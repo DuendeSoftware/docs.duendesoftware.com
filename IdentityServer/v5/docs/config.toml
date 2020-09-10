@@ -1,4 +1,4 @@
-baseURL = "http://example.org/"
+baseURL = "https://docs.duendesoftware.com/identityserver/v5"
 languageCode = "en-us"
 title = "Duende IdentityServer Documentation"
 
@@ -8,4 +8,5 @@ theme = "hugo-theme-learn"
 home = [ "HTML", "RSS", "JSON"]
 
 [params]
+editURL = "https://github.com/duendesoftware/docs.duendesoftware.com/edit/main/identityserver/v5/docs/content/"
 qs_base = "https://github.com/IdentityServer/IdentityServer4/tree/main/samples/Quickstarts/"
