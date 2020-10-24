@@ -126,7 +126,6 @@ It identifies your application to the identity server so that it knows which app
 
 	
 #### Configuring IdentityServer
-
 Loading the resource and client definitions happens in [Startup.cs]({{< param qs_base >}}/1_ClientCredentials/src/IdentityServer/Startup.cs) - update the code to look like this
 
 ```csharp
@@ -236,7 +235,7 @@ public class Startup
 * ``UseAuthentication`` adds the authentication middleware to the pipeline so authentication will be performed automatically on every call into the host.
 * ``UseAuthorization`` adds the authorization middleware to make sure, our API endpoint cannot be accessed by anonymous clients.
 
-Navigating to the controller ``https://localhost:6001/identity`` on a browser should return a 401 status code. 
+Navigating to the controller *https://localhost:6001/identity* on a browser should return a 401 status code. 
 This means your API requires a credential and is now protected by IdentityServer.
 
 {{% notice note %}}

@@ -5,3 +5,8 @@
 [See part 1 - defining an API scope]({{< ref "1_client_credentials#defining-an-api-scope" >}})
 
 {{< param qs_base >}}
+
+{{% notice note %}}
+...
+{{% /notice %}}
+
