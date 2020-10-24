@@ -1,6 +1,7 @@
 ---
 title: "Interactive Applications with ASP.NET Core"
 date: 2020-09-10T08:22:12+02:00
+weight: 3
 ---
 
 {{% notice note %}}
