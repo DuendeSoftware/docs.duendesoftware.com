@@ -10,3 +10,4 @@
 ...
 {{% /notice %}}
 
+![](../images/1_client_screenshot.png)
