@@ -4,12 +4,13 @@ date: 2020-09-10T08:22:12+02:00
 weight: 1
 ---
 
-The following Identity Server 4 quickstart provides step by step instructions for various common IdentityServer scenarios. 
+The following quickstart provides step by step instructions for various common Duende IdentityServer scenarios. 
 These start with the absolute basics and become more complex as they progress. We recommend that you follow them in sequence.  
 
-To see the full list, please go to [IdentityServer4 Quickstarts Overview]({{< ref "0_overview" >}}).
+To see the full list, please go to [Quickstarts Overview]({{< ref "0_overview" >}}).
 
-This first quickstart is the most basic scenario for protecting APIs using IdentityServer. 
+This first quickstart is the most basic scenario: using Duende IdentityServer for protecting APIs for server-to-server communication.
+
 In this quickstart you define an API and a Client with which to access it. 
 The client will request an access token from the Identity Server using its client ID and secret and then use the token to gain access to the API.
 
@@ -23,7 +24,7 @@ The IdentityServer templates for the dotnet CLI are a good starting point for th
 To install the templates open a console window and type the following command:
 
 ```
-dotnet new -i IdentityServer4.Templates
+dotnet new -i Duende.IdentityServer.Templates
 ```
 
 They will be used as a starting point for the various tutorials.

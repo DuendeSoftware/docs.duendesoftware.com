@@ -9,4 +9,4 @@ home = [ "HTML", "RSS", "JSON"]
 
 [params]
 editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/identityserver/v5/docs/content/"
-qs_base = "https://github.com/IdentityServer/IdentityServer4/tree/main/samples/Quickstarts/"
+qs_base = "https://github.com/DuendeSoftware/docs.duendesoftware.com/tree/main/IdentityServer/v5"
