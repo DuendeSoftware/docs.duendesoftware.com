@@ -1,5 +1,5 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+﻿// Copyright (c) Duende Software. All rights reserved.
+// See LICENSE in the project root for license information.
 
 
 using Microsoft.AspNetCore.Builder;
@@ -14,11 +14,9 @@ namespace IdentityServer
             // uncomment, if you want to add an MVC-based UI
             //services.AddControllersWithViews();
 
-            var builder = services.AddIdentityServer()
+            services.AddIdentityServer()
                 .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients);
-
-            builder.AddDeveloperSigningCredential();
         }
 
         public void Configure(IApplicationBuilder app)
