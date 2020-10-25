@@ -4,6 +4,10 @@ date: 2020-09-10T08:22:12+02:00
 weight: 4
 ---
 
+{{% notice note %}}
+For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview]({{< ref "0_overview" >}}) first.
+{{% /notice %}}
+
 In the previous quickstarts we explored both API access and user authentication. 
 Now we want to bring the two parts together.
 

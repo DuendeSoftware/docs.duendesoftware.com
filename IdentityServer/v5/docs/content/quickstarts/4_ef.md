@@ -4,6 +4,10 @@ date: 2020-09-10T08:22:12+02:00
 weight: 5
 ---
 
+{{% notice note %}}
+For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview]({{< ref "0_overview" >}}) first.
+{{% /notice %}}
+
 In the previous quickstarts, we created our client and scope data in code.
 On startup, IdentityServer loaded this configuration data into memory.
 If we wanted to modify this configuration data, we had to stop and start IdentityServer.
