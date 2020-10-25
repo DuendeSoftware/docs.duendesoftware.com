@@ -43,9 +43,9 @@ First create a directory for the application - then use our template to create a
 
 This will create the following files:
 
-* ``IdentityServer.csproj`` - the project file and a ``Properties\launchSettings.json`` file
-* ``Program.cs`` and ``Startup.cs`` - the main application entry point
-* ``Config.cs`` - Duende IdentityServer resources and clients configuration file
+* *IdentityServer.csproj* - the project file and a *Properties\launchSettings.json* file
+* *Program.cs* and *Startup.cs* - the main application entry point
+* *Config.cs* - Duende IdentityServer resources and clients configuration file
 
 You can now use your favorite text editor to edit or view the files. If you want to have Visual Studio support, you can add a solution file like this:
 
@@ -57,7 +57,7 @@ dotnet new sln -n Quickstart
 and let it add the IdentityServer project (keep this command in mind as we will create other projects below):
 
 ```
-dotnet sln add .\src\IdentityServer\IdentityServer.csproj
+dotnet sln add ./src/IdentityServer/IdentityServer.csproj
 ```
 
 {{% notice note %}}
@@ -159,14 +159,14 @@ Run from within the ``src`` folder the following command:
 Then add it to the solution by running the following commands:
 
     cd ..
-    dotnet sln add .\src\Api\Api.csproj
+    dotnet sln add ./src/Api/Api.csproj
 
 Configure the API application to run on ``https://localhost:6001`` only. You can do this by editing the [launchSettings.json]({{< param qs_base >}}/1_ClientCredentials/src/Api/Properties/launchSettings.json) file inside the Properties folder. Change the application URL setting to be:
 
     "applicationUrl": "https://localhost:6001"
 
 #### The controller
-Add a new class called ``IdentityController``:
+Add a new class called *IdentityController*:
 
 ```csharp
 [Route("identity")]
@@ -186,7 +186,7 @@ This controller will be used later to test the authorization requirement, as wel
 #### Adding a Nuget Dependency
 In order for the configuration step to work the nuget package dependency has to be added, run this command in the root directory.
 
-    dotnet add .\src\api\Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
+    dotnet add ./src/api/Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
 
 #### Configuration
 The last step is to add the authentication services to DI (dependency injection) and the authentication middleware to the pipeline.
@@ -195,7 +195,7 @@ These will:
 * validate the incoming token to make sure it is coming from a trusted issuer
 * validate that the token is valid to be used with this api (aka audience)
 
-Update `Startup` to look like this:
+Update *Startup* to look like this:
 
 ```csharp
 public class Startup
@@ -231,15 +231,15 @@ public class Startup
 }
 ```
 
-* ``AddAuthentication`` adds the authentication services to DI and configures ``Bearer`` as the default scheme. 
-* ``UseAuthentication`` adds the authentication middleware to the pipeline so authentication will be performed automatically on every call into the host.
-* ``UseAuthorization`` adds the authorization middleware to make sure, our API endpoint cannot be accessed by anonymous clients.
+* *AddAuthentication* adds the authentication services to DI and configures *Bearer* as the default scheme. 
+* *UseAuthentication* adds the authentication middleware to the pipeline so authentication will be performed automatically on every call into the host.
+* *UseAuthorization* adds the authorization middleware to make sure, our API endpoint cannot be accessed by anonymous clients.
 
 Navigating to the controller *https://localhost:6001/identity* on a browser should return a 401 status code. 
 This means your API requires a credential and is now protected by IdentityServer.
 
 {{% notice note %}}
-If you are wondering, why the above code disables audience validation, have a look :ref:`here <refResources>` for a more in-depth discussion.
+If you are wondering, why the above code disables audience validation, have a look :ref:`here <refResources>` TODO for a more in-depth discussion.
 {{% /notice %}}
 
 #### Creating the client
