@@ -18,18 +18,18 @@ By default, these are also stored in-memory.
 To move this data into a database that is persistent between restarts and across multiple IdentityServer instances, we can use the IdentityServer4 Entity Framework library.
 
 {{% notice note %}}
-In addition to manually configuring EF support, there is also an IdentityServer template to create a new project with EF support, using ``dotnet new isef``.
+In addition to manually configuring EF support, there is also an IdentityServer template to create a new project with EF support, using *dotnet new isef*.
 {{% /notice %}}
 
 ## Overview
 Our EF integration library implements the required stores and services using the following DbContexts:
 
-    * ConfigurationDbContext - used for configuration data such as clients, resources, and scopes
-    * PersistedGrantDbContext - used for temporary operational data such as authorization codes, and refresh tokens
+* ConfigurationDbContext: used for configuration data such as clients, resources, and scopes
+* PersistedGrantDbContext: used for dynamic operational data such as authorization codes, and refresh tokens
 
 These contexts are suitable for any Entity Framework Core compatible relational database.
 
-You can find the extension methods to register them in your IdentityServer in the ``Duende.IdentityServer.EntityFramework`` nuget package, which we will add to the *IdentityServer* project now:
+You can find the extension methods to register them in your IdentityServer in the *Duende.IdentityServer.EntityFramework* nuget package, which we will add to the *IdentityServer* project now:
 
     dotnet add package Duende.IdentityServer.EntityFramework
 
@@ -40,15 +40,15 @@ To add SQL Server support to our IdentityServer project, you’ll need the follo
     dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
 ### Database Schema Changes and Using EF Migrations
-The ``Duende.IdentityServer.EntityFramework.Storage`` Nuget package contains entity classes that map from Duende IdentityServer’s models.
-As IdentityServer’s models change, so will the entity classes in ``Duende.IdentityServer.EntityFramework.Storage``.
-As you use ``IdentityServer4.EntityFramework.Storage`` and upgrade over time, you are responsible for your database schema and changes necessary to that schema as the entity classes change.
+The *Duende.IdentityServer.EntityFramework.Storage* Nuget package contains entity classes that map from Duende IdentityServer’s models.
+As IdentityServer’s models change, so will the entity classes in *Duende.IdentityServer.EntityFramework.Storage*.
+As you use *IdentityServer4.EntityFramework.Storage* and upgrade over time, you are responsible for your database schema and changes necessary to that schema as the entity classes change.
 
 One approach for managing those changes is to use [EF migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index), which is what we’ll use in this quickstart.
 If migrations are not your preference, then you can manage the schema changes in any way you see fit.
 
 {{% notice note %}}
-You can find the latest SQL scripts for SqlServer in our EF [repository](https://github.com/Duende/IdentityServer4/tree/main/src/EntityFramework.Storage/migrations/SqlServer/Migrations>).
+You can find the latest SQL scripts for SqlServer in our EF [repository](https://github.com/DuendeSoftware/IdentityServer/tree/main/src/EntityFramework.Storage/migrations/).
 {{% /notice %}}
 
 ### Configuring the Stores
@@ -81,13 +81,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 ```
 
-Because we are using EF migrations in this quickstart, the call to *MigrationsAssembly* is used to inform Entity Framework that the host project will contain the migrations code.
+Because we are using EF migrations in this quickstart, the call to *MigrationsAssembly(...)* is used to inform Entity Framework that the host project will contain the migrations code.
 This is necessary since the host project is in a different assembly than the one that contains the *DbContext* classes.
 
 ### Adding Migrations
 Once the IdentityServer has been configured to use Entity Framework, we’ll need to generate some migrations.
 
-To create migrations, you will need to install the Entity Framework Core CLI on your machine and the ``Microsoft.EntityFrameworkCore.Design`` nuget package in IdentityServer:
+To create migrations, you will need to install the Entity Framework Core CLI on your machine and the *Microsoft.EntityFrameworkCore.Design* nuget package in IdentityServer:
 
     dotnet tool install --global dotnet-ef
     dotnet add package Microsoft.EntityFrameworkCore.Design
@@ -175,7 +175,7 @@ You should be able to use SQL Server Management Studio or Visual Studio to conne
 ![](../images/ef_database.png)
 
 {{% notice note %}}
-The above ``InitializeDatabase`` helper API is convenient to seed the database, but this approach is not ideal to leave in to execute each time the application runs. Once your database is populated, consider removing the call to the API.
+The above *InitializeDatabase* helper API is convenient to seed the database, but this approach is not ideal to leave in to execute each time the application runs. Once your database is populated, consider removing the call to the API.
 {{% /notice %}}
 
 ### Run the client applications
