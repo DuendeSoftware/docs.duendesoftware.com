@@ -16,7 +16,7 @@ The client will request an access token from the Identity Server using its clien
 
 ## Source Code
 As with all of these quickstarts you can find the source code for it in the [docs]({{< param qs_base >}}) repository. 
-The project for this quickstart is [Quickstart #1: Securing an API using Client Credentials]({{< param qs_base >}}1_ClientCredentials).
+The project for this quickstart is [Quickstart #1: Securing an API using Client Credentials]({{< param qs_base >}}/1_ClientCredentials).
 
 ## Preparation
 The Duende IdentityServer templates for the dotnet CLI are a good starting point for the quickstarts.
@@ -33,13 +33,15 @@ They will be used as a starting point for the various tutorials.
 
 First create a directory for the application - then use our template to create an ASP.NET Core application that includes a basic Duende IdentityServer setup, e.g.:
 
-    md quickstart
-    cd quickstart
+```
+md quickstart
+cd quickstart
 
-    md src
-    cd src
+md src
+cd src
 
-    dotnet new isempty -n IdentityServer
+dotnet new isempty -n IdentityServer
+```
 
 This will create the following files:
 
@@ -61,7 +63,7 @@ dotnet sln add ./src/IdentityServer/IdentityServer.csproj
 ```
 
 {{% notice note %}}
-.. note:: The protocol used in this Template is ``https`` and the port is set to 5001 when running on Kestrel or a random one on IISExpress. You can change that in the ``Properties\launchSettings.json`` file. For production scenarios you should always use ``https``.
+The protocol used in this Template is *https* and the port is set to 5001 when running on Kestrel or a random one on IISExpress. You can change that in the *Properties\launchSettings.json* file. For production scenarios you should always use *https*.
 {{% /notice %}}
 
 
