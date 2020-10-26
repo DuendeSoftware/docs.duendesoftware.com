@@ -48,21 +48,21 @@ Notice the reference to *Duende.IdentityServer.AspNetIdentity*.
 This NuGet package contains the ASP.NET Core Identity integration components for Duende IdentityServer.
 
 ### Startup.cs
-In *ConfigureServices* notice the necessary *AddDbContext<ApplicationDbContext>* and *AddIdentity<ApplicationUser, IdentityRole>* calls are done to configure ASP.NET Core Identity.
+In *ConfigureServices* notice the necessary *AddDbContext<ApplicationDbContext>()* and *AddIdentity<ApplicationUser, IdentityRole>()* calls are done to configure ASP.NET Core Identity.
 
 Also notice that much of the same IdentityServer configuration you did in the previous quickstarts is already done.
 The template uses the in-memory style for clients and resources, and those are sourced from *Config.cs*.
 
-Finally, notice the addition of the new call to *AddAspNetIdentity<ApplicationUser>*.
-*AddAspNetIdentity* adds the integration layer to allow IdentityServer to access the user data for the ASP.NET Core Identity user database.
+Finally, notice the addition of the new call to *AddAspNetIdentity<ApplicationUser>()*.
+*AddAspNetIdentity()* adds the integration layer to allow IdentityServer to access the user data for the ASP.NET Core Identity user database.
 This is needed when IdentityServer must add claims for the users into tokens.
 
-Note that `AddIdentity<ApplicationUser, IdentityRole>` must be invoked before *AddIdentityServer*.
+Note that *AddIdentity<ApplicationUser, IdentityRole>()* must be invoked before *AddIdentityServer()*.
 
 ### Config.cs
 *Config.cs* contains the hard-coded in-memory clients and resource definitions.
 To keep the same clients and API working as the prior quickstarts, we need to copy over the configuration data from the old IdentityServer project into this one.
-Do that now, and afterwards `Config.cs` should look like this:
+Do that now, and afterwards *Config.cs* should look like this:
 
 ```cs
 public static class Config
@@ -73,6 +73,7 @@ public static class Config
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
         };
+
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
@@ -93,7 +94,7 @@ public static class Config
                 // scopes that client has access to
                 AllowedScopes = { "api1" }
             },
-            
+                
             // interactive ASP.NET Core MVC client
             new Client
             {
@@ -101,7 +102,7 @@ public static class Config
                 ClientSecrets = { new Secret("secret".Sha256()) },
 
                 AllowedGrantTypes = GrantTypes.Code,
-                
+                    
                 // where to redirect to after login
                 RedirectUris = { "https://localhost:5002/signin-oidc" },
 
@@ -122,15 +123,15 @@ public static class Config
 At this point, you no longer need the old IdentityServer project.
 
 ### Program.cs and SeedData.cs
-*Program.cs*'s *Main* is a little different than most ASP.NET Core projects.
-Notice how this looks for a command line argument called `/seed` which is used as a flag to seed the users in the ASP.NET Core Identity database.
+The application entry function *Main* in *Program.cs* is a little different than most ASP.NET Core projects.
+Notice how this looks for a command line argument called */seed* which is used as a flag to seed the users in the ASP.NET Core Identity database.
 
-Look at the `SeedData` class' code to see how the database is created and the first users are created.
+Look at the *SeedData* class' code to see how the database is created and the first users are created.
 
 ### AccountController
 The last code to inspect in this template is the *AccountController*. 
 This contains a slightly different login and logout code than the prior quickstart and templates.
-Notice the use of the ``SignInManager<ApplicationUser>`` and ``UserManager<ApplicationUser>`` from ASP.NET Core Identity to validate credentials and manage the authentication session.
+Notice the use of the *SignInManager<ApplicationUser>* and *UserManager<ApplicationUser>* from ASP.NET Core Identity to validate credentials and manage the authentication session.
 
 Much of the rest of the code is the same from the prior quickstarts and templates.
 
