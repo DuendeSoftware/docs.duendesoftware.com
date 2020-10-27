@@ -8,5 +8,5 @@ theme = "hugo-theme-learn"
 home = [ "HTML", "RSS", "JSON"]
 
 [params]
-editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/identityserver/v5/docs/content/"
+editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/IdentityServer/v5/docs/content/"
 qs_base = "https://github.com/DuendeSoftware/docs.duendesoftware.com/tree/main/IdentityServer/v5/quickstarts"
