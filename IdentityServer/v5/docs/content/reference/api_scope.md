@@ -4,25 +4,32 @@ date: 2020-09-10T08:22:12+02:00
 weight: 3
 ---
 
+#### Duende.IdentityServer.Models.ApiScope
+
 This class models an OAuth scope.
 
- ``Enabled``
+* ***Enabled***
+    
     Indicates if this resource is enabled and can be requested. Defaults to true.
 
-``Name``
+* ***Name***
+    
     The unique name of the API. This value is used for authentication with introspection and will be added to the audience of the outgoing access token.
 
-``DisplayName``
+* ***DisplayName***
+    
     This value can be used e.g. on the consent screen.
 
-``Description``
+* ***Description***
+    
     This value can be used e.g. on the consent screen.
 
-``UserClaims``
+* ***UserClaims***
+    
     List of associated user claim types that should be included in the access token.
 
 ## Defining API scope in appsettings.json
-The ``AddInMemoryApiResource`` extension method also supports adding clients from the ASP.NET Core configuration file::
+The *AddInMemoryApiResource* extension method also supports adding clients from the ASP.NET Core configuration file::
 
 ```json
 "IdentityServer": {
@@ -53,6 +60,8 @@ The ``AddInMemoryApiResource`` extension method also supports adding clients fro
 }
 ```
 
-Then pass the configuration section to the ``AddInMemoryApiScopes`` method::
+Then pass the configuration section to the *AddInMemoryApiScopes* method:
 
-    AddInMemoryApiScopes(configuration.GetSection("IdentityServer:ApiScopes"))
+```cs
+builder.AddInMemoryApiScopes(configuration.GetSection("IdentityServer:ApiScopes"))
+```
