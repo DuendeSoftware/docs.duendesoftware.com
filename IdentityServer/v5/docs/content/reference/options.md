@@ -16,6 +16,7 @@ var builder = services.AddIdentityServer(options =>
 ```
 
 ## Main
+Top-level settings.
 
 * ***IssuerUri***
 
@@ -194,56 +195,74 @@ Setting regarding the IdentityServer / user workflow.
 ## Caching
 These settings only apply if the respective caching has been enabled in the services configuration in startup.
 
-* ``ClientStoreExpiration``
+* ***ClientStoreExpiration***
+
     Cache duration of client configuration loaded from the client store.
 
-* ``ResourceStoreExpiration``
+* ***ResourceStoreExpiration***
+
     Cache duration of identity and API resource configuration loaded from the resource store.
 
 ## CORS
 IdentityServer supports CORS for some of its endpoints.
 The underlying CORS implementation is provided from ASP.NET Core, and as such it is automatically registered in the dependency injection system.
 
-* ``CorsPolicyName``
-    Name of the CORS policy that will be evaluated for CORS requests into IdentityServer (defaults to ``"IdentityServer4"``).
-    The policy provider that handles this is implemented in terms of the ``ICorsPolicyService`` registered in the dependency injection system.
-    If you wish to customize the set of CORS origins allowed to connect, then it is recommended that you provide a custom implementation of ``ICorsPolicyService``.
+* ***CorsPolicyName***
 
-* ``CorsPaths``
+    Name of the CORS policy that will be evaluated for CORS requests into IdentityServer (defaults to *IdentityServer*).
+    The policy provider that handles this is implemented in terms of the *ICorsPolicyService* registered in the dependency injection system.
+    If you wish to customize the set of CORS origins allowed to connect, then it is recommended that you provide a custom implementation of *ICorsPolicyService*.
+
+* ***CorsPaths***
+    
     The endpoints within IdentityServer where CORS is supported. 
     Defaults to the discovery, user info, token, and revocation endpoints.
 
-* ``PreflightCacheDuration``
-    `Nullable<TimeSpan>` indicating the value to be used in the preflight `Access-Control-Max-Age` response header.
-    Defaults to `null` indicating no caching header is set on the response.
+* ***PreflightCacheDuration***
+    Indicates the value to be used in the preflight *Access-Control-Max-Age* response header.
+    Defaults to *null* indicating no caching header is set on the response.
 
 ## CSP (Content Security Policy)
 IdentityServer emits CSP headers for some responses, where appropriate.
 
-* ``Level``
-    The level of CSP to use. CSP Level 2 is used by default, but if older browsers must be supported then this be changed to ``CspLevel.One`` to accommodate them.
+* ***Level***
+    
+    The level of CSP to use. CSP Level 2 is used by default, but if older browsers must be supported then this be changed to *CspLevel.One* to accommodate them.
 
-* ``AddDeprecatedHeader``
-    Indicates if the older ``X-Content-Security-Policy`` CSP header should also be emitted (in addition to the standards-based header value). Defaults to true.
+* ***AddDeprecatedHeader***
+    
+    Indicates if the older *X-Content-Security-Policy* CSP header should also be emitted (in addition to the standards-based header value). Defaults to *true*.
 
 ## Device Flow
+OAuth device flow related settings.
 
-* ``DefaultUserCodeType``
+* ***DefaultUserCodeType***
+    
     The user code type to use, unless set at the client level. Defaults to *Numeric*, a 9-digit code.
-* ``Interval``
+
+* ***Interval***
+
     Defines the minimum allowed polling interval on the token endpoint. Defaults to *5*.
 
 ## Mutual TLS
+Mutual TLS enabled settings. See MTLS section for more information. TODO
 
-* ``Enabled``
-    Specifies if MTLS support should be enabled. Defaults to ``false``.
-* ``ClientCertificateAuthenticationScheme``
-    Specifies the name of the authentication handler for X.509 client certificates. Defaults to ``"Certificate"``.
-* ``DomainName``
+* ***Enabled***
+    
+    Specifies if MTLS support should be enabled. Defaults to *false*.
+
+* ***ClientCertificateAuthenticationScheme***
+
+    Specifies the name of the authentication handler for X.509 client certificates. Defaults to *Certificate*.
+
+* ***DomainName***
+
     Specifies either the name of the sub-domain or full domain for running the MTLS endpoints (will use path-based endpoints if not set).
     Use a simple string (e.g. "mtls") to set a sub-domain, use a full domain name (e.g. "identityserver-mtls.io") to set a full domain name.
-    When a full domain name is used, you also need to set the ``IssuerName`` to a fixed value.
-* ``AlwaysEmitConfirmationClaim``
+    When a full domain name is used, you also need to set the *IssuerName* to a fixed value.
+
+* ***AlwaysEmitConfirmationClaim***
+
     Specifies whether a cnf claim gets emitted for access tokens if a client certificate was present.
     Normally the cnf claims only gets emitted if the client used the client certificate for authentication,
     setting this to true, will set the claim regardless of the authentication method. (defaults to false).
