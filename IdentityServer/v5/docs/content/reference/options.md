@@ -4,6 +4,8 @@ date: 2020-09-10T08:22:12+02:00
 weight: 1
 ---
 
+#### Duende.IdentityServer.Configuration.IdentityServerOptions
+
 The *IdentityServerOptions* is the central place to configure fundamental settings in Duende IdentityServer.
 
 You set the options at startup time in your *ConfigureServices* method:
@@ -219,6 +221,7 @@ The underlying CORS implementation is provided from ASP.NET Core, and as such it
     Defaults to the discovery, user info, token, and revocation endpoints.
 
 * ***PreflightCacheDuration***
+
     Indicates the value to be used in the preflight *Access-Control-Max-Age* response header.
     Defaults to *null* indicating no caching header is set on the response.
 
@@ -246,6 +249,18 @@ OAuth device flow related settings.
 
 ## Mutual TLS
 Mutual TLS enabled settings. See MTLS section for more information. TODO
+
+```cs
+var builder = services.AddIdentityServer(options =>
+{
+    options.MutualTls.Enabled = true;
+    
+    // use mtls sub-domain
+    options.MutualTls.DomainName = "mtls";
+
+    options.MutualTls.AlwaysEmitConfirmationClaim = true;
+})
+```
 
 * ***Enabled***
     
