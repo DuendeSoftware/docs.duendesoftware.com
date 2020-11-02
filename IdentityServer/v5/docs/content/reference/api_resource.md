@@ -4,34 +4,43 @@ date: 2020-09-10T08:22:12+02:00
 weight: 4
 ---
 
-This class models an API resource.
+#### Duende.IdentityServer.Models.ApiResource
 
-``Enabled``
+This class models an API.
+
+* ***Enabled***
+    
     Indicates if this resource is enabled and can be requested. Defaults to true.
 
-``Name``
+* ***Name***
+    
     The unique name of the API. This value is used for authentication with introspection and will be added to the audience of the outgoing access token.
 
-``DisplayName``
+* ***DisplayName***
+    
     This value can be used e.g. on the consent screen.
 
-``Description``
+* ***Description***
+    
     This value can be used e.g. on the consent screen.
 
-``ApiSecrets``
+* ***ApiSecrets***
+    
     The API secret is used for the introspection endpoint. The API can authenticate with introspection using the API name and secret.
 
-``AllowedAccessTokenSigningAlgorithms``
+* ***AllowedAccessTokenSigningAlgorithms***
+    
     List of allowed signing algorithms for access token. If empty, will use the server default signing algorithm.
 
-``UserClaims``
+* ***UserClaims***
+    
     List of associated user claim types that should be included in the access token.
 
-``Scopes``
-    List of API scope names.
+* ***Scopes***
+    List of API scope names. You need to create those using [ApiScope]({{< ref "api_scope.md" >}}).
 
 ## Defining API resources in appsettings.json
-The ``AddInMemoryApiResource`` extensions method also supports adding API resources from the ASP.NET Core configuration file::
+The *AddInMemoryApiResource* extensions method also supports adding API resources from the ASP.NET Core configuration file::
 
     "IdentityServer": {
         "IssuerUri": "urn:sso.company.com",
@@ -62,6 +71,8 @@ The ``AddInMemoryApiResource`` extensions method also supports adding API resour
         ]
     }
 
-Then pass the configuration section to the ``AddInMemoryApiResource`` method::
+Then pass the configuration section to the *AddInMemoryApiResource* method:
 
-    AddInMemoryApiResources(configuration.GetSection("IdentityServer:ApiResources"))
+```cs
+builder.AddInMemoryApiResources(configuration.GetSection("IdentityServer:ApiResources"))
+```
