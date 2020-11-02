@@ -4,87 +4,187 @@ date: 2020-09-10T08:22:12+02:00
 weight: 1
 ---
 
-* ``IssuerUri``
+The *IdentityServerOptions* is the central place to configure fundamental settings in Duende IdentityServer.
+
+You set the options at startup time in your *ConfigureServices* method:
+
+```cs
+var builder = services.AddIdentityServer(options =>
+{
+    // configure options here..
+})
+```
+
+## Main
+
+* ***IssuerUri***
+
     Set the issuer name that will appear in the discovery document and the issued JWT tokens.
     It is recommended to not set this property, which infers the issuer name from the host name that is used by the clients.
 
-* ``LowerCaseIssuerUri``
-    Set to ``false`` to preserve the original casing of the IssuerUri. Defaults to ``true``.
+* ***LowerCaseIssuerUri***
 
-* ``AccessTokenJwtType``
-    Specifies the value used for the JWT typ header for access tokens (defaults to ``at+jwt``).
+    Set to *false* to preserve the original casing of the IssuerUri. Defaults to *true*.
 
-* ``EmitScopesAsSpaceDelimitedStringInJwt``
+* ***AccessTokenJwtType***
+  
+    Specifies the value used for the JWT typ header for access tokens (defaults to *at+jwt*).
+
+* ***EmitScopesAsSpaceDelimitedStringInJwt***
+  
     Specifies whether scopes in JWTs are emitted as array or string
 
-* ``EmitStaticAudienceClaim``
-    Emits an ``aud`` claim with the format issuer/resources. Defaults to false.
+* ***EmitStaticAudienceClaim***
+  
+    Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
+
+* ***EmitScopesAsSpaceDelimitedStringsInJwt***
+
+    Historically scopes values were emitted as an array in JWT access tokens.
+    The newer JWT for OAuth profile specifies a space delimited string instead.
+    The behavior can be toggled here (defaults to *false* for backwards compatibility).
 
 ## Endpoints
 Allows enabling/disabling individual endpoints, e.g. token, authorize, userinfo etc.
 
+```cs
+var builder = services.AddIdentityServer(options =>
+{
+    // see endpoint section in docs for a list of endoints
+
+    options.Endpoints.EnableAuthorizeEndpoint = true;
+    options.Endpoints.EnableIntrospectionEndpoint = false;
+})
+```
+
 By default all endpoints are enabled, but you can lock down your server by disabling endpoint that you don't need.
 
-* ``EnableJwtRequestUri``
-    JWT request_uri processing is enabled on the authorize endpoint. Defaults to ``false``.
+* ***EnableJwtRequestUri***
+  
+    Enabling the request_uri parameter has some security implications (see spec).
+    Thus support for this parameter is disabled by default.
 
 ## Discovery
 Allows enabling/disabling various sections of the discovery document, e.g. endpoints, scopes, claims, grant types etc.
 
-The ``CustomEntries`` dictionary allows adding custom elements to the discovery document.
+```cs
+var builder = services.AddIdentityServer(options =>
+{
+    options.Discovery.ShowApiScopes = false;
+    options.Discovery.ShowClaims = false;
+
+    // etc
+}
+```
+
+The *CustomEntries* dictionary allows adding custom elements to the discovery document.
+
+```cs
+var builder = services.AddIdentityServer(options =>
+{
+    // the ~ character resolves to an absolute URL
+    options.Discovery.CustomEntries.Add("my_endpoint", "~/my");
+}
+```
 
 ## Authentication
 
-* ``CookieAuthenticationScheme``
-    Sets the cookie authentication scheme configured by the host used for interactive users. If not set, the scheme will be inferred from the host's default authentication scheme. This setting is typically used when AddPolicyScheme is used in the host as the default scheme.
+Login/logout releated settings.
 
-* ``CookieLifetime``
+* ***CookieAuthenticationScheme***
+    
+    Sets the cookie authentication scheme configured by the host used for interactive users. If not set, the scheme will be inferred from the host's default authentication scheme. This setting is typically used when AddPolicyScheme is used in the host as the default scheme.
+    
+* ***CookieLifetime***
+
     The authentication cookie lifetime (only effective if the IdentityServer-provided cookie handler is used).
 
-* ``CookieSlidingExpiration``
+* ***CookieSlidingExpiration***
+    
     Specifies if the cookie should be sliding or not (only effective if the IdentityServer-provided cookie handler is used).
 
-* ``CookieSameSiteMode``
+* ***CookieSameSiteMode***
+    
     Specifies the SameSite mode for the internal cookies.
 
-* ``RequireAuthenticatedUserForSignOutMessage``
+* ***RequireAuthenticatedUserForSignOutMessage***
+    
     Indicates if user must be authenticated to accept parameters to end session endpoint. Defaults to false.
 
-* ``CheckSessionCookieName``
+* ***CheckSessionCookieName***
+    
     The name of the cookie used for the check session endpoint.
 
-* ``CheckSessionCookieDomain``
+* ***CheckSessionCookieDomain***
+    
     The domain of the cookie used for the check session endpoint.
 
-* ``CheckSessionCookieSameSiteMode``
+* ***CheckSessionCookieSameSiteMode***
+    
     The SameSite mode of the cookie used for the check session endpoint.
 
-* ``RequireCspFrameSrcForSignout``
+* ***RequireCspFrameSrcForSignout***
+    
     If set, will require frame-src CSP headers being emitting on the end session callback endpoint which renders iframes to clients for front-channel signout notification. Defaults to true.
 
 ## Events
-Allows configuring if and which events should be submitted to a registered event sink. See :ref:`here <refEvents>` for more information on events.
+Allows configuring if and which events should be submitted to a registered event sink. See :ref:`here <refEvents>` TODO for more information on events.
+
+```cs
+var builder = services.AddIdentityServer(options =>
+{
+    options.Events.RaiseSuccessEvents = true;
+    options.Events.RaiseFailureEvents = true;
+    options.Events.RaiseErrorEvents = true;
+    options.Events.RaiseInformationEvents = true;
+})
+```
 
 ## InputLengthRestrictions
 Allows setting length restrictions on various protocol parameters like client id, scope, redirect URI etc.
 
+```cs
+var builder = services.AddIdentityServer(options =>
+{
+    // allow scope parameter up to 1000 characters
+    options.InputLengthRestrictions.Scope = 1000;
+})
+```
+
 ## UserInteraction
 
-* ``LoginUrl``, ``LogoutUrl``, ``ConsentUrl``, ``ErrorUrl``, ``DeviceVerificationUrl``
+Setting regarding the IdentityServer / user workflow.
+
+* ***LoginUrl***, ***LogoutUrl***, ***ConsentUrl***, ***ErrorUrl***, ***DeviceVerificationUrl***
+
     Sets the URLs for the login, logout, consent, error and device verification pages.
-* ``LoginReturnUrlParameter``
+
+* ***LoginReturnUrlParameter***
+
     Sets the name of the return URL parameter passed to the login page. Defaults to *returnUrl*.
-* ``LogoutIdParameter``
+
+* ***LogoutIdParameter***
+
     Sets the name of the logout message id parameter passed to the logout page. Defaults to *logoutId*.
-* ``ConsentReturnUrlParameter``
+
+* ***ConsentReturnUrlParameter***
+
     Sets the name of the return URL parameter passed to the consent page. Defaults to *returnUrl*.
-* ``ErrorIdParameter``
+
+* ***ErrorIdParameter***
+    
     Sets the name of the error message id parameter passed to the error page. Defaults to *errorId*.
-* ``CustomRedirectReturnUrlParameter``
+
+* ***CustomRedirectReturnUrlParameter***
+    
     Sets the name of the return URL parameter passed to a custom redirect from the authorization endpoint. Defaults to *returnUrl*.
-* ``DeviceVerificationUserCodeParameter``
+
+* ***DeviceVerificationUserCodeParameter***
+    
     Sets the name of the user code parameter passed to the device verification page. Defaults to *userCode*.
-* ``CookieMessageThreshold``
+
+* ***CookieMessageThreshold***
+    
     Certain interactions between IdentityServer and some UI pages require a cookie to pass state and context (any of the pages above that have a configurable "message id" parameter).
     Since browsers have limits on the number of cookies and their size, this setting is used to prevent too many cookies being created. 
     The value sets the maximum number of message cookies of any type that will be created.
