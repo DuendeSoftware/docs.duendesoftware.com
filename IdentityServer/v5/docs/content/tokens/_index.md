@@ -14,3 +14,4 @@ chapter = true
 * refresh token
 * reference token
 * proof of possession
+* custom token request validator
