@@ -7,4 +7,4 @@ chapter = true
 
 # Reference
 
-Reference documentation
+{{%children style="h4" %}}

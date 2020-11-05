@@ -7,6 +7,7 @@ chapter = true
 
 # Issuing Tokens
 
+{{%children style="h4" %}}
 
 * Overview
 * identity token

@@ -7,15 +7,13 @@ chapter = true
 
 # User Authentication and Session Management
 
-
 {{%children style="h4" %}}
 
 
-* Sign-in with External Identity Providers
+todo
+
 * Windows Authentication
 * Windows-only / Windows token to JWT
-* Sign-out
-* Sign-out of External Identity Providers
 * Federated Sign-out
 
 * Resource Owner Password Validation
