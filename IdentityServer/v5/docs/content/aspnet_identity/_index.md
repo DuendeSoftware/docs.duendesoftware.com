@@ -6,3 +6,9 @@ chapter = true
 +++
 
 # ASP.NET Identity Integration
+
+{{%children style="h4" %}}
+
+## todo
+
+* complete qs code with registration, change pwd, reset pwd etc.

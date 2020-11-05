@@ -10,10 +10,7 @@ chapter = true
 {{%children style="h4" %}}
 
 
-todo
+### todo
 
-* Windows Authentication
+* Windows Authentication using negotiate and http.sys
 * Windows-only / Windows token to JWT
-* Federated Sign-out
-
-* Resource Owner Password Validation
