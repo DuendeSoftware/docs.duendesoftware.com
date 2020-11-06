@@ -8,10 +8,11 @@ The ultimate job of Duende IdentityServer is to control access to resources.
 
 The two fundamental resource types in IdentityServer are:
 
-* **identity resources:** 
+* **identity resources** 
 
     represent claims about a user like user ID, display name, email address etc…
-* **API resources:** 
+
+* **API resources** 
 
     represent functionality a client wants to access. Typically, they are HTTP-based endpoints (aka APIs), but could be also message queuing endpoints or similar.
 
@@ -317,7 +318,7 @@ Let's have a look at some example access tokens for the above resource configura
         "client_id": "client",
         "sub": "123",
 
-        "aud": [ "invoice", "customer" ]
+        "aud": [ "invoice", "customer" ],
         "scope": "invoice.read customer.read"
     }
 ```
@@ -332,7 +333,7 @@ Let's have a look at some example access tokens for the above resource configura
         "client_id": "client",
         "sub": "123",
 
-        "aud": [ "invoice", "customer" ]
+        "aud": [ "invoice", "customer" ],
         "scope": "manage"
     }
 ```
