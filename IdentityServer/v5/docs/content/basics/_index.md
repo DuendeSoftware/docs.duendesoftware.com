@@ -1,7 +1,7 @@
 +++
 title = "Basics"
 date = 2020-09-10T08:20:20+02:00
-weight = 3
+weight = 20
 chapter = true
 +++
 
