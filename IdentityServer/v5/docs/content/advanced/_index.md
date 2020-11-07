@@ -9,6 +9,5 @@ chapter = true
 
 ## todo
 
-* MTLS
 * Token Exchange
 * Request objects
