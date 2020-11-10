@@ -34,7 +34,7 @@ new Client
 ```
 
 {{% notice note %}}
-The value of ``IdentityServerConstants.LocalApi.ScopeName`` is ``IdentityServerApi``.
+The value of *IdentityServerConstants.LocalApi.ScopeName* is *IdentityServerApi*.
 {{% /notice %}}
 
 To enable token validation for local APIs, add the following to your IdentityServer startup:
