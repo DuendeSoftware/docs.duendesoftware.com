@@ -86,7 +86,7 @@ See the [reference]({{< ref "/reference/client" >}}) section for more informatio
 
 The client can then request the resource using the scope parameter (other parameters omitted)::
 
-    https://demo.identityserver.io/connect/authorize?client_id=client&scope=openid profile
+    https://demo.duendesoftware.com/connect/authorize?client_id=client&scope=openid profile
 
 IdentityServer will then use the scope names to create a list of requested claim types, 
 and present that to your implementation of the [profile service]({{< ref "/reference/profile_service" >}}).
