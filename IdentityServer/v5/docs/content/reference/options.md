@@ -85,10 +85,23 @@ The *CustomEntries* dictionary allows adding custom elements to the discovery do
 ```cs
 var builder = services.AddIdentityServer(options =>
 {
-    // the ~ character resolves to an absolute URL
-    options.Discovery.CustomEntries.Add("my_endpoint", "~/my");
-}
+    options.Discovery.CustomEntries.Add("my_setting", "foo");
+    options.Discovery.CustomEntries.Add("my_complex_setting",
+        new
+        {
+            foo = "foo",
+            bar = "bar"
+        });
+});
 ```
+
+When you add a custom value that starts with ~/ it will be expanded to an absolute path below the IdentityServer base address, e.g.:
+
+```cs
+options.Discovery.CustomEntries.Add("my_custom_endpoint", "~/custom");
+```
+
+If you want to take full control over the rendering of the discovery (and jwks) document, you can implement the *IDiscoveryResponseGenerator* interface (or derive from our default implementation).
 
 ## Authentication
 

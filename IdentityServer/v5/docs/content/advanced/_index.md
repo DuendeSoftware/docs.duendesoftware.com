@@ -10,4 +10,4 @@ chapter = true
 ## todo
 
 * Token Exchange
-* Request objects
+* multi-tenancy

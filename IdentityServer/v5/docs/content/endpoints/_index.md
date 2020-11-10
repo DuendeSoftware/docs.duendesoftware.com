@@ -1,16 +1,12 @@
 +++
-title = "Basics"
+title = "Endpoints"
 date = 2020-09-10T08:20:20+02:00
-weight = 30
+weight = 99
 chapter = true
 +++
 
-# Basics
+# Endpoints
 
 {{%children style="h4" %}}
 
-## todo
-
-
-* adding UI
-* key management?
+child of reference?
