@@ -15,7 +15,7 @@ The details vary, but you typically define the following common settings for a c
 * a list of scopes (aka resources) the client is allowed to access
 
 {{% notice note %}}
-See the [grant types]({{< ref "grant_types" >}}) topic for more information on choosing the protocol flavour for your client.
+See the [application types]({{< ref "application_types" >}}) topic for more information on choosing the protocol flavour for your client.
 {{% /notice %}}
 
 ## Defining a client for server to server communication
