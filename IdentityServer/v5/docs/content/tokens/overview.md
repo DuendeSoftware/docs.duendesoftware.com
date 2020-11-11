@@ -4,13 +4,13 @@ date: 2020-09-10T08:22:12+02:00
 weight: 1
 ---
 
-Duende IdentityServer is a token service based on OAuth 2.x and OpenID Connect.
+Duende IdentityServer is a token service engine based on OAuth 2.x and OpenID Connect.
 
 ## How to request tokens
 OIDC and OAuth contain two endpoints that can return tokens - *authorize* and *token*. TODO link to endpoint reference
 
 While the *authorize* endpoint can be used for some special cases, you typically use the *token* endpoint for issuing tokens.
-See the [application types]({{< ref "/basics/application_types" >}}) chapter for more general information on protocol flows.
+See the [application types]({{< ref "/basics/application_types" >}}) chapter for more general information on protocol flows and TODO for concrete examples of token requests.
 
 ## Token Types
 The following token types are supported.
