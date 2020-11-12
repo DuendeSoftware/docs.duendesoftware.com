@@ -39,7 +39,7 @@ IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize r
     
     * ***code id_token token*** 
     
-### Required parameters
+### Optional parameters
     
 * ***response_mode***
 
