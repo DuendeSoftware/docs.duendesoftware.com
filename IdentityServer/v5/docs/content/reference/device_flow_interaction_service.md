@@ -1,7 +1,7 @@
 ---
 title: "Device Flow Interaction Service"
 date: 2020-09-10T08:22:12+02:00
-weight: 9
+weight: 65
 ---
 
 #### Duende.IdentityServer.Services.IDeviceFlowInteractionService
