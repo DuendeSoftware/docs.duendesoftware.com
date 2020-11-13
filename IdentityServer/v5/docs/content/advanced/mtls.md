@@ -145,7 +145,7 @@ When writing a client to connect to IdentityServer, the *SocketsHttpHandler* (or
 class provides a convenient mechanism to add a client certificate to outgoing requests.
 
 Use such a handler with *HttpClient* to perform the client certificate authentication handshake at the TLS channel.
-The following snippet is using [IdentityModel] to read the discovery document and request a token:
+The following snippet is using [IdentityModel](https://identitymodel.readthedocs.io) to read the discovery document and request a token:
 
 ```cs
 static async Task<TokenResponse> RequestTokenAsync()
