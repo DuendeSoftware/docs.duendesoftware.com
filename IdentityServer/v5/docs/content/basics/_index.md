@@ -1,7 +1,7 @@
 +++
 title = "Basics"
 date = 2020-09-10T08:20:20+02:00
-weight = 20
+weight = 30
 chapter = true
 +++
 
@@ -11,7 +11,6 @@ chapter = true
 
 ## todo
 
-* Adding DI and middleware to startup
-* defining resources
-* defining clients
-* adding logging
+
+* adding UI
+* key management?

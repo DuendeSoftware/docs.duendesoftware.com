@@ -1,7 +1,7 @@
 ---
 title: "DI Extension Methods"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+weight: 10
 ---
 
 *AddIdentityServer* return a builder object that provides many extension methods to add IdentityServer specific services to DI. Here's a list grouped by feature areas.

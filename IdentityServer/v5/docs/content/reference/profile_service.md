@@ -1,7 +1,7 @@
 ---
 title: "Profile Service"
 date: 2020-09-10T08:22:12+02:00
-weight: 7
+weight: 40
 ---
 
 #### Duende.IdentityServer.Services.IProfileService

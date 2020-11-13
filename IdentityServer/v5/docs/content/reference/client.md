@@ -1,7 +1,7 @@
 ---
 title: "Client"
 date: 2020-09-10T08:22:12+02:00
-weight: 5
+weight: 35
 ---
 
 #### Duende.IdentityServer.Models.Client
@@ -164,6 +164,36 @@ public static IEnumerable<Client> Get()
 
     Lifetime of authorization code in seconds (defaults to 300 seconds / 5 minutes)
 
+* ***AccessTokenType***
+    
+    Specifies whether the access token is a reference token or a self contained JWT token (defaults to *Jwt*).
+
+* ***IncludeJwtId***
+    
+    Specifies whether JWT access tokens should have an embedded unique ID (via the *jti* claim). Defaults to *true*.
+
+* ***Claims***
+    
+    Allows settings claims for the client (will be included in the access token).
+
+* ***AlwaysSendClientClaims***
+    
+    If set, the client claims will be sent for every flow. If not, only for client credentials flow (default is *false*)
+
+* ***AlwaysIncludeUserClaimsInIdToken***
+    
+    When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is *false*.
+
+* ***ClientClaimsPrefix***
+
+    If set, the prefix client claim types will be prefixed with. Defaults to *client*_. The intent is to make sure they don't accidentally collide with user claims.
+
+* ***PairWiseSubjectSalt***
+    Salt value used in pair-wise subjectId generation for users of this client.
+    Currently not implemented.
+
+## Refresh Token
+
 * ***AbsoluteRefreshTokenLifetime***
     
     Maximum lifetime of a refresh token in seconds. Defaults to 2592000 seconds / 30 days
@@ -194,33 +224,6 @@ public static IEnumerable<Client> Get()
     
     Gets or sets a value indicating whether the access token (and its claims) should be updated on a refresh token request.
 
-* ***AccessTokenType***
-    
-    Specifies whether the access token is a reference token or a self contained JWT token (defaults to *Jwt*).
-
-* ***IncludeJwtId***
-    
-    Specifies whether JWT access tokens should have an embedded unique ID (via the *jti* claim). Defaults to *true*.
-
-* ***Claims***
-    
-    Allows settings claims for the client (will be included in the access token).
-
-* ***AlwaysSendClientClaims***
-    
-    If set, the client claims will be sent for every flow. If not, only for client credentials flow (default is *false*)
-
-* ***AlwaysIncludeUserClaimsInIdToken***
-    
-    When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is *false*.
-
-* ***ClientClaimsPrefix***
-
-    If set, the prefix client claim types will be prefixed with. Defaults to *client*_. The intent is to make sure they don't accidentally collide with user claims.
-
-* ***PairWiseSubjectSalt***
-    Salt value used in pair-wise subjectId generation for users of this client.
-    Currently not implemented.
 
 ## Consent Screen
 Consent screen specific settings. 

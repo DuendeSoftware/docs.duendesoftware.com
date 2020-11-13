@@ -5,7 +5,7 @@ weight = 10
 chapter = true
 +++
 
-# Protecting APIs
+# Protecting APIs using ASP.NET Core
 
 {{%children style="h4" %}}
 
