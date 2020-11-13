@@ -1,7 +1,7 @@
 ---
 title: "Defining clients"
 date: 2020-09-10T08:22:12+02:00
-weight: 3
+weight: 30
 ---
 
 Clients represent applications that can request tokens from your IdentityServer.

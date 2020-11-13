@@ -25,7 +25,7 @@ token=...&token_type_hint=refresh_token
 ```
 
 ## .NET client library
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically create with the protocol endpoint from .NET code.
+You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code.
 
 ```cs
 using IdentityModel.Client;

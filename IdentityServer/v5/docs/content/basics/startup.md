@@ -1,7 +1,7 @@
 ---
 title: "Adding DI and middleware to Startup"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+weight: 10
 ---
 
 You add the Duende IdentityServer engine to an ASP.NET application by adding the relevant services to the DI system and adding the middleware to the processing pipeline.
