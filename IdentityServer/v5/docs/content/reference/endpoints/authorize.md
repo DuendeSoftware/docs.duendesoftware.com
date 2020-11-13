@@ -129,7 +129,7 @@ GET /connect/authorize?
 ```
 
 ## .NET client library
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically access the discovery endpoint from .NET code. 
+You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically create authorize request URLs from .NET code. 
 
 ```cs
 var ru = new RequestUrl("https://demo.duendesoftware.com/connect/authorize");

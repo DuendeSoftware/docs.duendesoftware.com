@@ -11,7 +11,7 @@ The discovery endpoint is available via */.well-known/openid-configuration* rela
     https://demo.identityserver.io/.well-known/openid-configuration
 
 ## .NET client library
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically access the discovery endpoint from .NET code. 
+You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically create with the protocol endpoint from .NET code.
 
 ```cs
 var client = new HttpClient();
