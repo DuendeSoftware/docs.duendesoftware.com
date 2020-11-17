@@ -40,7 +40,7 @@ The client typically has to authenticate with the token endpoint using its clien
 See the [Client Credentials Quick Start]({{< ref "/quickstarts/1_client_credentials" >}}) for a sample how to use it. 
 
 ## Interactive Clients
-This is the most common type of client scenario: web applications, SPAs or native/mobile apps with interactive users.
+This is the most common type of client scenario: web applications, SPAs or native/mobile apps with interactive users. See the [Interactive Applications Quick Start]({{< ref "/quickstarts/2_interactive" >}}) for a sample how to use it. 
 
 {{% notice note %}}
 Feel free to skip to the summary, if you don't care about all the technical details.
