@@ -9,6 +9,3 @@ chapter = true
 
 {{%children style="h4" %}}
 
-* shared secret
-* private key jwt
-* x.509

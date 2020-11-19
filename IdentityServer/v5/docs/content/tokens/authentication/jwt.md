@@ -37,6 +37,10 @@ The default default private key JWT secret validator expects either a base64 enc
         AllowedScopes = { "api1", "api2" }
     };
 
+{{% notice note %}}
+You can share the same key for client authentication and [signed authorize requests]({{< ref "/advanced/jar" >}}).
+{{% /notice %}}
+
 ## Authentication using a private key JWT
 On the client side the, the caller must first generate the JWT, and then send it on the *assertion* body field:
 
@@ -111,4 +115,51 @@ static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential
 }
 ```
 
-todo: add info on MVC client
+### Using ASP.NET Core
+The OpenID Connect authentication handler in ASP.NET Core allows for replacing a static client secret with a dynamically created client assertion.
+
+This is accomplished by handling the various events on the handler. We recommend to encapsulate the event handler in a separate type. This makes it easier to consume services from DI:
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    // some details omitted
+    services.AddTransient<OidcEvents>();
+
+    services.AddAuthentication(options =>
+        .AddOpenIdConnect("oidc", options =>
+        {
+            options.Authority = Constants.Authority;
+
+            // no static client secret        
+            options.ClientId = "mvc.jar.jwt";
+
+            // specifies type that handles events
+            options.EventsType = typeof(OidcEvents);        
+        }));
+    }
+```
+
+In your event handler you can inject code before the handler redeems the code:
+
+```cs
+public class OidcEvents : OpenIdConnectEvents
+{
+    private readonly AssertionService _assertionService;
+
+    public OidcEvents(AssertionService assertionService)
+    {
+        _assertionService = assertionService;
+    }
+    
+    public override Task AuthorizationCodeReceived(AuthorizationCodeReceivedContext context)
+    {
+        context.TokenEndpointRequest.ClientAssertionType = OidcConstants.ClientAssertionTypes.JwtBearer;
+        context.TokenEndpointRequest.ClientAssertion = _assertionService.CreateClientToken();
+
+        return Task.CompletedTask;
+    }
+}
+```
+
+The assertion service would be a helper to create the JWT as shown above in the *CreateClientToken* method.
