@@ -63,7 +63,7 @@ Duende IdentityServer needs some signing key material to sign tokens.
 This key material either comes from the built-in automatic key management feature (todo link) or can be configured statically.
 
 {{% notice note %}}
-It is recommended to use the automatic key management, this section covers the extensions methods for the static configuration.
+It is recommended to use the [automatic key management]({{< ref "/basics/keys" >}}), this section covers the extensions methods for the static configuration.
 {{% /notice %}}
 
 Duende IdentityServer supports X.509 certificates (both raw files and a reference to the certificate store), 

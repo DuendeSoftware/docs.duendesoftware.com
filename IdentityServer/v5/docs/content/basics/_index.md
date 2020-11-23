@@ -11,6 +11,4 @@ chapter = true
 
 ## todo
 
-
 * adding UI
-* key management?

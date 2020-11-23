@@ -47,6 +47,9 @@ Top-level settings.
     The newer JWT for OAuth profile specifies a space delimited string instead.
     The behavior can be toggled here (defaults to *false* for backwards compatibility).
 
+## Key management
+TODO
+
 ## Endpoints
 Allows enabling/disabling individual endpoints, e.g. token, authorize, userinfo etc.
 
