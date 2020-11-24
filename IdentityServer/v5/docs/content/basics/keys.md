@@ -44,7 +44,7 @@ var builder = services.AddIdentityServer(options =>
 If no specific signing algorithms are configured, key management will auto-maintain an RSA key for the RS256 signing algorithm. You can specify multiple keys, algorithm, and if those keys should additionally get wrapped into an X.509 certificate (sometime a requirement for SAML-based clients).
 
 ```cs
-options.KeyManagement.AllowedSigningAlgorithms = new[]
+options.KeyManagement.SigningAlgorithms = new[]
 {
     // RS256 for older clients (with additional X.509 wrapping)
     new SigningAlgorithmOptions(SecurityAlgorithms.RsaSha256) {  UseX509Certificate = true },
