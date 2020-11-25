@@ -1,7 +1,7 @@
 ---
 title: "Application types"
 date: 2020-09-10T08:22:12+02:00
-weight: 40
+weight: 35
 ---
 
 The OpenID Connect and OAuth 2.0 specifications define so-called grant types (often also called flows - or protocol flows).

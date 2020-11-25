@@ -1,17 +1,20 @@
 +++
-title = "Data Management and Persistence"
+title = "Data Stores and Persistence"
 date = 2020-09-10T08:20:20+02:00
 weight = 80
 chapter = true
 +++
 
-# Data Management and Persistence
+# Data Stores and Persistence
 
 {{%children style="h4" %}}
 
 ## todo 
 
 * Stores
+    * client
+    * resource
+    * keys
 * Caching
 * EF
 * Persisted Grants

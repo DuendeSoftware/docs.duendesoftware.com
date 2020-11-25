@@ -8,7 +8,3 @@ chapter = true
 # Basics
 
 {{%children style="h4" %}}
-
-## todo
-
-* adding UI

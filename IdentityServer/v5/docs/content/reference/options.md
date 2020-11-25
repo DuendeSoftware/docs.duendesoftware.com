@@ -48,7 +48,69 @@ Top-level settings.
     The behavior can be toggled here (defaults to *false* for backwards compatibility).
 
 ## Key management
-TODO
+Controls the automatic key management settings.
+
+* ***Enabled***
+
+    Specifies if key management should be enabled. Defaults to true.
+
+* ***SigningAlgorithms***
+
+    The signing algorithms allowed. 
+    If none are specified, then "RS256" will be used as the default.
+    The first in the collection will be used as the default. 
+
+* ***RotationInterval***
+
+    Age at which keys will no longer be used for signing, but will still be used in discovery for validation.
+    Defaults to 90 days.
+
+* ***PropagationTime***
+
+    Time expected to propagate new keys to all servers, and time expected all clients to refresh discovery.
+    Defaults to 14 days.
+
+* ***RetentionDuration***
+
+    Duration for keys to remain in discovery after rotation.
+    Defaults to 14 days.
+
+* ***DeleteRetiredKeys***
+
+    Automatically delete retired keys.
+    Defaults to true.
+        
+* ***KeyPath***
+
+    Path for storing keys when using the default file system store.
+    Defaults to the "keys" directory relative to the hosting application.
+
+* ***DataProtectKeys***
+
+    Automatically protect keys in the storage using data protection.
+    Defaults to true.
+
+* ***KeyCacheDuration***
+
+    When in normal operation, duration to cache keys from store.
+    Defaults to 24 hours.
+
+* ***InitializationDuration***
+
+    When no keys have been created yet, this is the window of time considered to be an initialization 
+    period to allow all servers to synchronize if the keys are being created for the first time.
+    Defaults to 5 minutes.
+
+* ***InitializationSynchronizationDelay***
+
+    Delay used when re-loading from the store when the initialization period. It allows
+    other servers more time to write new keys so other servers can include them.
+    Defaults to 5 seconds.
+
+* ***InitializationKeyCacheDuration***
+
+    Cache duration when within the initialization period.
+    Defaults to 1 minute.
 
 ## Endpoints
 Allows enabling/disabling individual endpoints, e.g. token, authorize, userinfo etc.
