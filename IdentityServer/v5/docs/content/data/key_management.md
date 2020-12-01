@@ -5,6 +5,7 @@ weight: 50
 ---
 
 The automatic key management feature in Duende IdentityServer requires a store to persist keys that are dynamically created.
+By default, the file system is used, but the storage of these keys is abstracted behind an extensibility point.
 This page describes the extensibility point that models the key management store, and is useful if you wish to implement your own storage.
 
 {{% notice note %}}
@@ -16,7 +17,7 @@ The *Duende.IdentityServer.Stores.ISigningKeyStore* models the storage of keys u
 
 * ***LoadKeysAsync***
     
-    Returns all the keys in storage as *IEnumerable<SerializedKey>*. 
+    Returns all the keys in storage as *IEnumerable< SerializedKey >*. 
 
 * ***StoreKeyAsync***
 
@@ -63,3 +64,16 @@ The *SerializedKey* is the model that contains the key data to persist. Its prop
     Indicates if data is protected.
 
 It is expected that the *Id* is the unique identifier for the key in the store. The *Data* property is the main payload of the key and contains a copy of all the other values. Some of the properties affect how the *Data* is processed (e.g. *DataProtected*), and the other properties are considered read-only and thus can't be changed to affect the behavior (e.g. changing the *Created* value will not affect the key lifetime, nor will changing *Algorithm* change which signing algorithm the key is used for).
+
+### Registering a custom signing key store
+
+To register a custom signing key store in the DI container, there is a *AddSigningKeyStore* helper on the *IIdentityServerBuilder*. 
+For example:
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer()
+        .AddSigningKeyStore<YourCustomStore>();
+}
+```
