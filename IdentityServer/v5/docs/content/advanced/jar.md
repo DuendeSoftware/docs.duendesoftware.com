@@ -9,6 +9,10 @@ TODO add content from training
 Instead of providing the parameters for an authorize request as individual query string key/value pairs, you can package them up in signed JWTs.
 This makes the parameters tamper proof and you can authenticate the client already on the front-channel.
 
+{{% notice note %}}
+See [here]({{< param samples_base >}}//Basics/MvcClientJarJwt) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
+{{% /notice %}}
+
 TODO: add language about OIDC vs JAR
 
 You can either transmit them by value or by reference to the authorize endpoint - see the `spec <https://openid.net/specs/openid-connect-core-1_0.html#JWTRequests>`_ for more details.

@@ -163,3 +163,4 @@ public class OidcEvents : OpenIdConnectEvents
 ```
 
 The assertion service would be a helper to create the JWT as shown above in the *CreateClientToken* method.
+See [here]({{< param samples_base >}}//Basics/MvcClientJarJwt) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.
