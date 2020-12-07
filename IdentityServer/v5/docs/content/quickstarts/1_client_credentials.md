@@ -24,7 +24,7 @@ The Duende IdentityServer templates for the dotnet CLI are a good starting point
 To install the templates open a console window and type the following command:
 
 ```
-dotnet new -i Duende.IdentityServer.Templates
+dotnet new --install Duende.IdentityServer.Templates::5.0.0-preview.2
 ```
 
 They will be used as a starting point for the various tutorials.
