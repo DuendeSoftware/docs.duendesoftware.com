@@ -115,7 +115,7 @@ static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential
 }
 ```
 
-See [here]({{< param samples_base >}}//Basics/JwtBasedClientAuthentication) for a sample for using JWT-based authentication.
+See [here]({{< param samples_base >}}//fundamentals/JwtBasedClientAuthentication) for a sample for using JWT-based authentication.
 
 ### Using ASP.NET Core
 The OpenID Connect authentication handler in ASP.NET Core allows for replacing a static client secret with a dynamically created client assertion.
@@ -165,4 +165,4 @@ public class OidcEvents : OpenIdConnectEvents
 ```
 
 The assertion service would be a helper to create the JWT as shown above in the *CreateClientToken* method.
-See [here]({{< param samples_base >}}//Basics/MvcClientJarJwt) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.
+See [here]({{< param samples_base >}}//fundamentals/MvcClientJarJwt) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.

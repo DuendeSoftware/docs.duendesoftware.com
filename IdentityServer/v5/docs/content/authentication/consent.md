@@ -10,7 +10,7 @@ During an authorization request, if user consent is required the browser will be
 You can configure the consent requirement per client. By default no consent is required, but this setting can be changed via the *RequireConsent* [setting]({{< ref "/reference/client#consent-screen" >}}).
 {{% /notice %}}
 
-Consent is used to allow an end user to grant a client access to [resources]({{< ref "/basics/resources" >}}).
+Consent is used to allow an end user to grant a client access to [resources]({{< ref "/fundamentals/resources" >}}).
 
 ## Consent Page
 In order for the user to grant consent, a consent page must be provided by the hosting application.

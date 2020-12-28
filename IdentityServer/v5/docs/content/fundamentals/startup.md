@@ -1,5 +1,5 @@
 ---
-title: "Adding DI and middleware to Startup"
+title: "Adding services and middleware to the ASP.NET Core host"
 date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---

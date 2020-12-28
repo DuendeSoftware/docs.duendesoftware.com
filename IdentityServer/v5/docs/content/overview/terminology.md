@@ -28,12 +28,12 @@ A typical implementation of Duende IdentityServer has a number of jobs and featu
 A user is a human that is using a registered client to access resources.
 
 ### Client
-A [client]({{< ref "/basics/clients" >}}) is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting an access token). A client must be first registered with your IdentityServer before it can request tokens.
+A [client]({{< ref "/fundamentals/clients" >}}) is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting an access token). A client must be first registered with your IdentityServer before it can request tokens.
 
 Examples for clients are web applications, native mobile or desktop applications, SPAs, server processes etc.
 
 ### Resources
-[Resources]({{< ref "/basics/resources" >}}) are something you want to protect with your IdentityServer - either identity data of your users, or APIs. 
+[Resources]({{< ref "/fundamentals/resources" >}}) are something you want to protect with your IdentityServer - either identity data of your users, or APIs. 
 
 Every resource has a unique name - and clients use this name to specify to which resources they want to get access to.
 

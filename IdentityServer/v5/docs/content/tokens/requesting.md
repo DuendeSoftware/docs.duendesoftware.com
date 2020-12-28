@@ -4,15 +4,15 @@ date: 2020-09-10T08:22:12+02:00
 weight: 2
 ---
 
-A typical architecture is composed of two [application types]({{< ref "/basics/application_types" >}}) - machine to machine calls and interactive applications.
+A typical architecture is composed of two [application types]({{< ref "/fundamentals/application_types" >}}) - machine to machine calls and interactive applications.
 
 ## Machine to Machine communication
 In this scenario a headless application with no interactive user (e.g. a server daemon, batch job etc.) wants to call an API.
 
 Prerequisites are:
 
-* define a [client]({{< ref "/basics/clients" >}}) for the *client credentials* grant type
-* define an [API scope]({{< ref "/basics/resources#apis" >}}) (and optionally a resource)
+* define a [client]({{< ref "/fundamentals/clients" >}}) for the *client credentials* grant type
+* define an [API scope]({{< ref "/fundamentals/resources#apis" >}}) (and optionally a resource)
 * grant the client access to the scope via the [*AllowedScopes*]({{< ref "/reference/client#basics" >}}) property
 
 According to the OAuth [specification](https://tools.ietf.org/html/rfc6749#section-4.4), you request a token by posting to the token endpoint:
@@ -122,9 +122,9 @@ In this scenario you typically use the authorization code flow which first invol
 
 Prerequisites are:
 
-* define a [client]({{< ref "/basics/clients" >}}) for the *authorization code* grant type
-* define an [identity]({{< ref "/basics/resources#identity-resources" >}}) resource, e.g. *openid*
-* define an [API scope]({{< ref "/basics/resources#apis" >}}) (and optionally a resource)
+* define a [client]({{< ref "/fundamentals/clients" >}}) for the *authorization code* grant type
+* define an [identity]({{< ref "/fundamentals/resources#identity-resources" >}}) resource, e.g. *openid*
+* define an [API scope]({{< ref "/fundamentals/resources#apis" >}}) (and optionally a resource)
 * grant the client access to both scopes via the [*AllowedScopes*]({{< ref "/reference/client#basics" >}}) property
 
 ### Front-channel

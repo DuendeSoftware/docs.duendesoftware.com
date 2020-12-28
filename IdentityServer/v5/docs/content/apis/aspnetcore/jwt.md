@@ -43,7 +43,7 @@ On .NET Core 3.1 you need to manually reference the [System.IdentityModel.Tokens
 Simply making sure that the token is coming from a trusted issuer is not good for most cases.
 In more complex systems, you will have multiple resources and multiple clients. Not every client might be authorized to access every resource.
 
-In OAuth there are two complementary mechanisms to embed more information about the "functionality" that the token is for - *audience* and *scope* (see [defining resources]({{< ref "/basics/resources" >}}) for more information).
+In OAuth there are two complementary mechanisms to embed more information about the "functionality" that the token is for - *audience* and *scope* (see [defining resources]({{< ref "/fundamentals/resources" >}}) for more information).
 
 ### Validation using Audience
 If you designed your APIs around the concept of [API resources]({{< ref "/reference/api_resource" >}}), your IdentityServer will emit the *aud* claim by default (*api1* in this example):

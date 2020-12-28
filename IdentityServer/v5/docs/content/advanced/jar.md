@@ -10,7 +10,7 @@ Instead of providing the parameters for an authorize request as individual query
 This makes the parameters tamper proof and you can authenticate the client already on the front-channel.
 
 {{% notice note %}}
-See [here]({{< param samples_base >}}//Basics/MvcClientJarJwt) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
+See [here]({{< param samples_base >}}//fundamentals/MvcClientJarJwt) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
 {{% /notice %}}
 
 TODO: add language about OIDC vs JAR
