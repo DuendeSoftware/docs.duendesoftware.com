@@ -7,7 +7,4 @@ chapter = true
 
 # Advanced Topics
 
-## todo
-
-* Token Exchange
-* multi-tenancy
+{{%children style="h4" %}}

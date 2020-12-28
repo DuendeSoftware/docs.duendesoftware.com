@@ -399,25 +399,16 @@ Make sure that you have configured your IdentityServer for the required signing 
 {{% /notice %}}
 
 ### Resource isolation
-OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view. This means that all the requested scope and audience combination get merged into a single access token. This has a couple of downsides, e.g.
-
-* tokens can become very powerful (and big)
-    * if such a token leaks, it allows access to multiple resources
-* resource within that single token might have conflicting settings
-    * e.g. the user claims or required signing algorithm
-* without sender-constraining a resource could potentially re-use (or abuse) a token to call another contained resource
-
-To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds an additional request parameter for the authorize and token endpoint called *resource*. This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single value only). TODO: see advanced/resource_isolation for more information.
-
-The *resource* parameter is optional by default, but you can enforce the usage of the resource indicator by setting the following option on the API resource:
+If you want to make sure that a certain API resource never shares access tokens with other resources and scopes, you can enforce usage of the *resource* parameter for that resource:
 
 ```cs
 var invoiceApi = new ApiResource("urn:invoice", "Invoice API")
     {
         Scopes = { "invoice.read", "invoice.pay", "manage", "enumerate" },
 
+        // require usage of resource parameter
         RequireResourceIndicator = true
     }
 ```
 
-This forces the client to explicitly specify the resource during the token request, and makes sure the access token for the invoice API is always separate from access tokens for other scopes or resources.
+See [here]({{< ref "/advanced/resource_isolation" >}}) for more information on resource isolation.
