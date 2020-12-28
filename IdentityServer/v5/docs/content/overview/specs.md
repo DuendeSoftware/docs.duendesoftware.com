@@ -30,5 +30,6 @@ Duende IdentityServer implements the following specifications:
 * OAuth 2.0 Device Authorization Grant ([RFC 8628](https://tools.ietf.org/html/rfc8628))
 * OAuth 2.0 Mutual TLS Client Authentication and Certificate-Bound Access Tokens ([RFC 8705](https://tools.ietf.org/html/rfc8705))
 * OAuth 2.0 Token Exchange ([RFC 8693](https://tools.ietf.org/html/rfc8693))
+* Resource Indicators for OAuth 2.0 ([RFC 8707](https://tools.ietf.org/html/rfc8707))
 * JWT Secured Authorization Request ([draft](https://tools.ietf.org/html/draft-ietf-oauth-jwsreq))
 * JWT Profile for OAuth 2.0 Access Tokens ([draft](https://tools.ietf.org/wg/oauth/draft-ietf-oauth-access-token-jwt/))

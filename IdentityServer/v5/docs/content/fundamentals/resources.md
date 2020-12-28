@@ -153,9 +153,16 @@ the value of that scope will be included in the resulting access token as a clai
 }
 ```
 
+{{% notice note %}}
+The format of the *scope* parameter can be controlled by the *EmitScopesAsSpaceDelimitedStringInJwt* setting on the options.
+Historically IdentityServer emitted scopes as an array, but you can switch to a space delimited string instead.
+{{% /notice %}}
+
 The consumer of the access token can use that data to make sure that the client is actually allowed to invoke the corresponding functionality. See the [APIs]({{< ref "/apis" >}}) section for more information on protecting APIs with access tokens.
 
-.. note:: Be aware, that scopes are purely for authorizing clients - not users. IOW - the *write* scope allows the client to invoke the functionality associated with that. Still that client can most probably only write the data the belongs to the current user. This additional user centric authorization is application logic and not covered by OAuth.
+{{% notice warning %}}
+Be aware, that scopes are purely for authorizing clients - not users. IOW - the *write* scope allows the client to invoke the functionality associated with that. Still that client can most probably only write the data the belongs to the current user. This additional user centric authorization is application logic and not covered by OAuth.
+{{% /notice %}}
 
 You can add more identity information about the user by deriving additional claims from the scope request. The following scope definition tells the configuration system,
 that when a *write* scope gets granted, the *user_level* claim should be added to the access token::
@@ -169,7 +176,7 @@ This will pass the *user_level* claim as a requested claim type to the profile s
 so that the consumer of the access token can use this data as input for authorization decisions or business logic.
 
 {{% notice note %}}
-When using the scope-only model, no aud (audience) claim will be added to the token, since this concept does not apply. If you need an aud claim, you can enable the *EmitStaticAudience* setting on the options. This will emit an aud claim in the *issuer_name/resources* format. If you need more control of the aud claim, use API resources.
+When using the scope-only model, no aud (audience) claim will be added to the token, since this concept does not apply. If you need an aud claim, you can enable the *EmitStaticAudienceClaim* setting on the options. This will emit an aud claim in the *issuer_name/resources* format. If you need more control of the aud claim, use API resources.
 {{% /notice %}}
 
 ### Parameterized Scopes
@@ -237,13 +244,11 @@ public class HostProfileService : IProfileService
 ```
 
 ## API Resources
-When the API surface gets larger, a flat list of scopes like the one used above might not be feasible.
+When the API/resource surface gets larger, a flat list of scopes like the one used above might become hard to  manage.
 
-You typically need to introduce some sort of namespacing to organize the scope names, and maybe you also want to group them together and 
-get some higher-level constructs like an *audience* claim in access tokens.
-You might also have scenarios, where multiple resources should support the same scope names, whereas sometime you explicitly want to isolate a scope to a certain resource.
+In Duende IdentityServer, the *ApiResource* class allows for some additional organization as well as grouping and isolation of scopes as well as providing some common settings.
 
-In IdentityServer, the *ApiResource* class allows some additional organization. Let's use the following scope definition:
+Let's use the following scope definition as an example:
 
 ```cs
 public static IEnumerable<ApiScope> GetApiScopes()
@@ -258,8 +263,9 @@ public static IEnumerable<ApiScope> GetApiScopes()
         new ApiScope(name: "customer.read",    displayName: "Reads you customers information."),
         new ApiScope(name: "customer.contact", displayName: "Allows contacting one of your customers."),
 
-        // shared scope
-        new ApiScope(name: "manage", displayName: "Provides administrative access to invoice and customer data.")
+        // shared scopes
+        new ApiScope(name: "manage",    displayName: "Provides administrative access.")
+        new ApiScope(name: "enumerate", displayName: "Allows enumerating data.")
     };
 }
 ```
@@ -273,12 +279,12 @@ public static readonly IEnumerable<ApiResource> GetApiResources()
     {
         new ApiResource("invoice", "Invoice API")
         {
-            Scopes = { "invoice.read", "invoice.pay", "manage" }
+            Scopes = { "invoice.read", "invoice.pay", "manage", "enumerate" }
         },
         
         new ApiResource("customer", "Customer API")
         {
-            Scopes = { "customer.read", "customer.contact", "manage" }
+            Scopes = { "customer.read", "customer.contact", "manage", "enumerate" }
         }
     };
 }
@@ -293,7 +299,7 @@ Using the API resource grouping gives you the following additional features
 
 Let's have a look at some example access tokens for the above resource configuration.
 
-**Client requests** invoice.read and invoice.pay:
+Client requests: **invoice.read** and **invoice.pay**:
 
 ```json
     {
@@ -308,7 +314,7 @@ Let's have a look at some example access tokens for the above resource configura
     }
 ```
 
-**Client requests** invoice.read and customer.read:
+Client requests: **invoice.read** and **customer.read**:
 
 ```json
     {
@@ -323,7 +329,7 @@ Let's have a look at some example access tokens for the above resource configura
     }
 ```
 
-**Client requests** manage:
+Client requests: **manage**:
 
 ```json
     {
@@ -337,3 +343,81 @@ Let's have a look at some example access tokens for the above resource configura
         "scope": "manage"
     }
 ```
+
+### Adding user claims
+You can specify that an access token for an API resource (regardless which scope is requested) should contain additional user claims, 
+
+```cs
+var customerResource = new ApiResource("customer", "Customer API")
+    {
+        Scopes = { "customer.read", "customer.contact", "manage", "enumerate" },
+        
+        // additional claims to put into access token
+        UserClaims =
+        {
+            "department_it",
+            "sales_region"
+        }
+    }
+```
+
+If a client would now request a scope belonging to the *customer* resource, the access token would contain the additional claims (if provided by your [profile service]({{< ref "/reference/profile_service" >}})).
+
+```json
+    {
+        "typ": "at+jwt"
+    }.
+    {
+        "client_id": "client",
+        "sub": "123",
+
+        "aud": [ "invoice", "customer" ],
+        "scope": "invoice.read customer.read",
+
+        "department_id": 5,
+        "sales_region": "south"
+    }
+```
+
+### Setting a signing algorithm
+Your APIs might have certain requirements for the cryptographic algorithm used to sign the access tokens for that resource.
+An example could be regulatory requirements, or that you are starting to migration your system to higher security algorithms.
+
+The following sample sets *PS256* as the required signing algorithm for the *invoices* API:
+
+```cs
+var invoiceApi = new ApiResource("invoice", "Invoice API")
+    {
+        Scopes = { "invoice.read", "invoice.pay", "manage", "enumerate" },
+
+        AllowedAccessTokenSigningAlgorithms = { SecurityAlgorithms.RsaSsaPssSha256 }
+    }
+```
+
+{{% notice note %}}
+Make sure that you have configured your IdentityServer for the required signing algorithm. See [here]({{< ref "keys" >}}) for more details.
+{{% /notice %}}
+
+### Resource isolation
+OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view. This means that all the requested scope and audience combination get merged into a single access token. This has a couple of downsides, e.g.
+
+* tokens can become very powerful (and big)
+    * if such a token leaks, it allows access to multiple resources
+* resource within that single token might have conflicting settings
+    * e.g. the user claims or required signing algorithm
+* without sender-constraining a resource could potentially re-use (or abuse) a token to call another contained resource
+
+To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds an additional request parameter for the authorize and token endpoint called *resource*. This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single value only). TODO: see advanced/resource_isolation for more information.
+
+The *resource* parameter is optional by default, but you can enforce the usage of the resource indicator by setting the following option on the API resource:
+
+```cs
+var invoiceApi = new ApiResource("urn:invoice", "Invoice API")
+    {
+        Scopes = { "invoice.read", "invoice.pay", "manage", "enumerate" },
+
+        RequireResourceIndicator = true
+    }
+```
+
+This forces the client to explicitly specify the resource during the token request, and makes sure the access token for the invoice API is always separate from access tokens for other scopes or resources.
