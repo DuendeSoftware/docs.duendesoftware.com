@@ -19,7 +19,7 @@ Every quickstart has a reference solution - you can find the code in the [sample
 The first thing you should do is install our templates:
 
 ```
-dotnet new --install Duende.IdentityServer.Templates::5.0.0-preview.2
+dotnet new --install Duende.IdentityServer.Templates::5.0.0-preview.3
 ```
 
 They will be used as a starting point for the various tutorials.
