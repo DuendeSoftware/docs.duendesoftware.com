@@ -126,7 +126,7 @@ public class DataController : ControllerBase
 {
     IAuthorizationService _authz;
 
-    public DataControler(IAuthorizationService authz)
+    public DataController(IAuthorizationService authz)
     {
         _authz = authz;
     }

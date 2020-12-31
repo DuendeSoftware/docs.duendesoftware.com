@@ -40,7 +40,7 @@ The *SerializedKey* is the model that contains the key data to persist. Its prop
 
 * ***Version*** (int)
 
-    Version number of seralized key.
+    Version number of serialized key.
 
 * ***Created*** (DateTime)
 

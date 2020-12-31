@@ -12,7 +12,7 @@ Duende IdentityServer has built-in support for various client credential types a
 All information in this section also applies to [API secrets]({{< ref "/reference/api_resource" >}}) for introspection.
 {{% /notice %}}
 
-**We recommend using asymmetric client credentials like the [*private key jwt*]({{< ref "/tokens/authentication/jwt" >}}) or [*Mututal TLS*]({{< ref "/tokens/authentication/tls" >}}) authentication method over shared secrets.**
+**We recommend using asymmetric client credentials like the [*private key jwt*]({{< ref "/tokens/authentication/jwt" >}}) or [*Mutual TLS*]({{< ref "/tokens/authentication/tls" >}}) authentication method over shared secrets.**
 
 ## Assigning secrets
 A client secret is abstracted by the *Secret* class. It provides properties for setting the value and type as well as a description and expiration date.

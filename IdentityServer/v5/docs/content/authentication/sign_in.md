@@ -56,7 +56,7 @@ When Duende IdentityServer receives a request at the authorization endpoint and 
 By default a path of */account/login* is used. You can change this value on the [options]({{< ref "/reference/options#userinteraction" >}}).
 
 The login page is the entry point into your custom login workflow. This might just involve simple username/password authentication, 
-but can have arbitrary complexity involving mutliple authentication factors, external authentication systems or custom user registration and provisioning.
+but can have arbitrary complexity involving multiple authentication factors, external authentication systems or custom user registration and provisioning.
 
 Duende IdentityServer will pass a *returnUrl* query parameter to the login page. Simply return to this URL once you are done with your custom workflow and IdentityServer will continue with the session management and protocol work.
 
