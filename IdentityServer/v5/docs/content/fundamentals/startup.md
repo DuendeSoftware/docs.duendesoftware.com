@@ -7,7 +7,7 @@ weight: 10
 You add the Duende IdentityServer engine to an ASP.NET application by adding the relevant services to the DI system and adding the middleware to the processing pipeline.
 
 ## DI system
-Yo add the necessary services to the  DI system by calling *AddIdentityServer* in your startup class:
+You add the necessary services to the  DI system by calling *AddIdentityServer* in your startup class:
 
 ```cs
 public void ConfigureServices(IServiceCollection services)
