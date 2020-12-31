@@ -105,7 +105,7 @@ The following are convenient to add additional features to your IdentityServer.
 
 * ***AddProfileService***
 
-    Adds an *[IProfileService]({{< ref "profile_service" >}})* implemenation.
+    Adds an *[IProfileService]({{< ref "profile_service" >}})* implementation.
     The default implementation (found in *DefaultProfileService*) relies upon the authentication cookie as the only source of claims for issuing in tokens.
 
 * ***AddAuthorizeInteractionResponseGenerator***

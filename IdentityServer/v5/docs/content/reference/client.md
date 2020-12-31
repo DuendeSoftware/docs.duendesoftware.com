@@ -41,7 +41,7 @@ public static IEnumerable<Client> Get()
             RedirectUris = { "https://myapp.com:/signin-oidc" },
             PostLogoutRedirectUris = { "https://myapp.com/signout-callback-oidc" },
 
-            BackChannelLogourUri = "https://myapp.com/backchannel-logout",
+            BackChannelLogoutUri = "https://myapp.com/backchannel-logout",
 
             AllowOfflineAccess = true,
             AllowedScopes = webScopes

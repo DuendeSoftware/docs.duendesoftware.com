@@ -170,7 +170,7 @@ If you want to take full control over the rendering of the discovery (and jwks) 
 
 ## Authentication
 
-Login/logout releated settings.
+Login/logout related settings.
 
 * ***CookieAuthenticationScheme***
     
