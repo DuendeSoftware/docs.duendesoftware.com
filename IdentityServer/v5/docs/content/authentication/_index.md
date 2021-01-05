@@ -9,8 +9,3 @@ chapter = true
 
 {{%children style="h4" %}}
 
-
-### todo
-
-* Windows Authentication using negotiate and http.sys
-* Windows-only / Windows token to JWT

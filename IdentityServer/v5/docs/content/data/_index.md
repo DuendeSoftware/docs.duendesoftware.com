@@ -8,13 +8,3 @@ chapter = true
 # Data Stores and Persistence
 
 {{%children style="h4" %}}
-
-## todo 
-
-* Stores
-    * client
-    * resource
-    * keys
-* Caching
-* EF
-* Persisted Grants

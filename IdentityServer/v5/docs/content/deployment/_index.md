@@ -6,12 +6,3 @@ chapter = true
 +++
 
 # Deployment
-
-## todo
-
-* data protection keys
-* data stores
-* key management
-* reverse proxies
-* integration with Azure
-* integration with AWS

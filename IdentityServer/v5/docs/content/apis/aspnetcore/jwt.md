@@ -6,8 +6,6 @@ weight: 10
 
 By default, Duende IdentityServer uses the JSON Web Token ([JWT](http://tools.ietf.org/html/rfc7519)) format for creating access tokens.
 
-**todo**: add general JWT information (payload, header, claims).
-
 Every relevant platform today has support for validating JWT tokens, a good list of JWT libraries can be found [here](https://jwt.io). On .NET, you typically use either the [ASP.NET Core](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer) or [Katana](https://www.nuget.org/packages/Microsoft.Owin.Security.Jwt) library.
 
 ## Validating a JWT token

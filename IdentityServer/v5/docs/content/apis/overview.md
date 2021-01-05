@@ -13,4 +13,5 @@ In the case of HTTP-APIs, the access token is typically sent on the Authorizatio
 ![](../images/authorization_header.png)
 
 
-todo: add jwt vs reference tokens content
+* todo: add jwt vs reference tokens content
+* todo: add general JWT information (payload, header, claims).
