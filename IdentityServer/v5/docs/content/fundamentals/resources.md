@@ -39,7 +39,7 @@ public static IEnumerable<IdentityResource> GetIdentityResources()
 }
 ```
 
-But since this is one of the standard scopes from the spec you can shorten that to::
+But since this is one of the standard scopes from the spec you can shorten that to:
 
 ```cs
 public static IEnumerable<IdentityResource> GetIdentityResources()
@@ -54,7 +54,7 @@ public static IEnumerable<IdentityResource> GetIdentityResources()
 See the [reference]({{< ref "/reference/identity_resource" >}}) section for more information on *IdentityResource*.
 {{% /notice %}}
 
-The following example shows a custom identity resource called *profile* that represents the display name, email address and website claim::
+The following example shows a custom identity resource called *profile* that represents the display name, email address and website claim:
 
 ```cs
 public static IEnumerable<IdentityResource> GetIdentityResources()
@@ -84,7 +84,7 @@ var client = new Client
 See the [reference]({{< ref "/reference/client" >}}) section for more information on the *Client* class.
 {{% /notice %}}
 
-The client can then request the resource using the scope parameter (other parameters omitted)::
+The client can then request the resource using the scope parameter (other parameters omitted):
 
     https://demo.duendesoftware.com/connect/authorize?client_id=client&scope=openid profile
 
@@ -139,7 +139,7 @@ var mobileApp = new Client
 
 ### Authorization based on Scopes
 When a client asks for a scope (and that scope is allowed via configuration and not denied via consent), 
-the value of that scope will be included in the resulting access token as a claim of type *scope* (for both JWTs and introspection), e.g.::
+the value of that scope will be included in the resulting access token as a claim of type *scope* (for both JWTs and introspection), e.g.:
 
 ```json
 {
@@ -161,11 +161,12 @@ Historically IdentityServer emitted scopes as an array, but you can switch to a 
 The consumer of the access token can use that data to make sure that the client is actually allowed to invoke the corresponding functionality. See the [APIs]({{< ref "/apis" >}}) section for more information on protecting APIs with access tokens.
 
 {{% notice warning %}}
-Be aware, that scopes are purely for authorizing clients - not users. IOW - the *write* scope allows the client to invoke the functionality associated with that. Still that client can most probably only write the data the belongs to the current user. This additional user centric authorization is application logic and not covered by OAuth.
+Be aware, that scopes are purely for authorizing clients, not users. In other words, the *write* scope allows the client to invoke the functionality associated with the scope and is unrelated to the user's permission to do so. This additional user centric authorization is application logic and not covered by OAuth, yet still possibly important to implement in your API.
 {{% /notice %}}
 
-You can add more identity information about the user by deriving additional claims from the scope request. The following scope definition tells the configuration system,
-that when a *write* scope gets granted, the *user_level* claim should be added to the access token::
+You can add more identity information about the user to the access token.
+The additional claims added are based on the scope requested. 
+The following scope definition tells the configuration system that when a *write* scope gets granted the *user_level* claim should be added to the access token:
 
     var writeScope = new ApiScope(
         name: "write",
@@ -176,7 +177,7 @@ This will pass the *user_level* claim as a requested claim type to the profile s
 so that the consumer of the access token can use this data as input for authorization decisions or business logic.
 
 {{% notice note %}}
-When using the scope-only model, no aud (audience) claim will be added to the token, since this concept does not apply. If you need an aud claim, you can enable the *EmitStaticAudienceClaim* setting on the options. This will emit an aud claim in the *issuer_name/resources* format. If you need more control of the aud claim, use API resources.
+When using the scope-only model, no aud (audience) claim will be added to the token since this concept does not apply. If you need an aud claim, you can enable the *EmitStaticAudienceClaim* setting on the options. This will emit an aud claim in the *issuer_name/resources* format. If you need more control of the aud claim, use API resources.
 {{% /notice %}}
 
 ### Parameterized Scopes
@@ -411,4 +412,4 @@ var invoiceApi = new ApiResource("urn:invoice", "Invoice API")
     }
 ```
 
-See [here]({{< ref "/advanced/resource_isolation" >}}) for more information on resource isolation.
+This will require the client to obtain an access token per API resource, rather than a single access token for all of them. See [here]({{< ref "/advanced/resource_isolation" >}}) for more information on resource isolation.

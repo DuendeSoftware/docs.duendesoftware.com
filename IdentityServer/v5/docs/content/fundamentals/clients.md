@@ -19,7 +19,7 @@ See the [application types]({{< ref "application_types" >}}) topic for more info
 {{% /notice %}}
 
 ## Defining a client for server to server communication
-In this scenario no interactive user is present - a service (aka client) wants to communicate with an API (aka scope):
+In this scenario no interactive user is present - a service (i.e. the client) wants to communicate with an API (i.e. the resource that supports the scope):
 
 ```cs
 public class Clients
