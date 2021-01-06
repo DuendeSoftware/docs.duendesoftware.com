@@ -21,7 +21,7 @@ This document will describe, at a high level, the request workflow and interacti
 
 Recall the diagram of an application hosting Duende IdentityServer and the user interface (indicated by "Your code"):
 
-![](../../overview/images/middleware.png)
+![foo='bar'](../../overview/images/middleware.png?height=500px)
 
 Requests from a client to log a user in are made to the authorize endpoint (not directly to the login page). This is the protocol endpoint the clients redirect a user to in order to request authentication.
 
@@ -29,7 +29,7 @@ When your IdentityServer receives an authorize request, it will inspect it for a
 
 If the user has never logged in there will be no cookie, and then the request to the authorize endpoint will result in a redirect to a login page that is expected to be co-hosted in the same running application as your IdentityServer. 
 
-![](../../authentication/images/signin_flow.png)
+![](../../authentication/images/signin_flow.png?height=500px)
 
 The login page (which is provided by the developer) will prompt the user to login using any mechanism desired (commonly using a password). 
 Once the user has provided valid credentials (as determined by your custom logic), then the login page will establish an authentication session for the user with a cookie that contains a claim (i.e. the *sub* claim) that uniquely identifies the user.
