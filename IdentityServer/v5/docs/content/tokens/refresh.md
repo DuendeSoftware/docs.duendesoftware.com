@@ -1,7 +1,7 @@
 ---
-title: "Refresh Tokens"
+title: "Refreshing a Token"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+weight: 20
 ---
 
 Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential flow.
@@ -9,7 +9,7 @@ Refresh tokens are supported for the following flows: authorization code, hybrid
 The clients needs to be explicitly authorized to request refresh tokens by setting *AllowOfflineAccess* property to *true*. See the [client reference]({{< ref "/reference/client#refresh-token" >}}) section for additional refresh token related settings.
 
 ## Requesting a refresh token
-You can request a refresh token by adding a scope called *offline_access* to the scope parameter list.
+You can request a refresh token by adding a scope called *offline_access* to the scope parameter list of the authorize request.
 
 ## Requesting an access token using a refresh token
 To get a new access token, you send the refresh token to the token endpoint.
@@ -63,7 +63,7 @@ Refresh tokens usually have a (much) longer lifetime than an access token. You c
 You can use the *AbsoluteRefreshTokenLifetime* and *SlidingRefreshTokenLifetime* client settings to fine tune the behavior.
 
 #### One-time Refresh Tokens
-Another option is rotating the refresh tokens on every usage. This also reduces the exposure, and has a higher chance to make older refresh tokens (e.g. exfiltrated from some storage mechanism or a network trace/log file) unusable.
+Another option is rotating the refresh tokens on every usage. This also reduces the exposure, and has a higher chance to make older refresh tokens (e.g. ex-filtrated from some storage mechanism or a network trace/log file) unusable.
 
 The downside of this approach is, that you might have more scenarios where a legitimate refresh token becomes unusable – e.g. due to network problems while refreshing them.
 

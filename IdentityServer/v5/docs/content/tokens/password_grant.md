@@ -1,15 +1,19 @@
 ---
-title: "Password Grant"
+title: "Issuing Tokens based on User Passwords"
 date: 2020-09-10T08:22:12+02:00
 weight: 30
 ---
 
-The *password* grant type is an OAuth 2.0 protocol flow for authenticating end-users at the token endpoint. It is designed for legacy applications (and will be removed in OAuth 2.1). It is generally recommended to use *authorization code* flow and the browser instead - but in certain situation it is not feasible to change existing applications.
+The *password* grant type is an OAuth 2.0 [protocol flow](https://tools.ietf.org/html/rfc6749#section-4.3) for authenticating end-users at the token endpoint. It is designed for legacy applications, and it is generally recommended to use a browser-based flow instead - but in certain situation it is not feasible to change existing applications.
+
+{{% notice note %}}
+The *password* grant type is deprecated per [OAuth 2.1](https://tools.ietf.org/wg/oauth/draft-ietf-oauth-v2-1/).
+{{% /notice %}}
 
 ## Requesting a token using Password grant
 First you need to add the *GrantType.Password* to the *AllowedGrantTypes* list of the client you want to use.
 
- Per [specification](https://tools.ietf.org/html/rfc6749#section-4.3) you post the user name & password to the token endpoint, to receive the typical token response:
+Then your client application would provide some means for the end-user to enter their credentials and post them to the token endpoint:
 
 ```
 POST /token HTTP/1.1
@@ -20,12 +24,12 @@ client_id=client&
 client_secret=secret
 
 grant_type=password&
-username=johndoe&
-password=A3ddj3w
+username=bob&
+password=password
 ```
 
 ### .NET client library
-On .NET you can use the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens, e.g.:
+On .NET you can use the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens using the *password* grant type, e.g.:
 
 ```cs
 using IdentityModel.Client;
@@ -41,12 +45,13 @@ var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
     Scope = "api1",
 
     UserName = "bob",
-    Password = "bob"
+    Password = "password"
 });
 ```
 
 ## Validating the token request
-By default, handling *password* grant requests is not supported. To add support for it you need to to implement and register an implementation of the *IResourceOwnerPasswordValidator* interface::
+Since this flow is not generally recommended, no standard implementation for validating the token request and user credentials is included.
+To add support for it you need to to implement and [register]({{< ref "/reference/di#additional-services" >}}) an implementation of the *IResourceOwnerPasswordValidator* interface::
 
 ```cs
 public interface IResourceOwnerPasswordValidator
@@ -59,6 +64,6 @@ public interface IResourceOwnerPasswordValidator
 }
 ```
 
-On the context you will find already parsed protocol parameters like *UserName* and *Password*, but also the raw request if you want to look at other input data.
+On the context, parsed protocol parameters like *UserName* and *Password*, but also the raw request can be found.
 
-Your job is then to implement the password validation and set the *Result* on the context accordingly (see the [grant validation result]({{< ref "/reference/grant_validation_result" >}}) reference).
+It is the job of the validator to implement the password validation and set the *Result* property on the context accordingly (see the [Grant Validation Result]({{< ref "/reference/grant_validation_result" >}}) reference).

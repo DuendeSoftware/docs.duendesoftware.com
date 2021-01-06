@@ -1,7 +1,7 @@
 ---
 title: "Requesting a Token"
 date: 2020-09-10T08:22:12+02:00
-weight: 2
+weight: 10
 ---
 
 A typical architecture is composed of two application (aka client) [types]({{< ref "/overview/terminology#client" >}}) - machine to machine calls and interactive applications.
