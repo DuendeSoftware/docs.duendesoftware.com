@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 30
 ---
 
-Clients represent applications that can request tokens from your IdentityServer.
+[Clients]({{< ref "/overview/terminology#client" >}}) represent applications that can request tokens from your IdentityServer.
 
 The details vary, but you typically define the following common settings for a client:
 
@@ -13,10 +13,6 @@ The details vary, but you typically define the following common settings for a c
 * the allowed interactions with the token service (called a grant type)
 * a network location where identity and/or access token gets sent to (called a redirect URI)
 * a list of scopes (aka resources) the client is allowed to access
-
-{{% notice note %}}
-See the [application types]({{< ref "application_types" >}}) topic for more information on choosing the protocol flavour for your client.
-{{% /notice %}}
 
 ## Defining a client for server to server communication
 In this scenario no interactive user is present - a service (i.e. the client) wants to communicate with an API (i.e. the resource that supports the scope):

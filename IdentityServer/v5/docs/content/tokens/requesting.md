@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 2
 ---
 
-A typical architecture is composed of two [application types]({{< ref "/fundamentals/application_types" >}}) - machine to machine calls and interactive applications.
+A typical architecture is composed of two application (aka client) [types]({{< ref "/overview/terminology#client" >}}) - machine to machine calls and interactive applications.
 
 ## Machine to Machine communication
 In this scenario a headless application with no interactive user (e.g. a server daemon, batch job etc.) wants to call an API.
