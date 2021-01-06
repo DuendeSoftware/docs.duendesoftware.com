@@ -1,7 +1,7 @@
 ---
 title: "Reference Tokens"
 date: 2020-09-10T08:22:12+02:00
-weight: 15
+weight: 100
 ---
 
 Access tokens can come in two flavours - self-contained or reference.

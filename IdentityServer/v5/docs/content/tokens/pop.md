@@ -1,7 +1,7 @@
 ---
 title: "Proof-of-Possession Access Tokens"
 date: 2020-09-10T08:22:12+02:00
-weight: 20
+weight: 100
 ---
 
 By default, OAuth access tokens are so called *bearer* tokens. This means they are not bound to a client and anybody who possess the token can use it (compare to cash). 
