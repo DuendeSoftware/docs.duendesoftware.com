@@ -4,11 +4,11 @@ date: 2020-09-10T08:22:12+02:00
 weight: 50
 ---
 
-Duende IdentityServer is middleware that implements the OpenID Connect and OAuth2 security protocols.
-It does not manage users, or provide a user database, or provide any built-in means for users to create accounts, reset passwords, or login.
+Duende IdentityServer is middleware that implements the OpenID Connect and OAuth security protocols.
+It does not manage users, or provide a user database, or provide any built-in mechanism for users to create accounts, reset passwords, or login.
 
 This design requires the developer using Duende IdentityServer to "bring" their users to the implementation.
-This means the developer using Duende IdentityServer is expected to provide a means for those users to login (typically via a login page), and then based on that login, Duende IdentityServer can issue tokens for those users.
+This means when building your IdentityServer, your are expected to provide a means for those users to login (typically via a login page), and then based on that login, your IdentityServer can issue tokens for those users.
 
 {{% notice note %}}
 This design is a major feature of Duende IdentityServer; the ability to customize the login workflow (password, MFA, etc.), use any user credentials system or database (greenfield or legacy), and/or used federated logins from a variety of sources (social or enterprise).
@@ -25,16 +25,16 @@ Recall the diagram of an application hosting Duende IdentityServer and the user 
 
 Requests from a client to log a user in are made to the authorize endpoint (not directly to the login page). This is the protocol endpoint the clients redirect a user to in order to request authentication.
 
-When Duende IdentityServer receives an authorize request, it will inspect it for a current authentication session for a user. This authentication session is based on ASP.NET Core's authentication system and is ultimately determined by a cookie issued from your login page. 
+When your IdentityServer receives an authorize request, it will inspect it for a current authentication session for a user. This authentication session is based on ASP.NET Core's authentication system and is ultimately determined by a cookie issued from your login page. 
 
-If the user has never logged in there will be no cookie, and then the request to the authorize endpoint will result in a redirect to a login page that is expected to be co-hosted in the same running host as Duende IdentityServer. 
+If the user has never logged in there will be no cookie, and then the request to the authorize endpoint will result in a redirect to a login page that is expected to be co-hosted in the same running application as your IdentityServer. 
 
 ![](../../authentication/images/signin_flow.png)
 
-The login page (which is provided by the developer) will prompt the user to login using any mechanism desired (typically using a password). 
+The login page (which is provided by the developer) will prompt the user to login using any mechanism desired (commonly using a password). 
 Once the user has provided valid credentials (as determined by your custom logic), then the login page will establish an authentication session for the user with a cookie that contains a claim (i.e. the *sub* claim) that uniquely identifies the user.
 
-A *returnUrl* parameter is passed to this login page so that once the interactive login workflow is complete, the login page can redirect the user back into the Duende IdentityServer endpoint to complete the original authorization request from the client (but this time with an authenticated session for the user).
+A *returnUrl* parameter is passed to this login page so that once the interactive login workflow is complete, the login page can redirect the user back into the your IdentityServer endpoint to complete the original authorization request from the client (but this time with an authenticated session for the user).
 
 The below code shows a sample Razor Page that could act as a login page:
 
@@ -105,5 +105,15 @@ namespace Sample.Pages.Account
 The above Razor page is expected to be located in the project at the path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the browser at the "/Account/Login" path.
 {{% /notice %}}
 
-The above sample hard codes the logic to validate the user's credentials. Of course, this is where the developer using Duende IdentityServer could implement this login logic in any way they see fit.
+The above sample hard codes the logic to validate the user's credentials. Of course, this is where your IdentityServer could implement this login logic in any way they see fit.
+
+## More details and other UI pages
+
+There are other pages that Duende IdentityServer expects (e.g. logout, error, consent), and you could implement your customer ones (e.g. register, forgot password, etc.). 
+
+Additionally during any of the user workflows, your code might need to use information about the original authorize request to perform logic to control the user experience. 
+
+There is more detail about building the login page, and coverage of these additional topics in the 
+[User Authentication and Session Management]({{< ref "/authentication" >}}) 
+section of this documentation.
 
