@@ -30,7 +30,19 @@ A user is a human that is using a registered client to access resources.
 ### Client
 A [client]({{< ref "/fundamentals/clients" >}}) is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting an access token). A client must be first registered with your IdentityServer before it can request tokens.
 
-Examples for clients are web applications, native mobile or desktop applications, SPAs, server processes etc.
+While there are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server processes etc., they can all be put into two high-level categories.
+
+#### Machine to Machine Communication
+In this scenario two machines talk to each other (e.g. background processes, batch jobs, server daemons), and there is no interactive user present. To authorize this communication, your IdentityServer issues a token to the caller.
+
+In protocol terms, this scenario is called *Client Credentials Flow* and you can learn more about it in the issuing tokens [section]({{< ref "/tokens/requesting#machine-to-machine-communication" >}}) as well as in our [Quickstart]({{< ref "/quickstarts/1_client_credentials" >}}).
+
+#### Interactive Applications
+This is the most common type of client scenario: web applications, SPAs or native/mobile apps with interactive users.  This scenario typically involves a browser for user interaction (e.g. for authentication or consent). 
+
+In protocol terms, this scenario is called *Authorization Code Flow* and you can learn more about it in the issuing tokens [section]({{< ref "/tokens/requesting#interactive-applications" >}}) as well as in our [Quickstart]({{< ref "/quickstarts/2_interactive" >}}).
+
+See the [Interactive Applications Quick Start]({{< ref "/quickstarts/2_interactive" >}}) for a sample how to use it. 
 
 ### Resources
 [Resources]({{< ref "/fundamentals/resources" >}}) are something you want to protect with your IdentityServer - either identity data of your users, or APIs. 
@@ -43,7 +55,7 @@ Every resource has a unique name - and clients use this name to specify to which
 
 ### Identity Token
 An identity token represents the outcome of an authentication process. It contains at a bare minimum an identifier for the user 
-(called the `sub` aka subject claim) and information about how and when the user authenticated.  It can contain additional identity data.
+(called the *sub* aka subject claim) and information about how and when the user authenticated.  It can contain additional identity data.
 
 ### Access Token
 An access token allows access to an API resource. Clients request access tokens and forward them to the API. 
