@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---
 
-An identity resource is a named group of claims that can be requested using the *scope* parameter.
+An identity resource is a named group of claims about a user that can be requested using the *scope* parameter.
 
 The OpenID Connect specification [suggests](https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims) a couple of standard 
 scope name to claim type mappings that might be useful to you for inspiration, but you can freely design them yourself.
