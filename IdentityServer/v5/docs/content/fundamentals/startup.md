@@ -1,10 +1,14 @@
 ---
-title: "Adding services and middleware to the ASP.NET Core host"
+title: "Adding Duende IdentityServer to your ASP.NET Core host"
 date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---
 
-You add the Duende IdentityServer engine to an ASP.NET application by adding the relevant services to the DI system and adding the middleware to the processing pipeline.
+You add the Duende IdentityServer engine to any ASP.NET Core application by adding the relevant services to the DI system and adding the middleware to the processing pipeline.
+
+{{% notice note %}}
+While technically you could share the ASP.NET Core host between Duende IdentityServer, clients or APIs. We recommend putting your IdentityServer into a separate application.
+{{% /notice %}}
 
 ## DI system
 You add the necessary services to the  DI system by calling *AddIdentityServer* in your startup class:
