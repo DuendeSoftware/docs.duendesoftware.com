@@ -12,7 +12,7 @@ Duende IdentityServer has built-in support for various client credential types a
 All information in this section also applies to [API secrets]({{< ref "/reference/api_resource" >}}) for introspection.
 {{% /notice %}}
 
-**We recommend using asymmetric client credentials like the [*private key jwt*]({{< ref "/tokens/authentication/jwt" >}}) or [*Mutual TLS*]({{< ref "/tokens/authentication/tls" >}}) authentication method over shared secrets.**
+**We recommend using asymmetric client credentials like the [*private key jwt*]({{< ref "/tokens/authentication/jwt" >}}) or [*Mutual TLS*]({{< ref "/tokens/authentication/mtls" >}}) authentication method over shared secrets.**
 
 ## Assigning secrets
 A client secret is abstracted by the *Secret* class. It provides properties for setting the value and type as well as a description and expiration date.
@@ -40,27 +40,7 @@ client.ClientSecrets = new[] { primary, secondary };
 ## Secret parsing
 During request processing, the secret must be somehow extracted from the incoming request. The various specs describe a couple of options, e.g. as part of the authorization header or the body payload.
 
-It is the job of implementations of the *ISecretParser* interface to accomplish this.
-
-```cs
-public interface ISecretParser
-{
-    /// <summary>
-    /// Tries to find a secret on the context that can be used for authentication
-    /// </summary>
-    /// <param name="context">The HTTP context.</param>
-    /// <returns>A parsed secret</returns>
-    Task<ParsedSecret> ParseAsync(HttpContext context);
-
-    /// <summary>
-    /// Returns the authentication method name that this parser implements
-    /// </summary>
-    /// <value>The authentication method.</value>
-    string AuthenticationMethod { get; }
-}
-```
-
-You can add secret parsers by calling the *AddSecretParser()* DI extension method.
+It is the job of implementations of the [ISecretParser]({{< ref "/reference/secrets#duendeidentityservervalidationisecretparser" >}}) interface to accomplish this. You can add secret parsers by calling the *AddSecretParser()* DI extension method.
 
 The following secret parsers are part of Duende IdentityServer:
 
@@ -86,20 +66,8 @@ The following secret parsers are part of Duende IdentityServer:
 
 
 ## Secret validation
-It is the job of implementations of the *ISecretValidator* interface to validate the extracted credentials.
+It is the job of implementations of the [ISecretValidator]({{< ref "/reference/secrets#duendeidentityservervalidationisecretvalidator" >}}) interface to validate the extracted credentials.
 
-```cs
-public interface ISecretValidator
-{
-    /// <summary>Validates a secret</summary>
-    /// <param name="secrets">The stored secrets.</param>
-    /// <param name="parsedSecret">The received secret.</param>
-    /// <returns>A validation result</returns>
-    Task<SecretValidationResult> ValidateAsync(
-      IEnumerable<Secret> secrets,
-      ParsedSecret parsedSecret);
-}
-```
 You can add secret parsers by calling the *AddSecretValidator()* DI extension method.
 
 The following secret validators are part of Duende IdentityServer:
