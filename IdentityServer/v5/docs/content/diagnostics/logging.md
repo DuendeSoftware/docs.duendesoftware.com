@@ -1,7 +1,7 @@
 ---
 title: "Logging"
 date: 2020-09-10T08:22:12+02:00
-weight: 60
+weight: 10
 ---
 
 Duende IdentityServer uses the standard logging facilities provided by ASP.NET Core. You don't need to do any extra configuration.
@@ -35,7 +35,7 @@ We are roughly following the Microsoft guidelines for usage of log levels:
     For failures that require immediate attention. Examples: missing store implementation, invalid key material...
 
 {{% notice note %}}
-In production, logging might produce too much data. It is recommended you either turn it off, or default to the *Warning* level. Have a look at [events]({{< ref "/advanced/events" >}}) for more high-level production instrumentation.
+In production, logging might produce too much data. It is recommended you either turn it off, or default to the *Warning* level. Have a look at [events]({{< ref "/diagnostics/events" >}}) for more high-level production instrumentation.
 {{% /notice %}}
 
 ### Setup for Serilog
