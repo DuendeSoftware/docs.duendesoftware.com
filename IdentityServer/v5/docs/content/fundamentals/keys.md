@@ -1,7 +1,7 @@
 ---
 title: "Key Management"
 date: 2020-09-10T08:22:12+02:00
-weight: 45
+weight: 50
 ---
 
 You need key material to sign issued tokens, e.g. identity tokens, JWT access tokens, logout tokens etc.

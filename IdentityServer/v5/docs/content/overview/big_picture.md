@@ -63,7 +63,7 @@ Duende IdentityServer is middleware that adds the spec compliant OpenID Connect 
 Typically, you build (or re-use) an application that contains a login and logout page (and maybe consent - depending on your needs),
 and the IdentityServer middleware adds the necessary protocol heads to it, so that client applications can talk to it using those standard protocols.
 
-![](../images/middleware.png?height=500px)
+![](../images/middleware.png?height=30pc)
 
 The hosting application can be as complex as you want, but we typically recommend to keep the attack surface as small as possible by including
 authentication/federation related UI only.
