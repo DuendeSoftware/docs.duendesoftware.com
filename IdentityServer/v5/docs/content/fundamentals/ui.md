@@ -105,11 +105,11 @@ namespace Sample.Pages.Account
 The above Razor page is expected to be located in the project at the path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the browser at the "/Account/Login" path.
 {{% /notice %}}
 
-The above sample hard codes the logic to validate the user's credentials. Of course, this is where your IdentityServer could implement this login logic in any way they see fit.
+The above sample hard codes the logic to validate the user's credentials. Of course, this is where your IdentityServer could implement this login logic in any way you see fit.
 
 ## More details and other UI pages
 
-There are other pages that Duende IdentityServer expects (e.g. logout, error, consent), and you could implement your customer ones (e.g. register, forgot password, etc.). 
+There are other pages that Duende IdentityServer expects (e.g. logout, error, consent), and you could implement custom pages (e.g. register, forgot password, etc.). 
 
 Additionally during any of the user workflows, your code might need to use information about the original authorize request to perform logic to control the user experience. 
 
