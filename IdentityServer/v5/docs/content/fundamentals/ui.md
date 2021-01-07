@@ -1,119 +1,45 @@
 ---
-title: "UI"
+title: "Users and User Interaction"
 date: 2020-09-10T08:22:12+02:00
 weight: 40
 ---
 
-Duende IdentityServer is middleware that implements the OpenID Connect and OAuth security protocols.
-It does not manage users, or provide a user database, or provide any built-in mechanism for users to create accounts, reset passwords, or login.
+One of the main goals of building a single sign-on (SSO) server is to allow users to login.
+The standard mechanism to allow those users to login is for the client application to use a web browser.
+This is obvious is the client is already a web application, but it's also the recommended practice for native and mobile applications.
 
-This design requires the developer using Duende IdentityServer to "bring" their users to the implementation.
-This means when building your IdentityServer, your are expected to provide a means for those users to login (typically via a login page), and then based on that login, your IdentityServer can issue tokens for those users.
+When a user must login, the client application will redirect the user to the protocol endpoint in the SSO server to request authentication.
+This protocol endpoint is called the **authorization endpoint** and expects requests to be made from a browser with an interactive user.
+As part of the authorize request, the SSO server will typically display a login page for the user to enter their credentials.
+Once the user has authenticated, the SSO server will redirect the user back to the application with the protocol response.
 
 {{% notice note %}}
-This design is a major feature of Duende IdentityServer; the ability to customize the login workflow (password, MFA, etc.), use any user credentials system or database (greenfield or legacy), and/or used federated logins from a variety of sources (social or enterprise).
-This allows the developer to have control over the entire user experience while allowing Duende IdentityServer to provide the security protocol, which of course enables single sign-on (SSO) for users.
+The design of Duende IdentityServer allows you to build any custom UI workflow needed to satisfy your requirements for users.
+This means you have the ability to customize any UI workflow (registration, login, password reset, etc.), support any credential type (password, MFA, etc.), use any user credentials system or database (greenfield or legacy), and/or use federated logins from any provider (social or enterprise).
+You have the ability to control the entire user experience while allowing Duende IdentityServer to provide the implementation of the security protocol (OpenID Connect and OAuth2), which is of course the enabler for single sign-on.
 {{% /notice %}}
 
-This document will describe, at a high level, the request workflow and interaction between the Duende IdentityServer middleware endpoints (specifically the authorization endpoint) and a simple login page.
+This diagram shows the relationship of your custom UI pages and the IdentityServer middleware in your IdentityServer host application:
 
-## Login workflow
+![](../../overview/images/middleware.png?height=500px)
 
-Recall the diagram of an application hosting Duende IdentityServer and the user interface (indicated by "Your code"):
-
-![foo='bar'](../../overview/images/middleware.png?height=500px)
-
-Requests from a client to log a user in are made to the authorize endpoint (not directly to the login page). This is the protocol endpoint the clients redirect a user to in order to request authentication.
+## Login Workflow
 
 When your IdentityServer receives an authorize request, it will inspect it for a current authentication session for a user. This authentication session is based on ASP.NET Core's authentication system and is ultimately determined by a cookie issued from your login page. 
 
-If the user has never logged in there will be no cookie, and then the request to the authorize endpoint will result in a redirect to a login page that is expected to be co-hosted in the same running application as your IdentityServer. 
+If the user has never logged in there will be no cookie, and then the request to the authorize endpoint will result in a redirect to your login page. This is where your custom workflow takes over to get the user logged in.
 
 ![](../../authentication/images/signin_flow.png?height=500px)
 
-The login page (which is provided by the developer) will prompt the user to login using any mechanism desired (commonly using a password). 
-Once the user has provided valid credentials (as determined by your custom logic), then the login page will establish an authentication session for the user with a cookie that contains a claim (i.e. the *sub* claim) that uniquely identifies the user.
-
-A *returnUrl* parameter is passed to this login page so that once the interactive login workflow is complete, the login page can redirect the user back into the your IdentityServer endpoint to complete the original authorization request from the client (but this time with an authenticated session for the user).
-
-The below code shows a sample Razor Page that could act as a login page:
-
-```html
-@page
-@model Sample.Pages.Account.LoginModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
-<div asp-validation-summary="All"></div>
-
-<form method="post">
-    <input type="hidden" asp-for="ReturnUrl" />
-
-    <div>
-        <label asp-for="Username">Username</label>
-        <input asp-for="Username" autofocus>
-    </div>
-    <div>
-        <label asp-for="Password">Password</label>
-        <input type="password" asp-for="Password" autocomplete="off">
-    </div>
-
-    <button type="submit">Login</button>
-</form>
-```
-
-The below code shows the code behind for the login Razor Page:
-
-```cs
-namespace Sample.Pages.Account
-{
-    public class LoginModel : PageModel
-    {
-        [BindProperty(SupportsGet = true)]
-        public string ReturnUrl { get; set; }
-        [BindProperty]
-        public string Username { get; set; }
-        [BindProperty]
-        public string Password { get; set; }
-        
-        public async Task<IActionResult> OnPost()
-        {
-            if (Username == "alice" && Password == "password")
-            {
-                var claims = new Claim[] {
-                    new Claim("sub", "unique_id_for_alice")
-                };
-                var identity = new ClaimsIdentity(claims, "pwd");
-                var user = new ClaimsPrincipal(identity);
-                
-                await HttpContext.SignInAsync(user);
-
-                if (Url.IsLocalUrl(ReturnUrl))
-                {
-                    return Redirect(ReturnUrl);
-                }
-            }
-
-            ModelState.AddModelError("", "Invalid username or password");
-
-            return Page();
-        }
-    }
-}
-```
-
-{{% notice note %}}
-The above Razor page is expected to be located in the project at the path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the browser at the "/Account/Login" path.
-{{% /notice %}}
-
-The above sample hard codes the logic to validate the user's credentials. Of course, this is where your IdentityServer could implement this login logic in any way you see fit.
+Once the login page has finished logging in the user with the ASP.NET Core authentication system, it will redirect the user back to the authorize endpoint.
+This request to the authorize endpoint will have an authenticated session for the user, and it can then create the protocol response and redirect to the client application.
 
 ## More details and other UI pages
 
-There are other pages that Duende IdentityServer expects (e.g. logout, error, consent), and you could implement custom pages (e.g. register, forgot password, etc.). 
+In addition to the login page, there are other pages that Duende IdentityServer expects (e.g. logout, error, consent), and you could implement custom pages (e.g. register, forgot password, etc.). 
 
-Additionally during any of the user workflows, your code might need to use information about the original authorize request to perform logic to control the user experience. 
+Additionally, during any of the user workflows your code might need to use information about the original authorize request to perform logic to customize the user experience.
 
-There is more detail about building the login page, and coverage of these additional topics in the 
-[User Authentication and Session Management]({{< ref "/authentication" >}}) 
+There are more details about building the login page, and coverage of these additional topics in the 
+[Users and UI]({{< ref "/authentication" >}}) 
 section of this documentation.
-
