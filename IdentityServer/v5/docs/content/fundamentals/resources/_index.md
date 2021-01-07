@@ -7,4 +7,6 @@ chapter = true
 
 # Resources
 
+The ultimate job of Duende IdentityServer is to control access to resources.
+
 {{%children style="h4" %}}
