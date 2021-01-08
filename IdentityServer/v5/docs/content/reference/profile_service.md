@@ -6,34 +6,30 @@ weight: 40
 
 #### Duende.IdentityServer.Services.IProfileService
 
-Often IdentityServer requires identity information about users when creating tokens or when handling requests to the userinfo or introspection endpoints.
-By default, IdentityServer only has the claims from the session to draw upon for this identity data.
-
-It is impractical to put all of the possible claims needed for users into the session, so IdentityServer defines an extensibility point for allowing claims to be dynamically loaded as needed for a user.
-
-This extensibility point is the *IProfileService* and it is common for a developer to implement this interface to access a custom database or API that contains the identity data for users.
+Encapsulates retrieval of user claims from a data source of your choice.
 
 ```cs
-public class SampleProfileService : IProfileService
+/// <summary>
+/// This interface allows IdentityServer to connect to your user and profile store.
+/// </summary>
+public interface IProfileService
 {
-    public virtual Task GetProfileDataAsync(ProfileDataRequestContext context)
-    {
-        context.LogProfileRequest(Logger);
-        context.AddRequestedClaims(context.Subject.Claims);
-        context.LogIssuedClaims(Logger);
+    /// <summary>
+    /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns></returns>
+    Task GetProfileDataAsync(ProfileDataRequestContext context);
 
-        return Task.CompletedTask;
-    }
-
-    public virtual Task IsActiveAsync(IsActiveContext context)
-    {
-        context.IsActive = true;
-        return Task.CompletedTask;
-    }
+    /// <summary>
+    /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. if the user's account has been deactivated since they logged in).
+    /// (e.g. during token issuance or validation).
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns></returns>
+    Task IsActiveAsync(IsActiveContext context);
 }
 ```
-
-## IProfileService APIs
 
 * ***GetProfileDataAsync***
     
@@ -43,7 +39,8 @@ public class SampleProfileService : IProfileService
     
     The API that is expected to indicate if a user is currently allowed to obtain tokens. It is passed an instance of *IsActiveContext*.
 
-## ProfileDataRequestContext
+#### Duende.IdentityServer.Models.ProfileDataRequestContext
+
 Models the request for user claims and is the vehicle to return those claims. It contains these properties:
 
 * ***Subject***
@@ -70,14 +67,8 @@ Models the request for user claims and is the vehicle to return those claims. It
 
     Extension method on the *ProfileDataRequestContext* to populate the *IssuedClaims*, but first filters the claims based on *RequestedClaimTypes*.
 
-## Requested scopes and claims mapping
-The scopes requested by the client control what user claims are returned in the tokens to the client. 
+#### Duende.IdentityServer.Models.IsActiveContext
 
-The *GetProfileDataAsync* method is responsible for dynamically obtaining those claims based on the *RequestedClaimTypes* collection on the *ProfileDataRequestContext*.
-
-The *RequestedClaimTypes* collection is populated based on the user claims defined on the requested resources (TODO: link to resource design) that model the scopes.
-
-## IsActiveContext
 Models the request to determine if the user is currently allowed to obtain tokens. It contains these properties:
 
 * ***Subject***
