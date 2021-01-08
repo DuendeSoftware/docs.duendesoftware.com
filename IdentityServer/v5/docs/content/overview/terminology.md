@@ -42,8 +42,6 @@ This is the most common type of client scenario: web applications, SPAs or nativ
 
 In protocol terms, this scenario is called *Authorization Code Flow* and you can learn more about it in the issuing tokens [section]({{< ref "/tokens/requesting#interactive-applications" >}}) as well as in our [Quickstart]({{< ref "/quickstarts/2_interactive" >}}).
 
-See the [Interactive Applications Quick Start]({{< ref "/quickstarts/2_interactive" >}}) for a sample how to use it. 
-
 ### Resources
 [Resources]({{< ref "/fundamentals/resources" >}}) are something you want to protect with your IdentityServer - either identity data of your users, or APIs. 
 
