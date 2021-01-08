@@ -1,7 +1,7 @@
 ---
 title: "Sign-in with external Identity Providers"
 date: 2020-09-10T08:22:12+02:00
-weight: 3
+weight: 40
 ---
 
 Authentication with external providers is not a Duende IdentityServer feature, it is provided by the ASP.NET application framework.

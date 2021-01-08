@@ -1,7 +1,7 @@
 ---
 title: "Local sign-in"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+weight: 20
 ---
 
 In order for Duende IdentityServer to issue tokens on behalf of a user, that user must sign-in.

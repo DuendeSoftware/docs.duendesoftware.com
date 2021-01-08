@@ -1,7 +1,7 @@
 ---
 title: "Sign-out with external Identity Providers"
 date: 2020-09-10T08:22:12+02:00
-weight: 4
+weight: 50
 ---
 
 When a user is [signing-out]({{< ref "sign_out" >}}), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.

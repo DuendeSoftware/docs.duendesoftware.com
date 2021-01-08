@@ -1,5 +1,5 @@
 ---
-title: "Users and User Interaction"
+title: "Users and Logging In"
 date: 2020-09-10T08:22:12+02:00
 weight: 40
 ---
@@ -43,5 +43,5 @@ In addition to the login page, there are other pages that Duende IdentityServer 
 Additionally, during any of the user workflows your code might need to use information about the original authorize request to perform logic to customize the user experience.
 
 There are more details about building the login page, and coverage of these additional topics in the 
-[Users and UI]({{< ref "/authentication" >}}) 
+[Users and User Interaction]({{< ref "/authentication" >}}) 
 section of this documentation.
