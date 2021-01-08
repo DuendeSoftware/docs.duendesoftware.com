@@ -1,10 +1,9 @@
 ---
 title: "Sign-out with external Identity Providers"
-date: 2020-09-10T08:22:12+02:00
-weight: 50
+weight: 20
 ---
 
-When a user is [signing-out]({{< ref "sign_out" >}}), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.
+When a user is [signing-out]({{< ref "../logout" >}}), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.
 Not all external providers support sign-out, as it depends on the protocol and features they support.
 
 To detect that a user must be redirected to an external identity provider for sign-out is typically done by using a *idp* claim issued into the cookie at IdentityServer.
@@ -16,7 +15,7 @@ The only way to then complete the normal sign-out and cleanup process at Duende 
 Not all external providers support post-logout redirects, as it depends on the protocol and features they support.
 
 The workflow at sign-out is then to revoke your IdentityServer's authentication cookie, and then redirect to the external provider requesting a post-logout redirect.
-The post-logout redirect should maintain the necessary sign-out [state]({{< ref "sign_out#sign-out-initiated-by-a-client-application" >}}) (i.e. the *logoutId* parameter value).
+The post-logout redirect should maintain the necessary sign-out [state]({{< ref "../logout#sign-out-initiated-by-a-client-application" >}}) (i.e. the *logoutId* parameter value).
 
 To redirect back to IdentityServer after the external provider sign-out, the *RedirectUri* should be used on the *AuthenticationProperties* when using ASP.NET Core's *SignOutAsync* API, for example:
 

@@ -1,7 +1,7 @@
 ---
 title: "Consent"
 date: 2020-09-10T08:22:12+02:00
-weight: 80
+weight: 40
 ---
 
 During an authorization request, if user consent is required the browser will be redirected to the consent page.

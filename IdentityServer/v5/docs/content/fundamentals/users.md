@@ -9,7 +9,7 @@ The standard mechanism to allow those users to login is for the client applicati
 This is obvious is the client is already a web application, but it's also the recommended practice for native and mobile applications.
 
 When a user must login, the client application will redirect the user to the protocol endpoint in the SSO server to request authentication.
-This protocol endpoint is called the **authorization endpoint** and expects requests to be made from a browser with an interactive user.
+This protocol endpoint is called the [authorization endpoint]({{< ref "/reference/endpoints/authorize" >}}) and expects requests to be made from a browser with an interactive user.
 As part of the authorize request, the SSO server will typically display a login page for the user to enter their credentials.
 Once the user has authenticated, the SSO server will redirect the user back to the application with the protocol response.
 

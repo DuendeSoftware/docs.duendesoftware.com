@@ -1,8 +1,23 @@
----
-title: "Local sign-in"
-date: 2020-09-10T08:22:12+02:00
-weight: 20
----
++++
+title = "Login"
+date = 2020-09-10T08:20:20+02:00
+weight = 10
+chapter = true
++++
+
+# Login
+
+The login page is passed a returnUrl. 
+This is state that needs to be maintained during the user's login workflow.
+Once the user is logged in, the login page will redirect the user back to the returnUrl.
+
+A user can authenticate in any way you would like to allow them to.
+Commonly a username or password (and possibly other credentials like MFA) can be used. 
+But it's also possible that user uses an external login system, such as a social login, or a federated enterprise SSO system.
+Really, any means that you can code to validate the identity of the user is possible (e.g. windows authentication).
+
+A user's session is determined by the ASP.NET cookie authentication system.
+So the results of any of the above will ultimately the result in a cookie that your workflow issues.
 
 In order for Duende IdentityServer to issue tokens on behalf of a user, that user must sign-in.
 
@@ -46,10 +61,6 @@ For example:
 Since Duende IdentityServer sets up default cookie handlers internally, you must call *AddAuthentication* after *AddIdentityServer*.
 {{% /notice %}}
 
-## Login User Interface and Identity Management System
-One of the key features of Duende IdentityServer is that you have full control over the login UI, login workflow and the datasources you need to connect to.
-
-We provide a full featured UI that you can use as a starting point to customize and connect to your own data stores in the quickstart UI [repo](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI). A popular option for greenfield scenarios is using Microsoft's ASP.NET Identity library for user management (TODO link to integration docs).
 
 ## Login Workflow
 When Duende IdentityServer receives a request at the authorization endpoint and the user is not authenticated, the user will be redirected to the configured login page.
