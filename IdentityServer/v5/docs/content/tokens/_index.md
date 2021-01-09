@@ -7,4 +7,6 @@ chapter = true
 
 # Issuing Tokens
 
+At its very heart, Duende IdentityServer is a so-called *Security Token Service* (STS).
+
 {{%children style="h4" %}}

@@ -1,7 +1,7 @@
 ---
 title: "Signed Authorize Requests"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+weight: 1000
 ---
 
 TODO add content from training 
