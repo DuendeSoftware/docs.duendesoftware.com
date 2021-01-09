@@ -6,7 +6,14 @@ weight: 30
 
 Clients can use an X.509 client certificate as an authentication mechanism to endpoints in your IdentityServer.
 
-For this you need to associate a client certificate with a client in your IdentityServer.
+For this you need to associate a client certificate with a client in your IdentityServer and enable MTLS support on the options.
+
+```cs
+var builder = service.AddIdentityServer(options =>
+{
+    options.MutualTls.Enabled = true;
+})
+```
 
 Use the [DI extensions methods]({{< ref "/reference/di" >}}) to add the services to DI which contain a default implementation to do that either thumbprint or common-name based:
 
