@@ -1,7 +1,7 @@
 ---
 title: "Claims"
 date: 2020-09-10T08:22:12+02:00
-weight: 35
+weight: 45
 ---
 
 Your IdentityServer emits claims about users and clients into tokens. You are in full control which claims you want to emit in which situation and where to retrieve those claims from.
