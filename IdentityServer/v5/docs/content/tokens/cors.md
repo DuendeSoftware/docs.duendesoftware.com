@@ -1,10 +1,10 @@
 ---
-title: "CORS"
+title: "Calling Endpoints from JavaScript"
 date: 2020-09-10T08:22:12+02:00
-weight: 50
+weight: 200
 ---
 
-In JavaScript-based clients, some endpoints in Duende IdentityServer will be accessed via Ajax calls.
+In JavaScript-based clients, some endpoints like the token endpoint (but also discovery) will be accessed via Ajax calls.
 
 Given that your IdentityServer will most likely be hosted on a different origin than these clients, this implies that [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) (CORS) will need to be configured.
 
