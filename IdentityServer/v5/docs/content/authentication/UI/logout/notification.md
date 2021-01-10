@@ -42,15 +42,3 @@ There is nothing special you need to do to notify these clients that the user ha
 
 The clients, though, must perform monitoring on the *check_session_iframe*, and this is implemented by spec compliant client libraries, e.g.  the [oidc-client JavaScript library](https://github.com/IdentityModel/oidc-client-js/).
 
-## Sign-out initiated by a client application
-If sign-out was initiated by a client application, then the client first redirected the user to the :ref:`end session endpoint <refEndSession>` TODO.
-
-Processing at the end session endpoint might require some temporary state to be maintained (e.g. the client's post logout redirect uri) across the redirect to the logout page.
-This state might be of use to the logout page, and the identifier for the state is passed via a *logoutId* parameter to the logout page.
-
-The *GetLogoutContextAsync* API on the [IIdentityServerInteractionService]({{< ref "/reference/interaction_service#iidentityserverinteractionservice-apis" >}}) can be used to load the state.
-
-Of interest on the *LogoutRequest* model context class is the *ShowSignoutPrompt* which indicates if the request for sign-out has been authenticated, and therefore it's safe to not prompt the user for sign-out.
-
-By default this state is managed as a protected data structure passed via the *logoutId* value.
-If you wish to use some other persistence between the end session endpoint and the logout page, then you can implement *IMessageStore<LogoutMessage>* and register the implementation in DI.

@@ -3,107 +3,141 @@ title: "External Login"
 weight: 20
 ---
 
-xoxo
-One for the authentication session and one for temporary external cookies. 
-xoxo
+## External Identity Providers
 
-Authentication with external providers is not a Duende IdentityServer feature, it is provided by the ASP.NET application framework.
+One option for allowing your users to login is by using an external identity provider.
+These external providers can be a social login for your users (e.g. Google), a corporate login system (e.g. Azure AD for employees), or some other login system your users use.
 
-The ASP.NET Core authentication system is very flexible but involves a couple of parts that you should be aware of.
-
-{{% notice note %}}
-If you are using ASP.NET Identity, many of the underlying technical details are hidden from you. It is recommended that you also read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the ASP.NET Identity [quickstart]({{< ref "/quickstarts/5_aspnetid" >}}).
-{{% /notice %}}
-
-## Adding authentication handlers for external providers
-The protocol implementation that is needed to talk to an external provider is encapsulated in an *authentication handler*.
-Some providers use proprietary protocols (e.g. social providers like Facebook) and some use standard protocols, e.g. OpenID Connect, WS-Federation or SAML2p.
-
-See this [quickstart]({{< ref "/quickstarts/2_interactive" >}}) for step-by-step instructions for adding external authentication and configuring it.
-
-### The role of cookies
-When doing external authentication, ASP.NET Core needs a way to manage some temporary state, e.g. the claims that got sent by the external provider. This is (by default) achieved with a cookie. This is necessary, since there are typically a couple of redirects involved until you are done with the external authentication process.
-
-One option on an external authentication handlers is called *SignInScheme*. This specifies the cookie handler that manages that state:
-
-```cs
-services.AddAuthentication()
-    .AddGoogle(options =>
-    {
-        options.SignInScheme = "scheme of cookie handler to use";
-
-        options.ClientId = "...";
-        options.ClientSecret = "...";
-    });
-```
-
-Given that this is such a common practise, IdentityServer registers a cookie handler specifically for this external provider workflow.
-The scheme is represented via the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant.
-If you were to use our external cookie handler, then for the *SignInScheme* above you'd assign the value to be the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant:
-
-```cs
-services.AddAuthentication()
-    .AddGoogle(options =>
-    {
-        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-        options.ClientId = "...";
-        options.ClientSecret = "...";
-    });
-```
-
-You can also register your own custom cookie handler instead, like this:
-
-```cs
-services.AddAuthentication()
-    .AddCookie("MyTempHandler")
-    .AddGoogle(options =>
-    {
-        options.SignInScheme = "MyTempHandler";
-
-        options.ClientId = "...";
-        options.ClientSecret = "...";
-    })
-```
+The workflow using an external provider is much like the workflow from one of your client applications using your IdentityServer.
+Your login page must redirect the user to the identity provider for login, and the identity provider will redirect the user to a callback endpoint in your IdentityServer to process the results.
+This means the external provider should implement a standard protocol (e.g. Open ID Connect, SAML2-P, or WS-Federation) to allow such an integration.
 
 {{% notice note %}}
-For specialized scenarios, you can also short-circuit the external cookie mechanism and forward the external user directly to the main cookie handler. This typically involves handling events on the external handler to make sure you do the correct claims transformation from the external identity source.
+It is possible to use a custom protocol to allow logins from an external provider, but you are taking on risk using something that is not as widely validated and scrutinized as one of the standard authentication protocols (e.g. Open ID Connect, SAML2-P, or WS-Federation).
 {{% /notice %}}
 
-## Triggering the authentication handler
-You invoke an external authentication handler via the *ChallengeAsync* extension method on the *HttpContext* (or using the MVC *ChallengeResult*).
+To ease integration with external providers, it is recommended to use an authentication handler for ASP.NET Core that implements the corresponding protocol used by the provider. Many are available as part of ASP.NET Core, but you might need to find others (both commercial and free) for things like SAML2-P and other social login systems not provided by ASP.NET Core.
 
-You typically want to pass in some options to the challenge operation, e.g. the path to your callback page and the name of the provider for bookkeeping, e.g.:
+## Registering Authentication Handlers for External Providers
+
+Supporting an external provider is achieved by simply registering the handler in your IdentityServer's startup. 
+For example, to use employee logins from Azure AD (AAD):
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer();
+
+    services.AddAuthentication()
+        .AddOpenIdConnect("AAD", "Employee Login", options =>
+        {
+            // options omitted
+        });
+}
+```
+
+The above snippet registers a scheme called *AAD* in the ASP.NET Core authentication system, and uses a human-friendly display name of "Employee Login".
+The options necessary will be different based on the protocol and identity provider used, and are beyond the scope of this documentation. 
+
+## Triggering the Authentication Handler
+
+To allow the user to be redirected to the external provider, there must be some code in your login page that triggers the handler.
+This can be done because you have provided the user with a button to click, or it could be due to inspecting some property of the [authorization context]({{<ref "/authentication/ui/login/#authorization-context">}}), or it could be based on any other aspect of the request (e.g. such as the user entering their email).
+
+{{% notice note %}}
+The process of determining which identity provider to use is called *Home Realm Discovery*, or *HRD* for short.
+{{% /notice %}}
+
+To invoke an external authentication handler use the *ChallengeAsync* extension method on the *HttpContext* (or using the MVC *ChallengeResult*).
+When triggering challenge, it's common to pass some properties to indicate the callback URL where you intend to process the external user results and any other state you need to maintain across the workflow (e.g. such as the [return URL passed to the login page]({{<ref "../login#the-return-url-and-the-login-workflow">}})):
 
 ```cs
-var callbackUrl = Url.Action("Callback");
+var callbackUrl = Url.Action("MyCallback");
 
 var props = new AuthenticationProperties
 {
     RedirectUri = callbackUrl,
     Items = 
     { 
-        { "scheme", provider },
+        { "scheme", "AAD" },
         { "returnUrl", returnUrl }
     }
 };
 
-return Challenge(provider, props);
+return Challenge("AAD", props);
 ```
 
-## Handling the callback and signing in the user
+## The Role of Cookies in External Logins
+
+ASP.NET Core needs a way to manage the state produced from the results of the external login.
+This state is mainly the claims of the user issued by the external provider.
+This state is managed (by default) with another cookie using ASP.NET Core's cookie authentication handler.
+
+This extra cookie is necessary since there are typically several redirects involved until you are done with the external authentication process.
+
+{{% notice note %}}
+If you are using ASP.NET Identity, many of these technical details are hidden from you. It is recommended that you also read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the ASP.NET Identity [quickstart]({{< ref "/quickstarts/5_aspnetid" >}}).
+{{% /notice %}}
+
+One option on an external authentication handlers is called *SignInScheme*. This specifies the cookie handler that manages that state:
+
+```cs
+services.AddAuthentication()
+    .AddOpenIdConnect("AAD", "Employee Login", options =>
+    {
+        options.SignInScheme = "scheme of cookie handler to use";
+
+        // other options omitted
+    });
+```
+
+Given that this is such a common practice, IdentityServer registers a cookie handler specifically for this external provider workflow.
+The scheme is represented via the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant.
+If you were to use our external cookie handler, then for the *SignInScheme* above you'd assign the value to be the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant:
+
+```cs
+services.AddAuthentication()
+    .AddOpenIdConnect("AAD", "Employee Login", options =>
+    {
+        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+        // other options omitted
+    });
+```
+
+Alternatively, you can also register your own custom cookie handler instead.
+For example:
+
+```cs
+services.AddAuthentication()
+    .AddCookie("MyTempHandler")
+    .AddOpenIdConnect("AAD", "Employee Login", options =>
+    {
+        options.SignInScheme = "MyTempHandler";
+
+        // other options omitted
+    });
+```
+
+{{% notice note %}}
+For specialized scenarios, you can also short-circuit the external cookie mechanism and forward the external user directly to the main cookie handler. This typically involves handling events on the external handler to make sure you do the correct claims transformation from the external identity source.
+{{% /notice %}}
+
+## Handling the Callback
 On the callback page your typical tasks are:
 
-* inspect the identity returned by the external provider.
-* make a decision how you want to deal with that user. This might be different based on the fact if this is a new user or a returning user.
-* new users might need additional steps and UI before they are allowed in.
-* probably create a new internal user account that is linked to the external provider.
-* store the external claims that you want to keep.
-* delete the temporary cookie
-* sign-in the user
+* Inspect the identity returned by the external provider.
+* Make a decision how you want to deal with that user. This might be different based on the fact if this is a new user or a returning user.
+* New users might need additional steps and UI before they are allowed in. Typically this involves creating a new internal user account that is linked to the user from the external provider.
+* Store the external claims that you want to keep.
+* Delete the temporary cookie.
+* Establish the user's [authentication session]({{<ref "../login/#authentication-session">}}).
+* Complete the login workflow.
 
-### Inspecting the external identity
-In this step you are using the *AuthenticateAsync* method to read the data inside the temporary cookie to retrieve the claims issued by the external provider:
+### Inspecting the External Identity
+
+To access the claims issued by the external provider, invoke the *AuthenticateAsync* method. 
+This will read the external cookie to retrieve the claims and any other state you previously stored when calling *ChallengeAsync*:
 
 ```cs
 // read external identity from the temporary cookie
@@ -130,8 +164,10 @@ var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
 // use the user information to find your user in your database, or provision a new user
 ```
 
-### Start a session and clean-up
-In this step you start a session for the external user and delete the temporary data:
+### Establish Session, Clean Up, and Resume Workflow
+
+Once your callback page logic has identified the user based on the external identity provider, 
+it will log the user in and complete the original login workflow:
 
 ```cs
 // issue authentication cookie for user
@@ -149,6 +185,7 @@ return Redirect(returnUrl);
 ```
 
 ## State, URL length, and ISecureDataFormat
+
 When redirecting to an external provider for sign-in, frequently state from the client application must be round-tripped.
 This means that state is captured prior to leaving the client and preserved until the user has returned to the client application.
 Many protocols, including OpenID Connect, allow passing some sort of state as a parameter as part of the request, and the identity provider will return that state on the response.
@@ -196,3 +233,5 @@ public void ConfigureServices(IServiceCollection services)
     // rest omitted
 }
 ```
+
+See this [quickstart]({{< ref "/quickstarts/2_interactive" >}}) for step-by-step instructions for adding external authentication and configuring it.
