@@ -28,7 +28,7 @@ Regardless of how the user proves their identity on the login page, an authentic
 This authentication session is based on ASP.NET Core’s authentication system, and is tracked with a cookie managed by the [cookie authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie) handler.
 
 To establish the session, ASP.NET Core provides a *SignInAsync* extension method on the *HttpContext*. 
-This API accepts a *ClaimsPrincipal* which contain claims that describe the user. 
+This API accepts a *ClaimsPrincipal* which contains claims that describe the user. 
 IdentityServer requires a special claim called *sub* whose value uniquely identifies the user.
 On your login page, this would be the code to establish the authentication session and issue the cookie:
 
@@ -112,7 +112,7 @@ It is unnecessary (and discouraged) for your login page logic to parse the *retu
 Duende IdentityServer registers a cookie authentication handler by default for the authentication session. 
 The scheme that the handler in the authentication system is identified by is from the constant *IdentityServerConstants.DefaultCookieAuthenticationScheme*.
 
-When configuring IdentityServer, our [AuthenticationOptions]({{<ref "/reference/options#Authentication">}}) expose some settings to control the cookie (e.g. expiration and sliding). For example:
+When configuring IdentityServer, the [AuthenticationOptions]({{<ref "/reference/options#Authentication">}}) expose some settings to control the cookie (e.g. expiration and sliding). For example:
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
@@ -126,7 +126,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 {{% notice note %}}
-In addition to the authentication cookie, IdentityServer will issue an additional cookie which defaults to the name *idsrv.session*. This cookie is derived from the main authentication cookie, and it used for the check session endpoint for [browser-based JavaScript clients at signout time] ({{<ref "/authentication/ui/logout/notification#browser-based-javascript-clients">}}). It is kept in sync with the authentication cookie, and is removed when the user signs out.
+In addition to the authentication cookie, IdentityServer will issue an additional cookie which defaults to the name *idsrv.session*. This cookie is derived from the main authentication cookie, and it used for the check session endpoint for [browser-based JavaScript clients at signout time]({{<ref "/authentication/ui/logout/notification#browser-based-javascript-clients">}}). It is kept in sync with the authentication cookie, and is removed when the user signs out.
 {{% /notice %}}
 
 If you require more control over the cookie authentication handler you can register your own cookie handler.

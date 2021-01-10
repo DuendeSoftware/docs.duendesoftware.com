@@ -1,5 +1,5 @@
 ---
-title: "Sign-out with external Identity Providers"
+title: "External Logout"
 weight: 20
 ---
 

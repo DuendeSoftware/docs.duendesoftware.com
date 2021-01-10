@@ -31,11 +31,10 @@ Typically you should prompt the user for sign-out (meaning require a POST), othe
 
 ### External Logins
 
-Signing out is as simple as removing the authentication cookie, 
-but for doing a complete federated sign-out, we must consider signing the user out of the client applications (and maybe even up-stream identity providers) as well.
+If your user has signed in with an external login, then it's likely that they should perform an [external logout]({{<ref "./external">}}) of the external provider as well.
 
 ### Sign-out initiated by a client application
-If sign-out was initiated by a client application, then the client first redirected the user to the :ref:`end session endpoint <refEndSession>` TODO.
+If sign-out was initiated by a client application, then the client first redirected the user to the [end session endpoint]({{<ref "/reference/endpoints/end_session">}}).
 
 Processing at the end session endpoint might require some temporary state to be maintained (e.g. the client's post logout redirect uri) across the redirect to the logout page.
 This state might be of use to the logout page, and the identifier for the state is passed via a *logoutId* parameter to the logout page.

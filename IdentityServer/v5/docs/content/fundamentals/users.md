@@ -29,7 +29,7 @@ Recall the diagram showing the relationship of your custom UI pages and the Iden
 
 When your IdentityServer receives an authorize request, it will inspect it for a current authentication session for a user. This authentication session is based on ASP.NET Core's authentication system and is ultimately determined by a cookie issued from your login page.
 
-If the user has never logged in there will be no cookie, and then the request to the authorize endpoint will result in a redirect to your login page. This is where your custom workflow takes over to get the user logged in.
+If the user has never logged in there will be no cookie, and then the request to the authorize endpoint will result in a redirect to your login page. This is the entry point into your custom workflow that can take over to get the user logged in.
 
 ![](../../authentication/images/signin_flow.png?height=500px)
 

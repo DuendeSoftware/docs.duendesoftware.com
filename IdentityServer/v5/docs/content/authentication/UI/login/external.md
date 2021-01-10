@@ -49,7 +49,7 @@ The process of determining which identity provider to use is called *Home Realm 
 {{% /notice %}}
 
 To invoke an external authentication handler use the *ChallengeAsync* extension method on the *HttpContext* (or using the MVC *ChallengeResult*).
-When triggering challenge, it's common to pass some properties to indicate the callback URL where you intend to process the external user results and any other state you need to maintain across the workflow (e.g. such as the [return URL passed to the login page]({{<ref "../login#the-return-url-and-the-login-workflow">}})):
+When triggering challenge, it's common to pass some properties to indicate the callback URL where you intend to process the external login results and any other state you need to maintain across the workflow (e.g. such as the [return URL passed to the login page]({{<ref "../login#the-return-url-and-the-login-workflow">}})):
 
 ```cs
 var callbackUrl = Url.Action("MyCallback");
@@ -69,8 +69,7 @@ return Challenge("AAD", props);
 
 ## The Role of Cookies in External Logins
 
-ASP.NET Core needs a way to manage the state produced from the results of the external login.
-This state is mainly the claims of the user issued by the external provider.
+ASP.NET Core needs a way to manage the state produced from the result of the external login.
 This state is managed (by default) with another cookie using ASP.NET Core's cookie authentication handler.
 
 This extra cookie is necessary since there are typically several redirects involved until you are done with the external authentication process.
@@ -79,7 +78,8 @@ This extra cookie is necessary since there are typically several redirects invol
 If you are using ASP.NET Identity, many of these technical details are hidden from you. It is recommended that you also read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the ASP.NET Identity [quickstart]({{< ref "/quickstarts/5_aspnetid" >}}).
 {{% /notice %}}
 
-One option on an external authentication handlers is called *SignInScheme*. This specifies the cookie handler that manages that state:
+One option on an external authentication handlers is called *SignInScheme*.
+This specifies the cookie handler to manage the state:
 
 ```cs
 services.AddAuthentication()
@@ -136,8 +136,8 @@ On the callback page your typical tasks are:
 
 ### Inspecting the External Identity
 
-To access the claims issued by the external provider, invoke the *AuthenticateAsync* method. 
-This will read the external cookie to retrieve the claims and any other state you previously stored when calling *ChallengeAsync*:
+To access the result of the external login, invoke the *AuthenticateAsync* method.
+This will read the external cookie to retrieve the claims issued by the external provider and any other state you previously stored when calling *ChallengeAsync*:
 
 ```cs
 // read external identity from the temporary cookie
@@ -163,6 +163,8 @@ var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
 
 // use the user information to find your user in your database, or provision a new user
 ```
+The *sub* claim from the external cookie is the external provider's unique id for the user.
+This value should be used to locate your local user record for the user.
 
 ### Establish Session, Clean Up, and Resume Workflow
 
@@ -170,11 +172,13 @@ Once your callback page logic has identified the user based on the external iden
 it will log the user in and complete the original login workflow:
 
 ```cs
+var user = FindUserFromExternalProvider(scheme, userId);
+
 // issue authentication cookie for user
 await HttpContext.SignInAsync(new IdentityServerUser(user.SubjectId) 
 {
-    DisplayName = user.Username,
-    IdentityProvider = provider
+    DisplayName = user.DisplayName,
+    IdentityProvider = scheme
 });
 
 // delete temporary cookie used during external authentication
@@ -183,6 +187,8 @@ await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticat
 // return back to protocol processing
 return Redirect(returnUrl);
 ```
+
+Typically, the *sub* value used to login the user would be the user's unique id from your local user database.
 
 ## State, URL length, and ISecureDataFormat
 
