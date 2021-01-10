@@ -1,7 +1,11 @@
 ---
-title: "Sign-in with external Identity Providers"
+title: "External Login"
 weight: 20
 ---
+
+xoxo
+One for the authentication session and one for temporary external cookies. 
+xoxo
 
 Authentication with external providers is not a Duende IdentityServer feature, it is provided by the ASP.NET application framework.
 

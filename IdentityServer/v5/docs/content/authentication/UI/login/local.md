@@ -1,16 +1,19 @@
 ---
-title: "Local sign-in"
+title: "Local Login"
 weight: 10
 ---
 
-## Login User Interface and Identity Management System
-One of the key features of Duende IdentityServer is that you have full control over the login UI, login workflow and the datasources you need to connect to.
+## Implementing a Local Login Page
 
-We provide a full featured UI that you can use as a starting point to customize and connect to your own data stores in the quickstart UI [repo](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI). A popular option for greenfield scenarios is using Microsoft's ASP.NET Identity library for user management (TODO link to integration docs).
+The steps for implementing a local login page are:
+* Validate the user's credentials
+* Issue the authentication cookie
+* Redirect the user to the return URL
 
-## Sample login page
+The below code shows a sample Razor Page that could act as a login page.
+This sample hard codes the logic for the credentials, so this is where your implementation would use your custom user database or identity management library.
 
-The below code shows a sample Razor Page that could act as a login page:
+This is the cshtml for the login Razor Page:
 
 ```html
 @page
@@ -35,7 +38,7 @@ The below code shows a sample Razor Page that could act as a login page:
 </form>
 ```
 
-The below code shows the code behind for the login Razor Page:
+And this is the code behind for the login Razor Page:
 
 ```cs
 namespace Sample.Pages.Account
@@ -75,9 +78,8 @@ namespace Sample.Pages.Account
 }
 ```
 
-{{% notice note %}}
 The above Razor page is expected to be located in the project at the path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the browser at the "/Account/Login" path.
+
+{{% notice note %}}
+While you can use any custom user database or identity management library for your users, we provide first class [integration support]({{< ref "/aspnet_identity" >}}) for ASP.NET Identity.
 {{% /notice %}}
-
-The above sample hard codes the logic to validate the user's credentials. Of course, this is where your IdentityServer could implement this login logic in any way you see fit. Regardless, the steps are to validate the user's credentials, issue the authentication cookie, and redirect to the return url.
-

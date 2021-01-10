@@ -6,115 +6,157 @@ chapter = true
 
 # Login
 
-The login page is passed a returnUrl. 
-This is state that needs to be maintained during the user's login workflow.
-Once the user is logged in, the login page will redirect the user back to the returnUrl.
+The purpose of the login page is to allow a user to establish an authentication session in your IdentityServer.
+This involves the user presenting credentials and then a session can be established.
 
-A user can authenticate in any way you would like to allow them to.
-Commonly a username or password (and possibly other credentials like MFA) can be used. 
-But it's also possible that user uses an external login system, such as a social login, or a federated enterprise SSO system.
-Really, any means that you can code to validate the identity of the user is possible (e.g. windows authentication).
+## Credentials
 
-A user's session is determined by the ASP.NET cookie authentication system.
-So the results of any of the above will ultimately the result in a cookie that your workflow issues.
+Your requirements dictate what types of credentials are allowed in your login workflow.
+A common approach is to allow local logins whereby the user enters their credentials into the login page.
+An example of that is shown [here]({{<ref "./local">}}).
 
-In order for Duende IdentityServer to issue tokens on behalf of a user, that user must sign-in.
+A user can authenticate by other means, though.
+For example a user can utilize an external login system, such as a social login or a federated login provider.
+Using an external login is discussed in more detail here [here]({{<ref "./external">}}).
 
-## Session Management
-The authentication session is typically tracked with a cookie managed by the [cookie authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie) handler from ASP.NET Core.
+One less common scenario, but still certainly possible, is to allow users to login with integrated Windows authentication, 
+which is covered [here]({{<ref "./windows">}}).
 
-Duende IdentityServer registers two cookie handlers by default. 
-One for the authentication session and one for temporary external cookies. 
+## Authentication Session
 
-These are used by default and you can get their names from the *IdentityServerConstants* class (*DefaultCookieAuthenticationScheme* and *ExternalCookieAuthenticationScheme*) if you want to reference them.
+Regardless of how the user proves their identity on the login page, an authentication session must be established.
+This authentication session is based on ASP.NET Core’s authentication system, and is tracked with a cookie managed by the [cookie authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie) handler.
 
-Only basic settings are exposed for these cookies (expiration and sliding), but you can register your own cookie handlers if you need more control.
-IdentityServer uses whichever cookie handler matches the *DefaultAuthenticateScheme* configured for the ASP.NET Core application when using *AddAuthentication*.
+To establish the session, ASP.NET Core provides a *SignInAsync* extension method on the *HttpContext*. 
+This API accepts a *ClaimsPrincipal* which contain claims that describe the user. 
+IdentityServer requires a special claim called *sub* whose value uniquely identifies the user.
+On your login page, this would be the code to establish the authentication session and issue the cookie:
 
-{{% notice note %}}
-In addition to the authentication cookie, IdentityServer will issue an additional cookie which defaults to the name "idsrv.session". This cookie is derived from the main authentication cookie, and it used for the check session endpoint for :ref:`browser-based JavaScript clients at signout time <refSignOut>` TODO. It is kept in sync with the authentication cookie, and is removed when the user signs out.
-{{% /notice %}}
+```csharp
+var claims = new Claim[] {
+    new Claim("sub", "unique_id_for_your_user")
+};
+var identity = new ClaimsIdentity(claims, "pwd");
+var user = new ClaimsPrincipal(identity);
 
-## Overriding cookie handler configuration
-If you wish to use your own cookie authentication handler, then you must configure it yourself.
-This must be done in *ConfigureServices* after registering IdentityServer in DI (with *AddIdentityServer* TODO link to extension method reference).
-
-For example:
-
-```cs
-    services.AddIdentityServer()
-        .AddInMemoryClients(Clients.Get())
-        .AddInMemoryIdentityResources(Resources.GetIdentityResources())
-        .AddInMemoryApiResources(Resources.GetApiResources())
-        .AddDeveloperSigningCredential()
-        .AddTestUsers(TestUsers.Users);
-
-    services.AddAuthentication("MyCookie")
-        .AddCookie("MyCookie", options =>
-        {
-            options.ExpireTimeSpan = ...;
-        });
+await HttpContext.SignInAsync(user);
 ```
 
 {{% notice note %}}
-Since Duende IdentityServer sets up default cookie handlers internally, you must call *AddAuthentication* after *AddIdentityServer*.
+The *sub* claim is the [subject identifier](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims) and is the most important claim your IdentityServer will issue.
+It will uniquely identify the user and must never change and must never be reassigned to a different user.
+A GUID data type is a very common choice for the *sub*. 
 {{% /notice %}}
 
+Additional claims can be added to the cookie if desired or needed at at other UI pages.
+For example, it's common to also issue a *name* claim which represents the user's display name.
 
-## Login Workflow
-When Duende IdentityServer receives a request at the authorization endpoint and the user is not authenticated, the user will be redirected to the configured login page.
-By default a path of */account/login* is used. You can change this value on the [options]({{< ref "/reference/options#userinteraction" >}}).
+The claims issued in the cookie are passed as the *Subject* on the [ProfileDataRequestContext]({{<ref "/reference/profile_service#duendeidentityservermodelsprofiledatarequestcontext">}}) in the [profile service]({{<ref "/fundamentals/claims">}}).
 
-The login page is the entry point into your custom login workflow. This might just involve simple username/password authentication, 
-but can have arbitrary complexity involving multiple authentication factors, external authentication systems or custom user registration and provisioning.
 
-Duende IdentityServer will pass a *returnUrl* query parameter to the login page. Simply return to this URL once you are done with your custom workflow and IdentityServer will continue with the session management and protocol work.
+## Well Known Claims Issued From the Login Page
 
-![](../images/signin_flow.png)
+There are some claims beyond *sub* that can be issued by your login page to capture additional information about the user's authentication session.
+Internally Duende IdentityServer will set these values if you do not specify them when calling *SignInAsync*.
+The claims are:
 
-{{% notice note %}}
-Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#Security_issues) via the *returnUrl* parameter. You should validate that the *returnUrl* refers to well-known location. See the [interaction service]({{< ref "/reference/interaction_service#iidentityserverinteractionservice-apis" >}}) for APIs to validate the *returnUrl* parameter.
-{{% /notice %}}
+* ***name***: The display name of the user.
+* ***amr***: Name of the [authentication method](https://tools.ietf.org/html/rfc8176) used for user authentication (defaults to *pwd*).
+* ***auth_time***: Time in epoch format the user entered their credentials (defaults to the current time).
+* ***idp***: Authentication scheme name of the external identity provider used for login. When not specified then the value defaults to *local* indicating that it was a local login.
 
-## Login Context
-On your login page you might require information about the context of the request in order to customize the login experience 
-(such as client information or protocol parameters).
-This is made available via the *[GetAuthorizationContextAsync]({{< ref "/reference/interaction_service#iidentityserverinteractionservice-apis" >}})* API.
-
-## Issuing a cookie and Claims
-Before you return control back to the IdentityServer middleware via the *returnUrl* you need to start the user session.
-
-This is ultimately done via the ASP.NET Core *SignInAsync* extension method on *HttpContext*.
-
-The user you are signing in must have at least a claim of type *sub* that contains the unique user identifier.
-You can store additional claims in the user session if that makes sense for your scenario.
-
-Some claims have special meaning an will be picked up by IdentityServer if you add them, e.g.:
-
-* ***idp***
-
-    Name of the identity provider used for sign-in (defaults to *local*)
-
-* ***amr***
-
-    Name of the authentication method used for user authentication (defaults to *pwd*)
-
-* ***auth_time***
-
-    authentication time in epoch format (default to current time)
-
-* ***name***
-
-    display name
-
-While you can create the *ClaimsPrincipal* yourself, you can use IdentityServer extension methods and the *IdentityServerUser* class to make this easier:
+While you can create the *ClaimsPrincipal* yourself, you can alternatively use IdentityServer extension methods and the *IdentityServerUser* class to make this easier:
 
 ```cs
-// issue authentication cookie with subject ID and username
-var isuser = new IdentityServerUser(user.SubjectId)
+var user = new IdentityServerUser("unique_id_for_your_user")
 {
     DisplayName = user.Username
 };
 
-await HttpContext.SignInAsync(isuser, props);
+await HttpContext.SignInAsync(user);
+```
+
+## The Return URL and the Login Workflow
+
+Once the user has been logged in, they must complete the protocol workflow so they can ultimately be logged into the client.
+To facilitate this, the login page is passed a *returnUrl* query parameter which refers to the URL the prior request came from.
+This URL is, in essence, the same authorization endpoint to which the client made the original authorize request.
+
+In the request to your login page where it logs the user in with a call to *SignInAsync*, it would then simply use the *returnUrl* to redirect the response back.
+This will cause the browser to re-issue the original authorize request from the client allowing your IdentityServer to complete the protocol work.
+An example of this redirect can be seen in the [local login]({{<ref "./local">}}) topic.
+
+{{% notice note %}}
+Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#Security_issues) via the *returnUrl* parameter. You should validate that the *returnUrl* refers to well-known location.
+Either use the *Url.IsLocalUrl* helper from ASP.NET Core, or use the [interaction service]({{< ref "/reference/interaction_service#iidentityserverinteractionservice-apis" >}}) from Duende IdentityServer for APIs to validate the *returnUrl* parameter.
+{{% /notice %}}
+
+Keep in mind that this *returnUrl* is state that needs to be maintained during the user's login workflow.
+If your workflow involves page post-backs, redirecting the user to an external login provider, or just sending the user through a custom workflow, then this value must be preserved across all of those page transitions.
+
+## Authorization Context
+
+The *returnUrl* refers to the IdentityServer authorization endpoint and contains the original request parameters sent from the client.
+These parameters might contain information your login page needs to customize its workflow.
+Some examples would be for branding, dynamic page customization (e.g. which external login providers to use), or controlling what credentials the client application expects (e.g. perhaps MFA is required).
+
+The [interaction service]({{< ref "/reference/interaction_service#iidentityserverinteractionservice-apis" >}}) provides a *GetAuthorizationContextAsync* API that will extract that information from the *returnUrl*.
+The returned *AuthorizationRequest* object contains these values in its properties.
+
+{{% notice note %}}
+It is unnecessary (and discouraged) for your login page logic to parse the *returnUrl* itself.
+{{% /notice %}}
+
+## Cookie Handler Configuration
+
+Duende IdentityServer registers a cookie authentication handler by default for the authentication session. 
+The scheme that the handler in the authentication system is identified by is from the constant *IdentityServerConstants.DefaultCookieAuthenticationScheme*.
+
+When configuring IdentityServer, our [AuthenticationOptions]({{<ref "/reference/options#Authentication">}}) expose some settings to control the cookie (e.g. expiration and sliding). For example:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer(options =>
+    {
+        options.Authentication.CookieLifetime = TimeSpan.FromHours(1);
+        options.Authentication.CookieSlidingExpiration = false;
+    });
+}
+```
+
+{{% notice note %}}
+In addition to the authentication cookie, IdentityServer will issue an additional cookie which defaults to the name *idsrv.session*. This cookie is derived from the main authentication cookie, and it used for the check session endpoint for [browser-based JavaScript clients at signout time] ({{<ref "/authentication/ui/logout/notification#browser-based-javascript-clients">}}). It is kept in sync with the authentication cookie, and is removed when the user signs out.
+{{% /notice %}}
+
+If you require more control over the cookie authentication handler you can register your own cookie handler.
+You can then configure IdentityServer to use your cookie handler by setting the *CookieAuthenticationScheme* on the [AuthenticationOptions]({{<ref "/reference/options#Authentication">}}). For example:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddAuthentication()
+        .AddCookie("your_cookie", options => { 
+            // ...
+        });
+
+    services.AddIdentityServer(options =>
+    {
+        options.Authentication.CookieAuthenticationScheme = "your_cookie";
+    });
+}
+```
+
+If the *CookieAuthenticationScheme* is not set, the cookie handler marked as the *DefaultAuthenticateScheme* configured for the ASP.NET Core application when using *AddAuthentication* will be the one used. So a scheme registered as the default after the call to *AddIdentityServer* in your startup will be the one used. For example:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer();
+
+    services.AddAuthentication(defaultScheme: "your_cookie")
+        .AddCookie("your_cookie", options => { 
+            // ...
+        });
+}
 ```
