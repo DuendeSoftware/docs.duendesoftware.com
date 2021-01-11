@@ -1,52 +1,69 @@
 ---
 title: "External Logout"
-weight: 20
+weight: 70
 ---
 
-When a user is [signing-out]({{< ref "../logout" >}}), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.
+When a user is [logging out]({{< ref "../logout" >}}), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.
 Not all external providers support sign-out, as it depends on the protocol and features they support.
 
+Don't forget that your logout page still needs to complete all the other steps to properly sign the user out.
+But this is complicated if the logout page must redirect to an external provider to sign out.
+To achieve both, it is necessary to have the external provider to redirect the user back to your IdentityServer after signing out of the external provider.
+Across this redirect exchange, there will be state that must be maintained so the complete sign out workflow can complete successfully.
+
+## Determining the Identity Provider
+
 To detect that a user must be redirected to an external identity provider for sign-out is typically done by using a *idp* claim issued into the cookie at IdentityServer.
-The value is either *local* for a local sing-in or the scheme of the corresponding authentication handler used for an external provider.
-At sign-out time this claim is consulted to know if an external sign-out is required.
+The value is either *local* for a local sign-in or the scheme of the corresponding authentication handler used for an external provider.
+At sign-out time this claim should be consulted to determine if an external sign-out is required.
 
-Redirecting the user to an external identity provider is problematic due to the cleanup and state management already required by the normal sign-out workflow.
-The only way to then complete the normal sign-out and cleanup process at Duende IdentityServer is to then request from the external identity provider that after its logout that the user be redirected back to your IdentityServer.
-Not all external providers support post-logout redirects, as it depends on the protocol and features they support.
+{{% notice note %}}
+The constant *IdentityServerConstants.LocalIdentityProvider* can be used instead of hard coding the value *local* for the local login provider identifier.
+{{% /notice %}}
 
-The workflow at sign-out is then to revoke your IdentityServer's authentication cookie, and then redirect to the external provider requesting a post-logout redirect.
-The post-logout redirect should maintain the necessary sign-out [state]({{< ref "../logout#sign-out-initiated-by-a-client-application" >}}) (i.e. the *logoutId* parameter value).
+## Redirecting to the External Provider
 
-To redirect back to IdentityServer after the external provider sign-out, the *RedirectUri* should be used on the *AuthenticationProperties* when using ASP.NET Core's *SignOutAsync* API, for example:
+To trigger logout at an external provider, use the *SignOutAsync* extension method on the *HttpContext* (or the *SignOutResult* action result in MVC or Razor Pages). You must pass the scheme of the provider as configured in your startup (which should also match the *idp* claim mentioned above).
 
-```cs
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Logout(LogoutInputModel model)
+```csharp
+public IActionResult Logout(string logoutId)
 {
-    // build a model so the logged out page knows what to display
-    var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
+    // other code elided
 
-    if (User?.Identity.IsAuthenticated == true)
+    var idp = User.FindFirst("idp").Value;
+    if (idp != IdentityServerConstants.LocalIdentityProvider)
     {
-        // delete local authentication cookie
-        await HttpContext.SignOutAsync();
+        return SignOut(idp);
     }
 
-    // check if we need to trigger sign-out at an upstream identity provider
-    if (vm.TriggerExternalSignout)
-    {
-        // build a return URL so the upstream provider will redirect back
-        // to us after the user has logged out. this allows us to then
-        // complete our single sign-out processing.
-        string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
-
-        // this triggers a redirect to the external provider for sign-out
-        return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
-    }
-
-    return View("LoggedOut", vm);
+    // other code elided
 }
 ```
 
-Once the user is signed-out of the external provider and then redirected back, the normal sign-out processing at IdentityServer should execute which involves processing the *logoutId* and doing all necessary cleanup.
+## Redirecting back from the External Provider and State Management
+
+To redirect back to your IdentityServer after the external provider sign-out, the *RedirectUri* should be used on the *AuthenticationProperties* when using ASP.NET Core's *SignOutAsync* API.
+
+Recall that after we return, we must perform the other steps to complete the logout workflow.
+These steps require the context passed as the *logoutId* parameter, so this state needs to be round-tripped to the external provider.
+We can do so by incorporating the *logoutId* value into the *RedirectUri*.
+
+For example:
+
+```csharp
+public IActionResult Logout(string logoutId)
+{
+    // other code elided
+
+    var idp = User.FindFirst("idp").Value;
+    if (idp != IdentityServerConstants.LocalIdentityProvider)
+    {
+        string url = Url.Action("Logout", new { logoutId = logoutId });
+        return SignOut(new AuthenticationProperties { RedirectUri = url }, idp);
+    }
+
+    // other code elided
+}
+```
+
+Once the user is signed-out of the external provider and then redirected back, the normal sign-out processing at your IdentityServer should execute which involves processing the *logoutId* and doing all necessary cleanup.

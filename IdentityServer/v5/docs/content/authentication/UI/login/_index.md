@@ -4,7 +4,7 @@ weight = 10
 chapter = true
 +++
 
-# Login
+# Login Page
 
 The purpose of the login page is to allow a user to establish an authentication session in your IdentityServer.
 This involves the user presenting credentials and then a session can be established.

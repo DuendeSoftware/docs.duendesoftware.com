@@ -1,6 +1,6 @@
 ---
-title: "Logout Notifications"
-weight: 10
+title: "Client Notifications"
+weight: 50
 ---
 
 
@@ -33,9 +33,7 @@ See the [Quickstart UI](https://github.com/DuendeSoftware/IdentityServer.Quickst
 To signout the user from the server-side client applications via the back-channel the *IBackChannelLogoutService* service can be used. 
 IdentityServer will automatically use this service when your logout page removes the user's authentication cookie via a call to *HttpContext.SignOutAsync*.
 
-Clients that wish to be notified must have the ``BackChannelLogoutUri`` configuration value set.
-
-TODO: add more information on backchannel logout API - maybe this needs a separate page.
+Clients that wish to be notified must have the [BackChannelLogoutUri]({{<ref "/reference/client#authentication--session-management">}}) configuration value set.
 
 ### Browser-based JavaScript clients
 There is nothing special you need to do to notify these clients that the user has signed out.
