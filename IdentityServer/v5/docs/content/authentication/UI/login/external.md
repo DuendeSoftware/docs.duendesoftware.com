@@ -1,6 +1,6 @@
 ---
 title: "External Login"
-weight: 20
+weight: 60
 ---
 
 ## External Identity Providers

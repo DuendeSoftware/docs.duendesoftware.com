@@ -1,6 +1,6 @@
 ---
-title: "Local Login"
-weight: 10
+title: "Accepting Local Credentials"
+weight: 50
 ---
 
 ## Implementing a Local Login Page
