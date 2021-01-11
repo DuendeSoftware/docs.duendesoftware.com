@@ -5,7 +5,7 @@ weight: 50
 
 
 ## Notifying clients that the user has signed-out
-As part of the sign-out process you will want to ensure client applications are informed that the user has signed out.
+As part of the logout process you will want to ensure client applications are informed that the user has signed out.
 
 This is done by sending a notification to and endpoint provided by the each client application. Depending on your architecture, there are three supported techniques to call these endpoints:
 

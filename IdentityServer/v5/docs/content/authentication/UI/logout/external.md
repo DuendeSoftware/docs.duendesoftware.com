@@ -7,7 +7,7 @@ When a user is [logging out]({{< ref "../logout" >}}), and they have used an ext
 Not all external providers support sign-out, as it depends on the protocol and features they support.
 
 Don't forget that your logout page still needs to complete all the other steps to properly sign the user out.
-But this is complicated if the logout page must redirect to an external provider to sign out.
+This is complicated if the logout page must redirect to an external provider to sign out.
 To achieve both, it is necessary to have the external provider to redirect the user back to your IdentityServer after signing out of the external provider.
 Across this redirect exchange, there will be state that must be maintained so the complete sign out workflow can complete successfully.
 
@@ -48,17 +48,22 @@ Recall that after we return, we must perform the other steps to complete the log
 These steps require the context passed as the *logoutId* parameter, so this state needs to be round-tripped to the external provider.
 We can do so by incorporating the *logoutId* value into the *RedirectUri*.
 
+If there is no *logoutId* parameter on the original logout page request, we still might have context that needs to be round tripped.
+We can obtain a *logoutId* to use by calling *CreateLogoutContextAsync* API on the [interaction service]({{<ref "/reference/interaction_service">}}).
+
 For example:
 
 ```csharp
-public IActionResult Logout(string logoutId)
+public async Task<IActionResult> Logout(string logoutId)
 {
     // other code elided
 
     var idp = User.FindFirst("idp").Value;
     if (idp != IdentityServerConstants.LocalIdentityProvider)
     {
+        logoutId = logoutId ?? await _interaction.CreateLogoutContextAsync();
         string url = Url.Action("Logout", new { logoutId = logoutId });
+
         return SignOut(new AuthenticationProperties { RedirectUri = url }, idp);
     }
 
