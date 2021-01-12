@@ -214,7 +214,7 @@ public static IEnumerable<Client> Get()
 * ***RefreshTokenExpiration***
     * ***Absolute***
     
-        the refresh token will expire on a fixed point in time (specified by the *AbsoluteRefreshTokenLifetime*)  
+        the refresh token will expire on a fixed point in time (specified by the *AbsoluteRefreshTokenLifetime*). This is the default. 
  
     * ***Sliding*** 
     
