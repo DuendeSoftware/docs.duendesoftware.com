@@ -1,11 +1,11 @@
 +++
-title = "User Interface"
+title = "Pages"
 date = 2020-09-10T08:20:20+02:00
 weight = 10
 chapter = true
 +++
 
-# User Interface
+# Pages
 
 As browser requests are made to the protocol endpoints in your IdentityServer, they will be redirected to the interactive pages for the user to see. Depending on the features required, the pages expected in your IdentityServer are:
 * [Login]({{< ref "./login" >}}): allows the user to login. This could be achieved with a local credential, or could utilize an external login provider (e.g. social or enterprise federation system).

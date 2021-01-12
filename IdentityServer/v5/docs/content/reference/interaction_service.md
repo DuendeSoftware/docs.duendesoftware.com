@@ -126,6 +126,14 @@ The above methods return various models.
 
 ### ErrorMessage
 
+* ***Error***
+    
+    The error code.
+
+* ***ErrorDescription***
+    
+    The error description.
+
 * ***DisplayMode***
     
     The display mode passed from the authorization request.
@@ -134,13 +142,17 @@ The above methods return various models.
     
     The UI locales passed from the authorization request.
 
-* ***Error***
-    
-    The error code.
-
 * ***RequestId***
     
     The per-request identifier. This can be used to display to the end user and can be used in diagnostics.
+
+* ***ClientId***
+    
+    The client id making the request (if available).
+
+* ***RedirectUri***
+    
+    The redirect URI back to the client (id available).
 
 ### LogoutRequest
 

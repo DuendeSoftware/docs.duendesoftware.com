@@ -3,8 +3,6 @@ title: "Accepting Local Credentials"
 weight: 50
 ---
 
-## Implementing a Local Login Page
-
 The steps for implementing a local login page are:
 * Validate the user's credentials
 * Issue the authentication cookie

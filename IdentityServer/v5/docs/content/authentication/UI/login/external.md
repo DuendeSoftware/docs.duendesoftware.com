@@ -1,5 +1,5 @@
 ---
-title: "External Login"
+title: "Integrating with External Providers"
 weight: 60
 ---
 
