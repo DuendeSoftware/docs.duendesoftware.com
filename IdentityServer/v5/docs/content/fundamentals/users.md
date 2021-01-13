@@ -31,7 +31,7 @@ When your IdentityServer receives an authorize request, it will inspect it for a
 
 If the user has never logged in there will be no cookie, and then the request to the authorize endpoint will result in a redirect to your login page. This is the entry point into your custom workflow that can take over to get the user logged in.
 
-![](../../authentication/images/signin_flow.png?height=500px)
+![](../../ui/images/signin_flow.png?height=500px)
 
 Once the login page has finished logging in the user with the ASP.NET Core authentication system, it will redirect the user back to the authorize endpoint.
 This time the request to the authorize endpoint will have an authenticated session for the user, and it can then create the protocol response and redirect to the client application.
@@ -40,5 +40,5 @@ This time the request to the authorize endpoint will have an authenticated sessi
 
 In addition to the login page, there are other pages that Duende IdentityServer expects (e.g. logout, error, consent), and you could implement custom pages as well (e.g. register, forgot password, etc.).
 Details about building these pages, and coverage of additional topics are in the 
-[User Interaction]({{< ref "/authentication" >}}) 
+[User Interaction]({{< ref "/ui" >}}) 
 section of this documentation.

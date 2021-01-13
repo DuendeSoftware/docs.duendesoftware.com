@@ -76,7 +76,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 {{% notice note %}}
-In addition to the authentication cookie, IdentityServer will issue an additional cookie which defaults to the name *idsrv.session*. This cookie is derived from the main authentication cookie, and it used for the check session endpoint for [browser-based JavaScript clients at signout time]({{<ref "/authentication/ui/logout/notification#browser-based-javascript-clients">}}). It is kept in sync with the authentication cookie, and is removed when the user signs out.
+In addition to the authentication cookie, IdentityServer will issue an additional cookie which defaults to the name *idsrv.session*. This cookie is derived from the main authentication cookie, and it used for the check session endpoint for [browser-based JavaScript clients at signout time]({{<ref "/ui/logout/notification#browser-based-javascript-clients">}}). It is kept in sync with the authentication cookie, and is removed when the user signs out.
 {{% /notice %}}
 
 If you require more control over the cookie authentication handler you can register your own cookie handler.

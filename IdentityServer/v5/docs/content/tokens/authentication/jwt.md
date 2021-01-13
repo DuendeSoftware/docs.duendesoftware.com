@@ -38,7 +38,7 @@ The default default private key JWT secret validator expects either a base64 enc
     };
 
 {{% notice note %}}
-You can share the same key for client authentication and [signed authorize requests]({{< ref "/authentication/jar" >}}).
+You can share the same key for client authentication and [signed authorize requests]({{< ref "/tokens/jar" >}}).
 {{% /notice %}}
 
 ## Authentication using a private key JWT
