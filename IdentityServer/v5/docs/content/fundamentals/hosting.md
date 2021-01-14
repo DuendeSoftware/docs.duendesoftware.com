@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---
 
-You add the Duende IdentityServer engine to any ASP.NET Core application by adding the relevant services to the DI system and adding the middleware to the processing pipeline.
+You add the Duende IdentityServer engine to any ASP.NET Core application by adding the relevant services to the dependency injection (DI) system and adding the middleware to the processing pipeline.
 
 {{% notice note %}}
 While technically you could share the ASP.NET Core host between Duende IdentityServer, clients or APIs. We recommend putting your IdentityServer into a separate application.
@@ -60,3 +60,32 @@ public void Configure(IApplicationBuilder app)
 {{% notice note %}}
 *UseIdentityServer* includes a call to *UseAuthentication*, so it’s not necessary to have both.
 {{% /notice %}}
+
+## License Key
+
+When deploying your IdentityServer to production, you will need to configure your license key.
+This can be configured in one of two ways:
+* Via a well-known file on the file system
+* Programmatically in your startup code
+
+### File System
+
+Duende IdentityServer will look for a file called *Duende_IdentityServer_License.key* in the same directory as your hosting application.
+If present, the contents of the file will be loaded as the license key.
+
+### Startup
+
+If you prefer to load the license key dynamically, you can in your startup code.
+When calling *AddIdentityServer* from *ConfigureServices*, you can pass a lambda expression to configure various options in your IdentityServer.
+The *LicenseKey* is one such setting. 
+For example:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer(options =>
+    {
+        options.LicenseKey = "your_license_key";
+    });
+}
+```
