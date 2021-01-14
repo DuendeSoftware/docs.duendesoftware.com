@@ -1,6 +1,6 @@
 ---
 title: "Redirecting back to the client"
-weight: 40
+weight: 30
 ---
 
 ## The Return URL and the Login Workflow
