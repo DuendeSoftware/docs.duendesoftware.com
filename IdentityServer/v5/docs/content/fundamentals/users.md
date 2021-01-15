@@ -11,7 +11,7 @@ This means you have the ability to customize any UI page (registration, login, p
 You have the ability to control the entire user experience while Duende IdentityServer provides the implementation of the security protocol (OpenID Connect and OAuth).
 
 {{% notice note %}}
-While you can use any custom user database or identity management library for your users, we provide first class [integration support]({{< ref "/aspnet_identity" >}}) for ASP.NET Identity.
+While you can use any custom user database or identity management library for your users, we provide [integration support]({{< ref "/aspnet_identity" >}}) for ASP.NET Identity.
 {{% /notice %}}
 
 ## Authorization Endpoint and Login Page Workflow

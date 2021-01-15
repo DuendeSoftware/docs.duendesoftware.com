@@ -1,10 +1,15 @@
 +++
 title = "Data Stores and Persistence"
-date = 2020-09-10T08:20:20+02:00
 weight = 80
 chapter = true
 +++
 
 # Data Stores and Persistence
 
-{{%children style="h4" %}}
+Duende IdentityServer is backed by two kinds of data:
+* [Configuration Data]({{<ref "./configuration">}})
+* [Operational Data]({{<ref "./operational">}})
+
+This data is accessed dynamically at runtime using services in DI system that model the storage of this data.
+You can implement these interfaces yourself and thus can use any database you wish.
+If you prefer a relational database for this data, then we provide [EntityFramework Core]({{<ref "./ef">}}) implementations.

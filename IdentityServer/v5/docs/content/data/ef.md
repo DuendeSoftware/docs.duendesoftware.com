@@ -9,7 +9,7 @@ The use of EntityFramework allows any EF-supported database to be used with this
 The features provided by this library are broken down into two main areas: configuration store and operational store support.
 These two different areas can be used independently or together, based upon the needs of the hosting application.
 
-## Configuration Store support for Clients, Resources, and CORS settings
+## Configuration Store Support
 If client, identity resource, API resource, or CORS data is desired to be loaded from a EF-supported database 
 (rather than use in-memory configuration), then the configuration store can be used.
 This support provides implementations of the *IClientStore*, *IResourceStore*, and the *ICorsPolicyService* extensibility points.
@@ -36,7 +36,7 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
 
 To configure the configuration store, use the *ConfigurationStoreOptions* options object passed to the configuration callback.
 
-## ConfigurationStoreOptions
+### ConfigurationStoreOptions
 This options class contains properties to control the configuration store and *ConfigurationDbContext*.
 
 *ConfigureDbContext*
@@ -58,8 +58,8 @@ options.ConfigureDbContext = b =>
         sql => sql.MigrationsAssembly(migrationsAssembly).MigrationsHistoryTable("MyConfigurationMigrationTable", "myConfigurationSchema"));
 ```
 
-## Operational Store support for persisted grants
-If [persisted grants]({{<ref "./persisted_grants">}}) are desired to be loaded from a EF-supported database (rather than the default in-memory database), then the operational store can be used.
+## Operational Store 
+If [operational data]({{<ref "./operational">}}) are desired to be loaded from a EF-supported database (rather than the default in-memory database), then the operational store can be used.
 This support provides implementations of the *IPersistedGrantStore* extensibility point.
 The implementation uses a *DbContext*-derived class called *PersistedGrantDbContext* to model the table in the database.
 
@@ -88,7 +88,7 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
 
 To configure the operational store, use the *OperationalStoreOptions* options object passed to the configuration callback.
 
-## OperationalStoreOptions
+### OperationalStoreOptions
 This options class contains properties to control the operational store and *PersistedGrantDbContext*.
 
 *ConfigureDbContext*
@@ -105,7 +105,7 @@ This options class contains properties to control the operational store and *Per
     The token cleanup interval (in seconds). The default is 3600 (1 hour).
 
 {{% notice note %}}
-The token cleanup feature does *not* remove persisted grants that are *consumed* (see [persisted grants]({{<ref "./persisted_grants">}})).
+The token cleanup feature does *not* remove persisted grants that are *consumed* (see [persisted grants]({{<ref "./operational/grants">}})).
 {{% /notice %}}
 
 ## Database creation and schema changes across different versions of IdentityServer

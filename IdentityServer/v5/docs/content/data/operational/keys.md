@@ -1,6 +1,6 @@
 ---
-title: "Key Management Store"
-weight: 20
+title: "Keys"
+weight: 40
 ---
 
 The automatic key management feature in Duende IdentityServer requires a store to persist keys that are dynamically created.

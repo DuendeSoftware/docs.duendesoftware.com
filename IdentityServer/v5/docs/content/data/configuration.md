@@ -1,0 +1,87 @@
++++
+title = "Configuration Data"
+weight = 10
++++
+
+Configuration data models the information for [Clients]({{<ref "/fundamentals/clients">}}) and [Resources]({{<ref "/fundamentals/resources">}}).
+
+## Stores
+
+Store interfaces are designed to abstract accessing the configuration data. 
+The stores used in Duende IdentityServer are:
+* [Client store]({{<ref "/reference/client_store">}}) for *Client* data.
+* [CORS policy service]({{<ref "/reference/cors_policy_service">}}) for [CORS support]({{<ref "/tokens/cors">}}). Given that this is so closely tied to the *Client* configuration data, the CORS policy service is considered one of the configuration stores.
+* [Resource store]({{<ref "/reference/resource_store">}}) for *IdentityResource*, *ApiResource*, and *ApiScope* data.
+
+## Registering Custom Stores
+
+Custom implementations of *IClientStore*, *ICorsPolicyService*, and/or *IResourceStore* must be registered in the DI system.
+There are [convenience methods]({{<ref "/reference/di#configuration-stores">}}) for registering these.
+For example:
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer()
+        .AddClientStore<YourCustomClientStore>()
+        .AddCorsPolicyService<YourCustomCorsPolicyService>()
+        .AddResourceStore<YourCustomResourceStore>();
+}
+```
+
+## Caching Configuration Data
+
+Client and resource configuration data is used frequently by during request processing.
+If this data is being loaded from a database or other external store, then it might be expensive to frequently re-load the same data.
+
+Duende IdentityServer provides [convenience methods]({{<ref "/reference/di#caching-configuration-data">}}) to enable caching data from the *IClientStore*, *ICorsPolicyService*, and/or *IResourceStore* stores.
+The caching implementation relies upon an *ICache\<T>* service and must also be added to DI. 
+For example:
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer()
+        .AddClientStore<YourCustomClientStore>()
+        .AddCorsPolicyService<YourCustomCorsPolicyService>()
+        .AddResourceStore<YourCustomResourceStore>()
+        .AddInMemoryCaching()
+        .AddClientStoreCache<YourCustomClientStore>()
+        .AddCorsPolicyCache<YourCustomCorsPolicyService>()
+        .AddResourceStoreCache<YourCustomResourceStore>();
+}
+```
+
+The duration of the data in the default cache is configurable on the [IdentityServerOptions]({{<ref "/reference/options#caching">}}).
+For example:
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer(options => {
+        options.Caching.ClientStoreExpiration = TimeSpan.FromMinutes(5);
+        options.Caching.ResourceStoreExpiration = TimeSpan.FromMinutes(5);
+    })
+        .AddClientStore<YourCustomClientStore>()
+        .AddCorsPolicyService<YourCustomCorsPolicyService>()
+        .AddResourceStore<YourCustomResourceStore>()
+        .AddInMemoryCaching()
+        .AddClientStoreCache<YourCustomClientStore>()
+        .AddCorsPolicyCache<YourCustomCorsPolicyService>()
+        .AddResourceStoreCache<YourCustomResourceStore>();
+}
+```
+
+Further customization of the cache is possible: 
+* If you wish to customize the caching behavior for the specific configuration objects, you can replace the *ICache\<T>* service implementation in the dependency injection system.
+* The default implementation of the *ICache\<T>* itself relies upon the *IMemoryCache* interface (and *MemoryCache* implementation) provided by .NET.
+If you wish to customize the in-memory caching behavior, you can replace the *IMemoryCache* implementation in the dependency injection system.
+
+## In-Memory Stores
+
+The various [in-memory configuration APIs]({{<ref "/reference/di#configuration-stores">}}) allow for configuring IdentityServer from an in-memory list of the various configuration objects.
+These in-memory collections can be hard-coded in the hosting application, or could be loaded dynamically from a configuration file or a database.
+By design, though, these collections are only created when the hosting application is starting up.
+
+Use of these configuration APIs are designed for use when prototyping, developing, and/or testing where it is not necessary to dynamically consult database at runtime for the configuration data.
+This style of configuration might also be appropriate for production scenarios if the configuration rarely changes, or it is not inconvenient to require restarting the application if the value must be changed.

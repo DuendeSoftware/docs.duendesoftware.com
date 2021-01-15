@@ -18,17 +18,25 @@ Many of the fundamental configuration settings can be set on the options. See th
 {{% /notice %}}
 
 
-## Configuration stores
-Duende IdentityServer needs certain configuration data at runtime, namely clients and resources.
+## Configuration Stores
 
-The various "in-memory" configuration APIs allow for configuring IdentityServer from an in-memory list of configuration objects.
-These "in-memory" collections can be hard-coded in the hosting application, or could be loaded dynamically from a configuration file or a database.
-By design, though, these collections are only created when the hosting application is starting up.
+Several convenience methods are provided for registering custom stores:
 
-Use of these configuration APIs are designed for use when prototyping, developing, and/or testing where it is not necessary to dynamically consult database at runtime for the configuration data.
-This style of configuration might also be appropriate for production scenarios if the configuration rarely changes, or it is not inconvenient to require restarting the application if the value must be changed.
+* ***AddClientStore\<T>***
+    
+    Registers a custom *IClientStore* implementation.
 
-TODO: add links to pages explaining the concepts
+* ***AddCorsPolicyService\<T>***
+    
+    Registers a custom *ICorsPolicyService* implementation.
+
+* ***AddResourceStore\<T>***
+    
+    Registers a custom *IResourceStore* implementation.
+
+
+The [in-memory configuration stores]({{<ref "/data/configuration#in-memory-stores">}}) can be registered in DI with the following extension methods.
+
 
 * ***AddInMemoryClients***
     
@@ -45,6 +53,29 @@ TODO: add links to pages explaining the concepts
 * ***AddInMemoryApiResources***
 
     Registers *IResourceStore* implementation based on the in-memory collection of *ApiResource* configuration objects.
+
+## Caching Configuration Data
+
+Extension methods to enable [caching for configuration data]({{<ref "/data/configuration#caching-configuration-data">}}):
+
+* ***AddInMemoryCaching\<T>***
+    
+    To use any of the caches described below, an implementation of *ICache\<T>* must be registered in DI.
+    This API registers a default in-memory implementation of *ICache\<T>* that's based on ASP.NET Core's *MemoryCache*.
+
+* ***AddClientStoreCache\<T>***
+    Registers a *IClientStore* decorator implementation which will maintain an in-memory cache of *Client* configuration objects.
+    The cache duration is configurable on the *Caching* configuration options on the *IdentityServerOptions*.
+
+* ***AddResourceStoreCache\<T>***
+    
+    Registers a *IResourceStore* decorator implementation which will maintain an in-memory cache of *IdentityResource* and *ApiResource* configuration objects.
+    The cache duration is configurable on the *Caching* configuration options on the *IdentityServerOptions*.
+
+* ***AddCorsPolicyCache\<T>***
+    
+    Registers a *ICorsPolicyService* decorator implementation which will maintain an in-memory cache of the results of the CORS policy service evaluation.
+    The cache duration is configurable on the *Caching* configuration options on the *IdentityServerOptions*.
 
 ## Test Stores
 The *TestUser* class models a user, their credentials, and claims in IdentityServer. 
@@ -137,33 +168,4 @@ The following are convenient to add additional features to your IdentityServer.
     
     Adds the X509 secret validators for mutual TLS.
 
-## Caching
-Client and resource configuration data is used frequently by during request processing.
-If this data is being loaded from a database or other external store, then it might be expensive to frequently re-load the same data.
 
-* ***AddInMemoryCaching***
-    
-    To use any of the caches described below, an implementation of *ICache<T>* must be registered in DI.
-    This API registers a default in-memory implementation of *ICache<T>* that's based on ASP.NET Core's *MemoryCache*.
-
-* ***AddClientStoreCache***
-    Registers a *IClientStore* decorator implementation which will maintain an in-memory cache of *Client* configuration objects.
-    The cache duration is configurable on the *Caching* configuration options on the *IdentityServerOptions*.
-
-* ***AddResourceStoreCache***
-    
-    Registers a *IResourceStore* decorator implementation which will maintain an in-memory cache of *IdentityResource* and *ApiResource* configuration objects.
-    The cache duration is configurable on the *Caching* configuration options on the *IdentityServerOptions*.
-
-* ***AddCorsPolicyCache***
-    
-    Registers a *ICorsPolicyService* decorator implementation which will maintain an in-memory cache of the results of the CORS policy service evaluation.
-    The cache duration is configurable on the *Caching* configuration options on the *IdentityServerOptions*.
-
-Further customization of the cache is possible:
-
-The default caching relies upon the *ICache<T>* implementation.
-If you wish to customize the caching behavior for the specific configuration objects, you can replace this implementation in the dependency injection system.
-
-The default implementation of the *ICache<T>* itself relies upon the *IMemoryCache* interface (and *MemoryCache* implementation) provided by .NET.
-If you wish to customize the in-memory caching behavior, you can replace the *IMemoryCache* implementation in the dependency injection system.
