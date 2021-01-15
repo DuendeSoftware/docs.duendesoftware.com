@@ -7,9 +7,9 @@ weight: 45
 Your IdentityServer emits claims about users and clients into tokens. You are in full control which claims you want to emit in which situation and where to retrieve those claims from.
 
 ## User claims
-User claims can be put in both identity and access tokens. The central extensibility point to implement for emitting claims is called the [profile service]({{< ref "/reference/profile_service" >}}).
+User claims can be put in both identity and access tokens. The central extensibility point to implement for emitting claims is called the [profile service]({{< ref "/reference/services/profile_service" >}}).
 
-Whenever your IdentityServer creates tokens, it invokes the registered profile service and presents detailed information about the current token request via the passed in [context]({{< ref "/reference/profile_service#duendeidentityservermodelsprofiledatarequestcontext" >}}), e.g.
+Whenever your IdentityServer creates tokens, it invokes the registered profile service and presents detailed information about the current token request via the passed in [context]({{< ref "/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext" >}}), e.g.
 
 * the identity of the client who is requesting the token
 * the identity of the user
@@ -76,7 +76,7 @@ var client = new Client
 };
 ```
 
-All client claims will be by default prefixed with *client* to avoid accidental collision with user claims, e.g. the above claim would show up as *client_customer_id* in access tokens. You can change (or remove) that prefix by setting the *ClientClaimsPrefix* on the [client definition]({{< ref "/reference/client#token" >}}). 
+All client claims will be by default prefixed with *client* to avoid accidental collision with user claims, e.g. the above claim would show up as *client_customer_id* in access tokens. You can change (or remove) that prefix by setting the *ClientClaimsPrefix* on the [client definition]({{< ref "/reference/models/client#token" >}}). 
 
 {{% notice note %}}
 By default, client claims are only send in the client credentials flow. If you want to enable them for other flows, you need to set the *AlwaysSendClientClaims* property on the client definition.

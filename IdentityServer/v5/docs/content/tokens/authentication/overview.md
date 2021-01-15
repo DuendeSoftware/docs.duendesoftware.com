@@ -9,7 +9,7 @@ Confidential and credentialed clients need to authenticate with your IdentitySer
 Duende IdentityServer has built-in support for various client credential types and authentication methods, and an extensible infrastructure to customize the authentication system.
 
 {{% notice note %}}
-All information in this section also applies to [API secrets]({{< ref "/reference/api_resource" >}}) for introspection.
+All information in this section also applies to [API secrets]({{< ref "/reference/models/api_resource" >}}) for introspection.
 {{% /notice %}}
 
 **We recommend using asymmetric client credentials like the [*private key jwt*]({{< ref "/tokens/authentication/jwt" >}}) or [*Mutual TLS*]({{< ref "/tokens/authentication/mtls" >}}) authentication method over shared secrets.**
@@ -40,7 +40,7 @@ client.ClientSecrets = new[] { primary, secondary };
 ## Secret parsing
 During request processing, the secret must be somehow extracted from the incoming request. The various specs describe a couple of options, e.g. as part of the authorization header or the body payload.
 
-It is the job of implementations of the [ISecretParser]({{< ref "/reference/secrets#duendeidentityservervalidationisecretparser" >}}) interface to accomplish this. You can add secret parsers by calling the *AddSecretParser()* DI extension method.
+It is the job of implementations of the [ISecretParser]({{< ref "/reference/models/secrets#duendeidentityservervalidationisecretparser" >}}) interface to accomplish this. You can add secret parsers by calling the *AddSecretParser()* DI extension method.
 
 The following secret parsers are part of Duende IdentityServer:
 
@@ -66,7 +66,7 @@ The following secret parsers are part of Duende IdentityServer:
 
 
 ## Secret validation
-It is the job of implementations of the [ISecretValidator]({{< ref "/reference/secrets#duendeidentityservervalidationisecretvalidator" >}}) interface to validate the extracted credentials.
+It is the job of implementations of the [ISecretValidator]({{< ref "/reference/models/secrets#duendeidentityservervalidationisecretvalidator" >}}) interface to validate the extracted credentials.
 
 You can add secret parsers by calling the *AddSecretValidator()* DI extension method.
 

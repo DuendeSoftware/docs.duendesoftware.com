@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 50
 ---
 
-You can hook into the token request pipeline by implementing the [ICustomTokenRequestValidator]({{< ref "/reference/custom_token_request_validator" >}}) interface.
+You can hook into the token request pipeline by implementing the [ICustomTokenRequestValidator]({{< ref "/reference/validators/custom_token_request_validator" >}}) interface.
 
 This would allow for
 

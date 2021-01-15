@@ -121,7 +121,7 @@ var customerResource = new ApiResource("customer", "Customer API")
     }
 ```
 
-If a client would now request a scope belonging to the *customer* resource, the access token would contain the additional claims (if provided by your [profile service]({{< ref "/reference/profile_service" >}})).
+If a client would now request a scope belonging to the *customer* resource, the access token would contain the additional claims (if provided by your [profile service]({{< ref "/reference/services/profile_service" >}})).
 
 ```json
     {

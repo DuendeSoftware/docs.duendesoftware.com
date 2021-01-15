@@ -6,7 +6,7 @@ weight: 20
 
 Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential flow.
 
-The clients needs to be explicitly authorized to request refresh tokens by setting *AllowOfflineAccess* property to *true*. See the [client reference]({{< ref "/reference/client#refresh-token" >}}) section for additional refresh token related settings.
+The clients needs to be explicitly authorized to request refresh tokens by setting *AllowOfflineAccess* property to *true*. See the [client reference]({{< ref "/reference/models/client#refresh-token" >}}) section for additional refresh token related settings.
 
 ## Requesting a refresh token
 You can request a refresh token by adding a scope called *offline_access* to the scope parameter list of the authorize request.
@@ -72,4 +72,4 @@ Rotation can be configured via the *RefreshTokenUsage* client settings and is en
 #### Replay detection
 On top of one-time only semantics, you could also layer replay detection. This means, that if you ever see the same refresh token used more than once, you could revoke all access to the client/user combination. Again – same caveat applies – while increasing the security, this might result in false positives.
 
-See the [reference]({{< ref "/reference/refresh_token_service" >}}) section for more customization of the refresh token service.
+See the [reference]({{< ref "/reference/services/refresh_token_service" >}}) section for more customization of the refresh token service.

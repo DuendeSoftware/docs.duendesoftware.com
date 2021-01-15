@@ -49,7 +49,7 @@ These steps require the context passed as the *logoutId* parameter, so this stat
 We can do so by incorporating the *logoutId* value into the *RedirectUri*.
 
 If there is no *logoutId* parameter on the original logout page request, we still might have context that needs to be round tripped.
-We can obtain a *logoutId* to use by calling *CreateLogoutContextAsync* API on the [interaction service]({{<ref "/reference/interaction_service">}}).
+We can obtain a *logoutId* to use by calling *CreateLogoutContextAsync* API on the [interaction service]({{<ref "/reference/services/interaction_service">}}).
 
 For example:
 

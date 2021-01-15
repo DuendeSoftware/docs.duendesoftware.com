@@ -74,7 +74,7 @@ In the case of JWTs, all claims are embedded into the token itself, e.g.:
 A reference token does not contain any data, but is a pointer to the token data stored in the token service. Reference tokens allow for immediate revocation (by deleting the token data from your IdentityServer data store), whereas a JWT can only be invalidated via expiration.
 
 {{% notice note %}}
-You can control the access token format on a per-client basis using the [AccessTokenType]({{< ref "/reference/client#token" >}}) setting.
+You can control the access token format on a per-client basis using the [AccessTokenType]({{< ref "/reference/models/client#token" >}}) setting.
 {{% /notice %}}
 
 See the [OAuth specification](https://tools.ietf.org/html/rfc6749#section-1.4) for more information on access tokens.

@@ -32,7 +32,7 @@ A GUID data type is a very common choice for the *sub*.
 Additional claims can be added to the cookie if desired or needed at at other UI pages.
 For example, it's common to also issue a *name* claim which represents the user's display name.
 
-The claims issued in the cookie are passed as the *Subject* on the [ProfileDataRequestContext]({{<ref "/reference/profile_service#duendeidentityservermodelsprofiledatarequestcontext">}}) in the [profile service]({{<ref "/fundamentals/claims">}}).
+The claims issued in the cookie are passed as the *Subject* on the [ProfileDataRequestContext]({{<ref "/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext">}}) in the [profile service]({{<ref "/fundamentals/claims">}}).
 
 
 ## Well Known Claims Issued From the Login Page

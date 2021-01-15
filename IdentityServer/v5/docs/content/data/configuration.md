@@ -9,9 +9,9 @@ Configuration data models the information for [Clients]({{<ref "/fundamentals/cl
 
 Store interfaces are designed to abstract accessing the configuration data. 
 The stores used in Duende IdentityServer are:
-* [Client store]({{<ref "/reference/client_store">}}) for *Client* data.
-* [CORS policy service]({{<ref "/reference/cors_policy_service">}}) for [CORS support]({{<ref "/tokens/cors">}}). Given that this is so closely tied to the *Client* configuration data, the CORS policy service is considered one of the configuration stores.
-* [Resource store]({{<ref "/reference/resource_store">}}) for *IdentityResource*, *ApiResource*, and *ApiScope* data.
+* [Client store]({{<ref "/reference/stores/client_store">}}) for *Client* data.
+* [CORS policy service]({{<ref "/reference/stores/cors_policy_service">}}) for [CORS support]({{<ref "/tokens/cors">}}). Given that this is so closely tied to the *Client* configuration data, the CORS policy service is considered one of the configuration stores.
+* [Resource store]({{<ref "/reference/stores/resource_store">}}) for *IdentityResource*, *ApiResource*, and *ApiScope* data.
 
 ## Registering Custom Stores
 

@@ -14,4 +14,4 @@ Extension grants allow adding support for non-standard token issuance scenarios,
 * federation
 * encapsulating custom input parameters
 
-You can add support for additional grant types by implementing the [IExtensionGrantValidator]({{< ref "/reference/extension_grant_validator" >}}) interface.
+You can add support for additional grant types by implementing the [IExtensionGrantValidator]({{< ref "/reference/validators/extension_grant_validator" >}}) interface.

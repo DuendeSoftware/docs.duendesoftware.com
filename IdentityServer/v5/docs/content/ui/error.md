@@ -13,7 +13,7 @@ But this allows the user to understand that something went wrong and that they a
 
 Details of the error are provided to the error page via an *errorId* parameter.
 
-The [interaction service]({{< ref "/reference/interaction_service#iidentityserverinteractionservice-apis" >}}) provides a *GetErrorContextAsync* API that will extract that information from the *errorId*.
-The returned [ErrorMessage]({{<ref "/reference/interaction_service#errormessage">}}) object contains these details.
+The [interaction service]({{< ref "/reference/services/interaction_service#iidentityserverinteractionservice-apis" >}}) provides a *GetErrorContextAsync* API that will extract that information from the *errorId*.
+The returned [ErrorMessage]({{<ref "/reference/services/interaction_service#errormessage">}}) object contains these details.
 
 

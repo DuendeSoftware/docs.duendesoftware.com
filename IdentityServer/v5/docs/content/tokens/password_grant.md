@@ -66,4 +66,4 @@ public interface IResourceOwnerPasswordValidator
 
 On the context, parsed protocol parameters like *UserName* and *Password*, but also the raw request can be found.
 
-It is the job of the validator to implement the password validation and set the *Result* property on the context accordingly (see the [Grant Validation Result]({{< ref "/reference/grant_validation_result" >}}) reference).
+It is the job of the validator to implement the password validation and set the *Result* property on the context accordingly (see the [Grant Validation Result]({{< ref "/reference/models/grant_validation_result" >}}) reference).

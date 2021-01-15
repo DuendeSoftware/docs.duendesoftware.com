@@ -9,7 +9,7 @@ In JavaScript-based clients, some endpoints like the token endpoint (but also di
 Given that your IdentityServer will most likely be hosted on a different origin than these clients, this implies that [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) (CORS) will need to be configured.
 
 ## Client-based CORS Configuration
-One approach to configuring CORS is to use the *AllowedCorsOrigins* collection on the [client configuration]({{< ref "/reference/client#authentication--session-management" >}}).
+One approach to configuring CORS is to use the *AllowedCorsOrigins* collection on the [client configuration]({{< ref "/reference/models/client#authentication--session-management" >}}).
 Simply add the origin of the client to the collection and the default configuration in IdentityServer will consult these values to allow cross-origin calls from the origins.
 
 {{% notice note %}}

@@ -10,8 +10,8 @@ Some examples would be for branding, dynamic page customization (e.g. which exte
 
 ## Authorization Request Context
 
-In order to read the original authorize request parameter values, you can use the [interaction service]({{< ref "/reference/interaction_service#iidentityserverinteractionservice-apis" >}}). 
-It provides a *GetAuthorizationContextAsync* API that will extract that information from the *returnUrl* and return a [AuthorizationRequest]({{<ref "/reference/interaction_service#authorizationrequest">}}) object which contains these values.
+In order to read the original authorize request parameter values, you can use the [interaction service]({{< ref "/reference/services/interaction_service#iidentityserverinteractionservice-apis" >}}). 
+It provides a *GetAuthorizationContextAsync* API that will extract that information from the *returnUrl* and return a [AuthorizationRequest]({{<ref "/reference/services/interaction_service#authorizationrequest">}}) object which contains these values.
 
 {{% notice note %}}
 It is unnecessary (and discouraged) for your login page logic to parse the *returnUrl* itself.

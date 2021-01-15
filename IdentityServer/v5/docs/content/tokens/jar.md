@@ -66,4 +66,4 @@ Request URI processing is disabled by default. Enable on the [Endpoints]({{<ref 
 You can access the validated data from the request object in two ways:
 
 * Wherever you have access to the *ValidatedAuthorizeRequest*, the *RequestObjectValues* dictionary holds the values.
-* In the UI code you can call *IIdentityServerInteractionService.GetAuthorizationContextAsync*, the resulting [AuthorizationRequest]({{<ref "/reference/interaction_service#authorizationrequest">}}) object contains the *RequestObjectValues* dictionary as well.
+* In the UI code you can call *IIdentityServerInteractionService.GetAuthorizationContextAsync*, the resulting [AuthorizationRequest]({{<ref "/reference/services/interaction_service#authorizationrequest">}}) object contains the *RequestObjectValues* dictionary as well.

@@ -13,7 +13,7 @@ Prerequisites are:
 
 * define a [client]({{< ref "/fundamentals/clients" >}}) for the *client credentials* grant type
 * define an [API scope]({{< ref "/fundamentals/resources#apis" >}}) (and optionally a resource)
-* grant the client access to the scope via the [*AllowedScopes*]({{< ref "/reference/client#basics" >}}) property
+* grant the client access to the scope via the [*AllowedScopes*]({{< ref "/reference/models/client#basics" >}}) property
 
 According to the OAuth [specification](https://tools.ietf.org/html/rfc6749#section-4.4), you request a token by posting to the token endpoint:
 
@@ -125,7 +125,7 @@ Prerequisites are:
 * define a [client]({{< ref "/fundamentals/clients" >}}) for the *authorization code* grant type
 * define an [identity]({{< ref "/fundamentals/resources#identity-resources" >}}) resource, e.g. *openid*
 * define an [API scope]({{< ref "/fundamentals/resources#apis" >}}) (and optionally a resource)
-* grant the client access to both scopes via the [*AllowedScopes*]({{< ref "/reference/client#basics" >}}) property
+* grant the client access to both scopes via the [*AllowedScopes*]({{< ref "/reference/models/client#basics" >}}) property
 
 ### Front-channel
 The call to the authorize endpoint is one using a redirect in the browser:
