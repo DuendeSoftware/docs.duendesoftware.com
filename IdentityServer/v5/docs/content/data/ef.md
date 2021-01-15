@@ -9,9 +9,16 @@ The use of EntityFramework allows any EF-supported database to be used with this
 The features provided by this library are broken down into two main areas: configuration store and operational store support.
 These two different areas can be used independently or together, based upon the needs of the hosting application.
 
+To use this library, ensure that you have the NuGet package for the ASP.NET Identity integration. 
+It is called *Duende.IdentityServer.EntityFramework*.
+You can install it with:
+
+```
+dotnet add package Duende.IdentityServer.EntityFramework
+```
+
 ## Configuration Store Support
-If client, identity resource, API resource, or CORS data is desired to be loaded from a EF-supported database 
-(rather than use in-memory configuration), then the configuration store can be used.
+For storing [configuration data]({{<ref "./configuration">}}), then the configuration store can be used.
 This support provides implementations of the *IClientStore*, *IResourceStore*, and the *ICorsPolicyService* extensibility points.
 These implementations use a *DbContext*-derived class called *ConfigurationDbContext* to model the tables in the database.
 
@@ -59,8 +66,8 @@ options.ConfigureDbContext = b =>
 ```
 
 ## Operational Store 
-If [operational data]({{<ref "./operational">}}) are desired to be loaded from a EF-supported database (rather than the default in-memory database), then the operational store can be used.
-This support provides implementations of the *IPersistedGrantStore* extensibility point.
+For storing [operational data]({{<ref "./operational">}}) then the operational store can be used.
+This support provides implementations of the *IPersistedGrantStore*, and *IDeviceFlowStore* extensibility points.
 The implementation uses a *DbContext*-derived class called *PersistedGrantDbContext* to model the table in the database.
 
 To use the operational store support, use the *AddOperationalStore* extension method after the call to *AddIdentityServer*:
@@ -105,7 +112,7 @@ This options class contains properties to control the operational store and *Per
     The token cleanup interval (in seconds). The default is 3600 (1 hour).
 
 {{% notice note %}}
-The token cleanup feature does *not* remove persisted grants that are *consumed* (see [persisted grants]({{<ref "./operational/grants">}})).
+The token cleanup feature does *not* remove persisted grants that are *consumed* (see [persisted grants]({{<ref "./operational/grants#grant-expiration-and-consumption">}})). It only removes persisted grants that are beyond their *Expiration*.
 {{% /notice %}}
 
 ## Database creation and schema changes across different versions of IdentityServer
