@@ -1569,12 +1569,14 @@ pre .copy-to-clipboard {
     position: absolute;
     right: 4px;
     top: 4px;
-    background-color: #949bab;
+    background-color:#d3c4f1;
+    margin-right: 5px;
+    margin-top: 5px;
     color: #ccc;
-    border-radius: 2px;
+    border-radius: 5px;
 }
 pre .copy-to-clipboard:hover {
-    background-color: #656c72;
+    background-color: #e9dfff;
     color: #fff;
 }
 .parent-element {
