@@ -24,7 +24,7 @@ The Duende IdentityServer templates for the dotnet CLI are a good starting point
 To install the templates open a console window and type the following command:
 
 ```
-dotnet new --install Duende.IdentityServer.Templates::5.0.0-preview.2
+dotnet new --install Duende.IdentityServer.Templates
 ```
 
 They will be used as a starting point for the various tutorials.
@@ -241,7 +241,7 @@ Navigating to the controller *https://localhost:6001/identity* on a browser shou
 This means your API requires a credential and is now protected by IdentityServer.
 
 {{% notice note %}}
-If you are wondering, why the above code disables audience validation, have a look :ref:`here <refResources>` TODO for a more in-depth discussion.
+If you are wondering, why the above code disables audience validation, have a look [here]({{< ref "/fundamentals/resources/api_scopes" >}}) for a more in-depth discussion.
 {{% /notice %}}
 
 #### Creating the client
@@ -375,7 +375,7 @@ app.UseEndpoints(endpoints =>
 ```
 
 ## Further experiments
-This walkthrough focused on the success path so far
+This walk-through focused on the success path so far
 
 * client was able to request token
 * client could use the token to access the API
