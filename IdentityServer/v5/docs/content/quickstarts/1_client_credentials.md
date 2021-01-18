@@ -141,7 +141,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-That's it - your identity server should now be configured. If you run the server and navigate the browser to ``https://localhost:5001/.well-known/openid-configuration``, you should see the so-called discovery document. 
+That's it - your identity server should now be configured. If you run the server and navigate the browser to *https://localhost:5001/.well-known/openid-configuration*, you should see the so-called discovery document. 
 The discovery document is a standard endpoint in identity servers.  The discovery document will be used by your clients and APIs to download the necessary configuration data.
 
 ![image](../images/1_discovery.png)
@@ -154,7 +154,7 @@ You don't have to check that folder into your source control, it will be re-crea
 Next, add an API to your solution. 
 
 You can either use the ASP.NET Core Web API template from Visual Studio or use the .NET CLI to create the API project as we do here.
-Run from within the ``src`` folder the following command:
+Run from within the *src* folder the following command:
 
     dotnet new webapi -n Api
 
@@ -163,7 +163,7 @@ Then add it to the solution by running the following commands:
     cd ..
     dotnet sln add ./src/Api/Api.csproj
 
-Configure the API application to run on ``https://localhost:6001`` only. You can do this by editing the [launchSettings.json]({{< param qs_base >}}/1_ClientCredentials/src/Api/Properties/launchSettings.json) file inside the Properties folder. Change the application URL setting to be:
+Configure the API application to run on *https://localhost:6001* only. You can do this by editing the [launchSettings.json]({{< param qs_base >}}/1_ClientCredentials/src/Api/Properties/launchSettings.json) file inside the Properties folder. Change the application URL setting to be:
 
     "applicationUrl": "https://localhost:6001"
 
