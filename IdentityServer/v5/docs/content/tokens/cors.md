@@ -45,7 +45,7 @@ services.AddSingleton<ICorsPolicyService>((container) => {
     {
         AllowedOrigins = { "https://foo", "https://bar" }
     };
-};
+});
 ```
 
 {{% notice note %}}
