@@ -36,16 +36,14 @@ Top-level settings.
 * ***EmitScopesAsSpaceDelimitedStringInJwt***
   
     Specifies whether scopes in JWTs are emitted as array or string
+    
+    Historically scopes values were emitted as an array in JWT access tokens.
+    The newer JWT for OAuth profile specifies a space delimited string instead.
+    The behavior can be toggled here (defaults to *false* for backwards compatibility).
 
 * ***EmitStaticAudienceClaim***
   
     Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
-
-* ***EmitScopesAsSpaceDelimitedStringsInJwt***
-
-    Historically scopes values were emitted as an array in JWT access tokens.
-    The newer JWT for OAuth profile specifies a space delimited string instead.
-    The behavior can be toggled here (defaults to *false* for backwards compatibility).
 
 ## Key management
 Controls the automatic key management settings.
