@@ -115,7 +115,7 @@ var customerResource = new ApiResource("customer", "Customer API")
         // additional claims to put into access token
         UserClaims =
         {
-            "department_it",
+            "department_id",
             "sales_region"
         }
     }
