@@ -1625,3 +1625,12 @@ pre .copy-to-clipboard:hover {
 option {
     color: initial;
 }
+
+.copy-to-clipboard {
+    background-color: #dac7ff !important;
+    margin: 10px 10px 0 0;
+}
+
+.copy-to-clipboard:hover {
+    background-color: #e9dfff !important;
+}
