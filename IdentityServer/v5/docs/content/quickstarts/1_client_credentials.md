@@ -245,7 +245,7 @@ If you are wondering, why the above code disables audience validation, have a lo
 {{% /notice %}}
 
 #### Creating the client
-The last step is to write a client that requests an access token, and then uses this token to access the API. For that, add a console project to your solution, remember to create it in the ``src``:
+The last step is to write a client that requests an access token, and then uses this token to access the API. For that, add a console project to your solution, remember to create it in the *src*:
 
     dotnet new console -n Client
     
@@ -257,7 +257,7 @@ Then as before, add it to your solution using:
 The token endpoint at IdentityServer implements the OAuth 2.0 protocol, and you could use raw HTTP to access it. 
 However, we have a client library called IdentityModel, that encapsulates the protocol interaction in an easy to use API.
 
-Add the ``IdentityModel`` NuGet package to your client. 
+Add the *IdentityModel* NuGet package to your client. 
 This can be done either via Visual Studio's Nuget Package manager or dotnet CLI::
 
     cd src
@@ -278,10 +278,10 @@ if (disco.IsError)
 ```
 
 {{% notice note %}}
-If you get an error connecting it may be that you are running `https` and the development certificate for ``localhost`` is not trusted. You can run ``dotnet dev-certs https --trust`` in order to trust the development certificate. This only needs to be done once.
+If you get an error connecting it may be that you are running *https* and the development certificate for *localhost* is not trusted. You can run *dotnet dev-certs https --trust* in order to trust the development certificate. This only needs to be done once.
 {{% /notice %}}
 
-Next you can use the information from the discovery document to request a token to IdentityServer to access ``api1``:
+Next you can use the information from the discovery document to request a token to IdentityServer to access *api1*:
 
 ```cs
 // request token
@@ -306,11 +306,11 @@ Console.WriteLine(tokenResponse.Json);
 (full file can be found [here]({{< param qs_base >}}/1_ClientCredentials/src/Client/Program.cs>))
 
 {{% notice note %}}
-Copy and paste the access token from the console to `jwt.ms <https://jwt.ms>`_ to inspect the raw token.
+Copy and paste the access token from the console to [jwt.ms](https://jwt.ms) to inspect the raw token.
 {{% /notice %}}
 
 #### Calling the API
-To send the access token to the API you typically use the HTTP Authorization header. This is done using the ``SetBearerToken`` extension method:
+To send the access token to the API you typically use the HTTP Authorization header. This is done using the *SetBearerToken* extension method:
 
 ```cs
 // call api
@@ -330,7 +330,7 @@ else
 ```
 
 {{% notice note %}}
-If you are in Visual Studio you can right-click on the solution and select "Multiple Startup Projects", and ensure the Api and IdentityServer will start; then run the solution; then, to step through the Client code, you can right-click on the "Client" project and select Debug... Start New Instance.
+If you are in Visual Studio you can right-click on the solution and select *Multiple Startup Projects*, and ensure the Api and IdentityServer will start; then run the solution; then, to step through the Client code, you can right-click on the *Client* project and select Debug... Start New Instance.
 {{% /notice %}}
 
 The output should look like this:
@@ -345,7 +345,7 @@ By default an access token will contain claims about the scope, lifetime (nbf an
 Right now, the API accepts any access token issued by your identity server.
 
 In the following we will add code that allows checking for the presence of the scope in the access token that the client asked for (and got granted).
-For this we will use the ASP.NET Core authorization policy system. Add the following to the ``ConfigureServices`` method in ``Startup``:
+For this we will use the ASP.NET Core authorization policy system. Add the following to the *ConfigureServices* method in *Startup*:
 
 ```cs
 services.AddAuthorization(options =>

@@ -23,7 +23,3 @@ dotnet new --install Duende.IdentityServer.Templates
 ```
 
 They will be used as a starting point for the various tutorials.
-
-{{% notice note %}}
-If you are using private NuGet sources do not forget to add the `–nuget-source` parameter: `–nuget-source https://api.nuget.org/v3/index.json`
-{{% /notice %}}

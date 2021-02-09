@@ -100,7 +100,7 @@ We then identify this client via the *ClientId* and the *ClientSecret*.
 *SaveTokens* is used to persist the tokens from IdentityServer in the cookie (as they will be needed later).
 
 {{% notice note %}}
-We use the so called *authorization code* flow with PKCE to connect to the OpenID Connect provider. See :ref:`here <refGrantTypes>` for more information on protocol flows.
+We use the so called *authorization code* flow with PKCE to connect to the OpenID Connect provider. See [here]({{< ref "/fundamentals/clients" >}}) for more information on protocol flows.
 {{% /notice %}}
 
 And then to ensure the execution of the authentication services on each request, add *UseAuthentication* to *Configure* in *Startup*:
@@ -381,7 +381,7 @@ services.AddAuthentication()
         options.SignOutScheme = IdentityServerConstants.SignoutScheme;
         options.SaveTokens = true;
 
-        options.Authority = "https://demo.identityserver.io/";
+        options.Authority = "https://demo.duendesoftware.com";
         options.ClientId = "interactive.confidential";
         options.ClientSecret = "secret";
         options.ResponseType = "code";

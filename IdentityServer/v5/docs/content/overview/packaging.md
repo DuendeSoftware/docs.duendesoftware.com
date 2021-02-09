@@ -26,15 +26,21 @@ Contains templates for the dotnet CLI.
 * Nuget [package](https://www.nuget.org/packages/Duende.IdentityServer.Templates)
 * [source code](https://github.com/DuendeSoftware/IdentityServer.Templates)
 
+You can install the templates using the following command:
+
+```
+dotnet new -i Duende.IdentityServer.Templates
+```
+
 ### Dev builds
 In addition we publish CI builds to our package repository.
-Add the following ``nuget.config`` to your project to access the CI feed:
+Add the following *nuget.config* to your project to access the CI feed:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-    <configuration>
-        <packageSources>
-            <add key="Duende IdentityServer CI" value="https://www.myget.org/F/duende_identityserver/api/v3/index.json" />
-        </packageSources>
-    </configuration>
+<configuration>
+    <packageSources>
+        <add key="Duende IdentityServer CI" value="https://www.myget.org/F/duende_identityserver/api/v3/index.json" />
+    </packageSources>
+</configuration>
 ```
