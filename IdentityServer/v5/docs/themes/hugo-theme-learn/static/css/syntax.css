@@ -42,12 +42,10 @@ pre {
 .hljs-selector-pseudo {
   color: #2b91af;
 }
+.hljs-comment,
 .hljs-quote,
 .hljs-doctag {
   color: grey;
-}
-.hljs-comment {
-  color: #316423;
 }
 .hljs-attr {
   color: red;

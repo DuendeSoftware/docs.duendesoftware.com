@@ -528,7 +528,9 @@ h6 {
   font-size: 0.9rem; }
 
 p {
-  margin: 1.7rem 0; }
+  /*margin: 1.7rem 0; */
+  margin: 1rem 0;
+}
 
 ul, ol {
   margin-top: 1.7rem;
