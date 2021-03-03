@@ -1,7 +1,7 @@
 ---
 title: "Supported Specifications"
 date: 2020-09-10T08:22:12+02:00
-weight: 3
+weight: 30
 ---
 
 Duende IdentityServer implements the following specifications:
