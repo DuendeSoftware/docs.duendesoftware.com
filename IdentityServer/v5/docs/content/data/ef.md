@@ -108,6 +108,9 @@ This options class contains properties to control the operational store and *Per
 *EnableTokenCleanup*
     Indicates whether expired grants will be automatically cleaned up from the database. The default is *false*.
 
+*RemoveConsumedTokens* [added in 5.1]
+    Indicates whether consumed grants will be automatically cleaned up from the database. The default is *false*.
+        
 *TokenCleanupInterval*
     The token cleanup interval (in seconds). The default is 3600 (1 hour).
 
