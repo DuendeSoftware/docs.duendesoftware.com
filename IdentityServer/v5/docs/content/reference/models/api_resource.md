@@ -23,6 +23,10 @@ This class models an API.
 * ***Description***
     
     This value can be used e.g. on the consent screen.
+    
+* ***RequireResourceIndicator***
+    
+    Indicates if this API resource requires the resource indicator to request it, and expects access tokens issued to it will only ever contain this API resource as the audience.
 
 * ***ApiSecrets***
     
@@ -37,6 +41,7 @@ This class models an API.
     List of associated user claim types that should be included in the access token.
 
 * ***Scopes***
+
     List of API scope names. You need to create those using [ApiScope]({{< ref "api_scope.md" >}}).
 
 ## Defining API resources in appsettings.json
