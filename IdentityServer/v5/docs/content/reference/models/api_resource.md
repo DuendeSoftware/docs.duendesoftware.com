@@ -34,13 +34,14 @@ This class models an API.
 
 * ***AllowedAccessTokenSigningAlgorithms***
     
-    List of allowed signing algorithms for access token. If empty, will use the server default signing algorithm.   
+    List of allowed signing algorithms for access token. If empty, will use the server default signing algorithm.
 
 * ***UserClaims***
     
     List of associated user claim types that should be included in the access token.
 
 * ***Scopes***
+
     List of API scope names. You need to create those using [ApiScope]({{< ref "api_scope.md" >}}).
 
 ## Defining API resources in appsettings.json
