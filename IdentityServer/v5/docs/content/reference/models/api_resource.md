@@ -23,6 +23,10 @@ This class models an API.
 * ***Description***
     
     This value can be used e.g. on the consent screen.
+    
+* ***RequireResourceIndicator***
+    
+    Indicates if this API resource requires the resource indicator to request it, and expects access tokens issued to it will only ever contain this API resource as the audience.
 
 * ***ApiSecrets***
     
@@ -30,7 +34,7 @@ This class models an API.
 
 * ***AllowedAccessTokenSigningAlgorithms***
     
-    List of allowed signing algorithms for access token. If empty, will use the server default signing algorithm.
+    List of allowed signing algorithms for access token. If empty, will use the server default signing algorithm.   
 
 * ***UserClaims***
     
