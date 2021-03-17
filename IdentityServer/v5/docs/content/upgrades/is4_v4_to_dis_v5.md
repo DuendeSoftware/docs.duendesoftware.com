@@ -51,7 +51,7 @@ This includes:
 * A new *Keys* table for the automatic key management feature in the operational database.
 * A new *RequireResourceIndicator* boolean column on the *ApiResources* table in the configuration database.
 
-If you are using the *Duende.IdentityServer.EntityFramework* package as the implementation for the database and you're using EntityFramework Code migrations as the mechanism for managing those schema changes over time, the commands below will update those migrations with the new changes.
+If you are using the *Duende.IdentityServer.EntityFramework* package as the implementation for the database and you're using EntityFramework Core migrations as the mechanism for managing those schema changes over time, the commands below will update those migrations with the new changes.
 Note that you might need to adjust based on your specific organization of the migration files.
 
 ```
