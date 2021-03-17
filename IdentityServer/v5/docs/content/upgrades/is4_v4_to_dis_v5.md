@@ -41,11 +41,11 @@ using Duende.IdentityServer.Models;
 ## Step 3: Remove AddDeveloperSigningCredential
 
 If in *ConfigureServices* in your *Startup.cs* you were previously using *AddDeveloperSigningCredential*, that can be removed. 
-[Automatic key management]({{ref "/fundamentals/keys"}}) is now a built-in feature.
+[Automatic key management]({{<ref "/fundamentals/keys">}}) is now a built-in feature.
 
 ## Step 4: Update Database Schema (if needed)
 
-If you are using a [database]({{ref "/data"}}) for your configuration and operational data, then there is a small database schema update.
+If you are using a [database]({{<ref "/data">}}) for your configuration and operational data, then there is a small database schema update.
 This includes:
 
 * A new *Keys* table for the automatic key management feature in the operational database.
