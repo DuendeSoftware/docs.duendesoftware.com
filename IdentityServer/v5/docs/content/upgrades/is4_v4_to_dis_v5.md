@@ -3,7 +3,7 @@ title: "IdentityServer4 v4.1 to Duende IdentityServer v5.0"
 weight: 10
 ---
 
-This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende IdentityServer v5.0.x.
+This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende IdentityServer [v5.0.x](https://github.com/DuendeSoftware/IdentityServer/releases/tag/5.0.0).
 
 ## Step 1: Update NuGet package
 
