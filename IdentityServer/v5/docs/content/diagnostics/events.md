@@ -45,7 +45,7 @@ Our default event sink will simply serialize the event class to JSON and forward
 If you want to connect to a custom event store, implement the *IEventSink* interface and register it with DI.  
 
 {{% notice info %}}
-The `SeqEventSink` example below should be registered as a singleton, or the sink should implement `IDisposable` and dispose of the `Logger` object in the Dispose method.  
+The *SeqEventSink* example below should be registered as a singleton, or the sink should implement *IDisposable* and dispose of the *Logger* object in the Dispose method.  
 {{% /notice %}}
 
 The following example uses [Seq](https://getseq.net) to emit events:
