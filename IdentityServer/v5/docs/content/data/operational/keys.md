@@ -3,7 +3,7 @@ title: "Keys"
 weight: 40
 ---
 
-The [automatic key management]({{ref "/fundamentals/keys"}}) feature in Duende IdentityServer requires a store to persist keys that are dynamically created.
+The [automatic key management]({{<ref "/fundamentals/keys">}}) feature in Duende IdentityServer requires a store to persist keys that are dynamically created.
 
 ## Signing Key Store
 By default, the file system is used, but the storage of these keys is abstracted behind a extensible store interface.
