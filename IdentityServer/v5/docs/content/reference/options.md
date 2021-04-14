@@ -357,3 +357,19 @@ var builder = services.AddIdentityServer(options =>
     Specifies whether a cnf claim gets emitted for access tokens if a client certificate was present.
     Normally the cnf claims only gets emitted if the client used the client certificate for authentication,
     setting this to true, will set the claim regardless of the authentication method. (defaults to false).
+
+## Dynamic Providers
+Shared settings for the [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}) feature.
+
+* ***PathPrefix***
+    
+    Prefix in the pipeline for callbacks from external providers. Defaults to "/federation".
+
+* ***SignInScheme***
+    
+    Scheme used for signin. Defaults to the constant *IdentityServerConstants.ExternalCookieAuthenticationScheme*.
+
+* ***SignOutScheme***
+    
+    Scheme for signout. Defaults to the constant *IdentityServerConstants.DefaultCookieAuthenticationScheme*.
+
