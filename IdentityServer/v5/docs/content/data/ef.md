@@ -19,7 +19,7 @@ dotnet add package Duende.IdentityServer.EntityFramework
 
 ## Configuration Store Support
 For storing [configuration data]({{<ref "./configuration">}}), then the configuration store can be used.
-This support provides implementations of the *IClientStore*, *IResourceStore*, and the *ICorsPolicyService* extensibility points.
+This support provides implementations of the *IClientStore*, *IResourceStore*, *IIdentityProviderStore*, and the *ICorsPolicyService* extensibility points.
 These implementations use a *DbContext*-derived class called *ConfigurationDbContext* to model the tables in the database.
 
 To use the configuration store support, use the *AddConfigurationStore* extension method after the call to *AddIdentityServer*:
