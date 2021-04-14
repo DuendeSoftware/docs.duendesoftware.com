@@ -55,9 +55,9 @@ If you are using the *Duende.IdentityServer.EntityFramework* package as the impl
 Note that you might need to adjust based on your specific organization of the migration files.
 
 ```
-dotnet ef migrations add UpdateToDuende_v5 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
+dotnet ef migrations add UpdateToDuende_v5_0 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
 
-dotnet ef migrations add UpdateToDuende_v5 -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
+dotnet ef migrations add UpdateToDuende_v5_0 -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
 ```
 
 Then to apply those changes to your database:
