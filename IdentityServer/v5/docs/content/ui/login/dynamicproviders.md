@@ -50,7 +50,7 @@ And to register this in the DI system:
 ### Callback Paths
 
 As part of the architecture of the dynamic providers feature, the various callback paths are required and are automatically set to follow a convention.
-This convention of these paths follows the form of *~/federation/{scheme}/{suffix}*.
+The convention of these paths follows the form of *~/federation/{scheme}/{suffix}*.
 
 These are three paths that are set on the *OpenIdConnectOptions*:
 

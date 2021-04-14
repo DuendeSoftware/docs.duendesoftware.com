@@ -23,7 +23,7 @@ Its properties map to the Open ID Connect options class from ASP.NET Core, and t
 
 * ***Type***
     
-    Protocol type of the provider. Default to *"oidc"* for the *OidcProvider*.
+    Protocol type of the provider. Defaults to *"oidc"* for the *OidcProvider*.
 
 * ***Authority***
     
@@ -39,7 +39,7 @@ Its properties map to the Open ID Connect options class from ASP.NET Core, and t
 
 * ***ClientSecret***
     
-    The client secret. By default this is the plaintext client secret and great consideration should be taken if this value is to be stored as plaintext in the store. It is possible to store this in a protected way and then unprotecting when loaded from the store either by implementing a custom *IIdentityProviderStore* or registering a custom *IConfigureNamedOptions\<OpenIdConnectOptions>*.
+    The client secret. By default this is the plaintext client secret and great consideration should be taken if this value is to be stored as plaintext in the store. It is possible to store this in a protected way and then unprotect when loading from the store either by implementing a custom *IIdentityProviderStore* or registering a custom *IConfigureNamedOptions\<OpenIdConnectOptions>*.
 
 * ***Scope***
     
