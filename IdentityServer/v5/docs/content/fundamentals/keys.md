@@ -83,6 +83,11 @@ builder.AddSigningCredential(key, SecurityAlgorithms.RsaSha256);
 
 You can call *AddSigningCredential* multiple times if you want to register more than one signing key. Another extension method called *AddValidationKey* can be called to register public keys, that should be accepted for token validation.
 
+{{% notice note %}}
+A signing key registered with *AddSigningCredential* will take precedence over any keys created by the automatic key management feature.
+{{% /notice %}}
+
+
 ## Disabling automatic key management
 The automatic key management feature can be disabled by setting the *Enabled* flag to *false* on the the [*IdentityServerOptions*]({{< ref "/reference/options#key-management" >}}), e.g.:
 
@@ -92,3 +97,6 @@ var builder = services.AddIdentityServer(options =>
     options.KeyManagement.Enabled = false;
 });
 ```
+
+
+
