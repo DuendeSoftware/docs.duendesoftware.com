@@ -59,6 +59,7 @@ We recommend using the self-host option over IIS Express. The rest of the docs a
 To add support for OpenID Connect authentication to the MVC application, you first need to add the nuget package containing the OpenID Connect handler to your project, e.g.::
 
     dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
+    dotnet add package System.IdentityModel.Tokens.Jwt
 
 ..then add the following to *ConfigureServices* in *Startup*:
 
