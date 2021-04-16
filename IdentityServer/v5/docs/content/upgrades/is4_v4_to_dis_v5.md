@@ -1,9 +1,9 @@
 ---
-title: "IdentityServer4 v4.1 to Duende IdentityServer v5.0"
+title: "IdentityServer4 v4.1 to Duende IdentityServer v5"
 weight: 100
 ---
 
-This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende IdentityServer [v5.0.x](https://github.com/DuendeSoftware/IdentityServer/releases/tag/5.0.0).
+This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende IdentityServer v5.
 
 ## Step 1: Update NuGet package
 
@@ -14,10 +14,10 @@ For example in your project file:
 <PackageReference Include="IdentityServer4" Version="4.1.1" />
 ```
 
-would change to: 
+would change to the latest version of Duende IdentityServer:
 
 ```
-<PackageReference Include="Duende.IdentityServer" Version="5.0.5" />
+<PackageReference Include="Duende.IdentityServer" Version="5.2.0" />
 ```
 
 If you're using any of the other IdentityServer4 packages, such as *IdentityServer4.EntityFramework* or *IdentityServer4.AspNetIdentity*, then there are Duende equivalents such as *Duende.IdentityServer.EntityFramework* and *Duende.IdentityServer.AspNetIdentity*, respectively.
@@ -55,9 +55,9 @@ If you are using the *Duende.IdentityServer.EntityFramework* package as the impl
 Note that you might need to adjust based on your specific organization of the migration files.
 
 ```
-dotnet ef migrations add UpdateToDuende_v5_0 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
+dotnet ef migrations add UpdateToDuende_v5 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
 
-dotnet ef migrations add UpdateToDuende_v5_0 -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
+dotnet ef migrations add UpdateToDuende_v5 -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
 ```
 
 Then to apply those changes to your database:
