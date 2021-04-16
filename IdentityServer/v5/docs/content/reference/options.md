@@ -45,6 +45,10 @@ Top-level settings.
   
     Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
 
+* ***ValidateTenantOnAuthorization***
+  
+    Specifies if a user's *tenant* claim is compared to the tenant *acr_values* parameter value to determine if the login page is displayed. Defaults to *false*.
+
 ## Key management
 Controls the automatic key management settings.
 
