@@ -21,6 +21,7 @@ For certain operations, IdentityServer needs a persistence store to keep state, 
 * issuing authorization codes
 * issuing reference and refresh tokens
 * storing consent
+* automatic management for signing keys
 
 You can either use a traditional database for storing operational data, or use a cache with persistence features like Redis.
 
