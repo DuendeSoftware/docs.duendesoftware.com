@@ -303,7 +303,7 @@ if (tokenResponse.IsError)
 Console.WriteLine(tokenResponse.Json);
 ```
 
-(full file can be found [here]({{< param qs_base >}}/1_ClientCredentials/src/Client/Program.cs>))
+(full file can be found [here]({{< param qs_base >}}/1_ClientCredentials/src/Client/Program.cs))
 
 {{% notice note %}}
 Copy and paste the access token from the console to [jwt.ms](https://jwt.ms) to inspect the raw token.
