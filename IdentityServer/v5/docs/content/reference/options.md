@@ -274,9 +274,9 @@ Setting regarding the IdentityServer / user workflow.
     The oldest message cookies will be purged once the limit has been reached.
     This effectively indicates how many tabs can be opened by a user when using IdentityServer.
 
-* ***AllowHostInReturnUrl***
+* ***AllowOriginInReturnUrl***
 
-    Flag that allows return URL validation to accept full URL that includes the IdentityServer scheme and host name. Defaults to *false*.
+    Flag that allows return URL validation to accept full URL that includes the IdentityServer origin. Defaults to *false*.
 
 
 ## Caching
