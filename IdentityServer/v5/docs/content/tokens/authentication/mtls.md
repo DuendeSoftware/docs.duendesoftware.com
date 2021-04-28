@@ -31,7 +31,7 @@ new Client
 {
     ClientId = "mtls.client",
     AllowedGrantTypes = GrantTypes.ClientCredentials,
-    AllowedScopes = { "api1" }
+    AllowedScopes = { "api1" },
 
     ClientSecrets = 
     {
