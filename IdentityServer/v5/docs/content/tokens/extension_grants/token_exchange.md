@@ -183,4 +183,4 @@ public class ProfileService : IProfileService
 }
 ```
 
-See [here]({{< param samples_base >}}/TokenExchange) for the full source code.
+See [here]({{< ref "/samples/extension_grants" >}}) for the full source code.
