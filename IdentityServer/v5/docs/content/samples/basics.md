@@ -82,7 +82,7 @@ Key takeaways:
 
 [link to source code]({{< param samples_base >}}/Basics/MvcJarJwt)
 
-### Interactive MVC Client with Back-Channel Logout Notifications
+### MVC Client with Back-Channel Logout Notifications
 This sample shows how to use back-channel logout notifications.
 
 Key takeaways:
