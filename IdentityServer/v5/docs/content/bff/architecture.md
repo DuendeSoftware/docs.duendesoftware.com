@@ -36,6 +36,6 @@ The frontend will call APIs. Frontend exclusive APIs can live directly in the BF
 
 The remote API interfaces can be either created manually, or a reverse proxy approach can be used. Duende.BFF includes a developer-centric version of Microsoft's YARP proxy that integrates with the automatic token management mentioned above.
 
-**UI**
+**Frontend**
 
 The UI can be delivered over various mechanisms, e.g. via the ASP.NET static files middleware, MVC/Razor or server/WASM Blazor.
