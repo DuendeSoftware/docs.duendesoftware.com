@@ -26,6 +26,16 @@ services.AddAuthentication(options =>
 ```
 
 ### The OpenID Connect Authentication Handler
+The OIDC handler connects the application to the authentication / access token system.
+
+The exact settings depend on the OIDC provider and its configuration settings. We recommend:
+
+* use authorization code flow with PKCE
+* use a *response_mode* of *query* since this plays nicer with *SameSite* cookies
+* use a strong client secret. Since the BFF can be a confidential client, it is totally possible to use strong client authentication like JWT assertions, JAR or MTLS
+* turn of inbound claims mapping
+* save the tokens into the authentication session so they can be automatically managed
+* request a refresh token using the *offline_access* scope
 
 ```csharp
 services.AddAuthentication().AddOpenIdConnect("oidc", options =>
@@ -58,15 +68,28 @@ services.AddAuthentication().AddOpenIdConnect("oidc", options =>
     options.Scope.Add("offline_access");
 });
 ```
-
+The OIDC handler will use the default sign-in handler (the cookie handler) to establish a session after successful validation of the OIDC response.
 
 ### The Cookie Handler
+The cookie handler is responsible for establishing the session and manage authentication session related data.
+
+Things to consider:
+
+* determine the session lifetime - and if the session lifetime should be sliding or absolute
+* it is recommended to use a cookie name [prefix](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-4.1.3) if compatible with your application
+* use the highest available *SameSite* mode that is compatible with your application, e.g. *strict*, but at least *lax*
 
 ```csharp
 services.AddAuthentication().AddCookie("cookie", options =>
 {
+    // set session lifetime
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    
+    // sliding or absolute
+    options.SlidingExpiration = false;
+
     // host prefixed cookie name
-    options.Cookie.Name = "__Host-spa5";
+    options.Cookie.Name = "__Host-spa";
     
     // strict SameSite handling
     options.Cookie.SameSite = SameSiteMode.Strict;
