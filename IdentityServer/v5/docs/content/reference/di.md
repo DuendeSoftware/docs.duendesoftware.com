@@ -34,6 +34,10 @@ Several convenience methods are provided for registering custom stores:
     
     Registers a custom *IResourceStore* implementation.
 
+* ***AddIdentityProviderStore\<T>***
+    
+    Registers a custom *IIdentityProviderStore* implementation.
+
 
 The [in-memory configuration stores]({{<ref "/data/configuration#in-memory-stores">}}) can be registered in DI with the following extension methods.
 
@@ -77,6 +81,11 @@ Extension methods to enable [caching for configuration data]({{<ref "/data/confi
     Registers a *ICorsPolicyService* decorator implementation which will maintain an in-memory cache of the results of the CORS policy service evaluation.
     The cache duration is configurable on the *Caching* configuration options on the *IdentityServerOptions*.
 
+* ***AddIdentityProviderStoreCache\<T>***
+    
+    Registers a *IIdentityProviderStore* decorator implementation which will maintain an in-memory cache of *IdentityProvider* configuration objects.
+    The cache duration is configurable on the *Caching* configuration options on the *IdentityServerOptions*.
+    
 ## Test Stores
 The *TestUser* class models a user, their credentials, and claims in IdentityServer. 
 
