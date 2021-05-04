@@ -12,10 +12,11 @@ The stores used in Duende IdentityServer are:
 * [Client store]({{<ref "/reference/stores/client_store">}}) for *Client* data.
 * [CORS policy service]({{<ref "/reference/stores/cors_policy_service">}}) for [CORS support]({{<ref "/tokens/cors">}}). Given that this is so closely tied to the *Client* configuration data, the CORS policy service is considered one of the configuration stores.
 * [Resource store]({{<ref "/reference/stores/resource_store">}}) for *IdentityResource*, *ApiResource*, and *ApiScope* data.
+* [Identity Provider store]({{<ref "/reference/stores/idp_store">}}) for *IdentityProvider* data.
 
 ## Registering Custom Stores
 
-Custom implementations of *IClientStore*, *ICorsPolicyService*, and/or *IResourceStore* must be registered in the DI system.
+Custom implementations of the stores must be registered in the DI system.
 There are [convenience methods]({{<ref "/reference/di#configuration-stores">}}) for registering these.
 For example:
 
@@ -25,16 +26,17 @@ public void ConfigureServices(IServiceCollection services)
     services.AddIdentityServer()
         .AddClientStore<YourCustomClientStore>()
         .AddCorsPolicyService<YourCustomCorsPolicyService>()
-        .AddResourceStore<YourCustomResourceStore>();
+        .AddResourceStore<YourCustomResourceStore>()
+        .AddIdentityProviderStore<YourCustomAddIdentityProviderStore>();
 }
 ```
 
 ## Caching Configuration Data
 
-Client and resource configuration data is used frequently by during request processing.
+Configuration data is used frequently by during request processing.
 If this data is being loaded from a database or other external store, then it might be expensive to frequently re-load the same data.
 
-Duende IdentityServer provides [convenience methods]({{<ref "/reference/di#caching-configuration-data">}}) to enable caching data from the *IClientStore*, *ICorsPolicyService*, and/or *IResourceStore* stores.
+Duende IdentityServer provides [convenience methods]({{<ref "/reference/di#caching-configuration-data">}}) to enable caching data from the various stores.
 The caching implementation relies upon an *ICache\<T>* service and must also be added to DI. 
 For example:
 
@@ -48,7 +50,8 @@ public void ConfigureServices(IServiceCollection services)
         .AddInMemoryCaching()
         .AddClientStoreCache<YourCustomClientStore>()
         .AddCorsPolicyCache<YourCustomCorsPolicyService>()
-        .AddResourceStoreCache<YourCustomResourceStore>();
+        .AddResourceStoreCache<YourCustomResourceStore>()
+        .AddIdentityProviderStoreCache<YourCustomAddIdentityProviderStore>();
 }
 ```
 

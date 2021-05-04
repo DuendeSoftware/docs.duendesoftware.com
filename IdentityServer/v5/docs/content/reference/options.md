@@ -45,6 +45,10 @@ Top-level settings.
   
     Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
 
+* ***ValidateTenantOnAuthorization***
+  
+    Specifies if a user's *tenant* claim is compared to the tenant *acr_values* parameter value to determine if the login page is displayed. Defaults to *false*.
+
 ## Key management
 Controls the automatic key management settings.
 
@@ -270,6 +274,11 @@ Setting regarding the IdentityServer / user workflow.
     The oldest message cookies will be purged once the limit has been reached.
     This effectively indicates how many tabs can be opened by a user when using IdentityServer.
 
+* ***AllowOriginInReturnUrl***
+
+    Flag that allows return URL validation to accept full URL that includes the IdentityServer origin. Defaults to *false*.
+
+
 ## Caching
 These settings only apply if the respective caching has been enabled in the services configuration in startup.
 
@@ -357,3 +366,19 @@ var builder = services.AddIdentityServer(options =>
     Specifies whether a cnf claim gets emitted for access tokens if a client certificate was present.
     Normally the cnf claims only gets emitted if the client used the client certificate for authentication,
     setting this to true, will set the claim regardless of the authentication method. (defaults to false).
+
+## Dynamic Providers
+Shared settings for the [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}) feature.
+
+* ***PathPrefix***
+    
+    Prefix in the pipeline for callbacks from external providers. Defaults to "/federation".
+
+* ***SignInScheme***
+    
+    Scheme used for signin. Defaults to the constant *IdentityServerConstants.ExternalCookieAuthenticationScheme*.
+
+* ***SignOutScheme***
+    
+    Scheme for signout. Defaults to the constant *IdentityServerConstants.DefaultCookieAuthenticationScheme*.
+
