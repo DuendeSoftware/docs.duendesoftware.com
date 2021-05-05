@@ -169,3 +169,7 @@ By default, the logout endpoint will trigger revocation of the user's refresh to
 The */bff/backchannel* endpoint is an implementation of the [OpenID Connect Back-Channel Logout](https://openid.net/specs/openid-connect-backchannel-1_0.html) specification.
 
 The endpoint will call the registered session revocation service to revoke the user session when it receives a valid logout token. You need to enable server-side session for this feature to work.
+
+{{% notice note %}}
+By default, only the specific session of the user will be revoked. You can also configure the endpoint to revoke every session that belongs to the given subject ID.
+{{% /notice %}}
