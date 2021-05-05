@@ -6,6 +6,8 @@ weight: 20
 
 Duende.BFF adds a couple of endpoints for managing typical session-related operations like triggering login and logout and getting information about the currently logged-on user. These endpoint are meant to be called by the frontend.
 
+In addition we add an implementation of the OpenID Connect back-channel notification endpoint to overcome the restrictions of third party cookies in front-channel notification in modern browsers.
+
 You enable the endpoints by adding the relevant services into the DI container:
 
 ```csharp
@@ -158,3 +160,12 @@ By default the logout endpoint will redirect back to the root of the application
 ```
 GET /bff/logout?sid=xyz&returnUrl=/loggedout
 ```
+
+{{% notice note %}}
+By default, the logout endpoint will trigger revocation of the user's refresh token (if present). This can be configured on the [options]({{< ref "/bff/options" >}}).
+{{% /notice %}}
+
+### Back-channel logout notifications
+The */bff/backchannel* endpoint is an implementation of the [OpenID Connect Back-Channel Logout](https://openid.net/specs/openid-connect-backchannel-1_0.html) specification.
+
+The endpoint will call the registered session revocation service to revoke the user session when it receives a valid logout token. You need to enable server-side session for this feature to work.
