@@ -48,7 +48,7 @@ The login endpoint triggers authentication with the scheme configured for challe
 GET /bff/login
 ```
 
-By default the login endpoint will redirect back to the root of the application, after authentication is done. Alternatively you can add local URL instead:
+By default the login endpoint will redirect back to the root of the application after authentication is done. Alternatively you can use local URL instead:
 
 ```
 GET /bff/login?returnUrl=/page2
@@ -129,7 +129,32 @@ If there is a valid session, the user endpoint returns a JSON array containing t
 ```
 
 {{% notice note %}}
-You can customize the contents of the ASP.NET Core session via the OpenID Connect handler's [ClaimAction](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/additional-claims?view=aspnetcore-5.0#creating-and-adding-claims) infrastructure, or using [claim transformation](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.iclaimstransformation?view=aspnetcore-5.0).
+You can customize the contents of the ASP.NET Core session via the OpenID Connect handler's [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.claimactioncollectionmapextensions?view=aspnetcore-5.0) infrastructure, or using [claim transformation](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.iclaimstransformation?view=aspnetcore-5.0).
 {{% /notice %}}
 
+Duende.BFF adds three additional elements to the list:
+
+**bff:session_expires_in**
+
+This is the number of seconds the current session will be valid for
+
+**bff:session_state**
+
+This is the session state value of the upstream OIDC provider that can be use for the JavaScript *check_session* mechanism(if provided).
+
+**bff:logout_url**
+
+This is the URL to trigger logout. If the upstream provider includes an *sid* claim, the BFF logout endpoint required this value as a query string parameter. This behavior can be configured on the [options]({{< ref "/bff/options" >}}).
+
 ### Logout
+This endpoint trigger local and upstream logout. If the upstream IdP sent a session ID, this must be appended to the URL:
+
+```
+GET /bff/logout?sid=xyz
+```
+
+By default the logout endpoint will redirect back to the root of the application after logout is done. Alternatively you can use a local URL instead:
+
+```
+GET /bff/logout?sid=xyz&returnUrl=/loggedout
+```
