@@ -15,3 +15,17 @@ Key takeaways:
 * how to implement a backend to support the frontend pages
 
 [link to source code]({{< param samples_base >}}/UserInteraction/SpaLoginUi)
+
+### Adding other protocol types to dynamic providers
+
+The [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to support additional protocol types, and specifically WS-Federation.
+
+Key takeaways:
+
+* how to define a custom identity provider model
+* how to map from the custom identity provider model to the protocol options
+* how to register the custom protocol type with IdentityServer
+* how to register the custom protocol type with IdentityServer
+* how to use the existing provider store to persist custom provider model data
+
+[link to source code]({{< param samples_base >}}/UserInteraction/WsFederationDynamicProviders)
