@@ -17,7 +17,9 @@ services.AddBff()
     .AddServerSideSessions();
 ```
 
-The default implementation stores the session in-memory on the server. This is useful for testing, for production you typically want a more robust storage mechanism. If you want to use an EntityFramework-based session store (e.g. SQL Server), you can use our EF integration package like this:
+The default implementation stores the session in-memory on the server. This is useful for testing, for production you typically want a more robust storage mechanism. 
+
+We provide an EntityFramework-based session store implementation (e.g. for SQL Server):
 
 ```csharp
 var cn = _configuration.GetConnectionString("db");

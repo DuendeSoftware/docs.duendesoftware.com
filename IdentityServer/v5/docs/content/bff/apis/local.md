@@ -5,14 +5,16 @@ weight: 10
 
 A local API can be any invocable functionality that is located inside the BFF host, e.g. an MVC controller or just a simple endpoint.
 
-The endpoints needs to be secured, to make sure that only the frontend can call it. We recommend doing this using two layers of protection:
+These endpoints need to be secured to make sure that only the frontend can call them. We recommend doing this using two layers of protection:
 
 **SameSite cookies**
+
 SameSite cookies are a built-in feature of modern browsers to make sure that a cookie only gets sent from a page that originates from the same site where the cookie was originally issued on.
 
 This is a good first layer of defense, but makes the assumption that you can trust all sub-domains of your top-level site, e.g. **.mycompany.com*.
 
 **Anti-forgery header**
+
 In addition to the cookie protection, we recommend requiring an additional custom header, e.g.:
 
 ```
@@ -21,7 +23,7 @@ GET /endpoint
 x-csrf: 1
 ```
 
-The fact that the header value is static is really not important - but its presence in combination with the cookie requirement will trigger CORS preflight request. This effectively sandboxes the caller to the same origin as the backend.
+The fact that the header value is static is really not important - but its presence in combination with the cookie requirement will trigger CORS preflight request for cross-origin calls. This effectively sandboxes the caller to the same origin as the backend which is a very strong security guarantee.
 
 In addition, API endpoints also need some special treatment in situations where the session has expired, or authorization fails. In these cases you want to avoid trigger an authentication redirect to the upstream IdP, but instead return Ajax-friendly status codes
 
@@ -45,7 +47,7 @@ public void Configure(IApplicationBuilder app)
 ```
 
 {{% notice note %}}
-The BFF middleware must be before the authorization middleware.
+The BFF middleware must be placed before the authorization middleware.
 {{% /notice %}}
 
 In addition, the endpoints that need the processing must be decorated, e.g.:

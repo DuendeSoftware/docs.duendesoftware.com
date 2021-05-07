@@ -21,7 +21,7 @@ You can then use the token to set it on an *HttpClient* instance:
     client.SetBearerToken(token);
 ```
 
-We recommend to leverage the *HttpClientFactory* to fabricate HTTP client that are already aware of the token management plumbing. For this you would register a named client in your *startup* e.g. like this:
+We recommend to leverage the *HttpClientFactory* to fabricate HTTP clients that are already aware of the token management plumbing. For this you would register a named client in your *startup* e.g. like this:
 
 ```cs
 // registers HTTP client that uses the managed user access token
@@ -79,3 +79,5 @@ public async Task<IActionResult> CallApiAsUserTyped(
     // rest omitted
 }
 ```
+
+The client will internally always try to use a current and valid access token. If for any reason, this is not possible, the 401 status code will be returned to the caller. 

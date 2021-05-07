@@ -14,4 +14,4 @@ These APIs only exist to support the specific frontend - they are not shared wit
 
 **shared APIs (remote APIs)**
 
-These APIs are shared between multiple frontends - or generally speaking, multiple clients. They are typically deployed on a different server, and can only be called via the BFF host.
+These APIs are deployed on a different host than the BFF, e.g. because they need to be shared between multiple frontends - or generally speaking, multiple clients. These APIs can only be called via the BFF host acting as a proxy.

@@ -38,7 +38,7 @@ public void Configure(IApplicationBuilder app)
 ```
 
 {{% notice note %}}
-*MapBffManagementEndpoints* adds all BFF management endpoints. You can also map every endpoint individually, e.g by calling  *endpoints.MapBffManagementLoginEndpoint();*
+*MapBffManagementEndpoints* adds all BFF management endpoints. You can also map every endpoint individually, e.g by calling  *endpoints.MapBffManagementLoginEndpoint();* etc...
 {{% /notice %}}
 
 The following describes the default behavior of those endpoints. See the [extensibility]({{< ref "/bff/extensibility" >}}) section for more information how to provide custom implementations.
@@ -50,7 +50,7 @@ The login endpoint triggers authentication with the scheme configured for challe
 GET /bff/login
 ```
 
-By default the login endpoint will redirect back to the root of the application after authentication is done. Alternatively you can use local URL instead:
+By default the login endpoint will redirect back to the root of the application after authentication is done. Alternatively you can use a different local URL instead:
 
 ```
 GET /bff/login?returnUrl=/page2
@@ -60,7 +60,7 @@ GET /bff/login?returnUrl=/page2
 The user endpoint returns data about the currently logged-on user and the session.
 
 {{% notice note %}}
-To protect against cross-site request forgery, you need to add a static header to the GET request. Both header name and required value can be configured on the [options]({{< ref "/bff/options" >}}).
+To protect against cross-site request forgery, you need to add a static header to the GET request. Both header name and  value can be configured on the [options]({{< ref "/bff/options" >}}).
 {{% /notice %}}
 
 ```
@@ -79,14 +79,10 @@ GET bff/user?slide=false
 x-csrf: 1
 ```
 
-If there is a valid session, the user endpoint returns a JSON array containing the contents of the ASP.NET Core authentication session, and BFF specific management data, e.g.:
+If there is a valid session, the user endpoint returns a JSON array containing the contents of the ASP.NET Core authentication session and BFF specific management data, e.g.:
 
 ```json
 [
-  {
-    "type": "amr",
-    "value": "pwd"
-  },
   {
     "type": "sid",
     "value": "173E788068FFB728806501F4F46C52D6"
@@ -96,24 +92,12 @@ If there is a valid session, the user endpoint returns a JSON array containing t
     "value": "88421113"
   },
   {
-    "type": "auth_time",
-    "value": "1620127316"
-  },
-  {
     "type": "idp",
     "value": "local"
   },
   {
     "type": "name",
     "value": "Bob Smith"
-  },
-  {
-    "type": "given_name",
-    "value": "Bob"
-  },
-  {
-    "type": "family_name",
-    "value": "Smith"
   },
   {
     "type": "bff:logout_url",
@@ -142,14 +126,14 @@ This is the number of seconds the current session will be valid for
 
 **bff:session_state**
 
-This is the session state value of the upstream OIDC provider that can be use for the JavaScript *check_session* mechanism(if provided).
+This is the session state value of the upstream OIDC provider that can be use for the JavaScript *check_session* mechanism (if provided).
 
 **bff:logout_url**
 
-This is the URL to trigger logout. If the upstream provider includes an *sid* claim, the BFF logout endpoint required this value as a query string parameter. This behavior can be configured on the [options]({{< ref "/bff/options" >}}).
+This is the URL to trigger logout. If the upstream provider includes an *sid* claim, the BFF logout endpoint requires this value as a query string parameter for CSRF protection. This behavior can be configured on the [options]({{< ref "/bff/options" >}}).
 
 ### Logout
-This endpoint trigger local and upstream logout. If the upstream IdP sent a session ID, this must be appended to the URL:
+This endpoint triggers local and upstream logout. If the upstream IdP sent a session ID, this must be appended to the URL:
 
 ```
 GET /bff/logout?sid=xyz
@@ -162,7 +146,7 @@ GET /bff/logout?sid=xyz&returnUrl=/loggedout
 ```
 
 {{% notice note %}}
-By default, the logout endpoint will trigger revocation of the user's refresh token (if present). This can be configured on the [options]({{< ref "/bff/options" >}}).
+The logout endpoint will trigger revocation of the user's refresh token (if present). This can be configured on the [options]({{< ref "/bff/options" >}}).
 {{% /notice %}}
 
 ### Back-channel logout notifications

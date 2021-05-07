@@ -33,7 +33,7 @@ The exact settings depend on the OIDC provider and its configuration settings. W
 * use authorization code flow with PKCE
 * use a *response_mode* of *query* since this plays nicer with *SameSite* cookies
 * use a strong client secret. Since the BFF can be a confidential client, it is totally possible to use strong client authentication like JWT assertions, JAR or MTLS
-* turn of inbound claims mapping
+* turn off inbound claims mapping
 * save the tokens into the authentication session so they can be automatically managed
 * request a refresh token using the *offline_access* scope
 
