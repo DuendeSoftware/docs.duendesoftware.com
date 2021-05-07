@@ -80,4 +80,4 @@ public async Task<IActionResult> CallApiAsUserTyped(
 }
 ```
 
-The client will internally always try to use a current and valid access token. If for any reason, this is not possible, the 401 status code will be returned to the caller. 
+The client will internally always try to use a current and valid access token. If for any reason this is not possible, the 401 status code will be returned to the caller. 
