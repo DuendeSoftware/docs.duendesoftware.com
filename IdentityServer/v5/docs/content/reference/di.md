@@ -14,7 +14,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 {{% notice note %}}
-Many of the fundamental configuration settings can be set on the options. See the *[IdentityServerOptions]({{< ref "options" >}})* reference for more details.
+Many of the fundamental configuration settings can be set on the options. See the *[IdentityServerOptions]({{< ref "reference/options" >}})* reference for more details.
 {{% /notice %}}
 
 
