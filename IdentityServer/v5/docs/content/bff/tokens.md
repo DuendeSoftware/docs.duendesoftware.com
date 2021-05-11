@@ -31,7 +31,7 @@ services.AddUserAccessTokenClient("apiClient", configureClient: client =>
 });
 ```
 
-..and then retrieve a client instance like this:
+And then retrieve a client instance like this:
 
 ```cs
 [Route("myApi")]
@@ -68,7 +68,7 @@ services.AddHttpClient<MyTypedApiClient>(client =>
     .AddUserAccessTokenHandler();
 ```
 
-..and then use that client e.g. like this on a controller:
+And then use that client, for example like this on a controller's action method:
 
 ```cs
 public async Task<IActionResult> CallApiAsUserTyped(

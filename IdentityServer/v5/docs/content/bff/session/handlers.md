@@ -75,7 +75,7 @@ The cookie handler is responsible for establishing the session and manage authen
 
 Things to consider:
 
-* determine the session lifetime - and if the session lifetime should be sliding or absolute
+* determine the session lifetime and if the session lifetime should be sliding or absolute
 * it is recommended to use a cookie name [prefix](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-4.1.3) if compatible with your application
 * use the highest available *SameSite* mode that is compatible with your application, e.g. *strict*, but at least *lax*
 
