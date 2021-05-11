@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 20
 ---
 
-Duende.BFF adds a couple of endpoints for managing typical session-related operations like triggering login and logout and getting information about the currently logged-on user. These endpoint are meant to be called by the frontend.
+Duende.BFF adds endpoints for managing typical session-related operations like triggering login and logout and getting information about the currently logged-on user. These endpoint are meant to be called by the frontend.
 
 In addition we add an implementation of the OpenID Connect back-channel notification endpoint to overcome the restrictions of third party cookies in front-channel notification in modern browsers.
 
@@ -24,7 +24,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-...and mapping the endpoints in the routing table:
+Endpoint routing is used to map the management endpoints:
 
 ```csharp
 public void Configure(IApplicationBuilder app)
@@ -38,7 +38,7 @@ public void Configure(IApplicationBuilder app)
 ```
 
 {{% notice note %}}
-*MapBffManagementEndpoints* adds all BFF management endpoints. You can also map every endpoint individually, e.g by calling  *endpoints.MapBffManagementLoginEndpoint();* etc...
+*MapBffManagementEndpoints* adds all BFF management endpoints. You can also map every endpoint individually by calling the various *MapBffManagementXxxEndpoint* APIs, for example *endpoints.MapBffManagementLoginEndpoint()*.
 {{% /notice %}}
 
 The following describes the default behavior of those endpoints. See the [extensibility]({{< ref "/bff/extensibility" >}}) section for more information how to provide custom implementations.
@@ -155,5 +155,5 @@ The */bff/backchannel* endpoint is an implementation of the [OpenID Connect Back
 The endpoint will call the registered session revocation service to revoke the user session when it receives a valid logout token. You need to enable server-side session for this feature to work.
 
 {{% notice note %}}
-By default, only the specific session of the user will be revoked. You can also configure the endpoint to revoke every session that belongs to the given subject ID.
+By default, only the specific session of the user will be revoked. Alternatively, you can configure the endpoint to revoke every session that belongs to the given subject ID.
 {{% /notice %}}

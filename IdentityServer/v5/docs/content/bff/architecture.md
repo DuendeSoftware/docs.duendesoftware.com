@@ -10,9 +10,9 @@ A BFF host is an ASP.NET Core application with the following logical building bl
 
 These components deal with server-side protocol requests and responses, session and token management as well as providing and securing API endpoints for the frontend.
 
-In addition, the host serves the UI assets - this could be HTML/JS/CSS, WASM and also server-rendered content.
+In addition, the host serves the UI assets which could be HTML/JS/CSS, WASM, and/or server-rendered content.
 
-Plain ASP.NET Core provides a good starting point to inject the additional security and application features that are typically associated with a BFF. This is where Duende.BFF comes in. We fill those gaps and add advanced functionality so you only have to focus on providing the application logic - and not the security logic:
+Plain ASP.NET Core provides a good starting point to inject the additional security and application features that are typically associated with a BFF. This is where Duende.BFF comes in. We fill those gaps and add advanced functionality so you only have to focus on providing the application logic, and not the security logic:
 
 ![](../images/DuendeBFF_blocks.png?height=30pc)
 
@@ -32,7 +32,7 @@ This library plugs into both the OpenID Connect and cookie handler to provide au
 
 **API Endpoints**
 
-The frontend will call APIs. Frontend exclusive APIs can live directly in the BFF host. Remote (aka cross-site) APIs are called via the backend. Both types need to be secured with the session cookie and anti-forgery protection.
+The frontend will call APIs. Frontend exclusive APIs can live directly in the BFF host. Remote (e.g. cross-site) APIs are called via the backend. Both types need to be secured with the session cookie and anti-forgery protection.
 
 The remote API interfaces can be either created manually, or a reverse proxy approach can be used. Duende.BFF includes a developer-centric version of Microsoft's YARP proxy that integrates with the automatic token management mentioned above.
 
