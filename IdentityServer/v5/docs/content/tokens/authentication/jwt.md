@@ -49,8 +49,8 @@ POST /connect/token
 
 Content-type: application/x-www-form-urlencoded
 
-    assertion=<jwt>&
-    assertion_type=urn:ietf:params:oauth:grant-type:jwt-bearer&
+    client_assertion=<jwt>&
+    client_assertion_type=urn:ietf:params:oauth:grant-type:jwt-bearer&
 
     grant_type=authorization_code&
     code=hdh922&
@@ -61,13 +61,13 @@ Content-type: application/x-www-form-urlencoded
 You can use the [Microsoft JWT library](https://www.nuget.org/packages/System.IdentityModel.Tokens.Jwt/) to create JSON Web Tokens.
 
 ```cs
-private static string CreateClientToken(SigningCredentials credential, string clientId, string audience)
+private static string CreateClientToken(SigningCredentials credential, string clientId, string tokenEndpoint)
 {
     var now = DateTime.UtcNow;
 
     var token = new JwtSecurityToken(
         clientId,
-        audience,
+        tokenEndpoint,
         new List<Claim>()
         {
             new Claim(JwtClaimTypes.JwtId, Guid.NewGuid().ToString()),
@@ -115,7 +115,7 @@ static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential
 }
 ```
 
-See [here]({{< param samples_base >}}//fundamentals/JwtBasedClientAuthentication) for a sample for using JWT-based authentication.
+See [here]({{< ref "/samples/basics#jwt-based-client-authentication" >}}) for a sample for using JWT-based authentication.
 
 ### Using ASP.NET Core
 The OpenID Connect authentication handler in ASP.NET Core allows for replacing a static client secret with a dynamically created client assertion.
@@ -165,4 +165,4 @@ public class OidcEvents : OpenIdConnectEvents
 ```
 
 The assertion service would be a helper to create the JWT as shown above in the *CreateClientToken* method.
-See [here]({{< param samples_base >}}//fundamentals/MvcClientJarJwt) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.
+See [here]({{< ref "/samples/basics#mvc-client-with-jar-and-jwt-based-authentication" >}}) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.
