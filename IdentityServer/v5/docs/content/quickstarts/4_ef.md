@@ -42,7 +42,7 @@ To add SQL Server support to our IdentityServer project, you’ll need the follo
 ### Database Schema Changes and Using EF Migrations
 The *Duende.IdentityServer.EntityFramework.Storage* Nuget package contains entity classes that map from Duende IdentityServer’s models.
 As IdentityServer’s models change, so will the entity classes in *Duende.IdentityServer.EntityFramework.Storage*.
-As you use *IdentityServer4.EntityFramework.Storage* and upgrade over time, you are responsible for your database schema and changes necessary to that schema as the entity classes change.
+As you use *Duende.IdentityServer.EntityFramework.Storage* and upgrade over time, you are responsible for your database schema and changes necessary to that schema as the entity classes change.
 
 One approach for managing those changes is to use [EF migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index), which is what we’ll use in this quickstart.
 If migrations are not your preference, then you can manage the schema changes in any way you see fit.
