@@ -45,7 +45,7 @@ services.AddBff(options =>
     Defaults to *false*.
 
 
-## Session Management
+## APIs
 
 * ***AntiForgeryHeaderName***
 
