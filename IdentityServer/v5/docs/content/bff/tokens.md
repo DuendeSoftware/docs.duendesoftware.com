@@ -81,3 +81,14 @@ public async Task<IActionResult> CallApiAsUserTyped(
 ```
 
 The client will internally always try to use a current and valid access token. If for any reason this is not possible, the 401 status code will be returned to the caller. 
+
+### Manually revoking refresh tokens
+Duende.BFF revokes refresh tokens automatically at logout time (this behavior can be controlled via the options).
+
+If you want to manually revoke the current refresh token, you can use the following code:
+
+```cs
+    await HttpContext.RevokeUserRefreshTokenAsync();
+```
+
+This will invalidate the refresh token at the token service.
