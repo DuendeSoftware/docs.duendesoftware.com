@@ -74,7 +74,7 @@ An operation was scaffolded that may result in the loss of data. Please review t
 Done. To undo this action, use 'ef migrations remove'
 ```
 
-To ensure we don't lose data, we will add a custom SQL script to run at the beginning of the migration.
+To ensure we don't lose data, we will add a custom SQL script to run instead of the generated migration.
 To ensure the script is available to the migration we will include the script into the project as an embedded resource.
 You could devise other approaches (like simply loading the SQL script from the filesystem) based on your preferences.
 
@@ -120,6 +120,15 @@ namespace IdentityServerMigrationSample.Migrations.ConfigurationDb
 
 Note that given that there is no *Down* implementation, this is a one-way update.
 
+And now run the migration:
+
+```
+dotnet ef database update -c ConfigurationDbContext
+```
+
+And your database should now be updated.
+
+
 ## Step 3: Verify your configuration database data
 
 At this point, you should be able to query your migrated database and see your data in tact. 
@@ -127,5 +136,5 @@ At this point, you should be able to query your migrated database and see your d
 
 ## Step 4: Move onto the upgrade guide for Duende IdentityServer v5
 
-Once your project has been updated to IdentityServer4 v4, then you can work through the update to Duende IdentityServer v5 (which should be far easier).
-This is the [link to the next upgrade guide]({{< ref "/is4_v4_to_dis_v5" >}}).
+Once your project has been updated to IdentityServer4 v4, then you can work through the guide to update from IdentityServer4 v4 to Duende IdentityServer v5 (which should be far easier).
+Here is the [link to the next upgrade guide]({{< ref "/is4_v4_to_dis_v5" >}}).
