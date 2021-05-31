@@ -14,3 +14,8 @@ This sample shows how to use the BFF framework with a JavaScript-based frontend 
 This sample shows how to use the BFF framework with Blazor Server.
 
 [link to source code]({{< param samples_base >}}/BFF/BlazorServer)
+
+### Blazor WASM
+This sample shows how to use the BFF framework with Blazor WASM.
+
+[link to source code]({{< param samples_base >}}/BFF/BlazorWasm)
