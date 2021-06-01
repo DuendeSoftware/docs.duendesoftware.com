@@ -9,9 +9,58 @@ Normally authentication handlers for external providers are added into your Iden
 
 Duende IdentityServer provides support for dynamic configuration of OpenID Connect providers loaded from a store. This is designed to address the performance concern as well as allowing changes to the configuration to a running server.
 
+### Listing and displaying the dynamic providers on the login page
+
+The [identity provider store]({{<ref "/reference/stores/idp_store">}}) can be used to query the database containing the dynamic providers.
+
+```cs
+    /// <summary>
+    /// Interface to model storage of identity providers.
+    /// </summary>
+    public interface IIdentityProviderStore
+    {
+        /// <summary>
+        /// Gets all identity providers name.
+        /// </summary>
+        Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
+
+        // other APIs omitted
+    }
+```
+
+These results can then be used to populate the list of options presented to the user on the login page.
+
+This API is deliberatly separate than the *IAuthenticationSchemeProvider* provided by ASP.NET Core, which returns the list of statically configured providers (from *Startup.cs*).
+This allows the developer to have more control over the customization on the login page (e.g. there might be hundreds or thousands on dynamic providers, and therefore you would not want them displayed on the login page, but you might have a few social providers statically configured that you would want to display).
+
+Here is an example of how the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/Quickstart/Account/AccountController.cs#L265-L282) uses both interfaces to then present a merged and unifised list to the end user:
+
+
+```cs
+var schemes = await _schemeProvider.GetAllSchemesAsync();
+
+var providers = schemes
+    .Where(x => x.DisplayName != null)
+    .Select(x => new ExternalProvider
+    {
+        DisplayName = x.DisplayName ?? x.Name,
+        AuthenticationScheme = x.Name
+    }).ToList();
+
+var dyanmicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
+    .Where(x => x.Enabled)
+    .Select(x => new ExternalProvider
+    {
+        AuthenticationScheme = x.Scheme,
+        DisplayName = x.DisplayName
+    });
+
+providers.AddRange(dyanmicSchemes);
+```
+
 ### Store and Configuration Data
 
-To use this feature an [identity provider store]({{<ref "/reference/stores/idp_store">}}) must be provided that will load [model data]({{<ref "/reference/models/idp">}}) for the OIDC identity provider to be used.
+To use the dynamic providers feature an [identity provider store]({{<ref "/reference/stores/idp_store">}}) must be provided that will load [model data]({{<ref "/reference/models/idp">}}) for the OIDC identity provider to be used.
 If you're using the [Entity Framework Integration]({{<ref "/data/ef">}}) then this is implemented for you.
 
 The configuration data for the OIDC provider is used to assign the configuration on the ASP.NET Core [OpenID Connect Options](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions) class, much like you would if you were to statically configure the options when using *AddOpenIdConnect()*.

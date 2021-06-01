@@ -11,7 +11,7 @@ Its properties map to the Open ID Connect options class from ASP.NET Core, and t
 
 * ***Enabled***
     
-    Specifies if client is enabled. Defaults to *true*.
+    Specifies if provider is enabled. Defaults to *true*.
 
 * ***Scheme***
     
@@ -45,6 +45,22 @@ Its properties map to the Open ID Connect options class from ASP.NET Core, and t
     
     Space separated list of scope values.
 
+
+#### Duende.IdentityServer.Models.IdentityProviderName
+
+The *IdentityProviderName* models the display name of an identity provider.
+
+* ***Enabled***
+    
+    Specifies if provider is enabled. Defaults to *true*.
+
+* ***Scheme***
+    
+    Scheme name for the provider.
+
+* ***DisplayName***
+    
+    Display name for the provider.
 
 
 #### Duende.IdentityServer.Models.IdentityProvider

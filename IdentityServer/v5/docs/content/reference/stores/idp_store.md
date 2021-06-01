@@ -14,6 +14,11 @@ Used to dynamically load [identity provider configuration]({{<ref "/reference/mo
     public interface IIdentityProviderStore
     {
         /// <summary>
+        /// Gets all identity providers name.
+        /// </summary>
+        Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
+
+        /// <summary>
         /// Gets the identity provider by scheme name.
         /// </summary>
         /// <param name="scheme"></param>
