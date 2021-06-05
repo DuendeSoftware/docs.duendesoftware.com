@@ -28,7 +28,7 @@ On top of the cookie handler, we provide endpoints for login, logout and user/se
 
 **IdentityModel.AspNetCore**
 
-This library plugs into both the OpenID Connect and cookie handler to provide automatic access token management and storage. It provides both and imperative API as well as integration with the ASP.NET HTTP client factory.
+This library plugs into both the OpenID Connect and cookie handler to provide automatic access token management and storage. It provides both an imperative API as well as integration with the ASP.NET HTTP client factory.
 
 **API Endpoints**
 
