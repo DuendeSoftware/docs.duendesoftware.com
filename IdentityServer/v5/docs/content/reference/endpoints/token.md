@@ -12,7 +12,7 @@ Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 toke
 
 * ***client_id***
     
-    client identifier
+    client identifier; not necessary in body if it is present in the authorization header
 
 * ***grant_type***
     
