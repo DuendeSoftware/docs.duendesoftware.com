@@ -96,6 +96,38 @@ And to register this in the DI system:
     }
 ```
 
+#### Accessing OidcProvider data in IConfigureNamedOptions
+
+If your customization of the *OpenIdConnectOptions* requires per-provider data that you are storing on the *OidcProvider*, then we provide an abstraction for the *IConfigureNamedOptions\<OpenIdConnectOptions>*.
+This abstraction requires your code to derive from *ConfigureAuthenticationOptions\<OpenIdConnectOptions, OidcProvider>* (rather than *IConfigureNamedOptions\<OpenIdConnectOptions>*).
+For exmaple:
+
+```cs
+class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectOptions, OidcProvider>
+{
+    public CustomOidcConfigureOptions(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+    {
+    }
+
+    protected override void Configure(ConfigureAuthenticationContext<OpenIdConnectOptions, OidcProvider> context)
+    {
+        var oidcProvider = context.IdentityProvider;
+        var oidcOptions = context.AuthenticationOptions;
+
+        // TODO: configure oidcOptions with values from oidcProvider
+    }
+}
+```
+
+The above class would need to be configured in DI, as with any *IConfigureNamedOptions\<OpenIdConnectOptions>*:
+
+```cs
+public void Configure(IServiceCollection services)
+{
+    services.AddSingleton<IConfigureNamedOptions<OpenIdConnectOptions>, CustomOidcConfigureOptions>();
+}
+```
+
 ### Callback Paths
 
 As part of the architecture of the dynamic providers feature, the various callback paths are required and are automatically set to follow a convention.
