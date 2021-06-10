@@ -188,7 +188,7 @@ This controller will be used later to test the authorization requirement, as wel
 #### Adding a Nuget Dependency
 In order for the configuration step to work the nuget package dependency has to be added, run this command in the root directory.
 
-    dotnet add ./src/api/Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
+    dotnet add ./src/Api/Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
 
 #### Configuration
 The last step is to add the authentication services to DI (dependency injection) and the authentication middleware to the pipeline.
