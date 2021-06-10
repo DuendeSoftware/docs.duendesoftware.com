@@ -119,12 +119,12 @@ class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectO
 }
 ```
 
-The above class would need to be configured in DI, as with any *IConfigureNamedOptions\<OpenIdConnectOptions>*:
+The above class would need to be configured in DI (as before):
 
 ```cs
 public void Configure(IServiceCollection services)
 {
-    services.AddSingleton<IConfigureNamedOptions<OpenIdConnectOptions>, CustomOidcConfigureOptions>();
+    services.ConfigureOptions<CustomOidcConfigureOptions>();
 }
 ```
 
