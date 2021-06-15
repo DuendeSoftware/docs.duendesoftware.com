@@ -4,9 +4,11 @@ date: 2020-09-10T08:22:12+02:00
 weight: 20
 ---
 
-Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential flow.
+Access token have finite lifetimes. If a client needs long-lived access to a resource, [refresh tokens](https://datatracker.ietf.org/doc/html/rfc6749#section-1.5) can be used to request a new access token. This can be done with an API call and does not require any user interaction or interruption.
 
-The clients needs to be explicitly authorized to request refresh tokens by setting *AllowOfflineAccess* property to *true*. See the [client reference]({{< ref "/reference/models/client#refresh-token" >}}) section for additional refresh token related settings.
+Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by setting *AllowOfflineAccess* property to *true*. See the [client reference]({{< ref "/reference/models/client#refresh-token" >}}) section for additional refresh token related settings.
+
+Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential flow.
 
 ## Requesting a refresh token
 You can request a refresh token by adding a scope called *offline_access* to the scope parameter list of the authorize request.
