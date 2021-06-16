@@ -8,3 +8,8 @@ weight: 1000
 This sample shows how to add OpenID Connect code flow with PKCE to a .NET 4.8 WebForms client.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/WebFormsOidcClient)
+
+### Securing Azure Functions client
+This sample shows how to parse and validate a JWT token issued by IdentityServer inside an Azure Function.
+
+[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/JwtSecuredAzureFunction)
