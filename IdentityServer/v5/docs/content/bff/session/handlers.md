@@ -6,7 +6,7 @@ weight: 10
 
 You typically use the following two ASP.NET Core authentication handlers to implement remote authentication:
 
-* the OpenID Connect authentication handler to interact with the remote OIDC / OAuth token service
+* the OpenID Connect authentication handler to interact with the remote OIDC / OAuth token service, e.g. Duende IdentityServer
 * the cookie handler to do local session management
 
 Furthermore the BFF plumbing relies on the configuration of the ASP.NET Core default authentication schemes. This describes how the two handlers share the work.
@@ -32,7 +32,7 @@ The exact settings depend on the OIDC provider and its configuration settings. W
 
 * use authorization code flow with PKCE
 * use a *response_mode* of *query* since this plays nicer with *SameSite* cookies
-* use a strong client secret. Since the BFF can be a confidential client, it is totally possible to use strong client authentication like JWT assertions, JAR or MTLS
+* use a strong client secret. Since the BFF can be a confidential client, it is totally possible to use strong client authentication like JWT assertions, JAR or MTLS. Shared secrets work as well of course.
 * turn off inbound claims mapping
 * save the tokens into the authentication session so they can be automatically managed
 * request a refresh token using the *offline_access* scope
