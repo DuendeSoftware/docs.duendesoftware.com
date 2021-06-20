@@ -34,7 +34,7 @@ This library plugs into both the OpenID Connect and cookie handler to provide au
 
 The frontend will call APIs. Frontend exclusive APIs can live directly in the BFF host. Remote (e.g. cross-site) APIs are called via the backend. Both types need to be secured with the session cookie and anti-forgery protection.
 
-The remote API interfaces can be either created manually, or a reverse proxy approach can be used. Duende.BFF includes a developer-centric version of Microsoft's YARP proxy that integrates with the automatic token management mentioned above.
+The remote API interfaces can be either created manually, or a reverse proxy approach can be used. Duende.BFF includes a developer-centric version of Microsoft's YARP proxy that integrates with the automatic token management mentioned above. We also provide YARP-specific plumbing to add the BFF features to "standard" YARP directly.
 
 **Frontend**
 
