@@ -40,7 +40,7 @@ cd quickstart
 md src
 cd src
 
-dotnet new isempty -n IdentityServer
+dotnet new web -n IdentityServer
 ```
 
 This will create the following files:
