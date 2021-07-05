@@ -15,7 +15,7 @@ If we wanted to modify this configuration data, we had to stop and start Identit
 IdentityServer also generates temporary data, such as authorization codes, consent choices, and refresh tokens.
 By default, these are also stored in-memory.
 
-To move this data into a database that is persistent between restarts and across multiple IdentityServer instances, we can use the IdentityServer4 Entity Framework library.
+To move this data into a database that is persistent between restarts and across multiple IdentityServer instances, we can use the Duende IdentityServer Entity Framework library.
 
 {{% notice note %}}
 In addition to manually configuring EF support, there is also an IdentityServer template to create a new project with EF support, using *dotnet new isef*.
@@ -33,11 +33,13 @@ You can find the extension methods to register them in your IdentityServer in th
 
     dotnet add package Duende.IdentityServer.EntityFramework
 
-## Using SqlServer
-For this quickstart, we will use the LocalDb version of SQLServer that comes with Visual Studio.
-To add SQL Server support to our IdentityServer project, you’ll need the following nuget package::
+## Using Sqlite
+For this quickstart, we will use Sqlite as the database provider.
+Of course, given EntityFramework Core's flexibility, you can adjust this quickstart to use any EF supported provider.
 
-    dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+To add Sqlite support to our IdentityServer project, you’ll need the following nuget package::
+
+    dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 
 ### Database Schema Changes and Using EF Migrations
 The *Duende.IdentityServer.EntityFramework.Storage* Nuget package contains entity classes that map from Duende IdentityServer’s models.
@@ -58,18 +60,18 @@ These methods each require a *DbContextOptionsBuilder*, meaning your code will l
 
 ```cs
 var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=IdentityServer.Quickstart.EntityFramework;trusted_connection=yes;";
+const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
 
 services.AddIdentityServer()
     .AddTestUsers(TestUsers.Users)
     .AddConfigurationStore(options =>
     {
-        options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+        options.ConfigureDbContext = b => b.UseSqlite(connectionString,
             sql => sql.MigrationsAssembly(migrationsAssembly));
     })
     .AddOperationalStore(options =>
     {
-        options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+        options.ConfigureDbContext = b => b.UseSqlite(connectionString,
             sql => sql.MigrationsAssembly(migrationsAssembly));
     });
 ```
@@ -170,7 +172,7 @@ public void Configure(IApplicationBuilder app)
 ```
 
 Now if you run the IdentityServer project, the database should be created and seeded with the quickstart configuration data.
-You should be able to use SQL Server Management Studio or Visual Studio to connect and inspect the data.
+You should be able to use a tool like SQL Lite Studio to connect and inspect the data.
 
 ![](../images/ef_database.png)
 
