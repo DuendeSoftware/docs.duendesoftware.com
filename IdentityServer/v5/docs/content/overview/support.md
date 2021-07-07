@@ -17,5 +17,7 @@ Standard support and feature requests are handled via our public [support forum]
 
 Priority support is part of our Enterprise Edition, or can be purchased separately. It includes a private email alias, guaranteed two US business days response time and two private incidents per year. Please [contact](https://duendesoftware.com/contact) us for more information.
 
+See [here](https://duendesoftware.com/products/support) for our support policy.
+
 ### Reporting a security vulnerability
 Security issues and bugs should be reported privately [here](https://duendesoftware.com/contact). You should receive a response within 24 hours.
