@@ -36,7 +36,7 @@ IdentityServer leverages the ASP.NET Core authentication infrastructure for comm
 See the [Integrating with External Providers]({{< ref "/ui/login/external" >}}) section for more details.
 
 ### Home Realm Discovery
-The process of selecting the "best" authentication workflow for a user (especially when you have multiple authentication methods) is called Home Realm Discovery or short HRD.
+The process of selecting the "best" authentication workflow for a user (especially when you have multiple authentication methods) is called Home Realm Discovery (or HRD for short).
 
 Since users are typically anonymous when they arrive at the gateway, you need some sort of hint to optimize the login workflow, e.g.
 
