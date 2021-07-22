@@ -7,9 +7,13 @@ weight: 2
 For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview]({{< ref "0_overview" >}}) first.
 {{% /notice %}}
 
-This quickstart will show how to build a browser-based JavaScript client application (sometimes referred to as a "Single Page Application" or "SPA").
 
-The user will login to IdentityServer, invoke the web API with an access token issued by IdentityServer, and logout of IdentityServer. 
+This quickstart will show how to build a browser-based JavaScript client application without a backend. 
+This means your application has no server-side code that can support the frontend application code, and thus all OpenID Connect/OAuth protocol interactions occur from the JavaScript code running in the browser. Also, invoking the API will be performed directly from the JavaScript in the browser.
+
+This design adds complexity (and thus security concerns) to your application, so consider if the ["BFF" pattern]({{<ref "js_with_backend">}}) might be a better choice.
+
+In this quickstart the user will login to IdentityServer, invoke the web API with an access token issued by IdentityServer, and logout of IdentityServer. 
 All of this will be driven from the JavaScript running in the browser.
 
 ## New Project for the JavaScript client
