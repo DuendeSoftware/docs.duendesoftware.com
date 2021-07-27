@@ -165,7 +165,8 @@ var mgr = new Oidc.UserManager(config);
 Next, the *UserManager* provides a *getUser* API to know if the user is logged into the JavaScript application.
 It uses a JavaScript *Promise* to return the results asynchronously. 
 The returned *User* object has a *profile* property which contains the claims for the user.
-Add this code to detect if the user is logged into the JavaScript application:
+There's also an event called *UserSignedOut* that can be handled to detect if the user signs out of the token server while the SPA application is being used (presumably in a different tab).
+Add this code to detect the user's session status in JavaScript application:
 
 ```js
 mgr.getUser().then(function (user) {
@@ -175,6 +176,10 @@ mgr.getUser().then(function (user) {
     else {
         log("User not logged in");
     }
+});
+
+mgr.events.addUserSignedOut(function () {
+    log("User signed out of IdentityServer");
 });
 ```
 
@@ -329,3 +334,8 @@ And finally click "Logout" to sign the user out.
 ![image](../../images/jsclient_signed_out.png)
 
 You now have the start of a JavaScript client application that uses IdentityServer for sign-in, sign-out, and authenticating calls to web APIs.
+
+{{% notice note %}}
+Some browsers limit cross-site interactions (especially in iframes).
+If you were to test this sample in Safari, Chrome, or Brave you will notice that some important features will not work such as silent token renewal and check session monitoring.
+{{% /notice %}}
