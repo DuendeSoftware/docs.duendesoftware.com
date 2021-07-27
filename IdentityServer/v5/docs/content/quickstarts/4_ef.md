@@ -37,9 +37,11 @@ You can find the extension methods to register them in your IdentityServer in th
 For this quickstart, we will use Sqlite as the database provider.
 Of course, given EntityFramework Core's flexibility, you can adjust this quickstart to use any EF supported provider.
 
-To add Sqlite support to our IdentityServer project, you’ll need the following nuget package::
+To add Sqlite support to our IdentityServer project, you’ll need the following nuget package:
 
-    dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+```
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+```
 
 ### Database Schema Changes and Using EF Migrations
 The *Duende.IdentityServer.EntityFramework.Storage* Nuget package contains entity classes that map from Duende IdentityServer’s models.
