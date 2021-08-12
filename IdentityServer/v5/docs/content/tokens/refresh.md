@@ -48,7 +48,7 @@ var response = await client.RequestRefreshTokenAsync(new RefreshTokenRequest
 The [IdentityModel.AspNetCore](https://identitymodel.readthedocs.io/en/latest/aspnetcore/web.html) library can be used to automate refresh & access token lifetime management in ASP.NET Core.
 
 ## Refresh token security considerations
-Refresh tokens are are a high-value target for attackers, because they typically have a much higher lifetime than access tokens.
+Refresh tokens are a high-value target for attackers, because they typically have a much higher lifetime than access tokens.
 
 It is recommended, that a refresh token is either bound to the client via a client secret (for confidential/credentialed clients), or rotated for public clients.
 
