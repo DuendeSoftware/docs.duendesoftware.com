@@ -34,7 +34,7 @@ var builder = services.AddIdentityServer()
 The above is using the in-memory stores, but we also support EntityFramework-based implementations and custom stores. See [here]({{< ref "/data" >}}) for more information.
 
 ## Pipeline
-You need to add the Duende IdentityServer middleware to the pipeline by calling *AddIdentityServer*.
+You need to add the Duende IdentityServer middleware to the pipeline by calling *UseIdentityServer*.
 
 Since ordering is important in the pipeline, you typically want to put the IdentityServer middleware after the static files, but before the UI framework like MVC.
 

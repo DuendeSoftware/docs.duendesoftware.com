@@ -67,7 +67,7 @@ By default the keys will be protected at rest using the ASP.NET Core Data Protec
 Key storage defaults to the file system, but is extensible. We also provide EntityFramework integration.
 
 ## Static key configuration
-You can also statically configure your key material. A common scenario would be to load your keys from a key vault or other secured location at startup. With static configuration you are responsible of secure storage, loading and rotation.
+You can also statically configure your key material. A common scenario would be to load your keys from a key vault or other secured location at startup. With static configuration you are responsible for the secure storage, loading and rotation.
 
 For this purpose you disable the automatic key management, and load the keys manually with the [*AddSigningCredential*]({{< ref "/reference/di#signing-keys" >}}) DI extension method:
 

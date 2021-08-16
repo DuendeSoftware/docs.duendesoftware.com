@@ -23,7 +23,7 @@ You can use different strategies to determine which claims you want emit based o
 * emit claims based on the requested resources
 
 {{% notice note %}}
-Generally speaking, we recommend using the [resource definitions]({{< ref "/fundamentals/resources" >}}) to associate user claims with resources. In that case you profile service receives an aggregated list of requested claim types based on the requested resources. The implementation is then as simple as returning the corresponding claim values back to the runtime.
+Generally speaking, we recommend using the [resource definitions]({{< ref "/fundamentals/resources" >}}) to associate user claims with resources. In that case your profile service receives an aggregated list of requested claim types based on the requested resources. The implementation is then as simple as returning the corresponding claim values back to the runtime.
 {{% /notice %}}
 
 Here's a sample implementation of a profile service:
@@ -56,7 +56,7 @@ public class SampleProfileService : IProfileService
 The *Subject* property on the context contains the principal that you issued during user sign-in. Some claims can typically be sourced from there, other typically come from databases or other data sources.
 
 {{% notice note %}}
-The profile service gets also called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}). In this case you do not have access to the user identity since these calls don't happen as part of a session. You can check the caller of the profile service by querying the *Caller* property on the context.
+The profile service gets also gets called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}). In this case you do not have access to the user identity since these calls don't happen as part of a session. You can check the caller of the profile service by querying the *Caller* property on the context.
 {{% /notice %}}
 
 ## Client claims
@@ -79,7 +79,7 @@ var client = new Client
 All client claims will be by default prefixed with *client* to avoid accidental collision with user claims, e.g. the above claim would show up as *client_customer_id* in access tokens. You can change (or remove) that prefix by setting the *ClientClaimsPrefix* on the [client definition]({{< ref "/reference/models/client#token" >}}). 
 
 {{% notice note %}}
-By default, client claims are only send in the client credentials flow. If you want to enable them for other flows, you need to set the *AlwaysSendClientClaims* property on the client definition.
+By default, client claims are only sent in the client credentials flow. If you want to enable them for other flows, you need to set the *AlwaysSendClientClaims* property on the client definition.
 {{% /notice %}}
 
 ### Setting client claims dynamically
