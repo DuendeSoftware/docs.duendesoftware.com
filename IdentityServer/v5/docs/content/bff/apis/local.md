@@ -58,12 +58,12 @@ app.UseEndpoints(endpoints =>
     // MVC controllers
     endpoints.MapControllers()
         .RequireAuthorization()    // no anonymous access
-        .AsLocalBffApiEndpoint();  // BFF pre/post processing
+        .AsBffApiEndpoint();       // BFF pre/post processing
 
     // simple endpoint
     endpoints.MapPost("/foo", context => { ... })
         .RequireAuthorization()
-        .AsLocalBffApiEndpoint();
+        .AsBffApiEndpoint();
 });
 ```
 
@@ -71,11 +71,11 @@ Or if using MVC, then an attribute applied directly to the controller or action:
 
 ```csharp
 [Route("myApi")]
-[BffLocalApiEndpoint]
+[BffApi]
 public class MyApiController : ControllerBase
 { ... }
 ```
 
 {{% notice note %}}
-You can disable the anti-forgery protection requirement by using the *DisableAntiforgeryProtection* extension method on the endpoint or passing a flag into the attribute. This is not recommended.
+You can disable the anti-forgery protection requirement by setting the *requireAntiForgeryCheck* parameter to *false* on the endpoint or attribute. This is not recommended.
 {{% /notice %}}
