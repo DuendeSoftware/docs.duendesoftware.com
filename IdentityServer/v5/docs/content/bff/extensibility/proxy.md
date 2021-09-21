@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 40
 ---
 
-You can customize the proxy behavior in two was
+You can customize the proxy behavior in two ways
 
 * provide a customized HTTP client for outgoing calls
 * provide custom request/response transformation
