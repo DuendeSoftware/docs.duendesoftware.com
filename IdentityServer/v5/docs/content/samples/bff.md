@@ -1,6 +1,6 @@
 ---
 title: "Backend for Frontend Pattern"
-weight: 20
+weight: 30
 ---
 
 This solution contains a collection of clients using our [BFF security framework]({{< ref "/bff" >}}).

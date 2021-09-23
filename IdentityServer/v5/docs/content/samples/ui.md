@@ -1,6 +1,6 @@
 ---
 title: "User Interaction"
-weight: 15
+weight: 20
 ---
 
 These samples illustrate customization of the [interactive pages]({{< ref "/ui" >}}) used in your IdentityServer.
