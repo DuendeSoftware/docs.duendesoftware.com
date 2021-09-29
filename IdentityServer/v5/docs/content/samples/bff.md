@@ -19,3 +19,8 @@ This sample shows how to use the BFF framework with Blazor Server.
 This sample shows how to use the BFF framework with Blazor WASM.
 
 [link to source code]({{< param samples_base >}}/BFF/BlazorWasm)
+
+### YARP Integration
+This sample shows how to use the BFF extensions for Microsoft YARP
+
+[link to source code]({{< param samples_base >}}/BFF/JsBffYarpSample)

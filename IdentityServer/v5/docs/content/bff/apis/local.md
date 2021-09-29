@@ -3,7 +3,7 @@ title: "Local APIs"
 weight: 10
 ---
 
-A local API can be any invocable functionality that is located inside the BFF host, for example as an MVC controller or just a simple endpoint.
+A local API can be any invocable functionality that is located inside the BFF host, for example an MVC controller or just a simple endpoint.
 
 These endpoints need to be secured to make sure that only the frontend can call them. We recommend doing this using two layers of protection:
 
@@ -47,10 +47,10 @@ public void Configure(IApplicationBuilder app)
 ```
 
 {{% notice note %}}
-The BFF middleware must be placed before the authorization middleware.
+The BFF middleware must be placed before the authorization middleware, but after routing.
 {{% /notice %}}
 
-In addition, the endpoints that need the processing must be decorated, e.g.:
+In addition, the endpoints that want the extra security must be decorated, e.g.:
 
 ```csharp
 app.UseEndpoints(endpoints =>
