@@ -29,7 +29,7 @@ It will uniquely identify the user and must never change and must never be reass
 A GUID data type is a very common choice for the *sub*. 
 {{% /notice %}}
 
-Additional claims can be added to the cookie if desired or needed at at other UI pages.
+Additional claims can be added to the cookie if desired or needed at other UI pages.
 For example, it's common to also issue a *name* claim which represents the user's display name.
 
 The claims issued in the cookie are passed as the *Subject* on the [ProfileDataRequestContext]({{<ref "/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext">}}) in the [profile service]({{<ref "/fundamentals/claims">}}).
@@ -97,13 +97,17 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-If the *CookieAuthenticationScheme* is not set, the cookie handler marked as the *DefaultAuthenticateScheme* configured for the ASP.NET Core application when using *AddAuthentication* will be the one used. So a scheme registered as the default after the call to *AddIdentityServer* in your startup will be the one used. For example:
+If the *CookieAuthenticationScheme* is not set, the *DefaultAuthenticationScheme* configured for ASP.NET Core will be used instead. Note that the *AddAuthentication* call that sets the default can come after the *AddIdentityServer* call. For example:
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
+    // No cookie authentication scheme is set here. 
+    // Identity Server will use the default scheme from ASP.NET Core,
+    // even though it is not yet defined.
     services.AddIdentityServer();
 
+    // Default scheme is registered. IdentityServer will use this scheme.
     services.AddAuthentication(defaultScheme: "your_cookie")
         .AddCookie("your_cookie", options => { 
             // ...

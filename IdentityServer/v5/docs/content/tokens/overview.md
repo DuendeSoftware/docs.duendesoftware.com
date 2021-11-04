@@ -17,7 +17,7 @@ The following token types are supported.
 ### Identity Token
 During user authentication, your IdentityServer collects data about the user, e.g. authentication method, authentication time, some protocol information and a unique identifier for the user that was authenticated, to communicate back to the client application “what happened at the token service”.
 
-This data must be sent in a format that is both tamper proof and that allows the client to authenticate the issuer. In OIDC this format is JSON – and the way how you add the above security properties to a JSON object is by wrapping it in a JWT (along with JWS, JWA and JWK) – hence the name identity *token*.
+This data must be sent in a format that is both tamper proof and that allows the client to authenticate the issuer. In OIDC this format is JSON – and the way to add the above security properties to a JSON object is by wrapping it in a JWT (along with JWS, JWA and JWK) – hence the name identity *token*.
 
 The data includes token lifetime information (*exp*, *iat*, *nbf*), the authentication method (*amr*) and time (*auth_time*), the authentication source (*idp*), the session ID (*sid*) and information about the user (*sub* and *name*).
 

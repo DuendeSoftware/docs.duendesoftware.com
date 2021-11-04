@@ -33,8 +33,8 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Caching Configuration Data
 
-Configuration data is used frequently by during request processing.
-If this data is being loaded from a database or other external store, then it might be expensive to frequently re-load the same data.
+Configuration data is used frequently during request processing.
+If this data is loaded from a database or other external store, then it might be expensive to frequently re-load the same data.
 
 Duende IdentityServer provides [convenience methods]({{<ref "/reference/di#caching-configuration-data">}}) to enable caching data from the various stores.
 The caching implementation relies upon an *ICache\<T>* service and must also be added to DI. 
