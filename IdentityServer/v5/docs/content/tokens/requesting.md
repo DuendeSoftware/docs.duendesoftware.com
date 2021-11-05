@@ -118,7 +118,7 @@ In this scenario, an interactive application like a web application or mobile/de
 
 You will receive three tokens - an identity token containing details about the end-user authentication, the access token to call the API, and a refresh token for access token lifetime management. The access token will also contain some information about the end-user (e.g. the user ID), so that the API can do authorization based on the user's identity.
 
-In this scenario you typically use the authorization code flow which first involves a call to the authorize endpoint for all human interactions (e.g. login and/or consent). This return a code, which you then redeem at the token endpoint to retrieve identity and access token.
+In this scenario you typically use the authorization code flow which first involves a call to the authorize endpoint for all human interactions (e.g. login and/or consent). This returns a code, which you then redeem at the token endpoint to retrieve identity and access tokens.
 
 Prerequisites are:
 
@@ -182,7 +182,7 @@ See the refresh token section for more information on how to deal with refresh t
 {{% /notice %}}
 
 ### .NET client library
-The most common client library for .NET would be the OpenID Connect [authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication) handler for ASP.NET Core. This library handles the complete front- and back-channel interaction and coordination.
+The most common client library for .NET is the OpenID Connect [authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication) handler for ASP.NET Core. This library handles the complete front- and back-channel interaction and coordination.
 
 You only need to configure it in your startup code:
 

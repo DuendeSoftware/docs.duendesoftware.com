@@ -6,13 +6,13 @@ weight: 50
 
 You can hook into the token request pipeline by implementing the [ICustomTokenRequestValidator]({{< ref "/reference/validators/custom_token_request_validator" >}}) interface.
 
-This would allow for
+This allows you to
 
-* adding additional token request validation logic
+* add additional token request validation logic
 * do custom per-client processing
-* adding custom response parameters
+* add custom response parameters
 * return custom errors and error descriptions
-* modifying parameters on-the-fly
+* modify parameters on-the-fly
     * access token lifetime and type
     * client claims
     * confirmation method

@@ -14,7 +14,7 @@ This will cause the browser to re-issue the original authorize request from the 
 An example of this redirect can be seen in the [local login]({{<ref "./local">}}) topic.
 
 {{% notice note %}}
-Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#Security_issues) via the *returnUrl* parameter. You should validate that the *returnUrl* refers to well-known location.
+Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#Security_issues) via the *returnUrl* parameter. You should validate that the *returnUrl* refers to a well-known location.
 Either use the *Url.IsLocalUrl* helper from ASP.NET Core, or use the [interaction service]({{< ref "/reference/services/interaction_service#iidentityserverinteractionservice-apis" >}}) from Duende IdentityServer for APIs to validate the *returnUrl* parameter.
 {{% /notice %}}
 

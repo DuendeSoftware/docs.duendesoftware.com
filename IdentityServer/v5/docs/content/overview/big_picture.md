@@ -54,14 +54,14 @@ OpenID Connect and OAuth 2.0 are very similar – in fact OpenID Connect is an e
 The two fundamental security concerns, authentication and API access, are combined into a  single protocol - often with a single round trip to the security token service. 
 
 We believe that the combination of OpenID Connect and OAuth 2.0 is the best approach to secure modern
-applications for the foreseeable future. IdentityServer4 is an implementation of these two protocols and is
+applications for the foreseeable future. Duende IdentityServer is an implementation of these two protocols and is
 highly optimized to solve the typical security problems of today’s mobile, native and web applications.
 
 ### How Duende IdentityServer can help
-Duende IdentityServer is middleware that adds the spec compliant OpenID Connect and OAuth 2.0 endpoints to an arbitrary ASP.NET Core host.
+Duende IdentityServer is middleware that adds spec-compliant OpenID Connect and OAuth 2.0 endpoints to an arbitrary ASP.NET Core host.
 
-Typically, you build (or re-use) an application that contains a login and logout page (and maybe consent - depending on your needs),
-and the IdentityServer middleware adds the necessary protocol heads to it, so that client applications can talk to it using those standard protocols.
+Typically, you build (or re-use) an application that contains login and logout pages (and optionally a consent page, depending on your needs)
+and add the IdentityServer middleware to that application. The middleware adds the necessary protocol heads to the application so that clients can talk to it using those standard protocols.
 
 ![](../images/middleware.png?height=30pc)
 

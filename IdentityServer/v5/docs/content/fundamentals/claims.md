@@ -4,19 +4,19 @@ date: 2020-09-10T08:22:12+02:00
 weight: 45
 ---
 
-Your IdentityServer emits claims about users and clients into tokens. You are in full control which claims you want to emit in which situation and where to retrieve those claims from.
+IdentityServer emits claims about users and clients into tokens. You are in full control of which claims you want to emit, in which situations you want to emit those claims, and where to retrieve those claims from.
 
 ## User claims
 User claims can be put in both identity and access tokens. The central extensibility point to implement for emitting claims is called the [profile service]({{< ref "/reference/services/profile_service" >}}).
 
-Whenever your IdentityServer creates tokens, it invokes the registered profile service and presents detailed information about the current token request via the passed in [context]({{< ref "/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext" >}}), e.g.
+Whenever IdentityServer creates tokens for a user, it invokes the registered profile service with a [context]({{< ref "/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext" >}}) that presents detailed information about the current token request, including
 
 * the identity of the client who is requesting the token
 * the identity of the user
 * what type of token is requested
 * the requested claim types according to the definition of the requested resources
 
-You can use different strategies to determine which claims you want emit based on that information
+You can use different strategies to determine which claims you want to emit based on that information
 
 * always emit certain claims (because they are an integral part of the user identity and needed in scenarios)
 * emit claims based on user or client identity
@@ -31,7 +31,7 @@ Here's a sample implementation of a profile service:
 ```cs
 public class SampleProfileService : IProfileService
 {
-    // this method returns the claims that should go into the token
+    // this method adds claims that should go into the token to context.IssuedClaims
     public virtual Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
         var requestedClaimTypes = context.RequestedClaimTypes;
@@ -53,10 +53,10 @@ public class SampleProfileService : IProfileService
 }
 ```
 
-The *Subject* property on the context contains the principal that you issued during user sign-in. Some claims can typically be sourced from there, other typically come from databases or other data sources.
+The *Subject* property on the *ProfileDataRequestContext* contains the principal that was issued during user sign-in. Typically, the profile service will source some claims from the *Subject* and others from databases or other data sources.
 
 {{% notice note %}}
-The profile service gets also gets called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}). In this case you do not have access to the user identity since these calls don't happen as part of a session. You can check the caller of the profile service by querying the *Caller* property on the context.
+The profile service also gets called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}). In that case, the *Subject* property will not contain the principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call. You can check the caller of the profile service by querying the *Caller* property on the context.
 {{% /notice %}}
 
 ## Client claims

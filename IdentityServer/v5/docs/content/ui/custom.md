@@ -56,6 +56,6 @@ When using custom redirect pages by setting the *RedirectUrl* on the *Interactio
 Once the custom logic is complete on the page, then the URL in the *returnUrl* query parameter should be used to return the user back into the IdentityServer authorize request workflow.
 
 {{% notice note %}}
-Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#Security_issues) via the *returnUrl* parameter. You should validate that the *returnUrl* refers to well-known location.
+Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#Security_issues) via the *returnUrl* parameter. You should validate that the *returnUrl* refers to a well-known location.
 Either use the *Url.IsLocalUrl* helper from ASP.NET Core, or use the [interaction service]({{< ref "/reference/services/interaction_service#iidentityserverinteractionservice-apis" >}}) from Duende IdentityServer for APIs to validate the *returnUrl* parameter.
 {{% /notice %}}
