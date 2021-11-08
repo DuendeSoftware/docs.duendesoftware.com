@@ -11,7 +11,7 @@ Duende IdentityServer is backed by two kinds of data:
 * [Operational Data]({{<ref "./operational">}})
 
 Data access is abstracted by store interfaces that are registered in the DI system. 
-These store interfaces allow IdentitySerer to access the data it needs at runtime when processing requests. 
+These store interfaces allow IdentityServer to access the data it needs at runtime when processing requests. 
 You can implement these interfaces yourself and thus can use any database you wish.
 If you prefer a relational database for this data, then we provide [EntityFramework Core]({{<ref "./ef">}}) implementations.
 
