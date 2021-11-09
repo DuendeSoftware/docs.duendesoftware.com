@@ -13,3 +13,9 @@ This sample shows how to add OpenID Connect code flow with PKCE to a .NET 4.8 We
 This sample shows how to parse and validate a JWT token issued by IdentityServer inside an Azure Function.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/JwtSecuredAzureFunction)
+
+### Client Initiated Backchannel Login (CIBA)
+This sample shows how a client can make CIBA-style login requests using Duende IdentityServer.
+
+[link to source code]({{< param samples_base >}}/Ciba)
+
