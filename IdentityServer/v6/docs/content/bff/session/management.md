@@ -71,7 +71,11 @@ x-csrf: 1
 
 If there is no current session, the user endpoint will return a 401 status code. This endpoint can also be used to periodically query if the session is still valid.
 
-If you are using server-side sessions, you can also prohibit that the session query would slide the session cookie (if set to sliding expiration) by adding the *slide=false* query string parameter.
+If your backend uses sliding cookies, you typically want to avoid that querying the session will extend the session lifetime. Adding the *slide=false* query string parameter to the URL will prohibit that.
+
+{{% notice note %}}
+This features requires either usage of server-side sessions, or .NET 6 or higher (or both).
+{{% /notice %}}
 
 ```
 GET bff/user?slide=false

@@ -10,7 +10,7 @@ You can customize the proxy behavior in two ways
 * provide custom request/response transformation
 
 ### Custom HTTP clients
-By default, Duende.BFF will create and cache an HTTP client (or rather an *HttpMessageInvoker* to be more specific) per configured route or local path.
+By default, Duende.BFF will create and cache an HTTP client per configured route or local path.
 
 This invoker is setup like this:
 
@@ -60,15 +60,10 @@ services.AddSingleton<IHttpMessageInvokerFactory, MyInvokerFactory>();
 ```
 
 ### Custom transformations
-HTTP requests are being transformed before forwarded to the remote API:
+In the standard configuration, BFF uses the YARP default behavior for forwarding HTTP requests. In addition we
 
-* all request headers besides *Accept*, *Content-Length* and *Content-Type* are removed
-* the local path of the API URL gets removed (can be configured on the options)
-* an access token gets attached (depends on endpoint configuration)
-* X-Forwarded headers are created or forwarded based on the options
-* customer headers get forwarded if configured on the options
-
-The response from the remote API is returned to the frontend unchanged.
+* remove the sensitive session cookie
+* add the current access token
 
 If you want to modify this behavior you can either implement *IHttpTransformerFactory* from scratch: 
 

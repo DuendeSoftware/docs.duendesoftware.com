@@ -25,7 +25,7 @@ You can also supply client assertions to the token management library. See this 
 ### Custom token storage
 We recommend to use the default storage mechanism, as this will automatically be compatible with the Duende.BFF server-side sessions.
 
-If you do not use server-side sessions, then the access and refresh token will be stored in the session cookie. If this is a concern, you can take over token storage completely.
+If you do not use server-side sessions, then the access and refresh token will be stored in the protected session cookie. If you want to change this, you can take over token storage completely.
 
 This would involve two steps
 
