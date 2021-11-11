@@ -290,6 +290,14 @@ These settings only apply if the respective caching has been enabled in the serv
 
     Cache duration of identity and API resource configuration loaded from the resource store.
 
+* ***CorsExpiration***
+
+    Cache duration of CORS configuration loaded from the CORS policy service.
+
+* ***IdentityProviderCacheDuration***
+
+    Cache duration of identity provider configuration loaded from the identity provider store.
+
 ## CORS
 IdentityServer supports CORS for some of its endpoints.
 The underlying CORS implementation is provided from ASP.NET Core, and as such it is automatically registered in the dependency injection system.
