@@ -50,7 +50,7 @@ public void Configure(IApplicationBuilder app)
 The BFF middleware must be placed before the authorization middleware, but after routing.
 {{% /notice %}}
 
-In addition, the endpoints that want the extra security must be decorated, e.g.:
+In addition, the endpoints that want the extra security features described above must be decorated, e.g.:
 
 ```csharp
 app.UseEndpoints(endpoints =>
@@ -67,7 +67,7 @@ app.UseEndpoints(endpoints =>
 });
 ```
 
-Or if using MVC, then an attribute applied directly to the controller or action:
+Or if using MVC, an attribute can be applied directly to the controller or action:
 
 ```csharp
 [Route("myApi")]
@@ -77,5 +77,5 @@ public class MyApiController : ControllerBase
 ```
 
 {{% notice note %}}
-You can disable the anti-forgery protection requirement by setting the *requireAntiForgeryCheck* parameter to *false* on the endpoint or attribute. This is not recommended.
+You can disable the anti-forgery protection requirement by setting the *requireAntiForgeryCheck* parameter to *false* on the endpoint, controller or action. This is not recommended though.
 {{% /notice %}}

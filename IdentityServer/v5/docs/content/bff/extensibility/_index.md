@@ -6,4 +6,8 @@ chapter = true
 
 # Extensibility
 
-Duende.BFF has several extensibility points to customize data storage and endpoints.
+Duende.BFF can be extended in the following areas
+
+* custom logic at the session management endpoints
+* custom logic and configuration for HTTP forwarding
+* custom data storage for server-side sessions and access/refresh tokens

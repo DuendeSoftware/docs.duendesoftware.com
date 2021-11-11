@@ -15,6 +15,16 @@ services.AddBff(options =>
 })
 ```
 
+## General
+
+* ***EnforceBffMiddleware***
+
+    This injects exra checks to make sure the BFF middleware has been added to the pipeline. Since this middleware does important security checks, this protects from accidental configuration errors. You can disable this check if it interferes with some custom logic you might have.
+
+* ***LicenseKey***
+
+    This sets the license key for Duende.BFF. This license key is required for production deployments.
+
 ## Session Management
 
 * ***ManagementBasePath***
@@ -56,23 +66,3 @@ services.AddBff(options =>
 
     Specifies the expected value of Anti-forgery header.
     Defaults to *1*.
-
-* ***AddXForwardedHeaders***
-
-    Specifies if X-Forwarded headers are automatically added to calls to remote API endpoints.
-    Defaults to *true*.
-
-* ***ForwardIncomingXForwardedHeaders***
-
-    Specifies if incoming XForwarded headers should be forwarded. Defaults to *false*.
-
-    **Make sure you only forward headers from sources you trust.**
-
-* ***ForwardedHeaders***
-
-    Specifies additional headers to forward to remote API endpoints.
-
-* ***PathTransformMode***
-
-    Specifies how the path for remote API endpoints gets transformed.
-    Defaults to removing the configured local prefix.

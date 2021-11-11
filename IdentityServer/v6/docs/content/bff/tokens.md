@@ -25,7 +25,7 @@ We recommend to leverage the *HttpClientFactory* to fabricate HTTP clients that 
 
 ```cs
 // registers HTTP client that uses the managed user access token
-services.AddUserAccessTokenClient("apiClient", configureClient: client =>
+services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://remoteServer/");
 });
