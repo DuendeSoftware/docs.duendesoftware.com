@@ -45,6 +45,14 @@ Its properties map to the Open ID Connect options class from ASP.NET Core, and t
     
     Space separated list of scope values.
 
+* ***GetClaimsFromUserInfoEndpoint***
+    
+    Indicates if userinfo endpoint is to be contacted. Defaults to true.
+
+* ***UsePkce***
+    
+    Indicates if PKCE should be used. Defaults to true.
+
 
 #### Duende.IdentityServer.Models.IdentityProviderName
 
