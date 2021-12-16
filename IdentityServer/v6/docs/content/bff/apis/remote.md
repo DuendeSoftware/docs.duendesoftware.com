@@ -156,9 +156,9 @@ You can achieve the same in configuration with the following:
         "ClusterId": "cluster1",
         "Match": {
           "Path": "/todos/{**catch-all}",
-          "MetaData": { 
+        },
+        "Metadata": { 
             "Duende.Bff.Yarp.TokenType": "User"
-            }
         }
       }
     },
