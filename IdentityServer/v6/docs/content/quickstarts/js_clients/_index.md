@@ -1,6 +1,6 @@
 +++
 title = "Building JavaScript client applications"
-weight = 5
+weight = 10
 chapter = true
 +++
 
