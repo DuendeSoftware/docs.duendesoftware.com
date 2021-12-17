@@ -75,7 +75,7 @@ This state is managed (by default) with another cookie using ASP.NET Core's cook
 This extra cookie is necessary since there are typically several redirects involved until you are done with the external authentication process.
 
 {{% notice note %}}
-If you are using ASP.NET Identity, many of these technical details are hidden from you. It is recommended that you also read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the ASP.NET Identity [quickstart]({{< ref "/quickstarts/6_aspnetid" >}}).
+If you are using ASP.NET Identity, many of these technical details are hidden from you. It is recommended that you also read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the ASP.NET Identity [quickstart]({{< ref "/quickstarts/5_aspnetid" >}}).
 {{% /notice %}}
 
 One option on an external authentication handlers is called *SignInScheme*.

@@ -1,14 +1,14 @@
 ---
 title: "Building Blazor WASM client applications"
 date: 2020-09-10T08:22:12+02:00
-weight: 6
+weight: 15
 ---
 
 Similar to JavaScript SPAs, you can build Blazor WASM applications with and without a backend. Not having a backend has all the security disadvantages we discussed already in the JavaScript quickstart. 
 
 If you are building Blazor WASM apps that do not deal with sensitive data and you want to use the no-backend approach, have a look at the standard Microsoft templates, which are using this style.
 
-In this quickstart we will focus on how to build a Blazor WASM application using our Duende.BFF security framework. You can find the full source code here. TODO
+In this quickstart we will focus on how to build a Blazor WASM application using our Duende.BFF security framework. You can find the full source code [here]({{< param qs_base >}}/7_Blazor)
 
 {{% notice note %}}
 To keep things simple, we will utilize our demo IdentityServer instance hosted at https://demo.duendesoftware.com. We will provide more details on how to configure a Blazor client in your own IdentityServer at then end.
