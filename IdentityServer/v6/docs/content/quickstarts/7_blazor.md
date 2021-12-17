@@ -349,4 +349,4 @@ Response status code does not indicate success: 401 (Unauthorized).
 
 The client code can properly respond to this, e.g. triggering a login redirect.
 
-When you logon now and call the API, you can put a breakpoint server-side and inspect that the API controller has access to the claims of the authentication use via the *.User* property.
+When you logon now and call the API, you can put a breakpoint server-side and inspect that the API controller has access to the claims of the authenticated user via the *.User* property.
