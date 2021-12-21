@@ -395,3 +395,14 @@ Shared settings for the [dynamic providers]({{< ref "/ui/login/dynamicproviders"
     
     Scheme for signout. Defaults to the constant *IdentityServerConstants.DefaultCookieAuthenticationScheme*.
 
+## CIBA
+Shared settings for the CIBA feature.
+
+* ***DefaultLifetime***
+    
+    The default lifetime of the pending authentication requests in seconds. Defaults to 300.
+
+* ***DefaultPollingInterval***
+    
+    The polling interval in seconds that a client is to use when connecting to the token endpoint. Defaults to 5.
+

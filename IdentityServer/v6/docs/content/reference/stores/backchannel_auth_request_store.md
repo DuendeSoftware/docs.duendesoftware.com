@@ -1,6 +1,6 @@
 ---
 title: "Backchannel Authentication Request Store"
-weight: 90
+weight: 80
 ---
 
 #### Duende.IdentityServer.Stores.IBackChannelAuthenticationRequestStore

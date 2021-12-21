@@ -74,6 +74,10 @@ Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 toke
 
     the device code (required for *urn:ietf:params:oauth:grant-type:device_code* grant type)
 
+* ***auth_req_id***
+
+    the backchannel authentication request id (required for *urn:openid:params:grant-type:ciba* grant type)
+
 ```
 POST /connect/token
 CONTENT-TYPE application/x-www-form-urlencoded
