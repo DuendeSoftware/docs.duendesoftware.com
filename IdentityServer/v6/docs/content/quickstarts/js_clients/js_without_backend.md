@@ -1,6 +1,6 @@
 ---
 title: "JavaScript applications without a backend"
-weight: 2
+weight: 20
 ---
 
 {{% notice note %}}
