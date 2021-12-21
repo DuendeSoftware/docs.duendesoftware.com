@@ -5,7 +5,7 @@ weight: 80
 
 #### Duende.IdentityServer.Models.BackchannelUserLoginRequest
 
-Models the information to initiate a user login request due to a CIBA request.
+Models the information to initiate a user login request due to a [CIBA]({{< ref "/ui/ciba">}}) request.
 
 * ***InternalId***
     

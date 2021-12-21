@@ -5,7 +5,7 @@ weight: 80
 
 #### Duende.IdentityServer.Stores.IBackChannelAuthenticationRequestStore
 
-Used to store backchannel login requests (for CIBA).
+Used to store backchannel login requests (for [CIBA]({{< ref "/ui/ciba">}})).
 
 ```cs
     /// <summary>

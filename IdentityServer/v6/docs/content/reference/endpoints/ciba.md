@@ -3,7 +3,7 @@ title: "Backchannel Authentication Endpoint"
 weight: 9
 ---
 
-The backchannel authentication endpoint is used by a client to initiate a CIBA request.
+The backchannel authentication endpoint is used by a client to initiate a [CIBA]({{< ref "/ui/ciba">}}) request.
 Only the poll mode is supported.
 
 Clients must be configured with the *"urn:openid:params:grant-type:ciba"* grant type to use this endpoint.
