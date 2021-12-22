@@ -35,11 +35,9 @@ The *SendLoginRequestAsync* method should contact the user with whatever mechani
 This method is passed a [BackchannelUserLoginRequest]({{< ref "/reference/models/ciba_login_request" >}}) which will contain all the contextual information needed to send to the user (the *InternalId* being the identifier for this login request which is needed when completing the request -- see below).
 
 Next, the user should be presented with the information for the login request (e.g. via a web page at IdentityServer, or via any other means appropriate).
-The [IBackchannelAuthenticationInteractionService]({{< ref "/reference/services/ciba_interaction_service" >}}) can be used to access an indivdual [BackchannelUserLoginRequest]({{< ref "/reference/models/ciba_login_request" >}}) by its *InternalId*. 
+The [IBackchannelAuthenticationInteractionService]({{< ref "/reference/services/ciba_interaction_service" >}}) can be used to access an indivdual [BackchannelUserLoginRequest]({{< ref "/reference/models/ciba_login_request" >}}) by its *InternalId*. Once the user has consented and allows the login, then the *CompleteLoginRequestAsync* method should be used to record the result (including which scopes the user has granted).
 
-Once the user wishes to consent and allow the login, then the *CompleteLoginRequestAsync* method should be used to record the result (including which scopes the user has granted).
-
-Finally, once the user has completed the login request, the client, after polling for the result, will finally be issued the tokens it's requested. 
+Finally, the client, after polling for the result, will finally be issued the tokens it's requested (or a suitable error if the user has denied the request or it has timed out).
 
 {{% notice note %}}
 We provide [a sample]({{< ref "/samples/misc#client-initiated-backchannel-login-ciba">}}) for the interactive pages a user might be presented with for the CIBA workflow.
