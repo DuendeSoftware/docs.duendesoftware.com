@@ -5,7 +5,7 @@ weight: 80
 
 #### Duende.IdentityServer.Services.IBackchannelAuthenticationInteractionService
 
-The *IBackchannelAuthenticationInteractionService* interface is intended to provide services to be used by the user interface to communicate with Duende IdentityServer during backchannel login requests ([CIBA]({{< ref "/ui/ciba">}})).
+The *IBackchannelAuthenticationInteractionService* interface provides services for a user to access or complete a login requests for [CIBA]({{< ref "/ui/ciba">}}).
 It is available from the dependency injection system and would normally be injected as a constructor parameter into your MVC controllers for the user interface of IdentityServer.
 
 
