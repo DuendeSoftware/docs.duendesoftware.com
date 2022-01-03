@@ -156,8 +156,8 @@ The above code may require you to add the following namespaces to your file::
 
 ```cs
 using System.Linq;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Mappers;
 ```
 
 And then we can invoke this from the *Configure* method:
