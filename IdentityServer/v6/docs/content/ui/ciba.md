@@ -22,22 +22,27 @@ A nice feature of this workflow is that the user does not enter their credential
 
 ## CIBA Workflow in IdentityServer
 
-IdentityServer exposes a [backchannel authentication request endpoint]({{< ref "/reference/endpoints/ciba" >}}) that the client uses to initiate the CIBA workflow.
+Below is a diagram that shows the high level steps involved with the CIBA workflow and the supporting services involved.
 
-Once client authentication and basic request parameter validation is performed, the user for which the request is being made must be identified.
+![](../images/ciba.png?height=30pc)
+
+
+* **Step 1**: IdentityServer exposes a [backchannel authentication request endpoint]({{< ref "/reference/endpoints/ciba" >}}) that the client uses to initiate the CIBA workflow.
+
+* **Step 2**: Once client authentication and basic request parameter validation is performed, the user for which the request is being made must be identified.
 This is done by using the [IBackchannelAuthenticationUserValidator]({{< ref "/reference/validators/ciba_user_validator" >}}) service in DI, **which you are required to implement and register in the DI system**.
 The *ValidateRequestAsync* method will validate the request parameters and return a result which will contain the user's *sub* (subject identifier) claim.
 
-Once a user has successfully been identified, then a record representing the pending login request is created in the [Backchannel Authentication Request Store]({{< ref "/reference/stores/backchannel_auth_request_store">}}).
+* **Step 3**: Once a user has successfully been identified, then a record representing the pending login request is created in the [Backchannel Authentication Request Store]({{< ref "/reference/stores/backchannel_auth_request_store">}}).
 
-Next, the user needs to be notified of the login request. This is done by using the [IBackchannelAuthenticationUserNotificationService]({{< ref "/reference/services/ciba_user_notification" >}}) service in DI, **which you are required to implement and register in the DI system**.
+* **Step 4**: Next, the user needs to be notified of the login request. This is done by using the [IBackchannelAuthenticationUserNotificationService]({{< ref "/reference/services/ciba_user_notification" >}}) service in DI, **which you are required to implement and register in the DI system**.
 The *SendLoginRequestAsync* method should contact the user with whatever mechanism is appropriate (e.g. email, text message, push notification, etc.), and presumably provide the user with instructions (perhaps via a link, but other approaches are conceivable) to start the login and consent process. 
 This method is passed a [BackchannelUserLoginRequest]({{< ref "/reference/models/ciba_login_request" >}}) which will contain all the contextual information needed to send to the user (the *InternalId* being the identifier for this login request which is needed when completing the request -- see below).
 
-Next, the user should be presented with the information for the login request (e.g. via a web page at IdentityServer, or via any other means appropriate).
+* **Step 5**: Next, the user should be presented with the information for the login request (e.g. via a web page at IdentityServer, or via any other means appropriate).
 The [IBackchannelAuthenticationInteractionService]({{< ref "/reference/services/ciba_interaction_service" >}}) can be used to access an indivdual [BackchannelUserLoginRequest]({{< ref "/reference/models/ciba_login_request" >}}) by its *InternalId*. Once the user has consented and allows the login, then the *CompleteLoginRequestAsync* method should be used to record the result (including which scopes the user has granted).
 
-Finally, the client, after polling for the result, will finally be issued the tokens it's requested (or a suitable error if the user has denied the request or it has timed out).
+* **Step 6**: Finally, the client, after polling for the result, will finally be issued the tokens it's requested (or a suitable error if the user has denied the request or it has timed out).
 
 {{% notice note %}}
 We provide [a sample]({{< ref "/samples/misc#client-initiated-backchannel-login-ciba">}}) for the interactive pages a user might be presented with for the CIBA workflow.
