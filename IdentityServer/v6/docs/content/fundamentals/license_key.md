@@ -10,7 +10,7 @@ This can be configured in one of two ways:
 
 ## File System
 
-Duende IdentityServer will look for a file called *Duende_IdentityServer_License.key* in the same directory as your hosting application.
+Duende IdentityServer will look for a file called *Duende_License.key* in the same directory as your hosting application.
 If present, the contents of the file will be loaded as the license key.
 
 ## Startup

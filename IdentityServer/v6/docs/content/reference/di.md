@@ -177,4 +177,15 @@ The following are convenient to add additional features to your IdentityServer.
     
     Adds the X509 secret validators for mutual TLS.
 
+* ***AddIdentityProviderConfigurationValidator***
+    
+    Adds an IdentityProvider configuration validator.
+
+* ***AddBackchannelAuthenticationUserValidator***
+    
+    Adds the backchannel login user validator.
+
+* ***AddBackchannelAuthenticationUserNotificationService***
+    
+    Adds the backchannel login user validator.
 

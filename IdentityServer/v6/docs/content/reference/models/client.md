@@ -262,3 +262,14 @@ Device flow specific settings.
 * ***DeviceCodeLifetime***
 
     Lifetime to device code in seconds (defaults to 300 seconds / 5 minutes)
+
+## CIBA
+Client initiated backchannel authentication specific settings.
+
+* ***CibaLifetime***
+    
+    Specifies the backchannel authentication request lifetime in seconds. Default to *null*.
+
+* ***PollingInterval***
+
+    Backchannel polling interval in seconds. Default to *null*.

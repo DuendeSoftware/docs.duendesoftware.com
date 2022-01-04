@@ -16,7 +16,7 @@ Duende IdentityServer implements the following specifications:
 * OpenID Connect Back-Channel Logout 1.0 - draft 06 ([spec](https://openid.net/specs/openid-connect-backchannel-1_0.html>))
 * Multiple Response Types ([spec](http://openid.net/specs/oauth-v2-multiple-response-types-1_0.html))
 * Form Post Response Mode ([spec](http://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html>))
-
+* OpenID Connect Client-Initiated Backchannel Authentication (CIBA) ([spec](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html)).
 
 ### OAuth 2.x
 

@@ -15,7 +15,7 @@ This sample shows how to parse and validate a JWT token issued by IdentityServer
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/JwtSecuredAzureFunction)
 
 ### Client Initiated Backchannel Login (CIBA)
-This sample shows how a client can make CIBA-style login requests using Duende IdentityServer.
+This sample shows how a client can make [CIBA]({{< ref "/ui/ciba">}}) login requests using Duende IdentityServer.
 To run the sample, the IdentityServer and API hosts should be started first.
 Next run the ConsoleCibaClient which will initiate the backchannel login request.
 The URL the user would receive to login and approve the request is being written out to the IdentityServer log (visible in the console window).
