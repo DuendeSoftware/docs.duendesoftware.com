@@ -38,13 +38,14 @@ The claims issued in the cookie are passed as the *Subject* on the [ProfileDataR
 ## Well Known Claims Issued From the Login Page
 
 There are some claims beyond *sub* that can be issued by your login page to capture additional information about the user's authentication session.
-Internally Duende IdentityServer will set these values if you do not specify them when calling *SignInAsync*.
+Internally Duende IdentityServer will set some of these values if you do not specify them when calling *SignInAsync*.
 The claims are:
 
 * ***name***: The display name of the user.
 * ***amr***: Name of the [authentication method](https://tools.ietf.org/html/rfc8176) used for user authentication (defaults to *pwd*).
 * ***auth_time***: Time in epoch format the user entered their credentials (defaults to the current time).
 * ***idp***: Authentication scheme name of the external identity provider used for login. When not specified then the value defaults to *local* indicating that it was a local login.
+* ***tenant***: Tenant identifier the user is associated with (if needed). This is used to determine if a user must re-authenticate when clients make [authorization requests]({{<ref "/reference/endpoints/authorize">}}) using the *acr_values* with a *tenant* value. If the user's tenant does not match the request, then they should re-authenticate.
 
 While you can create the *ClaimsPrincipal* yourself, you can alternatively use IdentityServer extension methods and the *IdentityServerUser* class to make this easier:
 
