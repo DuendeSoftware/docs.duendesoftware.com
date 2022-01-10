@@ -4,22 +4,32 @@ date: 2020-09-10T08:22:12+02:00
 weight: 2
 ---
 
-The following quickstart provides step by step instructions for various common Duende IdentityServer scenarios. 
-These start with the absolute basics and become more complex as they progress. We recommend that you follow them in sequence.  
+Welcome to the first quickstart for IdentityServer!
 
-To see the full list, please go to [Quickstarts Overview]({{< ref "0_overview" >}}).
+To see the full list of quickstarts, please see [Quickstarts Overview]({{< ref
+"0_overview" >}}).
 
-This first quickstart is the most basic scenario: using Duende IdentityServer for protecting APIs for server-to-server communication.
+This first quickstart provides step by step instructions to set up
+IdentityServer in the most basic scenario: protecting APIs for server-to-server
+communication.
 
-In this quickstart you define an API and a Client with which to access it. 
-The client will request an access token from the Identity Server using its client ID and secret and then use the token to gain access to the API.
+In this quickstart, you will create a solution containing three projects:
+- An Identity Server
+- An API that requires authentication
+- A client that accesses that API
+
+The client will request an access token from the Identity Server using its
+client ID and secret and then use the token to gain access to the API.
 
 ## Source Code
-As with all of these quickstarts you can find the source code for it in the [docs]({{< param qs_base >}}) repository. 
-The project for this quickstart is [Quickstart #1: Securing an API using Client Credentials]({{< param qs_base >}}/1_ClientCredentials).
+As with all of the quickstarts, you can find the source code for it in the
+[docs]({{< param qs_base >}}) repository. The project for this quickstart is
+[Quickstart #1: Securing an API using Client Credentials]({{< param qs_base
+>}}/1_ClientCredentials).
 
 ## Preparation
-The Duende IdentityServer templates for the dotnet CLI are a good starting point for the quickstarts.
+The IdentityServer templates for the dotnet CLI are a good starting point for
+the quickstarts.
 
 To install the templates open a console window and type the following command:
 
@@ -29,76 +39,92 @@ dotnet new --install Duende.IdentityServer.Templates
 
 They will be used as a starting point for the various tutorials.
 
-## Setting up the ASP.NET Core application
-
-First create a directory for the application - then use our template to create an ASP.NET Core application that includes a basic Duende IdentityServer setup, e.g.:
+## Create the Solution and IdentityServer Project
+In this section, you will create a directory for the solution and use the
+isempty (Identity Server Empty) template to create an ASP.NET Core application
+that includes a basic IdentityServer setup.
 
 ```
 md quickstart
 cd quickstart
 
+dotnet new sln -n Quickstart
+
 md src
 cd src
-
 dotnet new isempty -n IdentityServer
 ```
 
 This will create the following files:
 
-* *IdentityServer.csproj* - the project file and a *Properties\launchSettings.json* file
-* *Program.cs* and *Startup.cs* - the main application entry point
-* *Config.cs* - Duende IdentityServer resources and clients configuration file
+* *IdentityServer.csproj* - the project file
+* *Properties\launchSettings.json* file - the launch profile
+* *appsettings.json* - the run time settings file
+* *Program.cs* - the main application entry point
+* *HostingExtensions.cs* - Configures the ASP.NET pipeline and services.
+  Notably, the IdentityServer services are configured here and the
+  IdentityServer middleware is added to the pipeline here
+* *Config.cs* - Defines the [resources]({{< ref
+  "/overview/terminology#resources" >}} and [clients]({{< ref
+  "/overview/terminology#client" >}} used by IdentityServer
 
-You can now use your favorite text editor to edit or view the files. If you want to have Visual Studio support, you can add a solution file like this:
+You can now use your favorite text editor to edit or view the files. 
 
+Add the IdentityServer project to the solution:
 ```
 cd ..
-dotnet new sln -n Quickstart
-```
-
-and let it add the IdentityServer project (keep this command in mind as we will create other projects below):
-
-```
 dotnet sln add ./src/IdentityServer/IdentityServer.csproj
+
 ```
 
-{{% notice note %}}
-The protocol used in this Template is *https* and the port is set to 5001 when running on Kestrel or a random one on IISExpress. You can change that in the *Properties\launchSettings.json* file. For production scenarios you should always use *https*.
-{{% /notice %}}
+{{% notice note %}} The protocol used in this Template is *https* and the port
+is set to 5001 when running on Kestrel or a random one on IISExpress. You can
+change that in the *Properties\launchSettings.json* file. For production
+scenarios you should always use *https*. {{% /notice %}}
 
+### Defining an API Scope
+Scope is a core feature of OAuth that allows us to express the extent or scope
+of access. Clients request scopes when they initiate the protocol, declaring
+what scope of access they want. Identity Server then has to decide which scopes
+to include in the token. Just because the client has asked for something doesn't
+mean they should get it! There are built-in abstractions as well as
+extensibility points that you can use to make this decision. Ultimately,
+Identity Server issues a token to the client, which then uses the token to
+access APIs. APIs can check the scopes that were included in the token to make
+authorization decisions.
 
-#### Defining an API Scope
-An API is a resource in your system that you want to protect. 
-Resource definitions can be loaded in many ways, the template you used to create the project above shows how to use a "code as configuration" approach.
+Scopes don't have structure imposed by the protocols - they are just
+space-separated strings. This allows for flexibility when designing the scopes
+used by a system. In this quickstart, you will create a scope that represents
+complete access to our API.
 
-The Config.cs is already created for you. Open it, update the code to look like this::
+Scope definitions can be loaded in many ways. This quickstart shows how to use a
+"code as configuration" approach. A minimal Config.cs was created by the
+template. Open it and add an ApiScope to the ApiScopes property:
 
 ```csharp
-public static class Config
-{
-    public static IEnumerable<ApiScope> ApiScopes =>
-        new List<ApiScope>
-        {
-            new ApiScope("api1", "My API")
-        };
-}
+public static IEnumerable<ApiScope> ApiScopes =>
+    new List<ApiScope>
+    {
+        new ApiScope(name: "api1", displayName: "MyAPI") 
+    };
 ```
 
 (see the full file [here]({{< param qs_base >}}/1_ClientCredentials/src/IdentityServer/Config.cs)).
 
-
 {{% notice note %}}
-If you will be using this in production it is important to give your API a logical name. Developers will be using this to connect to your api though your Identity server.  It should describe your api in simple terms to both developers and users.
+In practice it is important to give your API a useful name and display name. Use
+these names to describe your api in simple terms to both developers and users.
+Developers will use the name to connect to your api, and end users will see the
+display name on consent screens, etc. 
 {{% /notice %}}
 
+### Defining the client {#define-client}
+The next step is to configure a client application that you will use to access the API.
 
-#### Defining the client
+In this quickstart, the client will not have an interactive user and will authenticate with IdentityServer using a client secret.
 
-The next step is to define a client application that we will use to access our new API.
-
-For this scenario, the client will not have an interactive user, and will authenticate using the so called client secret with Duende IdentityServer.
-
-For this, add a client definition:
+Add this client definition to Config.cs:
 
 ```cs
 public static IEnumerable<Client> Clients =>
@@ -123,56 +149,129 @@ public static IEnumerable<Client> Clients =>
     };
 ```
 
-You can think of the ClientId and the ClientSecret as the login and password for your application itself.  
-It identifies your application to the identity server so that it knows which application is trying to connect to it.	
+(Again, see the full file [here]({{< param qs_base
+>}}/1_ClientCredentials/src/IdentityServer/Config.cs)).
 
-	
-#### Configuring IdentityServer
-Loading the resource and client definitions happens in [Startup.cs]({{< param qs_base >}}/1_ClientCredentials/src/IdentityServer/Startup.cs) - update the code to look like this
+Clients can be configured with many options. Our minimal machine-to-machine
+client here contains 
+- A ClientId, which identifies the application to Identity Server so that it
+  knows which client is trying to connect to it.
+- A Secret, which you can think of as the password for the client.
+- The list of scopes that the client is allowed to ask for.
+
+Notice that the allowed scope here matches the name of the ApiScope above.
+
+### Configuring IdentityServer
+The scope and client definitions are loaded in [HostingExtensions.cs]({{< param
+qs_base >}}/1_ClientCredentials/src/IdentityServer/HostingExtensions.cs). The
+template created a ConfigureServices method that is already loading the scopes
+and clients. You can take a look to see how it is done. Note that the template
+adds a few things that are not used in this quickstart. Here's the minimal
+ConfigureServices method that is needed:
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
+public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
     var builder = services.AddIdentityServer()
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients);
 
-    // omitted for brevity
+    return builder.Build();
 }
 ```
 
-That's it - your identity server should now be configured. If you run the server and navigate the browser to *https://localhost:5001/.well-known/openid-configuration*, you should see the so-called discovery document. 
-The discovery document is a standard endpoint in identity servers.  The discovery document will be used by your clients and APIs to download the necessary configuration data.
+That's it - your Identity Server is now configured. If you run the project and
+then navigate to *https://localhost:5001/.well-known/openid-configuration* in
+your browser, you should see the [discovery
+document](reference/endpoints/discovery.md). The discovery document is a
+standard endpoint in [OpenID
+Connect](https://openid.net/specs/openid-connect-discovery-1_0.html) and
+[OAuth](https://self-issued.info/docs/draft-ietf-oauth-discovery-01.html). It is
+used by your clients and APIs to retrieve configuration data needed to request
+and validate tokens, login and logout, etc.
 
 ![image](../images/1_discovery.png)
 
-At first startup, IdentityServer will use its automatic key management feature to create a signing key for you, 
-it is stored in the *keys* folder.
-You don't have to check that folder into your source control, it will be re-created if it is not present.
+{{% notice note %}} At first startup, IdentityServer will use its automatic key
+management feature to create a signing key and store it in the *keys* folder. To
+avoid accidentally disclosing cryptographic secrets, the entire *keys* folder
+should be excluded from source control. It will be recreated if it is not
+present. {{% /notice }}
 
-#### Adding an API
-Next, add an API to your solution. 
+## Create an API Project
+Next, add an API project to your solution. This API will serve protected
+resources that will be secured by IdentityServer.
 
-You can either use the ASP.NET Core Web API template from Visual Studio or use the .NET CLI to create the API project as we do here.
-Run from within the *src* folder the following command:
+You can either use the ASP.NET Core Web API template from Visual Studio or use
+the .NET CLI to create the API project. In the quickstart/src folder, run the
+following command:
 
-    dotnet new webapi -n Api
+```
+dotnet new webapi -n Api
+```
 
 Then add it to the solution by running the following commands:
 
-    cd ..
-    dotnet sln add ./src/Api/Api.csproj
+```
+cd ..
+dotnet sln add ./src/Api/Api.csproj
+```
 
-Configure the API application to run on *https://localhost:6001* only. You can do this by editing the [launchSettings.json]({{< param qs_base >}}/1_ClientCredentials/src/Api/Properties/launchSettings.json) file inside the Properties folder. Change the application URL setting to be:
+### Add JWT Bearer Authentication
+Now we will add JWT Bearer Authentication to the API's ASP.NET pipeline. We want
+to authenticate users of our API using the token that they were issued by the
+IdentityServer project. To that end, we will add authentication middleware to
+the pipeline from the *Microsoft.AspNetCore.Authentication.JwtBearer* nuget
+package. This middleware will
+* Find and parse a JWT sent with incoming requests as an *Authorization: Bearer*
+  header.
+* Validate the JWT's signature to ensure that the JWT was issued by a trusted
+  issuer.
+* Validate that the JWT is not expired.
 
-    "applicationUrl": "https://localhost:6001"
+Run this command in the *quickstart* directory to install the middleware
+package:
+```
+dotnet add ./src/Api/Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
+```
 
-#### The controller
+Add JWT Bearer authentication services to the Service Collection to allow for
+dependency injection (DI), and configure *Bearer* as the default [Authentication
+Scheme](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-6.0#authentication-scheme).
+
+```csharp
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = "https://localhost:5001";
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false
+        };
+    });
+```
+{{% notice note %}} If you are wondering why the above code disables audience
+validation, have a look [here]({{< ref "/fundamentals/resources/api_scopes" >}})
+for a more in-depth discussion. {{% /notice %}}
+
+Add authentication middleware to the pipeline immediately before authorization:
+```csharp
+app.UseAuthentication();
+app.UseAuthorization();
+```
+*UseAuthentication* adds the authentication middleware to the pipeline so
+authentication will be performed automatically on every call into the host.
+*UseAuthorization* adds the authorization middleware to make sure our API
+endpoint cannot be accessed by anonymous clients.
+
+### Add a controller
 Add a new class called *IdentityController*:
 
 ```csharp
 [Route("identity")]
 [Authorize]
+[ApiController]
 public class IdentityController : ControllerBase
 {
     [HttpGet]
@@ -182,89 +281,60 @@ public class IdentityController : ControllerBase
     }
 }
 ```
+This controller will be used to test authorization and to visualize the claims
+identity through the eyes of the API.
 
-This controller will be used later to test the authorization requirement, as well as visualize the claims identity through the eyes of the API.
+### Configure API to listen on Port 6001
 
-#### Adding a Nuget Dependency
-In order for the configuration step to work the nuget package dependency has to be added, run this command in the root directory.
+Configure the API application to run on *https://localhost:6001* only. You can
+do this by editing the [launchSettings.json]({{< param qs_base
+>}}/1_ClientCredentials/src/Api/Properties/launchSettings.json) file inside the
+Properties folder. Change the application URL setting to be:
 
-    dotnet add ./src/Api/Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
-
-#### Configuration
-The last step is to add the authentication services to DI (dependency injection) and the authentication middleware to the pipeline.
-These will:
-
-* validate the incoming token to make sure it is coming from a trusted issuer
-* validate that the token is valid to be used with this api (aka audience)
-
-Update *Startup* to look like this:
-
-```csharp
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddControllers();
-
-        services.AddAuthentication("Bearer")
-            .AddJwtBearer("Bearer", options =>
-            {
-                options.Authority = "https://localhost:5001";
-
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = false
-                };
-            });
-    }
-
-    public void Configure(IApplicationBuilder app)
-    {
-        app.UseRouting();
-
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
-    }
-}
+```json
+"applicationUrl": "https://localhost:6001"
 ```
 
-* *AddAuthentication* adds the authentication services to DI and configures *Bearer* as the default scheme. 
-* *UseAuthentication* adds the authentication middleware to the pipeline so authentication will be performed automatically on every call into the host.
-* *UseAuthorization* adds the authorization middleware to make sure, our API endpoint cannot be accessed by anonymous clients.
+### Test the controller
 
-Navigating to the controller *https://localhost:6001/identity* on a browser should return a 401 status code. 
-This means your API requires a credential and is now protected by IdentityServer.
+Run the API project and then navigate to the identity controller at
+*https://localhost:6001/identity* in a browser. This should return a 401 status
+code, which  means your API requires a credential and is now protected by
+IdentityServer.
 
-{{% notice note %}}
-If you are wondering, why the above code disables audience validation, have a look [here]({{< ref "/fundamentals/resources/api_scopes" >}}) for a more in-depth discussion.
-{{% /notice %}}
+## Create the client project
+The last step is to create a client that requests an access token and then uses
+that token to access the API. Your client will be a console project in your
+solution. From the *quickstart\src* directory, run the following command:
 
-#### Creating the client
-The last step is to write a client that requests an access token, and then uses this token to access the API. For that, add a console project to your solution, remember to create it in the *src*:
+```
+dotnet new console -n Client
+```
 
-    dotnet new console -n Client
-    
 Then as before, add it to your solution using:
 
-    cd ..
-    dotnet sln add .\src\Client\Client.csproj
+```
+cd ..
+dotnet sln add .\src\Client\Client.csproj
+```
 
-The token endpoint at IdentityServer implements the OAuth 2.0 protocol, and you could use raw HTTP to access it. 
-However, we have a client library called IdentityModel, that encapsulates the protocol interaction in an easy to use API.
+### Add the IdentityModel nuget package
+The token endpoint at IdentityServer implements the OAuth 2.0 protocol, and you
+could use raw HTTP to access it. However, we have a client library called
+IdentityModel that encapsulates the protocol interaction in an easy to use API.
 
-Add the *IdentityModel* NuGet package to your client. 
-This can be done either via Visual Studio's Nuget Package manager or dotnet CLI::
+Add the *IdentityModel* NuGet package to your client. This can be done either
+via Visual Studio's Nuget Package manager or dotnet CLI. From the *quickstart*
+directory, run the following command:
 
-    cd src
-    cd client
-    dotnet add package IdentityModel
+```
+dotnet add ./src/Client/Client.csproj package IdentityModel
+```
 
-IdentityModel includes a client library to use with the discovery endpoint. This way you only need to know the base-address of IdentityServer - the actual endpoint addresses can be read from the metadata:
+### Retrieve the discovery document
+IdentityModel includes a client library to use with the discovery endpoint. This
+way you only need to know the base address of IdentityServer - the actual
+endpoint addresses can be read from the metadata.
 
 ```cs
 // discover endpoints from metadata
@@ -277,11 +347,14 @@ if (disco.IsError)
 }
 ```
 
-{{% notice note %}}
-If you get an error connecting it may be that you are running *https* and the development certificate for *localhost* is not trusted. You can run *dotnet dev-certs https --trust* in order to trust the development certificate. This only needs to be done once.
-{{% /notice %}}
+{{% notice note %}} If you get an error connecting it may be that you are
+running *https* and the development certificate for *localhost* is not trusted.
+You can run *dotnet dev-certs https --trust* in order to trust the development
+certificate. This only needs to be done once. {{% /notice %}}
 
-Next you can use the information from the discovery document to request a token to IdentityServer to access *api1*:
+### Request a token from IdentityServer
+Next you can use the information from the discovery document to request a token
+to IdentityServer to access *api1*:
 
 ```cs
 // request token
@@ -300,17 +373,17 @@ if (tokenResponse.IsError)
     return;
 }
 
-Console.WriteLine(tokenResponse.Json);
+Console.WriteLine(tokenResponse.AccessToken);
 ```
 
-(full file can be found [here]({{< param qs_base >}}/1_ClientCredentials/src/Client/Program.cs))
-
 {{% notice note %}}
-Copy and paste the access token from the console to [jwt.ms](https://jwt.ms) to inspect the raw token.
+Copy and paste the access token from the console to [jwt.ms](https://jwt.ms) to
+inspect the raw token.
 {{% /notice %}}
 
-#### Calling the API
-To send the access token to the API you typically use the HTTP Authorization header. This is done using the *SetBearerToken* extension method:
+### Calling the API
+To send the access token to the API you typically use the HTTP Authorization
+header. This is done using the *SetBearerToken* extension method:
 
 ```cs
 // call api
@@ -329,23 +402,32 @@ else
 }
 ```
 
-{{% notice note %}}
-If you are in Visual Studio you can right-click on the solution and select *Multiple Startup Projects*, and ensure the Api and IdentityServer will start; then run the solution; then, to step through the Client code, you can right-click on the *Client* project and select Debug... Start New Instance.
-{{% /notice %}}
+The completed *Program.cs* file can be found [here]({{< param qs_base >}}/1_ClientCredentials/src/Client/Program.cs).
+
+To run the entire solution from Visual Studio
+1. Right click the solution and select *Set Startup Projects*
+2. Choose *Multiple Startup Projects* and set the action for Api and IdentityServer to Start
+3. Run the solution and wait a moment for both the API and and IdentityServer to start
+4. Right click the *Client* project and select Debug... Start New Instance.
 
 The output should look like this:
 
 ![](../images/1_client_screenshot.png)
 
-{{% notice note %}}
-By default an access token will contain claims about the scope, lifetime (nbf and exp), the client ID (client_id) and the issuer name (iss).
-{{% /notice %}}
+{{% notice note %}} By default an access token will contain claims about the
+scope, lifetime (nbf and exp), the client ID (client_id) and the issuer name
+(iss). {{% /notice %}}
 
 #### Authorization at the API
-Right now, the API accepts any access token issued by your identity server.
-
-In the following we will add code that allows checking for the presence of the scope in the access token that the client asked for (and got granted).
-For this we will use the ASP.NET Core authorization policy system. Add the following to the *ConfigureServices* method in *Startup*:
+Right now, the API accepts any access token issued by your identity server. In
+this section, you will add an [Authorization
+Policy](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-6.0)
+to the API that will check for the presence of the "api1" scope in the access
+token. The protocol ensures that this scope will only be in the token if the
+client requests it and IdentityServer allows the client to have that scope. You
+configured IdentityServer to allow this access by [including it in the
+allowedScopes property](#define-client). Add the following to the
+*ConfigureServices* method in the API's *Startup.cs* file:
 
 ```cs
 services.AddAuthorization(options =>
@@ -358,7 +440,7 @@ services.AddAuthorization(options =>
 });
 ```
 
-You can now enforce this policy at various levels, e.g.
+You can now enforce this policy at various levels, including.
 
 * globally
 * for all API endpoints
@@ -375,16 +457,16 @@ app.UseEndpoints(endpoints =>
 ```
 
 ## Further experiments
-This walk-through focused on the success path so far
+This quickstart focused on the success path:
 
-* client was able to request token
-* client could use the token to access the API
+* The client was able to request a token.
+* The client could use the token to access the API.
 
-You can now try to provoke errors to learn how the system behaves, e.g.
+You can now try to provoke errors to learn how the system behaves, e.g.:
 
-* try to connect to IdentityServer when it is not running (unavailable)
-* try to use an invalid client id or secret to request the token
-* try to ask for an invalid scope during the token request
-* try to call the API when it is not running (unavailable)
-* don't send the token to the API
-* configure the API to require a different scope than the one in the token
+* Try to connect to IdentityServer when it is not running (unavailable).
+* Try to use an invalid client id or secret to request the token.
+* Try to ask for an invalid scope during the token request.
+* Try to call the API when it is not running (unavailable).
+* Don't send the token to the API.
+* Configure the API to require a different scope than the one in the token.
