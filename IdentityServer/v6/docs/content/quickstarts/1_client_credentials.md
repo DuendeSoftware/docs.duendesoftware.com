@@ -174,8 +174,9 @@ public static WebApplication ConfigureServices(this WebApplicationBuilder builde
 
 That's it - your IdentityServer is now configured. If you run the project and
 then navigate to *https://localhost:5001/.well-known/openid-configuration* in
-your browser, you should see the [discovery
-document](reference/endpoints/discovery.md). The discovery document is a
+your browser, you should see the TODO [discovery
+document]({{< ref "/reference/endpoints/discovery"
+>}}). The discovery document is a
 standard endpoint in [OpenID
 Connect](https://openid.net/specs/openid-connect-discovery-1_0.html) and
 [OAuth](https://self-issued.info/docs/draft-ietf-oauth-discovery-01.html). It is
@@ -247,7 +248,7 @@ builder.Services.AddAuthentication("Bearer")
 {{% notice note %}} 
 Audience validation is disabled here because access to the api is modeled with
 *ApiScopes* only. By default, no audience will be emitted unless the api is modeled with
-*ApiResources* instead. See [here]({{< ref "/apis/aspnetcore/jwt/#adding-audience-validation"
+*ApiResources* instead. See [here]({{< ref "/apis/aspnetcore/jwt#adding-audience-validation"
 >}}) for a more in-depth discussion. 
 {{% /notice %}}
 
