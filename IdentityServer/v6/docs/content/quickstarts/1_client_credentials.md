@@ -20,8 +20,7 @@ client ID and secret and then use the token to gain access to the API.
 ## Source Code
 As with all of the quickstarts, you can find the source code for it in the
 [docs]({{< param qs_base >}}) repository. The project for this quickstart is
-[Quickstart #1: Securing an API using Client Credentials]({{< param qs_base
->}}/1_ClientCredentials).
+[Quickstart #1: Securing an API using Client Credentials]({{< param qs_base >}}/1_ClientCredentials).
 
 ## Preparation
 The IdentityServer templates for the dotnet CLI are a good starting point for
@@ -57,8 +56,8 @@ This will create the following files:
 * *HostingExtensions.cs* - configuration for ASP.NET pipeline and services.
   Notably, the IdentityServer services are configured here and the
   IdentityServer middleware is added to the pipeline here.
-* *Config.cs* - definitions for [resources]({{< ref "/overview/terminology#resources" >}}) and [clients]({{< ref
-  "/overview/terminology#client" >}}) used by IdentityServer
+* *Config.cs* - definitions for [resources]({{< ref "/overview/terminology#resources" >}}) and 
+[clients]({{< ref "/overview/terminology#client" >}}) used by IdentityServer
 
 You can now use your favorite text editor to edit or view the files. 
 
@@ -148,8 +147,7 @@ public static IEnumerable<Client> Clients =>
     };
 ```
 
-Again, see the full file [here]({{< param qs_base >
-}}/1_ClientCredentials/src/IdentityServer/Config.cs).
+Again, see the full file [here]({{< param qs_base >}}/1_ClientCredentials/src/IdentityServer/Config.cs).
 
 Clients can be configured with many options. Your minimal machine-to-machine
 client here contains 
@@ -254,8 +252,7 @@ builder.Services.AddAuthentication("Bearer")
 
 Audience validation is disabled here because access to the api is modeled with
 *ApiScopes* only. By default, no audience will be emitted unless the api is modeled with
-*ApiResources* instead. See [here]({{< ref "/apis/aspnetcore/jwt#adding-audience-validation"
->}}) for a more in-depth discussion. 
+*ApiResources* instead. See [here]({{< ref "/apis/aspnetcore/jwt#adding-audience-validation" >}}) for a more in-depth discussion. 
 
 {{% /notice %}}
 
@@ -285,15 +282,13 @@ public class IdentityController : ControllerBase
 }
 ```
 This controller will be used to test authorization and to visualize the claims
-identity through the eyes of the API. See the full file [here]({{< param qs_base
->}}/1_ClientCredentials/src/Api/Controllers/IdentityController.cs).
+identity through the eyes of the API. See the full file [here]({{< param qs_base >}}/1_ClientCredentials/src/Api/Controllers/IdentityController.cs).
 
 
 ### Configure API to listen on Port 6001
 
 Configure the API to run on *https://localhost:6001* only. You can do this by
-editing the [launchSettings.json]({{< param qs_base
->}}/1_ClientCredentials/src/Api/Properties/launchSettings.json) file inside the
+editing the [launchSettings.json]({{< param qs_base >}}/1_ClientCredentials/src/Api/Properties/launchSettings.json) file inside the
 Properties folder. Change the application URL setting to be:
 
 ```json
