@@ -97,4 +97,4 @@ private async Task<IActionResult> ChallengeWindowsAsync(string returnUrl)
 }
 ```
 
-A sample is provided [here]({{<ref "/samples/windowsauth#iis-hosting">}}).
+A sample is provided [here]({{<ref "/samples/ui#windows-authentication-with-iis-hosting">}}).
