@@ -440,7 +440,7 @@ services.AddAuthorization(options =>
 });
 ```
 
-You can now enforce this policy at various levels, including.
+You can now enforce this policy at various levels, e.g.:
 
 * globally
 * for all API endpoints
