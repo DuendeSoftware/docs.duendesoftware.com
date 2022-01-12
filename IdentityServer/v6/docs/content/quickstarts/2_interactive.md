@@ -385,6 +385,7 @@ the page.
 ![](../images/3_additional_claims.png)
 
 ## Further Experiments
+### Add More Identity Claims
 Feel free to add more claims to the test users - and also more identity
 resources. 
 
@@ -413,14 +414,14 @@ It is also noteworthy, that the retrieval of claims for tokens is an extensibili
 Since we are using *AddTestUsers*, the *TestUserProfileService* is used by default.
 You can inspect the source code [here](https://github.com/DuendeSoftware/IdentityServer/blob/main/src/IdentityServer/Test/TestUserProfileService.cs) to see how it works.
 
-## Adding Support for External Authentication
+### Add Support for External Authentication
 Next we will add support for external authentication.
 This is really easy, because all you really need is an ASP.NET Core compatible authentication handler.
 
 ASP.NET Core itself ships with support for Google, Facebook, Twitter, Microsoft Account and OpenID Connect.
 In addition you can find implementations for many other authentication providers [here](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers).
 
-## Adding Google support
+### Adding Google support
 To be able to use Google for authentication, you first need to register with them.
 This is done at their developer [console](https://console.developers.google.com).
 
@@ -453,7 +454,7 @@ After authentication with the MVC client, you can see that the claims are now be
 
 .. note:: If you are interested in the magic that automatically renders the Google button on the login page, inspect the *BuildLoginViewModel* method on the *AccountController*.
 
-## Adding an additional OpenID Connect-based external provider
+### Adding an additional OpenID Connect-based external provider
 You can add an additional external provider.
 We have a [cloud-hosted demo](https://demo.duendesoftware.com) version of Duende IdentityServer which you can integrate using OpenID Connect.
 
