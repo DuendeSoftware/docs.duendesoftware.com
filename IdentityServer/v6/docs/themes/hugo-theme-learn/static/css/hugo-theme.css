@@ -40,7 +40,8 @@ body {
 }
 
 #body a.highlight, #body a.highlight:hover, #body a.highlight:focus {
-    text-decoration: none;
+    /* removed since after click the link underline disappears */
+    /* text-decoration: none; */
     outline: none;
     outline: 0;
 }
