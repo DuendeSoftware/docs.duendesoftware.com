@@ -19,7 +19,7 @@ client ID and secret and then use the token to gain access to the API.
 
 ## Source Code
 As with all of the quickstarts, you can find the source code for it in the
-[docs]({{< param qs_base >}}) repository. The project for this quickstart is
+[Samples]({{< param qs_base >}}) repository. The project for this quickstart is
 [Quickstart #1: Securing an API using Client Credentials]({{< param qs_base >}}/1_ClientCredentials).
 
 ## Preparation
@@ -33,7 +33,7 @@ dotnet new --install Duende.IdentityServer.Templates
 
 ## Create the Solution and IdentityServer Project
 In this section, you will create a directory for the solution and use the
-isempty (IdentityServer Empty) template to create an ASP.NET Core application
+*isempty* (IdentityServer Empty) template to create an ASP.NET Core application
 that includes a basic IdentityServer setup.
 
 ```console
@@ -69,10 +69,9 @@ dotnet sln add ./src/IdentityServer/IdentityServer.csproj
 
 {{% notice note %}}
 
-The protocol used in this Template is *https* and the port is set to 5001 when
-running on Kestrel or a random one on IISExpress. You can change that in the
-*Properties\launchSettings.json* file. For production scenarios you should
-always use *https*. 
+The protocol used in this template is *https* and the port is set to 5001. You
+can change the port in the *Properties\launchSettings.json* file. For production
+scenarios you should always use *https*. 
 
 {{% /notice %}}
 
@@ -94,7 +93,7 @@ complete access to your API.
 
 Scope definitions can be loaded in many ways. This quickstart shows how to use a
 "code as configuration" approach. A minimal Config.cs was created by the
-template. Open it and add an ApiScope to the ApiScopes property:
+template. Open it and add an *ApiScope* to the *ApiScopes* property:
 
 ```csharp
 public static IEnumerable<ApiScope> ApiScopes =>
@@ -122,7 +121,7 @@ the API.
 In this quickstart, the client will not have an interactive user and will
 authenticate with IdentityServer using a client secret.
 
-Add this client definition to Config.cs:
+Add this client definition to *Config.cs*:
 
 ```cs
 public static IEnumerable<Client> Clients =>
@@ -181,7 +180,7 @@ That's it - your IdentityServer is now configured. If you run the project and
 then navigate to *https://localhost:5001/.well-known/openid-configuration* in
 your browser, you should see the [discovery document]({{< ref "/reference/endpoints/discovery">}}). 
 The discovery document is a standard endpoint in [OpenID Connect](https://openid.net/specs/openid-connect-discovery-1_0.html) and 
-[OAuth](https://self-issued.info/docs/draft-ietf-oauth-discovery-01.html). It is
+[OAuth](https://datatracker.ietf.org/doc/html/rfc8414). It is
 used by your clients and APIs to retrieve configuration data needed to request
 and validate tokens, login and logout, etc.
 
@@ -319,7 +318,7 @@ dotnet sln add .\src\Client\Client.csproj
 ```
 
 ### Add the IdentityModel nuget package
-The token endpoint at IdentityServer implements the OAuth 2.0 protocol, and you
+The token endpoint at IdentityServer implements the OAuth protocol, and you
 could use raw HTTP to access it. However, we have a client library called
 IdentityModel that encapsulates the protocol interaction in an easy to use API.
 
@@ -404,22 +403,29 @@ if (!response.IsSuccessStatusCode)
 }
 else
 {
-    var content = await response.Content.ReadAsStringAsync();
-    Console.WriteLine(JArray.Parse(content));
+    var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+    Console.WriteLine(JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true }));
 }
 ```
 
 The completed *Program.cs* file can be found [here]({{< param qs_base >}}/1_ClientCredentials/src/Client/Program.cs).
 
-To run the entire solution from Visual Studio
+To test the flow, start the IdentityServer and API projects. Once they are
+running, run the Client project.
+
+The output should look like this:
+
+![](../images/1_client_screenshot.png)
+
+{{% notice note %}} 
+
+If you're using Visual Studio, here's how to start everything up:
 1. Right click the solution and select *Set Startup Projects*
 2. Choose *Multiple Startup Projects* and set the action for Api and IdentityServer to Start
 3. Run the solution and wait a moment for both the API and and IdentityServer to start
 4. Right click the *Client* project and select Debug... Start New Instance.
 
-The output should look like this:
-
-![](../images/1_client_screenshot.png)
+{{% /notice %}}
 
 {{% notice note %}} 
 
