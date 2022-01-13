@@ -4,12 +4,12 @@ date: 2020-09-10T08:22:12+02:00
 weight: 3
 ---
 
-Welcome to quickstart 2 for Duende IdentityServer!
+Welcome to Quickstart 2 for Duende IdentityServer!
 
 In this quickstart, you will add support for interactive user authentication via
-the OpenID Connect protocol to the IdentityServer you built in the previous 
-chapter. Once that is in place, you will create an MVC application that will use 
-IdentityServer for authentication.
+the OpenID Connect protocol to the IdentityServer you built in [Quickstart
+1]({{< ref "1_client_credentials" >}}). Once that is in place, you will create
+an MVC application that will use IdentityServer for authentication.
 
 {{% notice note %}}
 
@@ -35,19 +35,19 @@ You need to provide the User Interface for login, logout, consent and error.
 
 While the look & feel and workflows will differ in each implementation, we
 provide a Razor Pages-based UI that you can use as a starting point. You can use
-the .NET CLI and add the quickstart UI. Run the following command from the
-*IdentityServer* folder:
+the .NET CLI to add the quickstart UI to a project. Run the following command
+from the *IdentityServer* folder:
 
 ```console
 dotnet new isui
 ```
 
 ### Enable the UI
-Once you have added the UI, you will need to register services for Razor Pages
-and enable it the pipeline. In *IdentityServer\HostingExtensions.cs* you will
-find commented out code in the *ConfigureServices* and *ConfigurePipeline*
-methods that enable the UI. Note that there are three places to comment in - two
-in *ConfigurePipeline* and one in *ConfigureServices*.
+Once you have added the UI, you will need to register its services and enable it
+in the pipeline. In *IdentityServer\HostingExtensions.cs* you will find
+commented out code in the *ConfigureServices* and *ConfigurePipeline* methods
+that enable the UI. Note that there are three places to comment in - two in
+*ConfigurePipeline* and one in *ConfigureServices*.
 
 {{% notice note %}}
 
@@ -57,8 +57,9 @@ IdentityServer from the *isempty* template with the quickstart UI from the
 
 {{% /notice %}}
 
-Run the *IdentityServer* project and navigate to https://localhost:5001. You
-should now see a home page.
+Comment in the service registration and pipeline configuration, run the
+*IdentityServer* project, and navigate to https://localhost:5001. You should now
+see a home page.
 
 Spend some time reading the pages and models, especially those in the
 *Pages/Account* folder. These pages are the main UI entry points for login and
@@ -71,8 +72,7 @@ protect and that clients want to access. In contrast to OAuth, scopes in OIDC
 represent identity data like user id, name or email address rather than APIs.
 
 Add support for the standard *openid* (subject id) and *profile* (first name,
-last name etc..) scopes by declaring them in an *IdentityResources* property in
-*IdentityServer\Config.cs*:
+last name, etc) scopes by declaring them in *IdentityServer\Config.cs*:
 
 ```cs
 public static IEnumerable<IdentityResource> IdentityResources =>
@@ -86,7 +86,7 @@ public static IEnumerable<IdentityResource> IdentityResources =>
 Then register the identity resources in *IdentityServer\HostingExtensions.cs*:
 
 ```cs
-var builder = services.AddIdentityServer()
+builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
     .AddInMemoryApiScopes(Config.ApiScopes)
     .AddInMemoryClients(Config.Clients);
@@ -102,7 +102,7 @@ Connect
 
 ### Add Test Users
 The sample UI also comes with an in-memory "user database". You can enable this
-by calling *AddTestUsers* in *IdentityServer\HostingExtensions.cs*.
+by calling *AddTestUsers* in *IdentityServer\HostingExtensions.cs*:
 
 ```cs
 builder.Services.AddIdentityServer()
@@ -120,12 +120,12 @@ that the test users' passwords match their usernames.
 
 The last step in the *IdentityServer* project is to add a new configuration
 entry for a client that will use OIDC to log in. You will create the application
-code for this client in the next section using MVC. For now, you will register
+code for this client in the next section. For now, you will register
 its configuration.
 
-OpenID Connect-based clients are very similar to the OAuth 2.0 clients we added
-in quickstart 1. But since the flows in OIDC are always interactive, we need to
-add some redirect URLs to our configuration.
+OpenID Connect-based clients are very similar to the OAuth clients we added in
+[Quickstart 1]({{< ref "1_client_credentials" >}}). But since the flows in OIDC
+are always interactive, we need to add some redirect URLs to our configuration.
 
 The *Clients* list in *IdentityServer\Config.cs* should look like this:
 
@@ -168,9 +168,8 @@ public static IEnumerable<Client> Clients =>
 
 ## Create the OIDC client
 Next you will create an MVC application that will allow interactive users to log
-in using OIDC. Use the *ASP.NET Core Web App (Model-View-Controller)* (i.e. mvc)
-template to create the project. Run the following commands from the
-*quickstart\src* folder:
+in using OIDC. Use the mvc template to create the project. Run the following
+commands from the *quickstart\src* folder:  
 
 ```console
 dotnet new mvc -n MvcClient
@@ -179,7 +178,7 @@ dotnet sln add .\src\MvcClient\MvcClient.csproj
 ```
 
 ### Install the OIDC NuGet Package
-To add support for OpenID Connect authentication to *MvcClient* , you need to add
+To add support for OpenID Connect authentication to *MvcClient*, you need to add
 the NuGet package containing the OpenID Connect handler. From the *MvcClient*
 folder, run the following command:
 
@@ -242,10 +241,9 @@ information on protocol flows.
 {{% /notice %}}
 
 ### Configure the Pipeline
-Now, to ensure the execution of the authentication services on each request, add
-*UseAuthentication* to the ASP.NET pipeline in **MvcClient* \Program.cs*. Also add
-*RequireAuthorization* to the controller routing to disable anonymous access for
-the entire application. 
+Now add *UseAuthentication* to the ASP.NET pipeline in *MvcClient\Program.cs*.
+Also add *RequireAuthorization* to the controller routing to disable anonymous
+access for the entire application. 
 
 ```cs
 app.UseRouting();
@@ -261,9 +259,8 @@ app.MapControllerRoute(
 
 {{% notice note %}}
 
-You could use the *[Authorize]* attribute instead of calling
-*RequireAuthorization* if you want to specify authorization on a per controller
-or action basis.
+You could use the *[Authorize]* attribute instead of this *RequireAuthorization*
+call if you want to specify authorization on a per controller or action basis.
 
 {{% /notice %}}
 
@@ -341,11 +338,13 @@ Next you will add sign-out to *MvcClient*.
 
 To sign out, you need to 
 - Clear local application cookies
-- Make a roundtrip to *IdentityServer* to clear its session
+- Make a roundtrip to *IdentityServer* using the OIDC protocol to clear its
+  session
 
-The protocol steps for the roundtrip are implemented inside the OpenID Connect
-handler. Simply add the following code to the home controller to trigger the
-sign-out:
+The cookie auth handler will clear the local cookie when you sign out from its
+authentication scheme. The OpenId Connect handler will perform the protocol
+steps for the roundtrip to *IdentityServer* when you sign out of its scheme. Add
+the following code to the home controller to trigger sign-out of both schemes:
 
 ```cs
 public IActionResult Logout()
