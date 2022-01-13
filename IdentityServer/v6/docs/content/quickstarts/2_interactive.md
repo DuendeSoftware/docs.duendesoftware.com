@@ -311,14 +311,14 @@ IdentityServer and MvcClient and then trigger the authentication handshake by
 navigating to the protected controller action. You should see a redirect to the
 login page of the IdentityServer.
 
-![](../images/3_login.png)
+![](../images/2_login.png)
 
 After you log in, IdentityServer will redirect back to the MVC client, where the
 OpenID Connect authentication handler will process the response and sign-in the
 user locally by setting a cookie. Finally the MVC view will show the contents of
 the cookie.
 
-![](../images/3_claims.png)
+![](../images/2_claims.png)
 
 As you can see, the cookie has two parts: the claims of the user and some
 metadata. This metadata also contains the original token that was issued by the
@@ -382,7 +382,7 @@ After restarting the client app, logging out, and logging back in you should see
 additional user claims associated with the *profile* identity scope displayed on
 the page.
 
-![](../images/3_additional_claims.png)
+![](../images/2_additional_claims.png)
 
 ## Further Experiments
 This quickstart created a client with interactive login using OIDC. To
@@ -455,60 +455,79 @@ will automatically include requested claims from the test users added in
 *TestUsers.cs*. 
 
 ### Add Support for External Authentication
-Next we will add support for external authentication.
-This is really easy, because all you really need is an ASP.NET Core compatible authentication handler.
+Next you will add support for external authentication to your IdentityServer.
+This can be done with very little code; all that is needed is an authentication
+handler.
 
-ASP.NET Core itself ships with support for Google, Facebook, Twitter, Microsoft Account and OpenID Connect.
-In addition you can find implementations for many other authentication providers [here](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers).
+ASP.NET Core ships with handlers for Google, Facebook, Twitter, Microsoft
+Account and OpenID Connect. In addition, you can find handlers for many
+other authentication providers
+[here](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers).
 
-#### Adding Google support
-To be able to use Google for authentication, you first need to register with them.
-This is done at their developer [console](https://console.developers.google.com).
+#### Add Google support
+To use Google for authentication, you need to:
+- Add the *Microsoft.AspNetCore.Authentication.Google* nuget package to
+  the IdentityServer project.
+- Register with Google and set up a client.
+- Store the client id and secret securely with *dotnet user-secrets*.
+- Add the Google authentication handler to the middleware pipeline and configure
+  it.
 
-Create a new project, enable the Google+ ????? API and configure the callback address of your
-local IdentityServer by adding the */signin-google* path to your base-address (e.g. https://localhost:5001/signin-google).
+See  [Microsoft's
+guide](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0#create-a-google-api-console-project-and-client-id)
+for details on how to register with Google, create the client, and store the
+secrets in user-secrets. **Stop before adding the authentication middleware and
+Google authentication handler to the pipeline.** You will need some
+IdentityServer specific options.
 
-The developer console will show you a client ID and secret issued by Google - you will need that in the next step.
-
-Add the Google authentication handler to the DI of the IdentityServer host.
-This is done by first adding the *Microsoft.AspNetCore.Authentication.Google* nuget package and then adding this snippet to *ConfigureServices* in *Startup*:
+Add the following to *ConfigureServices* in
+*src\IdentityServer\HostingExtensions.cs*:
 
 ```cs
-services.AddAuthentication()
+builder.Services.AddAuthentication()
     .AddGoogle("Google", options =>
     {
         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
 
-        options.ClientId = "<insert here>";
-        options.ClientSecret = "<insert here>";
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientId"];
     });
 ```
-By default, IdentityServer configures a cookie handler specifically for the results of external authentication (with the scheme based on the constant *IdentityServerConstants.ExternalCookieAuthenticationScheme*).
-The configuration for the Google handler is then using that cookie handler.
 
-Now run the MVC client and try to authenticate - you will see a Google button on the login page:
+When authenticating with Google, there are again two authentication
+schemes((https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-6.0#authentication-scheme)).
+*AddGoogle* adds the Google scheme, which handles the protocol flow back and
+forth with Google. After successful login, the application needs to sign in to
+an additional scheme that can authenticate future requests without needing a
+round-trip to Google - typically by issuing a local cookie. The *SignInScheme*
+tells the Google handler to use the scheme named
+*IdentityServerConstants.ExternalCookieAuthenticationScheme*, which is a cookie
+authentication handler automatically created by intended for external logins.
 
-.. image:: images/4_login_page.png
+Now run IdentityServer and the MVC client and try to authenticate (you may need
+to log out and log back in). You will see a Google button on the login page.
 
-After authentication with the MVC client, you can see that the claims are now being sourced from Google data.
+ ![](../images/2_google_login.png)
 
-.. note:: If you are interested in the magic that automatically renders the Google button on the login page, inspect the *BuildLoginViewModel* method on the *AccountController*.
+Click on Google and authenticate with a Google account. You should land back on
+the MvcClient home page, showing that the user is now coming from Google with 
+claims sourced from Google's data.
+
+The Google button is rendered by the login page automatically when there are
+external providers registered as authentication schemes. See the
+*BuildModelAsync* method in *src/IdentityServer/Pages/Login/Index.cshtml.cs* and
+the corresponding Razor template for more details.
 
 #### Adding an additional OpenID Connect-based external provider
-You can add an additional external provider.
-We have a [cloud-hosted demo](https://demo.duendesoftware.com) version of Duende IdentityServer which you can integrate using OpenID Connect.
+You can add an additional external provider. We have a [cloud-hosted
+demo](https://demo.duendesoftware.com) version of Duende IdentityServer which
+you can integrate using OpenID Connect.
 
 Add the OpenId Connect handler to DI:
 
 ```cs
-services.AddAuthentication()
-    .AddGoogle("Google", options =>
-    {
-        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-        options.ClientId = "<insert here>";
-        options.ClientSecret = "<insert here>";
-    })
+builder.Services.AddAuthentication()
+    .AddGoogle("Google", options => { /* ... */ })
     .AddOpenIdConnect("oidc", "Demo IdentityServer", options =>
     {
         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
@@ -528,8 +547,10 @@ services.AddAuthentication()
     });
 ```
 
+TODO - Explain what you see in the cloud demo.
 And now a user should be able to use the cloud-hosted demo identity provider.
 
+TODO - Think about this note
 {{% notice note %}}
 The quickstart UI auto-provisions external users. As an external user logs in for the first time, a new local user is created, and all the external claims are copied over and associated with the new user. The way you deal with such a situation is completely up to you though. Maybe you want to show some sort of registration UI first. The source code for the default quickstart can be found [here](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI). The controller where auto-provisioning is executed can be found [here](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/Quickstart/Account/ExternalController.cs).
 {{% /notice %}}
