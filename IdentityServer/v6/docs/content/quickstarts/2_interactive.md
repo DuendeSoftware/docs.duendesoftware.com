@@ -385,34 +385,74 @@ the page.
 ![](../images/3_additional_claims.png)
 
 ## Further Experiments
-### Add More Identity Claims
-Feel free to add more claims to the test users - and also more identity
-resources. 
+This quickstart created a client with interactive login using OIDC. To
+experiment further you can
+- Add additional claims to the identity
+- Add support for external authentication
 
-The process for defining an identity resource is as follows:
+### Add More Claims
+To add more claims to the identity:
 
-* add a new identity resource to the list in Config.cs. Give it a name and
-  specify which claims should be returned when this resource is requested.
-* give the client access to the resource via the *AllowedScopes* property on the
-  client configuration.
-* request the resource by adding it to the *Scopes* collection on the OpenID Connect handler configuration in the client.
-* (optional) if the identity resource is associated with a non-standard claim (e.g. *myclaim1*), on the client side add the [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-3.0) mapping between the claim appearing in JSON (returned from the userinfo endpoint) and the user claim.
-
-```cs
-    using Microsoft.AspNetCore.Authentication
-    // ...
+* Add a new identity resource to the list in *src/IdentityServer/Config.cs*.
+  Name it and specify which claims should be returned when it is requested. The
+  *Name* property of the resource is the scope value that clients can request to
+  get the associated *UserClaims*. For example, you could add an
+  *IdentityResource* named "email" which would include the *email* and
+  *email_verified* claims.
+  ```csharp
+    public static IEnumerable<IdentityResource> IdentityResources =>
+    new List<IdentityResource>
+    { 
+        new IdentityResources.OpenId(),
+        new IdentityResources.Profile(),
+        new IdentityResource()
+        {
+            Name = "email",
+            UserClaims = new List<string> 
+            { 
+                JwtClaimTypes.Email,
+                JwtClaimTypes.EmailVerified
+            }
+        }
+    };
+  ```
+  
+* Give the client access to the resource via the *AllowedScopes* property on the
+  client configuration. The string value in *AllowedScopes* must match the
+  *Name* property of the resource.
+  ```csharp
+    new Client
+    {
+        ClientId = "mvc",
+        //...
+        AllowedScopes = new List<string>
+        {
+            IdentityServerConstants.StandardScopes.OpenId,
+            IdentityServerConstants.StandardScopes.Profile,
+            "email"
+        }
+  ```
+* Request the resource by adding it to the *Scopes* collection on the OpenID
+  Connect handler configuration in *src/MvcClient/Program.cs*, and add a
+  [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-6.0)
+  to map the new claims returned from the userinfo endpoint onto user claims.
+  ```csharp
     .AddOpenIdConnect("oidc", options =>
     {
         // ...
-        options.ClaimActions.MapUniqueJsonKey("myclaim1", "myclaim1");
+        options.Scope.Add("email");
+        options.ClaimActions.MapJsonKey("email", "email");
+        options.ClaimActions.MapJsonKey("email_verified", "email_verified");
         // ...
-    });
-```
+    }
+  ```
 
-TODO
-It is also noteworthy, that the retrieval of claims for tokens is an extensibility point - *IProfileService*.
-Since we are using *AddTestUsers*, the *TestUserProfileService* is used by default.
-You can inspect the source code [here](https://github.com/DuendeSoftware/IdentityServer/blob/main/src/IdentityServer/Test/TestUserProfileService.cs) to see how it works.
+IdentityServer uses the *IProfileService* to retrieve claims for tokens and the
+userinfo endpoint. You can provide your own implementation of *IProfileService*
+to customize this process with custom logic, data access, etc. Since you are
+using *AddTestUsers*, the *TestUserProfileService* is used automatically. It
+will automatically include requested claims from the test users added in
+*TestUsers.cs*. 
 
 ### Add Support for External Authentication
 Next we will add support for external authentication.
@@ -421,7 +461,7 @@ This is really easy, because all you really need is an ASP.NET Core compatible a
 ASP.NET Core itself ships with support for Google, Facebook, Twitter, Microsoft Account and OpenID Connect.
 In addition you can find implementations for many other authentication providers [here](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers).
 
-### Adding Google support
+#### Adding Google support
 To be able to use Google for authentication, you first need to register with them.
 This is done at their developer [console](https://console.developers.google.com).
 
@@ -454,7 +494,7 @@ After authentication with the MVC client, you can see that the claims are now be
 
 .. note:: If you are interested in the magic that automatically renders the Google button on the login page, inspect the *BuildLoginViewModel* method on the *AccountController*.
 
-### Adding an additional OpenID Connect-based external provider
+#### Adding an additional OpenID Connect-based external provider
 You can add an additional external provider.
 We have a [cloud-hosted demo](https://demo.duendesoftware.com) version of Duende IdentityServer which you can integrate using OpenID Connect.
 
