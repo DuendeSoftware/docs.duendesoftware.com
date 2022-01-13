@@ -547,10 +547,26 @@ builder.Services.AddAuthentication()
     });
 ```
 
-TODO - Explain what you see in the cloud demo.
-And now a user should be able to use the cloud-hosted demo identity provider.
+Now if you try to authenticate, you should see an additional button to log in to
+the cloud-hosted Demo IdentityServer. If you click that button, you will be
+redirected to https://demo.duendesoftware.com/. Note that the demo site is using
+the same UI as your site, so there will not be very much change on the page.
+Check that the page's location has changed and then log in using the alice or
+bob users (their passwords are their usernames, just as they are for the local
+test users). 
 
-TODO - Think about this note
+The Demo IdentityServer's users are logically distinct entities from the local
+TestUsers, even though they happen to have identical usernames. Inspect their
+claims in the MvcClient and note the differences between the local and cloud
+hosted users, such as the distinct sub claims for the users.
+
 {{% notice note %}}
-The quickstart UI auto-provisions external users. As an external user logs in for the first time, a new local user is created, and all the external claims are copied over and associated with the new user. The way you deal with such a situation is completely up to you though. Maybe you want to show some sort of registration UI first. The source code for the default quickstart can be found [here](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI). The controller where auto-provisioning is executed can be found [here](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/Quickstart/Account/ExternalController.cs).
+
+The quickstart UI auto-provisions external users. When an external user logs in
+for the first time, a new local user is created with a copy of all the external
+user's claims. This auto-provisioning process occurs in the *OnGet* method of
+*src/IdentityServer/Pages/ExternalLogin/Callback.cshtml.cs*, and is completely
+customizable. For example, you could modify the Callback so that it will require
+registration before provisioning the external user. 
+
 {{% /notice %}}
