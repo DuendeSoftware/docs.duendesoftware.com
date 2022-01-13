@@ -487,8 +487,8 @@ See  [Microsoft's
 guide](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0#create-a-google-api-console-project-and-client-id)
 for details on how to register with Google, create the client, and store the
 secrets in user-secrets. **Stop before adding the authentication middleware and
-Google authentication handler to the pipeline.** You will need some
-IdentityServer specific options.
+Google authentication handler to the pipeline.** You will need an
+IdentityServer specific option.
 
 Add the following to *ConfigureServices* in
 *IdentityServer\HostingExtensions.cs*:
@@ -504,8 +504,8 @@ builder.Services.AddAuthentication()
     });
 ```
 
-When authenticating with Google, there are again two authentication
-schemes((https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-6.0#authentication-scheme)).
+When authenticating with Google, there are again two [authentication
+schemes](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-6.0#authentication-scheme).
 *AddGoogle* adds the Google scheme, which handles the protocol flow back and
 forth with Google. After successful login, the application needs to sign in to
 an additional scheme that can authenticate future requests without needing a
