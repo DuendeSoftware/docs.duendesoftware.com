@@ -64,7 +64,7 @@ You can now use your favorite text editor to edit or view the files.
 Add the IdentityServer project to the solution:
 ```console
 cd ..
-dotnet sln add ./src/IdentityServer/IdentityServer.csproj
+dotnet sln add .\src\IdentityServer\IdentityServer.csproj
 ```
 
 {{% notice note %}}
@@ -201,7 +201,7 @@ resources that will be secured by IdentityServer.
 
 You can either use the ASP.NET Core Web API template from Visual Studio or use
 the .NET CLI to create the API project. To use the CLI, run the
-following command from the *quickstart/src* folder:
+following command from the *quickstart\src* folder:
 
 ```console
 dotnet new webapi -n Api
@@ -211,7 +211,7 @@ Then add it to the solution by running the following commands:
 
 ```console
 cd ..
-dotnet sln add ./src/Api/Api.csproj
+dotnet sln add .\src\Api\Api.csproj
 ```
 
 ### Add JWT Bearer Authentication
@@ -228,7 +228,7 @@ middleware will
 Run this command in the *quickstart* directory to install the middleware
 package:
 ```console
-dotnet add ./src/Api/Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
+dotnet add .\src\Api\Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
 ```
 
 Now add JWT Bearer authentication services to the Service Collection to allow for
@@ -327,7 +327,7 @@ via Visual Studio's Nuget Package manager or dotnet CLI. From the *quickstart*
 directory, run the following command:
 
 ```console
-dotnet add ./src/Client/Client.csproj package IdentityModel
+dotnet add .\src\Client\Client.csproj package IdentityModel
 ```
 
 ### Retrieve the discovery document
