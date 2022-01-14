@@ -7,7 +7,7 @@ weight: 4
 Welcome to Quickstart 3 for Duende IdentityServer!
 
 The previous quickstarts introduced 
-[API access]({{< ref "1_client_credentials"> }}) and 
+[API access]({{< ref "1_client_credentials" >}}) and 
 [user authentication]({{< ref "2_interactive" >}}). This quickstart will bring 
 the two together.
 
@@ -25,8 +25,8 @@ quickstart, you will add scopes for API resources to that request.
 {{% notice note %}}
 
 We recommend you do the quickstarts in order, but if you'd like to start here,
-begin from a copy of [Quickstart 2's source code](({{< param qs_base
->}}/2_InteractiveAspNetCore)). You will also need to [install the IdentityServer
+begin from a copy of [Quickstart 2's source code]({{< param qs_base
+>}}/2_InteractiveAspNetCore). You will also need to [install the IdentityServer
 templates]({{< ref "0_overview#preparation" >}}).
 
 {{% /notice %}}
