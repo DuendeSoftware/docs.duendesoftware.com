@@ -15,7 +15,6 @@ templates]({{< ref "0_overview#preparation" >}}).
 
 {{% /notice %}}
 
-
 In this quickstart you will move configuration and other temporary data into a
 database using Entity Framework. In the previous quickstarts, you configured
 clients and scopes with code. IdentityServer loaded this configuration data into
@@ -59,40 +58,51 @@ dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 
 ### Configuring the Stores
 *Duende.IdentityServer.EntityFramework* stores configuration and operational
-data in separate stores. To start using these stores, replace the existing calls
-to *AddInMemoryClients*, *AddInMemoryIdentityResources*, and
-*AddInMemoryApiScopes* in your *ConfigureServices* method in
-*HostingExtensions.cs* with *AddConfigurationStore* and *AddOperationalStore*.
+data in separate stores, each with their own DbContext.
+
+* ConfigurationDbContext: used for configuration data such as clients,
+  resources, and scopes
+* PersistedGrantDbContext: used for dynamic operational data such as
+  authorization codes, and refresh tokens
+
+To start using these stores, replace the existing calls to *AddInMemoryClients*,
+*AddInMemoryIdentityResources*, and *AddInMemoryApiScopes* in your
+*ConfigureServices* method in *HostingExtensions.cs* with
+*AddConfigurationStore* and *AddOperationalStore*, like this:
+
+```cs
+public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
+{
+    var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+    const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
+
+    builder.Services.AddIdentityServer()
+        .AddConfigurationStore(options =>
+        {
+            options.ConfigureDbContext = b => b.UseSqlite(connectionString,
+                sql => sql.MigrationsAssembly(migrationsAssembly));
+        })
+        .AddOperationalStore(options =>
+        {
+            options.ConfigureDbContext = b => b.UseSqlite(connectionString,
+                sql => sql.MigrationsAssembly(migrationsAssembly));
+        })
+        .AddTestUsers(TestUsers.Users);
+    
+    //...
+}
+```
+{{% notice note %}}
 
 You will use Entity Framework migrations later on in this quickstart to manage
 the database schema. The call to *MigrationsAssembly(...)* tells Entity
-Framework that the (TODO) host project will contain the migrations. This is
-necessary since the host project is in a different assembly than the one that
-contains the *DbContext* classes.
+Framework that the host project will contain the migrations. This is necessary
+since the host project is in a different assembly than the one that contains the
+*DbContext* classes.
 
+{{% /notice %}}
 
-```cs
-// TODO - Do I need typeof still, or is there some more modern thing that will do it?
-// TODO - Also, Startup doesn't exist anymore!
-var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
-
-builder.Services.AddIdentityServer()
-    .AddTestUsers(TestUsers.Users)
-    .AddConfigurationStore(options =>
-    {
-        options.ConfigureDbContext = b => b.UseSqlite(connectionString,
-            sql => sql.MigrationsAssembly(migrationsAssembly));
-    })
-    .AddOperationalStore(options =>
-    {
-        options.ConfigureDbContext = b => b.UseSqlite(connectionString,
-            sql => sql.MigrationsAssembly(migrationsAssembly));
-    });
-```
-
-
-## Database Schema Changes
+## Managing the Database Schema
 
 The *Duende.IdentityServer.EntityFramework.Storage* Nuget package (installed as
 a dependency of *Duende.IdentityServer.EntityFramework*) contains entity classes
@@ -114,19 +124,7 @@ You can find the latest SQL scripts for SqlServer in our EF
 
 {{% /notice %}}
 
-
-TODO - Where does this belong? Back with the stores intro?
-### DB Contexts
-The IdentityServer Entity Framework integration library implements the required
-stores and services using the following DbContexts:
-
-* ConfigurationDbContext: used for configuration data such as clients,
-  resources, and scopes
-* PersistedGrantDbContext: used for dynamic operational data such as
-  authorization codes, and refresh tokens
-
-
-## Adding Migrations
+### Adding Migrations
 To create migrations, you will need to install the Entity Framework Core CLI
 on your machine and the *Microsoft.EntityFrameworkCore.Design* nuget package in
 IdentityServer. Run the following commands from the *IdentityServer* directory.
@@ -136,18 +134,44 @@ dotnet tool install --global dotnet-ef
 dotnet add package Microsoft.EntityFrameworkCore.Design
 ```
 
-Then in the same directory, run the following two commands to create the
-migrations:
+### Handle Excepted Exception
+The Entity Framework CLI internally start up the host in order to read the
+database configuration. However, it does not want to actually run the host after
+it has read the config, so it immediately throws a *StopTheHostException*. Since
+this exception is expected and not a fatal error, update the error logging code
+in *IdentityServer\Program.cs* as follows:
+```csharp
+catch (Exception ex)
+{
+    if (ex.GetType().Name == "StopTheHostException")
+    {
+        throw;
+    }
+
+    Log.Fatal(ex, "Unhandled exception");
+}
+```
+
+{{% notice note %}}
+
+You must use the "StopTheHost" string here rather than catching the
+*StopTheHostException* because it is a private type. See
+https://github.com/dotnet/runtime/issues/60600.
+
+
+{{% /notice %}}
+
+Now run the following two commands from the *IdentityServer* directory to create
+the migrations:
 
 ```console
 dotnet ef migrations add InitialIdentityServerPersistedGrantDbMigration -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
 dotnet ef migrations add InitialIdentityServerConfigurationDbMigration -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
 ```
-
 You should now see a *Data/Migrations/IdentityServer* folder in your project
 containing the code for your newly created migrations.
 
-## Initializing the Database
+### Initializing the Database
 Now that you have the migrations, you can write code to create the database from
 them and seed the database with the same configuration data used in the previous
 quickstarts.
@@ -164,8 +188,7 @@ In *IdentityServer/HostingExtensions.cs*, add this method to initialize the
 database:
 
 ```cs
-TODO - Copy updated code here
-private void InitializeDatabase(IApplicationBuilder app)
+private static void InitializeDatabase(IApplicationBuilder app)
 {
     using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
     {
@@ -203,17 +226,20 @@ private void InitializeDatabase(IApplicationBuilder app)
 }
 ```
 
-Call *InitializeDatabase* from the *Configure* method:
+Call *InitializeDatabase* from the *ConfigurePipeline* method:
 
 ```cs
-TODO - Copy updated code here
-public void Configure(IApplicationBuilder app)
-{
-    // this will do the initial DB population
+public static WebApplication ConfigurePipeline(this WebApplication app)
+{ 
+    app.UseSerilogRequestLogging();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+    
     InitializeDatabase(app);
-
-    // the rest of the code that was already here
-    // ...
+    
+    //...
 }
 ```
 
@@ -223,11 +249,13 @@ like SQL Lite Studio to connect and inspect the data.
 
 ![](../images/ef_database.png)
 
-{{% notice note %}}
-The above *InitializeDatabase* helper API is convenient to seed the database, but this approach is not ideal to leave in to execute each time the application runs. Once your database is populated, consider removing the call to the API.
+{{% notice note %}} 
+
+The *InitializeDatabase* method is convenient way to seed the database, but this
+approach is not ideal to leave in to execute each time the application runs.
+Once your database is populated, consider removing the call to the API. 
+
 {{% /notice %}}
 
 ## Run the client applications
 You should now be able to run any of the existing client applications and sign-in, get tokens, and call the API -- all based upon the database configuration.
-
-TODO - Make on the fly changes?
