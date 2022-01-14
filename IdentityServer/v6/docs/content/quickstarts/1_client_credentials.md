@@ -37,12 +37,12 @@ In this section, you will create a directory for the solution and use the
 that includes a basic IdentityServer setup.
 
 ```console
-md quickstart
+mkdir quickstart
 cd quickstart
 
 dotnet new sln -n Quickstart
 
-md src
+mkdir src
 cd src
 dotnet new isempty -n IdentityServer
 ```
@@ -50,7 +50,7 @@ dotnet new isempty -n IdentityServer
 This will create the following files:
 
 * *IdentityServer.csproj* - project file
-* *Properties\launchSettings.json* file - launch profile
+* *Properties/launchSettings.json* file - launch profile
 * *appsettings.json* - run time settings
 * *Program.cs* - main application entry point
 * *HostingExtensions.cs* - configuration for ASP.NET pipeline and services.
@@ -64,13 +64,13 @@ You can now use your favorite text editor to edit or view the files.
 Add the IdentityServer project to the solution:
 ```console
 cd ..
-dotnet sln add .\src\IdentityServer\IdentityServer.csproj
+dotnet sln add ./src/IdentityServer/IdentityServer.csproj
 ```
 
 {{% notice note %}}
 
 The protocol used in this template is *https* and the port is set to 5001. You
-can change the port in the *Properties\launchSettings.json* file. For production
+can change the port in the *Properties/launchSettings.json* file. For production
 scenarios you should always use *https*. 
 
 {{% /notice %}}
@@ -201,7 +201,7 @@ resources that will be secured by IdentityServer.
 
 You can either use the ASP.NET Core Web API template from Visual Studio or use
 the .NET CLI to create the API project. To use the CLI, run the
-following command from the *quickstart\src* folder:
+following command from the *quickstart/src* folder:
 
 ```console
 dotnet new webapi -n Api
@@ -211,7 +211,7 @@ Then add it to the solution by running the following commands:
 
 ```console
 cd ..
-dotnet sln add .\src\Api\Api.csproj
+dotnet sln add ./src/Api/Api.csproj
 ```
 
 ### Add JWT Bearer Authentication
@@ -228,7 +228,7 @@ middleware will
 Run this command in the *quickstart* directory to install the middleware
 package:
 ```console
-dotnet add .\src\Api\Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
+dotnet add ./src/Api/Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
 ```
 
 Now add JWT Bearer authentication services to the Service Collection to allow for
@@ -304,7 +304,7 @@ IdentityServer.
 ## Create the client project
 The last step is to create a client that requests an access token and then uses
 that token to access the API. Your client will be a console project in your
-solution. From the *quickstart\src* directory, run the following command:
+solution. From the *quickstart/src* directory, run the following command:
 
 ```console
 dotnet new console -n Client
@@ -314,7 +314,7 @@ Then as before, add it to your solution using:
 
 ```console
 cd ..
-dotnet sln add .\src\Client\Client.csproj
+dotnet sln add ./src/Client/Client.csproj
 ```
 
 ### Add the IdentityModel nuget package
@@ -327,7 +327,7 @@ via Visual Studio's Nuget Package manager or dotnet CLI. From the *quickstart*
 directory, run the following command:
 
 ```console
-dotnet add .\src\Client\Client.csproj package IdentityModel
+dotnet add ./src/Client/Client.csproj package IdentityModel
 ```
 
 ### Retrieve the discovery document
