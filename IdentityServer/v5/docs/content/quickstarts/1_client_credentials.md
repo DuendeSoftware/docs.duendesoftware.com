@@ -34,10 +34,10 @@ They will be used as a starting point for the various tutorials.
 First create a directory for the application - then use our template to create an ASP.NET Core application that includes a basic Duende IdentityServer setup, e.g.:
 
 ```
-md quickstart
+mkdir quickstart
 cd quickstart
 
-md src
+mkdir src
 cd src
 
 dotnet new isempty -n IdentityServer
@@ -45,7 +45,7 @@ dotnet new isempty -n IdentityServer
 
 This will create the following files:
 
-* *IdentityServer.csproj* - the project file and a *Properties\launchSettings.json* file
+* *IdentityServer.csproj* - the project file and a *Properties/launchSettings.json* file
 * *Program.cs* and *Startup.cs* - the main application entry point
 * *Config.cs* - Duende IdentityServer resources and clients configuration file
 
@@ -252,7 +252,7 @@ The last step is to write a client that requests an access token, and then uses 
 Then as before, add it to your solution using:
 
     cd ..
-    dotnet sln add .\src\Client\Client.csproj
+    dotnet sln add ./src/Client/Client.csproj
 
 The token endpoint at IdentityServer implements the OAuth 2.0 protocol, and you could use raw HTTP to access it. 
 However, we have a client library called IdentityModel, that encapsulates the protocol interaction in an easy to use API.

@@ -44,7 +44,7 @@ dotnet new isui
 
 ### Enable the UI
 Once you have added the UI, you will need to register its services and enable it
-in the pipeline. In *IdentityServer\HostingExtensions.cs* you will find
+in the pipeline. In *IdentityServer/HostingExtensions.cs* you will find
 commented out code in the *ConfigureServices* and *ConfigurePipeline* methods
 that enable the UI. Note that there are three places to comment in - two in
 *ConfigurePipeline* and one in *ConfigureServices*.
@@ -72,7 +72,7 @@ protect and that clients want to access. In contrast to OAuth, scopes in OIDC
 represent identity data like user id, name or email address rather than APIs.
 
 Add support for the standard *openid* (subject id) and *profile* (first name,
-last name, etc) scopes by declaring them in *IdentityServer\Config.cs*:
+last name, etc) scopes by declaring them in *IdentityServer/Config.cs*:
 
 ```cs
 public static IEnumerable<IdentityResource> IdentityResources =>
@@ -83,7 +83,7 @@ public static IEnumerable<IdentityResource> IdentityResources =>
     };
 ```
 
-Then register the identity resources in *IdentityServer\HostingExtensions.cs*:
+Then register the identity resources in *IdentityServer/HostingExtensions.cs*:
 
 ```cs
 builder.Services.AddIdentityServer()
@@ -102,7 +102,7 @@ Connect
 
 ### Add Test Users
 The sample UI also comes with an in-memory "user database". You can enable this
-by calling *AddTestUsers* in *IdentityServer\HostingExtensions.cs*:
+by calling *AddTestUsers* in *IdentityServer/HostingExtensions.cs*:
 
 ```cs
 builder.Services.AddIdentityServer()
@@ -127,7 +127,7 @@ OpenID Connect-based clients are very similar to the OAuth clients we added in
 [Quickstart 1]({{< ref "1_client_credentials" >}}). But since the flows in OIDC
 are always interactive, we need to add some redirect URLs to our configuration.
 
-The *Clients* list in *IdentityServer\Config.cs* should look like this:
+The *Clients* list in *IdentityServer/Config.cs* should look like this:
 
 ```cs
 public static IEnumerable<Client> Clients =>
@@ -169,12 +169,12 @@ public static IEnumerable<Client> Clients =>
 ## Create the OIDC client
 Next you will create an MVC application that will allow interactive users to log
 in using OIDC. Use the mvc template to create the project. Run the following
-commands from the *quickstart\src* folder:  
+commands from the *quickstart/src* folder:  
 
 ```console
 dotnet new mvc -n MvcClient
 cd ..
-dotnet sln add .\src\MvcClient\MvcClient.csproj
+dotnet sln add ./src/MvcClient/MvcClient.csproj
 ```
 
 ### Install the OIDC NuGet Package
@@ -187,7 +187,7 @@ dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 ```
 
 ### Configure Authentication Services
-Then add the following to *ConfigureServices* in *MvcClient\Program.cs*:
+Then add the following to *ConfigureServices* in *MvcClient/Program.cs*:
 
 ```cs
 using System.IdentityModel.Tokens.Jwt;
@@ -241,7 +241,7 @@ information on protocol flows.
 {{% /notice %}}
 
 ### Configure the Pipeline
-Now add *UseAuthentication* to the ASP.NET pipeline in *MvcClient\Program.cs*.
+Now add *UseAuthentication* to the ASP.NET pipeline in *MvcClient/Program.cs*.
 Also add *RequireAuthorization* to the controller routing to disable anonymous
 access for the entire application. 
 
@@ -295,7 +295,7 @@ cookie properties:
 
 ### Configure MvcClient's Port
 Update the client's applicationUrl in
-*MvcClient\Properties\launchSettings.json* to use port 5002.
+*MvcClient/Properties/launchSettings.json* to use port 5002.
 
 ```json
 {
@@ -376,7 +376,7 @@ that scope (such as *name*, *family_name*, *website* etc.) don't appear in the
 returned token. You need to tell the client to retrieve those claims from the
 userinfo endpoint by specifying scopes that the client application needs to
 access and setting the *GetClaimsFromUserInfoEndpoint* option. Add the following
-to *ConfigureServices* in *MvcClient\Program.cs*:
+to *ConfigureServices* in *MvcClient/Program.cs*:
 
 ```cs
 .AddOpenIdConnect("oidc", options =>
@@ -403,7 +403,7 @@ experiment further you can
 ### Add More Claims
 To add more claims to the identity:
 
-* Add a new identity resource to the list in *IdentityServer\Config.cs*.
+* Add a new identity resource to the list in *IdentityServer/Config.cs*.
   Name it and specify which claims should be returned when it is requested. The
   *Name* property of the resource is the scope value that clients can request to
   get the associated *UserClaims*. For example, you could add an
@@ -428,7 +428,7 @@ To add more claims to the identity:
   ```
   
 * Give the client access to the resource via the *AllowedScopes* property on the
-  client configuration in *IdentityServer\Config.cs*. The string value in
+  client configuration in *IdentityServer/Config.cs*. The string value in
   *AllowedScopes* must match the *Name* property of the resource.
   ```csharp
     new Client
@@ -444,7 +444,7 @@ To add more claims to the identity:
     }
   ```
 * Request the resource by adding it to the *Scopes* collection on the OpenID
-  Connect handler configuration in *MvcClient\Program.cs*, and add a
+  Connect handler configuration in *MvcClient/Program.cs*, and add a
   [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-6.0)
   to map the new claims returned from the userinfo endpoint onto user claims.
   ```csharp
@@ -491,7 +491,7 @@ Google authentication handler to the pipeline.** You will need an
 IdentityServer specific option.
 
 Add the following to *ConfigureServices* in
-*IdentityServer\HostingExtensions.cs*:
+*IdentityServer/HostingExtensions.cs*:
 
 ```cs
 builder.Services.AddAuthentication()
@@ -528,7 +528,7 @@ claims sourced from Google's data.
 
 The Google button is rendered by the login page automatically when there are
 external providers registered as authentication schemes. See the
-*BuildModelAsync* method in *IdentityServer\Pages\Login\Index.cshtml.cs* and
+*BuildModelAsync* method in *IdentityServer/Pages/Login/Index.cshtml.cs* and
 the corresponding Razor template for more details.
 
 {{% /notice %}}
@@ -538,7 +538,7 @@ A [cloud-hosted demo](https://demo.duendesoftware.com) version of Duende
 IdentityServer can be added as an additional external provider.
 
 Register and configure the services for the OpenId Connect handler in
-*IdentityServer\HostingExtensions.cs*:
+*IdentityServer/HostingExtensions.cs*:
 ```cs
 builder.Services.AddAuthentication()
     .AddGoogle("Google", options => { /* ... */ })
@@ -580,7 +580,7 @@ claims.
 The quickstart UI auto-provisions external users. When an external user logs in
 for the first time, a new local user is created with a copy of all the external
 user's claims. This auto-provisioning process occurs in the *OnGet* method of
-*IdentityServer\Pages\ExternalLogin\Callback.cshtml.cs*, and is completely
+*IdentityServer/Pages/ExternalLogin/Callback.cshtml.cs*, and is completely
 customizable. For example, you could modify *Callback* so that it will require
 registration before provisioning the external user. 
 
