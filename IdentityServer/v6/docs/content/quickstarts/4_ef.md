@@ -4,7 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 weight: 5
 ---
 
-Welcome to Quickstart 4 for Duende IdentityServer!
+Welcome to Quickstart 4 for Duende IdentityServer! In this quickstart you will
+move configuration and other temporary data into a database using Entity
+Framework. 
 
 {{% notice note %}}
 
@@ -15,13 +17,11 @@ templates]({{< ref "0_overview#preparation" >}}).
 
 {{% /notice %}}
 
-In this quickstart you will move configuration and other temporary data into a
-database using Entity Framework. In the previous quickstarts, you configured
-clients and scopes with code. IdentityServer loaded this configuration data into
-memory on startup. Modifying the configuration required a restart.
-IdentityServer also generates temporary data, such as authorization codes,
-consent choices, and refresh tokens. Up to this point in the quickstarts, this
-data was also stored in memory.
+In the previous quickstarts, you configured clients and scopes with code.
+IdentityServer loaded this configuration data into memory on startup. Modifying
+the configuration required a restart. IdentityServer also generates temporary
+data, such as authorization codes, consent choices, and refresh tokens. Up to
+this point in the quickstarts, this data was also stored in memory.
 
 To move this data into a database that is persistent between restarts and across
 multiple IdentityServer instances, you will use the
@@ -47,10 +47,11 @@ dotnet add package Duende.IdentityServer.EntityFramework
 
 ### Install Microsoft.EntityFrameworkCore.Sqlite
 
-In this quickstart you will use Sqlite as the database provider, but you can
-replace Sqlite with any Entity Framework provider. To add Sqlite support to your
-IdentityServer project, install the Entity framework Sqlite NuGet package by
-running the following command from the *IdentityServer* directory:
+*Duende.IdentityServer.EntityFramework* can be used with any Entity Framework
+database provider. In this quickstart, you will use Sqlite. To add Sqlite
+support to your IdentityServer project, install the Entity framework Sqlite
+NuGet package by running the following command from the *IdentityServer*
+directory:
 
 ```
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
@@ -63,9 +64,9 @@ data in separate stores, each with their own DbContext.
 * ConfigurationDbContext: used for configuration data such as clients,
   resources, and scopes
 * PersistedGrantDbContext: used for dynamic operational data such as
-  authorization codes, and refresh tokens
+  authorization codes and refresh tokens
 
-To start using these stores, replace the existing calls to *AddInMemoryClients*,
+To use these stores, replace the existing calls to *AddInMemoryClients*,
 *AddInMemoryIdentityResources*, and *AddInMemoryApiScopes* in your
 *ConfigureServices* method in *HostingExtensions.cs* with
 *AddConfigurationStore* and *AddOperationalStore*, like this:
@@ -126,8 +127,9 @@ You can find the latest SQL scripts for SqlServer in our EF
 
 ### Adding Migrations
 To create migrations, you will need to install the Entity Framework Core CLI
-on your machine and the *Microsoft.EntityFrameworkCore.Design* nuget package in
-IdentityServer. Run the following commands from the *IdentityServer* directory.
+tool on your machine and the *Microsoft.EntityFrameworkCore.Design* nuget
+package in IdentityServer. Run the following commands from the *IdentityServer*
+directory.
 
 ```console
 dotnet tool install --global dotnet-ef
