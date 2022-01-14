@@ -407,7 +407,7 @@ To add more claims to the identity:
   Name it and specify which claims should be returned when it is requested. The
   *Name* property of the resource is the scope value that clients can request to
   get the associated *UserClaims*. For example, you could add an
-  *IdentityResource* named "email" which would include the *email* and
+  *IdentityResource* named "verification" which would include the *email* and
   *email_verified* claims.
   ```csharp
     public static IEnumerable<IdentityResource> IdentityResources =>
@@ -417,7 +417,7 @@ To add more claims to the identity:
         new IdentityResources.Profile(),
         new IdentityResource()
         {
-            Name = "email",
+            Name = "verification",
             UserClaims = new List<string> 
             { 
                 JwtClaimTypes.Email,
@@ -439,7 +439,7 @@ To add more claims to the identity:
         {
             IdentityServerConstants.StandardScopes.OpenId,
             IdentityServerConstants.StandardScopes.Profile,
-            "email"
+            "verification"
         }
     }
   ```
@@ -451,7 +451,7 @@ To add more claims to the identity:
     .AddOpenIdConnect("oidc", options =>
     {
         // ...
-        options.Scope.Add("email");
+        options.Scope.Add("verification");
         options.ClaimActions.MapJsonKey("email", "email");
         options.ClaimActions.MapJsonKey("email_verified", "email_verified");
         // ...
