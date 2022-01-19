@@ -4,117 +4,186 @@ date: 2020-09-10T08:22:12+02:00
 weight: 5
 ---
 
-{{% notice note %}}
-For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview]({{< ref "0_overview" >}}) first.
-{{% /notice %}}
-
-In the previous quickstarts, we created our client and scope data in code.
-On startup, IdentityServer loaded this configuration data into memory.
-If we wanted to modify this configuration data, we had to stop and start IdentityServer.
-
-IdentityServer also generates temporary data, such as authorization codes, consent choices, and refresh tokens.
-By default, these are also stored in-memory.
-
-To move this data into a database that is persistent between restarts and across multiple IdentityServer instances, we can use the Duende IdentityServer Entity Framework library.
+Welcome to Quickstart 4 for Duende IdentityServer! In this quickstart you will
+move configuration and other temporary data into a database using Entity
+Framework. 
 
 {{% notice note %}}
-In addition to manually configuring EF support, there is also an IdentityServer template to create a new project with EF support, using *dotnet new isef*.
+
+We recommend you do the quickstarts in order, but if you'd like
+to start here, begin from a copy of [Quickstart 3's source code]({{< param
+qs_base >}}/3_AspNetCoreAndApis). You will also need to [install the IdentityServer
+templates]({{< ref "0_overview#preparation" >}}).
+
 {{% /notice %}}
 
-## Overview
-Our EF integration library implements the required stores and services using the following DbContexts:
+In the previous quickstarts, you configured clients and scopes with code.
+IdentityServer loaded this configuration data into memory on startup. Modifying
+the configuration required a restart. IdentityServer also generates temporary
+data, such as authorization codes, consent choices, and refresh tokens. Up to
+this point in the quickstarts, this data was also stored in memory.
 
-* ConfigurationDbContext: used for configuration data such as clients, resources, and scopes
-* PersistedGrantDbContext: used for dynamic operational data such as authorization codes, and refresh tokens
+To move this data into a database that is persistent between restarts and across
+multiple IdentityServer instances, you will use the
+*Duende.IdentityServer.EntityFramework* library.
 
-These contexts are suitable for any Entity Framework Core compatible relational database.
+{{% notice note %}}
 
-You can find the extension methods to register them in your IdentityServer in the *Duende.IdentityServer.EntityFramework* nuget package, which we will add to the *IdentityServer* project now:
+This quickstart shows how to add Entity Framework support to IdentityServer
+manually. There is also a template that will create a new IdentityServer project
+with the EntityFramework integration already added: *dotnet new isef*.
 
-    dotnet add package Duende.IdentityServer.EntityFramework
+{{% /notice %}}
 
-## Using Sqlite
-For this quickstart, we will use Sqlite as the database provider.
-Of course, given EntityFramework Core's flexibility, you can adjust this quickstart to use any EF supported provider.
+## Configure IdentityServer
+### Install Duende.IdentityServer.EntityFramework
+IdentityServer's Entity Framework integration is provided by the
+*Duende.IdentityServer.EntityFramework* NuGet package. Run the following command
+from the *IdentityServer* directory to install it:
 
-To add Sqlite support to our IdentityServer project, you’ll need the following nuget package:
+```console
+dotnet add package Duende.IdentityServer.EntityFramework
+```
+
+### Install Microsoft.EntityFrameworkCore.Sqlite
+
+*Duende.IdentityServer.EntityFramework* can be used with any Entity Framework
+database provider. In this quickstart, you will use Sqlite. To add Sqlite
+support to your IdentityServer project, install the Entity framework Sqlite
+NuGet package by running the following command from the *IdentityServer*
+directory:
 
 ```
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
-### Database Schema Changes and Using EF Migrations
-The *Duende.IdentityServer.EntityFramework.Storage* Nuget package contains entity classes that map from Duende IdentityServer’s models.
-As IdentityServer’s models change, so will the entity classes in *Duende.IdentityServer.EntityFramework.Storage*.
-As you use *Duende.IdentityServer.EntityFramework.Storage* and upgrade over time, you are responsible for your database schema and changes necessary to that schema as the entity classes change.
+### Configuring the Stores
+*Duende.IdentityServer.EntityFramework* stores configuration and operational
+data in separate stores, each with their own DbContext.
 
-One approach for managing those changes is to use [EF migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index), which is what we’ll use in this quickstart.
-If migrations are not your preference, then you can manage the schema changes in any way you see fit.
+* ConfigurationDbContext: used for configuration data such as clients,
+  resources, and scopes
+* PersistedGrantDbContext: used for dynamic operational data such as
+  authorization codes and refresh tokens
 
+To use these stores, replace the existing calls to *AddInMemoryClients*,
+*AddInMemoryIdentityResources*, and *AddInMemoryApiScopes* in your
+*ConfigureServices* method in *HostingExtensions.cs* with
+*AddConfigurationStore* and *AddOperationalStore*, like this:
+
+```cs
+public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
+{
+    var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+    const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
+
+    builder.Services.AddIdentityServer()
+        .AddConfigurationStore(options =>
+        {
+            options.ConfigureDbContext = b => b.UseSqlite(connectionString,
+                sql => sql.MigrationsAssembly(migrationsAssembly));
+        })
+        .AddOperationalStore(options =>
+        {
+            options.ConfigureDbContext = b => b.UseSqlite(connectionString,
+                sql => sql.MigrationsAssembly(migrationsAssembly));
+        })
+        .AddTestUsers(TestUsers.Users);
+    
+    //...
+}
+```
 {{% notice note %}}
-You can find the latest SQL scripts for SqlServer in our EF [repository](https://github.com/DuendeSoftware/IdentityServer/tree/main/migrations/IdentityServerDb/Migrations).
+
+You will use Entity Framework migrations later on in this quickstart to manage
+the database schema. The call to *MigrationsAssembly(...)* tells Entity
+Framework that the host project will contain the migrations. This is necessary
+since the host project is in a different assembly than the one that contains the
+*DbContext* classes.
+
 {{% /notice %}}
 
-### Configuring the Stores
-To start using these stores, you’ll need to replace any existing calls to *AddInMemoryClients*, *AddInMemoryIdentityResources*, *AddInMemoryApiScopes*, *AddInMemoryApiResources*, and *AddInMemoryPersistedGrants* in your *ConfigureServices* method in *Startup.cs* with *AddConfigurationStore* and *AddOperationalStore*.
+## Managing the Database Schema
 
-These methods each require a *DbContextOptionsBuilder*, meaning your code will look something like this:
+The *Duende.IdentityServer.EntityFramework.Storage* NuGet package (installed as
+a dependency of *Duende.IdentityServer.EntityFramework*) contains entity classes
+that map onto IdentityServer's models. These entities are maintained in sync
+with IdentityServer's models - when the models are changed in a new release,
+corresponding changes are made to the entities. As you use IdentityServer and
+upgrade over time, you are responsible for your database schema and changes
+necessary to that schema.
 
-```cs
-var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
-
-services.AddIdentityServer()
-    .AddTestUsers(TestUsers.Users)
-    .AddConfigurationStore(options =>
-    {
-        options.ConfigureDbContext = b => b.UseSqlite(connectionString,
-            sql => sql.MigrationsAssembly(migrationsAssembly));
-    })
-    .AddOperationalStore(options =>
-    {
-        options.ConfigureDbContext = b => b.UseSqlite(connectionString,
-            sql => sql.MigrationsAssembly(migrationsAssembly));
-    });
-```
-
-You might need these namespaces added to the file:
-
-```cs
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-```
-
-Because we are using EF migrations in this quickstart, the call to *MigrationsAssembly(...)* is used to inform Entity Framework that the host project will contain the migrations code.
-This is necessary since the host project is in a different assembly than the one that contains the *DbContext* classes.
+One approach for managing those changes is to use [EF
+migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index),
+which is what this quickstart will use. If migrations are not your preference,
+then you can manage the schema changes in any way you see fit. 
 
 ### Adding Migrations
-Once the IdentityServer has been configured to use Entity Framework, we’ll need to generate some migrations.
+To create migrations, you will need to install the Entity Framework Core CLI
+tool on your machine and the *Microsoft.EntityFrameworkCore.Design* NuGet
+package in IdentityServer. Run the following commands from the *IdentityServer*
+directory:
 
-To create migrations, you will need to install the Entity Framework Core CLI on your machine and the *Microsoft.EntityFrameworkCore.Design* nuget package in IdentityServer:
+```console
+dotnet tool install --global dotnet-ef
+dotnet add package Microsoft.EntityFrameworkCore.Design
+```
 
-    dotnet tool install --global dotnet-ef
-    dotnet add package Microsoft.EntityFrameworkCore.Design
-
-To create the migrations, open a command prompt in the IdentityServer project directory and run the following two commands:
-
-    dotnet ef migrations add InitialIdentityServerPersistedGrantDbMigration -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
-    dotnet ef migrations add InitialIdentityServerConfigurationDbMigration -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
-
-You should now see a *~/Data/Migrations/IdentityServer* folder in your project containing the code for your newly created migrations.
-
-### Initializing the Database
-Now that we have the migrations, we can write code to create the database from the migrations.
-We can also seed the database with the in-memory configuration data that we already defined in the previous quickstarts.
+### Handle Expected Exception
+The Entity Framework CLI internally starts up *IdentityServer* for a short time
+in order to read your database configuration. After it has read the
+configuration, it shuts *IdentityServer* down by throwing a
+*StopTheHostException* exception. We expect this exception to be unhandled and
+therefore stop *IdentityServer*. Since it is expected, you do not need to log it
+as a fatal error. Update the error logging code in *IdentityServer\Program.cs*
+as follows:
+```csharp
+catch (Exception ex)
+{
+    if (ex.GetType().Name != "StopTheHostException")
+    {
+        Log.Fatal(ex, "Unhandled exception");
+    }
+}
+```
 
 {{% notice note %}}
-The approach used in this quickstart is used to make it easy to get IdentityServer up and running. You should devise your own database creation and maintenance strategy that is appropriate for your architecture.
+
+You must use the "StopTheHost" string here rather than catching the
+*StopTheHostException* because it is a private type. See
+https://github.com/dotnet/runtime/issues/60600.
+
+
 {{% /notice %}}
 
-In *Startup.cs* add this method to help initialize the database::
+Now run the following two commands from the *IdentityServer* directory to create
+the migrations:
+
+```console
+dotnet ef migrations add InitialIdentityServerPersistedGrantDbMigration -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
+dotnet ef migrations add InitialIdentityServerConfigurationDbMigration -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
+```
+You should now see a *Data/Migrations/IdentityServer* folder in your project
+containing the code for your newly created migrations.
+
+### Initializing the Database
+Now that you have the migrations, you can write code to create the database from
+them and seed the database with the same configuration data used in the previous
+quickstarts.
+
+{{% notice note %}}
+
+The approach used in this quickstart is used to make it easy to get
+IdentityServer up and running. You should devise your own database creation and
+maintenance strategy that is appropriate for your architecture.
+
+{{% /notice %}}
+
+In *IdentityServer/HostingExtensions.cs*, add this method to initialize the
+database:
 
 ```cs
-private void InitializeDatabase(IApplicationBuilder app)
+private static void InitializeDatabase(IApplicationBuilder app)
 {
     using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
     {
@@ -152,35 +221,36 @@ private void InitializeDatabase(IApplicationBuilder app)
 }
 ```
 
-The above code may require you to add the following namespaces to your file::
+Call *InitializeDatabase* from the *ConfigurePipeline* method:
 
 ```cs
-using System.Linq;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Duende.IdentityServer.EntityFramework.Mappers;
-```
-
-And then we can invoke this from the *Configure* method:
-
-```cs
-public void Configure(IApplicationBuilder app)
-{
-    // this will do the initial DB population
+public static WebApplication ConfigurePipeline(this WebApplication app)
+{ 
+    app.UseSerilogRequestLogging();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+    
     InitializeDatabase(app);
-
-    // the rest of the code that was already here
-    // ...
+    
+    //...
 }
 ```
 
-Now if you run the IdentityServer project, the database should be created and seeded with the quickstart configuration data.
-You should be able to use a tool like SQL Lite Studio to connect and inspect the data.
+Now if you run the IdentityServer project, the database should be created and
+seeded with the quickstart configuration data. You should be able to use a tool
+like SQL Lite Studio to connect and inspect the data.
 
 ![](../images/ef_database.png)
 
-{{% notice note %}}
-The above *InitializeDatabase* helper API is convenient to seed the database, but this approach is not ideal to leave in to execute each time the application runs. Once your database is populated, consider removing the call to the API.
+{{% notice note %}} 
+
+The *InitializeDatabase* method is convenient way to seed the database, but this
+approach is not ideal to leave in to execute each time the application runs.
+Once your database is populated, consider removing the call to the API. 
+
 {{% /notice %}}
 
-### Run the client applications
+## Run the client applications
 You should now be able to run any of the existing client applications and sign-in, get tokens, and call the API -- all based upon the database configuration.
