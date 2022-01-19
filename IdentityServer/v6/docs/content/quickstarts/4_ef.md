@@ -147,12 +147,10 @@ as follows:
 ```csharp
 catch (Exception ex)
 {
-    if (ex.GetType().Name == "StopTheHostException")
+    if (ex.GetType().Name != "StopTheHostException")
     {
-        throw; // Rethrow so that the host stops
+        Log.Fatal(ex, "Unhandled exception");
     }
-
-    Log.Fatal(ex, "Unhandled exception");
 }
 ```
 
