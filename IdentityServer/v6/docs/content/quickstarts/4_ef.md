@@ -105,7 +105,7 @@ since the host project is in a different assembly than the one that contains the
 
 ## Managing the Database Schema
 
-The *Duende.IdentityServer.EntityFramework.Storage* Nuget package (installed as
+The *Duende.IdentityServer.EntityFramework.Storage* NuGet package (installed as
 a dependency of *Duende.IdentityServer.EntityFramework*) contains entity classes
 that map onto IdentityServer's models. These entities are maintained in sync
 with IdentityServer's models - when the models are changed in a new release,
@@ -127,7 +127,7 @@ You can find the latest SQL scripts for SqlServer in our EF
 
 ### Adding Migrations
 To create migrations, you will need to install the Entity Framework Core CLI
-tool on your machine and the *Microsoft.EntityFrameworkCore.Design* nuget
+tool on your machine and the *Microsoft.EntityFrameworkCore.Design* NuGet
 package in IdentityServer. Run the following commands from the *IdentityServer*
 directory.
 
@@ -136,18 +136,20 @@ dotnet tool install --global dotnet-ef
 dotnet add package Microsoft.EntityFrameworkCore.Design
 ```
 
-### Handle Excepted Exception
-The Entity Framework CLI internally start up the host in order to read the
-database configuration. However, it does not want to actually run the host after
-it has read the config, so it immediately throws a *StopTheHostException*. Since
-this exception is expected and not a fatal error, update the error logging code
-in *IdentityServer\Program.cs* as follows:
+### Handle Expected Exception
+The Entity Framework CLI internally starts up *IdentityServer* for a short time
+in order to read your database configuration. After it has read the
+configuration, it shuts *IdentityServer* down by throwing a
+*StopTheHostException* exception. We expect this exception to be unhandled and
+therefore stop *IdentityServer*. Since it is expected, you do not need to log it
+as a fatal error. Update the error logging code in *IdentityServer\Program.cs*
+as follows:
 ```csharp
 catch (Exception ex)
 {
     if (ex.GetType().Name == "StopTheHostException")
     {
-        throw;
+        throw; // Rethrow so that the host stops
     }
 
     Log.Fatal(ex, "Unhandled exception");
