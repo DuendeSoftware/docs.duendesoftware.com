@@ -11,8 +11,8 @@ Framework.
 {{% notice note %}}
 
 We recommend you do the quickstarts in order, but if you'd like
-to start here, begin from a copy of [Quickstart 2's source code]({{< param
-qs_base >}}/2_InteractiveAspNetCore). You will also need to [install the IdentityServer
+to start here, begin from a copy of [Quickstart 3's source code]({{< param
+qs_base >}}/3_AspNetCoreAndApis). You will also need to [install the IdentityServer
 templates]({{< ref "0_overview#preparation" >}}).
 
 {{% /notice %}}
