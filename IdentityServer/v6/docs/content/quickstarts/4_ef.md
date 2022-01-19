@@ -118,18 +118,11 @@ migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations
 which is what this quickstart will use. If migrations are not your preference,
 then you can manage the schema changes in any way you see fit. 
 
-{{% notice note %}}
-
-You can find the latest SQL scripts for SqlServer in our EF
-[repository](https://github.com/DuendeSoftware/IdentityServer/tree/main/migrations/IdentityServerDb/Migrations).
-
-{{% /notice %}}
-
 ### Adding Migrations
 To create migrations, you will need to install the Entity Framework Core CLI
 tool on your machine and the *Microsoft.EntityFrameworkCore.Design* NuGet
 package in IdentityServer. Run the following commands from the *IdentityServer*
-directory.
+directory:
 
 ```console
 dotnet tool install --global dotnet-ef
