@@ -223,6 +223,18 @@ var builder = services.AddIdentityServer(options =>
 })
 ```
 
+## Logging
+Options related to logging.
+
+* ***AuthorizeRequestSensitiveValuesFilter***
+    
+    Collection of parameter names passed to the authorize endpoint that are considered sensitive and will be excluded from logging.
+
+* ***TokenRequestSensitiveValuesFilter***
+    
+    Collection of parameter names passed to the token endpoint that are considered sensitive and will be excluded from logging.
+
+
 ## InputLengthRestrictions
 Allows setting length restrictions on various protocol parameters like client id, scope, redirect URI etc.
 

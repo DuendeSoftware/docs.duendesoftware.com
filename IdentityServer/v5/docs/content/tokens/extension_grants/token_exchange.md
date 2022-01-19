@@ -79,17 +79,23 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
 }
 ```
 
-You then register your grant validator with DI.
+You then register your grant validator with DI:
 
 ```cs
 builder.AddExtensionGrantValidator<TokenExchangeGrantValidator>();
 ```
 
-...and configure your client to be able to use it.
+And configure your client to be able to use it:
 
 ```cs
 client.AllowedGrantTypes = { OidcConstants.GrantTypes.TokenExchange };
 ```
+
+{{% notice note %}}
+Values sent to the token endpoint are logged, except well-known sensitive values that IdentityServer processes by default.
+Any sensitive values you use as input to your extension grant validator that you do not want included in the logs should be filtered.
+This can be done by adding those parameter names on the *Logging.TokenRequestSensitiveValuesFilter* collection on the [IdentityServerOptions]({{<ref "/reference/options#logging">}}).
+{{% /notice %}}
 
 ## Token Exchange for impersonation and delegation
 One of the primary use cases of the token exchange specification is creating tokens for identity delegation and impersonation scenarios. In these scenarios you want to forward certain token and identity information over multiple hops in a call chain.

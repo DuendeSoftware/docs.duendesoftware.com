@@ -37,12 +37,12 @@ In this section, you will create a directory for the solution and use the
 that includes a basic IdentityServer setup.
 
 ```console
-md quickstart
+mkdir quickstart
 cd quickstart
 
 dotnet new sln -n Quickstart
 
-md src
+mkdir src
 cd src
 dotnet new isempty -n IdentityServer
 ```
@@ -50,7 +50,7 @@ dotnet new isempty -n IdentityServer
 This will create the following files:
 
 * *IdentityServer.csproj* - project file
-* *Properties\launchSettings.json* file - launch profile
+* *Properties/launchSettings.json* file - launch profile
 * *appsettings.json* - run time settings
 * *Program.cs* - main application entry point
 * *HostingExtensions.cs* - configuration for ASP.NET pipeline and services.
@@ -70,7 +70,7 @@ dotnet sln add ./src/IdentityServer/IdentityServer.csproj
 {{% notice note %}}
 
 The protocol used in this template is *https* and the port is set to 5001. You
-can change the port in the *Properties\launchSettings.json* file. For production
+can change the port in the *Properties/launchSettings.json* file. For production
 scenarios you should always use *https*. 
 
 {{% /notice %}}
@@ -304,7 +304,7 @@ IdentityServer.
 ## Create the client project
 The last step is to create a client that requests an access token and then uses
 that token to access the API. Your client will be a console project in your
-solution. From the *quickstart\src* directory, run the following command:
+solution. From the *quickstart/src* directory, run the following command:
 
 ```console
 dotnet new console -n Client
@@ -314,7 +314,7 @@ Then as before, add it to your solution using:
 
 ```console
 cd ..
-dotnet sln add .\src\Client\Client.csproj
+dotnet sln add ./src/Client/Client.csproj
 ```
 
 ### Add the IdentityModel nuget package
