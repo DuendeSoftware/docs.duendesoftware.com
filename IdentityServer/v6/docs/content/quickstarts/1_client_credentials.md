@@ -168,7 +168,7 @@ minimal ConfigureServices method that is needed:
 ```csharp
 public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
-    var builder = services.AddIdentityServer()
+    builder.Services.AddIdentityServer()
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients);
 
@@ -463,14 +463,10 @@ You can now enforce this policy at various levels, e.g.:
 * for all API endpoints
 * for specific controllers/actions
 
-Typically you setup the policy for all API endpoints in the routing system:
+Typically you set the policy for all controllers where they are mapped in *Api\Program.cs*:
 
 ```cs
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers()
-        .RequireAuthorization("ApiScope");
-});
+app.MapControllers().RequireAuthorization("ApiScope");
 ```
 
 ## Further experiments
