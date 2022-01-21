@@ -463,23 +463,10 @@ You can now enforce this policy at various levels, e.g.:
 * for all API endpoints
 * for specific controllers/actions
 
-Typically you setup the policy for all API endpoints in the routing system.
-You'll have to add a call to app.UseRouting() *before* the call the app.UseEndpoints(),
-and *remove* the call to app.MapControllers(). Also, if there are calls to
-*both* app.UseRouting() and app.UseEndpoints(...), the call to app.UseAuthorization() must go between them:
+Typically you set the policy for all controllers where they are mapped in *Api\Program.cs*:
 
 ```cs
-app.UseRouting();
-...
-app.UseAuthorization();
-...
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers()
-        .RequireAuthorization("ApiScope");
-});
-
-//app.MapControllers();
+app.MapControllers().RequireAuthorization("ApiScope");
 ```
 
 ## Further experiments
