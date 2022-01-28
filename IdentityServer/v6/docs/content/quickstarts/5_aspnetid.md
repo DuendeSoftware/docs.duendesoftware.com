@@ -47,7 +47,7 @@ Be sure to look at:
 Notice the reference to *Duende.IdentityServer.AspNetIdentity*. 
 This NuGet package contains the ASP.NET Core Identity integration components for Duende IdentityServer.
 
-### Startup.cs
+### HostingExtensions.cs
 In *ConfigureServices* notice the necessary *AddDbContext<ApplicationDbContext>()* and *AddIdentity<ApplicationUser, IdentityRole>()* calls are done to configure ASP.NET Core Identity.
 
 Also notice that much of the same IdentityServer configuration you did in the previous quickstarts is already done.
