@@ -124,7 +124,7 @@ public async Task<IActionResult> CallApi()
 }
 ```
 
-Create a view called json.cshtml (in either the /Views/Home or /Views/Shared folder) that outputs the json like this:
+Create a view in *MvcClient/Views/Home/json.cshtml* that outputs the json like this:
 
 ```html
 <pre>@ViewBag.Json</pre>
