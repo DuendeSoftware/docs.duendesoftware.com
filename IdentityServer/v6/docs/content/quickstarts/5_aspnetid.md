@@ -18,7 +18,7 @@ The reason for this new project is due to the differences in UI assets when usin
 All the other projects in this solution (for the clients and the API) will remain the same.
 
 {{% notice note %}}
-This quickstart assumes you are familiar with how ASP.NET Core Identity works. If you are not, it is recommended that you first [learn about it](https://docs.microsoft.com/en-us/aspnet/core/security/ui/identity).
+This quickstart assumes you are familiar with how ASP.NET Core Identity works. If you are not, it is recommended that you first [learn about it](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0).
 {{% /notice %}}
 
 ## New Project for ASP.NET Core Identity
@@ -47,7 +47,7 @@ Be sure to look at:
 Notice the reference to *Duende.IdentityServer.AspNetIdentity*. 
 This NuGet package contains the ASP.NET Core Identity integration components for Duende IdentityServer.
 
-### Startup.cs
+### HostingExtensions.cs
 In *ConfigureServices* notice the necessary *AddDbContext<ApplicationDbContext>()* and *AddIdentity<ApplicationUser, IdentityRole>()* calls are done to configure ASP.NET Core Identity.
 
 Also notice that much of the same IdentityServer configuration you did in the previous quickstarts is already done.
