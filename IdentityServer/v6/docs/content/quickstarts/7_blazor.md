@@ -282,7 +282,7 @@ public class AntiforgeryHandler : DelegatingHandler
 }
 ````
 
-..and register it in the client's *Program.cs* (overriding the standard HTTP client configuration):
+..and register it in the client's *Program.cs* (overriding the standard HTTP client configuration; requires package Microsoft.Extensions.Http):
 
 ```cs
 // HTTP client configuration
