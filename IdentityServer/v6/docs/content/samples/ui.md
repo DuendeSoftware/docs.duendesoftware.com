@@ -5,6 +5,13 @@ weight: 20
 
 These samples illustrate customization of the [interactive pages]({{< ref "/ui" >}}) used in your IdentityServer.
 
+### Custom Profile Service
+This sample shows how to create a [custom profile service]({{<ref "/fundamentals/claims">}}) to control what claims are issued from your IdentityServer. The majority of the sample is captured in *CustomProfileService.cs* in the *IdentityServer* project.
+
+Also, another part of the sample shows how to collect a custom claim during the login workflow when using an external login provider (this is done in the *ExternalLogin/Callback.cshtml.cs* processing logic). This claim value then is stored the user's session, and then ultimately is copied into the created tokens via the custom profile service logic.
+
+[link to source code]({{< param samples_base >}}/UserInteraction/ProfileService)
+
 ### SPA-style login page
 This sample shows an example of building the interactive pages (login, consent, logout, and error) as client-rendered (typical of SPAs), rather than server-rendered. Since there are many different SPA frameworks, the actual pages are coded using vanilla JavaScript.
 
