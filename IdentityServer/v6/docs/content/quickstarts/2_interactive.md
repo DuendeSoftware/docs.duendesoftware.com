@@ -222,6 +222,10 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = "secret";
         options.ResponseType = "code";
 
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+
         options.SaveTokens = true;
     });
 ```
@@ -241,8 +245,10 @@ process the local cookie.
 Finally, *AddOpenIdConnect* is used to configure the handler that performs the
 OpenID Connect protocol. The *Authority* indicates where the trusted token
 service is located. The *ClientId* and the *ClientSecret* identify this client.
-*SaveTokens* is used to persist the tokens in the cookie (as they will be needed
-later).
+The *Scope* is the collection of scopes that the client will request. By default
+it includes the openid and profile scopes, but clear the collection and add them
+back for explicit clarity. *SaveTokens* is used to persist the tokens in the
+cookie (as they will be needed later).
 
 {{% notice note %}}
 
@@ -414,6 +420,8 @@ to *ConfigureServices* in *WebClient/Program.cs*:
 .AddOpenIdConnect("oidc", options =>
 {
     // ...
+    options.Scope.Clear();
+    options.Scope.Add("openid");
     options.Scope.Add("profile");
     options.GetClaimsFromUserInfoEndpoint = true;
     // ...
@@ -478,13 +486,12 @@ To add more claims to the identity:
 * Request the resource by adding it to the *Scopes* collection on the OpenID
   Connect handler configuration in *WebClient/Program.cs*, and add a
   [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-6.0)
-  to map the new claims returned from the userinfo endpoint onto user claims.
+  to map the new claim returned from the userinfo endpoint onto a user claim.
   ```csharp
     .AddOpenIdConnect("oidc", options =>
     {
         // ...
         options.Scope.Add("verification");
-        options.ClaimActions.MapJsonKey("email", "email");
         options.ClaimActions.MapJsonKey("email_verified", "email_verified");
         // ...
     }
