@@ -26,11 +26,11 @@ In terms of workflow for ultimately securing calls to the API, the logical steps
 
 **1:** The SPA Assets are loaded from the host into the browser.
 
-**2:** The UI logic must then navigate the user to the login page. The login session is fundmentally tracked with a cookie managed by the ASP.NET cookie authentication handler. This authentication handler is configured by ASP.NET Identity.
+**2:** The UI logic must then navigate the user to the login page. The login session is fundamentally tracked with a cookie managed by the ASP.NET cookie authentication handler. This authentication handler is configured by ASP.NET Identity.
 
 **3:** Once the user is logged in, the SPA must make OIDC/OAuth protocol requests to the endpoints managed by Duende IdentityServer. The authentication cookie from the prior step is what is used to identify the user. The result of this step is an access token that is maintained by the code running in the browser.
 
-**4:** Finally, the UI logic can securely invoke the API by passing the access token as the *Authorization* HTTP header. The code on the server will validate that the access token was issued by the the instance of Duende IdentityServer that is hosted from this project.
+**4:** Finally, the UI logic can securely invoke the API by passing the access token as the *Authorization* HTTP header. The code on the server will validate that the access token was issued by the instance of Duende IdentityServer that is hosted from this project.
 
 The picture below shows these logical steps.
 
@@ -46,27 +46,29 @@ There are great pains taken in the template (hidden away in various extension me
 
 Related to this, co-hosting your token server (i.e. Duende IdentityServer) with the application and API is simply not the recommended pattern.
 The intent of using a token server is to enable centralization of user authentication, which enables single sign-on for users.
+Co-hosting the token server with the client application (and API) is counter to that goal.
 Thus, the recommended approach is to host Duende IdentityServer (and then also the ASP.NET Identity Pages) in its own host separate from the app and API.
-Doing so would produce an architectual picture as such:
+Doing so would produce an architectural picture as such:
 
 
 ![](../images/token_server_separate_host.png)
 
 
-The steps in the logical workflow would reamain the same, but now the token server is independent from any one app or API.
+The steps in the logical workflow would remain the same, but now the token server is independent from any one app or API.
 Also, each host now only has one credential type to be concerned with, which simplifies the security model.
 Once you decide to add a new app or API into your architecture, it's very little effort to integrate them with the existing token server.
 And of course, your users would get single sign-on across all of those applications.
-Finally, from a deployment standpoint, each the various hosts is separate and can be updated/versioned/patched separately, as needed.
+Finally, from a deployment standpoint, each of the various hosts is separate and can be updated/versioned/patched separately, as needed.
 
 
 ## BFF Architecture with a Remote API
 
 There is another point about the security of the SPA invoking the API that requires discussion.
+
 The design of the template utilizes an access token to secure calls to the API.
 It makes sense to secure APIs with access tokens when those APIs need to be accessed by a variety of applications, including those not even running in a browser.
 This would be an example of a shared API.
-But very often, an API that is co-hosted with a SPA front end really only exsists to support the UI and won't expect to be invoked by any other application.
+But very often, an API that is co-hosted with a SPA front end really only exists to support the UI and won't expect to be invoked by any other application.
 In this case, it might be overkill to design this "local" API to require an access token.
 Also, there are a [variety of factors that make is undesirable]({{<ref "/bff/overview">}}) (and sometimes impossible) for code running in the browser to fully manage tokens obtained from the OIDC/OAuth protocol.
 
@@ -76,7 +78,7 @@ The BFF pattern changes the credential used from the SPA to the backend to inste
 This would allow securing calls to a "local" API that is co-hosted in the backend. 
 And then if there is a "remote" API (e.g. a shared API) hosted elsewhere that accepts access tokens, it is accessible from the code running in the application.
 
-The picture below ilustrates:
+The picture below illustrates:
 
 
 ![](../images/remote_api_host.png)
@@ -91,7 +93,7 @@ The [Duende BFF Security Framework]({{<ref "/bff/overview">}}) make this archite
 
 ## Migrating
 
-Unfortuntely, the last aspect of the template which requires discussion is that there is configuration required when using OIDC/OAuth. 
+Unfortunately, the last aspect of the template which requires discussion is that there is configuration required when using OIDC/OAuth. 
 This configuration models the client application (the SPA) as well as the API being secured.
 Typically, all the players (the app, the API, and the token server) require their own store for their relevant configuration data.
 Given that the template co-hosts all three of these, more great pains were taken to hide all of this configuration from the developer.
@@ -111,6 +113,6 @@ First, at the time the template was created, the templating system from Microsof
 This explains why all the different logical pieces are lumped into a single host.
 Second, why was a token based design chosen to secure the API co-hosted with the login page.
 The assumption is that as projects grow and more and more applications are added to the architecture, the design would eventually require a token based architecture (presumably hosted separately). 
-Thus, rather than require rework later on, starting with a token based design makes sense and acclimates developers to those fundamentals from the begining.
+Thus, rather than require rework later on, starting with a token based design makes sense and acclimates developers to those fundamentals from the beginning.
 Third, it's assumed that the automatic self-configuration done in the template would avoid 1) the hassle of explicit configuration needed for the OIDC/OAuth protocols when the template is deployed, and 2) the need to explain the mechanics of the protocols.
 {{% /notice %}}
