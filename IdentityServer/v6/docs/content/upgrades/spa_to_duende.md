@@ -89,17 +89,18 @@ The picture below illustrates:
 
 **Step 4b:** If a remote API needs to be invoked, then the access token associated with the user's authentication session can be used. This access token is only available on the server. It can be used from the local API invoking a remote API, or a reverse proxy can be setup in the SPA host (e.g. using Microsoft's YARP) to allow more of a pass-through style so the SPA code can invoke the remote API without manual coding to pass along the access token.
 
-The [Duende BFF Security Framework]({{<ref "/bff/overview">}}) make this architecture easy to implement.
+The [Duende BFF Security Framework]({{<ref "/bff/overview">}}) makes this architecture easy to implement.
 
 ## Migrating
 
-Unfortunately, the last aspect of the template which requires discussion is that there is configuration required when using OIDC/OAuth. 
+The last aspect of the template which requires discussion is that there is configuration required when using OIDC/OAuth. 
 This configuration models the client application (the SPA) as well as the API being secured.
 Typically, all the players (the app, the API, and the token server) require their own store for their relevant configuration data.
 Given that the template co-hosts all three of these, more great pains were taken to hide all of this configuration from the developer.
+The various extension methods that are provided for the template that sets up Duende IdentityServer, that performs the automatic configuration, and the client-side code that bootstraps the security in the browser all assume this co-hosting model.
 While this might be convenient when co-hosting, when you split the hosts into the recommended architecture then the configuration must be more explicit.
 
-Having said all of this, it is non-trivial to migrate a project from the template to the recommended architecture.
+Unfortunately what this means is that is it non-trivial to migrate a project from the template to the recommended architecture.
 Rather, it makes more sense to follow the [quickstart guides]({{<ref "/quickstarts">}}) to setup a properly designed architecture.
 Once that's in place, then it will be more obvious how to take any existing application created with the template and preserve the relevant application assets to use the token server you have setup in its own host.
 
