@@ -41,7 +41,8 @@ To add BFF and OIDC support to the *JavaScriptClient* project, you'll need the f
 
 ```
 dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
-dotnet add package Duende.BFF --prerelease
+dotnet add package Duende.BFF
+dotnet add package Duende.BFF.Yarp
 ```
 
 ### Modify hosting
@@ -53,39 +54,46 @@ Modify the *JavaScriptClient* project to run on *https://localhost:5003*.
 With the BFF pattern, the server-side code is responsible for triggering and receiving the OpenID Connect requests and responses.
 This means that for our JavaScript application the configuration for session management and OpenID Connect is really no different than our prior [MVC application quickstart]({{<ref "../3_api_access">}}).
 We will be using API controllers later, so we need a call to *AddControllers()*.
-Additionally, the BFF services need to be added with *AddBff()*.
+Additionally, the BFF services need to be added with *AddBff()*. Add the following to *Program.cs*:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
+var builder = WebApplication.CreateBuilder(args);
+
+...
+
+builder.Services.AddControllers();
+builder.Services.AddAuthorization();
+
+builder.Services
+    .AddBff()
+    .AddRemoteApis();
+
+JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+builder.Services.AddAuthentication(options =>
 {
-    services.AddControllers();
-    services.AddAuthorization();
-    
-    services.AddBff();
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "oidc";
+    options.DefaultSignOutScheme = "oidc";
+})
+.AddCookie("Cookies")
+.AddOpenIdConnect("oidc", options =>
+{
+    options.Authority = "https://localhost:5001";
 
-    JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+    options.ClientId = "bff";
+    options.ClientSecret = "secret";
+    options.ResponseType = "code";
 
-    services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = "Cookies";
-        options.DefaultChallengeScheme = "oidc";
-        options.DefaultSignOutScheme = "oidc";
-    })
-    .AddCookie("Cookies")
-    .AddOpenIdConnect("oidc", options =>
-    {
-        options.Authority = "https://localhost:5001";
+    options.Scope.Add("api1");
 
-        options.ClientId = "bff";
-        options.ClientSecret = "secret";
-        options.ResponseType = "code";
+    options.SaveTokens = true;
+    options.GetClaimsFromUserInfoEndpoint = true;
+});
 
-        options.Scope.Add("api1");
+...
 
-        options.SaveTokens = true;
-        options.GetClaimsFromUserInfoEndpoint = true;
-    });
-}
+var app = builder.Build();
 ```
 
 ### Add middleware
@@ -93,28 +101,33 @@ public void ConfigureServices(IServiceCollection services)
 Similarly, the middleware pipeline for this application will be fairly standard with the addition of the BFF middleware, and the BFF endpoints:
 
 ```cs
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+var app = builder.Build();
+
+...
+
+if (app.Environment.IsDevelopment())
 {
-    if (env.IsDevelopment())
-    {
-        app.UseDeveloperExceptionPage();
-    }
-
-    app.UseDefaultFiles();
-    app.UseStaticFiles();
-
-    app.UseRouting();
-    app.UseAuthentication();
-    
-    app.UseBff();
-
-    app.UseAuthorization();
-
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapBffManagementEndpoints();
-    });
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.UseRouting();
+app.UseAuthentication();
+
+app.UseBff();
+
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapBffManagementEndpoints();
+});
+
+...
+
+app.Run();
 ```
 
 ### Add your HTML and JavaScript files
@@ -335,7 +348,7 @@ is an extension method *GetUserAccessTokenAsync* on the *HttpContext* you can us
 ### Update routing to accept local and remote API calls
 
 We need to register both the local API and the BFF proxy for the remote API in the ASP.NET Core routing system. 
-Add the code below to the *UseEndpoints* section in *Configure* in *Startup.cs*.
+Add the code below to the *UseEndpoints* section in *Configure* in *Program.cs*.
 
 ```cs
 app.UseEndpoints(endpoints =>
@@ -357,7 +370,7 @@ This includes anti-forgery protection as well as suppressing login redirects on 
 
 ### Call the APIs from JavaScript
 
-Back in *site.js*, implement the two API button event handlers as such:
+Back in *app.js*, implement the two API button event handlers as such:
 
 ```js
 async function localApi() {
