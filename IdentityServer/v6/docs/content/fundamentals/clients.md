@@ -70,7 +70,6 @@ The *AddInMemoryClients* extensions method also supports adding clients from the
 
 ```json
 "IdentityServer": {
-    "IssuerUri": "urn:sso.company.com",
     "Clients": [
         {
             "Enabled": true,
