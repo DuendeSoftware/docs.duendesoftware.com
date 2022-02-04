@@ -283,7 +283,7 @@ basis.
 
 ### Display the Auth Cookie
 
-Modify *geWebClient/Pas/Index.cshtml* to display the claims of the user and the
+Modify *WebClient/Pages/Index.cshtml* to display the claims of the user and the
 cookie properties:
 
 ```cs
@@ -305,7 +305,7 @@ cookie properties:
 <h2>Properties</h2>
 
 <dl>
-    @foreach (var prop in (await Context.AuthenticateAsync()).Properties.Items)
+    @foreach (var prop in (await HttpContext.AuthenticateAsync()).Properties.Items)
     {
         <dt>@prop.Key</dt>
         <dd>@prop.Value</dd>
