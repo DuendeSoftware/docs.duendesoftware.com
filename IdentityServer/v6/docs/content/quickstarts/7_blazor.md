@@ -293,6 +293,12 @@ builder.Services.AddHttpClient("backend", client => client.BaseAddress = new Uri
 builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
 ```
 
+This requires an additional reference in the client project:
+
+```
+<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+```
+
 If you restart the application again, the logon/logoff logic should work now. In addition you can display the contents of the session on the main page by adding this code to *Index.razor*:
 
 ```
