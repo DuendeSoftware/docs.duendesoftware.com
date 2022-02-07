@@ -3,7 +3,6 @@ title: "Terminology"
 date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---
-
 The specs, documentation and object model use a certain terminology that you should be aware of.
 
 ![](../images/terminology.png)
