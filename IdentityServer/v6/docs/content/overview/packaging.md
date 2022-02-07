@@ -5,9 +5,7 @@ weight: 40
 ---
 
 ### Product
-You can find the Duende IdentityServer source code on [GitHub](https://github.com/duendesoftware/IdentityServer).
-
-This repo is the source for the following main product Nuget packages:
+The licensed and supported libraries can be accessed via Nuget:
 
 * [Duende IdentityServer](https://www.nuget.org/packages/Duende.IdentityServer)
 * [Duende IdentityServer EntityFramework Integration](https://www.nuget.org/packages/Duende.IdentityServer.EntityFramework)
@@ -44,3 +42,6 @@ Add the following *nuget.config* to your project to access the CI feed:
     </packageSources>
 </configuration>
 ```
+
+### Source Code
+You can find the Duende IdentityServer source code on [GitHub](https://github.com/duendesoftware/IdentityServer).
