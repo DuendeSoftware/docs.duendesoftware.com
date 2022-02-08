@@ -356,3 +356,10 @@ Response status code does not indicate success: 401 (Unauthorized).
 The client code can properly respond to this, e.g. triggering a login redirect.
 
 When you logon now and call the API, you can put a breakpoint server-side and inspect that the API controller has access to the claims of the authenticated user via the *.User* property.
+
+### Further experiments
+Our Blazor BFF [sample]({{< ref "/samples/bff#blazor-wasm" >}}) is based on this Quickstart. In addition it shows concepts like
+
+* better organization with components
+* reacting to logout
+* using the authorize attribute to trigger automatic redirects to the login page
