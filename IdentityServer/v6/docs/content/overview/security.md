@@ -44,7 +44,7 @@ This document describes how the integrity of software produced by Duende Softwar
 
 ### Dependencies
 
-IdentityServer has two depencies
+IdentityServer has two dependencies:
 
 * [Microsoft .NET](https://dot.net)
 * [IdentityModel](https://github.com/IdentityModel)
