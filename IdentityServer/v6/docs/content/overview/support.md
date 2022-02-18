@@ -10,14 +10,14 @@ You can find all source code for IdentityServer and its supporting repos in our 
 ### Issue Tracker
 The IdentityServer [issue tracker](https://github.com/DuendeSoftware/IdentityServer/issues) and [pull requests](https://github.com/DuendeSoftware/IdentityServer/pulls) allow you to follow the current work and [submit bug reports](https://github.com/DuendeSoftware/IdentityServer/issues/new?assignees=&labels=bug+report&template=bug_report.md&title=).
 
-Planned features and their [milestones](https://github.com/DuendeSoftware/IdentityServer/milestones) can be tracked using this [label](https://github.com/DuendeSoftware/IdentityServer/issues/new/choose).
+[Milestones](https://github.com/DuendeSoftware/IdentityServer/milestones) / [release notes](https://github.com/DuendeSoftware/IdentityServer/releases)
 
 ### Support
+See [here](https://duendesoftware.com/products/support) for our support policy.
+
 Standard support and feature requests are handled via our public [support forum](https://github.com/DuendeSoftware/IdentityServer/discussions). Please start a discussion there if you need help.
 
-Priority support is part of our Enterprise Edition, or can be purchased separately. It includes a private email alias, guaranteed two US business days response time and two private incidents per year. Please [contact](https://duendesoftware.com/contact) us for more information.
-
-See [here](https://duendesoftware.com/products/support) for our support policy.
+[Priority support](https://duendesoftware.com/license/PrioritySupportLicense.pdf) is part of our Enterprise Edition. It includes a private email alias, guaranteed two US business days response time.
 
 ### Reporting a security vulnerability
 Security issues and bugs should be reported privately [here](https://duendesoftware.com/contact). You should receive a response within 24 hours.
