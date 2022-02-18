@@ -9,7 +9,7 @@ This document describes how the integrity of software produced by Duende Softwar
 ### Systems access
 
 * Multiple systems are used in the development life cycle, including GitHub, NuGet, and Microsoft Azure Key Vault.
-* Multi-factor authentication is required for all services mentioned above and others.
+* Multi-factor authentication is required for all services mentioned above.
 * Only a limited subset of Duende Software employees act as administrators for each system.
 
 
