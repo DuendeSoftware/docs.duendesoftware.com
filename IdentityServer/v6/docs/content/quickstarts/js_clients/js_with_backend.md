@@ -334,6 +334,18 @@ is an extension method *GetUserAccessTokenAsync* on the *HttpContext* you can us
 
 ### Update routing to accept local and remote API calls
 
+We now use Microsoft YARP library to forward certain routes in your BFF to remote APIs, so we need to add the following NuGet package:
+
+```
+dotnet add package Duende.BFF.Yarp
+```
+
+And that behavior is added fluently when AddBff() is called in Program.cs:
+
+```
+services.AddBff().AddRemoteApis();
+```
+
 We need to register both the local API and the BFF proxy for the remote API in the ASP.NET Core routing system. 
 Add the code below to the *UseEndpoints* section in *Configure* in *Startup.cs*.
 
