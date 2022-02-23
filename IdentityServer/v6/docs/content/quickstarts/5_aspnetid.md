@@ -44,12 +44,11 @@ old project for IdentityServer, but there are some items that you will need to
 migrate over.
 
 Start by creating a new IdentityServer project that will use ASP.NET Core
-Identity:
+Identity. Run the following from the *quickstart/src* directory:
 
-```  
-cd quickstart/src
+```console
 dotnet new isaspid -n IdentityServerAspNetIdentity
-dotnet sln add .\src\IdentityServerAspNetIdentity\IdentityServerAspNetIdentity.csproj
+dotnet sln add ./src/IdentityServerAspNetIdentity/IdentityServerAspNetIdentity.csproj
 ```
 
 When prompted to "seed" the user database, choose "Y" for "yes". This populates
@@ -65,16 +64,14 @@ migrations.
 
 ## Inspect the new project
 Open the new project in the editor of your choice, and inspect the generated
-code. 
-
-Be sure to look at:
+code. Much of it is the same from the prior quickstarts and templates. The
+following sections will describe some key differences and guide you through
+migrating configuration from the old IdentityServer Project, including:
 - The project file (*IdentityServerAspNetIdentity.csproj*)
 - Pipeline and service configuration (*HostingExtensions.cs*)
+- Resource and client configuration (Config.cs)
 - Entry point and seed data (*Program.cs* and *SeedData.cs*)
 - Login and logout pages (Pages in *Pages/Account*)
-
-And migrate configuration from the IdentityServerProject for:
-- Resource and client configuration (Config.cs)
 
 ### IdentityServerAspNetIdentity.csproj
 Notice the reference to *Duende.IdentityServer.AspNetIdentity*. This NuGet
@@ -155,11 +152,12 @@ public static class Config
 ```
 
 At this point, you no longer need the old IdentityServer project and can remove
-it from the solution:
+it from the solution. Again from the *quickstart/src* directory, run the
+following commands:
 
-```
-dotnet sln remove .\src\IdentityServer\IdentityServer.csproj
-rm -r .\src\IdentityServer
+```console
+dotnet sln remove ./src/IdentityServer/IdentityServer.csproj
+rm -r ./src/IdentityServer
 ```
 
 ### Program.cs and SeedData.cs
