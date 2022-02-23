@@ -4,48 +4,82 @@ date: 2020-09-10T08:22:12+02:00
 weight: 6
 ---
 
+Welcome to Quickstart 5 for Duende IdentityServer! In this quickstart you will
+integrate IdentityServer with ASP.NET Core Identity. 
+
 {{% notice note %}}
-For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview]({{< ref "0_overview" >}}) first.
+We recommend you do the quickstarts in order, but if you'd like to start here,
+begin from a copy of [Quickstart 4's source code]({{< param qs_base
+>}}/4_EntityFramework). You will also need to [install the IdentityServer
+templates]({{< ref "0_overview#preparation" >}}).
 {{% /notice %}}
 
-Duende IdentityServer is designed for flexibility and part of that is allowing you to use any database you want for your users and their data (including passwords).
-If you are starting with a new user database, then ASP.NET Core Identity is one option you could choose.
-This quickstart shows how to use ASP.NET Core Identity with Duende IdentityServer.
+IdentityServer's flexible design allows you to use any database you want to
+store users and their data, including password hashes, multifactor
+authentication details, roles, claims, profile data, etc. If you are starting
+with a new user database, then ASP.NET Core Identity is one option you could
+choose. This quickstart shows how to use ASP.NET Core Identity with
+IdentityServer.
 
-The approach this quickstart takes to using ASP.NET Core Identity is to create a new project for the IdentityServer host.
-This new project will replace the prior IdentityServer project we built up in the previous quickstarts.
-The reason for this new project is due to the differences in UI assets when using ASP.NET Core Identity (mainly around the differences in login and logout).
-All the other projects in this solution (for the clients and the API) will remain the same.
+The approach this quickstart takes to using ASP.NET Core Identity is to create a
+new project for the IdentityServer host. This new project will replace the
+IdentityServer project you built up in the previous quickstarts. You will create
+a new project because it is a convenient way to get the UI assets that are
+needed to login and logout with ASP.NET Core Identity. All the other projects in
+this solution (for the clients and the API) will remain the same.
 
 {{% notice note %}}
-This quickstart assumes you are familiar with how ASP.NET Core Identity works. If you are not, it is recommended that you first [learn about it](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0).
+
+This quickstart assumes you are familiar with how ASP.NET Core Identity works.
+If you are not, it is recommended that you first [learn about
+it](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0).
+
 {{% /notice %}}
 
 ## New Project for ASP.NET Core Identity
-The first step is to add a new project for ASP.NET Core Identity to your solution.
-We provide a template that contains the minimal UI assets needed to use ASP.NET Core Identity with Duende IdentityServer.
-You will eventually delete the old project for Duende IdentityServer, but there are some items that you will need to migrate over.
+The first step is to add a new project for ASP.NET Core Identity to your
+solution. We provide a template that contains the minimal UI assets needed to
+use ASP.NET Core Identity with IdentityServer. You will eventually delete the
+old project for IdentityServer, but there are some items that you will need to
+migrate over.
 
-Start by creating a new IdentityServer project that will use ASP.NET Core Identity:
-    
-    cd quickstart/src
-    dotnet new isaspid -n IdentityServerAspNetIdentity
+Start by creating a new IdentityServer project that will use ASP.NET Core
+Identity:
 
-When prompted to "seed" the user database, choose "Y" for "yes".
-This populates the user database with our "alice" and "bob" users. 
-Their passwords are "Pass123$".
+```  
+cd quickstart/src
+dotnet new isaspid -n IdentityServerAspNetIdentity
+dotnet sln add .\src\IdentityServerAspNetIdentity\IdentityServerAspNetIdentity.csproj
+```
+
+When prompted to "seed" the user database, choose "Y" for "yes". This populates
+the user database with our "alice" and "bob" users. Their passwords are
+"Pass123$".
 
 {{% notice note %}}
-The template uses Sqlite as the database for the users, and EF migrations are pre-created in the template. If you wish to use a different database provider, you will need to change the provider used in the code and re-create the EF migrations.
+The template uses Sqlite as the database for the users, and EF migrations are
+pre-created in the template. If you wish to use a different database provider,
+you will need to change the provider used in the code and re-create the EF
+migrations.
 {{% /notice %}}
 
 ## Inspect the new project
-Open the new project in the editor of your choice, and inspect the generated code.
+Open the new project in the editor of your choice, and inspect the generated
+code. 
+
 Be sure to look at:
+- The project file (*IdentityServerAspNetIdentity.csproj*)
+- Pipeline and service configuration (*HostingExtensions.cs*)
+- Entry point and seed data (*Program.cs* and *SeedData.cs*)
+- Login and logout pages (Pages in *Pages/Account*)
+
+And migrate configuration from the IdentityServerProject for:
+- Resource and client configuration (Config.cs)
 
 ### IdentityServerAspNetIdentity.csproj
-Notice the reference to *Duende.IdentityServer.AspNetIdentity*. 
-This NuGet package contains the ASP.NET Core Identity integration components for Duende IdentityServer.
+Notice the reference to *Duende.IdentityServer.AspNetIdentity*. This NuGet
+package contains the ASP.NET Core Identity integration components for
+IdentityServer.
 
 ### HostingExtensions.cs
 In *ConfigureServices* notice the necessary *AddDbContext<ApplicationDbContext>()* and *AddIdentity<ApplicationUser, IdentityRole>()* calls are done to configure ASP.NET Core Identity.
@@ -95,10 +129,10 @@ public static class Config
                 AllowedScopes = { "api1" }
             },
                 
-            // interactive ASP.NET Core MVC client
+            // interactive ASP.NET Core Web App
             new Client
             {
-                ClientId = "mvc",
+                ClientId = "web",
                 ClientSecrets = { new Secret("secret".Sha256()) },
 
                 AllowedGrantTypes = GrantTypes.Code,
@@ -120,42 +154,60 @@ public static class Config
 }
 ```
 
-At this point, you no longer need the old IdentityServer project.
+At this point, you no longer need the old IdentityServer project and can remove
+it from the solution:
+
+```
+dotnet sln remove .\src\IdentityServer\IdentityServer.csproj
+rm -r .\src\IdentityServer
+```
 
 ### Program.cs and SeedData.cs
-The application entry function *Main* in *Program.cs* is a little different than most ASP.NET Core projects.
-Notice how this looks for a command line argument called */seed* which is used as a flag to seed the users in the ASP.NET Core Identity database.
+The application entry point in *Program.cs* is a little different than most
+ASP.NET Core projects. Notice that it looks for a command line argument called
+*/seed* which is used as a flag to seed the users in the ASP.NET Core Identity
+database. This seed process is invoked during template creation and already ran
+when you were prompted to seed the database.
 
-Look at the *SeedData* class' code to see how the database is created and the first users are created.
+Look at the *SeedData* class' code to see how the database is created and the
+first users are created.
 
-### AccountController
-The last code to inspect in this template is the *AccountController*. 
-This contains a slightly different login and logout code than the prior quickstart and templates.
-Notice the use of the *SignInManager<ApplicationUser>* and *UserManager<ApplicationUser>* from ASP.NET Core Identity to validate credentials and manage the authentication session.
+### Account Pages
+Finally, take a look at the the pages in the *Pages/Account* folder. These pages
+contain slightly different login and logout code than the prior quickstart and
+templates because the login and logout processes now rely on ASP.NET Core
+Identity. Notice the use of the *SignInManager<ApplicationUser>* and
+*UserManager<ApplicationUser>* types from ASP.NET Core Identity to validate
+credentials and manage the authentication session.
 
-Much of the rest of the code is the same from the prior quickstarts and templates.
+Much of the rest of the code is the same from the prior quickstarts and
+templates.
 
-## Logging in with the MVC client
+## Logging in with the Web client
 At this point, you should be able to run all of the existing clients and samples.
-Launch the MVC client application, and you should be able to click the "Secure" link to get logged in.
-
-![](../images/aspid_mvc_client.png)
-
-You should be redirected to the ASP.NET Core Identity login page.
-Login with your newly created user, and after that you will be redirected back to the MVC client application where your user's claims should be listed.
+Launch the Web client application, and you should be redirected to IdentityServer to log in. Login with one of the users created by the seed process (e.g., alice/Pass123$), and after that you will be redirected back to the Web client application where your user's claims should be listed.
 
 ![](../images/aspid_claims.png)
 
-You should also be able to click "Call API using application identity" to invoke the API on behalf of the user:
+You should also be able to go to the [call api
+page](https://localhost:5002/callapi) to invoke the API on behalf of the user:
 
 ![](../images/aspid_api_claims.png)
 
-And now you're using users from ASP.NET Core Identity in Duende IdentityServer.
+Congratulations, you're using users from ASP.NET Core Identity in
+IdentityServer!
 
 ## What's Missing?
-Much of the rest of the code in this template is similar to the other quickstart and templates we provide.
-The one thing you will notice that is missing from this template is UI code for user registration, password reset, and the other things you might expect from the Visual Studio ASP.NET Core Identity template.
+The rest of the code in this template is similar to the other quickstarts and
+templates we provide. You will notice that this template does not include UI
+code for user registration, password reset, and other things you might expect
+from Microsoft's templates that include ASP.NET Core Identity.
 
-Given the variety of requirements and different approaches to using ASP.NET Core Identity, our template deliberately does not provide those features.
-You are expected to know how ASP.NET Core Identity works sufficiently well to add those features to your project.
-Alternatively, you can create a new project based on the Visual Studio ASP.NET Core Identity template and add the IdentityServer features you have learned about in these quickstarts to that project.
+Given the variety of requirements and different approaches to using ASP.NET Core
+Identity, our template deliberately does not provide those features. The intent
+of this template is to be a starting point to which you you can add the features
+you need from ASP.NET Core Identity, customized according to your requirements.
+Alternatively, you can [create a new project based on the ASP.NET Core Identity
+template](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=netcore-cli#create-a-web-app-with-authentication)
+and add the IdentityServer features you have learned about in these quickstarts
+to that project.
