@@ -37,7 +37,7 @@ dotnet sln add .\src\JavaScriptClient\JavaScriptClient.csproj
 
 ### Add additional NuGet packages
 
-To add BFF and OIDC support to the *JavaScriptClient* project, you’ll need the following nuget packages:
+To add BFF and OIDC support to the *JavaScriptClient* project, you'll need the following nuget packages:
 
 ```
 dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
