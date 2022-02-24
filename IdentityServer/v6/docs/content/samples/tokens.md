@@ -1,9 +1,17 @@
 ---
-title: "Personal Access Tokens (PAT)"
-date: 2020-09-10T08:22:12+02:00
-weight: 50
+title: "Requesting tokens"
+weight: 30
 ---
 
+### Extension grants and Token Exchange
+[link to source code]({{< param samples_base >}}/TokenExchange)
+
+This sample shows an implementation of the Token Exchange specification [RFC 8693](https://tools.ietf.org/html/rfc8693) via the Duende IdentityServer extension grant mechanism.
+
+See [here]({{< ref "/tokens/extension_grants" >}}) for more information on extension grants.
+
+
+### Personal Access Tokens (PAT)
 [link to source code]({{< param samples_base >}}/PAT)
 
 This sample shows how to provide a self-service UI to create access tokens. This is a common approach to enable integrations with APIs without having to create full-blown OAuth clients.

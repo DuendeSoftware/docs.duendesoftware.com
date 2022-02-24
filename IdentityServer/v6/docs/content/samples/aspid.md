@@ -1,6 +1,6 @@
 ---
 title: "ASP.NET Identity Integration"
-weight: 21
+weight: 30
 ---
 
 [link to source code]({{< param samples_base >}}/AspNetIdentity)
