@@ -163,7 +163,7 @@ an *index.html* and an *app.js* file to it.
 
 **index.html**
 
-This will be the main page in our application. 
+This will be the main page in your application. 
 It contains
 - buttons for the user to login, logout, and call the APIs
 - a *\<pre>* container used to show messages to the user
@@ -193,9 +193,9 @@ It should look like this:
 
 **app.js**
 
-This will contain the client-side code for our application.
+This will contain the client-side code for your application.
 
-First,add a helper function to display messages in the *\<pre>*:
+First, add a helper function to display messages in the *\<pre>*:
 
 ```js
 function log() {
@@ -499,3 +499,7 @@ invoke the APIs. The local API should return something like this:
 And the remote API should return something like this:
 
 ![image](../../images/jsbff_remote_api.png)
+
+You now have the start of a JavaScript client application that uses
+IdentityServer for sign-in, sign-out, and authenticating calls to local and
+remote APIs, using *Duende.BFF*.
