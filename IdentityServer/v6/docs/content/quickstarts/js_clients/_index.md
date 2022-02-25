@@ -11,8 +11,8 @@ with a backend and those without.
 
 JavaScript applications **with a backend** are more secure, making it the
 preferred style. This style uses the ["Backend For Frontend"
-pattern](https://blog.duendesoftware.com/posts/20210326_bff/) (or "BFF" for
-short) which relies on the backend host to implement all of the security
+pattern](https://blog.duendesoftware.com/posts/20210326_bff/), or "BFF" for
+short, which relies on the backend host to implement all of the security
 protocol interactions with the token server. The *Duende.BFF* library is used in
 this quickstart to easily support the BFF pattern.
 

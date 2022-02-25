@@ -4,42 +4,54 @@ weight: 10
 ---
 
 {{% notice note %}}
-For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview]({{< ref "0_overview" >}}) first.
+
+We recommend you do the quickstarts in order, but if you'd like
+to start here, begin from a copy of [Quickstart 3's source code]({{< param
+qs_base >}}/3_AspNetCoreAndApis). You will also need to [install the IdentityServer
+templates]({{< ref "0_overview#preparation" >}}).
+
 {{% /notice %}}
 
-This quickstart will show how to build a browser-based JavaScript client application with a backend. 
-This means your application will have server-side code that can support the frontend application code.
+In this quickstart, you will build a browser-based JavaScript client application
+with a backend. This means your application will have server-side code that
+supports the frontend application code. This is known as the Backend For
+Frontend (BFF) pattern. 
 
-In this quickstart we will be implementing the BFF pattern (with the help of the *Duende.BFF* library), which means the backend implements all of the security protocol interactions with the token server.
-This simplifies the JavaScript in the client-side, and reduces the attack surface of the application.
+You will implement the BFF pattern with the help of the *Duende.BFF* library.
+The backend will implement all of the security protocol interactions with the
+token server and will be responsible for management of the tokens. The
+client-side JavaScript authenticates with the BFF using traditional cookie
+authentication. This simplifies the JavaScript in the client-side, and reduces
+the attack surface of the application.
 
-The features that will be shown in this quickstart will allow the user will login with IdentityServer, invoke a local API hosted in the backend (secured with cookie authentication), invoke a remote API running in a different host (secured with an access token), and logout of IdentityServer (again, all with the help of the backend).
+The features that will be shown in this quickstart will allow the user to login
+with IdentityServer, invoke a local API hosted in the backend (secured with
+cookie authentication), invoke a remote API running in a different host (secured
+with an access token), and logout of IdentityServer.
 
-## New Project for the JavaScript client
 
-Create a new project for the JavaScript application.
-Since we expect the backend host to handle much of the protocol we will use an ASP.NET Core application.
+## New Project for the JavaScript client and BFF
 
-Create a new "Empty" ASP.NET Core web application in the *~/src* directory.
-You can use Visual Studio or do this from the command line:
+Begin by creating a new project to host the JavaScript application and its BFF.
+A single project containing the front-end and its BFF facilitates cookie
+authentication - the front end and BFF need to be on the same host so that
+cookies will be sent from the front end to the BFF.
 
-```
-md JavaScriptClient
-cd JavaScriptClient
-dotnet new web
-```
+Create a new ASP.NET Core web application and add it to the solution by running
+the following commands from the *quickstart/src* directory:
 
-As we have done before, with other client projects, add this project also to your solution. Run this from the root folder which has the sln file:
-
-```
-dotnet sln add .\src\JavaScriptClient\JavaScriptClient.csproj
+```console
+dotnet new web -n JavaScriptClient
+cd ..
+dotnet sln add ./src/JavaScriptClient/JavaScriptClient.csproj
 ```
 
 ### Add additional NuGet packages
 
-To add BFF and OIDC support to the *JavaScriptClient* project, you'll need the following nuget packages:
+Install NuGet packages to add BFF and OIDC support to the new project by running
+the following commands from the *quickstart/src/JavaScriptClient* directory:
 
-```
+```console
 dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 dotnet add package Duende.BFF
 dotnet add package Duende.BFF.Yarp
@@ -47,21 +59,42 @@ dotnet add package Duende.BFF.Yarp
 
 ### Modify hosting
 
-Modify the *JavaScriptClient* project to run on *https://localhost:5003*.
+Modify the *JavaScriptClient* project to run on *https://localhost:5003*. Its
+*Properties/launchSettings.json* should look like this:
+
+```json
+{
+  "profiles": {
+    "JavaScriptClient": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5003",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+```
 
 ### Add services
 
-With the BFF pattern, the server-side code is responsible for triggering and receiving the OpenID Connect requests and responses.
-This means that for our JavaScript application the configuration for session management and OpenID Connect is really no different than our prior [MVC application quickstart]({{<ref "../3_api_access">}}).
-We will be using API controllers later, so we need a call to *AddControllers()*.
-Additionally, the BFF services need to be added with *AddBff()*. Add the following to *Program.cs*:
+In the BFF pattern, the server-side code triggers and receives OpenID Connect
+requests and responses. To do that, it needs the same services configured as the WebClient did in the prior [web application
+quickstart]({{<ref "../3_api_access">}}). Additionally, the BFF services need to
+be added with *AddBff()*. 
+
+Add the following to *Program.cs*:
 
 ```cs
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Duende.Bff.Yarp;
+using Microsoft.AspNetCore.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 
-...
-
-builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 
 builder.Services
@@ -69,41 +102,35 @@ builder.Services
     .AddRemoteApis();
 
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = "Cookies";
-    options.DefaultChallengeScheme = "oidc";
-    options.DefaultSignOutScheme = "oidc";
-})
-.AddCookie("Cookies")
-.AddOpenIdConnect("oidc", options =>
-{
-    options.Authority = "https://localhost:5001";
-
-    options.ClientId = "bff";
-    options.ClientSecret = "secret";
-    options.ResponseType = "code";
-
-    options.Scope.Add("api1");
-
-    options.SaveTokens = true;
-    options.GetClaimsFromUserInfoEndpoint = true;
-});
-
-...
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultScheme = "Cookies";
+        options.DefaultChallengeScheme = "oidc";
+        options.DefaultSignOutScheme = "oidc";
+    })
+    .AddCookie("Cookies")
+    .AddOpenIdConnect("oidc", options =>
+    {
+        options.Authority = "https://localhost:5001";
+        options.ClientId = "bff";
+        options.ClientSecret = "secret";
+        options.ResponseType = "code";
+        options.Scope.Add("api1");
+        options.SaveTokens = true;
+        options.GetClaimsFromUserInfoEndpoint = true;
+    });
 
 var app = builder.Build();
 ```
 
 ### Add middleware
 
-Similarly, the middleware pipeline for this application will be fairly standard with the addition of the BFF middleware, and the BFF endpoints:
+Similarly, the middleware pipeline for this application will be similar to the
+WebClient with the addition of the BFF middleware and the BFF endpoints:
 
 ```cs
 var app = builder.Build();
-
-...
 
 if (app.Environment.IsDevelopment())
 {
@@ -125,23 +152,22 @@ app.UseEndpoints(endpoints =>
     endpoints.MapBffManagementEndpoints();
 });
 
-...
-
 app.Run();
 ```
 
 ### Add your HTML and JavaScript files
 
-Next is to add your HTML and JavaScript files to *~/wwwroot*.
-We will have an HTML file and an application-specific JavaScript file.
-In *~/wwwroot*, add a HTML file named *index.html* and add a JavaScript file called *app.js*.
+Next, add HTML and JavaScript files for your client-side application to the
+*wwwroot* folder in the *JavaScriptClient* project. Create that folder and add
+an *index.html* and an *app.js* file to it.
 
 **index.html**
 
 This will be the main page in our application. 
-It will simply contain the HTML for the buttons for the user to login, logout, and call the web APIs.
-It will also contain the *\<script>* tags to include our JavaScript file.
-It will also contain a *\<pre>* used for showing messages to the user.
+It contains
+- buttons for the user to login, logout, and call the APIs
+- a *\<pre>* container used to show messages to the user
+- a *\<script>* tag to include our JavaScript file
 
 It should look like this:
 
@@ -167,58 +193,57 @@ It should look like this:
 
 **app.js**
 
-This will contain the main code for our application.
-The first thing is to add a helper function to log messages to the *\<pre>*:
+This will contain the client-side code for our application.
+
+First,add a helper function to display messages in the *\<pre>*:
 
 ```js
 function log() {
-    document.getElementById('results').innerText = '';
+  document.getElementById("results").innerText = "";
 
-    Array.prototype.forEach.call(arguments, function (msg) {
-        if (typeof msg !== 'undefined') {
-            if (msg instanceof Error) {
-                msg = "Error: " + msg.message;
-            }
-            else if (typeof msg !== 'string') {
-                msg = JSON.stringify(msg, null, 2);
-            }
-            document.getElementById('results').innerText += msg + '\r\n';
-        }
-    });
+  Array.prototype.forEach.call(arguments, function (msg) {
+    if (typeof msg !== "undefined") {
+      if (msg instanceof Error) {
+        msg = "Error: " + msg.message;
+      } else if (typeof msg !== "string") {
+        msg = JSON.stringify(msg, null, 2);
+      }
+      document.getElementById("results").innerText += msg + "\r\n";
+    }
+  });
 }
+
 ```
 
-Next, we can use the BFF *user* management endpoint to query if the user is logged in or not.
+Next, you can use the BFF *user* management endpoint to query if the user is logged in or not.
 Notice the *userClaims* variable is global; it will be needed elsewhere.
 
 ```js
 let userClaims = null;
 
 (async function () {
-    var req = new Request("/bff/user", {
-        headers: new Headers({
-            'X-CSRF': '1'
-        })
-    })
+  var req = new Request("/bff/user", {
+    headers: new Headers({
+      "X-CSRF": "1",
+    }),
+  });
 
-    try {
-        var resp = await fetch(req);
-        if (resp.ok) {
-            userClaims = await resp.json();
+  try {
+    var resp = await fetch(req);
+    if (resp.ok) {
+      userClaims = await resp.json();
 
-            log("user logged in", userClaims);
-        }
-        else if (resp.status === 401) {
-            log("user not logged in");
-        }
+      log("user logged in", userClaims);
+    } else if (resp.status === 401) {
+      log("user not logged in");
     }
-    catch (e) {
-        log("error checking user status");
-    }
+  } catch (e) {
+    log("error checking user status");
+  }
 })();
 ```
 
-Next, add code to register *click* event handlers to the buttons:
+Next, add code to register *click* event handlers on the buttons:
 
 ```js
 document.getElementById("login").addEventListener("click", login, false);
@@ -227,29 +252,34 @@ document.getElementById("remote").addEventListener("click", remoteApi, false);
 document.getElementById("logout").addEventListener("click", logout, false);
 ```
 
-Next, we want to implement the *login* and *logout* functions.
-Login is simple, as we redirect the user to the BFF *login* endpoint.
-Logout is more involved, as we need to redirect the user to the BFF *logout* endpoint, but it's required that we pass an anti-forgery token to prevent cross site request forgery attacks.
-The *userClaims* that we populated earlier contains this token and the full URL in one of its claims, so we will use that:
+Next, implement the *login* and *logout* functions.
+
+Login is simple - just redirect the user to the BFF *login* endpoint.
+
+Logout is more involved, as you need to redirect the user to the BFF *logout*
+endpoint, which requires an anti-forgery token to prevent cross site request
+forgery attacks. The *userClaims* that you populated earlier contain that token
+and the full logout URL in its *bff:logout_url* claim, so redirect to that url:
 
 ```js
 function login() {
-    window.location = "/bff/login";
+  window.location = "/bff/login";
 }
 
 function logout() {
-    if (userClaims) {
-        var logoutUrl = userClaims.find(claim => claim.type === 'bff:logout_url').value;
-        window.location = logoutUrl;
-    }
-    else {
-        window.location = "/bff/logout";
-    }
+  if (userClaims) {
+    var logoutUrl = userClaims.find(
+      (claim) => claim.type === "bff:logout_url"
+    ).value;
+    window.location = logoutUrl;
+  } else {
+    window.location = "/bff/logout";
+  }
 }
 ```
 
 Finally, add empty stubs for the other button event handler functions. 
-We will fully implement those after we get login and logout working.
+You will implement those after you get login and logout working.
 
 ```js
 async function localApi() {
@@ -261,11 +291,13 @@ async function remoteApi() {
 
 ## Add a client registration to IdentityServer for the JavaScript client
 
-Now that the client application is ready to go, we need to define a configuration entry in IdentityServer for this new JavaScript client.
-In the IdentityServer project locate the client configuration (in *Config.cs*).
-Add a new *Client* to the list for our new JavaScript application.
-Given that this client uses the BFF pattern, the configuration will be very smiliar to the MVC client.
-It should have the configuration listed below:
+Now that the client application is ready to go, you need to define a
+configuration entry in IdentityServer for the new JavaScript client.
+
+In the IdentityServer project locate the client configuration in *Config.cs*.
+Add a new *Client* to the list for your new JavaScript application. Because this
+client uses the BFF pattern, the configuration will be very similar to the Web
+client. It should have the configuration listed below:
 
 ```cs
 // JavaScript BFF client
@@ -298,8 +330,16 @@ You should see that the user is not logged in initially.
 
 ![image](../../images/jsbff_not_logged_in.png)
 
-Once you click the login button, the user should be redirected to login at IdentityServer.
-Once the *JavaScriptClient* application receives the response from IdentityServer then the user should appear logged in and their claims should be displayed.
+When you click the login button, you'll be redirected to IdentityServer to
+login. After you login, you'll be redirected back to the *JavaScriptClient*
+application, where you'll be signed into the Cookies authentication scheme with
+your tokens saved in the session.
+
+The app loads again, but this time it has a session cookie. So,
+when it makes the HTTP request to get userClaims, that cookie is included in the
+request. This allows the BFF middleware to authenticate the user and return user
+info. Once the *JavaScriptClient* application receives the response, the user
+should appear logged in and their claims should be displayed.
  
 ![image](../../images/jsbff_logged_in.png)
 
@@ -310,126 +350,149 @@ Finally, the logout button should successfully get the user logged out.
 
 ## Add API support
 
-Now that we have login and logout working, we will add support to invoke both local and remote APIs.
+Now that you have login and logout working, you will add support to invoke both
+local and remote APIs.
 
-A local API is an endpoint that is hosted in the same backend as the *JavaScriptClient* application.
-This would be perfect for APIs that only exist to support the JavaScript frontend (typically to provide UI specific data or aggregate data from other sources).
-The authentication for the local API will be based on the user's session cookie in the *JavaScriptClient* application.
+A local API is an endpoint that is hosted in the same backend as the
+*JavaScriptClient* application. Local APIs are intended to be APIs that only
+exists to support the JavaScript frontend, typically by providing UI specific
+data or aggregating data from other sources. Local APIs are authenticated with
+the user's session cookie.
 
-A remote API is an API running in some other host other than the *JavaScriptClient* application.
-This would be typical for APIs that are shared by many different applications (e.g. mobile app, other web apps, etc).
-The authentication for remote APIs will use an access token. 
-Fortunately the *JavaScriptClient* application has an access token stored in the user's session.
-We will use the BFF proxy feature to accept a call from the JavaScript running in the browser authenticated with the user's session cookie, locate the access token for the user based on the user's session, and then proxy the call to the remote API sending the access token for authentication.
+A remote API is an API running in some other host than the *JavaScriptClient*
+application. This is useful for APIs that are shared by many different
+applications (e.g. mobile app, other web apps, etc). Remote APIs are
+authenticated with an access token. Fortunately, the *JavaScriptClient*
+application has an access token stored in the user's session. You will use the
+BFF proxy feature to accept a call from the JavaScript running in the browser
+authenticated with the user's session cookie, retrieve the access token for the
+user from the user's session, and then proxy the call to the remote API, sending
+the access token for authentication.
 
 ### Define a local API
 
-Add a new class to the *JavaScriptClient* project that will contain the local API:
+Local APIs can be defined using controllers or with [Minimal API Route
+Handlers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-6.0#route-handlers).
+For simplicity, this quickstart uses a minimal API with its handler defined
+directly in *Program.cs*, but you can organize your Local APIs however you like.
 
+Add a handler to *Program.cs* for the the local API:
 ```cs
-public class LocalApiController : ControllerBase
+[Authorize] 
+static IResult LocalIdentityHandler(ClaimsPrincipal user)
 {
-    [Route("local/identity")]
-    [Authorize]
-    public IActionResult Get()
-    {
-        var name = User.FindFirst("name")?.Value ?? User.FindFirst("sub")?.Value;
-        return new JsonResult(new { message = "Local API Success!", user=name });
-    }
+    var name = user.FindFirst("name")?.Value ?? user.FindFirst("sub")?.Value;
+    return Results.Json(new { message = "Local API Success!", user = name });
 }
+
 ```
 
 {{% notice note %}}
-If while in the local API controller code you want to call out manually to a remote API and need the user's access token, there
-is an extension method *GetUserAccessTokenAsync* on the *HttpContext* you can use. For example:
-*var token = await HttpContext.GetUserAccessTokenAsync();*
+
+Local APIs often make requests to remote APIs that are authorized with the
+user's access token. To get the access token, call the *GetUserAccessTokenAsync*
+extension method on the *HttpContext*. For example: *var token = await HttpContext.GetUserAccessTokenAsync();*
 {{% /notice %}}
 
 ### Update routing to accept local and remote API calls
 
-We need to register both the local API and the BFF proxy for the remote API in the ASP.NET Core routing system. 
-Add the code below to the *UseEndpoints* section in *Configure* in *Program.cs*.
+Next, you need to register both the local API and the BFF proxy for the remote
+API in the ASP.NET Core routing system. Add the code below to the *UseEndpoints*
+call in *Program.cs*.
 
 ```cs
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers()
-        .AsBffApiEndpoint();
-
     endpoints.MapBffManagementEndpoints();
+
+    // Uncomment this for Controller support
+    // endpoints.MapControllers()
+    //     .AsBffApiEndpoint();
+
+    endpoints.MapGet("/local/identity", LocalIdentityHandler)
+        .AsBffApiEndpoint();
 
     endpoints.MapRemoteBffApiEndpoint("/remote", "https://localhost:6001")
         .RequireAccessToken(Duende.Bff.TokenType.User);
 
 });
 ```
-The call to the *AsBffApiEndpoint()* fluent helper method adds BFF support to the local APIs.
-This includes anti-forgery protection as well as suppressing login redirects on authentication failures and instead returning 401 and 403 status codes under the appropriate circumstances.
+The call to the *AsBffApiEndpoint()* fluent helper method adds BFF support to
+the local APIs. This includes anti-forgery protection as well as suppressing
+login redirects on authentication failures and instead returning 401 and 403
+status codes under the appropriate circumstances.
 
-*MapRemoteBffApiEndpoint()* registers the BFF proxy for the remote API and configures it to pass the user's access token.
+*MapRemoteBffApiEndpoint()* registers the BFF proxy for the remote API and
+configures it to pass the user's access token.
 
 ### Call the APIs from JavaScript
 
-Back in *app.js*, implement the two API button event handlers as such:
+Back in *app.js*, implement the two API button event handlers like this:
 
 ```js
 async function localApi() {
+  var req = new Request("/local/identity", {
+    headers: new Headers({
+      "X-CSRF": "1",
+    }),
+  });
 
-    var req = new Request("/local/identity", {
-        headers: new Headers({
-            'X-CSRF': '1'
-        })
-    })
+  try {
+    var resp = await fetch(req);
 
-    try {
-        var resp = await fetch(req);
-
-        let data;
-        if (resp.ok) {
-            data = await resp.json();
-        }
-        log("Local API Result: " + resp.status, data);
+    let data;
+    if (resp.ok) {
+      data = await resp.json();
     }
-    catch (e) {
-        log("error calling local API");
-    }
+    log("Local API Result: " + resp.status, data);
+  } catch (e) {
+    log("error calling local API");
+  }
 }
 
 async function remoteApi() {
+  var req = new Request("/remote/identity", {
+    headers: new Headers({
+      "X-CSRF": "1",
+    }),
+  });
 
-    var req = new Request("/remote/identity", {
-        headers: new Headers({
-            'X-CSRF': '1'
-        })
-    })
+  try {
+    var resp = await fetch(req);
 
-    try {
-        var resp = await fetch(req);
-
-        let data;
-        if (resp.ok) {
-            data = await resp.json();
-        }
-        log("Remote API Result: " + resp.status, data);
+    let data;
+    if (resp.ok) {
+      data = await resp.json();
     }
-    catch (e) {
-        log("error calling remote API");
-    }
+    log("Remote API Result: " + resp.status, data);
+  } catch (e) {
+    log("error calling remote API");
+  }
 }
 ```
 
-The local API path uses the path as configured in the *Route* attribute applied to the *LocalApiController*.
-The remote API path uses a "/remote" prefix to indicate that the BFF proxy should be used, and the remaining path is what's then passed when invoking the remote API ("/identity" in this case).
-Notice both API calls require a *'X-CSRF': '1'* header, which acts as the anti-forgery token.
+The path for the local API is exactly what you set in the the call to *MapGet*
+in *Program.cs*. 
+
+The path for the remote API uses a "/remote" prefix to indicate that the BFF proxy
+should be used, and the remaining path is what's then passed when invoking the
+remote API ("/identity" in this case). 
+
+Notice both API calls require a *'X-CSRF': '1'* header, which acts as the
+anti-forgery token.
 
 {{% notice note %}}
-See the [client credentials quickstart]({{< ref "/quickstarts/1_client_credentials" >}}) for information on how to create the remote API used in the code above.
+
+See the [client credentials quickstart]({{< ref
+"/quickstarts/1_client_credentials" >}}) for information on how to create the
+remote API used in the code above. 
+
 {{% /notice %}}
 
 ## Run and test the API calls
 
-At this point, you should be able to run the *JavaScriptClient* application and invoke the APIs.
-The local API should return something like this:
+At this point, you should be able to run the *JavaScriptClient* application and
+invoke the APIs. The local API should return something like this:
 
 ![image](../../images/jsbff_local_api.png)
 
