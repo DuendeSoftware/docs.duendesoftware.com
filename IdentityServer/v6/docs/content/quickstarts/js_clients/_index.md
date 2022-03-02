@@ -30,4 +30,5 @@ says
 
 Additionally, modern browsers have recently added or are planning to add privacy
 features that can break some front-channel protocol interactions. See 
-[logout notifications]({{ref "/ui/logout/notification">}}) for more details.
+[here]({{< ref "/bff/overview#react-to-changes-in-the-browser-security-models" >}}) 
+for more details.

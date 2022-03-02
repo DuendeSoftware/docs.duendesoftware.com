@@ -31,9 +31,9 @@ of this will be driven from the JavaScript running in the browser.
 ## New Project for the JavaScript client
 
 Create a new project for the JavaScript application. Beyond being able to serve
-your application's html and javascript, there are no requirements on the backend
-- you could use anything from an empty ASP.NET Core application to a Node.js
-application. This quickstart will use an ASP.NET Core application.
+your application's html and javascript, there are no requirements on the
+backend. You could use anything from an empty ASP.NET Core application to a
+Node.js application. This quickstart will use an ASP.NET Core application.
 
 Create a new ASP.NET Core web application and add it to the solution by running
 the following commands from the *quickstart/src* directory:
@@ -104,13 +104,13 @@ from github.
 If you want to use NPM to download *oidc-client*, then run these commands from
 your *JavaScriptClient* project directory:
 
-```
+```console
 npm i oidc-client
 copy node_modules\oidc-client\dist\* wwwroot
 ```
 
 This downloads the latest *oidc-client* package locally, and then copies the
-relevant JavaScript files into *~/wwwroot* so they can be served up by your
+relevant JavaScript files into *~/wwwroot* so they can be served by your
 application.
 
 **Manual download**
@@ -119,7 +119,7 @@ If you want to download the *oidc-client* JavaScript files manually, browse to
 [the GitHub
 repository](https://github.com/IdentityModel/oidc-client-js/tree/release/dist)
 and download the JavaScript files. Once downloaded, copy them into *~/wwwroot*
-so they can be served up by your application.
+so they can be served by your application.
 
 ### Add your HTML and JavaScript files
 Next, add HTML and JavaScript files to the *wwwroot* folder in the
@@ -231,7 +231,7 @@ provides a *signinRedirect* to log the user in, and a *signoutRedirect* to log
 the user out. The *User* object that we obtained above also has an
 *access_token* property which can be used to authenticate to a web API. The
 *access_token* will be passed to the web API via the *Authorization* header with
-the *Bearer* scheme. Add this code to implement those three functions in our
+the *Bearer* scheme. Add this code to implement those three functions in your
 application:
 
 ```js

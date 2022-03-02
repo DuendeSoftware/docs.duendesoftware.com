@@ -126,8 +126,8 @@ var app = builder.Build();
 
 ### Add middleware
 
-Similarly, the middleware pipeline for this application will be similar to the
-WebClient with the addition of the BFF middleware and the BFF endpoints:
+Similarly, the middleware pipeline for this application will resemble the
+WebClient, with the addition of the BFF middleware and the BFF endpoints:
 
 ```cs
 var app = builder.Build();
@@ -355,7 +355,7 @@ local and remote APIs.
 
 A local API is an endpoint that is hosted in the same backend as the
 *JavaScriptClient* application. Local APIs are intended to be APIs that only
-exists to support the JavaScript frontend, typically by providing UI specific
+exist to support the JavaScript frontend, typically by providing UI specific
 data or aggregating data from other sources. Local APIs are authenticated with
 the user's session cookie.
 
