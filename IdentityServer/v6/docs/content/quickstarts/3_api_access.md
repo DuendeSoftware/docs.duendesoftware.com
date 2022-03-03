@@ -86,6 +86,8 @@ builder.Services.AddAuthentication(options =>
 
         options.SaveTokens = true;
 
+        options.Scope.Clear();
+        options.Scope.Add("openid");
         options.Scope.Add("profile");
         options.Scope.Add("api1");
         options.Scope.Add("offline_access");
