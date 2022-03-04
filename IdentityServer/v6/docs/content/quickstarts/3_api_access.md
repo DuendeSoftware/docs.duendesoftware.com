@@ -119,7 +119,13 @@ dotnet new page -n CallApi
 
 Update *WebClient\Pages\CallApi.cshtml.cs* as follows:
 ```cs
-public async Task<IActionResult> OnGet()
+public string? Json
+{
+    get => ViewData["Json"] as string;
+    private set => ViewData["Json"] = value;
+}
+
+public async Task OnGet()
 {
     var accessToken = await HttpContext.GetTokenAsync("access_token");
 
@@ -128,10 +134,7 @@ public async Task<IActionResult> OnGet()
     var content = await client.GetStringAsync("https://localhost:6001/identity");
 
     var parsed = JsonDocument.Parse(content);
-    var formatted = JsonSerializer.Serialize(parsed, new JsonSerializerOptions { WriteIndented = true });
-
-    ViewBag.Json = formatted;
-    return View("json");
+    Json = JsonSerializer.Serialize(parsed, new JsonSerializerOptions { WriteIndented = true });
 }
 ```
 
