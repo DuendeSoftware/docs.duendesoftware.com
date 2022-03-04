@@ -53,7 +53,7 @@ support to your IdentityServer project, install the Entity framework Sqlite
 NuGet package by running the following command from the *IdentityServer*
 directory:
 
-```
+```console
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
