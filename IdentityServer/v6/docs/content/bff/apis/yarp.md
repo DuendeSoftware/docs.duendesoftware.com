@@ -3,9 +3,9 @@ title: "YARP extensions"
 weight: 30
 ---
 
-Instead of using our simple forwarder, you can also use a more feature complete reverse proxy - e.g. Microsoft [YARP](https://microsoft.github.io/reverse-proxy/).
+Instead of using the simple HTTP forwarder, you can also use a more feature complete reverse proxy - e.g. Microsoft [YARP](https://microsoft.github.io/reverse-proxy/).
 
-YARP has built-in advanced features, e.g. load balancing, service discovery, session affinity etc. It also has its own extensibility mechanism. The BFF library includes a set of YARP extensions (e.g. token management and anti-forgery protection) so can get the best of both worlds.
+YARP has built-in advanced features, e.g. load balancing, service discovery, session affinity etc. It also has its own extensibility mechanism. The BFF library includes a set of YARP extensions (e.g. token management and anti-forgery protection) so you can get the best of both worlds.
 
 #### Adding YARP
 To enable our YARP integration, add a reference to the *Duende.BFF.Yarp* Nuget package and add the YARP and our service to DI:
@@ -19,7 +19,7 @@ var builder = services.AddReverseProxy()
 ```
 
 #### Configuring YARP
-YARP is most commonly configured via a config file. The following simple snippets forwards a local URL to a remote API:
+YARP is most commonly configured via a config file. The following simple snippet forwards a local URL to a remote API:
 
 ```json
 "ReverseProxy": {
