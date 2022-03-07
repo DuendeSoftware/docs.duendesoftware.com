@@ -46,7 +46,7 @@ YARP is most commonly configured via a config file. The following simple snippet
 
 See the Microsoft [documentation](https://microsoft.github.io/reverse-proxy/articles/config-files.html) for the complete configuration schema.
 
-Another option is to configure YARP in code (using [this](https://github.com/microsoft/reverse-proxy/tree/main/samples/ReverseProxy.Code.Sample) sample). The above configuration as code would look like this:
+Another option is to configure YARP in code using the in-memory config provider included in the BFF extensions for YARP. The above configuration as code would look like this:
 
 ```cs
 builder.LoadFromMemory(
@@ -180,6 +180,10 @@ builder.LoadFromMemory(
     // rest omitted
     });
 ```
+
+{{% notice note %}}
+You can combine the token management feature with the anti-forgery check.
+{{% /notice %}}
 
 To enforce the presence of the anti-forgery headers, you need to add a middleware to the YARP pipeline:
 
