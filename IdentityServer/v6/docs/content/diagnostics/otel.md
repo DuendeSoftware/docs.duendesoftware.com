@@ -4,6 +4,8 @@ date: 2020-09-10T08:22:12+02:00
 weight: 30
 ---
 
+(added in v6.1)
+
 [OpenTelemetry](https://opentelemetry.io) is a collection of tools, APIs, and SDKs for generating and collecting telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior - especially in highly distributed systems.
 
 Now that the tracing part of OTel is finalized, we started adding instrumentation to all relevant parts of IdentityServer - especially around input validators, response generators and stores.
