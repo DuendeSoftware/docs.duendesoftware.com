@@ -136,6 +136,45 @@ This is the session state value of the upstream OIDC provider that can be use fo
 
 This is the URL to trigger logout. If the upstream provider includes an *sid* claim, the BFF logout endpoint requires this value as a query string parameter for CSRF protection. This behavior can be configured on the [options]({{< ref "/bff/options" >}}).
 
+### Silent Login
+
+The silent login endpoint is designed to trigger authentication much in the same way the login endpoint would, but in a non-interactive way. 
+
+The expected usage pattern would be that the application code loads in the browser and first triggers a request to the *User Endpoint*, and if that indicates that there is no session in the BFF backend, then the *Silent Login Endpoint* can be triggered to automatically log the user in (assuming there is an existing session at the OIDC provider).
+
+This non-interactive design relies upon the use of an *iframe* to make the silent login request.
+The result of the silent login request in the *iframe* will then use *postMessage* to notify the parent window of the outcome.
+If the result is that a session has been established, then the application logic can either re-trigger a call to the *User Endpoint*, or simply reload the entire page (depending on the preferred design).
+
+To trigger the silent login, the applicaiton code must have an *iframe* and then set its *src* to the silent login endpoint.
+For example in your HTML:
+
+```
+<iframe id="bff-silent-login"></iframe>
+```
+
+And then in JavaScript:
+
+```
+document.querySelector('#bff-silent-login').src = '/bff/silent-login';
+```
+
+To then receive the result, the application would handle the *message* event in the browser and look for the *data.isLoggedIn* property on the event object:
+
+```
+window.addEventListener("message", e => {
+  if (e.data && e.data.source === 'bff-silent-login' && e.data.isLoggedIn) {
+      // if we now have a user logged in silently, then reload this window
+      window.location.reload();
+  }
+});
+```
+
+{{% notice note %}}
+The silent logout endpoint was added in version 1.2.0.
+{{% /notice %}}
+
+
 ### Logout
 This endpoint triggers local and upstream logout. If the upstream IdP sent a session ID, this must be appended to the URL:
 
