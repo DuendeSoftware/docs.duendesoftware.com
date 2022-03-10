@@ -65,7 +65,7 @@ options.ConfigureDbContext = b =>
         sql => sql.MigrationsAssembly(migrationsAssembly).MigrationsHistoryTable("MyConfigurationMigrationTable", "myConfigurationSchema"));
 ```
 
-### Enableing Cachine for Configuration Store
+### Enabling Caching for Configuration Store
 
 To enable caching for the EF configuration store implementation, use the *AddConfigurationStoreCache* extension method:
 
