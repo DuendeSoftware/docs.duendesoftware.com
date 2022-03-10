@@ -140,7 +140,7 @@ This is the URL to trigger logout. If the upstream provider includes an *sid* cl
 
 The silent login endpoint is designed to trigger authentication much in the same way the login endpoint would, but in a non-interactive way. 
 
-The expected usage pattern would be that the application code loads in the browser and first triggers a request to the *User Endpoint*, and if that indicates that there is no session in the BFF backend, then the *Silent Login Endpoint* can be triggered to automatically log the user in (assuming there is an existing session at the OIDC provider).
+The expected usage pattern would be that the application code loads in the browser and first triggers a request to the *User Endpoint*, and if that indicates that there is no session in the BFF backend, then the *Silent Login Endpoint* can be requested to automatically log the user in (assuming there is an existing session at the OIDC provider).
 
 This non-interactive design relies upon the use of an *iframe* to make the silent login request.
 The result of the silent login request in the *iframe* will then use *postMessage* to notify the parent window of the outcome.
