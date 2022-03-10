@@ -46,7 +46,8 @@ This document describes how the integrity of software produced by Duende Softwar
 * Potential security vulnerabilities can be responsibly disclosed via our [contact form](https://duendesoftware.com/contact).
    * We guarantee to reply within two US business days.
 * All licenses includes a security notification service.
-   * whenever a security vulnerability has been confirmed and fixed, customer will get a private update prior to public release.
+   * Whenever a security vulnerability has been confirmed and fixed, customers will get a private update prior to public release.
+* We will publish an official advisory
 
 ### Dependencies
 
