@@ -164,7 +164,7 @@ To then receive the result, the application would handle the *message* event in 
 ```
 window.addEventListener("message", e => {
   if (e.data && e.data.source === 'bff-silent-login' && e.data.isLoggedIn) {
-      // if we now have a user logged in silently, then reload this window
+      // we now have a user logged in silently, so reload this window
       window.location.reload();
   }
 });
