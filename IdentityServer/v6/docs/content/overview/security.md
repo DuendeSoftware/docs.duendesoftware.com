@@ -41,6 +41,12 @@ This document describes how the integrity of software produced by Duende Softwar
 * Once on NuGet, the package is available for end users to update their own solutions.
 * End users still must take explicit action to upgrade after reviewing the package's release notes.
 
+### Vulnerability management process
+
+* Potential security vulnerabilities can be responsibly disclosed via our [contact form](https://duendesoftware.com/contact).
+   * We guarantee to reply within two US business days.
+* All licenses includes a security notification service.
+   * whenever a security vulnerability has been confirmed and fixed, customer will get a private update prior to public release.
 
 ### Dependencies
 
