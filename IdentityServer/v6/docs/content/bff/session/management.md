@@ -153,6 +153,15 @@ GET /bff/logout?sid=xyz&returnUrl=/loggedout
 The logout endpoint will trigger revocation of the user's refresh token (if present). This can be configured on the [options]({{< ref "/bff/options" >}}).
 {{% /notice %}}
 
+### Diagnostics
+The diagnostics endpoint returns the current user and client access token for testing purposes.
+
+```
+GET /bff/diagnostics
+```
+
+This endpoint is only enabled in *Development* mode.
+
 ### Back-channel logout notifications
 The */bff/backchannel* endpoint is an implementation of the [OpenID Connect Back-Channel Logout](https://openid.net/specs/openid-connect-backchannel-1_0.html) specification.
 
