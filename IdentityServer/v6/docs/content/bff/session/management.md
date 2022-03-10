@@ -171,7 +171,7 @@ window.addEventListener("message", e => {
 ```
 
 {{% notice note %}}
-The silent logout endpoint was added in version 1.2.0.
+The silent login endpoint was added in version 1.2.0.
 {{% /notice %}}
 
 
