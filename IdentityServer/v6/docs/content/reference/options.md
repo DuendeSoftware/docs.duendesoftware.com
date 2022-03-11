@@ -210,6 +210,10 @@ Login/logout related settings.
     
     If set, will require frame-src CSP headers being emitting on the end session callback endpoint which renders iframes to clients for front-channel signout notification. Defaults to true.
 
+* ***UserDisplayNameClaimType***
+    
+    The claim type used for the user's display name. This is used when storing user sessions server side.
+
 ## Events
 Allows configuring if and which events should be submitted to a registered event sink. See :ref:`here <refEvents>` TODO for more information on events.
 

@@ -67,7 +67,7 @@ options.ConfigureDbContext = b =>
 
 ## Operational Store 
 For storing [operational data]({{<ref "./operational">}}) then the operational store can be used.
-This support provides implementations of the *IPersistedGrantStore*, *IDeviceFlowStore*, and *ISigningKeyStore* extensibility points.
+This support provides implementations of the *IPersistedGrantStore*, *IDeviceFlowStore*, *IServerSideSessionStore*, and *ISigningKeyStore* extensibility points.
 The implementation uses a *DbContext*-derived class called *PersistedGrantDbContext* to model the table in the database.
 
 To use the operational store support, use the *AddOperationalStore* extension method after the call to *AddIdentityServer*:
