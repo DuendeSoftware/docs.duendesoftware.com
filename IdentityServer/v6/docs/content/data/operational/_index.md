@@ -11,4 +11,4 @@ This data is collectively called *operational data*, and includes:
 
 * [Grants]({{<ref "./grants">}}) for authorization and device codes, reference and refresh tokens, and remembered user consent
 * [Keys]({{<ref "./keys">}}) managing dynamically created signing keys
-
+* [Server Side Sessions]({{<ref "./sessions">}}) for storing authentication session data for interactive users server-side
