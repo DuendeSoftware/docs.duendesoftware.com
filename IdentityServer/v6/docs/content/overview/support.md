@@ -15,7 +15,7 @@ The IdentityServer [issue tracker](https://github.com/DuendeSoftware/IdentitySer
 ### Support
 See [here](https://duendesoftware.com/products/support) for our support policy.
 
-Standard support and feature requests are handled via our public [support forum](https://github.com/DuendeSoftware/IdentityServer/discussions). Please start a discussion there if you need help.
+Standard support and feature requests are handled via our public [support forum](https://github.com/DuendeSoftware/Support/issues). Please start a discussion there if you need help.
 
 [Priority support](https://duendesoftware.com/license/PrioritySupportLicense.pdf) is part of our Enterprise Edition. It includes a private email alias, guaranteed two US business days response time.
 
