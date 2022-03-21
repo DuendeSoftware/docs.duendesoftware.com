@@ -8,7 +8,7 @@ weight: 50
 You can find all source code for IdentityServer and its supporting repos in our [organization](https://github.com/duendesoftware).
 
 ### Issue Tracker
-The IdentityServer [issue tracker](https://github.com/DuendeSoftware/IdentityServer/issues) and [pull requests](https://github.com/DuendeSoftware/IdentityServer/pulls) allow you to follow the current work and [submit bug reports](https://github.com/DuendeSoftware/IdentityServer/issues/new?assignees=&labels=bug+report&template=bug_report.md&title=).
+The IdentityServer [issue tracker](https://github.com/DuendeSoftware/IdentityServer/issues) and [pull requests](https://github.com/DuendeSoftware/IdentityServer/pulls) allow you to follow the current work and [submit questions or bug reports](https://github.com/DuendeSoftware/Support/issues).
 
 [Milestones](https://github.com/DuendeSoftware/IdentityServer/milestones) / [release notes](https://github.com/DuendeSoftware/IdentityServer/releases)
 
