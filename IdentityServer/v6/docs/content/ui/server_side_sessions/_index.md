@@ -3,7 +3,7 @@ title: "Server-Side Sessions"
 weight: 140
 ---
 
-(added in v6.1)
+(added in 6.1)
 
 ## Overview
 
@@ -31,6 +31,11 @@ public void ConfigureServices(IServiceCollection services)
 By default, the store for the server-side sessions will just be kept in-memory.
 For production scenarios you will want to configure a durable store either by using our [EntityFramework Core implementation]({{<ref "/data/ef#operational-store">}}), or you can [implement the store yourself]({{<ref "/reference/stores/server_side_sessions">}}).
 
+{{% notice note %}}
+Order is important in the DI system.
+When using *AddServerSideSessions*, this call needs to come after any custom *IRefreshTokenService* implementation that has been registered.
+{{% /notice %}}
+
 ### Data stored server-side
 
 The data stored for the user session is the data contained in the ASP.NET Core *AuthenticationTicket* class.
@@ -52,6 +57,40 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer(options => {
         options.Authentication.UserDisplayNameClaimType = "name"; // or "email" perhaps
+    })
+        .AddServerSideSessions();
+}
+```
+
+### Session Expiration
+
+If a user abandons their session without triggering logout, then the server-side session data will be abandoned.
+In order to clean up these expired records, there is an automatic cleanup mechanism that can be configured with the [server-side session options]({{<ref "/reference/options#server-side-sessions">}}).
+It is enabled by default, but if you wish to disable it or change the frequency it runs you can. 
+
+For example:
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer(options => {
+        options.ServerSideSessions.RemoveExpiredSessionsFrequency = TimeSpan.FromSeconds(60);
+    })
+        .AddServerSideSessions();
+}
+```
+
+In addition, when these records are removed you can optionally trigger [back-channel logout notification]({{<ref "/ui/logout/notification#back-channel-server-side-clients">}}). 
+To do so, you must enable the feature with the *ExpiredSessionsTriggerBackchannelLogout* option on the [server-side session options]({{<ref "/reference/options#server-side-sessions">}}). 
+This is not enabled by default.
+
+For example:
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer(options => {
+        options.ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout = true;
     })
         .AddServerSideSessions();
 }

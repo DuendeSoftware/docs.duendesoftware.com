@@ -210,9 +210,12 @@ Login/logout related settings.
     
     If set, will require frame-src CSP headers being emitting on the end session callback endpoint which renders iframes to clients for front-channel signout notification. Defaults to true.
 
-* ***UserDisplayNameClaimType***
+* ***CoordinateClientLifetimesWithUserSession*** (added in 6.1)
     
-    The claim type used for the user's display name. This is used when storing user sessions server side.
+    When enabled, all clients' token lifetimes (e.g. refresh tokens) will be tied to the user's session lifetime.
+    This means when the user logs out, any revokable tokens will be removed.
+    If using server-side sessions, expired sessions will also remove any revokable tokens, and backchannel logout will be triggered.
+    An individual client can override this setting with its own *CoordinateLifetimeWithUserSession* configuration setting.
 
 ## Events
 Allows configuring if and which events should be submitted to a registered event sink. See :ref:`here <refEvents>` TODO for more information on events.
@@ -422,3 +425,26 @@ Shared settings for the CIBA feature.
     
     The polling interval in seconds that a client is to use when connecting to the token endpoint. Defaults to 5.
 
+## Server-side Sessions 
+Shared settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added in 6.1.
+
+* ***UserDisplayNameClaimType***
+    
+    The claim type used for the user's display name. 
+
+* ***RemoveExpiredSessions***
+    
+    If enabled will perodically cleanup expired sessions.
+
+* ***RemoveExpiredSessionsFrequency***
+    
+    Frequency expired sessions will be removed.
+
+* ***RemoveExpiredSessionsBatchSize***
+    
+    Number of expired sessions records to be removed at a time.
+
+* ***ExpiredSessionsTriggerBackchannelLogout***
+    
+    If enabled, when server-side sessions are removed due to expiration, will back-channel logout notifications be sent.
+    This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer.
