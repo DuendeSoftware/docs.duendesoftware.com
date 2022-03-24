@@ -17,24 +17,45 @@ Despite the protocol not providing a formal solution to this requirement, it is 
 ## Design
 
 To achieve the goal of distributed session management, there must be a single record tracking the user's session.
-Using server-side sessions at IdentityServer provides this central location to track expiration and monitor user activity.
+Using server-side sessions at IdentityServer provides this central location to monitor user activity and track session expiration.
+
+### User Activity Monitoring
 
 As a user is active interactively at IdentityServer, the session's expiration will be extended given the normal cookie authentication handler mechanics of ASP.NET Core.
 Most of the time, though, a user is active at the client applications, not at IdentityServer.
-But client applications commonly make server to server protocol invocations back to IdentityServer on behalf of the user as that user remains active in the client (e.g. access token renewal using the refresh token).
+This makes it difficult for the session at IdentityServer to be extended.
+
+Fortunately as a user uses a client application, it's common for that client to make server to server protocol invocations back to IdentityServer on behalf of the user (e.g. with the refresh token).
 These invocations can be used as the signal to the server-side session management at IdentityServer that the user is still active, and thus can be used to extend the session.
 
 In addition to refresh tokens, any client activity using an access token that originated from the user's session could also be used to extend the user's server-side session at IdentityServer.
 This would only work if IdentityServer were aware of this activity, but userinfo and introspection endpoint requests are examples of those types of activity.
 
-If the user becomes inactive the server-side session management system at IdentityServer can detect an abandoned session and revoke any outstanding tokens for the user's session, and/or notify client applications via back-channel logout that the session is expired.
-Clients would then either know to terminate a user's session in the application if a refresh token failed to renew, or it received a back-channel logout notification.
+Internally IdentityServer provides a *ISessionCoordinationService* which is invoked from the endpoints describes above. 
+Its purpose is to then extend the lifetime of the server-side session. 
+Below is a picture of the various types of requests to do this:
+
+![](../images/extending_session.png)
+
+
+### User Inactivity Detection and Session Termination
+
+When the user becomes inactive, the server-side session management system at IdentityServer can detect and remove the abandoned session.
+When this happens, the *ISessionCoordinationService* provides another operation to perform any client related cleanup for the session.
+This could invoke back-channel logout for any client the user has logged into during their session, or this could revoke any grants in the [operational store]({{<ref "/data/operational/grants">}}) issued during the user's session.
+
+Clients that receive back-channel logout would know the user's session has ended, and can cleanup appropriately.
+But if back-channel is not used, then the client would need some other signal to consider the user's session has ended.
+The obvious signal would be if the refresh token request failed, then that would be an appropriate signal that the user's session has also ended.
+
+![](../images/session_expired.png)
 
 Given this understanding, client applications can participate in this convention and IdentityServer can coordinate to achieve this system-wide "inactivity timeout" requirement.
 
+
 ## Configuration
 
-Configuration is needed in both IdentityServer and client applications to achieve this distributed session management.
+Configuration is needed in both IdentityServer and client applications.
 
 ### IdentityServer
 
