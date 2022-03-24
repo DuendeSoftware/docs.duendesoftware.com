@@ -1,11 +1,7 @@
 ---
-title: "Distributed Session Management"
-weight: 10
+title: "Inactivity Timeout"
+weight: 30
 ---
-
-(added in 6.1)
-
-## Overview
 
 A common requirement in several industries is the concept of a system-wide "inactivity timeout".
 The expectation is that if a user is active in the system, then their authentication session should continue to be active.
@@ -76,11 +72,4 @@ To detect inactivity:
 
 Clients without access tokens have no way to notify IdentityServer that the user is still active.
 But they can implement back-channel logout to be notified that the user's session has ended.
-
-### Implementing Back-channel Logout in .NET Applications
-
-.NET does not have native support for back-channel logout notification.
-We do [provide a sample]({{<ref "/samples/basics#mvc-client-with-back-channel-logout-notifications">}}), though.
-Alternatively, if you are using our BFF framework, back-channel logout is [already implemented]({{<ref "/bff/session/management#back-channel-logout-notifications">}}) for you.
-
 

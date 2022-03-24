@@ -35,6 +35,13 @@ IdentityServer will automatically use this service when your logout page removes
 
 Clients that wish to be notified must have the [BackChannelLogoutUri]({{<ref "/reference/models/client#authentication--session-management">}}) configuration value set.
 
+#### Implementing Back-channel Logout in .NET Applications
+
+.NET does not have native support for back-channel logout notification.
+We do [provide a sample]({{<ref "/samples/basics#mvc-client-with-back-channel-logout-notifications">}}), though.
+Alternatively, if you are using our BFF framework, back-channel logout is [already implemented]({{<ref "/bff/session/management#back-channel-logout-notifications">}}) for you.
+
+
 ### Browser-based JavaScript clients
 There is nothing special you need to do to notify these clients that the user has signed out.
 

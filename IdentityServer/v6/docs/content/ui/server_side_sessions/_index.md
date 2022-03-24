@@ -16,6 +16,15 @@ While this does allow for a stateless server for session management, cookie size
 IdentityServer provides a server-side session feature, which extends the ASP.NET Core cookie authentication handler to maintain this state in a server-side store, rather than putting it all into the cookie itself.
 This implementation is specifically designed for IdentityServer to allow for more protocol related features, such as querying for active sessions based on subject id or session id, and revoking artifacts from protocol workflows as part of that session.
 
+## Session Management
+
+With the addition and use of server-side sessions, more interesting architectural features are possible:
+
+* the ability to query and [manage sessions]({{<ref "./session_management">}}) from outside the browser that a user is logged into is possible.
+* the ability to detect [session expiration]({{<ref "./session_expiration">}}) and perform cleanup both in IdentityServer as well as in the client.
+* the ability to centralize and monitor session activity in order to achieve a system-wide [inactivity timeout]({{<ref "./inactivity_timeout">}}).
+
+
 ### Enabling server-side sessions
 
 To enable server-side sessions, use the *AddServerSideSessions* extension method after adding IdentityServer to the DI system:
@@ -62,119 +71,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-### Session Expiration
+### IServerSideSessionStore
 
-If a user abandons their session without triggering logout, then the server-side session data will be abandoned.
-In order to clean up these expired records, there is an automatic cleanup mechanism that can be configured with the [server-side session options]({{<ref "/reference/options#server-side-sessions">}}).
-It is enabled by default, but if you wish to disable it or change the frequency it runs you can. 
+The [*IServerSideSessionStore*]({{<ref "/reference/stores/server_side_sessions">}}) is the abstraction for storing the server-side session.
 
-For example:
-
-```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer(options => {
-        options.ServerSideSessions.RemoveExpiredSessionsFrequency = TimeSpan.FromSeconds(60);
-    })
-        .AddServerSideSessions();
-}
-```
-
-In addition, when these records are removed you can optionally trigger [back-channel logout notification]({{<ref "/ui/logout/notification#back-channel-server-side-clients">}}). 
-To do so, you must enable the feature with the *ExpiredSessionsTriggerBackchannelLogout* option on the [server-side session options]({{<ref "/reference/options#server-side-sessions">}}). 
-This is not enabled by default.
-
-For example:
-
-```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer(options => {
-        options.ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout = true;
-    })
-        .AddServerSideSessions();
-}
-```
-
-## ISessionManagementService
-
-The [session management service]({{<ref "/reference/services/session_management_service">}}) provides administrative operations for querying and revoking the server-side sessions.
-
-{{% notice note %}}
-The Quickstart UI contains a simple administrative page (under the "ServerSideSessions" folder) that uses the ISessionManagementService API.
-{{% /notice %}}
-
-
-### Querying sessions
-
-Use the *QuerySessionsAsync* API to access a paged list of user sessions.
-You can optionally filter on a user's claims mentioned above (subject identifier, session identifier, and/or display name).
-
-For example:
-
-```cs
-var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        CountRequested = 10,
-        SubjectId = "12345",
-        DisplayName = "Bob",
-    });
-```
-
-The results returned contains the matching users' session data, as well as paging information (depending if the store and backing database supports certain features such as total count and current page number).
-
-This paging information contains a *ResultsToken* and allows subsequent requests for next or previous pages (set *RequestPriorResults* to true for the previous page, otherwise the next page is assumed):
-
-```cs
-// this requests the first page
-var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        CountRequested = 10,
-    });
-
-// this requests the next page relative to the previous results
-userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        ResultsToken = userSessions.ResultsToken,
-        CountRequested = 10,
-    });
-
-// this requests the prior page relative to the previous results
-userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        ResultsToken = userSessions.ResultsToken,
-        RequestPriorResults = true,
-        CountRequested = 10,
-    });
-```
-
-
-### Terminating sessions
-
-To terminate session(s) for a user, use the *RemoveSessionsAsync* API.
-This accepts a *RemoveSessionsContext* which can filter on the subject and/or the session identifier to terminate.
-It then also has flags for what to terminate or revoke.
-This allows deleting a user's session record in the store, any associated tokens or consents in the [operational database]({{<ref "/data/operational/grants">}}), and/or notifying any clients via [back-channel logout]({{<ref "/ui/logout/notification#back-channel-server-side-clients">}}) that the user's session has ended.
-There is also a list of client identifiers to control which clients are affected.
-
-An example to revoke everything for current sessions for subject id *12345* might be:
-
-```cs
-await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
-    SubjectId = "12345"
-});
-```
-
-Or to just revoke all refresh tokens for current sessions for subject id *12345* might be:
-
-```cs
-await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
-    SubjectId = "12345",
-    RevokeTokens = true,
-    RemoveServerSideSession = false,
-    RevokeConsents = false,
-    SendBackchannelLogoutNotification = false,
-});
-```
-
-Internally this uses the *IServerSideTicketStore*, *IPersistedGrantStore* and *IBackChannelLogoutService* features from IdentityServer.
+A EntityFramework Core implementaiton is already provided as part of our [operational store]({{<ref "/data/ef#operational-store">}}), but you can implement the [interface]({{<ref "/reference/stores/server_side_sessions">}}) yourself for other backing implementations.
