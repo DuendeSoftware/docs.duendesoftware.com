@@ -3,7 +3,7 @@ title: "Server-Side Sessions"
 weight: 140
 ---
 
-(added in v6.1)
+(added in 6.1)
 
 ## Overview
 
@@ -15,6 +15,15 @@ While this does allow for a stateless server for session management, cookie size
 
 IdentityServer provides a server-side session feature, which extends the ASP.NET Core cookie authentication handler to maintain this state in a server-side store, rather than putting it all into the cookie itself.
 This implementation is specifically designed for IdentityServer to allow for more protocol related features, such as querying for active sessions based on subject id or session id, and revoking artifacts from protocol workflows as part of that session.
+
+## Session Management
+
+With the addition and use of server-side sessions, more interesting architectural features are possible:
+
+* the ability to query and [manage sessions]({{<ref "./session_management">}}) from outside the browser that a user is logged into is possible.
+* the ability to detect [session expiration]({{<ref "./session_expiration">}}) and perform cleanup both in IdentityServer as well as in the client.
+* the ability to centralize and monitor session activity in order to achieve a system-wide [inactivity timeout]({{<ref "./inactivity_timeout">}}).
+
 
 ### Enabling server-side sessions
 
@@ -30,6 +39,11 @@ public void ConfigureServices(IServiceCollection services)
 
 By default, the store for the server-side sessions will just be kept in-memory.
 For production scenarios you will want to configure a durable store either by using our [EntityFramework Core implementation]({{<ref "/data/ef#operational-store">}}), or you can [implement the store yourself]({{<ref "/reference/stores/server_side_sessions">}}).
+
+{{% notice note %}}
+Order is important in the DI system.
+When using *AddServerSideSessions*, this call needs to come after any custom *IRefreshTokenService* implementation that has been registered.
+{{% /notice %}}
 
 ### Data stored server-side
 
@@ -57,85 +71,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-## ISessionManagementService
+### IServerSideSessionStore
 
-The [session management service]({{<ref "/reference/services/session_management_service">}}) provides administrative operations for querying and revoking the server-side sessions.
+The [*IServerSideSessionStore*]({{<ref "/reference/stores/server_side_sessions">}}) is the abstraction for storing the server-side session.
 
-{{% notice note %}}
-The Quickstart UI contains a simple administrative page (under the "ServerSideSessions" folder) that uses the ISessionManagementService API.
-{{% /notice %}}
-
-
-### Querying sessions
-
-Use the *QuerySessionsAsync* API to access a paged list of user sessions.
-You can optionally filter on a user's claims mentioned above (subject identifier, session identifier, and/or display name).
-
-For example:
-
-```cs
-var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        CountRequested = 10,
-        SubjectId = "12345",
-        DisplayName = "Bob",
-    });
-```
-
-The results returned contains the matching users' session data, as well as paging information (depending if the store and backing database supports certain features such as total count and current page number).
-
-This paging information contains a *ResultsToken* and allows subsequent requests for next or previous pages (set *RequestPriorResults* to true for the previous page, otherwise the next page is assumed):
-
-```cs
-// this requests the first page
-var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        CountRequested = 10,
-    });
-
-// this requests the next page relative to the previous results
-userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        ResultsToken = userSessions.ResultsToken,
-        CountRequested = 10,
-    });
-
-// this requests the prior page relative to the previous results
-userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        ResultsToken = userSessions.ResultsToken,
-        RequestPriorResults = true,
-        CountRequested = 10,
-    });
-```
-
-
-### Terminating sessions
-
-To terminate session(s) for a user, use the *RemoveSessionsAsync* API.
-This accepts a *RemoveSessionsContext* which can filter on the subject and/or the session identifier to terminate.
-It then also has flags for what to terminate or revoke.
-This allows deleting a user's session record in the store, any associated tokens or consents in the [operational database]({{<ref "/data/operational/grants">}}), and/or notifying any clients via [back-channel logout]({{<ref "/ui/logout/notification#back-channel-server-side-clients">}}) that the user's session has ended.
-There is also a list of client identifiers to control which clients are affected.
-
-An example to revoke everything for current sessions for subject id *12345* might be:
-
-```cs
-await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
-    SubjectId = "12345"
-});
-```
-
-Or to just revoke all refresh tokens for current sessions for subject id *12345* might be:
-
-```cs
-await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
-    SubjectId = "12345",
-    RevokeTokens = true,
-    RemoveServerSideSession = false,
-    RevokeConsents = false,
-    SendBackchannelLogoutNotification = false,
-});
-```
-
-Internally this uses the *IServerSideTicketStore*, *IPersistedGrantStore* and *IBackChannelLogoutService* features from IdentityServer.
+A EntityFramework Core implementaiton is already provided as part of our [operational store]({{<ref "/data/ef#operational-store">}}), but you can implement the [interface]({{<ref "/reference/stores/server_side_sessions">}}) yourself for other backing implementations.
