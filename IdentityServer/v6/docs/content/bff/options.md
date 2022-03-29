@@ -54,6 +54,17 @@ services.AddBff(options =>
     If *true*, all sessions for the subject will be revoked. If false, just the specific session will be revoked.
     Defaults to *false*.
 
+* ***EnableSessionCleanup***
+
+    Indicates if expired server side sessions should be cleaned up.
+    This requires an implementation of IUserSessionStoreCleanup to be registered in the DI system.
+    Defaults to *false*.
+
+* ***SessionCleanupInterval***
+
+    Interval at which expired sessions are cleaned up.
+    Defaults to *10 minutes*.
+
 
 ## APIs
 

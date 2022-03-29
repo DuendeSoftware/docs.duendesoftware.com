@@ -4,6 +4,8 @@ date: 2020-09-10T08:22:12+02:00
 weight: 20
 ---
 
+## User Session Store
+
 If using the server-side sessions feature, you will need to have a store for the session data.
 A EntityFramework Core based implementation of this store is provided. 
 If you wish to use some other type of store, then you can implement the *IUserSessionStore* interface:
@@ -72,5 +74,22 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddBff()
         .AddServerSideSessions<YourStoreClassName>();
+}
+```
+
+## User Session Store Cleanup
+
+The *IUserSessionStoreCleanup* interface is used to model cleaning up expired sessions.
+
+```csharp
+/// <summary>
+/// User session store cleanup
+/// </summary>
+public interface IUserSessionStoreCleanup
+{
+    /// <summary>
+    /// Deletes expired sessions
+    /// </summary>
+    Task DeleteExpiredSessionsAsync(CancellationToken cancellationToken = default);
 }
 ```
