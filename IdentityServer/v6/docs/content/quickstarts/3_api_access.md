@@ -119,19 +119,22 @@ dotnet new page -n CallApi
 
 Update *WebClient\Pages\CallApi.cshtml.cs* as follows:
 ```cs
-public async Task<IActionResult> OnGet()
+public class CallApiModel : PageModel
 {
-    var accessToken = await HttpContext.GetTokenAsync("access_token");
+    public string Json = string.Empty;
 
-    var client = new HttpClient();
-    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-    var content = await client.GetStringAsync("https://localhost:6001/identity");
+    public async Task OnGet()
+    {
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
+        var client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var content = await client.GetStringAsync("https://localhost:6001/identity");
 
-    var parsed = JsonDocument.Parse(content);
-    var formatted = JsonSerializer.Serialize(parsed, new JsonSerializerOptions { WriteIndented = true });
+        var parsed = JsonDocument.Parse(content);
+        var formatted = JsonSerializer.Serialize(parsed, new JsonSerializerOptions { WriteIndented = true });
 
-    ViewBag.Json = formatted;
-    return View("json");
+        Json = formatted;
+    }
 }
 ```
 
