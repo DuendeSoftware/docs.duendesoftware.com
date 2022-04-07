@@ -350,8 +350,8 @@ if (disco.IsError)
 {{% notice note %}}
 
 If you get an error connecting it may be that you are running *https* and the
-development certificate for *localhost* is not trusted. You can run *dotnet
-dev-certs https --trust* in order to trust the development certificate. This
+development certificate for *localhost* is not trusted. You can run `dotnet
+dev-certs https --trust` in order to trust the development certificate. This
 only needs to be done once. 
 
 {{% /notice %}}
