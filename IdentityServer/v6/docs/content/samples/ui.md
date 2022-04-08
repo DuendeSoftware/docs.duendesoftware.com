@@ -23,6 +23,18 @@ Key takeaways:
 
 [link to source code]({{< param samples_base >}}/UserInteraction/SpaLoginUi)
 
+### Dynamic providers
+
+The [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample sets up a simple database with one dynamic OIDC provider.
+
+Some key points about the *IdentityServer* project in the sample:
+
+* Execute the command "dotnet run /seed" to create and populate the Sqlite database.
+* *SeedData.cs* has the code to populate the dynamic provider in the database.
+* In the *Account/Login/Index.cshtml.cs* file, the code to build the UI to list the dynamic providers is in the *BuildModelAsync* helper. It uses the *IIdentityProviderStore* to query the dynamic provider database.
+
+[link to source code]({{< param samples_base >}}/UserInteraction/DynamicProviders)
+
 ### Adding other protocol types to dynamic providers
 
 The [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to support additional protocol types, and specifically WS-Federation.
