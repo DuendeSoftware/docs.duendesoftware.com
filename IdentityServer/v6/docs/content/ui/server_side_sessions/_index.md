@@ -65,7 +65,7 @@ For example:
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer(options => {
-        options.Authentication.UserDisplayNameClaimType = "name"; // or "email" perhaps
+        options.ServerSideSessions.UserDisplayNameClaimType = "name"; // or "email" perhaps
     })
         .AddServerSideSessions();
 }
