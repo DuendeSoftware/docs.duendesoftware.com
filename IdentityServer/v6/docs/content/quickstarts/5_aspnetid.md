@@ -145,7 +145,8 @@ public static class Config
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     "api1"
-                }
+                },
+                AllowOfflineAccess = true
             }
         };
 }
