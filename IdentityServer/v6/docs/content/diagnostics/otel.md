@@ -32,13 +32,18 @@ The following screenshot shows the ASP.NET Core OpenID Connect authentication ha
 To start emitting Otel tracing information you need 
 
 * add the Otel libraries to your IdentityServer and client applications
-* start collecting traces from the *Duende.IdentityServer* source (and other sources e.g. ASP.NET Core)
+* start collecting traces from the various IdentityServer sources (and other sources e.g. ASP.NET Core)
 
 ```cs
 builder.Services.AddOpenTelemetryTracing(builder =>
 {
     builder
-        .AddSource(IdentityServerConstants.Tracing.ServiceName)
+        .AddSource(IdentityServerConstants.Tracing.Basic)
+        .AddSource(IdentityServerConstants.Tracing.Cache)
+        .AddSource(IdentityServerConstants.Tracing.Services)
+        .AddSource(IdentityServerConstants.Tracing.Stores)
+        .AddSource(IdentityServerConstants.Tracing.Validation)
+        
         .SetResourceBuilder(
             ResourceBuilder.CreateDefault()
                 .AddService("MyIdentityServerHost"))
@@ -53,3 +58,30 @@ builder.Services.AddOpenTelemetryTracing(builder =>
 ```
 
 This [sample]({{< ref "/samples/diagnostics#opentelemetry-support" >}}) uses the console exporter and can be used as a starting point.
+
+### Tracing sources
+IdentityServer can emit very fine grained traces which is useful for performance troubleshooting and general exploration of the control flow.
+
+This might be too detailed in production. 
+
+You can select which information you are interested in by selectively listening to various traces:
+
+* **IdentityServerConstants.Tracing.Basic**
+   
+   High level request processing like request validators and response generators
+
+* **IdentityServerConstants.Tracing.Cache**
+   
+   Caching related tracing
+
+* **IdentityServerConstants.Tracing.Services**
+   
+   Services related tracing
+
+* **IdentityServerConstants.Tracing.Stores**
+   
+   Store related tracing
+
+* **IdentityServerConstants.Tracing.Validation**
+   
+   More detailed tracing related to validation
