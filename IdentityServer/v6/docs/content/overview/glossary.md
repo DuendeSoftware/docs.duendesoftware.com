@@ -5,6 +5,8 @@ weight: 70
 ---
 
 ## Automatic key management
+(Business Edition)
+
 The automatic key management feature creates and manages key material for signing tokens and follows best practices for handling this key material, including storage and rotation.
 
 [More details](https://blog.duendesoftware.com/posts/20201028_key_management/)
@@ -13,6 +15,8 @@ The automatic key management feature creates and manages key material for signin
 
 
 ## BFF Security Framework
+(Business Edition)
+
 The Duende BFF (Backend for Frontend) security framework packages up guidance and the necessary components to secure browser-based frontends (e.g. SPAs or Blazor WASM applications) with ASP.NET Core backends.
 
 [More details](https://blog.duendesoftware.com/posts/20210326_bff/)
@@ -21,6 +25,8 @@ The Duende BFF (Backend for Frontend) security framework packages up guidance an
 
 
 ## Dynamic Authentication Providers
+(Enterprise Edition)
+
 The dynamic configuration feature allows dynamic loading of configuration for OpenID Connect providers from a store.
 This is designed to address the performance concern as well as allowing changes to the configuration to a running server.
 
@@ -30,6 +36,8 @@ This is designed to address the performance concern as well as allowing changes 
 
 
 ## Resource isolation
+(Enterprise Edition)
+
 The resource isolation feature allows a client to request access tokens for an individual resource server.
 This allows API-specific features such as access token encryption and isolation of APIs that are not in the same trust boundary.
 
@@ -39,6 +47,8 @@ This allows API-specific features such as access token encryption and isolation 
 
 
 ## CIBA
+(Enterprise Edition)
+
 Duende IdentityServer supports the Client-Initiated Backchannel Authentication Flow (also known as CIBA).
 This allows a user to login with a higher security device (e.g. their mobile phone) than the device on which they are using an application (e.g. a public kiosk).
 CIBA is one of the requirements to support the Financal-grade API compliance.
