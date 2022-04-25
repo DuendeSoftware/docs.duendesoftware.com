@@ -368,7 +368,8 @@ var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCr
 
     ClientId = "client",
     ClientSecret = "secret",
-    Scope = "api1"
+    Scope = "api1",
+    GrantType = OidcConstants.GrantTypes.ClientCredentials
 });
 
 if (tokenResponse.IsError)
