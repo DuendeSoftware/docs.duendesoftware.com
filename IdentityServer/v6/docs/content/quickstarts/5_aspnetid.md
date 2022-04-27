@@ -203,7 +203,7 @@ from Microsoft's templates that include ASP.NET Core Identity.
 
 Given the variety of requirements and different approaches to using ASP.NET Core
 Identity, our template deliberately does not provide those features. The intent
-of this template is to be a starting point to which you you can add the features
+of this template is to be a starting point to which you can add the features
 you need from ASP.NET Core Identity, customized according to your requirements.
 Alternatively, you can [create a new project based on the ASP.NET Core Identity
 template](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=netcore-cli#create-a-web-app-with-authentication)
