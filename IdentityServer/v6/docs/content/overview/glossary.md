@@ -14,6 +14,20 @@ The automatic key management feature creates and manages key material for signin
 [Documentation]({{<ref "/fundamentals/keys" >}})
 
 
+## Server-side Session Management
+(Business Edition)
+
+The server-side session management feature extends the ASP.NET Core cookie authentication handler to maintain a user's authentication session state in a server-side store, rather than putting it all into a self-contained cookie. Using server-side sessions enables more architectural features in your IdentityServer, such as:
+
+* query and manage active user sessions (e.g. from an administrative app).
+* detect session expiration and perform cleanup both in IdentityServer as well as in client apps.
+* centralize and monitor session activity in order to achieve a system-wide inactivity timeout.
+
+[More details](https://blog.duendesoftware.com/posts/20220406_session_management/)
+
+[Documentation]({{<ref "/ui/server_side_sessions" >}})
+
+
 ## BFF Security Framework
 (Business Edition)
 
@@ -33,6 +47,7 @@ This is designed to address the performance concern as well as allowing changes 
 [More details](https://blog.duendesoftware.com/posts/20210517_dynamic_providers/)
 
 [Documentation]({{<ref "/ui/login/dynamicproviders" >}})
+
 
 
 ## Resource isolation
