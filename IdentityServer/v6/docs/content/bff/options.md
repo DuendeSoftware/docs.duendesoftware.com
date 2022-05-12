@@ -42,12 +42,6 @@ services.AddBff(options =>
     Specifies if the user's refresh token is automatically revoked at logout time.
     Defaults to *true*.
 
-* ***RequireLogoutSessionId***
-
-    Flag that specifies if the *sid* claim needs to be present in the logout request as query string parameter.
-    Used to prevent cross site request forgery.
-    Defaults to *true*.
-
 * ***BackchannelLogoutAllUserSessions***
 
     Specifies if during backchannel logout all matching user sessions are logged out.
