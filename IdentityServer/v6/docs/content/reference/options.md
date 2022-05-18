@@ -399,6 +399,14 @@ var builder = services.AddIdentityServer(options =>
     Normally the cnf claims only gets emitted if the client used the client certificate for authentication,
     setting this to true, will set the claim regardless of the authentication method. (defaults to false).
 
+## PersistentGrants
+Shared settings for persisted grants behavior.
+
+* ***DataProtectData***
+    
+    Data protect the persisted grants "data" column. Defaults to *true*.
+    If you have PII requirements and your database is already protecting data at rest, then you can consider disabling this.
+
 ## Dynamic Providers
 Shared settings for the [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}) feature.
 
@@ -448,3 +456,4 @@ Shared settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}})
     
     If enabled, when server-side sessions are removed due to expiration, will back-channel logout notifications be sent.
     This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer.
+
