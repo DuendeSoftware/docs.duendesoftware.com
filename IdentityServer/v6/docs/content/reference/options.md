@@ -218,7 +218,7 @@ Login/logout related settings.
     An individual client can override this setting with its own *CoordinateLifetimeWithUserSession* configuration setting.
 
 ## Events
-Allows configuring if and which events should be submitted to a registered event sink. See :ref:`here <refEvents>` TODO for more information on events.
+Allows configuring if and which events should be submitted to a registered event sink. See [here]({{< ref "/diagnostics/events">}}) for more information on events.
 
 ```cs
 var builder = services.AddIdentityServer(options =>
