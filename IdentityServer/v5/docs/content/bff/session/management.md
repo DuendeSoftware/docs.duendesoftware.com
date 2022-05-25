@@ -18,7 +18,7 @@ public void ConfigureServices(IServiceCollection services)
     {
         // default value
         options.ManagementBasePath = "/bff";
-    };
+    });
 
     // rest omitted
 }
