@@ -59,4 +59,4 @@ IdentityServer has two dependencies:
 
 ### Certification
 
-IdentityServer is a [certified](https://openid.net/certification/) implementation of OpenID Connect.
+Duende IdentityServer is a [certified](https://openid.net/certification/) implementation of OpenID Connect.
