@@ -56,3 +56,7 @@ IdentityServer has two dependencies:
 * [Microsoft .NET](https://dot.net)
 * [IdentityModel](https://github.com/IdentityModel)
    * maintained by Duende Software using the same principles as outlined above
+
+### Certification
+
+IdentityServer is a [certified](https://openid.net/certification/) implementation of OpenID Connect.
