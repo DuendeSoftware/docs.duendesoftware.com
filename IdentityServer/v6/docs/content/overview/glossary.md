@@ -74,7 +74,7 @@ CIBA is one of the requirements to support the Financal-grade API compliance.
 
 
 ## Single Deployment
-A single deployment acts as a single OpenID Connect / OAuth authority hosted at a single URL. It can consist of multiple physical nodes for load-balancing or fail-over purposes.
+A single deployment acts as a single OpenID Connect / OAuth authority hosted at a single URL. It can consist of multiple physical or virtual nodes for load-balancing or fail-over purposes.
 
 
 ## Multiple Deployment
