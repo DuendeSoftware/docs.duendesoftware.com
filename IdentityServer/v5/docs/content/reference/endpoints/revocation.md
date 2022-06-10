@@ -5,7 +5,7 @@ weight: 6
 ---
 
 This endpoint allows revoking access tokens (reference tokens only) and refresh token. 
-It implements the token revocation specification [(RFC 7009)](https://tools.ietf.org/html/rfc7009>).
+It implements the token revocation specification [(RFC 7009)](https://tools.ietf.org/html/rfc7009).
 
 * ***token***
     
