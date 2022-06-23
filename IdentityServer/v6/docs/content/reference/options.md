@@ -44,6 +44,10 @@ Top-level settings.
 * ***EmitStaticAudienceClaim***
   
     Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
+    
+* ***EmitIssuerIdentificationResponseParameter***
+  
+    Emits the *iss* response parameter on authorize reponses. Defaults to *true*.
 
 * ***ValidateTenantOnAuthorization***
   
