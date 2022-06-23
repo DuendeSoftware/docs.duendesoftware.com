@@ -34,4 +34,4 @@ Duende IdentityServer implements the following specifications:
 * JWT Secured Authorization Request / JAR ([RFC 9101](https://datatracker.ietf.org/doc/html/rfc9101))
 * Resource Indicators for OAuth 2.0 ([RFC 8707](https://tools.ietf.org/html/rfc8707))
 * JWT Profile for OAuth 2.0 Access Tokens ([RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068))
-* OAuth 2.0 Authorization Server Issuer Identifier in Authorization Response ([draft](https://tools.ietf.org/wg/oauth/draft-ietf-oauth-iss-auth-resp/))
+* OAuth 2.0 Authorization Server Issuer Identifier in Authorization Response ([RFC 9207](https://datatracker.ietf.org/doc/html/rfc9207.txt))
