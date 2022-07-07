@@ -76,6 +76,7 @@ The consumer of the access token can use that data to make sure that the client 
 Be aware, that scopes are purely for authorizing clients, not users. In other words, the *write* scope allows the client to invoke the functionality associated with the scope and is unrelated to the user's permission to do so. This additional user centric authorization is application logic and not covered by OAuth, yet still possibly important to implement in your API.
 {{% /notice %}}
 
+### Adding user claims
 You can add more identity information about the user to the access token.
 The additional claims added are based on the scope requested. 
 The following scope definition tells the configuration system that when a *write* scope gets granted the *user_level* claim should be added to the access token:
