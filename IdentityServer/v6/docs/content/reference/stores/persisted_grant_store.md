@@ -189,7 +189,9 @@ The *Data* property contains a copy of all of the values (and more) and is consi
     }
 ```
 
-The types used are defined by the `IdentityServerConstants.PersistedGrantTypes` constants:
+#### PersistedGrantTypes
+
+The types of persisted grants are defined by the `IdentityServerConstants.PersistedGrantTypes` constants:
 
 ```cs
     public static class PersistedGrantTypes
