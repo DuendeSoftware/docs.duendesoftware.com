@@ -122,7 +122,7 @@ A couple of steps are necessary to add the security and identity plumbing to a B
 </CascadingAuthenticationState>
 ```
 
-**d)** Last but not least, we will some conditional rendering to the layout page to be able to trigger login/logout as well as displaying the current user name when logged in. This is achieved by using the *AuthorizeView* component in *MainLayout.razor*:
+**d)** Last but not least, we will add some conditional rendering to the layout page to be able to trigger login/logout as well as displaying the current user name when logged in. This is achieved by using the *AuthorizeView* component in *MainLayout.razor*:
 
 ```xml
 <div class="page">
