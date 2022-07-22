@@ -13,7 +13,7 @@ xoxo
 
 
 By default, the file system is used, but the storage of these keys is abstracted behind a extensible store interface.
-The [IServerSideSessionStore]({{<ref "/reference/stores/signing_key_store">}}) is that storage interface. 
+The [IServerSideSessionStore]({{<ref "/reference/stores/server_side_sessions">}}) is that storage interface. 
 
 ## Registering a custom signing key store
 
