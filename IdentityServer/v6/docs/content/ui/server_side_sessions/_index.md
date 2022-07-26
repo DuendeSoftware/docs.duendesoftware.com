@@ -56,7 +56,7 @@ These values are the user's:
 * session identifier (the *sid* claim value)
 * display name (an optional and configurable claim value)
 
-If you would like to query this data based on a user's display name, then the claim type used is configurable with the *Authentication.UserDisplayNameClaimType* property on the [IdentityServerOptions]({{<ref "/reference/options#authentication">}}).
+If you would like to query this data based on a user's display name, then the claim type used is configurable with the *ServerSideSessions.UserDisplayNameClaimType* property on the [IdentityServerOptions]({{<ref "/reference/options#authentication">}}).
 This claim must be included in the claims when the user's [authentication session is established]({{<ref "/ui/login/session">}}).
 
 For example:
