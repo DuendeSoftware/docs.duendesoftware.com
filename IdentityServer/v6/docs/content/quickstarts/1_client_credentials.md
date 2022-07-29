@@ -444,10 +444,10 @@ token. The protocol ensures that this scope will only be in the token if the
 client requests it and IdentityServer allows the client to have that scope. You
 configured IdentityServer to allow this access by [including it in the
 allowedScopes property](#define-client). Add the following to the
-*ConfigureServices* method in the API's *Startup.cs* file:
+*ConfigureServices* method in the API's *Program.cs* file:
 
 ```cs
-services.AddAuthorization(options =>
+builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ApiScope", policy =>
     {
