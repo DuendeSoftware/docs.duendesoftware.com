@@ -245,7 +245,7 @@ dotnet run /seed
 ```
 
 Now that you have more data in the database, you can use it to set claims.
-*IdentityServer* contains an extensibility point called the *IProfileService*
+IdentityServer contains an extensibility point called the *IProfileService*
 that is responsible for retrieval of user claims. The ASP.NET Identity
 Integration includes an implementation of *IProfileService* that retrieves
 claims from ASP.NET Identity. You can extend that implementation to use the
@@ -367,4 +367,7 @@ you need from ASP.NET Core Identity, customized according to your requirements.
 Alternatively, you can [create a new project based on the ASP.NET Core Identity
 template](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=netcore-cli#create-a-web-app-with-authentication)
 and add the IdentityServer features you have learned about in these quickstarts
-to that project.
+to that project. With that approach, you may need to configure *IdentityServer*
+so that it knows the paths to pages for user interactions. Set the LoginUrl, 
+LogoutUrl, ConsentUrl, ErrorUrl, and DeviceVerificationUrl as needed in your 
+*IdentityServerOptions*.
