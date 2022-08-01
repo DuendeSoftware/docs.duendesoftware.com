@@ -245,7 +245,7 @@ dotnet run /seed
 ```
 
 Now that you have more data in the database, you can use it to set claims.
-*IdentityServer* contains an extensibility point called the *IProfileService*
+IdentityServer contains an extensibility point called the *IProfileService*
 that is responsible for retrieval of user claims. The ASP.NET Identity
 Integration includes an implementation of *IProfileService* that retrieves
 claims from ASP.NET Identity. You can extend that implementation to use the
