@@ -367,7 +367,7 @@ you need from ASP.NET Core Identity, customized according to your requirements.
 Alternatively, you can [create a new project based on the ASP.NET Core Identity
 template](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=netcore-cli#create-a-web-app-with-authentication)
 and add the IdentityServer features you have learned about in these quickstarts
-to that project. With that approach, you may need to configure *IdentityServer*
+to that project. With that approach, you may need to configure IdentityServer
 so that it knows the paths to pages for user interactions. Set the LoginUrl, 
 LogoutUrl, ConsentUrl, ErrorUrl, and DeviceVerificationUrl as needed in your 
 *IdentityServerOptions*.
