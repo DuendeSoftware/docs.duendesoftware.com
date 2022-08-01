@@ -38,4 +38,4 @@ It also configures some of ASP.NET Identity's options for use with IdentityServe
 If you need to use your own implementation of *IUserClaimsPrincipalFactory*, then that is supported. Our implementation of the *IUserClaimsPrincipalFactory* will use the decorator pattern to encapsulate yours. For this to work properly, ensure that your implementation is registered in the DI system prior to calling the IdentityServer *AddAspNetIdentity* extension method.
 
 ## Template
-The [templates]({{<ref "/overview/packaging/#templates>}}) includes the isaspid template. This template will create a starter IdentityServer host project configured to use ASP.NET Identity. See the [Quickstart Documentation]({{<ref "/quickstarts/5_aspnetid/">}}) for a detailed walkthrough. 
+Alternatively, you can use the *isaspid* [template]({{<ref "/overview/packaging#templates">}}) to create a starter IdentityServer host project configured to use ASP.NET Identity. See the [Quickstart Documentation]({{<ref "/quickstarts/5_aspnetid">}}) for a detailed walkthrough. 
