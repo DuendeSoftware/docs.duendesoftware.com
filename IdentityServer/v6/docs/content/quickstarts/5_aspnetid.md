@@ -197,6 +197,163 @@ page](https://localhost:5002/callapi) to invoke the API on behalf of the user:
 Congratulations, you're using users from ASP.NET Core Identity in
 IdentityServer!
 
+## Adding Custom Profile Data
+Next you will add a custom property to your user model and include it as a 
+claim when the appropriate Identity Resource is requested.
+
+First, add a *FavoriteColor* property to the *ApplicationUser* class.
+```csharp
+public class ApplicationUser : IdentityUser
+{
+    public string FavoriteColor { get; set; }
+}
+```
+
+Then, set the FavoriteColor of one of your test users in *SeedData.cs*
+
+```csharp
+alice = new ApplicationUser
+{
+    UserName = "alice",
+    Email = "AliceSmith@email.com",
+    EmailConfirmed = true,
+    FavoriteColor = "red",
+};
+```
+
+In the same file, add code to recreate the database when you re-seed the data,
+by calling *EnsureDeleted* just before *Migrate*:
+
+
+```csharp
+var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+context.Database.EnsureDeleted();
+context.Database.Migrate();
+```
+
+{{% notice note %}}
+Caution: this will destroy
+your test users when you make changes to them. While that is convenient for this
+quickstart, it is not recommended in production!
+{{% /notice %}}
+
+Next, create an ef migration for the CustomProfileData and reseed your user
+database.
+```sh
+dotnet ef migrations add CustomProfileData
+dotnet run /seed
+```
+
+Now that you have more data in the database, you can use it to set claims.
+*IdentityServer* contains an extensibility point called the *IProfileService*
+that is responsible for retrieval of user claims. The ASP.NET Identity
+Integration includes an implementation of *IProfileService* that retrieves
+claims from ASP.NET Identity. You can extend that implementation to use the
+custom profile data as a source of claims data. [See here]({{< ref "/reference/services/profile_service" >}}) 
+for more details on the profile service.
+
+Create a new class called *CustomProfileService* and add the following code to it:
+```csharp
+using Duende.IdentityServer.AspNetIdentity;
+using Duende.IdentityServer.Models;
+using IdentityServerHost.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+
+namespace IdentityServerAspNetIdentity
+{
+    public class CustomProfileService : ProfileService<ApplicationUser>
+    {
+        public CustomProfileService(UserManager<ApplicationUser> userManager, IUserClaimsPrincipalFactory<ApplicationUser> claimsFactory) : base(userManager, claimsFactory)
+        {
+        }
+
+        protected override async Task GetProfileDataAsync(ProfileDataRequestContext context, ApplicationUser user)
+        {
+            var principal = await GetUserClaimsAsync(user);
+            var id = (ClaimsIdentity)principal.Identity;
+            if (!string.IsNullOrEmpty(user.FavoriteColor))
+            {
+                id.AddClaim(new Claim("favorite_color", user.FavoriteColor));
+            }
+
+            context.AddRequestedClaims(principal.Claims);
+        }
+    }
+}
+```
+
+Register the *CustomProfileService* in *HostingExtensions.cs*:
+```csharp
+builder.Services
+    .AddIdentityServer(options =>
+    {
+        // ...
+    })
+    .AddInMemoryIdentityResources(Config.IdentityResources)
+    .AddInMemoryApiScopes(Config.ApiScopes)
+    .AddInMemoryClients(Config.Clients)
+    .AddAspNetIdentity<ApplicationUser>()
+    .AddProfileService<CustomProfileService>();
+```
+
+Finally, you need to configure your application to make a request for the
+favorite_color, and include that claim in your client's configuration.
+
+Add a new *IdentityResource* in *Config.cs* that will map the color scope onto the
+favoroite_color claim type:
+
+```csharp
+public static IEnumerable<IdentityResource> IdentityResources =>
+    new IdentityResource[]
+    {
+        new IdentityResources.OpenId(),
+        new IdentityResources.Profile(),
+        new IdentityResource("color", new [] { "favorite_color" })
+    };
+```
+
+Allow the web client to request the color scope (also in *Config.cs*):
+```csharp
+new Client
+{
+    ClientId = "web",
+    // ...
+    
+    AllowedScopes = new List<string>
+    {
+        IdentityServerConstants.StandardScopes.OpenId,
+        IdentityServerConstants.StandardScopes.Profile,
+        "api1",
+        "color"
+    }
+}
+```
+
+Finally, update the *WebClient* project so that it will request the color scope.
+In its *program.cs* file, add the color scope to the requested scopes, and add a
+claim action to map the favorite_color into the principal:
+
+```csharp
+.AddOpenIdConnect("oidc", options =>
+{
+    // ...
+
+    options.Scope.Clear();
+    options.Scope.Add("openid");
+    options.Scope.Add("profile");
+    options.Scope.Add("offline_access");
+    options.Scope.Add("api1");
+    options.Scope.Add("color");
+
+    options.GetClaimsFromUserInfoEndpoint = true;
+    options.ClaimActions.MapUniqueJsonKey("favorite_color", "favorite_color");
+});
+```
+
+Now restart the *IdentityServerAspNetIdentity* and *WebClient* projects, sign
+out and sign back in as alice, and you should see the favorite color claim.
+
 ## What's Missing?
 The rest of the code in this template is similar to the other quickstarts and
 templates we provide. You will notice that this template does not include UI
