@@ -21,11 +21,11 @@ Both the front-channel and JS-based notifications make use of cookies in iframes
 
 
 ### Front-channel server-side clients
-To signout the user from the server-side client applications via the front-channel spec, the "logged out" page in IdentityServer must render an *<iframe>* for each client that points to the corresponding notification endpoint at the client.
+To signout the user from the server-side client applications via the front-channel spec, the "logged out" page in IdentityServer must render an *\<iframe>* for each client that points to the corresponding notification endpoint at the client.
 
 Clients that wish to be notified must have the *FrontChannelLogoutUri* configuration value set.
 IdentityServer tracks which clients the user has signed into, and provides an API called *GetLogoutContextAsync* on the [IIdentityServerInteractionService]({{< ref "/reference/services/interaction_service#iidentityserverinteractionservice-apis" >}}). 
-This API returns a *LogoutRequest* object with a *SignOutIFrameUrl* property that your logged out page must render into an *<iframe>*.
+This API returns a *LogoutRequest* object with a *SignOutIFrameUrl* property that your logged out page must render into an *\<iframe>*.
 
 See the [Quickstart UI](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI) account controller and signout view for an example.
 
@@ -34,6 +34,13 @@ To signout the user from the server-side client applications via the back-channe
 IdentityServer will automatically use this service when your logout page removes the user's authentication cookie via a call to *HttpContext.SignOutAsync*.
 
 Clients that wish to be notified must have the [BackChannelLogoutUri]({{<ref "/reference/models/client#authentication--session-management">}}) configuration value set.
+
+#### Implementing Back-channel Logout in .NET Applications
+
+.NET does not have native support for back-channel logout notification.
+We do [provide a sample]({{<ref "/samples/basics#mvc-client-with-back-channel-logout-notifications">}}), though.
+Alternatively, if you are using our BFF framework, back-channel logout is [already implemented]({{<ref "/bff/session/management#back-channel-logout-notifications">}}) for you.
+
 
 ### Browser-based JavaScript clients
 There is nothing special you need to do to notify these clients that the user has signed out.

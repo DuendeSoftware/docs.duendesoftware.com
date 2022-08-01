@@ -350,8 +350,8 @@ if (disco.IsError)
 {{% notice note %}}
 
 If you get an error connecting it may be that you are running *https* and the
-development certificate for *localhost* is not trusted. You can run *dotnet
-dev-certs https --trust* in order to trust the development certificate. This
+development certificate for *localhost* is not trusted. You can run `dotnet
+dev-certs https --trust` in order to trust the development certificate. This
 only needs to be done once. 
 
 {{% /notice %}}
@@ -444,10 +444,10 @@ token. The protocol ensures that this scope will only be in the token if the
 client requests it and IdentityServer allows the client to have that scope. You
 configured IdentityServer to allow this access by [including it in the
 allowedScopes property](#define-client). Add the following to the
-*ConfigureServices* method in the API's *Startup.cs* file:
+*ConfigureServices* method in the API's *Program.cs* file:
 
 ```cs
-services.AddAuthorization(options =>
+builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ApiScope", policy =>
     {

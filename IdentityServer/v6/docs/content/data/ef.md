@@ -65,9 +65,23 @@ options.ConfigureDbContext = b =>
         sql => sql.MigrationsAssembly(migrationsAssembly).MigrationsHistoryTable("MyConfigurationMigrationTable", "myConfigurationSchema"));
 ```
 
+### Enabling Caching for Configuration Store
+
+To enable caching for the EF configuration store implementation, use the *AddConfigurationStoreCache* extension method:
+
+```csharp
+public IServiceProvider ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentityServer()
+        .AddConfigurationStore(options => { ... })
+        // this is something you will want in production to reduce load on and requests to the DB
+        .AddConfigurationStoreCache();
+}
+```
+
 ## Operational Store 
 For storing [operational data]({{<ref "./operational">}}) then the operational store can be used.
-This support provides implementations of the *IPersistedGrantStore*, *IDeviceFlowStore*, and *ISigningKeyStore* extensibility points.
+This support provides implementations of the *IPersistedGrantStore*, *IDeviceFlowStore*, *IServerSideSessionStore*, and *ISigningKeyStore* extensibility points.
 The implementation uses a *DbContext*-derived class called *PersistedGrantDbContext* to model the table in the database.
 
 To use the operational store support, use the *AddOperationalStore* extension method after the call to *AddIdentityServer*:

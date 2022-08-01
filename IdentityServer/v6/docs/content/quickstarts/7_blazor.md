@@ -122,7 +122,7 @@ A couple of steps are necessary to add the security and identity plumbing to a B
 </CascadingAuthenticationState>
 ```
 
-**d)** Last but not least, we will some conditional rendering to the layout page to be able to trigger login/logout as well as displaying the current user name when logged in. This is achieved by using the *AuthorizeView* component in *MainLayout.razor*:
+**d)** Last but not least, we will add some conditional rendering to the layout page to be able to trigger login/logout as well as displaying the current user name when logged in. This is achieved by using the *AuthorizeView* component in *MainLayout.razor*:
 
 ```xml
 <div class="page">
@@ -293,6 +293,12 @@ builder.Services.AddHttpClient("backend", client => client.BaseAddress = new Uri
 builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
 ```
 
+This requires an additional reference in the client project:
+
+```
+<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+```
+
 If you restart the application again, the logon/logoff logic should work now. In addition you can display the contents of the session on the main page by adding this code to *Index.razor*:
 
 ```
@@ -350,3 +356,43 @@ Response status code does not indicate success: 401 (Unauthorized).
 The client code can properly respond to this, e.g. triggering a login redirect.
 
 When you logon now and call the API, you can put a breakpoint server-side and inspect that the API controller has access to the claims of the authenticated user via the *.User* property.
+
+### Setting up a Blazor BFF client in IdentityServer
+In essence a BFF client is "just" a normal authorization code flow client:
+
+* use the code grant type
+* set a client secret
+* enable *AllowOfflineAccess* if you want to use refresh tokens
+* enable the required identity and resource scopes
+* set the redirect URIs for the OIDC handler
+
+Below is a typical code snippet for the client definition:
+
+```cs
+var bffClient = new Client
+{
+    ClientId = "bff",
+    
+    ClientSecrets =
+    {
+        new Secret("secret".Sha256())
+    },
+
+    AllowedGrantTypes = GrantTypes.Code,
+
+    RedirectUris = { "https://bff_host/signin-oidc" },
+    FrontChannelLogoutUri = "https://bff_host/signout-oidc",
+    PostLogoutRedirectUris = { "https://bff_host/signout-callback-oidc" },
+
+    AllowOfflineAccess = true,
+
+    AllowedScopes = { "openid", "profile", "remote_api" }
+};
+```
+
+### Further experiments
+Our Blazor BFF [sample]({{< ref "/samples/bff#blazor-wasm" >}}) is based on this Quickstart. In addition it shows concepts like
+
+* better organization with components
+* reacting to logout
+* using the authorize attribute to trigger automatic redirects to the login page

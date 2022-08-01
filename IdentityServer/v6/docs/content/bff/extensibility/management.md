@@ -9,9 +9,12 @@ When you add Duende.BFF to DI - a default implementation for every management en
 ```cs
 // management endpoints
 services.AddTransient<ILoginService, DefaultLoginService>();
+services.AddTransient<ISilentLoginService, DefaultSilentLoginService>();
+services.AddTransient<ISilentLoginCallbackService, DefaultSilentLoginCallbackService>();
 services.AddTransient<ILogoutService, DefaultLogoutService>();
 services.AddTransient<IUserService, DefaultUserService>();
 services.AddTransient<IBackchannelLogoutService, DefaultBackchannelLogoutService>();
+services.AddTransient<IDiagnosticsService, DefaultDiagnosticsService>();
 ```
 
 You can add your own implementation, by overriding our default after calling *AddBff()*.

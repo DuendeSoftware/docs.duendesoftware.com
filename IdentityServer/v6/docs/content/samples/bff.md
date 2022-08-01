@@ -1,9 +1,9 @@
 ---
 title: "Backend for Frontend Pattern"
-weight: 30
+weight: 40
 ---
 
-This solution contains a collection of clients using our [BFF security framework]({{< ref "/bff" >}}).
+This section contains a collection of clients using our [BFF security framework]({{< ref "/bff" >}}).
 
 ### JavaScript Frontend
 This sample shows how to use the BFF framework with a JavaScript-based frontend (e.g. SPA).

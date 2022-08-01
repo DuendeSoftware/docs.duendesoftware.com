@@ -9,7 +9,7 @@ The OpenID Connect specification recommends a client authentication method based
 The technique is described [here](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) and is based on the OAuth JWT assertion specification [(RFC 7523)](https://tools.ietf.org/html/rfc7523).
 
 ## Setting up a private key JWT secret
-The default default private key JWT secret validator expects either a base64 encoded X.509 certificate or a [JSON Web Key](https://tools.ietf.org/html/rfc7517) formatted RSA, EC or symmetric key on the secret definition:
+The default private key JWT secret validator expects either a base64 encoded X.509 certificate or a [JSON Web Key](https://tools.ietf.org/html/rfc7517) formatted RSA, EC or symmetric key on the secret definition:
 
     var client = new Client
     {

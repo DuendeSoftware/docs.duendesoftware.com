@@ -171,10 +171,37 @@ The *Data* property contains a copy of all of the values (and more) and is consi
         /// Client id the grant was issued to.
         /// </summary>
         public string ClientId { get; set; }
-        
+
+        /// <summary>
+        /// Client ids the grant was issued to.
+        /// </summary>
+        public IEnumerable<string> ClientIds { get; set; }
+
         /// <summary>
         /// The type of grant.
         /// </summary>
         public string Type { get; set; }
+
+        /// <summary>
+        /// The types of grants.
+        /// </summary>
+        public IEnumerable<string> Types { get; set; }
+    }
+```
+
+#### PersistedGrantTypes
+
+The types of persisted grants are defined by the `IdentityServerConstants.PersistedGrantTypes` constants:
+
+```cs
+    public static class PersistedGrantTypes
+    {
+        public const string AuthorizationCode = "authorization_code";
+        public const string BackChannelAuthenticationRequest = "ciba";
+        public const string ReferenceToken = "reference_token";
+        public const string RefreshToken = "refresh_token";
+        public const string UserConsent = "user_consent";
+        public const string DeviceCode = "device_code";
+        public const string UserCode = "user_code";
     }
 ```

@@ -53,7 +53,7 @@ support to your IdentityServer project, install the Entity framework Sqlite
 NuGet package by running the following command from the *IdentityServer*
 directory:
 
-```
+```console
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
@@ -74,7 +74,7 @@ To use these stores, replace the existing calls to *AddInMemoryClients*,
 ```cs
 public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
-    var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+    var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
     const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
 
     builder.Services.AddIdentityServer()

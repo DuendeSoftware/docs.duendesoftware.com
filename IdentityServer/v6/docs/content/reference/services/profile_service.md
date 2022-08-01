@@ -6,7 +6,7 @@ weight: 40
 
 #### Duende.IdentityServer.Services.IProfileService
 
-Encapsulates retrieval of user claims from a data source of your choice.
+Encapsulates retrieval of user claims from a data source of your choice. See [here]({{< ref "/samples/ui#custom-profile-service" >}}) for a sample.
 
 ```cs
 /// <summary>

@@ -42,17 +42,22 @@ services.AddBff(options =>
     Specifies if the user's refresh token is automatically revoked at logout time.
     Defaults to *true*.
 
-* ***RequireLogoutSessionId***
-
-    Flag that specifies if the *sid* claim needs to be present in the logout request as query string parameter.
-    Used to prevent cross site request forgery.
-    Defaults to *true*.
-
 * ***BackchannelLogoutAllUserSessions***
 
     Specifies if during backchannel logout all matching user sessions are logged out.
     If *true*, all sessions for the subject will be revoked. If false, just the specific session will be revoked.
     Defaults to *false*.
+
+* ***EnableSessionCleanup***
+
+    Indicates if expired server side sessions should be cleaned up.
+    This requires an implementation of IUserSessionStoreCleanup to be registered in the DI system.
+    Defaults to *false*.
+
+* ***SessionCleanupInterval***
+
+    Interval at which expired sessions are cleaned up.
+    Defaults to *10 minutes*.
 
 
 ## APIs

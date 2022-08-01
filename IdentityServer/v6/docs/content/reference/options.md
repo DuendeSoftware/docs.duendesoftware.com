@@ -1,6 +1,5 @@
 ---
 title: "IdentityServer Options"
-date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---
 
@@ -44,6 +43,10 @@ Top-level settings.
 * ***EmitStaticAudienceClaim***
   
     Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
+    
+* ***EmitIssuerIdentificationResponseParameter***
+  
+    Emits the *iss* response parameter on authorize reponses. Defaults to *true*.
 
 * ***ValidateTenantOnAuthorization***
   
@@ -210,8 +213,15 @@ Login/logout related settings.
     
     If set, will require frame-src CSP headers being emitting on the end session callback endpoint which renders iframes to clients for front-channel signout notification. Defaults to true.
 
+* ***CoordinateClientLifetimesWithUserSession*** (added in 6.1)
+    
+    When enabled, all clients' token lifetimes (e.g. refresh tokens) will be tied to the user's session lifetime.
+    This means when the user logs out, any revokable tokens will be removed.
+    If using server-side sessions, expired sessions will also remove any revokable tokens, and backchannel logout will be triggered.
+    An individual client can override this setting with its own *CoordinateLifetimeWithUserSession* configuration setting.
+
 ## Events
-Allows configuring if and which events should be submitted to a registered event sink. See :ref:`here <refEvents>` TODO for more information on events.
+Allows configuring if and which events should be submitted to a registered event sink. See [here]({{< ref "/diagnostics/events">}}) for more information on events.
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -392,6 +402,14 @@ var builder = services.AddIdentityServer(options =>
     Normally the cnf claims only gets emitted if the client used the client certificate for authentication,
     setting this to true, will set the claim regardless of the authentication method. (defaults to false).
 
+## PersistentGrants
+Shared settings for persisted grants behavior.
+
+* ***DataProtectData***
+    
+    Data protect the persisted grants "data" column. Defaults to *true*.
+    If you have PII requirements and your database is already protecting data at rest, then you can consider disabling this.
+
 ## Dynamic Providers
 Shared settings for the [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}) feature.
 
@@ -417,4 +435,28 @@ Shared settings for the CIBA feature.
 * ***DefaultPollingInterval***
     
     The polling interval in seconds that a client is to use when connecting to the token endpoint. Defaults to 5.
+
+## Server-side Sessions 
+Shared settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added in 6.1.
+
+* ***UserDisplayNameClaimType***
+    
+    The claim type used for the user's display name. 
+
+* ***RemoveExpiredSessions***
+    
+    If enabled will perodically cleanup expired sessions.
+
+* ***RemoveExpiredSessionsFrequency***
+    
+    Frequency expired sessions will be removed.
+
+* ***RemoveExpiredSessionsBatchSize***
+    
+    Number of expired sessions records to be removed at a time.
+
+* ***ExpiredSessionsTriggerBackchannelLogout***
+    
+    If enabled, when server-side sessions are removed due to expiration, will back-channel logout notifications be sent.
+    This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer.
 

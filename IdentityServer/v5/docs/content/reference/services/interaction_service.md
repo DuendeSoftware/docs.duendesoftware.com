@@ -192,7 +192,7 @@ The above methods return various models.
 
 * ***Description***
     
-    Optional description the user can set for the grant (e.g. the name of the device being used when consent is given). This can be presented back to the user from the :ref:`persisted grant service <refPersistedGrants>` (TODO).
+    Optional description the user can set for the grant (e.g. the name of the device being used when consent is given). This can be presented back to the user from the [persisted grant service]({{<ref "/reference/services/persisted_grant_service" >}}).
 
 * ***Error***
     

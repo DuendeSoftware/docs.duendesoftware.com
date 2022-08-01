@@ -42,7 +42,7 @@ Update the *Client* in *IdentityServer/Config.cs* as follows:
 ```cs
 new Client
 {
-    ClientId = "mvc",
+    ClientId = "web",
     ClientSecrets = { new Secret("secret".Sha256()) },
 
     AllowedGrantTypes = GrantTypes.Code,
@@ -59,15 +59,15 @@ new Client
     {
         IdentityServerConstants.StandardScopes.OpenId,
         IdentityServerConstants.StandardScopes.Profile,
-        "verification",
         "api1"
     }
 }
 ```
 
-## Modifying the MVC client
-Now just configure the client to ask for the *api1* scope. This is done in the
-OpenID Connect handler configuration in *MvcClient/Program.cs*:
+## Modifying the Web client
+Now configure the client to ask for access to api1 and for a refresh token by
+requesting the *api1* and *offline_access* scopes. This is done in the OpenID
+Connect handler configuration in *WebClient/Program.cs*:
 
 ```cs
 builder.Services.AddAuthentication(options =>
@@ -80,14 +80,18 @@ builder.Services.AddAuthentication(options =>
     {
         options.Authority = "https://localhost:5001";
 
-        options.ClientId = "mvc";
+        options.ClientId = "web";
         options.ClientSecret = "secret";
         options.ResponseType = "code";
 
         options.SaveTokens = true;
 
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
         options.Scope.Add("api1");
         options.Scope.Add("offline_access");
+        options.GetClaimsFromUserInfoEndpoint = true;
     });
 ```
 
@@ -97,41 +101,53 @@ you run the solution and authenticate, you will see the tokens on
 the page that displays the cookie claims and properties created in quickstart 2.
 
 ## Using the access token
-Now you will use the access token to authorize requests from the *MvcClient* to
+Now you will use the access token to authorize requests from the *WebClient* to
 the *Api*. 
 
-Create an action on the *HomeController* that will 
+Create a page that will 
 1. Retrieve the access token from the session using the *GetTokenAsync*
 method from *Microsoft.AspNetCore.Authentication*
 2. Set the token in an *Authentication: Bearer* HTTP header
 3. Make an HTTP request to the *API*
 4. Display the results
 
+Create the Page by running the following command from the *WebClient\Pages*
+directory:
+```console
+dotnet new page -n CallApi
+```
+
+Update *WebClient\Pages\CallApi.cshtml.cs* as follows:
 ```cs
-public async Task<IActionResult> CallApi()
+public class CallApiModel : PageModel
 {
-    var accessToken = await HttpContext.GetTokenAsync("access_token");
+    public string Json = string.Empty;
 
-    var client = new HttpClient();
-    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-    var content = await client.GetStringAsync("https://localhost:6001/identity");
+    public async Task OnGet()
+    {
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
+        var client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var content = await client.GetStringAsync("https://localhost:6001/identity");
 
-    var parsed = JsonDocument.Parse(content);
-    var formatted = JsonSerializer.Serialize(parsed, new JsonSerializerOptions { WriteIndented = true });
+        var parsed = JsonDocument.Parse(content);
+        var formatted = JsonSerializer.Serialize(parsed, new JsonSerializerOptions { WriteIndented = true });
 
-    ViewBag.Json = formatted;
-    return View("json");
+        Json = formatted;
+    }
 }
 ```
 
-Create a view in *MvcClient/Views/Home/json.cshtml* that outputs the json like this:
-
+And update *WebClient\Pages\CallApi.cshtml* as follows:
 ```html
-<pre>@ViewBag.Json</pre>
+@page
+@model MyApp.Namespace.CallApiModel
+
+<pre>@Model.Json</pre>
 ```
 
-Make sure the API is running, start the MVC client and call */home/CallApi*
-after authentication.
+Make sure the *IdentityServer* and *Api* projects are running, start the
+*WebClient* and request */CallApi* after authentication.
 
 ## Further Reading - Access token lifetime management
 By far the most complex task for a typical client is to manage the access token.
