@@ -13,8 +13,16 @@ You can configure the consent requirement per client. By default no consent is r
 Consent is used to allow an end user to grant a client access to [resources]({{< ref "/fundamentals/resources" >}}).
 
 ## Consent Page
-In order for the user to grant consent, a consent page must be provided by the hosting application.
-The quickstart UI has a basic implementation of a consent page.
+In order for the user to grant consent, a consent page must be provided by the
+hosting application. When IdentityServer needs to prompt the
+user for consent, it will redirect the user to a configurable *ConsentUrl*. 
+```csharp
+builder.Services.AddIdentityServer(opt => {
+    opt.UserInteraction.ConsentUrl = "/path/to/consent";
+})
+```
+By default, the ConsentUrl is set to "/consent".  The quickstart UI includes a
+basic implementation of a consent page at that route.
 
 A consent page normally renders the display name of the current user, 
 the display name of the client requesting access, 
