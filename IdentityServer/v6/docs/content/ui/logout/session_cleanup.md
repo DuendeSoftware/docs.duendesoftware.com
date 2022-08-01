@@ -16,6 +16,10 @@ Or you can use the overload that will simply sign-out of the default authenticat
 await HttpContext.SignOutAsync();
 ```
 
+If you are integrating with ASP.NET Identity, sign out using its *SignInManager* instead:
+```cs
+await _signInManager.SignOutAsync();
+```
 ### Prompting the User to Logout
 
 Typically you should prompt the user to logout which requires a POST to remove the cookie.

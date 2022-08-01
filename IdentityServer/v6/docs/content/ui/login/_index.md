@@ -12,6 +12,33 @@ This requires a user to present credentials and typically involves these steps:
 * Start the session by creating the authentication session cookie in your IdentityServer.
 * If the login is client initiated, redirect the user back to the client.
 
+When IdentityServer needs to show the login page, it redirects the user to a configurable
+*LoginUrl*.
+```cs
+builder.Services.AddIdentityServer(opt => {
+    opt.UserInteraction.LoginUrl = "/path/to/login";
+})
+```
 
+If no *LoginUrl* is set, IdentityServer will infer it from the *LoginPath* of your Cookie
+Authentication Handler. For example:
+```cs
+builder.Services.AddAuthentication()
+    .AddCookie("cookie-handler-with-custom-path", options => 
+    {
+        options.LoginPath = "/path/to/login/from/cookie/handler";
+    })
+```
 
+If you are using ASP.NET Identity, configure its cookie authentication handler like this:
+```cs
+builder.Services
+    .AddIdentityServer()
+    .AddAspNetIdentity<ApplicationUser>();
 
+builder.Services
+    .ConfigureApplicationCookie(options => 
+    {
+        options.LoginPath = "/path/to/login/for/aspnet_identity";
+    });
+```

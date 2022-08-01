@@ -8,8 +8,14 @@ The steps for implementing a local login page are:
 * Issue the authentication cookie
 * Redirect the user to the return URL
 
-The below code shows a sample Razor Page that could act as a login page.
-This sample hard codes the logic for the credentials, so this is where your implementation would use your custom user database or identity management library.
+The code below shows a sample Razor Page that could act as a login page. This
+sample hard codes the logic for the credentials. In production code, use your custom user database or identity management library here. 
+
+If you are using ASP.NET Identity for user management, our Identity Server
+ASP.NET Identity (*isaspid*) [template]({{<ref
+"/overview/packaging#templates">}}) includes a login page that shows how you
+might use the abstractions of that library on your login page. Notably, it uses
+the *SignInManager* to start the session, rather than *HttpContext.SignInAsync*.
 
 This is the cshtml for the login Razor Page:
 
@@ -76,7 +82,10 @@ namespace Sample.Pages.Account
 }
 ```
 
-The above Razor page is expected to be located in the project at the path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the browser at the "/Account/Login" path.
+When IdentityServer redirects to the [LoginUrl]({{< ref "/ui/login" >}}), the user should arrive at this
+page. If you're using the default urls, then this page should be created at the
+path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the
+browser at the "/Account/Login" path. 
 
 {{% notice note %}}
 While you can use any custom user database or identity management library for your users, we provide first class [integration support]({{< ref "/aspnet_identity" >}}) for ASP.NET Identity.
