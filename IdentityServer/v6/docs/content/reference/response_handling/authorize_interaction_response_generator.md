@@ -12,7 +12,7 @@ If a custom implementation of *IAuthorizeInteractionResponseGenerator* is desire
 {{% /notice %}}
 
 
-## IDeviceFlowInteractionService APIs
+## IAuthorizeInteractionResponseGenerator APIs
 
 * ***ProcessInteractionAsync***
     
