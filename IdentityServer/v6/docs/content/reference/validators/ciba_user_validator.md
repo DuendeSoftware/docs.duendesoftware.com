@@ -1,6 +1,6 @@
 ---
 title: "Backchannel Authentication User Validator"
-weight: 80
+weight: 30
 ---
 
 #### Duende.IdentityServer.Validation.IBackchannelAuthenticationUserValidator

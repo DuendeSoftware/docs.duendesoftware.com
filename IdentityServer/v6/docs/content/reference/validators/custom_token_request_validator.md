@@ -1,7 +1,6 @@
 ---
 title: "Custom Token Request Validator"
-date: 2020-09-10T08:22:12+02:00
-weight: 47
+weight: 20
 ---
 
 #### Duende.IdentityServer.Validation.ICustomTokenRequestValidator
@@ -29,7 +28,8 @@ public interface ICustomTokenRequestValidator
 
     This method gets called during token request processing. The context gives you access to request and response parameters.
 
-    You can also change certain parameters on the validated request object, e.g. the token lifetime, toke type, confirmation method and client claims.
+    You can also change certain parameters on the validated request object, e.g. the token lifetime, token type, confirmation method and client claims.
 
     The *CustomResponse* dictionary allows emitting additional response fields.
 
+    To fail the request, set the the *IsError*, the *Error*, and optionally the *ErrorDescription* properties on the *Result* object on the *CustomTokenRequestValidationContext*.
