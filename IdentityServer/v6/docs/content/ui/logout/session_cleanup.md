@@ -37,4 +37,4 @@ If your user has signed in with an external login, then it's likely that they sh
 ### Revoking Client Tokens at Logout
 
 During a user's session, long-lived tokens (e.g. refresh tokens) might have been created for client applications.
-If at logout time you would like to have those tokens revoked, then this can be done automatically by setting the *CoordinateLifetimeWithUserSession* propery on the [client configuration]({{<ref "/reference/models/client#authentication--session-management">}}), or globally on the [IdentityServer Authentication Options]({{<ref "/reference/options#authentication">}}).
+If at logout time you would like to have those tokens revoked, then this can be done automatically by setting the *CoordinateLifetimeWithUserSession* property on the [client configuration]({{<ref "/reference/models/client#authentication--session-management">}}), or globally on the [IdentityServer Authentication Options]({{<ref "/reference/options#authentication">}}).
