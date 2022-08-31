@@ -71,6 +71,12 @@ x-csrf: 1
 
 If there is no current session, the user endpoint will return a 401 status code. This endpoint can also be used to periodically query if the session is still valid.
 
+{{% notice note %}}
+The *AnonymousSessionResponse* option allows you to change the behavior of the user endpoint to return 200 instead of a 401 when the user is anonymous.
+The payload simply returns *null* in that case.
+{{% /notice %}}
+
+
 If your backend uses sliding cookies, you typically want to avoid that querying the session will extend the session lifetime. Adding the *slide=false* query string parameter to the URL will prohibit that.
 
 {{% notice note %}}

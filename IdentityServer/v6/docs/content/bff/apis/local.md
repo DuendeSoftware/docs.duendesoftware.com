@@ -76,6 +76,66 @@ public class MyApiController : ControllerBase
 { ... }
 ```
 
-{{% notice note %}}
-You can disable the anti-forgery protection requirement by setting the *requireAntiForgeryCheck* parameter to *false* on the endpoint, controller or action. This is not recommended though.
-{{% /notice %}}
+#### Disabling Anti-forgery
+
+If needed, you can disable the anti-forgery protection requirement (though this is not recommended).
+
+For *version 1.x*, this is done by setting the *requireAntiForgeryCheck* parameter to *false* when adding the endpoint. For example:
+
+```csharp
+app.UseEndpoints(endpoints =>
+{
+    // MVC controllers
+    endpoints.MapControllers()
+        .RequireAuthorization()
+        .AsBffApiEndpoint(requireAntiforgeryCheck: false);
+
+    // simple endpoint
+    endpoints.MapPost("/foo", context => { ... })
+        .RequireAuthorization()
+        .AsBffApiEndpoint(requireAntiforgeryCheck: false);
+});
+```
+
+Or when using MVC controllers and actions you can set the *RequireAntiForgeryCheck* on the *BffApi*, like this:
+
+```csharp
+    [Route("sample")]
+    [BffApi(requireAntiForgeryCheck: false)]
+    public class SampleApiController : ControllerBase
+    {
+
+    }
+```
+
+
+For *version 2.x*, this is done by using the *SkipAntiforgery* fluent API when adding the endpoint. For example:
+
+```csharp
+app.UseEndpoints(endpoints =>
+{
+    // MVC controllers
+    endpoints.MapControllers()
+        .RequireAuthorization()
+        .AsBffApiEndpoint()
+        .SkipAntiforgery();
+
+    // simple endpoint
+    endpoints.MapPost("/foo", context => { ... })
+        .RequireAuthorization()
+        .AsBffApiEndpoint()
+        .SkipAntiforgery();
+});
+```
+
+Or when using MVC controllers and actions you can use the *BffApiSkipAntiforgeryAttribute* (which is independent of the *BffApiAttribute*), like this:
+
+```csharp
+    [Route("sample")]
+    [BffApiSkipAntiforgeryAttribute]
+    public class SampleApiController : ControllerBase
+    {
+
+    }
+```
+
