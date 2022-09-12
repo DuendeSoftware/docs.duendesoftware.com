@@ -152,7 +152,7 @@ This non-interactive design relies upon the use of an *iframe* to make the silen
 The result of the silent login request in the *iframe* will then use *postMessage* to notify the parent window of the outcome.
 If the result is that a session has been established, then the application logic can either re-trigger a call to the *User Endpoint*, or simply reload the entire page (depending on the preferred design).
 
-To trigger the silent login, the applicaiton code must have an *iframe* and then set its *src* to the silent login endpoint.
+To trigger the silent login, the application code must have an *iframe* and then set its *src* to the silent login endpoint.
 For example in your HTML:
 
 ```
