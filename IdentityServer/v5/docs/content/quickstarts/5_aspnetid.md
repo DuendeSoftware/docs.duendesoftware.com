@@ -18,7 +18,7 @@ The reason for this new project is due to the differences in UI assets when usin
 All the other projects in this solution (for the clients and the API) will remain the same.
 
 {{% notice note %}}
-This quickstart assumes you are familiar with how ASP.NET Core Identity works. If you are not, it is recommended that you first [learn about it](https://docs.microsoft.com/en-us/aspnet/core/security/ui/identity).
+This quickstart assumes you are familiar with how ASP.NET Core Identity works. If you are not, it is recommended that you first [learn about it](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity).
 {{% /notice %}}
 
 ## New Project for ASP.NET Core Identity
