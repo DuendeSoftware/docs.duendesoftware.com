@@ -86,4 +86,4 @@ A client is a piece of software that requests tokens from your IdentityServer - 
 
 There are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server processes, etc.
 
-[More details]({{< ref "/fundamentals/clients" >}})
+[More details]({{<ref "/fundamentals/clients" >}})
