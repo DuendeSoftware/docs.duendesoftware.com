@@ -18,6 +18,8 @@ If present, the contents of the file will be loaded as the license key.
 If you prefer to load the license key dynamically, you can in your startup code.
 When calling *AddIdentityServer* from *ConfigureServices*, you can pass a lambda expression to configure various options in your IdentityServer.
 The *LicenseKey* is one such setting. 
+
+The contents of the license key file is text, and so that is the value to assign to the *LicenseKey* property.
 For example:
 
 ```csharp
@@ -25,7 +27,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer(options =>
     {
-        options.LicenseKey = "your_license_key";
+        options.LicenseKey = "eyJhbG..."; // the contents of the license key file
     });
 }
 ```
