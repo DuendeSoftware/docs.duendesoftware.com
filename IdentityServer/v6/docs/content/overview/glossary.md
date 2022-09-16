@@ -4,6 +4,14 @@ date: 2020-09-10T08:22:12+02:00
 weight: 70
 ---
 
+## Client
+
+A client is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting an access token). A client must be first registered with your IdentityServer before it can request tokens.
+
+There are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server processes, etc.
+
+[More details]({{<ref "/fundamentals/clients" >}})
+
 ## Automatic key management
 (Business Edition)
 
@@ -79,3 +87,4 @@ A single deployment acts as a single OpenID Connect / OAuth authority hosted at 
 
 ## Multiple Deployment
 Can be either completely independent single deployments, or a single deployment that acts as multiple authorities on multiple URLs or host names (e.g. for branding, isolation or multi-tenancy reasons).
+
