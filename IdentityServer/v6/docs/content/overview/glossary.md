@@ -6,7 +6,7 @@ weight: 70
 
 ## Client
 
-A client is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting an access token). A client must be first registered with your IdentityServer before it can request tokens.
+A client is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting an access token). A client must be first registered with your IdentityServer before it can request tokens and is identified by a unique client ID.
 
 There are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server processes, etc.
 
