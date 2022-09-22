@@ -23,6 +23,12 @@ When a user must login, the client application will redirect the user to the pro
 As part of the authorize request, your IdentityServer will typically display a login page for the user to enter their credentials.
 Once the user has authenticated, your IdentityServer will redirect the user back to the application with the protocol response.
 
+{{% notice note %}}
+A user's authentication session is managed using Microsoft's ASP.NET [cookie authentication framework](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie).
+It is very important that you understand how it works when building the login pages in IdentityServer.
+{{% /notice %}}
+
+
 Recall the diagram showing the relationship of your custom UI pages and the IdentityServer middleware in your IdentityServer host application:
 
 ![](../../overview/images/middleware.png?height=500px)
