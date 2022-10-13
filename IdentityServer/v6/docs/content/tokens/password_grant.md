@@ -7,7 +7,7 @@ weight: 30
 The *password* grant type is an OAuth 2.0 [protocol flow](https://tools.ietf.org/html/rfc6749#section-4.3) for authenticating end-users at the token endpoint. It is designed for legacy applications, and it is generally recommended to use a browser-based flow instead - but in certain situation it is not feasible to change existing applications.
 
 {{% notice note %}}
-The *password* grant type is deprecated per [OAuth 2.1](https://tools.ietf.org/wg/oauth/draft-ietf-oauth-v2-1/).
+The *password* grant type is deprecated per [OAuth 2.1](https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/).
 {{% /notice %}}
 
 ## Requesting a token using Password grant
