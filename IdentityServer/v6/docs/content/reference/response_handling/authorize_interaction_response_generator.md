@@ -8,7 +8,7 @@ weight: 10
 The *IAuthorizeInteractionResponseGenerator* interface models the logic for determining if user must login or consent when making requests to the authorization endpoint.
 
 {{% notice note %}}
-If a custom implementation of *IAuthorizeInteractionResponseGenerator* is desired, the it's [recommended]({{<ref "/ui/custom#built-in-authorizeinteractionresponsegenerator">}}) to derive from the built-in *AuthorizeInteractionResponseGenerator* to inherit all the default logic pertaining to login and consent semantics.
+If a custom implementation of *IAuthorizeInteractionResponseGenerator* is desired, then it's [recommended]({{<ref "/ui/custom#built-in-authorizeinteractionresponsegenerator">}}) to derive from the built-in *AuthorizeInteractionResponseGenerator* to inherit all the default logic pertaining to login and consent semantics.
 {{% /notice %}}
 
 
