@@ -100,7 +100,7 @@ And to register this in the DI system:
 
 If your customization of the *OpenIdConnectOptions* requires per-provider data that you are storing on the *OidcProvider*, then we provide an abstraction for the *IConfigureNamedOptions\<OpenIdConnectOptions>*.
 This abstraction requires your code to derive from *ConfigureAuthenticationOptions\<OpenIdConnectOptions, OidcProvider>* (rather than *IConfigureNamedOptions\<OpenIdConnectOptions>*).
-For exmaple:
+For example:
 
 ```cs
 class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectOptions, OidcProvider>
