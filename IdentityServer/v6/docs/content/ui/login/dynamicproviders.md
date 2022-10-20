@@ -63,8 +63,15 @@ providers.AddRange(dyanmicSchemes);
 To use the dynamic providers feature an [identity provider store]({{<ref "/reference/stores/idp_store">}}) must be provided that will load [model data]({{<ref "/reference/models/idp">}}) for the OIDC identity provider to be used.
 If you're using the [Entity Framework Integration]({{<ref "/data/ef">}}) then this is implemented for you.
 
+{{% notice note %}}
+Like other configuration data in IdentityServer, by default the dynamic provider configuration is loaded from the store on every request unless caching is enabled. 
+If you use a custom store, there is an [extension method to enable caching]({{<ref "/data/configuration#caching-configuration-data">}}).
+If you use the EF stores, there is general helper [to enable caching for all configuration data]({{<ref "/data/ef#enabling-caching-for-configuration-store">}}).
+{{% /notice %}}
+
 The configuration data for the OIDC provider is used to assign the configuration on the ASP.NET Core [OpenID Connect Options](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions) class, much like you would if you were to statically configure the options when using *AddOpenIdConnect()*.
 The [identity provider model documentation]({{<ref "/reference/models/idp">}}) provides details for the model properties and how they are mapped to the options.
+
 
 #### Customizing OpenIdConnectOptions
 
