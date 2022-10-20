@@ -13,7 +13,7 @@ To use CIBA, you are expected to implement this interface and register it in the
 * ***ValidateRequestAsync***
     
     Validates the backchannel login request with the provided *BackchannelAuthenticationUserValidatorContext* for the current request.
-    Returns a *BackchannelAuthenticationUserValidatonResult* object.
+    Returns a *BackchannelAuthenticationUserValidationResult* object.
 
 
 ### BackchannelAuthenticationUserValidatorContext
@@ -48,7 +48,7 @@ Models the information to validate and identity the user for a CIBA login reques
     The binding request parameter from the request.
 
 
-### BackchannelAuthenticationUserValidatonResult
+### BackchannelAuthenticationUserValidationResult
 Models the result of a CIBA login request.
 
 * ***Subject***
