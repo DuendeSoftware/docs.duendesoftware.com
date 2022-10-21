@@ -21,8 +21,7 @@ Host: demo.duendesoftware.com
 Content-Type: application/x-www-form-urlencoded
 
 client_id=client&
-client_secret=secret
-
+client_secret=secret&
 grant_type=password&
 username=bob&
 password=password
