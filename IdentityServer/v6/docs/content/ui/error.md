@@ -9,7 +9,7 @@ The error page is used to display to the end user that an error has ocurred duri
 When an error occurs, IdentityServer will redirect the user to a configurable *ErrorUrl*.
 ```csharp
 builder.Services.AddIdentityServer(opt => {
-    opt.UserInteraction.ErrorUrl = "/path/to/consent";
+    opt.UserInteraction.ErrorUrl = "/path/to/error";
 })
 ```
 The default *ErrorUrl* is "/home/error". The quickstart UI includes a basic
