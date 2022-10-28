@@ -12,7 +12,8 @@ Below are links to relevant topics:
 
 ## ASP.NET Security
 
-* [ASP.NET Cookie Authentication](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie)
+* [Introduction to ASP.NET Core Authentication and Authorization](https://www.youtube.com/watch?v=02Yh3sxzAYI)
+* [ASP.NET Cookie Authentication Documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie)
 
 ## End-User Authorization
 
