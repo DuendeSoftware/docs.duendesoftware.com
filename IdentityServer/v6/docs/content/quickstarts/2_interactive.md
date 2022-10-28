@@ -230,6 +230,11 @@ builder.Services.AddAuthentication(options =>
     });
 ```
 
+{{% notice note %}}
+If you are unfamiliar with the fundamentals of how the ASP.NET Core authentication system works, then we recommend this recording of an [Introduction to ASP.NET Core Authentication and Authorization](https://www.youtube.com/watch?v=02Yh3sxzAYI).
+{{% /notice %}}
+
+
 *AddAuthentication* registers the authentication services. Notice that in its
 options, the DefaultChallengeScheme is set to "oidc", and the DefaultScheme is
 set to "Cookies". The DefaultChallengeScheme is used when an unauthenticated
