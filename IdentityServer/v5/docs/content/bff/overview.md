@@ -6,7 +6,7 @@ weight: 1
 
 Writing a browser-based application is hard, and when it comes to security, the guidance changes every year. It all started with securing your Ajax calls with cookies until we learned that this is prone to CSRF attacks. Then the IETF made JS-based OAuth *official* by introducing the Implicit Flow; until we learned how hard it is to protect against XSS, token leakage and the threat of token exfiltration. Seems you cannot win.
 
-In the meantime the IETF realized that Implicit Flow is an anachronism and will [deprecate](https://tools.ietf.org/wg/oauth/draft-ietf-oauth-v2-1/) it. So what's next?
+In the meantime the IETF realized that Implicit Flow is an anachronism and will [deprecate](https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/) it. So what's next?
 
 There is ongoing work in the [OAuth for browser-based Apps](https://tools.ietf.org/html/draft-ietf-oauth-browser-based-apps) BCP document to give practical guidance on this very topic. The document distinguishes between two architectural approaches: "JavaScript Applications **with** a Backend" and "JavaScript Applications **without** a Backend". If you don't have the luxury of a backend, the more up-to-date recommendation is to use authorization code flow with PKCE and refresh tokens (with additional steps necessary in the token server to mitigate refresh token abuse). We think this approach is problematic because it encourages storing your tokens in the browser.
 
