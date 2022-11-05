@@ -65,11 +65,18 @@ Refresh tokens usually have a much longer lifetime than access tokens. You can r
 You can use the *AbsoluteRefreshTokenLifetime* and *SlidingRefreshTokenLifetime* client settings to fine tune this behavior.
 
 #### One-time Refresh Tokens
-Another option is rotating the refresh tokens on every usage. This also reduces the exposure, and has a higher chance to make older refresh tokens (e.g. ex-filtrated from some storage mechanism or a network trace/log file) unusable.
+Another option to reduce the exposure of refresh tokens is to rotate them on every usage. Rotation can be configured via the *RefreshTokenUsage* client setting and is enabled by default. As long as it is enabled, refresh tokens are only usable once: every time a refresh token is used, it is marked as consumed and a new refresh token is sent along with the new access token. The new refresh token will have the same creation and expiration time stamps as the previous token.
 
-The downside of this approach is that you might have more scenarios where a legitimate refresh token becomes unusable – e.g. due to network problems while refreshing them.
+Rotating refresh tokens reduces their attack surface because there is a chance that a stolen token will be unusable by the attacker. If a token is exfiltrated from some storage mechanism, a network trace, or log file, but the owner of the token uses it before the attacker, then the attack fails.
 
-Rotation can be configured via the *RefreshTokenUsage* client settings and is enabled by default.
+The downside of this approach is that you might have more scenarios where a legitimate refresh token becomes unusable. For example, a network problem while refreshing the token could result in the old token being consumed but the new token not delivered to the client, which then will have to authenticate again. To mitigate this problem, you can customize the behavior of the *RefreshTokenService* such that consumed tokens can be used under certain circumstances, perhaps for a small length of time after they are consumed. To do so, create a subclass of the *DefaultRefreshTokenService* and override its *AcceptConsumedTokenAsync(RefreshToken refreshToken)* method. This method takes a consumed refresh token and returns a boolean flag that indicates if that token should be accepted, that is, allowed to be used to obtain an access token. The default implementation in the *DefaultRefreshTokenService* rejects all consumed tokens, but your customized implementation can create a time window where consumed tokens can be used or implement additional revocation logic. 
+
+This customization must be registered in the DI system as an implementation of the *IRefreshTokenService*:
+
+```C#
+builder.Services.TryAddTransient<IRefreshTokenService, YourCustomRefreshTokenService>();
+```
+
 
 #### Replay detection
 On top of one-time only semantics, you could also layer replay detection. This means that if you ever see the same refresh token used more than once, you could revoke all access to the client/user combination. Again – same caveat applies – while increasing the security, this might result in false positives.
