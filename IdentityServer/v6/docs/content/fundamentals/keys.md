@@ -13,7 +13,7 @@ The automatic key management feature follows best practices for handling signing
 
 * automatic key rotation
 * secure storage of keys at rest
-* announcement upcoming new keys in discovery
+* announcement of upcoming new keys in discovery
 * maintenance of retired keys in discovery
 
 {{% notice note %}}
