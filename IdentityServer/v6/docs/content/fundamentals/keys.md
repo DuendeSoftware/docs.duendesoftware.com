@@ -89,6 +89,8 @@ A signing key registered with *AddSigningCredential* will take precedence over a
 
 
 ## Disabling automatic key management
+Automatic key management is enabled by default. If you want to explicitly set a static key, or you have a license that does not include that feature (e.g. the Starter SKU), you need to disable key management.
+
 The automatic key management feature can be disabled by setting the *Enabled* flag to *false* on the the [*IdentityServerOptions*]({{< ref "/reference/options#key-management" >}}), e.g.:
 
 ```cs
@@ -97,6 +99,7 @@ var builder = services.AddIdentityServer(options =>
     options.KeyManagement.Enabled = false;
 });
 ```
+
 
 
 
