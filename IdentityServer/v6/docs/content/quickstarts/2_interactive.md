@@ -14,12 +14,11 @@ authentication.
 
 {{% notice note %}}
 
-This quickstart builds on the solution created in 
-[Quickstart 1]({{< ref "1_client_credentials" >}}). We recommend you do the 
-quickstarts in order, but if you'd like to start here, begin from a copy of 
-[Quickstart 1's source code]({{< param qs_base >}}/1_ClientCredentials). You 
-will also need to [install the IdentityServer 
-templates]({{< ref "0_overview#preparation" >}}).
+We recommend you do the quickstarts in order. If you'd like to start here, begin
+from a copy of the [reference implementation of Quickstart 1]({{< param qs_base >}}/1_ClientCredentials).
+Throughout this quickstart, paths are written relative to the base *quickstart*
+directory created in part 1, which is the root directory of the reference
+implementation. You will also need to [install the IdentityServer templates]({{< ref "0_overview#preparation" >}}).
 
 {{% /notice %}}
 
@@ -37,7 +36,7 @@ You need to provide the User Interface for login, logout, consent and error.
 While the look & feel and workflows will differ in each implementation, we
 provide a Razor Pages-based UI that you can use as a starting point. You can use
 the .NET CLI to add the quickstart UI to a project. Run the following command
-from the *IdentityServer* folder:
+from the *src/IdentityServer* directory:
 
 ```console
 dotnet new isui
@@ -45,7 +44,7 @@ dotnet new isui
 
 ### Enable the UI
 Once you have added the UI, you will need to register its services and enable it
-in the pipeline. In *IdentityServer/HostingExtensions.cs* you will find
+in the pipeline. In *src/IdentityServer/HostingExtensions.cs* you will find
 commented out code in the *ConfigureServices* and *ConfigurePipeline* methods
 that enable the UI. Note that there are three places to comment in - two in
 *ConfigurePipeline* and one in *ConfigureServices*.
@@ -63,9 +62,9 @@ Comment in the service registration and pipeline configuration, run the
 see a home page.
 
 Spend some time reading the pages and models, especially those in the
-*Pages/Account* folder. These pages are the main UI entry points for login and
-logout. The better you understand them, the easier it will be to make future
-modifications.
+*src/IdentityServer/Pages/Account* directory. These pages are the main UI entry
+points for login and logout. The better you understand them, the easier it will
+be to make future modifications.
 
 ### Configure OIDC Scopes
 Similar to OAuth, OpenID Connect uses scopes to represent something you want to
@@ -73,7 +72,7 @@ protect and that clients want to access. In contrast to OAuth, scopes in OIDC
 represent identity data like user id, name or email address rather than APIs.
 
 Add support for the standard *openid* (subject id) and *profile* (first name,
-last name, etc) scopes by declaring them in *IdentityServer/Config.cs*:
+last name, etc) scopes by declaring them in *src/IdentityServer/Config.cs*:
 
 ```cs
 public static IEnumerable<IdentityResource> IdentityResources =>
@@ -84,7 +83,8 @@ public static IEnumerable<IdentityResource> IdentityResources =>
     };
 ```
 
-Then register the identity resources in *IdentityServer/HostingExtensions.cs*:
+Then register the identity resources in
+*src/IdentityServer/HostingExtensions.cs*:
 
 ```cs
 builder.Services.AddIdentityServer()
@@ -103,7 +103,7 @@ Connect
 
 ### Add Test Users
 The sample UI also comes with an in-memory "user database". You can enable this
-by calling *AddTestUsers* in *IdentityServer/HostingExtensions.cs*:
+by calling *AddTestUsers* in *src/IdentityServer/HostingExtensions.cs*:
 
 ```cs
 builder.Services.AddIdentityServer()
@@ -128,7 +128,7 @@ OpenID Connect-based clients are very similar to the OAuth clients we added in
 [Quickstart 1]({{< ref "1_client_credentials" >}}). But since the flows in OIDC
 are always interactive, we need to add some redirect URLs to our configuration.
 
-The *Clients* list in *IdentityServer/Config.cs* should look like this:
+The *Clients* list in *src/IdentityServer/Config.cs* should look like this:
 
 ```cs
 public static IEnumerable<Client> Clients =>
@@ -170,7 +170,7 @@ public static IEnumerable<Client> Clients =>
 ## Create the OIDC client
 Next you will create an ASP.NET web application that will allow interactive
 users to log in using OIDC. Use the webapp template to create the project. Run
-the following commands from the *quickstart/src* folder:  
+the following commands from the *src* directory:  
 
 ```console
 dotnet new webapp -n WebClient
@@ -190,16 +190,16 @@ that uses it.
 {{% /notice %}}
 
 ### Install the OIDC NuGet Package
-To add support for OpenID Connect authentication to *WebClient*, you need to add
-the NuGet package containing the OpenID Connect handler. From the *WebClient*
-folder, run the following command:
+To add support for OpenID Connect authentication to the *WebClient* project, you
+need to add the NuGet package containing the OpenID Connect handler. From the
+*src/WebClient* directory, run the following command:
 
 ```console
 dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 ```
 
 ### Configure Authentication Services
-Then add the following to *ConfigureServices* in *WebClient/Program.cs*:
+Then add the following to *ConfigureServices* in *src/WebClient/Program.cs*:
 
 ```cs
 using System.IdentityModel.Tokens.Jwt;
@@ -231,7 +231,12 @@ builder.Services.AddAuthentication(options =>
 ```
 
 {{% notice note %}}
-If you are unfamiliar with the fundamentals of how the ASP.NET Core authentication system works, then we recommend this recording of an [Introduction to ASP.NET Core Authentication and Authorization](https://www.youtube.com/watch?v=02Yh3sxzAYI).
+
+If you are unfamiliar with the fundamentals of how the ASP.NET Core
+authentication system works, then we recommend this recording of an
+[Introduction to ASP.NET Core Authentication and
+Authorization](https://www.youtube.com/watch?v=02Yh3sxzAYI).
+
 {{% /notice %}}
 
 
@@ -264,9 +269,9 @@ information on protocol flows.
 {{% /notice %}}
 
 ### Configure the Pipeline
-Now add *UseAuthentication* to the ASP.NET pipeline in *WebClient/Program.cs*.
-Also chain a call to *RequireAuthorization* onto *MapRazorPages* to disable
-anonymous access for the entire application. 
+Now add *UseAuthentication* to the ASP.NET pipeline in
+*src/WebClient/Program.cs*. Also chain a call to *RequireAuthorization* onto
+*MapRazorPages* to disable anonymous access for the entire application. 
 
 ```cs
 app.UseRouting();
@@ -281,15 +286,15 @@ app.MapRazorPages().RequireAuthorization();
 
 See the ASP.NET Core documentation on [Razor Pages authorization
 conventions](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-6.0)
-for more options that allow you to specify authorization on a per page or folder
-basis.
+for more options that allow you to specify authorization on a per page or
+directory basis.
 
 {{% /notice %}}
 
 ### Display the Auth Cookie
 
-Modify *WebClient/Pages/Index.cshtml* to display the claims of the user and the
-cookie properties:
+Modify *src/WebClient/Pages/Index.cshtml* to display the claims of the user and
+the cookie properties:
 
 ```cs
 @page
@@ -320,7 +325,7 @@ cookie properties:
 
 ### Configure WebClient's Port
 Update the client's applicationUrl in
-*WebClient/Properties/launchSettings.json* to use port 5002.
+*src/WebClient/Properties/launchSettings.json* to use port 5002.
 
 ```json
 {
@@ -371,12 +376,12 @@ authentication scheme. The OpenId Connect handler will perform the protocol
 steps for the roundtrip to *IdentityServer* when you sign out of its scheme.
 
 Create a page to trigger sign-out of both schemes by running the following
-command from the *WebClient\Pages* directory:
+command from the *src/WebClient/Pages* directory:
 ```console
 dotnet new page -n Signout
 ```
 
-Update the new page's model (*WebClient\Pages\Signout.cshtml.cs*) with the
+Update the new page's model (*src/WebClient/Pages/Signout.cshtml.cs*) with the
 following code:
 
 ```cs
@@ -393,8 +398,8 @@ This will clear the local cookie and then redirect to the IdentityServer. The
 IdentityServer will clear its cookies and then give the user a link to return
 back to the web application.
 
-Create a link to logout page in *WebClient/Pages/Shared/_Layout.cshtml* as a
-child of the navbar-nav list:
+Create a link to the logout page in *src/WebClient/Pages/Shared/_Layout.cshtml* 
+within the navbar-nav list:
 ```html
 <!-- Existing navbar generated by template -->
 <ul class="navbar-nav flex-grow-1">
@@ -419,7 +424,7 @@ that scope (such as *name*, *family_name*, *website* etc.) don't appear in the
 returned token. You need to tell the client to retrieve those claims from the
 userinfo endpoint by specifying scopes that the client application needs to
 access and setting the *GetClaimsFromUserInfoEndpoint* option. Add the following
-to *ConfigureServices* in *WebClient/Program.cs*:
+to *ConfigureServices* in *src/WebClient/Program.cs*:
 
 ```cs
 .AddOpenIdConnect("oidc", options =>
@@ -448,7 +453,7 @@ experiment further you can
 ### Add More Claims
 To add more claims to the identity:
 
-* Add a new identity resource to the list in *IdentityServer/Config.cs*.
+* Add a new identity resource to the list in *src/IdentityServer/Config.cs*.
   Name it and specify which claims should be returned when it is requested. The
   *Name* property of the resource is the scope value that clients can request to
   get the associated *UserClaims*. For example, you could add an
@@ -473,7 +478,7 @@ To add more claims to the identity:
   ```
   
 * Give the client access to the resource via the *AllowedScopes* property on the
-  client configuration in *IdentityServer/Config.cs*. The string value in
+  client configuration in *src/IdentityServer/Config.cs*. The string value in
   *AllowedScopes* must match the *Name* property of the resource.
   ```csharp
     new Client
@@ -489,7 +494,7 @@ To add more claims to the identity:
     }
   ```
 * Request the resource by adding it to the *Scopes* collection on the OpenID
-  Connect handler configuration in *WebClient/Program.cs*, and add a
+  Connect handler configuration in *src/WebClient/Program.cs*, and add a
   [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-6.0)
   to map the new claim returned from the userinfo endpoint onto a user claim.
   ```csharp
@@ -507,7 +512,7 @@ userinfo endpoint. You can provide your own implementation of *IProfileService*
 to customize this process with custom logic, data access, etc. Since you are
 using *AddTestUsers*, the *TestUserProfileService* is used automatically. It
 will automatically include requested claims from the test users added in
-*TestUsers.cs*. 
+*src/IdentityServer/TestUsers.cs*. 
 
 ### Add Support for External Authentication
 Adding support for external authentication to your IdentityServer can be done
@@ -535,7 +540,7 @@ Google authentication handler to the pipeline.** You will need an
 IdentityServer specific option.
 
 Add the following to *ConfigureServices* in
-*IdentityServer/HostingExtensions.cs*:
+*src/IdentityServer/HostingExtensions.cs*:
 
 ```cs
 builder.Services.AddAuthentication()
@@ -572,7 +577,7 @@ claims sourced from Google's data.
 
 The Google button is rendered by the login page automatically when there are
 external providers registered as authentication schemes. See the
-*BuildModelAsync* method in *IdentityServer/Pages/Login/Index.cshtml.cs* and
+*BuildModelAsync* method in *src/IdentityServer/Pages/Login/Index.cshtml.cs* and
 the corresponding Razor template for more details.
 
 {{% /notice %}}
@@ -582,7 +587,7 @@ A [cloud-hosted demo](https://demo.duendesoftware.com) version of Duende
 IdentityServer can be added as an additional external provider.
 
 Register and configure the services for the OpenId Connect handler in
-*IdentityServer/HostingExtensions.cs*:
+*src/IdentityServer/HostingExtensions.cs*:
 ```cs
 builder.Services.AddAuthentication()
     .AddGoogle("Google", options => { /* ... */ })
@@ -624,7 +629,7 @@ claims.
 The quickstart UI auto-provisions external users. When an external user logs in
 for the first time, a new local user is created with a copy of all the external
 user's claims. This auto-provisioning process occurs in the *OnGet* method of
-*IdentityServer/Pages/ExternalLogin/Callback.cshtml.cs*, and is completely
+*src/IdentityServer/Pages/ExternalLogin/Callback.cshtml.cs*, and is completely
 customizable. For example, you could modify *Callback* so that it will require
 registration before provisioning the external user. 
 

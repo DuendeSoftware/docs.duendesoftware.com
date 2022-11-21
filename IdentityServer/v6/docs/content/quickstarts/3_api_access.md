@@ -24,12 +24,14 @@ quickstart, you will add scopes for API resources to that request.
 
 {{% notice note %}}
 
-We recommend you do the quickstarts in order, but if you'd like to start here,
-begin from a copy of [Quickstart 2's source code]({{< param qs_base
->}}/2_InteractiveAspNetCore). You will also need to [install the IdentityServer
-templates]({{< ref "0_overview#preparation" >}}).
+We recommend you do the quickstarts in order. If you'd like to start here, begin
+from a copy of the [reference implementation of Quickstart 2]({{< param qs_base >}}/2_InteractiveAspNetCore).
+Throughout this quickstart, paths are written relative to the base *quickstart*
+directory created in part 1, which is the root directory of the reference
+implementation. You will also need to [install the IdentityServer templates]({{< ref "0_overview#preparation" >}}).
 
 {{% /notice %}}
+
 
 ## Modifying the client configuration
 
@@ -38,7 +40,7 @@ The client configuration in IdentityServer requires two straightforward updates.
    have permission to access it.
 2. Enable support for refresh tokens by setting the *AllowOfflineAccess* flag.
 
-Update the *Client* in *IdentityServer/Config.cs* as follows:
+Update the *Client* in *src/IdentityServer/Config.cs* as follows:
 ```cs
 new Client
 {
@@ -67,7 +69,7 @@ new Client
 ## Modifying the Web client
 Now configure the client to ask for access to api1 and for a refresh token by
 requesting the *api1* and *offline_access* scopes. This is done in the OpenID
-Connect handler configuration in *WebClient/Program.cs*:
+Connect handler configuration in *src/WebClient/Program.cs*:
 
 ```cs
 builder.Services.AddAuthentication(options =>
@@ -111,13 +113,13 @@ method from *Microsoft.AspNetCore.Authentication*
 3. Make an HTTP request to the *API*
 4. Display the results
 
-Create the Page by running the following command from the *WebClient\Pages*
+Create the Page by running the following command from the *src/WebClient/Pages*
 directory:
 ```console
 dotnet new page -n CallApi
 ```
 
-Update *WebClient\Pages\CallApi.cshtml.cs* as follows:
+Update *src/WebClient/Pages/CallApi.cshtml.cs* as follows:
 ```cs
 public class CallApiModel : PageModel
 {
@@ -138,7 +140,7 @@ public class CallApiModel : PageModel
 }
 ```
 
-And update *WebClient\Pages\CallApi.cshtml* as follows:
+And update *src/WebClient/Pages/CallApi.cshtml* as follows:
 ```html
 @page
 @model MyApp.Namespace.CallApiModel

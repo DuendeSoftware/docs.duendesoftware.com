@@ -5,10 +5,11 @@ weight: 10
 
 {{% notice note %}}
 
-We recommend you do the quickstarts in order, but if you'd like
-to start here, begin from a copy of [Quickstart 3's source code]({{< param
-qs_base >}}/3_AspNetCoreAndApis). You will also need to [install the IdentityServer
-templates]({{< ref "0_overview#preparation" >}}).
+We recommend you do the quickstarts in order. If you'd like to start here, begin
+from a copy of the [reference implementation of Quickstart 3]({{< param qs_base >}}/3_AspNetCoreAndApis).
+Throughout this quickstart, paths are written relative to the base *quickstart*
+directory created in part 1, which is the root directory of the reference
+implementation. You will also need to [install the IdentityServer templates]({{< ref "0_overview#preparation" >}}).
 
 {{% /notice %}}
 
@@ -38,7 +39,7 @@ authentication - the front end and BFF need to be on the same host so that
 cookies will be sent from the front end to the BFF.
 
 Create a new ASP.NET Core web application and add it to the solution by running
-the following commands from the *quickstart/src* directory:
+the following commands from the *src* directory:
 
 ```console
 dotnet new web -n JavaScriptClient
@@ -49,7 +50,7 @@ dotnet sln add ./src/JavaScriptClient/JavaScriptClient.csproj
 ### Add additional NuGet packages
 
 Install NuGet packages to add BFF and OIDC support to the new project by running
-the following commands from the *quickstart/src/JavaScriptClient* directory:
+the following commands from the *src/JavaScriptClient* directory:
 
 ```console
 dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
@@ -81,11 +82,12 @@ Modify the *JavaScriptClient* project to run on *https://localhost:5003*. Its
 ### Add services
 
 In the BFF pattern, the server-side code triggers and receives OpenID Connect
-requests and responses. To do that, it needs the same services configured as the WebClient did in the prior [web application
-quickstart]({{<ref "../3_api_access">}}). Additionally, the BFF services need to
-be added with *AddBff()*. 
+requests and responses. To do that, it needs the same services configured as the
+WebClient did in the prior [web application quickstart]({{<ref
+"../3_api_access">}}). Additionally, the BFF services need to be added with
+*AddBff()*. 
 
-Add the following to *Program.cs*:
+Add the following to *src/JavaScriptClient/Program.cs*:
 
 ```cs
 using System.IdentityModel.Tokens.Jwt;
@@ -127,7 +129,8 @@ var app = builder.Build();
 ### Add middleware
 
 Similarly, the middleware pipeline for this application will resemble the
-WebClient, with the addition of the BFF middleware and the BFF endpoints:
+WebClient, with the addition of the BFF middleware and the BFF endpoints.
+Continuing by adding the following to *src/JavaScriptClient/Program.cs*:
 
 ```cs
 var app = builder.Build();
@@ -158,13 +161,13 @@ app.Run();
 ### Add your HTML and JavaScript files
 
 Next, add HTML and JavaScript files for your client-side application to the
-*wwwroot* folder in the *JavaScriptClient* project. Create that folder and add
-an *index.html* and an *app.js* file to it.
+*wwwroot* directory in the *JavaScriptClient* project. Create that directory
+(*src/JavaScriptClient/wwwroot*) and add an *index.html* and an *app.js* file to
+it.
 
 **index.html**
 
-This will be the main page in your application. 
-It contains
+The index.html file will be the main page in your application. It contains
 - buttons for the user to login, logout, and call the APIs
 - a *\<pre>* container used to show messages to the user
 - a *\<script>* tag to include our JavaScript file
@@ -193,7 +196,7 @@ It should look like this:
 
 **app.js**
 
-This will contain the client-side code for your application.
+The app.js file will contain the client-side code for your application.
 
 First, add a helper function to display messages in the *\<pre>*:
 
@@ -215,8 +218,9 @@ function log() {
 
 ```
 
-Next, you can use the BFF *user* management endpoint to query if the user is logged in or not.
-Notice the *userClaims* variable is global; it will be needed elsewhere.
+Next, you can use the BFF *user* management endpoint to query if the user is
+logged in or not. Notice the *userClaims* variable is global; it will be needed
+elsewhere.
 
 ```js
 let userClaims = null;
@@ -243,7 +247,7 @@ let userClaims = null;
 })();
 ```
 
-Next, add code to register *click* event handlers on the buttons:
+Next, register *click* event handlers on the buttons:
 
 ```js
 document.getElementById("login").addEventListener("click", login, false);
@@ -256,16 +260,18 @@ Next, implement the *login* and *logout* functions.
 
 Login is simple - just redirect the user to the BFF *login* endpoint.
 
+```js
+function login() {
+  window.location = "/bff/login";
+}
+```
+
 Logout is more involved, as you need to redirect the user to the BFF *logout*
 endpoint, which requires an anti-forgery token to prevent cross site request
 forgery attacks. The *userClaims* that you populated earlier contain that token
 and the full logout URL in its *bff:logout_url* claim, so redirect to that url:
 
-```js
-function login() {
-  window.location = "/bff/login";
-}
-
+```
 function logout() {
   if (userClaims) {
     var logoutUrl = userClaims.find(
@@ -294,10 +300,11 @@ async function remoteApi() {
 Now that the client application is ready to go, you need to define a
 configuration entry in IdentityServer for the new JavaScript client.
 
-In the IdentityServer project locate the client configuration in *Config.cs*.
-Add a new *Client* to the list for your new JavaScript application. Because this
-client uses the BFF pattern, the configuration will be very similar to the Web
-client. It should have the configuration listed below:
+In the IdentityServer project locate the client configuration in
+*src/IdentityServer/Config.cs*. Add a new *Client* to the list for your new
+JavaScript application. Because this client uses the BFF pattern, the
+configuration will be very similar to the Web client. It should have the
+configuration listed below:
 
 ```cs
 // JavaScript BFF client
@@ -376,7 +383,7 @@ Handlers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
 For simplicity, this quickstart uses a minimal API with its handler defined
 directly in *Program.cs*, but you can organize your Local APIs however you like.
 
-Add a handler to *Program.cs* for the the local API:
+Add a handler to *src/JavaScriptClient/Program.cs* for the the local API:
 ```cs
 [Authorize] 
 static IResult LocalIdentityHandler(ClaimsPrincipal user)
@@ -391,14 +398,16 @@ static IResult LocalIdentityHandler(ClaimsPrincipal user)
 
 Local APIs often make requests to remote APIs that are authorized with the
 user's access token. To get the access token, call the *GetUserAccessTokenAsync*
-extension method on the *HttpContext*. For example: *var token = await HttpContext.GetUserAccessTokenAsync();*
+extension method on the *HttpContext*. For example: *var token = await
+HttpContext.GetUserAccessTokenAsync();*
+
 {{% /notice %}}
 
 ### Update routing to accept local and remote API calls
 
 Next, you need to register both the local API and the BFF proxy for the remote
 API in the ASP.NET Core routing system. Add the code below to the *UseEndpoints*
-call in *Program.cs*.
+call in *src/JavaScriptClient/Program.cs*.
 
 ```cs
 app.UseEndpoints(endpoints =>
@@ -427,7 +436,8 @@ configures it to pass the user's access token.
 
 ### Call the APIs from JavaScript
 
-Back in *app.js*, implement the two API button event handlers like this:
+Back in *src/JavaScriptClient/wwwroot/app.js*, implement the two API button
+event handlers like this:
 
 ```js
 async function localApi() {
@@ -472,11 +482,11 @@ async function remoteApi() {
 ```
 
 The path for the local API is exactly what you set in the the call to *MapGet*
-in *Program.cs*. 
+in *src/JavaScriptClient/Program.cs*. 
 
-The path for the remote API uses a "/remote" prefix to indicate that the BFF proxy
-should be used, and the remaining path is what's then passed when invoking the
-remote API ("/identity" in this case). 
+The path for the remote API uses a "/remote" prefix to indicate that the BFF
+proxy should be used, and the remaining path is what's then passed when invoking
+the remote API ("/identity" in this case). 
 
 Notice both API calls require a *'X-CSRF': '1'* header, which acts as the
 anti-forgery token.

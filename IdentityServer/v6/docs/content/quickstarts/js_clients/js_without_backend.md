@@ -5,10 +5,11 @@ weight: 20
 
 {{% notice note %}}
 
-We recommend you do the quickstarts in order, but if you'd like
-to start here, begin from a copy of [Quickstart 3's source code]({{< param
-qs_base >}}/3_AspNetCoreAndApis). You will also need to [install the IdentityServer
-templates]({{< ref "0_overview#preparation" >}}).
+We recommend you do the quickstarts in order. If you'd like to start here, begin
+from a copy of the [reference implementation of Quickstart 3]({{< param qs_base >}}/3_AspNetCoreAndApis).
+Throughout this quickstart, paths are written relative to the base *quickstart*
+directory created in part 1, which is the root directory of the reference
+implementation. You will also need to [install the IdentityServer templates]({{< ref "0_overview#preparation" >}}).
 
 {{% /notice %}}
 
@@ -24,9 +25,9 @@ This design adds complexity (and thus security concerns) to your application, so
 consider if the ["BFF" pattern]({{<ref "js_with_backend">}}) might be a better
 choice.
 
-In this quickstart the user will login to IdentityServer, invoke the web API
-with an access token issued by IdentityServer, and logout of IdentityServer. All
-of this will be driven from the JavaScript running in the browser.
+In this quickstart the user will login to IdentityServer, invoke an API with an
+access token issued by IdentityServer, and logout of IdentityServer. All of this
+will be driven from the JavaScript running in the browser.
 
 ## New Project for the JavaScript client
 
@@ -36,7 +37,7 @@ backend. You could use anything from an empty ASP.NET Core application to a
 Node.js application. This quickstart will use an ASP.NET Core application.
 
 Create a new ASP.NET Core web application and add it to the solution by running
-the following commands from the *quickstart/src* directory:
+the following commands from the *src* directory:
 
 ```console
 dotnet new web -n JavaScriptClient
@@ -71,8 +72,8 @@ Given that this project is designed to run client-side, all we need ASP.NET Core
 to do is to serve up the static HTML and JavaScript files that will make up our
 application. The static file middleware is designed to do this.
 
-Register the static file middleware in *Program.cs*. The entire file should look
-like this:
+Register the static file middleware in *src/JavaScriptClient/Program.cs*. The
+entire file should look like this:
 
 ```cs
 var builder = WebApplication.CreateBuilder(args);
@@ -84,8 +85,9 @@ app.Run();
 ```
 
 This middleware will now serve up static files from the application's
-*~/wwwroot* folder. This is where we will put our HTML and JavaScript files. If
-that folder does not exist in your project, create it now.
+*src/JavaScriptClient/wwwroot* directory. This is where we will put our HTML and
+JavaScript files. If that directory does not exist in your project, create it
+now.
 
 ### Reference oidc-client
 
@@ -102,30 +104,30 @@ from github.
 **NPM**
 
 If you want to use NPM to download *oidc-client*, then run these commands from
-your *JavaScriptClient* project directory:
+the *src/JavaScriptClient* directory:
 
 ```console
 npm i oidc-client
-copy node_modules\oidc-client\dist\* wwwroot
+copy node_modules/oidc-client/dist/* wwwroot
 ```
 
 This downloads the latest *oidc-client* package locally, and then copies the
-relevant JavaScript files into *~/wwwroot* so they can be served by your
-application.
+relevant JavaScript files into *src/JavaScriptClient/wwwroot* so they can be
+served by your application.
 
 **Manual download**
 
 If you want to download the *oidc-client* JavaScript files manually, browse to
 [the GitHub
 repository](https://github.com/IdentityModel/oidc-client-js/tree/release/dist)
-and download the JavaScript files. Once downloaded, copy them into *~/wwwroot*
-so they can be served by your application.
+and download the JavaScript files. Once downloaded, copy them into
+*src/JavaScriptClient/wwwroot* so they can be served by your application.
 
 ### Add your HTML and JavaScript files
-Next, add HTML and JavaScript files to the *wwwroot* folder in the
-*JavaScriptClient* project. You will need two HTML files and one JavaScript
-file (in addition to the *oidc-client.js* library). Add *index.html*,
-*callback.html*, and *app.js* to *wwwroot*.
+Next, add HTML and JavaScript files to the *src/JavaScriptClient/wwwroot*
+directory. You will need two HTML files and one JavaScript file (in addition to
+the *oidc-client.js* library). Add *index.html*, *callback.html*, and *app.js*
+to *wwwroot*.
 
 **index.html**
 
@@ -297,11 +299,12 @@ the signin process:
 
 ## Add a client registration to IdentityServer for the JavaScript client
 
-Now that the client application is ready to go, we need to define a configuration entry in IdentityServer for the new JavaScript client.
+Now that the client application is ready to go, you need to define a
+configuration entry in IdentityServer for the new JavaScript client.
 
-In the IdentityServer project locate the client configuration (in *Config.cs*).
-Add a new *Client* to the list for our new JavaScript application. It should
-have the configuration listed below:
+n the IdentityServer project locate the client configuration in
+*src/IdentityServer/Config.cs*. Add a new *Client* to the list for your new
+JavaScript application. It should have the configuration listed below:
 
 ```cs
 // JavaScript Client
@@ -333,8 +336,8 @@ One last bit of configuration that is necessary is to configure CORS in the
 
 **Configure CORS**
 
-Add the CORS services to the dependency injection system in *API*'s
-*Program.cs*:
+Add the CORS services to the dependency injection system in
+*src/Api/Program.cs*:
 
 ```cs
 builder.Services.AddCors(options =>
@@ -349,8 +352,8 @@ builder.Services.AddCors(options =>
 });
 ```
 
-Add the CORS middleware to the pipeline in *Program.cs*. It should come before
-the call to *UseAuthentication*.
+Then add the CORS middleware to the pipeline in *src/Api/Program.cs*. It should
+come before the call to *UseAuthentication*.
 
 ```cs
 app.UseHttpsRedirection();
@@ -386,9 +389,8 @@ IdentityServer for sign-in, sign-out, and authenticating calls to web APIs.
 
 {{% notice note %}}
 
-Some browsers limit cross-site interactions (especially in iframes). If you were
-to test this sample in Safari, Chrome, or Brave you will notice that some
-important features will not work such as silent token renewal and check session
-monitoring.
+Some browsers limit cross-site interactions (especially in iframes). In Safari,
+Firefox, or Brave you will notice that some important features will not work
+such as silent token renewal and check session monitoring.
 
 {{% /notice %}}

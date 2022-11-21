@@ -10,10 +10,12 @@ Framework.
 
 {{% notice note %}}
 
-We recommend you do the quickstarts in order, but if you'd like
-to start here, begin from a copy of [Quickstart 3's source code]({{< param
-qs_base >}}/3_AspNetCoreAndApis). You will also need to [install the IdentityServer
-templates]({{< ref "0_overview#preparation" >}}).
+We recommend you do the quickstarts in order. If you'd like to start here, begin
+from a copy of the [reference implementation of Quickstart 3]({{< param qs_base >}}/3_AspNetCoreAndApis).
+Throughout this quickstart, paths are written relative to the base *quickstart*
+directory created in part 1, which is the root directory of the reference
+implementation. You will also need to [install the IdentityServer templates]({{< ref "0_overview#preparation" >}}).
+
 
 {{% /notice %}}
 
@@ -39,7 +41,7 @@ with the EntityFramework integration already added: *dotnet new isef*.
 ### Install Duende.IdentityServer.EntityFramework
 IdentityServer's Entity Framework integration is provided by the
 *Duende.IdentityServer.EntityFramework* NuGet package. Run the following command
-from the *IdentityServer* directory to install it:
+from the *src/IdentityServer* directory to install it:
 
 ```console
 dotnet add package Duende.IdentityServer.EntityFramework
@@ -50,7 +52,7 @@ dotnet add package Duende.IdentityServer.EntityFramework
 *Duende.IdentityServer.EntityFramework* can be used with any Entity Framework
 database provider. In this quickstart, you will use Sqlite. To add Sqlite
 support to your IdentityServer project, install the Entity framework Sqlite
-NuGet package by running the following command from the *IdentityServer*
+NuGet package by running the following command from the *src/IdentityServer*
 directory:
 
 ```console
@@ -68,7 +70,7 @@ data in separate stores, each with their own DbContext.
 
 To use these stores, replace the existing calls to *AddInMemoryClients*,
 *AddInMemoryIdentityResources*, and *AddInMemoryApiScopes* in your
-*ConfigureServices* method in *HostingExtensions.cs* with
+*ConfigureServices* method in *src/IdentityServer/HostingExtensions.cs* with
 *AddConfigurationStore* and *AddOperationalStore*, like this:
 
 ```cs
@@ -121,8 +123,8 @@ then you can manage the schema changes in any way you see fit.
 ### Adding Migrations
 To create migrations, you will need to install the Entity Framework Core CLI
 tool on your machine and the *Microsoft.EntityFrameworkCore.Design* NuGet
-package in IdentityServer. Run the following commands from the *IdentityServer*
-directory:
+package in IdentityServer. Run the following commands from the
+*src/IdentityServer* directory:
 
 ```console
 dotnet tool install --global dotnet-ef
@@ -135,8 +137,8 @@ in order to read your database configuration. After it has read the
 configuration, it shuts *IdentityServer* down by throwing a
 *StopTheHostException* exception. We expect this exception to be unhandled and
 therefore stop *IdentityServer*. Since it is expected, you do not need to log it
-as a fatal error. Update the error logging code in *IdentityServer\Program.cs*
-as follows:
+as a fatal error. Update the error logging code in
+*src/IdentityServer/Program.cs* as follows:
 ```csharp
 catch (Exception ex)
 {
@@ -156,15 +158,16 @@ https://github.com/dotnet/runtime/issues/60600.
 
 {{% /notice %}}
 
-Now run the following two commands from the *IdentityServer* directory to create
-the migrations:
+Now run the following two commands from the *src/IdentityServer* directory to
+create the migrations:
 
 ```console
 dotnet ef migrations add InitialIdentityServerPersistedGrantDbMigration -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
 dotnet ef migrations add InitialIdentityServerConfigurationDbMigration -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
 ```
-You should now see a *Data/Migrations/IdentityServer* folder in your project
-containing the code for your newly created migrations.
+
+You should now see a *src/IdentityServer/Data/Migrations/IdentityServer*
+directory in your project containing the code for your newly created migrations.
 
 ### Initializing the Database
 Now that you have the migrations, you can write code to create the database from
@@ -179,7 +182,7 @@ maintenance strategy that is appropriate for your architecture.
 
 {{% /notice %}}
 
-In *IdentityServer/HostingExtensions.cs*, add this method to initialize the
+In *src/IdentityServer/HostingExtensions.cs*, add this method to initialize the
 database:
 
 ```cs
