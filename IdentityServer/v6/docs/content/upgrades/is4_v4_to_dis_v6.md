@@ -65,7 +65,7 @@ using Duende.IdentityServer.Models;
 ## Step 4: Remove AddDeveloperSigningCredential
 
 If in *ConfigureServices* in your *Startup.cs* you were previously using *AddDeveloperSigningCredential*, that can be removed. 
-[Automatic key management]({{<ref "/fundamentals/keys">}}) is now a built-in feature.
+[Automatic key management]({{<ref "/fundamentals/keys/automatic_key_management">}}) is now a built-in feature.
 
 ## Step 5: Update Database Schema (if needed)
 
@@ -104,7 +104,7 @@ dotnet ef database update -c ConfigurationDbContext
 ## Step 6: Migrating signing keys (optional)
 
 In IdentityServer4, the common way to configure a signing key in *Startup* was to use *AddSigningCredential()* and provide key material (such as an *X509Certificate2*).
-In Duende IdentityServer the [automatic key management]({{<ref "/fundamentals/keys">}}) feature can manage those keys for you.
+In Duende IdentityServer the [automatic key management]({{<ref "/fundamentals/keys/automatic_key_management">}}) feature can manage those keys for you.
 
 Since client apps and APIs commonly cache the key material published from the discovery document then when upgrading you need to consider how those applications will handle an upgraded token server with a new and different signing key.
 
