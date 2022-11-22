@@ -88,3 +88,20 @@ A single deployment acts as a single OpenID Connect / OAuth authority hosted at 
 ## Multiple Deployment
 Can be either completely independent single deployments, or a single deployment that acts as multiple authorities on multiple URLs or host names (e.g. for branding, isolation or multi-tenancy reasons).
 
+
+## Standard Developer Support
+Online [forum](https://github.com/DuendeSoftware/Support/issues/) for Duende Software product issues and bugs.
+
+
+## Priority Developer Support
+(Enterprise Edition)
+
+Helpdesk system with guaranteed response time for Duende Software product issues and bugs.
+
+[More details](https://duendesoftware.com/license/PrioritySupportLicense.pdf)
+
+
+## Security Notification System
+Notification system for security bugs and/or reported vulnerabilities.
+
+[More details](https://docs.duendesoftware.com/identityserver/v6/overview/security/#vulnerability-management-process)
