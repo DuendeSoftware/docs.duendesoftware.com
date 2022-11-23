@@ -7,7 +7,7 @@ weight: 50
 Instead of using [Automatic Key Management]({{< ref "automatic_key_management.md" >}}), IdentityServer's signing keys can be set
 manually. Automatic Key Management is generally recommended, but if you want to
 explicitly control your keys statically, or you have a license that does not
-include the feature (e.g. the Starter SKU), you will need to manually manage
+include the feature (e.g. the Starter Edition), you will need to manually manage
 your keys. With static configuration you are responsible for secure storage,
 loading and rotation of keys.
 

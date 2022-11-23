@@ -98,7 +98,7 @@ By default, Automatic Key Management will maintain a signing credential and
 validation keys for a single cryptographic algorithm (*RS256*). You can specify
 multiple keys, algorithms, and if those keys should additionally get wrapped in
 an X.509 certificate. Automatic key management will create and rotate keys for
-Each signing algorithm you specify.
+each signing algorithm you specify.
 
 ```cs
 options.KeyManagement.SigningAlgorithms = new[]
