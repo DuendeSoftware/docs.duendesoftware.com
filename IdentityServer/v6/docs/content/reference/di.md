@@ -99,11 +99,20 @@ The use of *TestUser* is not recommended in production.
     Also registers implementations of *IProfileService* and *IResourceOwnerPasswordValidator* that uses the test users as a backing store.
 
 ## Signing keys
-Duende IdentityServer needs some signing key material to sign tokens.
-This key material either comes from the built-in automatic key management feature (todo link) or can be configured statically.
+Duende IdentityServer needs key material to sign tokens. This key material can
+either be created and 
+[managed automatically]({{< ref "/fundamentals/keys/automatic_key_management" >}}) 
+or 
+[configured statically]({{< ref "/fundamentals/keys/static_key_management" >}}).
 
 {{% notice note %}}
-It is recommended to use the [automatic key management]({{< ref "/fundamentals/keys" >}}), this section covers the extensions methods for the static configuration.
+
+We recommend that you use automatic key management. This section covers the
+configuration methods needed for manual configuration of signing keys, which are
+usually only needed if your license does not include automatic key management or
+if you are [migrating]({{< ref "/fundamentals/keys/migration" >}}) from manually
+managed keys to automatic key management.
+
 {{% /notice %}}
 
 Duende IdentityServer supports X.509 certificates (both raw files and a reference to the certificate store), 

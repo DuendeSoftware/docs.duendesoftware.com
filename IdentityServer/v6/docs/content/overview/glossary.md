@@ -19,7 +19,7 @@ The automatic key management feature creates and manages key material for signin
 
 [More details](https://blog.duendesoftware.com/posts/20201028_key_management/)
 
-[Documentation]({{<ref "/fundamentals/keys" >}})
+[Documentation]({{<ref "/fundamentals/keys/automatic_key_management" >}})
 
 
 ## Server-side Session Management
