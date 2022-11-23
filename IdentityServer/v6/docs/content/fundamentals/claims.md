@@ -59,6 +59,9 @@ The *Subject* property on the *ProfileDataRequestContext* contains the principal
 The profile service also gets called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}). In that case, the *Subject* property will not contain the principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call. You can check the caller of the profile service by querying the *Caller* property on the context.
 {{% /notice %}}
 
+## Claim Serialization
+Claim values are serialized based on the ClaimValueType of the claim. Claims that don't specify a ClaimValueType are simply serialized as strings. Claims that specify a ClaimValueType of *System.Security.Claims.ClaimValueTypes.Integer*, *System.Security.Claims.ClaimValueTypes.Integer32*, *System.Security.Claims.ClaimValueTypes.Integer64*, *System.Security.Claims.ClaimValueTypes.Double*, or *System.Security.Claims.ClaimValueTypes.Boolean* are parsed as the corresponding type, while those that specify *IdentityServerConstants.ClaimValueTypes.Json* are serialized to JSON using *System.Text.Json*.
+
 ## Client claims
 Client claims are typically statically defined claims that get emitted into access tokens. The following shows an example of a client that is associated with a certain customer in your system:
 
