@@ -317,7 +317,7 @@ Finally, you need to configure your application to make a request for the
 favorite_color, and include that claim in your client's configuration.
 
 Add a new *IdentityResource* in *src/IdentityServerAspNetIdentity/Config.cs*
-that will map the color scope onto the favoroite_color claim type:
+that will map the color scope onto the favorite_color claim type:
 
 ```csharp
 public static IEnumerable<IdentityResource> IdentityResources =>
