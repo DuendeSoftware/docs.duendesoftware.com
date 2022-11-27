@@ -302,7 +302,7 @@ the signin process:
 Now that the client application is ready to go, you need to define a
 configuration entry in IdentityServer for the new JavaScript client.
 
-n the IdentityServer project locate the client configuration in
+In the IdentityServer project locate the client configuration in
 *src/IdentityServer/Config.cs*. Add a new *Client* to the list for your new
 JavaScript application. It should have the configuration listed below:
 
