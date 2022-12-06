@@ -116,6 +116,9 @@ This can be achieved by still using *AddSigningCredential()*.
 A signing key registered with *AddSigningCredential()* will take precedence over any keys created by the automatic key management feature.
 Once the client apps and APIs have updated their caches (typically after 24 hours) then you can remove the prior signing key by removing the call to *AddSigningCredential()* and redeploy your IdentityServer.
 
-## Step 7: Done!
+## Step 7: Verify DataProtectionKey Application Name
+IdentityServer depends on ASP.NET DataProtection. DataProtection encrypts and signs data using keys managed by ASP.NET. Those keys are isolated by application name, which by default is set to the content root path of the host. This prevents multiple applications from sharing encrypting keys, which is necessary to protect your encryption against certain forms of attack. However, this means that if your content root path changes, the default settings for data protection will prevent you from using your old keys. Beginning in .NET 6, the content root path is now normalized so that it ends with a directory separator. This means that your content root path might change when you upgrade to .NET 6. This can be mitigated by explicitly setting the application name and removing the separator character. See [Microsoft's documentation for more information](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-6.0#setapplicationname).
+
+## Step 8: Done!
 
 That's it. Of course, at this point you can and should test that your IdentityServer is updated and working properly.
