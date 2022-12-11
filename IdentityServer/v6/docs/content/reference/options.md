@@ -245,6 +245,7 @@ Options related to logging.
     Collection of parameter names passed to the token endpoint that are considered sensitive and will be excluded from logging.
 
 * ***UnhandledExceptionLoggingFilter*** (Added in 6.2)
+  
   A function that is called when the IdentityServer middleware detects an unhandled exception, and is used to determine if the exception is logged.
   The arguments to the function are the HttpContext and the Exception. It should return true to log the exception, and false to suppress.
   The default is to suppress *TaskCanceledException*s. Such exceptions are thrown when Http requests are canceled, which is an expected occurrence. Logging them creates unnecessary noise in the logs.
