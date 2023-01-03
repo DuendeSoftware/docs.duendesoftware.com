@@ -22,6 +22,15 @@ var builder = services.AddIdentityServer(options =>
     options.KeyManagement.Enabled = false;
 });
 ```
+## Key Creation
+Without automatic key management, you are responsible for creating your own
+cryptographic keys. Such keys can be created with many tools. Some options
+include:
+
+- Use the PowerShell commandlet
+  [New-SelfSignedCertificate](https://learn.microsoft.com/en-us/powershell/module/pki/new-selfsignedcertificate?view=windowsserver2022-ps) to self-sign your own certificate
+- Create certificates using [Azure KeyVault](https://learn.microsoft.com/en-us/azure/key-vault/certificates/certificate-scenarios)
+- Create certificates using your Public Key Infrastructure.
 
 ## Adding Keys
 Signing keys are added with the [*AddSigningCredential*]({{< ref
@@ -41,6 +50,11 @@ default on a per resource and client basis.
 
 Another configuration method called *AddValidationKey* can
 be called to register public keys that should be accepted for token validation.
+
+## Key Storage
+With automatic key management disabled, secure storage of the key material is
+left to you. This key material should be treated as highly sensitive. Key
+material should be encrypted at rest, and access to it should be restricted.
 
 ## Manual Key Rotation {#rotation}
 With automatic key management disabled, you will need to rotate your keys
