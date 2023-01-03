@@ -71,7 +71,7 @@ dotnet ef database update -c ConfigurationDbContext
 ## Step 5: Migrating signing keys (optional)
 
 In IdentityServer4, the common way to configure a signing key in *Startup* was to use *AddSigningCredential()* and provide key material (such as an *X509Certificate2*).
-In Duende IdentityServer the [automatic key management]({{<ref "/fundamentals/automatic_key_management">}}) feature can manage those keys for you.
+In Duende IdentityServer the [automatic key management]({{<ref "/fundamentals/keys/automatic_key_management">}}) feature can manage those keys for you.
 
 Since client apps and APIs commonly cache the key material published from the discovery document then when upgrading you need to consider how those applications will handle an upgraded token server with a new and different signing key.
 
