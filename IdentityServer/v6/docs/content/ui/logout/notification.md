@@ -39,7 +39,7 @@ Clients that wish to be notified must have the [BackChannelLogoutUri]({{<ref "/r
 
 .NET does not have native support for back-channel logout notification.
 We do [provide a sample]({{<ref "/samples/basics#mvc-client-with-back-channel-logout-notifications">}}), though.
-Alternatively, if you are using our BFF framework, back-channel logout is [already implemented]({{<ref "/bff/session/management#back-channel-logout-notifications">}}) for you.
+Alternatively, if you are using our BFF framework, back-channel logout is [already implemented]({{<ref "/bff/session/management/back-channel-logout">}}) for you.
 
 
 ### Browser-based JavaScript clients
