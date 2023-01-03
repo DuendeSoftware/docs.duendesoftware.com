@@ -89,7 +89,7 @@ A single deployment acts as a single OpenID Connect / OAuth authority hosted at 
 Can be either completely independent single deployments, or a single deployment that acts as multiple authorities.
 
 ## Multiple Authorities
-A single logical deployment that acts as multiple authorities on multiple URLs or host names (e.g. for branding, isolation or multi-tenancy reasons).
+A single logical deployment that acts as multiple logical token services on multiple URLs or host names (e.g. for branding, isolation or multi-tenancy reasons).
 
 ## Standard Developer Support
 Online [forum](https://github.com/DuendeSoftware/Support/issues/) for Duende Software product issues and bugs.
