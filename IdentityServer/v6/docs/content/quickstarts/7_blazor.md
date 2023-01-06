@@ -162,7 +162,7 @@ crit: Microsoft.AspNetCore.Components.WebAssembly.Rendering.WebAssemblyRenderer[
 This component needs to be implemented, and that's what we'll do next.
 
 ### Modifying the frontend (part 2)
-The BFF library has a server-side component that allows querying the current authentication session and state (see [here]({{< ref "/bff/session/management#user" >}})). We will now add a Blazor *AuthenticationStateProvider* that will internally use this endpoint.
+The BFF library has a server-side component that allows querying the current authentication session and state (see [here]({{< ref "/bff/session/management/user" >}})). We will now add a Blazor *AuthenticationStateProvider* that will internally use this endpoint.
 
 Add a file with the following content:
 

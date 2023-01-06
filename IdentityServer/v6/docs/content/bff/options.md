@@ -27,7 +27,7 @@ services.AddBff(options =>
 
 * ***AnonymousSessionResponse*** (added in 2.0)
 
-    This sets the response status code behavior on the [user endpoint]({{< ref "/bff/session/management#user">}}) to either return 401 or 200 with a *null* payload when the user is anonymous.
+    This sets the response status code behavior on the [user endpoint]({{< ref "/bff/session/management/user">}}) to either return 401 or 200 with a *null* payload when the user is anonymous.
 
 ## Session Management
 
