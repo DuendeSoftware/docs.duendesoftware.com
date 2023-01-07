@@ -142,7 +142,7 @@ as a fatal error. Update the error logging code in
 ```csharp
 catch (Exception ex)
 {
-    if (ex.GetType().Name != "StopTheHostException")
+    if (ex.GetType().Name != "StopTheHostException" && ex.GetType().Name != "HostAbortedException")
     {
         Log.Fatal(ex, "Unhandled exception");
     }
