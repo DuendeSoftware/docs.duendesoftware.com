@@ -11,6 +11,12 @@ The */bff/login* endpoint begins the authentication process. To use it, typicall
 window.location = "/bff/login";
 ```
 
+...or using the *NavigationManager* in Blazor:
+
+```cs
+Navigation.NavigateTo($"bff/login", forceLoad: true);
+```
+
 The login endpoint triggers an authentication challenge using the default challenge scheme, which will typically use the OpenID Connect [handler]({{< ref "handlers" >}}).
 
 
