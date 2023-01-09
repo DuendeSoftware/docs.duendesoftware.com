@@ -46,7 +46,7 @@ jobs:
   close_pull_request_job:
     env: 
       AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F }}
-    if: (github.event_name == 'pull_request' && github.event.action == 'closed') && AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F != ''
+    if: (github.event_name == 'pull_request' && github.event.action == 'closed') && env.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F != ''
     runs-on: ubuntu-latest
     name: Close Pull Request Job
     steps:
