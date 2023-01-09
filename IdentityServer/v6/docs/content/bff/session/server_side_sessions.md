@@ -19,11 +19,11 @@ services.AddBff()
     .AddServerSideSessions();
 ```
 
-The default implementation stores the session in-memory on the server. This is useful for testing, for production you typically want a more robust storage mechanism. 
+The default implementation stores the session in-memory. This is useful for testing, but for production you typically want a more robust storage mechanism. We provide an implementation of the session store built with EntityFramework (EF) that can be used with any database with an EF provider (e.g. Microsoft SQL Server). You can also use a custom store. See [extensibility]({{< ref "/bff/extensibility/sessions#user-session-store" >}}) for more information.
 
-## Using EntityFramework for the Server-side Session Store
+## Using Entity Framework for the Server-side Session Store
 
-We provide an EntityFramework Core-based session store implementation (e.g. for SQL Server):
+To use the EF session store, register it by calling *AddEntityFrameworkServerSideSessions*, like this:
 
 ```csharp
 var cn = _configuration.GetConnectionString("db");
@@ -35,7 +35,8 @@ services.AddBff()
     });
 ```
 
-You can also use a custom store, see [extensibility]({{< ref "/bff/extensibility/sessions#user-session-store" >}}) for more information.
+### Entity Framework Migrations 
+Most datastores that you might use with Entity Framework use a schema to define the structure of their data. *Duende.BFF.EntityFramework* doesn't make any assumptions about the underlying datastore, how (or indeed even if) it defines its schema, or how schema changes are managed by your organization. For these reasons, Duende does not directly support database creation, schema changes, or data migration by publishing database scripts. You are expected to manage your database in the way your organization sees fit. Using EF migrations is one possible approach to that, which Duende facilitates by publishing entity classes in each version of *Duende.BFF.EntityFramework*. An example project that uses those entities to create migrations is [here](https://github.com/DuendeSoftware/BFF/tree/main/migrations/UserSessionDb).
 
 ## Session Store Cleanup
 
@@ -54,7 +55,7 @@ services.AddBff(options => {
 
 This requires an implementation of [*IUserSessionStoreCleanup*]({{< ref "/bff/extensibility/sessions#user-session-store-cleanup" >}}) in the DI system.
 
-If using EntityFramework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
+If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
 Just enable session cleanup:
 
 ```csharp
