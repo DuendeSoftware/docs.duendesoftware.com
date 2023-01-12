@@ -253,7 +253,8 @@ quickstart, it is not recommended in production!
 {{% /notice %}}
 
 Next, create an ef migration for the CustomProfileData and reseed your user
-database.
+database. Run the following commands from the *src/IdentityServerAspNetIdentity* 
+directory:
 ```sh
 dotnet ef migrations add CustomProfileData
 dotnet run /seed
@@ -272,7 +273,7 @@ Create a new class called *CustomProfileService* and add the following code to i
 ```csharp
 using Duende.IdentityServer.AspNetIdentity;
 using Duende.IdentityServer.Models;
-using IdentityServerHost.Models;
+using IdentityServerAspNetIdentity.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
