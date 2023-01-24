@@ -135,24 +135,27 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 The Entity Framework CLI internally starts up *IdentityServer* for a short time
 in order to read your database configuration. After it has read the
 configuration, it shuts *IdentityServer* down by throwing a
-*StopTheHostException* exception. We expect this exception to be unhandled and
+*StopTheHostException* (in Entity Framework 6) or *HostAbortedException* (in Entity Framework 7) exception. We expect this exception to be unhandled and
 therefore stop *IdentityServer*. Since it is expected, you do not need to log it
 as a fatal error. Update the error logging code in
 *src/IdentityServer/Program.cs* as follows:
 ```csharp
-catch (Exception ex)
+catch (Exception ex) when (
+    // https://github.com/dotnet/runtime/issues/60600
+    ex.GetType().Name is not "StopTheHostException"
+    // HostAbortedException was added in .NET 7, but since we target .NET 6 we
+    // need to do it this way until we target .NET 8
+    && ex.GetType().Name is not "HostAbortedException")
 {
-    if (ex.GetType().Name != "StopTheHostException")
-    {
-        Log.Fatal(ex, "Unhandled exception");
-    }
+    Log.Fatal(ex, "Unhandled exception");
 }
 ```
 
 {{% notice note %}}
 
-You must use the "StopTheHost" string here rather than catching the
-*StopTheHostException* because it is a private type. See
+When using `Microsoft.EntityFrameworkCore.Tools` version 6.x, you must use the "StopTheHostException" string here rather than catching the
+*StopTheHostException* because it is a private type. 
+If you use version 7.x of `Microsoft.EntityFrameworkCore.Tools` and reference version 7.x of the `Microsoft.Extensions.Hosting` package, you can catch the "HostAbortedException" as expected. See
 https://github.com/dotnet/runtime/issues/60600.
 
 
