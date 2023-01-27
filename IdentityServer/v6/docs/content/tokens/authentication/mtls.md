@@ -51,7 +51,7 @@ new Client
 ```
 
 ### .NET client library
-When writing a client to connect to IdentityServer, the *SocketsHttpHandler* (or *HttpClientHandler* depending on you .NET version) 
+When writing a client to connect to IdentityServer, the *SocketsHttpHandler* (or *HttpClientHandler* depending on your .NET version) 
 class provides a convenient mechanism to add a client certificate to outgoing requests.
 
 Use such a handler with *HttpClient* to perform the client certificate authentication handshake at the TLS channel.
