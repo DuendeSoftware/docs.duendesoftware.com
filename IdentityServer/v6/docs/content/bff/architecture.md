@@ -4,38 +4,39 @@ date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---
 
-A BFF host is an ASP.NET Core application with the following logical building blocks:
+
+
+A BFF host is an ASP.NET Core application with components to 
+- Handle OIDC and OAuth protocol requests and responses on the server-side
+- Manage user sessions and token
+- Provide and securing API endpoints for the frontend
 
 ![](../images/BFF_blocks.png?height=30pc)
 
-These components deal with server-side protocol requests and responses, session and token management as well as providing and securing API endpoints for the frontend.
+In addition, the host typically serves the UI assets of the frontend, which can be HTML/JS/CSS, WASM, and/or server-rendered content. Serving the UI assets from the same host as the backend simplifies the sharing of cookie credentials, but other hosting architectures are [possible]({{< ref "#frontend" >}}).
 
-In addition, the host serves the UI assets which could be HTML/JS/CSS, WASM, and/or server-rendered content.
-
-Plain ASP.NET Core provides a good starting point to inject the additional security and application features that are typically associated with a BFF. This is where Duende.BFF comes in. We fill those gaps and add advanced functionality so you only have to focus on providing the application logic, and not the security logic:
+ASP.NET Core provides a starting point to which Duende.BFF adds the additional security and application features that are typically needed in a BFF. We fill the gaps and add advanced functionality so you can focus on implementing the application logic rather than worrying about security logic:
 
 ![](../images/DuendeBFF_blocks.png?height=30pc)
 
-**ASP.NET OpenID Connect Handler**
+## ASP.NET OpenID Connect Handler
+We use ASP.NET's built-in OpenID Connect handler for OIDC and OAuth protocol processing. As both long-term users of and contributors to this library, we think it is a well implemented and flexible implementation of the protocols.
 
-We leverage the built-in OpenID Connect handler for OIDC and OAuth protocol processing. We are both a long-term user and contributor of this library and think this is a very well implemented and flexible protocol library.
+## ASP.NET Cookie Handler
+We also use ASP.NET's built-in Cookie handler for session management in ASP.NET Core. 
+It has a good set of security features, including claims, cookie security features, digital signatures and encryption, provides both absolute and sliding session support, and has a good extensibility model. Duende.BFF uses the extensibility points of the Cookie Handler to implement server-side session management and back-channel logout support.
 
-**ASP.NET Cookie Handler**
+To interact with the session cookie, we provide endpoints for login, logout, and retrieval of user and session data.
 
-This library takes care of session management in ASP.NET Core. It has a good set of features around security (claims, cookie security features, digital signatures and encryption), provides both absolute and sliding session support, and has a good extensibility model. We leverage the library to add server-side session management and back-channel logout support.
+## IdentityModel.AspNetCore
+Duende.BFF uses the IdentityModel.AspNetCore library to provide automatic access token management. This includes storage and retrieval of tokens, refreshing tokens as needed, and revoking tokens on logout. The library provides  integration with the ASP.NET HTTP client to automatically attach tokens to outgoing HTTP requests, and its underlying management actions can also be programmatically invoked through an imperative API.
 
-On top of the cookie handler, we provide endpoints for login, logout and user/session data and query.
+## API Endpoints
+In the BFF architecture, the frontend makes API calls to backend services via the BFF host exclusively. API endpoints made specifically for the frontend can be implemented directly in the BFF host using standard ASP.NET abstractions, such as API controllers and minimal API endpoints. Remote, that is cross-site, APIs can also be called through the backend. Remote APIs can either be invoked manually, or a reverse proxy approach can be used. In either case, requests need to be secured with the session cookie and anti-forgery protection.
 
-**IdentityModel.AspNetCore**
+Duende.BFF includes a developer-centric version of Microsoft's YARP proxy that integrates with the Duende.BFF automatic token management features. We also provide YARP-specific plumbing to add the BFF features to "standard" YARP directly.
 
-This library plugs into both the OpenID Connect and cookie handler to provide automatic access token management and storage. It provides both an imperative API as well as integration with the ASP.NET HTTP client factory.
+## Frontend
+The frontend can be hosted from the BFF host or separately. Hosting together with the BFF is the simplest choice, as requests from the front end to the backend will automatically include the authentication cookie and not require CORS headers. This approach typically makes use of Visual Studio's SPA templates that start up the SPA and proxy requests to it. Samples that take this approach using [React]({{< ref "/samples/bff#reactjs-frontend" >}}) and [Angular]({{< ref "/samples/bff#angular-frontend" >}}) are available. 
 
-**API Endpoints**
-
-The frontend will call APIs. Frontend exclusive APIs can live directly in the BFF host. Remote (e.g. cross-site) APIs are called via the backend. Both types need to be secured with the session cookie and anti-forgery protection.
-
-The remote API interfaces can be either created manually, or a reverse proxy approach can be used. Duende.BFF includes a developer-centric version of Microsoft's YARP proxy that integrates with the automatic token management mentioned above. We also provide YARP-specific plumbing to add the BFF features to "standard" YARP directly.
-
-**Frontend**
-
-The UI can be delivered over various mechanisms, e.g. via the ASP.NET static files middleware, MVC/Razor or server/WASM Blazor.
+If you would prefer to run the SPA outside of the C# project, you can host the frontend separately. Cross site requests from the frontend to the backend can be made by [using CORS]({{< ref "/samples/bff#separate-host-for-ui" >}}) or the existence of multiple hosts can be hidden behind a proxy. 
