@@ -4,8 +4,6 @@ date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---
 
-
-
 A BFF host is an ASP.NET Core application with components to 
 - Handle OIDC and OAuth protocol requests and responses on the server-side
 - Manage user sessions and token
@@ -28,8 +26,8 @@ It has a good set of security features, including claims, cookie security featur
 
 To interact with the session cookie, we provide endpoints for login, logout, and retrieval of user and session data.
 
-## IdentityModel.AspNetCore
-Duende.BFF uses the IdentityModel.AspNetCore library to provide automatic access token management. This includes storage and retrieval of tokens, refreshing tokens as needed, and revoking tokens on logout. The library provides  integration with the ASP.NET HTTP client to automatically attach tokens to outgoing HTTP requests, and its underlying management actions can also be programmatically invoked through an imperative API.
+## Duende.AccessTokenManagement
+Duende.BFF uses the Duende.AccessTokenManagement library to provide automatic access token management. This includes storage and retrieval of tokens, refreshing tokens as needed, and revoking tokens on logout. The library provides integration with the ASP.NET HTTP client to automatically attach tokens to outgoing HTTP requests, and its underlying management actions can also be programmatically invoked through an imperative API.
 
 ## API Endpoints
 In the BFF architecture, the frontend makes API calls to backend services via the BFF host exclusively. API endpoints made specifically for the frontend can be implemented directly in the BFF host using standard ASP.NET abstractions, such as API controllers and minimal API endpoints. Remote, that is cross-site, APIs can also be called through the backend. Remote APIs can either be invoked manually, or a reverse proxy approach can be used. In either case, requests need to be secured with the session cookie and anti-forgery protection.

@@ -22,7 +22,7 @@ Risk comes to an application not only from its own code, which must be protected
 
 Storing tokens on the server-side and using encrypted and signed HTTP-only cookies for session management greatly simplifies the threat model and reduces the risk. While this does not make the application "auto-magically" secure against content injection, it limits the attacker's ability to abuse a stolen token by forcing them to go through a well-defined interface to the backend which eliminates the possibility of arbitrary API calls.
 
-#### React to changes in the browser security models
+#### React to changes in browser security models
 Browsers are increasingly restricting the use of cookies across site boundaries to protect user privacy. This can be a [problem](https://leastprivilege.com/2020/03/31/spas-are-dead/) for legitimate OAuth and OpenID Connect interactions, as these protocols are indistinguishable from common tracking mechanisms from a browser's perspective.
 
 This affects several key areas of web security, including:
