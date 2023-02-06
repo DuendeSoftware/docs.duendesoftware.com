@@ -41,8 +41,8 @@ point to a replay attack of the refresh token, bugs in the client code, or
 transient network failures.
 
 When one-time use refresh tokens are used, they are not necessarily deleted from
-the database. The DeleteOneTimeOnlyRefreshTokensOnUse configuration flag, which
-will be added in version 6.3, controls if such tokens are immediately deleted or
+the database. The *DeleteOneTimeOnlyRefreshTokensOnUse* configuration flag,
+added in version 6.3, controls if such tokens are immediately deleted or
 consumed. If configured for consumption instead of deletion, then when the token
 is used, the *ConsumedTime* property will be set. If a token is received that
 has already been consumed, the default service will call the

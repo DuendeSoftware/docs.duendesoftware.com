@@ -128,7 +128,7 @@ This options class contains properties to control the operational store and *Per
 *TokenCleanupInterval*
     The token cleanup interval (in seconds). The default is 3600 (1 hour).
 
-*ConsumedTokenCleanupDelay* [Will be added in 6.3]
+*ConsumedTokenCleanupDelay* [added in 6.3]
     The consumed token cleanup delay (in seconds). The default is 0. This delay is the amount of time that must elapse before tokens marked as consumed can be deleted. Note that only refresh tokens with
     OneTime usage can be marked as consumed. 
 

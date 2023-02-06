@@ -415,8 +415,7 @@ Shared settings for persisted grants behavior.
     Data protect the persisted grants "data" column. Defaults to *true*.
     If you have PII requirements and your database is already protecting data at rest, then you can consider disabling this.
 
-* ***DeleteOneTimeOnlyRefreshTokensOnUse***
-    (Will be added in 6.3)
+* ***DeleteOneTimeOnlyRefreshTokensOnUse*** (added in 6.3)
 
     When Refresh tokens that are configured with RefreshTokenUsage.OneTime are used, this option controls if they will be deleted immediately or retained and marked as consumed. The default is on - immediately delete.
 
