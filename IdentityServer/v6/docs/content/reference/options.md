@@ -7,7 +7,7 @@ weight: 10
 
 The *IdentityServerOptions* is the central place to configure fundamental settings in Duende IdentityServer.
 
-You set the options at startup time in your *ConfigureServices* method:
+You set the options when registering IdentityServer at startup time, using a lambda expression in the AddIdentityServer method:
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -17,54 +17,72 @@ var builder = services.AddIdentityServer(options =>
 ```
 
 ## Main
-Top-level settings.
+Top-level settings. Available directly on the *IdentityServerOptions* object.
 
 * ***IssuerUri***
 
-    Set the issuer name that will appear in the discovery document and the issued JWT tokens.
-    It is recommended to not set this property, which infers the issuer name from the host name that is used by the clients.
+    The name of the token server, used in the discovery document as the *issuer* claim and in JWT tokens and introspection responses as the *iss* claim.
+
+    It is not recommended to set this option. If it is not set (the default), the issuer is inferred from the URL used by clients. This better conforms to the OpenID Connect specification, which requires that issuer values be "identical to the Issuer URL that was directly used to retrieve the configuration information". It is also more convenient for clients to validate the issuer of tokens, because they will not need additional configuration or customization to know the expected issuer.
 
 * ***LowerCaseIssuerUri***
 
-    Set to *false* to preserve the original casing of the IssuerUri. Defaults to *true*.
+    Controls the casing of inferred *IssuerUri*s. When set to *false*, the original casing of the IssuerUri in requests is preserved. When set to *true*, the *IssuerUri* is converted to lowercase. Defaults to *true*.
 
 * ***AccessTokenJwtType***
   
-    Specifies the value used for the JWT typ header for access tokens (defaults to *at+jwt*).
+    The value used for the *typ* header in JWT access tokens. Defaults to *at+jwt*, as specified by the [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068). If *AccessTokenJwtType* is set to *null* or the empty string, the *typ* header will not be emitted in JWT access tokens.
 
 * ***EmitScopesAsSpaceDelimitedStringInJwt***
   
-    Specifies whether scopes in JWTs are emitted as array or string
-    
-    Historically scopes values were emitted as an array in JWT access tokens.
-    The newer JWT for OAuth profile specifies a space delimited string instead.
-    The behavior can be toggled here (defaults to *false* for backwards compatibility).
+    Controls the format of scope claims in JWTs and introspection responses. Historically scopes values were emitted as an array in JWT access tokens. [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068) now specifies a space delimited string instead. Defaults to *false* for backwards compatibility.
 
 * ***EmitStaticAudienceClaim***
-  
-    Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
     
+    Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
+
 * ***EmitIssuerIdentificationResponseParameter***
+     
+    Emits the *iss* response parameter on authorize responses, as specified by [RFC 9207](https://datatracker.ietf.org/doc/rfc9207/). Defaults to *true*.
+
+* ***EmitStateHash*** 
   
-    Emits the *iss* response parameter on authorize reponses. Defaults to *true*.
+    Emits the s_hash claim in identity tokens. The s_hash claim is a hash of the state parameter that is specified in the OpenID Connect [Financial-grade API Security Profile](https://openid.net/specs/openid-financial-api-part-2-1_0.html). Defaults to *false*.
+
+* ***StrictJarValidation***
+
+    Strictly validate JWT-secured authorization requests according to [RFC 9101](https://datatracker.ietf.org/doc/rfc9101/). When enabled, JWTs used to secure authorization requests must have the *typ* header value *oauth-authz-req+jwt* and JWT-secured authorization requests must have the HTTP *content-type* header value *application/oauth-authz-req+jwt*. This might break older OIDC conformant request objects. Defaults to *false*.  
+
 
 * ***ValidateTenantOnAuthorization***
-  
+    
     Specifies if a user's *tenant* claim is compared to the tenant *acr_values* parameter value to determine if the login page is displayed. Defaults to *false*.
 
 ## Key management
-Controls the automatic key management settings.
+Automatic key management settings. Available on the *KeyManagement* property of the *IdentityServerOptions* object.
 
 * ***Enabled***
 
-    Specifies if key management should be enabled. Defaults to true.
+    Enables automatic key management. Defaults to true.
 
 * ***SigningAlgorithms***
 
-    The signing algorithms allowed. 
-    If none are specified, then "RS256" will be used as the default.
-    The first in the collection will be used as the default. 
+    The signing algorithms for which automatic key management will manage keys. 
 
+    This option is configured with a list of objects containing a Name property, which is the name of a supported signing algorithm, and a UseX509Certificate property, which is a flag indicating if the signing key should be wrapped in an X.509 certificate.
+    
+    The first algorithm in the collection will be used as the default for clients that do not specify *AllowedIdentityTokenSigningAlgorithms*.
+    
+    The supported signing algorithm names are *RS256*, *RS384*, *RS512*, *PS256*, *PS384*, *PS512*, *ES256*, *ES384*, and *ES512*.
+
+    X.509 certificates are not supported for *ES256*, *ES384*, and *ES512* keys.
+
+    Defaults to *RS256* without an X.509 certificate.
+
+* ***RsaKeySize***
+    
+    Key size (in bits) of RSA keys. The signing algorithms that use RSA keys (*RS256*, *RS384*, *RS512*, *PS256*, *PS384*, and *PS512*) will generate an RSA key of this length. Defaults to 2048.
+  
 * ***RotationInterval***
 
     Age at which keys will no longer be used for signing, but will still be used in discovery for validation.
@@ -118,39 +136,88 @@ Controls the automatic key management settings.
     Defaults to 1 minute.
 
 ## Endpoints
-Allows enabling/disabling individual endpoints, e.g. token, authorize, userinfo etc.
+Endpoint settings, including flags to disable individual endpoints and support for the request_uri JAR parameter. Available on the *Endpoints* property of the *IdentityServerOptions* object.
 
-```cs
-var builder = services.AddIdentityServer(options =>
-{
-    // see endpoint section in docs for a list of endpoints
+* ***EnableAuthorizeEndpoint***
 
-    options.Endpoints.EnableAuthorizeEndpoint = true;
-    options.Endpoints.EnableIntrospectionEndpoint = false;
-})
-```
+    Enables the authorize endpoint. Default to true.
 
-By default all endpoints are enabled, but you can lock down your server by disabling endpoints that you don't need.
+* ***EnableTokenEndpoint***
+
+    Enables the token endpoint. Default to true.
+
+* ***EnableDiscoveryEndpoint***
+
+    Enables the discovery endpoint. Default to true.
+
+* ***EnableUserInfoEndpoint***
+
+    Enables the user info endpoint. Default to true.
+
+* ***EnableEndSessionEndpoint***
+
+    Enables the end session endpoint. Default to true.
+
+* ***EnableCheckSessionEndpoint***
+
+    Enables the check session endpoint. Default to true.
+
+* ***EnableTokenRevocationEndpoint***
+
+    Enables the token revocation endpoint. Default to true.
+
+* ***EnableIntrospectionEndpoint***
+
+    Enables the introspection endpoint. Default to true.
+
+* ***EnableDeviceAuthorizationEndpoint***
+
+    Enables the device authorization endpoint. Default to true.
+
+* ***EnableBackchannelAuthenticationEndpoint***
+
+    Enables the backchannel authentication endpoint. Default to true.
 
 * ***EnableJwtRequestUri***
-  
-    Enabling the request_uri parameter has some security implications (see spec).
-    Thus support for this parameter is disabled by default.
+  Enables the *request_uri* parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the request_uri parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).
 
 ## Discovery
-Allows enabling/disabling various sections of the discovery document, e.g. endpoints, scopes, claims, grant types etc.
+Discovery settings, including flags to toggle sections of the discovery document and settings to add custom entries to it. Available on the *Discovery* property of the *IdentityServerOptions* object. 
 
-```cs
-var builder = services.AddIdentityServer(options =>
-{
-    options.Discovery.ShowApiScopes = false;
-    options.Discovery.ShowClaims = false;
+If you want to take full control over the rendering of the discovery and jwks documents, you can implement the *IDiscoveryResponseGenerator* interface (or derive from our default implementation).
 
-    // etc
-}
-```
+* ***ShowEndpoints***
 
-The *CustomEntries* dictionary allows adding custom elements to the discovery document.
+    Shows endpoints (authorization_endpoint, token_endpoint, etc) in the discovery document. Defaults to true.
+* ***ShowKeySet***
+
+    Shows the jwks_uri in the discovery document and enables the jwks endpoint. Defaults to true.
+* ***ShowIdentityScopes***
+
+    Includes IdentityResources in the supported_scopes of the discovery document. Defaults to true.
+* ***ShowApiScopes***
+
+    Includes ApiScopes in the supported_scopes of the discovery document. Defaults to true.
+* ***ShowClaims***
+
+    Shows claims_supported in the discovery document. Defaults to true.
+* ***ShowResponseTypes***
+
+    Shows response_types_supported in the discovery document. Defaults to true.
+* ***ShowResponseModes***
+
+    Shows response_modes_supported in the discovery document. Defaults to true.
+* ***ShowGrantTypes***
+
+    Shows grant_types_supported in the discovery document. Defaults to true.
+* ***ShowExtensionGrantTypes***
+
+    Includes extension grant types in the grant_types_supported of the discovery document. Defaults to true.
+* ***ShowTokenEndpointAuthenticationMethods***
+
+    Shows token_endpoint_auth_methods_supported in the discovery document. Defaults to true.
+* ***CustomEntries***
+Adds custom elements to the discovery document. For example:
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -165,17 +232,16 @@ var builder = services.AddIdentityServer(options =>
 });
 ```
 
-When you add a custom value that starts with ~/ it will be expanded to an absolute path below the IdentityServer base address, e.g.:
+* ***ExpandRelativePathsInCustomEntries***
+Expands paths in custom entries that begin with "~/" into absolute paths below the IdentityServer base address. Defaults to true. In the following example, if IdentityServer's base address is *https://localhost:5001*, then *my_custom_endpoint*'s value will be expanded to *https://localhost:5001/custom*.
 
 ```cs
 options.Discovery.CustomEntries.Add("my_custom_endpoint", "~/custom");
 ```
 
-If you want to take full control over the rendering of the discovery (and jwks) document, you can implement the *IDiscoveryResponseGenerator* interface (or derive from our default implementation).
-
 ## Authentication
 
-Login/logout related settings.
+Login/logout related settings. Available on the *Authentication* property of the *IdentityServerOptions*
 
 * ***CookieAuthenticationScheme***
     
@@ -183,15 +249,15 @@ Login/logout related settings.
     
 * ***CookieLifetime***
 
-    The authentication cookie lifetime (only effective if the IdentityServer-provided cookie handler is used).
+    The authentication cookie lifetime (only effective if the IdentityServer-provided cookie handler is used). Defaults to 10 hours.
 
 * ***CookieSlidingExpiration***
     
-    Specifies if the cookie should be sliding or not (only effective if the IdentityServer-provided cookie handler is used).
+    Specifies if the cookie should be sliding or not (only effective if the IdentityServer-provided cookie handler is used). Defaults to false.
 
 * ***CookieSameSiteMode***
     
-    Specifies the SameSite mode for the internal cookies.
+    Specifies the SameSite mode for the internal cookies. Defaults to None.
 
 * ***RequireAuthenticatedUserForSignOutMessage***
     
@@ -199,18 +265,18 @@ Login/logout related settings.
 
 * ***CheckSessionCookieName***
     
-    The name of the cookie used for the check session endpoint.
+    The name of the cookie used for the check session endpoint. Defaults to the constant *IdentityServerConstants.DefaultCheckSessionCookieName*, which has the value "idsrv.session".
 
 * ***CheckSessionCookieDomain***
     
-    The domain of the cookie used for the check session endpoint.
+    The domain of the cookie used for the check session endpoint. Defaults to null.
 
 * ***CheckSessionCookieSameSiteMode***
     
-    The SameSite mode of the cookie used for the check session endpoint.
+    The SameSite mode of the cookie used for the check session endpoint. Defaults to None.
 
 * ***RequireCspFrameSrcForSignout***
-    
+
     If set, will require frame-src CSP headers being emitting on the end session callback endpoint which renders iframes to clients for front-channel signout notification. Defaults to true.
 
 * ***CoordinateClientLifetimesWithUserSession*** (added in 6.1)
@@ -221,49 +287,169 @@ Login/logout related settings.
     An individual client can override this setting with its own *CoordinateLifetimeWithUserSession* configuration setting.
 
 ## Events
-Allows configuring if and which events should be submitted to a registered event sink. See [here]({{< ref "/diagnostics/events">}}) for more information on events.
+Configures which [events]({{< ref "/diagnostics/events">}}) should be raised at the  registered event sink.
 
-```cs
-var builder = services.AddIdentityServer(options =>
-{
-    options.Events.RaiseSuccessEvents = true;
-    options.Events.RaiseFailureEvents = true;
-    options.Events.RaiseErrorEvents = true;
-    options.Events.RaiseInformationEvents = true;
-})
-```
+* ***RaiseSuccessEvents***
+
+    Enables success events. Defaults to false. Success events include all the events whose names are postfixed with "SuccessEvent". In general, they are raised when properly formed and valid requests are processed without errors.
+
+* ***RaiseFailureEvents***
+
+    Enables failure events. Defaults to false. Failure events include all the events whose names are postfixed with "FailureEvent". In general, they are raised when an action has failed because of incorrect or badly formed parameters in a request. They indicate that the user or client calling IdentityServer has done something wrong and are analogous to a 400: bad request error.
+
+* ***RaiseErrorEvents***
+
+    Enables Error events. Defaults to false. Error events are raised when an error has occurred, either because of invalid configuration or an unhandled exception. They indicate that there is something wrong within the token server or its configuration and are analogous to a 500: internal server error.
+
+* ***RaiseInformationEvents***
+
+    Enables Information events. Defaults to false. Information events are emitted when an action has occurred that is of informational interest, but that is neither a success nor a failure. For example, when the end user grants, denies, or revokes consent, that is considered an information event, because these events capture a valid choice of the user rather than success or failure.
+
+
 
 ## Logging
-Options related to logging.
+Logging related settings, including filters that will remove sensitive values and unwanted exceptions from logs. Available on the *Logging* property of the *IdentityServerOptions* object.
 
 * ***AuthorizeRequestSensitiveValuesFilter***
     
-    Collection of parameter names passed to the authorize endpoint that are considered sensitive and will be excluded from logging.
+    Collection of parameter names passed to the authorize endpoint that are considered sensitive and will be excluded from logging. Defaults to *id_token_hint*.
 
 * ***TokenRequestSensitiveValuesFilter***
     
-    Collection of parameter names passed to the token endpoint that are considered sensitive and will be excluded from logging.
+    Collection of parameter names passed to the token endpoint that are considered sensitive and will be excluded from logging. Defaults to *client_secret*, *password*, *client_assertion*, *refresh_token*, and *device_code*.
+
+* ***BackchannelAuthenticationRequestSensitiveValuesFilter**
+  
+    Collection of parameter names passed to the backchannel authentication endpoint that are considered senstivie and will be excluded from logging. Defaults to *client_secret*, *client_assertion*, and *id_token_hint*.
 
 * ***UnhandledExceptionLoggingFilter*** (Added in 6.2)
   
   A function that is called when the IdentityServer middleware detects an unhandled exception, and is used to determine if the exception is logged.
   The arguments to the function are the HttpContext and the Exception. It should return true to log the exception, and false to suppress.
-  The default is to suppress *TaskCanceledException*s. Such exceptions are thrown when Http requests are canceled, which is an expected occurrence. Logging them creates unnecessary noise in the logs.
+  The default is to suppress *TaskCanceledException*s when the *CancellationToken* on the *HttpContext* has requested cancellation. Such exceptions are thrown when Http requests are canceled, which is an expected occurrence. Logging them creates unnecessary noise in the logs.
 
 ## InputLengthRestrictions
-Allows setting length restrictions on various protocol parameters like client id, scope, redirect URI etc.
 
-```cs
-var builder = services.AddIdentityServer(options =>
-{
-    // allow scope parameter up to 1000 characters
-    options.InputLengthRestrictions.Scope = 1000;
-})
-```
+Settings that control the allowed length of various protocol parameters, such as client id, scope, redirect URI etc. Available on the *InputLengthRestrictions* property of the *IdentityServerOptions* object.
+
+* ***ClientId***
+
+    Max length for ClientId. Defaults to 100.
+
+* ***ClientSecret***
+    
+    Max length for external client secrets. Defaults to 100.
+
+* ***Scope***
+    
+    Max length for scope. Defaults to 300.
+
+* ***RedirectUri***
+    
+    Max length for redirect_uri. Defaults to 400.
+
+* ***Nonce***
+    
+    Max length for nonce. Defaults to 300.
+
+* ***UiLocale***
+    
+    Max length for ui_locale. Defaults to 100.
+
+* ***LoginHint***
+    
+    Max length for login_hint. Defaults to 100.
+
+* ***AcrValues***
+    
+    Max length for acr_values. Defaults to 300.
+
+* ***GrantType***
+    
+    Max length for grant_type. Defaults to 100.
+
+* ***UserName***
+    
+    Max length for username. Defaults to 100.
+
+* ***Password***
+    
+    Max length for password. Defaults to 100.
+
+* ***CspReport***
+    
+    Max length for CSP reports. Defaults to 2000.
+
+* ***IdentityProvider***
+    
+    Max length for external identity provider name. Defaults to 100.
+
+* ***ExternalError***
+    
+    Max length for external identity provider errors. Defaults to 100.
+
+* ***AuthorizationCode***
+    
+    Max length for authorization codes. Defaults to 100.
+
+* ***DeviceCode***
+    
+    Max length for device codes. Defaults to 100.
+
+* ***RefreshToken***
+    
+    Max length for refresh tokens. Defaults to 100.
+
+* ***TokenHandle***
+    
+    Max length for token handles. Defaults to 100.
+
+* ***Jwt***
+    
+    Max length for JWTs. Defaults to 51200.
+
+* ***CodeChallengeMinLength***
+    
+    Min length for the code challenge. Defaults to 43.
+
+* ***CodeChallengeMaxLength***
+    
+    Max length for the code challenge. Defaults to 128.
+
+* ***CodeVerifierMinLength***
+    
+    Min length for the code verifier. Defaults to 43.
+
+* ***CodeVerifierMaxLength***
+        
+    Max length for the code verifier. Defaults to 128.
+
+* ***ResourceIndicatorMaxLength***
+    
+    Max length for resource indicator parameter. Defaults to 512.
+
+* ***BindingMessage***
+        
+    Max length for binding_message. Defaults to 100.
+
+* ***UserCode***
+    
+    Max length for user_code. Defaults to 100.
+
+* ***IdTokenHint***
+    
+    Max length for id_token_hint. Defaults to 4000.
+
+* ***LoginHintToken***
+    
+    Max length for login_hint_token. Defaults to 4000.
+
+* ***AuthenticationRequestId***
+    Max length for auth_req_id. Defaults to 100.
 
 ## UserInteraction
 
-Setting regarding the IdentityServer / user workflow.
+    User interaction settings, including urls for pages in the UI, names of parameters to those pages, and other settings related to interactive flows. Available on the *UserInteraction* property of the *IdentityServerOptions* object.
 
 * ***LoginUrl***, ***LogoutUrl***, ***ConsentUrl***, ***ErrorUrl***, ***DeviceVerificationUrl***
 
@@ -299,7 +485,7 @@ Setting regarding the IdentityServer / user workflow.
     Since browsers have limits on the number of cookies and their size, this setting is used to prevent too many cookies being created. 
     The value sets the maximum number of message cookies of any type that will be created.
     The oldest message cookies will be purged once the limit has been reached.
-    This effectively indicates how many tabs can be opened by a user when using IdentityServer.
+    This effectively indicates how many tabs can be opened by a user when using IdentityServer. Defaults to 2.
 
 * ***AllowOriginInReturnUrl***
 
@@ -307,23 +493,23 @@ Setting regarding the IdentityServer / user workflow.
 
 
 ## Caching
-These settings only apply if the respective caching has been enabled in the services configuration in startup.
+Caching settings for the stores. Available on the *Caching* property of the *IdentityServerOptions* object. These settings only apply if the respective caching has been enabled in the services configuration in startup.
 
 * ***ClientStoreExpiration***
 
-    Cache duration of client configuration loaded from the client store.
+    Cache duration of client configuration loaded from the client store. Defaults to 15 minutes.
 
 * ***ResourceStoreExpiration***
 
-    Cache duration of identity and API resource configuration loaded from the resource store.
+    Cache duration of identity and API resource configuration loaded from the resource store. Defaults to 15 minutes.
 
 * ***CorsExpiration***
 
-    Cache duration of CORS configuration loaded from the CORS policy service.
+    Cache duration of CORS configuration loaded from the CORS policy service. Defaults to 15 minutes.
 
 * ***IdentityProviderCacheDuration***
 
-    Cache duration of identity provider configuration loaded from the identity provider store.
+    Cache duration of identity provider configuration loaded from the identity provider store. Defaults to 60 minutes.
 
 * ***CacheLockTimeout***
 
@@ -331,12 +517,11 @@ These settings only apply if the respective caching has been enabled in the serv
 
 
 ## CORS
-IdentityServer supports CORS for some of its endpoints.
-The underlying CORS implementation is provided from ASP.NET Core, and as such it is automatically registered in the dependency injection system.
+CORS settings for IdentityServer's endpoints. Available on the *Cors* property of the *IdentityServerOptions* object. The underlying CORS implementation is provided from ASP.NET Core, and as such it is automatically registered in the dependency injection system. 
 
 * ***CorsPolicyName***
 
-    Name of the CORS policy that will be evaluated for CORS requests into IdentityServer (defaults to *IdentityServer*).
+    Name of the CORS policy that will be evaluated for CORS requests into IdentityServer. Defaults to *IdentityServer*.
     The policy provider that handles this is implemented in terms of the *ICorsPolicyService* registered in the dependency injection system.
     If you wish to customize the set of CORS origins allowed to connect, then it is recommended that you provide a custom implementation of *ICorsPolicyService*.
 
@@ -350,19 +535,19 @@ The underlying CORS implementation is provided from ASP.NET Core, and as such it
     Indicates the value to be used in the preflight *Access-Control-Max-Age* response header.
     Defaults to *null* indicating no caching header is set on the response.
 
-## CSP (Content Security Policy)
-IdentityServer emits CSP headers for some responses, where appropriate.
+## Content Security Policy
+Settings for Content Security Policy (CSP) headers that IdentityServer emits. Available on the *Csp* property of the *IdentityServerOptions* object.
 
 * ***Level***
     
-    The level of CSP to use. CSP Level 2 is used by default, but if older browsers must be supported then this be changed to *CspLevel.One* to accommodate them.
+    The level of CSP to use. CSP Level 2 is used by default, but this can be changed to *CspLevel.One* to accommodate older browsers.
 
 * ***AddDeprecatedHeader***
     
-    Indicates if the older *X-Content-Security-Policy* CSP header should also be emitted (in addition to the standards-based header value). Defaults to *true*.
+    Indicates if the older *X-Content-Security-Policy* CSP header should also be emitted in addition to the standards-based header value. Defaults to *true*.
 
 ## Device Flow
-OAuth device flow related settings.
+OAuth device flow settings. Available on the *DeviceFlow* property of the *IdentityServerOptions* object.
 
 * ***DefaultUserCodeType***
     
@@ -373,7 +558,7 @@ OAuth device flow related settings.
     Defines the minimum allowed polling interval on the token endpoint. Defaults to *5*.
 
 ## Mutual TLS
-Mutual TLS enabled settings. See MTLS section for more information. TODO
+[Mutual TLS]({{< ref "/tokens/authentication/mtls" >}}) settings. Available on the *MutualTls* property of the *IdentityServerOptions* object.
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -397,7 +582,7 @@ var builder = services.AddIdentityServer(options =>
 
 * ***DomainName***
 
-    Specifies either the name of the sub-domain or full domain for running the MTLS endpoints (will use path-based endpoints if not set).
+    Specifies either the name of the sub-domain or full domain for running the MTLS endpoints. MTLS will use path-based endpoints if not set (the default).
     Use a simple string (e.g. "mtls") to set a sub-domain, use a full domain name (e.g. "identityserver-mtls.io") to set a full domain name.
     When a full domain name is used, you also need to set the *IssuerName* to a fixed value.
 
@@ -405,7 +590,7 @@ var builder = services.AddIdentityServer(options =>
 
     Specifies whether a cnf claim gets emitted for access tokens if a client certificate was present.
     Normally the cnf claims only gets emitted if the client used the client certificate for authentication,
-    setting this to true, will set the claim regardless of the authentication method. (defaults to false).
+    setting this to true, will set the claim regardless of the authentication method. Defaults to false.
 
 ## PersistentGrants
 Shared settings for persisted grants behavior.
@@ -413,14 +598,14 @@ Shared settings for persisted grants behavior.
 * ***DataProtectData***
     
     Data protect the persisted grants "data" column. Defaults to *true*.
-    If you have PII requirements and your database is already protecting data at rest, then you can consider disabling this.
+    If your database is already protecting data at rest, then you can consider disabling this.
 
 * ***DeleteOneTimeOnlyRefreshTokensOnUse*** (added in 6.3)
 
     When Refresh tokens that are configured with RefreshTokenUsage.OneTime are used, this option controls if they will be deleted immediately or retained and marked as consumed. The default is on - immediately delete.
 
 ## Dynamic Providers
-Shared settings for the [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}) feature.
+Settings for [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}). Available on the *DynamicProviders* property of the *IdentityServerOptions* object.
 
 * ***PathPrefix***
     
@@ -428,14 +613,14 @@ Shared settings for the [dynamic providers]({{< ref "/ui/login/dynamicproviders"
 
 * ***SignInScheme***
     
-    Scheme used for signin. Defaults to the constant *IdentityServerConstants.ExternalCookieAuthenticationScheme*.
+    Scheme used for signin. Defaults to the constant *IdentityServerConstants.ExternalCookieAuthenticationScheme*, which has the value "idsrv.external".
 
 * ***SignOutScheme***
     
-    Scheme for signout. Defaults to the constant *IdentityServerConstants.DefaultCookieAuthenticationScheme*.
+    Scheme for signout. Defaults to the constant *IdentityServerConstants.DefaultCookieAuthenticationScheme*, which has the value "idsrv".
 
 ## CIBA
-Shared settings for the CIBA feature.
+[CIBA]({{< ref "/ui/ciba" >}}) settings.  Available on the *Ciba* property of the *IdentityServerOptions* object.
 
 * ***DefaultLifetime***
     
@@ -446,26 +631,35 @@ Shared settings for the CIBA feature.
     The polling interval in seconds that a client is to use when connecting to the token endpoint. Defaults to 5.
 
 ## Server-side Sessions 
-Shared settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added in 6.1.
+Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added in 6.1.  Available on the *ServerSideSessions* property of the *IdentityServerOptions* object.
 
 * ***UserDisplayNameClaimType***
     
-    The claim type used for the user's display name. 
+    Claim type used for the user's display name. Unset by default. Usually this should be set to *JwtClaimTypes.Name*.
 
 * ***RemoveExpiredSessions***
     
-    If enabled will perodically cleanup expired sessions.
+   Enables periodic cleanup of expired sessions. Defaults to true.
 
 * ***RemoveExpiredSessionsFrequency***
     
-    Frequency expired sessions will be removed.
+    Frequency that expired sessions will be removed. Defaults to 10 minutes.
 
 * ***RemoveExpiredSessionsBatchSize***
     
-    Number of expired sessions records to be removed at a time.
+    Number of expired session records to be removed at a time. Defaults to 100.
 
 * ***ExpiredSessionsTriggerBackchannelLogout***
     
-    If enabled, when server-side sessions are removed due to expiration, will back-channel logout notifications be sent.
-    This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer.
+    If enabled, when server-side sessions are removed due to expiration, back-channel logout notifications will be sent.
+    This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer. Defaults to true.
 
+## Validation
+
+* ***InvalidRedirectUriPrefixes***
+
+    Collection of URI scheme prefixes that should never be used as custom URI
+    schemes in the *redirect_uri* passed to tha authorize endpoint or the
+    *post_logout_redirect_uri* passed to the end_session endpoint. Defaults to
+    *["javascript:", "file:", "data:", "mailto:", "ftp:", "blob:", "about:",
+    "ssh:", "tel:", "view-source:", "ws:", "wss:"]*.
