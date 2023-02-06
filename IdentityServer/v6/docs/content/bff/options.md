@@ -19,7 +19,7 @@ services.AddBff(options =>
 
 * ***EnforceBffMiddleware***
 
-    This injects exra checks to make sure the BFF middleware has been added to the pipeline. Since this middleware does important security checks, this protects from accidental configuration errors. You can disable this check if it interferes with some custom logic you might have.
+    Enables checks in the user management endpoints that ensure that the BFF middleware has been added to the pipeline. Since the middleware performs important security checks, this protects from accidental configuration errors. You can disable this check if it interferes with some custom logic you might have. Defaults to true.
 
 * ***LicenseKey***
 
@@ -28,6 +28,40 @@ services.AddBff(options =>
 * ***AnonymousSessionResponse*** (added in 2.0)
 
     This sets the response status code behavior on the [user endpoint]({{< ref "/bff/session/management/user">}}) to either return 401 or 200 with a *null* payload when the user is anonymous.
+
+* ***DiagnosticsEnvironments***
+ 
+    The ASP.NET environment names that enable the diagnostics endpoint. Defaults to "Development".
+
+## Paths
+
+* ***LoginPath***
+
+    Sets the path to the login endpoint. Defaults to */bff/login*.
+
+* ***SilentLoginPath***
+
+    Sets the path to the silent login endpoint. Defaults to */bff/silent-login*.
+
+* ***SilentLoginCallbackPath***
+
+    Sets the path to the silent login callback endpoint. Defaults to */bff/silent-login-callback*.
+
+* ***LogoutPath***
+
+    Sets the path to the logout endpoint. Defaults to */bff/logout*.
+
+* ***UserPath***
+
+    Sets the path to the user endpoint. Defaults to */bff/user*.
+
+* ***BackChannelLogoutPath***
+
+    Sets the path to the backchannel logout endpoint. Defaults to */bff/backchannel*.
+
+* ***DiagnosticsPath***
+
+    Sets the path to the diagnostics endpoint. Defaults to */bff/diagnostics*.
 
 ## Session Management
 
