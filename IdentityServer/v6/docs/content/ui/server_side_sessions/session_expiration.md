@@ -3,7 +3,7 @@ title: "Session Expiration"
 weight: 20
 ---
 
-If a user abandons their session without triggering logout, then, by default, the server-side session data will remain in the store.
+If a user abandons their session without triggering logout, the server-side session data will remain in the store by default.
 In order to clean up these expired records, there is an automatic cleanup mechanism that periodically scans for expired sessions.
 When these records are cleaned up, you can optionally notify the client that the session has ended via back-channel logout.
 

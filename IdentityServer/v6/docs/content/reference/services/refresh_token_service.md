@@ -27,17 +27,32 @@ public interface IRefreshTokenService
 }
 ```
 
-The logic around refresh token handling is pretty involved, and we don't recommend implementing the interface from scratch,
-unless you exactly know what you are doing.
-If you want to customize certain behavior, it is more recommended to derive from the default implementation and call the base checks first.
+The behavior of the refresh token service is complex. We don't recommend
+implementing the interface from scratch, unless you know exactly know what you
+are doing. If you want to customize how refresh tokens are handled, we
+recommended that you create a class that derives from the default implementation
+and override its virtual methods, calling the methods in the base class before
+adding your own custom logic.
 
-The most common customization that you probably want to do is how to deal with refresh token replays.
-This is for situations where the token usage has been set to one-time only, but the same token gets sent more than once.
-This could either point to a replay attack of the refresh token, or to faulty client code like logic bugs or race conditions.
+The most common customizations to the refresh token service involve how to
+handle consumed tokens. In these situations, the token usage has been set to
+one-time only, but the same token gets sent more than once. This could either
+point to a replay attack of the refresh token, bugs in the client code, or
+transient network failures.
 
-It is important to note, that a refresh token is never deleted in the database. 
-Once it has been used, the *ConsumedTime* property will be set.
-If a token is received that has already been consumed, the default service will call a virtual method called *AcceptConsumedTokenAsync*.
+When one-time use refresh tokens are used, they are not necessarily deleted from
+the database. The *DeleteOneTimeOnlyRefreshTokensOnUse* configuration flag,
+added in version 6.3, controls if such tokens are immediately deleted or
+consumed. If configured for consumption instead of deletion, then when the token
+is used, the *ConsumedTime* property will be set. If a token is received that
+has already been consumed, the default service will call the
+*AcceptConsumedTokenAsync* virtual method. The purpose of
+*AcceptConsumedTokenAsync* is to determine if a consumed token should be allowed
+to be used to produce new tokens. The default implementation of
+*AcceptConsumedTokenAsync* rejects all consumed tokens, causing the protocol
+request to fail with the "invalid_grant" error. Your customized implementation
+could instead add a grace period to allow recovery after network failures or
+could treat this as a replay attack and take steps to notify the user and/or
+revoke their access.
 
-The default implementation will reject the request, but here you can implement custom logic like grace periods, 
-or revoking additional refresh or access tokens.
+See also: [Refreshing a token]({{< ref "tokens\refresh" >}})

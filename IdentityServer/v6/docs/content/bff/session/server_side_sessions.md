@@ -42,8 +42,8 @@ Most datastores that you might use with Entity Framework use a schema to define 
 
 Added in v1.2.0.
 
-Abandonded sessions will remain in the store unless something removes the stale entries.
-If you wish to have abandonded sessions cleaned up perodically, then you can configure the *EnableSessionCleanup* and *SessionCleanupInterval* options:
+Abandoned sessions will remain in the store unless something removes the stale entries.
+If you wish to have such sessions cleaned up periodically, then you can configure the *EnableSessionCleanup* and *SessionCleanupInterval* options:
 
 ```csharp
 services.AddBff(options => {
