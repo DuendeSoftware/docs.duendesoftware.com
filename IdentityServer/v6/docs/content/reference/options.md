@@ -449,7 +449,7 @@ Settings that control the allowed length of various protocol parameters, such as
 
 ## UserInteraction
 
-    User interaction settings, including urls for pages in the UI, names of parameters to those pages, and other settings related to interactive flows. Available on the *UserInteraction* property of the *IdentityServerOptions* object.
+User interaction settings, including urls for pages in the UI, names of parameters to those pages, and other settings related to interactive flows. Available on the *UserInteraction* property of the *IdentityServerOptions* object.
 
 * ***LoginUrl***, ***LogoutUrl***, ***ConsentUrl***, ***ErrorUrl***, ***DeviceVerificationUrl***
 
@@ -635,7 +635,7 @@ Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added
 
 * ***UserDisplayNameClaimType***
     
-    Claim type used for the user's display name. Unset by default. Usually this should be set to *JwtClaimTypes.Name*.
+    Claim type used for the user's display name. Unset by default due to possible PII concerns. If used, this would commonly be *JwtClaimTypes.Name*, *JwtClaimType.Email* or a custom claim.
 
 * ***RemoveExpiredSessions***
     
