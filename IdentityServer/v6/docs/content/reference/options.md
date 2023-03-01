@@ -140,43 +140,43 @@ Endpoint settings, including flags to disable individual endpoints and support f
 
 * ***EnableAuthorizeEndpoint***
 
-    Enables the authorize endpoint. Default to true.
+    Enables the authorize endpoint. Defaults to true.
 
 * ***EnableTokenEndpoint***
 
-    Enables the token endpoint. Default to true.
+    Enables the token endpoint. Defaults to true.
 
 * ***EnableDiscoveryEndpoint***
 
-    Enables the discovery endpoint. Default to true.
+    Enables the discovery endpoint. Defaults to true.
 
 * ***EnableUserInfoEndpoint***
 
-    Enables the user info endpoint. Default to true.
+    Enables the user info endpoint. Defaults to true.
 
 * ***EnableEndSessionEndpoint***
 
-    Enables the end session endpoint. Default to true.
+    Enables the end session endpoint. Defaults to true.
 
 * ***EnableCheckSessionEndpoint***
 
-    Enables the check session endpoint. Default to true.
+    Enables the check session endpoint. Defaults to true.
 
 * ***EnableTokenRevocationEndpoint***
 
-    Enables the token revocation endpoint. Default to true.
+    Enables the token revocation endpoint. Defaults to true.
 
 * ***EnableIntrospectionEndpoint***
 
-    Enables the introspection endpoint. Default to true.
+    Enables the introspection endpoint. Defaults to true.
 
 * ***EnableDeviceAuthorizationEndpoint***
 
-    Enables the device authorization endpoint. Default to true.
+    Enables the device authorization endpoint. Defaults to true.
 
 * ***EnableBackchannelAuthenticationEndpoint***
 
-    Enables the backchannel authentication endpoint. Default to true.
+    Enables the backchannel authentication endpoint. Defaults to true.
 
 * ***EnableJwtRequestUri***
   Enables the *request_uri* parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the request_uri parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).

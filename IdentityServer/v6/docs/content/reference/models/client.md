@@ -82,7 +82,7 @@ public static IEnumerable<Client> Get()
 
 * ***AllowPlainTextPkce***
     
-    Specifies whether clients using PKCE can use a plain text code challenge (not recommended - and default to *false*)
+    Specifies whether clients using PKCE can use a plain text code challenge (not recommended - and defaults to *false*)
 
 * ***RedirectUris***
     
@@ -276,8 +276,8 @@ Client initiated backchannel authentication specific settings.
 
 * ***CibaLifetime***
     
-    Specifies the backchannel authentication request lifetime in seconds. Default to *null*.
+    Specifies the backchannel authentication request lifetime in seconds. Defaults to *null*.
 
 * ***PollingInterval***
 
-    Backchannel polling interval in seconds. Default to *null*.
+    Backchannel polling interval in seconds. Defaults to *null*.
