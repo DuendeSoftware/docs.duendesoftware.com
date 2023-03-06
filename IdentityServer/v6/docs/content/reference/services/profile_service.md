@@ -45,7 +45,7 @@ Models the request for user claims and is the vehicle to return those claims. It
 
 * ***Subject***
     
-    The *ClaimsPrincipal* modeling the user.
+    The *ClaimsPrincipal* modeling the user associated with this request for profile data. When the profile service is invoked for tokens, the *Subject* property will contain the principal that was issued during user sign-in. When the profile service is called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}), the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call.
 
 * ***Client***
     
@@ -57,7 +57,7 @@ Models the request for user claims and is the vehicle to return those claims. It
 
 * ***Caller***
     
-    An identifier for the context in which the claims are being requested (e.g. an identity token, an access token, or the user info endpoint. The constant *IdentityServerConstants.ProfileDataCallers* contains the different constant values.
+    An identifier for the context in which the claims are being requested (e.g. an identity token, an access token, or the user info endpoint). The *IdentityServerConstants.ProfileDataCallers* class contains the different constant values.
 
 * ***IssuedClaims***
 
