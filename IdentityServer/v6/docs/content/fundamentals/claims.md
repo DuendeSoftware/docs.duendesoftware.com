@@ -14,12 +14,12 @@ Whenever IdentityServer needs the claims for a user, it invokes the registered p
 * the client that is making the request
 * the identity of the user
 * the type of the request (access token, id token, or userinfo)
-* the requested claim types, which are the claims types associated with requested identity resource scopes
+* the requested claim types, which are the claims types associated with requested scopes and resources
 
 ### Strategies for Emitting Claims
 You can use different strategies to determine which claims to emit based on the information in the profile context.
 
-* emit claims based on the requested identity resources
+* emit claims based on the requested claim types
 * emit claims based on user or client identity
 * always emit certain claims
 
@@ -49,7 +49,7 @@ public class SampleProfileService : DefaultProfileService
 ```
 
 #### Always emit claims
-We generally recommend emitting claims based on the requested identity resources, as that respects the scopes requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you have claims that don't need to follow such rules, such as claims that are an integral part of the user's identity and that needed in most scenarios, they can be added by directly updating the *context.IssuedClaims* collection. For example:
+We generally recommend emitting claims based on the requested claim types, as that respects the scopes requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you have claims that don't need to follow such rules, such as claims that are an integral part of the user's identity and that needed in most scenarios, they can be added by directly updating the *context.IssuedClaims* collection. For example:
 
 ```cs
 public class SampleProfileService : DefaultProfileService
