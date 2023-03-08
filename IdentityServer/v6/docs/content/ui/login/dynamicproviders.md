@@ -47,7 +47,7 @@ var providers = schemes
         AuthenticationScheme = x.Name
     }).ToList();
 
-var dyanmicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
+var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
     .Where(x => x.Enabled)
     .Select(x => new ExternalProvider
     {
@@ -55,7 +55,7 @@ var dyanmicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
         DisplayName = x.DisplayName
     });
 
-providers.AddRange(dyanmicSchemes);
+providers.AddRange(dynamicSchemes);
 ```
 
 ### Store and Configuration Data
