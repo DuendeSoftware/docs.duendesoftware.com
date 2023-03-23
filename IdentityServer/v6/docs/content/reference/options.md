@@ -630,7 +630,7 @@ Settings for [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}). Avail
     
     The polling interval in seconds that a client is to use when connecting to the token endpoint. Defaults to 5.
 
-## DPoP
+## DPoP (Added in 6.3.0)
 Demonstration of Proof-of-Possession settings.  Available on the *DPoP* property of the *IdentityServerOptions* object.
 
 * ***ProofTokenValidityDuration***
