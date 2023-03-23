@@ -630,6 +630,17 @@ Settings for [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}). Avail
     
     The polling interval in seconds that a client is to use when connecting to the token endpoint. Defaults to 5.
 
+## DPoP
+Demonstration of Proof-of-Possession settings.  Available on the *DPoP* property of the *IdentityServerOptions* object.
+
+* ***ProofTokenValidityDuration***
+    
+    Duration that DPoP proof tokens are considered valid. Defaults to *1 minute*.
+
+* ***ServerClockSkew***
+    
+    Clock skew used in validating DPoP proof token expiration using a server-senerated nonce value. Defaults to *0*.
+
 ## Server-side Sessions 
 Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added in 6.1.  Available on the *ServerSideSessions* property of the *IdentityServerOptions* object.
 
