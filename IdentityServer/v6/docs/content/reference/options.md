@@ -318,7 +318,7 @@ Logging related settings, including filters that will remove sensitive values an
     
     Collection of parameter names passed to the token endpoint that are considered sensitive and will be excluded from logging. Defaults to *client_secret*, *password*, *client_assertion*, *refresh_token*, and *device_code*.
 
-* ***BackchannelAuthenticationRequestSensitiveValuesFilter**
+* ***BackchannelAuthenticationRequestSensitiveValuesFilter***
   
     Collection of parameter names passed to the backchannel authentication endpoint that are considered senstivie and will be excluded from logging. Defaults to *client_secret*, *client_assertion*, and *id_token_hint*.
 
