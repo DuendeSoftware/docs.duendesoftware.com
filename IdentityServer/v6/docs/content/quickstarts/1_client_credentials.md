@@ -154,7 +154,7 @@ public static IEnumerable<Client> Clients =>
             ClientId = "client",
 
             // no interactive user, use the clientid/secret for authentication
-            AllowedGrantTypes = GrantTypes.ClientCredentials,
+            AllowedGrantTypes = new[] { GrantTypes.ClientCredentials },
 
             // secret for authentication
             ClientSecrets =
