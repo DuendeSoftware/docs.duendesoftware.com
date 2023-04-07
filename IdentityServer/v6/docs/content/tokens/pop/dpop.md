@@ -26,14 +26,14 @@ The mechanism by which the client proves control of the private key (both when c
 This proof token is passed via the *DPoP* request header and contains the public portion of the JWK, and is signed by the corresponding private key.
 
 The creation and management of this DPoP key is up to the policy of the client.
-For example is can be dynamically created when the client starts up, and can be perodically rotated.
+For example is can be dynamically created when the client starts up, and can be periodically rotated.
 The main constraint is that it must be stored for as long as the client uses any access tokens (and possibly refresh tokens) that they are bound to.
 
 #### Enabling DPoP in IdentityServer
 
 DPoP is something a client can use dynamically with no configuration in IdentityServer, but you can configure it as required.
-This would be a [per-client setting]({{< ref "/reference/models/client#dpop" >}}) in your IdentityServer.
-There are additional client as well as [global DPoP settings]({{< ref "/reference/options#dpop">}}) to control the behavior.
+This is a per-client [setting]({{< ref "/reference/models/client#dpop" >}}) in your IdentityServer.
+There are additional client as well as [global]({{< ref "/reference/options#dpop">}}) DPoP settings to control the behavior.
 
 ```csharp
 new Client
@@ -47,7 +47,7 @@ new Client
 
 #### Enabling DPoP support in your client
 
-The easiest approach for supporting DPoP in your client is to use the DPoP support in the *Duende.AccessTokenManagement* library.
+The easiest approach for supporting DPoP in your client is to use the DPoP support in the *Duende.AccessTokenManagement* library ([docs available here](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki/DPoP)).
 It provides DPoP client support for both client credentials and code flow style clients.
 DPoP is enabled by simply assigning the *DPoPJsonWebKey* on the client configuration. 
 
@@ -81,7 +81,7 @@ One approach to creating a JWK in string format is to use the .NET crypto APIs, 
 ```csharp
 var rsaKey = new RsaSecurityKey(RSA.Create(2048));
 var jsonWebKey = JsonWebKeyConverter.ConvertFromSecurityKey(rsaKey);
-jsonWebKey.Alg = "RS256";
+jsonWebKey.Alg = "PS256";
 string jwk = JsonSerializer.Serialize(jsonWebKey);
 ```
 
