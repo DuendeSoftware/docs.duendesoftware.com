@@ -165,7 +165,7 @@ public static class Config
 ```
 
 At this point, you no longer need the old IdentityServer project and can remove
-it from the solution. Again from the *src* directory, run the
+it from the solution. From the quickstart directory, run the
 following commands:
 
 ```console
