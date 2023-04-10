@@ -15,14 +15,13 @@ OpenID Connect for *challenge* and *signout* - cookies for all the other operati
 
 ```csharp
 services.AddAuthentication(options =>
-{
-    options.DefaultScheme = "cookie";
-    options.DefaultChallengeScheme = "oidc";
-    options.DefaultSignOutScheme = "oidc";
-})
+    {
+        options.DefaultScheme = "cookie";
+        options.DefaultChallengeScheme = "oidc";
+        options.DefaultSignOutScheme = "oidc";
+    })
     .AddCookie("cookie", options => { ... })
-    .AddOpenIdConnect("oidc", options => { ... })
-);    
+    .AddOpenIdConnect("oidc", options => { ... });
 ```
 
 ### The OpenID Connect Authentication Handler
