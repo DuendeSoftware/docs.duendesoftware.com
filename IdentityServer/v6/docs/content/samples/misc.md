@@ -16,11 +16,9 @@ This approach requires DNS entries for *mtls.localhost* and *api.localhost* to r
 [link to source code]({{< param samples_base >}}/MTLS)
 
 ### DPoP
-This sample shows how to use DPoP for [proof of possession]({{<ref "/tokens/pop">}}) API access.
-
-We have documentation for using DPoP when obtaining tokens [here]({{< ref "/tokens/pop/dpop" >}}).
-
-We have documentation for enabling DPoP in your API [here]({{< ref "/apis/aspnetcore/confirmation#validating-dpop-proof-of-possession" >}}).
+This sample shows how to use DPoP for [proof of possession]({{<ref "/tokens/pop/dpop">}}) API access.
+It contains two different clients; one that uses client credentials and DPoP tokens, and another that is an interactive ASP.NET Core app using code flow to obtain the DPoP bound tokens.
+The sample also contains an API with the necessary helpers code to accept and validate DPoP bound access tokens. 
 
 [link to source code]({{< param samples_base >}}/DPoP)
 
