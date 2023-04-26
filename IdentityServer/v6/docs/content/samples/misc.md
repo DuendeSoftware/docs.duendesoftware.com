@@ -15,6 +15,15 @@ This approach requires DNS entries for *mtls.localhost* and *api.localhost* to r
 
 [link to source code]({{< param samples_base >}}/MTLS)
 
+### DPoP
+This sample shows how to use DPoP for [proof of possession]({{<ref "/tokens/pop">}}) API access.
+
+We have documentation for using DPoP when obtaining tokens [here]({{< ref "/tokens/pop/dpop" >}}).
+
+We have documentation for enabling DPoP in your API [here]({{< ref "/apis/aspnetcore/confirmation#validating-dpop-proof-of-possession" >}}).
+
+[link to source code]({{< param samples_base >}}/DPoP)
+
 ### Session Management Sample
 
 This sample shows how to enable [server-side sessions]({{<ref "/ui/server_side_sessions">}}) and configure the basic settings.

@@ -90,4 +90,4 @@ Furthermore, any API invocations using the *AddClientCredentialsHttpClient* or *
 
 #### Enabling DPoP support in your API
 
-TBD
+We have documentation for enabling DPoP in your API [here]({{< ref "/apis/aspnetcore/confirmation#validating-dpop-proof-of-possession" >}}).

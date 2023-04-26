@@ -91,3 +91,33 @@ public class ConfirmationValidationMiddlewareOptions
     public string JwtBearerSchemeName { get; set; } = JwtBearerDefaults.AuthenticationScheme;
 }
 ```
+
+### Validating DPoP Proof-of-Possession
+If you are using DPoP for proof-of-possession, there is a non-trvial amount of work needed to validate the *cnf* claim.
+In addition to the normal validation mechanics of the access token itself, DPoP requires the additional validation of the DPoP proof token sent in the "DPoP" HTTP request header.
+DPoP proof token processing involves requiring the DPoP scheme on the authorization header where the access token is sent, JWT validation of the proof token, "cnf" claim validation, HTTP method and URL validation, replay detection (which requires some storage for the replay information), nonce generation and validation, additional clock skew logic, and emitting the correct response headers in the case of the various validation errors.
+
+Given that there are no off-the-shelf libraries that implement this, we have developed a full-featured sample implementation.
+With this sample the configuration necessary in your starup can be as simple as this:
+
+```cs
+
+public void ConfigureServices(IServiceCollection services)
+{
+    // adds the normal JWT bearer validation
+    services.AddAuthentication("token")
+        .AddJwtBearer("token", options =>
+        {
+            options.Authority = Constants.Authority;
+            options.TokenValidationParameters.ValidateAudience = false;
+            options.MapInboundClaims = false;
+
+            options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+        });
+    
+    // extends the "token" scheme above with DPoP processing and validation
+    services.ConfigureDPoPTokensForScheme("token");
+}
+```
+
+You can find this sample [here]({{< ref "/samples/misc#DPoP" >}}).
