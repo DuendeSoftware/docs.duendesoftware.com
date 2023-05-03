@@ -98,7 +98,7 @@ In addition to the normal validation mechanics of the access token itself, DPoP 
 DPoP proof token processing involves requiring the DPoP scheme on the authorization header where the access token is sent, JWT validation of the proof token, "cnf" claim validation, HTTP method and URL validation, replay detection (which requires some storage for the replay information), nonce generation and validation, additional clock skew logic, and emitting the correct response headers in the case of the various validation errors.
 
 Given that there are no off-the-shelf libraries that implement this, we have developed a full-featured sample implementation.
-With this sample the configuration necessary in your starup can be as simple as this:
+With this sample the configuration necessary in your startup can be as simple as this:
 
 ```cs
 

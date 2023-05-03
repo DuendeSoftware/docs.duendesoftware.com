@@ -7,7 +7,7 @@ chapter: true
 
 # Proof-of-Possession Access Tokens
 
-By default, OAuth access tokens are so called *bearer* tokens. This means they are not bound to a client and anybody who possesses the token can use it. The security concern here is that a leaked token could be used by a (malicious) third-party to impersonate the client and/or user.
+By default, OAuth access tokens are so called *bearer* tokens. This means they are not bound to a client and anybody who possesses the token can use it. The security concern here is that a leaked token could be used by a (malicious) third party to impersonate the client and/or user.
 
 On the other hand, *Proof-of-Possession* (PoP) tokens are bound to the client that requested the token. This is also often called sender constraining. This is done by using cryptography to prove that the sender of the token knows an additional secret only known to the client. 
 

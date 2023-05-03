@@ -3,9 +3,8 @@ title: "Mutual TLS"
 weight: 10
 ---
 
-
 ## Proof-of-possession using Mutual TLS
-[RFC 8705](https://tools.ietf.org/html/rfc8705) specifies how to bind a TLS client certificate to an access token. With this method your IdentityServer will embed the SHA-256 thumbprint of the X.509 certificate into the access token via the cnf claim, e.g.:
+[RFC 8705](https://tools.ietf.org/html/rfc8705) specifies how to bind a TLS client certificate to an access token. With this method your IdentityServer will embed the SHA-256 thumbprint of the X.509 client certificate into the access token via the cnf claim, e.g.:
 
 ```json
 {

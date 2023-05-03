@@ -18,7 +18,7 @@ Added in 6.3.0.
 }
 ```
 
-The client must then proove posession of the private key to call the APIs, and your APIs can [validate]({{< ref "/apis/aspnetcore/confirmation" >}}) the *cnf* claim by comparing it to the thumbprint of the client's public key in the JWK.
+The client must then prove possession of the private key to call the APIs, and your APIs can [validate]({{< ref "/apis/aspnetcore/confirmation" >}}) the *cnf* claim by comparing it to the thumbprint of the client's public key in the JWK.
 
 If the access token would leak, it cannot be replayed without having access to the private key of the JWK the client controls.
 
@@ -51,7 +51,7 @@ The easiest approach for supporting DPoP in your client is to use the DPoP suppo
 It provides DPoP client support for both client credentials and code flow style clients.
 DPoP is enabled by simply assigning the *DPoPJsonWebKey* on the client configuration. 
 
-This shows how it would be done for a client credentials configuration:
+For example, here's how to configure a client credentials client:
 
 ```csharp
 services.AddClientCredentialsTokenManagement()
@@ -63,7 +63,7 @@ services.AddClientCredentialsTokenManagement()
         });
 ```
 
-And this shows for a code-flow client:
+And here's how to configure a code flow client:
 
 ```csharp
  builder.Services.AddAuthentication(...)
@@ -90,4 +90,4 @@ Furthermore, any API invocations using the *AddClientCredentialsHttpClient* or *
 
 #### Enabling DPoP support in your API
 
-We have documentation for enabling DPoP in your API [here]({{< ref "/apis/aspnetcore/confirmation#validating-dpop-proof-of-possession" >}}).
+See [here]({{< ref "/apis/aspnetcore/confirmation#validating-dpop-proof-of-possession" >}}) for documentation describing how to enable DPoP in your APIs.
