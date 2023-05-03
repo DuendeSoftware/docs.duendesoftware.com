@@ -7,4 +7,4 @@ chapter = true
 
 # Reference
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}

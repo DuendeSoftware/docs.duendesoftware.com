@@ -14,5 +14,5 @@ configuration.
 IdentityServer supports [signing](https://tools.ietf.org/html/rfc7515) tokens
 using the *RS*, *PS* and *ES* family of cryptographic signing algorithms. 
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}
 

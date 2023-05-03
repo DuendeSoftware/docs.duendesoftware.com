@@ -33,4 +33,4 @@ None of the endpoint services contain additional members beyond *ProcessRequestA
 
 You can customize the behavior of the endpoints either by implementing the appropriate interface or by extending the default implementation of that interface. In many cases, extending the default implementation is preferred, as this allows you to keep most of the default behavior by calling the base *ProcessRequestAsync* from your derived class. Several of the default endpoint service implementations also define virtual methods that can be overridden to customize their behavior with more granularity. See the following pages for details on those extension points.
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}

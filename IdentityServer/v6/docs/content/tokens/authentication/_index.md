@@ -7,5 +7,5 @@ chapter = true
 
 # Client Authentication
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}
 
