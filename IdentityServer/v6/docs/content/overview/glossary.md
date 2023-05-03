@@ -45,6 +45,10 @@ The Duende BFF (Backend for Frontend) security framework packages up guidance an
 
 [Documentation]({{<ref "/bff" >}})
 
+## Dynamic Client Registration
+(Business Edition)
+
+Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register clients and their configuration.
 
 ## Dynamic Authentication Providers
 (Enterprise Edition)
@@ -55,8 +59,6 @@ This is designed to address the performance concern as well as allowing changes 
 [More details](https://blog.duendesoftware.com/posts/20210517_dynamic_providers/)
 
 [Documentation]({{<ref "/ui/login/dynamicproviders" >}})
-
-
 
 ## Resource isolation
 (Enterprise Edition)
@@ -80,6 +82,10 @@ CIBA is one of the requirements to support the Financal-grade API compliance.
 
 [Documentation]({{<ref "/ui/ciba" >}})
 
+## Proof-of-Possession at the Application Layer / DPoP
+(Enterprise Edition)
+
+A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This mechanism allows for the detection of replay attacks with access and refresh tokens.
 
 ## Single Deployment
 A single deployment acts as a single OpenID Connect / OAuth authority hosted at a single URL. It can consist of multiple physical or virtual nodes for load-balancing or fail-over purposes.
