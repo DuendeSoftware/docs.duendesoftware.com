@@ -76,7 +76,7 @@ services.AddOpenIdConnectAccessTokenManagement(options =>
 });
 ```
 
-One approach to creating a JWK in string format is to use the .NET crypto APIs, for example:
+In either case, you will need to create a JWK. One approach to creating a JWK in string format is to use the .NET crypto APIs, for example:
 
 ```csharp
 var rsaKey = new RsaSecurityKey(RSA.Create(2048));
@@ -85,8 +85,8 @@ jsonWebKey.Alg = "PS256";
 string jwk = JsonSerializer.Serialize(jsonWebKey);
 ```
 
-Once your client configuration has a *DPoPJsonWebKey*, then any protocol requests to obtain access tokens from the token server will automatially include a DPoP proof token created from the *DPoPJsonWebKey*.
-Furthermore, any API invocations using the *AddClientCredentialsHttpClient* or *AddUserAccessTokenHttpClient* helpers will also automatially include a DPoP proof token.
+Once your client configuration has a *DPoPJsonWebKey*, then any protocol requests to obtain access tokens from the token server will automatically include a DPoP proof token created from the *DPoPJsonWebKey*.
+Furthermore, any API invocations using the *AddClientCredentialsHttpClient* or *AddUserAccessTokenHttpClient* helpers will also automatically include a DPoP proof token. The implication is that the *DPoPJsonWebKey* is a critical secret that must be carefully managed, because any tokens requested with this secret will be bound to it; if the secret is lost, the tokens can longer be used, and if the secret is leaked, the security benefits of DPoP are lost.
 
 #### Enabling DPoP support in your API
 
