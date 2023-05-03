@@ -9,4 +9,4 @@ chapter = true
 
 The following hands-on tutorials guide you through a couple of common scenarios.
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}
