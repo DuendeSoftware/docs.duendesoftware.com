@@ -66,11 +66,11 @@ services.AddClientCredentialsTokenManagement()
 And here's how to configure a code flow client:
 
 ```csharp
- builder.Services.AddAuthentication(...)
-            .AddCookie("cookie", ...)
-            .AddOpenIdConnect("oidc", ...);
+services.AddAuthentication(...)
+    .AddCookie("cookie", ...)
+    .AddOpenIdConnect("oidc", ...);
 
-builder.Services.AddOpenIdConnectAccessTokenManagement(options => 
+services.AddOpenIdConnectAccessTokenManagement(options => 
 {
     options.DPoPJsonWebKey = "...";
 });
