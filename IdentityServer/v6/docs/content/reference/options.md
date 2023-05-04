@@ -663,3 +663,16 @@ Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added
     *post_logout_redirect_uri* passed to the end_session endpoint. Defaults to
     *["javascript:", "file:", "data:", "mailto:", "ftp:", "blob:", "about:",
     "ssh:", "tel:", "view-source:", "ws:", "wss:"]*.
+
+## DPoP
+Added in 6.3.0.
+
+Demonstration of Proof-of-Possession settings.  Available on the *DPoP* property of the *IdentityServerOptions* object.
+
+* ***ProofTokenValidityDuration***
+    
+    Duration that DPoP proof tokens are considered valid. Defaults to *1 minute*.
+
+* ***ServerClockSkew***
+    
+    Clock skew used in validating DPoP proof token expiration using a server-senerated nonce value. Defaults to *0*.

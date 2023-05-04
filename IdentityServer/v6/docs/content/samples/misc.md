@@ -15,6 +15,13 @@ This approach requires DNS entries for *mtls.localhost* and *api.localhost* to r
 
 [link to source code]({{< param samples_base >}}/MTLS)
 
+### DPoP
+This sample shows how to access APIs using DPoP for [proof of possession]({{<ref "/tokens/pop/dpop">}}).
+It contains two different clients; one that uses client credentials and DPoP tokens, and another that is an interactive ASP.NET Core app using code flow to obtain the DPoP bound tokens. Both clients demonstrate the use of the *Duende.AccessTokenManagement* library with DPoP.
+The sample also contains an API with the necessary helper code to accept and validate DPoP bound access tokens. 
+
+[link to source code]({{< param samples_base >}}/DPoP)
+
 ### Session Management Sample
 
 This sample shows how to enable [server-side sessions]({{<ref "/ui/server_side_sessions">}}) and configure the basic settings.

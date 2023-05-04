@@ -81,5 +81,3 @@ static async Task<TokenResponse> RequestTokenAsync()
     return response;
 }
 ```
-
-TODO: add ASP.NET Core client sample

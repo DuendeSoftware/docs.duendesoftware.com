@@ -281,3 +281,21 @@ Client initiated backchannel authentication specific settings.
 * ***PollingInterval***
 
     Backchannel polling interval in seconds. Defaults to *null*.
+
+## DPoP
+Added in 6.3.0.
+
+Settings specific to the Demonstration of Proof-of-Possession at the Application Layer ([DPoP]({{< ref "/tokens/pop/dpop" >}})) feature.
+
+* ***RequireDPoP***
+    
+    Specifies whether a DPoP (Demonstrating Proof-of-Possession) token is requied to be used by this client. Defaults to *false*.
+
+* ***DPoPValidationMode***
+    
+    Enum setting to control validation for the DPoP proof token expiration. This supports both the client generated 'iat' value and/or the server generated 'nonce' value. Defaults to *DPoPTokenExpirationValidationMode.Iat*, which only validates the 'iat' value.
+
+* ***DPoPClockSkew***
+    
+    Clock skew used in validating the client's DPoP proof token 'iat' claim value. Defaults to *5 minutes*.
+
