@@ -1,19 +1,17 @@
 ---
-title: "Dynamic Client Registration"
-weight: 95
-chapter: true
+title: Configuration API
 ---
 
-# Dynamic Client Registration 
-Dynamic Client Registration (DCR) is the process of registering OAuth clients dynamically. The client provides information about itself and specifies its desired configuration in an HTTP request to the configuration endpoint. The endpoint will then create the necessary client configuration and return an HTTP response describing the new client, if the request is authorized and valid.
+(Added in 6.3)
 
-DCR eliminates the need for a manual registration process, making it more efficient and less time-consuming to register new clients.
-
-Duende's support for DCR is the first protocol that we are supporting as part of
-a larger effort to provide configuration tools for IdentityServer. As we expand
-the suite of configuration tools, they will be collectively be distributed
-through the [Duende.IdentityServer.Configuration nuget
+The Configuration API is a collection of endpoints that allow for management and
+configuration of an IdentityServer implementation. The Configuration API can be
+hosted either separately or within the IdentityServer implementation, and is
+distributed through the separate [Duende.IdentityServer.Configuration nuget
 package](https://www.nuget.org/packages/Duende.IdentityServer.Configuration).
 
-The Configuration API's source code is available [on github](https://github.com/DuendeSoftware/IdentityServer/tree/main/src/Configuration).
+In this initial release, the Configuration API supports the Dynamic Client
+Registration protocol.
 
+The Configuration API's source code is available [on
+github](https://github.com/DuendeSoftware/IdentityServer/tree/main/src/Configuration).

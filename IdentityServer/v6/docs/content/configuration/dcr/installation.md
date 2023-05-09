@@ -60,7 +60,7 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
 });
 ```
 
-#### Map the DCR endpoints in the pipeline
+#### Map Configuration Endpoints
 ```cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 ```
@@ -106,7 +106,7 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
     options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
 });
 ```
-#### Map the DCR endpoints in the pipeline:
+#### Map Configuration Endpoints:
 ```cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 
