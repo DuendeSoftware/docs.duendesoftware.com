@@ -15,3 +15,5 @@ Registration protocol.
 
 The Configuration API's source code is available [on
 github](https://github.com/DuendeSoftware/IdentityServer/tree/main/src/Configuration).
+
+Samples of the Configuration API are available [here]({{< ref "/samples/configuration" >}}).
