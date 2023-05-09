@@ -17,7 +17,7 @@ public interface IClientConfigurationStore
 
 | name | description |
 | --- | --- |
-| [AddAsync](IClientConfigurationStore/AddAsync.md)(…) | Adds a client to the configuration store. |
+| AddAsync(…) | Adds a client to the configuration store. |
 
 ## ClientConfigurationStore
 

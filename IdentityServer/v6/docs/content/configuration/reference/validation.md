@@ -30,7 +30,7 @@ public Task<IDynamicClientRegistrationValidationResult> ValidateAsync(
 
 #### Return Value
 
-A task that returns an [*IDynamicClientRegistrationValidationResult*]({{< ref "./models.md#IDynamicClientRegistrationValidationResult" >}}), indicating success or failure.
+A task that returns an [*IDynamicClientRegistrationValidationResult*]({{< ref "./models.md#idynamicclientregistrationvalidationresult" >}}), indicating success or failure.
 
 ## DynamicClientRegistrationValidator
 
@@ -47,8 +47,8 @@ class and override the appropriate virtual methods.
 
 Each of these virtual methods represents one step in the validation process.
 Each step is passed a [*DynamicClientRegistrationContext*]({{< ref
-"./models.md#DynamicClientRegistrationContext" >}}) and returns a task
-that returns an [*IStepResult*]({{< ref "./models.md#IStepResult"
+"./models.md#dynamicclientregistrationcontext" >}}) and returns a task
+that returns an [*IStepResult*]({{< ref "./models.md#istepresult"
 >}}). The *DynamicClientRegistrationContext* includes the client model that will
 have its properties set, the DCR request, and other contextual information. The
 *IStepResult* either represents that the step succeeded or failed.
