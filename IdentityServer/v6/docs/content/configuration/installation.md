@@ -31,23 +31,43 @@ builder.Services.AddIdentityServerConfiguration(opt =>
     opt.LicenseKey = "<license>";
 );
 ```
-The Configuration API feature is included in the IdentityServer Business edition license and higher. Use the same license key for IdentityServer and the Configuration API.
+The Configuration API feature is included in the IdentityServer Business edition
+license and higher. Use the same license key for IdentityServer and the
+Configuration API.
 
 #### Add and configure the store implementation
 
-The Configuration API uses the *IClientConfigurationStore* abstraction to persist new clients to the configuration store. Your Configuration API host needs an implementation of this interface. You can either use the built-in Entity Framework-based implementation, or implement the interface yourself. See [the IClientConfigurationStore reference]({{< ref "./reference/store" >}}) for more details. 
+The Configuration API uses the *IClientConfigurationStore* abstraction to
+persist new clients to the configuration store. Your Configuration API host
+needs an implementation of this interface. You can either use the built-in
+Entity Framework based implementation, or implement the interface yourself. See
+[the IClientConfigurationStore reference]({{< ref "./reference/store" >}}) for
+more details. If you wish to use the built-in implementation, install its NuGet
+package and add it to DI.
+
+```
+dotnet add package Duende.IdentityServer.Configuration.EntityFramework
+```
 
 ```cs
 builder.Services.AddIdentityServerConfiguration(opt =>
     opt.LicenseKey = "<license>"
 ).AddClientConfigurationStore();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
+{
+    options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
+});
 ```
 
 #### Map the DCR endpoints in the pipeline
 ```cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 ```
-*MapDynamicClientRegistration* registers the DCR endpoints and returns an *IEndpointConventionBuilder* which you can use to define authorization requirements for your DCR endpoint. See [Authorization]({{< ref "./authorization" >}}) for more details.
+*MapDynamicClientRegistration* registers the DCR endpoints and returns an
+*IEndpointConventionBuilder* which you can use to define authorization
+requirements for your DCR endpoint. See [Authorization]({{< ref
+"./authorization" >}}) for more details.
 
 ## Shared Host for Configuration API and IdentityServer
 To host the configuration API in the same host as IdentityServer:
@@ -64,11 +84,34 @@ builder.Services.AddIdentityServerConfiguration();
 
 #### Add and configure the store implementation
 
-The Configuration API uses the *IClientConfigurationStore* abstraction to persist new clients to the configuration store. Your Configuration API host needs an implementation of this interface. You can either use the built-in Entity Framework-based implementation, or implement the interface yourself.  See [the IClientConfigurationStore reference]({{< ref "./reference/store" >}}) for more details. 
+The Configuration API uses the *IClientConfigurationStore* abstraction to
+persist new clients to the configuration store. Your Configuration API host
+needs an implementation of this interface. You can either use the built-in
+Entity Framework-based implementation, or implement the interface yourself.  See
+[the IClientConfigurationStore reference]({{< ref "./reference/store" >}}) for
+more details. If you wish to use the built-in implementation, install its NuGet
+package and add it to DI.
 
+```
+dotnet add package Duende.IdentityServer.Configuration.EntityFramework
+```
+
+```cs
+builder.Services.AddIdentityServerConfiguration(opt =>
+    opt.LicenseKey = "<license>"
+).AddClientConfigurationStore();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
+{
+    options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
+});
+```
 #### Map the DCR endpoints in the pipeline:
 ```cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 
 ```
-*MapDynamicClientRegistration* registers the DCR endpoints and returns an *IEndpointConventionBuilder* which you can use to define authorization requirements for your DCR endpoint. See [Authorization]({{< ref "./authorization" >}}) for more details.
+*MapDynamicClientRegistration* registers the DCR endpoints and returns an
+*IEndpointConventionBuilder* which you can use to define authorization
+requirements for your DCR endpoint. See [Authorization]({{< ref
+"./authorization" >}}) for more details.
