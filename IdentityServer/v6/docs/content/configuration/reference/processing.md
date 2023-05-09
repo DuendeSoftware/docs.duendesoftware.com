@@ -52,5 +52,4 @@ plaintext of that secret to the context's *Items* dictionary for later use. If y
 
 | name | description |
 | --- | --- |
-| virtual GenerateSecret | Generates a secret for a dynamic client registration
-request. |
+| virtual GenerateSecret | Generates a secret for a dynamic client registration request. |

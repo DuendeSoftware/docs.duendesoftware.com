@@ -12,7 +12,7 @@ is required in order to register.
 
 The Configuration API creates standard ASP.NET endpoints that can be protected
 through traditional ASP.NET authorization. Alternatively, the dynamic client
-registration software_statement parameter can be used to authenticate requests.
+registration *software_statement* parameter can be used to authenticate requests.
 
 ## Traditional ASP.NET Authorization
 You can authorize access to the Configuration API Endpoints using [authorization
