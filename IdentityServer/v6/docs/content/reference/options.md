@@ -675,4 +675,4 @@ Demonstration of Proof-of-Possession settings.  Available on the *DPoP* property
 
 * ***ServerClockSkew***
     
-    Clock skew used in validating DPoP proof token expiration using a server-senerated nonce value. Defaults to *0*.
+    Clock skew used in validating DPoP proof token expiration using a server-generated nonce value. Defaults to *0*.
