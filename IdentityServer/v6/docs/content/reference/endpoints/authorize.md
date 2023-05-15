@@ -71,6 +71,10 @@ IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize r
     * ***login*** 
     
         the login UI will be shown, even if the user is already signed-in and has a valid session
+    
+    * ***create***
+
+        the user registration UI will be shown, if the *UserInteraction.CreateAccountUrl* option is set (the option is null by default, which disables support for this prompt value)
 
 * ***code_challenge***
 

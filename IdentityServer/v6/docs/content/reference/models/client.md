@@ -101,7 +101,7 @@ public static IEnumerable<Client> Get()
     Specifies whether this client is allowed to receive access tokens via the browser. 
     This is useful to harden flows that allow multiple response types 
     (e.g. by disallowing a hybrid flow client that is supposed to use *code id_token* to add the *token* response type 
-    and thus leaking the token to the browser.
+    and thus leaking the token to the browser).
 
 * ***Properties***
     
@@ -298,4 +298,11 @@ Settings specific to the Demonstration of Proof-of-Possession at the Application
 * ***DPoPClockSkew***
     
     Clock skew used in validating the client's DPoP proof token 'iat' claim value. Defaults to *5 minutes*.
+
+## Third-Party Initiated Login
+Added in 6.3.0.
+
+* ***InitiateLoginUri***
+
+    An optional URI that can be used to [initiate login](https://openid.net/specs/openid-connect-core-1_0.html#ThirdPartyInitiatedLogin) from the IdentityServer host or a third party. This is most commonly used to create a client application portal within the IdentityServer host. Defaults to null.
 
