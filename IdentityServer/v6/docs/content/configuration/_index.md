@@ -1,5 +1,6 @@
 ---
 title: Configuration API
+weight: 96
 ---
 
 (Added in 6.3)
@@ -12,6 +13,11 @@ package](https://www.nuget.org/packages/Duende.IdentityServer.Configuration).
 
 In this initial release, the Configuration API supports the Dynamic Client
 Registration protocol.
+
+The Configuration API is part of the
+[IdentityServer](https://duendesoftware.com/products/identityserver) 
+Business Edition or higher. The same [license](https://duendesoftware.com/products/identityserver#pricing) 
+and [special offers](https://duendesoftware.com/specialoffers) apply.
 
 The Configuration API's source code is available [on
 github](https://github.com/DuendeSoftware/IdentityServer/tree/main/src/Configuration).
