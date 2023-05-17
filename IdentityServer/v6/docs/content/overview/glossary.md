@@ -51,6 +51,7 @@ The Duende BFF (Backend for Frontend) security framework packages up guidance an
 
 Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register clients and their configuration.
 
+[Documentation]({{<ref "/configuration" >}})
 
 ## Dynamic Authentication Providers
 (Enterprise Edition)
