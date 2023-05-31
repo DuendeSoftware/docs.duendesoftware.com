@@ -79,9 +79,15 @@ These include:
 * Add missing columns for created, updated, etc to EF entities ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/356)).
 * Add unique constraints to EF tables where duplicate records not allowed ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/355)).
 
+IdentityServer is abstracted from the data store on multiple levels, so the exact steps involved in updating your data store will depend on your implementation details. 
 
-If you are using the *Duende.IdentityServer.EntityFramework* package as the implementation for the database and you're using EntityFramework Core migrations as the mechanism for managing those schema changes over time, the commands below will update those migrations with the new changes.
-Note that you might need to adjust based on your specific organization of the migration files.
+#### Custom Store Implementations
+The core of IdentityServer is written against the [store interfaces]({{<ref "reference/stores" >}}), which abstract all the implementation details of actually storing data. If your IdentityServer implementation includes a custom implementation of those stores, then you will have to determine how best to include the changes in the model in the underlying data store and make any necessary changes to schemas, if your data store requires that.
+
+#### Duende.IdentityServer.EntityFramework
+We also provide a default implementation of the stores in the *Duende.IdentityServer.EntityFramework* package, but this implementation is still highly abstracted because it is usable with any database that has an EF provider. Different database vendors have very different dialects of sql that have different syntax and type systems, so we don't provide schema changes directly. Instead, we provide the Entity Framework entities and mappings which can be used with Entity Framework's migrations feature to generate the schema updates that are needed in your database. 
+
+To generate migrations, run the commands below. Note that you might need to adjust paths based on your specific organization of the migration files.
 
 ```
 dotnet ef migrations add UpdateToDuende_v6_0 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
@@ -100,6 +106,8 @@ dotnet ef database update -c PersistedGrantDbContext
 
 dotnet ef database update -c ConfigurationDbContext
 ```
+
+Some organizations prefer to use other tools for managing schema changes. You're free to manage your schema however you see fit, as long as the entities can be successfully mapped. Even if you're not going to ultimately use Entity Framework migrations to manage your database changes, generating a migration can be a useful development step to get an idea of what needs to be done.
 
 ## Step 6: Migrating signing keys (optional)
 
