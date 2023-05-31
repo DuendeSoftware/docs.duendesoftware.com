@@ -16,6 +16,8 @@ While this does allow for a stateless server for session management, cookie size
 IdentityServer provides a server-side session feature, which extends the ASP.NET Core cookie authentication handler to maintain this state in a server-side store, rather than putting it all into the cookie itself.
 This implementation is specifically designed for IdentityServer to allow for more protocol related features, such as querying for active sessions based on subject id or session id, and revoking artifacts from protocol workflows as part of that session.
 
+Support for Server Side Sessions is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business Edition or higher. 
+
 ## Session Management
 
 With the addition and use of server-side sessions, more interesting architectural features are possible:

@@ -6,9 +6,9 @@ weight: 20
 
 ## Proof-of-possession using Demonstrating Proof-of-Possession at the Application Layer (DPoP)
 
-Added in 6.3.0.
+Added in 6.3.0. 
 
-[DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) specifies how to bind an asymmetric key stored within a JSON Web Key (JWK) to an access token. With this enabled your IdentityServer will embed the thumbprint of the public key JWK into the access token via the cnf claim, e.g.:
+[DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) is a security measure that addresses token replay attacks by making it difficult for attackers to use stolen tokens. Support for DPoP is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition. DPoP specifies how to bind an asymmetric key stored within a JSON Web Key (JWK) to an access token. With this enabled your IdentityServer will embed the thumbprint of the public key JWK into the access token via the cnf claim, e.g.:
 
 ```json
 {
