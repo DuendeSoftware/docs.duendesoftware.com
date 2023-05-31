@@ -64,7 +64,7 @@ This is designed to address the performance concern as well as allowing changes 
 [Documentation]({{<ref "/ui/login/dynamicproviders" >}})
 
 
-## Resource isolation
+## Resource Isolation
 (Enterprise Edition)
 
 The resource isolation feature allows a client to request access tokens for an individual resource server.

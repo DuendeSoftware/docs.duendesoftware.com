@@ -9,6 +9,8 @@ Normally authentication handlers for external providers are added into your Iden
 
 Duende IdentityServer provides support for dynamic configuration of OpenID Connect providers loaded from a store. This is designed to address the performance concern as well as allowing changes to the configuration to a running server.
 
+Support for Dynamic Identity Providers is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition. 
+
 ### Listing and displaying the dynamic providers on the login page
 
 The [identity provider store]({{<ref "/reference/stores/idp_store">}}) can be used to query the database containing the dynamic providers.

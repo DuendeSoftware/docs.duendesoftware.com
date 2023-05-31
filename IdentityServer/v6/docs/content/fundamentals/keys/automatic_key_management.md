@@ -15,6 +15,7 @@ material, including
 * announcement of upcoming new keys
 * maintenance of retired keys
 
+Automatic Key Management is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business Edition or higher. 
 
 ### Configuration
 Automatic Key Management is configured by the options in the *KeyManagement*
