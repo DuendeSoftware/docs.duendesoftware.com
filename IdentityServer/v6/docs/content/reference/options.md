@@ -33,6 +33,11 @@ Top-level settings. Available directly on the *IdentityServerOptions* object.
   
     The value used for the *typ* header in JWT access tokens. Defaults to *at+jwt*, as specified by the [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068). If *AccessTokenJwtType* is set to *null* or the empty string, the *typ* header will not be emitted in JWT access tokens.
 
+* ***LogoutTokenJwtType***
+
+    The value for the *typ* header in back-channel logout tokens. Defaults to "logout+jwt", as specified by [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html#LogoutToken).
+
+
 * ***EmitScopesAsSpaceDelimitedStringInJwt***
   
     Controls the format of scope claims in JWTs and introspection responses. Historically scopes values were emitted as an array in JWT access tokens. [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068) now specifies a space delimited string instead. Defaults to *false* for backwards compatibility.
@@ -57,6 +62,7 @@ Top-level settings. Available directly on the *IdentityServerOptions* object.
 * ***ValidateTenantOnAuthorization***
     
     Specifies if a user's *tenant* claim is compared to the tenant *acr_values* parameter value to determine if the login page is displayed. Defaults to *false*.
+
 
 ## Key management
 Automatic key management settings. Available on the *KeyManagement* property of the *IdentityServerOptions* object.
