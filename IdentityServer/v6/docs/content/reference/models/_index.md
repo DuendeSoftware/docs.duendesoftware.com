@@ -6,4 +6,4 @@ chapter = true
 
 # Models
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}

@@ -8,4 +8,4 @@ chapter = true
 
 Here is a list of upgrade guides.
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}

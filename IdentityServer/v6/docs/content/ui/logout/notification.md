@@ -41,6 +41,7 @@ Clients that wish to be notified must have the [BackChannelLogoutUri]({{<ref "/r
 We do [provide a sample]({{<ref "/samples/basics#mvc-client-with-back-channel-logout-notifications">}}), though.
 Alternatively, if you are using our BFF framework, back-channel logout is [already implemented]({{<ref "/bff/session/management/back-channel-logout">}}) for you.
 
+Back-channel logout notifications are logout tokens as specified by [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html#LogoutToken). Beginning in v6.3, IdentityServer sets the *typ* header of the logout token to *logout+jwt* to comply with the final version of the specification. The [*LogoutTokenJwtType* option]({{< ref "reference/options#main" >}}) can override this behavior.
 
 ### Browser-based JavaScript clients
 There is nothing special you need to do to notify these clients that the user has signed out.

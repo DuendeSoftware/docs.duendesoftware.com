@@ -79,9 +79,15 @@ These include:
 * Add missing columns for created, updated, etc to EF entities ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/356)).
 * Add unique constraints to EF tables where duplicate records not allowed ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/355)).
 
+IdentityServer is abstracted from the data store on multiple levels, so the exact steps involved in updating your data store will depend on your implementation details. 
 
-If you are using the *Duende.IdentityServer.EntityFramework* package as the implementation for the database and you're using EntityFramework Core migrations as the mechanism for managing those schema changes over time, the commands below will update those migrations with the new changes.
-Note that you might need to adjust based on your specific organization of the migration files.
+#### Custom Store Implementations
+The core of IdentityServer is written against the [store interfaces]({{<ref "reference/stores" >}}), which abstract all the implementation details of actually storing data. If your IdentityServer implementation includes a custom implementation of those stores, then you will have to determine how best to include the changes in the model in the underlying data store and make any necessary changes to schemas, if your data store requires that.
+
+#### Duende.IdentityServer.EntityFramework
+We also provide a default implementation of the stores in the *Duende.IdentityServer.EntityFramework* package, but this implementation is still highly abstracted because it is usable with any database that has an EF provider. Different database vendors have very different dialects of sql that have different syntax and type systems, so we don't provide schema changes directly. Instead, we provide the Entity Framework entities and mappings which can be used with Entity Framework's migrations feature to generate the schema updates that are needed in your database. 
+
+To generate migrations, run the commands below. Note that you might need to adjust paths based on your specific organization of the migration files.
 
 ```
 dotnet ef migrations add UpdateToDuende_v6_0 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
@@ -101,6 +107,8 @@ dotnet ef database update -c PersistedGrantDbContext
 dotnet ef database update -c ConfigurationDbContext
 ```
 
+Some organizations prefer to use other tools for managing schema changes. You're free to manage your schema however you see fit, as long as the entities can be successfully mapped. Even if you're not going to ultimately use Entity Framework migrations to manage your database changes, generating a migration can be a useful development step to get an idea of what needs to be done.
+
 ## Step 6: Migrating signing keys (optional)
 
 In IdentityServer4, the common way to configure a signing key in *Startup* was to use *AddSigningCredential()* and provide key material (such as an *X509Certificate2*).
@@ -116,8 +124,8 @@ This can be achieved by still using *AddSigningCredential()*.
 A signing key registered with *AddSigningCredential()* will take precedence over any keys created by the automatic key management feature.
 Once the client apps and APIs have updated their caches (typically after 24 hours) then you can remove the prior signing key by removing the call to *AddSigningCredential()* and redeploy your IdentityServer.
 
-## Step 7: Verify DataProtectionKey Application Name
-IdentityServer depends on ASP.NET DataProtection. DataProtection encrypts and signs data using keys managed by ASP.NET. Those keys are isolated by application name, which by default is set to the content root path of the host. This prevents multiple applications from sharing encrypting keys, which is necessary to protect your encryption against certain forms of attack. However, this means that if your content root path changes, the default settings for data protection will prevent you from using your old keys. Beginning in .NET 6, the content root path is now normalized so that it ends with a directory separator. This means that your content root path might change when you upgrade to .NET 6. This can be mitigated by explicitly setting the application name and removing the separator character. See [Microsoft's documentation for more information](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-6.0#setapplicationname).
+## Step 7: Verify Data Protection Configuration
+IdentityServer depends on ASP.NET Data Protection. Data Protection encrypts and signs data using keys managed by ASP.NET. Those keys are isolated by application name, which by default is set to the content root path of the host. This prevents multiple applications from sharing encryption keys, which is necessary to protect your encryption against certain forms of attack. However, this means that if your content root path changes, the default settings for data protection will prevent you from using your old keys. Beginning in .NET 6, the content root path is now normalized so that it ends with a directory separator. This means that your content root path might change when you upgrade to .NET 6. This can be mitigated by explicitly setting the application name and removing the separator character. See [Microsoft's documentation for more information](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-6.0#setapplicationname).
 
 ## Step 8: Done!
 

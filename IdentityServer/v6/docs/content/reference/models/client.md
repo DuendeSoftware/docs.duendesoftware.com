@@ -82,7 +82,7 @@ public static IEnumerable<Client> Get()
 
 * ***AllowPlainTextPkce***
     
-    Specifies whether clients using PKCE can use a plain text code challenge (not recommended - and default to *false*)
+    Specifies whether clients using PKCE can use a plain text code challenge (not recommended - and defaults to *false*)
 
 * ***RedirectUris***
     
@@ -101,7 +101,7 @@ public static IEnumerable<Client> Get()
     Specifies whether this client is allowed to receive access tokens via the browser. 
     This is useful to harden flows that allow multiple response types 
     (e.g. by disallowing a hybrid flow client that is supposed to use *code id_token* to add the *token* response type 
-    and thus leaking the token to the browser.
+    and thus leaking the token to the browser).
 
 * ***Properties***
     
@@ -276,8 +276,33 @@ Client initiated backchannel authentication specific settings.
 
 * ***CibaLifetime***
     
-    Specifies the backchannel authentication request lifetime in seconds. Default to *null*.
+    Specifies the backchannel authentication request lifetime in seconds. Defaults to *null*.
 
 * ***PollingInterval***
 
-    Backchannel polling interval in seconds. Default to *null*.
+    Backchannel polling interval in seconds. Defaults to *null*.
+
+## DPoP
+Added in 6.3.0.
+
+Settings specific to the Demonstration of Proof-of-Possession at the Application Layer ([DPoP]({{< ref "/tokens/pop/dpop" >}})) feature.
+
+* ***RequireDPoP***
+    
+    Specifies whether a DPoP (Demonstrating Proof-of-Possession) token is requied to be used by this client. Defaults to *false*.
+
+* ***DPoPValidationMode***
+    
+    Enum setting to control validation for the DPoP proof token expiration. This supports both the client generated 'iat' value and/or the server generated 'nonce' value. Defaults to *DPoPTokenExpirationValidationMode.Iat*, which only validates the 'iat' value.
+
+* ***DPoPClockSkew***
+    
+    Clock skew used in validating the client's DPoP proof token 'iat' claim value. Defaults to *5 minutes*.
+
+## Third-Party Initiated Login
+Added in 6.3.0.
+
+* ***InitiateLoginUri***
+
+    An optional URI that can be used to [initiate login](https://openid.net/specs/openid-connect-core-1_0.html#ThirdPartyInitiatedLogin) from the IdentityServer host or a third party. This is most commonly used to create a client application portal within the IdentityServer host. Defaults to null.
+

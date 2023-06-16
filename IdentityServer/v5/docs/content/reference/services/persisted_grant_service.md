@@ -8,7 +8,7 @@ weight: 43
 Provides access to a user's grants.
 
 ```cs
- /// <summary>
+    /// <summary>
     /// Implements persisted grant logic
     /// </summary>
     public interface IPersistedGrantService

@@ -128,6 +128,10 @@ This options class contains properties to control the operational store and *Per
 *TokenCleanupInterval*
     The token cleanup interval (in seconds). The default is 3600 (1 hour).
 
+*ConsumedTokenCleanupDelay* [added in 6.3]
+    The consumed token cleanup delay (in seconds). The default is 0. This delay is the amount of time that must elapse before tokens marked as consumed can be deleted. Note that only refresh tokens with
+    OneTime usage can be marked as consumed. 
+
 {{% notice note %}}
 The token cleanup feature does *not* remove persisted grants that are *consumed* (see [persisted grants]({{<ref "./operational/grants#grant-expiration-and-consumption">}})). It only removes persisted grants that are beyond their *Expiration*.
 {{% /notice %}}

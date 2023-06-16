@@ -41,4 +41,4 @@ public void Configure(IApplicationBuilder app)
 
 The following pages describe the default behavior of the management endpoints. See the [extensibility]({{< ref "/bff/extensibility" >}}) section for information about how to customize the behavior of the endpoints.
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}

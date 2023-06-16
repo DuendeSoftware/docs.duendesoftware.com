@@ -7,63 +7,77 @@ weight: 45
 IdentityServer emits claims about users and clients into tokens. You are in full control of which claims you want to emit, in which situations you want to emit those claims, and where to retrieve those claims from.
 
 ## User claims
-User claims can be put in both identity and access tokens. The central extensibility point to implement for emitting claims is called the [profile service]({{< ref "/reference/services/profile_service" >}}).
+User claims can be emitted in both identity and access tokens and in the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}). The central extensibility point to implement to emit claims is called the [profile service]({{< ref "/reference/services/profile_service" >}}). The profile service is responsible for both gathering claim data and deciding which claims should be emitted.
 
-Whenever IdentityServer creates tokens for a user, it invokes the registered profile service with a [context]({{< ref "/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext" >}}) that presents detailed information about the current token request, including
+Whenever IdentityServer needs the claims for a user, it invokes the registered profile service with a [context]({{< ref "/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext" >}}) that presents detailed information about the current request, including
 
-* the identity of the client who is requesting the token
+* the client that is making the request
 * the identity of the user
-* what type of token is requested
-* the requested claim types according to the definition of the requested resources
+* the type of the request (access token, id token, or userinfo)
+* the requested claim types, which are the claims types associated with requested scopes and resources
 
-You can use different strategies to determine which claims you want to emit based on that information
+### Strategies for Emitting Claims
+You can use different strategies to determine which claims to emit based on the information in the profile context.
 
-* always emit certain claims (because they are an integral part of the user identity and needed in scenarios)
+* emit claims based on the requested claim types
 * emit claims based on user or client identity
-* emit claims based on the requested resources
+* always emit certain claims
 
-{{% notice note %}}
-Generally speaking, we recommend using the [resource definitions]({{< ref "/fundamentals/resources" >}}) to associate user claims with resources. In that case your profile service receives an aggregated list of requested claim types based on the requested resources. The implementation is then as simple as returning the corresponding claim values back to the runtime.
-{{% /notice %}}
+#### Emit claims based on the requested identity resources
+You can filter the claims you emit to only include the claim types requested by the client. If your client requires consent, this will also give end users the opportunity to approve or deny sharing those claims with the client.
 
-Here's a sample implementation of a profile service:
+The *RequestedClaimTypes* property of the *ProfileDataRequestContext* contains the collection of such claims. Clients request claim types by requesting scopes of *IdentityResources* that are configured to include those claim in their *UserClaims* property. 
+
+If your profile service extends the *DefaultProfileService*, you can use its *AddRequestedClaims* method to add only requested and approved claims. For example:
 
 ```cs
-public class SampleProfileService : IProfileService
+public class SampleProfileService : DefaultProfileService
 {
-    // this method adds claims that should go into the token to context.IssuedClaims
-    public virtual Task GetProfileDataAsync(ProfileDataRequestContext context)
+    public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
-        var requestedClaimTypes = context.RequestedClaimTypes;
-        var user = context.Subject;
-
-        // your implementation to retrieve the requested information
-        var claims = GetRequestedClaims(user, requestedClaimsTypes);
-        context.IssuedClaims.AddRange(claims);
-
-        return Task.CompletedTask;
+        var claims = await GetClaimsAsync(context);
+        
+        context.AddRequestedClaims(claims);
     }
 
-    // this method allows to check if the user is still "enabled" per token request
-    public virtual Task IsActiveAsync(IsActiveContext context)
+
+    private async Task<Claim> GetClaimsAsync(ProfileDataRequestContext context)
     {
-        context.IsActive = true;
-        return Task.CompletedTask;
+        // Your implementation that retrieves claims goes here
     }
 }
 ```
 
-The *Subject* property on the *ProfileDataRequestContext* contains the principal that was issued during user sign-in. Typically, the profile service will source some claims from the *Subject* and others from databases or other data sources.
+#### Always emit claims
+We generally recommend emitting claims based on the requested claim types, as that respects the scopes requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you have claims that don't need to follow such rules, such as claims that are an integral part of the user's identity and that needed in most scenarios, they can be added by directly updating the *context.IssuedClaims* collection. For example:
 
-{{% notice note %}}
-The profile service also gets called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}). In that case, the *Subject* property will not contain the principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call. You can check the caller of the profile service by querying the *Caller* property on the context.
-{{% /notice %}}
+```cs
+public class SampleProfileService : DefaultProfileService
+{
+    public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
+    {
+        var claims = await GetClaimsAsync(context);
+        context.IssuedClaims.AddRange(claims);
+    }
 
-## Claim Serialization
-Claim values are serialized based on the ClaimValueType of the claim. Claims that don't specify a ClaimValueType are simply serialized as strings. Claims that specify a ClaimValueType of *System.Security.Claims.ClaimValueTypes.Integer*, *System.Security.Claims.ClaimValueTypes.Integer32*, *System.Security.Claims.ClaimValueTypes.Integer64*, *System.Security.Claims.ClaimValueTypes.Double*, or *System.Security.Claims.ClaimValueTypes.Boolean* are parsed as the corresponding type, while those that specify *IdentityServerConstants.ClaimValueTypes.Json* are serialized to JSON using *System.Text.Json*.
+
+    private async Task<Claim> GetClaimsAsync(ProfileDataRequestContext context)
+    {
+        // Your implementation that retrieves claims goes here
+    }
+}
+```
+
+#### Emit claims based on the user or client identity
+Finally, you might have claims that are only appropriate for certain users or clients. Your *ProfileService* can add whatever filtering or logic that you like.
+
+### The Subject of the ProfileDataRequestContext
+When the profile service is invoked to add claims to tokens, the *Subject* property on the *ProfileDataRequestContext* contains the principal that was issued during user sign-in. Typically, the profile service will source some claims from the *Subject* and others from databases or other data sources.
+
+When the profile service is called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}), the *Subject* property will not contain the principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call. You can check the caller of the profile service by querying the *Caller* property on the context.
 
 ## Client claims
-Client claims are typically statically defined claims that get emitted into access tokens. The following shows an example of a client that is associated with a certain customer in your system:
+Client claims are a set of pre-defined claims that are emitted in access tokens. They are defined on a per-client basis, meaning that each client can have its own unique set of client claims. The following shows an example of a client that is associated with a certain customer in your system:
 
 ```cs
 var client = new Client
@@ -79,7 +93,7 @@ var client = new Client
 };
 ```
 
-All client claims will be by default prefixed with *client* to avoid accidental collision with user claims, e.g. the above claim would show up as *client_customer_id* in access tokens. You can change (or remove) that prefix by setting the *ClientClaimsPrefix* on the [client definition]({{< ref "/reference/models/client#token" >}}). 
+To avoid accidental collision with user claims, client claims are prefixed with *client_*. For example, the above `ClientClaim` would be emitted as the *client_customer_id* claim type in access tokens. You can change or remove this prefix by setting the *ClientClaimsPrefix* on the [client definition]({{< ref "/reference/models/client#token" >}}). 
 
 {{% notice note %}}
 By default, client claims are only sent in the client credentials flow. If you want to enable them for other flows, you need to set the *AlwaysSendClientClaims* property on the client definition.
@@ -87,3 +101,7 @@ By default, client claims are only sent in the client credentials flow. If you w
 
 ### Setting client claims dynamically
 If you want to set client claims dynamically, you could either do that at client load time (via a client [store]({{< ref "/data" >}}) implementation), or using a [custom token request validator]({{< ref "/tokens/dynamic_validation" >}}).
+
+
+## Claim Serialization
+Claim values are serialized based on the *ClaimValueType* of the claim. Claims that don't specify a ClaimValueType are simply serialized as strings. Claims that specify a ClaimValueType of *System.Security.Claims.ClaimValueTypes.Integer*, *System.Security.Claims.ClaimValueTypes.Integer32*, *System.Security.Claims.ClaimValueTypes.Integer64*, *System.Security.Claims.ClaimValueTypes.Double*, or *System.Security.Claims.ClaimValueTypes.Boolean* are parsed as the corresponding type, while those that specify *IdentityServerConstants.ClaimValueTypes.Json* are serialized to JSON using *System.Text.Json*.

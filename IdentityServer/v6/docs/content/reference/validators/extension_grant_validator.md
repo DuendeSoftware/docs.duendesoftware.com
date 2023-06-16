@@ -1,6 +1,6 @@
 ---
 title: "Extension Grant Validator"
-weight: 40
+weight: 80
 ---
 
 #### Duende.IdentityServer.Validation.IExtensionGrantValidator

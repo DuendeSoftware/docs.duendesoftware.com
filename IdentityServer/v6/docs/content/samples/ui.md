@@ -12,6 +12,28 @@ Also, another part of the sample shows how to collect a custom claim during the 
 
 [link to source code]({{< param samples_base >}}/UserInteraction/ProfileService)
 
+### Step Up
+
+This sample shows how to implement [step up](https://datatracker.ietf.org/doc/draft-ietf-oauth-step-up-authn-challenge/). The Demo consists of 3 projects:
+
+  - IdentityServerHost is a token server implemented with Duende IdentityServer.
+  - Api is a protected resource that uses the IdentityServerHost as its authority and can make Step-Up responses when requests don't meet its authentication requirements.
+  - Client is a client application that uses IdentityServerHost to login and makes requests to the Api.
+   
+To run the demo, start all three projects and navigate to the Client application at https://localhost:6001. From there, you can click on links to pages that will trigger step up in various ways. For example, you could
+
+- Click on the secure page to trigger login.
+- Authenticate with user alice, password alice.
+- Note that alice does not require MFA to log in.
+- Click on the MFA page to make an API request that requires MFA.
+- This will trigger step up for Alice, who should be shown a fake MFA page at IdentityServer before returning to the Client application.
+- Finally, click on the Recent Auth page to make an API request that requires an authentication in the past minute. The page will show the age of the authentication.
+- It may be necessary to refresh the page after a minute has passed to trigger step up.
+
+From there, you can experiment with other interactions. You can go to the Recent Auth with MFA page that has both authentication requirements, or try the user bob, who always requires MFA.
+
+[link to source code]({{< param samples_base >}}/UserInteraction/StepUp)
+
 ### SPA-style login page
 This sample shows an example of building the interactive pages (login, consent, logout, and error) as client-rendered (typical of SPAs), rather than server-rendered. Since there are many different SPA frameworks, the actual pages are coded using vanilla JavaScript.
 

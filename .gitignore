@@ -19,6 +19,6 @@ bld/
 
 .idea
 .vs/
-.vscode/
 
 IdentityServer/v6/docs/.hugo_build.lock
+.vscode/settings.json
