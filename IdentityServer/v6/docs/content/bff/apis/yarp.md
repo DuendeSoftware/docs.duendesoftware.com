@@ -1,14 +1,14 @@
 ---
 title: "YARP extensions"
-weight: 30
+weight: 20
 ---
 
-Instead of using the simple HTTP forwarder, you can also use a more feature complete reverse proxy - e.g. Microsoft [YARP](https://microsoft.github.io/reverse-proxy/).
+Duende.BFF integrates with Microsoft's full-featured reverse proxy [YARP](https://microsoft.github.io/reverse-proxy/).
 
-YARP has built-in advanced features, e.g. load balancing, service discovery, session affinity etc. It also has its own extensibility mechanism. The BFF library includes a set of YARP extensions (e.g. token management and anti-forgery protection) so you can get the best of both worlds.
+YARP includes many advanced features such as load balancing, service discovery, and session affinity. It also has its own extensibility mechanism. Duende.BFF includes YARP extensions for token management and anti-forgery protection so that you can combine the security and identity features of Duende.BFF with the flexible reverse proxy features of YARP.
 
 #### Adding YARP
-To enable our YARP integration, add a reference to the *Duende.BFF.Yarp* Nuget package and add the YARP and our service to DI:
+To enable Duende.BFF's YARP integration, add a reference to the *Duende.BFF.Yarp* Nuget package to your project and add YARP and the BFF's YARP extensions to DI:
 
 ```cs
 services.AddBff();
@@ -19,7 +19,7 @@ var builder = services.AddReverseProxy()
 ```
 
 #### Configuring YARP
-YARP is most commonly configured via a config file. The following simple snippet forwards a local URL to a remote API:
+YARP is most commonly configured by a config file. The following simple example forwards a local URL to a remote API:
 
 ```json
 "ReverseProxy": {
@@ -83,7 +83,7 @@ builder.LoadFromMemory(
 ```
 
 ### Token management
-Using the BFF extensions, you can benefit from the built-in token management, and attach user or client access tokens automatically to proxied API calls. This is done by adding metadata with the name *Duende.Bff.Yarp.TokenType* to the route or cluster configuration:
+Duende.BFF's YARP extensions provide access token management, and attach user or client access tokens automatically to proxied API calls. To enable this, add metadata with the name *Duende.Bff.Yarp.TokenType* to the route or cluster configuration:
 
 ```json
 "ReverseProxy": {
@@ -102,11 +102,9 @@ Using the BFF extensions, you can benefit from the built-in token management, an
 }
 ```
 
-{{% notice note %}}
-The allowed values for the token type are *User*, *Client*, *UserOrClient*
-{{% /notice %}}
+Similarly to the [simple HTTP forwarder]({{<ref "/bff/apis/remote#access-token-requirements" >}}), the allowed values for the token type are *User*, *Client*, *UserOrClient*. 
 
-If you are using the code config method, the *WithAccessToken* extension method achieves the same:
+If you are using the code config method, call the *WithAccessToken* extension method to achieve the same thing:
 
 ```cs
 builder.LoadFromMemory(
@@ -124,14 +122,21 @@ builder.LoadFromMemory(
         }.WithAccessToken(TokenType.User)
     },
     // rest omitted
-    });
+);
 ```
 
-
 ### Anti-forgery protection
-Just like with local APIs, you can also add additional anti-forgery protection to proxied API calls.
+Duende.BFF's YARP extensions can also add anti-forgery protection to proxied API calls. Anti-forgery protection defends against CSRF attacks by requiring a custom header on API endpoints, for example:
 
-You can either add the anti-forgery protection to all YARP routes by adding the *AsBffApiEndpoint* extension:
+```
+GET /endpoint
+
+x-csrf: 1
+```
+
+The value of the header is not important, but its presence, combined with the cookie requirement, triggers a CORS preflight request for cross-origin calls. This effectively isolates the caller to the same origin as the backend, providing a robust security guarantee. 
+
+You can add the anti-forgery protection to all YARP routes by calling the *AsBffApiEndpoint* extension method:
 
 ```cs
 endpoints.MapReverseProxy()

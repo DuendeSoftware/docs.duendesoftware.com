@@ -29,3 +29,8 @@ This sample shows how to use the BFF framework with Blazor WASM.
 This sample shows how to use the BFF extensions for Microsoft YARP
 
 [link to source code]({{< param samples_base >}}/BFF/JsBffYarpSample)
+
+### Separate Host for UI
+This sample shows how to have separate projects from the frontend and backend, using CORS to allow cross-site requests from the frontend to the backend.
+
+[link to source code]({{< param samples_base >}}/BFF/SplitHosts)
