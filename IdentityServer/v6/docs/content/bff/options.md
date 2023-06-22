@@ -109,3 +109,8 @@ services.AddBff(options =>
 
     Specifies the expected value of Anti-forgery header.
     Defaults to *1*.
+
+* ***DPoPJsonWebKey***
+
+    Specifices the Json Web Key to use when creating DPoP proof tokens. 
+    Defaults to null, which is appropriate when not using DPoP.

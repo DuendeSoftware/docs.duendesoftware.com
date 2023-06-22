@@ -1,61 +1,30 @@
 ---
 title: "Remote APIs"
-weight: 20
+weight: 10
 ---
 
-For invoking APIs that are deployed on different servers, you have a couple of options:
+A _Remote API_ is an API that is deployed separately from the BFF host. Remote APIs use access tokens to authenticate and authorize requests, but the frontend does not possess an access token to make requests to remote APIs directly. Instead, all access to remote APIs is proxied through the BFF, which authenticates the frontend using its authentication cookie, obtains the appropriate access token, and forwards the request to the Remote API with the token attached.
 
-* create local API endpoints that call those remote APIs
-* use our built-in simplified HTTP forwarder
-* use a fully fledged reverse proxy to transparently forward the local API calls to the remote APIs, e.g. [YARP]({{< ref "/bff/apis/yarp" >}})
+There are two different ways to set up Remote API proxying in Duende.BFF. This page describes the built-in simple HTTP forwarder. Alternatively, you can integrate Duende.BFF with Microsoft's reverse proxy [YARP]({{< ref "/bff/apis/yarp" >}}), which allows for more complex reverse proxy features provided by YARP combined with the security and identity features of Duende.BFF.
 
-### Manual API endpoints
-If you want to expose a frontend specific subset of your remote APIs or want to aggregate multiple remote APIs, it is a common practice to create local API endpoints that in turn call the remote APIs and present the data in a frontend specific way.
+### Simple HTTP forwarder
 
-You can use a MVC controller for this, and leverage services like the HTTP client factory and the Duende.BFF [token management]({{< ref "/bff/tokens" >}}) to make the outgoing calls. The following is a very simplified version of that:
+Duende.BFF's simple HTTP forwarder maps routes in the BFF to a remote API surface. It uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally, but is much simpler to configure than YRAP. The intent is to provide a developer-centric and simplified way to proxy requests from the BFF to remote APIs when more complex reverse proxy features are not needed.
 
-```cs
-[Route("myApi")]
-public class MyApiController : ControllerBase
-{
-    private readonly IHttpClientFactory _httpClientFactory;
+These routes receive automatic anti-forgery protection and integrate with automatic token management.
 
-    public MyApiController(IHttpClientFactory httpClientFactory)
-    {
-        _httpClientFactory = httpClientFactory;
-    }
-    
-    public async Task<IActionResult> Get(string id)
-    {
-        // create HTTP client
-        var client = _httpClientFactory.CreateClient();
-        
-        // get current user access token and set it on HttpClient
-        var token = await HttpContext.GetUserAccessTokenAsync();
-        client.SetBearerToken(token);
+To enable this feature, add a reference to the *Duende.BFF.Yarp* Nuget package, add the remote APIs service to DI, and call the *MapRemoteBFFApiEndpoint* method to create the mappings.
 
-        // call remote API
-        var response = await client.GetAsync($"https://remoteServer/remoteApi?id={id}");
-
-        // maybe process response and return to frontend
-        return new JsonResult(await response.Content.ReadAsStringAsync());
-    }
-}
-```
-
-### Use our built-in simple HTTP forwarder
-Our HTTP forwarder is useful when you realize that you are re-creating large parts of an already existing API surface in your BFF for forwarding. In this case you might decide to automate the process.
-
-Duende.BFF uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally to give you a developer centric and simplified way to forward certain routes in your BFF to remote APIs. These routes have the same anti-forgery protection as local API endpoints, and also integrate with the automatic token management.
-
-To enable that feature, you need add a reference to the *Duende.BFF.Yarp* Nuget package and add the service to DI:
+#### Add Remote API Service to DI
 
 ```cs
 services.AddBff()
     .AddRemoteApis();
 ```
 
-The following snippet routes a local */api/customers* endpoint to a remote API, and forwards the user's access token in the outgoing call:
+
+#### Map Remote APIs
+This example routes a local */api/customers* endpoint to a remote API, and forwards the user's access token in the outgoing call:
 
 ```cs
 app.UseEndpoints(endpoints =>
@@ -67,32 +36,56 @@ app.UseEndpoints(endpoints =>
 ```
 
 {{% notice note %}}
-Be aware that above example is opening up the complete */customers* API namespace to the frontend and thus to the outside world. Try to be as specific as possible when designing the forwarding paths.
+This example opens up the complete */customers* API namespace to the frontend and thus to the outside world. Try to be as specific as possible when designing the forwarding paths.
 {{% /notice %}}
 
-There are several ways to influence security parameters of such an endpoint:
+## Securing Remote APIs
+Remote APIs typically require access control and must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. 
 
-**Require authorization**
+To provide access control, you can specify authorization policies on the mapped routes, and configure them with access token requirements.
 
-The endpoint integrates with the ASP.NET Core authorization system and you can attach a **RequireAuthorization** extension to specify an authorization policy that must be fulfilled before being able to invoke the endpoint.
+To defend against CSRF attacks, you should use SameSite cookies to authenticate calls from the frontend to the BFF. As an additional layer of defense, APIs mapped with *MapRemoteBffApiEndpoint* are automatically protected with an anti-forgery header. 
 
-**Access token requirements**
 
-You can specify access token requirements via the **RequireAccessToken** extension. The **TokenType** parameter has three options:
+#### SameSite cookies
+[The SameSite cookie attribute](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value) is a feature of modern browsers that restricts cookies so that they are only sent to pages originating from the [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) where the cookie was originally issued. This prevents CSRF attacks, because cross site requests will no longer implicitly include the user's credentials.
+
+This is a good first layer of defense, but makes the assumption that you can trust all subdomains of your site. All subdomains within a registrable domain are considered the same site for purposes of SameSite cookies. Thus, if another application hosted on a subdomain within your site is infected with malware, it can make CSRF attacks against your application.
+
+
+#### Anti-forgery header
+
+For this reason, remote APIs automatically require an additional custom header on API endpoints. For example:
+
+```
+GET /endpoint
+
+x-csrf: 1
+```
+
+The value of the header is not important, but its presence, combined with the cookie requirement, triggers a CORS preflight request for cross-origin calls. This effectively isolates the caller to the same origin as the backend, providing a robust security guarantee. 
+
+#### Require authorization
+
+The *MapRemoteBffApiEndpoint* method returns the appropriate type to integrate with the ASP.NET Core authorization system. You can attach authorization policies to remote endpoints using **RequireAuthorization**, just as you would for a standard ASP.NET core endpoint created with *MapGet*, and the authorization middleware will then enforce that policy before forwarding requests on that route to the remote endpoint.
+
+#### Access token requirements
+
+Remote APIs sometimes allow anonymous access, but usually require an access token, and the type of access token (user or client) will vary as well. You can specify access token requirements via the **RequireAccessToken** extension method. Its **TokenType** parameter has three options:
 
 * ***User***
 
-    A valid user access token is required and will be forwarded
+    A valid user access token is required and will be forwarded to the remote API. A user access token is an access token obtained during an OIDC flow (or subsequent refresh), and is associated with a particular user. User tokens are obtained when the user initially logs in, and will be automatically refreshed using a refresh token when they expire.
 
 * ***Client***
 
-    A valid client access token is required and will be forwarded
+    A valid client access token is required and will be forwarded to the remote API. A client access token is an access token obtained through the client credentials flow, and is associated with the client application, not any particular user. Client tokens can be obtained even if the user is not logged in.
 
 * ***UserOrClient***
 
-    Either a valid user access token or a valid client access token (as fallback) is required and will be forwarded
+    Either a valid user access token or a valid client access token (as fallback) is required and will be forwarded to the remote API.
 
-You can also use the *WithOptionalUserAccessToken* extension to specify that the API should be called with a user access token (if present), otherwise anonymously.
+You can also use the *WithOptionalUserAccessToken* extension method to specify that the API should be called with a user access token if one is available and anonymously if not.
 
 {{% notice note %}}
 These settings only specify the logic that is applied before the API call gets proxied. The remote APIs you are calling should always specify their own authorization and token requirements.
