@@ -112,5 +112,5 @@ services.AddBff(options =>
 
 * ***DPoPJsonWebKey***
 
-    Specifices the Json Web Key to use when creating DPoP proof tokens. 
+    Specifies the Json Web Key to use when creating DPoP proof tokens. 
     Defaults to null, which is appropriate when not using DPoP.
