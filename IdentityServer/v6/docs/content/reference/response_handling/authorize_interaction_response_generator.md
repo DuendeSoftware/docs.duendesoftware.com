@@ -30,6 +30,8 @@ If a custom implementation of *IAuthorizeInteractionResponseGenerator* is desire
 
 * ***IsCreateAccount***
 
+    Added in *v6.3*.
+
     Specifies if the user must create an account.
 
 * ***IsError***
