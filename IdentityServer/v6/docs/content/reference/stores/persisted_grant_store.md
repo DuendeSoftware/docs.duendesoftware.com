@@ -3,149 +3,145 @@ title: "Persisted Grant Store"
 weight: 42
 ---
 
-#### Duende.IdentityServer.Stores.IPersistedGrantStore
+The *IPersistedGrantStore* interface is the contract for a service that stores,
+retrieves, and deletes _persisted grants_. A _grant_ is a somewhat abstract
+concept that is used in various protocol flows and represents that a resource
+owner has given authorization of some kind. Grants that require server side
+state in IdentityServer are the _persisted grants_ stored by the
+*IPersistedGrantStore*. 
 
-Models storage of persisted grants.
+The *IPersistedGrantStore* is abstracted to allow for storage of several grant
+types, including authorization codes, refresh tokens, user consent, and
+reference tokens. Some specialized grant types, including device flow and CIBA,
+use their own specialized stores instead.
 
-```cs
-    /// <summary>
-    /// Interface for persisting any type of grant.
-    /// </summary>
-    public interface IPersistedGrantStore
-    {
-        /// <summary>
-        /// Stores the grant.
-        /// </summary>
-        /// <param name="grant">The grant.</param>
-        /// <returns></returns>
-        Task StoreAsync(PersistedGrant grant);
+IdentityServer includes two implementations of the *IPersistedGrantStore*. The
+*InMemoryPersistedGrantStore* unsurprisingly persists grants in memory and is
+intended for demos, tests, and other situations where persistent storage is not
+actually necessary. In contrast, the
+*Duende.IdentityServer.EntityFramework.Stores.PersistedGrantStore* durably
+persists grants to a database using EntityFramework, and can be used with any
+database with an EF provider.
 
-        /// <summary>
-        /// Gets the grant.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns></returns>
-        Task<PersistedGrant> GetAsync(string key);
+You can also provide your own implementation of the *IPersistedGrantStore*. This
+allows for complete control of the data access code so that you can support
+other data stores that lack an EF provider, and so that you can optimize the
+data access for your environment and usage.
 
-        /// <summary>
-        /// Gets all grants based on the filter.
-        /// </summary>
-        /// <param name="filter">The filter.</param>
-        /// <returns></returns>
-        Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter);
+### Duende.IdentityServer.Stores.IPersistedGrantStore
 
-        /// <summary>
-        /// Removes the grant by key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns></returns>
-        Task RemoveAsync(string key);
+#### Members
+| name                                                                        | description                                                   |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Task StoreAsync(PersistedGrant grant);                                      | Stores a grant.                                               |
+| Task<PersistedGrant> GetAsync(string key);                                  | Retrieves a grant by its key.                                 |
+| Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter); | Retrieves all grants that fulfill the conditions of a filter. |
+| Task RemoveAsync(string key);                                               | Removes a grant by key.                                       |
+| Task RemoveAllAsync(PersistedGrantFilter filter);                           | Removes all grants that fulfill the conditions of a filter.   |
 
-        /// <summary>
-        /// Removes all grants based on the filter.
-        /// </summary>
-        /// <param name="filter">The filter.</param>
-        /// <returns></returns>
-        Task RemoveAllAsync(PersistedGrantFilter filter);
-    }
-```
 
-#### PersistedGrant
+### Duende.IdentityServer.Models.PersistedGrant
 
-Models persistence of authorization codes, reference and refresh tokens, and user consents.
+#### Members
 
-```cs
-    /// <summary>
-    /// A model for a persisted grant
-    /// </summary>
-    public class PersistedGrant
-    {
-        /// <summary>
-        /// Gets or sets the key.
-        /// </summary>
-        /// <value>
-        /// The key.
-        /// </value>
-        public string Key { get; set; }
+| name                   | description                                                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| string Key             | A string that uniquely identifies the grant.                                                                                 |
+| string Type            | A string that specifies the type of grant. The possible values are constants in the *PersistedGrantTypes* class (see below). |
+| string SubjectId       | The identifier of the subject that granted authorization.                                                                    |
+| string SessionId       | The identifier of the session where the grant was made, if applicable.                                                       |
+| string ClientId        | The identifier of the client that was granted authorization.                                                                 |
+| string Description     | The description the user assigned to the device being authorized.                                                            |
+| DateTime CreationTime  | The time that the grant expires.                                                                                             |
+| DateTime? Expiration   | The time that the grant expires.                                                                                             |
+| DateTime? ConsumedTime | The time that the grant was consumed.                                                                                        |
+| string Data            | A serialized and data protected representation of the grant.                                                                 |
 
-        /// <summary>
-        /// Gets the type.
-        /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
-        public string Type { get; set; }
+#### Key Property
+The *Key* property contains a SHA256 hash of the value used to refer to
+individual grants. For authorization codes, refresh tokens, and reference
+tokens, the stored *Key* hashes the actual value sent to the client as part of
+the protocol flow. For example, refresh token records use a hash of the actual
+refresh token parameter sent to the client as their *Key*. In contrast, user
+consent is not identified by a single protocol parameter. Instead, the *Key*
+value for user consent records comes from a hash of a combination of subject id
+and client id. In all cases, the value that is hashed to compute the *Key* also
+includes the grant type.
 
-        /// <summary>
-        /// Gets the subject identifier.
-        /// </summary>
-        /// <value>
-        /// The subject identifier.
-        /// </value>
-        public string SubjectId { get; set; }
+Beginning in *v6.0*, the hashes that IdentityServer passes to the
+*IPersistedGrantStore* to use as *Key* values are formatted as hex values. In
+earlier versions, the *Keys* were base-64 encoded. That occasionally caused
+database collation issues in case-insensitive databases, which prompted the
+change to hex encoding. To facilitate migration, IdentityServer adds a version
+suffix ("-1") to indicate that the newer hex encoding should be used during
+hashing. For example, the refresh token parameter
+"27931A10FBCA75583C5576DAFB5DBDF0A9BCA8D6BD38B7CF142C47D6E44ED24D-1" ends in the
+"-1" suffix, so when IdentityServer searches for its persisted grant record, it
+computes the hash of the parameter value, applies hex encoding, and then calls
+*IPersistedGrantStore.GetAsync(...)*, passing the resulting hex encoded value. A
+refresh token created before *v6.0* would not include the "-1" suffix, so
+IdentityServer would instead pass a base-64 encoded hash to the *GetAsync*
+method.
 
-        /// <summary>
-        /// Gets the session identifier.
-        /// </summary>
-        /// <value>
-        /// The session identifier.
-        /// </value>
-        public string SessionId { get; set; }
-        
-        /// <summary>
-        /// Gets the client identifier.
-        /// </summary>
-        /// <value>
-        /// The client identifier.
-        /// </value>
-        public string ClientId { get; set; }
+However, consent records were not migrated to use hex encoding of their *Key*
+values until IdentityServer *v7.0*. Since there's no protocol parameter that
+corresponds to consent records, there's no way to use the protocol parameters to
+determine which encoding to use. So, prior to *v7.0*, the consent *Key* values
+remained in the base-64 encoding.
 
-        /// <summary>
-        /// Gets the description the user assigned to the device being authorized.
-        /// </summary>
-        /// <value>
-        /// The description.
-        /// </value>
-        public string Description { get; set; }
+Beginning in *v7.0*, IdentityServer uses hex encoding for Consent *Key* values,
+but falls back to base-64 encoding when hex encoding fails to find a grant. In
+that case, IdentityServer will automatically update the grant to use a hex
+encoded *Key*.
 
-        /// <summary>
-        /// Gets or sets the creation time.
-        /// </summary>
-        /// <value>
-        /// The creation time.
-        /// </value>
-        public DateTime CreationTime { get; set; }
+#### Data Property
 
-        /// <summary>
-        /// Gets or sets the expiration.
-        /// </summary>
-        /// <value>
-        /// The expiration.
-        /// </value>
-        public DateTime? Expiration { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the consumed time.
-        /// </summary>
-        /// <value>
-        /// The consumed time.
-        /// </value>
-        public DateTime? ConsumedTime { get; set; }
+The *Data* property contains information that is specific to the grant type. For
+example, consent records contain the scopes that the user consented to grant
+to the client.  
 
-        /// <summary>
-        /// Gets or sets the data.
-        /// </summary>
-        /// <value>
-        /// The data.
-        /// </value>
-        public string Data { get; set; }
-    }
-```
+The *Data* property also contains a copy of the *SubjectId*, *SessionId*,
+*ClientId*, *Description*, *CreationTime*, and *Expiration* properties when
+those properties are applicable to the grant type. The copy in the *Data* is
+treated as authoritative by IdentityServer, in the sense that the copy is used
+when grants are retrieved from the store. The other properties exist to enable
+querying the grants and/or for informational purposes and should be treated as
+read-only. 
+ 
+By default, the *Data* property is encrypted at rest using the ASP.NET Data
+Protection API. The [*DataProtectData* option]({{<ref
+"/reference/options#PersistentGrants">}}) can be used to disable this
+encryption.
 
-{{% notice note %}}
-The *Data* property contains a copy of all of the values (and more) and is considered authoritative by IdentityServer, thus most of the other property values are considered informational and read-only.
-{{% /notice %}}
+#### Time Stamps
 
+All grants set their *CreationTime* when they are created as a UTC timestamp.
+
+Grants that expire set their *Expiration* when they are created as well. Consent
+records only expire if the *ConsentLifetime* property of the *Client* is set. By
+default, *ConsentLifetime* is not set and consent lasts until it is revoked.
+Authorization code records always include an *Expiration*. They expire after the
+[*AuthorizationCodeLifetime*]({{<ref "/reference/models/client#token">}}) has
+elapsed, so they are initialized with their *Expiration* set that far into the
+future. Reference token records expire in the same way, with their *Expiration*
+controlled by the [*AccessTokenLifetime*]({{<ref
+"/reference/models/client#token">}}). Refresh token records also always include
+*Expiration*, controlled by the *AbsoluteRefreshTokenLifetime* and
+*SlidingRefreshTokenLifetime* [client settings]({{<ref
+"/tokens/refresh#sliding-expiration">}}). Custom grant records should set the
+*Expiration* to indicate that they are only usable for a length of time, or not
+set it to indicate that they can be used indefinitely.
+
+Some grants can set a *ConsumedTime* when they are used. This applies to grants
+that are intended to be used once and that need to be retained after their use
+for some purpose (for example, replay detection or to allow certain kinds of
+limited reuse). Refresh tokens can be [configured]({{<ref
+"/tokens/refresh#sliding">}}) to have one-time use semantics. Refresh tokens
+that are configured this way set a *ConsumedTime* when they are used.
+Authorization codes do not set a *ConsumedTime*. They are instead always removed
+on use. *ConsumedTime* is not applicable to reference tokens and consent, so
+they both never set it. Custom grant records should set the *ConsumedTime* if
+one-time use semantics are appropriate for the grant. 
 
 #### PersistedGrantFilter
 
