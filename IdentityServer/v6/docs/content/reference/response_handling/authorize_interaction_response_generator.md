@@ -28,6 +28,10 @@ If a custom implementation of *IAuthorizeInteractionResponseGenerator* is desire
        
     Specifies if the user must consent.
 
+* ***IsCreateAccount***
+
+    Specifies if the user must create an account.
+
 * ***IsError***
        
     Specifies if the user must be shown an error page.
