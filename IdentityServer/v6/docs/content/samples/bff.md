@@ -34,3 +34,13 @@ This sample shows how to use the BFF extensions for Microsoft YARP
 This sample shows how to have separate projects from the frontend and backend, using CORS to allow cross-site requests from the frontend to the backend.
 
 [link to source code]({{< param samples_base >}}/BFF/SplitHosts)
+
+### DPoP
+This sample shows how to configure the BFF to use [DPoP]({{<ref "/tokens/pop/dpop" >}}) to obtain sender-constrained tokens.
+
+[link to source code]({{< param samples_base >}}/BFF/DPoP)
+
+### Token Exchange using the IAccessTokenRetriever
+This sample shows how to extend the BFF with an *IAccessTokenRetriever*. This example of an IAccessTokenRetriever performs token exchange for impersonation. If you are logged in as alice you will get a token for bob, and vice versa.
+
+[link to source code]({{< param samples_base >}}/BFF/TokenExchange)
