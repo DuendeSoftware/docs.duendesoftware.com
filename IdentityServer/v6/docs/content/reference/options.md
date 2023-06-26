@@ -275,7 +275,7 @@ Login/logout related settings. Available on the *Authentication* property of the
 
 * ***CheckSessionCookieDomain***
     
-    The domain of the cookie used for the check session endpoint. Defaults to null.
+    The domain of the cookie used for the check session endpoint. Defaults to *null*.
 
 * ***CheckSessionCookieSameSiteMode***
     
@@ -460,6 +460,12 @@ User interaction settings, including urls for pages in the UI, names of paramete
 * ***LoginUrl***, ***LogoutUrl***, ***ConsentUrl***, ***ErrorUrl***, ***DeviceVerificationUrl***
 
     Sets the URLs for the login, logout, consent, error and device verification pages.
+
+* ***CreateAccountUrl***
+
+    Added in *v6.3*.
+
+    Sets the URL for the create account page, which is used by OIDC requests that include the *prompt=create* parameter. When this option is set, including the *prompt=create* parameter will cause the user to be redirected to the specified url. *create* will also be added to the discovery document's *prompt_values_supported* array to announce support for this feature. When this option is not set, the *prompt=create* parameter is ignored, and *create is not added to discovery. Defaults to *null*.
 
 * ***LoginReturnUrlParameter***
 
