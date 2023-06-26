@@ -283,7 +283,7 @@ Login/logout related settings. Available on the *Authentication* property of the
 
 * ***RequireCspFrameSrcForSignout***
 
-    Enables all Content Security Policy headers on the end session endpoint. For historical reasons, this option's name mentions frame-src, but the Content Security policy headers on the end session endpoint also include other fetch directives, including a *default-src 'none'* directive, which prevents most resources from being loaded by the end-session endpoint, and a *style-src* directive that specifies the hash of the expected style on the page.
+    Enables all content security policy headers on the end session endpoint. For historical reasons, this option's name mentions *frame-src*, but the content security policy headers on the end session endpoint also include other fetch directives, including a *default-src 'none'* directive, which prevents most resources from being loaded by the end session endpoint, and a *style-src* directive that specifies the hash of the expected style on the page.
 
 * ***CoordinateClientLifetimesWithUserSession*** (added in 6.1)
     

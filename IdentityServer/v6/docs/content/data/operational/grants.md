@@ -37,6 +37,9 @@ This "soft delete" allows for custom implementations to either have flexibility 
 or to be used in risk assessment and threat mitigation scenarios (where suspicious activity is detected) to revoke access.
 For refresh tokens, this sort of custom logic would be performed in the [IRefreshTokenService]({{<ref "/reference/services/refresh_token_service">}}).
 
+## Grant Data
+The *Data* property of the model contains the authoritative copy of the values in the store. This data is protected at rest using the ASP.NET Data Protection API. With the exception of *ConsumedTime*, The other properties of the model should be treated as read-only.
+
 ## Persisted Grant Service
 Working with the grants store directly might be too low level. 
 As such, a higher level service called the [IPersistedGrantService]({{<ref "/reference/services/persisted_grant_service">}}) is provided.
