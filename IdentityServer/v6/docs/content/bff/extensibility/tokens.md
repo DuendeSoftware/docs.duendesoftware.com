@@ -96,3 +96,5 @@ endpoints.MapRemoteBffApiEndpoint("/api/impersonation", "https://api.example.com
     .RequireAccessToken(TokenType.User)
     .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```
+
+The *GetAccessToken* method will be invoked on every call to APIs that use the access token retriever. If retrieving the token is an expensive operation, you may need to cache it. It is up to your retriever code to perform caching.
