@@ -10,7 +10,7 @@ A frontend application using the BFF pattern can call two types of APIs:
 
 #### Remote APIs
 
-These APIs are deployed on a different host than the BFF, which allows them to be shared between multiple frontends or (more generally speaking) multiple clients. The These APIs can only be called via the BFF host acting as a proxy.
+These APIs are deployed on a different host than the BFF, which allows them to be shared between multiple frontends or (more generally speaking) multiple clients. These APIs can only be called via the BFF host acting as a proxy.
 
 #### Local APIs
 
