@@ -125,6 +125,28 @@ builder.LoadFromMemory(
 );
 ```
 
+#### Optional User Access Tokens
+You can also attach user access tokens optionally using *WithOptionalUserAccessToken*. This method causes the user's access token to be sent with the proxied request when the user is logged in, but makes the request anonymously when the user is not logged in. Since *WithAccessToken* means that a token is required, and *WithOptionalUserAccessToken* means that the token is optional, it is an error to configure an endpoint with both.
+
+```cs
+builder.LoadFromMemory(
+    new[]
+    {
+        new RouteConfig()
+        {
+            RouteId = "todos",
+            ClusterId = "cluster1",
+
+            Match = new RouteMatch
+            {
+                Path = "/todos/{**catch-all}"
+            }
+        }.WithOptionalUserAccessToken()
+    },
+    // rest omitted
+);
+```
+
 ### Anti-forgery protection
 Duende.BFF's YARP extensions can also add anti-forgery protection to proxied API calls. Anti-forgery protection defends against CSRF attacks by requiring a custom header on API endpoints, for example:
 
