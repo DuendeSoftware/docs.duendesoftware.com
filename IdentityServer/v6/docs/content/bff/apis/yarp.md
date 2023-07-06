@@ -205,7 +205,7 @@ builder.LoadFromMemory(
         }.WithAntiforgeryCheck()
     },
     // rest omitted
-    });
+);
 ```
 
 {{% notice note %}}
