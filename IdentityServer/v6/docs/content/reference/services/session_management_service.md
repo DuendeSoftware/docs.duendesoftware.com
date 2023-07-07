@@ -1,6 +1,6 @@
 ---
 title: "Session Management Service"
-weight: 60
+weight: 57
 ---
 
 #### Duende.IdentityServer.Services.ISessionManagementService
