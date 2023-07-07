@@ -29,7 +29,7 @@ You can filter the claims you emit to only include the claim types requested by 
 Clients can request claims in several ways:
 - Requesting an [IdentityResource]({{< ref "/fundamentals/resources/identity" >}}) by including the scope parameter for the *IdentityResource* requests the claims associated with the *IdentityResource* in its *UserClaims* collection.
 - Requesting an [ApiScope]({{< ref "/fundamentals/resources/api_scopes" >}}) by including the scope parameter for the *ApiScope* requests the claims associated with the *ApiScope* in its *UserClaims* collection.
-- Requesting an [ApiResource] by including the resource indicator parameter for the *ApiResource* requests the claims associated with the *ApiResource* in its *UserClaims* collection.
+- Requesting an [ApiResource]({{< ref "/fundamentals/resources/api_resources" >}}) by including the resource indicator parameter for the *ApiResource* requests the claims associated with the *ApiResource* in its *UserClaims* collection.
 
 The *RequestedClaimTypes* property of the *ProfileDataRequestContext* contains the collection of claims requested by the client.
 
