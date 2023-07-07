@@ -83,7 +83,7 @@ builder.LoadFromMemory(
 ```
 
 ### Token management
-Duende.BFF's YARP extensions provide access token management, and attach user or client access tokens automatically to proxied API calls. To enable this, add metadata with the name *Duende.Bff.Yarp.TokenType* to the route or cluster configuration:
+Duende.BFF's YARP extensions provide access token management and attach user or client access tokens automatically to proxied API calls. To enable this, add metadata with the name *Duende.Bff.Yarp.TokenType* to the route or cluster configuration:
 
 ```json
 "ReverseProxy": {
@@ -103,6 +103,8 @@ Duende.BFF's YARP extensions provide access token management, and attach user or
 ```
 
 Similarly to the [simple HTTP forwarder]({{<ref "/bff/apis/remote#access-token-requirements" >}}), the allowed values for the token type are *User*, *Client*, *UserOrClient*. 
+
+Routes that set the *Duende.Bff.Yarp.TokenType* metadata **require** the given type of access token. If it is unavailable (for example, if the *User* token type is specified but the request to the BFF is anonymous), then the proxied request will not be sent, and the BFF will return an HTTP 401: Unauthorized response.
 
 If you are using the code config method, call the *WithAccessToken* extension method to achieve the same thing:
 
@@ -124,6 +126,8 @@ builder.LoadFromMemory(
     // rest omitted
 );
 ```
+
+Again, the WithAccessToken method causes the route to require the given type of access token. If it is unavailable, the proxied request will not be made and the BFF will return an HTTP 401: Unauthorized response.
 
 #### Optional User Access Tokens
 You can also attach user access tokens optionally using *WithOptionalUserAccessToken*. This method causes the user's access token to be sent with the proxied request when the user is logged in, but makes the request anonymously when the user is not logged in. Since *WithAccessToken* means that a token is required, and *WithOptionalUserAccessToken* means that the token is optional, it is an error to configure an endpoint with both.
