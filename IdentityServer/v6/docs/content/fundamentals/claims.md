@@ -23,12 +23,17 @@ You can use different strategies to determine which claims to emit based on the 
 * emit claims based on user or client identity
 * always emit certain claims
 
-#### Emit claims based on the requested identity resources
+#### Emit claims based on the client's request
 You can filter the claims you emit to only include the claim types requested by the client. If your client requires consent, this will also give end users the opportunity to approve or deny sharing those claims with the client.
 
-The *RequestedClaimTypes* property of the *ProfileDataRequestContext* contains the collection of such claims. Clients request claim types by requesting scopes of *IdentityResources* that are configured to include those claim in their *UserClaims* property. 
+Clients can request claims in several ways:
+- Requesting an [IdentityResource]({{< ref "/fundamentals/resources/identity" >}}) by including the scope parameter for the *IdentityResource* requests the claims associated with the *IdentityResource* in its *UserClaims* collection.
+- Requesting an [ApiScope]({{< ref "/fundamentals/resources/api_scopes" >}}) by including the scope parameter for the *ApiScope* requests the claims associated with the *ApiScope* in its *UserClaims* collection.
+- Requesting an [ApiResource] by including the resource indicator parameter for the *ApiResource* requests the claims associated with the *ApiResource* in its *UserClaims* collection.
 
-If your profile service extends the *DefaultProfileService*, you can use its *AddRequestedClaims* method to add only requested and approved claims. For example:
+The *RequestedClaimTypes* property of the *ProfileDataRequestContext* contains the collection of claims requested by the client.
+
+If your profile service extends the *DefaultProfileService*, you can use its *AddRequestedClaims* method to add only requested and approved claims. The intent is that your profile service can retrieve claim data and then filter that claim data based on what was requested by the client. For example:
 
 ```cs
 public class SampleProfileService : DefaultProfileService
@@ -49,7 +54,7 @@ public class SampleProfileService : DefaultProfileService
 ```
 
 #### Always emit claims
-We generally recommend emitting claims based on the requested claim types, as that respects the scopes requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you have claims that don't need to follow such rules, such as claims that are an integral part of the user's identity and that needed in most scenarios, they can be added by directly updating the *context.IssuedClaims* collection. For example:
+We generally recommend emitting claims based on the requested claim types, as that respects the scopes and resources requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you have claims that don't need to follow such rules, such as claims that are an integral part of the user's identity and that needed in most scenarios, they can be added by directly updating the *context.IssuedClaims* collection. For example:
 
 ```cs
 public class SampleProfileService : DefaultProfileService
