@@ -127,10 +127,31 @@ builder.LoadFromMemory(
 );
 ```
 
-Again, the WithAccessToken method causes the route to require the given type of access token. If it is unavailable, the proxied request will not be made and the BFF will return an HTTP 401: Unauthorized response.
+Again, the *WithAccessToken* method causes the route to require the given type of access token. If it is unavailable, the proxied request will not be made and the BFF will return an HTTP 401: Unauthorized response.
 
 #### Optional User Access Tokens
-You can also attach user access tokens optionally using *WithOptionalUserAccessToken*. This method causes the user's access token to be sent with the proxied request when the user is logged in, but makes the request anonymously when the user is not logged in. Since *WithAccessToken* means that a token is required, and *WithOptionalUserAccessToken* means that the token is optional, it is an error to configure an endpoint with both.
+You can also attach user access tokens optionally by adding metadata named "Duende.Bff.Yarp.OptionalUserToken" to a YARP route.
+
+```json
+"ReverseProxy": {
+    "Routes": {
+      "todos": {
+        "ClusterId": "cluster1",
+        "Match": {
+          "Path": "/todos/{**catch-all}",
+        },
+        "Metadata": { 
+            "Duende.Bff.Yarp.OptionalUserToken": "true"
+        }
+      }
+    },
+    // rest omitted
+}
+```
+
+This metadata causes the user's access token to be sent with the proxied request when the user is logged in, but makes the request anonymously when the user is not logged in. It is an error to set both *Duende.Bff.Yarp.TokenType* and *Duende.Bff.Yarp.OptionalUserToken*, since they have conflicting semantics (*TokenType* requires the token, *OptionalUserToken* makes it optional).
+
+If you are using the code config method, call the *WithOptionalUserAccessToken* extension method to achieve the same thing:
 
 ```cs
 builder.LoadFromMemory(
