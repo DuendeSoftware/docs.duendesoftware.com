@@ -54,7 +54,7 @@ public class SampleProfileService : DefaultProfileService
 ```
 
 #### Always emit claims
-We generally recommend emitting claims based on the requested claim types, as that respects the scopes and resources requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you have claims that don't need to follow such rules, such as claims that are an integral part of the user's identity and that needed in most scenarios, they can be added by directly updating the *context.IssuedClaims* collection. For example:
+We generally recommend emitting claims based on the requested claim types, as that respects the scopes and resources requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you have claims that don't need to follow such rules, such as claims that are an integral part of the user's identity and that are needed in most scenarios, they can be added by directly updating the *context.IssuedClaims* collection. For example:
 
 ```cs
 public class SampleProfileService : DefaultProfileService
