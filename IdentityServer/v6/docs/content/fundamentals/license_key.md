@@ -15,7 +15,7 @@ If present, the contents of the file will be loaded as the license key.
 
 ## Startup
 
-If you prefer to load the license key dynamically, you can in your startup code.
+If you prefer to load the license key dynamically (e.g. from an API or environment variable), you can in your startup code.
 When calling *AddIdentityServer* from *ConfigureServices*, you can pass a lambda expression to configure various options in your IdentityServer.
 The *LicenseKey* is one such setting. 
 
