@@ -19,21 +19,21 @@ function initLunr() {
             lunrIndex = lunr(function() {
                 this.ref("uri");
                 this.field('title', {
-		    boost: 15
+		              boost: 25
                 });
                 this.field('tags', {
-		    boost: 10
+		              boost: 10
                 });
                 this.field("content", {
-		    boost: 5
+		              boost: 5
                 });
-				
+
                 this.pipeline.remove(lunr.stemmer);
                 this.searchPipeline.remove(lunr.stemmer);
-				
+
                 // Feed lunr with each file and let lunr actually index them
                 pagesIndex.forEach(function(page) {
-		    this.add(page);
+                  this.add(page);
                 }, this);
             })
         })
@@ -50,17 +50,33 @@ function initLunr() {
  * @return {Array}  results
  */
 function search(queryTerm) {
-    // Find the item in our index corresponding to the lunr one to have more info
-    return lunrIndex.search(queryTerm+"^100"+" "+queryTerm+"*^10"+" "+"*"+queryTerm+"^10"+" "+queryTerm+"~2^1").map(function(result) {
-            return pagesIndex.filter(function(page) {
-                return page.uri === result.ref;
-            })[0];
+  var searchResult = lunrIndex.search(trailingWildcard(requireAll(queryTerm)));
+  var pages = searchResult.map(function(result) {
+      var x = pagesIndex.filter(function (page) {
+            return page.uri === result.ref;
         });
+      return x[0];
+  });
+  return pages;
 }
+
+function requireAll(query) {
+  return query.split(" ").filter(t => t.length > 1).map(t => "+" + t).join(" ");
+}
+
+function trailingWildcard(query) {
+  return query + "*";
+}
+
+function quoteQuery(query) {
+  query = query.trim();
+  return `"${query}"^100 "${query}*"^10 "*${query}"^10 "${query}"~2^1"`
+}
+
 
 // Let's get started
 initLunr();
-$( document ).ready(function() {
+$(document).ready(function() {
     var searchList = new autoComplete({
         /* selector for the search box element */
         selector: $("#search-by").get(0),
