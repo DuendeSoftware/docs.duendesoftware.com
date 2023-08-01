@@ -13,13 +13,16 @@ function initLunr() {
     // First retrieve the index file
     $.getJSON(baseurl +"index.json")
         .done(function(index) {
-            pagesIndex = index;
+          pagesIndex = index;
             // Set up lunrjs by declaring the fields we use
             // Also provide their boost level for the ranking
             lunrIndex = lunr(function() {
                 this.ref("uri");
                 this.field('title', {
 		              boost: 25
+                });
+                this.field('description', {
+                    boost: 20
                 });
                 this.field('tags', {
 		              boost: 10
@@ -90,7 +93,8 @@ $(document).ready(function() {
             var text = item.content.match(
                 "(?:\\s?(?:[\\w]+)\\s?){0,"+numContextWords+"}" +
                     term+"(?:\\s?(?:[\\w]+)\\s?){0,"+numContextWords+"}");
-            item.context = text;
+            // TODO - consider always displaying description if it is available (would need to handle case of having both context and description)
+            item.context = text ?? item.description;
             return '<div class="autocomplete-suggestion" ' +
                 'data-term="' + term + '" ' +
                 'data-title="' + item.title + '" ' +
