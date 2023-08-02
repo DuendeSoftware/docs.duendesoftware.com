@@ -3,13 +3,21 @@
 }
 .ui-autocomplete .ui-menu-item {
   padding-left: 0;
+}
+
+.ui-autocomplete .ui-menu-item-wrapper {
   font-size: 18px;
   color: rgb(51,51,51);
+  padding: 7px;
+  line-height: 23px;
 }
+
 .ui-autocomplete .ui-menu-item .context {
   font-size: 12px;
 }
 .ui-autocomplete .ui-state-active {
   background-color: rgb(51,51,51);
   color: rgb(255,255,255);
+  border: none;
+  font-weight: 300;
 }
