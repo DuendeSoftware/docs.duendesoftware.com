@@ -54,13 +54,8 @@ function initLunr() {
  */
 function search(queryTerm) {
   var searchResult = lunrIndex.search(trailingWildcard(requireAll(queryTerm)));
-  var pages = searchResult.map(function (result) {
-    var x = pagesIndex.filter(function (page) {
-      return page.uri === result.ref;
-    });
-    return x[0];
-  });
-  return pages;
+  return searchResult.map(result =>
+    pagesIndex.filter(page => page.uri === result.ref)[0]);
 }
 
 function requireAll(query) {
@@ -99,6 +94,7 @@ $(document).ready(function () {
         response(results);
       },
       select: (event, ui) => {
+        debugger;
         location.href = ui.item.uri
       }
     })
