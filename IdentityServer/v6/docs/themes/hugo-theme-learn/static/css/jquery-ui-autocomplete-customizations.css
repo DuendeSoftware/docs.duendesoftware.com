@@ -1,0 +1,15 @@
+.ui-autocomplete {
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+.ui-autocomplete .ui-menu-item {
+  padding-left: 0;
+  font-size: 18px;
+  color: rgb(51,51,51);
+}
+.ui-autocomplete .ui-menu-item .context {
+  font-size: 12px;
+}
+.ui-autocomplete .ui-state-active {
+  background-color: rgb(51,51,51);
+  color: rgb(255,255,255);
+}
