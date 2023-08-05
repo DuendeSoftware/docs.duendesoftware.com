@@ -54,6 +54,7 @@ function initLunr() {
  */
 function search(queryTerm) {
   var searchResult = lunrIndex.search(trailingWildcard(requireAll(queryTerm)));
+  searchResult = searchResult.slice(0, 10);
   return searchResult.map(result =>
     pagesIndex.filter(page => page.uri === result.ref)[0]);
 }

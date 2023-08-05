@@ -1,5 +1,9 @@
 .ui-autocomplete {
   font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: fixed !important;
 }
 .ui-autocomplete .ui-menu-item {
   padding-left: 0;
