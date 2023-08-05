@@ -66,12 +66,6 @@ function trailingWildcard(query) {
   return query + "*";
 }
 
-function quoteQuery(query) {
-  query = query.trim();
-  return `"${query}"^100 "${query}*"^10 "*${query}"^10 "${query}"~2^1"`
-}
-
-
 // Let's get started
 initLunr();
 $(document).ready(function () {
@@ -79,7 +73,7 @@ $(document).ready(function () {
     .autocomplete({
       source: (request, response) => {
         let results = search(request.term).map(item => {
-          var numContextWords = 4;
+          var numContextWords = 2;
           var text = item.content.match(
             "(?:\\s?(?:[\\w]+)\\s?){0," + numContextWords + "}" +
             request.term + "(?:\\s?(?:[\\w]+)\\s?){0," + numContextWords + "}");
@@ -94,7 +88,6 @@ $(document).ready(function () {
         response(results);
       },
       select: (event, ui) => {
-        debugger;
         location.href = ui.item.uri
       }
     })
@@ -105,30 +98,3 @@ $(document).ready(function () {
     };
 
 });
-
-
-    // var searchList = new autoComplete({
-    //       /* selector for the search box element */
-    //       selector: $("#search-by").get(0),
-    //       /* source is the callback to perform the search */
-    //       source: function(term, response) {
-    //           response(search(term));
-    //       },
-    //       /* renderItem displays individual search results */
-    //       renderItem: function(item, term) {
-
-    //           return '<div class="autocomplete-suggestion" ' +
-    //               'data-term="' + term + '" ' +
-    //               'data-title="' + item.title + '" ' +
-    //               'data-uri="'+ item.uri + '" ' +
-    //               'data-context="' + item.context + '">' +
-    //               '» ' + item.title +
-    //               '<div class="context">' +
-    //               (item.context || '') +'</div>' +
-    //               '</div>';
-    //       },
-    //       /* onSelect callback fires when a search suggestion is chosen */
-    //       onSelect: function(e, term, item) {
-    //           location.href = item.getAttribute('data-uri');
-    //       }
-    //   });
