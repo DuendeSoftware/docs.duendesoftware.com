@@ -1,5 +1,6 @@
 ---
 title: "ASP.NET Identity Integration"
+description: "Sample"
 weight: 30
 ---
 

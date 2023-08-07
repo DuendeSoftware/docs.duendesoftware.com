@@ -1,5 +1,6 @@
 +++
 title = "ASP.NET Identity Integration"
+description = "Overview"
 weight = 90
 chapter = true
 +++

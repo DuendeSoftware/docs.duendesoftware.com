@@ -1,5 +1,6 @@
 ---
 title: "Diagnostics"
+description: "Samples"
 weight: 50
 ---
 
