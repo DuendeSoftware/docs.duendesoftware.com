@@ -75,13 +75,13 @@ $(document).ready(function () {
       source: (request, response) => {
         let results = search(request.term).map(item => {
           var numContextWords = 2;
-          var text = item.content.match(
+          var context = item.content.match(
             "(?:\\s?(?:[\\w]+)\\s?){0," + numContextWords + "}" +
             request.term + "(?:\\s?(?:[\\w]+)\\s?){0," + numContextWords + "}");
-          // TODO - consider always displaying description if it is available (would need to handle case of having both context and description)
           return {
-            label: item.title,
-            desc: text || item.description,
+            title: item.title,
+            context,
+            description: item.description,
             uri: item.uri
           };
         });
@@ -93,8 +93,15 @@ $(document).ready(function () {
       }
     })
     .autocomplete("instance")._renderItem = function (ul, item) {
+      let text = `» ${item.title}`;
+      if (item.description) {
+        text += ` (${item.description})`;
+      }
+      if (item.context) {
+        text += `<div class="context">${item.context}</div>`
+      }
       return $("<li>")
-        .append("<div>" + '» ' + item.label + '<div class="context">' + item.desc + "</div></div>")
+        .append(`<div>${text}</div>`)
         .appendTo(ul);
     };
 
