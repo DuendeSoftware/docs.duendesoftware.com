@@ -144,12 +144,12 @@ jQuery(document).ready(function () {
     $(".highlightable").unhighlight({ element: 'mark' }).highlight(value, { element: 'mark' });
 
     if (ajax && ajax.abort) ajax.abort();
+  });
 
-    jQuery('[data-search-clear]').on('click', function () {
-      jQuery('[data-search-input]').val('').trigger('input');
-      sessionStorage.removeItem('search-input');
-      $(".highlightable").unhighlight({ element: 'mark' })
-    });
+  jQuery('[data-search-clear]').on('click', function () {
+    jQuery('[data-search-input]').val('').trigger('input');
+    sessionStorage.removeItem('search-value');
+    $(".highlightable").unhighlight({ element: 'mark' })
   });
 
   $.expr[":"].contains = $.expr.createPseudo(function (arg) {
