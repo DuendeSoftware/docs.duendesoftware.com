@@ -13,7 +13,7 @@ Across this redirect exchange, there will be state that must be maintained so th
 
 ## Determining the Identity Provider
 
-To detect that a user must be redirected to an external identity provider for sign-out is typically done by using a *idp* claim issued into the cookie at IdentityServer.
+To detect that a user must be redirected to an external identity provider for sign-out is typically done by using an *idp* claim issued into the cookie at IdentityServer.
 The value is either *local* for a local sign-in or the scheme of the corresponding authentication handler used for an external provider.
 At sign-out time this claim should be consulted to determine if an external sign-out is required.
 
