@@ -74,7 +74,7 @@ $(document).ready(function () {
     .autocomplete({
       source: (request, response) => {
         let results = search(request.term).map(item => {
-          var numContextWords = 2;
+          var numContextWords = 3;
           var context = item.content.match(
             "(?:\\s?(?:[\\w]+)\\s?){0," + numContextWords + "}" +
             request.term + "(?:\\s?(?:[\\w]+)\\s?){0," + numContextWords + "}");
