@@ -1,5 +1,6 @@
 ---
 title: "Configuration Options"
+description: "Entity Framework"
 weight: 20
 ---
 

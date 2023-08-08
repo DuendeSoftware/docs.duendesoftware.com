@@ -1,5 +1,6 @@
 ---
 title: "Session Management"
+description: "Server Side Sessions"
 weight: 10
 ---
 

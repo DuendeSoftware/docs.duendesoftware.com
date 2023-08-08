@@ -1,5 +1,6 @@
 ---
 title: "Configuration API"
+description: "Samples"
 weight: 60
 ---
 

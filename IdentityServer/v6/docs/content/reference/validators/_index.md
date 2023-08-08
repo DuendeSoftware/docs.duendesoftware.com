@@ -1,5 +1,6 @@
 +++
 title = "Validators"
+description = "Reference"
 weight = 70
 chapter = true
 +++
