@@ -22,7 +22,7 @@ The sample also contains an API with the necessary helper code to accept and val
 
 [link to source code]({{< param samples_base >}}/DPoP)
 
-### Session Management Sample
+### Session Management
 
 This sample shows how to enable [server-side sessions]({{<ref "/ui/server_side_sessions">}}) and configure the basic settings.
 The sample requires all three projects to be run at once.
@@ -37,3 +37,10 @@ Things of note:
 * When you revoke the user's session, the user should be logged out of the client app.
 
 [link to source code]({{< param samples_base >}}/SessionManagement)
+
+### Session Migration
+This sample shows how to do seamless migration of existing cookie-based session when enabling server side sessions. Normally when server side sesssions are enabled all existing logged in sessions are invalidated
+and the users are forced to log in again. If the application has sessions with long lifetimes where it would be a problem to have all users log in again the sessions can be migrated. Instructions for running the
+sample are in the HostingExtensions.cs file.
+
+[link to source code]({{< param samples_base >}}/SessionMigration)
