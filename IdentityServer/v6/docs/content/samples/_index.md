@@ -6,6 +6,13 @@ chapter = true
 
 # Samples
 
-Our samples [repository]({{< param samples_base >}}) contains various samples for IdentityServer, BFF and typical application scenarios.
+We have a collection of runnable samples for various scenarios. Each sample typically self contained with both an IdentityServer instance and
+clients/APIs needed to demonstrate the functionality.
 
-Feel free to open a new [feature request](https://github.com/DuendeSoftware/IdentityServer/discussions/new) if you are looking for a particular sample, and can't find it here.
+{{%children style="li" /%}}
+
+The source code for the samples are in our samples [repository]({{< param samples_base >}}).
+
+Feel free to open a new Bff or IdentityServer [issue ](https://github.com/DuendeSoftware/Support/issues/new/choose) if you are looking for a particular sample, and can't find it here.
+
+
