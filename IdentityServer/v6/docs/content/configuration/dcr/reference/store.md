@@ -1,5 +1,6 @@
 ---
 title: "Store"
+description: "DCR Reference"
 weight: 30
 ---
 

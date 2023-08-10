@@ -1,5 +1,6 @@
 ---
 title: "Server-side Sessions"
+description: "BFF"
 weight: 40
 ---
 

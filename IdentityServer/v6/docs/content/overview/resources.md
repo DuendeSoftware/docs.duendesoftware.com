@@ -1,5 +1,6 @@
 ---
 title: "Resources"
+description: "External Links"
 weight: 80
 ---
 

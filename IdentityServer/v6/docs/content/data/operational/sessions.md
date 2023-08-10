@@ -1,5 +1,6 @@
 ---
 title: "Server-Side Sessions"
+description: "Data Store"
 weight: 50
 ---
 

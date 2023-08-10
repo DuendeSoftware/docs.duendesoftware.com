@@ -1,5 +1,6 @@
 ---
 title: "Server-Side Session Store"
+description: "Reference"
 weight: 100
 ---
 
