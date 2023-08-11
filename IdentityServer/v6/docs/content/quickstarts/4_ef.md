@@ -44,7 +44,7 @@ IdentityServer's Entity Framework integration is provided by the
 from the *src/IdentityServer* directory to install it:
 
 ```console
-dotnet add package Duende.IdentityServer.EntityFramework
+dotnet add package Duende.IdentityServer.EntityFramework --version 6.3.1
 ```
 
 ### Install Microsoft.EntityFrameworkCore.Sqlite
