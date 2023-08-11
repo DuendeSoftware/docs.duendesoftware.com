@@ -1,4 +1,4 @@
-baseURL = "/identityserver/v6"
+baseURL = "https://docs.duendesoftware.com/identityserver/v6"
 languageCode = "en-us"
 title = "Duende IdentityServer Documentation"
 
