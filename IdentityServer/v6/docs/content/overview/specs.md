@@ -37,4 +37,4 @@ Duende IdentityServer implements the following specifications:
 * OAuth 2.0 Step-up Authentication Challenge Protocol ([RFC pending](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-step-up-authn-challenge))
 * Business Edition: OAuth 2.0 Dynamic Client Registration Protocol ([RFC 7591](https://www.rfc-editor.org/rfc/rfc7591.html))
 * Enterprise Edition: Resource Indicators for OAuth 2.0 ([RFC 8707](https://tools.ietf.org/html/rfc8707))
-* Enterprise Edition: OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer / DPoP ([Revision 16](https://datatracker.ietf.org/doc/draft-ietf-oauth-dpop/))
+* Enterprise Edition: OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer / DPoP ([RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449))
