@@ -40,11 +40,14 @@ with the EntityFramework integration already added: *dotnet new isef*.
 ## Configure IdentityServer
 ### Install Duende.IdentityServer.EntityFramework
 IdentityServer's Entity Framework integration is provided by the
-*Duende.IdentityServer.EntityFramework* NuGet package. Run the following command
-from the *src/IdentityServer* directory to install it:
+*Duende.IdentityServer.EntityFramework* NuGet package. Run the following
+commands from the *src/IdentityServer* directory to replace the
+*Duende.IdentityServer* package with it. Replacing packages prevents any
+dependency issues with version mismatches.
 
 ```console
-dotnet add package Duende.IdentityServer.EntityFramework --version 6.3.1
+dotnet remove package Duende.IdentityServer
+dotnet add package Duende.IdentityServer.EntityFramework
 ```
 
 ### Install Microsoft.EntityFrameworkCore.Sqlite
