@@ -13,7 +13,7 @@ First you need add a reference to the authentication handler to your API project
 <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 ```
 
-If all you care about, is making sure that an access token comes from your trusted IdentityServer, the following snippet shows the typical JWT validation configuration for ASP.NET Core:
+If all you care about is making sure that an access token comes from your trusted IdentityServer, the following snippet shows the typical JWT validation configuration for ASP.NET Core:
 
 ```cs
 public class Startup
