@@ -7,7 +7,7 @@ weight: 10
 On ASP.NET Core, you typically use the [JWT authentication handler](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer) for validating JWT bearer tokens.
 
 ## Validating a JWT token
-First you need add a reference to the authentication handler to your API project:
+First you need to add a reference to the authentication handler in your API project:
 
 ```xml
 <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
