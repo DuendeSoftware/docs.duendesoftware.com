@@ -28,7 +28,7 @@ This means you will need a page to prompt the user to logout.
 
 If a *logoutId* is passed to the login page and the returned *LogoutRequest*'s *ShowSignoutPrompt* is *false* then it is safe to skip the prompt. 
 This would occur when the logout page is requested due to a validated client initiated logout via the [end session endpoint]({{<ref "/reference/endpoints/end_session">}}).
-Your logout page process can continue as if they user submitted the post back to logout, in essence calling *SignOutAsync*.
+Your logout page process can continue as if the user submitted the post back to logout, in essence calling *SignOutAsync*.
 
 ### External Logins
 
