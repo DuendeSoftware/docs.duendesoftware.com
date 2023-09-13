@@ -142,7 +142,7 @@ If a client would now request a scope belonging to the *customer* resource, the 
 
 ### Setting a signing algorithm
 Your APIs might have certain requirements for the cryptographic algorithm used to sign the access tokens for that resource.
-An example could be regulatory requirements, or that you are starting to migration your system to higher security algorithms.
+An example could be regulatory requirements, or that you are starting to migrate your system to higher security algorithms.
 
 The following sample sets *PS256* as the required signing algorithm for the *invoices* API:
 
