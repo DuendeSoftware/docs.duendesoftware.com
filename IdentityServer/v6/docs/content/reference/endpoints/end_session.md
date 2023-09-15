@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 7
 ---
 
-The end session endpoint can be used to trigger single sign-out in the browser (see [spec](https://openid.net/specs/openid-connect-rpinitiated-1_0.html).
+The end session endpoint can be used to trigger single sign-out in the browser (see [spec](https://openid.net/specs/openid-connect-rpinitiated-1_0.html)).
 
 To use the end session endpoint a client application will redirect the user's browser to the end session URL.
 All applications that the user has logged into via the browser during the user's session can participate in the sign-out.
