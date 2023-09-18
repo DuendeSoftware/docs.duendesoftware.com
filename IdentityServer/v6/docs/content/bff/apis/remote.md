@@ -9,7 +9,7 @@ There are two different ways to set up Remote API proxying in Duende.BFF. This p
 
 ### Simple HTTP forwarder
 
-Duende.BFF's simple HTTP forwarder maps routes in the BFF to a remote API surface. It uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally, but is much simpler to configure than YRAP. The intent is to provide a developer-centric and simplified way to proxy requests from the BFF to remote APIs when more complex reverse proxy features are not needed.
+Duende.BFF's simple HTTP forwarder maps routes in the BFF to a remote API surface. It uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally, but is much simpler to configure than YARP. The intent is to provide a developer-centric and simplified way to proxy requests from the BFF to remote APIs when more complex reverse proxy features are not needed.
 
 These routes receive automatic anti-forgery protection and integrate with automatic token management.
 
