@@ -152,7 +152,7 @@ The above methods return various models.
 
 * ***RedirectUri***
     
-    The redirect URI back to the client (id available).
+    The redirect URI back to the client (if available).
 
 ### LogoutRequest
 
