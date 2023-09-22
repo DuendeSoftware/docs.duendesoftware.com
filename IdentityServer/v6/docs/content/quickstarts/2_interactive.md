@@ -360,7 +360,7 @@ contents of the cookie.
 
 As you can see, the cookie has two parts: the claims of the user and some
 metadata. This metadata also contains the original token that was issued by
-*IdentityServer*. Feel free to copy this token to [jwt.ms](https://jwt.ms>) to
+*IdentityServer*. Feel free to copy this token to [jwt.ms](https://jwt.ms) to
 inspect its content.
 
 ## Adding sign-out
