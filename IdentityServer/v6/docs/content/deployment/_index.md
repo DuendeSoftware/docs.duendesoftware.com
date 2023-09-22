@@ -22,4 +22,4 @@ Microsoft publishes extensive [advice and documentation](https://docs.microsoft.
 Our experience has been that these topics are very important. Some of our most common support requests are related to [Data Protection]({{<ref "./data_protection">}}) and [Load Balancing]({{<ref "./proxies">}}), so we strongly encourage you to review those pages, along with the rest of this chapter before deploying IdentityServer to production.
 {{% /notice %}}
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}
