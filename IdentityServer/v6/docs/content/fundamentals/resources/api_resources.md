@@ -55,7 +55,7 @@ Using the API resource grouping gives you the following additional features
 
 * support for the JWT *aud* claim. The value(s) of the audience claim will be the name of the API resource(s)
 * support for adding common user claims across all contained scopes
-* support for introspection by assigning a API secret to the resource
+* support for introspection by assigning an API secret to the resource
 * support for configuring the access token signing algorithm for the resource
 
 Let's have a look at some example access tokens for the above resource configuration.
@@ -106,7 +106,7 @@ Client requests: **manage**:
 ```
 
 ### Adding user claims
-You can specify that an access token for an API resource (regardless which scope is requested) should contain additional user claims, 
+You can specify that an access token for an API resource (regardless of which scope is requested) should contain additional user claims. 
 
 ```cs
 var customerResource = new ApiResource("customer", "Customer API")
@@ -122,7 +122,7 @@ var customerResource = new ApiResource("customer", "Customer API")
     }
 ```
 
-If a client would now request a scope belonging to the *customer* resource, the access token would contain the additional claims (if provided by your [profile service]({{< ref "/reference/services/profile_service" >}})).
+If a client now requested a scope belonging to the *customer* resource, the access token would contain the additional claims (if provided by your [profile service]({{< ref "/reference/services/profile_service" >}})).
 
 ```json
     {
