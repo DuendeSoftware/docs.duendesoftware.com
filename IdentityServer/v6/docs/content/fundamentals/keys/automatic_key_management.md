@@ -86,8 +86,8 @@ that should be encrypted at rest. By default, keys managed by Automatic Key
 Management are protected at rest using ASP.NET Core Data Protection. This is
 controlled with the *DataProtectKeys* flag, which is on by default. We recommend
 leaving this flag on unless you are using a custom *ISigningKeyStore* to store
-you keys in a secure location that will ensure keys are encrypted at rest. For
-example, if you implement the *ISigningKeyStore* to store you keys in Azure Key
+your keys in a secure location that will ensure keys are encrypted at rest. For
+example, if you implement the *ISigningKeyStore* to store your keys in Azure Key
 Vault, you could safely disabled *DataProtectKeys*, relying on Azure Key Vault
 to encrypt your signing keys at rest.
 
