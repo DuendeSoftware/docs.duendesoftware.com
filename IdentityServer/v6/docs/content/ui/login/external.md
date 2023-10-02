@@ -127,7 +127,7 @@ For specialized scenarios, you can also short-circuit the external cookie mechan
 On the callback page your typical tasks are:
 
 * Inspect the identity returned by the external provider.
-* Make a decision how you want to deal with that user. This might be different based on the fact if this is a new user or a returning user.
+* Make a decision how you want to deal with that user. This might be different based on if this is a new user or a returning user.
 * New users might need additional steps and UI before they are allowed in. Typically this involves creating a new internal user account that is linked to the user from the external provider.
 * Store the external claims that you want to keep.
 * Delete the temporary cookie.
@@ -188,13 +188,13 @@ await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticat
 return Redirect(returnUrl);
 ```
 
-Typically, the *sub* value used to login the user would be the user's unique id from your local user database.
+Typically, the *sub* value used to log the user in would be the user's unique id from your local user database.
 
 ## State, URL length, and ISecureDataFormat
 
 When redirecting to an external provider for sign-in, frequently state from the client application must be round-tripped.
 This means that state is captured prior to leaving the client and preserved until the user has returned to the client application.
-Many protocols, including OpenID Connect, allow passing some sort of state as a parameter as part of the request, and the identity provider will return that state on the response.
+Many protocols, including OpenID Connect, allow passing some sort of state as a parameter as part of the request, and the identity provider will return that state in the response.
 The OpenID Connect authentication handler provided by ASP.NET Core utilizes this feature of the protocol, and that is how it implements the *returnUrl* feature mentioned above.
 
 The problem with storing state in a request parameter is that the request URL can get too large (over the common limit of 2000 characters).
