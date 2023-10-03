@@ -7,7 +7,7 @@ weight: 80
 
 Use an implementation of this interface to handle [extension grants]({{< ref "/tokens/extension_grants" >}}).
 
-```cs
+```
 public interface IExtensionGrantValidator
 {
     /// <summary>
@@ -37,6 +37,6 @@ public interface IExtensionGrantValidator
 
 The instance of the extension grant validator gets registered with:
 
-```cs
+```
 builder.AddExtensionGrantValidator<MyValidator>();
 ```

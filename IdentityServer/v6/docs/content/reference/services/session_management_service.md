@@ -7,7 +7,7 @@ weight: 57
 
 When using [server-side sessions]({{<ref "/ui/server_side_sessions">}}), the *ISessionManagementService* provides an administrative feature to query those sessions and terminate those sessions (including associated tokens, consents, and triggering back-channel logout to the clients).
 
-```cs
+```
 /// <summary>
 /// Session management service
 /// </summary>
@@ -27,7 +27,7 @@ public interface ISessionManagementService
 
 *QuerySessionsAsync* allows for returning paged results of *UserSession* data based on the optional *SessionQuery* filter.
 
-```cs
+```
 /// <summary>
 /// Results from querying user sessions from session management service.
 /// </summary>
@@ -77,7 +77,7 @@ public class UserSession
 
 *RemoveSessionsAsync* will terminate server-side sessions based on *SubjectId* and/or *SessionId*, and allow for fine-grained flags for what to revoke and/or notify.
 
-```cs
+```
 /// <summary>
 /// Models the information to remove a user's session data.
 /// </summary>

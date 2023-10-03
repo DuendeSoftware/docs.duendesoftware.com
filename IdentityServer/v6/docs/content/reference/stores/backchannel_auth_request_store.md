@@ -7,7 +7,7 @@ weight: 80
 
 Used to store backchannel login requests (for [CIBA]({{< ref "/ui/ciba">}})).
 
-```cs
+```
     /// <summary>
     /// Interface for the backchannel authentication request store
     /// </summary>
@@ -47,7 +47,7 @@ Used to store backchannel login requests (for [CIBA]({{< ref "/ui/ciba">}})).
 
 #### BackChannelAuthenticationRequest
 
-```cs
+```
     /// <summary>
     /// Models a backchannel authentication request.
     /// </summary>

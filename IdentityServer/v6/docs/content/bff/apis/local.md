@@ -21,7 +21,7 @@ Alternatively, you can make the data available as a service and make HTTP reques
 Your local endpoints can leverage services like the HTTP client factory and Duende.BFF [token management]({{< ref "/bff/tokens" >}}) to make the outgoing calls. The following is a simplified example showing how local endpoints can obtain managed access tokens and use them to make requests to remote APIs.
 
 
-```cs
+```
 [Route("myApi")]
 public class MyApiController : ControllerBase
 {
@@ -82,7 +82,7 @@ Duende.BFF can automate both the pre-processing step of requiring the custom ant
 #### Add Middleware
 Add the BFF middleware to the pipeline by calling *UseBFF*. Note that the  middleware must be placed before the authorization middleware, but after routing.
 
-```csharp
+```
 public void Configure(IApplicationBuilder app)
 {
     // rest omitted
@@ -102,7 +102,7 @@ public void Configure(IApplicationBuilder app)
 Endpoints that require the pre and post processing described above must be decorated with a call to *AsBffApiEndpoint()*.
 
 For minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
-```csharp
+```
 endpoints.MapPost("/foo", context => { ... })
     .RequireAuthorization()  // no anonymous access
     .AsBffApiEndpoint();     // BFF pre/post processing
@@ -110,14 +110,14 @@ endpoints.MapPost("/foo", context => { ... })
 
 
 For MVC controllers, you can similarly apply BFF pre- and post-processing to controller actions when they are mapped.
-```csharp
+```
 endpoints.MapControllers()
     .RequireAuthorization()  // no anonymous access
     .AsBffApiEndpoint();     // BFF pre/post processing
 ```
 
 Alternatively, you can apply the *[BffApi]* attribute directly to the controller or action.
-```csharp
+```
 [Route("myApi")]
 [BffApi]
 public class MyApiController : ControllerBase
@@ -132,7 +132,7 @@ However, if you are defending against CSRF attacks with some other mechanism, yo
 
 For *version 1.x*, set the *requireAntiForgeryCheck* parameter to *false* when adding the endpoint. For example:
 
-```csharp
+```
 app.UseEndpoints(endpoints =>
 {
     // MVC controllers
@@ -153,7 +153,7 @@ app.UseEndpoints(endpoints =>
 
 On MVC controllers and actions you can set the *RequireAntiForgeryCheck* as a flag in the *BffApiAttribute*, like this:
 
-```csharp
+```
 [Route("sample")]
 // WARNING: Disabling antiforgery protection may make
 // your APIs vulnerable to CSRF attacks
@@ -165,7 +165,7 @@ public class SampleApiController : ControllerBase
 
 In *version 2.x*, use the *SkipAntiforgery* fluent API when adding the endpoint. For example:
 
-```csharp
+```
 app.UseEndpoints(endpoints =>
 {
     // MVC controllers
@@ -188,7 +188,7 @@ app.UseEndpoints(endpoints =>
 
 MVC controllers and actions can use the *BffApiSkipAntiforgeryAttribute* (which is independent of the *BffApiAttribute*), like this:
 
-```csharp
+```
 [Route("sample")]
 // WARNING: Disabling antiforgery protection may make
 // your APIs vulnerable to CSRF attacks

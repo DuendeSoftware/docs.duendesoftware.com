@@ -76,7 +76,7 @@ To use these stores, replace the existing calls to *AddInMemoryClients*,
 *ConfigureServices* method in *src/IdentityServer/HostingExtensions.cs* with
 *AddConfigurationStore* and *AddOperationalStore*, like this:
 
-```cs
+```
 public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
     var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
@@ -142,7 +142,7 @@ configuration, it shuts *IdentityServer* down by throwing a
 therefore stop *IdentityServer*. Since it is expected, you do not need to log it
 as a fatal error. Update the error logging code in
 *src/IdentityServer/Program.cs* as follows:
-```csharp
+```
 catch (Exception ex) when (
     // https://github.com/dotnet/runtime/issues/60600
     ex.GetType().Name is not "StopTheHostException"
@@ -191,7 +191,7 @@ maintenance strategy that is appropriate for your architecture.
 In *src/IdentityServer/HostingExtensions.cs*, add this method to initialize the
 database:
 
-```cs
+```
 private static void InitializeDatabase(IApplicationBuilder app)
 {
     using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
@@ -232,7 +232,7 @@ private static void InitializeDatabase(IApplicationBuilder app)
 
 Call *InitializeDatabase* from the *ConfigurePipeline* method:
 
-```cs
+```
 public static WebApplication ConfigurePipeline(this WebApplication app)
 { 
     app.UseSerilogRequestLogging();

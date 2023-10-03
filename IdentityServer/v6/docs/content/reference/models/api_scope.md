@@ -63,6 +63,6 @@ The *AddInMemoryApiResource* extension method also supports adding clients from 
 
 Then pass the configuration section to the *AddInMemoryApiScopes* method:
 
-```cs
+```
 builder.AddInMemoryApiScopes(configuration.GetSection("IdentityServer:ApiScopes"))
 ```

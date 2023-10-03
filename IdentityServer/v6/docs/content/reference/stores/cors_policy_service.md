@@ -7,7 +7,7 @@ weight: 36
 
 Used to determine if CORS requests are allowed to certain protocol endpoints.
 
-```cs
+```
     /// <summary>
     /// Service that determines if CORS is allowed.
     /// </summary>

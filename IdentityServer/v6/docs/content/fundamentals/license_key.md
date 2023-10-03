@@ -22,7 +22,7 @@ The *LicenseKey* is one such setting.
 The contents of the license key file is text, and so that is the value to assign to the *LicenseKey* property.
 For example:
 
-```csharp
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer(options =>

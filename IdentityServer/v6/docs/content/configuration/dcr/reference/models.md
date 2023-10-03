@@ -7,7 +7,7 @@ weight: 50
 ## DynamicClientRegistrationRequest
 Represents a dynamic client registration request. The parameters that are supported include a subset of the parameters [defined by IANA](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#client-metadata), and custom properties needed by IdentityServer.
 
-```csharp
+```
 public class DynamicClientRegistrationRequest
 ```
 
@@ -57,7 +57,7 @@ public class DynamicClientRegistrationRequest
 ## Dynamic Client Registration Response
 Represents the response to a successful dynamic client registration request. This class extends the registration request by adding additional properties that are generated server side and not set by the client.
 
-```csharp
+```
 public class DynamicClientRegistrationResponse : DynamicClientRegistrationRequest, IDynamicClientRegistrationResponse
 ```
 
@@ -75,7 +75,7 @@ the original DCR request, the client model that is built up through validation
 and processing, the caller who made the DCR request, and other contextual
 information.
 
-```csharp
+```
 public class DynamicClientRegistrationContext
 ```
 
@@ -92,7 +92,7 @@ Represents an error that occurred during validation of a dynamic client
 registration request. This class implements the appropriate [marker interfaces](#marker-interfaces) so
 that it can be returned from various points in the validator or processor.
 
-```csharp
+```
 public class DynamicClientRegistrationValidationError : IStepResult, IDynamicClientRegistrationResponse, IDynamicClientRegistrationValidationResult
 ```
 
@@ -140,13 +140,13 @@ conveniently construct a success or failure from a step wrapped in a task.
 ## DynamicClientRegistrationValidatedRequest
 Represents a successfully validated dynamic client registration request.
 
-```csharp
+```
 public class DynamicClientRegistrationValidatedRequest : DynamicClientRegistrationValidationResult
 ```
 
 ## SuccessfulStep
 Represents a successful validation step.
 
-```csharp
+```
 public class SuccessfulStep : IStepResult
 ```

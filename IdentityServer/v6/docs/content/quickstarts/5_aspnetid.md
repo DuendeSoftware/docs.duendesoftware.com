@@ -106,7 +106,7 @@ To keep the same clients and API working as the prior quickstarts, we need to
 copy over the configuration data from the old IdentityServer project into this
 one. Do that now, and afterwards *Config.cs* should look like this:
 
-```cs
+```
 public static class Config
 {
     public static IEnumerable<IdentityResource> IdentityResources =>
@@ -217,7 +217,7 @@ Next you will add a custom property to your user model and include it as a
 claim when the appropriate Identity Resource is requested.
 
 First, add a *FavoriteColor* property to the *ApplicationUser* class.
-```csharp
+```
 public class ApplicationUser : IdentityUser
 {
     public string FavoriteColor { get; set; }
@@ -226,7 +226,7 @@ public class ApplicationUser : IdentityUser
 
 Then, set the FavoriteColor of one of your test users in *SeedData.cs*
 
-```csharp
+```
 alice = new ApplicationUser
 {
     UserName = "alice",
@@ -240,7 +240,7 @@ In the same file, add code to recreate the database when you re-seed the data,
 by calling *EnsureDeleted* just before *Migrate*:
 
 
-```csharp
+```
 var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 context.Database.EnsureDeleted();
 context.Database.Migrate();
@@ -270,7 +270,7 @@ data as a source of claims data. [See here]({{< ref
 service.
 
 Create a new class called *CustomProfileService* and add the following code to it:
-```csharp
+```
 using Duende.IdentityServer.AspNetIdentity;
 using Duende.IdentityServer.Models;
 using IdentityServerAspNetIdentity.Models;
@@ -301,7 +301,7 @@ namespace IdentityServerAspNetIdentity
 ```
 
 Register the *CustomProfileService* in *HostingExtensions.cs*:
-```csharp
+```
 builder.Services
     .AddIdentityServer(options =>
     {
@@ -320,7 +320,7 @@ favorite_color, and include that claim in your client's configuration.
 Add a new *IdentityResource* in *src/IdentityServerAspNetIdentity/Config.cs*
 that will map the color scope onto the favorite_color claim type:
 
-```csharp
+```
 public static IEnumerable<IdentityResource> IdentityResources =>
     new IdentityResource[]
     {
@@ -331,7 +331,7 @@ public static IEnumerable<IdentityResource> IdentityResources =>
 ```
 
 Allow the web client to request the color scope (also in *Config.cs*):
-```csharp
+```
 new Client
 {
     ClientId = "web",
@@ -351,7 +351,7 @@ Finally, update the *WebClient* project so that it will request the color scope.
 In its *src/WebClient/Program.cs* file, add the color scope to the requested
 scopes, and add a claim action to map the favorite_color into the principal:
 
-```csharp
+```
 .AddOpenIdConnect("oidc", options =>
 {
     // ...

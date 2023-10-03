@@ -14,7 +14,7 @@ The [ISigningKeyStore]({{<ref "/reference/stores/signing_key_store">}}) is that 
 To register a custom signing key store in the DI container, there is a *AddSigningKeyStore* helper on the *IIdentityServerBuilder*. 
 For example:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer()

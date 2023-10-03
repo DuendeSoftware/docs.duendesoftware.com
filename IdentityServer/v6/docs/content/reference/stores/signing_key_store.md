@@ -7,7 +7,7 @@ weight: 90
 
 Used to dynamically load client configuration.
 
-```cs
+```
     /// <summary>
     /// Interface to model storage of serialized keys.
     /// </summary>
@@ -37,7 +37,7 @@ Used to dynamically load client configuration.
 
 #### SerializedKey
 
-```cs
+```
     /// <summary>
     /// Serialized key.
     /// </summary>

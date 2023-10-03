@@ -74,7 +74,7 @@ represent identity data like user id, name or email address rather than APIs.
 Add support for the standard *openid* (subject id) and *profile* (first name,
 last name, etc) scopes by declaring them in *src/IdentityServer/Config.cs*:
 
-```cs
+```
 public static IEnumerable<IdentityResource> IdentityResources =>
     new List<IdentityResource>
     {
@@ -86,7 +86,7 @@ public static IEnumerable<IdentityResource> IdentityResources =>
 Then register the identity resources in
 *src/IdentityServer/HostingExtensions.cs*:
 
-```cs
+```
 builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
     .AddInMemoryApiScopes(Config.ApiScopes)
@@ -105,7 +105,7 @@ Connect
 The sample UI also comes with an in-memory "user database". You can enable this
 by calling *AddTestUsers* in *src/IdentityServer/HostingExtensions.cs*:
 
-```cs
+```
 builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
     .AddInMemoryApiScopes(Config.ApiScopes)
@@ -130,7 +130,7 @@ are always interactive, we need to add some redirect URLs to our configuration.
 
 The *Clients* list in *src/IdentityServer/Config.cs* should look like this:
 
-```cs
+```
 public static IEnumerable<Client> Clients =>
     new List<Client>
     {
@@ -201,7 +201,7 @@ dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 ### Configure Authentication Services
 Then add the following to *ConfigureServices* in *src/WebClient/Program.cs*:
 
-```cs
+```
 using System.IdentityModel.Tokens.Jwt;
 
 // ...
@@ -273,7 +273,7 @@ Now add *UseAuthentication* to the ASP.NET pipeline in
 *src/WebClient/Program.cs*. Also chain a call to *RequireAuthorization* onto
 *MapRazorPages* to disable anonymous access for the entire application. 
 
-```cs
+```
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -296,7 +296,7 @@ directory basis.
 Modify *src/WebClient/Pages/Index.cshtml* to display the claims of the user and
 the cookie properties:
 
-```cs
+```
 @page
 @model IndexModel
 
@@ -384,7 +384,7 @@ dotnet new page -n Signout
 Update the new page's model (*src/WebClient/Pages/Signout.cshtml.cs*) with the
 following code:
 
-```cs
+```
 public class SignoutModel : PageModel
 {
     public IActionResult OnGet()
@@ -426,7 +426,7 @@ userinfo endpoint by specifying scopes that the client application needs to
 access and setting the *GetClaimsFromUserInfoEndpoint* option. Add the following
 to *ConfigureServices* in *src/WebClient/Program.cs*:
 
-```cs
+```
 .AddOpenIdConnect("oidc", options =>
 {
     // ...
@@ -459,7 +459,7 @@ To add more claims to the identity:
   get the associated *UserClaims*. For example, you could add an
   *IdentityResource* named "verification" which would include the *email* and
   *email_verified* claims.
-  ```csharp
+  ```
     public static IEnumerable<IdentityResource> IdentityResources =>
     new List<IdentityResource>
     { 
@@ -480,7 +480,7 @@ To add more claims to the identity:
 * Give the client access to the resource via the *AllowedScopes* property on the
   client configuration in *src/IdentityServer/Config.cs*. The string value in
   *AllowedScopes* must match the *Name* property of the resource.
-  ```csharp
+  ```
     new Client
     {
         ClientId = "web",
@@ -497,7 +497,7 @@ To add more claims to the identity:
   Connect handler configuration in *src/WebClient/Program.cs*, and add a
   [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-6.0)
   to map the new claim returned from the userinfo endpoint onto a user claim.
-  ```csharp
+  ```
     .AddOpenIdConnect("oidc", options =>
     {
         // ...
@@ -542,7 +542,7 @@ IdentityServer specific option.
 Add the following to *ConfigureServices* in
 *src/IdentityServer/HostingExtensions.cs*:
 
-```cs
+```
 builder.Services.AddAuthentication()
     .AddGoogle("Google", options =>
     {
@@ -588,7 +588,7 @@ IdentityServer can be added as an additional external provider.
 
 Register and configure the services for the OpenId Connect handler in
 *src/IdentityServer/HostingExtensions.cs*:
-```cs
+```
 builder.Services.AddAuthentication()
     .AddGoogle("Google", options => { /* ... */ })
     .AddOpenIdConnect("oidc", "Demo IdentityServer", options =>

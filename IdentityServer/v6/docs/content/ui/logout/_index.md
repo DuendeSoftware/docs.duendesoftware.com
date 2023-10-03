@@ -16,14 +16,14 @@ This is a potentially complicated process and involves these steps:
 
 When IdentityServer needs to show the logout page, it redirects the user to a configurable
 *LogoutUrl*.
-```cs
+```
 builder.Services.AddIdentityServer(opt => {
     opt.UserInteraction.LogoutUrl = "/path/to/logout";
 })
 ```
 If no *LogoutUrl* is set, IdentityServer will infer it from the *LogoutPath* of your Cookie
 Authentication Handler. For example:
-```cs
+```
 builder.Services.AddAuthentication()
     .AddCookie("cookie-handler-with-custom-path", options => 
     {
@@ -32,7 +32,7 @@ builder.Services.AddAuthentication()
 ```
 
 If you are using ASP.NET Identity, configure its cookie authentication handler like this:
-```cs
+```
 builder.Services
     .AddIdentityServer()
     .AddAspNetIdentity<ApplicationUser>();

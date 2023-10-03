@@ -19,7 +19,7 @@ Some of the logic is boilerplate:
 
 Here's a simple implementation of the above steps:
 
-```cs
+```
 public class TokenExchangeGrantValidator : IExtensionGrantValidator
 {
     private readonly ITokenValidator _validator;
@@ -81,13 +81,13 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
 
 You then register your grant validator with DI:
 
-```cs
+```
 builder.AddExtensionGrantValidator<TokenExchangeGrantValidator>();
 ```
 
 And configure your client to be able to use it:
 
-```cs
+```
 client.AllowedGrantTypes = { OidcConstants.GrantTypes.TokenExchange };
 ```
 
@@ -116,7 +116,7 @@ In the impersonation use case, API 1 doing the token exchange becomes "invisible
 
 Add the following code to the above validator to create an impersonation response:
 
-```cs
+```
 // set token client_id to original id
 context.Request.ClientId = clientId;
 
@@ -146,7 +146,7 @@ For API 2 it still looks like that the front-end is making the call, but by insp
 
 The following code adds the *act* claim to the response:
 
-```cs
+```
 // set token client_id to original id
 context.Request.ClientId = clientId;
 
@@ -168,7 +168,7 @@ context.Result = new GrantValidationResult(
 
 To emit the *act* claim into outgoing tokens, your [profile service]({{< ref "/reference/services/profile_service" >}}) must know about it. The following simple profile service emits the *act* claim if the token request is in the context of a token exchange operation:
 
-```cs
+```
 public class ProfileService : IProfileService
 {
     public override async Task GetProfileDataAsync(ProfileDataRequestContext context)

@@ -8,7 +8,7 @@ weight: 40
 The *IDynamicClientRegistrationResponseGenerator* interface defines the contract
 for a service that generates dynamic client registration responses.
 
-```csharp
+```
 public interface IDynamicClientRegistrationResponseGenerator
 ```
 

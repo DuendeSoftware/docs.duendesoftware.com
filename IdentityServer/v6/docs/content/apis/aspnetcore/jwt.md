@@ -15,7 +15,7 @@ First you need to add a reference to the authentication handler in your API proj
 
 If all you care about is making sure that an access token comes from your trusted IdentityServer, the following snippet shows the typical JWT validation configuration for ASP.NET Core:
 
-```cs
+```
 public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
@@ -65,7 +65,7 @@ If you designed your APIs around the concept of [API resources]({{< ref "/fundam
 
 If you want to express in your API, that only access tokens for the *api1* audience (aka API resource name) are accepted, change the above code snippet to:
 
-```cs
+```
 public class Startup
 {
     public void ConfigureServices(IServiceCollection services)

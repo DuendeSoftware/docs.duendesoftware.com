@@ -37,7 +37,7 @@ The BFF services provide the logic to invoke the authentication plumbing from th
 
 Add the following snippet to your *Program.cs* above the call to *builder.Build();*
 
-```cs
+```
 builder.Services.AddBff();
 
 builder.Services.AddAuthentication(options =>
@@ -74,7 +74,7 @@ builder.Services.AddAuthentication(options =>
 
 The last step is to add the required middleware for authentication, authorization and BFF session management. Add the following snippet after the call to *UseRouting*:
 
-```cs
+```
 app.UseAuthentication();
 app.UseBff();
 app.UseAuthorization();
@@ -99,7 +99,7 @@ A couple of steps are necessary to add the security and identity plumbing to a B
 
 **b)** Add a using statement to *_Imports.razor* to bring the above package in scope:
 
-```cs
+```
 @using Microsoft.AspNetCore.Components.Authorization
 ```
 
@@ -166,7 +166,7 @@ The BFF library has a server-side component that allows querying the current aut
 
 Add a file with the following content:
 
-```cs
+```
 using System.Net;
 using System.Net.Http.Json;
 using System.Security.Claims;
@@ -255,7 +255,7 @@ public class BffAuthenticationStateProvider
 
 ..and register it in the client's *Program.cs*:
 
-```cs
+```
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, BffAuthenticationStateProvider>();
 ```
@@ -271,7 +271,7 @@ This is due to the antiforgery protection that is applied automatically to the m
 
 This can be easily accomplished by a delegating handler that can be plugged into the default HTTP client used by the Blazor frontend. Let's first add the handler:
 
-```cs
+```
 public class AntiforgeryHandler : DelegatingHandler
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -284,7 +284,7 @@ public class AntiforgeryHandler : DelegatingHandler
 
 ..and register it in the client's *Program.cs* (overriding the standard HTTP client configuration; requires package Microsoft.Extensions.Http):
 
-```cs
+```
 // HTTP client configuration
 builder.Services.AddTransient<AntiforgeryHandler>();
 
@@ -326,7 +326,7 @@ The standard Blazor template contains an API endpoint (*WeatherForecastControlle
 
 The standard way in ASP.NET Core would be to add an authorization requirement to the endpoint, either on the controller/action or via the endpoint routing, e.g.:
 
-```cs
+```
 app.MapControllers()
         .RequireAuthorization();
 ```
@@ -341,7 +341,7 @@ This happens because the ASP.NET Core authentication plumbing is triggering a re
 
 This is one of the features of the BFF middleware, but you need to mark the endpoint as a BFF API endpoint for that to take effect:
 
-```cs
+```
 app.MapControllers()
         .RequireAuthorization()
         .AsBffApiEndpoint();
@@ -368,7 +368,7 @@ In essence a BFF client is "just" a normal authorization code flow client:
 
 Below is a typical code snippet for the client definition:
 
-```cs
+```
 var bffClient = new Client
 {
     ClientId = "bff",

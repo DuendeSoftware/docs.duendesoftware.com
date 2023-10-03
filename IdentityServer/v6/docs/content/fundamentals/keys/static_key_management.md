@@ -16,7 +16,7 @@ The automatic key management feature can be disabled by setting the *Enabled*
 flag to *false* on the the *KeyManagement* property of
 [*IdentityServerOptions*]({{< ref "/reference/options#key-management" >}}):
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {
     options.KeyManagement.Enabled = false;
@@ -36,7 +36,7 @@ include:
 Signing keys are added with the [*AddSigningCredential*]({{< ref
 "/reference/di#signing-keys" >}}) configuration method:
 
-```cs
+```
 var builder = services.AddIdentityServer();
 var key = LoadKeyFromVault(); // (Your code here)
 builder.AddSigningCredential(key, SecurityAlgorithms.RsaSha256);
@@ -99,7 +99,7 @@ all the applications and APIs to update their caches without any interruption in
 service. Configure IdentityServer for phase 1 by registering the new
 key as a validation key.
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = false;
@@ -127,7 +127,7 @@ key of the old key so that tokens that were signed with that key can continue to
 be validated. The IdentityServer configuration change needed is simply to swap
 the signing credential and validation key. 
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = false;
@@ -149,7 +149,7 @@ defaults to 1 hour, though it is configurable.
 Once enough time has passed that there are no unexpired tokens signed with the
 old key, it is safe to completely remove the old key. 
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = false;

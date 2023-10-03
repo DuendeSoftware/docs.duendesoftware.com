@@ -28,7 +28,7 @@ The *DynamicClientRegistrationRequestProcessor* is the default implementation of
 of Dynamic Client Registration request processing, we recommend that you extend this
 class and override the appropriate virtual methods.
 
-```csharp
+```
 public class DynamicClientRegistrationRequestProcessor : IDynamicClientRegistrationRequestProcessor
 ```
 

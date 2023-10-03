@@ -145,7 +145,7 @@ one-time use semantics are appropriate for the grant.
 
 #### PersistedGrantFilter
 
-```cs
+```
     /// <summary>
     /// Represents a filter used when accessing the persisted grants store. 
     /// Setting multiple properties is interpreted as a logical 'AND' to further filter the query.
@@ -189,7 +189,7 @@ one-time use semantics are appropriate for the grant.
 
 The types of persisted grants are defined by the `IdentityServerConstants.PersistedGrantTypes` constants:
 
-```cs
+```
     public static class PersistedGrantTypes
     {
         public const string AuthorizationCode = "authorization_code";

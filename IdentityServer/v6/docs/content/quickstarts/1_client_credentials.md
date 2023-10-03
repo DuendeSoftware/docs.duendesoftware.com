@@ -116,7 +116,8 @@ Scope definitions can be loaded in many ways. This quickstart shows how to use a
 template at *src/IdentityServer/Config.cs*. Open it and add an *ApiScope* to the
 *ApiScopes* property:
 
-```csharp
+
+```
 public static IEnumerable<ApiScope> ApiScopes =>
     new List<ApiScope>
     {
@@ -145,7 +146,7 @@ authenticate with IdentityServer using a client secret.
 
 Add this client definition to *Config.cs*:
 
-```cs
+```
 public static IEnumerable<Client> Clients =>
     new List<Client>
     {
@@ -187,7 +188,7 @@ the scopes and clients. You can take a look to see how it is done. Note that the
 template adds a few things that are not used in this quickstart. Here's the
 minimal ConfigureServices method that is needed:
 
-```csharp
+```
 public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
     builder.Services.AddIdentityServer()
@@ -260,7 +261,7 @@ Now add JWT Bearer authentication services to the Service Collection to allow
 for dependency injection (DI), and configure *Bearer* as the default 
 [Authentication Scheme](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-6.0#authentication-scheme).
 
-```csharp
+```
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -283,7 +284,7 @@ more in-depth discussion.
 {{% /notice %}}
 
 Add authentication middleware to the pipeline immediately before authorization:
-```csharp
+```
 app.UseAuthentication();
 app.UseAuthorization();
 ```
@@ -295,7 +296,7 @@ endpoint cannot be accessed by anonymous clients.
 ### Add a controller
 Add a new class called *IdentityController* in *src/Api/Controllers*:
 
-```csharp
+```
 [Route("identity")]
 [Authorize]
 public class IdentityController : ControllerBase
@@ -366,7 +367,7 @@ way you only need to know the base address of IdentityServer - the actual
 endpoint addresses can be read from the metadata. Add the following to the
 client's Program.cs in the *src/Client/Program.cs* directory:
 
-```cs
+```
 // discover endpoints from metadata
 var client = new HttpClient();
 var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
@@ -390,7 +391,7 @@ only needs to be done once.
 Next you can use the information from the discovery document to request a token
 from *IdentityServer* to access *api1*:
 
-```cs
+```
 // request token
 var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
 {
@@ -421,7 +422,7 @@ inspect the raw token.
 To send the access token to the API you typically use the HTTP Authorization
 header. This is done using the *SetBearerToken* extension method:
 
-```cs
+```
 // call api
 var apiClient = new HttpClient();
 apiClient.SetBearerToken(tokenResponse.AccessToken);
@@ -477,7 +478,7 @@ configured IdentityServer to allow this access by [including it in the
 allowedScopes property](#define-client). Add the following to the
 *ConfigureServices* method in the API's *Program.cs* file:
 
-```cs
+```
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ApiScope", policy =>
@@ -497,7 +498,7 @@ You can now enforce this policy at various levels, e.g.:
 Typically you set the policy for all controllers where they are mapped in
 *src/Api/Program.cs*:
 
-```cs
+```
 app.MapControllers().RequireAuthorization("ApiScope");
 ```
 

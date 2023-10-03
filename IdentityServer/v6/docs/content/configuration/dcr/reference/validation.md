@@ -20,7 +20,7 @@ itself.
 
 Validates a dynamic client registration request.
 
-```csharp
+```
 public Task<IDynamicClientRegistrationValidationResult> ValidateAsync(
     DynamicClientRegistrationContext context)
 ```
@@ -35,7 +35,7 @@ A task that returns an [*IDynamicClientRegistrationValidationResult*]({{< ref ".
 
 ## DynamicClientRegistrationValidator
 
-```csharp
+```
 public class DynamicClientRegistrationValidator : IDynamicClientRegistrationValidator
 ```
 

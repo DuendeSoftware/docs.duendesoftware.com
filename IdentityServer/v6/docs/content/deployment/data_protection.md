@@ -10,7 +10,7 @@ In local development, ASP.NET automatically creates data protection keys, but in
 
 A typical IdentityServer implementation should include data protection configuration code, like this:
 
-```cs
+```
 builder.Services.AddDataProtection()
   // Choose an extension method for key persistence, such as 
   // PersistKeysToFileSystem, PersistKeysToDbContext, 

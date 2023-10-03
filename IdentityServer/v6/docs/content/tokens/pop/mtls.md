@@ -28,7 +28,7 @@ In this scenario, the client would create an X.509 certificate on the fly, and u
 #### .NET Client
 In .NET it is straight-forward to create an X.509 certificate on the fly and use it to open a TLS connection.
 
-```cs
+```
 static X509Certificate2 CreateClientCertificate(string name)
 {
     X500DistinguishedName distinguishedName = new X500DistinguishedName($"CN={name}");
@@ -59,7 +59,7 @@ static X509Certificate2 CreateClientCertificate(string name)
 
 Then use this client certificate on the TLS channel to request the token:
 
-```cs
+```
 static async Task<TokenResponse> RequestTokenAsync()
 {
     var client = new HttpClient(GetHandler(ClientCertificate));
@@ -91,7 +91,7 @@ static SocketsHttpHandler GetHandler(X509Certificate2 certificate)
 #### Enabling support in your IdentityServer
 The last step is to enable that feature in the options:
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {
     // other settings

@@ -13,7 +13,7 @@ This API accepts a *ClaimsPrincipal* which contains claims that describe the use
 IdentityServer requires a special claim called *sub* whose value uniquely identifies the user.
 On your login page, this would be the code to establish the authentication session and issue the cookie:
 
-```csharp
+```
 var claims = new Claim[] {
     new Claim("sub", "unique_id_for_your_user")
 };
@@ -50,7 +50,7 @@ The claims are:
 
 While you can create the *ClaimsPrincipal* yourself, you can alternatively use IdentityServer extension methods and the *IdentityServerUser* class to make this easier:
 
-```cs
+```
 var user = new IdentityServerUser("unique_id_for_your_user")
 {
     DisplayName = user.Username
@@ -66,7 +66,7 @@ The scheme that the handler in the authentication system is identified by is fro
 
 When configuring IdentityServer, the [AuthenticationOptions]({{<ref "/reference/options#Authentication">}}) expose some settings to control the cookie (e.g. expiration and sliding). For example:
 
-```csharp
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer(options =>
@@ -84,7 +84,7 @@ In addition to the authentication cookie, IdentityServer will issue an additiona
 If you require more control over the cookie authentication handler you can register your own cookie handler.
 You can then configure IdentityServer to use your cookie handler by setting the *CookieAuthenticationScheme* on the [AuthenticationOptions]({{<ref "/reference/options#Authentication">}}). For example:
 
-```csharp
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddAuthentication()
@@ -101,7 +101,7 @@ public void ConfigureServices(IServiceCollection services)
 
 If the *CookieAuthenticationScheme* is not set, the *DefaultAuthenticationScheme* configured for ASP.NET Core will be used instead. Note that the *AddAuthentication* call that sets the default can come after the *AddIdentityServer* call. For example:
 
-```csharp
+```
 public void ConfigureServices(IServiceCollection services)
 {
     // No cookie authentication scheme is set here. 

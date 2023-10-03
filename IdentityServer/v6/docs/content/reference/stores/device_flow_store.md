@@ -7,7 +7,7 @@ weight: 43
 
 Models storage of grants for the device flow.
 
-```cs
+```
     /// <summary>
     /// Interface for the device flow store
     /// </summary>
@@ -52,7 +52,7 @@ Models storage of grants for the device flow.
 
 #### DeviceCode
 
-```cs
+```
     /// <summary>
     /// Represents data needed for device flow.
     /// </summary>

@@ -97,7 +97,7 @@ Cache-Control: no-store
 ## .NET client library
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code.
 
-```cs
+```
 using IdentityModel.Client;
 
 var client = new HttpClient();
@@ -114,7 +114,7 @@ var cibaResponse = await client.RequestBackchannelAuthenticationAsync(new Backch
 
 And with a successful response, it can be used to poll the token endpoint:
 
-```cs
+```
 while (true)
 {
     var response = await client.RequestBackchannelAuthenticationTokenAsync(new BackchannelAuthenticationTokenRequest

@@ -29,7 +29,7 @@ POST /connect/token
 ### .NET client library
 On .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) refresh tokens, e.g.:
 
-```cs
+```
 using IdentityModel.Client;
 
 var client = new HttpClient();

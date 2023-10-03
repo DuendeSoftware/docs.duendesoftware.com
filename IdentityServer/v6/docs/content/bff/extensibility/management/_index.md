@@ -7,7 +7,7 @@ weight: 10
 
 The behavior of each [management endpoint]({{< ref "/bff/session/management" >}}) is defined in a service. When you add Duende.BFF to DI, a default implementation for every management endpoint gets registered:
 
-```csharp
+```
 // management endpoints
 services.AddTransient<ILoginService, DefaultLoginService>();
 services.AddTransient<ISilentLoginService, DefaultSilentLoginService>();
@@ -22,7 +22,7 @@ You can add your own implementation by overriding the default after calling *Add
 
 The management endpoint services all inherit from the *IBffEndpointService*, which provides a general-purpose mechanism to add custom logic to the endpoints. 
 
-```cs
+```
 public interface IBffEndpointService
 {
     Task ProcessRequestAsync(HttpContext context);

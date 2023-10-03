@@ -12,7 +12,7 @@ The BFF diagnostics endpoint can be customized by implementing the *IDiagnostics
 
 For example, you could take whatever actions you need before normal processing of the request like this:
 
-```csharp
+```
 public override Task ProcessRequestAsync(HttpContext context)
 {
     // Custom logic here

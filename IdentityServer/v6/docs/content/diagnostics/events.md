@@ -13,7 +13,7 @@ Events work great with structured logging stores like [ELK](https://www.elastic.
 ### Emitting events
 Events are not turned on by default - but can be globally configured in the *ConfigureServices* method, e.g.:
 
-```cs
+```
 services.AddIdentityServer(options =>
 {
     options.Events.RaiseSuccessEvents = true;
@@ -24,7 +24,7 @@ services.AddIdentityServer(options =>
 
 To emit an event use the *IEventService* from the DI container and call the *RaiseAsync* method, e.g.:
 
-```cs
+```
 public async Task<IActionResult> Login(LoginInputModel model)
 {
     if (_users.ValidateCredentials(model.Username, model.Password))
@@ -46,7 +46,7 @@ If you want to connect to a custom event store, implement the *IEventSink* inter
 
 The following example uses [Seq](https://getseq.net) to emit events:
 
-```cs
+```
 public class SeqEventSink : IEventSink
 {
     private readonly Logger _log;
@@ -132,7 +132,7 @@ You can create your own events and emit them via our infrastructure.
 You need to derive from our base *Event* class which injects contextual information like activity ID, timestamp, etc.
 Your derived class can then add arbitrary data fields specific to the event context::
 
-```cs
+```
 public class UserLoginFailureEvent : Event
 {
     public UserLoginFailureEvent(string username, string error)

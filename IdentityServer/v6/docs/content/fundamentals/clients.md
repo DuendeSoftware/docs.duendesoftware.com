@@ -18,7 +18,7 @@ The details vary, but you typically define the following common settings for a c
 ## Defining a client for server to server communication
 In this scenario no interactive user is present - a service (i.e. the client) wants to communicate with an API (i.e. the resource that supports the scope):
 
-```cs
+```
 public class Clients
 {
     public static IEnumerable<Client> Get()
@@ -42,7 +42,7 @@ public class Clients
 Interactive applications (e.g. web applications or native desktop/mobile) applications use the authorization code flow.
 This flow gives you the best security because the access tokens are transmitted via back-channel calls only (and gives you access to refresh tokens):
 
-```cs
+```
 var interactiveClient = new Client
 {
     ClientId = "interactive",
@@ -86,6 +86,6 @@ The *AddInMemoryClients* extensions method also supports adding clients from the
     
 Then pass the configuration section to the *AddInMemoryClients* method:
 
-```cs
+```
 AddInMemoryClients(configuration.GetSection("IdentityServer:Clients"))
 ```

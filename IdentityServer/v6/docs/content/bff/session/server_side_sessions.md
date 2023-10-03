@@ -15,7 +15,7 @@ Duende.BFF includes all the plumbing to store your sessions server-side. The coo
 
 Server-side session can be enabled in *Startup*:
 
-```csharp
+```
 services.AddBff()
     .AddServerSideSessions();
 ```
@@ -26,7 +26,7 @@ The default implementation stores the session in-memory. This is useful for test
 
 To use the EF session store, register it by calling *AddEntityFrameworkServerSideSessions*, like this:
 
-```csharp
+```
 var cn = _configuration.GetConnectionString("db");
         
 services.AddBff()
@@ -46,7 +46,7 @@ Added in v1.2.0.
 Abandoned sessions will remain in the store unless something removes the stale entries.
 If you wish to have such sessions cleaned up periodically, then you can configure the *EnableSessionCleanup* and *SessionCleanupInterval* options:
 
-```csharp
+```
 services.AddBff(options => {
         options.EnableSessionCleanup = true;
         options.SessionCleanupInterval = TimeSpan.FromMinutes(5);
@@ -59,7 +59,7 @@ This requires an implementation of [*IUserSessionStoreCleanup*]({{< ref "/bff/ex
 If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
 Just enable session cleanup:
 
-```csharp
+```
 var cn = _configuration.GetConnectionString("db");
         
 services.AddBff(options => {

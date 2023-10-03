@@ -60,7 +60,7 @@ Content-type: application/x-www-form-urlencoded
 ### .NET client library
 You can use the [Microsoft JWT library](https://www.nuget.org/packages/System.IdentityModel.Tokens.Jwt/) to create JSON Web Tokens.
 
-```cs
+```
 private static string CreateClientToken(SigningCredentials credential, string clientId, string tokenEndpoint)
 {
     var now = DateTime.UtcNow;
@@ -86,7 +86,7 @@ private static string CreateClientToken(SigningCredentials credential, string cl
 
 ..and the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code. 
 
-```cs
+```
 using IdentityModel.Client;
 
 static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential)
@@ -122,7 +122,7 @@ The OpenID Connect authentication handler in ASP.NET Core allows for replacing a
 
 This is accomplished by handling the various events on the handler. We recommend to encapsulate the event handler in a separate type. This makes it easier to consume services from DI:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     // some details omitted
@@ -144,7 +144,7 @@ public void ConfigureServices(IServiceCollection services)
 
 In your event handler you can inject code before the handler redeems the code:
 
-```cs
+```
 public class OidcEvents : OpenIdConnectEvents
 {
     private readonly AssertionService _assertionService;

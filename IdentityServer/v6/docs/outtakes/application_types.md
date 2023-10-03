@@ -14,13 +14,13 @@ A client can be configured to use more than a single grant type (e.g. Authorizat
 
 The *GrantTypes* class can be used to pick from typical grant type combinations:
 
-```cs
+```
 Client.AllowedGrantTypes = GrantTypes.CodeAndClientCredentials;
 ```
 
 You can also specify the grant types list manually:
 
-```cs
+```
 Client.AllowedGrantTypes = 
 {
     GrantType.Code, 
@@ -85,7 +85,7 @@ Interactive clients should use an authorization code-based flow. To protect agai
 
 This is how you would configure an interactive client:
 
-```cs
+```
 var client = new Client
 {
     ClientId = "...",

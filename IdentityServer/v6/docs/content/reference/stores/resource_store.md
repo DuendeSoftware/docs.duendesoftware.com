@@ -7,7 +7,7 @@ weight: 32
 
 Used to dynamically load resource configuration.
 
-```cs
+```
     /// <summary>
     /// Resource retrieval
     /// </summary>

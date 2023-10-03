@@ -34,7 +34,7 @@ To start emitting Otel tracing information you need
 * add the Otel libraries to your IdentityServer and client applications
 * start collecting traces from the various IdentityServer sources (and other sources e.g. ASP.NET Core)
 
-```cs
+```
 builder.Services.AddOpenTelemetryTracing(builder =>
 {
     builder

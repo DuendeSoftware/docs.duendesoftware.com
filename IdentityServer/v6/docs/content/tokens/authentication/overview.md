@@ -18,7 +18,7 @@ All information in this section also applies to [API secrets]({{< ref "/referenc
 ## Assigning secrets
 A client secret is abstracted by the *Secret* class. It provides properties for setting the value and type as well as a description and expiration date.
 
-```cs
+```
 var secret = new Secret
 {
     Value = "foo",
@@ -31,7 +31,7 @@ var secret = new Secret
 
 You can assign multiple secrets to a client to enable roll-over scenarios, e.g.:
 
-```cs
+```
 var primary = new Secret("foo");
 var secondary = new Secret("bar");
 

@@ -17,7 +17,7 @@ The persistence for grants is abstracted behind two interfaces:
 Custom implementations of *IPersistedGrantStore*, and/or *IDeviceFlowStore* must be registered in the DI system.
 For example:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer();

@@ -32,7 +32,7 @@ With the addition and use of server-side sessions, more interesting architectura
 
 To enable server-side sessions, use the *AddServerSideSessions* extension method after adding IdentityServer to the DI system:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer()
@@ -64,7 +64,7 @@ This claim must be included in the claims when the user's [authentication sessio
 
 For example:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer(options => {

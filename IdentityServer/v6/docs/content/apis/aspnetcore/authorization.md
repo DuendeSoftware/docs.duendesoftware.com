@@ -8,7 +8,7 @@ The access token will include additional claims that can be used for authorizati
 
 In ASP.NET core, the contents of the JWT payload get transformed into claims and packaged up in a *ClaimsPrincipal*. So you can always write custom validation or authorization logic in C#:
 
-```cs
+```
 public IActionResult Get()
 {
     var isAllowed = User.HasClaim("scope", "read");
@@ -21,7 +21,7 @@ For better encapsulation and re-use, consider using the ASP.NET Core [authorizat
 
 With this approach, you would first turn the claim requirement(s) into a named policy:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddAuthorization(options =>
@@ -34,7 +34,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ..and then enforce it, e.g. using the routing table:
 
-```cs
+```
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapControllers().RequireAuthorization("read_access");
@@ -43,7 +43,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ...or imperatively inside the controller:
 
-```cs
+```
 public class DataController : ControllerBase
 {
     IAuthorizationService _authz;
@@ -64,7 +64,7 @@ public class DataController : ControllerBase
 
 ... or declaratively:
 
-```cs
+```
 public class DataController : ControllerBase
 {
     [Authorize("read_access")]
@@ -82,7 +82,7 @@ Historically, Duende IdentityServer emitted the *scope* claims as an array in th
 
 The newer *JWT Profile for OAuth* [spec]({{< ref "/overview/specs" >}}) mandates that the scope claim is a single space delimited string. You can switch the format by setting the *EmitScopesAsSpaceDelimitedStringInJwt* on the [options]({{< ref "/reference/options" >}}). But this means that the code consuming access tokens might need to be adjusted. The following code can do a conversion to the *multiple claims* format that .NET prefers:
 
-```cs
+```
 namespace IdentityModel.AspNetCore.AccessTokenValidation
 {
     /// <summary>

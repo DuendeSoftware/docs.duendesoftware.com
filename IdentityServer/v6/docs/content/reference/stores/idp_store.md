@@ -7,7 +7,7 @@ weight: 36
 
 Used to dynamically load [identity provider configuration]({{<ref "/reference/models/idp">}}).
 
-```cs
+```
     /// <summary>
     /// Interface to model storage of identity providers.
     /// </summary>

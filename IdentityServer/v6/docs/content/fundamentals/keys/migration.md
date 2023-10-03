@@ -36,7 +36,7 @@ as the signing credential. In this phase, the new automatically managed key will
 announced so that as client apps and APIs update their caches, they get the new
 key. IdentityServer will continue to sign keys with your old static key.
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = true;
@@ -54,7 +54,7 @@ then proceed to phase 2.
 Next, switch to using the new automatically managed keys for signing, but still
 keep the old key for validation purposes.
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = true;
@@ -70,7 +70,7 @@ expired, and then proceed to phase 3.
 ## Phase 3: Drop the old key
 Now the static key configuration can be removed entirely.
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = true;

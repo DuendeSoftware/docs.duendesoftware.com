@@ -14,7 +14,7 @@ This requires a user to present credentials and typically involves these steps:
 
 When IdentityServer needs to show the login page, it redirects the user to a configurable
 *LoginUrl*.
-```cs
+```
 builder.Services.AddIdentityServer(opt => {
     opt.UserInteraction.LoginUrl = "/path/to/login";
 })
@@ -22,7 +22,7 @@ builder.Services.AddIdentityServer(opt => {
 
 If no *LoginUrl* is set, IdentityServer will infer it from the *LoginPath* of your Cookie
 Authentication Handler. For example:
-```cs
+```
 builder.Services.AddAuthentication()
     .AddCookie("cookie-handler-with-custom-path", options => 
     {
@@ -31,7 +31,7 @@ builder.Services.AddAuthentication()
 ```
 
 If you are using ASP.NET Identity, configure its cookie authentication handler like this:
-```cs
+```
 builder.Services
     .AddIdentityServer()
     .AddAspNetIdentity<ApplicationUser>();

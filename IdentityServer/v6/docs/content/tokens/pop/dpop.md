@@ -35,7 +35,7 @@ DPoP is something a client can use dynamically with no configuration in Identity
 This is a per-client [setting]({{< ref "/reference/models/client#dpop" >}}) in your IdentityServer.
 There are additional client as well as [global]({{< ref "/reference/options#dpop">}}) DPoP settings to control the behavior.
 
-```csharp
+```
 new Client
 {
     ClientId = "dpop_client",
@@ -53,7 +53,7 @@ DPoP is enabled by simply assigning the *DPoPJsonWebKey* on the client configura
 
 For example, here's how to configure a client credentials client:
 
-```csharp
+```
 services.AddClientCredentialsTokenManagement()
         .AddClient("demo_dpop_client", client =>
         {
@@ -65,7 +65,7 @@ services.AddClientCredentialsTokenManagement()
 
 And here's how to configure a code flow client:
 
-```csharp
+```
 services.AddAuthentication(...)
     .AddCookie("cookie", ...)
     .AddOpenIdConnect("oidc", ...);
@@ -78,7 +78,7 @@ services.AddOpenIdConnectAccessTokenManagement(options =>
 
 In either case, you will need to create a JWK. One approach to creating a JWK in string format is to use the .NET crypto APIs, for example:
 
-```csharp
+```
 var rsaKey = new RsaSecurityKey(RSA.Create(2048));
 var jsonWebKey = JsonWebKeyConverter.ConvertFromSecurityKey(rsaKey);
 jsonWebKey.Alg = "PS256";

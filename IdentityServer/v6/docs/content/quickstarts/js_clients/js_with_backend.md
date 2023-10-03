@@ -89,7 +89,7 @@ WebClient did in the prior [web application quickstart]({{<ref
 
 Add the following to *src/JavaScriptClient/Program.cs*:
 
-```cs
+```
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Duende.Bff.Yarp;
@@ -132,7 +132,7 @@ Similarly, the middleware pipeline for this application will resemble the
 WebClient, with the addition of the BFF middleware and the BFF endpoints.
 Continuing by adding the following to *src/JavaScriptClient/Program.cs*:
 
-```cs
+```
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -306,7 +306,7 @@ JavaScript application. Because this client uses the BFF pattern, the
 configuration will be very similar to the Web client. It should have the
 configuration listed below:
 
-```cs
+```
 // JavaScript BFF client
 new Client
 {
@@ -384,7 +384,7 @@ For simplicity, this quickstart uses a minimal API with its handler defined
 directly in *Program.cs*, but you can organize your Local APIs however you like.
 
 Add a handler to *src/JavaScriptClient/Program.cs* for the the local API:
-```cs
+```
 [Authorize] 
 static IResult LocalIdentityHandler(ClaimsPrincipal user)
 {
@@ -409,7 +409,7 @@ Next, you need to register both the local API and the BFF proxy for the remote
 API in the ASP.NET Core routing system. Add the code below to the *UseEndpoints*
 call in *src/JavaScriptClient/Program.cs*.
 
-```cs
+```
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapBffManagementEndpoints();

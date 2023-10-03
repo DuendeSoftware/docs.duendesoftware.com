@@ -20,7 +20,7 @@ Custom implementations of the stores must be registered in the DI system.
 There are [convenience methods]({{<ref "/reference/di#configuration-stores">}}) for registering these.
 For example:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer()
@@ -40,7 +40,7 @@ Duende IdentityServer provides [convenience methods]({{<ref "/reference/di#cachi
 The caching implementation relies upon an *ICache\<T>* service and must also be added to DI. 
 For example:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer()
@@ -58,7 +58,7 @@ public void ConfigureServices(IServiceCollection services)
 The duration of the data in the default cache is configurable on the [IdentityServerOptions]({{<ref "/reference/options#caching">}}).
 For example:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer(options => {

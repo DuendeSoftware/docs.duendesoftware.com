@@ -38,7 +38,7 @@ An invalid request will return a 400, an unauthorized request 401.
 ## .NET client library
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code. 
 
-```cs
+```
 using IdentityModel.Client;
 
 var client = new HttpClient();

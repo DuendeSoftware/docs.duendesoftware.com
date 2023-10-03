@@ -15,7 +15,7 @@ Support for Dynamic Identity Providers is included in [IdentityServer](https://d
 
 The [identity provider store]({{<ref "/reference/stores/idp_store">}}) can be used to query the database containing the dynamic providers.
 
-```cs
+```
     /// <summary>
     /// Interface to model storage of identity providers.
     /// </summary>
@@ -38,7 +38,7 @@ This allows the developer to have more control over the customization on the log
 Here is an example of how the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/Quickstart/Account/AccountController.cs#L265-L282) uses both interfaces to then present a merged and unified list to the end user:
 
 
-```cs
+```
 var schemes = await _schemeProvider.GetAllSchemesAsync();
 
 var providers = schemes
@@ -79,7 +79,7 @@ The [identity provider model documentation]({{<ref "/reference/models/idp">}}) p
 
 If it is needed to further customize the *OpenIdConnectOptions*, you can register in the DI system an instance of *IConfigureNamedOptions\<OpenIdConnectOptions>*. For example:
 
-```cs
+```
     public class CustomConfig : IConfigureNamedOptions<OpenIdConnectOptions>
     {
         public void Configure(string name, OpenIdConnectOptions options)
@@ -98,7 +98,7 @@ If it is needed to further customize the *OpenIdConnectOptions*, you can registe
 
 And to register this in the DI system:
 
-```cs
+```
     public void ConfigureServices(IServiceCollection services)
     {
         services.ConfigureOptions<CustomConfig>();
@@ -111,7 +111,7 @@ If your customization of the *OpenIdConnectOptions* requires per-provider data t
 This abstraction requires your code to derive from *ConfigureAuthenticationOptions\<OpenIdConnectOptions, OidcProvider>* (rather than *IConfigureNamedOptions\<OpenIdConnectOptions>*).
 For example:
 
-```cs
+```
 class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectOptions, OidcProvider>
 {
     public CustomOidcConfigureOptions(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
@@ -130,7 +130,7 @@ class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectO
 
 The above class would need to be configured in DI (as before):
 
-```cs
+```
 public void Configure(IServiceCollection services)
 {
     services.ConfigureOptions<CustomOidcConfigureOptions>();

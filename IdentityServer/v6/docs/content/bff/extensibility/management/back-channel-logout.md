@@ -13,7 +13,7 @@ You can add custom logic to the endpoint by implementing the *IBackchannelLogout
 
 *ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
 
-```csharp
+```
 public class CustomizedBackchannelLogoutService : DefaultBackchannelLogoutService
 {
     public override Task ProcessRequestAsync(HttpContext context)
@@ -28,7 +28,7 @@ public class CustomizedBackchannelLogoutService : DefaultBackchannelLogoutServic
 
 Validation of the incoming request can be customized by overriding one of several virtual methods in the *DefaultBackchannelLogoutService*. *GetTokenValidationParameters* allows you to specify the *[TokenValidationParameters](https://learn.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.tokenvalidationparameters?view=azure-dotnet)* used to validate the incoming logout token. The default implementation creates token validation parameters based on the authentication scheme's configuration. Your override could begin by calling the base method and then make changes to those parameters or completely customize how token validation parameters are created. For example:
 
-```csharp
+```
 public class CustomizedBackchannelLogoutService : DefaultBackchannelLogoutService
 {
   protected override async Task<TokenValidationParameters> GetTokenValidationParameters()
@@ -46,7 +46,7 @@ If you need more control over the validation of the logout token, you can overri
 
 *ValidateLogoutTokenAsync* is the coarsest-grained validation method. It is is responsible for validating the incoming logout token and determining if logout should proceed, based on claims in the token. It returns a *ClaimsIdentity* if logout should proceed or null if it should not. Your override could prevent logout in certain circumstances by returning null. For example:
 
-```csharp
+```
 public class CustomizedBackchannelLogoutService : DefaultBackchannelLogoutService
 {
   protected override async Task<ClaimsIdentity?> ValidateLogoutTokenAsync(string logoutToken)

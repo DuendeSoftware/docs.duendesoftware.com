@@ -7,7 +7,7 @@ weight: 30
 The error page is used to display to the end user that an error has ocurred during a request to the [authorize endpoint]({{<ref "/reference/endpoints/authorize">}}).
 
 When an error occurs, IdentityServer will redirect the user to a configurable *ErrorUrl*.
-```csharp
+```
 builder.Services.AddIdentityServer(opt => {
     opt.UserInteraction.ErrorUrl = "/path/to/error";
 })
@@ -22,7 +22,7 @@ But this allows the user to understand that something went wrong and that they a
 
 Details of the error are provided to the error page via a query string parameter. That parameter's name is configurable using the *ErrorId* option.
 
-```csharp
+```
 builder.Services.AddIdentityServer(opt => {
     opt.UserInteraction.ErrorId = "ErrorQueryStringParamName";
 })

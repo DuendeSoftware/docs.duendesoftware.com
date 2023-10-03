@@ -41,7 +41,7 @@ The client configuration in IdentityServer requires two straightforward updates.
 2. Enable support for refresh tokens by setting the *AllowOfflineAccess* flag.
 
 Update the *Client* in *src/IdentityServer/Config.cs* as follows:
-```cs
+```
 new Client
 {
     ClientId = "web",
@@ -71,7 +71,7 @@ Now configure the client to ask for access to api1 and for a refresh token by
 requesting the *api1* and *offline_access* scopes. This is done in the OpenID
 Connect handler configuration in *src/WebClient/Program.cs*:
 
-```cs
+```
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
@@ -120,7 +120,7 @@ dotnet new page -n CallApi
 ```
 
 Update *src/WebClient/Pages/CallApi.cshtml.cs* as follows:
-```cs
+```
 public class CallApiModel : PageModel
 {
     public string Json = string.Empty;

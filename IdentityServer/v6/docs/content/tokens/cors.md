@@ -36,7 +36,7 @@ This would be configured as a singleton in DI, and hard-coded with its *AllowedO
 
 For example, in *ConfigureServices*:
 
-```cs
+```
 services.AddSingleton<ICorsPolicyService>((container) =>
 {
     var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();

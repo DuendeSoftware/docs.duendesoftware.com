@@ -10,7 +10,7 @@ The *GrantValidationResult* class models the outcome of grant validation for [ex
 
 It models either a successful validation result with claims (e.g. subject ID) or an invalid result with an error code and message, e.g.:
 
-```cs
+```
 public class ExtensionGrantValidator : IExtensionGrantValidator
 {
     public Task ValidateAsync(ExtensionGrantValidationContext context)
@@ -39,7 +39,7 @@ public class ExtensionGrantValidator : IExtensionGrantValidator
 
 It also allows passing additional custom values that will be included in the token response, e.g.:
 
-```cs
+```
 context.Result = new GrantValidationResult(
     subject: "818727",
     authenticationMethod: "custom",

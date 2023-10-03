@@ -9,7 +9,7 @@ The *Duende.BFF.BffOptions* allows to configure several aspects of the BFF frame
 
 You set the options at startup time in your *ConfigureServices* method:
 
-```cs
+```
 services.AddBff(options =>
 {
     // configure options here..

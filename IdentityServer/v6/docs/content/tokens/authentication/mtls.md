@@ -8,7 +8,7 @@ Clients can use an X.509 client certificate as an authentication mechanism to en
 
 For this you need to associate a client certificate with a client in your IdentityServer and enable MTLS support on the options.
 
-```cs
+```
 var builder = service.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;
@@ -17,7 +17,7 @@ var builder = service.AddIdentityServer(options =>
 
 Use the [DI extensions methods]({{< ref "/reference/di" >}}) to add the services to DI which contain a default implementation to do that either thumbprint or common-name based:
 
-```cs
+```
 builder.AddMutualTlsSecretValidators();
 ```
 
@@ -26,7 +26,7 @@ or *SecretTypes.X509CertificateThumbprint* (for self-issued certificates) to the
 
 For example::
 
-```cs
+```
 new Client
 {
     ClientId = "mtls.client",
@@ -57,7 +57,7 @@ class provides a convenient mechanism to add a client certificate to outgoing re
 Use such a handler with *HttpClient* to perform the client certificate authentication handshake at the TLS channel.
 The following snippet is using [IdentityModel](https://identitymodel.readthedocs.io) to read the discovery document and request a token:
 
-```cs
+```
 static async Task<TokenResponse> RequestTokenAsync()
 {
     var handler = new SocketsHttpHandler();

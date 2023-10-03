@@ -44,7 +44,7 @@ This is the cshtml for the login Razor Page:
 
 And this is the code behind for the login Razor Page:
 
-```cs
+```
 namespace Sample.Pages.Account
 {
     public class LoginModel : PageModel

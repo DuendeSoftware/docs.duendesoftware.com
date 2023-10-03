@@ -23,7 +23,7 @@ To ease integration with external providers, it is recommended to use an authent
 Supporting an external provider is achieved by simply registering the handler in your IdentityServer's startup. 
 For example, to use employee logins from Azure AD (AAD):
 
-```csharp
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer();
@@ -51,7 +51,7 @@ The process of determining which identity provider to use is called *Home Realm 
 To invoke an external authentication handler use the *ChallengeAsync* extension method on the *HttpContext* (or using the MVC *ChallengeResult*).
 When triggering challenge, it's common to pass some properties to indicate the callback URL where you intend to process the external login results and any other state you need to maintain across the workflow (e.g. such as the [return URL passed to the login page]({{<ref "../login#the-return-url-and-the-login-workflow">}})):
 
-```cs
+```
 var callbackUrl = Url.Action("MyCallback");
 
 var props = new AuthenticationProperties
@@ -81,7 +81,7 @@ If you are using ASP.NET Identity, many of these technical details are hidden fr
 One option on an external authentication handlers is called *SignInScheme*.
 This specifies the cookie handler to manage the state:
 
-```cs
+```
 services.AddAuthentication()
     .AddOpenIdConnect("AAD", "Employee Login", options =>
     {
@@ -95,7 +95,7 @@ Given that this is such a common practice, IdentityServer registers a cookie han
 The scheme is represented via the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant.
 If you were to use our external cookie handler, then for the *SignInScheme* above you'd assign the value to be the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant:
 
-```cs
+```
 services.AddAuthentication()
     .AddOpenIdConnect("AAD", "Employee Login", options =>
     {
@@ -108,7 +108,7 @@ services.AddAuthentication()
 Alternatively, you can also register your own custom cookie handler instead.
 For example:
 
-```cs
+```
 services.AddAuthentication()
     .AddCookie("MyTempHandler")
     .AddOpenIdConnect("AAD", "Employee Login", options =>
@@ -139,7 +139,7 @@ On the callback page your typical tasks are:
 To access the result of the external login, invoke the *AuthenticateAsync* method.
 This will read the external cookie to retrieve the claims issued by the external provider and any other state you previously stored when calling *ChallengeAsync*:
 
-```cs
+```
 // read external identity from the temporary cookie
 var result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
 if (result?.Succeeded != true)
@@ -171,7 +171,7 @@ This value should be used to locate your local user record for the user.
 Once your callback page logic has identified the user based on the external identity provider, 
 it will log the user in and complete the original login workflow:
 
-```cs
+```
 var user = FindUserFromExternalProvider(scheme, userId);
 
 // issue authentication cookie for user
@@ -206,7 +206,7 @@ To use the IdentityServer provided secure data format implementation, simply cal
 
 If no parameters are passed, then all OpenID Connect handlers configured will use the IdentityServer provided secure data format implementation:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     // configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.
@@ -230,7 +230,7 @@ public void ConfigureServices(IServiceCollection services)
 
 If only particular schemes are to be configured, then pass those schemes as parameters:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     // configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.

@@ -25,7 +25,7 @@ The constant *IdentityServerConstants.LocalIdentityProvider* can be used instead
 
 To trigger logout at an external provider, use the *SignOutAsync* extension method on the *HttpContext* (or the *SignOutResult* action result in MVC or Razor Pages). You must pass the scheme of the provider as configured in your startup (which should also match the *idp* claim mentioned above).
 
-```csharp
+```
 public IActionResult Logout(string logoutId)
 {
     // other code elided
@@ -53,7 +53,7 @@ We can obtain a *logoutId* to use by calling *CreateLogoutContextAsync* API on t
 
 For example:
 
-```csharp
+```
 public async Task<IActionResult> Logout(string logoutId)
 {
     // other code elided

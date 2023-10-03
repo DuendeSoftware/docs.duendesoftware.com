@@ -15,7 +15,7 @@ You could achieve the same by using either Microsoft's *JwtBearer* handler. But 
 
 Start by registering your API as an *ApiScope*, (or resource) e.g.:
 
-```cs
+```
 var scopes = new List<ApiScope>
 {
     // local API
@@ -25,7 +25,7 @@ var scopes = new List<ApiScope>
 
 ..and give your clients access to this API, e.g.:
 
-```cs
+```
 new Client
 {
     // rest omitted
@@ -39,21 +39,21 @@ The value of *IdentityServerConstants.LocalApi.ScopeName* is *IdentityServerApi*
 
 To enable token validation for local APIs, add the following to your IdentityServer startup:
 
-```cs
+```
 services.AddLocalApiAuthentication();
 ```
 
 To protect an API controller, decorate it with an *Authorize* attribute using the *LocalApi.PolicyName* policy:
 
-```cs
+```
 [Route("localApi")]
 [Authorize(LocalApi.PolicyName)]
 public class LocalApiController : ControllerBase
 {
-    public IActionResult Get()
-    {
-        // omitted
-    }
+	public IActionResult Get()
+	{
+		// omitted
+	}
 }
 ```
 
@@ -62,7 +62,7 @@ Authorized clients can then request a token for the *IdentityServerApi* scope an
 ## Discovery
 You can also add your endpoints to the discovery document if you want, e.g like this::
 
-```cs
+```
 services.AddIdentityServer(options =>
 {
     options.Discovery.CustomEntries.Add("local_api", "~/localapi");
@@ -83,7 +83,7 @@ This covers the most common scenarios. You can customize this behavior in the fo
 * Do your own scope validation/authorization in your controllers using custom policies or code, e.g.:
 
 
-```cs
+```
     services.AddAuthorization(options =>
     {
         options.AddPolicy(IdentityServerConstants.LocalApi.PolicyName, policy =>
@@ -99,7 +99,7 @@ This covers the most common scenarios. You can customize this behavior in the fo
 You can provide a callback to transform the claims of the incoming token after validation.
 Either use the helper method, e.g.:
 
-```cs
+```
 services.AddLocalApiAuthentication(principal =>
 {
     principal.Identities.First().AddClaim(new Claim("additional_claim", "additional_value"));

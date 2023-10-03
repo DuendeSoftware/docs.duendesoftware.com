@@ -22,7 +22,7 @@ To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds an ad
 ## Using the resource parameter
 Let's assume you have the following resource design and that the client is allowed access to all scopes:
 
-```cs
+```
 var resources = new[]
 {
     new ApiResource("urn:invoices")
@@ -123,7 +123,7 @@ The end-result will be that the client has two access tokens - one for each reso
 ## Enforcing resource isolation
 All examples so far used the *resource* parameter optionally. If you have API resources, where you want to make sure they are not sharing access tokens with other resources, you can enforce the resource indicator, e.g.:
 
-```cs
+```
 var resources = new[]
 {
     new ApiResource("urn:invoices")

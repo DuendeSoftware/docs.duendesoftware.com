@@ -7,7 +7,7 @@ weight: 60
 
 Top level options for IdentityServer.Configuration.
 
-```csharp
+```
 public class IdentityServerConfigurationOptions
 ```
 
@@ -21,7 +21,7 @@ public class IdentityServerConfigurationOptions
 
 Options for dynamic client registration.
 
-```csharp
+```
 public class DynamicClientRegistrationOptions
 ```
 

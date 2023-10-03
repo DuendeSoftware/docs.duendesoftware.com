@@ -24,7 +24,7 @@ These implementations use a *DbContext*-derived class called *ConfigurationDbCon
 
 To use the configuration store support, use the *AddConfigurationStore* extension method after the call to *AddIdentityServer*:
 
-```csharp
+```
 public IServiceProvider ConfigureServices(IServiceCollection services)
 {
     const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=YourIdentityServerDatabase;trusted_connection=yes;";
@@ -53,13 +53,13 @@ This options class contains properties to control the configuration store and *C
 *DefaultSchema*
     Allows setting the default database schema name for all the tables in the *ConfigurationDbContext*
 
-```csharp
+```
 options.DefaultSchema = "myConfigurationSchema";      
 ```
 
 If you need to change the schema for the Migration History Table, you can chain another action to the *UseSqlServer*:
 
-```csharp
+```
 options.ConfigureDbContext = b =>
     b.UseSqlServer(connectionString,
         sql => sql.MigrationsAssembly(migrationsAssembly).MigrationsHistoryTable("MyConfigurationMigrationTable", "myConfigurationSchema"));
@@ -69,7 +69,7 @@ options.ConfigureDbContext = b =>
 
 To enable caching for the EF configuration store implementation, use the *AddConfigurationStoreCache* extension method:
 
-```csharp
+```
 public IServiceProvider ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer()
@@ -86,7 +86,7 @@ The implementation uses a *DbContext*-derived class called *PersistedGrantDbCont
 
 To use the operational store support, use the *AddOperationalStore* extension method after the call to *AddIdentityServer*:
 
-```csharp
+```
 public IServiceProvider ConfigureServices(IServiceCollection services)
 {
     const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=YourIdentityServerDatabase;trusted_connection=yes;";

@@ -12,7 +12,7 @@ The BFF user endpoint can be customized by implementing the *IUserService* or by
 
 For example, you could take whatever actions you need before normal processing of the request like this:
 
-```csharp
+```
 public override Task ProcessRequestAsync(HttpContext context)
 {
     // Custom logic here
@@ -26,7 +26,7 @@ public override Task ProcessRequestAsync(HttpContext context)
 
 For example, you could add additional claims to the user endpoint that would not be part of the session like this:
 
-```csharp
+```
 protected override IEnumerable<ClaimRecord> GetUserClaims(AuthenticateResult authenticateResult)
 {
     var baseClaims = base.GetUserClaims(authenticateResult);

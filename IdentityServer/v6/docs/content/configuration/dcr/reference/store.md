@@ -10,7 +10,7 @@ The *IClientConfigurationStore* interface defines the contract for a service
 that communication with the client configuration data store. It contains a
 single *AddAsync* method.
 
-```csharp
+```
 public interface IClientConfigurationStore
 ```
 

@@ -92,7 +92,7 @@ CONTENT-TYPE application/x-www-form-urlencoded
 ## .NET client library
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code.
 
-```cs
+```
 using IdentityModel.Client;
 
 var client = new HttpClient();

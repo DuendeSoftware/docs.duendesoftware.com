@@ -9,7 +9,7 @@ weight: 20
 
 This class models an identity resource.
 
-```cs
+```
 public static readonly IEnumerable<IdentityResource> IdentityResources =
     new[]
     {

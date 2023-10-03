@@ -37,7 +37,7 @@ The URL for the end session endpoint is available via discovery.
 ## .NET client library
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically create end sessions request URLs from .NET code. 
 
-```cs
+```
 var ru = new RequestUrl("https://demo.duendesoftware.com/connect/end_session");
 
 var url = ru.CreateEndSessionUrl(

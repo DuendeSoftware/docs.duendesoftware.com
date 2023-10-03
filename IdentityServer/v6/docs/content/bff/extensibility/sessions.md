@@ -82,7 +82,7 @@ public void ConfigureServices(IServiceCollection services)
 
 The *IUserSessionStoreCleanup* interface is used to model cleaning up expired sessions.
 
-```csharp
+```
 /// <summary>
 /// User session store cleanup
 /// </summary>

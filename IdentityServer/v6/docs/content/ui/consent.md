@@ -16,7 +16,7 @@ Consent is used to allow an end user to grant a client access to [resources]({{<
 In order for the user to grant consent, a consent page must be provided by the
 hosting application. When IdentityServer needs to prompt the
 user for consent, it will redirect the user to a configurable *ConsentUrl*. 
-```csharp
+```
 builder.Services.AddIdentityServer(opt => {
     opt.UserInteraction.ConsentUrl = "/path/to/consent";
 })

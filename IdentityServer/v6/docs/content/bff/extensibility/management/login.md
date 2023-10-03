@@ -12,7 +12,7 @@ The BFF login endpoint has extensibility points in two interfaces. The *ILoginSe
 
 For example, you could take whatever actions you need before normal processing of the request like this:
 
-```csharp
+```
 public override Task ProcessRequestAsync(HttpContext context)
 {
     // Custom logic here

@@ -8,7 +8,7 @@ weight: 70
 
 Parses a secret from the raw HTTP request.
 
-```cs
+```
 public interface ISecretParser
 {
     /// <summary>
@@ -39,7 +39,7 @@ public interface ISecretParser
 
 Represents a parsed secret.
 
-```cs
+```
 /// <summary>
 /// Represents a secret extracted from the HttpContext
 /// </summary>
@@ -85,7 +85,7 @@ The parsed secret is forwarded to the registered secret validator. The validator
 
 Validates a parsed secret.
 
-```cs
+```
 public interface ISecretValidator
 {
     /// <summary>Validates a secret</summary>

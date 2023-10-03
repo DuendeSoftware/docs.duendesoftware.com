@@ -17,7 +17,7 @@ for IdentityServer. To use it, inject it into your code, e.g. a controller::
 The *IssueJwtAsync* method allows creating JWT tokens using the IdentityServer token creation engine. The *IssueClientJwtAsync* is an easier
 version of that for creating tokens for server-to-server communication (e.g. when you have to call an IdentityServer protected API from your code):
 
-```cs
+```
 public async Task<IActionResult> MyAction()
 {
     var token = await _tools.IssueClientJwtAsync(

@@ -37,7 +37,7 @@ propagation time, retain old keys for a duration of 14 days, and to delete keys
 when they are retired. All of these options are configurable in the
 *KeyManagement* options. For example:
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {   
     // new key every 30 days
@@ -72,7 +72,7 @@ If you are deploying in a load balanced environment and wish to use the
 *FileSystemKeyStore*, all instances of IdentityServer will need read/write
 access to the *KeyPath*.
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {   
     // set path to store keys
@@ -101,7 +101,7 @@ multiple keys, algorithms, and if those keys should additionally get wrapped in
 an X.509 certificate. Automatic key management will create and rotate keys for
 each signing algorithm you specify.
 
-```cs
+```
 options.KeyManagement.SigningAlgorithms = new[]
 {
     // RS256 for older clients (with additional X.509 wrapping)

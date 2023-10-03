@@ -13,7 +13,7 @@ Furthermore the BFF plumbing relies on the configuration of the ASP.NET Core def
 
 OpenID Connect for *challenge* and *signout* - cookies for all the other operations:
 
-```csharp
+```
 services.AddAuthentication(options =>
     {
         options.DefaultScheme = "cookie";
@@ -36,7 +36,7 @@ The exact settings depend on the OIDC provider and its configuration settings. W
 * save the tokens into the authentication session so they can be automatically managed
 * request a refresh token using the *offline_access* scope
 
-```csharp
+```
 services.AddAuthentication().AddOpenIdConnect("oidc", options =>
 {
     options.Authority = "https://demo.duendesoftware.com";
@@ -78,7 +78,7 @@ Things to consider:
 * it is recommended to use a cookie name [prefix](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-4.1.3) if compatible with your application
 * use the highest available *SameSite* mode that is compatible with your application, e.g. *strict*, but at least *lax*
 
-```csharp
+```
 services.AddAuthentication().AddCookie("cookie", options =>
 {
     // set session lifetime

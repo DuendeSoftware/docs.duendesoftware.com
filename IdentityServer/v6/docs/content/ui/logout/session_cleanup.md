@@ -6,18 +6,18 @@ weight: 20
 To remove the authentication cookie, simply use the ASP.NET Core *SignOutAsync* extension method on the *HttpContext*.
 You will need to pass the scheme used (which is provided by *IdentityServerConstants.DefaultCookieAuthenticationScheme* unless you have changed it):
 
-```cs
+```
 await HttpContext.SignOutAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme);
 ```
 
 Or you can use the overload that will simply sign-out of the default authentication scheme:
 
-```cs
+```
 await HttpContext.SignOutAsync();
 ```
 
 If you are integrating with ASP.NET Identity, sign out using its *SignInManager* instead:
-```cs
+```
 await _signInManager.SignOutAsync();
 ```
 ### Prompting the User to Logout

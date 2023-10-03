@@ -14,7 +14,7 @@ By default, Duende.BFF will create and cache an HTTP client per configured route
 
 This invoker is setup like this:
 
-```cs
+```
 var client = new HttpMessageInvoker(new SocketsHttpHandler
 {
     UseProxy = false,
@@ -26,7 +26,7 @@ var client = new HttpMessageInvoker(new SocketsHttpHandler
 
 If you want to customize the HTTP client for specific paths, you can either implement the *IHttpMessageInvokerFactory* interface or derive from the *DefaultHttpMessageInvokerFactory*, e.g.:
 
-```cs
+```
 public class MyInvokerFactory : DefaultHttpMessageInvokerFactory
 {
     public override HttpMessageInvoker CreateClient(string localPath)
@@ -55,7 +55,7 @@ public class MyInvokerFactory : DefaultHttpMessageInvokerFactory
 
 ..and override our registration:
 
-```cs
+```
 services.AddSingleton<IHttpMessageInvokerFactory, MyInvokerFactory>();
 ```
 
@@ -67,7 +67,7 @@ In the standard configuration, BFF uses the YARP default behavior for forwarding
 
 If you want to modify this behavior you can either implement *IHttpTransformerFactory* from scratch: 
 
-```cs
+```
 public interface IHttpTransformerFactory
 {
     /// <summary>

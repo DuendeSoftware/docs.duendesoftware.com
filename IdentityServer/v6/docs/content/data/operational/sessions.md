@@ -21,7 +21,7 @@ To register a custom server-side session store in the DI container, there is a *
 It is still necessary to call *AddServerSideSessions* to enable the server-side session feature.
 For example:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer()
@@ -33,7 +33,7 @@ public void ConfigureServices(IServiceCollection services)
 There is also an overloaded version of a *AddServerSideSessions* that will perform both registration steps in one call.
 For example:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer()
@@ -49,7 +49,7 @@ When using the EntityFramework Core operational store, it will be necessary to i
 For example:
 
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddIdentityServer()

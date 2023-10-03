@@ -10,7 +10,7 @@ These options are configurable when using the Entity Framework Core for the [con
 
 You set the options at startup time in your *AddConfigurationStore* method:
 
-```cs
+```
 var builder = services.AddIdentityServer()
     .AddConfigurationStore(options =>
     {

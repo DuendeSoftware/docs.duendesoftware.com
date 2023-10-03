@@ -12,7 +12,7 @@ If you are using a [mutual TLS connection]({{< ref "/tokens/pop/mtls" >}}) to es
 
 You can do so with custom middleware like this:
 
-```cs
+```
 public void Configure(IApplicationBuilder app)
 {
     // rest omitted
@@ -31,7 +31,7 @@ public void Configure(IApplicationBuilder app)
 
 Here, *UseConfirmationValidation* is an extension method that registers the middleware that performs the necessary validation:
 
-```cs
+```
 public static class ConfirmationValidationExtensions
 {
     public static IApplicationBuilder UseConfirmationValidation(this IApplicationBuilder app, ConfirmationValidationMiddlewareOptions options = default)
@@ -43,7 +43,7 @@ public static class ConfirmationValidationExtensions
 
 And this is the actual middleware that validates the *cnf* claim:
 
-```cs
+```
 // this middleware validates the cnf claim (if present) against the thumbprint of the X.509 client certificate for the current client
 public class ConfirmationValidationMiddleware
 {
@@ -117,7 +117,7 @@ DPoP proof token processing involves requiring the DPoP scheme on the authorizat
 Given that there are no off-the-shelf libraries that implement this, we have developed a full-featured sample implementation.
 With this sample the configuration necessary in your startup can be as simple as this:
 
-```cs
+```
 
 public void ConfigureServices(IServiceCollection services)
 {

@@ -7,7 +7,7 @@ weight: 43
 
 Provides access to a user's grants.
 
-```cs
+```
     /// <summary>
     /// Implements persisted grant logic
     /// </summary>
@@ -33,7 +33,7 @@ Provides access to a user's grants.
 
 ### Grant
 
-```cs
+```
     /// <summary>
     /// Models a grant the user has given.
     /// </summary>

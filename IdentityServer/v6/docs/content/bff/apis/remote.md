@@ -17,7 +17,7 @@ To enable this feature, add a reference to the *Duende.BFF.Yarp* Nuget package, 
 
 #### Add Remote API Service to DI
 
-```cs
+```
 services.AddBff()
     .AddRemoteApis();
 ```
@@ -26,7 +26,7 @@ services.AddBff()
 #### Map Remote APIs
 This example routes a local */api/customers* endpoint to a remote API, and forwards the user's access token in the outgoing call:
 
-```cs
+```
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRemoteBffApiEndpoint(

@@ -41,7 +41,7 @@ In production, logging might produce too much data. It is recommended you either
 ### Setup for Serilog
 We personally like [Serilog](https://serilog.net) and the [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) package a lot. Give it a try:
 
-```cs
+```
     public class Program
     {
         public static int Main(string[] args)

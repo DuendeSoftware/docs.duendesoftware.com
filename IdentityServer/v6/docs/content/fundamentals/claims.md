@@ -35,7 +35,7 @@ The *RequestedClaimTypes* property of the *ProfileDataRequestContext* contains t
 
 If your profile service extends the *DefaultProfileService*, you can use its *AddRequestedClaims* method to add only requested and approved claims. The intent is that your profile service can retrieve claim data and then filter that claim data based on what was requested by the client. For example:
 
-```cs
+```
 public class SampleProfileService : DefaultProfileService
 {
     public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -56,7 +56,7 @@ public class SampleProfileService : DefaultProfileService
 #### Always emit claims
 We generally recommend emitting claims based on the requested claim types, as that respects the scopes and resources requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you have claims that don't need to follow such rules, such as claims that are an integral part of the user's identity and that are needed in most scenarios, they can be added by directly updating the *context.IssuedClaims* collection. For example:
 
-```cs
+```
 public class SampleProfileService : DefaultProfileService
 {
     public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -84,7 +84,7 @@ When the profile service is called for requests to the [userinfo endpoint]({{< r
 ## Client claims
 Client claims are a set of pre-defined claims that are emitted in access tokens. They are defined on a per-client basis, meaning that each client can have its own unique set of client claims. The following shows an example of a client that is associated with a certain customer in your system:
 
-```cs
+```
 var client = new Client
 {
     ClientId = "client",

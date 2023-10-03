@@ -14,7 +14,7 @@ From a security point of view they have some shortcomings
 
 The following creates a shared secret:
 
-```cs
+```
 // loadSecret is responsible for loading a SHA256 or SHA512 hash of a good,
 // high-entropy secret from a secure storage location
 var hash = loadSecretHash(); 
@@ -32,7 +32,7 @@ when prototyping or during demos to get started quickly. However, the clear text
 of secrets used in production should never be written down in your source code.
 Anyone with access to the repository can see the secret.
 
-```cs
+```
 var compromisedSecret = new Secret("just for demos, not prod!".Sha256());
 ```
 
@@ -70,7 +70,7 @@ Authorization: Basic xxxxx
 ## .NET client library
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code.
 
-```cs
+```
 using IdentityModel.Client;
 
 var client = new HttpClient();

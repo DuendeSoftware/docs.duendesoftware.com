@@ -20,7 +20,7 @@ Let's model something very simple - a system that has three logical operations *
 
 You can define them using the *ApiScope* class:
 
-```cs
+```
 public static IEnumerable<ApiScope> GetApiScopes()
 {
     return new List<ApiScope>
@@ -34,7 +34,7 @@ public static IEnumerable<ApiScope> GetApiScopes()
 
 You can then assign the scopes to various clients, e.g.:
 
-```cs
+```
 var webViewer = new Client
 {
     ClientId = "web_viewer",
@@ -100,7 +100,7 @@ Sometimes scopes have a certain structure, e.g. a scope name with an additional 
 In this case you would create a scope without the parameter part and assign that name to a client, but in addition provide some logic to parse the structure
 of the scope at runtime using the *IScopeParser* interface or by deriving from our default implementation, e.g.:
 
-```cs
+```
 public class ParameterizedScopeParser : DefaultScopeParser
 {
     public ParameterizedScopeParser(ILogger<DefaultScopeParser> logger) : base(logger)
@@ -144,7 +144,7 @@ public class ParameterizedScopeParser : DefaultScopeParser
 
 You then have access to the parsed value throughout the pipeline, e.g. in the profile service:
 
-```cs
+```
 public class HostProfileService : IProfileService
 {
     public override async Task GetProfileDataAsync(ProfileDataRequestContext context)

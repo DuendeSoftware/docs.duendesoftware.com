@@ -7,7 +7,7 @@ weight: 36
 
 Used to dynamically load client configuration.
 
-```cs
+```
     /// <summary>
     /// Retrieval of client configuration
     /// </summary>

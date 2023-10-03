@@ -8,7 +8,7 @@ weight: 100
 
 Used to persist users' authentication session data when using the [server-side sessions feature]({{<ref "/ui/server_side_sessions">}}).
 
-```cs
+```
 /// <summary>
 /// User session store
 /// </summary>
@@ -55,7 +55,7 @@ public interface IServerSideSessionStore
 
 #### ServerSideSession
 
-```cs
+```
 /// <summary>
 /// A user session
 /// </summary>
@@ -114,7 +114,7 @@ The *Ticket* property contains a copy of all of the values (and more) and is con
 
 #### SessionFilter
 
-```cs
+```
 /// <summary>
 /// Filter to query user sessions
 /// </summary>
@@ -135,7 +135,7 @@ public class SessionFilter
 
 #### SessionQuery
 
-```cs
+```
 /// <summary>
 /// Filter to query all user sessions
 /// </summary>
@@ -175,7 +175,7 @@ public class SessionQuery
 
 #### QueryResult
 
-```cs
+```
 /// <summary>
 /// Query result for paged data
 /// </summary>

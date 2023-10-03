@@ -7,7 +7,7 @@ weight: 20
 
 Allows running custom code as part of the token issuance pipeline at the token endpoint.
 
-```cs
+```
 /// <summary>
 /// Allows inserting custom validation logic into token requests
 /// </summary>

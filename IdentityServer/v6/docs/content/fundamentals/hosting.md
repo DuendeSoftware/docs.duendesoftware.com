@@ -12,7 +12,7 @@ While technically you could share the ASP.NET Core host between Duende IdentityS
 ## DI system
 You add the necessary services to the  DI system by calling *AddIdentityServer* in your startup class:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     var builder = services.AddIdentityServer(options => { ... });
@@ -24,7 +24,7 @@ Many of the fundamental configuration settings can be set on the options. See th
 The builder object has a number of extension methods to add additional services to DI.
 You can see the full list in the [reference]({{< ref "/reference/di" >}}) section, but very commonly you start by adding the configuration stores for clients and resources, e.g.:
 
-```cs
+```
 var builder = services.AddIdentityServer()
     .AddInMemoryClients(Config.Clients)
     .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -40,7 +40,7 @@ Since ordering is important in the pipeline, you typically want to put the Ident
 
 This would be a very typical minimal pipeline:
 
-```cs
+```
 public void Configure(IApplicationBuilder app)
 {
     app.UseStaticFiles();

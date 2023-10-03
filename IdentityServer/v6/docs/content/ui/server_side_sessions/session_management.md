@@ -31,7 +31,7 @@ You can optionally filter on a user's claims mentioned above (subject identifier
 
 For example:
 
-```cs
+```
 var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
     {
         CountRequested = 10,
@@ -44,7 +44,7 @@ The results returned contains the matching users' session data, as well as pagin
 
 This paging information contains a *ResultsToken* and allows subsequent requests for next or previous pages (set *RequestPriorResults* to true for the previous page, otherwise the next page is assumed):
 
-```cs
+```
 // this requests the first page
 var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
     {
@@ -78,7 +78,7 @@ There is also a list of client identifiers to control which clients are affected
 
 An example to revoke everything for current sessions for subject id *12345* might be:
 
-```cs
+```
 await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
     SubjectId = "12345"
 });
@@ -86,7 +86,7 @@ await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext {
 
 Or to just revoke all refresh tokens for current sessions for subject id *12345* might be:
 
-```cs
+```
 await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
     SubjectId = "12345",
     RevokeTokens = true,

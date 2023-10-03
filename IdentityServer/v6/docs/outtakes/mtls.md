@@ -39,7 +39,7 @@ The Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/secur
 
 If you are using Nginx (which we found is the most flexible hosting option), you need to register the following service in *ConfigureServices*:
 
-```cs
+```
 services.AddCertificateForwarding(options =>
 {
     // header name might be different, based on your nginx config
@@ -64,7 +64,7 @@ Once, the certificate has been loaded, you also need to setup the authentication
 In this scenario we want to support self-signed certificates, hence the ``CertificateType.All`` and no revocation checking.
 These settings might be different in your environment:: 
 
-```cs
+```
     services.AddAuthentication()
         .AddCertificate(options =>
         {
@@ -85,7 +85,7 @@ In your IdentityServer, the mutual TLS endpoints, can be configured in three way
 
 For example:
 
-```cs
+```
     var builder = services.AddIdentityServer(options =>
     {
         options.MutualTls.Enabled = true;
@@ -109,7 +109,7 @@ For this you need to associate a client certificate with a client in your Identi
 
 Use the [DI extensions methods]({{< ref "/reference/di" >}}) to add the services to DI which contain a default implementation to do that either thumbprint or common-name based:
 
-```cs
+```
 builder.AddMutualTlsSecretValidators();
 ```
 
@@ -118,7 +118,7 @@ or ``SecretTypes.X509CertificateThumbprint`` (for self-issued certificates) to t
 
 For example::
 
-```cs
+```
 new Client
 {
     ClientId = "mtls",
@@ -147,7 +147,7 @@ class provides a convenient mechanism to add a client certificate to outgoing re
 Use such a handler with *HttpClient* to perform the client certificate authentication handshake at the TLS channel.
 The following snippet is using [IdentityModel](https://identitymodel.readthedocs.io) to read the discovery document and request a token:
 
-```cs
+```
 static async Task<TokenResponse> RequestTokenAsync()
 {
     var handler = new SocketsHttpHandler();
@@ -200,7 +200,7 @@ The same preparation steps as mentioned above are necessary at the API to be abl
 Additionally, the API hosting application will need a mechanism to accept the client certificate in order to obtain the thumbprint to perform the confirmation claim validation.
 Below is an example how an API in ASP.NET Core might be configured for both access tokens and client certificates:
 
-```cs
+```
 services.AddAuthentication("token")
     .AddJwtBearer("token", options =>
     {
@@ -218,7 +218,7 @@ Finally, a mechanism is needed that runs after the authentication middleware to 
 
 Below is a simple middleware that checks the claims:
 
-```cs
+```
 public class ConfirmationValidationMiddlewareOptions
 {
     public string CertificateSchemeName { get; set; } = CertificateAuthenticationDefaults.AuthenticationScheme;
@@ -272,7 +272,7 @@ public class ConfirmationValidationMiddleware
 
 Below is an example pipeline for an API:
 
-```cs
+```
 app.UseForwardedHeaders(new ForwardedHeadersOptions
     {
         ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -314,7 +314,7 @@ request the token and calling the API, this will give you the desired proof-of-p
 
 For this enable the following setting in the options::
 
-```cs
+```
 var builder = services.AddIdentityServer(options =>
 {
     // other settings
@@ -327,7 +327,7 @@ var builder = services.AddIdentityServer(options =>
 In this scenario, the client uses *some* client secret (a shared secret in the below sample), but attaches an additional client certificate to the token request.
 Since this certificate does not need to be associated with the client at the token services, it can be created on the fly:
 
-```cs
+```
 static X509Certificate2 CreateClientCertificate(string name)
 {
     X500DistinguishedName distinguishedName = new X500DistinguishedName($"CN={name}");
@@ -350,7 +350,7 @@ static X509Certificate2 CreateClientCertificate(string name)
 
 Then use this client certificate in addition to the already setup-up client secret:
 
-```cs
+```
 static async Task<TokenResponse> RequestTokenAsync()
 {
     var client = new HttpClient(GetHandler(ClientCertificate));

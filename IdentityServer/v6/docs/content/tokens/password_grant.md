@@ -30,7 +30,7 @@ password=password
 ### .NET client library
 On .NET you can use the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens using the *password* grant type, e.g.:
 
-```cs
+```
 using IdentityModel.Client;
 
 var client = new HttpClient();
@@ -52,7 +52,7 @@ var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
 Since this flow is not generally recommended, no standard implementation for validating the token request and user credentials is included.
 To add support for it you need to to implement and [register]({{< ref "/reference/di#additional-services" >}}) an implementation of the *IResourceOwnerPasswordValidator* interface::
 
-```cs
+```
 public interface IResourceOwnerPasswordValidator
 {
     /// <summary>

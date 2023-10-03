@@ -48,7 +48,7 @@ On .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.i
 
 The above token request would look like this in C#:
 
-```cs
+```
 using IdentityModel.Client;
 
 var client = new HttpClient();
@@ -68,7 +68,7 @@ The [IdentityModel.AspNetCore](https://identitymodel.readthedocs.io/en/latest/as
 
 Using this library, you only need to register the token client in DI:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddAccessTokenManagement(options =>
@@ -86,7 +86,7 @@ public void ConfigureServices(IServiceCollection services)
 
 You can then add token management to an HTTP-factory provided client:
 
-```cs
+```
 services.AddClientAccessTokenClient("client", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
@@ -95,7 +95,7 @@ services.AddClientAccessTokenClient("client", configureClient: client =>
 
 ...and finally use the client with automatic token management in your application code:
 
-```cs
+```
 public class DataController : Controller
 {
     IHttpClientFactory _factory;
@@ -187,7 +187,7 @@ The most common client library for .NET is the OpenID Connect [authentication](h
 
 You only need to configure it in your startup code:
 
-```cs
+```
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddAuthentication(options =>
