@@ -170,7 +170,7 @@ The above methods return various models.
 
 * ***SignOutIFrameUrl***
 
-    The URL to render in an *<iframe>* on the logged out page to enable single sign-out.
+    The URL to render in an *\<iframe>* on the logged out page to enable single sign-out.
 
 * ***Parameters***
     
