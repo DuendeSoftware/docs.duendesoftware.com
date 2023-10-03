@@ -14,4 +14,4 @@ Doing so would skip the necessary [front-channel notifications]({{< ref "./notif
 
 Instead, the typical approach is to render the *PostLogoutRedirectUri* as a link on the "logged out" page.
 This will allow the page to render, the front-channel iframes will load and perform their duty. 
-It's possible to add JavaScript to the page could enhance this experience even more.
+It's possible to add JavaScript to the page to enhance this experience even more.
