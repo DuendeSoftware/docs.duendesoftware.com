@@ -44,7 +44,7 @@ Pragma: no-cache
 ```
 
 ### .NET client library
-On .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens.
+In .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens.
 
 The above token request would look like this in C#:
 
@@ -129,7 +129,7 @@ Prerequisites are:
 * grant the client access to both scopes via the [*AllowedScopes*]({{< ref "/reference/models/client#basics" >}}) property
 
 ### Front-channel
-The call to the authorize endpoint is one using a redirect in the browser:
+The call to the authorize endpoint is done using a redirect in the browser:
 
 ```
 GET /connect/authorize?
@@ -179,7 +179,7 @@ Pragma: no-cache
 ```
 
 {{% notice note %}}
-See the refresh token section for more information on how to deal with refresh tokens. TODO link
+See the refresh token section for more information on how to deal with [refresh tokens]({{< ref "/tokens/refresh/" >}}).
 {{% /notice %}}
 
 ### .NET client library
