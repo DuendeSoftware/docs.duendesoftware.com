@@ -179,7 +179,7 @@ Pragma: no-cache
 ```
 
 {{% notice note %}}
-See the refresh token section for more information on how to deal with [refresh tokens]({{< ref "/tokens/refresh/" >}}).
+See the refresh token section for more information on how to deal with [refresh tokens]({{< ref "/tokens/refresh" >}}).
 {{% /notice %}}
 
 ### .NET client library
