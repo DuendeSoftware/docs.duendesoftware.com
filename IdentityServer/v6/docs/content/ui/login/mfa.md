@@ -3,7 +3,7 @@ title: "Multi Factor Authentication"
 weight: 50
 ---
 
-IdentityServer itself doesn't implement MFA. MFA is part of the login which is the [responsibility of the hosting application]({{< ref "..">}}).
+IdentityServer itself doesn't implement MFA. MFA is part of the login which is the [responsibility of the hosting application]({{< ref "..">}}). Microsoft provides some [general guidelines](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/mfa) on how to enable MFA for Asp.Net Core.
 
 ## MFA hosted in IdentityServer
 To make the local IdentityServer login page offer MFA anything that works with Asp.Net Core also works with IdentityServer. One approach is to use [Microsoft Asp.Net Identity](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity) that offers [MFA support](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-enable-qrcodes).
