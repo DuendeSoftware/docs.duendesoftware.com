@@ -3,8 +3,6 @@ title: "Multi Factor Authentication"
 weight: 50
 ---
 
-# Multi Factor Authentication
-
 IdentityServer itself doesn't implement MFA. MFA is part of the login which is the [responsibility of the hosting application]({{< ref "..">}}).
 
 ## MFA hosted in IdentityServer
