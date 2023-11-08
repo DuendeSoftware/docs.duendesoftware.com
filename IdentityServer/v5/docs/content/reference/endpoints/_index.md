@@ -6,4 +6,4 @@ chapter = true
 
 # Endpoints
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}
