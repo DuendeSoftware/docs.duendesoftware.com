@@ -8,4 +8,4 @@ chapter = true
 # Overview
 
 
-{{%children style="h4" %}}
+{{%children style="h4" /%}}
