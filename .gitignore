@@ -4,6 +4,7 @@
 # hugo
 public
 root/identityserver/
+.hugo_build.lock
 
 # .net
 [Dd]ebug/
