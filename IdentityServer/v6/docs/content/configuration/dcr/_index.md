@@ -14,3 +14,4 @@ response describing the new client, if the request is authorized and valid.
 DCR eliminates the need for a manual registration process, making it more
 efficient and less time-consuming to register new clients.
 
+{{%children style="h4" /%}}
