@@ -27,7 +27,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddAuthorization(options =>
     {
         options.AddPolicy("read_access", policy =>
-            policy.RequireClaim("scope", "read");
+            policy.RequireClaim("scope", "read"));
     });
 }
 ```
