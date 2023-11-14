@@ -12,8 +12,8 @@ hosted either separately or within the IdentityServer implementation, and is
 distributed through the separate [Duende.IdentityServer.Configuration nuget
 package](https://www.nuget.org/packages/Duende.IdentityServer.Configuration).
 
-In this initial release, the Configuration API supports the Dynamic Client
-Registration protocol.
+In this initial release, the Configuration API supports the [Dynamic Client
+Registration]({{< ref "dcr" >}}) protocol. 
 
 The Configuration API is part of the
 [IdentityServer](https://duendesoftware.com/products/identityserver) 
