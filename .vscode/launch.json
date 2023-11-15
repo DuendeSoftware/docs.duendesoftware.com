@@ -8,7 +8,7 @@
             "name": "hugo",
             "request": "launch",
             "type": "f5anything",
-            "command": "hugo server --navigateToChanged --source ${workspaceFolder}/IdentityServer/v6/docs"
+            "command": "hugo server --navigateToChanged --source ${workspaceFolder}/IdentityServer/v7/docs"
         }
     ]
 }
