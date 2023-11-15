@@ -176,7 +176,7 @@ The following are convenient to add additional features to your IdentityServer.
 
 * ***AddAppAuthRedirectUriValidator***
     
-    Adds a an "AppAuth" (OAuth 2.0 for Native Apps) compliant redirect URI validator (does strict validation but also allows http://127.0.0.1 with random port).
+    Adds an "AppAuth" (OAuth 2.0 for Native Apps) compliant redirect URI validator (does strict validation but also allows http://127.0.0.1 with random port).
 
 * ***AddJwtBearerClientAuthentication***
     
