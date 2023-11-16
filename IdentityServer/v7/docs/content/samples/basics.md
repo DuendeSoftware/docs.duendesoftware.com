@@ -91,3 +91,13 @@ Key takeaways:
 * how to leverage events on the cookie handler to invalidate the user session
 
 [link to source code]({{< param samples_base >}}/Basics/MvcBackChannelLogout)
+
+### MVC Client with Pushed Authorization Requests
+This sample shows how to use [Pushed Authorization Requests]({{< ref "/tokens/par" >}}) (PAR).
+
+Key takeaways:
+
+* how to enable PAR in the client configuration
+* how to add support for PAR to the ASP.NET OIDC authentication handler. The main idea is to use the events in the handler to push the parameters before redirecting to the authorize endpoint, and then replace the parameters that would normally be sent in that redirect with the resulting request uri. See the *ParOidcEvents.cs* file for more details.
+
+[link to source code]({{< param samples_base >}}/Basics/MvcPar)
