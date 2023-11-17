@@ -15,5 +15,5 @@ Version 6.x is supported on .NET 6 and .NET 7. Version 6.x is supported until No
 {{% /notice %}}
 
 {{% notice info %}}
-Version 6.x is supported not supported on .NET 8. Please use [v7.x](https://docs.duendesoftware.com/identityserver/v7) for .NET 8.
+Version 6.x is not supported on .NET 8. Please use [v7.x](https://docs.duendesoftware.com/identityserver/v7) for .NET 8.
 {{% /notice %}}
