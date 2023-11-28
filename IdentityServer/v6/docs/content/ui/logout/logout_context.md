@@ -13,7 +13,7 @@ The logout page can be triggered in different ways:
 * External Provider Logout Notification (protocol)
 * Direct User Access (non-protocol)
 
-If the login page is being triggered by a protocol workflow, then this means Duende IdentityServer has redirected the user's browser to the logout page.
+If the logout page is being triggered by a protocol workflow, then this means Duende IdentityServer has redirected the user's browser to the logout page.
 In these scenarios, a *logoutId* parameter will be passed that represents the logout context. 
 The *logoutId* value can be exchanged with the *GetLogoutContextAsync* API on the [interaction service]({{<ref "/reference/services/interaction_service">}}) to obtain a *LogoutRequest* object.
 
