@@ -12,7 +12,7 @@ This prevents an attacker in the browser from
 - seeing authorization parameters (which could leak PII) and from 
 - tampering with those parameters (e.g., the attacker could change the scope of access being requested). 
  
-Pushing the authorization parameters also keeps request URLs short. Authorize parameters might get very long when using more complex OAuth and OIDC features such as Rich Authorization Requests, and URLs that are long cause issues in many browsers and networking infrastructure.
+Pushing the authorization parameters also keeps request URLs short. Authorize parameters might get very long when using more complex OAuth and OIDC features, and URLs that are long cause issues in many browsers and networking infrastructure.
 
 The use of PAR is encouraged by the [FAPI working group](https://openid.net/wg/fapi/) within the OpenID Foundation. For example, [the FAPI2.0 Security Profile](https://openid.bitbucket.io/fapi/fapi-2_0-security-profile.html) requires the use of PAR. This security profile is used by many of the groups working on open banking (primarily in Europe), in health care, and in other industries with high security requirements.
 
