@@ -261,7 +261,14 @@ Consent screen specific settings.
     
     URI to client logo.
 
-## Device flow
+## Cross Device Flows
+Settings used in the CIBA and OAuth device flows.
+
+* ***PollingInterval***
+
+    Maximum polling interval for the client in cross device flows. If the client polls more frequently than the polling interval during those flows, it will receive a *slow_down* error response. Defaults to *null*, which means the throttling will use the global default appropriate for the flow (*IdentityServerOptions.Ciba.DefaultPollingInterval* or *IdentityServerOptions.DeviceFlow.Interval*).
+
+#### Device Flow
 Device flow specific settings.
 
 * ***UserCodeType***
@@ -272,16 +279,13 @@ Device flow specific settings.
 
     Lifetime to device code in seconds (defaults to 300 seconds / 5 minutes)
 
-## CIBA
+#### CIBA
 Client initiated backchannel authentication specific settings.
 
 * ***CibaLifetime***
     
     Specifies the backchannel authentication request lifetime in seconds. Defaults to *null*.
 
-* ***PollingInterval***
-
-    Backchannel polling interval in seconds. Defaults to *null*.
 
 ## DPoP
 Added in 6.3.0.

@@ -567,7 +567,7 @@ OAuth device flow settings. Available on the *DeviceFlow* property of the *Ident
 
 * ***Interval***
 
-    Defines the minimum allowed polling interval on the token endpoint. Defaults to *5*.
+    The maximum frequency in seconds that a client may poll the token endpoint in the device flow. Defaults to *5*.
 
 ## Mutual TLS
 [Mutual TLS]({{< ref "/tokens/authentication/mtls" >}}) settings. Available on the *MutualTls* property of the *IdentityServerOptions* object.
@@ -640,7 +640,7 @@ Settings for [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}). Avail
 
 * ***DefaultPollingInterval***
     
-    The polling interval in seconds that a client is to use when connecting to the token endpoint. Defaults to 5.
+    The maximum frequency in seconds that a client may poll the token endpoint in the CIBA flow. Defaults to 5.
 
 ## Server-side Sessions 
 Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added in 6.1.  Available on the *ServerSideSessions* property of the *IdentityServerOptions* object.
