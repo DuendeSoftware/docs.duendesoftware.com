@@ -1,6 +1,6 @@
 ---
 title: "Local APIs"
-weight: 30
+weight: 10
 ---
 
 A _Local API_ is an API that is located within the BFF host. Local APIs are implemented with the familiar ASP.NET abstractions of API controllers or minimal API endpoints. 
@@ -50,7 +50,7 @@ public class MyApiController : ControllerBase
 }
 ```
 
-The example above is simplified to demonstrate the way that you might obtain a token. Real local endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Local endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder]({{<ref "\bff\apis\remote">}}) or [YARP]({{<ref "\bff\apis\yarp">}}).
+The example above is simplified to demonstrate the way that you might obtain a token. Real local endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Local endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder]({{<ref "remote">}}) or [YARP]({{<ref "yarp">}}).
 
 ## Securing Local API Endpoints
 Regardless of the style of data access used by a local API, it must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. To defend against such attacks and ensure that only the frontend can access these endpoints, we recommend implementing two layers of protection. 
