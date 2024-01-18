@@ -1,7 +1,6 @@
 ---
 title: "Pushed Authorization Requests"
 weight: 175
-chapter: true
 ---
 
 (Added in 7.0)
