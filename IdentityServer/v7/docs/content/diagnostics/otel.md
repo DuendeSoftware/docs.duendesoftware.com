@@ -162,11 +162,12 @@ multiple actual tokens (id_token, access token, refresh token).
 |error | Error label on errors |
 
 ### Metrics in the UI
-Duende IdentityServer in itself does not provide a UI. That is [the responsibility of the hosting application]
-({{< ref "/ui/" >}}). That is why there are no metrics from the core IdentityServer system for things
-like user login/logout as those events are responsibilities for the UI. We do provide quick start UIs
-which are meant as a starting point for your own UI development. In the quick start UIs we do provide
-metrics as a starting point, but you should alter and add metrics as needed in your context.
+Duende IdentityServer in itself does not provide a UI. That is 
+[the responsibility of the hosting application]({{< ref "/ui/" >}}). That is why there are no metrics
+from the core IdentityServer system for events like user login/logout as those events are responsibilities 
+for the UI. We do provide quick start UIs which are meant as a starting point for your own UI development.
+In the quick start UIs we do provide metrics as a starting point, but you should alter and add metrics
+as needed in your context.
 
 #### Telemetry.Metrics.Counters.ConsentGranted/ConsentDenied
 Counter names: *consent_granted*/*consent_denied*
