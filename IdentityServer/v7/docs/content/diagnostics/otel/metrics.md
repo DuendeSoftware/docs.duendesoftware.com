@@ -10,12 +10,14 @@ The metric counters are designed to provide a high level overview. They are desi
 sensitive information. The counters may contain tags to indicate the source of the data.
 
 ## High level Metrics
-These metrics are instrumented by the IdentityServer services and middleware and are intended to describe the overal usage and health of the system. They could provide the starting point for building a metrics dashboard.
+These metrics are instrumented by the IdentityServer middleware and services and are
+intended to describe the overall usage and health of the system. They could provide the
+starting point for building a metrics dashboard.
 
 #### Telemetry.Metrics.Counters.Failure/Success
 Counter names: *failure*/*success*
 
-Aggregaged counter of failed and successful operations. Note that it is expected to have failures during normal
+Aggregated counter of failed and successful operations. Note that it is expected to have failures during normal
 operation of IdentityServer. The failure/success ratio can be used as a very high level health metric.
 |Tag|Description|
 |---|---|
@@ -104,7 +106,7 @@ Number of successful/failed validations of dynamic identity providers.
 #### Telemetry.Metrics.Counters.Introspection/IntrospectionFailure  
 Counter names: *introspection_failure*/*introspection_failure*
  
-Number of successful/failed token instrospections.
+Number of successful/failed token introspections.
 |Tag|Description|
 |---|---|
 |caller| The caller of the endpoint, a client id or api id.|
@@ -151,9 +153,11 @@ multiple actual tokens (id_token, access token, refresh token).
 |error | Error label on errors |
 
 ### Metrics in the UI
-The [UI in your IdentityServer host]({{< ref "/ui/" >}}) can instrument these events to measure 
-activites that occur during interactive flows, such as user login and logout. Our templated UI 
-includes these metrics, but you can alter and add metrics as needed in your context.
+The [UI in your IdentityServer host]({{< ref "/ui/" >}}) can instrument these events to
+measure activities that occur during interactive flows, such as user login and logout. The
+These events are not instrumented by the IdentityServer middleware or services because
+they are the responsibility of the UI. Our templated UI does instrument these events, and
+you can alter and add metrics as needed to the UI in your context.
 
 #### Telemetry.Metrics.Counters.ConsentGranted/ConsentDenied
 Counter names: *consent_granted*/*consent_denied*
