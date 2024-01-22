@@ -1,22 +1,11 @@
 ---
-title: "OpenTelemetry"
+title: "Metrics"
 date: 2020-09-10T08:22:12+02:00
-weight: 30
+weight: 10
 ---
 
-(added in v6.1, expanded in v7.0)
+(added in v7.0)
 
-[OpenTelemetry](https://opentelemetry.io) is a collection of tools, APIs, and SDKs for generating and collecting
-telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior, 
-especially in highly distributed systems.
-
-.NET 8 comes with first class support for Open Telemetry. IdentityServer emmits traces, metrics and logs.
-- Metrics are high level statistic counters. They provide an aggregated overview and can be used to set monitoring rules.
-- Traces shows individual requests and dependencies. The output is very useful for visualizing the control 
-  flow and finding performance bottlenecks.
-- Logs contains all the details when needed for troubleshooting.
-
-# Metrics
 The metric counters are designed to provide a high level overview. They are designed to not contain any
 sensitive information. The counters may contains tags to indicate the source of the data.
 
@@ -211,88 +200,3 @@ will typically be lower than the number of logins.
 |Tag|Description|
 |---|---|
 |idp | The idp (Asp.Net Core Scheme name) logging out from |
-
-# Traces
-Here's e.g. the output for a request to the discovery endpoint:
-
-![](../images/otel_disco.png)
-
-When multiple applications send their traces to the same OTel server, this becomes super useful for following e.g. authentication flows over service boundaries.
-
-The following screenshot shows the ASP.NET Core OpenID Connect authentication handler redeeming the authorization code:
-
-![](../images/otel_flow_1.png)
-
-...and then contacting the userinfo endpoint:
-
-![](../images/otel_flow_2.png)
-
-*The above screenshots are from https://www.honeycomb.io.*
-
-#### Tracing sources
-IdentityServer can emit very fine grained traces which is useful for performance troubleshooting and general exploration of the
-control flow.
-
-This might be too detailed in production. 
-
-You can select which information you are interested in by selectively listening to various traces:
-
-* **IdentityServerConstants.Tracing.Basic**
-   
-   High level request processing like request validators and response generators
-
-* **IdentityServerConstants.Tracing.Cache**
-   
-   Caching related tracing
-
-* **IdentityServerConstants.Tracing.Services**
-   
-   Services related tracing
-
-* **IdentityServerConstants.Tracing.Stores**
-   
-   Store related tracing
-
-* **IdentityServerConstants.Tracing.Validation**
-   
-   More detailed tracing related to validation
-
-### Setup
-To start emitting Otel tracing and metrics information you need 
-
-* add the Otel libraries to your IdentityServer and client applications
-* start collecting traces and Metrics from the various IdentityServer sources (and other sources e.g. ASP.NET Core)
-
-For development a simple option is to export the tracing information to the console and use the Prometheus
-exporter to create a human readable /metrics endpoint for the metrics.
-
-Add the Open Telemetry configuration to your service setup.
-```cs
-var openTelemetry = builder.Services.AddOpenTelemetry();
-
-openTelemetry.ConfigureResource(r => r
-    .AddService(builder.Environment.ApplicationName));
-
-openTelemetry.WithMetrics(m => m
-    .AddMeter(Telemetry.ServiceName)
-    .AddMeter(Pages.Telemetry.ServiceName)
-    .AddPrometheusExporter());
-
-openTelemetry.WithTracing(t => t
-    .AddSource(IdentityServerConstants.Tracing.Basic)
-    .AddSource(IdentityServerConstants.Tracing.Cache)
-    .AddSource(IdentityServerConstants.Tracing.Services)
-    .AddSource(IdentityServerConstants.Tracing.Stores)
-    .AddSource(IdentityServerConstants.Tracing.Validation)
-    .AddAspNetCoreInstrumentation()
-    .AddConsoleExporter());
-```
-
-Add the Prometheus exporter to the pipeline
-
-```cs
-// Map /metrics that displays Otel data in human readable form.
-app.UseOpenTelemetryPrometheusScrapingEndpoint();
-```
-
-This setup will write the tracing information to the console and provide metrics on the /metrics endpoint.
