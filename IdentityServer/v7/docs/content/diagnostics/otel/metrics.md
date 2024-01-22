@@ -154,7 +154,7 @@ multiple actual tokens (id_token, access token, refresh token).
 
 ### Metrics in the UI
 The [UI in your IdentityServer host]({{< ref "/ui/" >}}) can instrument these events to
-measure activities that occur during interactive flows, such as user login and logout. The
+measure activities that occur during interactive flows, such as user login and logout.
 These events are not instrumented by the IdentityServer middleware or services because
 they are the responsibility of the UI. Our templated UI does instrument these events, and
 you can alter and add metrics as needed to the UI in your context.
