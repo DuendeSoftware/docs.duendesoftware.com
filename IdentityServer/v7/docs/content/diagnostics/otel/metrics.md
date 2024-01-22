@@ -7,15 +7,15 @@ weight: 10
 (added in v7.0)
 
 The metric counters are designed to provide a high level overview. They are designed to not contain any
-sensitive information. The counters may contains tags to indicate the source of the data.
+sensitive information. The counters may contain tags to indicate the source of the data.
 
 ## High level Metrics
-The instrumation provides some high level metrics that are probably a good starting point for building a metrics dashboard.
+These metrics are instrumented by the IdentityServer services and middleware and are intended to describe the overal usage and health of the system. They could provide the starting point for building a metrics dashboard.
 
 #### Telemetry.Metrics.Counters.Failure/Success
 Counter names: *failure*/*success*
 
-Aggregaged counter of failed and successful operations. Please note that it is expected to have failures during normal
+Aggregaged counter of failed and successful operations. Note that it is expected to have failures during normal
 operation of IdentityServer. The failure/success ratio can be used as a very high level health metric.
 |Tag|Description|
 |---|---|
@@ -26,14 +26,14 @@ operation of IdentityServer. The failure/success ratio can be used as a very hig
 Counter name: *active_requests*
 
 Gauge/up-down counter that shows current active requests that are processed by any IdentityServer endpoint. 
-Please note that the pages in the user interface are not IdentityServer endpoints and are not included in this count.
+Note that the pages in the user interface are not IdentityServer endpoints and are not included in this count.
 |Tag|Description|
 |---|---|
 |endpoint | The type name for the endpoint processor |
 |path | The path of the request |
 
 #### Telemetry.Metrics.Counters.UnHandledException
-Counter names: *unhandled_exception*
+Counter name: *unhandled_exception*
  
 Number of globally unhandled exceptions from IdentityServer.
 |Tag|Description|
@@ -42,7 +42,7 @@ Number of globally unhandled exceptions from IdentityServer.
 |method | The name of the method where the exception was thrown. |
 
 ### Detailed Metrics
-There are also more detailed metrics available that show the usage of specific flows and features.
+These detailed metrics are instrumented by the IdentityServer middleware and services and track usage of specific flows and features.
 ####  Telemetry.Metrics.Counters.ApiSecretValidation/ApiSecretValidationFailure
 Counter names: *apisecret_validation*/*apisecret_validation_failure*
 
@@ -151,20 +151,16 @@ multiple actual tokens (id_token, access token, refresh token).
 |error | Error label on errors |
 
 ### Metrics in the UI
-Duende IdentityServer in itself does not provide a UI. That is 
-[the responsibility of the hosting application]({{< ref "/ui/" >}}). That is why there are no metrics
-from the core IdentityServer system for events like user login/logout as those events are responsibilities 
-for the UI. We do provide quick start UIs which are meant as a starting point for your own UI development.
-In the quick start UIs we do provide metrics as a starting point, but you should alter and add metrics
-as needed in your context.
+The [UI in your IdentityServer host]({{< ref "/ui/" >}}) can instrument these events to measure 
+activites that occur during interactive flows, such as user login and logout. Our templated UI 
+includes these metrics, but you can alter and add metrics as needed in your context.
 
 #### Telemetry.Metrics.Counters.ConsentGranted/ConsentDenied
 Counter names: *consent_granted*/*consent_denied*
 
-Consents granted or consent requests denied. The counters are per scope, so if a user consents
-to multiple scopes, the counter is increased multiple times, one for each scope. The reason
-for this is to be able to include the scope name as a tag without causing an explosion of
-combination of tags.
+Consent requests granted or denied. The counters are per scope, so if a user consents
+to multiple scopes, the counter is increased multiple times, one for each scope. This allows
+the scope name to be included as a tag without causing an explosion of combination of tags.
 
 |Tag|Description|
 |---|---|
@@ -178,7 +174,7 @@ Revocation of grants.
 
 |Tag|Description|
 |---|---|
-|client | The client Id, if grants are revoked only for one client. If not set the revocation was for all clients. |
+|client | The client Id, if grants are revoked only for one client. If not set, the revocation was for all clients. |
 
 #### Telemetry.Metrics.Counters.UserLogin/UserLoginFailure 
 Counter names: *user_login*/*user_login_failure*
@@ -192,11 +188,11 @@ Successful and failed user logins.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.UserLogout
-Counter names: *user_logout*
+Counter name: *user_logout*
 
 User logout. Note that this is only raised on explicit user logout, not if the session times out. The number of logouts
 will typically be lower than the number of logins.
 
 |Tag|Description|
 |---|---|
-|idp | The idp (Asp.Net Core Scheme name) logging out from |
+|idp | The idp (ASP.NET scheme name) logging out from |
