@@ -31,23 +31,24 @@ If you do not use server-side sessions, then the access and refresh token will b
 This would involve two steps
 
 * turn off the *SaveTokens* flag on the OpenID Connect handler and handle the relevant events manually to store the tokens in your custom store
-* implement and register the *IdentityModel.AspNetCore.AccessTokenManagement.IUserAccessTokenStore* interface
+* implement and register the *Duende.AccessTokenManagement.IUserTokenStore* interface
 
 The interface is responsible to storing, retrieving and clearing tokens for the automatic token management:
 
 ```cs
-public interface IUserAccessTokenStore
+public interface IUserTokenStore
 {
     /// <summary>
     /// Stores tokens
     /// </summary>
     /// <param name="user">User the tokens belong to</param>
-    /// <param name="accessToken">The access token</param>
-    /// <param name="expiration">The access token expiration</param>
-    /// <param name="refreshToken">The refresh token (optional)</param>
+    /// <param name="token"></param>
     /// <param name="parameters">Extra optional parameters</param>
     /// <returns></returns>
-    Task StoreTokenAsync(ClaimsPrincipal user, string accessToken, DateTimeOffset expiration, string refreshToken = null, UserAccessTokenParameters parameters = null);
+    Task StoreTokenAsync(
+        ClaimsPrincipal user,
+        UserToken token,
+        UserTokenRequestParameters? parameters = null);
 
     /// <summary>
     /// Retrieves tokens from store
@@ -55,7 +56,9 @@ public interface IUserAccessTokenStore
     /// <param name="user">User the tokens belong to</param>
     /// <param name="parameters">Extra optional parameters</param>
     /// <returns>access and refresh token and access token expiration</returns>
-    Task<UserAccessToken> GetTokenAsync(ClaimsPrincipal user, UserAccessTokenParameters parameters = null);
+    Task<UserToken> GetTokenAsync(
+        ClaimsPrincipal user, 
+        UserTokenRequestParameters? parameters = null);
 
     /// <summary>
     /// Clears the stored tokens for a given user
@@ -63,7 +66,9 @@ public interface IUserAccessTokenStore
     /// <param name="user">User the tokens belong to</param>
     /// <param name="parameters">Extra optional parameters</param>
     /// <returns></returns>
-    Task ClearTokenAsync(ClaimsPrincipal user, UserAccessTokenParameters parameters = null);
+    Task ClearTokenAsync(
+        ClaimsPrincipal user, 
+        UserTokenRequestParameters? parameters = null);
 }
 ```
 

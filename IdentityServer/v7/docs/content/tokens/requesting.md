@@ -64,7 +64,7 @@ var response = await client.RequestClientCredentialsTokenAsync(new ClientCredent
 ```
 
 ### Automating token requests in ASP.NET Core and Worker applications
-The [IdentityModel.AspNetCore](https://identitymodel.readthedocs.io/en/latest/aspnetcore/worker.html) library can automate client credential request and token lifetime management for you.
+The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) library can automate client credential request and token lifetime management for you.
 
 Using this library, you only need to register the token client in DI:
 
@@ -220,4 +220,4 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 ### Automating token management in ASP.NET Core
-The [IdentityModel.AspNetCore](https://identitymodel.readthedocs.io/en/latest/aspnetcore/web.html) library can also be used to automate token lifetime management in ASP.NET Core applications for you.
+The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) library can also be used to automate token lifetime management in ASP.NET Core applications for you.
