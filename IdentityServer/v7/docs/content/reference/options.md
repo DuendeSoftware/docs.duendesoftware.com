@@ -669,9 +669,7 @@ Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added
 * ***FuzzExpiredSessionRemovalStart***
 
     The background session cleanup job runs at a configured interval. If multiple nodes run the cleanup
-    job at the same time there will be updated conflicts in the store. To avoid that, the startup time
-    can be fuzzed. The first run is scheduled at a random time between the host startup and the configured
-    RemoveExpiredSessionsFrequency. Subsequent runs are run on the configured RemoveExpiredSessionsFrequency.
+    job at the same time update conflicts might occur in the store. To reduce the propability of that happening, the startup time can be fuzzed. The first run is scheduled at a random time between the host startup and the configured RemoveExpiredSessionsFrequency. Subsequent runs are run on the configured RemoveExpiredSessionsFrequency.
     Defaults to *true*.
 
 ## Validation

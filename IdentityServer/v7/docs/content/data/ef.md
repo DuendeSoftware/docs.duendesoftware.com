@@ -133,9 +133,7 @@ This options class contains properties to control the operational store and *Per
     OneTime usage can be marked as consumed. 
 
 *FuzzTokenCleanupStart* [added in 7.0]
-    The background token cleanup job runs at a configured interval. If multiple nodes run the cleanup
-    job at the same time, update conflicts might occur in the store. To reduce the probability of that happening, the startup time
-    can be fuzzed. When enabled, the first run is scheduled at a random time between the host startup and the configured
+    The background token cleanup job runs at a configured interval. If multiple nodes run the cleanup job at the same time, update conflicts might occur in the store. To reduce the probability of that happening, the startup time can be fuzzed. When enabled, the first run is scheduled at a random time between the host startup and the configured
     TokenCleanupInterval. Subsequent runs are run on the configured TokenCleanupInterval. Defaults to *true*.
 
 
