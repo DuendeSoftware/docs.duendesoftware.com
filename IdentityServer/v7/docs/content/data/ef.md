@@ -132,6 +132,13 @@ This options class contains properties to control the operational store and *Per
     The consumed token cleanup delay (in seconds). The default is 0. This delay is the amount of time that must elapse before tokens marked as consumed can be deleted. Note that only refresh tokens with
     OneTime usage can be marked as consumed. 
 
+*FuzzTokenCleanupStart* [added in 7.0]
+    The background token cleanup job runs at a configured interval. If multiple nodes run the cleanup
+    job at the same time there will be updated conflicts in the store. To avoid that, the startup time
+    can be fuzzed. The first run is scheduled at a random time between the host startup and the configured
+    TokenCleanupInterval. Subsequent runs are run on the configured TokenCleanupInterval. Defaults to *true*.
+
+
 {{% notice note %}}
 The token cleanup feature does *not* remove persisted grants that are *consumed* (see [persisted grants]({{<ref "./operational/grants#grant-expiration-and-consumption">}})). It only removes persisted grants that are beyond their *Expiration*.
 {{% /notice %}}
