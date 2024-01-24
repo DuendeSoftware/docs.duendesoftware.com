@@ -666,6 +666,12 @@ Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added
     If enabled, when server-side sessions are removed due to expiration, back-channel logout notifications will be sent.
     This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer. Defaults to true.
 
+* ***FuzzExpiredSessionRemovalStart***
+
+    The background session cleanup job runs at a configured interval. If multiple nodes run the cleanup
+    job at the same time update conflicts might occur in the store. To reduce the propability of that happening, the startup time can be fuzzed. The first run is scheduled at a random time between the host startup and the configured RemoveExpiredSessionsFrequency. Subsequent runs are run on the configured RemoveExpiredSessionsFrequency.
+    Defaults to *true*.
+
 ## Validation
 
 * ***InvalidRedirectUriPrefixes***
