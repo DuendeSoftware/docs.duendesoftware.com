@@ -69,3 +69,10 @@ Settings that affect the background cleanup of expired entries (tokens) from the
 
     Gets or sets the number of records to remove at a time. Defaults to *100*.
 
+* ***FuzzTokenCleanupStart***
+
+    The background token cleanup job runs at a configured interval. If multiple nodes run the cleanup
+    job at the same time there will be updated conflicts in the store. To avoid that, the startup time
+    can be fuzzed. The first run is scheduled at a random time between the host startup and the configured
+    TokenCleanupInterval. Subsequent runs are run on the configured TokenCleanupInterval. Defaults to *true*
+
