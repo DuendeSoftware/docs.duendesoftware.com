@@ -101,9 +101,11 @@ does not disable any of these features.
 We understand that when IdentityServer is redistributed, log messages from the licensing
 system are not likely to be very useful to your redistribution customers. For that reason,
 in a redistribution the severity of log messages from the license system is turned all the
-way down to the Trace level. We also appreciate that it might be cumbersome to deploy
-updated licenses in this scenario. You are not required to deploy updated licenses to your
-redistribution customers, as long as you have a current license.
+way down to the trace level. We also appreciate that it might be cumbersome to deploy
+updated licenses in this scenario, especially if the deployment of your software does not 
+coincide with the duration of the IdentityServer license. In that situation, we ask that you
+update the license key at the next deployment of your software to your redistribution customers.
+Of course, you are always responsible for ensuring that your license is renewed.
 
 ## Log Severity
 
