@@ -33,7 +33,7 @@ are experienced with the Entity Framework Migrations Tooling you may also create
 6.2-7.0.
 
 There were minor breaking changes in 6.3, most notably rotated refresh tokens are now deleted immediately
-on use by default. Review the [list in the upgrade guide](v6.3_to_v7.0#step-4-breaking-changes) to check
+on use by default. Review the [list in the upgrade guide](v6.2_to_v6.3#step-4-breaking-changes) to check
 if any of them affect your implementation.
 
 Then continue with "Upgrading from version 6.3" below.
