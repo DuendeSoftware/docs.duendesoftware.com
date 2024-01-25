@@ -5,7 +5,9 @@ weight: 20
 
 ## Duende.IdentityServer.ResponseHandling.ITokenResponseGenerator
 
-The *ITokenResponseGenerator* interface is the contract for the service that generates responses to valid requests to the token endpoint. The default implementation is the *TokenResponseGenerator* class. You can customize the behavior of the token endpoint by providing your own implementation of the *ITokenResponseGenerator* to the DI system.
+The *ITokenResponseGenerator* interface is the contract for the service that generates responses to valid requests to the token endpoint. A response in this context refers to an object model that describes the content that will be serialized and transmitted in the HTTP response.
+
+The default implementation is the *TokenResponseGenerator* class. You can customize the behavior of the token endpoint by providing your own implementation of the *ITokenResponseGenerator* to the DI system.
 
 To create a customized implementation of *ITokenResponseGenerator*, we recommend that you create a class that derives from the default implementation. Your custom implementation should override the appropriate virtual methods of the default implementation and add your custom behavior to those overrides, possibly calling the base methods first and then manipulating their results.
 
