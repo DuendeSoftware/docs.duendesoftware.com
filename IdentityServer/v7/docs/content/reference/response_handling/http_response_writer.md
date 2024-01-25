@@ -5,7 +5,7 @@ weight: 100
 
 The *IHttpResponseWriter* interface is the contract for services that can produce HTTP responses for *IEndpointResult*s. This is a low level abstraction that is intended to be used if you need to customize the serialization, encoding, or HTTP headers in a response from a protocol endpoint.
 
-#### Duende.IdentityServer.Hosting
+#### Duende.IdentityServer.Hosting.IHttpResponseWriter
 
 ```cs
 /// <summary>
@@ -22,7 +22,7 @@ public interface IHttpResponseWriter<in T>
 }
 ```
 
-#### IEndpointResult
+#### Duende.IdentityServer.Hosting.IEndpointResult
 
 ```cs
 /// <summary>
