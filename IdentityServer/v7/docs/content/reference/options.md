@@ -184,6 +184,10 @@ Endpoint settings, including flags to disable individual endpoints and support f
 
     Enables the backchannel authentication endpoint. Defaults to true.
 
+* ***EnablePushedAuthorizationEndpoint***
+
+    Enables the pushed authorization endpoint. Defaults to true.
+
 * ***EnableJwtRequestUri***
   Enables the *request_uri* parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the request_uri parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).
 
@@ -685,7 +689,7 @@ Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added
 ## DPoP
 Added in 6.3.0.
 
-Demonstration of Proof-of-Possession settings.  Available on the *DPoP* property of the *IdentityServerOptions* object.
+Demonstration of Proof-of-Possession settings. Available on the *DPoP* property of the *IdentityServerOptions* object.
 
 * ***ProofTokenValidityDuration***
     
@@ -694,3 +698,16 @@ Demonstration of Proof-of-Possession settings.  Available on the *DPoP* property
 * ***ServerClockSkew***
     
     Clock skew used in validating DPoP proof token expiration using a server-generated nonce value. Defaults to *0*.
+
+## Pushed Authorization Requests
+Added in 7.0.0
+
+Pushed Authorization Requests (PAR) settings. Available on the *PushedAuthorization* property of the *IdentityServerOptions* object.
+
+* ***Required*** 
+ 
+    Causes PAR to be required globally. Defaults to *false*. 
+
+* ***Lifetime***
+
+    Controls the lifetime of pushed authorization requests. The pushed authorization request's lifetime begins when the request to the PAR endpoint is received, and is validated until the authorize endpoint returns a response to the client application. Note that user interaction, such as entering credentials or granting consent, may need to occur before the authorize endpoint can do so. Setting the lifetime too low will likely cause login failures for interactive users, if pushed authorization requests expire before those users complete authentication. Some security profiles, such as the FAPI 2.0 Security Profile recommend an expiration within 10 minutes to prevent attackers from pre-generating requests. To balance these constraints, this lifetime defaults to 10 minutes. 

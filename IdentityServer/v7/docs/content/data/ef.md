@@ -120,7 +120,7 @@ This options class contains properties to control the operational store and *Per
     Allows setting the default database schema name for all the tables in the *PersistedGrantDbContext*.
 
 *EnableTokenCleanup*
-    Indicates whether expired grants will be automatically cleaned up from the database. The default is *false*.
+    Indicates whether expired grants and pushed authorization requests will be automatically cleaned up from the database. The default is *false*.
 
 *RemoveConsumedTokens* [added in 5.1]
     Indicates whether consumed grants will be automatically cleaned up from the database. The default is *false*.
