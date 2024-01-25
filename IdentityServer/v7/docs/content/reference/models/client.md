@@ -311,3 +311,14 @@ Added in 6.3.0.
 
     An optional URI that can be used to [initiate login](https://openid.net/specs/openid-connect-core-1_0.html#ThirdPartyInitiatedLogin) from the IdentityServer host or a third party. This is most commonly used to create a client application portal within the IdentityServer host. Defaults to null.
 
+
+## Pushed Authorization Requests
+Added in 7.0.0
+
+* ***RequirePushedAuthorization***
+
+    Controls if this client requires PAR. PAR is required if either the global configuration is enabled or if the client's flag is enabled (this can't be used to opt out of the global configuration). This defaults to *false*, which means the global configuration will be used.
+
+* ***PushedAuthorizationLifetime***
+
+    Controls the lifetime of pushed authorization requests for a client. If this lifetime is set, it takes precedence over the global configuration. This defaults to *null*, which means the global configuration is used.
