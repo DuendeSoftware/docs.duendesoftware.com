@@ -38,8 +38,7 @@ The license key can be configured in one of two ways:
 
 #### File System
 
-IdentityServer looks for a file named either *Duende_License.key* or
-*Duende_IdentityServer_License.key* in the
+IdentityServer looks for a file named *Duende_License.key* in the
 [ContentRootPath](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostenvironment.contentrootpath?view=dotnet-plat-ext-8.0#microsoft-extensions-hosting-ihostenvironment-contentrootpath).
 If either are present, the content of the file will be used as the license key.
 
