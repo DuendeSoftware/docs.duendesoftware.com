@@ -76,7 +76,7 @@ last name, etc) scopes by declaring them in *src/IdentityServer/Config.cs*:
 
 ```cs
 public static IEnumerable<IdentityResource> IdentityResources =>
-    new List<IdentityResource>
+    new IdentityResource[]
     {
         new IdentityResources.OpenId(),
         new IdentityResources.Profile(),
@@ -158,7 +158,7 @@ public static IEnumerable<Client> Clients =>
             // where to redirect to after logout
             PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
 
-            AllowedScopes = new List<string>
+            AllowedScopes =
             {
                 IdentityServerConstants.StandardScopes.OpenId,
                 IdentityServerConstants.StandardScopes.Profile
@@ -175,13 +175,13 @@ the following commands from the *src* directory:
 ```console
 dotnet new webapp -n WebClient
 cd ..
-dotnet sln add ./src/WebClient/WebClient.csproj
+dotnet sln add ./src/WebClient
 ```
 
 {{% notice note %}}
 
 This version of the quickstarts uses [Razor
-Pages](https://docs.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-6.0&tabs=visual-studio)
+Pages](https://docs.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-8.0&tabs=visual-studio)
 for the web client. If you prefer MVC, the conversion is straightforward. See
 the [quickstart for IdentityServer
 5](https://docs.duendesoftware.com/identityserver/v5/quickstarts/2_interactive/)
@@ -199,15 +199,9 @@ dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 ```
 
 ### Configure Authentication Services
-Then add the following to *ConfigureServices* in *src/WebClient/Program.cs*:
+Then add the authentication service and register the cookie and OpenIdConnect authentication providers in *src/WebClient/Program.cs*:
 
 ```cs
-using System.IdentityModel.Tokens.Jwt;
-
-// ...
-
-JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = "Cookies";
@@ -225,6 +219,8 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Clear();
         options.Scope.Add("openid");
         options.Scope.Add("profile");
+
+        options.MapInboundClaims = false; // Don't rename claim types
 
         options.SaveTokens = true;
     });
@@ -285,7 +281,7 @@ app.MapRazorPages().RequireAuthorization();
 {{% notice note %}}
 
 See the ASP.NET Core documentation on [Razor Pages authorization
-conventions](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-6.0)
+conventions](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0)
 for more options that allow you to specify authorization on a per page or
 directory basis.
 
@@ -315,7 +311,7 @@ the cookie properties:
 <h2>Properties</h2>
 
 <dl>
-    @foreach (var prop in (await HttpContext.AuthenticateAsync()).Properties.Items)
+    @foreach (var prop in (await HttpContext.AuthenticateAsync()).Properties!.Items)
     {
         <dt>@prop.Key</dt>
         <dd>@prop.Value</dd>
@@ -329,7 +325,8 @@ Update the client's applicationUrl in
 
 ```json
 {
-  "profiles": {
+    "$schema": "http://json.schemastore.org/launchsettings.json",
+    "profiles": {
     "WebClient": {
       "commandName": "Project",
       "dotnetRunMessages": true,
@@ -417,10 +414,12 @@ within the navbar-nav list:
 </ul>
 ```
 
+Run the application again, and try logging out. Observe that you get redirected to the end session endpoint, and that both session cookies are cleared.
+
 ## Getting claims from the UserInfo endpoint
 You might have noticed that even though you've configured the client to be
 allowed to retrieve the *profile* identity scope, the claims associated with
-that scope (such as *name*, *family_name*, *website* etc.) don't appear in the
+that scope (such as *name*, *given_name*, *family_name*, etc.) don't appear in the
 returned token. You need to tell the client to retrieve those claims from the
 userinfo endpoint by specifying scopes that the client application needs to
 access and setting the *GetClaimsFromUserInfoEndpoint* option. Add the following
@@ -438,9 +437,8 @@ to *ConfigureServices* in *src/WebClient/Program.cs*:
 });
 ```
 
-After restarting the client app, logging out, and logging back in, you should
-see additional user claims associated with the *profile* identity scope
-displayed on the page.
+After restarting the client app and logging back in, you should see additional user claims
+associated with the *profile* identity scope displayed on the page.
 
 ![](../images/2_additional_claims.png)
 
@@ -485,7 +483,7 @@ To add more claims to the identity:
     {
         ClientId = "web",
         //...
-        AllowedScopes = new List<string>
+        AllowedScopes = 
         {
             IdentityServerConstants.StandardScopes.OpenId,
             IdentityServerConstants.StandardScopes.Profile,
@@ -495,7 +493,7 @@ To add more claims to the identity:
   ```
 * Request the resource by adding it to the *Scopes* collection on the OpenID
   Connect handler configuration in *src/WebClient/Program.cs*, and add a
-  [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-6.0)
+  [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-8.0)
   to map the new claim returned from the userinfo endpoint onto a user claim.
   ```csharp
     .AddOpenIdConnect("oidc", options =>
@@ -533,7 +531,7 @@ To use Google for authentication, you need to:
   it.
 
 See  [Microsoft's
-guide](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-6.0#create-a-google-api-console-project-and-client-id)
+guide](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-8.0#create-a-google-api-console-project-and-client-id)
 for details on how to register with Google, create the client, and store the
 secrets in user-secrets. **Stop before adding the authentication middleware and
 Google authentication handler to the pipeline.** You will need an
@@ -554,7 +552,7 @@ builder.Services.AddAuthentication()
 ```
 
 When authenticating with Google, there are again two [authentication
-schemes](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-6.0#authentication-scheme).
+schemes](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-8.0#authentication-scheme).
 *AddGoogle* adds the Google scheme, which handles the protocol flow back and
 forth with Google. After successful login, the application needs to sign in to
 an additional scheme that can authenticate future requests without needing a

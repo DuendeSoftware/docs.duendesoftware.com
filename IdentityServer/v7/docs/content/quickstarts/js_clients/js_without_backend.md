@@ -42,7 +42,7 @@ the following commands from the *src* directory:
 ```console
 dotnet new web -n JavaScriptClient
 cd ..
-dotnet sln add ./src/JavaScriptClient/JavaScriptClient.csproj
+dotnet sln add ./src/JavaScriptClient
 ```
 
 ### Modify hosting
@@ -52,7 +52,8 @@ Modify the *JavaScriptClient* project to run on *https://localhost:5003*. Its
 
 ```json
 {
-  "profiles": {
+    "$schema": "http://json.schemastore.org/launchsettings.json",
+    "profiles": {
     "JavaScriptClient": {
       "commandName": "Project",
       "dotnetRunMessages": true,
@@ -331,13 +332,12 @@ new Client
 ## Allowing Ajax calls to the Web API with CORS
 
 One last bit of configuration that is necessary is to configure CORS in the
-*API* project. This will allow Ajax calls to be made from
+*Api* project. This will allow Ajax calls to be made from
 *https://localhost:5003* to *https://localhost:6001*.
 
 **Configure CORS**
 
-Add the CORS services to the dependency injection system in
-*src/Api/Program.cs*:
+Add the CORS service to the dependency injection system in *src/Api/Program.cs*:
 
 ```cs
 builder.Services.AddCors(options =>
@@ -352,17 +352,11 @@ builder.Services.AddCors(options =>
 });
 ```
 
-Then add the CORS middleware to the pipeline in *src/Api/Program.cs*. It should
-come before the call to *UseAuthentication*.
+Then add the CORS middleware to the pipeline in *src/Api/Program.cs*.
 
 ```cs
 app.UseHttpsRedirection();
-
 app.UseCors("default");
-
-app.UseAuthentication();
-app.UseAuthorization();
-
 ```
 
 ## Run the JavaScript application

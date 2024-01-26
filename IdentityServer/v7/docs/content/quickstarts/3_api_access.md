@@ -57,10 +57,11 @@ new Client
     
     AllowOfflineAccess = true,
 
-    AllowedScopes = new List<string>
+    AllowedScopes =
     {
         IdentityServerConstants.StandardScopes.OpenId,
         IdentityServerConstants.StandardScopes.Profile,
+        "verification",
         "api1"
     }
 }
@@ -93,7 +94,13 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Add("profile");
         options.Scope.Add("api1");
         options.Scope.Add("offline_access");
+        options.Scope.Add("verification");
+        options.ClaimActions.MapJsonKey("email_verified", "email_verified");
         options.GetClaimsFromUserInfoEndpoint = true;
+
+        options.MapInboundClaims = false; // Don't rename claim types
+
+        options.SaveTokens = true;
     });
 ```
 
@@ -164,6 +171,6 @@ You typically want to
 ASP.NET Core has built-in facilities that can help you with some of those tasks
 (like caching or sessions), but there is still quite some work left to do.
 Consider using the
-[IdentityModel](https://identitymodel.readthedocs.io/en/latest/aspnetcore/overview.html)
+[Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki)
 library for help with access token lifetime management. It provides abstractions
 for storing tokens, automatic refresh of expired tokens, etc.

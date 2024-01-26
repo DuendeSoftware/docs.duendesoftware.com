@@ -38,7 +38,7 @@ with the EntityFramework integration already added: *dotnet new isef*.
 {{% /notice %}}
 
 ## Configure IdentityServer
-### Install Duende.IdentityServer.EntityFramework
+#### Install Duende.IdentityServer.EntityFramework
 IdentityServer's Entity Framework integration is provided by the
 *Duende.IdentityServer.EntityFramework* NuGet package. Run the following
 commands from the *src/IdentityServer* directory to replace the
@@ -50,7 +50,7 @@ dotnet remove package Duende.IdentityServer
 dotnet add package Duende.IdentityServer.EntityFramework
 ```
 
-### Install Microsoft.EntityFrameworkCore.Sqlite
+#### Install Microsoft.EntityFrameworkCore.Sqlite
 
 *Duende.IdentityServer.EntityFramework* can be used with any Entity Framework
 database provider. In this quickstart, you will use Sqlite. To add Sqlite
@@ -62,7 +62,7 @@ directory:
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
-### Configuring the Stores
+#### Configuring the Stores
 *Duende.IdentityServer.EntityFramework* stores configuration and operational
 data in separate stores, each with their own DbContext.
 
@@ -79,6 +79,8 @@ To use these stores, replace the existing calls to *AddInMemoryClients*,
 ```cs
 public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
+    builder.Services.AddRazorPages();
+
     var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
     const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
 
@@ -123,7 +125,7 @@ migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations
 which is what this quickstart will use. If migrations are not your preference,
 then you can manage the schema changes in any way you see fit. 
 
-### Adding Migrations
+#### Adding Migrations
 To create migrations, you will need to install the Entity Framework Core CLI
 tool on your machine and the *Microsoft.EntityFrameworkCore.Design* NuGet
 package in IdentityServer. Run the following commands from the
@@ -134,35 +136,20 @@ dotnet tool install --global dotnet-ef
 dotnet add package Microsoft.EntityFrameworkCore.Design
 ```
 
-### Handle Expected Exception
-The Entity Framework CLI internally starts up *IdentityServer* for a short time
-in order to read your database configuration. After it has read the
-configuration, it shuts *IdentityServer* down by throwing a
-*StopTheHostException* (in Entity Framework 6) or *HostAbortedException* (in Entity Framework 7) exception. We expect this exception to be unhandled and
-therefore stop *IdentityServer*. Since it is expected, you do not need to log it
-as a fatal error. Update the error logging code in
+#### Handle Expected Exception
+The Entity Framework CLI internally starts up *IdentityServer* for a short time in order
+to read your database configuration. After it has read the configuration, it shuts
+*IdentityServer* down by throwing a *HostAbortedException* exception. We expect this
+exception to be unhandled and therefore stop *IdentityServer*. Since it is expected, you
+do not need to log it as a fatal error. Update the error logging code in
 *src/IdentityServer/Program.cs* as follows:
 ```csharp
-catch (Exception ex) when (
-    // https://github.com/dotnet/runtime/issues/60600
-    ex.GetType().Name is not "StopTheHostException"
-    // HostAbortedException was added in .NET 7, but since we target .NET 6 we
-    // need to do it this way until we target .NET 8
-    && ex.GetType().Name is not "HostAbortedException")
+// See https://github.com/dotnet/runtime/issues/60600 re StopTheHostException
+catch (Exception ex) when (ex.GetType().Name is not "StopTheHostException")
 {
     Log.Fatal(ex, "Unhandled exception");
 }
 ```
-
-{{% notice note %}}
-
-When using `Microsoft.EntityFrameworkCore.Tools` version 6.x, you must use the "StopTheHostException" string here rather than catching the
-*StopTheHostException* because it is a private type. 
-If you use version 7.x of `Microsoft.EntityFrameworkCore.Tools` and reference version 7.x of the `Microsoft.Extensions.Hosting` package, you can catch the "HostAbortedException" as expected. See
-https://github.com/dotnet/runtime/issues/60600.
-
-
-{{% /notice %}}
 
 Now run the following two commands from the *src/IdentityServer* directory to
 create the migrations:
@@ -175,7 +162,7 @@ dotnet ef migrations add InitialIdentityServerConfigurationDbMigration -c Config
 You should now see a *src/IdentityServer/Data/Migrations/IdentityServer*
 directory in your project containing the code for your newly created migrations.
 
-### Initializing the Database
+#### Initializing the Database
 Now that you have the migrations, you can write code to create the database from
 them and seed the database with the same configuration data used in the previous
 quickstarts.
@@ -194,7 +181,7 @@ database:
 ```cs
 private static void InitializeDatabase(IApplicationBuilder app)
 {
-    using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+    using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()!.CreateScope())
     {
         serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
