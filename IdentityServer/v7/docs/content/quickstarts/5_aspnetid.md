@@ -35,7 +35,7 @@ this solution (for the clients and the API) will remain the same.
 
 This quickstart assumes you are familiar with how ASP.NET Core Identity works.
 If you are not, it is recommended that you first [learn about
-it](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0).
+it](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0).
 
 {{% /notice %}}
 
@@ -52,7 +52,7 @@ Identity. Run the following commands from the *src* directory:
 ```console
 dotnet new isaspid -n IdentityServerAspNetIdentity
 cd ..
-dotnet sln add ./src/IdentityServerAspNetIdentity/IdentityServerAspNetIdentity.csproj
+dotnet sln add ./src/IdentityServerAspNetIdentity
 ```
 
 When prompted to "seed" the user database, choose "Y" for "yes". This populates
@@ -77,12 +77,12 @@ migrating configuration from the old IdentityServer Project, including:
 - Entry point and seed data (*Program.cs* and *SeedData.cs*)
 - Login and logout pages (Pages in *Pages/Account*)
 
-### IdentityServerAspNetIdentity.csproj
+#### IdentityServerAspNetIdentity.csproj
 Notice the reference to *Duende.IdentityServer.AspNetIdentity*. This NuGet
 package contains the ASP.NET Core Identity integration components for
 IdentityServer.
 
-### HostingExtensions.cs
+#### HostingExtensions.cs
 In *ConfigureServices* notice the necessary
 *AddDbContext<ApplicationDbContext>()* and *AddIdentity<ApplicationUser,
 IdentityRole>()* calls are done to configure ASP.NET Core Identity.
@@ -100,7 +100,7 @@ claims for the users into tokens.
 Note that *AddIdentity<ApplicationUser, IdentityRole>()* must be invoked before
 *AddIdentityServer()*.
 
-### Config.cs
+#### Config.cs
 *Config.cs* contains the hard-coded in-memory clients and resource definitions.
 To keep the same clients and API working as the prior quickstarts, we need to
 copy over the configuration data from the old IdentityServer project into this
@@ -110,33 +110,46 @@ one. Do that now, and afterwards *Config.cs* should look like this:
 public static class Config
 {
     public static IEnumerable<IdentityResource> IdentityResources =>
-        new List<IdentityResource>
+        new IdentityResource[]
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResource()
+            {
+                Name = "verification",
+                UserClaims = new List<string> 
+                { 
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.EmailVerified
+                }
+            }
         };
 
-
     public static IEnumerable<ApiScope> ApiScopes =>
-        new List<ApiScope>
-        {
-            new ApiScope("api1", "My API")
+        new ApiScope[]
+        { 
+            new ApiScope(name: "api1", displayName: "My API")
         };
 
     public static IEnumerable<Client> Clients =>
-        new List<Client>
+        new Client[] 
         {
-            // machine to machine client
             new Client
             {
                 ClientId = "client",
-                ClientSecrets = { new Secret("secret".Sha256()) },
 
+                // no interactive user, use the clientid/secret for authentication
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+                // secret for authentication
+                ClientSecrets =
+                {
+                    new Secret("secret".Sha256())
+                },
+
                 // scopes that client has access to
                 AllowedScopes = { "api1" }
             },
-                
             // interactive ASP.NET Core Web App
             new Client
             {
@@ -144,19 +157,20 @@ public static class Config
                 ClientSecrets = { new Secret("secret".Sha256()) },
 
                 AllowedGrantTypes = GrantTypes.Code,
-                    
+                
                 // where to redirect to after login
                 RedirectUris = { "https://localhost:5002/signin-oidc" },
 
                 // where to redirect to after logout
                 PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-    
+
                 AllowOfflineAccess = true,
 
-                AllowedScopes = new List<string>
+                AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
+                    "verification",
                     "api1"
                 }
             }
@@ -169,11 +183,11 @@ it from the solution. From the quickstart directory, run the
 following commands:
 
 ```console
-dotnet sln remove ./src/IdentityServer/IdentityServer.csproj
+dotnet sln remove ./src/IdentityServer
 rm -r ./src/IdentityServer
 ```
 
-### Program.cs and SeedData.cs
+#### Program.cs and SeedData.cs
 The application entry point in *Program.cs* is a little different than most
 ASP.NET Core projects. Notice that it looks for a command line argument called
 */seed* which is used as a flag to seed the users in the ASP.NET Core Identity
@@ -183,7 +197,7 @@ when you were prompted to seed the database.
 Look at the *SeedData* class' code to see how the database is created and the
 first users are created.
 
-### Account Pages
+#### Account Pages
 Finally, take a look at the the pages in the
 *src/IdentityServerAspNetIdentity/Pages/Account* directory. These pages contain
 slightly different login and logout code than the prior quickstart and templates
@@ -216,7 +230,9 @@ IdentityServer!
 Next you will add a custom property to your user model and include it as a 
 claim when the appropriate Identity Resource is requested.
 
-First, add a *FavoriteColor* property to the *ApplicationUser* class.
+First, add a *FavoriteColor* property in
+src/IdentityServerAspNetIdentity/ApplicationUser.cs*.
+
 ```csharp
 public class ApplicationUser : IdentityUser
 {
@@ -269,7 +285,8 @@ data as a source of claims data. [See here]({{< ref
 "/reference/services/profile_service" >}}) for more details on the profile
 service.
 
-Create a new class called *CustomProfileService* and add the following code to it:
+Create a new file called *src/AspNetIdentity/CustomProfileService.cs* and add the
+following code to it:
 ```csharp
 using Duende.IdentityServer.AspNetIdentity;
 using Duende.IdentityServer.Models;
@@ -324,8 +341,7 @@ that will map the color scope onto the favorite_color claim type:
 public static IEnumerable<IdentityResource> IdentityResources =>
     new IdentityResource[]
     {
-        new IdentityResources.OpenId(),
-        new IdentityResources.Profile(),
+        // ...
         new IdentityResource("color", new [] { "favorite_color" })
     };
 ```
@@ -382,7 +398,7 @@ Identity, our template deliberately does not provide those features. The intent
 of this template is to be a starting point to which you can add the features you
 need from ASP.NET Core Identity, customized according to your requirements.
 Alternatively, you can [create a new project based on the ASP.NET Core Identity
-template](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=netcore-cli#create-a-web-app-with-authentication)
+template](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=netcore-cli#create-a-web-app-with-authentication)
 and add the IdentityServer features you have learned about in these quickstarts
 to that project. With that approach, you may need to configure IdentityServer so
 that it knows the paths to pages for user interactions. Set the LoginUrl,

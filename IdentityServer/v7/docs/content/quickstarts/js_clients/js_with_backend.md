@@ -44,7 +44,7 @@ the following commands from the *src* directory:
 ```console
 dotnet new web -n JavaScriptClient
 cd ..
-dotnet sln add ./src/JavaScriptClient/JavaScriptClient.csproj
+dotnet sln add ./src/JavaScriptClient
 ```
 
 ### Add additional NuGet packages
@@ -65,6 +65,7 @@ Modify the *JavaScriptClient* project to run on *https://localhost:5003*. Its
 
 ```json
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "JavaScriptClient": {
       "commandName": "Project",
@@ -130,7 +131,7 @@ var app = builder.Build();
 
 Similarly, the middleware pipeline for this application will resemble the
 WebClient, with the addition of the BFF middleware and the BFF endpoints.
-Continuing by adding the following to *src/JavaScriptClient/Program.cs*:
+Continue by adding the following to *src/JavaScriptClient/Program.cs*:
 
 ```cs
 var app = builder.Build();
@@ -379,7 +380,7 @@ the access token for authentication.
 ### Define a local API
 
 Local APIs can be defined using controllers or with [Minimal API Route
-Handlers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-6.0#route-handlers).
+Handlers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0#route-handlers).
 For simplicity, this quickstart uses a minimal API with its handler defined
 directly in *Program.cs*, but you can organize your Local APIs however you like.
 

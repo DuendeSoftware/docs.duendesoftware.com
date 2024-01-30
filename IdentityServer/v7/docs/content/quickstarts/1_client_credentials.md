@@ -92,7 +92,7 @@ the solution.
 
 ```console
 cd ..
-dotnet sln add ./src/IdentityServer/IdentityServer.csproj
+dotnet sln add ./src/IdentityServer
 ```
 
 ### Defining an API Scope
@@ -113,14 +113,14 @@ complete access to an API that will be created later in this quickstart.
 
 Scope definitions can be loaded in many ways. This quickstart shows how to use a
 "code as configuration" approach. A minimal Config.cs was created by the
-template at *src/IdentityServer/Config.cs*. Open it and add an *ApiScope* to the
+template at *src/IdentityServer/Config.cs*. Open it and add a couple *ApiScope*s to the
 *ApiScopes* property:
 
 ```csharp
 public static IEnumerable<ApiScope> ApiScopes =>
-    new List<ApiScope>
+    new ApiScope[]
     {
-        new ApiScope(name: "api1", displayName: "MyAPI") 
+        new ApiScope(name: "api1", displayName: "My API") 
     };
 ```
 
@@ -147,7 +147,8 @@ Add this client definition to *Config.cs*:
 
 ```cs
 public static IEnumerable<Client> Clients =>
-    new List<Client>
+    new Client
+    
     {
         new Client
         {
@@ -228,7 +229,7 @@ the .NET CLI to create the API project. To use the CLI, run the
 following command from the *src* directory:
 
 ```console
-dotnet new webapi -n Api
+dotnet new webapi -n Api --no-openapi
 ```
 
 Then navigate back up to the root quickstart directory and add it to the
@@ -236,7 +237,7 @@ solution by running the following commands:
 
 ```console
 cd ..
-dotnet sln add ./src/Api/Api.csproj
+dotnet sln add ./src/Api
 ```
 
 ### Add JWT Bearer Authentication
@@ -253,24 +254,21 @@ middleware will
 Run this command in the *src* directory to install the middleware
 package in the Api:
 ```console
-dotnet add ./Api/Api.csproj package Microsoft.AspNetCore.Authentication.JwtBearer
+dotnet add ./Api package Microsoft.AspNetCore.Authentication.JwtBearer
 ```
 
-Now add JWT Bearer authentication services to the Service Collection to allow 
-for dependency injection (DI), and configure *Bearer* as the default 
-[Authentication Scheme](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-6.0#authentication-scheme).
+Now add the authentication and authorization services to the Service Collection, and
+configure the JWT Bearer authentication provider as the default 
+[Authentication Scheme](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-8.0#authentication-scheme).
 
 ```csharp
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
+builder.Services.AddAuthentication()
+    .AddJwtBearer(options =>
     {
         options.Authority = "https://localhost:5001";
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false
-        };
+        options.TokenValidationParameters = false;
     });
+builder.Services.AddAuthorization();
 ```
 {{% notice note %}} 
 
@@ -282,35 +280,16 @@ more in-depth discussion.
 
 {{% /notice %}}
 
-Add authentication middleware to the pipeline immediately before authorization:
-```csharp
-app.UseAuthentication();
-app.UseAuthorization();
-```
-*UseAuthentication* adds the authentication middleware to the pipeline so
-authentication will be performed automatically on every call into the host.
-*UseAuthorization* adds the authorization middleware to make sure your API
-endpoint cannot be accessed by anonymous clients.
-
-### Add a controller
-Add a new class called *IdentityController* in *src/Api/Controllers*:
+### Add an endpoint
+Replace the templated weather forecast endpoint with a new endpoint:
 
 ```csharp
-[Route("identity")]
-[Authorize]
-public class IdentityController : ControllerBase
-{
-    [HttpGet]
-    public IActionResult Get()
-    {
-        return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
-    }
-}
+app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
+    .RequireAuthorization();
 ```
-This controller will be used to test authorization and to display the claims
-identity through the eyes of the API. See the full file 
-[here]({{< param qs_base >}}/1_ClientCredentials/src/Api/Controllers/IdentityController.cs).
 
+This endpoint will be used to test authorization and to display the claims identity
+through the eyes of the API.
 
 ### Configure API to listen on Port 6001
 
@@ -324,7 +303,7 @@ to be:
 "applicationUrl": "https://localhost:6001"
 ```
 
-### Test the controller
+### Test the identity endpoint
 
 Run the API project and then navigate to the identity controller at
 *https://localhost:6001/identity* in a browser. This should return a 401 status
@@ -344,7 +323,7 @@ Then as before, add it to your solution using:
 
 ```console
 cd ..
-dotnet sln add ./src/Client/Client.csproj
+dotnet sln add ./src/Client
 ```
 
 ### Add the IdentityModel nuget package
@@ -357,7 +336,7 @@ via Visual Studio's Nuget Package manager or dotnet CLI. From the *quickstart*
 directory, run the following command:
 
 ```console
-dotnet add ./src/Client/Client.csproj package IdentityModel
+dotnet add ./src/Client package IdentityModel
 ```
 
 ### Retrieve the discovery document
@@ -367,6 +346,8 @@ endpoint addresses can be read from the metadata. Add the following to the
 client's Program.cs in the *src/Client/Program.cs* directory:
 
 ```cs
+using IdentityModel.Client;
+
 // discover endpoints from metadata
 var client = new HttpClient();
 var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
@@ -379,10 +360,9 @@ if (disco.IsError)
 
 {{% notice note %}}
 
-If you get an error connecting it may be that you are running *https* and the
-development certificate for *localhost* is not trusted. You can run `dotnet
-dev-certs https --trust` in order to trust the development certificate. This
-only needs to be done once. 
+If you get an error connecting, it may be that the development certificate for *localhost*
+is not trusted. You can run `dotnet dev-certs https --trust` in order to trust the
+development certificate. This only needs to be done once. 
 
 {{% /notice %}}
 
@@ -395,7 +375,6 @@ from *IdentityServer* to access *api1*:
 var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
 {
     Address = disco.TokenEndpoint,
-
     ClientId = "client",
     ClientSecret = "secret",
     Scope = "api1"
@@ -404,6 +383,7 @@ var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCr
 if (tokenResponse.IsError)
 {
     Console.WriteLine(tokenResponse.Error);
+    Console.WriteLine(tokenResponse.ErrorDescription);
     return;
 }
 
@@ -424,7 +404,7 @@ header. This is done using the *SetBearerToken* extension method:
 ```cs
 // call api
 var apiClient = new HttpClient();
-apiClient.SetBearerToken(tokenResponse.AccessToken);
+apiClient.SetBearerToken(tokenResponse.AccessToken!); // AccessToken is always non-null when IsError is false
 
 var response = await apiClient.GetAsync("https://localhost:6001/identity");
 if (!response.IsSuccessStatusCode)
@@ -469,7 +449,7 @@ scope, lifetime (nbf and exp), the client ID (client_id) and the issuer name
 #### Authorization at the API
 Right now, the API accepts any access token issued by your IdentityServer. In
 this section, you will add an [Authorization
-Policy](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-6.0)
+Policy](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-8.0)
 to the API that will check for the presence of the "api1" scope in the access
 token. The protocol ensures that this scope will only be in the token if the
 client requests it and IdentityServer allows the client to have that scope. You
@@ -491,15 +471,18 @@ builder.Services.AddAuthorization(options =>
 You can now enforce this policy at various levels, e.g.:
 
 * globally
-* for all API endpoints
-* for specific controllers/actions
+* for all endpoints
+* for specific controllers, actions, or endpoints
 
-Typically you set the policy for all controllers where they are mapped in
-*src/Api/Program.cs*:
+Add the policy to the identity endpoint in *src/Api/Program.cs*:
 
 ```cs
-app.MapControllers().RequireAuthorization("ApiScope");
+app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
+    .RequireAuthorization("ApiScope");
 ```
+
+Now you can run the API again and it will enforce that the api1 scope is present in the
+access token.
 
 ## Further experiments
 This quickstart focused on the success path:
