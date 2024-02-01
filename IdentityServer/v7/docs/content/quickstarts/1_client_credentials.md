@@ -266,7 +266,7 @@ builder.Services.AddAuthentication()
     .AddJwtBearer(options =>
     {
         options.Authority = "https://localhost:5001";
-        options.TokenValidationParameters = false;
+        options.TokenValidationParameters.ValidateAudience = false;
     });
 builder.Services.AddAuthorization();
 ```
