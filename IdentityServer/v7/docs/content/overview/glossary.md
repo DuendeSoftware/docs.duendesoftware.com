@@ -53,6 +53,14 @@ Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a st
 
 [Documentation]({{<ref "/configuration" >}})
 
+## Pushed Authorization Requests
+(Business Edition)
+
+Implementation of [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html). Provides a more secure way to start a browser-based token/authentication request.
+
+[Documentation]({{<ref "/tokens/par" >}})
+
+
 ## Dynamic Authentication Providers
 (Enterprise Edition)
 
