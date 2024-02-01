@@ -428,15 +428,12 @@ The output should look like this:
 
 ![](../images/1_client_screenshot.png)
 
-{{% notice note %}} 
 
 If you're using Visual Studio, here's how to start everything up:
-1. Right click the solution and select *Set Startup Projects*
+1. Right click the solution and select *Configure Startup Projects...*
 2. Choose *Multiple Startup Projects* and set the action for Api and IdentityServer to Start
 3. Run the solution and wait a moment for both the API and and IdentityServer to start
-4. Right click the *Client* project and select Debug... Start New Instance.
-
-{{% /notice %}}
+4. Right click the *Client* project and select Debug -> Start Without Debugging.
 
 {{% notice note %}} 
 
