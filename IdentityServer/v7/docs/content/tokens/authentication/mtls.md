@@ -71,8 +71,7 @@ static async Task<TokenResponse> RequestTokenAsync()
 
     var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
     {
-        Address = disco.MtlEndpointAliases.TokenEndpoint
-                        
+        Address = disco.MtlEndpointAliases.TokenEndpoint,
         ClientId = "mtls.client",
         Scope = "api1"
     });
