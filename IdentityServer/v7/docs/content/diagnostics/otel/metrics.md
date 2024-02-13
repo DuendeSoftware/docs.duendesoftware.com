@@ -6,14 +6,12 @@ weight: 10
 
 (added in v7.0)
 
-OpenTelemetry metrics are counters designed to provide a high level overview of the
-frequency of events that are occurring in an IdentityServer implementation. They are
-intended to be used to provide an indication of overall health and are typically used to
-show graphs on a dashboard or to set up monitoring rules. When that monitoring reveals
-issues, the traces and logs are used to investigate further. Open Telemetry monitoring
+OpenTelemetry metrics are run-time measurements that are are intended to provide an indication 
+of overall health and are typically used to show graphs on a dashboard or to set up monitoring rules.
+When that monitoring reveals issues, traces and logs are used to investigate further. Open Telemetry monitoring
 tools often provide features to find the traces and logs corresponding to certain metrics.
 
-IdentityServer emits metrics from the IdentityServer library. Our quick start for the UI also
+IdentityServer emits metrics from the IdentityServer middleware and services. Our quick start for the UI also
 [contains metrics](#metrics-in-the-ui) that can be used as a starting point for monitoring UI events.
 The metric counters that IdentityServer emits are designed to not contain any sensitive
 information. They often are tagged to indicate the source of the events.
@@ -22,7 +20,7 @@ information. They often are tagged to indicate the source of the events.
 These metrics are instrumented by the IdentityServer middleware and services and are
 intended to describe the overall usage and health of the system. They could provide the
 starting point for building a metrics dashboard. The high level metrics are enabled through
-the `Duende.IdentityServer.Telemetry.ServiceName` meter.
+the *Duende.IdentityServer.Telemetry.ServiceName* meter.
 
 #### Telemetry.Metrics.Counters.Operation
 Counter name: *tokenservice.operation*
@@ -52,9 +50,9 @@ Note that the pages in the user interface are not IdentityServer endpoints and a
 
 ## Detailed Metrics - Experimental
 These detailed metrics are instrumented by the IdentityServer middleware and services and track usage of specific
-flows and features. These metrics are enabled through the `Duende.IdentityServer.Telemetry.ServiceName.Experimental`
+flows and features. These metrics are enabled through the *Duende.IdentityServer.Telemetry.ServiceName.Experimental*
 meter. The definition and tags of these counters may be changed between releases. Once the counters and tags
-are considered stable they will be moved to the `Duende.IdentityServer.Telemetry.ServiceName` meter.
+are considered stable they will be moved to the *Duende.IdentityServer.Telemetry.ServiceName* meter.
 
 ####  Telemetry.Metrics.Counters.ApiSecretValidation
 Counter name: *tokenservice.api.secret_validation*
