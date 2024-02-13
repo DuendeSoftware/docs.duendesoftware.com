@@ -6,15 +6,17 @@ weight: 10
 
 (added in v7.0)
 
-The metric counters are designed to provide a high level overview. They are designed to not contain any
-sensitive information. The counters may contain tags to indicate the source of the data. Metrics are
-intended to be used to provide overall health metrics and are typically used to show graphs on
-a dashboard or to set up monitoring rules. If the metrics indicates that something has happened,
-the traces and logs are used to find out the reason. Open Telemetry monitoring tools might have
-provide features to find the traces and logs corresponding to certain metrics.
+OpenTelemetry metrics are counters designed to provide a high level overview of the
+frequency of events that are occurring in an IdentityServer implementation. They are
+intended to be used to provide an indication of overall health and are typically used to
+show graphs on a dashboard or to set up monitoring rules. When that monitoring reveals
+issues, the traces and logs are used to investigate further. Open Telemetry monitoring
+tools often provide features to find the traces and logs corresponding to certain metrics.
 
 IdentityServer emits metrics from the IdentityServer library. Our quick start for the UI also
 [contains metrics](#metrics-in-the-ui) that can be used as a starting point for monitoring UI events.
+The metric counters that IdentityServer emits are designed to not contain any sensitive
+information. They often are tagged to indicate the source of the events.
 
 ## High level Metrics
 These metrics are instrumented by the IdentityServer middleware and services and are
@@ -25,13 +27,16 @@ the `Duende.IdentityServer.Telemetry.ServiceName` meter.
 #### Telemetry.Metrics.Counters.Operation
 Counter name: *tokenservice.operation*
 
-Aggregated counter of failed and successful operations. Note that it is expected to have some failures during
-normal operation of IdentityServer. There should be no internal_errors though, they indicate that there are
-unhandled exceptions. The failure/success ratio can be used as a very high level health metric.
-|Tag|Description|
-|---|---|
-|error | Error label on errors|
-|result | Success, error or internal_error |
+Aggregated counter of failed and successful operations. The result tag indicates if an
+operation succeeded, failed, or caused an internal error. It is expected to have some
+failures during normal operations. In contrast, operations tagged with a result of
+internal_error are abnormal and indicate an unhandled exception.  The error/success ratio
+can be used as a very high level health metric. 
+
+|Tag|Description| 
+|---|---| 
+|error | Error label on errors| 
+|result | Success, error or internal_error | 
 |client | Id of client requesting the operation. May be empty. |
 
 #### Telemetry.Metrics.Counters.ActiveRequests
@@ -39,13 +44,13 @@ Counter name: *active_requests*
 
 Gauge/up-down counter that shows current active requests that are processed by any IdentityServer endpoint. 
 Note that the pages in the user interface are not IdentityServer endpoints and are not included in this count.
-This metrics
+
 |Tag|Description|
 |---|---|
 |endpoint | The type name for the endpoint processor |
 |path | The path of the request |
 
-### Detailed Metrics - Experimental
+## Detailed Metrics - Experimental
 These detailed metrics are instrumented by the IdentityServer middleware and services and track usage of specific
 flows and features. These metrics are enabled through the `Duende.IdentityServer.Telemetry.ServiceName.Experimental`
 meter. The definition and tags of these counters may be changed between releases. Once the counters and tags
