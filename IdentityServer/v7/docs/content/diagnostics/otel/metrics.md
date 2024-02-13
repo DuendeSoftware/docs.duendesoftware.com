@@ -19,8 +19,9 @@ information. They often are tagged to indicate the source of the events.
 ## High level Metrics
 These metrics are instrumented by the IdentityServer middleware and services and are
 intended to describe the overall usage and health of the system. They could provide the
-starting point for building a metrics dashboard. The high level metrics are enabled through
-the *Duende.IdentityServer.Telemetry.ServiceName* meter.
+starting point for building a metrics dashboard. The high level metrics are created by the
+the meter named "Duende.IdentityServer", which is the value of the
+*Duende.IdentityServer.Telemetry.ServiceName* constant.
 
 #### Telemetry.Metrics.Counters.Operation
 Counter name: *tokenservice.operation*
@@ -50,8 +51,9 @@ Note that the pages in the user interface are not IdentityServer endpoints and a
 
 ## Detailed Metrics - Experimental
 These detailed metrics are instrumented by the IdentityServer middleware and services and track usage of specific
-flows and features. These metrics are enabled through the *Duende.IdentityServer.Telemetry.ServiceName.Experimental*
-meter. The definition and tags of these counters may be changed between releases. Once the counters and tags
+flows and features. These metrics are created by the meter named "Duende.IdentityServer.Experimental", which is 
+the value of the *Duende.IdentityServer.Telemetry.ServiceName.Experimental* constant.
+The definition and tags of these counters may be changed between releases. Once the counters and tags
 are considered stable they will be moved to the *Duende.IdentityServer.Telemetry.ServiceName* meter.
 
 ####  Telemetry.Metrics.Counters.ApiSecretValidation
