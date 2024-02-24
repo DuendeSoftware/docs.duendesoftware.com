@@ -7,13 +7,13 @@ A _Remote API_ is an API that is deployed separately from the BFF host. Remote A
 
 There are two different ways to set up Remote API proxying in Duende.BFF. This page describes the built-in simple HTTP forwarder. Alternatively, you can integrate Duende.BFF with Microsoft's reverse proxy [YARP]({{< ref "/bff/apis/yarp" >}}), which allows for more complex reverse proxy features provided by YARP combined with the security and identity features of Duende.BFF.
 
-### Simple HTTP forwarder
+## Simple HTTP forwarder
 
 Duende.BFF's simple HTTP forwarder maps routes in the BFF to a remote API surface. It uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally, but is much simpler to configure than YARP. The intent is to provide a developer-centric and simplified way to proxy requests from the BFF to remote APIs when more complex reverse proxy features are not needed.
 
 These routes receive automatic anti-forgery protection and integrate with automatic token management.
 
-To enable this feature, add a reference to the *Duende.BFF.Yarp* Nuget package, add the remote APIs service to DI, and call the *MapRemoteBFFApiEndpoint* method to create the mappings.
+To enable this feature, add a reference to the *Duende.BFF.Yarp* NuGet package, add the remote APIs service to DI, and call the *MapRemoteBFFApiEndpoint* method to create the mappings.
 
 #### Add Remote API Service to DI
 
@@ -24,19 +24,19 @@ services.AddBff()
 
 
 #### Map Remote APIs
-This example routes a local */api/customers* endpoint to a remote API, and forwards the user's access token in the outgoing call:
+Use the *MapRemoteBffApiEndpoint* extension method to describe how to map requests coming into the BFF out to remote APIs and the *RequireAccessToken* method to specify token requirements. *MapRemoteBffApiEndpoint* takes two parameters: the base path of requests that will be mapped externally, and the address to the external API where the requests will be mapped. *MapRemoteBffApiEndpoint* maps a path and all sub-paths below it. The intent is to allow easy mapping of groups of URLs. For example, you can set up mappings for the /users, /users/{userId}, /users/{userId}/books, and /users/{userId}/books/{bookId} endpoints like this:
 
 ```cs
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRemoteBffApiEndpoint(
-            "/api/customers", "https://remoteHost/customers")
+            "/api/users", "https://remoteHost/users")
         .RequireAccessToken(TokenType.User);
 });
 ```
 
 {{% notice note %}}
-This example opens up the complete */customers* API namespace to the frontend and thus to the outside world. Try to be as specific as possible when designing the forwarding paths.
+This example opens up the complete */users* API namespace to the frontend and thus to the outside world. Try to be as specific as possible when designing the forwarding paths.
 {{% /notice %}}
 
 ## Securing Remote APIs
