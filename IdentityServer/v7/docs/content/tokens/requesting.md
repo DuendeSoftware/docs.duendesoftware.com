@@ -172,7 +172,7 @@ Pragma: no-cache
 {
     "id_token": "...",
     "access_token": "...",
-    "refresh_token": "..."
+    "refresh_token": "...",
     "token_type": "bearer",
     "expires_in": 3600,
 }
@@ -215,6 +215,9 @@ public void ConfigureServices(IServiceCollection services)
                 NameClaimType = "name",
                 RoleClaimType = "role"
             };
+
+            // Disable x-client-SKU and x-client-ver headers 
+            options.DisableTelemetry = true;
         });
 }
 ```
