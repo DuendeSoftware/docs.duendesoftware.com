@@ -18,3 +18,10 @@ especially in highly distributed systems.
 
 {{%children style="h4" /%}}
 
+Traces from a web application calling an API (displayed using Aspire). The web application uses a refresh token to call
+IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the
+jwsk url and then gets the keys from jwks endpoint.
+![](images/aspire_traces.png)
+
+
+
