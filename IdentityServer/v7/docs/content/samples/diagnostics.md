@@ -21,4 +21,4 @@ This sample is not intended to be a full Aspire sample, it simply uses Aspire as
 
 IdentityServer emits OpenTelemetry traces for input validators, stores and response generators (see [here]({{< ref "/diagnostics/otel" >}}) for more information).
 
-The samples shows how to setup Otel for console tracing.
+The sample shows how to setup Otel for console tracing.
