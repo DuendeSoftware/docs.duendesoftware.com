@@ -11,10 +11,18 @@ telemetry data (metrics, logs, and traces). This is very useful for analyzing so
 especially in highly distributed systems.
 
 .NET 8 comes with first class support for Open Telemetry. IdentityServer emmits traces, metrics and logs.
-- Metrics are high level statistic counters. They provide an aggregated overview and can be used to set monitoring rules.
-- Traces shows individual requests and dependencies. The output is very useful for visualizing the control 
-  flow and finding performance bottlenecks.
-- Logs contains all the details when needed for troubleshooting.
 
-{{%children style="h4" /%}}
+#### [**Metrics**]({{< ref "metrics">}})
+Metrics are high level statistic counters. They provide an aggregated overview and can be used to set monitoring rules.
 
+#### **Logs**
+OpenTelemetry in .NET 8 exports the logs written to the standard ILogger system. The logs are augmented with
+trace ids to be able to correlate log entries with traces.
+
+#### [**Traces**]({{< ref "traces">}})
+Traces shows individual requests and dependencies. The output is very useful for visualizing the control 
+flow and finding performance bottlenecks.
+
+This is an example of distributed traces from a web application calling an API (displayed using our 
+[Aspire sample]({{< ref "../../samples/diagnostics" >}})). The web application uses a refresh token to call IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks url and then gets the keys from jwks endpoint.
+![](images/aspire_traces.png)
