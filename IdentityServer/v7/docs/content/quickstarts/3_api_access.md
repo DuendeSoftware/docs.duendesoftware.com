@@ -155,6 +155,13 @@ And update *src/WebClient/Pages/CallApi.cshtml* as follows:
 <pre>@Model.Json</pre>
 ```
 
+Also remember to update *src/WebClient/Shared/_Layout.cshtml with the following:
+```html
+<li class="nav-item">
+  <a class="nav-link text-dark" asp-area="" asp-page="/CallApi">CallApi</a>
+</li>
+```
+
 Make sure the *IdentityServer* and *Api* projects are running, start the
 *WebClient* and request */CallApi* after authentication.
 
