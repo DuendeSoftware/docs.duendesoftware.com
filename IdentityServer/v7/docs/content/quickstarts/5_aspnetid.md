@@ -231,7 +231,7 @@ Next you will add a custom property to your user model and include it as a
 claim when the appropriate Identity Resource is requested.
 
 First, add a *FavoriteColor* property in
-src/IdentityServerAspNetIdentity/ApplicationUser.cs*.
+*src/IdentityServerAspNetIdentity/ApplicationUser.cs*.
 
 ```csharp
 public class ApplicationUser : IdentityUser
