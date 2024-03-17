@@ -575,7 +575,7 @@ claims sourced from Google's data.
 
 The Google button is rendered by the login page automatically when there are
 external providers registered as authentication schemes. See the
-*BuildModelAsync* method in *src/IdentityServer/Pages/Login/Index.cshtml.cs* and
+*BuildModelAsync* method in *src/IdentityServer/Pages/Account/Login/Index.cshtml.cs* and
 the corresponding Razor template for more details.
 
 {{% /notice %}}
