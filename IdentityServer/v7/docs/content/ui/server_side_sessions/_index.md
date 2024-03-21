@@ -50,10 +50,12 @@ When using *AddServerSideSessions*, this call needs to come after any custom *IR
 
 ### Data stored server-side
 
-The data stored for the user session is the data contained in the ASP.NET Core *AuthenticationTicket* class.
-This data will be serialized and protected using ASP.NET Core's [data protection]({{<ref "/deployment/data_protection">}}) feature so as to protect any user PII.
-Some of the values from the user's session are extracted and used as indices in the store so that specific sessions can be queried.
-These values are the user's:
+The data stored for the user session is the data contained in the ASP.NET Core *AuthenticationTicket* class. This includes
+all claims and the *AuthenticationProperties.Items* collection. The *Items* can be used to store any custom (string)
+data. The *AuthenticationProperties* is included in the call to *SignInAsync* that establishes the user session in the UI code.
+
+This data will be serialized and protected using ASP.NET Core's [data protection]({{<ref "/deployment/data_protection">}}) feature to protect any user PII from being directly readable in the data store.
+To allow querying some of the values from the user's session are extracted and used as indices in the store. These values are the user's:
 
 * subject identifier (the *sub* claim value)
 * session identifier (the *sid* claim value)
