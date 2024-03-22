@@ -147,8 +147,7 @@ Add this client definition to *Config.cs*:
 
 ```cs
 public static IEnumerable<Client> Clients =>
-    new Client
-    
+    new Client []
     {
         new Client
         {
@@ -267,6 +266,7 @@ builder.Services.AddAuthentication()
     {
         options.Authority = "https://localhost:5001";
         options.TokenValidationParameters.ValidateAudience = false;
+        options.MetadataAddress = "https://localhost:5001/.well-known/openid-configuration";
     });
 builder.Services.AddAuthorization();
 ```
