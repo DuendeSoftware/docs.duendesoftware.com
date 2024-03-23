@@ -147,8 +147,7 @@ Add this client definition to *Config.cs*:
 
 ```cs
 public static IEnumerable<Client> Clients =>
-    new Client
-    
+    new Client[]
     {
         new Client
         {
