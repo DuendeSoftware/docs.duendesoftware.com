@@ -119,7 +119,7 @@ options.KeyManagement.SigningAlgorithms = new[]
 
 When you register multiple signing algorithms, the first in the list will be the
 default used for signing tokens. Client and API resource definitions both have
-an *AllowedTokenSigningAlgorithm* property to override the default on a per
+an *AllowedTokenSigningAlgorithms* property to override the default on a per
 resource and client basis.
 
 {{% /notice %}}
