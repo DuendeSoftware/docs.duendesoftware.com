@@ -87,8 +87,6 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = "secret";
         options.ResponseType = "code";
 
-        options.SaveTokens = true;
-
         options.Scope.Clear();
         options.Scope.Add("openid");
         options.Scope.Add("profile");
