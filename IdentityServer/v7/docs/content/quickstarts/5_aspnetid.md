@@ -285,7 +285,7 @@ data as a source of claims data. [See here]({{< ref
 "/reference/services/profile_service" >}}) for more details on the profile
 service.
 
-Create a new file called *src/AspNetIdentity/CustomProfileService.cs* and add the
+Create a new file called *src/IdentityServerAspNetIdentity/CustomProfileService.cs* and add the
 following code to it:
 ```csharp
 using Duende.IdentityServer.AspNetIdentity;
