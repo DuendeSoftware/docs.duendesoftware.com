@@ -1,90 +1,46 @@
 Welcome to IdentityModel
 ========================
 
-![image](icon.jpg){.align-center}
+![image](icon.jpg)
 
-IdentityModel is a family of FOSS libraries for building OAuth 2.0 and
-OpenID Connect clients.
+IdentityModel is a family of open source libraries for building OAuth 2.0 and OpenID
+Connect clients.
 
-IdentityModel
--------------
+## IdentityModel
 
-The base library for OIDC and OAuth 2.0 related protocol operations. It
-also provides useful constants and helper methods.
+The base library for OIDC and OAuth 2.0 related protocol operations. It provides an object
+model to interact with the endpoints defined in the various OAuth and OpenId Connect
+specifications in the form of types to represent the requests and responses, extension
+methods to invoke requests constants defined in the specifications, such as standard
+scope, claim, and parameter names, and other convenience methods for performing common
+identity related operations
 
-Currently we support .NET Standard 2.0 / .NET Framework \> 4.6.1
+IdentityModel targets .NET Standard 2.0, making it suitable for .NET and .NET Framework.
 
--   github <https://github.com/IdentityModel/IdentityModel>
--   nuget <https://www.nuget.org/packages/IdentityModel/>
--   CI builds <https://github.com/orgs/IdentityModel/packages>
+- GitHub: <https://github.com/IdentityModel/IdentityModel>
+- NuGet: <https://www.nuget.org/packages/IdentityModel/>
+<!-- - CI builds <https://github.com/orgs/IdentityModel/packages> -->
 
 The following libraries build on top of IdentityModel, and provide
 specific implementations for different applications:
 
-IdentityModel.AspNetCore
-------------------------
+## IdentityModel.OidcClient
 
-ASP.NET Core specific helper library for token management.
+IdentityModel.OidcClient is an OpenID Connect (OIDC) client library for native
+applications in .NET. It is a certified OIDC relying party and implements [RFC
+8252](https://datatracker.ietf.org/doc/html/rfc8252/), "OAuth 2.0 for native
+Applications". It provides types that describe OIDC requests and responses, low level
+methods to construct protocol state and handle responses, and higher level methods for
+logging in, logging out, retrieving userinfo, and refreshing tokens.
 
--   github <https://github.com/IdentityModel/IdentityModel.AspNetCore>
--   nuget <https://www.nuget.org/packages/IdentityModel.AspNetCore/>
--   CI builds <https://github.com/orgs/IdentityModel/packages>
+- GitHub: <https://github.com/IdentityModel/IdentityModel.OidcClient>
+- NuGet: <https://www.nuget.org/packages/IdentityModel.OidcClient>
+<!-- -   CI builds <https://github.com/orgs/IdentityModel/packages> -->
 
-IdentityModel.AspNetCore.OAuth2Introspection
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--OAuth
-2.0 token introspection authentication handler for ASP.NET Core.
+## IdentityModel.AspNetCore.OAuth2Introspection
 
--   github
-```
-<https://github.com/IdentityModel/IdentityModel.AspNetCore.OAuth2Introspection>
-```
--   nuget
-```
-<https://www.nuget.org/packages/IdentityModel.AspNetCore.OAuth2Introspection/>
-```
--   CI builds <https://github.com/orgs/IdentityModel/packages>
+OAuth 2.0 token introspection authentication handler for ASP.NET Core.
 
-IdentityModel.OidcClient
-------------------------
-
-.NET based implementation of the **OAuth 2.0 for native apps** BCP.
-Certified by the OpenID Foundation.
-
--   github <https://github.com/IdentityModel/IdentityModel.OidcClient>
--   nuget <https://www.nuget.org/packages/IdentityModel.OidcClient>
--   CI builds <https://github.com/orgs/IdentityModel/packages>
-
-oidc-client.js
---------------
-
-JavaScript based implementation of the **OAuth 2.0 for browser-based
-applications** BCP. Certified by the OpenID Foundation
-
--   github <https://github.com/IdentityModel/oidc-client-js>
--   npm <https://www.npmjs.com/package/oidc-client>
-
-::: {.toctree maxdepth="2" hidden="" caption="IdentityModel"}
-client/overview client/discovery client/token client/introspection
-client/revocation client/userinfo client/dynamic\_registration
-client/device\_authorize
-:::
-
-::: {.toctree maxdepth="2" hidden="" caption="IdentityModel - Misc Helpers"}
-misc/constants misc/request\_url misc/x509store misc/base64
-misc/epoch\_time misc/time\_constant\_comparison
-:::
-
-::: {.toctree maxdepth="2" hidden="" caption="IdentityModel for Workers and Web Apps"}
-aspnetcore/overview aspnetcore/worker aspnetcore/web
-aspnetcore/extensibility
-:::
-
-::: {.toctree maxdepth="2" hidden="" caption="Building mobile/native Clients"}
-native/overview native/manual native/automatic native/logging
-native/samples
-:::
-
-::: {.toctree maxdepth="2" hidden="" caption="Building JavaScript Clients"}
-js/overview
-:::
-
+- GitHub <https://github.com/IdentityModel/IdentityModel.AspNetCore.OAuth2Introspection>
+- NuGet <https://www.nuget.org/packages/IdentityModel.AspNetCore.OAuth2Introspection/>
+<!-- - CI builds <https://github.com/orgs/IdentityModel/packages> -->
