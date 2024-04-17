@@ -1,5 +1,7 @@
-Token Revocation Endpoint
-=========================
++++
+title = "Token Revocation Endpoint"
+weight = 50
++++
 
 The client library for [OAuth 2.0 token
 revocation](https://tools.ietf.org/html/rfc7009) is provided as an

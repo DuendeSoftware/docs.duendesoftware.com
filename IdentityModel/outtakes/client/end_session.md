@@ -1,3 +1,8 @@
++++
+title = "End Session Endpoint"
+weight = 55
++++
+
 ## End Session
 
 The [RequestUrl]({{< ref "/misc/request_url" >}}) class can be used to construct URLs to the

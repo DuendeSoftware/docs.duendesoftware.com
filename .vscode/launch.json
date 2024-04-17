@@ -5,16 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "hugo - v7",
+            "name": "IdentityServer v7",
             "request": "launch",
             "type": "f5anything",
             "command": "hugo server --navigateToChanged --source ${workspaceFolder}/IdentityServer/v7/docs"
         },
         {
-            "name": "hugo - v6",
+            "name": "IdentityServer v6",
             "request": "launch",
             "type": "f5anything",
             "command": "hugo server --navigateToChanged --source ${workspaceFolder}/IdentityServer/v6/docs"
+        },
+        {
+            "name": "IdentityModel",
+            "request": "launch",
+            "type": "f5anything",
+            "command": "hugo server --navigateToChanged --source ${workspaceFolder}/IdentityModel"
         }
     ]
 }

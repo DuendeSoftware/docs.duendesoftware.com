@@ -1,5 +1,7 @@
-UserInfo Endpoint
-=================
++++
+title = "UserInfo Endpoint"
+weight = 50
++++
 
 The client library for the [OpenID Connect
 UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)

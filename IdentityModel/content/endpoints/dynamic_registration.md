@@ -1,5 +1,7 @@
-Dynamic Client Registration
-===========================
++++
+title = "Dynamic Client Registration"
+weight = 60
++++
 
 The client library for [OpenID Connect Dynamic Client
 Registration](https://openid.net/specs/openid-connect-registration-1_0.html)

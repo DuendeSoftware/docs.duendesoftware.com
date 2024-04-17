@@ -1,5 +1,7 @@
-Base64 URL Encoding
-===================
++++
+title = "Base64 URL Encoding"
+weight = 40
++++
 
 JWT tokens are serialized using [Base64 URL
 encoding](https://tools.ietf.org/html/rfc4648#section-5).

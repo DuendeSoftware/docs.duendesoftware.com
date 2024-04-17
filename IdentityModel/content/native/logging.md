@@ -1,8 +1,12 @@
-Logging
-=======
++++
+title = "Logging"
+weight = 30
++++
 
-OidcClient has support for the standard .NET logging facilities, e.g.
-using [Serilog](https://github.com/serilog/serilog-extensions-hosting):
+OidcClient logs errors, warnings, and diagnostic information using
+*Microsoft.Extensions.Logging.ILogger*, the standard .NET logging library. You can use any
+logging provider to store your logs however you like. For example, you could configure
+[Serilog](https://github.com/serilog/serilog-extensions-hosting) like this:
 
 ```
 var serilog = new LoggerConfiguration()

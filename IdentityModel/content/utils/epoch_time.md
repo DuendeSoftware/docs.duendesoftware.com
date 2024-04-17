@@ -1,5 +1,7 @@
-Epoch Time Conversion
-=====================
++++
+title = "Epoch Time Conversion"
+weight = 50
++++
 
 JWT tokens use so called [Epoch or Unix
 time](https://en.wikipedia.org/wiki/Unix_time) to represent date/times.

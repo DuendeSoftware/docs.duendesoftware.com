@@ -1,5 +1,7 @@
-Discovery Endpoint
-==================
++++
+title = "Discovery Endpoint"
+weight = 20
++++
 
 The client library for the [OpenID Connect discovery
 endpoint](https://openid.net/specs/openid-connect-discovery-1_0.html) is

@@ -1,3 +1,9 @@
++++
+title = "Protocol Endpoints"
+weight = 10
+chapter = true
++++
+
 Overview
 ========
 
@@ -19,7 +25,7 @@ thus also allows setting custom headers etc.
 The following code snippet creates a request for a client credentials
 grant type:
 
-```
+```cs
 var request = new ClientCredentialsTokenRequest
 {
     Address = "https://demo.identityserver.io/connect/token",
@@ -39,8 +45,9 @@ implementation that parses the status codes and response content. The
 following code snippet would parse the raw HTTP response from a token
 endpoint and turn it into a *TokenResponse* object:
 
-```
-var tokenResponse = await ProtocolResponse.FromHttpResponseAsync<TokenResponse>(httpResponse);
+```cs
+var tokenResponse = await ProtocolResponse
+    .FromHttpResponseAsync<TokenResponse>(httpResponse);
 ```
 
 Again these steps are automated using the extension methods. So let\'s
@@ -50,36 +57,38 @@ Extension methods
 -----------------
 
 For each protocol interaction, an extension method for
-*HttpMessageInvoker* (that\'s the base class of *HttpClient*) exists.
+*HttpMessageInvoker* (that's the base class of *HttpClient*) exists.
 The extension methods expect a request object and return a response
 object.
 
 It is your responsibility to setup and manage the lifetime of the
 *HttpClient*, e.g. manually:
 
-```
+```cs
 var client = new HttpClient();
 
-var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-{
-    Address = "https://demo.identityserver.io/connect/token",
-    ClientId = "client",
-    ClientSecret = "secret"
-});
+var response = await client.RequestClientCredentialsTokenAsync(
+    new ClientCredentialsTokenRequest
+    {
+        Address = "https://demo.identityserver.io/connect/token",
+        ClientId = "client",
+        ClientSecret = "secret"
+    });
 ```
 
 You might want to use other techniques to obtain an *HttpClient*, e.g.
 via the HTTP client factory:
 
-```
+```cs
 var client = HttpClientFactory.CreateClient("my_named_token_client");
 
-var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-{
-    Address = "https://demo.identityserver.io/connect/token",
-    ClientId = "client",
-    ClientSecret = "secret"
-});
+var response = await client.RequestClientCredentialsTokenAsync(
+    new ClientCredentialsTokenRequest
+    {
+        Address = "https://demo.identityserver.io/connect/token",
+        ClientId = "client",
+        ClientSecret = "secret"
+    });
 ```
 
 All other endpoint client follow the same design.

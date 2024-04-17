@@ -1,5 +1,7 @@
-Automatic Mode
-==============
++++
+title = "Automatic Mode"
+weight = 20
++++
 
 In automatic mode, you can encapsulate all browser interactions by
 implementing the

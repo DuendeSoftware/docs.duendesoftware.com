@@ -1,5 +1,7 @@
-Device Authorization Endpoint
-=============================
++++
+title = "Device Authorization Endpoint"
+weight = 70
++++
 
 The client library for the [OAuth 2.0 device
 flow](https://tools.ietf.org/html/rfc7662) device authorization is

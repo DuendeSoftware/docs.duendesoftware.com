@@ -1,5 +1,7 @@
-Token Endpoint
-==============
++++
+title = "Token Endpoint"
+weight = 30
++++
 
 The client library for the token endpoint ([OAuth
 2.0](https://tools.ietf.org/html/rfc6749#section-3.2) and [OpenID

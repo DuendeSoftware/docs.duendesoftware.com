@@ -1,7 +1,12 @@
++++
+title = "Welcome to IdentityModel"
+weight = 10
+chapter = true
++++
+
+
 Welcome to IdentityModel
 ========================
-
-![image](icon.jpg)
 
 IdentityModel is a family of open source libraries for building OAuth 2.0 and OpenID
 Connect clients.

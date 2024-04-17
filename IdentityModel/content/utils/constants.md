@@ -1,5 +1,7 @@
-Protocol and Claim Type Constants
-=================================
++++
+title = "Protocol and Claim Type Constants"
+weight = 10
++++
 
 When working with OAuth 2.0, OpenID Connect and claims, there are a lot
 of \"magic strings\" for claim types and protocol values. IdentityModel

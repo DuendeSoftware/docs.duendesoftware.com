@@ -1,6 +1,9 @@
-=================================================================== The
-*RequestUrl* class is a helper for creating URLs with query string
-parameters, e.g.:
++++
+title = "Creating Authorize and EndSession URLs"
+weight = 60
++++
+
+The *RequestUrl* class is a helper for creating URLs with query string parameters, e.g.:
 
 ```
 var ru = new RequestUrl("https://server/endpoint");
@@ -21,8 +24,7 @@ serialized to key/value pairs.
 All values will be URL encoded.
 {{% /notice %}}
 
-Authorization Endpoint
-======================
+## Authorization Endpoint
 
 For most cases, the [OAuth
 2.0](https://tools.ietf.org/html/rfc6749#section-3.1) and [OpenID
@@ -95,8 +97,7 @@ other type with properties. In both cases the values will be serialized
 as keys/values.
 {{% /notice %}}
 
-EndSession Endpoint
-===================
+## EndSession Endpoint
 
 The *CreateEndSessionUrl* extensions methods supports the most common
 parameters:

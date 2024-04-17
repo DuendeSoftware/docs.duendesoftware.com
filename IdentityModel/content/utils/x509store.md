@@ -1,5 +1,7 @@
-Fluent API for the X.509 Certificate Store
-==========================================
++++
+title = "Fluent X.509 Certificate Store API"
+weight = 60
++++
 
 A common place to store X.509 certificates is the Windows X.509
 certificate store. The raw APIs for the store are a bit arcane (and also
