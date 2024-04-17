@@ -14,14 +14,9 @@ var b64url = Base64Url.Encode(text);
 text = Base64Url.Decode(b64url);
 ```
 
-::: {.note}
-::: {.title}
-Note
-:::
-
+{{% notice note %}}
 ASP.NET Core has built-in support via
 [WebEncoders.Base64UrlEncode](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.webencoders.base64urlencode)
 and
 [WebEncoders.Base64UrlDecode](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.webencoders.base64urldecode).
-:::
-
+{{% /notice %}}

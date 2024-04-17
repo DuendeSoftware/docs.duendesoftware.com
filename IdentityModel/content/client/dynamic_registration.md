@@ -21,16 +21,12 @@ var response = await client.RegisterClientAsync(new DynamicClientRegistrationReq
 });
 ```
 
-::: {.note}
-::: {.title}
-Note
-:::
-
+{{% notice note %}}
 The *DynamicClientRegistrationDocument* class has strongly typed
 properties for all standard registration parameters as defines by the
 specification. If you want to add custom parameters, it is recommended
 to derive from this class and add your own properties.
-:::
+{{% /notice %}}
 
 The response is of type *RegistrationResponse* and has properties for
 the standard response parameters. You also have access to the the raw

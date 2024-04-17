@@ -1,10 +1,10 @@
-------------------------------------------------------------------------
+## End Session
 
-The *RequestUrl <refRequestUrl>*{.interpreted-text role="ref"} class can
-be used to construct URLs to the [OpenID Connect EndSession
+The [RequestUrl]({{< ref "/misc/request_url" >}}) class can be used to construct URLs to the
+[OpenID Connect EndSession
 endpoint](https://openid.net/specs/openid-connect-session-1_0.html#RPLogout).
 
-The *CreateEndSessionUrl* extensions methods supports the most common
+The *CreateEndSessionUrl* extension methods supports the most common
 parameters:
 
 ```
@@ -25,13 +25,8 @@ public static string CreateEndSessionUrl(this RequestUrl request,
 { ... }
 ```
 
-::: {.note}
-::: {.title}
-Note
-:::
-
+{{% notice note %}}
 The *extra* parameter can either be a string dictionary or an arbitrary
 other type with properties. In both cases the values will be serialized
 as keys/values.
-:::
-
+{{% /notice %}}

@@ -17,13 +17,9 @@ As a parameter to the *Create* method you can either pass in an object,
 or a string dictionary. In both cases the properties/values will be
 serialized to key/value pairs.
 
-::: {.note}
-::: {.title}
-Note
-:::
-
+{{% notice note %}}
 All values will be URL encoded.
-:::
+{{% /notice %}}
 
 Authorization Endpoint
 ======================
@@ -93,16 +89,11 @@ var url = ru.CreateAuthorizeUrl(
     nonce: "xyz",
     scope: "openid");
 ```
-
-::: {.note}
-::: {.title}
-Note
-:::
-
+{{% notice note %}}
 The *extra* parameter can either be a string dictionary or an arbitrary
 other type with properties. In both cases the values will be serialized
 as keys/values.
-:::
+{{% /notice %}}
 
 EndSession Endpoint
 ===================
@@ -128,13 +119,9 @@ public static string CreateEndSessionUrl(this RequestUrl request,
 { ... }
 ```
 
-::: {.note}
-::: {.title}
-Note
-:::
 
+{{% notice note %}}
 The *extra* parameter can either be a string dictionary or an arbitrary
 other type with properties. In both cases the values will be serialized
 as keys/values.
-:::
-
+{{% /notice %}}

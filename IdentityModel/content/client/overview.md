@@ -84,13 +84,8 @@ var response = await client.RequestClientCredentialsTokenAsync(new ClientCredent
 
 All other endpoint client follow the same design.
 
-::: {.note}
-::: {.title}
-Note
-:::
-
+{{% notice note %}}
 Some client libraries also include a stateful client object (e.g.
 *TokenClient* and *IntrospectionClient*). See the corresponding section
 to find out more.
-:::
-
+{{% /notice %}}
