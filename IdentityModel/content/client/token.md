@@ -4,15 +4,15 @@ Token Endpoint
 The client library for the token endpoint ([OAuth
 2.0](https://tools.ietf.org/html/rfc6749#section-3.2) and [OpenID
 Connect](https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint))
-is provided as a set of extension methods for `HttpClient`. This allows
-creating and managing the lifetime of the `HttpClient` the way you
+is provided as a set of extension methods for *HttpClient*. This allows
+creating and managing the lifetime of the *HttpClient* the way you
 prefer - e.g. statically or via a factory like the Microsoft
-`HttpClientFactory`.
+*HttpClientFactory*.
 
 Requesting a token
 ------------------
 
-The main extension method is called `RequestTokenAsync` - it has direct
+The main extension method is called *RequestTokenAsync* - it has direct
 support for standard parameters like client ID/secret (or assertion) and
 grant type, but it also allows setting arbitrary other parameters via a
 dictionary. All other extensions methods ultimately call this method
@@ -37,12 +37,12 @@ var response = await client.RequestTokenAsync(new TokenRequest
 });
 ```
 
-The response is of type `TokenResponse` and has properties for the
-standard token response parameters like `access_token`, `expires_in`
+The response is of type *TokenResponse* and has properties for the
+standard token response parameters like *access_token*, *expires_in*
 etc. You also have access to the the raw response as well as to a parsed
-JSON document (via the `Raw` and `Json` properties).
+JSON document (via the *Raw* and *Json* properties).
 
-Before using the response, you should always check the `IsError`
+Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
 ```
@@ -52,11 +52,11 @@ var token = response.AccessToken;
 var custom = response.Json.TryGetString("custom_parameter");
 ```
 
-Requesting a token using the `client_credentials` Grant Type
+Requesting a token using the *client_credentials* Grant Type
 ------------------------------------------------------------
 
-The `RequestClientCredentialsToken` extension method has convenience
-properties for the `client_credentials` grant type:
+The *RequestClientCredentialsToken* extension method has convenience
+properties for the *client_credentials* grant type:
 
 ```
 var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
@@ -69,11 +69,11 @@ var response = await client.RequestClientCredentialsTokenAsync(new ClientCredent
 });
 ```
 
-Requesting a token using the `password` Grant Type
+Requesting a token using the *password* Grant Type
 --------------------------------------------------
 
-The `RequestPasswordToken` extension method has convenience properties
-for the `password` grant type:
+The *RequestPasswordToken* extension method has convenience properties
+for the *password* grant type:
 
 ```
 var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
@@ -89,11 +89,11 @@ var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
 });
 ```
 
-Requesting a token using the `authorization_code` Grant Type
+Requesting a token using the *authorization_code* Grant Type
 ------------------------------------------------------------
 
-The `RequestAuthorizationCodeToken` extension method has convenience
-properties for the `authorization_code` grant type and PKCE:
+The *RequestAuthorizationCodeToken* extension method has convenience
+properties for the *authorization_code* grant type and PKCE:
 
 ```
 var response = await client.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
@@ -111,11 +111,11 @@ var response = await client.RequestAuthorizationCodeTokenAsync(new Authorization
 });
 ```
 
-Requesting a token using the `refresh_token` Grant Type
+Requesting a token using the *refresh_token* Grant Type
 -------------------------------------------------------
 
-The `RequestRefreshToken` extension method has convenience properties
-for the `refresh_token` grant type:
+The *RequestRefreshToken* extension method has convenience properties
+for the *refresh_token* grant type:
 
 ```
 var response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
@@ -132,8 +132,8 @@ var response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
 Requesting a Device Token
 -------------------------
 
-The `RequestDeviceToken` extension method has convenience properties for
-the `urn:ietf:params:oauth:grant-type:device_code` grant type:
+The *RequestDeviceToken* extension method has convenience properties for
+the *urn:ietf:params:oauth:grant-type:device_code* grant type:
 
 ```
 var response = await client.RequestDeviceTokenAsync(new DeviceTokenRequest

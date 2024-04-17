@@ -3,7 +3,7 @@ Device Authorization Endpoint
 
 The client library for the [OAuth 2.0 device
 flow](https://tools.ietf.org/html/rfc7662) device authorization is
-provided as an extension method for `HttpClient`.
+provided as an extension method for *HttpClient*.
 
 The following code sends a device authorization request:
 
@@ -17,12 +17,12 @@ var response = await client.RequestDeviceAuthorizationAsync(new DeviceAuthorizat
 });
 ```
 
-The response is of type `DeviceAuthorizationResponse` and has properties
+The response is of type *DeviceAuthorizationResponse* and has properties
 for the standard response parameters. You also have access to the the
-raw response as well as to a parsed JSON document (via the `Raw` and
-`Json` properties).
+raw response as well as to a parsed JSON document (via the *Raw* and
+*Json* properties).
 
-Before using the response, you should always check the `IsError`
+Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
 ```

@@ -3,12 +3,12 @@ Discovery Endpoint
 
 The client library for the [OpenID Connect discovery
 endpoint](https://openid.net/specs/openid-connect-discovery-1_0.html) is
-provided as an extension method for `HttpClient`. The
-`GetDiscoveryDocumentAsync` method returns a `DiscoveryResponse` object
+provided as an extension method for *HttpClient*. The
+*GetDiscoveryDocumentAsync* method returns a *DiscoveryResponse* object
 that has both strong and weak typed accessors for the various elements
 of the discovery document.
 
-You should always check the `IsError` and `Error` properties before
+You should always check the *IsError* and *Error* properties before
 accessing the contents of the document.
 
 Example:
@@ -56,11 +56,11 @@ authority
 ```
 -   enforce the existence of a keyset
 
-Policy violation errors will set the `ErrorType` property on the
-`DiscoveryResponse` to `PolicyViolation`.
+Policy violation errors will set the *ErrorType* property on the
+*DiscoveryResponse* to *PolicyViolation*.
 
 All of the standard validation rules can be modified using the
-`DiscoveryPolicy` class, e.g. disabling the issuer name check:
+*DiscoveryPolicy* class, e.g. disabling the issuer name check:
 
 ```
 var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
@@ -74,7 +74,7 @@ var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
 ```
 
 You can also customize validation strategy based on the authority with
-your own implementation of `IAuthorityValidationStrategy`. By default,
+your own implementation of *IAuthorityValidationStrategy*. By default,
 comparison uses ordinal string comparison. To switch to Uri comparison:
 
 ```
@@ -96,7 +96,7 @@ document, to be able to react to configuration changes on the server.
 This is especially important for playing nice with automatic key
 rotation.
 
-The `DiscoveryCache` class can help you with that.
+The *DiscoveryCache* class can help you with that.
 
 The following code will set-up the cache, retrieve the document the
 first time it is needed, and then cache it for 24 hours:
@@ -112,20 +112,20 @@ var disco = await cache.GetAsync();
 if (disco.IsError) throw new Exception(disco.Error);
 ```
 
-You can specify the cache duration using the `CacheDuration` property
+You can specify the cache duration using the *CacheDuration* property
 and also specify a custom discovery policy by passing in a
-`DiscoveryPolicy` to the constructor.
+*DiscoveryPolicy* to the constructor.
 
 ### Caching and HttpClient Instances
 
 By default the discovery cache will create a new instance of
-`HttpClient` every time it needs to access the discovery endpoint. You
+*HttpClient* every time it needs to access the discovery endpoint. You
 can modify this behavior in two ways, either by passing in a pre-created
 instance into the constructor, or by providing a function that will
-return an `HttpClient` when needed.
+return an *HttpClient* when needed.
 
 The following code will setup the discovery cache in DI and will use the
-`HttpClientFactory` to create clients:
+*HttpClientFactory* to create clients:
 
 ```
 services.AddSingleton<IDiscoveryCache>(r =>

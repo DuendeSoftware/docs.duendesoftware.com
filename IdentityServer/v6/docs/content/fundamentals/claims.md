@@ -98,7 +98,7 @@ var client = new Client
 };
 ```
 
-To avoid accidental collision with user claims, client claims are prefixed with *client_*. For example, the above `ClientClaim` would be emitted as the *client_customer_id* claim type in access tokens. You can change or remove this prefix by setting the *ClientClaimsPrefix* on the [client definition]({{< ref "/reference/models/client#token" >}}). 
+To avoid accidental collision with user claims, client claims are prefixed with *client_*. For example, the above *ClientClaim* would be emitted as the *client_customer_id* claim type in access tokens. You can change or remove this prefix by setting the *ClientClaimsPrefix* on the [client definition]({{< ref "/reference/models/client#token" >}}). 
 
 {{% notice note %}}
 By default, client claims are only sent in the client credentials flow. If you want to enable them for other flows, you need to set the *AlwaysSendClientClaims* property on the client definition.

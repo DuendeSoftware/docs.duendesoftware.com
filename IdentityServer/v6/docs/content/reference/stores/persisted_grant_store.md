@@ -187,7 +187,7 @@ one-time use semantics are appropriate for the grant.
 
 #### PersistedGrantTypes
 
-The types of persisted grants are defined by the `IdentityServerConstants.PersistedGrantTypes` constants:
+The types of persisted grants are defined by the *IdentityServerConstants.PersistedGrantTypes* constants:
 
 ```cs
     public static class PersistedGrantTypes

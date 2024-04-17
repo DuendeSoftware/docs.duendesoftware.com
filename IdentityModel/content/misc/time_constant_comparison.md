@@ -4,7 +4,7 @@ Time-Constant String Comparison
 When comparing strings in a security context (e.g. comparing keys), you
 should try to avoid leaking timing information.
 
-The `TimeConstantComparer` class can help with that:
+The *TimeConstantComparer* class can help with that:
 
 ```
 var isEqual = TimeConstantComparer.IsEqual(key1, key2);

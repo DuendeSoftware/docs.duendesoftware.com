@@ -3,7 +3,7 @@ Token Introspection Endpoint
 
 The client library for [OAuth 2.0 token
 introspection](https://tools.ietf.org/html/rfc7662) is provided as an
-extension method for `HttpClient`.
+extension method for *HttpClient*.
 
 The following code sends a reference token to an introspection endpoint:
 
@@ -20,12 +20,12 @@ var response = await client.IntrospectTokenAsync(new TokenIntrospectionRequest
 });
 ```
 
-The response is of type `TokenIntrospectionResponse` and has properties
+The response is of type *TokenIntrospectionResponse* and has properties
 for the standard response parameters. You also have access to the the
-raw response as well as to a parsed JSON document (via the `Raw` and
-`Json` properties).
+raw response as well as to a parsed JSON document (via the *Raw* and
+*Json* properties).
 
-Before using the response, you should always check the `IsError`
+Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
 ```

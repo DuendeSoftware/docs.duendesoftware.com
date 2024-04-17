@@ -3,7 +3,7 @@ Dynamic Client Registration
 
 The client library for [OpenID Connect Dynamic Client
 Registration](https://openid.net/specs/openid-connect-registration-1_0.html)
-is provided as an extension method for `HttpClient`.
+is provided as an extension method for *HttpClient*.
 
 The following code sends a registration request:
 
@@ -26,18 +26,18 @@ var response = await client.RegisterClientAsync(new DynamicClientRegistrationReq
 Note
 :::
 
-The `DynamicClientRegistrationDocument` class has strongly typed
+The *DynamicClientRegistrationDocument* class has strongly typed
 properties for all standard registration parameters as defines by the
 specification. If you want to add custom parameters, it is recommended
 to derive from this class and add your own properties.
 :::
 
-The response is of type `RegistrationResponse` and has properties for
+The response is of type *RegistrationResponse* and has properties for
 the standard response parameters. You also have access to the the raw
-response as well as to a parsed JSON document (via the `Raw` and `Json`
+response as well as to a parsed JSON document (via the *Raw* and *Json*
 properties).
 
-Before using the response, you should always check the `IsError`
+Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
 ```

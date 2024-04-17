@@ -9,10 +9,8 @@ machine communication and user-centric applications with refresh tokens.
 
 For user-centric it provides:
 
--   storage abstraction for access and refresh tokens (default
-```
-implementation using the ASP.NET Core authentication session)
-```
+-   storage abstraction for access and refresh tokens (default implementation using the
+    ASP.NET Core authentication session)
 -   automatic refresh of expired access tokens
 -   refresh token revocation
 -   token lifetime automation for HttpClient
@@ -20,9 +18,7 @@ implementation using the ASP.NET Core authentication session)
 For worker services it provides:
 
 -   caching abstraction for access tokens (default implementation using
-```
-`IDistributedCache`)
-```
+    *IDistributedCache*)
 -   automatic renewal of expired access tokens
 -   token lifetime automation for HttpClient
 

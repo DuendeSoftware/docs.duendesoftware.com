@@ -4,7 +4,7 @@ Base64 URL Encoding
 JWT tokens are serialized using [Base64 URL
 encoding](https://tools.ietf.org/html/rfc4648#section-5).
 
-IdentityModel includes the `Base64Url` class to help with
+IdentityModel includes the *Base64Url* class to help with
 encoding/decoding:
 
 ```

@@ -17,7 +17,7 @@ tokens
 ```
 that allows to refresh tokens (e.g. code flow)
 ```
--   you use the `SaveTokens` option to store the access and refresh
+-   you use the *SaveTokens* option to store the access and refresh
 ```
 token in the authentication session
 ```
@@ -31,14 +31,14 @@ services.AddAccessTokenManagement();
 ```
 
 To interact with the underlying services, this library adds two
-extension methods for `HttpContext`:
+extension methods for *HttpContext*:
 
--   `GetUserAccessTokenAsync` - retrieves current access token for user
+-   *GetUserAccessTokenAsync* - retrieves current access token for user
 ```
 and refreshes it if it is expired (or expiring soon - can be
 configured)
 ```
--   `RevokeUserRefreshTokenAsync` - revokes the refresh token when it is
+-   *RevokeUserRefreshTokenAsync* - revokes the refresh token when it is
 ```
 not needed anymore
 ```

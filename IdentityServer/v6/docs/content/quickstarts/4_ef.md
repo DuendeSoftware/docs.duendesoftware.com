@@ -156,9 +156,9 @@ catch (Exception ex) when (
 
 {{% notice note %}}
 
-When using `Microsoft.EntityFrameworkCore.Tools` version 6.x, you must use the "StopTheHostException" string here rather than catching the
+When using *Microsoft.EntityFrameworkCore.Tools* version 6.x, you must use the "StopTheHostException" string here rather than catching the
 *StopTheHostException* because it is a private type. 
-If you use version 7.x of `Microsoft.EntityFrameworkCore.Tools` and reference version 7.x of the `Microsoft.Extensions.Hosting` package, you can catch the "HostAbortedException" as expected. See
+If you use version 7.x of *Microsoft.EntityFrameworkCore.Tools* and reference version 7.x of the *Microsoft.Extensions.Hosting* package, you can catch the "HostAbortedException" as expected. See
 https://github.com/dotnet/runtime/issues/60600.
 
 

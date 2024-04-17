@@ -1,5 +1,5 @@
 =================================================================== The
-`RequestUrl` class is a helper for creating URLs with query string
+*RequestUrl* class is a helper for creating URLs with query string
 parameters, e.g.:
 
 ```
@@ -13,7 +13,7 @@ var url = ru.Create(new
     });
 ```
 
-As a parameter to the `Create` method you can either pass in an object,
+As a parameter to the *Create* method you can either pass in an object,
 or a string dictionary. In both cases the properties/values will be
 serialized to key/value pairs.
 
@@ -34,7 +34,7 @@ Connect](https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndp
 authorization endpoint expects a GET request with a number of query
 string parameters.
 
-The `CreateAuthorizeUrl` extension method creates URLs for the authorize
+The *CreateAuthorizeUrl* extension method creates URLs for the authorize
 endpoint - it has support the most common parameters:
 
 ```
@@ -99,7 +99,7 @@ var url = ru.CreateAuthorizeUrl(
 Note
 :::
 
-The `extra` parameter can either be a string dictionary or an arbitrary
+The *extra* parameter can either be a string dictionary or an arbitrary
 other type with properties. In both cases the values will be serialized
 as keys/values.
 :::
@@ -107,7 +107,7 @@ as keys/values.
 EndSession Endpoint
 ===================
 
-The `CreateEndSessionUrl` extensions methods supports the most common
+The *CreateEndSessionUrl* extensions methods supports the most common
 parameters:
 
 ```
@@ -133,7 +133,7 @@ public static string CreateEndSessionUrl(this RequestUrl request,
 Note
 :::
 
-The `extra` parameter can either be a string dictionary or an arbitrary
+The *extra* parameter can either be a string dictionary or an arbitrary
 other type with properties. In both cases the values will be serialized
 as keys/values.
 :::

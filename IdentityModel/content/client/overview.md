@@ -10,10 +10,10 @@ Request and response objects
 ----------------------------
 
 All protocol request are modelled as request objects and have a common
-base class called `ProtocolRequest` which has properties to set the
+base class called *ProtocolRequest* which has properties to set the
 endpoint address, client ID, client secret, client assertion, and the
 details of how client secrets are transmitted (e.g. authorization header
-vs POST body). `ProtocolRequest` derives from `HttpRequestMessage` and
+vs POST body). *ProtocolRequest* derives from *HttpRequestMessage* and
 thus also allows setting custom headers etc.
 
 The following code snippet creates a request for a client credentials
@@ -28,16 +28,16 @@ var request = new ClientCredentialsTokenRequest
 };
 ```
 
-While in theory you could now call `Prepare` (which internally sets the
+While in theory you could now call *Prepare* (which internally sets the
 headers, body and address) and send the request via a plain
-`HttpClient`, typically there are more parameters with special semantics
+*HttpClient*, typically there are more parameters with special semantics
 and encoding required. That\'s why we provide extension methods to do
 the low level work.
 
-Equally, a protocol response has a corresponding `ProtocolResponse`
+Equally, a protocol response has a corresponding *ProtocolResponse*
 implementation that parses the status codes and response content. The
 following code snippet would parse the raw HTTP response from a token
-endpoint and turn it into a `TokenResponse` object:
+endpoint and turn it into a *TokenResponse* object:
 
 ```
 var tokenResponse = await ProtocolResponse.FromHttpResponseAsync<TokenResponse>(httpResponse);
@@ -50,12 +50,12 @@ Extension methods
 -----------------
 
 For each protocol interaction, an extension method for
-`HttpMessageInvoker` (that\'s the base class of `HttpClient`) exists.
+*HttpMessageInvoker* (that\'s the base class of *HttpClient*) exists.
 The extension methods expect a request object and return a response
 object.
 
 It is your responsibility to setup and manage the lifetime of the
-`HttpClient`, e.g. manually:
+*HttpClient*, e.g. manually:
 
 ```
 var client = new HttpClient();
@@ -68,7 +68,7 @@ var response = await client.RequestClientCredentialsTokenAsync(new ClientCredent
 });
 ```
 
-You might want to use other techniques to obtain an `HttpClient`, e.g.
+You might want to use other techniques to obtain an *HttpClient*, e.g.
 via the HTTP client factory:
 
 ```
@@ -90,7 +90,7 @@ Note
 :::
 
 Some client libraries also include a stateful client object (e.g.
-`TokenClient` and `IntrospectionClient`). See the corresponding section
+*TokenClient* and *IntrospectionClient*). See the corresponding section
 to find out more.
 :::
 

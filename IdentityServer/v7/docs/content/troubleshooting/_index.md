@@ -27,7 +27,7 @@ See [our data protection guide]({{< ref "/deployment/data_protection" >}}) for m
 ## Load Balancing, proxies and TLS offloading
 When running IdentityServer behind a load balancer it is important that IdentityServer still has access to the original request URL. IdentityServer uses that to create URLs that are included in the discovery document and in protocol messages.
 
-To diagnose, open the discovery document (append `/.well-known/openid-configuration` to your root IdentityServer host), e.g. https://demo.duendesoftware.com/.well-known/openid-configuration. Make sure that the URLs listed in there have the correct host name and are listed as https (assuming you are running under https, which you should).
+To diagnose, open the discovery document (append */.well-known/openid-configuration* to your root IdentityServer host), e.g. https://demo.duendesoftware.com/.well-known/openid-configuration. Make sure that the URLs listed in there have the correct host name and are listed as https (assuming you are running under https, which you should).
 
 See [our proxy guide]({{< ref "/deployment/proxies" >}}) for more information.
 

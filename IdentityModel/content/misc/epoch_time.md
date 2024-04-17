@@ -4,7 +4,7 @@ Epoch Time Conversion
 JWT tokens use so called [Epoch or Unix
 time](https://en.wikipedia.org/wiki/Unix_time) to represent date/times.
 
-IdentityModel contains extensions methods for `DateTime` to convert
+IdentityModel contains extensions methods for *DateTime* to convert
 to/from Unix time:
 
 ```
