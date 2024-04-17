@@ -13,5 +13,5 @@ hugo -d ../../../root/identityserver/v7
 popd
 
 pushd ./IdentityModel/
-hugo -d ../../../root/identitymodel
+hugo -d ../root/identitymodel
 popd
