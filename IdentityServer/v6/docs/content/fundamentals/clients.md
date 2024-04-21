@@ -39,7 +39,7 @@ public class Clients
 ```
 
 ## Defining an interactive application for use authentication and delegated API access
-Interactive applications (e.g. web applications or native desktop/mobile) applications use the authorization code flow.
+Interactive applications (e.g. web applications or native desktop/mobile) use the authorization code flow.
 This flow gives you the best security because the access tokens are transmitted via back-channel calls only (and gives you access to refresh tokens):
 
 ```cs
