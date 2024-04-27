@@ -13,12 +13,12 @@ This sample shows how to use the BFF framework with a JavaScript-based frontend 
 ### ReactJs Frontend
 This sample shows how to use the BFF framework with the .NET 6 React template.
 
-[link to source code]({{< param samples_base >}}/BFF/ReactBffSample)
+[link to source code]({{< param samples_base >}}/BFF/React)
 
 ### Angular Frontend
 This sample shows how to use the BFF framework with the .NET 6 Angular template.
 
-[link to source code]({{< param samples_base >}}/BFF/AngularBffSample)
+[link to source code]({{< param samples_base >}}/BFF/Angular)
 
 ### Blazor WASM
 This sample shows how to use the BFF framework with Blazor WASM.
