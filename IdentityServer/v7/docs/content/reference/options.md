@@ -44,7 +44,7 @@ Top-level settings. Available directly on the *IdentityServerOptions* object.
 
 * ***EmitStaticAudienceClaim***
     
-    Emits a static *aud* claim in all access tokens with the format *issuer/resources*. Defaults to *false*.
+    Emits a static *aud* (audience) claim in all access tokens with the format *{issuer}/resources*. For example, if IdentityServer was running at *https:\//identity.example.com*, the static *aud* claim's value would be *https:\//identity.example.com/resources*. Historically, older versions of IdentityServer produced tokens with a static audience claim in this format. This flag is intended for use when you need to produce backwards-compatible access tokens. Also note that multiple audience claims are possible. If you enable this flag and also configure *ApiResource*s you can have both the static audience and audiences from the API resources. Defaults to *false*.
 
 * ***EmitIssuerIdentificationResponseParameter***
      
