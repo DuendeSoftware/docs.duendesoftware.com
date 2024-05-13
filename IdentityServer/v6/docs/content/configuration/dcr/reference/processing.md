@@ -43,8 +43,8 @@ have its properties set, the DCR request, and other contextual information. The
 
 | name | description |
 | --- | --- |
-| virtual AddClientId | Generates a client ID and adds it to the validatedRequest's client model. |
-| virtual AddClientSecret | Adds a client secret to a dynamic client registration request. |
+| AddClientId | Generates a client ID and adds it to the validatedRequest's client model. |
+| AddClientSecret | Adds a client secret to a dynamic client registration request. |
 
 ## Secret Generation
 The *AddClientSecret* method is responsible for adding the client's secret and
@@ -52,4 +52,4 @@ plaintext of that secret to the context's *Items* dictionary for later use. If y
 
 | name | description |
 | --- | --- |
-| virtual GenerateSecret | Generates a secret for a dynamic client registration request. |
+| GenerateSecret | Generates a secret for a dynamic client registration request. |
