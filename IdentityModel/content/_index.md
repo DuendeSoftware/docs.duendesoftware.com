@@ -9,7 +9,8 @@ Welcome to IdentityModel
 ========================
 
 IdentityModel is a family of open source libraries for building OAuth 2.0 and OpenID
-Connect clients.
+Connect clients. Development of the IdentityModel libraries is sponsored by [Duende
+Software](https://duendesoftware.com/).
 
 ## IdentityModel
 
