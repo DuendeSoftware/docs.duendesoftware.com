@@ -65,7 +65,7 @@ Refresh tokens usually have a much longer lifetime than access tokens. You can r
 You can use the *AbsoluteRefreshTokenLifetime* and *SlidingRefreshTokenLifetime* client settings to fine tune this behavior.
 
 ### Rotation
-The security of refresh tokens used by public clients can be improved by rotating the tokens on every use. Rotation is configured with the *RefreshTokenUsage* client setting and is enabled by default. However, rotation is only recommended for public clients. For confidential clients, we recommend changing the *RefreshTokenUsage* to allow reusable refresh tokens.
+The security of refresh tokens used by public clients can be improved by rotating the tokens on every use. Rotation is configured with the *RefreshTokenUsage* client setting and is disabled by default. However, rotation is only recommended for public clients. For confidential clients, we recommend changing the *RefreshTokenUsage* to allow reusable refresh tokens.
 
 Public clients need to rotate refresh tokens for security. Rotating refresh tokens reduces their attack surface because there is a chance that a stolen token will be unusable by the attacker. If a token is exfiltrated from some storage mechanism, a network trace, or log file, but the owner of the token uses it before the attacker, then the attack fails. 
 
