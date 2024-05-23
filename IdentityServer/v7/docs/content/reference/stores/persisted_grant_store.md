@@ -137,7 +137,7 @@ that are intended to be used once and that need to be retained after their use
 for some purpose (for example, replay detection or to allow certain kinds of
 limited reuse). Refresh tokens can be [configured]({{<ref
 "/tokens/refresh#sliding">}}) to have one-time use semantics. Refresh tokens
-that are configured this way set a *ConsumedTime* when they are used.
+that are configured this way can be further configured to set a *ConsumedTime* when they are used.
 Authorization codes do not set a *ConsumedTime*. They are instead always removed
 on use. *ConsumedTime* is not applicable to reference tokens and consent, so
 they both never set it. Custom grant records should set the *ConsumedTime* if
