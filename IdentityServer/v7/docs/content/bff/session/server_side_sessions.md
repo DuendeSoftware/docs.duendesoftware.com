@@ -24,7 +24,7 @@ The default implementation stores the session in-memory. This is useful for test
 
 ## Using Entity Framework for the Server-side Session Store
 
-To use the EF session store, register it by calling *AddEntityFrameworkServerSideSessions*, like this:
+To use the EF session store, install the *Duende.BFF.EntityFramework* nuget package and register it by calling *AddEntityFrameworkServerSideSessions*, like this:
 
 ```csharp
 var cn = _configuration.GetConnectionString("db");
