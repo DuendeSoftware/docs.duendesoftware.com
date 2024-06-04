@@ -1,10 +1,10 @@
 +++
-title = "Protocol Endpoints"
+title = "Calling Protocol Endpoints"
 weight = 10
 chapter = true
 +++
 
-Overview
+Calling Protocol Endpoints
 ========
 
 IdentityModel contains client libraries for many interactions with
