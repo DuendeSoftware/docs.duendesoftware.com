@@ -8,19 +8,24 @@
             "name": "IdentityServer v7",
             "request": "launch",
             "type": "f5anything",
-            "command": "hugo server --navigateToChanged --source ${workspaceFolder}/IdentityServer/v7/docs"
+            "command": "hugo server --port 1313 --navigateToChanged --source ${workspaceFolder}/IdentityServer/v7/docs",
+            "terminalName": "IdentityServer7",
+            "terminalIndex": 0
         },
         {
             "name": "IdentityServer v6",
             "request": "launch",
             "type": "f5anything",
-            "command": "hugo server --navigateToChanged --source ${workspaceFolder}/IdentityServer/v6/docs"
+            "command": "hugo server --port 1312 --navigateToChanged --source ${workspaceFolder}/IdentityServer/v6/docs",
+            "terminalName": "IdentityServer6"
+
         },
         {
             "name": "IdentityModel",
             "request": "launch",
             "type": "f5anything",
-            "command": "hugo server --navigateToChanged --source ${workspaceFolder}/IdentityModel"
+            "command": "hugo server --port 1314 --navigateToChanged --source ${workspaceFolder}/IdentityModel",
+            "terminalName": "IdentityModel"
         }
     ]
 }
