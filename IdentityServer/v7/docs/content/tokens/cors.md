@@ -55,7 +55,7 @@ Use *AllowAll* with caution.
 ## Mixing IdentityServer's CORS policy with ASP.NET Core's CORS policies
 IdentityServer uses the CORS middleware from ASP.NET Core to provide its CORS implementation.
 It is possible that your application that hosts IdentityServer might also require CORS for its own custom endpoints.
-In general, both should work together in the same application, providing the call to `app.UseCors("mypolicy");` is called after the call to `app.UseIdentityServer();`.
+In general, both should work together in the same application, providing the call to *app.UseCors("mypolicy");* is called after the call to *app.UseIdentityServer();*.
 
 Your code should use the documented CORS features from ASP.NET Core without regard to IdentityServer.
 This means you should define policies and register the middleware as normal.
