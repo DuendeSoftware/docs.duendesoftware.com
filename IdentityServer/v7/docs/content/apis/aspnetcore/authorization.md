@@ -22,23 +22,17 @@ For better encapsulation and re-use, consider using the ASP.NET Core [authorizat
 With this approach, you would first turn the claim requirement(s) into a named policy:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
+builder.Services.AddAuthorization(options =>
 {
-    services.AddAuthorization(options =>
-    {
-        options.AddPolicy("read_access", policy =>
-            policy.RequireClaim("scope", "read");
-    });
-}
+    options.AddPolicy("read_access", policy =>
+        policy.RequireClaim("scope", "read");
+});
 ```
 
 ..and then enforce it, e.g. using the routing table:
 
 ```cs
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllers().RequireAuthorization("read_access");
-    });
+app.MapControllers().RequireAuthorization("read_access");
 ```
 
 ...or imperatively inside the controller:
@@ -78,47 +72,43 @@ public class DataController : ControllerBase
 ```
 
 #### Scope claim format
+
 Historically, Duende IdentityServer emitted the *scope* claims as an array in the JWT. This works very well with the .NET deserialization logic, which turns every array item into a separate claim of type *scope*.
 
 The newer *JWT Profile for OAuth* [spec]({{< ref "/overview/specs" >}}) mandates that the scope claim is a single space delimited string. You can switch the format by setting the *EmitScopesAsSpaceDelimitedStringInJwt* on the [options]({{< ref "/reference/options" >}}). But this means that the code consuming access tokens might need to be adjusted. The following code can do a conversion to the *multiple claims* format that .NET prefers:
 
 ```cs
-namespace IdentityModel.AspNetCore.AccessTokenValidation
+namespace IdentityModel.AspNetCore.AccessTokenValidation;
+
+/// <summary>
+/// Logic for normalizing scope claims to separate claim types
+/// </summary>
+public static class ScopeConverter
 {
     /// <summary>
     /// Logic for normalizing scope claims to separate claim types
     /// </summary>
-    public static class ScopeConverter
+    /// <param name="principal"></param>
+    /// <returns></returns>
+    public static ClaimsPrincipal NormalizeScopeClaims(this ClaimsPrincipal principal)
     {
-        /// <summary>
-        /// Logic for normalizing scope claims to separate claim types
-        /// </summary>
-        /// <param name="principal"></param>
-        /// <returns></returns>
-        public static ClaimsPrincipal NormalizeScopeClaims(this ClaimsPrincipal principal)
+        var identities = new List<ClaimsIdentity>();
+
+        foreach (var id in principal.Identities)
         {
-            var identities = new List<ClaimsIdentity>();
+            var identity = new ClaimsIdentity(id.AuthenticationType, id.NameClaimType, id.RoleClaimType);
 
-            foreach (var id in principal.Identities)
+            foreach (var claim in id.Claims)
             {
-                var identity = new ClaimsIdentity(id.AuthenticationType, id.NameClaimType, id.RoleClaimType);
-
-                foreach (var claim in id.Claims)
+                if (claim.Type == "scope")
                 {
-                    if (claim.Type == "scope")
+                    if (claim.Value.Contains(' '))
                     {
-                        if (claim.Value.Contains(' '))
-                        {
-                            var scopes = claim.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        var scopes = claim.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-                            foreach (var scope in scopes)
-                            {
-                                identity.AddClaim(new Claim("scope", scope, claim.ValueType, claim.Issuer));
-                            }
-                        }
-                        else
+                        foreach (var scope in scopes)
                         {
-                            identity.AddClaim(claim);
+                            identity.AddClaim(new Claim("scope", scope, claim.ValueType, claim.Issuer));
                         }
                     }
                     else
@@ -126,12 +116,16 @@ namespace IdentityModel.AspNetCore.AccessTokenValidation
                         identity.AddClaim(claim);
                     }
                 }
-                
-                identities.Add(identity);
+                else
+                {
+                    identity.AddClaim(claim);
+                }
             }
-            
-            return new ClaimsPrincipal(identities);
+
+            identities.Add(identity);
         }
+
+        return new ClaimsPrincipal(identities);
     }
 }
 ```
