@@ -114,7 +114,8 @@ For example:
 ```cs
 class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectOptions, OidcProvider>
 {
-    public CustomOidcConfigureOptions(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+    public CustomOidcConfigureOptions(IHttpContextAccessor httpContextAccessor,
+        ILogger<CustomOidcConfigureOptions> logger) : base(httpContextAccessor, logger)
     {
     }
 
@@ -131,7 +132,7 @@ class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectO
 The above class would need to be configured in DI (as before):
 
 ```cs
-public void Configure(IServiceCollection services)
+public void ConfigureServices(IServiceCollection services)
 {
     services.ConfigureOptions<CustomOidcConfigureOptions>();
 }
