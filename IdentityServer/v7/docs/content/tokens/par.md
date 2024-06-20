@@ -19,7 +19,7 @@ The use of PAR is encouraged by the [FAPI working group](https://openid.net/wg/f
 Duende.IdentityServer includes support for PAR in the Business Edition or higher license. In the starter edition, PAR requests will not be processed and instead log errors. If you have a starter edition license, you should disable the *EnablePushedAuthorizationEndpoint* flag so that discovery indicates that your IdentityServer does not support PAR:
 
 ```cs
-services.AddIdentityServer(options =>
+builder.Services.AddIdentityServer(options =>
 {
     options.Endpoints.EnablePushedAuthorizationEndpoint = false;
 })

@@ -11,31 +11,33 @@ The technique is described [here](https://openid.net/specs/openid-connect-core-1
 ## Setting up a private key JWT secret
 The default private key JWT secret validator expects either a base64 encoded X.509 certificate or a [JSON Web Key](https://tools.ietf.org/html/rfc7517) formatted RSA, EC or symmetric key on the secret definition:
 
-    var client = new Client
+```cs
+var client = new Client
+{
+    ClientId = "client.jwt",
+
+    ClientSecrets =
     {
-        ClientId = "client.jwt",
-
-        ClientSecrets =
+        new Secret
         {
-            new Secret
-            {
-                // base64 encoded X.509 certificate
-                Type = IdentityServerConstants.SecretTypes.X509CertificateBase64,
+            // base64 encoded X.509 certificate
+            Type = IdentityServerConstants.SecretTypes.X509CertificateBase64,
 
-                Value = "MIID...xBXQ="
-            }
-            new Secret
-            {
-                // JWK formatted RSA key
-                Type = IdentityServerConstants.SecretTypes.JsonWebKey,
+            Value = "MIID...xBXQ="
+        }
+        new Secret
+        {
+            // JWK formatted RSA key
+            Type = IdentityServerConstants.SecretTypes.JsonWebKey,
 
-                Value = "{'e':'AQAB','kid':'Zz...GEA','kty':'RSA','n':'wWw...etgKw'}"
-            }
-        },
+            Value = "{'e':'AQAB','kid':'Zz...GEA','kty':'RSA','n':'wWw...etgKw'}"
+        }
+    },
 
-        AllowedGrantTypes = GrantTypes.ClientCredentials,
-        AllowedScopes = { "api1", "api2" }
-    };
+    AllowedGrantTypes = GrantTypes.ClientCredentials,
+    AllowedScopes = { "api1", "api2" }
+};
+```
 
 {{% notice note %}}
 You can share the same key for client authentication and [signed authorize requests]({{< ref "/tokens/jar" >}}).
@@ -123,23 +125,20 @@ The OpenID Connect authentication handler in ASP.NET Core allows for replacing a
 This is accomplished by handling the various events on the handler. We recommend to encapsulate the event handler in a separate type. This makes it easier to consume services from DI:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    // some details omitted
-    services.AddTransient<OidcEvents>();
+// some details omitted
+builder.Services.AddTransient<OidcEvents>();
 
-    services.AddAuthentication(options =>
-        .AddOpenIdConnect("oidc", options =>
-        {
-            options.Authority = Constants.Authority;
+builder.Services.AddAuthentication(options =>
+    .AddOpenIdConnect("oidc", options =>
+    {
+        options.Authority = Constants.Authority;
 
-            // no static client secret        
-            options.ClientId = "mvc.jar.jwt";
+        // no static client secret        
+        options.ClientId = "mvc.jar.jwt";
 
-            // specifies type that handles events
-            options.EventsType = typeof(OidcEvents);        
-        }));
-    }
+        // specifies type that handles events
+        options.EventsType = typeof(OidcEvents);        
+    }));
 ```
 
 In your event handler you can inject code before the handler redeems the code:

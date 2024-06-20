@@ -7,10 +7,7 @@ weight: 20
 *AddIdentityServer* return a builder object that provides many extension methods to add IdentityServer specific services to DI. Here's a list grouped by feature areas.
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    var builder = services.AddIdentityServer();
-}
+var idsvrBuilder = builder.Services.AddIdentityServer();
 ```
 
 {{% notice note %}}

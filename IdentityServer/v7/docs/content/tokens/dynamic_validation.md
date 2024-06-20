@@ -49,5 +49,5 @@ public class TransactionScopeTokenRequestValidator : ICustomTokenRequestValidato
 You can register your implementation like this:
 
 ```cs
-builder.AddCustomTokenRequestValidator<TransactionScopeTokenRequestValidator>();
+idsvrBuilder.AddCustomTokenRequestValidator<TransactionScopeTokenRequestValidator>();
 ```

@@ -54,7 +54,7 @@ DPoP is enabled by simply assigning the *DPoPJsonWebKey* on the client configura
 For example, here's how to configure a client credentials client:
 
 ```csharp
-services.AddClientCredentialsTokenManagement()
+builder.Services.AddClientCredentialsTokenManagement()
         .AddClient("demo_dpop_client", client =>
         {
             client.TokenEndpoint = "https://demo.duendesoftware.com/connect/token";
@@ -66,11 +66,11 @@ services.AddClientCredentialsTokenManagement()
 And here's how to configure a code flow client:
 
 ```csharp
-services.AddAuthentication(...)
+builder.Services.AddAuthentication(...)
     .AddCookie("cookie", ...)
     .AddOpenIdConnect("oidc", ...);
 
-services.AddOpenIdConnectAccessTokenManagement(options => 
+builder.Services.AddOpenIdConnectAccessTokenManagement(options => 
 {
     options.DPoPJsonWebKey = "...";
 });

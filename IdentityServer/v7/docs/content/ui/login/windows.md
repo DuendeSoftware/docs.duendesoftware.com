@@ -22,14 +22,14 @@ This is done in *ConfigureServices* (details vary depending on in-proc vs out-of
 
 ```cs
 // configures IIS out-of-proc settings (see https://github.com/aspnet/AspNetCore/issues/14882)
-services.Configure<IISOptions>(iis =>
+builder.Services.Configure<IISOptions>(iis =>
 {
     iis.AuthenticationDisplayName = "Windows";
     iis.AutomaticAuthentication = false;
 });
 
 // ..or configures IIS in-proc settings
-services.Configure<IISServerOptions>(iis =>
+builder.Services.Configure<IISServerOptions>(iis =>
 {
     iis.AuthenticationDisplayName = "Windows";
     iis.AutomaticAuthentication = false;

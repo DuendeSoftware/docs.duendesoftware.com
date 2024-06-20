@@ -40,7 +40,7 @@ The Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/secur
 If you are using Nginx (which we found is the most flexible hosting option), you need to register the following service in *ConfigureServices*:
 
 ```cs
-services.AddCertificateForwarding(options =>
+builder.Services.AddCertificateForwarding(options =>
 {
     // header name might be different, based on your nginx config
     options.CertificateHeader = "X-SSL-CERT";
@@ -65,12 +65,12 @@ In this scenario we want to support self-signed certificates, hence the ``Certif
 These settings might be different in your environment:: 
 
 ```cs
-    services.AddAuthentication()
-        .AddCertificate(options =>
-        {
-            options.AllowedCertificateTypes = CertificateTypes.All;
-            options.RevocationMode = X509RevocationMode.NoCheck;
-        });
+builder.Services.AddAuthentication()
+    .AddCertificate(options =>
+    {
+        options.AllowedCertificateTypes = CertificateTypes.All;
+        options.RevocationMode = X509RevocationMode.NoCheck;
+    });
 ```
 
 ### IdentityServer setup
@@ -86,14 +86,14 @@ In your IdentityServer, the mutual TLS endpoints, can be configured in three way
 For example:
 
 ```cs
-    var builder = services.AddIdentityServer(options =>
-    {
-        options.MutualTls.Enabled = true;
-        options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
-        
-        // uses sub-domain hosting
-        options.MutualTls.DomainName = "mtls";
-    });
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
+{
+    options.MutualTls.Enabled = true;
+    options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
+    
+    // uses sub-domain hosting
+    options.MutualTls.DomainName = "mtls";
+});
 ```
 
 Your IdentityServer's discovery document reflects those endpoints (see the *mtls_endpoint_aliases* section):
@@ -201,7 +201,7 @@ Additionally, the API hosting application will need a mechanism to accept the cl
 Below is an example how an API in ASP.NET Core might be configured for both access tokens and client certificates:
 
 ```cs
-services.AddAuthentication("token")
+builder.Services.AddAuthentication("token")
     .AddJwtBearer("token", options =>
     {
         options.Authority = "https://myidentityserver.com";
@@ -315,7 +315,7 @@ request the token and calling the API, this will give you the desired proof-of-p
 For this enable the following setting in the options::
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     // other settings
     

@@ -67,14 +67,11 @@ The scheme that the handler in the authentication system is identified by is fro
 When configuring IdentityServer, the [AuthenticationOptions]({{<ref "/reference/options#Authentication">}}) expose some settings to control the cookie (e.g. expiration and sliding). For example:
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
+builder.Services.AddIdentityServer(options =>
 {
-    services.AddIdentityServer(options =>
-    {
-        options.Authentication.CookieLifetime = TimeSpan.FromHours(1);
-        options.Authentication.CookieSlidingExpiration = false;
-    });
-}
+    options.Authentication.CookieLifetime = TimeSpan.FromHours(1);
+    options.Authentication.CookieSlidingExpiration = false;
+});
 ```
 
 {{% notice note %}}
@@ -85,34 +82,28 @@ If you require more control over the cookie authentication handler you can regis
 You can then configure IdentityServer to use your cookie handler by setting the *CookieAuthenticationScheme* on the [AuthenticationOptions]({{<ref "/reference/options#Authentication">}}). For example:
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddAuthentication()
-        .AddCookie("your_cookie", options => { 
-            // ...
-        });
-
-    services.AddIdentityServer(options =>
-    {
-        options.Authentication.CookieAuthenticationScheme = "your_cookie";
+builder.Services.AddAuthentication()
+    .AddCookie("your_cookie", options => { 
+        // ...
     });
-}
+
+builder.Services.AddIdentityServer(options =>
+{
+    options.Authentication.CookieAuthenticationScheme = "your_cookie";
+});
 ```
 
 If the *CookieAuthenticationScheme* is not set, the *DefaultAuthenticationScheme* configured for ASP.NET Core will be used instead. Note that the *AddAuthentication* call that sets the default can come after the *AddIdentityServer* call. For example:
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    // No cookie authentication scheme is set here. 
-    // Identity Server will use the default scheme from ASP.NET Core,
-    // even though it is not yet defined.
-    services.AddIdentityServer();
+// No cookie authentication scheme is set here. 
+// Identity Server will use the default scheme from ASP.NET Core,
+// even though it is not yet defined.
+builder.Services.AddIdentityServer();
 
-    // Default scheme is registered. IdentityServer will use this scheme.
-    services.AddAuthentication(defaultScheme: "your_cookie")
-        .AddCookie("your_cookie", options => { 
-            // ...
-        });
-}
+// Default scheme is registered. IdentityServer will use this scheme.
+builder.Services.AddAuthentication(defaultScheme: "your_cookie")
+    .AddCookie("your_cookie", options => { 
+        // ...
+    });
 ```
