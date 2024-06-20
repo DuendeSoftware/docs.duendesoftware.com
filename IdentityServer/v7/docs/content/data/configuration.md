@@ -21,14 +21,12 @@ There are [convenience methods]({{<ref "/reference/di#configuration-stores">}}) 
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer()
-        .AddClientStore<YourCustomClientStore>()
-        .AddCorsPolicyService<YourCustomCorsPolicyService>()
-        .AddResourceStore<YourCustomResourceStore>()
-        .AddIdentityProviderStore<YourCustomAddIdentityProviderStore>();
-}
+builder.Services.AddIdentityServer()
+    .AddClientStore<YourCustomClientStore>()
+    .AddCorsPolicyService<YourCustomCorsPolicyService>()
+    .AddResourceStore<YourCustomResourceStore>()
+    .AddIdentityProviderStore<YourCustomAddIdentityProviderStore>();
+
 ```
 
 ## Caching Configuration Data
@@ -41,38 +39,34 @@ The caching implementation relies upon an *ICache\<T>* service and must also be 
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer()
-        .AddClientStore<YourCustomClientStore>()
-        .AddCorsPolicyService<YourCustomCorsPolicyService>()
-        .AddResourceStore<YourCustomResourceStore>()
-        .AddInMemoryCaching()
-        .AddClientStoreCache<YourCustomClientStore>()
-        .AddCorsPolicyCache<YourCustomCorsPolicyService>()
-        .AddResourceStoreCache<YourCustomResourceStore>()
-        .AddIdentityProviderStoreCache<YourCustomAddIdentityProviderStore>();
-}
+builder.Services.AddIdentityServer()
+    .AddClientStore<YourCustomClientStore>()
+    .AddCorsPolicyService<YourCustomCorsPolicyService>()
+    .AddResourceStore<YourCustomResourceStore>()
+    .AddInMemoryCaching()
+    .AddClientStoreCache<YourCustomClientStore>()
+    .AddCorsPolicyCache<YourCustomCorsPolicyService>()
+    .AddResourceStoreCache<YourCustomResourceStore>()
+    .AddIdentityProviderStoreCache<YourCustomAddIdentityProviderStore>();
+
 ```
 
 The duration of the data in the default cache is configurable on the [IdentityServerOptions]({{<ref "/reference/options#caching">}}).
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer(options => {
-        options.Caching.ClientStoreExpiration = TimeSpan.FromMinutes(5);
-        options.Caching.ResourceStoreExpiration = TimeSpan.FromMinutes(5);
-    })
-        .AddClientStore<YourCustomClientStore>()
-        .AddCorsPolicyService<YourCustomCorsPolicyService>()
-        .AddResourceStore<YourCustomResourceStore>()
-        .AddInMemoryCaching()
-        .AddClientStoreCache<YourCustomClientStore>()
-        .AddCorsPolicyCache<YourCustomCorsPolicyService>()
-        .AddResourceStoreCache<YourCustomResourceStore>();
-}
+builder.Services.AddIdentityServer(options => {
+    options.Caching.ClientStoreExpiration = TimeSpan.FromMinutes(5);
+    options.Caching.ResourceStoreExpiration = TimeSpan.FromMinutes(5);
+})
+    .AddClientStore<YourCustomClientStore>()
+    .AddCorsPolicyService<YourCustomCorsPolicyService>()
+    .AddResourceStore<YourCustomResourceStore>()
+    .AddInMemoryCaching()
+    .AddClientStoreCache<YourCustomClientStore>()
+    .AddCorsPolicyCache<YourCustomCorsPolicyService>()
+    .AddResourceStoreCache<YourCustomResourceStore>();
+
 ```
 
 Further customization of the cache is possible: 

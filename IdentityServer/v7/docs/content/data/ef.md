@@ -22,23 +22,20 @@ For storing [configuration data]({{<ref "./configuration">}}), then the configur
 This support provides implementations of the *IClientStore*, *IResourceStore*, *IIdentityProviderStore*, and the *ICorsPolicyService* extensibility points.
 These implementations use a *DbContext*-derived class called *ConfigurationDbContext* to model the tables in the database.
 
-To use the configuration store support, use the *AddConfigurationStore* extension method after the call to *AddIdentityServer*:
+To use the configuration store support, in Program.cs use the *AddConfigurationStore* extension method after the call to *AddIdentityServer*:
 
 ```csharp
-public IServiceProvider ConfigureServices(IServiceCollection services)
-{
-    const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=YourIdentityServerDatabase;trusted_connection=yes;";
-    var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-    
-    services.AddIdentityServer()
-        // this adds the config data from DB (clients, resources, CORS)
-        .AddConfigurationStore(options =>
-        {
-            options.ConfigureDbContext = builder =>
-                builder.UseSqlServer(connectionString,
-                    sql => sql.MigrationsAssembly(migrationsAssembly));
-        });
-}
+const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=YourIdentityServerDatabase;trusted_connection=yes;";
+var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+
+builder.Services.AddIdentityServer()
+    // this adds the config data from DB (clients, resources, CORS)
+    .AddConfigurationStore(options =>
+    {
+        options.ConfigureDbContext = builder =>
+            builder.UseSqlServer(connectionString,
+                sql => sql.MigrationsAssembly(migrationsAssembly));
+    });
 ```
 
 To configure the configuration store, use the *ConfigurationStoreOptions* options object passed to the configuration callback.
@@ -70,13 +67,11 @@ options.ConfigureDbContext = b =>
 To enable caching for the EF configuration store implementation, use the *AddConfigurationStoreCache* extension method:
 
 ```csharp
-public IServiceProvider ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer()
-        .AddConfigurationStore(options => { ... })
-        // this is something you will want in production to reduce load on and requests to the DB
-        .AddConfigurationStoreCache();
-}
+builder.Services.AddIdentityServer()
+    .AddConfigurationStore(options => { ... })
+    // this is something you will want in production to reduce load on and requests to the DB
+    .AddConfigurationStoreCache();
+
 ```
 
 ## Operational Store 
@@ -84,27 +79,25 @@ For storing [operational data]({{<ref "./operational">}}) then the operational s
 This support provides implementations of the *IPersistedGrantStore*, *IDeviceFlowStore*, *IServerSideSessionStore*, and *ISigningKeyStore* extensibility points.
 The implementation uses a *DbContext*-derived class called *PersistedGrantDbContext* to model the table in the database.
 
-To use the operational store support, use the *AddOperationalStore* extension method after the call to *AddIdentityServer*:
+To use the operational store support, in Program.cs use the *AddOperationalStore* extension method after the call to *AddIdentityServer*:
 
 ```csharp
-public IServiceProvider ConfigureServices(IServiceCollection services)
-{
-    const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=YourIdentityServerDatabase;trusted_connection=yes;";
-    var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-    
-    services.AddIdentityServer()
-        // this adds the operational data from DB (codes, tokens, consents)
-        .AddOperationalStore(options =>
-        {
-            options.ConfigureDbContext = builder =>
-                builder.UseSqlServer(connectionString,
-                    sql => sql.MigrationsAssembly(migrationsAssembly));
+const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=YourIdentityServerDatabase;trusted_connection=yes;";
+var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 
-            // this enables automatic token cleanup. this is optional.
-            options.EnableTokenCleanup = true;
-            options.TokenCleanupInterval = 3600; // interval in seconds (default is 3600)
-        });
-}
+builder.Services.AddIdentityServer()
+    // this adds the operational data from DB (codes, tokens, consents)
+    .AddOperationalStore(options =>
+    {
+        options.ConfigureDbContext = builder =>
+            builder.UseSqlServer(connectionString,
+                sql => sql.MigrationsAssembly(migrationsAssembly));
+
+        // this enables automatic token cleanup. this is optional.
+        options.EnableTokenCleanup = true;
+        options.TokenCleanupInterval = 3600; // interval in seconds (default is 3600)
+    });
+
 ```
 
 To configure the operational store, use the *OperationalStoreOptions* options object passed to the configuration callback.

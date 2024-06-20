@@ -15,11 +15,8 @@ To register a custom signing key store in the DI container, there is a *AddSigni
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer()
-        .AddSigningKeyStore<YourCustomStore>();
-}
+builder.Services.AddIdentityServer()
+    .AddSigningKeyStore<YourCustomStore>();
 ```
 
 ## Key Lifecycle

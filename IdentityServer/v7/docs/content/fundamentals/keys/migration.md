@@ -37,13 +37,13 @@ announced so that as client apps and APIs update their caches, they get the new
 key. IdentityServer will continue to sign keys with your old static key.
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = true;
 });
 
 var oldKey = LoadOldKeyFromVault();
-builder.AddSigningCredential(oldKey, SecurityAlgorithms.RsaSha256);
+idsvrBuilder.AddSigningCredential(oldKey, SecurityAlgorithms.RsaSha256);
 ```
 
 Wait until all APIs and applications have updated their signing key caches, and
@@ -55,13 +55,13 @@ Next, switch to using the new automatically managed keys for signing, but still
 keep the old key for validation purposes.
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = true;
 });
 
 var oldKey = LoadOldKeyFromVault();
-builder.AddValidationKey(oldKey, SecurityAlgorithms.RsaSha256);
+idsvrBuilder.AddValidationKey(oldKey, SecurityAlgorithms.RsaSha256);
 ```
 
 Keep the old key as a validation key until all tokens signed with that key are
@@ -71,7 +71,7 @@ expired, and then proceed to phase 3.
 Now the static key configuration can be removed entirely.
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = true;
 });

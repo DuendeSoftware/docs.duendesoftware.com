@@ -38,7 +38,7 @@ when they are retired. All of these options are configurable in the
 *KeyManagement* options. For example:
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {   
     // new key every 30 days
     options.KeyManagement.RotationInterval = TimeSpan.FromDays(30);
@@ -73,7 +73,7 @@ If you are deploying in a load balanced environment and wish to use the
 access to the *KeyPath*.
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {   
     // set path to store keys
     options.KeyManagement.KeyPath = "/home/shared/keys";

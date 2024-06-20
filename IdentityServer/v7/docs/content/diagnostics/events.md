@@ -11,10 +11,10 @@ This makes it easy to query and analyze them and extract useful information that
 Events work great with structured logging stores like [ELK](https://www.elastic.co/webinars/introduction-elk-stack), [Seq](https://getseq.net) or [Splunk](https://www.splunk.com/).
 
 ### Emitting events
-Events are not turned on by default - but can be globally configured in the *ConfigureServices* method, e.g.:
+Events are not turned on by default - but can be globally configured when *AddIdentityServer* is called, e.g.:
 
 ```cs
-services.AddIdentityServer(options =>
+builder.Services.AddIdentityServer(options =>
 {
     options.Events.RaiseSuccessEvents = true;
     options.Events.RaiseFailureEvents = true;
