@@ -9,13 +9,13 @@ The behavior of each [management endpoint]({{< ref "/bff/session/management" >}}
 
 ```csharp
 // management endpoints
-services.AddTransient<ILoginService, DefaultLoginService>();
-services.AddTransient<ISilentLoginService, DefaultSilentLoginService>();
-services.AddTransient<ISilentLoginCallbackService, DefaultSilentLoginCallbackService>();
-services.AddTransient<ILogoutService, DefaultLogoutService>();
-services.AddTransient<IUserService, DefaultUserService>();
-services.AddTransient<IBackchannelLogoutService, DefaultBackchannelLogoutService>();
-services.AddTransient<IDiagnosticsService, DefaultDiagnosticsService>();
+builder.Services.AddTransient<ILoginService, DefaultLoginService>();
+builder.Services.AddTransient<ISilentLoginService, DefaultSilentLoginService>();
+builder.Services.AddTransient<ISilentLoginCallbackService, DefaultSilentLoginCallbackService>();
+builder.Services.AddTransient<ILogoutService, DefaultLogoutService>();
+builder.Services.AddTransient<IUserService, DefaultUserService>();
+builder.Services.AddTransient<IBackchannelLogoutService, DefaultBackchannelLogoutService>();
+builder.Services.AddTransient<IDiagnosticsService, DefaultDiagnosticsService>();
 ```
 
 You can add your own implementation by overriding the default after calling *AddBff()*.

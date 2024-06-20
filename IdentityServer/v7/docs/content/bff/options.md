@@ -7,10 +7,10 @@ weight: 90
 
 The *Duende.BFF.BffOptions* allows to configure several aspects of the BFF framework.
 
-You set the options at startup time in your *ConfigureServices* method:
+You set the options at startup time:
 
 ```cs
-services.AddBff(options =>
+builder.Services.AddBff(options =>
 {
     // configure options here..
 })

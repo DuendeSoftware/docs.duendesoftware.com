@@ -11,30 +11,18 @@ In addition Duende.BFF adds an implementation of the OpenID Connect back-channel
 You enable the endpoints by adding the relevant services into the DI container:
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
+// Add BFF services to DI - also add server-side session management
+builder.Services.AddBff(options => 
 {
-    // Add BFF services to DI - also add server-side session management
-    services.AddBff(options => 
-    {
-        // default value
-        options.ManagementBasePath = "/bff";
-    };
-
-    // rest omitted
-}
+    // default value
+    options.ManagementBasePath = "/bff";
+};
 ```
 
-Endpoint routing is used to map the management endpoints:
+The management endpoints need to be mapped:
 
 ```csharp
-public void Configure(IApplicationBuilder app)
-{
-    // rest omitted
-
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapBffManagementEndpoints();
-    });
+app.MapBffManagementEndpoints();
 ```
 
 *MapBffManagementEndpoints* adds all BFF management endpoints. You can also map each endpoint individually by calling the various *MapBffManagementXxxEndpoint* methods, for example *endpoints.MapBffManagementLoginEndpoint()*.
