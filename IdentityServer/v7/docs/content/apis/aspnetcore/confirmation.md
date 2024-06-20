@@ -13,20 +13,13 @@ If you are using a [mutual TLS connection]({{< ref "/tokens/pop/mtls" >}}) to es
 You can do so with custom middleware like this:
 
 ```cs
-public void Configure(IApplicationBuilder app)
-{
-    // rest omitted
-    
-    // normal token validation happens here
-    app.UseAuthentication();
+// normal token validation happens here
+app.UseAuthentication();
 
-    // This adds custom middleware to validate cnf claim
-    app.UseConfirmationValidation();
-    
-    app.UseAuthorization();
+// This adds custom middleware to validate cnf claim
+app.UseConfirmationValidation();
 
-    // rest omitted
-}
+app.UseAuthorization();
 ```
 
 Here, *UseConfirmationValidation* is an extension method that registers the middleware that performs the necessary validation:
@@ -118,23 +111,19 @@ Given that there are no off-the-shelf libraries that implement this, we have dev
 With this sample the configuration necessary in your startup can be as simple as this:
 
 ```cs
+// adds the normal JWT bearer validation
+builder.Services.AddAuthentication("token")
+    .AddJwtBearer("token", options =>
+    {
+        options.Authority = Constants.Authority;
+        options.TokenValidationParameters.ValidateAudience = false;
+        options.MapInboundClaims = false;
 
-public void ConfigureServices(IServiceCollection services)
-{
-    // adds the normal JWT bearer validation
-    services.AddAuthentication("token")
-        .AddJwtBearer("token", options =>
-        {
-            options.Authority = Constants.Authority;
-            options.TokenValidationParameters.ValidateAudience = false;
-            options.MapInboundClaims = false;
+        options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+    });
 
-            options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
-        });
-    
-    // extends the "token" scheme above with DPoP processing and validation
-    services.ConfigureDPoPTokensForScheme("token");
-}
+// extends the "token" scheme above with DPoP processing and validation
+builder.Services.ConfigureDPoPTokensForScheme("token");
 ```
 
 You can find this sample [here]({{< ref "/samples/misc#DPoP" >}}). To use the
