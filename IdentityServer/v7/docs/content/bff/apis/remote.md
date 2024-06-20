@@ -18,7 +18,7 @@ To enable this feature, add a reference to the *Duende.BFF.Yarp* NuGet package, 
 #### Add Remote API Service to DI
 
 ```cs
-services.AddBff()
+builder.Services.AddBff()
     .AddRemoteApis();
 ```
 
@@ -27,12 +27,8 @@ services.AddBff()
 Use the *MapRemoteBffApiEndpoint* extension method to describe how to map requests coming into the BFF out to remote APIs and the *RequireAccessToken* method to specify token requirements. *MapRemoteBffApiEndpoint* takes two parameters: the base path of requests that will be mapped externally, and the address to the external API where the requests will be mapped. *MapRemoteBffApiEndpoint* maps a path and all sub-paths below it. The intent is to allow easy mapping of groups of URLs. For example, you can set up mappings for the /users, /users/{userId}, /users/{userId}/books, and /users/{userId}/books/{bookId} endpoints like this:
 
 ```cs
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapRemoteBffApiEndpoint(
-            "/api/users", "https://remoteHost/users")
-        .RequireAccessToken(TokenType.User);
-});
+app.MapRemoteBffApiEndpoint("/api/users", "https://remoteHost/users")
+    .RequireAccessToken(TokenType.User);
 ```
 
 {{% notice note %}}

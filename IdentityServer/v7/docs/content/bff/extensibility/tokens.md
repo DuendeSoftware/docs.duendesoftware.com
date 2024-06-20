@@ -16,7 +16,7 @@ Both aspects can be customized.
 The token management library uses a named HTTP client from the HTTP client factory for all token service communication. You can provide a customized HTTP client yourself using the well-known name after calling *AddBff*:
 
 ```cs
-services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClientName, configureClient => { ... });
+builder.Services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClientName, configureClient => { ... });
 ```
 
 {{% notice note %}}
@@ -98,7 +98,7 @@ You can implement this interface yourself or extend the *DefaultAccessTokenRetri
 Implementations of the *IAccessTokenRetriever* can be added to endpoints when they are mapped using the *WithAccessTokenRetriever* extension method:
 
 ```cs
-endpoints.MapRemoteBffApiEndpoint("/api/impersonation", "https://api.example.com/endpoint/requiring/impersonation")
+app.MapRemoteBffApiEndpoint("/api/impersonation", "https://api.example.com/endpoint/requiring/impersonation")
     .RequireAccessToken(TokenType.User)
     .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```

@@ -22,11 +22,11 @@ You can then use the token to set it on an *HttpClient* instance:
     client.SetBearerToken(token);
 ```
 
-We recommend to leverage the *HttpClientFactory* to fabricate HTTP clients that are already aware of the token management plumbing. For this you would register a named client in your *startup* e.g. like this:
+We recommend to leverage the *HttpClientFactory* to fabricate HTTP clients that are already aware of the token management plumbing. For this you would register a named client in your application startup e.g. like this:
 
 ```cs
 // registers HTTP client that uses the managed user access token
-services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
+builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://remoteServer/");
 });

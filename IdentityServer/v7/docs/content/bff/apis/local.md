@@ -83,10 +83,6 @@ Duende.BFF can automate both the pre-processing step of requiring the custom ant
 Add the BFF middleware to the pipeline by calling *UseBFF*. Note that the  middleware must be placed before the authorization middleware, but after routing.
 
 ```csharp
-public void Configure(IApplicationBuilder app)
-{
-    // rest omitted
-
     app.UseAuthentication();
     app.UseRouting();
 
@@ -94,8 +90,7 @@ public void Configure(IApplicationBuilder app)
 
     app.UseAuthorization();
 
-    app.UseEndpoints(endpoints => { /* ... */ }
-}
+    //map endpoints
 ```
 
 #### Decorate Endpoints
@@ -103,7 +98,7 @@ Endpoints that require the pre and post processing described above must be decor
 
 For minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
 ```csharp
-endpoints.MapPost("/foo", context => { ... })
+app.MapPost("/foo", context => { ... })
     .RequireAuthorization()  // no anonymous access
     .AsBffApiEndpoint();     // BFF pre/post processing
 ```
@@ -111,7 +106,7 @@ endpoints.MapPost("/foo", context => { ... })
 
 For MVC controllers, you can similarly apply BFF pre- and post-processing to controller actions when they are mapped.
 ```csharp
-endpoints.MapControllers()
+app.MapControllers()
     .RequireAuthorization()  // no anonymous access
     .AsBffApiEndpoint();     // BFF pre/post processing
 ```
@@ -133,22 +128,19 @@ However, if you are defending against CSRF attacks with some other mechanism, yo
 For *version 1.x*, set the *requireAntiForgeryCheck* parameter to *false* when adding the endpoint. For example:
 
 ```csharp
-app.UseEndpoints(endpoints =>
-{
-    // MVC controllers
-    endpoints.MapControllers()
-        .RequireAuthorization()
-        // WARNING: Disabling antiforgery protection may make
-        // your APIs vulnerable to CSRF attacks
-        .AsBffApiEndpoint(requireAntiforgeryCheck: false);
+// MVC controllers
+app.MapControllers()
+    .RequireAuthorization()
+    // WARNING: Disabling antiforgery protection may make
+    // your APIs vulnerable to CSRF attacks
+    .AsBffApiEndpoint(requireAntiforgeryCheck: false);
 
-    // simple endpoint
-    endpoints.MapPost("/foo", context => { /* ... */ })
-        .RequireAuthorization()
-        // WARNING: Disabling antiforgery protection may make
-        // your APIs vulnerable to CSRF attacks
-        .AsBffApiEndpoint(requireAntiforgeryCheck: false);
-});
+// simple endpoint
+app.MapPost("/foo", context => { /* ... */ })
+    .RequireAuthorization()
+    // WARNING: Disabling antiforgery protection may make
+    // your APIs vulnerable to CSRF attacks
+    .AsBffApiEndpoint(requireAntiforgeryCheck: false);
 ```
 
 On MVC controllers and actions you can set the *RequireAntiForgeryCheck* as a flag in the *BffApiAttribute*, like this:
@@ -166,24 +158,21 @@ public class SampleApiController : ControllerBase
 In *version 2.x*, use the *SkipAntiforgery* fluent API when adding the endpoint. For example:
 
 ```csharp
-app.UseEndpoints(endpoints =>
-{
-    // MVC controllers
-    endpoints.MapControllers()
-        .RequireAuthorization()
-        .AsBffApiEndpoint()
-        // WARNING: Disabling antiforgery protection may make
-        // your APIs vulnerable to CSRF attacks
-        .SkipAntiforgery();
+// MVC controllers
+app.MapControllers()
+    .RequireAuthorization()
+    .AsBffApiEndpoint()
+    // WARNING: Disabling antiforgery protection may make
+    // your APIs vulnerable to CSRF attacks
+    .SkipAntiforgery();
 
-    // simple endpoint
-    endpoints.MapPost("/foo", context => { /* ... */ })
-        .RequireAuthorization()
-        .AsBffApiEndpoint()
-        // WARNING: Disabling antiforgery protection may make
-        // your APIs vulnerable to CSRF attacks
-        .SkipAntiforgery();
-});
+// simple endpoint
+app.MapPost("/foo", context => { /* ... */ })
+    .RequireAuthorization()
+    .AsBffApiEndpoint()
+    // WARNING: Disabling antiforgery protection may make
+    // your APIs vulnerable to CSRF attacks
+    .SkipAntiforgery();
 ```
 
 MVC controllers and actions can use the *BffApiSkipAntiforgeryAttribute* (which is independent of the *BffApiAttribute*), like this:

@@ -7,7 +7,7 @@ weight: 20
 If you are using [reference tokens]({{< ref "/tokens/reference" >}}), you need an authentication handler that implements the back-channel validation via the [OAuth 2.0 token introspection](https://tools.ietf.org/html/rfc7662) protocol, e.g. [this](https://github.com/IdentityModel/IdentityModel.AspNetCore.OAuth2Introspection) one:.
 
 ```cs
-services.AddAuthentication("token")
+builder.Services.AddAuthentication("token")
     .AddOAuth2Introspection("token", options =>
     {
         options.Authority = Constants.Authority;
@@ -22,7 +22,7 @@ services.AddAuthentication("token")
 It is not uncommon to use the same API with both JWTs and reference tokens. In this case you setup two authentication handlers, make one the default handler and provide some forwarding logic, e.g.:
 
 ```cs
-services.AddAuthentication("token")
+builder.Services.AddAuthentication("token")
 
     // JWT tokens
     .AddJwtBearer("token", options =>

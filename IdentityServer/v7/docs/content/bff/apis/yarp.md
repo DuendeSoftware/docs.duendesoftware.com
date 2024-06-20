@@ -11,10 +11,10 @@ YARP includes many advanced features such as load balancing, service discovery, 
 To enable Duende.BFF's YARP integration, add a reference to the *Duende.BFF.Yarp* Nuget package to your project and add YARP and the BFF's YARP extensions to DI:
 
 ```cs
-services.AddBff();
+builder.Services.AddBff();
 
 // adds YARP with BFF extensions
-var builder = services.AddReverseProxy()
+var yarpBuilder = services.AddReverseProxy()
     .AddBffExtensions();
 ```
 
@@ -49,7 +49,7 @@ See the Microsoft [documentation](https://microsoft.github.io/reverse-proxy/arti
 Another option is to configure YARP in code using the in-memory config provider included in the BFF extensions for YARP. The above configuration as code would look like this:
 
 ```cs
-builder.LoadFromMemory(
+yarpBuilder.LoadFromMemory(
     new[]
     {
         new RouteConfig()
@@ -109,7 +109,7 @@ Routes that set the *Duende.Bff.Yarp.TokenType* metadata **require** the given t
 If you are using the code config method, call the *WithAccessToken* extension method to achieve the same thing:
 
 ```cs
-builder.LoadFromMemory(
+yarpBuilder.LoadFromMemory(
     new[]
     {
         new RouteConfig()
@@ -154,7 +154,7 @@ This metadata causes the user's access token to be sent with the proxied request
 If you are using the code config method, call the *WithOptionalUserAccessToken* extension method to achieve the same thing:
 
 ```cs
-builder.LoadFromMemory(
+yarpBuilder.LoadFromMemory(
     new[]
     {
         new RouteConfig()
@@ -186,11 +186,11 @@ The value of the header is not important, but its presence, combined with the co
 You can add the anti-forgery protection to all YARP routes by calling the *AsBffApiEndpoint* extension method:
 
 ```cs
-endpoints.MapReverseProxy()
+app.MapReverseProxy()
     .AsBffApiEndpoint();
 
 // or shorter
-endpoints.MapBffReverseProxy();
+app.MapBffReverseProxy();
 ```
 
 If you need more fine grained control over which routes should enforce the anti-forgery header, you can also annotate the route configuration by adding the *Duende.Bff.Yarp.AntiforgeryCheck* metadata to the route config:
@@ -215,7 +215,7 @@ If you need more fine grained control over which routes should enforce the anti-
 This is also possible in code:
 
 ```cs
-builder.LoadFromMemory(
+yarpBuilder.LoadFromMemory(
     new[]
     {
         new RouteConfig()
@@ -240,7 +240,7 @@ You can combine the token management feature with the anti-forgery check.
 To enforce the presence of the anti-forgery headers, you need to add a middleware to the YARP pipeline:
 
 ```cs
-endpoints.MapReverseProxy(proxyApp =>
+app.MapReverseProxy(proxyApp =>
 {
     proxyApp.UseAntiforgeryCheck();
 });
