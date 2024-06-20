@@ -9,7 +9,7 @@ Clients can use an X.509 client certificate as an authentication mechanism to en
 For this you need to associate a client certificate with a client in your IdentityServer and enable MTLS support on the options.
 
 ```cs
-var builder = service.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;
 })
@@ -18,7 +18,7 @@ var builder = service.AddIdentityServer(options =>
 Use the [DI extensions methods]({{< ref "/reference/di" >}}) to add the services to DI which contain a default implementation to do that either thumbprint or common-name based:
 
 ```cs
-builder.AddMutualTlsSecretValidators();
+idsvrBuilder.AddMutualTlsSecretValidators();
 ```
 
 Then add client secret of type *SecretTypes.X509CertificateName* (for PKI-based scenarios) 

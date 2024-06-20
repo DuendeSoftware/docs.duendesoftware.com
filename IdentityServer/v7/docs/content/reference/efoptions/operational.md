@@ -10,7 +10,7 @@ These options are configurable when using the Entity Framework Core for the [ope
 You set the options at startup time in your *AddOperationalStore* method:
 
 ```cs
-var builder = services.AddIdentityServer()
+builder.Services.AddIdentityServer()
     .AddOperationalStore(options =>
     {
         // configure options here..

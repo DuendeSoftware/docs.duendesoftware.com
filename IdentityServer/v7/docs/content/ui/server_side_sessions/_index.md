@@ -33,11 +33,8 @@ With the addition and use of server-side sessions, more interesting architectura
 To enable server-side sessions, use the *AddServerSideSessions* extension method after adding IdentityServer to the DI system:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer()
-        .AddServerSideSessions();
-}
+builder.Services.AddIdentityServer()
+    .AddServerSideSessions();
 ```
 
 By default, the store for the server-side sessions will just be kept in-memory.
@@ -67,13 +64,10 @@ This claim must be included in the claims when the user's [authentication sessio
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer(options => {
-        options.ServerSideSessions.UserDisplayNameClaimType = "name"; // or "email" perhaps
-    })
-        .AddServerSideSessions();
-}
+builder.Services.AddIdentityServer(options => {
+    options.ServerSideSessions.UserDisplayNameClaimType = "name"; // or "email" perhaps
+})
+    .AddServerSideSessions();
 ```
 
 ### IServerSideSessionStore

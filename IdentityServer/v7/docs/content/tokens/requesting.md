@@ -69,25 +69,22 @@ The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.Acce
 Using this library, you only need to register the token client in DI:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
+builder.Services.AddAccessTokenManagement(options =>
 {
-    services.AddAccessTokenManagement(options =>
+    options.Client.Clients.Add("client", new ClientCredentialsTokenRequest
     {
-        options.Client.Clients.Add("client", new ClientCredentialsTokenRequest
-        {
-            Address = "https://demo.duendesoftware.com/connect/token",
-            ClientId = "m2m",
-            ClientSecret = "secret",
-            Scope = "api"
-        });
+        Address = "https://demo.duendesoftware.com/connect/token",
+        ClientId = "m2m",
+        ClientSecret = "secret",
+        Scope = "api"
     });
-}
+});
 ```
 
 You can then add token management to an HTTP-factory provided client:
 
 ```cs
-services.AddClientAccessTokenClient("client", configureClient: client =>
+builder.Services.AddClientAccessTokenClient("client", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 });
@@ -188,38 +185,35 @@ The most common client library for .NET is the OpenID Connect [authentication](h
 You only need to configure it in your startup code:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
+builder.Services.AddAuthentication(options =>
 {
-    services.AddAuthentication(options =>
+    options.DefaultScheme = "cookie";
+    options.DefaultChallengeScheme = "duende";
+})
+    .AddCookie("cookie")
+    .AddOpenIdConnect("duende", "IdentityServer", options =>
     {
-        options.DefaultScheme = "cookie";
-        options.DefaultChallengeScheme = "duende";
-    })
-        .AddCookie("cookie")
-        .AddOpenIdConnect("duende", "IdentityServer", options =>
+        options.Authority = "https://demo.duendesoftware.com";
+        options.ClientId = "interactive.confidential";
+        
+        options.ResponseType = "code";
+        options.ResponseMode = "query";
+        options.SaveTokens = true;
+
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("api");
+        options.Scope.Add("offline_access");
+        
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            options.Authority = "https://demo.duendesoftware.com";
-            options.ClientId = "interactive.confidential";
-            
-            options.ResponseType = "code";
-            options.ResponseMode = "query";
-            options.SaveTokens = true;
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
 
-            options.Scope.Clear();
-            options.Scope.Add("openid");
-            options.Scope.Add("api");
-            options.Scope.Add("offline_access");
-            
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                NameClaimType = "name",
-                RoleClaimType = "role"
-            };
-
-            // Disable x-client-SKU and x-client-ver headers 
-            options.DisableTelemetry = true;
-        });
-}
+        // Disable x-client-SKU and x-client-ver headers 
+        options.DisableTelemetry = true;
+    });
 ```
 
 ### Automating token management in ASP.NET Core

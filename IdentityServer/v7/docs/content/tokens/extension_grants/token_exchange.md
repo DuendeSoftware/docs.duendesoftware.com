@@ -82,7 +82,7 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
 You then register your grant validator with DI:
 
 ```cs
-builder.AddExtensionGrantValidator<TokenExchangeGrantValidator>();
+idsvrBuilder.AddExtensionGrantValidator<TokenExchangeGrantValidator>();
 ```
 
 And configure your client to be able to use it:

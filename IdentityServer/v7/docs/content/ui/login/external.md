@@ -20,20 +20,17 @@ To ease integration with external providers, it is recommended to use an authent
 
 ## Registering Authentication Handlers for External Providers
 
-Supporting an external provider is achieved by simply registering the handler in your IdentityServer's startup. 
+Supporting an external provider is achieved by simply registering the handler in your IdentityServer's startup configuration. 
 For example, to use employee logins from Azure AD (AAD):
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer();
+builder.Services.AddIdentityServer();
 
-    services.AddAuthentication()
-        .AddOpenIdConnect("AAD", "Employee Login", options =>
-        {
-            // options omitted
-        });
-}
+builder.Services.AddAuthentication()
+    .AddOpenIdConnect("AAD", "Employee Login", options =>
+    {
+        // options omitted
+    });
 ```
 
 The above snippet registers a scheme called *AAD* in the ASP.NET Core authentication system, and uses a human-friendly display name of "Employee Login".
@@ -82,7 +79,7 @@ One option on an external authentication handlers is called *SignInScheme*.
 This specifies the cookie handler to manage the state:
 
 ```cs
-services.AddAuthentication()
+builder.Services.AddAuthentication()
     .AddOpenIdConnect("AAD", "Employee Login", options =>
     {
         options.SignInScheme = "scheme of cookie handler to use";
@@ -96,7 +93,7 @@ The scheme is represented via the *IdentityServerConstants.ExternalCookieAuthent
 If you were to use our external cookie handler, then for the *SignInScheme* above you'd assign the value to be the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant:
 
 ```cs
-services.AddAuthentication()
+builder.Services.AddAuthentication()
     .AddOpenIdConnect("AAD", "Employee Login", options =>
     {
         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
@@ -109,7 +106,7 @@ Alternatively, you can also register your own custom cookie handler instead.
 For example:
 
 ```cs
-services.AddAuthentication()
+builder.Services.AddAuthentication()
     .AddCookie("MyTempHandler")
     .AddOpenIdConnect("AAD", "Employee Login", options =>
     {
@@ -207,37 +204,29 @@ To use the IdentityServer provided secure data format implementation, simply cal
 If no parameters are passed, then all OpenID Connect handlers configured will use the IdentityServer provided secure data format implementation:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    // configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.
-    services.AddOidcStateDataFormatterCache();
+// configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.
+builder.Services.AddOidcStateDataFormatterCache();
 
-    services.AddAuthentication()
-        .AddOpenIdConnect("demoidsrv", "IdentityServer", options =>
-        {
-            // ...
-        })
-        .AddOpenIdConnect("aad", "Azure AD", options =>
-        {
-            // ...
-        })
-        .AddOpenIdConnect("adfs", "ADFS", options =>
-        {
-            // ...
-        });
-}
+builder.Services.AddAuthentication()
+    .AddOpenIdConnect("demoidsrv", "IdentityServer", options =>
+    {
+        // ...
+    })
+    .AddOpenIdConnect("aad", "Azure AD", options =>
+    {
+        // ...
+    })
+    .AddOpenIdConnect("adfs", "ADFS", options =>
+    {
+        // ...
+    });
 ```
 
 If only particular schemes are to be configured, then pass those schemes as parameters:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    // configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.
-    services.AddOidcStateDataFormatterCache("aad", "demoidsrv");
-
-    // rest omitted
-}
+// configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.
+builder.Services.AddOidcStateDataFormatterCache("aad", "demoidsrv");
 ```
 
 See this [quickstart]({{< ref "/quickstarts/2_interactive" >}}) for step-by-step instructions for adding external authentication and configuring it.

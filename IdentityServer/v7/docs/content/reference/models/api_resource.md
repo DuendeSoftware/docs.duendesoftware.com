@@ -80,5 +80,5 @@ The *AddInMemoryApiResource* extensions method also supports adding API resource
 Then pass the configuration section to the *AddInMemoryApiResource* method:
 
 ```cs
-builder.AddInMemoryApiResources(configuration.GetSection("IdentityServer:ApiResources"))
+idsvrBuilder.AddInMemoryApiResources(configuration.GetSection("IdentityServer:ApiResources"))
 ```

@@ -15,13 +15,10 @@ It is enabled by default, but if you wish to disable it or change how often Iden
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer(options => {
-        options.ServerSideSessions.RemoveExpiredSessionsFrequency = TimeSpan.FromSeconds(60);
-    })
-        .AddServerSideSessions();
-}
+builder.Services.AddIdentityServer(options => {
+    options.ServerSideSessions.RemoveExpiredSessionsFrequency = TimeSpan.FromSeconds(60);
+})
+    .AddServerSideSessions();
 ```
 
 ### Back-channel Logout

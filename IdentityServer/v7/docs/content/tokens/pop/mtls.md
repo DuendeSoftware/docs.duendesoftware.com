@@ -92,7 +92,7 @@ static SocketsHttpHandler GetHandler(X509Certificate2 certificate)
 The last step is to enable that feature in the options:
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     // other settings
     

@@ -99,10 +99,7 @@ If it is needed to further customize the *OpenIdConnectOptions*, you can registe
 And to register this in the DI system:
 
 ```cs
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.ConfigureOptions<CustomConfig>();
-    }
+builder.Services.ConfigureOptions<CustomConfig>();
 ```
 
 #### Accessing OidcProvider data in IConfigureNamedOptions
@@ -132,10 +129,7 @@ class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectO
 The above class would need to be configured in DI (as before):
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.ConfigureOptions<CustomOidcConfigureOptions>();
-}
+builder.Services.ConfigureOptions<CustomOidcConfigureOptions>();
 ```
 
 ### Callback Paths
