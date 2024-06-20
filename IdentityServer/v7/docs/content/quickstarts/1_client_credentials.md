@@ -451,8 +451,8 @@ to the API that will check for the presence of the "api1" scope in the access
 token. The protocol ensures that this scope will only be in the token if the
 client requests it and IdentityServer allows the client to have that scope. You
 configured IdentityServer to allow this access by [including it in the
-allowedScopes property](#define-client). Add the following to the
-*ConfigureServices* method in the API's *Program.cs* file:
+allowedScopes property](#define-client). 
+Add the following to the *Program.cs* file of the API:
 
 ```cs
 builder.Services.AddAuthorization(options =>
