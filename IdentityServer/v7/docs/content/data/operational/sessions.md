@@ -22,23 +22,17 @@ It is still necessary to call *AddServerSideSessions* to enable the server-side 
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer()
-        .AddServerSideSessions()
-        .AddServerSideSessionStore<YourCustomStore>();
-}
+builder.Services.AddIdentityServer()
+    .AddServerSideSessions()
+    .AddServerSideSessionStore<YourCustomStore>();
 ```
 
 There is also an overloaded version of a *AddServerSideSessions* that will perform both registration steps in one call.
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer()
-        .AddServerSideSessions<YourCustomStore>();
-}
+builder.Services.AddIdentityServer()
+    .AddServerSideSessions<YourCustomStore>();
 ```
 
 ## EntityFramework store implementation
@@ -50,13 +44,11 @@ For example:
 
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer()
-            .AddServerSideSessions()
-            .AddOperationalStore(options =>
-            {
-                // ...
-            });
-}
+builder.Services.AddIdentityServer()
+    .AddServerSideSessions()
+    .AddOperationalStore(options =>
+    {
+       // ...
+    });
+
 ```

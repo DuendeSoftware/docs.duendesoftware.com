@@ -17,7 +17,7 @@ flag to *false* on the the *KeyManagement* property of
 [*IdentityServerOptions*]({{< ref "/reference/options#key-management" >}}):
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.KeyManagement.Enabled = false;
 });
@@ -37,9 +37,9 @@ Signing keys are added with the [*AddSigningCredential*]({{< ref
 "/reference/di#signing-keys" >}}) configuration method:
 
 ```cs
-var builder = services.AddIdentityServer();
+var idsvrBuilder = builder.Services.AddIdentityServer();
 var key = LoadKeyFromVault(); // (Your code here)
-builder.AddSigningCredential(key, SecurityAlgorithms.RsaSha256);
+idsvrBuilder.AddSigningCredential(key, SecurityAlgorithms.RsaSha256);
 ```
 
 You can call *AddSigningCredential* multiple times if you want to register more
@@ -100,15 +100,15 @@ service. Configure IdentityServer for phase 1 by registering the new
 key as a validation key.
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = false;
 });
 
 var oldKey = LoadOldKeyFromVault();
 var newKey = LoadNewKeyFromVault();
-builder.AddSigningCredential(oldKey, SecurityAlgorithms.RsaSha256);
-builder.AddValidationKey(newKey, SecurityAlgorithms.RsaSha256)
+idsvrBuilder.AddSigningCredential(oldKey, SecurityAlgorithms.RsaSha256);
+idsvrBuilder.AddValidationKey(newKey, SecurityAlgorithms.RsaSha256)
 ```
 
 Once IdentityServer is updated with the new key as a validation key, wait to
@@ -128,15 +128,15 @@ be validated. The IdentityServer configuration change needed is simply to swap
 the signing credential and validation key. 
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = false;
 });
 
 var oldKey = LoadOldKeyFromVault();
 var newKey = LoadNewKeyFromVault();
-builder.AddSigningCredential(newKey, SecurityAlgorithms.RsaSha256);
-builder.AddValidationKey(oldKey, SecurityAlgorithms.RsaSha256)
+idsvrBuilder.AddSigningCredential(newKey, SecurityAlgorithms.RsaSha256);
+idsvrBuilder.AddValidationKey(oldKey, SecurityAlgorithms.RsaSha256)
 ```
 
 Again, you need to wait to proceed to phase 3. The delay here is typically
@@ -150,12 +150,12 @@ Once enough time has passed that there are no unexpired tokens signed with the
 old key, it is safe to completely remove the old key. 
 
 ```cs
-var builder = services.AddIdentityServer(options =>
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = false;
 });
 
 var newKey = LoadNewKeyFromVault();
-builder.AddSigningCredential(newKey, SecurityAlgorithms.RsaSha256);
+idsvrBuilder.AddSigningCredential(newKey, SecurityAlgorithms.RsaSha256);
 ```
 

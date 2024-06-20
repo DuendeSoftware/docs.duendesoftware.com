@@ -18,13 +18,10 @@ Custom implementations of *IPersistedGrantStore*, and/or *IDeviceFlowStore* must
 For example:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddIdentityServer();
-    
-    services.AddTransient<IPersistedGrantStore, YourCustomPersistedGrantStore>();
-    services.AddTransient<IDeviceFlowStore, YourCustomDeviceFlowStore>();
-}
+builder.Services.AddIdentityServer();
+
+builder.Services.AddTransient<IPersistedGrantStore, YourCustomPersistedGrantStore>();
+builder.Services.AddTransient<IDeviceFlowStore, YourCustomDeviceFlowStore>();
 ```
 
 ## Grant Expiration and Consumption

@@ -82,11 +82,12 @@ You can add more identity information about the user to the access token.
 The additional claims added are based on the scope requested. 
 The following scope definition tells the configuration system that when a *write* scope gets granted the *user_level* claim should be added to the access token:
 
-    var writeScope = new ApiScope(
-        name: "write",
-        displayName: "Write your data.",
-        userClaims: new[] { "user_level" });
-
+```cs
+var writeScope = new ApiScope(
+    name: "write",
+    displayName: "Write your data.",
+    userClaims: new[] { "user_level" });
+```
 This will pass the *user_level* claim as a requested claim type to the profile service, 
 so that the consumer of the access token can use this data as input for authorization decisions or business logic.
 

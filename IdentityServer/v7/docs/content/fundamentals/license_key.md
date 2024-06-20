@@ -56,13 +56,11 @@ your IdentityServer, including the *LicenseKey*. Set the value of this property 
 content of the license key file.
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
+builder.Services.AddIdentityServer(options =>
 {
-    services.AddIdentityServer(options =>
-    {
-        options.LicenseKey = "eyJhbG..."; // the content of the license key file
-    });
-}
+    options.LicenseKey = "eyJhbG..."; // the content of the license key file
+});
+
 ```
 
 ## License Validation and Logging
