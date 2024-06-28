@@ -36,5 +36,6 @@ Duende IdentityServer implements the following specifications:
 * OAuth 2.0 Authorization Server Issuer Identifier in Authorization Response ([RFC 9207](https://datatracker.ietf.org/doc/html/rfc9207.txt))
 * OAuth 2.0 Step-up Authentication Challenge Protocol ([RFC pending](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-step-up-authn-challenge))
 * Business Edition: OAuth 2.0 Dynamic Client Registration Protocol ([RFC 7591](https://www.rfc-editor.org/rfc/rfc7591.html))
+* Business Edition: OAuth 2.0 Pushed Authorization Requests ([RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html))
 * Enterprise Edition: Resource Indicators for OAuth 2.0 ([RFC 8707](https://tools.ietf.org/html/rfc8707))
 * Enterprise Edition: OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer / DPoP ([RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449))
