@@ -4,7 +4,7 @@ weight: 120
 ---
 
 Duende IdentityServer supports the [Client-Initiated Backchannel Authentication Flow](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) (also known as CIBA).
-CIBA is one of the requirements to support the [Financal-grade API](https://openid.net/wg/fapi/) compliance. 
+CIBA is one of the requirements to support the [Financial-grade API](https://openid.net/wg/fapi/) compliance. 
 
 CIBA is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition.
 
