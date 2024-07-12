@@ -86,7 +86,9 @@ In the BFF pattern, the server-side code triggers and receives OpenID Connect
 requests and responses. To do that, it needs the same services configured as the
 WebClient did in the prior [web application quickstart]({{<ref
 "../3_api_access">}}). Additionally, the BFF services need to be added with
-*AddBff()*. 
+*AddBff()*. In addition the offline_access scope is requested that will result in
+a refresh token that will be used by the BFF library to automatically refresh the
+access token for the remote API if needed.
 
 Add the following to *src/JavaScriptClient/Program.cs*:
 
@@ -120,6 +122,7 @@ builder.Services
         options.ClientSecret = "secret";
         options.ResponseType = "code";
         options.Scope.Add("api1");
+        options.Scope.Add("offline_access");
         options.SaveTokens = true;
         options.GetClaimsFromUserInfoEndpoint = true;
     });
@@ -304,7 +307,8 @@ configuration entry in IdentityServer for the new JavaScript client.
 In the IdentityServer project locate the client configuration in
 *src/IdentityServer/Config.cs*. Add a new *Client* to the list for your new
 JavaScript application. Because this client uses the BFF pattern, the
-configuration will be very similar to the Web client. It should have the
+configuration will be very similar to the Web client. In addition requesting
+the offline_access scope should be allowed for this client. It should have the
 configuration listed below:
 
 ```cs
@@ -321,6 +325,7 @@ new Client
 
     // where to redirect to after logout
     PostLogoutRedirectUris = { "https://localhost:5003/signout-callback-oidc" },
+    AllowOfflineAccess = true,
 
     AllowedScopes = new List<string>
     {
