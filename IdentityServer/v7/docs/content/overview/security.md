@@ -69,19 +69,20 @@ Duende IdentityServer is a [certified](https://openid.net/certification/) implem
 NuGet packages published by Duende are cryptographically signed to ensure their
 authenticity and integrity. Our certificate is signed by Sectigo, which is a widely
 trusted certificate authority and installed by default in most environments. This means
-that in many circumstances, the nuget tools can validate our packages' signatures
+that in many circumstances, the NuGet tools can validate our packages' signatures
 automatically.
 
-However, some environments (notably the dotnet sdk docker image which is sometimes used in
+However, some environments (notably the dotnet sdk docker image which is
+sometimes used in
 build pipelines) do not trust the Sectigo certificate. Typically this isn't a problem,
 because NuGet packages distributed by nuget.org are signed by nuget.org as the repository
 in addition to Duende's signature as the publisher. nuget.org's certificate is signed by a
-different authority that most build pipelines do trust. The nuget tools will validate
+different authority that most build pipelines do trust. The NuGet tools will validate
 packages if they trust either the publisher or the repository.
 
 In the rare circumstance that we distribute a NuGet package not through nuget.org (and
 therefore without a nuget.org repository signature), it might be necessary to add the
-Sectigo root certificate to nuget's code signing certificate bundle. Sectigo's root
+Sectigo root certificate to NuGet's code signing certificate bundle. Sectigo's root
 certificate is available from Sectigo
 [here](https://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c).
 
@@ -92,15 +93,28 @@ trust Sectigo by default.
 
 First, get the Sectigo certificate and convert it to PEM format:
 ```sh
-wget https://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c
+wget http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c
 
 openssl pkcs7 -inform DER -outform PEM -in SectigoPublicCodeSigningRootR46.p7c -print_certs -out sectigo.pem
 ```
+
+Next, you should validate that the thumprint of the certificate is correct.
+Bootstrapping trust in a certificate chain can be challenging. Fortunately, most
+desktop environments already trust this certificate, so you can compare the
+downloaded certificate's thumprint to the thumbprint of the certificate on a
+machine that already trusts it. You should verify this independently, but for
+your convenience, the thumprint is
+CC:BB:F9:E1:48:5A:F6:3C:E4:7A:BF:8E:9E:64:8C:25:04:FC:31:9D. You can check the
+thumbprint of the downloaded certificate with openssl:
+```sh
+openssl x509 -in sectigo.pem -fingerprint -sha1 -noout
+```
+
 Then append that PEM to the certificate bundle at */usr/share/dotnet/sdk/8.0.303/trustedroots/codesignctl.pem*:
 ```sh
 cat sectigo.pem >> /usr/share/dotnet/sdk/8.0.303/trustedroots/codesignctl.pem
 ```
-After that, nuget packages signed by Duende can be successfully verified, even if they are not distributed by nuget.org:
+After that, NuGet packages signed by Duende can be successfully verified, even if they are not distributed by nuget.org:
 ```sh
 dotnet nuget verify Duende.IdentityServer.7.0.x.nupkg
 ```
