@@ -46,7 +46,7 @@ public class SampleProfileService : DefaultProfileService
     }
 
 
-    private async Task<Claim> GetClaimsAsync(ProfileDataRequestContext context)
+    private async Task<List<Claim>> GetClaimsAsync(ProfileDataRequestContext context)
     {
         // Your implementation that retrieves claims goes here
     }
