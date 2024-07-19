@@ -84,7 +84,7 @@ In the rare circumstance that we distribute a NuGet package not through nuget.or
 therefore without a nuget.org repository signature), it might be necessary to add the
 Sectigo root certificate to NuGet's code signing certificate bundle. Sectigo's root
 certificate is available from Sectigo
-[here](https://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c).
+[here](http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c).
 
 #### Trusting the Sectigo certificate
 Here is an example of how to configure NuGet to validate a package signed by Duende but
