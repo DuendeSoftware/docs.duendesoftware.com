@@ -63,3 +63,44 @@ IdentityServer has two dependencies:
 ### Certification
 
 Duende IdentityServer is a [certified](https://openid.net/certification/) implementation of OpenID Connect.
+
+### Package Signing
+
+NuGet packages published by Duende are cryptographically signed to ensure their
+authenticity and integrity. Our certificate is signed by Sectigo, which is a widely
+trusted certificate authority and installed by default in most environments. This means
+that in many circumstances, the nuget tools can validate our packages' signatures
+automatically.
+
+However, some environments (notably the dotnet sdk docker image which is sometimes used in
+build pipelines) do not trust the Sectigo certificate. Typically this isn't a problem,
+because NuGet packages distributed by nuget.org are signed by nuget.org as the repository
+in addition to Duende's signature as the publisher. nuget.org's certificate is signed by a
+different authority that most build pipelines do trust. The nuget tools will validate
+packages if they trust either the publisher or the repository.
+
+In the rare circumstance that we distribute a NuGet package not through nuget.org (and
+therefore without a nuget.org repository signature), it might be necessary to add the
+Sectigo root certificate to nuget's code signing certificate bundle. Sectigo's root
+certificate is available from Sectigo
+[here](https://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c).
+
+#### Trusting the Sectigo certificate
+Here is an example of how to configure NuGet to validate a package signed by Duende but
+not signed by nuget.org in the docker dotnet sdk image - an environment that does not
+trust Sectigo by default.
+
+First, get the Sectigo certificate and convert it to PEM format:
+```sh
+wget https://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c
+
+openssl pkcs7 -inform DER -outform PEM -in SectigoPublicCodeSigningRootR46.p7c -print_certs -out sectigo.pem
+```
+Then append that PEM to the certificate bundle at */usr/share/dotnet/sdk/8.0.303/trustedroots/codesignctl.pem*:
+```sh
+cat sectigo.pem >> /usr/share/dotnet/sdk/8.0.303/trustedroots/codesignctl.pem
+```
+After that, nuget packages signed by Duende can be successfully verified, even if they are not distributed by nuget.org:
+```sh
+dotnet nuget verify Duende.IdentityServer.7.0.x.nupkg
+```
