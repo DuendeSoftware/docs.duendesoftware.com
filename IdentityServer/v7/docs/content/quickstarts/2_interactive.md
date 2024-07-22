@@ -22,6 +22,11 @@ implementation. You will also need to [install the IdentityServer templates]({{<
 
 {{% /notice %}}
 
+## Video
+In addition to the written steps below there's also a YouTube video available:
+
+{{< youtube "4aYj4xb7_Cg" >}}
+
 ## Enable OIDC in IdentityServer 
 To enable OIDC in IdentityServer you need:
 - An interactive UI

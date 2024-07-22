@@ -24,3 +24,5 @@ dotnet new install Duende.IdentityServer.Templates
 ```
 
 They will be used as a starting point for the various tutorials.
+
+{{< youtube cxYmODQHErM >}}

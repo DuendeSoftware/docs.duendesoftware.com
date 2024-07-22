@@ -22,6 +22,11 @@ Finished source code for each quickstart in this series is available in the
 [Samples]({{< param qs_base >}}) repository, and a reference implementation of
 this quickstart is available [here]({{< param qs_base >}}/1_ClientCredentials).
 
+## Video
+In addition to the written steps below there's also a YouTube video available:
+
+{{< youtube 3-1QY8s2C9k >}}
+
 ## Preparation
 The IdentityServer templates for the dotnet CLI are a good starting point for
 the quickstarts. To install the templates open a console window and type the
