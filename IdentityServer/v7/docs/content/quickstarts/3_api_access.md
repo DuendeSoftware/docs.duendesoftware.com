@@ -163,21 +163,3 @@ Also add a link to the new page in _src/WebClient/Shared/\_Layout.cshtml_ with t
 
 Make sure the _IdentityServer_ and _Api_ projects are running, start the
 _WebClient_ and request _/CallApi_ after authentication.
-
-## Further Reading - Access token lifetime management
-
-By far the most complex task for a typical client is to manage the access token.
-You typically want to
-
-- request an access and refresh token at login time
-- cache those tokens
-- use the access token to call APIs until it expires
-- use the refresh token to get a new access token
-- repeat the process of caching and refreshing with the new token
-
-ASP.NET Core has built-in facilities that can help you with some of those tasks
-(like caching or sessions), but there is still quite some work left to do.
-Consider using the
-[Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki)
-library for help with access token lifetime management. It provides abstractions
-for storing tokens, automatic refresh of expired tokens, etc.
