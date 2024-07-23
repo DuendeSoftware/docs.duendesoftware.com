@@ -26,8 +26,8 @@ _IdentityServer_ will respond with two tokens:
 {{% notice note %}}
 
 We recommend you do the quickstarts in order. If you'd like to start here, begin
-from a copy of the [reference implementation of Quickstart 2]({{< param qs_base >}}/2_InteractiveAspNetCore).
-Throughout this quickstart, paths are written relative to the base _quickstart_
+from a copy of the [reference implementation of Quickstart 2]({{< param qs_base >}}/2*InteractiveAspNetCore).
+Throughout this quickstart, paths are written relative to the base \_quickstart*
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates]({{< ref "0_overview#preparation" >}}).
 
@@ -35,11 +35,7 @@ implementation. You will also need to [install the IdentityServer templates]({{<
 
 ## Modifying the client configuration
 
-The client configuration in IdentityServer requires two straightforward updates.
-
-1. Add the _api1_ resource to the allowed scopes list so that the client will
-   have permission to access it.
-2. Enable support for refresh tokens by setting the _AllowOfflineAccess_ flag.
+The client configuration in IdentityServer requires one straightforward update. We should dd the _api1_ resource to the allowed scopes list so that the client will have permission to access it.
 
 Update the _Client_ in _src/IdentityServer/Config.cs_ as follows:
 
@@ -70,7 +66,7 @@ new Client
 ## Modifying the Web client
 
 Now configure the client to ask for access to api1 and for a refresh token by
-requesting the _api1_ and _offline_access_ scopes. This is done in the OpenID
+requesting the _api1_ scope. This is done in the OpenID
 Connect handler configuration in _src/WebClient/Program.cs_:
 
 ```cs
@@ -173,7 +169,7 @@ _WebClient_ and request _/CallApi_ after authentication.
 By far the most complex task for a typical client is to manage the access token.
 You typically want to
 
-- request the access and refresh token at login time
+- request an access and refresh token at login time
 - cache those tokens
 - use the access token to call APIs until it expires
 - use the refresh token to get a new access token
