@@ -35,7 +35,7 @@ implementation. You will also need to [install the IdentityServer templates]({{<
 
 ## Modifying the client configuration
 
-The client configuration in IdentityServer requires one straightforward update. We should dd the _api1_ resource to the allowed scopes list so that the client will have permission to access it.
+The client configuration in IdentityServer requires one straightforward update. We should add the _api1_ resource to the allowed scopes list so that the client will have permission to access it.
 
 Update the _Client_ in _src/IdentityServer/Config.cs_ as follows:
 
@@ -65,7 +65,7 @@ new Client
 
 ## Modifying the Web client
 
-Now configure the client to ask for access to api1 and for a refresh token by
+Now configure the client to ask for access to api1 by
 requesting the _api1_ scope. This is done in the OpenID
 Connect handler configuration in _src/WebClient/Program.cs_:
 
@@ -98,8 +98,8 @@ builder.Services.AddAuthentication(options =>
     });
 ```
 
-Since _SaveTokens_ is enabled, ASP.NET Core will automatically store the id,
-access, and refresh tokens in the properties of the authentication cookie. If
+Since _SaveTokens_ is enabled, ASP.NET Core will automatically store the id and
+access tokens in the properties of the authentication cookie. If
 you run the solution and authenticate, you will see the tokens on
 the page that displays the cookie claims and properties created in quickstart 2.
 
