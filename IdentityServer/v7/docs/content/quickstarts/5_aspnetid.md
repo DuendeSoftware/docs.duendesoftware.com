@@ -1,7 +1,7 @@
 ---
 title: "Using ASP.NET Core Identity"
 date: 2020-09-10T08:22:12+02:00
-weight: 6
+weight: 7
 ---
 
 Welcome to Quickstart 5 for Duende IdentityServer! In this quickstart you will
