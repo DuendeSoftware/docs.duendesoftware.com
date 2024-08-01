@@ -73,23 +73,13 @@ that in many circumstances, the NuGet tools can validate our packages' signature
 automatically.
 
 However, some environments (notably the dotnet sdk docker image which is
-sometimes used in
-build pipelines) do not trust the Sectigo certificate. Typically this isn't a problem,
-because NuGet packages distributed by nuget.org are signed by nuget.org as the repository
-in addition to Duende's signature as the publisher. nuget.org's certificate is signed by a
-different authority that most build pipelines do trust. The NuGet tools will validate
-packages if they trust either the publisher or the repository.
-
-In the rare circumstance that we distribute a NuGet package not through nuget.org (and
-therefore without a nuget.org repository signature), it might be necessary to add the
+sometimes used in build pipelines) do not trust the Sectigo certificate. In that case, it might be necessary to add the
 Sectigo root certificate to NuGet's code signing certificate bundle. Sectigo's root
 certificate is available from Sectigo
 [here](http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c).
 
 #### Trusting the Sectigo certificate
-Here is an example of how to configure NuGet to validate a package signed by Duende but
-not signed by nuget.org in the docker dotnet sdk image - an environment that does not
-trust Sectigo by default.
+Here is an example of how to configure NuGet to trust the Sectigo root CA on the dotnet sdk docker image.
 
 First, get the Sectigo certificate and convert it to PEM format:
 ```sh
