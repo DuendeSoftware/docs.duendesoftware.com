@@ -45,7 +45,12 @@ Models the request for user claims and is the vehicle to return those claims. It
 
 * ***Subject***
     
-    The *ClaimsPrincipal* modeling the user associated with this request for profile data. When the profile service is invoked for tokens, the *Subject* property will contain the principal that was issued during user sign-in. When the profile service is called for requests to the [userinfo endpoint]({{< ref "/reference/endpoints/userinfo" >}}), the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call.
+    The *ClaimsPrincipal* modeling the user associated with this request for profile data. When the profile service is invoked for tokens, the *Subject* property will contain the user's principal. Which claims are contained in the principal depends on the following:
+
+    - When the [server side sessions feature]({{< ref "ui/server_side_sessions/" >}}) is enabled _Subject_ will always contain the claims stored in the server side session.
+    - When that is not the case, it depends on the caller context:
+        - If the _ProfileService_ is called in the context of a grant (e.g. exchanging a code for a token), the claims associated with that grant in the grant store will be used. When grants are stored, by default a snapshot of the logged in user's claims are captured with the grant.
+        - If there's no grant context (e.g. when the user info endpoint is called) the claims in the access token will be used.
 
 * ***Client***
     
