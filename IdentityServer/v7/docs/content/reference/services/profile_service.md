@@ -49,7 +49,7 @@ Models the request for user claims and is the vehicle to return those claims. It
 
     - When the [server side sessions feature]({{< ref "ui/server_side_sessions/" >}}) is enabled _Subject_ will always contain the claims stored in the server side session.
     - When that is not the case, it depends on the caller context:
-        - If the _ProfileService_ is called in the context of grant (e.g. exchanging a code for a token) the claims stored in the grant store will be used.
+        - If the _ProfileService_ is called in the context of a grant (e.g. exchanging a code for a token) the claims stored in the grant store will be used.
         - If there's no grant context (e.g. when the user info endpoint is called) the claims in the access token will be used.
 
 * ***Client***
