@@ -15,7 +15,7 @@ It is available from the dependency injection system and would normally be injec
     
     Returns the *DeviceFlowAuthorizationRequest* based on the *userCode* passed to the login or consent pages.
 
-* ***DeviceFlowInteractionResult***
+* ***HandleRequestAsync***
     
     Completes device authorization for the given *userCode*.
 
