@@ -11,7 +11,7 @@ Errors that we have seen because of IdentityModel version mismatches include:
 * System.MissingMethodException: Method not found 'Boolean Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfiguration(...)'
 
 ## Diagnosing
-Run this command in powershell: *dotnet list package --include-transitive | sls "Microsoft.IdentityModel|System.IdentityModel"*
+Run this command in powershell: `dotnet list package --include-transitive | sls "Microsoft.IdentityModel|System.IdentityModel"`
 
 The output should look something like this:
 ```txt
