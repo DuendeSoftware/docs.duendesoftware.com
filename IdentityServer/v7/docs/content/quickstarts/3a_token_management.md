@@ -8,6 +8,10 @@ Welcome to this Quickstart for Duende IdentityServer!
 
 The previous quickstart introduced [API access]({{< ref "3_api_access" >}}) with interactive applications, but by far the most complex task for a typical client is to manage the access token.
 
+In addition to the written steps below a YouTube video is available:
+
+{{< youtube "W8jtc2Ou1d4" >}}
+
 Given that the access token has a finite lifetime, you typically want to
 
 - request a refresh token in addition to the access token at login time

@@ -11,6 +11,10 @@ The previous quickstarts introduced
 [user authentication]({{< ref "2_interactive" >}}). This quickstart will bring
 the two together.
 
+In addition to the written steps below a YouTube video is available:
+
+{{< youtube "zHVmzgPUImc" >}}
+
 OpenID Connect and OAuth combine elegantly; you can achieve both user
 authentication and api access in a single exchange with the token service.
 

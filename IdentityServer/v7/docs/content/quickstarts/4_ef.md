@@ -8,6 +8,10 @@ Welcome to Quickstart 4 for Duende IdentityServer! In this quickstart you will
 move configuration and other temporary data into a database using Entity
 Framework. 
 
+In addition to the written steps below a YouTube video is available:
+
+{{< youtube "GKSp3StwaVA" >}}
+
 {{% notice note %}}
 
 We recommend you do the quickstarts in order. If you'd like to start here, begin
