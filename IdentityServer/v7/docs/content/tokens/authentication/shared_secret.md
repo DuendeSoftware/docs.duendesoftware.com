@@ -60,8 +60,6 @@ POST /connect/token
 Content-type: application/x-www-form-urlencoded
 Authorization: Basic xxxxx
 
-    client_id=client1&
-    client_secret=secret&
     grant_type=authorization_code&
     code=hdh922&
     redirect_uri=https://myapp.com/callback
