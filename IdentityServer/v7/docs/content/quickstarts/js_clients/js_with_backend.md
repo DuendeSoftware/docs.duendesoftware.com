@@ -106,7 +106,6 @@ builder.Services
     .AddBff()
     .AddRemoteApis();
 
-JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 builder.Services
     .AddAuthentication(options =>
     {
@@ -125,6 +124,7 @@ builder.Services
         options.Scope.Add("offline_access");
         options.SaveTokens = true;
         options.GetClaimsFromUserInfoEndpoint = true;
+        options.MapInboundClaims = false;
     });
 
 var app = builder.Build();
@@ -153,11 +153,7 @@ app.UseAuthentication();
 app.UseBff();
 
 app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapBffManagementEndpoints();
-});
+app.MapBffManagementEndpoints();
 
 app.Run();
 ```
@@ -412,25 +408,20 @@ HttpContext.GetUserAccessTokenAsync();*
 ### Update routing to accept local and remote API calls
 
 Next, you need to register both the local API and the BFF proxy for the remote
-API in the ASP.NET Core routing system. Add the code below to the *UseEndpoints*
-call in *src/JavaScriptClient/Program.cs*.
+API in the ASP.NET Core routing system. Add the code below to the endpoint configuration code in *src/JavaScriptClient/Program.cs*.
 
 ```cs
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapBffManagementEndpoints();
+  app.MapBffManagementEndpoints();
 
-    // Uncomment this for Controller support
-    // endpoints.MapControllers()
-    //     .AsBffApiEndpoint();
+  // Uncomment this for Controller support
+  // app.MapControllers()
+  //     .AsBffApiEndpoint();
 
-    endpoints.MapGet("/local/identity", LocalIdentityHandler)
-        .AsBffApiEndpoint();
+  app.MapGet("/local/identity", LocalIdentityHandler)
+      .AsBffApiEndpoint();
 
-    endpoints.MapRemoteBffApiEndpoint("/remote", "https://localhost:6001")
-        .RequireAccessToken(Duende.Bff.TokenType.User);
-
-});
+  app.MapRemoteBffApiEndpoint("/remote", "https://localhost:6001")
+      .RequireAccessToken(Duende.Bff.TokenType.User);
 ```
 The call to the *AsBffApiEndpoint()* fluent helper method adds BFF support to
 the local APIs. This includes anti-forgery protection as well as suppressing
