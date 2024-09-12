@@ -4,19 +4,19 @@ weight = 10
 chapter = true
 +++
 
-# JavaScript/SPA Client Applications
+# Building Browser-Based Client Applications
 
-When building browser-based or SPA applications, there are two main styles: those
+When building browser-based or SPA applications using javascript, there are two main styles: those
 with a backend and those without.
 
-JavaScript applications **with a backend** are more secure, making it the
+Browser-based applications **with a backend** are more secure, making it the
 recommended style. This style uses the ["Backend For Frontend"
 pattern](https://blog.duendesoftware.com/posts/20210326_bff/), or "BFF" for
 short, which relies on the backend host to implement all of the security
 protocol interactions with the token server. The *Duende.BFF* library is used in
 [this quickstart]({{< ref "js_with_backend.md" >}}) to easily support the BFF pattern.
 
-JavaScript applications **without a backend** need to do all the security
+Browser-based applications **without a backend** need to do all the security
 protocol interactions on the client-side, including driving user authentication
 and token requests, session and token management, and token storage. This leads
 to more complex JavaScript, cross-browser incompatibilities, and a considerably
