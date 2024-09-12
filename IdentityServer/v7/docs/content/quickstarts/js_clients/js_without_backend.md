@@ -1,4 +1,5 @@
 ---
+expiryDate: 2024-09-11
 title: "JavaScript applications without a backend"
 weight: 20
 ---

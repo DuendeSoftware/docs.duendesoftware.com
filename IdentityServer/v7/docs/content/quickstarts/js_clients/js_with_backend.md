@@ -1,5 +1,5 @@
 ---
-title: "JavaScript applications with a backend"
+title: "Browser-Based Applications with a BFF"
 weight: 10
 ---
 
