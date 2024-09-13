@@ -41,7 +41,7 @@ it](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identit
 
 In addition to the written steps below a YouTube video is available:
 
-{{< youtube "GKSp3StwaVA" >}}
+{{< youtube "blvZzYsr8uI" >}}
 
 ## New Project for ASP.NET Core Identity
 The first step is to add a new project for ASP.NET Core Identity to your
