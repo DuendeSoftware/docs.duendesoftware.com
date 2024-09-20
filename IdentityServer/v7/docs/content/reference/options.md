@@ -289,7 +289,7 @@ Login/logout related settings. Available on the *Authentication* property of the
 
     Enables all content security policy headers on the end session endpoint. For historical reasons, this option's name mentions *frame-src*, but the content security policy headers on the end session endpoint also include other fetch directives, including a *default-src 'none'* directive, which prevents most resources from being loaded by the end session endpoint, and a *style-src* directive that specifies the hash of the expected style on the page.
 
-* ***CoordinateClientLifetimesWithUserSession*** (added in 6.1)
+* ***CoordinateClientLifetimesWithUserSession*** (added in *v6.1*)
     
     When enabled, all clients' token lifetimes (e.g. refresh tokens) will be tied to the user's session lifetime.
     This means when the user logs out, any revokable tokens will be removed.
@@ -332,7 +332,7 @@ Logging related settings, including filters that will remove sensitive values an
   
     Collection of parameter names passed to the backchannel authentication endpoint that are considered senstivie and will be excluded from logging. Defaults to *client_secret*, *client_assertion*, and *id_token_hint*.
 
-* ***UnhandledExceptionLoggingFilter*** (Added in 6.2)
+* ***UnhandledExceptionLoggingFilter*** (added in *6.2*)
   
   A function that is called when the IdentityServer middleware detects an unhandled exception, and is used to determine if the exception is logged.
   The arguments to the function are the HttpContext and the Exception. It should return true to log the exception, and false to suppress.
@@ -465,9 +465,7 @@ User interaction settings, including urls for pages in the UI, names of paramete
 
     Sets the URLs for the login, logout, consent, error and device verification pages.
 
-* ***CreateAccountUrl***
-
-    Added in *v6.3*.
+* ***CreateAccountUrl*** (added in *v6.3*)
 
     Sets the URL for the create account page, which is used by OIDC requests that include the *prompt=create* parameter. When this option is set, including the *prompt=create* parameter will cause the user to be redirected to the specified url. *create* will also be added to the discovery document's *prompt_values_supported* array to announce support for this feature. When this option is not set, the *prompt=create* parameter is ignored, and *create* is not added to discovery. Defaults to *null*.
 
@@ -507,6 +505,13 @@ User interaction settings, including urls for pages in the UI, names of paramete
 
     Flag that allows return URL validation to accept full URL that includes the IdentityServer origin. Defaults to *false*.
 
+* ***PromptValuesSupported*** (added in *v7.0.7*)
+
+    The collection of OIDC prompt modes supported and that will be published in discovery. By
+    default, this includes all values in *Constants.SupportedPromptModes*. If the
+    *CreateAccountUrl* option is set, then the "create" value is also included. If additional
+    prompt values are added, a customized [*IAuthorizeInteractionResponseGenerator"*]({{<ref
+    "/ui/custom">}}) is also required to handle those values.
 
 ## Caching
 Caching settings for the stores. Available on the *Caching* property of the *IdentityServerOptions* object. These settings only apply if the respective caching has been enabled in the services configuration in startup.
@@ -616,7 +621,7 @@ Shared settings for persisted grants behavior.
     Data protect the persisted grants "data" column. Defaults to *true*.
     If your database is already protecting data at rest, then you can consider disabling this.
 
-* ***DeleteOneTimeOnlyRefreshTokensOnUse*** (added in 6.3)
+* ***DeleteOneTimeOnlyRefreshTokensOnUse*** (added in *6.3*)
 
     When Refresh tokens that are configured with RefreshTokenUsage.OneTime are used, this option controls if they will be deleted immediately or retained and marked as consumed. The default is on - immediately delete.
 
@@ -647,7 +652,7 @@ Settings for [dynamic providers]({{< ref "/ui/login/dynamicproviders">}}). Avail
     The maximum frequency in seconds that a client may poll the token endpoint in the CIBA flow. Defaults to 5.
 
 ## Server-side Sessions 
-Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added in 6.1.  Available on the *ServerSideSessions* property of the *IdentityServerOptions* object.
+Settings for [server-side sessions]({{<ref "/ui/server_side_sessions">}}). Added in *v6.1*.  Available on the *ServerSideSessions* property of the *IdentityServerOptions* object.
 
 * ***UserDisplayNameClaimType***
     
@@ -700,9 +705,8 @@ Demonstration of Proof-of-Possession settings. Available on the *DPoP* property 
     Clock skew used in validating DPoP proof token expiration using a server-generated nonce value. Defaults to *0*.
 
 ## Pushed Authorization Requests
-Added in 7.0.0
 
-Pushed Authorization Requests (PAR) settings. Available on the *PushedAuthorization* property of the *IdentityServerOptions* object.
+[Pushed Authorization Requests (PAR)]({{<ref "tokens/par">}}) settings. Added in *v7.0*. Available on the *PushedAuthorization* property of the *IdentityServerOptions* object.
 
 * ***Required*** 
  
