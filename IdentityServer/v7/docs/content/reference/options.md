@@ -332,7 +332,7 @@ Logging related settings, including filters that will remove sensitive values an
   
     Collection of parameter names passed to the backchannel authentication endpoint that are considered senstivie and will be excluded from logging. Defaults to *client_secret*, *client_assertion*, and *id_token_hint*.
 
-* ***UnhandledExceptionLoggingFilter*** (added in *6.2*)
+* ***UnhandledExceptionLoggingFilter*** (added in *v6.2*)
   
   A function that is called when the IdentityServer middleware detects an unhandled exception, and is used to determine if the exception is logged.
   The arguments to the function are the HttpContext and the Exception. It should return true to log the exception, and false to suppress.
@@ -621,7 +621,7 @@ Shared settings for persisted grants behavior.
     Data protect the persisted grants "data" column. Defaults to *true*.
     If your database is already protecting data at rest, then you can consider disabling this.
 
-* ***DeleteOneTimeOnlyRefreshTokensOnUse*** (added in *6.3*)
+* ***DeleteOneTimeOnlyRefreshTokensOnUse*** (added in *v6.3*)
 
     When Refresh tokens that are configured with RefreshTokenUsage.OneTime are used, this option controls if they will be deleted immediately or retained and marked as consumed. The default is on - immediately delete.
 
