@@ -25,7 +25,7 @@ public static IEnumerable<ApiScope> GetApiScopes()
         new ApiScope(name: "customer.contact", displayName: "Allows contacting one of your customers."),
 
         // shared scopes
-        new ApiScope(name: "manage",    displayName: "Provides administrative access.")
+        new ApiScope(name: "manage",    displayName: "Provides administrative access."),
         new ApiScope(name: "enumerate", displayName: "Allows enumerating data.")
     };
 }
