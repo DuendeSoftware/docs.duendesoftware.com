@@ -216,7 +216,7 @@ public static IEnumerable<Client> Get()
     
         the refresh token handle will stay the same when refreshing tokens    
     
-    * ***OneTime*** 
+    * ***OneTimeOnly*** 
     
         the refresh token handle will be updated when refreshing tokens. This is the default.
 
