@@ -205,16 +205,16 @@ public static IEnumerable<Client> Get()
 
 * ***AbsoluteRefreshTokenLifetime***
     
-    Maximum lifetime of a refresh token in seconds. Defaults to 2592000 seconds / 30 days
+    Maximum lifetime of a refresh token in seconds. Defaults to 2592000 seconds / 30 days. Zero allows refresh tokens that, when used with RefreshTokenExpiration = Sliding only expire after the SlidingRefreshTokenLifetime is passed.
 
 * ***SlidingRefreshTokenLifetime***
     
-    Sliding lifetime of a refresh token in seconds. Defaults to 1296000 seconds / 15 days
+    Sliding lifetime of a refresh token in seconds. Defaults to 1296000 seconds / 15 days.
 
 * ***RefreshTokenUsage***
     * ***ReUse*** 
     
-        the refresh token handle will stay the same when refreshing tokens    
+        the refresh token handle will stay the same when refreshing tokens.    
     
     * ***OneTimeOnly*** 
     
