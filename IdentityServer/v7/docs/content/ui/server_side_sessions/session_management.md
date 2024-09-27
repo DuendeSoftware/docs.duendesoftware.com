@@ -19,6 +19,10 @@ The [session management service]({{<ref "/reference/services/session_management_
 
 The Quickstart UI contains a simple administrative page (under the "ServerSideSessions" folder) that uses the *ISessionManagementService* API.
 
+{{% notice note %}}
+The UI template doesn't include pre-configured authorization in the form of an authorization policy e.g. We strongly recommend to add authorization suitable to your organization for non-test environments.
+{{% /notice %}}
+
 It looks something like this (but of course you are free to customize or change it as needed):
 
 ![](../images/session_query.png)
