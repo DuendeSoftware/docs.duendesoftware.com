@@ -44,7 +44,7 @@ You can share the same key for client authentication and [signed authorize reque
 {{% /notice %}}
 
 ## Authentication using a private key JWT
-On the client side the, the caller must first generate the JWT, and then send it on the *assertion* body field:
+On the client side, the caller must first generate the JWT, and then send it on the *assertion* body field:
 
 ```
 POST /connect/token
