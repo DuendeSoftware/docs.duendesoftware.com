@@ -93,7 +93,8 @@ features will be disabled at runtime if your license does not include them, incl
 - CIBA
 
 Again, the absence of a license is permitted for development and testing, and therefore
-does not disable any of these features.
+does not disable any of these features. Similarly, using an expired license that includes
+those features does not cause those features to be disabled.
 
 ## Redistribution
 We understand that when IdentityServer is redistributed, log messages from the licensing
