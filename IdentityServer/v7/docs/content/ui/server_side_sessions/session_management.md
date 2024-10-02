@@ -20,7 +20,7 @@ The [session management service]({{<ref "/reference/services/session_management_
 The Quickstart UI contains a simple administrative page (under the "ServerSideSessions" folder) that uses the *ISessionManagementService* API.
 
 {{% notice note %}}
-In the template the administrative page is protected by checking if the caller uses a local IP address. We strongly recommend to add authorization suitable to your organization for non-test environments by adding an authorization policy and enforce that using the *Authorize* attribute for example.
+The Quickstart session administrative page requires a logged in user to manage sessions. We strongly recommend that you add additional authorization suitable to your organization by adding an authorization policy.
 {{% /notice %}}
 
 The session management page looks like this by default, but of course you are free to customize or change it as needed:
