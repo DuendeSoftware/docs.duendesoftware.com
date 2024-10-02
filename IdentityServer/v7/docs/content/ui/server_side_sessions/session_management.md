@@ -23,7 +23,7 @@ The Quickstart UI contains a simple administrative page (under the "ServerSideSe
 In the template the administrative page is protected by checking if the caller uses a local IP address. We strongly recommend to add authorization suitable to your organization for non-test environments by adding an authorization policy and enforce that using the *Authorize* attribute for example.
 {{% /notice %}}
 
-It looks something like this (but of course you are free to customize or change it as needed):
+The session management page looks like this by default, but of course you are free to customize or change it as needed:
 
 ![](../images/session_query.png)
 
