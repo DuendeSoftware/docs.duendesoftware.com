@@ -9,7 +9,7 @@ The use of EntityFramework allows any EF-supported database to be used with this
 The features provided by this library are broken down into two main areas: configuration store and operational store support.
 These two different areas can be used independently or together, based upon the needs of the hosting application.
 
-To use this library, ensure that you have the NuGet package for the ASP.NET Identity integration. 
+To use this library, ensure that you have the NuGet package for the EntityFramework integration. 
 It is called *Duende.IdentityServer.EntityFramework*.
 You can install it with:
 
