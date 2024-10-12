@@ -1,6 +1,6 @@
-baseURL = "https://docs.duendesoftware.com/identitymodel"
+baseURL = "https://docs.duendesoftware.com/foss"
 languageCode = "en-us"
-title = "IdentityModel Documentation"
+title = "Duende Open Source Documentation"
 
 theme = "hugo-theme-learn"
 # For search functionality
@@ -8,4 +8,4 @@ theme = "hugo-theme-learn"
 home = [ "HTML", "RSS", "JSON"]
 
 [params]
-editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/IdentityModel/docs/content/"
+editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/FOSS/docs/content/"
