@@ -26,7 +26,7 @@ A successful response will return a status code of 200, the token claims, the to
     "exp": 1729603199,
     "client_id": "client",
     "jti": "44FD2DE9E9F8E9F4DDD141CD7C244BE9",
-    "scope": "api1"
+    "scope": "api1",
     "token_type": "access_token",
     "active": true,
 }
