@@ -6,7 +6,7 @@ weight: 5
 
 The introspection endpoint is an implementation of [RFC 7662](https://tools.ietf.org/html/rfc7662).
 
-It can be used to validate reference tokens (or JWTs if the consumer does not have support for appropriate JWT or cryptographic libraries).
+It can be used to validate reference tokens, JWTs (if the consumer does not have support for appropriate JWT or cryptographic libraries) and refresh tokens. The response will contain the claims in the token.
 The introspection endpoint requires authentication - since the client of an introspection endpoint is an API, you configure the secret on the *ApiResource*.
 
 ```
@@ -16,16 +16,23 @@ Authorization: Basic xxxyyy
 token=<token>
 ```
 
-A successful response will return a status code of 200 and either an active or inactive token::
+A successful response will return a status code of 200, the token claims, the token type and a flag indicating either an active or inactive token:
 
 ```
 {
+    "iss": "https://localhost:5001",
+    "nbf": 1729599599,
+    "iat": 1729599599,
+    "exp": 1729603199,
+    "client_id": "client",
+    "jti": "44FD2DE9E9F8E9F4DDD141CD7C244BE9",
+    "scope": "api1"
+    "token_type": "access_token",
     "active": true,
-    "sub": "123"
 }
 ```
 
-Unknown or expired tokens will be marked as inactive::
+Unknown or expired tokens will be marked as inactive:
 
 ```
 {
