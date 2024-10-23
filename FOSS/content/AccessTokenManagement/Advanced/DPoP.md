@@ -1,5 +1,5 @@
 +++
-title = "DPop"
+title = "DPoP"
 weight = 40
 chapter = false
 +++

@@ -23,7 +23,7 @@ operations. It provides an object model to interact with the endpoints defined i
 various OAuth and OpenId Connect specifications in the form of types to represent the
 requests and responses, extension methods to invoke requests constants defined in the
 specifications, such as standard scope, claim, and parameter names, and other convenience
-methods for performing common identity related operations
+methods for performing common identity related operations.
 
 Duende.IdentityModel targets .NET Standard 2.0, making it suitable for .NET and .NET Framework.
 
@@ -32,7 +32,7 @@ Duende.IdentityModel targets .NET Standard 2.0, making it suitable for .NET and 
 
 ## Duende.IdentityModel.OidcClient
 
-Duende.IdentityModel.OidcClient is an OpenID Connect (OIDC) client library for native
+Duende.IdentityModel.OidcClient is an OpenID Connect (OIDC) client library for mobile and native
 applications in .NET. It is a certified OIDC relying party and implements [RFC
 8252](https://datatracker.ietf.org/doc/html/rfc8252/), "OAuth 2.0 for native
 Applications". It provides types that describe OIDC requests and responses, low level
