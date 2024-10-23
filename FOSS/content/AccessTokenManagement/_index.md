@@ -4,7 +4,7 @@ weight = 10
 chapter = true
 +++
 
-AccessTokenManagement
+Duende.AccessTokenManagement
 ========
 
 This library provides automatic access token management features for .NET worker and ASP.NET Core web applications:
@@ -13,3 +13,6 @@ This library provides automatic access token management features for .NET worker
 * automatic access token lifetime management using a refresh token for API calls on-behalf of the currently logged-in user
 * revocation of access tokens
 
+The following tutorials are available:
+
+{{%children style="h4" /%}}

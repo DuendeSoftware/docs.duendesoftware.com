@@ -20,4 +20,8 @@ Framework 4.6.2 or later.
 You can use OidcClient to build:
 - Android and iPhone apps with .NET MAUI
 - Windows Desktop Applications with WPF or WinForms
-- Cross Platform Console Applications 
+- Cross Platform Console Applications
+
+Please refer to the following sections for details on how to use this library:
+
+{{%children style="h4" /%}}
