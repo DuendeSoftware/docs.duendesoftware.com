@@ -101,7 +101,7 @@ There are two changes here that utilize the AccessTokenManagement NuGet package:
 
 On each call to OnGet in _CallApi.cshtml.cs_ a new HttpClient is created in the code above. Recommended however is to use the [HttpClientFactory](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory) pattern so that instances can be reused.
 
-`Duende.AccessTokenManagement.OpenIdConnect` builds on top of _HttpClientFactory_ to create HttpClient instances that automatically retrieve the needed access token and refresh if needed.
+*Duende.AccessTokenManagement.OpenIdConnect* builds on top of _HttpClientFactory_ to create HttpClient instances that automatically retrieve the needed access token and refresh if needed.
 
 In the client in _Program.cs_ under the call to _AddOpenIdConnectAccessTokenManagement_ register the HttpClient:
 
