@@ -107,8 +107,7 @@ If you are using [DPoP]({{< ref "/tokens/pop/dpop" >}}) for proof-of-possession,
 In addition to the normal validation mechanics of the access token itself, DPoP requires additional validation of the DPoP proof token sent in the "DPoP" HTTP request header.
 DPoP proof token processing involves requiring the DPoP scheme on the authorization header where the access token is sent, JWT validation of the proof token, "cnf" claim validation, HTTP method and URL validation, replay detection (which requires some storage for the replay information), nonce generation and validation, additional clock skew logic, and emitting the correct response headers in the case of the various validation errors.
 
-Given that there are no off-the-shelf libraries that implement this, we have developed a full-featured sample implementation.
-With this sample the configuration necessary in your startup can be as simple as this:
+You can use the *Duende.AspNetCore.Authentication.JwtBearer* NuGet package to implement this validation. With this package, the configuration necessary in your startup can be as simple as this:
 
 ```cs
 // adds the normal JWT bearer validation
@@ -126,6 +125,12 @@ builder.Services.AddAuthentication("token")
 builder.Services.ConfigureDPoPTokensForScheme("token");
 ```
 
-You can find this sample [here]({{< ref "/samples/misc#DPoP" >}}). To use the
-*ConfigureDPoPTokensForScheme* shown above, copy the *~/Api/DPoP code from the
-sample into you APIs.
+You will also typically need a distributed cache, used to perform replay detection of DPoP
+proofs. Duende.AspNetCore.Authentication.JwtBearer relies on `IDistributedCache` for this,
+so you can supply the cache implementation of your choice. See the 
+[Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-8.0)
+for more details on on setting up distributed caches, along with many examples, including Redis, CosmosDB, and
+Sql Server.
+
+A full sample using the default in memory caching is available
+[here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/DPoP).
