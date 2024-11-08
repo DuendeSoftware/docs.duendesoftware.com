@@ -21,11 +21,11 @@
 
         },
         {
-            "name": "IdentityModel",
+            "name": "foss",
             "request": "launch",
             "type": "f5anything",
-            "command": "hugo server --port 1314 --navigateToChanged --source ${workspaceFolder}/IdentityModel",
-            "terminalName": "IdentityModel"
+            "command": "hugo server --port 1314 --navigateToChanged --source ${workspaceFolder}/FOSS",
+            "terminalName": "foss"
         }
     ]
 }
