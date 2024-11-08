@@ -8,4 +8,4 @@ theme = "hugo-theme-learn"
 home = [ "HTML", "RSS", "JSON"]
 
 [params]
-editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/FOSS/docs/content/"
+editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/FOSS/content/"
