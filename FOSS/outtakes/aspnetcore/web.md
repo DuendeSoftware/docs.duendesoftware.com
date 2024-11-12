@@ -49,7 +49,7 @@ client that automatically uses the token management library:
 ```
 services.AddUserAccessTokenClient("user_client", client =>
 {
-    client.BaseAddress = new Uri("https://demo.identityserver.io/api/");
+    client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 });
 ```
 
@@ -75,7 +75,7 @@ services.AddAuthentication(options =>
     })
     .AddOpenIdConnect("oidc", options =>
     {
-        options.Authority = "https://demo.identityserver.io";
+        options.Authority = "https://demo.duendesoftware.com";
 
         options.ClientId = "interactive.confidential.short";
         options.ClientSecret = "secret";
@@ -119,13 +119,13 @@ services.AddAccessTokenManagement(options =>
 // registers HTTP client that uses the managed user access token
 services.AddUserAccessTokenClient("user_client", client =>
 {
-    client.BaseAddress = new Uri("https://demo.identityserver.io/api/");
+    client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 });
 
 // registers HTTP client that uses the managed client access token
 services.AddClientAccessTokenClient("client", configureClient: client =>
 {
-    client.BaseAddress = new Uri("https://demo.identityserver.io/api/");
+    client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 });
 ```
 
