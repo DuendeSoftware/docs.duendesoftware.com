@@ -65,7 +65,7 @@ Refresh tokens usually have a much longer lifetime than access tokens. You can r
 You can use the *AbsoluteRefreshTokenLifetime* and *SlidingRefreshTokenLifetime* client settings to fine tune this behavior.
 
 ### Rotation
-Rotating the tokens on every use [has no security benefits](https://blog.duendesoftware.com/posts/20240405_refresh_token_reuse/) regardless of which type of client is used. However, it comes with the cost of database pressure and reliability issues: Reusable refresh tokens are robust to network failures in a way that one time use tokens are not. If a one-time use refresh token is used to produce a new token, but the response containing the new refresh token is lost due to a network issue, the client application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
+Rotating the tokens on every use [has no security benefits](https://blog.duendesoftware.com/posts/20240405_refresh_token_reuse/) regardless of which type of client is used. And it comes with the cost of database pressure and reliability issues: Reusable refresh tokens are robust to network failures in a way that one time use tokens are not. If a one-time use refresh token is used to produce a new token, but the response containing the new refresh token is lost due to a network issue, the client application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
 
 Reusable tokens may have better performance in the [persisted grants store]({{< ref "/reference/stores/persisted_grant_store">}}). One-time use refresh tokens require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens avoids those writes.
 
