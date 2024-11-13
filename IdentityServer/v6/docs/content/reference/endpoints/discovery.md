@@ -8,7 +8,7 @@ The [discovery endpoint](https://openid.net/specs/openid-connect-discovery-1_0.h
 
 The discovery endpoint is available via */.well-known/openid-configuration* relative to the base address, e.g.:
 
-    https://demo.identityserver.io/.well-known/openid-configuration
+    https://demo.duendesoftware.com/.well-known/openid-configuration
 
 ## .NET client library
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code.

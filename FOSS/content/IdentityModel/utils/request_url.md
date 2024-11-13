@@ -82,7 +82,7 @@ public static string CreateAuthorizeUrl(this RequestUrl request,
 Example:
 
 ```
-var ru = new RequestUrl("https://demo.identityserver.io/connect/authorize");
+var ru = new RequestUrl("https://demo.duendesoftware.com/connect/authorize");
 
 var url = ru.CreateAuthorizeUrl(
     clientId: "client",

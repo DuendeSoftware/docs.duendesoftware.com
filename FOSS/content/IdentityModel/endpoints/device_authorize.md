@@ -14,7 +14,7 @@ var client = new HttpClient();
 
 var response = await client.RequestDeviceAuthorizationAsync(new DeviceAuthorizationRequest
 {
-    Address = "https://demo.identityserver.io/connect/device_authorize",
+    Address = "https://demo.duendesoftware.com/connect/device_authorize",
     ClientId = "device"
 });
 ```

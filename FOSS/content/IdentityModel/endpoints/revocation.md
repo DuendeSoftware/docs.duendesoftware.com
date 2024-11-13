@@ -15,7 +15,7 @@ var client = new HttpClient();
 
 var result = await client.RevokeTokenAsync(new TokenRevocationRequest
 {
-    Address = "https://demo.identityserver.io/connect/revocation",
+    Address = "https://demo.duendesoftware.com/connect/revocation",
     ClientId = "client",
     ClientSecret = "secret",
 

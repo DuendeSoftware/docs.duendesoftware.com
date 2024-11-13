@@ -25,7 +25,7 @@ var client = new HttpClient();
 
 var response = await client.RequestTokenAsync(new TokenRequest
 {
-    Address = "https://demo.identityserver.io/connect/token",
+    Address = "https://demo.duendesoftware.com/connect/token",
     GrantType = "custom",
 
     ClientId = "client",
@@ -63,7 +63,7 @@ properties for the *client_credentials* grant type:
 ```
 var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
 {
-    Address = "https://demo.identityserver.io/connect/token",
+    Address = "https://demo.duendesoftware.com/connect/token",
 
     ClientId = "client",
     ClientSecret = "secret",
@@ -80,7 +80,7 @@ for the *password* grant type:
 ```
 var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
 {
-    Address = "https://demo.identityserver.io/connect/token",
+    Address = "https://demo.duendesoftware.com/connect/token",
 
     ClientId = "client",
     ClientSecret = "secret",

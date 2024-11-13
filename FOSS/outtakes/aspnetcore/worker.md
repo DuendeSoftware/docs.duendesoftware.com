@@ -15,7 +15,7 @@ var host = Host.CreateDefaultBuilder(args)
         {
             options.Client.Clients.Add("identityserver", new ClientCredentialsTokenRequest
             {
-                Address = "https://demo.identityserver.io/connect/token",
+                Address = "https://demo.duendesoftware.com/connect/token",
                 ClientId = "m2m.short",
                 ClientSecret = "secret",
                 Scope = "api" // optional
@@ -60,7 +60,7 @@ management is by calling *AddClientAccessTokenHttpClient*:
 ```
 services.AddClientAccessTokenHttpClient("client", configureClient: client =>
 {
-    client.BaseAddress = new Uri("https://demo.identityserver.io/api/");
+    client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 });
 ```
 
@@ -76,7 +76,7 @@ optionally also takes a token client name), e.g. a typed client:
 ```
 services.AddHttpClient<MyClient>(client =>
 {
-    client.BaseAddress = new Uri("https://demo.identityserver.io/api/");
+    client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 })
     .AddClientAccessTokenHandler();
 ```

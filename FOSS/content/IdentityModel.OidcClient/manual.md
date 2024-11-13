@@ -10,7 +10,7 @@ browser you want to use, e.g.:
 ```
 var options = new OidcClientOptions
 {
-    Authority = "https://demo.identityserver.io",
+    Authority = "https://demo.duendesoftware.com",
     ClientId = "native",
     RedirectUri = redirectUri,
     Scope = "openid profile api"

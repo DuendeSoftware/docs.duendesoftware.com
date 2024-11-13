@@ -27,7 +27,7 @@ grant type:
 ```cs
 var request = new ClientCredentialsTokenRequest
 {
-    Address = "https://demo.identityserver.io/connect/token",
+    Address = "https://demo.duendesoftware.com/connect/token",
     ClientId = "client",
     ClientSecret = "secret"
 };
@@ -69,7 +69,7 @@ var client = new HttpClient();
 var response = await client.RequestClientCredentialsTokenAsync(
     new ClientCredentialsTokenRequest
     {
-        Address = "https://demo.identityserver.io/connect/token",
+        Address = "https://demo.duendesoftware.com/connect/token",
         ClientId = "client",
         ClientSecret = "secret"
     });
@@ -84,7 +84,7 @@ var client = HttpClientFactory.CreateClient("my_named_token_client");
 var response = await client.RequestClientCredentialsTokenAsync(
     new ClientCredentialsTokenRequest
     {
-        Address = "https://demo.identityserver.io/connect/token",
+        Address = "https://demo.duendesoftware.com/connect/token",
         ClientId = "client",
         ClientSecret = "secret"
     });

@@ -14,7 +14,7 @@ var client = new HttpClient();
 
 var response = await client.IntrospectTokenAsync(new TokenIntrospectionRequest
 {
-    Address = "https://demo.identityserver.io/connect/introspect",
+    Address = "https://demo.duendesoftware.com/connect/introspect",
     ClientId = "api1",
     ClientSecret = "secret",
 
