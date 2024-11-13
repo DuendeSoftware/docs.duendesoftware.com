@@ -65,18 +65,15 @@ Refresh tokens usually have a much longer lifetime than access tokens. You can r
 You can use the *AbsoluteRefreshTokenLifetime* and *SlidingRefreshTokenLifetime* client settings to fine tune this behavior.
 
 ### Rotation
-The security of refresh tokens used by *public clients* can be improved by rotating the tokens on every use, because there is a chance that a stolen token will be unusable by the attacker. If a token is exfiltrated from some storage mechanism, a network trace, or log file, but the owner of the token uses it before the attacker, then the attack fails. However, this comes at the cost of reliability and database pressure and is only necessary for public clients (see [below](#avoid-rotation)). Rotation is configured with the *RefreshTokenUsage* client setting and, beginning in IdentityServer v7.0, is disabled by default.
+Rotating the tokens on every use [has no security benefits](https://blog.duendesoftware.com/posts/20240405_refresh_token_reuse/) regardless of which type of client is used. However, it comes with the cost of database pressure and reliability issues: Reusable refresh tokens are robust to network failures in a way that one time use tokens are not. If a one-time use refresh token is used to produce a new token, but the response containing the new refresh token is lost due to a network issue, the client application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
+
+Reusable tokens may have better performance in the [persisted grants store]({{< ref "/reference/stores/persisted_grant_store">}}). One-time use refresh tokens require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens avoids those writes.
+
+Rotation is configured with the *RefreshTokenUsage* client setting and, beginning in IdentityServer v7.0, is disabled by default because of the reasons above.
 
 When *RefreshTokenUsage* is configured for *OneTime* usage, rotation is enabled and refresh tokens can only be used once. When refresh tokens are used with *OneTime* usage configured, a new refresh token is included in the response along with the new access token. Each time the client application uses the refresh token, it must use the most recent refresh token. This chain of tokens will each appear as distinct token values to the client, but will have identical creation and expiration timestamps in the datastore.
 
 Beginning in version 6.3, the configuration option *DeleteOneTimeOnlyRefreshTokensOnUse* controls what happens to refresh tokens configured for OneTime usage. If the flag is on, then refresh tokens are deleted immediately on use. If the flag is off, the token is marked as consumed instead. Prior to version 6.3, OneTime usage refresh tokens are always marked as consumed.
-
-#### Confidential Clients Should Not Rotate Refresh Tokens {#avoid-rotation}
-Confidential clients do not need one-time use refresh tokens because their tokens are bound to the authenticated client. One-time use tokens do not improve the security of confidential clients (see [OAuth 2.0 Security Best Current Practice](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-2.2.2) for more details). 
-
-Reusable refresh tokens are robust to network failures in a way that one time use tokens are not. If a one-time use refresh token is used to produce a new token, but the response containing the new refresh token is lost due to a network issue, the client application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
-
-Reusable tokens may have better performance in the [persisted grants store]({{< ref "/reference/stores/persisted_grant_store">}}). One-time use refresh tokens require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens avoids those writes.
 
 #### Accepting Consumed Tokens
 To make one time use tokens more robust to network failures, you can customize the behavior of the *RefreshTokenService* such that consumed tokens can be used under certain circumstances, perhaps for a small length of time after they are consumed. To do so, create a subclass of the *DefaultRefreshTokenService* and override its *AcceptConsumedTokenAsync(RefreshToken refreshToken)* method. This method takes a consumed refresh token and returns a boolean flag that indicates if that token should be accepted, that is, allowed to be used to obtain an access token. The default implementation in the *DefaultRefreshTokenService* rejects all consumed tokens, but your customized implementation could create a time window where consumed tokens can be used.
