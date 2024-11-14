@@ -47,12 +47,10 @@ var response = await client.RequestRefreshTokenAsync(new RefreshTokenRequest
 
 The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) library can be used to automate refresh & access token lifetime management in ASP.NET Core.
 
-## Refresh token security considerations
+## Binding refresh tokens
 Refresh tokens are a high-value target for attackers, because they typically have a much higher lifetime than access tokens.
 
-It is recommended that a refresh token is either bound to the client via a client secret (for confidential/credentialed clients), or rotated for public clients.
-
-The following techniques can be used to reduce the attack surface of refresh tokens.
+It is recommended that a refresh token is either bound to the client via a client secret or using [Proof of Possession]({{< ref "/pop" >}}).
 
 ### Consent
 We encourage you to request consent when a client requests a refresh token, as it not only makes the user aware of the action being taken, but also provides them with an opportunity to opt-out if they choose.
