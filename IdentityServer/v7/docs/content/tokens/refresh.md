@@ -13,7 +13,7 @@ Refresh tokens are supported for the following flows: authorization code, hybrid
 ## Requesting a refresh token
 You can request a refresh token by adding a scope called *offline_access* to the scope parameter list of the authorize request.
 
-## Requesting an access token using a refresh token
+#### Requesting an access token using a refresh token
 To get a new access token, you send the refresh token to the token endpoint.
 This will result in a new token response containing a new access token and its expiration and potentially also a new refresh token depending on the client configuration (see [rotation]({{< ref "#rotation" >}})).
 
@@ -26,7 +26,7 @@ POST /connect/token
     refresh_token=hdh922
 ```
 
-####.NET client library
+#### .NET client library
 On .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) refresh tokens, e.g.:
 
 ```cs
