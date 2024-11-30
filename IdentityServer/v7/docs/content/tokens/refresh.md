@@ -26,7 +26,7 @@ POST /connect/token
     refresh_token=hdh922
 ```
 
-### .NET client library
+####.NET client library
 On .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) refresh tokens, e.g.:
 
 ```cs
@@ -52,17 +52,17 @@ Refresh tokens are a high-value target for attackers, because they typically hav
 
 It is recommended that a refresh token is either bound to the client via a client secret or using [Proof of Possession]({{< ref "pop" >}}).
 
-### Consent
+#### Consent
 We encourage you to request consent when a client requests a refresh token, as it not only makes the user aware of the action being taken, but also provides them with an opportunity to opt-out if they choose.
 
 Duende IdentityServer will always ask for consent (if enabled) if the client asks for the *offline_access* scope which follows the recommendations in the OpenID Connect specification.
 
-### Sliding expiration
+#### Sliding expiration
 Refresh tokens usually have a much longer lifetime than access tokens. You can reduce their exposure by adding a sliding lifetime on top of the absolute lifetime. This allows for scenarios where a refresh token can be silently used if the user is regularly using the client, but needs a fresh authorize request if the client has not been used for a certain time. In other words, they auto-expire much quicker without potentially interfering with the typical usage pattern.
 
 You can use the *AbsoluteRefreshTokenLifetime* and *SlidingRefreshTokenLifetime* client settings to fine tune this behavior.
 
-### Rotation
+#### Rotation
 Rotating the tokens on every use [has no security benefits](https://blog.duendesoftware.com/posts/20240405_refresh_token_reuse/) regardless of which type of client is used. And it comes with the cost of database pressure and reliability issues: Reusable refresh tokens are robust to network failures in a way that one time use tokens are not. If a one-time use refresh token is used to produce a new token, but the response containing the new refresh token is lost due to a network issue, the client application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
 
 Reusable tokens may have better performance in the [persisted grants store]({{< ref "/reference/stores/persisted_grant_store">}}). One-time use refresh tokens require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens avoids those writes.
