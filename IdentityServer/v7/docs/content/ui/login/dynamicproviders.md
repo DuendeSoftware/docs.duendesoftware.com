@@ -35,7 +35,7 @@ These results can then be used to populate the list of options presented to the 
 This API is deliberately separate than the *IAuthenticationSchemeProvider* provided by ASP.NET Core, which returns the list of statically configured providers (from *Startup.cs*).
 This allows the developer to have more control over the customization on the login page (e.g. there might be hundreds or thousands on dynamic providers, and therefore you would not want them displayed on the login page, but you might have a few social providers statically configured that you would want to display).
 
-Here is an example of how the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/Quickstart/Account/AccountController.cs#L265-L282) uses both interfaces to then present a merged and unified list to the end user:
+Here is an example of how the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/Pages/Account/Login/Index.cshtml.cs#L193-L210) uses both interfaces to then present a merged and unified list to the end user:
 
 
 ```cs
