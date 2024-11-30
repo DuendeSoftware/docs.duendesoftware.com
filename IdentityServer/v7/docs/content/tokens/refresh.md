@@ -50,7 +50,7 @@ The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.Acce
 ## Binding refresh tokens
 Refresh tokens are a high-value target for attackers, because they typically have a much higher lifetime than access tokens.
 
-It is recommended that a refresh token is either bound to the client via a client secret or using [Proof of Possession]({{< ref "/pop" >}}).
+It is recommended that a refresh token is either bound to the client via a client secret or using [Proof of Possession]({{< ref "pop" >}}).
 
 ### Consent
 We encourage you to request consent when a client requests a refresh token, as it not only makes the user aware of the action being taken, but also provides them with an opportunity to opt-out if they choose.
