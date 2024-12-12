@@ -326,17 +326,17 @@ Logging related settings, including filters that will remove sensitive values an
 
 * ***TokenRequestSensitiveValuesFilter***
     
-    Collection of parameter names passed to the token endpoint that are considered sensitive and will be excluded from logging. Defaults to *client_secret*, *password*, *client_assertion*, *refresh_token*, and *device_code*.
+    Collection of parameter names passed to the token endpoint that are considered sensitive and will be excluded from logging. In *v7.0* and earlier, defaults to *client_secret*, *password*, *client_assertion*, *refresh_token*, and *device_code*. In *v7.1*, *subject_token* is also excluded.
 
 * ***BackchannelAuthenticationRequestSensitiveValuesFilter***
   
-    Collection of parameter names passed to the backchannel authentication endpoint that are considered senstivie and will be excluded from logging. Defaults to *client_secret*, *client_assertion*, and *id_token_hint*.
+    Collection of parameter names passed to the backchannel authentication endpoint that are considered sensitive and will be excluded from logging. Defaults to *client_secret*, *client_assertion*, and *id_token_hint*.
 
 * ***UnhandledExceptionLoggingFilter*** (added in *v6.2*)
   
   A function that is called when the IdentityServer middleware detects an unhandled exception, and is used to determine if the exception is logged.
   The arguments to the function are the HttpContext and the Exception. It should return true to log the exception, and false to suppress.
-  The default is to suppress *TaskCanceledException*s when the *CancellationToken* on the *HttpContext* has requested cancellation. Such exceptions are thrown when Http requests are canceled, which is an expected occurrence. Logging them creates unnecessary noise in the logs.
+  The default is to suppress logging of cancellation-related exceptions when the *CancellationToken* on the *HttpContext* has requested cancellation. Such exceptions are thrown when Http requests are canceled, which is an expected occurrence. Logging them creates unnecessary noise in the logs. In *v7.0* and earlier, only *TaskCanceledException*s were filtered. Beginning in *v7.1*, *OperationCanceledException*s are filtered as well.
 
 ## InputLengthRestrictions
 

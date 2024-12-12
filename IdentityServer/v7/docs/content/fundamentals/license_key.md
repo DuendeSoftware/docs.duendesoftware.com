@@ -3,7 +3,7 @@ title: "Licensing"
 weight: 60
 ---
 
-IdentityServer is free for development, testing and personal projects, but production use
+IdentityServer is [free](#trial-mode) for development, testing and personal projects, but production use
 requires a [license](https://duendesoftware.com/products/identityserver). 
 
 ## Editions
@@ -14,7 +14,7 @@ The Starter edition includes the core OIDC and OAuth protocol implementation. Th
 economical option that is a good fit for organizations with basic needs. It's also a great
 choice if you have an aging IdentityServer4 implementation that needs to be updated and
 licensed. The Starter edition includes all the features that were part of
-IdentityServer4, along with support for the latest .NET release, improved observability
+IdentityServer4, along with support for the latest .NET releases, improved observability
 through OTEL support, and years of bug fixes and enhancements. 
 
 #### Business Edition
@@ -44,10 +44,9 @@ If present, the content of the file will be used as the license key.
 
 #### Startup
 
-If you prefer to load the license key programatically, you can do so in your startup code.
-This allows you to use the ASP.NET configuration system to load the license key from any
-[configuration
-provider](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-7.0#cp),
+If you prefer to load the license key programmatically, you can do so in your startup
+code. This allows you to use the ASP.NET configuration system to load the license key from
+any [configuration provider](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-7.0#cp),
 including environment variables, appsettings.json, an external configuration service such
 as Azure App Configuration, etc.
 
@@ -72,7 +71,7 @@ validation.
 #### Startup Validation
 At startup, IdentityServer first checks for a license. If there is no license configured,
 IdentityServer logs a warning indicating that a license is required in a production
-deployment. You can ignore these messages in non-production environments.
+deployment and enters [Trial Mode](#trial-mode).
 
 Next, assuming a license is configured, IdentityServer compares its configuration to the
 license. If there are discrepancies between the license and the configuration,
@@ -95,6 +94,15 @@ features will be disabled at runtime if your license does not include them, incl
 Again, the absence of a license is permitted for development and testing, and therefore
 does not disable any of these features. Similarly, using an expired license that includes
 those features does not cause those features to be disabled.
+
+#### Trial Mode
+Using IdentityServer without a license is considered Trial Mode. In Trial Mode, all
+enterprise features are enabled. Trial Mode is limited to 500 protocol requests. This
+includes all HTTP requests that IdentityServer itself handles, such as requests for the
+discovery, authorize, and token endpoints. UI requests, such as the login page, are not
+included in this limit. Beginning in IdentityServer 7.1, IdentityServer will log a warning
+when the trial mode threshold is exceeded. In a future version, IdentityServer will shut
+down at that time instead.
 
 ## Redistribution
 We understand that when IdentityServer is redistributed, log messages from the licensing
