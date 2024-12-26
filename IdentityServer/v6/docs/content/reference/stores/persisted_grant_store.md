@@ -52,7 +52,7 @@ data access for your environment and usage.
 | string SessionId       | The identifier of the session where the grant was made, if applicable.                                                       |
 | string ClientId        | The identifier of the client that was granted authorization.                                                                 |
 | string Description     | The description the user assigned to the device being authorized.                                                            |
-| DateTime CreationTime  | The time that the grant expires.                                                                                             |
+| DateTime CreationTime  | The time that the grant created.                                                                                             |
 | DateTime? Expiration   | The time that the grant expires.                                                                                             |
 | DateTime? ConsumedTime | The time that the grant was consumed.                                                                                        |
 | string Data            | A serialized and data protected representation of the grant.                                                                 |
