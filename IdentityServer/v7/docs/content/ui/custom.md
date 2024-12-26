@@ -36,8 +36,8 @@ public class CustomAuthorizeInteractionResponseGenerator : AuthorizeInteractionR
         if (!result.IsLogin && !result.IsError)
         {
             // check EULA database
-            var mustShowEulaPage = HasUserAcceptedEula(request.Subject);
-            if (!mustShowEulaPage)
+            var mustShowEulaPage = !HasUserAcceptedEula(request.Subject);
+            if (mustShowEulaPage)
             {
                 result = new InteractionResponse { 
                     RedirectUrl = "/eula/accept"
