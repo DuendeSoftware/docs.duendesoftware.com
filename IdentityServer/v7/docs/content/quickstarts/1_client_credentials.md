@@ -73,16 +73,16 @@ dotnet new isempty -n IdentityServer
 
 This will create the following files within a new *src/IdentityServer* directory:
 
-- *IdentityServer.csproj* - project file with the IdentityServer NuGet package
-  added
 - *Properties/launchSettings.json* file - launch profile
 - *appsettings.json* - run time settings
-- *Program.cs* - main application entry point
+- *Config.cs* - definitions for [resources]({{< ref "/overview/terminology#resources" >}}) and
+[clients]({{< ref "/overview/terminology#client" >}}) used by IdentityServer
 - *HostingExtensions.cs* - configuration for ASP.NET pipeline and services
   Notably, the IdentityServer services are configured here and the
   IdentityServer middleware is added to the pipeline here.
-- *Config.cs* - definitions for [resources]({{< ref "/overview/terminology#resources" >}}) and
-[clients]({{< ref "/overview/terminology#client" >}}) used by IdentityServer
+- *IdentityServer.csproj* - project file with the IdentityServer NuGet package
+  added
+- *Program.cs* - main application entry point
 
 {{% notice note %}}
 
