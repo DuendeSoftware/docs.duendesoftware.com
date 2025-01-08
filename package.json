@@ -1,0 +1,18 @@
+{
+  "name": "docs.duendesoftware.com",
+  "version": "0.0.1",
+  "scripts": {
+    "v7": "hugo server --port 1313 --navigateToChanged --source IdentityServer/v7/docs",
+    "v6": "hugo server --port 1312 --navigateToChanged --source IdentityServer/v6/docs",
+    "foss": "hugo server --port 1314 --navigateToChanged --source FOSS"
+  },
+  "description": "Documentation for Duende Software products",
+  "keywords": [],
+  "homepage": "docs.duendesoftware.com",
+  "license": "MIT",
+  "author": "Duende Software",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DuendeSoftware/docs.duendesoftware.com.git"
+  }
+}
