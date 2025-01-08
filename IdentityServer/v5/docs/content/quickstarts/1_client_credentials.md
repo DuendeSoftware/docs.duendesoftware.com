@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 2
 ---
 
-The following quickstart provides step by step instructions for various common Duende IdentityServer scenarios. 
+The following quickstart provides step-by-step instructions for various common Duende IdentityServer scenarios. 
 These start with the absolute basics and become more complex as they progress. We recommend that you follow them in sequence.  
 
 To see the full list, please go to [Quickstarts Overview]({{< ref "0_overview" >}}).

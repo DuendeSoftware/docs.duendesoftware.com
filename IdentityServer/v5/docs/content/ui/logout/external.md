@@ -45,7 +45,7 @@ public IActionResult Logout(string logoutId)
 To redirect back to your IdentityServer after the external provider sign-out, the *RedirectUri* should be used on the *AuthenticationProperties* when using ASP.NET Core's *SignOutAsync* API.
 
 Recall that after we return, we must perform the other steps to complete the logout workflow.
-These steps require the context passed as the *logoutId* parameter, so this state needs to be round-tripped to the external provider.
+These steps require the context passed as the *logoutId* parameter, so this state needs to be roundtripped to the external provider.
 We can do so by incorporating the *logoutId* value into the *RedirectUri*.
 
 If there is no *logoutId* parameter on the original logout page request, we still might have context that needs to be round tripped.

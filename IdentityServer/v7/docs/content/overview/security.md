@@ -88,12 +88,12 @@ wget http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c
 openssl pkcs7 -inform DER -outform PEM -in SectigoPublicCodeSigningRootR46.p7c -print_certs -out sectigo.pem
 ```
 
-Next, you should validate that the thumprint of the certificate is correct.
+Next, you should validate that the thumbprint of the certificate is correct.
 Bootstrapping trust in a certificate chain can be challenging. Fortunately, most
 desktop environments already trust this certificate, so you can compare the
-downloaded certificate's thumprint to the thumbprint of the certificate on a
+downloaded certificate's thumbprint to the thumbprint of the certificate on a
 machine that already trusts it. You should verify this independently, but for
-your convenience, the thumprint is
+your convenience, the thumbprint is
 CC:BB:F9:E1:48:5A:F6:3C:E4:7A:BF:8E:9E:64:8C:25:04:FC:31:9D. You can check the
 thumbprint of the downloaded certificate with openssl:
 ```sh

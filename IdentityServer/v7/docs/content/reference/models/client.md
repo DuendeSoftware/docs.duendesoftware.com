@@ -300,7 +300,7 @@ Settings specific to the Demonstration of Proof-of-Possession at the Application
 
 * ***RequireDPoP***
     
-    Specifies whether a DPoP (Demonstrating Proof-of-Possession) token is requied to be used by this client. Defaults to *false*.
+    Specifies whether a DPoP (Demonstrating Proof-of-Possession) token is required to be used by this client. Defaults to *false*.
 
 * ***DPoPValidationMode***
     

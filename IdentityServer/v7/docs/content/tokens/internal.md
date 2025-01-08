@@ -31,4 +31,4 @@ public async Task<IActionResult> MyAction()
 }
 ```
 
-The *IIdentityServerTools* interface was added in v7 to allow mocking. Previous versions refrenced the *IdentityServerTools* implementation class directly.
+The *IIdentityServerTools* interface was added in v7 to allow mocking. Previous versions referenced the *IdentityServerTools* implementation class directly.

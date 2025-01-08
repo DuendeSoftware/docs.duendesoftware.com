@@ -5,7 +5,7 @@ date: 2022-12-30 10:55:24
 weight: 40
 ---
 
-The BFF logout endpoint has extensibility points in two interfaces. The *IlogoutService* is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The *IReturnUrlValidator* ensures that the *returnUrl* parameter passed to the logout endpoint is safe to use.
+The BFF logout endpoint has extensibility points in two interfaces. The *ILogoutService* is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The *IReturnUrlValidator* ensures that the *returnUrl* parameter passed to the logout endpoint is safe to use.
 
 ## Request Processing
 *ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.

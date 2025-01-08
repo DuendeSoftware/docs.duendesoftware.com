@@ -3,7 +3,7 @@ title = "Microsoft.IdentityModel.* versions"
 weight = 10
 +++
 
-Duende IdentityServer, the Microsoft external authentication handlers and other libraries all use the Microsoft.IdentityModel set of libraries. These libraries provides token and configuration handling features. The functionality is split up between different libraries and they all need to be **exactly the same version**. However this is not enfored by Nuget so it is common to end up with an application that brings in different versions of Microsoft.IdentityModel.* through transitive dependencies.
+Duende IdentityServer, the Microsoft external authentication handlers and other libraries all use the Microsoft.IdentityModel set of libraries. These libraries provides token and configuration handling features. The functionality is split up between different libraries and they all need to be **exactly the same version**. However this is not enforced by Nuget so it is common to end up with an application that brings in different versions of Microsoft.IdentityModel.* through transitive dependencies.
 
 ## Known Errors
 Errors that we have seen because of IdentityModel version mismatches include:

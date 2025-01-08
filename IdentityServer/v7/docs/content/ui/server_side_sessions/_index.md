@@ -74,4 +74,4 @@ builder.Services.AddIdentityServer(options => {
 
 The [*IServerSideSessionStore*]({{<ref "/reference/stores/server_side_sessions">}}) is the abstraction for storing the server-side session.
 
-A EntityFramework Core implementaiton is already provided as part of our [operational store]({{<ref "/data/ef#operational-store">}}), but you can implement the [interface]({{<ref "/reference/stores/server_side_sessions">}}) yourself for other backing implementations.
+A EntityFramework Core implementation is already provided as part of our [operational store]({{<ref "/data/ef#operational-store">}}), but you can implement the [interface]({{<ref "/reference/stores/server_side_sessions">}}) yourself for other backing implementations.

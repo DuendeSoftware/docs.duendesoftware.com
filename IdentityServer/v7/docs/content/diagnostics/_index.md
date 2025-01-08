@@ -5,12 +5,12 @@ weight: 90
 ---
 
 #### [**Logging**]({{< ref "logging" >}})
-IdentityServer offers multiple diagnostics possibilites. The logs contains detailed information and
+IdentityServer offers multiple diagnostics possibilities. The logs contains detailed information and
 are your best friend when troubleshooting. For security reasons the error messages returned
 to the UI/client are very brief - the logs always have all the details of what went wrong.
 
 #### [**Open Telemetry**]({{< ref "otel" >}})
-Open Telemetry is the new standard way of emiting diagnostics information from a process and
+Open Telemetry is the new standard way of emitting diagnostics information from a process and
 IdentityServer supports Traces (.NET Activities), Metrics and Logs.
 
 #### [**Events**]({{< ref "events" >}})
