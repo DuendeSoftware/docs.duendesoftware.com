@@ -20,3 +20,10 @@ hugo serve
 ```
 
 See the output for the running documentation site, typically at `http://localhost:1313/identityserver/v7/`.
+
+Alternatively, you can use `npm run` to run the documentation site locally:
+
+* `npm run v7` - http://localhost:1313/identityserver/v7/
+* `npm run v6` - http://localhost:1313/identityserver/v6/
+* `npm run foss` - http://localhost:1313/foss/
+* 
