@@ -23,7 +23,7 @@ dotnet new bfflocalapi
 ```
 
 #### Host UI in the BFF using Microsoft Templates
-Many frontend applications require a build process, which complicates the use of the static file middleware at development time. Visual Studio include's SPA templates that start up a SPA and proxy requests to it during development. Samples of Duende.BFF that take this approach using [React]({{< ref "/samples/bff#reactjs-frontend" >}}) and [Angular]({{< ref "/samples/bff#angular-frontend" >}}) are available. 
+Many frontend applications require a build process, which complicates the use of the static file middleware at development time. Visual Studio includes SPA templates that start up a SPA and proxy requests to it during development. Samples of Duende.BFF that take this approach using [React]({{< ref "/samples/bff#reactjs-frontend" >}}) and [Angular]({{< ref "/samples/bff#angular-frontend" >}}) are available. 
 
 Microsoft's templates are easy to use at dev time from Visual Studio. They allow you to simply run the solution, and the template proxies requests to the front end for you. At deploy time, that proxy is removed and the static assets of the site are served by the static file middleware.
 

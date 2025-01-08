@@ -7,7 +7,7 @@ weight: 2
 Welcome to the first quickstart for IdentityServer! To see the full list of
 quickstarts, please see [Quickstarts Overview]({{< ref "0_overview" >}}).
 
-This first quickstart provides step by step instructions to set up
+This first quickstart provides step-by-step instructions to set up
 IdentityServer in the most basic scenario: protecting APIs for server-to-server
 communication. You will create a solution containing three projects:
 

@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 weight: 30
 ---
 
-The error page is used to display to the end user that an error has ocurred during a request to the [authorize endpoint]({{<ref "/reference/endpoints/authorize">}}).
+The error page is used to display to the end user that an error has occurred during a request to the [authorize endpoint]({{<ref "/reference/endpoints/authorize">}}).
 
 When an error occurs, IdentityServer will redirect the user to a configurable *ErrorUrl*.
 ```csharp

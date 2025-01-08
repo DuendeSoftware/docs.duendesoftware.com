@@ -11,7 +11,7 @@ The [server-side sessions]({{<ref "/ui/server_side_sessions">}}) feature in Duen
 ## Server-Side Session Store
 
 The [IServerSideSessionStore]({{<ref "/reference/stores/server_side_sessions">}}) abstracts storing the server-side session data.
-[ServerSideSession]({{<ref "/reference/stores/server_side_sessions#serversidesession">}}) objects act as the storage entity, and provide several properties uses as metadata for the session. The *Ticket* property contains the actual serailized data used by the ASP.NET Cookie Authentication handler.
+[ServerSideSession]({{<ref "/reference/stores/server_side_sessions#serversidesession">}}) objects act as the storage entity, and provide several properties uses as metadata for the session. The *Ticket* property contains the actual serialized data used by the ASP.NET Cookie Authentication handler.
 
 The methods on the [IServerSideSessionStore]({{<ref "/reference/stores/server_side_sessions">}}) are used to orchestrate the various management functions needed by the [server-side sessions]({{<ref "/ui/server_side_sessions#session-management">}}) feature.
 

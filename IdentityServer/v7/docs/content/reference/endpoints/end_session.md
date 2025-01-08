@@ -27,7 +27,7 @@ The URL for the end session endpoint is available via discovery.
 
     If a valid *post_logout_redirect_uri* is passed, then the client may also send a *state* parameter.
     This will be returned back to the client as a query string parameter after the user redirects back to the client.
-    This is typically used by clients to round-trip state across the redirect.
+    This is typically used by clients to roundtrip state across the redirect.
 
 
 ```

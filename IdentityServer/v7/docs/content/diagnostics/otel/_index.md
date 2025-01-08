@@ -10,7 +10,7 @@ weight: 30
 telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior, 
 especially in highly distributed systems.
 
-.NET 8 comes with first class support for Open Telemetry. IdentityServer emmits traces, metrics and logs.
+.NET 8 comes with first class support for Open Telemetry. IdentityServer emits traces, metrics and logs.
 
 #### [**Metrics**]({{< ref "metrics">}})
 Metrics are high level statistic counters. They provide an aggregated overview and can be used to set monitoring rules.

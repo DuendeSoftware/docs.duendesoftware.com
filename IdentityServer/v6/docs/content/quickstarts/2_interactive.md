@@ -558,7 +558,7 @@ schemes](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?v
 *AddGoogle* adds the Google scheme, which handles the protocol flow back and
 forth with Google. After successful login, the application needs to sign in to
 an additional scheme that can authenticate future requests without needing a
-round-trip to Google - typically by issuing a local cookie. The *SignInScheme*
+roundtrip to Google - typically by issuing a local cookie. The *SignInScheme*
 tells the Google handler to use the scheme named
 *IdentityServerConstants.ExternalCookieAuthenticationScheme*, which is a cookie
 authentication handler automatically created by IdentityServer that is intended

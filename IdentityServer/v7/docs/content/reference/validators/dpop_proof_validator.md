@@ -12,11 +12,11 @@ A default implementation is provided and can be overridden as necessary.
 
 * ***ValidateAsync***
     
-    Validates a DPoP proof token with the provided *DPoPProofValidatonContext* for the current request.
-    Returns a *DPoPProofValidatonResult* object.
+    Validates a DPoP proof token with the provided *DPoPProofValidationContext* for the current request.
+    Returns a *DPoPProofValidationResult* object.
 
 
-### DPoPProofValidatonContext
+### DPoPProofValidationContext
 Models the information to validate a DPoP proof token request.
 
 * ***Client***
@@ -27,7 +27,7 @@ Models the information to validate a DPoP proof token request.
     
     The proof token sent with the request.
 
-### DPoPProofValidatonResult
+### DPoPProofValidationResult
 Models the result of a DPoP proof token validation.
 
 * ***IsError***

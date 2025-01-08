@@ -22,7 +22,7 @@ The client id and a client credential is required to authenticate to the endpoin
 
 * ***login_hint***
     
-    hint for the end user to be authenticated. the value used is implementaiton specific.
+    hint for the end user to be authenticated. the value used is implementation specific.
 
 * ***id_token_hint***
     
@@ -30,7 +30,7 @@ The client id and a client credential is required to authenticate to the endpoin
 
 * ***login_hint_token***
     
-    a token containing information for the end user to be authenticated. the details are implementaiton specific.
+    a token containing information for the end user to be authenticated. the details are implementation specific.
 
 {{% notice note %}}
 To validate these implementation specific values and use them to identity the user that is to be authenticated, you are required to implement the *IBackchannelAuthenticationUserValidator* interface.

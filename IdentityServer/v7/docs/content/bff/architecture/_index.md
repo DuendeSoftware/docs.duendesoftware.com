@@ -14,7 +14,7 @@ A BFF host is an ASP.NET Core application with the following components:
 
 These components handle OIDC and OAuth protocol requests and responses, manage user sessions and tokens, secure API endpoints for the front end, and optionally serve UI assets.
 
-Duende.BFF builds on widely used tools and frameworks, including ASP.NET Core's OpenID Connect and cookie authentication handlers, YARP, and Duende.AccessTokenManagment. Duende.BFF combines these tools and adds additional security and application features that are useful with a BFF architecture so that you can focus on providing application logic instead of security logic:
+Duende.BFF builds on widely used tools and frameworks, including ASP.NET Core's OpenID Connect and cookie authentication handlers, YARP, and Duende.AccessTokenManagement. Duende.BFF combines these tools and adds additional security and application features that are useful with a BFF architecture so that you can focus on providing application logic instead of security logic:
 
 ![](../images/DuendeBFF_blocks.png?height=30pc)
 

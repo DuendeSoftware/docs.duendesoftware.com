@@ -105,7 +105,7 @@ redirect_uri=...&
 resource=urn:invoices
 ```
 
-Which will return an access token for the invoices API and a refresh token. If you want to also retrieve the access token for the products API, you use the refresh token and make another round-trip to the token endpoint.
+Which will return an access token for the invoices API and a refresh token. If you want to also retrieve the access token for the products API, you use the refresh token and make another roundtrip to the token endpoint.
 
 ```
 POST /token

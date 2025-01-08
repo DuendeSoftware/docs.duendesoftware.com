@@ -18,7 +18,7 @@ implementation. You will also need to [install the IdentityServer templates]({{<
 {{% /notice %}}
 
 IdentityServer's flexible design allows you to use any database you want to
-store users and their data, including password hashes, multifactor
+store users and their data, including password hashes, multi-factor
 authentication details, roles, claims, profile data, etc. If you are starting
 with a new user database, then ASP.NET Core Identity is one option you could
 choose. This quickstart shows how to use ASP.NET Core Identity with
