@@ -14,8 +14,8 @@ Migrations.
 ## Upgrading from version 7.0 to 7.1
 IdentityServer v7.1 includes support for **.NET 9** and many other smaller fixes and
 enhancements. There are no schema changes needed for IdentityServer 7.1. There are two changes that may require small code changes for a minority of users:
-- **IdentityModel** renamed **Duende.IdentityModel**
-- *ClientConfigurationStore* now uses *IConfigurationDbContext*
+- **IdentityModel** package renamed to **Duende.IdentityModel** which may require code updates to referenced namespaces and types.
+- *ClientConfigurationStore* now uses *IConfigurationDbContext*.
 
 ## Upgrading from version 6 to version 7
 We recommend upgrading incrementally through each minor version of the 6.x release before upgrading from
