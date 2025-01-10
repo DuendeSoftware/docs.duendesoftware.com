@@ -52,7 +52,7 @@ Refresh tokens are a high-value target for attackers, because they typically hav
 
 However, refresh tokens for _confidential clients_ are bound to that client; they can only be used by the client they are issued to and the client is required to authenticate itself in order to do so. An attacker able to obtain a refresh token issued to a confidential client cannot use it without the client's credentials.
 
-Refresh tokens issued to public clients are not bound to the client in the same way since the client cannot authenticate itself. Instead, we recommend that such refresh tokens be sender-constrained using [Proof of Possession]({{< ref "pop" >}}).
+Refresh tokens issued to public clients are not bound to the client in the same way, since the client cannot authenticate itself. We recommend that such refresh tokens be sender-constrained using [Proof of Possession]({{< ref "pop" >}}) instead.
 
 You can further reduce the attack surface of refresh tokens using the following techniques.
 
