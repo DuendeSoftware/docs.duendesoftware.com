@@ -23,7 +23,7 @@ We still provide you a starting point for your modifications.
 ### Templates
 Contains templates for the dotnet CLI.
 
-* Nuget [package](https://www.nuget.org/packages/Duende.IdentityServer.Templates)
+* NuGet [package](https://www.nuget.org/packages/Duende.IdentityServer.Templates)
 * [source code](https://github.com/DuendeSoftware/IdentityServer.Templates)
 
 You can install the templates using the following command:

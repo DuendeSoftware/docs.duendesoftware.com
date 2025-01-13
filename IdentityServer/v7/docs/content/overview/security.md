@@ -104,7 +104,7 @@ Then append that PEM to the certificate bundle at */usr/share/dotnet/sdk/8.0.303
 ```sh
 cat sectigo.pem >> /usr/share/dotnet/sdk/8.0.303/trustedroots/codesignctl.pem
 ```
-After that, NuGet packages signed by Duende can be successfully verified, even if they are not distributed by nuget.org:
+After that, NuGet packages signed by Duende can be successfully verified, even if they are not distributed by NuGet.org:
 ```sh
 dotnet nuget verify Duende.IdentityServer.7.0.x.nupkg
 ```

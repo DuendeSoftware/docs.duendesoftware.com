@@ -29,7 +29,7 @@ Our EF integration library implements the required stores and services using the
 
 These contexts are suitable for any Entity Framework Core compatible relational database.
 
-You can find the extension methods to register them in your IdentityServer in the *Duende.IdentityServer.EntityFramework* nuget package, which we will add to the *IdentityServer* project now:
+You can find the extension methods to register them in your IdentityServer in the *Duende.IdentityServer.EntityFramework* NuGet package, which we will add to the *IdentityServer* project now:
 
     dotnet add package Duende.IdentityServer.EntityFramework
 
@@ -37,7 +37,7 @@ You can find the extension methods to register them in your IdentityServer in th
 For this quickstart, we will use Sqlite as the database provider.
 Of course, given EntityFramework Core's flexibility, you can adjust this quickstart to use any EF supported provider.
 
-To add Sqlite support to our IdentityServer project, you’ll need the following nuget package:
+To add Sqlite support to our IdentityServer project, you’ll need the following NuGet package:
 
 ```
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
@@ -91,7 +91,7 @@ This is necessary since the host project is in a different assembly than the one
 ### Adding Migrations
 Once the IdentityServer has been configured to use Entity Framework, we’ll need to generate some migrations.
 
-To create migrations, you will need to install the Entity Framework Core CLI on your machine and the *Microsoft.EntityFrameworkCore.Design* nuget package in IdentityServer:
+To create migrations, you will need to install the Entity Framework Core CLI on your machine and the *Microsoft.EntityFrameworkCore.Design* NuGet package in IdentityServer:
 
     dotnet tool install --global dotnet-ef
     dotnet add package Microsoft.EntityFrameworkCore.Design
