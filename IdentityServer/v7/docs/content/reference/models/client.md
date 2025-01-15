@@ -220,11 +220,11 @@ public static IEnumerable<Client> Get()
 * ***RefreshTokenUsage***
     * ***ReUse*** 
     
-        the refresh token handle will stay the same when refreshing tokens.    
+        the refresh token handle will stay the same when refreshing tokens. This is the default.  
     
     * ***OneTimeOnly*** 
     
-        the refresh token handle will be updated when refreshing tokens. This is the default.
+        the refresh token handle will be updated when refreshing tokens. 
 
 * ***RefreshTokenExpiration***
     * ***Absolute***
