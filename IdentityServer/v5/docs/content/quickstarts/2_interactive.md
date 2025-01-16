@@ -56,7 +56,7 @@ run from the src folder:
 We recommend using the self-host option over IIS Express. The rest of the docs assume you are using self-hosting on port 5002.
 {{% /notice %}}
 
-To add support for OpenID Connect authentication to the MVC application, you first need to add the nuget package containing the OpenID Connect handler to your project, e.g.::
+To add support for OpenID Connect authentication to the MVC application, you first need to add the NuGet package containing the OpenID Connect handler to your project, e.g.::
 
     dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 
@@ -337,7 +337,7 @@ local IdentityServer by adding the */signin-google* path to your base-address (e
 The developer console will show you a client ID and secret issued by Google - you will need that in the next step.
 
 Add the Google authentication handler to the DI of the IdentityServer host.
-This is done by first adding the *Microsoft.AspNetCore.Authentication.Google* nuget package and then adding this snippet to *ConfigureServices* in *Startup*:
+This is done by first adding the *Microsoft.AspNetCore.Authentication.Google* NuGet package and then adding this snippet to *ConfigureServices* in *Startup*:
 
 ```cs
 services.AddAuthentication()

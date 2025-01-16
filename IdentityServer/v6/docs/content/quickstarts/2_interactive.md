@@ -525,7 +525,7 @@ other authentication providers
 
 #### Add Google support
 To use Google for authentication, you need to:
-- Add the *Microsoft.AspNetCore.Authentication.Google* nuget package to
+- Add the *Microsoft.AspNetCore.Authentication.Google* NuGet package to
   the IdentityServer project.
 - Register with Google and set up a client.
 - Store the client id and secret securely with *dotnet user-secrets*.

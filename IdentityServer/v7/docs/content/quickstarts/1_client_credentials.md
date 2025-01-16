@@ -73,7 +73,7 @@ dotnet new isempty -n IdentityServer
 
 This will create the following files within a new *src/IdentityServer* directory:
 
-- *IdentityServer.csproj* - project file with the IdentityServer nuget package
+- *IdentityServer.csproj* - project file with the IdentityServer NuGet package
   added
 - *Properties/launchSettings.json* file - launch profile
 - *appsettings.json* - run time settings
@@ -260,7 +260,7 @@ dotnet sln add ./src/Api
 Now you will add JWT Bearer Authentication to the API's ASP.NET pipeline. The
 goal is to authorize calls to your API using tokens issued by the IdentityServer
 project. To that end, you will add authentication middleware to the pipeline
-from the *Microsoft.AspNetCore.Authentication.JwtBearer* nuget package. This
+from the *Microsoft.AspNetCore.Authentication.JwtBearer* NuGet package. This
 middleware will:
 
 - Find and parse a JWT sent with incoming requests as an *Authorization: Bearer*
@@ -349,7 +349,7 @@ cd ..
 dotnet sln add ./src/Client
 ```
 
-### Add the IdentityModel nuget package
+### Add the IdentityModel NuGet package
 
 The token endpoint at IdentityServer implements the OAuth protocol, and you
 could use raw HTTP to access it. However, we have a client library called

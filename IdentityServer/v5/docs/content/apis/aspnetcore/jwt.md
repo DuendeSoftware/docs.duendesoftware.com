@@ -38,7 +38,7 @@ public class Startup
 ```
 
 {{% notice note %}}
-On .NET Core 3.1 you need to manually reference the [System.IdentityModel.Tokens.Jwt](https://www.nuget.org/packages/System.IdentityModel.Tokens.Jwt/5.6.0) Nuget package version 5.6 to be able to check the type header.
+On .NET Core 3.1 you need to manually reference the [System.IdentityModel.Tokens.Jwt](https://www.nuget.org/packages/System.IdentityModel.Tokens.Jwt/5.6.0) NuGet package version 5.6 to be able to check the type header.
 {{% /notice %}}
 
 ## Adding audience validation

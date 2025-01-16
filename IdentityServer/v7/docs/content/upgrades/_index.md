@@ -19,7 +19,7 @@ enhancements. There are no schema changes needed for IdentityServer 7.1. There a
 
 ## Upgrading from version 6 to version 7
 We recommend upgrading incrementally through each minor version of the 6.x release before upgrading from
-6.3 to 7.0. At each step, update the nuget package, apply database schema changes (if any), and check for
+6.3 to 7.0. At each step, update the NuGet package, apply database schema changes (if any), and check for
 breaking changes that affect your implementation.
 
 #### Upgrading from version 6.0
