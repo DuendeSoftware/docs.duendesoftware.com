@@ -25,7 +25,7 @@ With this approach, you would first turn the claim requirement(s) into a named p
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("read_access", policy =>
-        policy.RequireClaim("scope", "read");
+        policy.RequireClaim("scope", "read"));
 });
 ```
 
