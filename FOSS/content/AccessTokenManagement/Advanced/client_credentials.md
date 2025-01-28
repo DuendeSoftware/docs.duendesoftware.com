@@ -102,13 +102,20 @@ The client registration object has two additional properties to customize the HT
 
 ### Token caching
 
-By default, tokens will be cached using the `IDistributedCache` abstraction in ASP.NET Core. You can either use the in-memory cache version, or plugin a real distributed cache like Redis.
+By default, tokens will be cached using the `IDistributedCache` abstraction in ASP.NET Core. You can either use the in-memory cache version, or a real distributed cache like Redis.
+
+For development purposes, you can use the `MemoryDistributedCache`:
 
 ```cs
 services.AddDistributedMemoryCache();
 ```
 
-The built-in cache uses two settings from the options:
+Note that `MemoryDistributedCache` will be cleared whenever the process is restarted. It won't be shared between multiple instances of your application in a load-balanced environment. 
+As a result, a new token will have to be obtained when you restart your application, and each instance will obtain a different token.
+
+For production deployments, we recommend using a [distributed cache](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/distributed#establish-distributed-caching-services).
+
+The built-in cache in `Duende.AccessTokenManagment` uses two settings from the options, which apply with any `IDistributedCache`: 
 
 ```cs
 services.AddClientCredentialsTokenManagement(options =>
