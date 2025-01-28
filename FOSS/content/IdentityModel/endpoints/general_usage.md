@@ -3,9 +3,6 @@ title = "General Usage"
 weight = 10
 +++
 
-General Usage
-========
-
 IdentityModel contains client libraries for many interactions with
 endpoints defined in OpenID Connect and OAuth 2.0. All of these
 libraries have a common design, let\'s examine the various layers using
