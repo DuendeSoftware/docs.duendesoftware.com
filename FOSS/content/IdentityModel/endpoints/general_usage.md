@@ -98,6 +98,12 @@ to find out more.
 Client Credential Style
 ------------------------
 
+{{% notice info %}}
+We recommend only changing the Client Credential Style if you're experiencing
+HTTP Basic authentication encoding issues.
+{{% /notice %}}
+
+
 Any request type implementing *ProtocolRequest* has the ability to configure
 the client credential style, which specifies how the client will transmit the client ID and secret.
 *ClientCredentialStyle* options include *PostBody* and the default value of *AuthorizationHeader*.
@@ -116,10 +122,24 @@ var response = await client.RequestClientCredentialsTokenAsync(
     });
 ```
 
-While both options are functionally equivalent, both have their advantages and disadvantages.
-Headers are more commonly used but using the *PostBody* option allows for larger payloads and avoiding potential
-data loss due to intermediary parties such as proxies. Some proxies are known to strip and transform headers
-that could cause requests to become malformed before reaching the target destination.
+For interoperability between OAuth implementations, we allow you to choose either approach, depending on which
+specification version you are targeting. When using IdentityServer, both header and body approaches
+are supported and _"it just works"_.
+
+[RFC 6749](https://datatracker.ietf.org/doc/rfc6749/), the original OAuth spec, says that support for the basic auth header is mandatory, 
+and that the POST body is optional. OAuth 2.1 reverses this - now the body is mandatory and the header is optional.
+
+In the previous OAuth specification version, the header caused bugs and interoperability problems. To follow
+both RFC 6749 and RFC 2617 (which is where basic auth headers are specified), you have to form url encode the client id and client secret, 
+concatenate them both with a colon in between, and then base64 encode the final value. To try to avoid that complex process,
+OAuth 2.1 now prefers the POST body mechanism.
+
+
+References:
+
+- [RFC 6749](https://datatracker.ietf.org/doc/rfc6749/) section 2.3.1
+- [RFC 2617 section 2](https://www.rfc-editor.org/rfc/rfc2617#section-2)
+- [OAuth 2.1 Draft](https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/)
 
 Here is a complete list of *ProtocolRequest* implementors that expose the *ClientCredentialStyle* option:
 
