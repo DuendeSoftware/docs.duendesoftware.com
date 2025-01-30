@@ -94,3 +94,49 @@ Some client libraries also include a stateful client object (e.g.
 *TokenClient* and *IntrospectionClient*). See the corresponding section
 to find out more.
 {{% /notice %}}
+
+Client Credential Style
+------------------------
+
+Any request type implementing *ProtocolRequest* has the ability to configure
+the client credential style, which specifies how the client will transmit the client ID and secret.
+*ClientCredentialStyle* options include *PostBody* and the default value of *AuthorizationHeader*.
+
+```cs
+var client = HttpClientFactory.CreateClient("my_named_token_client");
+
+var response = await client.RequestClientCredentialsTokenAsync(
+    new ClientCredentialsTokenRequest
+    {
+        Address = "https://demo.duendesoftware.com/connect/token",
+        ClientId = "client",
+        ClientSecret = "secret",
+        // set the client credential style
+        ClientCredentialStyle = ClientCredentialStyle.AuthorizationHeader
+    });
+```
+
+While both options are functionally equivalent, both have their advantages and disadvantages.
+Headers are more commonly used but using the *PostBody* option allows for larger payloads and avoiding potential
+data loss due to intermediary parties such as proxies. Some proxies are known to strip and transform headers
+that could cause requests to become malformed before reaching the target destination.
+
+Here is a complete list of *ProtocolRequest* implementors that expose the *ClientCredentialStyle* option:
+
+- *Duende.IdentityModel.Client.AuthorizationCodeTokenRequest*
+- *Duende.IdentityModel.Client.BackchannelAuthenticationRequest*
+- *Duende.IdentityModel.Client.BackchannelAuthenticationTokenRequest*
+- *Duende.IdentityModel.Client.ClientCredentialsTokenRequest*
+- *Duende.IdentityModel.Client.DeviceAuthorizationRequest*
+- *Duende.IdentityModel.Client.DeviceTokenRequest*
+- *Duende.IdentityModel.Client.DiscoveryDocumentRequest*
+- *Duende.IdentityModel.Client.DynamicClientRegistrationRequest*
+- *Duende.IdentityModel.Client.JsonWebKeySetRequest*
+- *Duende.IdentityModel.Client.PasswordTokenRequest*
+- *Duende.IdentityModel.Client.PushedAuthorizationRequest*
+- *Duende.IdentityModel.Client.RefreshTokenRequest*
+- *Duende.IdentityModel.Client.TokenExchangeTokenRequest*
+- *Duende.IdentityModel.Client.TokenIntrospectionRequest*
+- *Duende.IdentityModel.Client.TokenRequest*
+- *Duende.IdentityModel.Client.TokenRevocationRequest*
+- *Duende.IdentityModel.Client.UserInfoRequest*
