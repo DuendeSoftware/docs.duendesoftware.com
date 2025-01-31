@@ -23,7 +23,7 @@ public interface ITokenCreationService
 
 Token creation involves taking the *Token* argument and converting it into
 a JWT string. During the JWT creation, you have an opportunity to
-change the *Token* by adding, removing, or altering properties values.
+change the *Token* by adding, removing, or altering property values.
 
 Common use cases for implementing the *ITokenCreationService* include adding custom claims from a secondary data source, such a profile service, database, or third-party service.
 
