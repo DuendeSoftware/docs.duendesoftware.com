@@ -8,9 +8,9 @@ When using reference tokens, Duende IdentityServer stores the contents of the to
 
 The consumer of the token must use the [introspection]({{< ref "/reference/endpoints/introspection" >}}) endpoint to validate the token.
 
-![](../images/reference_tokens.png)
+![reference diagram for RFC 7662](../images/reference_tokens.png)
 
-You can set the token type of a client using the following client setting:
+You can set the client's token type using the following client setting:
 
 ```cs
 client.AccessTokenType = AccessTokenType.Reference;
