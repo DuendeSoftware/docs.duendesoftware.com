@@ -35,7 +35,7 @@ If, after research, you have still decided to implement *ITokenCreationService*,
 inherit and override methods on *DefaultTokenCreationService*, specifically the *CreatePayloadAsync* method.
 
 {{% notice warning %}}
-Do not overload your tokens with large amounts of data as it can lead to large JWTs and adversely affect system performance.
+Do not overload your tokens with large amounts of data, as it can lead to large JWTs and adversely affect system performance.
 {{% /notice %}}
 
 ```csharp
