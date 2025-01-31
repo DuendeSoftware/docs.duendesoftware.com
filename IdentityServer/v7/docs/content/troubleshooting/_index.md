@@ -49,3 +49,23 @@ Data protected data can contain '--' (two dashes) and some firewalls disallow th
 The Microsoft.IdentityModel.\* libraries used by Duende IdentityServer all have to be of exactly the same version. If they are not it can cause unexpected issues reading configuration data and tokens, i.e. **IDX10500: Signature validation failed. No security keys were provided to validate the signature.** or **System.MissingMethodException: Method not found 'Boolean Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfiguration(...)'**
 
 See [our guide]({{< ref "wilson" >}}) for more information on how to diagnose and fix version issues.
+
+## IdentityServerOptions.EmitStaticAudienceClaim and Token Validation
+
+Some token validation implementations require that all valid JWTs
+include an audience claim with the key/value of *"aud"* and *"&lt;issuer&gt;/resources"*.
+The *IdentityServerOptions.EmitStaticAudience* property's default value is *false*. 
+To add an audience claim to tokens created by IdentityServer, set the
+value of *IdentityServerOptions.EmitStaticAudienceClaim* to *true* during the setup
+of your IdentityServer instance.
+
+```csharp
+services.AddIdentityServer(options =>
+{
+    // add "aud" claim to JWT
+    options.EmitStaticAudienceClaim = true;
+})
+.AddClientStore<ClientStore>()
+.AddInMemoryIdentityResources(IdentityResources)
+.AddInMemoryApiScopes(ApiScopes);
+```
