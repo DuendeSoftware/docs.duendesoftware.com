@@ -94,3 +94,69 @@ Some client libraries also include a stateful client object (e.g.
 *TokenClient* and *IntrospectionClient*). See the corresponding section
 to find out more.
 {{% /notice %}}
+
+Client Credential Style
+------------------------
+
+{{% notice info %}}
+We recommend only changing the Client Credential Style if you're experiencing
+HTTP Basic authentication encoding issues.
+{{% /notice %}}
+
+
+Any request type implementing *ProtocolRequest* has the ability to configure
+the client credential style, which specifies how the client will transmit the client ID and secret.
+*ClientCredentialStyle* options include *PostBody* and the default value of *AuthorizationHeader*.
+
+```cs
+var client = HttpClientFactory.CreateClient("my_named_token_client");
+
+var response = await client.RequestClientCredentialsTokenAsync(
+    new ClientCredentialsTokenRequest
+    {
+        Address = "https://demo.duendesoftware.com/connect/token",
+        ClientId = "client",
+        ClientSecret = "secret",
+        // set the client credential style
+        ClientCredentialStyle = ClientCredentialStyle.AuthorizationHeader
+    });
+```
+
+For interoperability between OAuth implementations, we allow you to choose either approach, depending on which
+specification version you are targeting. When using IdentityServer, both header and body approaches
+are supported and _"it just works"_.
+
+[RFC 6749](https://datatracker.ietf.org/doc/rfc6749/), the original OAuth spec, says that support for the basic auth header is mandatory, 
+and that the POST body is optional. OAuth 2.1 reverses this - now the body is mandatory and the header is optional.
+
+In the previous OAuth specification version, the header caused bugs and interoperability problems. To follow
+both RFC 6749 and RFC 2617 (which is where basic auth headers are specified), you have to form url encode the client id and client secret, 
+concatenate them both with a colon in between, and then base64 encode the final value. To try to avoid that complex process,
+OAuth 2.1 now prefers the POST body mechanism.
+
+
+References:
+
+- [RFC 6749](https://datatracker.ietf.org/doc/rfc6749/) section 2.3.1
+- [RFC 2617 section 2](https://www.rfc-editor.org/rfc/rfc2617#section-2)
+- [OAuth 2.1 Draft](https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/)
+
+Here is a complete list of *ProtocolRequest* implementors that expose the *ClientCredentialStyle* option:
+
+- *Duende.IdentityModel.Client.AuthorizationCodeTokenRequest*
+- *Duende.IdentityModel.Client.BackchannelAuthenticationRequest*
+- *Duende.IdentityModel.Client.BackchannelAuthenticationTokenRequest*
+- *Duende.IdentityModel.Client.ClientCredentialsTokenRequest*
+- *Duende.IdentityModel.Client.DeviceAuthorizationRequest*
+- *Duende.IdentityModel.Client.DeviceTokenRequest*
+- *Duende.IdentityModel.Client.DiscoveryDocumentRequest*
+- *Duende.IdentityModel.Client.DynamicClientRegistrationRequest*
+- *Duende.IdentityModel.Client.JsonWebKeySetRequest*
+- *Duende.IdentityModel.Client.PasswordTokenRequest*
+- *Duende.IdentityModel.Client.PushedAuthorizationRequest*
+- *Duende.IdentityModel.Client.RefreshTokenRequest*
+- *Duende.IdentityModel.Client.TokenExchangeTokenRequest*
+- *Duende.IdentityModel.Client.TokenIntrospectionRequest*
+- *Duende.IdentityModel.Client.TokenRequest*
+- *Duende.IdentityModel.Client.TokenRevocationRequest*
+- *Duende.IdentityModel.Client.UserInfoRequest*
