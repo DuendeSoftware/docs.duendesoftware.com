@@ -21,13 +21,17 @@ public interface ITokenCreationService
 }
 ```
 
-Token creation involves taking the *Token* argument and converting it into
-a JWT string. During the JWT creation, you have an opportunity to
-change the *Token* by adding, removing, or altering property values.
+The Token creation service involves taking the *Token* model and converting it into
+a JWT. During the JWT creation, you have one last opportunity to
+modify the *Token* by adding, removing, or altering property values. Everyday use cases
+for implementing the *ITokenCreationService* include modifying claims, audiences, and more
+from a secondary data source, such as a profile service, database, or third-party service.
 
-Common use cases for implementing the *ITokenCreationService* include adding custom claims from a secondary data source, such a profile service, database, or third-party service.
+Note that there are better places within IdentityServer's infrastructure to add
+additional claims, such as *IClaimService*, *ITokenService*, and *IProfileService*. We recommend investigating
+whether overriding those interfaces would be sufficient before implementing *ITokenCreationService*.
 
-While you could implement an *ITokenCreationService* interface, we recommend you 
+If, after research, you have still decided to implement *ITokenCreationService*, we recommend you
 inherit and override methods on *DefaultTokenCreationService*, specifically the *CreatePayloadAsync* method.
 
 {{% notice warning %}}
@@ -53,7 +57,7 @@ public class CustomTokenCreationService : DefaultTokenCreationService
 }
 ```
 
-After creating your new implementation, be sure to register the type in your application's service collection.
+After creating your new implementation, register the type in your application's service collection.
 
 ```csharp
 builder.Services.AddTransient<ITokenCreationService, CustomTokenCreationService>();
