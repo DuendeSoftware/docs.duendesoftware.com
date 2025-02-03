@@ -1,0 +1,12 @@
+{{ if .Site.Params.NewContent.Enabled }}
+<div class="notices warning">
+  {{ $url := replace .Permalink .Site.Params.NewContent.Replace .Site.Params.NewContent.With }}
+  {{ if .Page.Params.NewContentUrl }}
+  {{ $url = .Page.Params.NewContentUrl }}
+  {{ end }}
+  <p><a class="highlight" href="https://duendesoftware.com/products/support">Version {{ .Site.Params.NewContent.CurrentVersion }} has been <span class="hljs-strong">out of support since {{ .Site.Params.NewContent.OutOfSupportSince }}</span></a>, and this
+    corresponding section of the documentation is no longer maintained. We strongly recommend you
+    <a class="highlight hljs-strong" href="{{ .Site.Params.NewContent.Url }}">upgrade to the latest supported version of {{ .Site.Params.NewContent.NewerVersion }}</a>
+    and <a class="highlight hljs-strong" href="{{ $url }}">read the latest version of this documentation.</a></p>
+</div>
+{{ end }}

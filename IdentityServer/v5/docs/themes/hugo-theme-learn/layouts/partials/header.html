@@ -116,13 +116,7 @@
         <div id="head-tags">
         {{ partial "tags.html" . }}
         </div>
-
-        <div class="notices warning">
-          <p>Version 5.x has been out of support since December 13, 2022, and this
-            corresponding section of the documentation is no longer maintained. We
-            strongly recommend upgrading to a <a class="highlight" href="https://docs.duendesoftware.com/identityserver/v7">supported version.</a></p>
-        </div>
-
+        {{ partial "newer-content-warning.html" . }}
         {{ if .Params.chapter }}
           <div id="chapter">
         {{ end }}

@@ -11,3 +11,12 @@ home = [ "HTML", "RSS", "JSON"]
 editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/IdentityServer/v5/docs/content/"
 qs_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v5/Quickstarts"
 samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v5"
+
+[params.newContent]
+enabled = true
+url = "https://docs.duendesoftware.com/identityserver/v7/"
+replace = "/v5/"
+with = "/v7/"
+currentVersion = "5.x"
+newerVersion = "7.x"
+outOfSupportSince = "December 13, 2022"

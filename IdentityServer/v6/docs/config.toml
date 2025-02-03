@@ -14,3 +14,12 @@ samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServ
 
 [markup.goldmark.renderer]
 unsafe= true
+
+[params.newContent]
+enabled = true
+url = "https://docs.duendesoftware.com/identityserver/v7/"
+replace = "/v6/"
+with = "/v7/"
+currentVersion = "6.x"
+newerVersion = "7.x"
+outOfSupportSince = "May 14, 2024"
