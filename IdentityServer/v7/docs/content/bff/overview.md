@@ -21,3 +21,58 @@ Browsers are increasingly restricting the use of cookies across site boundaries 
 - The "silent renew" technique for session-bound token refreshing
 
 Using a BFF removes or mitigates all of these problems in the design. The backend component makes backchannel logout notifications possible, while still allowing the option of front-channel notifications for 1st party clients. Robust server-side session and token management with optional server-side sessions and refresh tokens take the place of OIDC Session Management and older token refresh mechanisms. As an ASP.NET Core server-side application, the BFF has access to a full featured and stable OpenID Connect client library that supports all the necessary protocol mechanisms and provides an excellent extensibility model for advanced features like [Mutual TLS]({{<ref "/tokens/pop/mtls" >}}), [DPoP]({{<ref "/tokens/pop/dpop" >}}), [JWT secured authorization requests]({{<ref "/tokens/jar">}}), and [JWT-based client authentication]({{<ref "/tokens/authentication/jwt">}}).
+
+## Logical and Physical Sessions
+
+When implemented correctly, a user will think of their time interacting with a solution as _"one session"_ also known as the **"logical session"**. The user should be unaware of the steps taken by developers to provide the experience and rightfully so. User's want to use the app, get their tasks completed, and log out happy. 
+
+{{<mermaid align="center">}}
+sequenceDiagram
+    actor Alice
+    Alice->>App: /login
+    App->>Alice: /account
+    box logical session
+        participant App
+    end
+{{< /mermaid >}}
+
+There is the user experience, and then there is the reality of the implementation, and for most distributed applications, including those implemented with BFF, **sessions are managed independently by each component of an application architecture.** 
+
+In practice, There are **N+1** physical sessions, where **N** is the number of sessions for each service in your solution, and the **+1** being the session managed on the BFF host. Since we are focusing on ASP.NET Core, those sessions typically are stored using the Cookie Authentication handler features of .NET.
+
+{{< mermaid >}}
+sequenceDiagram
+    actor Alice
+    Alice->>App: /login
+    App->>Alice: /account
+    App->>Service 1: request
+    App-->>Service N...: N... request
+    box App session    
+        participant App
+    end
+    box Service 1 session
+        participant Service 1
+    end
+    box Service N... session
+        participant Service N...
+    end
+{{< /mermaid >}}
+
+The separation allows each service to manage its session to its specific needs. While it can depend on your requirements, we find most developers want to coordinate the physical session lifetimes, creating a more predictable logical session. If that is your case, we recommend you first start by turning each physical session into a more powerful [server-side session]({{< ref "./session/server_side_sessions" >}}). 
+
+Server-side sessions are instances that are persisted to data storage that allow for visibility into currently active sessions and better management techniques. Let's take a look at the advantages of server-side sessions. Server-side sessions at each component allows for:
+
+- Receiving back channel logout notifications
+- Forcibly end a user's session of that node
+- Store and view information about a session lifetime
+- Coordinate sessions across an application's components 
+- Different claims data 
+
+Server-side sessions at IdentityServer allow for more powerful features:
+
+- Receive back channel logout notifications from upstream identity providers in a federation
+- Forcibly end a user's session at IdentityServer
+- Global inactivity timeout across SSO apps and session coordination
+- Coordinate sessions to registered clients
+
+Keep in mind the distinctions between logical and physical sessions and you will better understand the interplay between elements in your solution.
