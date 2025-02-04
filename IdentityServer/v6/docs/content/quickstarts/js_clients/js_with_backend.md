@@ -1,6 +1,7 @@
 ---
 title: "JavaScript applications with a backend"
 weight: 10
+
 ---
 
 {{% notice note %}}

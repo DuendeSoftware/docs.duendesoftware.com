@@ -1,6 +1,7 @@
 ---
 title: "Windows Authentication"
 weight: 22
+newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/samples/"
 ---
 
 This solution contains samples when using [Windows Authentication]({{< ref "/ui/login/windows" >}}).

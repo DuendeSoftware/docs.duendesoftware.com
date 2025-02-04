@@ -2,6 +2,7 @@
 title: "Reverse Proxy"
 date: 2020-09-10T08:22:12+02:00
 weight: 40
+newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/bff/apis/yarp/"
 ---
 
 You can customize the proxy behavior in two ways

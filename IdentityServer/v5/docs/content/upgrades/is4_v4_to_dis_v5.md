@@ -1,6 +1,7 @@
 ---
 title: "IdentityServer4 v4.1 to Duende IdentityServer v5"
 weight: 100
+newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/upgrades/"
 ---
 
 This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende IdentityServer v5.
