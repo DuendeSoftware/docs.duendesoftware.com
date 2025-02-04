@@ -11,3 +11,6 @@ home = [ "HTML", "RSS", "JSON"]
 editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/IdentityServer/v7/docs/content/"
 qs_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts"
 samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7"
+
+[params.newContent]
+enabled = false
