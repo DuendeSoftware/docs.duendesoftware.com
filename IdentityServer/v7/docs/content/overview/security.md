@@ -72,7 +72,7 @@ trusted certificate authority and installed by default in most environments. Thi
 that in many circumstances, the NuGet tools can validate our packages' signatures
 automatically.
 
-However, some environments (notably the dotnet sdk docker image which is  sometimes used in
+However, some environments (notably the dotnet sdk docker image which is sometimes used in
 build pipelines) do not trust the certificate. In that case, it might be necessary to add the
 root certificate to NuGet's code signing certificate bundle.
 
@@ -83,6 +83,10 @@ root certificate to NuGet's code signing certificate bundle.
 
 Here is an example of how to configure NuGet to trust the DigiCert root CA on the dotnet sdk docker image.
 This applies for Duende packages released **after** January 1, 2025, such as IdentityServer 7.1 and newer versions.
+
+Note the dotnet sdk docker image already includes the tools used in this section.
+If you are using another container image, make sure the following tools are available in the image:
+`wget`, `openssl`, `cat`, and the .NET SDK.
 
 First, get the DigiCert certificate:
 
@@ -119,6 +123,10 @@ dotnet nuget verify Duende.IdentityServer.7.1.x.nupkg
 
 Here is an example of how to configure NuGet to trust the Sectigo root CA on the dotnet sdk docker image for
 Duende packages released **before** January 1, 2025
+
+Note the dotnet sdk docker image already includes the tools used in this section.
+If you are using another container image, make sure the following tools are available in the image:
+`wget`, `openssl`, `cat`, and the .NET SDK.
 
 First, get the Sectigo certificate and convert it to PEM format:
 
