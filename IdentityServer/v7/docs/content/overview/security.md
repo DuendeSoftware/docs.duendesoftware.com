@@ -67,21 +67,61 @@ Duende IdentityServer is a [certified](https://openid.net/certification/) implem
 ### Package Signing
 
 NuGet packages published by Duende are cryptographically signed to ensure their
-authenticity and integrity. Our certificate is signed by Sectigo, which is a widely
+authenticity and integrity. Our certificate is signed by DigiCert, which is a widely
 trusted certificate authority and installed by default in most environments. This means
 that in many circumstances, the NuGet tools can validate our packages' signatures
 automatically.
 
-However, some environments (notably the dotnet sdk docker image which is
-sometimes used in build pipelines) do not trust the Sectigo certificate. In that case, it might be necessary to add the
-Sectigo root certificate to NuGet's code signing certificate bundle. Sectigo's root
-certificate is available from Sectigo
-[here](http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c).
+However, some environments (notably the dotnet sdk docker image which is  sometimes used in
+build pipelines) do not trust the certificate. In that case, it might be necessary to add the
+root certificate to NuGet's code signing certificate bundle.
+
+* Packages released after January 1, 2025 (IdentityServer 7.1+): Use DigiCert's [root certificate](https://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA2562021CA1.crt.pem) (PEM).
+* Packages released before January 1, 2025: Use Sectigo's [root certificate](http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c) (P7C).
+
+#### Trusting the DigiCert certificate
+
+Here is an example of how to configure NuGet to trust the DigiCert root CA on the dotnet sdk docker image.
+This applies for Duende packages released **after** January 1, 2025, such as IdentityServer 7.1 and newer versions.
+
+First, get the DigiCert certificate:
+
+```sh
+wget https://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA2562021CA1.crt.pem
+```
+
+Next, you validate that the thumbprint of the certificate is correct.
+Bootstrapping trust in a certificate chain can be challenging. Fortunately, most
+desktop environments already trust this certificate, so you can compare the
+downloaded certificate's thumbprint to the thumbprint of the certificate on a
+machine that already trusts it. You should verify this independently, but for
+your convenience, the thumbprint is
+`8F:B2:8D:D3:CF:FA:5D:28:6E:7C:71:8A:A9:07:CB:4F:9B:17:67:C2`. You can check the
+thumbprint of the downloaded certificate with openssl:
+
+```sh
+openssl x509 -in DigiCertTrustedG4CodeSigningRSA4096SHA2562021CA1.crt.pem -fingerprint -sha1 -noout
+```
+
+Then append that PEM to the certificate bundle at `/usr/share/dotnet/sdk/9.0.102/trustedroots/codesignctl.pem`:
+
+```sh
+cat DigiCertTrustedG4CodeSigningRSA4096SHA2562021CA1.crt.pem >> /usr/share/dotnet/sdk/9.0.102/trustedroots/codesignctl.pem
+```
+
+After that, NuGet packages signed by Duende can be successfully verified, even if they are not distributed by NuGet.org:
+
+```sh
+dotnet nuget verify Duende.IdentityServer.7.1.x.nupkg
+```
 
 #### Trusting the Sectigo certificate
-Here is an example of how to configure NuGet to trust the Sectigo root CA on the dotnet sdk docker image.
+
+Here is an example of how to configure NuGet to trust the Sectigo root CA on the dotnet sdk docker image for
+Duende packages released **before** January 1, 2025
 
 First, get the Sectigo certificate and convert it to PEM format:
+
 ```sh
 wget http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c
 
@@ -94,17 +134,21 @@ desktop environments already trust this certificate, so you can compare the
 downloaded certificate's thumbprint to the thumbprint of the certificate on a
 machine that already trusts it. You should verify this independently, but for
 your convenience, the thumbprint is
-CC:BB:F9:E1:48:5A:F6:3C:E4:7A:BF:8E:9E:64:8C:25:04:FC:31:9D. You can check the
+`CC:BB:F9:E1:48:5A:F6:3C:E4:7A:BF:8E:9E:64:8C:25:04:FC:31:9D`. You can check the
 thumbprint of the downloaded certificate with openssl:
+
 ```sh
 openssl x509 -in sectigo.pem -fingerprint -sha1 -noout
 ```
 
-Then append that PEM to the certificate bundle at */usr/share/dotnet/sdk/8.0.303/trustedroots/codesignctl.pem*:
+Then append that PEM to the certificate bundle at `/usr/share/dotnet/sdk/8.0.303/trustedroots/codesignctl.pem`:
+
 ```sh
 cat sectigo.pem >> /usr/share/dotnet/sdk/8.0.303/trustedroots/codesignctl.pem
 ```
+
 After that, NuGet packages signed by Duende can be successfully verified, even if they are not distributed by NuGet.org:
+
 ```sh
 dotnet nuget verify Duende.IdentityServer.7.0.x.nupkg
 ```
