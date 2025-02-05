@@ -103,7 +103,7 @@ Can be either completely independent single deployments, or a single deployment 
 A single logical deployment that acts as multiple logical token services on multiple URLs or host names (e.g. for branding, isolation or multi-tenancy reasons).
 
 ## Standard Developer Support
-Online [forum](https://github.com/DuendeSoftware/Support/issues/) for Duende Software product issues and bugs.
+Online [developer community forum](https://github.com/DuendeSoftware/community/discussions) for Duende Software product issues and bugs.
 
 
 ## Priority Developer Support

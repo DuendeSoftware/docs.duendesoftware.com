@@ -13,7 +13,7 @@ The IdentityServer [issue tracker](https://github.com/DuendeSoftware/IdentitySer
 Planned features and their [milestones](https://github.com/DuendeSoftware/IdentityServer/milestones) can be tracked using this [label](https://github.com/DuendeSoftware/IdentityServer/issues/new/choose).
 
 ### Developer Support
-Standard developer support and feature requests are handled via our public [developer support forum](https://github.com/DuendeSoftware/Support/issues).
+Standard developer support and feature requests are handled via our public [developer community](https://github.com/DuendeSoftware/community/discussions).
 
 Priority developer support is part of our Enterprise Edition. It provides access to a helpdesk system with a response time guarantee.
 Please [contact](https://duendesoftware.com/contact) us for more information.

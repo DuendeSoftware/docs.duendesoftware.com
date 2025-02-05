@@ -13,6 +13,4 @@ clients and APIs needed to demonstrate the illustrated functionality. The "Basic
 
 The source code for the samples is in our samples [repository]({{< param samples_base >}}).
 
-Feel free to open a new BFF or IdentityServer [issue ](https://github.com/DuendeSoftware/Support/issues/new/choose) if you are looking for a particular sample and can't find it here.
-
-
+Feel free to [ask the developer community](https://github.com/DuendeSoftware/community/discussions) if you are looking for a particular sample and can't find it here.
