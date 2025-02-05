@@ -24,7 +24,7 @@ Using a BFF removes or mitigates all of these problems in the design. The backen
 
 ## Logical and Physical Sessions
 
-When implemented correctly, a user will think of their time interacting with a solution as _"one session"_ also known as the **"logical session"**. The user should be unaware of the steps taken by developers to provide the experience and rightfully so. User's want to use the app, get their tasks completed, and log out happy. 
+When implemented correctly, a user will think of their time interacting with a solution as _"one session"_ also known as the **"logical session"**. The user should be unaware of the steps taken by developers to provide the experience and rightfully so. Users want to use the app, get their tasks completed, and log out happy. 
 
 {{<mermaid align="center">}}
 sequenceDiagram
