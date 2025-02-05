@@ -60,7 +60,7 @@ sequenceDiagram
 
 The separation allows each service to manage its session to its specific needs. While it can depend on your requirements, we find most developers want to coordinate the physical session lifetimes, creating a more predictable logical session. If that is your case, we recommend you first start by turning each physical session into a more powerful [server-side session]({{< ref "./session/server_side_sessions" >}}). 
 
-Server-side sessions are instances that are persisted to data storage that allow for visibility into currently active sessions and better management techniques. Let's take a look at the advantages of server-side sessions. Server-side sessions at each component allows for:
+Server-side sessions are instances that are persisted to data storage and allow for visibility into currently active sessions and better management techniques. Let's take a look at the advantages of server-side sessions. Server-side sessions at each component allows for:
 
 - Receiving back channel logout notifications
 - Forcibly end a user's session of that node
