@@ -125,4 +125,4 @@ Helpdesk system with guaranteed response time for Duende Software product issues
 ## Security Notification System
 Notification system for security bugs and/or reported vulnerabilities.
 
-[More details](https://docs.duendesoftware.com/identityserver/v6/overview/security/#vulnerability-management-process)
+[More details]({{<ref "/overview/security" >}}#vulnerability-management-process)
