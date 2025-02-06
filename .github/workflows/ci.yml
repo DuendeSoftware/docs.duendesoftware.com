@@ -47,6 +47,9 @@ jobs:
           app_artifact_location: "" # Built app content directory - optional
           #production_branch: "main"
           ###### End of Repository/Build Configurations ######
+        env:
+          HUGO_ENV: 'production'
+          HUGO_VERSION: '0.140.2'
 
   close_pull_request_job:
     env: 
