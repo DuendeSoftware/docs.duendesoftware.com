@@ -38,9 +38,10 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match you app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          skip_app_build: true
+          skip_app_build: false
           app_location: "/" # App source code path
           output_location: "root"
+          app_build_command: "echo Working around pre-built Hugo deployment"
           skip_api_build: true
           #api_location: "api" # Api source code path - optional
           app_artifact_location: "" # Built app content directory - optional
