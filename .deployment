@@ -1,3 +1,0 @@
-[config]
-_DO_BUILD_DURING_DEPLOYMENT=false
-_ENABLE_ORYX_BUILD=false
