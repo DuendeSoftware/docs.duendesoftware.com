@@ -52,12 +52,12 @@ See [our guide]({{< ref "wilson" >}}) for more information on how to diagnose an
 
 ## IdentityServerOptions.EmitStaticAudienceClaim and Token Validation
 
-Some token validation implementations require that all valid JWTs
+Some token validation implementations require that all JWTs
 include an audience claim with the key/value of *"aud"* and *"&lt;issuer&gt;/resources"*.
-The *IdentityServerOptions.EmitStaticAudience* property's default value is *false*. 
+
 To add an audience claim to tokens created by IdentityServer, set the
 value of *IdentityServerOptions.EmitStaticAudienceClaim* to *true* during the setup
-of your IdentityServer instance.
+of your IdentityServer instance (default: *false*).
 
 ```csharp
 services.AddIdentityServer(options =>
