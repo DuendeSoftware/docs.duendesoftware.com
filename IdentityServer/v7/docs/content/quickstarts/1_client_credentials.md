@@ -355,10 +355,10 @@ The token endpoint at IdentityServer implements the OAuth protocol, and you
 could use raw HTTP to access it. However, we have a client library called
 IdentityModel that encapsulates the protocol interaction in an easy to use API.
 
-Add the *IdentityModel* NuGet package to your client by running the following command:
+Add the *Duende.IdentityModel * NuGet package to your client by running the following command:
 
 ```console
-dotnet add ./src/Client package IdentityModel
+dotnet add ./src/Client package Duende.IdentityModel 
 ```
 
 ### Retrieve the discovery document
