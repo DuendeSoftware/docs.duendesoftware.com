@@ -9,6 +9,7 @@ Duende IdentityServer, the Microsoft external authentication handlers and other 
 Errors that we have seen because of IdentityModel version mismatches include:
 * IDX10500: Signature validation failed. No security keys were provided to validate the signature.
 * System.MissingMethodException: Method not found 'Boolean Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfiguration(...)'
+* Microsoft.AspNetCore.Authentication.AuthenticationFailureException: An error was encountered while handling the remote login. ---> System.InvalidOperationException: An invalid request URI was provided. Either the request URI must be an absolute URI or BaseAddress must be set.
 
 ## Diagnosing
 Run this command in powershell: `dotnet list package --include-transitive | sls "Microsoft.IdentityModel|System.IdentityModel"`
