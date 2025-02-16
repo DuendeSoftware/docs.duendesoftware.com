@@ -101,8 +101,7 @@
                 <span class="links">
                 {{$showBreadcrumb := (and (not .Params.disableBreadcrumb) (not .Site.Params.disableBreadcrumb))}}
                 {{if $showBreadcrumb}}
-                  {{ $element := (printf "<span itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'>%s</span>" .Title) }}
-                  {{ template "breadcrumb" dict "page" . "value" $element }}
+                  {{ template "breadcrumb" (dict "page" . "value" "" "count" 1) }}
                 {{ else }}
                   {{ .Title }}
                 {{ end }}
@@ -131,12 +130,14 @@
             </h1>
           {{end}}
 
-        {{define "breadcrumb"}}
+          {{ define "breadcrumb" }}
           {{$parent := .page.Parent }}
           {{ if $parent }}
-            {{ $value := (printf "<a itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem' href='%s'><span itemprop='name'>%s</span></a> > %s" $parent.RelPermalink $parent.Title .value) }}
-            {{ template "breadcrumb" dict "page" $parent "value" $value }}
-          {{else}}
-            {{.value|safeHTML}}
-          {{end}}
-        {{end}}
+          {{ template "breadcrumb" (dict "page" $parent "value" "" "count" (add .count 1)) }}
+          {{ end }}
+          {{ $value := (printf "%s<a itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem' href='%s'><span itemprop='name'>%s</span><meta itemprop='position' content='%d'></a>" .value .page.RelPermalink .page.Title .count) }}
+          {{ $value | safeHTML }}
+          {{ if gt .count 1 }}
+          <i class="fas fa-angle-right"></i>
+          {{ end }}
+          {{ end }}
