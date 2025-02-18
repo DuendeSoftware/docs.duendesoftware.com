@@ -46,8 +46,7 @@ programmatic approach.
 
 {{% notice note %}}
 If you want to redistribute Duende IdentityServer as part of a product to your customers, 
-you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).\
-\
+you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).
 To include the license key with your product, we recommend adding it as an embedded resource.
 {{% /notice %}}
 
