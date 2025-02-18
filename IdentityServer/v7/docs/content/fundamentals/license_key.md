@@ -32,9 +32,13 @@ isolation, the OpenId Connect CIBA flow, and dynamic federation. This is the bes
 when you have a specific threat model or architectural need for these features.
 
 ## License Key
+
 The license key can be configured in one of two ways:
 * Via a well-known file on the file system
 * Programmatically in your startup code
+
+You can also use other configuration sources such as Azure Key Vault, by using the
+programmatic approach.
 
 #### File System
 
@@ -61,6 +65,37 @@ builder.Services.AddIdentityServer(options =>
 });
 
 ```
+
+#### Azure Key Vault
+
+When deploying IdentityServer to Microsoft Azure, you can make use of 
+[Azure Key Vault](https://azure.microsoft.com/products/key-vault/) to load the IdentityServer 
+license key at startup.
+
+Similarly to setting the license key programmatically, you can use the *AddIdentityServer* method 
+and use the overload  that accepts a lambda expression to configure the *LicenseKey* property for 
+your IdentityServer.
+
+```csharp
+var keyVaultUrl = new Uri("https://<YourKeyVaultName>.vault.azure.net/"); 
+
+var secretClient = new Azure.Security.KeyVault.Secrets.SecretClient(
+    keyVaultUrl, 
+    new Azure.Identity.DefaultAzureCredential()
+);
+
+KeyVaultSecret licenseKeySecret = secretClient.GetSecret("<YourSecretName>");
+var licenseKey = licenseKeySecret.Value;
+
+// Inject the secret (license key) into the IdentityServer configuration
+builder.Services.AddIdentityServer(options =>
+{
+    options.LicenseKey = licenseKey;
+});
+```
+
+If you are using [Azure App Configuration](https://azure.microsoft.com/products/app-configuration/), 
+you can use a similar approach to load the license key into your IdentityServer host.
 
 ## License Validation and Logging
 
