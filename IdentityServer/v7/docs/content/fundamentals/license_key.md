@@ -44,11 +44,22 @@ The license key can be configured in one of two ways:
 You can also use other configuration sources such as Azure Key Vault, by using the
 programmatic approach.
 
+{{% notice note %}}
+If you want to redistribute Duende IdentityServer as part of a product to your customers, 
+you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).\
+\
+To include the license key with your product, we recommend adding it as an embedded resource.
+{{% /notice %}}
+
 #### File System
 
 IdentityServer looks for a file named *Duende_License.key* in the
 [ContentRootPath](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostenvironment.contentrootpath?view=dotnet-plat-ext-8.0#microsoft-extensions-hosting-ihostenvironment-contentrootpath).
 If present, the content of the file will be used as the license key.
+
+We consider the license key to be private to your organization, but not necessarily a secret.
+If you're using private source control that is scoped to your organization, 
+storing your license key with it is acceptable.
 
 #### Startup
 
