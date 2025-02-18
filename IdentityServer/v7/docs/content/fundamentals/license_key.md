@@ -58,7 +58,7 @@ If present, the content of the file will be used as the license key.
 
 We consider the license key to be private to your organization, but not necessarily a secret.
 If you're using private source control that is scoped to your organization, 
-storing your license key with it is acceptable.
+storing your license key within it is acceptable.
 
 #### Startup
 
