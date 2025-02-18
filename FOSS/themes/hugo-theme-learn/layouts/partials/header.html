@@ -135,7 +135,7 @@
           {{ if $parent }}
           {{ template "breadcrumb" (dict "page" $parent "value" "" "count" (add .count 1)) }}
           {{ end }}
-          {{ $value := (printf "%s<a itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem' href='%s'><span itemprop='name'>%s</span><meta itemprop='position' content='%d'></a>" .value .page.RelPermalink .page.Title .count) }}
+          {{ $value := (printf "%s<a itemprop='itemListElement' itemtype='https://schema.org/ListItem' href='%s'>%s<meta itemprop='name' content='%s'><meta itemprop='position' content='%d'></a>" .value .page.RelPermalink .page.Title .page.Title .count) }}
           {{ $value | safeHTML }}
           {{ if gt .count 1 }}
           <i class="fas fa-angle-right"></i>
