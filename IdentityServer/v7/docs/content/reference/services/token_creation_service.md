@@ -23,9 +23,10 @@ public interface ITokenCreationService
 
 The Token creation service takes the *Token* model and converts it into
 a JWT. During the JWT creation, you have one last opportunity to
-modify the *Token* by adding, removing, or altering property values. Everyday use cases
+modify the *Token* by adding, removing, or altering property values. Common use cases
 for implementing the *ITokenCreationService* include modifying claims, audiences, and more
-from a secondary data source, such as a profile service, database, or third-party service.
+from a secondary data source, such as a profile service, database, or third-party service
+when other approaches are not an option.
 
 Note that there are better places within IdentityServer's infrastructure to add
 additional claims, such as *IClaimService*, *ITokenService*, and [*IProfileService*]({{< ref "/reference/services/profile_service.md" >}}). We recommend investigating
