@@ -90,7 +90,7 @@
                   {{ end }}
                 {{ end }}
                 {{$toc := (and (not .Params.disableToc) (not .Params.chapter))}}
-                <div id="breadcrumbs" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+                <div id="breadcrumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList">
                     <span id="sidebar-toggle-span">
                         <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
                           <i class="fas fa-bars"></i>
@@ -136,7 +136,7 @@
           {{ if $parent }}
           {{ template "breadcrumb" (dict "page" $parent "value" "" "count" (add .count 1)) }}
           {{ end }}
-          {{ $value := (printf "%s<a itemprop='itemListElement' itemtype='http://schema.org/ListItem' href='%s'>%s<meta itemprop='name' content='%s'><meta itemprop='position' content='%d'></a>" .value .page.RelPermalink .page.Title .page.Title .count) }}
+          {{ $value := (printf "%s<span class='links' itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a class='highlight' itemprop='item' href='%s'>%s<meta itemprop='name' content='%s'/></a><meta itemprop='position' content='%d'></span>" .value .page.RelPermalink .page.Title .page.Title .count) }}
           {{ $value | safeHTML }}
           {{ if gt .count 1 }}
           <i class="fas fa-angle-right"></i>
