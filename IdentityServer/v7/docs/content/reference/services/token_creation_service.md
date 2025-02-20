@@ -21,7 +21,7 @@ public interface ITokenCreationService
 }
 ```
 
-The Token creation service involves taking the *Token* model and converting it into
+The Token creation service takes the *Token* model and converts it into
 a JWT. During the JWT creation, you have one last opportunity to
 modify the *Token* by adding, removing, or altering property values. Everyday use cases
 for implementing the *ITokenCreationService* include modifying claims, audiences, and more
