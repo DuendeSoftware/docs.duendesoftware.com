@@ -101,6 +101,14 @@ multiple keys, algorithms, and if those keys should additionally get wrapped in
 an X.509 certificate. Automatic key management will create and rotate keys for
 each signing algorithm you specify.
 
+{{% notice info %}}
+
+When using a *X.509 certificates*, the certificate may have an expiration date, but IdentityServer does
+not use this data to validate the certificate and throw an exception. If a certificate has expired then you
+must decide whether to continue using it or replace it with a new certificate.
+
+{{% /notice %}}
+
 ```cs
 options.KeyManagement.SigningAlgorithms = new[]
 {
