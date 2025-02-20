@@ -27,7 +27,7 @@ Clients that wish to be notified must have the *FrontChannelLogoutUri* configura
 IdentityServer tracks which clients the user has signed into, and provides an API called *GetLogoutContextAsync* on the [IIdentityServerInteractionService]({{< ref "/reference/services/interaction_service#iidentityserverinteractionservice-apis" >}}). 
 This API returns a *LogoutRequest* object with a *SignOutIFrameUrl* property that your logged out page must render into an *\<iframe>*.
 
-See the [Quickstart UI](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI) account controller and signout view for an example.
+See the [Quickstart UI](https://github.com/DuendeSoftware/products/tree/main/identity-server/templates/src/UI) Logout page for an example.
 
 ### Back-channel server-side clients
 To sign the user out of the server-side client applications via the back-channel the *IBackChannelLogoutService* service can be used. 

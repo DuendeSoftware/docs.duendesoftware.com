@@ -13,10 +13,8 @@ The licensed and supported libraries can be accessed via Nuget:
 
 ### UI
 Duende IdentityServer does not contain any UI, because this is always custom to the project. 
-We still provide you a starting point for your modifications.
-
-* [standard](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI) UI
-* UI with ASP.NET Identity [integration](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI.AspNetIdentity)
+We still provide you with the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/products/tree/main/identity-server/templates/src/UI)
+as a starting point for your modifications.
 
 ### Templates
 Contains templates for the dotnet CLI.
