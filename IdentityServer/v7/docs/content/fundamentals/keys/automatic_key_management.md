@@ -103,7 +103,7 @@ each signing algorithm you specify.
 
 {{% notice info %}}
 
-When using a *X.509 certificates*, the certificate may have an expiration date, but IdentityServer does
+*X.509 certificates* have an expiration date, but IdentityServer does
 not use this data to validate the certificate and throw an exception. If a certificate has expired then you
 must decide whether to continue using it or replace it with a new certificate.
 
