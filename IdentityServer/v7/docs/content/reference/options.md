@@ -85,6 +85,14 @@ Automatic key management settings. Available on the *KeyManagement* property of 
 
     Defaults to *RS256* without an X.509 certificate.
 
+  {{% notice info %}}
+  
+*X.509 certificates* have an expiration date, but IdentityServer does
+  not use this data to validate the certificate and throw an exception. If a certificate has expired then you
+  must decide whether to continue using it or replace it with a new certificate.
+  
+  {{% /notice %}}
+
 * ***RsaKeySize***
     
     Key size (in bits) of RSA keys. The signing algorithms that use RSA keys (*RS256*, *RS384*, *RS512*, *PS256*, *PS384*, and *PS512*) will generate an RSA key of this length. Defaults to 2048.
