@@ -34,7 +34,7 @@ whether overriding those interfaces would be enough before implementing *ITokenC
 You can think of each of the services as providing the following functionality:
 
 - *ITokenCreationService* : Serialization of the *Token* model into a JWT
-- *ITokenService*: Building the Token using the data model
+- *ITokenService*: Building the *Token* model
 - *IClaimsService*: Customizing claims on the Token
 - *IProfileService*: User-centric profile data used in the Token and UserInfo endpoint
 
