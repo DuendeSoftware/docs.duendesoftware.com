@@ -28,8 +28,16 @@ for implementing the *ITokenCreationService* include modifying claims, audiences
 from a secondary data source, such as a profile service, database, or third-party service.
 
 Note that there are better places within IdentityServer's infrastructure to add
-additional claims, such as *IClaimService*, *ITokenService*, and *IProfileService*. We recommend investigating
-whether overriding those interfaces would be sufficient before implementing *ITokenCreationService*.
+additional claims, such as *IClaimService*, *ITokenService*, and [*IProfileService*]({{< ref "/reference/services/profile_service.md" >}}). We recommend investigating
+whether overriding those interfaces would be enough before implementing *ITokenCreationService*.
+
+You can think of each of the services as providing the following functionality:
+
+- *ITokenCreationService* : Token Serialization into a JWT
+- *ITokenService*: Building the Token using the data model
+- *IClaimsService*: Customizing claims on the Token
+- *IProfileService*: User-centric profile data used in the Token and UserInfo endpoint
+
 
 If, after research, you have still decided to implement *ITokenCreationService*, we recommend you
 inherit and override methods on *DefaultTokenCreationService*, specifically the *CreatePayloadAsync* method.
