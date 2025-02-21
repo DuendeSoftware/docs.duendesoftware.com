@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <title>{{ .Params.target }}</title>
+  <link rel="canonical" href="{{ .Params.target }}">
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url={{ .Params.target }}">
+</head>
+<body>
+<script>
+  window.location.replace("{{ .Params.target }}")
+</script>
+</body>
+</html>
