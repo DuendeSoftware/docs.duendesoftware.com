@@ -102,6 +102,8 @@
                   <span class="links">
                  {{$showBreadcrumb := (and (not .Params.disableBreadcrumb) (not .Site.Params.disableBreadcrumb))}}
                  {{if $showBreadcrumb}}
+                    <a href="https://duendesoftware.com/docs/">Products</a>
+                    <i class="fas fa-angle-right"></i>
                     {{ template "breadcrumb" (dict "page" . "value" "" "count" 1) }}
                  {{ else }}
                    {{ .Title }}

@@ -1,5 +1,5 @@
 ---
-title: "Home"
+title: "IdentityServer (v5)"
 weight: 1
 ---
 
