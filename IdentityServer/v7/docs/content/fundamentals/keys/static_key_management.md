@@ -90,7 +90,7 @@ With automatic key management disabled, secure storage of the key material is
 left to you. This key material should be treated as highly sensitive. Key
 material should be encrypted at rest, and access to it should be restricted.
 
-Loading a key from disk into memory can be done using the *x509CertificateLoader*
+Loading a key from disk into memory can be done using the *X509CertificateLoader*
 found in .NET assuming your hosting environment has proper security practices in 
 place.
 
