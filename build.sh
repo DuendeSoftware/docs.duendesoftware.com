@@ -15,3 +15,7 @@ popd
 pushd ./FOSS/
 hugo -d ../root/foss
 popd
+
+pushd ./BFF/v2/docs
+hugo -d ../root/BFF/v2
+popd
