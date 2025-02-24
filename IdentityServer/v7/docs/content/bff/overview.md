@@ -36,9 +36,7 @@ sequenceDiagram
     end
 {{< /mermaid >}}
 
-There is the user experience, and then there is the reality of the implementation, and for most distributed applications, including those implemented with BFF, **sessions are managed independently by each component of an application architecture.** 
-
-In practice, There are **N+1** physical sessions, where **N** is the number of sessions for each service in your solution, and the **+1** being the session managed on the BFF host. Since we are focusing on ASP.NET Core, those sessions typically are stored using the Cookie Authentication handler features of .NET.
+So while the user will only see only (and care about) a single session, it's entirely possible that there will be multiple physical sessions active. For most distributed applications, including those implemented with BFF, **sessions are managed independently by each component of an application architecture.** This means that there are **N+1** physical sessions possible, where **N** is the number of sessions for each service in your solution, and the **+1** being the session managed on the BFF host. Since we are focusing on ASP.NET Core, those sessions typically are stored using the Cookie Authentication handler features of .NET.
 
 {{< mermaid >}}
 sequenceDiagram
