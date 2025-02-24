@@ -27,6 +27,6 @@ app.MapBffManagementEndpoints();
 
 *MapBffManagementEndpoints* adds all BFF management endpoints. You can also map each endpoint individually by calling the various *MapBffManagementXxxEndpoint* methods, for example *endpoints.MapBffManagementLoginEndpoint()*.
 
-The following pages describe the default behavior of the management endpoints. See the [extensibility]({{< ref "/bff/extensibility" >}}) section for information about how to customize the behavior of the endpoints.
+The following pages describe the default behavior of the management endpoints. See the [extensibility]({{< ref "/extensibility" >}}) section for information about how to customize the behavior of the endpoints.
 
 {{%children style="h4" /%}}
