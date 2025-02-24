@@ -17,5 +17,5 @@ hugo -d ../root/foss
 popd
 
 pushd ./BFF/v2/docs
-hugo -d ../root/BFF/v2
+hugo -d ../root/bff/v2
 popd
