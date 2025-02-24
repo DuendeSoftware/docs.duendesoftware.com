@@ -1,5 +1,6 @@
 ---
 type: redirect
 baseUrl: bff
-target: "/overview"
+target: "/session
+/"
 ---

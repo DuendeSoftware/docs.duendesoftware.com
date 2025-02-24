@@ -1,0 +1,2 @@
+[params.baseUrls]
+bff = "http://localhost:1315/bff/v2/"
