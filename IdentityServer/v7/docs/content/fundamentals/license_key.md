@@ -24,7 +24,8 @@ through OTEL support, and years of bug fixes and enhancements.
 The Business edition adds additional features that go beyond the core protocol support
 included in the Starter edition. This is a popular license because it adds the most
 commonly needed tools and features outside a basic protocol implementation. Feature
-highlights include support for server side sessions and automatic key signing.
+highlights include support for server side sessions and automatic signing key management.
+
 
 #### Enterprise Edition
 
