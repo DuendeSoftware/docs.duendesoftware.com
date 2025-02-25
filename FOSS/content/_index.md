@@ -1,5 +1,5 @@
 +++
-title = "Welcome to Duende Open Source"
+title = "Duende Open Source"
 weight = 10
 chapter = true
 +++
