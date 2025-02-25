@@ -1,5 +1,5 @@
 ---
 type: redirect
 baseUrl: bff
-target: "/silent-login"
+target: "session/management/silent-login"
 ---

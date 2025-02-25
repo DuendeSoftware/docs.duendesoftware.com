@@ -1,5 +1,5 @@
 ---
 type: redirect
 baseUrl: bff
-target: "/server_side_sessions"
+target: "/session/server_side_sessions"
 ---
