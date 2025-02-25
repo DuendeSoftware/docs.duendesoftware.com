@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <title>{{ .Params.target }}</title>
-  <link rel="canonical" href="{{ .Params.target }}">
+  <title>{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target }}</title>
+  <link rel="canonical" href="{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target }}">
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url={{ .Params.target }}">
+  <meta http-equiv="refresh" content="0; url={{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target }}">
 </head>
 <body>
 <script>
-  window.location.replace("{{ .Params.target }}")
+  window.location.replace("{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target }}")
 </script>
 </body>
 </html>

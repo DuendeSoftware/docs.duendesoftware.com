@@ -12,5 +12,8 @@ editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/I
 qs_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts"
 samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7"
 
+[params.baseUrls]
+bff = "https://docs.duendesoftware.com/bff/v2"
+
 [params.newContent]
 enabled = false
