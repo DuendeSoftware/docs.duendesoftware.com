@@ -38,4 +38,4 @@ Applications". It provides types that describe OIDC requests and responses, low 
 methods to construct protocol state and handle responses, and higher level methods for
 logging in, logging out, retrieving userinfo, and refreshing tokens.
 
-Duende.IdentityModel.OidcClient targets .NET Standard 2.0, making it suitable for .NET and .NET Framework and is available on [GitHub](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client) and [NuGet]({{https://www.nuget.org/packages/IdentityModel.OidcClient).
+Duende.IdentityModel.OidcClient targets .NET Standard 2.0, making it suitable for .NET and .NET Framework and is available on [GitHub](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client) and [NuGet](https://www.nuget.org/packages/IdentityModel.OidcClient).
