@@ -19,3 +19,7 @@ popd
 pushd ./BFF/v2/docs
 hugo -d ../../../root/bff/v2
 popd
+
+pushd ./BFF/v3/docs
+hugo -d ../../../root/bff/v3
+popd

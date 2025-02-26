@@ -1,6 +1,6 @@
-baseURL = "https://docs.duendesoftware.com/bff/v2"
+baseURL = "https://docs.duendesoftware.com/bff/v3"
 languageCode = "en-us"
-title = "Duende IdentityServer Documentation"
+title = "Duende BFF Documentation"
 
 theme = "hugo-theme-learn"
 
@@ -10,10 +10,10 @@ theme = "hugo-theme-learn"
 home = [ "HTML", "RSS", "JSON"]
 
 [params]
-editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/IdentityServer/v7/docs/content/"
+editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/BFF/v3/docs/content/"
 qs_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts"
 samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7"
-identityServerBaseURL = "https://docs.duendesoftware.com/identityserver/v7"
+identityServerBaseURL = "https://docs.duendesoftware.com/bff/v3"
 
 [params.newContent]
 enabled = false

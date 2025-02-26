@@ -8,7 +8,7 @@
         data-category="Documentation"
         data-category-id="DIC_kwDONlV_G84CnEmQ"
         data-mapping="specific"
-        data-term="{{ .Permalink }}"
+        data-term="{{ replace (.Permalink | relURL) "/v3/" "/" }}"
         data-strict="0"
         data-reactions-enabled="1"
         data-emit-metadata="0"
