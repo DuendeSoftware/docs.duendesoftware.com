@@ -14,6 +14,8 @@ You can use `npm run` to run the documentation site locally:
 * `npm run v6` - http://localhost:1313/identityserver/v6/
 * `npm run foss` - http://localhost:1313/foss/
 
+There are a few other options, explore them by running `npm run` from a terminal.
+
 ## Making a page redirect to somewhere else
 
 There are two ways to restructure content:
