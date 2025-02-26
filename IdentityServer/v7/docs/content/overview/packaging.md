@@ -28,18 +28,5 @@ You can install the templates using the following command:
 dotnet new -i Duende.IdentityServer.Templates
 ```
 
-### Dev builds
-In addition we publish CI builds to our package repository.
-Add the following *nuget.config* to your project to access the CI feed:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-    <packageSources>
-        <add key="Duende IdentityServer CI" value="https://www.myget.org/F/duende_identityserver/api/v3/index.json" />
-    </packageSources>
-</configuration>
-```
-
 ### Source Code
 You can find the Duende IdentityServer source code on [GitHub](https://github.com/duendesoftware/IdentityServer).
