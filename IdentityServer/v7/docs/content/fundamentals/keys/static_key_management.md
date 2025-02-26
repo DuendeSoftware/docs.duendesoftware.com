@@ -31,6 +31,40 @@ include:
   [New-SelfSignedCertificate](https://learn.microsoft.com/en-us/powershell/module/pki/new-selfsignedcertificate?view=windowsserver2022-ps) to self-sign your own certificate
 - Create certificates using [Azure KeyVault](https://learn.microsoft.com/en-us/azure/key-vault/certificates/certificate-scenarios)
 - Create certificates using your Public Key Infrastructure.
+- Create certificates using C# (see bellow)
+
+```csharp
+var name = "MySelfSignedCertificate";
+
+// Generate a new key pair
+using var rsa = RSA.Create(keySizeInBits: 2048);
+
+// Create a certificate request
+var request = new CertificateRequest(
+    subjectName: $"CN={name}",
+    rsa,
+    HashAlgorithmName.SHA256,
+    RSASignaturePadding.Pkcs1
+);
+
+// Self-sign the certificate
+var certificate = request.CreateSelfSigned(
+    DateTimeOffset.Now,
+    DateTimeOffset.Now.AddYears(1)
+);
+
+// Export the certificate to a PFX file
+var pfxBytes = certificate.Export(
+    // TODO: pick a format
+    X509ContentType.Pfx,
+    // TODO: change the password
+    password: "password"
+);
+File.WriteAllBytes($"{name}.pfx", pfxBytes);
+Console.Write(certificate);
+Console.WriteLine("Self-signed certificate created successfully.");
+Console.WriteLine($"Certificate saved to {name}.pfx");
+```
 
 ## Adding Keys
 Signing keys are added with the [*AddSigningCredential*]({{< ref
@@ -55,6 +89,42 @@ be called to register public keys that should be accepted for token validation.
 With automatic key management disabled, secure storage of the key material is
 left to you. This key material should be treated as highly sensitive. Key
 material should be encrypted at rest, and access to it should be restricted.
+
+Loading a key from disk into memory can be done using the *X509CertificateLoader*
+found in .NET assuming your hosting environment has proper security practices in 
+place.
+
+```csharp
+// load certificate from disk
+var bytes = File.ReadAllBytes("mycertificate.pfx");
+var importedCertificate = X509CertificateLoader.LoadPkcs12(bytes, "password");
+```
+
+You may also choose to load a certificate from the current environment's 
+key store using the *X509Store* class.
+
+```csharp
+// Pick the appropriate StoreName and StoreLocation
+var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+store.Open(OpenFlags.ReadWrite);
+
+var certificate = store
+    .Certificates
+    .First(c => c.Thumbprint == "<thumbprint>");
+```
+
+If you're generating self-signed certificates using C#, you can use the *X509Store*
+to store the certificate into the current hosting environment as well.
+
+```csharp
+// Pick the appropriate StoreName and StoreLocation
+var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+store.Open(OpenFlags.ReadWrite);
+
+// push certificate into store
+var certificate = CreateCertificate();
+store.Add(certificate);
+```
 
 ## Manual Key Rotation {#rotation}
 With automatic key management disabled, you will need to rotate your keys
