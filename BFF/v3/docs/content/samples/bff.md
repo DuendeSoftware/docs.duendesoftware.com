@@ -20,8 +20,8 @@ This sample shows how to use the BFF framework with the .NET 6 Angular template.
 
 [link to source code]({{< param samples_base >}}/BFF/Angular)
 
-### Blazor WASM
-This sample shows how to use the BFF framework with Blazor WASM.
+### Blazor
+This sample shows how to use the BFF framework with Blazor.
 
 [link to source code]({{< param samples_base >}}/BFF/BlazorWasm)
 

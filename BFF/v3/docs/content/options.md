@@ -5,6 +5,8 @@ date: 2020-09-10T08:22:12+02:00
 weight: 90
 ---
 
+# BFF Options
+
 The *Duende.BFF.BffOptions* allows to configure several aspects of the BFF framework.
 
 You set the options at startup time:
@@ -115,3 +117,9 @@ builder.Services.AddBff(options =>
 
     Specifies the Json Web Key to use when creating DPoP proof tokens. 
     Defaults to null, which is appropriate when not using DPoP.
+
+# BFF Blazor Options
+
+## Blazor Options
+
+## Blazor Client Options

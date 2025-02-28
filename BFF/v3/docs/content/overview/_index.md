@@ -31,7 +31,7 @@ There is one thing to keep an eye out for with this pattern, and that’s Cross 
 
 # The Duende BFF framework
 
-Duende.BFF is a library for building services that comply with the BFF pattern and solve security and identity problems in browser based applications such as SPAs and Blazor WASM applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all of the OAuth and OIDC protocol interactions. It completely implements the latest recommendations from the IETF with regards to security for browser based applications. 
+Duende.BFF is a library for building services that comply with the BFF pattern and solve security and identity problems in browser based applications such as SPAs and Blazor based applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all of the OAuth and OIDC protocol interactions. It completely implements the latest recommendations from the IETF with regards to security for browser based applications. 
 
 It offers the following functionality:
 * Protection from Token Extraction attacks
@@ -49,7 +49,7 @@ The following diagram illustrates how the Duende BFF Security Framework fits int
 
 ![doc](../images/bff_application_architecture.svg)
 
-The browser based application runs inside the browser’s secure sandbox. It can be built using any type of front-end technology, such as via Vanilla-JS, React, Vue, WebComponents, Blazor WASM, etc. 
+The browser based application runs inside the browser’s secure sandbox. It can be built using any type of front-end technology, such as via Vanilla-JS, React, Vue, WebComponents, Blazor, etc. 
 
 When the user wants to log in, the app can redirect the browser to the authentication endpoints. This will trigger an OpenID Connect authentication flow, at the end of which, it will place an authentication cookie in the browser. This cookie has to be a HTTP Only Same Site and Secure cookie. This makes sure that the browser application cannot get the contents of the cookie, which makes stealing the session much more difficult. 
 

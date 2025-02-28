@@ -7,10 +7,10 @@ chapter: true
 
 A BFF host is an ASP.NET Core application, tied to a single browser based application. It performs the following functions:
 * Authenticate the user using OpenID Connect
-* Manages the user's session using Secure Cookies and optional Server Side Session Management. 
+* Manages the user's session using Secure Cookies and optional Server-side Session Management. 
 * Optionally, provides access to the UI assets.
-* Server side Token Management
-* Optionally, for Blazor Applications, unified authentication state management across rendering modes. 
+* Server-side Token Management
+* Blazor support with unified authentication state management across rendering modes. 
 
 ![doc](../images/bff_application_architecture.svg?height=30pc)
 
@@ -39,3 +39,8 @@ The BFF host typically serves at least some of the UI assets of the frontend, wh
 
 It is also possible to separate the BFF and UI and host them separately. See [here]({{< ref "/architecture/ui-hosting">}}) for more discussion of UI hosting architecture. 
 
+## Blazor Support
+
+Blazor based applications have unique challenges when it comes to authentication state. It's possible to mix various rendering models in a single application. Auto mode even starts off server rendered, then transitions to WASM when the code has loaded. 
+
+BFF Security Framework has built support for Blazor, where it helps to unify access to authentication state and to secure access to backend services. 
