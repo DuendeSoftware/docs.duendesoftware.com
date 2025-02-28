@@ -30,13 +30,61 @@ Blazor is very flexible in how it renders applications (and even individual comp
 These rendering modes are very powerful, but also add additional complexity when it comes to authentication and authorization. Any code that executes on the server can directly access local resources, such has a database, but code that executes on the client needs to through a local http endpoint (that requires authentication). Accessing external api's is also different between server and client, where the client needs to go through a proxy which performs a token exchange. 
 
 
-### BFF Server Authentication State Provider
+### Authentication State Providers
 
-When Blazor components, executing on the server needs to access authentication state, this is created by the **ServerAuthenticationStateProvider**. This reads the authentication state 
+Blazor uses AuthenticationStateProviders to make authentication state available to components. Depending on if a component is currently executing on the server or on the client, the implementation needs to be different. For this reason, the Duende BFF Security Framework contains two state providers: **BffServerAuthenticationStateProvider** and **BffClientAuthenticationStateProvider**. 
 
-### BFF Client Authentication State Provider
+On the server, the authentication state is already mostly managed by the framework. On the client, that's not the case. The **BffClientAuthenticationStateProvider** will poll the server to update the client on the latest authentication state, such as the user's claims. This also notifies the front-end if the session is terminated on the server. 
+
+Lastly, the authentications state providers also add the [management]({{< ref "/samples/bff" >}}) to the user's claims. 
 
 ### Server Side Token Store
 
-## Management Claims
+Blazor Server applications have the same token management requirements as a regular ASP.NET Core web application. Because Blazor Server streams content to the application over a websocket, there often is no HTTP request or response to interact with during the execution of a Blazor Server application. You therefore cannot use *HttpContext* in a Blazor Server application as you would in a traditional ASP.NET Core web application.
 
+This means:
+
+* you cannot use *HttpContext* extension methods
+* you cannot use the ASP.NET authentication session to store tokens
+* the normal mechanism used to automatically attach tokens to Http Clients making API calls won't work
+
+The **ServerSideTokenStore**, together with the Blazor Server functionality in Duende.AccessTokenManagement is automatically registered when you register Blazor Server. 
+
+For more information on this, see [Blazor Server](https://docs.duendesoftware.com/foss/accesstokenmanagement/blazor_server/)
+
+## Adding the BFF Security framework to your blazor application
+
+Adding 
+
+``` c#
+builder.Services.AddBff()
+    .AddServerSideSessions() // Add in-memory implementation of server side sessions
+    .AddBlazorServer();
+
+
+// ... <snip>..
+
+// Add the BFF middleware which performs anti forgery protection
+app.UseBff();
+
+app.UseAuthorization();
+app.UseAntiforgery();
+
+// Add the BFF management endpoints, such as login, logout, etc.
+// This has to be added after 'UseAuthorization()'
+app.MapBffManagementEndpoints();
+
+// .. <snip>
+```
+
+``` c#
+
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+builder.Services
+    .AddBffBlazorClient() // Provides auth state provider that polls the /bff/user endpoint
+    .AddCascadingAuthenticationState();
+
+builder.Services.AddLocalApiHttpClient<WeatherHttpClient>();
+
+```
