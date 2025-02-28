@@ -5,8 +5,6 @@ date: 2020-09-10T08:22:12+02:00
 weight: 1
 ---
 
-# Introduction
-
 Single-Page Applications (SPAs) are increasingly common, offering rich functionality within the browser. The landscape of front-end development has evolved rapidly in recent years, with new frameworks and ever changing browser security requirements. Consequently, best practices for securing these applications have also shifted dramatically. 
 
 While implementing OAuth logic directly in the browser was once considered acceptable, this is no longer recommended. Storing any authentication state in the browser (such as access tokens) has proven to be inherently risky (see Threats against browser based applications). Because of this, the IETF is currently [recommending](See: https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps#name-history-of-oauth-20-in-brow). delegating all authentication logic to a server based host via a Backend-For-Frontend pattern as the preferred approach to securing modern web applications. 

@@ -5,8 +5,6 @@ date: 2020-09-10T08:22:12+02:00
 weight: 1
 ---
 
-# Threats against browser based applications
-
 In this paragraph, let’s look at some of the common ways browser based apps are typically attacked and what their consequences would be. 
 
 ## Token theft

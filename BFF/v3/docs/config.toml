@@ -15,5 +15,8 @@ qs_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7
 samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7"
 identityServerBaseURL = "https://docs.duendesoftware.com/bff/v3"
 
+[params.PreRelease]
+enabled = true
+
 [params.newContent]
 enabled = false
