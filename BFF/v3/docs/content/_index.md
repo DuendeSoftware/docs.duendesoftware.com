@@ -7,8 +7,8 @@ chapter = true
 
 # BFF Security Framework
 
-The Duende.BFF (Backend for Frontend) security framework packages the necessary components to secure browser-based frontends (e.g. SPAs or Blazor WASM applications) with ASP.NET Core backends.
+The Duende.BFF (Backend for Frontend) security framework packages the necessary components to secure browser-based frontends (e.g. SPAs or Blazor applications) with ASP.NET Core backends.
 
-Duende.BFF is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business Edition or higher. The same [license](https://duendesoftware.com/products/identityserver#pricing) and [special offers](https://duendesoftware.com/specialoffers) apply.
+Duende.BFF is free for development, testing and personal projects, but production use requires a [license](https://duendesoftware.com/products/identityserver#pricing). [Special offers](https://duendesoftware.com/specialoffers) may apply.
 
 The source code for the BFF framework can be found [here](https://github.com/DuendeSoftware/BFF). Builds are distributed through NuGet [here](https://www.nuget.org/packages/Duende.BFF/), and samples are available [here]({{< ref "/samples/bff" >}}).
