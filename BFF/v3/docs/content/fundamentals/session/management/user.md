@@ -61,7 +61,7 @@ This is the session state value of the upstream OIDC provider that can be use fo
 
 **bff:logout_url**
 
-This is the URL to trigger logout. If the upstream provider includes a *sid* claim, the BFF logout endpoint requires this value as a query string parameter for CSRF protection. This behavior can be configured with the *RequireLogoutSessionId* in the [options]({{< ref "/options" >}}).
+This is the URL to trigger logout. If the upstream provider includes a *sid* claim, the BFF logout endpoint requires this value as a query string parameter for CSRF protection. This behavior can be configured with the *RequireLogoutSessionId* in the [options]({{< ref "/fundamentals/options" >}}).
 
 ## Typical Usage
 To use the endpoint, make an http GET request to it from your frontend javascript code. For example, your application could use the fetch api to make requests to the user endpoint like this:
@@ -83,7 +83,7 @@ if (resp.ok) {
 ```
 
 ## Cross-Site Request Forgery
-To protect against cross-site request forgery, you need to add a [static header](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers) to the GET request. The header's name and required value can be configured in the [options]({{< ref "/options" >}}).
+To protect against cross-site request forgery, you need to add a [static header](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers) to the GET request. The header's name and required value can be configured in the [options]({{< ref "/fundamentals/options" >}}).
 
 ## Anonymous Session Response Option
 The *AnonymousSessionResponse* option allows you to change the behavior of the user endpoint to return 200 instead of 401 when the user is anonymous. If *AnonymousSessionResponse* is set to *AnonymousSessionResponse.Response200*, then the endpoint's response will set its status code to 200 and its payload will contain the literal *null* (the response body will be the characters 'n', 'u', 'l', 'l' without quotes).
