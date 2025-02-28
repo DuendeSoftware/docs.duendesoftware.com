@@ -1,3 +1,10 @@
+---
+title: "Threats against browser based applications"
+description: "BFF Security Framework"
+date: 2020-09-10T08:22:12+02:00
+weight: 1
+---
+
 # Threats against browser based applications
 
 In this paragraph, let’s look at some of the common ways browser based apps are typically attacked and what their consequences would be. 
@@ -6,7 +13,7 @@ In this paragraph, let’s look at some of the common ways browser based apps ar
 
 Often, malicious actors are trying to steal access tokens. In this paragraph, we’ll look into several techniques how this is often done and what the consequences are. But it’s important to note that all of these techniques rely on the browser based application having access to the access token. Therefore, these attacks can be prevented by implementing the BFF pattern. 
 
-### Script injection atacks
+### Script injection attacks
 
 The most common way how malicious actors steal access token is by injecting malicious javascript code into the browser. This can happen in many different ways. Script injection attacks or supply chain attacks (via compromised NPM packages or cloud hosted scripts) are just some of the examples. 
 
