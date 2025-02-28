@@ -1,0 +1,20 @@
+<!-- import your comments system
+{{ template "_internal/disqus.html" . }}
+-->
+
+<script src="https://giscus.app/client.js"
+        data-repo="duendesoftware/community"
+        data-repo-id="R_kgDONlV_Gw"
+        data-category="Documentation"
+        data-category-id="DIC_kwDONlV_G84CnEmQ"
+        data-mapping="specific"
+        data-term="{{ replace (.Permalink | relURL) "/v3/" "/" }}"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="https://duendesoftware.com/css/giscus.css"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>

@@ -1,0 +1,8 @@
+{{ if .Site.Params.NewContent.Enabled }}
+{{ $url := replace .Permalink .Site.Params.NewContent.Replace .Site.Params.NewContent.With }}
+{{ if .Page.Params.NewContentUrl }}
+{{ $url = .Page.Params.NewContentUrl }}
+{{ end }}
+<link rel="canonical" href="{{ $url }}" />
+<meta name="giscus:backlink" content="{{ $url }}">
+{{ end}}

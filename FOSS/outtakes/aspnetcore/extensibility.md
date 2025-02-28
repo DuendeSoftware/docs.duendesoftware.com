@@ -60,7 +60,7 @@ public interface ITokenClientConfigurationService
     /// Returns the request details for a refresh token request
     /// </summary>
     /// <returns></returns>
-    Task<RefreshTokenRequest> GetRefreshTokenRequestAsync();
+    Task< refreshTokenRequest> GetRefreshTokenRequestAsync();
 
     /// <summary>
     /// Returns the request details for a token revocation request
