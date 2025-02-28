@@ -5,26 +5,63 @@ date: 2020-09-10T08:22:12+02:00
 weight: 1
 ---
 
-Duende.BFF is a library for building services that solve security and identity problems in browser based applications such as SPAs and Blazor WASM applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all of the OAuth and OIDC protocol interactions. Moving the protocol handling out of JavaScript provides important security benefits and works around changes in browser privacy rules that increasingly disrupt OAuth and OIDC protocol flows in browser based applications. The Duende.BFF library makes it easy to build and secure BFF hosts by providing [session and token management]({{< ref "/session" >}}), [API endpoint protection]({{< ref "/apis" >}}), and [logout notifications]({{< ref "/session/management/back-channel-logout" >}}).
+# Introduction
 
-## Threats against browser based applications
+Single-Page Applications (SPAs) are increasingly common, offering rich functionality within the browser. The landscape of front-end development has evolved rapidly in recent years, with new frameworks and ever changing browser security requirements. Consequently, best practices for securing these applications have also shifted dramatically. 
 
-Browser based applications have a relatively large attack surface. Security risks come not only from the application's own code, which must be protected against cross site scripting, cross site request forgery, and other vulnerabilities, but also from the frameworks, libraries, and other NPM packages it uses, as well as all of their transitive dependencies. Additionally, other applications running on the same site must also be secured. The recent [Spectre](https://www.securityweek.com/google-releases-poc-exploit-browser-based-spectre-attack) attacks against browsers serve as a reminder that new threats are constantly emerging. Given all of these risks, we do not recommend storing high-value access tokens or refresh tokens in JavaScript-accessible locations.
+While implementing OAuth logic directly in the browser was once considered acceptable, this is no longer recommended. Storing any authentication state in the browser (such as access tokens) has proven to be inherently risky (see Threats against browser based applications). Because of this, the IETF is currently [recommending](See: https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps#name-history-of-oauth-20-in-brow). delegating all authentication logic to a server based host via a Backend-For-Frontend pattern as the preferred approach to securing modern web applications. 
 
-In Duende.BFF, tokens are only accessible server-side and sessions are managed using encrypted and signed HTTP-only cookies. This greatly simplifies the threat model and reduces risk. While  content injection attacks are still possible, the BFF limits the attacker's ability to abuse APIs by constraining access through a well-defined interface to the backend which eliminates the possibility of arbitrary API calls.
+## The Backend For Frontend Pattern
+The BFF pattern (Backend-For-Frontend) pattern states that every browser based application should also have a server side application that handles all authentication requirements, including performing authentication flows and securing access to api’s. 
 
-## Changes in browser privacy rules
-Browsers are increasingly restricting the use of cookies across site boundaries to protect user privacy. This can be a [problem](https://leastprivilege.com/2020/03/31/spas-are-dead/) for legitimate OAuth and OpenID Connect interactions, as some interactions in these protocols are indistinguishable from common tracking mechanisms from a browser's perspective. When the identity provider and client application are hosted on 3rd party sites, this affects several flows, including:
+The server will now expose http endpoints that the browser can use to login, logout or interrogate the active session. With this, the browser based application can trigger an authentication flow by redirecting to a ur, such as /bff/login. Once the authentication process is completed, the server places a secure authentication cookie in the browser. This cookie is then used to authenticate all subsequent requests, until the user is logged out again. 
 
-- Front-channel logout notifications
-- [OpenID Connect Session Management](https://openid.net/specs/openid-connect-session-1_0.html)
-- The "silent renew" technique for session-bound token refreshing
+The BFF should expose all api’s that the front-end wants to access securely. So it can either host api’s locally, or act as a reverse proxy towards external api’s. 
 
-Using a BFF removes or mitigates all of these problems in the design. The backend component makes backchannel logout notifications possible, while still allowing the option of front-channel notifications for 1st party clients. Robust server-side session and token management with optional server-side sessions and refresh tokens take the place of OIDC Session Management and older token refresh mechanisms. As an ASP.NET Core server-side application, the BFF has access to a full featured and stable OpenID Connect client library that supports all the necessary protocol mechanisms and provides an excellent extensibility model for advanced features like [Mutual TLS]({{<ref-idsrv "/tokens/pop/mtls" "Mutual TLS" >}}), [DPoP]({{<ref-idsrv "/tokens/pop/dpop" "DPoP">}}), [JWT secured authorization requests]({{<ref-idsrv "/tokens/jar" "JWT secured authorization requests">}}), and [JWT-based client authentication]({{<ref-idsrv "/tokens/authentication/jwt" "JWT-based client authentication">}}).
+With this approach, the browser based application will not have direct access to the access token. So if the browser based application is compromised, for example with XSS attacks, there is no risk of the attacker stealing the access tokens. 
+
+As the name of this pattern already implies, the BFF backend is the (only) Backend for the Frontend. They should be considered part of the same application. It should only expose the api’s that the front-end needs to function. 
+
+## 3rd party cookies
+In recent years, several browsers (notably Safari and Firefox) have started to block 3rd party cookies. Chrome is planning to do the same in the future. While this is done for valid privacy reasons, it also limits some of the functionality a browser based application can provide. A couple of particularly notable OIDC flows that don’t work for SPAs when third party cookies are blocked are OIDC Session Management and OIDC Silent Login via the prompt=none parameter.
+
+## CSRF protection
+There is one thing to keep an eye out for with this pattern, and that’s Cross Site Request Forgery (CSRF). The browser automatically sends the authentication cookie for safe-listed cross origin requests, which exposes the application to CORS Attacks. Fortunately, this threat can easily be mitigated by a BFF solution by requiring a custom header to be passed along. See more on CORS protection.
+
+
+# The Duende BFF framework
+
+Duende.BFF is a library for building services that comply with the BFF pattern and solve security and identity problems in browser based applications such as SPAs and Blazor WASM applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all of the OAuth and OIDC protocol interactions. It completely implements the latest recommendations from the IETF with regards to security for browser based applications. 
+
+It offers the following functionality:
+* Protection from Token Extraction attacks
+* Built-in CSRF Attack protection
+* Server Side OAuth2 Authentication
+* User Management api’s
+* Back-channel logout
+* Securing access to both local and external Api’s by serving as a reverse proxy. 
+* Server side Session State Management
+* Blazor Authentication State Management
+
+## The BFF Framework in an application architecture
+
+The following diagram illustrates how the Duende BFF Security Framework fits into a typical application architecture. 
+
+![doc](../images/bff_application_architecture.svg)
+
+The browser based application runs inside the browser’s secure sandbox. It can be built using any type of front-end technology, such as via Vanilla-JS, React, Vue, WebComponents, Blazor WASM, etc. 
+
+When the user wants to log in, the app can redirect the browser to the authentication endpoints. This will trigger an OpenID Connect authentication flow, at the end of which, it will place an authentication cookie in the browser. This cookie has to be a HTTP Only Same Site and Secure cookie. This makes sure that the browser application cannot get the contents of the cookie, which makes stealing the session much more difficult. 
+
+The browser will now automatically add the authentication cookie to all calls to the BFF, so all calls to the api’s are secured. This means that local api’s are already automatically secured. 
+
+The app cannot access external Api’s directly, because the authentication cookie won’t be sent to 3rd party applications. To overcome this, the BFF can proxy requests through the BFF host, while exchanging the authentication cookie for a bearer token that’s issued from the identity provider. This can be configured to include or exclude the user’s credentials. 
+
+As mentioned earlier, the BFF needs protection against CSRF attacks, because of the nature of using authentication cookies. While .net has various built-in methods for protecting against CSRF attacks, they often require a bit of work to implement. The easiest way to protect (just as effective as the .Net provided security mechanisms) is just to require the use of a custom header. The BFF Security framework by default requires the app to add a custom header called x-csrf=1 to the application. Just the fact that this header must be present is enough to protect the BFF from CSRF attacks. 
 
 ## Logical and Physical Sessions
 
-When implemented correctly, a user will think of their time interacting with a solution as _"one session"_ also known as the **"logical session"**. The user should be unaware of the steps taken by developers to provide the experience and rightfully so. Users want to use the app, get their tasks completed, and log out happy. 
+When implemented correctly, a user will think of their time interacting with a solution as _"one session"_ also known as the **"logical session"**. The user should not be concerned with the steps developers take to provide a seamless experience. Users want to use the app, get their tasks completed, and log out happy. 
 
 {{<mermaid align="center">}}
 sequenceDiagram
