@@ -11,4 +11,4 @@ The Duende.BFF (Backend for Frontend) security framework packages the necessary 
 
 Duende.BFF is free for development, testing and personal projects, but production use requires a [license](https://duendesoftware.com/products/bff#pricing). [Special offers](https://duendesoftware.com/specialoffers) may apply.
 
-The source code for the BFF framework can be found [here](https://github.com/DuendeSoftware/products/tree/main/bff). Builds are distributed through NuGet [here](https://www.nuget.org/packages/Duende.BFF/), and samples are available [here]({{< ref "/samples/bff" >}}).
+The source code for the BFF framework can be found on [github](https://github.com/DuendeSoftware/products/tree/main/bff). Builds are distributed through [NuGet](https://www.nuget.org/packages/Duende.BFF/). Also check out the [samples]({{< ref "/samples/bff" >}}).

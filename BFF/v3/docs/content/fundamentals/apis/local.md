@@ -3,7 +3,7 @@ title: "Local APIs"
 weight: 10
 ---
 
-A _Local API_ is an API that is located within the BFF host. Local APIs are implemented with the familiar ASP.NET abstractions of API controllers or minimal API endpoints. 
+A _Local API_ is an API that is located within the BFF host. Local APIs are implemented with the familiar ASP.NET abstractions of API controllers or Minimal API endpoints. 
 
 There are two styles of local APIs:
 - Self-contained Local APIs
@@ -96,7 +96,7 @@ Add the BFF middleware to the pipeline by calling *UseBFF*. Note that the  middl
 #### Decorate Endpoints
 Endpoints that require the pre and post processing described above must be decorated with a call to *AsBffApiEndpoint()*.
 
-For minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
+For Minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
 ```csharp
 app.MapPost("/foo", context => { ... })
     .RequireAuthorization()  // no anonymous access

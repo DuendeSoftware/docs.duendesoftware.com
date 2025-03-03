@@ -56,7 +56,7 @@ Browsers have built-in control when cookies should be sent. For example, by sett
 Browsers also have built-in **Cross Origin** protection. Most requests that go across different origins (not sites) will by default be subjected to CORS protection. This means that the server needs to say if the requests are safe to use cross origin. The exclusion to this are requests that the browser considers safe. The following diagram (created based on this article [wikipedia](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)) shows this quite clearly:
 
 {{<mermaid align="center">}}
-flowchart lr;
+flowchart LR;
         A[JavaScript makes a cross-domain XHR call] --> B{Is it a GET or HEAD?};    
     subgraph cors-safe
         B -->|Yes| X[Make actual XHR];
