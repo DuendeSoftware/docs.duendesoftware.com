@@ -14,7 +14,7 @@ The Duende BFF (Backend for Frontend) Security Framework addresses common securi
 
 The following diagram shows how the support for Blazor applications in the Duende BFF Security Framework works:
 
-![](../images/bff_blazor.svg)
+![blazor-architecture](../../images/bff_blazor.svg)
 
 The BFF exposes endpoints to perform login / logout functionality. The actual authentication (to an identity server) is handled by the **OpenIDConnectHandler**. Once succesfully authenticated, the CookieAuthenticationHandler stores a secure, httponly cookie in the browser. This cookie is then responsible for authenticating all requests from the front-end to the BFF. 
 
@@ -52,7 +52,7 @@ The **ServerSideTokenStore**, together with the Blazor Server functionality in D
 
 For more information on this, see [Blazor Server](https://docs.duendesoftware.com/foss/accesstokenmanagement/blazor_server/)
 
-## Adding the BFF Security framework to your blazor application
+## Adding the BFF Security framework to your Blazor application
 
 Adding 
 
