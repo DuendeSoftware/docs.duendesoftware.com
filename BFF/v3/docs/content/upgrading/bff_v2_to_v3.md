@@ -27,7 +27,7 @@ during unit testing.
 
 If you wish to inject a http handler for unit testing, you should now inject a custom IForwarderHttpClientFactory. For example:
 
-``` c#
+``` csharp
    // A Forwarder factory that forwards the messages to a message handler (which can be easily retrieved from a testhost)
     public class BackChannelHttpMessageInvokerFactory(HttpMessageHandler backChannel) 
         : IForwarderHttpClientFactory
@@ -78,7 +78,7 @@ applying a switch statement and testing for specific routes.
 
 Now, there is an overload on the *endpoints.MapRemoteBffApiEndpoint()* that allows you to configure the pipeline directly:
 
-``` c#
+``` csharp
 
             endpoints.MapRemoteBffApiEndpoint(
                 "/local-path",

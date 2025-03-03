@@ -56,7 +56,7 @@ For more information on this, see [Blazor Server](https://docs.duendesoftware.co
 
 Adding 
 
-``` c#
+``` csharp
 builder.Services.AddBff()
     .AddServerSideSessions() // Add in-memory implementation of server side sessions
     .AddBlazorServer();
@@ -77,7 +77,7 @@ app.MapBffManagementEndpoints();
 // .. <snip>
 ```
 
-``` c#
+``` csharp
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
