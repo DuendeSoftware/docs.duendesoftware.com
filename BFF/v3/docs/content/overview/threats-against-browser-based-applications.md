@@ -53,9 +53,32 @@ To a browser, a [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) i
 
 Browsers have built-in control when cookies should be sent. For example, by setting [SameSite=strict](https://owasp.org/www-community/SameSite), the browser will only send along cookies if you are navigating within the same **site** (not origins). 
 
-Browsers also have built-in **Cross Origin** protection. Most requests that go across different origins (not sites) will by default be subjected to CORS protection. This means that the server needs to say if the requests are safe to use cross origin. The exclusion to this are requests that the browser considers safe. The following diagram (from [wikipedia](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)) shows this quite clearly:
+Browsers also have built-in **Cross Origin** protection. Most requests that go across different origins (not sites) will by default be subjected to CORS protection. This means that the server needs to say if the requests are safe to use cross origin. The exclusion to this are requests that the browser considers safe. The following diagram (created based on this article [wikipedia](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)) shows this quite clearly:
 
-![cors](https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flowchart_showing_Simple_and_Preflight_XHR.svg/2560px-Flowchart_showing_Simple_and_Preflight_XHR.svg.png)
+{{<mermaid align="center">}}
+flowchart TD;
+        A[JavaScript makes a cross-domain XHR call] --> B{Is it a GET or HEAD?};    
+    subgraph cors-safe
+        B -->|Yes| X[Make actual XHR];
+        B -->|No| C{Is it a POST?};
+        C -->|Yes| E{Is the content-type standard?};
+        C -->|No| D[Make OPTIONS call to server with all custom details];
+        E -->|No| D;
+        E -->|Yes| F{Are there custom HTTP headers?};
+        F -->|No| X;
+        F -->|Yes| D;
+    end
+
+    subgraph cors-verify
+        D --> G{Did server respond with appropriate Access-Control-* headers?};
+        G -->|No| H[ERROR];
+    end
+
+    G -->|Yes| X;
+
+    style cors-safe fill:#d9ead3,stroke:#6aa84f;
+    style cors-verify fill:#f4cccc,stroke:#cc0000;
+{{< /mermaid >}}
 
 So some requests, like regular GET or POSTs with a standard content type are NOT subject to CORS validation, but others (IE: deletes or requests with a custom HTTP header) are. 
 
