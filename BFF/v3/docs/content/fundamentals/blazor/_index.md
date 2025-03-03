@@ -27,7 +27,7 @@ Blazor is very flexible in how it renders applications (and even individual comp
 * **WASM** It's possible to create web assembly components that render completely in the browser. All interactivity is executed in the browser. 
 * **Auto** It's even possible to create components that initially render on the server, but then transition to WASM based rendering (and interactivity) when the WASM Components have been downloaded by the browser. 
 
-These rendering modes are very powerful, but also add additional complexity when it comes to authentication and authorization. Any code that executes on the server can directly access local resources, such has a database, but code that executes on the client needs to through a local http endpoint (that requires authentication). Accessing external api's is also different between server and client, where the client needs to go through a proxy which performs a token exchange. 
+These rendering modes are very powerful, but also add additional complexity when it comes to authentication and authorization. Any code that executes on the server can directly access local resources, such has a database, but code that executes on the client needs to through a local http endpoint (that requires authentication). Accessing external API's is also different between server and client, where the client needs to go through a proxy which performs a token exchange. 
 
 
 ### Authentication State Providers

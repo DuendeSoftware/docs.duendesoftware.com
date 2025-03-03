@@ -61,7 +61,7 @@ builder.Services.AddAuthentication().AddOpenIdConnect("oidc", options =>
     options.Scope.Clear();
     options.Scope.Add("openid");
     options.Scope.Add("profile");
-    options.Scope.Add("api");
+    options.Scope.Add("API");
 
     // and refresh token
     options.Scope.Add("offline_access");

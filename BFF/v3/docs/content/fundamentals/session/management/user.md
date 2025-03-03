@@ -46,7 +46,7 @@ If there is a current session, the user endpoint returns a JSON array containing
 ```
 
 ## User Claims
-Since the user endpoint returns the claims that are in the ASP.NET Core session, anything that changes the session will be reflected in its output. You can customize the contents of the session via the OpenID Connect handler's [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.claimactioncollectionmapextensions?view=aspnetcore-7.0) infrastructure, or by using [claims transformation](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.iclaimstransformation?view=aspnetcore-7.0). For example, if you add a [claim]({{< ref-idsrv "/fundamentals/claims" >}}) to the [userinfo endpoint]({{< ref-idsrv "reference/endpoints/userinfo" >}}) at IdentityServer that you would like to include in the */bff/user* endpoint, you need to add a corresponding ClaimAction in the BFF's OpenID Connect Handler to include the claim in the BFF's session.
+Since the user endpoint returns the claims that are in the ASP.NET Core session, anything that changes the session will be reflected in its output. You can customize the contents of the session via the OpenID Connect handler's [ClaimAction](https://docs.microsoft.com/en-us/dotnet/API/microsoft.aspnetcore.authentication.claimactioncollectionmapextensions?view=aspnetcore-7.0) infrastructure, or by using [claims transformation](https://docs.microsoft.com/en-us/dotnet/API/microsoft.aspnetcore.authentication.iclaimstransformation?view=aspnetcore-7.0). For example, if you add a [claim]({{< ref-idsrv "/fundamentals/claims" >}}) to the [userinfo endpoint]({{< ref-idsrv "reference/endpoints/userinfo" >}}) at IdentityServer that you would like to include in the */bff/user* endpoint, you need to add a corresponding ClaimAction in the BFF's OpenID Connect Handler to include the claim in the BFF's session.
 
 ## Management Claims
 In addition to the claims in the ASP.NET Core Session, Duende.BFF adds three additional claims:
@@ -64,7 +64,7 @@ This is the session state value of the upstream OIDC provider that can be use fo
 This is the URL to trigger logout. If the upstream provider includes a *sid* claim, the BFF logout endpoint requires this value as a query string parameter for CSRF protection. This behavior can be configured with the *RequireLogoutSessionId* in the [options]({{< ref "/fundamentals/options" >}}).
 
 ## Typical Usage
-To use the endpoint, make an http GET request to it from your frontend javascript code. For example, your application could use the fetch api to make requests to the user endpoint like this:
+To use the endpoint, make an http GET request to it from your frontend javascript code. For example, your application could use the fetch API to make requests to the user endpoint like this:
 
 ```js
 var req = new Request("/user", {

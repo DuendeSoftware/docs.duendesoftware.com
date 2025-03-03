@@ -98,7 +98,7 @@ You can implement this interface yourself or extend the *DefaultAccessTokenRetri
 Implementations of the *IAccessTokenRetriever* can be added to endpoints when they are mapped using the *WithAccessTokenRetriever* extension method:
 
 ```cs
-app.MapRemoteBffApiEndpoint("/api/impersonation", "https://api.example.com/endpoint/requiring/impersonation")
+app.MapRemoteBffApiEndpoint("/API/impersonation", "https://API.example.com/endpoint/requiring/impersonation")
     .RequireAccessToken(TokenType.User)
     .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```

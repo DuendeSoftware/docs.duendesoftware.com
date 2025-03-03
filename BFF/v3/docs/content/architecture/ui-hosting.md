@@ -39,7 +39,7 @@ You may want to host the UI outside of the BFF. At development time, UI develope
 ![](../images/bff_ui_hosting_cdn.svg)
 
 
-The browser accesses the application via the BFF. The BFF proxies the calls to index.html to the CDN. The browser can then download all static assets from the CDN, but then use the BFF (and it’s api’s and user management api’s) secured by the authentication cookie as normal. 
+The browser accesses the application via the BFF. The BFF proxies the calls to index.html to the CDN. The browser can then download all static assets from the CDN, but then use the BFF (and it’s API’s and user management API’s) secured by the authentication cookie as normal. 
 
 Effectively, this turns your front-end and BFF Host into two separately deployable units. You'll need to ensure that the two components are hosted on subdomains of the same domain so that [third party cookie blocking]({{<ref "/architecture/third-party-cookies" >}}) doesn't prevent the frontend from including cookies in its requests to the BFF host. 
 

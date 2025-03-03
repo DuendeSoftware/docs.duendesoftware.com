@@ -26,7 +26,7 @@ public class CustomizedBackchannelLogoutService : DefaultBackchannelLogoutServic
 
 ## Validation
 
-Validation of the incoming request can be customized by overriding one of several virtual methods in the *DefaultBackchannelLogoutService*. *GetTokenValidationParameters* allows you to specify the *[TokenValidationParameters](https://learn.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.tokenvalidationparameters?view=azure-dotnet)* used to validate the incoming logout token. The default implementation creates token validation parameters based on the authentication scheme's configuration. Your override could begin by calling the base method and then make changes to those parameters or completely customize how token validation parameters are created. For example:
+Validation of the incoming request can be customized by overriding one of several virtual methods in the *DefaultBackchannelLogoutService*. *GetTokenValidationParameters* allows you to specify the *[TokenValidationParameters](https://learn.microsoft.com/en-us/dotnet/API/microsoft.identitymodel.tokens.tokenvalidationparameters?view=azure-dotnet)* used to validate the incoming logout token. The default implementation creates token validation parameters based on the authentication scheme's configuration. Your override could begin by calling the base method and then make changes to those parameters or completely customize how token validation parameters are created. For example:
 
 ```csharp
 public class CustomizedBackchannelLogoutService : DefaultBackchannelLogoutService

@@ -36,7 +36,7 @@ YARP is most commonly configured by a config file. The following simple example 
       "cluster1": {
         "Destinations": {
           "destination1": {
-            "Address": "https://api.mycompany.com/todos"
+            "Address": "https://API.mycompany.com/todos"
           }
         }
       }
@@ -74,7 +74,7 @@ yarpBuilder.LoadFromMemory(
                 { 
                     "destination1", new() 
                     { 
-                        Address = "https://api.mycompany.com/todos" 
+                        Address = "https://API.mycompany.com/todos" 
                     } 
                 },
             }
