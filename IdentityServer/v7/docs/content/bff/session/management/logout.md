@@ -1,5 +1,5 @@
 ---
 type: redirect
 baseUrl: bff
-target: "/session/management/logout"
+target: "fundamentals/session/management/logout"
 ---

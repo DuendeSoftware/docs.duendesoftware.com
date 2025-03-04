@@ -13,7 +13,7 @@ qs_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7
 samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7"
 
 [params.baseUrls]
-bff = "https://docs.duendesoftware.com/bff/v2"
+bff = "https://docs.duendesoftware.com/bff/v3"
 
 [params.newContent]
 enabled = false

@@ -1,5 +1,5 @@
 ---
 type: redirect
 baseUrl: bff
-target: "/apis"
+target: "fundamentals/apis"
 ---
