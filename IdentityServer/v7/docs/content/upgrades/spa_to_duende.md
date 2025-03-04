@@ -4,7 +4,7 @@ weight: 150
 ---
 
 Microsoft publishes templates for securing an API with token based security backed by the ASP.NET Identity identity management library. 
-There are several templates; a couple for JavaScript-based SPA applications using React and Angular, and one for Blazor WASM style SPA applications. All of these use Duende IdentityServer as the token server to issue tokens to the client-side code in the browser for securing calls to an API.
+There are several templates; a couple for JavaScript-based SPA applications using React and Angular, and one for Blazor style SPA applications. All of these use Duende IdentityServer as the token server to issue tokens to the client-side code in the browser for securing calls to an API.
 
 This upgrade guide discusses the design pattern of these templates and how you would migrate them to a more recommended architecture. This guide describes the high level architecture, and doesn't go into the specifics of any code, and as such should suffice for the SPA/JavaScript templates, as well as the Blazor WASM template.
 
