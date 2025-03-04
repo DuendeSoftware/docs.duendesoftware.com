@@ -118,8 +118,63 @@ builder.Services.AddBff(options =>
     Specifies the Json Web Key to use when creating DPoP proof tokens. 
     Defaults to null, which is appropriate when not using DPoP.
 
+* ***RemoveSessionAfterRefreshTokenExpiration***
+    Flag that specifies if a user session should be removed after an attempt to use a Refresh Token to acquire
+    a new Access Token fails. This behavior is only triggered when proxying requests to remote
+    APIs with TokenType.User or TokenType.UserOrClient. Defaults to True. 
+
+
 # BFF Blazor Options
+
+If you use blazor, there's a special type of options that you can configure, using the **BffBlazorOptions** class. 
+
+In the server, you configure the **BffBlazorOptions** as follows:
+
+``` csharp
+
+    builder.Services.Configure<BffBlazorOptions>(opt => 
+        // configure options here.
+        // Note, the only option that makes sense here is :
+        //  opt.ServerStateProviderPollingInterval = some value);
+
+```
+
+In WASM, you configure the **BffBlazorOptions** using the AddBffBlazorClient method:
+
+``` csharp
+
+    builder.Services.AddBffBlazorClient(opt =>
+    {
+    // configure options here..
+    })
+
+```
 
 ## Blazor Options
 
-## Blazor Client Options
+* ***RemoteApiPath*** 
+    The base path to use for remote APIs.
+
+* ***RemoteApiBaseAddress*** 
+    The base address to use for remote APIs. If unset (the default), the
+    blazor hosting environment's base address is used.
+ 
+* ***StateProviderBaseAddress*** 
+    The base address to use for the state provider's calls to the /bff/user
+    endpoint. If unset (the default), the blazor hosting environment's base
+    address is used.
+
+* ***WebAssemblyStateProviderPollingDelay*** 
+
+    The delay, in milliseconds, before the BffClientAuthenticationStateProvider will
+    start polling the /bff/user endpoint. Defaults to 1000 ms.
+
+* ***WebAssemblyStateProviderPollingInterval*** 
+    The delay, in milliseconds, between polling requests by the
+    BffClientAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
+    ms.
+
+* ***ServerStateProviderPollingInterval*** 
+    The delay, in milliseconds, between polling requests by the
+    BffServerAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
+    ms.
