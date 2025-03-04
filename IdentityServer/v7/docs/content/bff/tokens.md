@@ -1,5 +1,5 @@
 ---
 type: "redirect"
 baseUrl: bff
-target: "/tokens"
+target: "fundamentals/tokens"
 ---

@@ -1,5 +1,5 @@
 ---
 type: redirect
 baseUrl: bff
-target: "/session/management/back-channel-logout"
+target: "fundamentals/session/management/back-channel-logout"
 ---
