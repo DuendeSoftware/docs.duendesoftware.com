@@ -131,12 +131,10 @@ If you use blazor, there's a special type of options that you can configure, usi
 In the server, you configure the **BffBlazorOptions** as follows:
 
 ``` csharp
-
-    builder.Services.Configure<BffBlazorOptions>(opt => 
-        // configure options here.
-        // Note, the only option that makes sense here is :
-        //  opt.ServerStateProviderPollingInterval = some value);
-
+builder.Services.Configure<BffBlazorOptions>(opt => 
+    // configure options here.
+    // Note, the only option that makes sense here is :
+    //  opt.ServerStateProviderPollingInterval = some value);
 ```
 
 In WASM, you configure the **BffBlazorOptions** using the AddBffBlazorClient method:
