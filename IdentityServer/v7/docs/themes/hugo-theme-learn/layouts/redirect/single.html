@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <title>{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target }}</title>
-  <link rel="canonical" href="{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target }}">
+  <title>{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target | strings.TrimPrefix "/" }}</title>
+  <link rel="canonical" href="{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target | strings.TrimPrefix "/" }}">
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url={{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target }}">
+  <meta http-equiv="refresh" content="0; url={{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target | strings.TrimPrefix "/" }}">
 </head>
 <body>
 <script>
-  window.location.replace("{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target }}")
+  window.location.replace("{{ index .Site.Params.baseUrls .Params.baseUrl }}{{ .Params.target | strings.TrimPrefix "/" }}")
 </script>
 </body>
 </html>
