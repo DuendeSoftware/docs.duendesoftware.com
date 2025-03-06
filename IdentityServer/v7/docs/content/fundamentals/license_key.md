@@ -46,7 +46,8 @@ programmatic approach.
 {{% notice note %}}
 If you want to redistribute Duende IdentityServer as part of a product to your customers, 
 you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).
-To include the license key with your product, we recommend adding it as an embedded resource.
+To include the license key with your product, we recommend loading it at startup
+from an embedded resource.
 {{% /notice %}}
 
 #### File System
@@ -154,9 +155,7 @@ included in this limit. Beginning in IdentityServer 7.1, IdentityServer will log
 when the trial mode threshold is exceeded:
 
 ```text
-You are using IdentityServer in trial mode and have exceeded the trial threshold of 500 requests 
-handled by IdentityServer. In a future version, you will need to restart the server or configure 
-a license key to continue testing.
+You are using IdentityServer in trial mode and have exceeded the trial threshold of 500 requests handled by IdentityServer. In a future version, you will need to restart the server or configure a license key to continue testing.
 ```
 
 In a future version, IdentityServer will shut down at that time instead.
