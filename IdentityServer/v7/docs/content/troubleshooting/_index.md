@@ -21,6 +21,7 @@ We recommend to always set this flag to true in any development and test environ
 Asp.Net Core Data Protection is an encryption mechanism that is heavily used by Duende.IdentityServer and the Asp.Net Core Authentication libraries. If it is not correctly configured it might result in issues such as
 * Unable to unprotect the message.State.
 * The key {xxxxx-xxxx-xxx-xxx-xxxxxxx} was not found in the key ring.
+* Failed to unprotect AuthenticationTicket payload for key {key}
 
 See [our data protection guide]({{< ref "/deployment/data_protection" >}}) for more information.
 
