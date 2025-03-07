@@ -94,3 +94,16 @@ builder.Services.AddAuthentication().AddCookie("cookie", options =>
     options.Cookie.SameSite = SameSiteMode.Strict;
 });
 ```
+
+#### Choosing between SameSite.Lax and SameSite.Strict
+
+The [SameSite cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value) is a feature of modern browsers that restricts cookies so that they are only sent to pages originating from the [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) where the cookie was originally issued. This prevents CSRF attacks and helps with improving privacy, because cross site requests will no longer implicitly include the user's credentials.
+
+If you configure SameSiteMode.Strict, this means that if a user originates from an external site and is redirected or linked to the BFF application, then the authentication cookie is not sent automatically. So, the application will consider the user to be not logged in, even though there may be a valid authentication cookie in the cookie jar. If the user refreshes the page, or visits a link on your site that forces a complete page reload, then the authentication cookie will be sent along normally again. 
+
+This also happens when you have an identity provider that's hosted on a different site than the BFF, in combination with SameSiteMode.Strict. After successful authentication at the IDP, the user will be redirected back to the BFF site. The server will then place an authentication cookie in the browser, but the browser will not automatically include it in subsequent requests until the full page is manually reloaded by the user. This means the user appears to still be logged out, even though the cookies is there. 
+
+So, if you have an Identity Provider that's hosted under a different site than your BFF, you may want to configure your cookie policy to be SameSiteMode.Lax
+
+
+
