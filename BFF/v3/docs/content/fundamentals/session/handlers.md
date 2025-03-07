@@ -106,4 +106,4 @@ This also happens when you have an identity provider that's hosted on a differen
 So, if you have an Identity Provider that's hosted under a different site than your BFF, you may want to configure your cookie policy to be `SameSiteMode.Lax`.
 
 
-
+> Chrome will make an exception for cookies set without a SameSite attribute less than 2 minutes ago. Such cookies will also be sent with non-idempotent (e.g. POST) top-level cross-site requests despite normal SameSite=Lax cookies requiring top-level cross-site requests to have a safe (e.g. GET) HTTP method. Support for this intervention ("Lax + POST") will be removed in the future. (source chromestatus)[https://chromestatus.com/feature/5088147346030592]
