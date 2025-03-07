@@ -24,26 +24,27 @@ There are two ways to configure this middleware:
 2. Configure the *ForwardedHeadersOptions* in DI, and use the ForwardedHeaders middleware explicitly in your pipeline. The advantage of configuring the middleware explicitly is that you can configure it in a way that is appropriate for your environment, if the defaults used by ASPNETCORE_FORWARDEDHEADERS_ENABLED are not what you need. Most notably, you can use the *KnownNetworks* or *KnownProxies* options to only accept headers sent by a known proxy, and you can set the *ForwardLimit* to allow for multiple proxies in front of your IdentityServer. This is often the right choice when you have more complex proxying going on, or if your proxy has a stable IP address.
    
 In a client codebase operating behind a proxy, you'll need to configure the *ForwardedHeadersOptions*. Be sure to correctly set values for *KnownNetworks* and *KnownProxies* for your production
-       environments. By default, *KnownNetworks* and *KnownProxies* support your local development environment with values of *127.0.0.1* and *::1* respectively.
+environments. By default, *KnownNetworks* and *KnownProxies* support localhost with values of *127.0.0.1* and *::1* respectively. This is useful (and secure!) for local development
+environments and for solutions where the reverse proxy and the .NET web host runs on the same machine.
 
-    ```csharp
-    builder.Services.Configure<ForwardedHeadersOptions>(options =>
-    {
-        // you may need to change these ForwardedHeaders 
-        // values based on your network architecture
-        options.ForwardedHeaders = ForwardedHeaders.XForwardedHost |
-                                   ForwardedHeaders.XForwardedProto;
-        
-        // address ranges of known proxies to accept forwarded headers from.                       
-        var network = new IPNetwork(IPAddress.Parse("192.168.0.0"), 24);
-        options.KnownNetworks.Add(network);
-        
-        // exact Addresses of known proxies to accept forwarded headers from.
-        options.KnownProxies.Add(IPAddress.Parse("10.11.120.1"); // <-- change this value to the IP Address of the proxy
-   
-        // default is 1
-        options.ForwardLimit = 1;
-    });
-    ```
+```
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    // you may need to change these ForwardedHeaders 
+    // values based on your network architecture
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedHost |
+                                ForwardedHeaders.XForwardedProto;
+    
+    // exact Addresses of known proxies to accept forwarded headers from.
+    options.KnownProxies.Add(IPAddress.Parse("203.0.113.42"); // <-- change this value to the IP Address of the proxy
+
+    // if the proxies could use any address from a block, that can be configured too:
+    // var network = new IPNetwork(IPAddress.Parse("198.51.100.0"), 24);
+    // options.KnownNetworks.Add(network);
+
+    // default is 1
+    options.ForwardLimit = 1;
+});
+```
 
 Please consult the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer) for more details.
