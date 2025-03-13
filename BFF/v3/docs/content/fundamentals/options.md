@@ -169,8 +169,3 @@ builder.Services.AddBffBlazorClient(opt =>
     The delay, in milliseconds, between polling requests by the
     BffClientAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
     ms.
-
-* ***ServerStateProviderPollingInterval*** 
-    The delay, in milliseconds, between polling requests by the
-    BffServerAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
-    ms.
