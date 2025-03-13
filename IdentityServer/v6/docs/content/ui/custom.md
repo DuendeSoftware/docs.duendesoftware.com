@@ -29,7 +29,7 @@ public class CustomAuthorizeInteractionResponseGenerator : AuthorizeInteractionR
     {
     }
 
-    protected internal override async Task<InteractionResponse> ProcessLoginAsync(ValidatedAuthorizeRequest request)
+    protected override async Task<InteractionResponse> ProcessLoginAsync(ValidatedAuthorizeRequest request)
     {
         var result = await base.ProcessLoginAsync(request);
 
