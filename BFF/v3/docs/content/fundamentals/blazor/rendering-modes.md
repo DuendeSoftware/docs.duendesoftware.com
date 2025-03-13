@@ -16,7 +16,7 @@ It's important to understand that, if you use a rendering mode that uses WebAsse
 
 If you have a component that's rendered both on the server AND on the client, then you effectively need to make sure that all the services it requires are available both on the server AND on the client. 
 
-## Fetching data from local api's
+## Fetching data from local APIs
 
 If your BFF application can directly access data (for example from a database), then you have to decide where this information is rendered. 
 
