@@ -73,7 +73,7 @@ internal class HttpClientDataAccessor(HttpClient client) : IDataAccessor
 
 ``` 
 
-## Fetching data from remote api's
+## Fetching data from remote APIs
 
 If your BFF needs to secure access to remote api's, then your components can both directly use a (typed) **HttpClient**. How this HttpClient is configured is quite different on the client vs the server though. 
 
