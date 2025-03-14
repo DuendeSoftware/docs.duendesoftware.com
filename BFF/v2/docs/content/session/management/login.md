@@ -3,6 +3,7 @@ title: "BFF Login Endpoint"
 menuTitle: "Login"
 date: 2020-09-10T08:22:12+02:00
 weight: 20
+newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/management/login/"
 ---
 
 The */bff/login* endpoint begins the authentication process. To use it, typically javascript code will navigate away from the frontend application to the login endpoint:

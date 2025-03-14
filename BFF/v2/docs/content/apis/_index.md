@@ -2,6 +2,7 @@
 title = "API Endpoints"
 weight = 40
 chapter = true
+newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/apis/"
 +++
 
 # Securing and Accessing API Endpoints
