@@ -723,3 +723,76 @@ Demonstration of Proof-of-Possession settings. Available on the *DPoP* property 
 * ***Lifetime***
 
     Controls the lifetime of pushed authorization requests. The pushed authorization request's lifetime begins when the request to the PAR endpoint is received, and is validated until the authorize endpoint returns a response to the client application. Note that user interaction, such as entering credentials or granting consent, may need to occur before the authorize endpoint can do so. Setting the lifetime too low will likely cause login failures for interactive users, if pushed authorization requests expire before those users complete authentication. Some security profiles, such as the FAPI 2.0 Security Profile recommend an expiration within 10 minutes to prevent attackers from pre-generating requests. To balance these constraints, this lifetime defaults to 10 minutes. 
+
+## Preview Features
+Preview Features settings. Available on the *Preview* property of the *IdentityServerOptions* object.
+
+{{% notice note %}}
+Duende IdentityServer may ship preview features, which can be configured using preview options.
+Note that preview features can be removed and may break in future releases.
+{{% /notice %}}
+
+When enabling a specific preview feature, you may see an error message:
+
+```
+Error DUENDEPREVIEW001 : ‘EnableDiscoveryDocumentCache’ is for evaluation
+purposes only and is subject to change or removal in future updates.
+Suppress this diagnostic to proceed.
+```
+
+To use a preview feature, you will have to explicitly opt-in, by suppressing the preview feature's diagnostic ID.
+This can be done by adding a suppression in the project file, or using `#pragma warning disable` at the call site.
+
+Here's an example project file using the `<NoWarn>` property to suppress the `DUENDEPREVIEW001` diagnostic:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <!-- ... -->
+
+    <PropertyGroup>
+        <!-- Opt-in to Duende IdentityServer preview features -->
+        <NoWarn>DUENDEPREVIEW001</NoWarn>
+    </PropertyGroup>
+
+    <!-- ... -->
+
+</Project>
+```
+
+Alternatively, you can suppress the warning at the call site:
+
+```csharp
+#pragma warning disable DUENDEPREVIEW001
+    options.Preview.EnableDiscoveryDocumentCache = true;
+#pragma warning enable DUENDEPREVIEW001
+```
+
+#### DUENDEPREVIEW001
+
+In large deployments of Duende IdentityServer, where a lot of concurrent users attempt to
+consume the [discovery endpoint]({{< ref "reference/endpoints/discovery" >}}) to retrieve
+metadata about your IdentityServer, you can increase throughput by enabling the
+discovery document cache preview using the **EnableDiscoveryDocumentCache** flag.
+This will cache discovery document information for the duration specified in the
+**DiscoveryDocumentCacheDuration** option.
+
+It's best to keep the cache time low if you use the `CustomEntries` element on the
+discovery document or implement a custom `IDiscoveryResponseGenerator`.
+
+The `DUENDEPREVIEW001` diagnostic is reported when using the discovery endpoint cache.
+
+#### DUENDEPREVIEW002
+
+When using [*private key JWT*]({{< ref "/tokens/authentication/jwt" >}}),
+there is a theoretical vulnerability where a Relying Party trusting multiple OpenID Providers
+could be attacked if one of the OpenID Providers is malicious or compromised.
+
+The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
+explicit `typ` header in the authentication JWT.
+
+You can [enable strict audience validation in Duende IdentityServer]({{< ref "/tokens/authentication/jwt#strict-audience-validation" >}})
+using the **StrictClientAssertionAudienceValidation** flag, which strictly validates that
+the audience is equal to the issuer and validates the token's `typ` header.
+
+The `DUENDEPREVIEW002` diagnostic is reported when using Strict Audience Validation.
