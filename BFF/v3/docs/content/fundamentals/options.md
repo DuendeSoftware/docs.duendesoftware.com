@@ -124,20 +124,27 @@ builder.Services.AddBff(options =>
     APIs with TokenType.User or TokenType.UserOrClient. Defaults to True. 
 
 
-# BFF Blazor Options
+# BFF Blazor Server Options
 
-If you use blazor, there's a special type of options that you can configure, using the **BffBlazorOptions** class. 
-
-In the server, you configure the **BffBlazorOptions** as follows:
+In the Blazor Server, you configure the **BffBlazorServerOptions** by using the **AddBlazorServer** method. 
 
 ``` csharp
-builder.Services.Configure<BffBlazorOptions>(opt => 
-    // configure options here.
-    // Note, the only option that makes sense here is :
-    //  opt.ServerStateProviderPollingInterval = some value);
-```
+builder.Services.AddBlazorServer(opt =>
+{
+    // configure options here..
+})
 
-In WASM, you configure the **BffBlazorOptions** using the AddBffBlazorClient method:
+The following options are available:
+
+* ***ServerStateProviderPollingInterval*** 
+    The delay, in milliseconds, between polling requests by the
+    BffServerAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
+    ms.
+
+
+# BFF Blazor Client Options
+
+In WASM, you configure the **BffBlazorClientOptions** using the **AddBffBlazorClient** method:
 
 ``` csharp
 builder.Services.AddBffBlazorClient(opt =>
@@ -146,7 +153,7 @@ builder.Services.AddBffBlazorClient(opt =>
 })
 ```
 
-## Blazor Options
+The following options are available:
 
 * ***RemoteApiPath*** 
     The base path to use for remote APIs.
@@ -169,3 +176,4 @@ builder.Services.AddBffBlazorClient(opt =>
     The delay, in milliseconds, between polling requests by the
     BffClientAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
     ms.
+
