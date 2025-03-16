@@ -178,7 +178,7 @@ contains, and can fool the Relying Party into creating authentication JWTs for t
 a victim OpenID Provider.
 
 The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
-explicit `typ` header in the authentication JWT.
+explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
 
 You can enable strict audience validation using the [**StrictClientAssertionAudienceValidation**]({{< ref "/reference/options/#DUENDEPREVIEW002" >}})
 flag, which strictly validates that the audience is equal to the issuer and validates the token's
