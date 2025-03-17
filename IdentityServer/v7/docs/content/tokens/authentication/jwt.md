@@ -180,7 +180,7 @@ a victim OpenID Provider.
 The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
 explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
 
-You can enable strict audience validation using the [**StrictClientAssertionAudienceValidation**]({{< ref "/reference/options/#DUENDEPREVIEW002" >}})
+You can enable strict audience validation using the [**StrictClientAssertionAudienceValidation**]({{< ref "/reference/options/#strict-audience-validation" >}})
 flag, which strictly validates that the audience is equal to the issuer and validates the token's
 `typ` header.
 

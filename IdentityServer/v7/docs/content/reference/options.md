@@ -732,43 +732,7 @@ Duende IdentityServer may ship preview features, which can be configured using p
 Note that preview features can be removed and may break in future releases.
 {{% /notice %}}
 
-When enabling a specific preview feature, you may see an error message:
-
-```
-Error DUENDEPREVIEW001 : ‘EnableDiscoveryDocumentCache’ is for evaluation
-purposes only and is subject to change or removal in future updates.
-Suppress this diagnostic to proceed.
-```
-
-To use a preview feature, you will have to explicitly opt-in, by suppressing the preview feature's diagnostic ID.
-This can be done by adding a suppression in the project file, or using `#pragma warning disable` at the call site.
-
-Here's an example project file using the `<NoWarn>` property to suppress the `DUENDEPREVIEW001` diagnostic:
-
-```xml
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
-    <!-- ... -->
-
-    <PropertyGroup>
-        <!-- Opt-in to Duende IdentityServer preview features -->
-        <NoWarn>DUENDEPREVIEW001</NoWarn>
-    </PropertyGroup>
-
-    <!-- ... -->
-
-</Project>
-```
-
-Alternatively, you can suppress the warning at the call site:
-
-```csharp
-#pragma warning disable DUENDEPREVIEW001
-    options.Preview.EnableDiscoveryDocumentCache = true;
-#pragma warning enable DUENDEPREVIEW001
-```
-
-#### DUENDEPREVIEW001
+#### Discovery Document Cache
 
 In large deployments of Duende IdentityServer, where a lot of concurrent users attempt to
 consume the [discovery endpoint]({{< ref "reference/endpoints/discovery" >}}) to retrieve
@@ -780,9 +744,7 @@ This will cache discovery document information for the duration specified in the
 It's best to keep the cache time low if you use the `CustomEntries` element on the
 discovery document or implement a custom `IDiscoveryResponseGenerator`.
 
-The `DUENDEPREVIEW001` diagnostic is reported when using the discovery endpoint cache.
-
-#### DUENDEPREVIEW002
+#### Strict Audience Validation
 
 When using [*private key JWT*]({{< ref "/tokens/authentication/jwt" >}}),
 there is a theoretical vulnerability where a Relying Party trusting multiple OpenID Providers
@@ -794,5 +756,3 @@ explicit `typ` header in the authentication JWT.
 You can [enable strict audience validation in Duende IdentityServer]({{< ref "/tokens/authentication/jwt#strict-audience-validation" >}})
 using the **StrictClientAssertionAudienceValidation** flag, which strictly validates that
 the audience is equal to the issuer and validates the token's `typ` header.
-
-The `DUENDEPREVIEW002` diagnostic is reported when using Strict Audience Validation.
