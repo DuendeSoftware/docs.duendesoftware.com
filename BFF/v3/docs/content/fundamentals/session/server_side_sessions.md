@@ -37,7 +37,7 @@ builder.Services.AddBff()
 ```
 
 ### Entity Framework Migrations 
-Most datastores that you might use with Entity Framework use a schema to define the structure of their data. *Duende.BFF.EntityFramework* doesn't make any assumptions about the underlying datastore, how (or indeed even if) it defines its schema, or how schema changes are managed by your organization. For these reasons, Duende does not directly support database creation, schema changes, or data migration by publishing database scripts. You are expected to manage your database in the way your organization sees fit. Using EF migrations is one possible approach to that, which Duende facilitates by publishing entity classes in each version of *Duende.BFF.EntityFramework*. An example project that uses those entities to create migrations is [here](https://github.com/DuendeSoftware/BFF/tree/main/migrations/UserSessionDb).
+Most datastores that you might use with Entity Framework use a schema to define the structure of their data. *Duende.BFF.EntityFramework* doesn't make any assumptions about the underlying datastore, how (or indeed even if) it defines its schema, or how schema changes are managed by your organization. For these reasons, Duende does not directly support database creation, schema changes, or data migration by publishing database scripts. You are expected to manage your database in the way your organization sees fit. Using EF migrations is one possible approach to that, which Duende facilitates by publishing entity classes in each version of *Duende.BFF.EntityFramework*. An example project that uses those entities to create migrations is [here](https://github.com/DuendeSoftware/products/tree/main/bff/migrations/UserSessionDb).
 
 ## Session Store Cleanup
 
