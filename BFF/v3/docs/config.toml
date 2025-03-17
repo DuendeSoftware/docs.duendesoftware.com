@@ -16,7 +16,7 @@ bffBaseUrl = "https://docs.duendesoftware.com/bff/v3"
 identityServerBaseURL = "https://docs.duendesoftware.com/identityserver/v7"
 
 [params.PreRelease]
-enabled = true
+enabled = false
 
 [params.newContent]
 enabled = false
