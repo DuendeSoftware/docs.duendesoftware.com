@@ -116,5 +116,5 @@ protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 ![image](images/Worker.gif)
 
 Full sample can be found in the
-[samples](https://github.com/IdentityModel/IdentityModel.AspNetCore).
+[samples](https://github.com/DuendeArchive/IdentityModel.AspNetCore).
 

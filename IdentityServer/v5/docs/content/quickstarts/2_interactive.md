@@ -318,7 +318,7 @@ The process for defining an identity resource is as follows:
 
 It is also noteworthy, that the retrieval of claims for tokens is an extensibility point - *IProfileService*.
 Since we are using *AddTestUsers*, the *TestUserProfileService* is used by default.
-You can inspect the source code [here](https://github.com/DuendeSoftware/IdentityServer/blob/main/src/IdentityServer/Test/TestUserProfileService.cs) to see how it works.
+You can inspect the source code [here](https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Test/TestUserProfileService.cs) to see how it works.
 
 ## Adding Support for External Authentication
 Next we will add support for external authentication.
