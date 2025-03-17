@@ -4,7 +4,7 @@ weight = 20
 chapter = false
 +++
 
-The most common way to use the access token management for interactive web applications is described [here](web-applications) - however you may want to customise certain aspects of it - here's what you can do.
+The most common way to use the access token management for interactive web applications is described [here]({{<ref "../web_apps">}}) - however you may want to customise certain aspects of it - here's what you can do.
 
 ### General options
 You can pass in some global options when registering token management in DI.

@@ -14,7 +14,7 @@ There are several options for hosting the UI assets when using a BFF.
 Hosting the UI together with the BFF is the simplest choice, as requests from the front end to the backend will automatically include the authentication cookie and not require CORS 
 headers. This makes the BFF and the front-end application a single deployable unit. Below shows a graphical overview of what that would look like:
 
-![Hosting BFF UI from the UI](../images/bff_ui_hosting_loc.svg)
+![Hosting BFF UI from the UI](../../images/bff_ui_hosting_loc.svg)
 
 
 If you create a BFF host using our templates, the UI will be hosted in this way:
@@ -36,7 +36,7 @@ Microsoft's templates are easy to use at dev time from Visual Studio. They allow
 #### Host the UI separately
 You may want to host the UI outside of the BFF. At development time, UI developers might prefer to run the frontend outside of Visual Studio (e.g., using the node cli). You might also want to have separate deployments of the frontend and the BFF, and you might want your static UI assets hosted on a CDN. Below is a schematic overview of what that would look like:
 
-![Hosting BFF UI on CDN](../images/bff_ui_hosting_cdn.svg)
+![Hosting BFF UI on CDN](../../images/bff_ui_hosting_cdn.svg)
 
 
 The browser accesses the application via the BFF. The BFF proxies the calls to index.html to the CDN. The browser can then download all static assets from the CDN, but then use the BFF (and it’s API’s and user management API’s) secured by the authentication cookie as normal. 
@@ -55,7 +55,7 @@ A sample of this approach is [available]({{< ref "/samples#separate-host-for-ui"
 #### Serve the index page from the BFF host
 Lastly, you could serve the index page of the SPA from the BFF, but have all of the other static assets hosted on another host (presumably a CDN). This technique makes the UI and BFF have exactly the same origin, so the authentication cookie will be sent from the frontend to the BFF automatically, and third party cookie blocking and the SameSite cookie attribute won't present any problems. The following diagram shows how that would work:
 
-![BFF Proxies the Index html from CDN](../images/bff_ui_hosting_proxy_index.svg)
+![BFF Proxies the Index html from CDN](../../images/bff_ui_hosting_proxy_index.svg)
 
 Setting this up for local development takes a bit of effort however. As you make changes to the frontend, the UI's build process might generate a change to the index page. If it does, you'll need to arrange for the index page being served by the BFF host to reflect that change.
 

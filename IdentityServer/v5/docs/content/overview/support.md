@@ -16,9 +16,9 @@ Planned features and their [milestones](https://github.com/DuendeSoftware/Identi
 Standard developer support and feature requests are handled via our public [developer community](https://github.com/DuendeSoftware/community/discussions).
 
 Priority developer support is part of our Enterprise Edition. It provides access to a helpdesk system with a response time guarantee.
-Please [contact](https://duendesoftware.com/contact) us for more information.
+Please [contact](https://duendesoftware.com/contact/general) us for more information.
 
 See [here](https://duendesoftware.com/products/support) for our support policy.
 
 ### Reporting a security vulnerability
-Security issues and bugs should be reported privately [here](https://duendesoftware.com/contact). You should receive a response within 24 hours.
+Security issues and bugs should be reported privately [here](https://duendesoftware.com/contact/general). You should receive a response within 24 hours.

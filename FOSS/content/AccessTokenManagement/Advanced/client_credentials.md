@@ -4,7 +4,7 @@ weight = 10
 chapter = false
 +++
 
-The most common way to use the access token management for machine to machine communication is described [here](worker-applications) - however you may want to customize certain aspects of it - here's what you can do.
+The most common way to use the access token management for machine to machine communication is described [here]({{<ref "../workers">}}) - however you may want to customize certain aspects of it - here's what you can do.
 
 ### Client options
 

@@ -5,11 +5,10 @@
     "v7": "hugo server --port 1313 --navigateToChanged --source IdentityServer/v7/docs",
     "v6": "hugo server --port 1312 --navigateToChanged --source IdentityServer/v6/docs",
     "v5": "hugo server --port 1311 --navigateToChanged --source IdentityServer/v5/docs",
-
     "foss": "hugo server --port 1314 --navigateToChanged --source FOSS",
-
     "bff-v3": "hugo server --port 1316 --navigateToChanged --source BFF/v3/docs",
-    "bff-v2": "hugo server --port 1315 --navigateToChanged --source BFF/v2/docs"
+    "bff-v2": "hugo server --port 1315 --navigateToChanged --source BFF/v2/docs",
+    "linkchecker": "./build.sh && lychee --no-progress --max-concurrency 16 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude github --root-dir \"$PWD/root\" root/**"
   },
   "description": "Documentation for Duende Software products",
   "keywords": [],

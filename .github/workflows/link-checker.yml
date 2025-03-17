@@ -1,0 +1,38 @@
+name: Link checker
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * 0"
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+
+jobs:
+  link_checker_job:
+    runs-on: ubuntu-latest
+    name: Link Checker Job
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.140.2'
+      - name: Run hugo
+        run: |
+          echo $PWD
+          export HUGO_ENV='production' 
+          ./build.sh
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          args: "--no-progress --max-concurrency 8 --accept 200,429 --exclude-loopback --require-https --exclude sample.duendesoftware.com --root-dir \"$PWD/root\" root/**"
+          fail: true

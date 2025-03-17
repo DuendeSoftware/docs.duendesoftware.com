@@ -5,7 +5,7 @@ weight = 20
 
 In automatic mode, you can encapsulate all browser interactions by
 implementing the
-[IBrowser](https://github.com/IdentityModel/IdentityModel.OidcClient/blob/main/src/OidcClient/Browser/IBrowser.cs)
+[IBrowser](https://github.com/DuendeArchive/IdentityModel.OidcClient/blob/main/src/OidcClient/Browser/IBrowser.cs)
 interface:
 
 ```

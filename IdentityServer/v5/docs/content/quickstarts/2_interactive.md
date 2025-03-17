@@ -257,7 +257,7 @@ Finally the MVC view will show the contents of the cookie.
 ![](../images/3_claims.png)
 
 As you can see, the cookie has two parts, the claims of the user, and some metadata. This metadata also contains the original token that was issued by the IdentityServer.
-Feel free to copy this token to [jwt.ms](https://jwt.ms>) to inspect its content.
+Feel free to copy this token to [jwt.ms](https://jwt.ms) to inspect its content.
 
 ## Adding sign-out
 The very last step is to add sign-out to the MVC client.
@@ -397,5 +397,5 @@ services.AddAuthentication()
 And now a user should be able to use the cloud-hosted demo identity provider.
 
 {{% notice note %}}
-The quickstart UI auto-provisions external users. As an external user logs in for the first time, a new local user is created, and all the external claims are copied over and associated with the new user. The way you deal with such a situation is completely up to you though. Maybe you want to show some sort of registration UI first. The source code for the default quickstart can be found [here](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI). The controller where auto-provisioning is executed can be found [here](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/Quickstart/Account/ExternalController.cs).
+The quickstart UI auto-provisions external users. As an external user logs in for the first time, a new local user is created, and all the external claims are copied over and associated with the new user. The way you deal with such a situation is completely up to you though. Maybe you want to show some sort of registration UI first. The source code for the default quickstart can be found [here](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI).
 {{% /notice %}}
