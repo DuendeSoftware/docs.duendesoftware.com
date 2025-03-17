@@ -28,7 +28,7 @@ dotnet new bfflocalapi
 ```
 
 
-Many frontend applications require a build process, which complicates the use of the static file middleware at development time. Visual Studio includes SPA templates that start up a SPA and proxy requests to it during development. Samples of Duende.BFF that take this approach using [React]({{< ref "/samples/bff#reactjs-frontend" >}}) and [Angular]({{< ref "/samples/bff#angular-frontend" >}}) are available. 
+Many frontend applications require a build process, which complicates the use of the static file middleware at development time. Visual Studio includes SPA templates that start up a SPA and proxy requests to it during development. Samples of Duende.BFF that take this approach using [React]({{< ref "/samples#reactjs-frontend" >}}) and [Angular]({{< ref "/samples#angular-frontend" >}}) are available. 
 
 Microsoft's templates are easy to use at dev time from Visual Studio. They allow you to simply run the solution, and the template proxies requests to the front end for you. At deploy time, that proxy is removed and the static assets of the site are served by the static file middleware.
 
@@ -50,7 +50,7 @@ In order for this architecture to work, the following things are needed:
 
 * In order to include the auth cookie in those requests, the frontend code will have to [declare that it should send credentials](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#sending_a_request_with_credentials_included) using the *credentials: "include"* option.   
 
-A sample of this approach is [available]({{< ref "/samples/bff#separate-host-for-ui" >}}).
+A sample of this approach is [available]({{< ref "/samples#separate-host-for-ui" >}}).
 
 #### Serve the index page from the BFF host
 Lastly, you could serve the index page of the SPA from the BFF, but have all of the other static assets hosted on another host (presumably a CDN). This technique makes the UI and BFF have exactly the same origin, so the authentication cookie will be sent from the frontend to the BFF automatically, and third party cookie blocking and the SameSite cookie attribute won't present any problems. The following diagram shows how that would work:
