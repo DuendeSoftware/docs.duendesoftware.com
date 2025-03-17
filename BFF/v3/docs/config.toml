@@ -11,9 +11,8 @@ home = [ "HTML", "RSS", "JSON"]
 
 [params]
 editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/BFF/v3/docs/content/"
-qs_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts"
-samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7"
-identityServerBaseURL = "https://docs.duendesoftware.com/bff/v3"
+samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/Bff/v3"
+bffBaseUrl = "https://docs.duendesoftware.com/bff/v3"
 
 [params.PreRelease]
 enabled = true
