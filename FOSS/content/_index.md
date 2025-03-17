@@ -27,7 +27,7 @@ requests and responses, extension methods to invoke requests constants defined i
 specifications, such as standard scope, claim, and parameter names, and other convenience
 methods for performing common identity related operations.
 
-Duende.IdentityModel targets .NET Standard 2.0, making it suitable for .NET and .NET Framework and is available on [GitHub](https://github.com/DuendeSoftware/foss/tree/main/identity-model") and [NuGet](https://www.nuget.org/packages/IdentityModel).
+Duende.IdentityModel targets .NET Standard 2.0, making it suitable for .NET and .NET Framework and is available on [GitHub](https://github.com/DuendeSoftware/foss/tree/main/identity-model) and [NuGet](https://www.nuget.org/packages/IdentityModel).
 
 ## [Duende.IdentityModel.OidcClient]({{< ref "IdentityModel.OidcClient" >}})
 
