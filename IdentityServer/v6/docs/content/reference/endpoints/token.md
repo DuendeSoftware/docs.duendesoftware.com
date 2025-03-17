@@ -6,7 +6,7 @@ weight: 3
 
 The token endpoint can be used to programmatically request tokens.
 
-Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 token request parameters. For a full list, see [here](http://openid.net/specs/openid-connect-core-1_0.html#TokenRequest).
+Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 token request parameters. For a full list, see [here](https://openid.net/specs/openid-connect-core-1_0.html#TokenRequest).
 
 ### Required parameters
 

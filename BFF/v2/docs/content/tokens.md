@@ -3,6 +3,7 @@ title: "Token Management"
 description: "BFF - Overview"
 date: 2020-09-10T08:22:12+02:00
 weight: 50
+newContentUrl: https://docs.duendesoftware.com/bff/v3/fundamentals/tokens/
 ---
 
 Duende.BFF includes an automatic token management feature. This uses the access and refresh token stored in the authentication session to always provide a current access token for outgoing API calls.
@@ -84,7 +85,7 @@ public async Task<IActionResult> CallApiAsUserTyped(
 The client will internally always try to use a current and valid access token. If for any reason this is not possible, the 401 status code will be returned to the caller. 
 
 ### Reuse of Refresh Tokens
-We recommend that you configure IdentityServer to issue reusable refresh tokens to BFF clients. Because the BFF is a confidential client, it does not need one-time use refresh tokens. Reusable refresh tokens are desirable because they avoid  performance and user experience problems associated with one time use tokens. See the discussion on [rotating refresh tokens]({{< ref-idsrv "tokens/refresh#one-time-refresh-tokens" >}}) and the [OAuth 2.0 Security Best Current Practice](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-2.2.2) for more details.
+We recommend that you configure IdentityServer to issue reusable refresh tokens to BFF clients. Because the BFF is a confidential client, it does not need one-time use refresh tokens. Reusable refresh tokens are desirable because they avoid  performance and user experience problems associated with one time use tokens. See the discussion on [rotating refresh tokens]({{< ref-idsrv "/tokens/refresh#one-time-refresh-tokens" >}}) and the [OAuth 2.0 Security Best Current Practice](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-2.2.2) for more details.
 
 ### Manually revoking refresh tokens
 Duende.BFF revokes refresh tokens automatically at logout time. This behavior can be disabled with the *RevokeRefreshTokenOnLogout* option.

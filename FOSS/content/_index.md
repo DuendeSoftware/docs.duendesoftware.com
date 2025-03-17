@@ -16,7 +16,7 @@ These libraries help with building OAuth 2.0 and OpenID Connect clients.
 
 A set of .NET libraries that manage OAuth and OpenId Connect access tokens. These tools automatically acquire new tokens when old tokens are about to expire, provide conveniences for using the current token with HTTP clients, and can revoke tokens that are no longer needed.
 
-The latest version of Duende.AccessTokenManagement targets .NET 8 and is available on [GitHub](https://github.com/DuendeSoftware/foss/tree/main/access-token-management) and [NuGet](https://www.nuget.org/packages/Duende.AccessTokenManagement").
+The latest version of Duende.AccessTokenManagement targets .NET 8 and is available on [GitHub](https://github.com/DuendeSoftware/foss/tree/main/access-token-management) and [NuGet](https://www.nuget.org/packages/Duende.AccessTokenManagement).
 
 ## [Duende.IdentityModel]({{< ref "IdentityModel" >}})
 

@@ -13,6 +13,7 @@ home = [ "HTML", "RSS", "JSON"]
 editURL = "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/BFF/v3/docs/content/"
 samples_base = "https://github.com/DuendeSoftware/Samples/tree/main/Bff/v3"
 bffBaseUrl = "https://docs.duendesoftware.com/bff/v3"
+identityServerBaseURL = "https://docs.duendesoftware.com/identityserver/v7"
 
 [params.PreRelease]
 enabled = true

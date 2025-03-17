@@ -1,5 +1,5 @@
 ---
 type: redirect
 baseUrl: bff
-target: "/apis/yarp"
+target: "/fundamentals/apis/yarp"
 ---

@@ -257,7 +257,7 @@ Finally the MVC view will show the contents of the cookie.
 ![](../images/3_claims.png)
 
 As you can see, the cookie has two parts, the claims of the user, and some metadata. This metadata also contains the original token that was issued by the IdentityServer.
-Feel free to copy this token to [jwt.ms](https://jwt.ms>) to inspect its content.
+Feel free to copy this token to [jwt.ms](https://jwt.ms) to inspect its content.
 
 ## Adding sign-out
 The very last step is to add sign-out to the MVC client.

@@ -3,6 +3,8 @@
 
 # hugo
 public
+root/bff/
+root/foss/
 root/identityserver/
 .hugo_build.lock
 

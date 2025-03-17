@@ -6,7 +6,6 @@ chapter = true
 
 # Samples
 
-
 This section contains a collection of clients using our [BFF security framework]({{< ref "/" >}}).
 
 ### JavaScript Frontend
@@ -46,7 +45,7 @@ This sample shows how to have separate projects from the frontend and backend, u
 [link to source code]({{< param samples_base >}}/SplitHosts)
 
 ### DPoP
-This sample shows how to configure the BFF to use [DPoP]({{<ref-idsrv "/tokens/pop/dpop" "DPoP" >}}) to obtain sender-constrained tokens.
+This sample shows how to configure the BFF to use [DPoP]({{<ref-idsrv "/tokens/pop/dpop">}}) to obtain sender-constrained tokens.
 
 [link to source code]({{< param samples_base >}}/DPoP)
 

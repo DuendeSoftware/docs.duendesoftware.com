@@ -1,6 +1,7 @@
 ---
 title: "Backend for Frontend Pattern"
 weight: 40
+newContentUrl: https://docs.duendesoftware.com/bff/v3/samples/
 ---
 
 This section contains a collection of clients using our [BFF security framework]({{< ref "/" >}}).
@@ -36,7 +37,7 @@ This sample shows how to have separate projects from the frontend and backend, u
 [link to source code]({{< param samples_base >}}/SplitHosts)
 
 ### DPoP
-This sample shows how to configure the BFF to use [DPoP]({{<ref-idsrv "/tokens/pop/dpop" >}}) to obtain sender-constrained tokens.
+This sample shows how to configure the BFF to use [DPoP]({{<ref-idsrv "/tokens/pop/dpop">}}) to obtain sender-constrained tokens.
 
 [link to source code]({{< param samples_base >}}/DPoP)
 
