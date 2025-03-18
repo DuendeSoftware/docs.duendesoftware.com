@@ -165,3 +165,27 @@ public class OidcEvents : OpenIdConnectEvents
 
 The assertion service would be a helper to create the JWT as shown above in the *CreateClientToken* method.
 See [here]({{< ref "/samples/basics#mvc-client-with-jar-and-jwt-based-authentication" >}}) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.
+
+## Strict Audience Validation
+
+Private key JWT have a theoretical vulnerability where a Relying Party trusting multiple
+OpenID Providers could be attacked if one of the OpenID Providers is malicious or compromised.
+
+The attack relies on the OpenID Provider setting the audience value of the authentication JWT
+to the token endpoint based on the token endpoint value found in the discovery document.
+The malicious Open ID Provider can attack this because it controls what the discovery document
+contains, and can fool the Relying Party into creating authentication JWTs for the audience of
+a victim OpenID Provider.
+
+The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
+explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
+
+You can enable strict audience validation using the [**StrictClientAssertionAudienceValidation**]({{< ref "/reference/options/#strict-audience-validation" >}})
+flag, which strictly validates that the audience is equal to the issuer and validates the token's
+`typ` header.
+
+Validation behavior is determined based on the `typ` header being present.
+If the **StrictClientAssertionAudienceValidation** flag is not set but the token sets the `typ`
+to `client-authentication+jwt`, then the audience will still be validated strictly.
+If `typ` is not present, [default audience validation]({{< ref "/apis/aspnetcore/jwt/#adding-audience-validation" >}})
+is used.
