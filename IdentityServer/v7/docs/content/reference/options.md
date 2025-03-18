@@ -741,8 +741,8 @@ discovery document cache preview using the **EnableDiscoveryDocumentCache** flag
 This will cache discovery document information for the duration specified in the
 **DiscoveryDocumentCacheDuration** option.
 
-It's best to keep the cache time low if you use the `CustomEntries` element on the
-discovery document or implement a custom `IDiscoveryResponseGenerator`.
+It's best to keep the cache time low if you use the **CustomEntries** element on the
+discovery document or implement a custom **IDiscoveryResponseGenerator**.
 
 #### Strict Audience Validation
 
