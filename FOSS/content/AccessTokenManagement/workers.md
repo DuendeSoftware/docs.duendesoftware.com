@@ -12,7 +12,7 @@ The access tokens need to be requested and cached (either locally or shared betw
 
 The actual business code should not need to be aware of any of this.
 
-Have a look for the `Worker` project in the samples folder for running code.
+Have a look for the `Worker` project in the [samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for running code.
 
 ### Setup
 
