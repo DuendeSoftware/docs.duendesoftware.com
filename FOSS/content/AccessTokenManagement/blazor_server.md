@@ -14,13 +14,13 @@ This means:
 * you cannot use the ASP.NET authentication session to store tokens
 * the normal mechanism used to automatically attach tokens to Http Clients making API calls won't work
 
-Fortunately, Duende.AccessTokenManagement provides a straightforward solution to these problems. Also see the *BlazorServer* sample for source code of a full example.
+Fortunately, Duende.AccessTokenManagement provides a straightforward solution to these problems. Also see the [*BlazorServer* sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/BlazorServer) for source code of a full example.
 
 ### Token storage
 
 Since the tokens cannot be managed in the authentication session, you need to store them somewhere else. The options include an in-memory data structure, a distributed cache like redis, or a database. Duende.AccessTokenManagement describes this store for tokens with the *IUserTokenStore* interface. In non-blazor scenarios, the default implementation that stores the tokens in the session is used. In your Blazor server application, you'll need to decide where you want to store the tokens and implement the store interface.
 
-The store interface is very simple. *StoreTokenAsync* adds a token to the store for a particular user, *GetTokenAsync* retrieves the user's token, and *ClearTokenAsync* clears the tokens stored for a particular user. A sample implementation that stores the tokens in memory can be found in the *ServerSideTokenStore* in the *BlazorServer* sample.
+The store interface is very simple. *StoreTokenAsync* adds a token to the store for a particular user, *GetTokenAsync* retrieves the user's token, and *ClearTokenAsync* clears the tokens stored for a particular user. A sample implementation that stores the tokens in memory can be found in the *ServerSideTokenStore* in the [*BlazorServer* sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/BlazorServer).
 
 Register your token store in the DI container and tell Duende.AccessTokenManagement to integrate with Blazor by calling *AddBlazorServerAccessTokenManagement<TTokenStore>*:
 
