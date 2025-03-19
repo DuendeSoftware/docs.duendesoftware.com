@@ -4,7 +4,7 @@ weight = 150
 chapter = true
 +++
 
-This quickstart walks you through how to create a BFF Blazor application. 
+This quickstart walks you through how to create a BFF Blazor application. The sourcecode for this quickstart is available on [github]([link to source code]({{< param samples_base >}}/Quickstarts/BlazorBffApp))
 
 
 ## Creating the project structure
