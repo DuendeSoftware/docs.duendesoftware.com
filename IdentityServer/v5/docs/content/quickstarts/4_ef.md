@@ -52,7 +52,7 @@ One approach for managing those changes is to use [EF migrations](https://docs.m
 If migrations are not your preference, then you can manage the schema changes in any way you see fit.
 
 {{% notice note %}}
-You can find the latest SQL scripts for SqlServer in our EF [repository](https://github.com/DuendeSoftware/IdentityServer/tree/main/migrations/IdentityServerDb/Migrations).
+You can find the latest SQL scripts for SqlServer in our EF [repository](https://github.com/DuendeSoftware/products/tree/main/identity-server/migrations/IdentityServerDb/Migrations).
 {{% /notice %}}
 
 ### Configuring the Stores
