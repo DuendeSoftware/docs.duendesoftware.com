@@ -181,11 +181,11 @@ The OpenID Foundation proposed a two-part fix: strictly validate the audience an
 explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
 
 You can enable strict audience validation using the [**StrictClientAssertionAudienceValidation**]({{< ref "/reference/options/#strict-audience-validation" >}})
-flag, which strictly validates that the audience is equal to the issuer and validates the token's
-`typ` header.
+flag, which always strictly validates that the audience is equal to the issuer and validates the token's
+`typ` header, as specified in [RFC 7523 bis](https://datatracker.ietf.org/doc/draft-ietf-oauth-rfc7523bis/).
 
-Validation behavior is determined based on the `typ` header being present.
-If the **StrictClientAssertionAudienceValidation** flag is not set but the token sets the `typ`
-to `client-authentication+jwt`, then the audience will still be validated strictly.
+When **StrictClientAssertionAudienceValidation** is not enabled, validation behavior is determined based
+on the `typ` header being present. When the token sets the `typ` header to `client-authentication+jwt`,
+IdentityServer assumes the client's intention is to apply strict audience validation.
 If `typ` is not present, [default audience validation]({{< ref "/apis/aspnetcore/jwt/#adding-audience-validation" >}})
 is used.
