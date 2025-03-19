@@ -114,5 +114,5 @@ By far the most complex task for a typical client is to manage the access token.
 ASP.NET Core has many built-in facility that can help you with those tasks (like caching or sessions), 
 but there is still quite some work left to do. 
 
-Feel free to have a look at [this](https://github.com/DuendeArchive/IdentityModel.AspNetCore) library, which can automate 
+Feel free to have a look at [this](https://github.com/DuendeArchive/IdentityModel.AspNetCore/) library, which can automate 
 many of the boilerplate tasks.

@@ -132,5 +132,5 @@ services.AddClientAccessTokenClient("client", configureClient: client =>
 ![image](images/Web.gif)
 
 Full sample can be found in the
-[samples](https://github.com/DuendeArchive/IdentityModel.AspNetCore).
+[samples](https://github.com/DuendeArchive/IdentityModel.AspNetCore/).
 
