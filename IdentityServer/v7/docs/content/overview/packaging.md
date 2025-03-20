@@ -19,14 +19,16 @@ as a starting point for your modifications.
 ### Templates
 Contains templates for the dotnet CLI.
 
-* NuGet [package](https://www.nuget.org/packages/Duende.IdentityServer.Templates)
-* [source code](https://github.com/DuendeSoftware/IdentityServer.Templates)
+* NuGet [package](https://www.nuget.org/packages/Duende.Templates)
+* [source code](https://github.com/DuendeSoftware/products/tree/main/templates)
 
 You can install the templates using the following command:
 
 ```
-dotnet new -i Duende.IdentityServer.Templates
+dotnet new -i Duende.Templates
 ```
 
 ### Source Code
-You can find the Duende IdentityServer source code on [GitHub](https://github.com/duendesoftware/IdentityServer).
+You can find the Duende IdentityServer source code on [GitHub][source].
+
+[source]: https://github.com/DuendeSoftware/products/tree/main/templates
