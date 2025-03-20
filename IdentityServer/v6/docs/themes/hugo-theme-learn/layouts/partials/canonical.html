@@ -3,6 +3,9 @@
 {{ if .Page.Params.NewContentUrl }}
 {{ $url = .Page.Params.NewContentUrl }}
 {{ end }}
-<link rel="canonical" href="{{ $url }}" />
-<meta name="giscus:backlink" content="{{ $url }}">
-{{ end}}
+    <link rel="canonical" href="{{ $url }}" />
+    <meta name="giscus:backlink" content="{{ $url }}">
+{{ else }}
+    <link rel="canonical" href="{{ .Permalink }}" />
+    <meta name="giscus:backlink" content="{{ .Permalink }}">
+{{ end }}
