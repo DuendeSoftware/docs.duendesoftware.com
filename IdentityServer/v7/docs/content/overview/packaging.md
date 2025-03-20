@@ -28,6 +28,11 @@ You can install the templates using the following command:
 dotnet new -i Duende.Templates
 ```
 
+{{% notice note %}}
+You may have a previous version of Duende templates (*Duende.IdentityServer.Templates*) installed on your machine. 
+Please uninstall the template package and install the latest version.
+{{% /notice %}}
+
 ### Source Code
 You can find the Duende IdentityServer source code on [GitHub][source].
 

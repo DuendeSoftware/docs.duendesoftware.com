@@ -40,6 +40,11 @@ following command:
 dotnet new install Duende.Templates
 ```
 
+{{% notice note %}}
+You may have a previous version of Duende templates (*Duende.IdentityServer.Templates*) installed on your machine.
+Please uninstall the template package and install the latest version.
+{{% /notice %}}
+
 ## Create the Solution and IdentityServer Project
 
 In this section, you will create a directory for the solution and use the

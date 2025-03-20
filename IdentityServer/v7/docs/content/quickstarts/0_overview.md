@@ -23,6 +23,12 @@ The first thing you should do is install our templates:
 dotnet new install Duende.Templates
 ```
 
+{{% notice note %}}
+You may have a previous version of Duende templates (*Duende.IdentityServer.Templates*) installed on your machine.
+Please uninstall the template package and install the latest version.
+{{% /notice %}}
+
+
 They will be used as a starting point for the various tutorials.
 
 {{< youtube cxYmODQHErM >}}
