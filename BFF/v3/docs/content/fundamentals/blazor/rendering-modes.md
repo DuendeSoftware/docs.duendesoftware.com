@@ -34,7 +34,7 @@ The data is also exposed (and secured by the BFF) via a local api.
 
 Below is an example of registering an abstraction 
 
-``` csharp
+```csharp
 // Setup on the server
 
 // Register the server implementation for accessing some data
@@ -56,7 +56,7 @@ internal class ServerWeatherClient() : IDataAccessor
 
 ```
 
-``` csharp
+```csharp
 // setup on the client
 
 // Register a http client that can access the data via a local api. 
@@ -87,7 +87,7 @@ This diagram shows this in more detail:
 
 ![remote api's](../../../images/bff_blazor_remote_api.svg)
 
-``` csharp
+```csharp
 // setup on the server
 
 app.MapRemoteBffApiEndpoint("/remote-apis/user-token", "https://localhost:5010")
@@ -98,7 +98,7 @@ builder.Services.AddUserAccessTokenHttpClient("callApi",
 
 ```
 
-``` csharp
+```csharp
 // setup on the client
 builder.services.AddRemoteApiHttpClient("callApi");
 ```

@@ -6,13 +6,11 @@ chapter = true
 
 This quickstart walks you through how to create a BFF Blazor application. The sourcecode for this quickstart is available on [github]([link to source code]({{< param samples_base >}}/Quickstarts/BlazorBffApp))
 
-
 ## Creating the project structure
 
 The first step is to create a Blazor app. You can do so using the command line:
 
-``` powershell
-
+```shell
 mkdir BlazorBffApp
 cd BlazorBffApp
 
@@ -25,16 +23,14 @@ This creates a blazor application with a Server project and a client project.
 
 To configure the server, the first step is to add the BFF Blazor package. 
 
-``` powershell
-
+```shell
 cd BlazorBffApp
 dotnet add package Duende.BFF.Blazor --version 3.0.0
-
 ```
 
 Then you need to configure the application to use the BFF Blazor application. Add this to your services:
 
-``` csharp
+```csharp
 // BFF setup for blazor
 builder.Services.AddBff()
     .AddServerSideSessions() // Add in-memory implementation of server side sessions
@@ -85,13 +81,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddAuthorization();
-
 ```
 To configure the web app pipeline. Replace the app.UseAntiforgery() with the code below:
 
-``` csharp
-
-
+```csharp
 app.UseRouting();
 app.UseAuthentication();
 
@@ -102,31 +95,26 @@ app.UseAntiforgery();
 
 // Add the BFF management endpoints, such as login, logout, etc.
 app.MapBffManagementEndpoints();
-
 ```
 
 ## Configuring the BffApp.Client project
 
 To add the BFF to the client project, add the following:
 
-``` powershell
-
-cd..
+```shell
+cd ..
 cd BlazorBffApp.Client
 dotnet add package Duende.BFF.Blazor.Client --version 3.0.0
-
 ```
 
 Then add the following to your program.cs:
 
-``` csharp
-
+```csharp
 builder.Services
     .AddBffBlazorClient(); // Provides auth state provider that polls the /bff/user endpoint
 
 builder.Services
     .AddCascadingAuthenticationState();
-
 ```
 
 Your application is ready to use BFF now. 
@@ -141,8 +129,7 @@ The following code shows a login / logout button depending on your state. Note, 
 logout link from the LogoutUrl claim, because this contains both the correct route and the session id. 
 Add it to the BffBlazorApp.Client/Components folder
 
-``` csharp
-
+```csharp
 @using Duende.Bff.Blazor.Client
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.Extensions.Options
@@ -172,7 +159,6 @@ Add it to the BffBlazorApp.Client/Components folder
     return $"{Options.Value.StateProviderBaseAddress}{logoutUrl?.Value}";
   }
 }
-
 ```
 
 ### RedirectToLogin.razor
@@ -180,8 +166,7 @@ Add it to the BffBlazorApp.Client/Components folder
 The following code will redirect users to Identity Server for authentication. Once authentication is complete,
 the users will be redirected back to where they came from. Add it to the BffBlazorApp.Client/Components folder
 
-``` csharp
-
+```csharp
 @inject NavigationManager Navigation
 
 @rendermode InteractiveAuto
@@ -193,15 +178,13 @@ the users will be redirected back to where they came from. Add it to the BffBlaz
         Navigation.NavigateTo($"bff/login?returnUrl={returnUrl}", forceLoad: true);
     }
 }
-
 ```
 
 ### Modifications to Routes.razor
 
 Replace the contents of routes.razor so it matches below:
 
-``` csharp
-
+```csharp
 @using Microsoft.AspNetCore.Components.Authorization
 @using BlazorBffApp.Client.Components
 
@@ -222,8 +205,6 @@ Replace the contents of routes.razor so it matches below:
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
-
-
 ```
 
 This makes sure that, if you're accessing a page that requires authorization, that you are automatically redirected to Identity Server for authentication. 
@@ -232,7 +213,7 @@ This makes sure that, if you're accessing a page that requires authorization, th
 
 Modify your MainLayout so it matches below:
 
-``` csharp
+```csharp
 @inherits LayoutComponentBase
 @using BlazorBffApp.Client.Components
 
@@ -257,14 +238,13 @@ Modify your MainLayout so it matches below:
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
-
 ```
 
 This adds the LoginDisplay to the header. 
 
 Now your application supports logging in / out. 
 
-## Exposing api's. 
+## Exposing APIs
 
 Now we're going to expose a local api for weather forecasts to Blazor wasm and call it via a HttpClient. 
 
@@ -275,8 +255,7 @@ Now we're going to expose a local api for weather forecasts to Blazor wasm and c
 
 Add a class called WeatherClient to the BffBlazorApp.Client project:
 
-``` csharp
-
+```csharp
 public class WeatherHttpClient(HttpClient client) : IWeatherClient
 {
     public async Task<WeatherForecast[]> GetWeatherForecasts() => await client.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast")
@@ -296,12 +275,11 @@ public interface IWeatherClient
 {
     Task<WeatherForecast[]> GetWeatherForecasts();
 }
-
 ```
 
 Then register this as a component in program.cs. 
 
-``` csharp
+```csharp
 builder.Services
     .AddBffBlazorClient()// Provides auth state provider that polls the /bff/user endpoint
 
@@ -310,15 +288,13 @@ builder.Services
 
 // Register the concrete implementation with the abstraction
 builder.Services.AddSingleton<IWeatherClient, WeatherHttpClient>();
-
 ```
 
 ### Configuring the server
 
 Add a class called ServerWeatherClient to your BlazorBffApp server project:
 
-``` csharp
-
+```csharp
 public class ServerWeatherClient : IWeatherClient
 {
     public Task<WeatherForecast[]> GetWeatherForecasts()
@@ -338,20 +314,17 @@ public class ServerWeatherClient : IWeatherClient
         }).ToArray());
     }
 }
-
 ```
 
 
 Then add an endpoint to your http pipeline:
 
-``` csharp
-
+```csharp
 app.MapGet("/WeatherForecast", (IWeatherClient weatherClient) => weatherClient.GetWeatherForecasts());
-
 ```
 
 Also register the 'server abstraction. 
-``` csharp
+```csharp
 builder.Services.AddSingleton<IWeatherClient, ServerWeatherClient>();
 ```
 
@@ -361,7 +334,7 @@ By default, the blazor template ships with a weather page.
 
 Change the content of the **Weather.razor** like this:
 
-``` csharp
+```csharp
 @page "/weather"
 @using BlazorBffApp.Client.Components
 @using Microsoft.AspNetCore.Authorization
@@ -376,7 +349,7 @@ Change the content of the **Weather.razor** like this:
 
 Now add a component called WeatherComponent
 
-``` csharp
+```csharp
 @inject IWeatherClient WeatherClient
 <h1>Weather</h1>
 
@@ -419,5 +392,4 @@ else
         forecasts = await WeatherClient.GetWeatherForecasts();
     }
 }
-
 ```

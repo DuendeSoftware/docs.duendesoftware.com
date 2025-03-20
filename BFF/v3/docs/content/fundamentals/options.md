@@ -128,7 +128,7 @@ builder.Services.AddBff(options =>
 
 In the Blazor Server, you configure the **BffBlazorServerOptions** by using the **AddBlazorServer** method. 
 
-``` csharp
+```csharp
 builder.Services.AddBlazorServer(opt =>
 {
     // configure options here..
@@ -146,7 +146,7 @@ The following options are available:
 
 In WASM, you configure the **BffBlazorClientOptions** using the **AddBffBlazorClient** method:
 
-``` csharp
+```csharp
 builder.Services.AddBffBlazorClient(opt =>
 {
     // configure options here..
