@@ -1,0 +1,15 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+import Comments from '../components/Comments.astro';
+
+const isHomepage = Astro.locals.starlightRoute.id === '';
+---
+
+{
+    isHomepage ? (
+        <Default />
+    ) : (
+        <Comments />
+        <Default />
+    )
+}

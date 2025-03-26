@@ -1,0 +1,30 @@
+---
+const ensureLeadingAndTrailingSlash = (value) => {
+        if (!value.startsWith('/')) {
+                value = `/${value}`;
+        }
+        if (!value.endsWith('/')) {
+                value = `${value}/`;
+        }
+        return value;
+};
+
+const commentSlug = ensureLeadingAndTrailingSlash(Astro.locals.starlightRoute.id.replace(/v[0-9]\//, ""));
+---
+
+<script src="https://giscus.app/client.js"
+        data-repo="duendesoftware/community"
+        data-repo-id="R_kgDONlV_Gw"
+        data-category="Documentation"
+        data-category-id="DIC_kwDONlV_G84CnEmQ"
+        data-mapping="specific"
+        data-term="{commentSlug}"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="https://duendesoftware.com/css/giscus.css"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>
