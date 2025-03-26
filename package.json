@@ -8,7 +8,7 @@
     "foss": "hugo server --port 1314 --navigateToChanged --source FOSS",
     "bff-v3": "hugo server --port 1316 --navigateToChanged --source BFF/v3/docs",
     "bff-v2": "hugo server --port 1315 --navigateToChanged --source BFF/v2/docs",
-    "linkchecker": "./build.sh && lychee --no-progress --max-concurrency 16 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude github --root-dir \"$PWD/root\" root/**"
+    "linkchecker": "./build.sh && lychee --no-progress --max-concurrency 16 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude github --root-dir \"$PWD/root\" _to-migrate/root/**"
   },
   "description": "Documentation for Duende Software products",
   "keywords": [],

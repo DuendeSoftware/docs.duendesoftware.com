@@ -3,9 +3,9 @@
 
 # hugo
 public
-root/bff/
-root/foss/
-root/identityserver/
+_to-migrate/root/bff/
+_to-migrate/root/foss/
+_to-migrate/root/identityserver/
 .hugo_build.lock
 
 # .net

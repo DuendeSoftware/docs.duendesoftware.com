@@ -15,7 +15,8 @@ This respository is a private clone of Duende docs.duendesoftware.com repository
 
 You will need Node 22+ installed on your operating system and in the PATH.
 
-Use `npm run dev` to run the documentation site locally.
+* Run `npm install` to restore all dependencies.
+* Use `npm run dev` to run the documentation site locally.
 
 ## Project Structure
 
@@ -45,10 +46,11 @@ Static assets, like favicons, can be placed in the `public/` directory.
 All commands are run from the root of the project, from a terminal:
 
 | Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
+|:--------------------------|:-------------------------------------------------|
 | `npm install`             | Installs dependencies                            |
 | `npm run dev`             | Starts local dev server at `localhost:4321`      |
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm run linkchecker`     | Run lychee link checker                          |

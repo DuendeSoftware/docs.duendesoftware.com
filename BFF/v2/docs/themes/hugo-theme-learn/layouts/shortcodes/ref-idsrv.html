@@ -1,5 +1,0 @@
-{{- if .Get 1 -}}
-  <a href="{{ .Page.Site.Params.identityServerBaseURL }}/{{ .Get 0 | strings.TrimPrefix "/" }}">{{ .Get 1 }}</a>
-{{- else -}}
-  {{- .Page.Site.Params.identityServerBaseURL }}/{{ .Get 0 | strings.TrimPrefix "/" -}}
-{{- end -}}

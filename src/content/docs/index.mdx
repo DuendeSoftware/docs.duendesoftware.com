@@ -1,0 +1,45 @@
+---
+title: Duende Software documentation
+description: Get started building your .NET applications with IdentityServer, Backend-for-Frontend (BFF) and our open-source tools.
+template: splash
+hero:
+  tagline: Get started building your .NET applications with IdentityServer, Backend-for-Frontend (BFF) and our open-source tools.
+  image:
+    file: ../../assets/duende-logo.png
+  actions:
+    - text: Explore docs
+      link: /identityserver/v7/
+      icon: right-arrow
+    - text: Join our Community
+      link: https://duende.link/community
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkButton, LinkCard, Icon } from '@astrojs/starlight/components';
+
+## Products
+
+<CardGrid>
+	<Card title="IdentityServer" icon="open-book">
+		The most flexible and standards-compliant OpenID Connect and OAuth 2.0 framework for ASP.NET Core.
+
+        <LinkButton href="identityserver/v7" variant="secondary">
+          Learn more
+        </LinkButton>
+	</Card>
+	<Card title="Backend-for-Frontend (BFF)" icon="seti:c-sharp">
+		Securing SPAs and Blazor WASM Applications once and for all, without storing tokens in the browser.
+
+        <LinkButton href="bff" variant="secondary">
+          Learn more
+        </LinkButton>
+	</Card>
+	<Card title="Open Source" icon="github">
+		.NET identity libraries for access token management, OIDC, and OAuth 2.0 related protocol operations.
+
+        <LinkButton href="foss" variant="secondary">
+          Learn more
+        </LinkButton>
+	</Card>
+</CardGrid>
