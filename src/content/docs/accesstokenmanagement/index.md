@@ -1,12 +1,9 @@
 ---
-title: AccessTokenManagement
+title: Duende.AccessTokenManagement
 sidebar:
-  order: 10
+  order: 1
+  label: 'Overview'
 ---
-
-
-Duende.AccessTokenManagement
-========
 
 This library provides automatic access token management features for .NET worker and ASP.NET Core web applications:
 

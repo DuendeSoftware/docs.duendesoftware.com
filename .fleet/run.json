@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "npm",
+            "name": "🚀 Run Astro",
+            "command": "run",
+            "scripts": "dev"
+        }
+    ]
+}

@@ -1,7 +1,7 @@
 ---
 title: Blazor Server
 sidebar:
-  order: 30
+  order: 20
 ---
 
 
@@ -41,7 +41,7 @@ public class OidcEvents : OpenIdConnectEvents
     {
         _store = store;
     }
-    
+
     public override async Task TokenValidated(TokenValidatedContext context)
     {
         var exp = DateTimeOffset.UtcNow.AddSeconds(Double.Parse(context.TokenEndpointResponse!.ExpiresIn));
@@ -54,7 +54,7 @@ public class OidcEvents : OpenIdConnectEvents
             RefreshToken = context.TokenEndpointResponse.RefreshToken,
             Scope = context.TokenEndpointResponse.Scope
         });
-        
+
         await base.TokenValidated(context);
     }
 }
@@ -64,7 +64,7 @@ Once registered and initialized, Duende.AccessTokenManagement will keep the stor
 
 ### Retrieving and using tokens
 
-If you've registered your token store with *AddBlazorServerAccessTokenManagement*, Duende.AccessTokenManagement will register the services necessary to attach tokens to outgoing HTTP requests automatically, using the same API as a non-blazor application. You inject an HTTP client factory and resolve named HTTP clients where ever you need to make HTTP requests, and you register the HTTP client's that use access tokens in the DI system with our extension method: 
+If you've registered your token store with *AddBlazorServerAccessTokenManagement*, Duende.AccessTokenManagement will register the services necessary to attach tokens to outgoing HTTP requests automatically, using the same API as a non-blazor application. You inject an HTTP client factory and resolve named HTTP clients where ever you need to make HTTP requests, and you register the HTTP client's that use access tokens in the DI system with our extension method:
 
 ```
 builder.Services.AddUserAccessTokenHttpClient("demoApiClient", configureClient: client =>

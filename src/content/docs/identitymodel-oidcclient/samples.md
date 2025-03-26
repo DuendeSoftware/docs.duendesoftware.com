@@ -30,11 +30,10 @@ You can login with *alice/alice* or *bob/bob*
 ## No longer maintained
 
 These samples are no longer maintained because their underlying technology is no
-longer supported. 
+longer supported.
 
 - [UWP](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/uwp/Uwp)
 - [Xamarin](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/xamarin/XamarinAndroidClient)
 - [Xamarin Forms](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/xamarin/XamarinForms)
 - [Xamarin iOS - AuthenticationServices](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/xamarin/iOS_AuthenticationServices)
 - [Xamarin iOS - SafariServices](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/xamarin/iOS_SafariServices)
-- 

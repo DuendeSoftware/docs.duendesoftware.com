@@ -1,12 +1,9 @@
 ---
-title: IdentityModel
+title: Duende.IdentityModel
 sidebar:
-  order: 20
+  order: 1
+  label: "Overview"
 ---
-
-
-Duende.IdentityModel
-========
 
 The Duende.IdentityModel package is the base library for OIDC and OAuth 2.0 related protocol
 operations. It provides an object model to interact with the endpoints defined in the
