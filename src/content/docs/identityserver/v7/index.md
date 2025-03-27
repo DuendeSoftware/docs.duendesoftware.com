@@ -1,6 +1,7 @@
 ---
-title: "IdentityServer (v7)"
-weight: 1
+title: "Overview"
+sidebar:
+    order: 1
 ---
 
 # Duende IdentityServer v7 Documentation

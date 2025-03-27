@@ -1,5 +1,5 @@
 ---
-title: Configuration API
+title: Overview
 description: Overview
 weight: 96
 ---

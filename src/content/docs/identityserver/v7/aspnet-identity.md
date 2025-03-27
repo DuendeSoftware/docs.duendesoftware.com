@@ -2,14 +2,14 @@
 title: ASP.NET Identity Integration
 description: Overview
 sidebar:
-  order: 90
+  order: 4
 ---
 
 
 An ASP.NET Identity-based implementation is provided for managing the identity database for users of IdentityServer.
 This implementation implements the extensibility points in IdentityServer needed to load identity data for your users to emit claims into tokens.
 
-To use this library, ensure that you have the NuGet package for the ASP.NET Identity integration. 
+To use this library, ensure that you have the NuGet package for the ASP.NET Identity integration.
 It is called *Duende.IdentityServer.AspNetIdentity*.
 You can install it with:
 
@@ -39,4 +39,4 @@ If you need to use your own implementation of *IUserClaimsPrincipalFactory*, the
 The *IUserProfileService* interface has two methods that IdentityServer uses to interact with the user store. The profile service added for Asp.Net Identity implements *GetProfileDataAsync* by invoking the *IUserClaimsPrincipalFactory* implementation registered in the dependency injection cotainer. The other method on *IProfileService* is *IsActiveAsync* which is used in various places in IdentityServer to validate that the user is (still) active. There is no built in concept in Asp.Net Identity to deactive users, so our implementation is simply hard coded to return *true*. If you extend the Asp.Net Identity user with enabled/disabled functionality you should derive from our *ProfileService<TUser>* and override *IsUserActiveAsync(TUser user)* to check your custom enabled/disabled flags.
 
 ## Template
-Alternatively, you can use the *isaspid* [template](/identityserver/v7/overview/packaging#templates) to create a starter IdentityServer host project configured to use ASP.NET Identity. See the [Quickstart Documentation](/identityserver/v7/quickstarts/5_aspnetid) for a detailed walkthrough. 
+Alternatively, you can use the *isaspid* [template](/identityserver/v7/overview/packaging#templates) to create a starter IdentityServer host project configured to use ASP.NET Identity. See the [Quickstart Documentation](/identityserver/v7/quickstarts/5_aspnetid) for a detailed walkthrough.

@@ -86,7 +86,7 @@ export default defineConfig({
 					collapsed: true
 				},
 				{
-					label: 'Backend-for-Frontend (BFF)',
+					label: 'BFF Security Framework',
 					autogenerate: {directory: 'bff'},
 					collapsed: true
 				},

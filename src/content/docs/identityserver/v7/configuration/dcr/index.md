@@ -1,5 +1,5 @@
 ---
-title: "Dynamic Client Registration"
+title: "Overview"
 weight: 95
 chapter: true
 ---
