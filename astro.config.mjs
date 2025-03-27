@@ -8,7 +8,7 @@ import starlightGiscus from "starlight-giscus";
 
 // https://astro.build/config
 export default defineConfig({
-	trailingSlash: 'always',
+	trailingSlash: 'ignore',
 	redirects: {
 		"/identityserver/v7/bff": "/bff/v3/",
 		"/identityserver/v7/samples/bff": "/bff/v3/samples",
