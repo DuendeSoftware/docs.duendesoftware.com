@@ -3,9 +3,17 @@ import {docsLoader} from '@astrojs/starlight/loaders';
 import {docsSchema} from '@astrojs/starlight/schema';
 import {autoSidebarLoader} from 'starlight-auto-sidebar/loader';
 import {autoSidebarSchema} from 'starlight-auto-sidebar/schema';
+import { z } from 'astro/zod'
 
 export const collections = {
-	docs: defineCollection({loader: docsLoader(), schema: docsSchema()}),
+	docs: defineCollection({
+		loader: docsLoader(),
+		schema: docsSchema({
+			extend: z.object({
+				giscus: z.boolean().optional().default(true),
+			})
+		}),
+	}),
 	autoSidebar: defineCollection({
 		loader: autoSidebarLoader(),
 		schema: autoSidebarSchema(),

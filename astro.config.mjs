@@ -4,10 +4,11 @@ import starlight from '@astrojs/starlight';
 import starlightLinksValidator from 'starlight-links-validator';
 import starlightClientMermaid from '@pasqal-io/starlight-client-mermaid';
 import starlightAutoSidebar from 'starlight-auto-sidebar'
+import starlightGiscus from "starlight-giscus";
 
 // https://astro.build/config
 export default defineConfig({
-	trailingSlash: 'ignore',
+	trailingSlash: 'always',
 	redirects: {
 		"/identityserver/v7/bff": "/bff/v3/",
 		"/identityserver/v7/samples/bff": "/bff/v3/samples",
@@ -51,6 +52,16 @@ export default defineConfig({
 			],
 			plugins: [
 				starlightAutoSidebar(),
+				starlightGiscus({
+					repo: 'duendesoftware/community',
+					repoId: 'R_kgDONlV_Gw',
+					category: 'Documentation',
+					categoryId: 'DIC_kwDONlV_G84CnEmQ',
+					mapping: 'pathname',
+					reactions: true,
+					inputPosition: 'top',
+					lazy: true
+				}),
 				starlightClientMermaid({ /* options */}),
 				starlightLinksValidator({
 					errorOnFallbackPages: false,
@@ -73,7 +84,6 @@ export default defineConfig({
 				linkedin: 'https://www.linkedin.com/company/duendesoftware/'
 			},
 			components: {
-				Footer: './src/overrides/Footer.astro'
 			},
 			sidebar: [
 				{
