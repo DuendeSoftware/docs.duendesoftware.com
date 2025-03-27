@@ -11,14 +11,14 @@ The [server-side sessions](/identityserver/v7/ui/server_side_sessions) feature i
 ## Server-Side Session Store
 
 The [IServerSideSessionStore](/identityserver/v7/reference/stores/server_side_sessions) abstracts storing the server-side session data.
-[ServerSideSession](/identityserver/v7/reference/stores/server_side_sessions#serversidesession) objects act as the storage entity, and provide several properties uses as metadata for the session. The *Ticket* property contains the actual serialized data used by the ASP.NET Cookie Authentication handler.
+[ServerSideSession](/identityserver/v7/reference/stores/server_side_sessions#serversidesession) objects act as the storage entity, and provide several properties uses as metadata for the session. The `Ticket` property contains the actual serialized data used by the ASP.NET Cookie Authentication handler.
 
 The methods on the [IServerSideSessionStore](/identityserver/v7/reference/stores/server_side_sessions) are used to orchestrate the various management functions needed by the [server-side sessions](/identityserver/v7/ui/server_side_sessions#session-management) feature.
 
 ## Registering a custom store
 
-To register a custom server-side session store in the DI container, there is a *AddServerSideSessionStore* helper on the *IIdentityServerBuilder*.
-It is still necessary to call *AddServerSideSessions* to enable the server-side session feature.
+To register a custom server-side session store in the DI container, there is a `AddServerSideSessionStore` helper on the `IIdentityServerBuilder`.
+It is still necessary to call `AddServerSideSessions` to enable the server-side session feature.
 For example:
 
 ```cs
@@ -27,7 +27,7 @@ builder.Services.AddIdentityServer()
     .AddServerSideSessionStore<YourCustomStore>();
 ```
 
-There is also an overloaded version of a *AddServerSideSessions* that will perform both registration steps in one call.
+There is also an overloaded version of a `AddServerSideSessions` that will perform both registration steps in one call.
 For example:
 
 ```cs
@@ -39,7 +39,7 @@ builder.Services.AddIdentityServer()
 
 An EntityFramework Core implementation of the server-side session store is included in the [Entity Framework Integration](/identityserver/v7/data/ef#operational-store) operational store.
 
-When using the EntityFramework Core operational store, it will be necessary to indicate that server-side sessions need to be used with the call to the *AddServerSideSessions* fluent API.
+When using the EntityFramework Core operational store, it will be necessary to indicate that server-side sessions need to be used with the call to the `AddServerSideSessions` fluent API.
 For example:
 
 

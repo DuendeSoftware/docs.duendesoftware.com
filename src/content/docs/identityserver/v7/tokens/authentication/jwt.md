@@ -44,7 +44,7 @@ You can share the same key for client authentication and [signed authorize reque
 :::
 
 ## Authentication using a private key JWT
-On the client side, the caller must first generate the JWT, and then send it on the *assertion* body field:
+On the client side, the caller must first generate the JWT, and then send it on the `assertion` body field:
 
 ```
 POST /connect/token
@@ -163,7 +163,7 @@ public class OidcEvents : OpenIdConnectEvents
 }
 ```
 
-The assertion service would be a helper to create the JWT as shown above in the *CreateClientToken* method.
+The assertion service would be a helper to create the JWT as shown above in the `CreateClientToken` method.
 See [here](/identityserver/v7/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.
 
 ## Strict Audience Validation
@@ -180,11 +180,11 @@ a victim OpenID Provider.
 The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
 explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
 
-You can enable strict audience validation using the [**StrictClientAssertionAudienceValidation**](/identityserver/v7/reference/options/#strict-audience-validation)
+You can enable strict audience validation using the [*`StrictClientAssertionAudienceValidation`*](/identityserver/v7/reference/options/#strict-audience-validation)
 flag, which always strictly validates that the audience is equal to the issuer and validates the token's
 `typ` header, as specified in [RFC 7523 bis](https://datatracker.ietf.org/doc/draft-ietf-oauth-rfc7523bis/).
 
-When **StrictClientAssertionAudienceValidation** is not enabled, validation behavior is determined based
+When *`StrictClientAssertionAudienceValidation`* is not enabled, validation behavior is determined based
 on the `typ` header being present. When the token sets the `typ` header to `client-authentication+jwt`,
 IdentityServer assumes the client's intention is to apply strict audience validation.
 If `typ` is not present, [default audience validation](/identityserver/v7/apis/aspnetcore/jwt/#adding-audience-validation)

@@ -18,15 +18,15 @@ Finally another project was added which acts as a OIDC client application to exe
 The changes to the template in the ASP.NET Identity project (i.e. "IdentityServerAspNetIdentity"):
 
 * Sqlite support was added, replacing the default of SqlServer.
-* Duende IdentityServer was configured in *Startup.cs* with the necessary information about the client application, and the OIDC scopes it would be requesting.
+* Duende IdentityServer was configured in `Startup.cs` with the necessary information about the client application, and the OIDC scopes it would be requesting.
 * Debug level logging was enabled for the "Duende" prefix to allow viewing the logging emitted during request processing.
-* In the middleware pipeline, *UseIdentityServer* replaced *UseAuthentication*. 
+* In the middleware pipeline, `UseIdentityServer` replaced `UseAuthentication`. 
 * The logout page was scaffolded to allow modification (located in Areas/Identity/Pages/Account/Logout.cshtml). The default logout page from the template is unaware of OIDC single signout, so this feature was added.
 
 In the client application:
 
 * A simple ASP.NET Core Razor Web Application was used as the starting point.
-* In *Startup.cs* the standard cookie and OIDC authentication configuration was added.
-* A secure page (*Secure.cshtml*) that required an authenticated user will render the logged in user's claim in the page.
-* The index page (*Index.cshtml*) was modified to allow a POST to trigger OIDC logout. 
+* In `Startup.cs` the standard cookie and OIDC authentication configuration was added.
+* A secure page (`Secure.cshtml`) that required an authenticated user will render the logged in user's claim in the page.
+* The index page (`Index.cshtml`) was modified to allow a POST to trigger OIDC logout. 
 * A logout button was added to trigger the POST.

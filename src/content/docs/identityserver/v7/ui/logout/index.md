@@ -15,13 +15,13 @@ This is a potentially complicated process and involves these steps:
 * If the logout is client initiated, redirect the user back to the client.
 
 When IdentityServer needs to show the logout page, it redirects the user to a configurable
-*LogoutUrl*.
+`LogoutUrl`.
 ```cs
 builder.Services.AddIdentityServer(opt => {
     opt.UserInteraction.LogoutUrl = "/path/to/logout";
 })
 ```
-If no *LogoutUrl* is set, IdentityServer will infer it from the *LogoutPath* of your Cookie
+If no `LogoutUrl` is set, IdentityServer will infer it from the `LogoutPath` of your Cookie
 Authentication Handler. For example:
 ```cs
 builder.Services.AddAuthentication()

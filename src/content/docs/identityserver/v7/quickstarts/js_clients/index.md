@@ -12,7 +12,7 @@ Browser-based applications **with a backend** are more secure, making it the
 recommended style. This style uses the ["Backend For Frontend"
 pattern](https://blog.duendesoftware.com/posts/20210326_bff/), or "BFF" for
 short, which relies on the backend host to implement all of the security
-protocol interactions with the token server. The *Duende.BFF* library is used in
+protocol interactions with the token server. The `Duende.BFF` library is used in
 [this quickstart](js_with_backend) to easily support the BFF pattern.
 
 Browser-based applications **without a backend** need to do all the security

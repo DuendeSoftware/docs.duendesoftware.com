@@ -7,39 +7,39 @@ weight: 80
 
 Models the information to initiate a user login request for [CIBA](/identityserver/v7/ui/ciba).
 
-* ***InternalId***
+* **`InternalId`**
     
     Ihe identifier of the request in the store.
 
-* ***Subject***
+* **`Subject`**
     
     The subject for whom the login request is intended.
 
-* ***BindingMessage***
+* **`BindingMessage`**
     
     The binding message used in the request.
 
-* ***AuthenticationContextReferenceClasses***
+* **`AuthenticationContextReferenceClasses`**
     
     The acr_values used in the request.
 
-* ***Tenant***
+* **`Tenant`**
     
     The tenant value from the acr_values used the request.
 
-* ***IdP***
+* **`IdP`**
     
     The idp value from the acr_values used in the request.
 
-* ***RequestedResourceIndicators***
+* **`RequestedResourceIndicators`**
     
     The resource indicator values used in the request.
 
-* ***Client***
+* **`Client`**
     
     The client that initiated the request.
 
-* ***ValidatedResources***
+* **`ValidatedResources`**
     
     The validated resources (i.e. scopes) used in the request.
 

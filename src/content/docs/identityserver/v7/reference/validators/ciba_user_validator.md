@@ -5,45 +5,45 @@ weight: 30
 
 #### Duende.IdentityServer.Validation.IBackchannelAuthenticationUserValidator
 
-The *IBackchannelAuthenticationUserValidator* interface is used to validate request hints and identify the user for whom the [CIBA](/identityserver/v7/ui/ciba) request is intended.
+The `IBackchannelAuthenticationUserValidator` interface is used to validate request hints and identify the user for whom the [CIBA](/identityserver/v7/ui/ciba) request is intended.
 To use CIBA, you are expected to implement this interface and register it in the DI system.
 
 ## IBackchannelAuthenticationUserValidator APIs
 
-* ***ValidateRequestAsync***
+* **`ValidateRequestAsync`**
     
-    Validates the backchannel login request with the provided *BackchannelAuthenticationUserValidatorContext* for the current request.
-    Returns a *BackchannelAuthenticationUserValidationResult* object.
+    Validates the backchannel login request with the provided `BackchannelAuthenticationUserValidatorContext` for the current request.
+    Returns a `BackchannelAuthenticationUserValidationResult` object.
 
 
 ### BackchannelAuthenticationUserValidatorContext
 Models the information to validate and identity the user for a CIBA login request.
 
-* ***Client***
+* **`Client`**
     
-    The *Client* making the request.
+    The `Client` making the request.
 
-* ***LoginHintToken***
+* **`LoginHintToken`**
     
     The login hint request parameter from the request.
 
-* ***IdTokenHint***
+* **`IdTokenHint`**
     
     The id token hint request parameter from the request.
 
-* ***IdTokenHintClaims***
+* **`IdTokenHintClaims`**
     
     The claims contained in the validated id token hint from the request.
 
-* ***LoginHint***
+* **`LoginHint`**
     
     The login hint request parameter from the request.
 
-* ***UserCode***
+* **`UserCode`**
     
     The user code request parameter from the request.
 
-* ***BindingMessage***
+* **`BindingMessage`**
     
     The binding request parameter from the request.
 
@@ -51,15 +51,15 @@ Models the information to validate and identity the user for a CIBA login reques
 ### BackchannelAuthenticationUserValidationResult
 Models the result of a CIBA login request.
 
-* ***Subject***
+* **`Subject`**
     
-    The *ClaimsPrincipal* that represents the user that was successfully identified for the login request.
-    This must contain the user's *"sub"* claim.
+    The `ClaimsPrincipal` that represents the user that was successfully identified for the login request.
+    This must contain the user's `"sub"` claim.
 
-* ***Error***
+* **`Error`**
     
     The error if the user validation failed.
 
-* ***ErrorDescription***
+* **`ErrorDescription`**
     
     The error description if the user validation failed.

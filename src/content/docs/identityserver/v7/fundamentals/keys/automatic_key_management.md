@@ -18,23 +18,23 @@ material, including
 Automatic Key Management is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business Edition or higher. 
 
 ### Configuration
-Automatic Key Management is configured by the options in the *KeyManagement*
-property on the [*IdentityServerOptions*](/identityserver/v7/reference/options#key-management). 
+Automatic Key Management is configured by the options in the `KeyManagement`
+property on the [`IdentityServerOptions`](/identityserver/v7/reference/options#key-management). 
 
 ### Managed Key Lifecycle
 Keys created by Automatic Key Management move through several phases. First, new
 keys are announced, that is, they are added to the list of keys in discovery,
-but not yet used for signing. After a configurable amount of *PropagationTime*,
+but not yet used for signing. After a configurable amount of `PropagationTime`,
 keys are promoted to be signing credentials, and will be used by IdentityServer
 to sign tokens. Eventually, enough time will pass that the key is older than the
-configurable *RotationTime*, at which point the key is retired, but kept in
-discovery for a configurable *RetentionDuration*. After the *RetentionDuration*
+configurable `RotationTime`, at which point the key is retired, but kept in
+discovery for a configurable `RetentionDuration`. After the `RetentionDuration`
 has passed, keys are removed from discovery, and optionally deleted.
 
 The default is to rotate keys every 90 days, announce new keys with 14 days of
 propagation time, retain old keys for a duration of 14 days, and to delete keys
 when they are retired. All of these options are configurable in the
-*KeyManagement* options. For example:
+`KeyManagement` options. For example:
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
@@ -58,18 +58,18 @@ Automatic Key Management stores keys through the abstraction of the
 [ISigningKeyStore](/identityserver/v7/data/operational/keys). You can implement this
 extensibility point to customize the storage of your keys (perhaps using a key
 vault of some kind), or use one of the two implementations of the
-*ISigningKeyStore* that we provide:
- - the default *FileSystemKeyStore*, which writes keys to the file system.
+`ISigningKeyStore` that we provide:
+ - the default `FileSystemKeyStore`, which writes keys to the file system.
  - the [EntityFramework operational store](/identityserver/v7/data/ef#operational-store) which writes keys to a database using
    EntityFramework.
 
-The default *FileSystemKeyStore* writes keys to the *KeyPath* directory
+The default `FileSystemKeyStore` writes keys to the `KeyPath` directory
 configured in your IdentityServer host, which defaults to the directory
-*~/keys*. This directory should be excluded from source control. 
+`~/keys`. This directory should be excluded from source control. 
 
 If you are deploying in a load balanced environment and wish to use the
-*FileSystemKeyStore*, all instances of IdentityServer will need read/write
-access to the *KeyPath*.
+`FileSystemKeyStore`, all instances of IdentityServer will need read/write
+access to the `KeyPath`.
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
@@ -83,11 +83,11 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 The keys created by Automatic Key Management are sensitive cryptographic secrets
 that should be encrypted at rest. By default, keys managed by Automatic Key
 Management are protected at rest using ASP.NET Core Data Protection. This is
-controlled with the *DataProtectKeys* flag, which is on by default. We recommend
-leaving this flag on unless you are using a custom *ISigningKeyStore* to store
+controlled with the `DataProtectKeys` flag, which is on by default. We recommend
+leaving this flag on unless you are using a custom `ISigningKeyStore` to store
 your keys in a secure location that will ensure keys are encrypted at rest. For
-example, if you implement the *ISigningKeyStore* to store your keys in Azure Key
-Vault, you could safely disabled *DataProtectKeys*, relying on Azure Key Vault
+example, if you implement the `ISigningKeyStore` to store your keys in Azure Key
+Vault, you could safely disabled `DataProtectKeys`, relying on Azure Key Vault
 to encrypt your signing keys at rest.
 
 See the [deployment](/identityserver/v7/deployment) section for more information
@@ -95,7 +95,7 @@ about setting up data protection.
 
 ### Manage multiple keys
 By default, Automatic Key Management will maintain a signing credential and
-validation keys for a single cryptographic algorithm (*RS256*). You can specify
+validation keys for a single cryptographic algorithm (`RS256`). You can specify
 multiple keys, algorithms, and if those keys should additionally get wrapped in
 an X.509 certificate. Automatic key management will create and rotate keys for
 each signing algorithm you specify.
@@ -126,7 +126,7 @@ options.KeyManagement.SigningAlgorithms = new[]
 
 When you register multiple signing algorithms, the first in the list will be the
 default used for signing tokens. Client and API resource definitions both have
-an *AllowedTokenSigningAlgorithm* property to override the default on a per
+an `AllowedTokenSigningAlgorithm` property to override the default on a per
 resource and client basis.
 
 :::

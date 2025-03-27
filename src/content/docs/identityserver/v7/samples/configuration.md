@@ -6,11 +6,11 @@ weight: 60
 
 ### Dynamic Client Registration Sample
 
-This sample of the *IdentityServer.Configuration* API shows how to make simple Dynamic Client Registration (DCR) requests.
+This sample of the `IdentityServer.Configuration` API shows how to make simple Dynamic Client Registration (DCR) requests.
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Configuration/SimpleDcr)
 
 ### Permissions Sample
-This sample of the *IdentityServer.Configuration* API shows how you might make authorization decisions during Dynamic Client Registration (DCR).
+This sample of the `IdentityServer.Configuration` API shows how you might make authorization decisions during Dynamic Client Registration (DCR).
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Configuration/Permissions)
 
 

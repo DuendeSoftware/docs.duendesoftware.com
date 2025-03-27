@@ -31,7 +31,7 @@ See [our data protection guide](/identityserver/v7/deployment/data_protection) f
 ## Load Balancing, proxies and TLS offloading
 When running IdentityServer behind a load balancer it is important that IdentityServer still has access to the original request URL. IdentityServer uses that to create URLs that are included in the discovery document and in protocol messages.
 
-To diagnose, open the discovery document (append */.well-known/openid-configuration* to your root IdentityServer host), e.g. https://demo.duendesoftware.com/.well-known/openid-configuration. Make sure that the URLs listed in there have the correct host name and are listed as https (assuming you are running under https, which you should).
+To diagnose, open the discovery document (append `/.well-known/openid-configuration` to your root IdentityServer host), e.g. https://demo.duendesoftware.com/.well-known/openid-configuration. Make sure that the URLs listed in there have the correct host name and are listed as https (assuming you are running under https, which you should).
 
 See [our proxy guide](/identityserver/v7/deployment/proxies) for more information.
 
@@ -57,11 +57,11 @@ See [our guide](wilson) for more information on how to diagnose and fix version 
 ## IdentityServerOptions.EmitStaticAudienceClaim and Token Validation
 
 Some token validation implementations require that all JWTs
-include an audience claim with the key/value of *"aud"* and *"&lt;issuer&gt;/resources"*.
+include an audience claim with the key/value of `"aud"` and `"&lt;issuer&gt;/resources"`.
 
 To add an audience claim to tokens created by IdentityServer, set the
-value of *IdentityServerOptions.EmitStaticAudienceClaim* to *true* during the setup
-of your IdentityServer instance (default: *false*).
+value of `IdentityServerOptions.EmitStaticAudienceClaim` to `true` during the setup
+of your IdentityServer instance (default: `false`).
 
 ```csharp
 services.AddIdentityServer(options =>

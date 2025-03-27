@@ -26,7 +26,7 @@ hash of the shared secret. The shared secret is not stored in IdentityServer -
 only the hash. The client on the hand needs access to the clear text of the 
 secret. It must send the clear text to authenticate itself.
 
-IdentityServer provides the *Sha256* and *Sha512* extension methods on strings
+IdentityServer provides the `Sha256` and `Sha512` extension methods on strings
 as a convenience to produce their hashes. These extension methods can be used
 when prototyping or during demos to get started quickly. However, the clear text
 of secrets used in production should never be written down in your source code.

@@ -33,5 +33,5 @@ builder.Services.AddIdentityServer(options => {
 ### Back-channel Logout
 When the session cleanup job removes expired records, it will by default also trigger [back-channel logout notifications](/identityserver/v7/ui/logout/notification#back-channel-server-side-clients) to client applications participating in the session. You can use this mechanism to create an [inactivity timeout](inactivity_timeout) that applies across all your client applications.
 
-The *ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout* flag enables this behavior, and it is on by default.
+The `ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout` flag enables this behavior, and it is on by default.
 

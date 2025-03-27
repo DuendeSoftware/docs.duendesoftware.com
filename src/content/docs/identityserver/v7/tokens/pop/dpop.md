@@ -18,12 +18,12 @@ Added in 6.3.0.
 }
 ```
 
-The client must then prove possession of the private key to call the APIs, and your APIs can [validate](/identityserver/v7/apis/aspnetcore/confirmation) the *cnf* claim by comparing it to the thumbprint of the client's public key in the JWK.
+The client must then prove possession of the private key to call the APIs, and your APIs can [validate](/identityserver/v7/apis/aspnetcore/confirmation) the `cnf` claim by comparing it to the thumbprint of the client's public key in the JWK.
 
 If the access token would leak, it cannot be replayed without having access to the private key of the JWK the client controls.
 
 The mechanism by which the client proves control of the private key (both when connecting to the token server and when calling an API) is by sending an additional JWT called a proof token on HTTP requests.
-This proof token is passed via the *DPoP* request header and contains the public portion of the JWK, and is signed by the corresponding private key.
+This proof token is passed via the `DPoP` request header and contains the public portion of the JWK, and is signed by the corresponding private key.
 
 The creation and management of this DPoP key is up to the policy of the client.
 For example is can be dynamically created when the client starts up, and can be periodically rotated.
@@ -47,9 +47,9 @@ new Client
 
 #### Enabling DPoP support in your client
 
-The easiest approach for supporting DPoP in your client is to use the DPoP support in the *Duende.AccessTokenManagement* library ([docs available here](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki/DPoP)).
+The easiest approach for supporting DPoP in your client is to use the DPoP support in the `Duende.AccessTokenManagement` library ([docs available here](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki/DPoP)).
 It provides DPoP client support for both client credentials and code flow style clients.
-DPoP is enabled by simply assigning the *DPoPJsonWebKey* on the client configuration. 
+DPoP is enabled by simply assigning the `DPoPJsonWebKey` on the client configuration. 
 
 For example, here's how to configure a client credentials client:
 
@@ -85,8 +85,8 @@ jsonWebKey.Alg = "PS256";
 string jwk = JsonSerializer.Serialize(jsonWebKey);
 ```
 
-Once your client configuration has a *DPoPJsonWebKey*, then any protocol requests to obtain access tokens from the token server will automatically include a DPoP proof token created from the *DPoPJsonWebKey*.
-Furthermore, any API invocations using the *AddClientCredentialsHttpClient* or *AddUserAccessTokenHttpClient* helpers will also automatically include a DPoP proof token. The implication is that the *DPoPJsonWebKey* is a critical secret that must be carefully managed, because any tokens requested with this secret will be bound to it; if the secret is lost, the tokens can longer be used, and if the secret is leaked, the security benefits of DPoP are lost.
+Once your client configuration has a `DPoPJsonWebKey`, then any protocol requests to obtain access tokens from the token server will automatically include a DPoP proof token created from the `DPoPJsonWebKey`.
+Furthermore, any API invocations using the `AddClientCredentialsHttpClient` or `AddUserAccessTokenHttpClient` helpers will also automatically include a DPoP proof token. The implication is that the `DPoPJsonWebKey` is a critical secret that must be carefully managed, because any tokens requested with this secret will be bound to it; if the secret is lost, the tokens can longer be used, and if the secret is leaked, the security benefits of DPoP are lost.
 
 #### Enabling DPoP support in your API
 

@@ -16,8 +16,8 @@ Duende IdentityServer provides the [authorize interaction response generator](/i
 
 ### Built-in AuthorizeInteractionResponseGenerator
 
-To provide custom logic for the authorize endpoint, the recommendation is to derive from the built-in *AuthorizeInteractionResponseGenerator* to inherit all the default logic pertaining to login and consent semantics.
-To augment the built-in logic, override *ProcessLoginAsync* and/or *ProcessConsentAsync* (depending on the nature of the custom logic).
+To provide custom logic for the authorize endpoint, the recommendation is to derive from the built-in `AuthorizeInteractionResponseGenerator` to inherit all the default logic pertaining to login and consent semantics.
+To augment the built-in logic, override `ProcessLoginAsync` and/or `ProcessConsentAsync` (depending on the nature of the custom logic).
 The pattern would be to invoke the base implementation and if the result did not cause a login, consent or error, then the custom logic could be tested to determine if it is desired to prevent SSO and instead force the user to interact in some way (e.g. re-login, trigger MFA, accept a EULA, etc).
 The sample below illustrates:
 
@@ -52,10 +52,10 @@ public class CustomAuthorizeInteractionResponseGenerator : AuthorizeInteractionR
 
 ### Custom Redirects
 
-When using custom redirect pages by setting the *RedirectUrl* on the *InteractionResponse*, IdentityServer will provide a *returnUrl* query parameter with the request (much like on the login page).
-Once the custom logic is complete on the page, then the URL in the *returnUrl* query parameter should be used to return the user back into the IdentityServer authorize request workflow.
+When using custom redirect pages by setting the `RedirectUrl` on the `InteractionResponse`, IdentityServer will provide a `returnUrl` query parameter with the request (much like on the login page).
+Once the custom logic is complete on the page, then the URL in the `returnUrl` query parameter should be used to return the user back into the IdentityServer authorize request workflow.
 
 :::note
-Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#security_issues) via the *returnUrl* parameter. You should validate that the *returnUrl* refers to a well-known location.
-Either use the *Url.IsLocalUrl* helper from ASP.NET Core, or use the [interaction service](/identityserver/v7/reference/services/interaction_service#iidentityserverinteractionservice-apis) from Duende IdentityServer for APIs to validate the *returnUrl* parameter.
+Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#security_issues) via the `returnUrl` parameter. You should validate that the `returnUrl` refers to a well-known location.
+Either use the `Url.IsLocalUrl` helper from ASP.NET Core, or use the [interaction service](/identityserver/v7/reference/services/interaction_service#iidentityserverinteractionservice-apis) from Duende IdentityServer for APIs to validate the `returnUrl` parameter.
 :::

@@ -8,7 +8,7 @@ weight: 20
 
 These options are configurable when using the Entity Framework Core for the [configuration store](/identityserver/v7/data/configuration):
 
-You set the options at startup time in your *AddConfigurationStore* method:
+You set the options at startup time in your `AddConfigurationStore` method:
 
 ```cs
 var builder = services.AddIdentityServer()
@@ -22,12 +22,12 @@ var builder = services.AddIdentityServer()
 
 Settings that affect the DbContext pooling feature of Entity Framework Core.
 
-* ***EnablePooling***
+* **`EnablePooling`**
 
-    Gets or set if EF DbContext pooling is enabled. Defaults to *false*.
+    Gets or set if EF DbContext pooling is enabled. Defaults to `false`.
 
     
-* ***PoolSize***
+* **`PoolSize`**
 
     Gets or set the pool size to use when DbContext pooling is enabled. If not set, the EF default is used.
 
@@ -36,46 +36,46 @@ Settings that affect the DbContext pooling feature of Entity Framework Core.
 
 Settings that affect the database schema and table names.
 
-* ***DefaultSchema***
+* **`DefaultSchema`**
 
-    Gets or sets the default schema. Defaults to *null*.
+    Gets or sets the default schema. Defaults to `null`.
 
-*TableConfiguration* settings for each individual table (schema and name) managed by this feature:
+`TableConfiguration` settings for each individual table (schema and name) managed by this feature:
 
 Identity Resource related tables:
 
-* ***IdentityResource***
-* ***IdentityResourceClaim***
-* ***IdentityResourceProperty***
+* **`IdentityResource`**
+* **`IdentityResourceClaim`**
+* **`IdentityResourceProperty`**
 
 API Resource related tables:
 
-* ***ApiResource***
-* ***ApiResourceSecret***
-* ***ApiResourceScope***
-* ***ApiResourceClaim***
-* ***ApiResourceProperty***
+* **`ApiResource`**
+* **`ApiResourceSecret`**
+* **`ApiResourceScope`**
+* **`ApiResourceClaim`**
+* **`ApiResourceProperty`**
 
 Client related tables:
 
-* ***Client***
-* ***ClientGrantType***
-* ***ClientRedirectUri***
-* ***ClientPostLogoutRedirectUri***
-* ***ClientScopes***
-* ***ClientSecret***
-* ***ClientClaim***
-* ***ClientIdPRestriction***
-* ***ClientCorsOrigin***
-* ***ClientProperty*** 
+* **`Client`**
+* **`ClientGrantType`**
+* **`ClientRedirectUri`**
+* **`ClientPostLogoutRedirectUri`**
+* **`ClientScopes`**
+* **`ClientSecret`**
+* **`ClientClaim`**
+* **`ClientIdPRestriction`**
+* **`ClientCorsOrigin`**
+* **`ClientProperty`** 
 
 API Scope related tables:
 
-* ***ApiScope***
-* ***ApiScopeClaim***
-* ***ApiScopeProperty***
+* **`ApiScope`**
+* **`ApiScopeClaim`**
+* **`ApiScopeProperty`**
 
 Identity provider related tables:
 
-* ***IdentityProvider***
+* **`IdentityProvider`**
 

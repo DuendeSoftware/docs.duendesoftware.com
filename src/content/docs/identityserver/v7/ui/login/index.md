@@ -14,14 +14,14 @@ This requires a user to present credentials and typically involves these steps:
 * If the login is client initiated, redirect the user back to the client.
 
 When IdentityServer needs to show the login page, it redirects the user to a configurable
-*LoginUrl*.
+`LoginUrl`.
 ```cs
 builder.Services.AddIdentityServer(opt => {
     opt.UserInteraction.LoginUrl = "/path/to/login";
 })
 ```
 
-If no *LoginUrl* is set, IdentityServer will infer it from the *LoginPath* of your Cookie
+If no `LoginUrl` is set, IdentityServer will infer it from the `LoginPath` of your Cookie
 Authentication Handler. For example:
 ```cs
 builder.Services.AddAuthentication()

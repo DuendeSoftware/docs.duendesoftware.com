@@ -4,12 +4,12 @@ date: 2020-09-10T08:22:12+02:00
 weight: 10
 ---
 
-An identity resource is a named group of claims about a user that can be requested using the *scope* parameter.
+An identity resource is a named group of claims about a user that can be requested using the `scope` parameter.
 
 The OpenID Connect specification [suggests](https://openid.net/specs/openid-connect-core-1_0.html#scopeclaims) a couple of standard 
 scope name to claim type mappings that might be useful to you for inspiration, but you can freely design them yourself.
 
-One of them is actually mandatory, the *openid* scope, which tells the provider to return the *sub* (subject id) claim in the identity token.
+One of them is actually mandatory, the `openid` scope, which tells the provider to return the `sub` (subject id) claim in the identity token.
 
 This is how you could define the openid scope in code:
 
@@ -38,10 +38,10 @@ public static IEnumerable<IdentityResource> GetIdentityResources()
 }
 ```
 :::note
-See the [reference](/identityserver/v7/reference/models/identity_resource) section for more information on *IdentityResource*.
+See the [reference](/identityserver/v7/reference/models/identity_resource) section for more information on `IdentityResource`.
 :::
 
-The following example shows a custom identity resource called *profile* that represents the display name, email address and website claim:
+The following example shows a custom identity resource called `profile` that represents the display name, email address and website claim:
 
 ```cs
 public static IEnumerable<IdentityResource> GetIdentityResources()
@@ -56,7 +56,7 @@ public static IEnumerable<IdentityResource> GetIdentityResources()
 }
 ```
 
-Once the resource is defined, you can give access to it to a client via the *AllowedScopes* option (other properties omitted):
+Once the resource is defined, you can give access to it to a client via the `AllowedScopes` option (other properties omitted):
 
 ```cs
 var client = new Client
@@ -68,7 +68,7 @@ var client = new Client
 ```
 
 :::note
-See the [reference](/identityserver/v7/reference/models/client) section for more information on the *Client* class.
+See the [reference](/identityserver/v7/reference/models/client) section for more information on the `Client` class.
 :::
 
 The client can then request the resource using the scope parameter (other parameters omitted):

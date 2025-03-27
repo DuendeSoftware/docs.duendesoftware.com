@@ -5,7 +5,7 @@ weight: 65
 
 ## Dynamic Identity Providers
 
-Normally authentication handlers for external providers are added into your IdentityServer using *AddAuthentication()* and *AddOpenIdConnect()*. This is fine for a handful of schemes, but the authentication handler architecture in ASP.NET Core was not designed for dozens or more statically registered in the DI system. At some point you will incur a performance penalty for having too many. Also, as you need to add or change this configuration you will need to re-compile and re-run your startup code for those changes to take effect.
+Normally authentication handlers for external providers are added into your IdentityServer using `AddAuthentication()` and `AddOpenIdConnect()`. This is fine for a handful of schemes, but the authentication handler architecture in ASP.NET Core was not designed for dozens or more statically registered in the DI system. At some point you will incur a performance penalty for having too many. Also, as you need to add or change this configuration you will need to re-compile and re-run your startup code for those changes to take effect.
 
 Duende IdentityServer provides support for dynamic configuration of OpenID Connect providers loaded from a store. This is designed to address the performance concern as well as allowing changes to the configuration to a running server.
 
@@ -32,7 +32,7 @@ The [identity provider store](/identityserver/v7/reference/stores/idp_store) can
 
 These results can then be used to populate the list of options presented to the user on the login page.
 
-This API is deliberately separate than the *IAuthenticationSchemeProvider* provided by ASP.NET Core, which returns the list of statically configured providers (from *Startup.cs*).
+This API is deliberately separate than the `IAuthenticationSchemeProvider` provided by ASP.NET Core, which returns the list of statically configured providers (from `Startup.cs`).
 This allows the developer to have more control over the customization on the login page (e.g. there might be hundreds or thousands on dynamic providers, and therefore you would not want them displayed on the login page, but you might have a few social providers statically configured that you would want to display).
 
 Here is an example of how the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/products/tree/main/identity-server/templates/src/UI/Pages/Account/Login/Index.cshtml.cs#l193-l210) uses both interfaces to then present a merged and unified list to the end user:
@@ -71,13 +71,13 @@ If you use a custom store, there is an [extension method to enable caching](/ide
 If you use the EF stores, there is general helper [to enable caching for all configuration data](/identityserver/v7/data/ef#enabling-caching-for-configuration-store).
 :::
 
-The configuration data for the OIDC provider is used to assign the configuration on the ASP.NET Core [OpenID Connect Options](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions) class, much like you would if you were to statically configure the options when using *AddOpenIdConnect()*.
+The configuration data for the OIDC provider is used to assign the configuration on the ASP.NET Core [OpenID Connect Options](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions) class, much like you would if you were to statically configure the options when using `AddOpenIdConnect()`.
 The [identity provider model documentation](/identityserver/v7/reference/models/idp) provides details for the model properties and how they are mapped to the options.
 
 
 #### Customizing OpenIdConnectOptions
 
-If it is needed to further customize the *OpenIdConnectOptions*, you can register in the DI system an instance of *IConfigureNamedOptions\<OpenIdConnectOptions>*. For example:
+If it is needed to further customize the `OpenIdConnectOptions`, you can register in the DI system an instance of `IConfigureNamedOptions\<OpenIdConnectOptions>`. For example:
 
 ```cs
     public class CustomConfig : IConfigureNamedOptions<OpenIdConnectOptions>
@@ -104,8 +104,8 @@ builder.Services.ConfigureOptions<CustomConfig>();
 
 #### Accessing OidcProvider data in IConfigureNamedOptions
 
-If your customization of the *OpenIdConnectOptions* requires per-provider data that you are storing on the *OidcProvider*, then we provide an abstraction for the *IConfigureNamedOptions\<OpenIdConnectOptions>*.
-This abstraction requires your code to derive from *ConfigureAuthenticationOptions\<OpenIdConnectOptions, OidcProvider>* (rather than *IConfigureNamedOptions\<OpenIdConnectOptions>*).
+If your customization of the `OpenIdConnectOptions` requires per-provider data that you are storing on the `OidcProvider`, then we provide an abstraction for the `IConfigureNamedOptions\<OpenIdConnectOptions>`.
+This abstraction requires your code to derive from *ConfigureAuthenticationOptions\<OpenIdConnectOptions, OidcProvider>* (rather than `IConfigureNamedOptions\<OpenIdConnectOptions>`).
 For example:
 
 ```cs
@@ -135,9 +135,9 @@ builder.Services.ConfigureOptions<CustomOidcConfigureOptions>();
 ### Callback Paths
 
 As part of the architecture of the dynamic providers feature, the various callback paths are required and are automatically set to follow a convention.
-The convention of these paths follows the form of *~/federation/{scheme}/{suffix}*.
+The convention of these paths follows the form of `~/federation/{scheme}/{suffix}`.
 
-These are three paths that are set on the *OpenIdConnectOptions*:
+These are three paths that are set on the `OpenIdConnectOptions`:
 
 * [CallbackPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.remoteauthenticationoptions.callbackpath). This is the OIDC redirect URI protocol value. The suffix "/signin" is used for this path.
 * [SignedOutCallbackPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.signedoutcallbackpath). This is the OIDC post logout redirect URI protocol value. The suffix "/signout-callback" is used for this path.
@@ -151,5 +151,5 @@ This means for your IdentityServer running at "https://sample.duendesoftware.com
 
 ### DynamicProviderOptions
 
-The *DynamicProviderOptions* is a new options class in the IdentityServer options object model.
+The `DynamicProviderOptions` is a new options class in the IdentityServer options object model.
 It provides [shared settings](/identityserver/v7/reference/options#dynamic-providers) for the dynamic identity providers feature.

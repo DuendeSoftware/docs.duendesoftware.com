@@ -6,7 +6,7 @@ weight: 1
 
 The [discovery endpoint](https://openid.net/specs/openid-connect-discovery-1_0.html) can be used to retrieve metadata about your IdentityServer - it returns information like the issuer name, key material, supported scopes etc. 
 
-The discovery endpoint is available via */.well-known/openid-configuration* relative to the base address, e.g.:
+The discovery endpoint is available via `/.well-known/openid-configuration` relative to the base address, e.g.:
 
     https://demo.duendesoftware.com/.well-known/openid-configuration
 

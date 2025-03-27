@@ -7,9 +7,9 @@ weight: 20
 These samples illustrate customization of the [interactive pages](/identityserver/v7/ui) used in your IdentityServer.
 
 ### Custom Profile Service
-This sample shows how to create a [custom profile service](/identityserver/v7/fundamentals/claims) to control what claims are issued from your IdentityServer. The majority of the sample is captured in *CustomProfileService.cs* in the *IdentityServer* project.
+This sample shows how to create a [custom profile service](/identityserver/v7/fundamentals/claims) to control what claims are issued from your IdentityServer. The majority of the sample is captured in `CustomProfileService.cs` in the `IdentityServer` project.
 
-Also, another part of the sample shows how to collect a custom claim during the login workflow when using an external login provider (this is done in the *ExternalLogin/Callback.cshtml.cs* processing logic). This claim value is then stored in the user's session, and is then ultimately copied into the created tokens via the custom profile service logic.
+Also, another part of the sample shows how to collect a custom claim during the login workflow when using an external login provider (this is done in the `ExternalLogin/Callback.cshtml.cs` processing logic). This claim value is then stored in the user's session, and is then ultimately copied into the created tokens via the custom profile service logic.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/ProfileService)
 
@@ -50,11 +50,11 @@ Key takeaways:
 
 The [dynamic providers](/identityserver/v7/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample sets up a simple database with one dynamic OIDC provider.
 
-Some key points about the *IdentityServer* project in the sample:
+Some key points about the `IdentityServer` project in the sample:
 
 * Execute the command "dotnet run /seed" to create and populate the Sqlite database.
-* *SeedData.cs* has the code to populate the dynamic provider in the database.
-* In the *Account/Login/Index.cshtml.cs* file, the code to build the UI to list the dynamic providers is in the *BuildModelAsync* helper. It uses the *IIdentityProviderStore* to query the dynamic provider database.
+* `SeedData.cs` has the code to populate the dynamic provider in the database.
+* In the `Account/Login/Index.cshtml.cs` file, the code to build the UI to list the dynamic providers is in the `BuildModelAsync` helper. It uses the `IIdentityProviderStore` to query the dynamic provider database.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/DynamicProviders)
 
@@ -90,9 +90,9 @@ Follow that URL, login as "alice", and then approve the login request to allow t
 
 ### Windows Authentication with IIS Hosting
 This sample shows how to use Windows Authentication when hosting your IdentityServer behind IIS (or IIS Express).
-The salient piece to understand is a new *LoginWithWindows* action method in the *AccountController* from the quickstarts.
-Windows authentication is triggered, and once the result is determined the main authentication session cookie is created based on the *WindowsIdentity* results.
-Also, note there is some configuration in *Startup* with a call to *Configure\<IISOptions>* (mainly to set *AutomaticAuthentication* to *false*).
+The salient piece to understand is a new `LoginWithWindows` action method in the `AccountController` from the quickstarts.
+Windows authentication is triggered, and once the result is determined the main authentication session cookie is created based on the `WindowsIdentity` results.
+Also, note there is some configuration in `Startup` with a call to `Configure\<IISOptions>` (mainly to set `AutomaticAuthentication` to `false`).
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/WindowsAuthentication)
 

@@ -5,7 +5,7 @@ weight: 50
 
 #### Duende.IdentityServer.Services.IRefreshTokenService
 
-All refresh token handling is implemented in the *DefaultRefreshTokenService* (which is the default implementation of the *IRefreshTokenService* interface):
+All refresh token handling is implemented in the `DefaultRefreshTokenService` (which is the default implementation of the `IRefreshTokenService` interface):
 
 ```cs
 public interface IRefreshTokenService
@@ -41,15 +41,15 @@ point to a replay attack of the refresh token, bugs in the client code, or
 transient network failures.
 
 When one-time use refresh tokens are used, they are not necessarily deleted from
-the database. The *DeleteOneTimeOnlyRefreshTokensOnUse* configuration flag,
+the database. The `DeleteOneTimeOnlyRefreshTokensOnUse` configuration flag,
 added in version 6.3, controls if such tokens are immediately deleted or
 consumed. If configured for consumption instead of deletion, then when the token
-is used, the *ConsumedTime* property will be set. If a token is received that
+is used, the `ConsumedTime` property will be set. If a token is received that
 has already been consumed, the default service will call the
-*AcceptConsumedTokenAsync* virtual method. The purpose of
-*AcceptConsumedTokenAsync* is to determine if a consumed token should be allowed
+`AcceptConsumedTokenAsync` virtual method. The purpose of
+`AcceptConsumedTokenAsync` is to determine if a consumed token should be allowed
 to be used to produce new tokens. The default implementation of
-*AcceptConsumedTokenAsync* rejects all consumed tokens, causing the protocol
+`AcceptConsumedTokenAsync` rejects all consumed tokens, causing the protocol
 request to fail with the "invalid_grant" error. Your customized implementation
 could instead add a grace period to allow recovery after network failures or
 could treat this as a replay attack and take steps to notify the user and/or

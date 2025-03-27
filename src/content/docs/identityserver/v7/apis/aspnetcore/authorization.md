@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 weight: 30
 ---
 
-The access token will include additional claims that can be used for authorization, e.g. the *scope* claim will reflect the scope the client requested (and was granted) during the token request.
+The access token will include additional claims that can be used for authorization, e.g. the `scope` claim will reflect the scope the client requested (and was granted) during the token request.
 
-In ASP.NET core, the contents of the JWT payload get transformed into claims and packaged up in a *ClaimsPrincipal*. So you can always write custom validation or authorization logic in C#:
+In ASP.NET core, the contents of the JWT payload get transformed into claims and packaged up in a `ClaimsPrincipal`. So you can always write custom validation or authorization logic in C#:
 
 ```cs
 public IActionResult Get()
@@ -73,9 +73,9 @@ public class DataController : ControllerBase
 
 #### Scope claim format
 
-Historically, Duende IdentityServer emitted the *scope* claims as an array in the JWT. This works very well with the .NET deserialization logic, which turns every array item into a separate claim of type *scope*.
+Historically, Duende IdentityServer emitted the `scope` claims as an array in the JWT. This works very well with the .NET deserialization logic, which turns every array item into a separate claim of type `scope`.
 
-The newer *JWT Profile for OAuth* [spec](/identityserver/v7/overview/specs) mandates that the scope claim is a single space delimited string. You can switch the format by setting the *EmitScopesAsSpaceDelimitedStringInJwt* on the [options](/identityserver/v7/reference/options). But this means that the code consuming access tokens might need to be adjusted. The following code can do a conversion to the *multiple claims* format that .NET prefers:
+The newer *JWT Profile for OAuth* [spec](/identityserver/v7/overview/specs) mandates that the scope claim is a single space delimited string. You can switch the format by setting the `EmitScopesAsSpaceDelimitedStringInJwt` on the [options](/identityserver/v7/reference/options). But this means that the code consuming access tokens might need to be adjusted. The following code can do a conversion to the *multiple claims* format that .NET prefers:
 
 ```cs
 namespace IdentityModel.AspNetCore.AccessTokenValidation;

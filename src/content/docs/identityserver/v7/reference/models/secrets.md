@@ -26,13 +26,13 @@ public interface ISecretParser
 }
 ```
 
-* ***AuthenticationMethod***
+* **`AuthenticationMethod`**
 
     The name of the authentication method that this parser registers for. This value must be unique and will be displayed in the discovery document.
 
-* ***ParseAsync***
+* **`ParseAsync`**
 
-    The job of this method is to extract the secret from the HTTP request and parse it into a *ParsedSecret*
+    The job of this method is to extract the secret from the HTTP request and parse it into a `ParsedSecret`
 
 
 #### Duende.IdentityServer.Model.ParsedSecret
@@ -79,7 +79,7 @@ public class ParsedSecret
 }
 ```
 
-The parsed secret is forwarded to the registered secret validator. The validator will typically inspect the *Type* property to determine if this secret is something that can be validated by that validator instance. If yes, it will know how to cast the *Credential* object into a format that is understood.
+The parsed secret is forwarded to the registered secret validator. The validator will typically inspect the `Type` property to determine if this secret is something that can be validated by that validator instance. If yes, it will know how to cast the `Credential` object into a format that is understood.
 
 #### Duende.IdentityServer.Validation.ISecretParser
 

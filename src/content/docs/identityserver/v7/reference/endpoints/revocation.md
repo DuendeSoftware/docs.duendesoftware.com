@@ -7,13 +7,13 @@ weight: 6
 This endpoint allows revoking access tokens (reference tokens only) and refresh token. 
 It implements the token revocation specification [(RFC 7009)](https://tools.ietf.org/html/rfc7009).
 
-* ***token***
+* **`token`**
     
     the token to revoke (required)
 
-* ***token_type_hint***
+* **`token_type_hint`**
     
-    either *access_token* or *refresh_token* (optional)
+    either `access_token` or `refresh_token` (optional)
 
 ```text
 POST /connect/revocation HTTP/1.1

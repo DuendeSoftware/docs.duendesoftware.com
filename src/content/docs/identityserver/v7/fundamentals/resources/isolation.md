@@ -17,7 +17,7 @@ OAuth itself only knows about scopes - the (API) resource concept does not exist
     * resource specific processing like signing or encryption algorithms conflict
 * without sender-constraints, a resource could potentially re-use (or abuse) a token to call another contained resource directly
 
-To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds an additional request parameter for the authorize and token endpoint called *resource*. This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single value only, and all scopes belong to that single resource).
+To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds an additional request parameter for the authorize and token endpoint called `resource`. This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single value only, and all scopes belong to that single resource).
 
 ## Using the resource parameter
 Let's assume you have the following resource design and that the client is allowed access to all scopes:
@@ -37,10 +37,10 @@ var resources = new[]
 };
 ```
 
-If the client would simply request a token for the *read* scope, the resulting access token would contain the audience of both the invoice and the products API and thus be accepted at both APIs.
+If the client would simply request a token for the `read` scope, the resulting access token would contain the audience of both the invoice and the products API and thus be accepted at both APIs.
 
 ### Machine to machine scenarios
-If the client in addition passes the *resource* parameter specifying the name of the resource where it wants to use the access token, the token engine can *down-scope* the resulting access token to the single resource, e.g.:
+If the client in addition passes the `resource` parameter specifying the name of the resource where it wants to use the access token, the token engine can `down-scope` the resulting access token to the single resource, e.g.:
 
 ```text
 POST /token
@@ -64,7 +64,7 @@ Thus resulting in an access token like this (some details omitted):
 ```
 
 ### Interactive applications
-The authorize endpoint supports the *resource* parameter as well, e.g.:
+The authorize endpoint supports the `resource` parameter as well, e.g.:
 
 ```text
 GET /authorize?client_id=client&response_type=code&scope=read&resource=urn:invoices
@@ -121,7 +121,7 @@ resource=urn:products
 The end-result will be that the client has two access tokens - one for each resource and can manage their lifetime via the  refresh token.
 
 ## Enforcing resource isolation
-All examples so far used the *resource* parameter optionally. If you have API resources, where you want to make sure they are not sharing access tokens with other resources, you can enforce the resource indicator, e.g.:
+All examples so far used the `resource` parameter optionally. If you have API resources, where you want to make sure they are not sharing access tokens with other resources, you can enforce the resource indicator, e.g.:
 
 ```cs
 var resources = new[]

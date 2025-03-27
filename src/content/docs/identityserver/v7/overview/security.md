@@ -82,7 +82,7 @@ root certificate to NuGet's code signing certificate bundle.
 #### Trusting the DigiCert certificate
 
 Here is an example of how to configure NuGet to trust the DigiCert root CA on the dotnet sdk docker image.
-This applies for Duende packages released **after** January 1, 2025, such as IdentityServer 7.1 and newer versions.
+This applies for Duende packages released *`after`* January 1, 2025, such as IdentityServer 7.1 and newer versions.
 
 Note the dotnet sdk docker image already includes the tools used in this section.
 If you are using another container image, make sure the following tools are available in the image:
@@ -122,7 +122,7 @@ dotnet nuget verify Duende.IdentityServer.7.1.x.nupkg
 #### Trusting the Sectigo certificate
 
 Here is an example of how to configure NuGet to trust the Sectigo root CA on the dotnet sdk docker image for
-Duende packages released **before** January 1, 2025
+Duende packages released *`before`* January 1, 2025
 
 Note the dotnet sdk docker image already includes the tools used in this section.
 If you are using another container image, make sure the following tools are available in the image:

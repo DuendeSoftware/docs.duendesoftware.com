@@ -52,11 +52,11 @@ Every resource has a unique name - and clients use this name to specify to which
 
 **Identity data** Identity information (aka claims) about a user, e.g. name or email address.
 
-**APIs** APIs resources represent functionality a client wants to invoke - typically modelled as Web APIs, but not necessarily.
+*`APIs`* APIs resources represent functionality a client wants to invoke - typically modelled as Web APIs, but not necessarily.
 
 ### Identity Token
 An identity token represents the outcome of an authentication process. It contains at a bare minimum an identifier for the user 
-(called the *sub* aka subject claim) and information about how and when the user authenticated.  It can contain additional identity data.
+(called the `sub` aka subject claim) and information about how and when the user authenticated.  It can contain additional identity data.
 
 ### Access Token
 An access token allows access to an API resource. Clients request access tokens and forward them to the API. 

@@ -12,7 +12,7 @@ is required in order to register.
 
 The Configuration API creates standard ASP.NET endpoints that can be protected
 through traditional ASP.NET authorization. Alternatively, the dynamic client
-registration *software_statement* parameter can be used to authenticate requests.
+registration `software_statement` parameter can be used to authenticate requests.
 
 ## Traditional ASP.NET Authorization
 You can authorize access to the Configuration API Endpoints using [authorization
@@ -42,7 +42,7 @@ scope, but this time, you'd use the authorization code flow.
 
 ## Software Statement
 The metadata within requests to the Configuration API can be bundled together
-into a JWT and sent in the *software_statement* parameter. If you can establish
+into a JWT and sent in the `software_statement` parameter. If you can establish
 a trust relationship between the Configuration API and the issuer of the
 software statement, then that can be used to decide if you want to accept
 registration requests. 
@@ -54,5 +54,5 @@ Configuration API, and how the Configuration API will validate the software
 statements. The configuration API doesn't make any assumptions about that
 design. By default it does nothing with the *software_statement parameter*; to
 make use of it, [customize](customization#validation) the
-*DynamicClientRegistrationValidator.ValidateSoftwareStatementAsync* extension
+`DynamicClientRegistrationValidator.ValidateSoftwareStatementAsync` extension
 point.

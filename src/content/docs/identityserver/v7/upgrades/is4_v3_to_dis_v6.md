@@ -37,7 +37,7 @@ would change to the latest version of IdentityServer4:
 <PackageReference Include="IdentityServer4" Version="4.1.2" />
 ```
 
-If you're using any of the other IdentityServer4 packages, such as *IdentityServer4.EntityFramework* or *IdentityServer4.AspNetIdentity*, then update those as well.
+If you're using any of the other IdentityServer4 packages, such as `IdentityServer4.EntityFramework` or `IdentityServer4.AspNetIdentity`, then update those as well.
 
 ## Step 2: Update Database Schema with EF Core Migrations
 
@@ -90,7 +90,7 @@ Copy it into your project folder and then configure it as an embedded resource i
 
 ```
 
-Then modify the migration that was just created. Remove all of the code in the *Up* and *Down* methods are replace the *Up* with this code, which will execute the custom SQL script:
+Then modify the migration that was just created. Remove all of the code in the `Up` and `Down` methods are replace the `Up` with this code, which will execute the custom SQL script:
 
 ```
 using System.IO;
@@ -120,7 +120,7 @@ namespace IdentityServerMigrationSample.Migrations.ConfigurationDb
 }
 ```
 
-Note that given that there is no *Down* implementation, this is a one-way update.
+Note that given that there is no `Down` implementation, this is a one-way update.
 
 And now run the migration:
 

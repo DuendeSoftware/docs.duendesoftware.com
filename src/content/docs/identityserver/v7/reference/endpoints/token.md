@@ -10,73 +10,73 @@ Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 toke
 
 ### Required parameters
 
-* ***client_id***
+* **`client_id`**
     
     client identifier; not necessary in body if it is present in the authorization header
 
-* ***grant_type***
+* **`grant_type`**
     
-    * ***authorization_code***
+    * **`authorization_code`**
     
-    * ***client_credentials***
+    * **`client_credentials`**
     
-    * ***password***
+    * **`password`**
     
-    * ***refresh_token***
+    * **`refresh_token`**
     
-    * ***urn:ietf:params:oauth:grant-type:device_code***
+    * **`urn:ietf:params:oauth:grant-type:device_code`**
     
     * ***extension grant***
 
 ### Optional parameters
 
-* ***client_secret***
+* **`client_secret`**
     
     client secret for confidential/credentials clients - either in the post body, or as a basic authentication header.
 
-* ***scope***
+* **`scope`**
     
     one or more registered scopes. If not specified, a token for all explicitly allowed scopes will be issued.
 
-* ***redirect_uri***
+* **`redirect_uri`**
     
-    required for the *authorization_code* grant type
+    required for the `authorization_code` grant type
 
-* ***code***
+* **`code`**
 
-    the authorization code (required for *authorization_code* grant type)
+    the authorization code (required for `authorization_code` grant type)
 
-* ***code_verifier***
+* **`code_verifier`**
     
     PKCE proof key
 
-* ***username***
+* **`username`**
 
-    resource owner username (required for *password* grant type)
+    resource owner username (required for `password` grant type)
 
-* ***password***
+* **`password`**
 
-    resource owner password (required for *password* grant type)
+    resource owner password (required for `password` grant type)
 
-* ***acr_values***
+* **`acr_values`**
    
     allows passing in additional authentication related information. Duende IdentityServer special cases the following proprietary acr_values
         
-    * ***tenant:name_of_tenant***
+    * **`tenant:name_of_tenant`**
     
         can be used to pass a tenant name to the token endpoint
 
-* ***refresh_token***
+* **`refresh_token`**
 
-    the refresh token (required for *refresh_token* grant type)
+    the refresh token (required for `refresh_token` grant type)
 
-* ***device_code***
+* **`device_code`**
 
-    the device code (required for *urn:ietf:params:oauth:grant-type:device_code* grant type)
+    the device code (required for `urn:ietf:params:oauth:grant-type:device_code` grant type)
 
-* ***auth_req_id***
+* **`auth_req_id`**
 
-    the backchannel authentication request id (required for *urn:openid:params:grant-type:ciba* grant type)
+    the backchannel authentication request id (required for `urn:openid:params:grant-type:ciba` grant type)
 
 ```text
 POST /connect/token

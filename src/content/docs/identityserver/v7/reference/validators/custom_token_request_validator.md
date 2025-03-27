@@ -24,12 +24,12 @@ public interface ICustomTokenRequestValidator
 }
 ```
 
-* ***ValidateAsync***
+* **`ValidateAsync`**
 
     This method gets called during token request processing. The context gives you access to request and response parameters.
 
     You can also change certain parameters on the validated request object, e.g. the token lifetime, token type, confirmation method and client claims.
 
-    The *CustomResponse* dictionary allows emitting additional response fields.
+    The `CustomResponse` dictionary allows emitting additional response fields.
 
-    To fail the request, set the the *IsError*, the *Error*, and optionally the *ErrorDescription* properties on the *Result* object on the *CustomTokenRequestValidationContext*.
+    To fail the request, set the the `IsError`, the `Error`, and optionally the `ErrorDescription` properties on the `Result` object on the `CustomTokenRequestValidationContext`.

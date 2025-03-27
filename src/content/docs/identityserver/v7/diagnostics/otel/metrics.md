@@ -21,10 +21,10 @@ These metrics are instrumented by the IdentityServer middleware and services and
 intended to describe the overall usage and health of the system. They could provide the
 starting point for building a metrics dashboard. The high level metrics are created by the
 the meter named "Duende.IdentityServer", which is the value of the
-*Duende.IdentityServer.Telemetry.ServiceName* constant.
+`Duende.IdentityServer.Telemetry.ServiceName` constant.
 
 #### Telemetry.Metrics.Counters.Operation
-Counter name: *tokenservice.operation*
+Counter name: `tokenservice.operation`
 
 Aggregated counter of failed and successful operations. The result tag indicates if an
 operation succeeded, failed, or caused an internal error. It is expected to have some
@@ -39,7 +39,7 @@ can be used as a very high level health metric.
 |client | Id of client requesting the operation. May be empty. |
 
 #### Telemetry.Metrics.Counters.ActiveRequests
-Counter name: *active_requests*
+Counter name: `active_requests`
 
 Gauge/up-down counter that shows current active requests that are processed by any IdentityServer endpoint. 
 Note that the pages in the user interface are not IdentityServer endpoints and are not included in this count.
@@ -52,12 +52,12 @@ Note that the pages in the user interface are not IdentityServer endpoints and a
 ## Detailed Metrics - Experimental
 These detailed metrics are instrumented by the IdentityServer middleware and services and track usage of specific
 flows and features. These metrics are created by the meter named "Duende.IdentityServer.Experimental", which is 
-the value of the *Duende.IdentityServer.Telemetry.ServiceName.Experimental* constant.
+the value of the `Duende.IdentityServer.Telemetry.ServiceName.Experimental` constant.
 The definition and tags of these counters may be changed between releases. Once the counters and tags
-are considered stable they will be moved to the *Duende.IdentityServer.Telemetry.ServiceName* meter.
+are considered stable they will be moved to the `Duende.IdentityServer.Telemetry.ServiceName` meter.
 
 ####  Telemetry.Metrics.Counters.ApiSecretValidation
-Counter name: *tokenservice.api.secret_validation*
+Counter name: `tokenservice.api.secret_validation`
 
 Number of successful/failed validations of API Secrets.
 
@@ -68,7 +68,7 @@ Number of successful/failed validations of API Secrets.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.BackchannelAuthentication
-Counter name: *tokenservice.backchannel_authentication*
+Counter name: `tokenservice.backchannel_authentication`
  
 Number of successful/failed back channel authentications (CIBA).
 
@@ -79,7 +79,7 @@ Number of successful/failed back channel authentications (CIBA).
 
 
 #### Telemetry.Metrics.Counters.ClientConfigValidation
-Counter name: *tokenservice.client.config_validation*
+Counter name: `tokenservice.client.config_validation`
  
 Number of successful/failed client validations.
 |Tag|Description|
@@ -89,7 +89,7 @@ Number of successful/failed client validations.
 
 
 #### Telemetry.Metrics.Counters.ClientSecretValidation
-Counter name: *tokenservice.client.secret_validation*
+Counter name: `tokenservice.client.secret_validation`
  
 Number of successful/failed client secret validations.
 |Tag|Description|
@@ -99,7 +99,7 @@ Number of successful/failed client secret validations.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.DeviceAuthentication
-Counter name: *tokenservice.device_authentication*
+Counter name: `tokenservice.device_authentication`
  
 Number of successful/failed device authentications.
 |Tag|Description|
@@ -108,7 +108,7 @@ Number of successful/failed device authentications.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.DynamicIdentityProviderValidation
-Counter name: *tokenservice.dynamic_identityprovider.validation*
+Counter name: `tokenservice.dynamic_identityprovider.validation`
  
 Number of successful/failed validations of dynamic identity providers.
 |Tag|Description|
@@ -117,7 +117,7 @@ Number of successful/failed validations of dynamic identity providers.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.Introspection
-Counter name: *tokenservice.introspection*
+Counter name: `tokenservice.introspection`
  
 Number of successful/failed token introspections.
 |Tag|Description|
@@ -127,7 +127,7 @@ Number of successful/failed token introspections.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.PushedAuthorizationRequest
-Counter name: *tokenservice.pushed_authorization_request*
+Counter name: `tokenservice.pushed_authorization_request`
  
 Number of successful/failed pushed authorization requests.
 |Tag|Description|
@@ -136,7 +136,7 @@ Number of successful/failed pushed authorization requests.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.ResourceOwnerAuthentication
-Counter name: *tokenservice.resourceowner_authentication*
+Counter name: `tokenservice.resourceowner_authentication`
  
 Number of successful/failed resource owner authentications.
 |Tag|Description|
@@ -145,7 +145,7 @@ Number of successful/failed resource owner authentications.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.Revocation
-Counter name: *tokenservice.revocation*
+Counter name: `tokenservice.revocation`
  
 Number of successful/failed token revocations.
 |Tag|Description|
@@ -154,7 +154,7 @@ Number of successful/failed token revocations.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.TokenIssued
-Counter name: *tokenservice.token_issued*
+Counter name: `tokenservice.token_issued`
  
 Number of successful/failed token issuance attempts. Note that a token issuance might include
 multiple actual tokens (id_token, access token, refresh token).
@@ -173,7 +173,7 @@ they are the responsibility of the UI. Our templated UI does instrument these ev
 you can alter and add metrics as needed to the UI in your context.
 
 #### Telemetry.Metrics.Counters.Consent
-Counter name: *tokenservice.consent*
+Counter name: `tokenservice.consent`
 
 Consent requests granted or denied. The counters are per scope, so if a user consents
 to multiple scopes, the counter is increased multiple times, one for each scope. This allows
@@ -186,7 +186,7 @@ the scope name to be included as a tag without causing an explosion of combinati
 |consent | granted or denied |
 
 #### Telemetry.Metrics.Counters.GrantsRevoked 
-Counter name: *tokenservice.grants_revoked*
+Counter name: `tokenservice.grants_revoked`
 
 Revocation of grants.
 
@@ -195,7 +195,7 @@ Revocation of grants.
 |client | The client Id, if grants are revoked only for one client. If not set, the revocation was for all clients. |
 
 #### Telemetry.Metrics.Counters.UserLogin
-Counter names: *tokenservice.user_login*
+Counter names: `tokenservice.user_login`
 
 Successful and failed user logins.
 
@@ -206,7 +206,7 @@ Successful and failed user logins.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.UserLogout
-Counter name: *user_logout*
+Counter name: `user_logout`
 
 User logout. Note that this is only raised on explicit user logout, not if the session times out. The number of logouts
 will typically be lower than the number of logins.

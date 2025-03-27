@@ -30,22 +30,22 @@ This might be too detailed in production.
 
 You can select which information you are interested in by selectively listening to various traces:
 
-* **IdentityServerConstants.Tracing.Basic**
+* *`IdentityServerConstants.Tracing.Basic`*
    
    High level request processing like request validators and response generators
 
-* **IdentityServerConstants.Tracing.Cache**
+* *`IdentityServerConstants.Tracing.Cache`*
    
    Caching related tracing
 
-* **IdentityServerConstants.Tracing.Services**
+* *`IdentityServerConstants.Tracing.Services`*
    
    Services related tracing
 
-* **IdentityServerConstants.Tracing.Stores**
+* *`IdentityServerConstants.Tracing.Stores`*
    
    Store related tracing
 
-* **IdentityServerConstants.Tracing.Validation**
+* *`IdentityServerConstants.Tracing.Validation`*
    
    More detailed tracing related to validation

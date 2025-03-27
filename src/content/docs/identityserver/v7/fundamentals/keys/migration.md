@@ -10,19 +10,19 @@ key management feature to begin creating keys and announce them in discovery,
 while you continue to use the old statically configured key. Eventually you can
 transition from the statically configured key to the automatically managed keys.
 
-A signing key registered with *AddSigningCredential* will take precedence over
+A signing key registered with `AddSigningCredential` will take precedence over
 any keys created by the automatic key management feature. IdentityServer will
-sign tokens with the credential specified in *AddSigningCredential*, but also
+sign tokens with the credential specified in `AddSigningCredential`, but also
 automatically create and manage validation keys. 
 
-Validation keys registered manually with *AddValidationKey* are added to the
+Validation keys registered manually with `AddValidationKey` are added to the
 collection of validation keys along with the keys produced by automatic key
 management. When automatic key management is enabled and there are keys
-statically specified with *AddValidationkey*, the set of validation keys will
+statically specified with `AddValidationkey`, the set of validation keys will
 include:
 - new keys created by automatic key management that are not yet used for signing
 - old keys created by automatic key management that are retired 
-- the keys added explicitly with calls to *AddValidationKey*.
+- the keys added explicitly with calls to `AddValidationKey`.
 
 The migration path from manual to automatic keys is a three phase process,
 similar to the phased approach to [manual key rotation](static_key_management#rotation). The

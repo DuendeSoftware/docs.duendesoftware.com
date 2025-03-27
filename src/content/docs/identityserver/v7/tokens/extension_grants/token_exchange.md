@@ -94,7 +94,7 @@ client.AllowedGrantTypes = { OidcConstants.GrantTypes.TokenExchange };
 :::note
 Values sent to the token endpoint are logged, except well-known sensitive values that IdentityServer processes by default.
 Any sensitive values you use as input to your extension grant validator that you do not want included in the logs should be filtered.
-This can be done by adding those parameter names on the *Logging.TokenRequestSensitiveValuesFilter* collection on the [IdentityServerOptions](/identityserver/v7/reference/options#logging).
+This can be done by adding those parameter names on the `Logging.TokenRequestSensitiveValuesFilter` collection on the [IdentityServerOptions](/identityserver/v7/reference/options#logging).
 :::
 
 
@@ -128,7 +128,7 @@ context.Result = new GrantValidationResult(
 ```
 
 ## Delegation
-In the delegation use case, the call chain is preserved using the *act* claim, e.g.: 
+In the delegation use case, the call chain is preserved using the `act` claim, e.g.: 
 
 ```json
 {
@@ -142,9 +142,9 @@ In the delegation use case, the call chain is preserved using the *act* claim, e
 }
 ```
 
-For API 2 it still looks like that the front-end is making the call, but by inspecting the *act* claim, the API can learn about the traversed call chain.
+For API 2 it still looks like that the front-end is making the call, but by inspecting the `act` claim, the API can learn about the traversed call chain.
 
-The following code adds the *act* claim to the response:
+The following code adds the `act` claim to the response:
 
 ```cs
 // set token client_id to original id
@@ -166,7 +166,7 @@ context.Result = new GrantValidationResult(
     customResponse: customResponse);
 ```
 
-To emit the *act* claim into outgoing tokens, your [profile service](/identityserver/v7/reference/services/profile_service) must know about it. The following simple profile service emits the *act* claim if the token request is in the context of a token exchange operation:
+To emit the `act` claim into outgoing tokens, your [profile service](/identityserver/v7/reference/services/profile_service) must know about it. The following simple profile service emits the `act` claim if the token request is in the context of a token exchange operation:
 
 ```cs
 public class ProfileService : IProfileService

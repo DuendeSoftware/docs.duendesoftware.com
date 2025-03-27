@@ -16,14 +16,14 @@ weight: 10
 
 This is done automatically if you [authenticate](/identityserver/v7/tokens/authentication/mtls) the client using a TLS client certificate.
 
-The client must then use the same client certificate to call the APIs, and your APIs can [validate](/identityserver/v7/apis/aspnetcore/confirmation) the *cnf* claim by comparing it to the thumbprint of the client certificate on the TLS channel.
+The client must then use the same client certificate to call the APIs, and your APIs can [validate](/identityserver/v7/apis/aspnetcore/confirmation) the `cnf` claim by comparing it to the thumbprint of the client certificate on the TLS channel.
 
 If the access token would leak, it cannot be replayed without having access to the additional private key of the X.509 client certificate.
 
 ### Combine TLS proof-of-possession with other authentication methods
 It is not mandatory to authenticate your clients with a client certificate to get the benefit of proof-of-possession. You can combine this feature with an arbitrary client authentication method - or even no client authentication at all (e.g. for public mobile/native clients).
 
-In this scenario, the client would create an X.509 certificate on the fly, and use that to establish the TLS channel to your IdentityServer. As long as the certificate is accepted by your web server, your IdentityServer can embed the *cnf* claim, and your APIs can validate it.
+In this scenario, the client would create an X.509 certificate on the fly, and use that to establish the TLS channel to your IdentityServer. As long as the certificate is accepted by your web server, your IdentityServer can embed the `cnf` claim, and your APIs can validate it.
 
 #### .NET Client
 In .NET it is straight-forward to create an X.509 certificate on the fly and use it to open a TLS connection.

@@ -33,7 +33,7 @@ builder.Services.AddAuthentication()
     });
 ```
 
-The above snippet registers a scheme called *AAD* in the ASP.NET Core authentication system, and uses a human-friendly display name of "Employee Login".
+The above snippet registers a scheme called `AAD` in the ASP.NET Core authentication system, and uses a human-friendly display name of "Employee Login".
 The options necessary will be different based on the protocol and identity provider used, and are beyond the scope of this documentation. 
 
 ## Triggering the Authentication Handler
@@ -42,10 +42,10 @@ To allow the user to be redirected to the external provider, there must be some 
 This can be done because you have provided the user with a button to click, or it could be due to inspecting some property of the [authorization context](/identityserver/v7/ui/login/#authorization-context), or it could be based on any other aspect of the request (e.g. such as the user entering their email).
 
 :::note
-The process of determining which identity provider to use is called *Home Realm Discovery*, or *HRD* for short.
+The process of determining which identity provider to use is called *Home Realm Discovery*, or `HRD` for short.
 :::
 
-To invoke an external authentication handler use the *ChallengeAsync* extension method on the *HttpContext* (or using the MVC *ChallengeResult*).
+To invoke an external authentication handler use the `ChallengeAsync` extension method on the `HttpContext` (or using the MVC `ChallengeResult`).
 When triggering challenge, it's common to pass some properties to indicate the callback URL where you intend to process the external login results and any other state you need to maintain across the workflow (e.g. such as the [return URL passed to the login page](../login#the-return-url-and-the-login-workflow)):
 
 ```cs
@@ -75,7 +75,7 @@ This extra cookie is necessary since there are typically several redirects invol
 If you are using ASP.NET Identity, many of these technical details are hidden from you. It is recommended that you also read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the ASP.NET Identity [quickstart](/identityserver/v7/quickstarts/5_aspnetid).
 :::
 
-One option on an external authentication handlers is called *SignInScheme*.
+One option on an external authentication handlers is called `SignInScheme`.
 This specifies the cookie handler to manage the state:
 
 ```cs
@@ -89,8 +89,8 @@ builder.Services.AddAuthentication()
 ```
 
 Given that this is such a common practice, IdentityServer registers a cookie handler specifically for this external provider workflow.
-The scheme is represented via the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant.
-If you were to use our external cookie handler, then for the *SignInScheme* above you'd assign the value to be the *IdentityServerConstants.ExternalCookieAuthenticationScheme* constant:
+The scheme is represented via the `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant.
+If you were to use our external cookie handler, then for the `SignInScheme` above you'd assign the value to be the `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant:
 
 ```cs
 builder.Services.AddAuthentication()
@@ -133,8 +133,8 @@ On the callback page your typical tasks are:
 
 ### Inspecting the External Identity
 
-To access the result of the external login, invoke the *AuthenticateAsync* method.
-This will read the external cookie to retrieve the claims issued by the external provider and any other state you previously stored when calling *ChallengeAsync*:
+To access the result of the external login, invoke the `AuthenticateAsync` method.
+This will read the external cookie to retrieve the claims issued by the external provider and any other state you previously stored when calling `ChallengeAsync`:
 
 ```cs
 // read external identity from the temporary cookie
@@ -160,7 +160,7 @@ var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
 
 // use the user information to find your user in your database, or provision a new user
 ```
-The *sub* claim from the external cookie is the external provider's unique id for the user.
+The `sub` claim from the external cookie is the external provider's unique id for the user.
 This value should be used to locate your local user record for the user.
 
 ### Establish Session, Clean Up, and Resume Workflow
@@ -185,21 +185,21 @@ await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticat
 return Redirect(returnUrl);
 ```
 
-Typically, the *sub* value used to log the user in would be the user's unique id from your local user database.
+Typically, the `sub` value used to log the user in would be the user's unique id from your local user database.
 
 ## State, URL length, and ISecureDataFormat
 
 When redirecting to an external provider for sign-in, frequently state from the client application must be roundtripped.
 This means that state is captured prior to leaving the client and preserved until the user has returned to the client application.
 Many protocols, including OpenID Connect, allow passing some sort of state as a parameter as part of the request, and the identity provider will return that state in the response.
-The OpenID Connect authentication handler provided by ASP.NET Core utilizes this feature of the protocol, and that is how it implements the *returnUrl* feature mentioned above.
+The OpenID Connect authentication handler provided by ASP.NET Core utilizes this feature of the protocol, and that is how it implements the `returnUrl` feature mentioned above.
 
 The problem with storing state in a request parameter is that the request URL can get too large (over the common limit of 2000 characters).
 The OpenID Connect authentication handler does provide an extensibility point to store the state in your server, rather than in the request URL. 
-You can implement this yourself by implementing *ISecureDataFormat<AuthenticationProperties>* and configuring it on the *OpenIdConnectOptions*.
+You can implement this yourself by implementing `ISecureDataFormat<AuthenticationProperties>` and configuring it on the `OpenIdConnectOptions`.
 
-Fortunately, IdentityServer provides an implementation of this for you, backed by the *IDistributedCache* implementation registered in the DI container (e.g. the standard *MemoryDistributedCache*).
-To use the IdentityServer provided secure data format implementation, simply call the *AddOidcStateDataFormatterCache* extension method on the *IServiceCollection* when configuring DI.
+Fortunately, IdentityServer provides an implementation of this for you, backed by the `IDistributedCache` implementation registered in the DI container (e.g. the standard `MemoryDistributedCache`).
+To use the IdentityServer provided secure data format implementation, simply call the `AddOidcStateDataFormatterCache` extension method on the `IServiceCollection` when configuring DI.
 
 If no parameters are passed, then all OpenID Connect handlers configured will use the IdentityServer provided secure data format implementation:
 

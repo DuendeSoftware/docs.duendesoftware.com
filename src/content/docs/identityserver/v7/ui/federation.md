@@ -42,7 +42,7 @@ Since users are typically anonymous when they arrive at the gateway, you need so
 
 * you present a list of available authentication methods to the user. This might work for simpler scenarios, but probably not if you have a lot of choices or if this would reveal your customers' authentication systems
 * you ask the user for an identifier (e.g. email address) and have a way to infer the right external authentication method from that id. This is a common technique for SaaS systems.
-* the client application can give a hint to the gateway via a custom protocol parameter of IdentityServer's built-in support for the *idp* parameter on *acr_values*. In some case the client already knows the right authentication method, e.g. when your customers access your software via a customer-specific URL  (see [here](/identityserver/v7/reference/endpoints/authorize#optional-parameters)).
-* you restrict the available authentication methods per client in the client configuration using the *IdentityProviderRestrictions* property (see [here](/identityserver/v7/reference/models/client#authentication--session-management))
+* the client application can give a hint to the gateway via a custom protocol parameter of IdentityServer's built-in support for the `idp` parameter on `acr_values`. In some case the client already knows the right authentication method, e.g. when your customers access your software via a customer-specific URL  (see [here](/identityserver/v7/reference/endpoints/authorize#optional-parameters)).
+* you restrict the available authentication methods per client in the client configuration using the `IdentityProviderRestrictions` property (see [here](/identityserver/v7/reference/models/client#authentication--session-management))
 
 Every system is slightly different. Always start with the desired user experience, and then choose from the above options (or combinations) to implement the required flow.

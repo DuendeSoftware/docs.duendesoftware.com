@@ -52,7 +52,7 @@ from an embedded resource.
 
 #### File System
 
-IdentityServer looks for a file named *Duende_License.key* in the
+IdentityServer looks for a file named `Duende_License.key` in the
 [ContentRootPath](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostenvironment.contentrootpath?view=dotnet-plat-ext-8.0#microsoft-extensions-hosting-ihostenvironment-contentrootpath).
 If present, the content of the file will be used as the license key.
 
@@ -68,8 +68,8 @@ any [configuration provider](https://learn.microsoft.com/en-us/aspnet/core/funda
 including environment variables, appsettings.json, an external configuration service such
 as Azure App Configuration, etc.
 
-The *AddIdentityServer* method accepts a lambda expression to configure various options in
-your IdentityServer, including the *LicenseKey*. Set the value of this property to the
+The `AddIdentityServer` method accepts a lambda expression to configure various options in
+your IdentityServer, including the `LicenseKey`. Set the value of this property to the
 content of the license key file.
 
 ```csharp
@@ -86,8 +86,8 @@ When deploying IdentityServer to Microsoft Azure, you can make use of
 [Azure Key Vault](https://azure.microsoft.com/products/key-vault/) to load the IdentityServer 
 license key at startup.
 
-Similarly to setting the license key programmatically, you can use the *AddIdentityServer* method 
-and use the overload  that accepts a lambda expression to configure the *LicenseKey* property for 
+Similarly to setting the license key programmatically, you can use the `AddIdentityServer` method 
+and use the overload  that accepts a lambda expression to configure the `LicenseKey` property for 
 your IdentityServer.
 
 ```csharp
@@ -196,4 +196,4 @@ license.
 | Startup, violations          | Error                   | Error                                | Trace                                 |
 | Runtime, violations          | Error                   | Error                                | Trace                                 |
 
-\* as determined by *IHostEnvironment.IsDevelopment()*
+\* as determined by `IHostEnvironment.IsDevelopment()`

@@ -7,7 +7,7 @@ weight: 35
 
 #### Duende.IdentityServer.Models.Client
 
-The *Client* class models an OpenID Connect or OAuth 2.0 client - 
+The `Client` class models an OpenID Connect or OAuth 2.0 client - 
 e.g. a native application, a web application or a JS-based application.
 
 ```cs
@@ -53,189 +53,189 @@ public static IEnumerable<Client> Get()
 
 ## Basics
 
-* ***Enabled***
+* **`Enabled`**
     
-    Specifies if client is enabled. Defaults to *true*.
+    Specifies if client is enabled. Defaults to `true`.
 
-* ***ClientId***
+* **`ClientId`**
     
     Unique ID of the client
 
-* ***ClientSecrets***
+* **`ClientSecrets`**
     
     List of client secrets - credentials to access the token endpoint.
 
-* ***RequireClientSecret***
+* **`RequireClientSecret`**
     
-    Specifies whether this client needs a secret to request tokens from the token endpoint (defaults to *true*)
+    Specifies whether this client needs a secret to request tokens from the token endpoint (defaults to `true`)
 
-* ***RequireRequestObject***
+* **`RequireRequestObject`**
     
-    Specifies whether this client needs to wrap the authorize request parameters in a JWT (defaults to *false*)
+    Specifies whether this client needs to wrap the authorize request parameters in a JWT (defaults to `false`)
 
-* ***AllowedGrantTypes***
+* **`AllowedGrantTypes`**
     
-    Specifies the grant types the client is allowed to use. Use the *GrantTypes* class for common combinations.
+    Specifies the grant types the client is allowed to use. Use the `GrantTypes` class for common combinations.
 
-* ***RequirePkce***
+* **`RequirePkce`**
     
-    Specifies whether clients using an authorization code based grant type must send a proof key (defaults to *true*).
+    Specifies whether clients using an authorization code based grant type must send a proof key (defaults to `true`).
 
-* ***AllowPlainTextPkce***
+* **`AllowPlainTextPkce`**
     
-    Specifies whether clients using PKCE can use a plain text code challenge (not recommended - and defaults to *false*)
+    Specifies whether clients using PKCE can use a plain text code challenge (not recommended - and defaults to `false`)
 
-* ***RedirectUris***
+* **`RedirectUris`**
     
     Specifies the allowed URIs to return tokens or authorization codes to
 
-* ***AllowedScopes***
+* **`AllowedScopes`**
     
     By default a client has no access to any resources - specify the allowed resources by adding the corresponding scopes names
 
-* ***AllowOfflineAccess***
+* **`AllowOfflineAccess`**
     
-    Specifies whether this client can request refresh tokens (be requesting the *offline_access* scope)
+    Specifies whether this client can request refresh tokens (be requesting the `offline_access` scope)
 
-* ***AllowAccessTokensViaBrowser***
+* **`AllowAccessTokensViaBrowser`**
 
     Specifies whether this client is allowed to receive access tokens via the browser. 
     This is useful to harden flows that allow multiple response types 
-    (e.g. by disallowing a hybrid flow client that is supposed to use *code id_token* to add the *token* response type 
+    (e.g. by disallowing a hybrid flow client that is supposed to use *code id_token* to add the `token` response type 
     and thus leaking the token to the browser).
 
-* ***Properties***
+* **`Properties`**
     
     Dictionary to hold any custom client-specific values as needed.
 
 ## Authentication / Session Management
 
-* ***PostLogoutRedirectUris***
+* **`PostLogoutRedirectUris`**
 
     Specifies allowed URIs to redirect to after logout.
 
-* ***FrontChannelLogoutUri***
+* **`FrontChannelLogoutUri`**
     
     Specifies logout URI at client for HTTP based front-channel logout. 
 
-* ***FrontChannelLogoutSessionRequired***
+* **`FrontChannelLogoutSessionRequired`**
     
     Specifies if the user's session id should be sent to the FrontChannelLogoutUri. Defaults to true.
 
-* ***BackChannelLogoutUri***
+* **`BackChannelLogoutUri`**
     
     Specifies logout URI at client for HTTP based back-channel logout.
 
-* ***BackChannelLogoutSessionRequired***
+* **`BackChannelLogoutSessionRequired`**
     
     Specifies if the user's session id should be sent in the request to the BackChannelLogoutUri. Defaults to true.
 
-* ***EnableLocalLogin***
+* **`EnableLocalLogin`**
     
-    Specifies if this client can use local accounts, or external IdPs only. Defaults to *true*.
+    Specifies if this client can use local accounts, or external IdPs only. Defaults to `true`.
 
-* ***IdentityProviderRestrictions***
+* **`IdentityProviderRestrictions`**
     
     Specifies which external IdPs can be used with this client (if list is empty all IdPs are allowed). Defaults to empty.
 
-* ***UserSsoLifetime***
+* **`UserSsoLifetime`**
     
-    The maximum duration (in seconds) since the last time the user authenticated. Defaults to *null*.
+    The maximum duration (in seconds) since the last time the user authenticated. Defaults to `null`.
     You can adjust the lifetime of a session token to control when and how often a user is required to reenter credentials instead of being silently authenticated, when using a web application.
 
-* ***AllowedCorsOrigins***
+* **`AllowedCorsOrigins`**
     
     If specified, will be used by the default CORS policy service implementations (In-Memory and EF) to build a CORS policy for JavaScript clients.
 
-* ***CoordinateLifetimeWithUserSession*** (added in v6.1)
+* **`CoordinateLifetimeWithUserSession`** (added in v6.1)
     
     When enabled, the client's token lifetimes (e.g. refresh tokens) will be tied to the user's session lifetime.
     This means when the user logs out, any revokable tokens will be removed.
     If using server-side sessions, expired sessions will also remove any revokable tokens, and backchannel logout will be triggered.
-    This client's setting overrides the global *CoordinateTokensWithUserSession* configuration setting.
+    This client's setting overrides the global `CoordinateTokensWithUserSession` configuration setting.
 
 
 ## Token
 
-* ***IdentityTokenLifetime***
+* **`IdentityTokenLifetime`**
     
     Lifetime to identity token in seconds (defaults to 300 seconds / 5 minutes)
 
-* ***AllowedIdentityTokenSigningAlgorithms***
+* **`AllowedIdentityTokenSigningAlgorithms`**
 
     List of allowed signing algorithms for identity token. If empty, will use the server default signing algorithm.
 
-* ***AccessTokenLifetime***
+* **`AccessTokenLifetime`**
     
     Lifetime of access token in seconds (defaults to 3600 seconds / 1 hour)
 
-* ***AuthorizationCodeLifetime***
+* **`AuthorizationCodeLifetime`**
 
     Lifetime of authorization code in seconds (defaults to 300 seconds / 5 minutes)
 
-* ***AccessTokenType***
+* **`AccessTokenType`**
     
-    Specifies whether the access token is a reference token or a self contained JWT token (defaults to *Jwt*).
+    Specifies whether the access token is a reference token or a self contained JWT token (defaults to `Jwt`).
 
-* ***IncludeJwtId***
+* **`IncludeJwtId`**
     
-    Specifies whether JWT access tokens should have an embedded unique ID (via the *jti* claim). Defaults to *true*.
+    Specifies whether JWT access tokens should have an embedded unique ID (via the `jti` claim). Defaults to `true`.
 
-* ***Claims***
+* **`Claims`**
     
     Allows settings claims for the client (will be included in the access token).
 
-* ***AlwaysSendClientClaims***
+* **`AlwaysSendClientClaims`**
     
-    If set, the client claims will be sent for every flow. If not, only for client credentials flow (default is *false*)
+    If set, the client claims will be sent for every flow. If not, only for client credentials flow (default is `false`)
 
-* ***AlwaysIncludeUserClaimsInIdToken***
+* **`AlwaysIncludeUserClaimsInIdToken`**
     
-    When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is *false*.
+    When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is `false`.
 
-* ***ClientClaimsPrefix***
+* **`ClientClaimsPrefix`**
 
-    If set, the prefix client claim types will be prefixed with. Defaults to *client*_. The intent is to make sure they don't accidentally collide with user claims.
+    If set, the prefix client claim types will be prefixed with. Defaults to `client`_. The intent is to make sure they don't accidentally collide with user claims.
 
-* ***PairWiseSubjectSalt***
+* **`PairWiseSubjectSalt`**
     Salt value used in pair-wise subjectId generation for users of this client.
     Currently not implemented.
 
 ## Refresh Token
 
-* ***AbsoluteRefreshTokenLifetime***
+* **`AbsoluteRefreshTokenLifetime`**
     
     Maximum lifetime of a refresh token in seconds. Defaults to 2592000 seconds / 30 days. 
     
     Setting this to 0 has the following effect:
     
-    - When *RefreshTokenExpiration* is set to *Absolute*, the behavior is the same as when no refresh tokens are used.
-    - When *RefreshTokenExpiration* is set to *Sliding*, refresh tokens only expire after the *SlidingRefreshTokenLifetime* has passed. 
+    - When `RefreshTokenExpiration` is set to `Absolute`, the behavior is the same as when no refresh tokens are used.
+    - When `RefreshTokenExpiration` is set to `Sliding`, refresh tokens only expire after the `SlidingRefreshTokenLifetime` has passed. 
 
 
-* ***SlidingRefreshTokenLifetime***
+* **`SlidingRefreshTokenLifetime`**
     
     Sliding lifetime of a refresh token in seconds. Defaults to 1296000 seconds / 15 days.
 
-* ***RefreshTokenUsage***
-    * ***ReUse*** 
+* **`RefreshTokenUsage`**
+    * **`ReUse`** 
     
         the refresh token handle will stay the same when refreshing tokens. This is the default.  
     
-    * ***OneTimeOnly*** 
+    * **`OneTimeOnly`** 
     
         the refresh token handle will be updated when refreshing tokens. 
 
-* ***RefreshTokenExpiration***
-    * ***Absolute***
+* **`RefreshTokenExpiration`**
+    * **`Absolute`**
     
-        the refresh token will expire on a fixed point in time (specified by the *AbsoluteRefreshTokenLifetime*). This is the default. 
+        the refresh token will expire on a fixed point in time (specified by the `AbsoluteRefreshTokenLifetime`). This is the default. 
  
-    * ***Sliding*** 
+    * **`Sliding`** 
     
-        when refreshing the token, the lifetime of the refresh token will be renewed (by the amount specified in *SlidingRefreshTokenLifetime*). The lifetime will not exceed *AbsoluteRefreshTokenLifetime*.
+        when refreshing the token, the lifetime of the refresh token will be renewed (by the amount specified in `SlidingRefreshTokenLifetime`). The lifetime will not exceed `AbsoluteRefreshTokenLifetime`.
 
-* ***UpdateAccessTokenClaimsOnRefresh***
+* **`UpdateAccessTokenClaimsOnRefresh`**
     
     Gets or sets a value indicating whether the access token (and its claims) should be updated on a refresh token request.
 
@@ -243,54 +243,54 @@ public static IEnumerable<Client> Get()
 ## Consent Screen
 Consent screen specific settings. 
 
-* ***RequireConsent***
+* **`RequireConsent`**
     
-    Specifies whether a consent screen is required. Defaults to *false*.
+    Specifies whether a consent screen is required. Defaults to `false`.
 
-* ***AllowRememberConsent***
+* **`AllowRememberConsent`**
     
-    Specifies whether user can choose to store consent decisions. Defaults to *true*.
+    Specifies whether user can choose to store consent decisions. Defaults to `true`.
 
-* ***ConsentLifetime***
+* **`ConsentLifetime`**
     
     Lifetime of a user consent in seconds. Defaults to null (no expiration).
 
-* ***ClientName***
+* **`ClientName`**
     
     Client display name (used for logging and consent screen).
 
-* ***ClientUri***
+* **`ClientUri`**
     
     URI to further information about client.
 
-* ***LogoUri***
+* **`LogoUri`**
     
     URI to client logo.
 
 ## Cross Device Flows
 Settings used in the CIBA and OAuth device flows.
 
-* ***PollingInterval***
+* **`PollingInterval`**
 
-    Maximum polling interval for the client in cross device flows. If the client polls more frequently than the polling interval during those flows, it will receive a *slow_down* error response. Defaults to *null*, which means the throttling will use the global default appropriate for the flow (*IdentityServerOptions.Ciba.DefaultPollingInterval* or *IdentityServerOptions.DeviceFlow.Interval*).
+    Maximum polling interval for the client in cross device flows. If the client polls more frequently than the polling interval during those flows, it will receive a `slow_down` error response. Defaults to `null`, which means the throttling will use the global default appropriate for the flow (`IdentityServerOptions.Ciba.DefaultPollingInterval` or `IdentityServerOptions.DeviceFlow.Interval`).
 
 #### Device Flow
 Device flow specific settings.
 
-* ***UserCodeType***
+* **`UserCodeType`**
     
     Specifies the type of user code to use for the client. Otherwise falls back to default.
 
-* ***DeviceCodeLifetime***
+* **`DeviceCodeLifetime`**
 
     Lifetime to device code in seconds (defaults to 300 seconds / 5 minutes)
 
 #### CIBA
 Client initiated backchannel authentication specific settings.
 
-* ***CibaLifetime***
+* **`CibaLifetime`**
     
-    Specifies the backchannel authentication request lifetime in seconds. Defaults to *null*.
+    Specifies the backchannel authentication request lifetime in seconds. Defaults to `null`.
 
 
 ## DPoP
@@ -298,22 +298,22 @@ Added in 6.3.0.
 
 Settings specific to the Demonstration of Proof-of-Possession at the Application Layer ([DPoP](/identityserver/v7/tokens/pop/dpop)) feature.
 
-* ***RequireDPoP***
+* **`RequireDPoP`**
     
-    Specifies whether a DPoP (Demonstrating Proof-of-Possession) token is required to be used by this client. Defaults to *false*.
+    Specifies whether a DPoP (Demonstrating Proof-of-Possession) token is required to be used by this client. Defaults to `false`.
 
-* ***DPoPValidationMode***
+* **`DPoPValidationMode`**
     
-    Enum setting to control validation for the DPoP proof token expiration. This supports both the client generated 'iat' value and/or the server generated 'nonce' value. Defaults to *DPoPTokenExpirationValidationMode.Iat*, which only validates the 'iat' value.
+    Enum setting to control validation for the DPoP proof token expiration. This supports both the client generated 'iat' value and/or the server generated 'nonce' value. Defaults to `DPoPTokenExpirationValidationMode.Iat`, which only validates the 'iat' value.
 
-* ***DPoPClockSkew***
+* **`DPoPClockSkew`**
     
     Clock skew used in validating the client's DPoP proof token 'iat' claim value. Defaults to *5 minutes*.
 
 ## Third-Party Initiated Login
 Added in 6.3.0.
 
-* ***InitiateLoginUri***
+* **`InitiateLoginUri`**
 
     An optional URI that can be used to [initiate login](https://openid.net/specs/openid-connect-core-1_0.html#thirdpartyinitiatedlogin) from the IdentityServer host or a third party. This is most commonly used to create a client application portal within the IdentityServer host. Defaults to null.
 
@@ -321,10 +321,10 @@ Added in 6.3.0.
 ## Pushed Authorization Requests
 Added in 7.0.0
 
-* ***RequirePushedAuthorization***
+* **`RequirePushedAuthorization`**
 
-    Controls if this client requires PAR. PAR is required if either the global configuration is enabled or if the client's flag is enabled (this can't be used to opt out of the global configuration). This defaults to *false*, which means the global configuration will be used.
+    Controls if this client requires PAR. PAR is required if either the global configuration is enabled or if the client's flag is enabled (this can't be used to opt out of the global configuration). This defaults to `false`, which means the global configuration will be used.
 
-* ***PushedAuthorizationLifetime***
+* **`PushedAuthorizationLifetime`**
 
-    Controls the lifetime of pushed authorization requests for a client. If this lifetime is set, it takes precedence over the global configuration. This defaults to *null*, which means the global configuration is used.
+    Controls the lifetime of pushed authorization requests for a client. If this lifetime is set, it takes precedence over the global configuration. This defaults to `null`, which means the global configuration is used.

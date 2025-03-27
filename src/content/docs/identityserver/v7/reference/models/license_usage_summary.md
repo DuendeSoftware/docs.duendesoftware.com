@@ -7,30 +7,30 @@ weight: 90
 
 #### Duende.IdentityServer.Licensing.LicenseUsageSummary
 
-The *LicenseUsageSummary* class allows developers to get a 
+The `LicenseUsageSummary` class allows developers to get a 
 detailed summary of clients, issuers, and features used 
 during the lifetime of an active .NET application for self-auditing
 purposes.
 
-* ***LicenseEdition***
+* **`LicenseEdition`**
     
     Indicates the current IdentityServer instance's license edition.
 
-* ***ClientsUsed***
+* **`ClientsUsed`**
     
-    A *string* collection of clients used with the current IdentityServer instance.
+    A `string` collection of clients used with the current IdentityServer instance.
 
-* ***IssuersUsed***
+* **`IssuersUsed`**
 
-    A *string* collection of issuers used with the current IdentityServer instance.
+    A `string` collection of issuers used with the current IdentityServer instance.
 
-* ***FeaturesUsed***
+* **`FeaturesUsed`**
 
-    A *string* collection of issuers used with the current IdentityServer instance.
+    A `string` collection of issuers used with the current IdentityServer instance.
 
 ## Using LicenseUsageSummary with .NET Lifetime Events
 
-In .NET, an [*IHost*](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime) 
+In .NET, an [`IHost`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime) 
 implementation allows developers to subscribe to application 
 lifetime events, including **Application Started**, **Application Stopped**, 
 and **Application Stopping**. IdentityServer tracks usage metrics internally 
@@ -42,10 +42,10 @@ from the application's service collection using the following code snippet.
 app.Services.GetRequiredService<LicenseUsageSummary>();
 ```
 
-For self-auditing purposes, we recommend using the *IHost* lifetime event *ApplicationStopping* as shown
+For self-auditing purposes, we recommend using the `IHost` lifetime event `ApplicationStopping` as shown
 in the example below.
 
-Note, *LicenseUsageSummary* is **read-only**.
+Note, `LicenseUsageSummary` is *`read-only`*.
 
 ```csharp
 app.Lifetime.ApplicationStopping.Register(() =>

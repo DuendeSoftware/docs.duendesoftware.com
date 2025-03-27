@@ -35,7 +35,7 @@ Next, we will add OpenID Connect and OAuth support to the backend. For this we a
 
 The BFF services provide the logic to invoke the authentication plumbing from the frontend (more about this later).
 
-Add the following snippet to your *Program.cs* above the call to *builder.Build();*
+Add the following snippet to your `Program.cs` above the call to `builder.Build();`
 
 ```cs
 builder.Services.AddBff();
@@ -72,7 +72,7 @@ builder.Services.AddAuthentication(options =>
     });
 ```
 
-The last step is to add the required middleware for authentication, authorization and BFF session management. Add the following snippet after the call to *UseRouting*:
+The last step is to add the required middleware for authentication, authorization and BFF session management. Add the following snippet after the call to `UseRouting`:
 
 ```cs
 app.UseAuthentication();
@@ -84,26 +84,26 @@ app.MapBffManagementEndpoints();
 
 Finally you can run the server project. This will start the host, which will in turn deploy the Blazor application to your browser.
 
-Try to manually invoke the BFF login endpoint on */bff/login* - this should bring you to the demo IdentityServer. After login (e.g. using bob/bob), the browser will return to the Blazor application. 
+Try to manually invoke the BFF login endpoint on `/bff/login` - this should bring you to the demo IdentityServer. After login (e.g. using bob/bob), the browser will return to the Blazor application. 
 
 In other words, the fundamental authentication plumbing is already working. Now we need to make the frontend aware of it.
 
 ### Modifying the frontend (part 1)
 A couple of steps are necessary to add the security and identity plumbing to a Blazor application.
 
-**a)** Add the authentication/authorization related package to the client project file:
+*`a)`* Add the authentication/authorization related package to the client project file:
 
 ```xml
 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.0" />
 ```
 
-**b)** Add a using statement to *_Imports.razor* to bring the above package in scope:
+*`b)`* Add a using statement to `_Imports.razor` to bring the above package in scope:
 
 ```cs
 @using Microsoft.AspNetCore.Components.Authorization
 ```
 
-**c)** To propagate the current authentication state to all pages in your Blazor client, you add a special component called *CascadingAuthenticationState* to your application.  This is done by wrapping the Blazor router with that component in *App.razor*:
+*`c)`* To propagate the current authentication state to all pages in your Blazor client, you add a special component called `CascadingAuthenticationState` to your application.  This is done by wrapping the Blazor router with that component in `App.razor`:
 
 ```xml
 <CascadingAuthenticationState>
@@ -122,7 +122,7 @@ A couple of steps are necessary to add the security and identity plumbing to a B
 </CascadingAuthenticationState>
 ```
 
-**d)** Last but not least, we will add some conditional rendering to the layout page to be able to trigger login/logout as well as displaying the current user name when logged in. This is achieved by using the *AuthorizeView* component in *MainLayout.razor*:
+*`d)`* Last but not least, we will add some conditional rendering to the layout page to be able to trigger login/logout as well as displaying the current user name when logged in. This is achieved by using the `AuthorizeView` component in `MainLayout.razor`:
 
 ```xml
 <div class="page">
@@ -157,12 +157,12 @@ crit: Microsoft.AspNetCore.Components.WebAssembly.Rendering.WebAssemblyRenderer[
       Unhandled exception rendering component: Cannot provide a value for property 'AuthenticationStateProvider' on type 'Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState'. There is no registered service of type 'Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider'.
 ```
 
-*CascadingAuthenticationState* is an abstraction over an arbitrary authentication system. It internally relies on a service called *AuthenticationStateProvider* to return the required information about the current authentication state and the information about the currently logged on user.
+`CascadingAuthenticationState` is an abstraction over an arbitrary authentication system. It internally relies on a service called `AuthenticationStateProvider` to return the required information about the current authentication state and the information about the currently logged on user.
 
 This component needs to be implemented, and that's what we'll do next.
 
 ### Modifying the frontend (part 2)
-The BFF library has a server-side component that allows querying the current authentication session and state (see [here](/identityserver/v7/bff/session/management/user)). We will now add a Blazor *AuthenticationStateProvider* that will internally use this endpoint.
+The BFF library has a server-side component that allows querying the current authentication session and state (see [here](/identityserver/v7/bff/session/management/user)). We will now add a Blazor `AuthenticationStateProvider` that will internally use this endpoint.
 
 Add a file with the following content:
 
@@ -253,7 +253,7 @@ public class BffAuthenticationStateProvider
 }
 ```
 
-..and register it in the client's *Program.cs*:
+..and register it in the client's `Program.cs`:
 
 ```cs
 builder.Services.AddAuthorizationCore();
@@ -267,7 +267,7 @@ fail: Duende.Bff.Endpoints.BffMiddleware[1]
       Anti-forgery validation failed. local path: '/bff/user'
 ```
 
-This is due to the antiforgery protection that is applied automatically to the management endpoints in the BFF host. To properly secure the call, you need to add a static *X-CSRF* header to the call. See [here](/identityserver/v7/bff/apis/local) for more background information.
+This is due to the antiforgery protection that is applied automatically to the management endpoints in the BFF host. To properly secure the call, you need to add a static `X-CSRF` header to the call. See [here](/identityserver/v7/bff/apis/local) for more background information.
 
 This can be easily accomplished by a delegating handler that can be plugged into the default HTTP client used by the Blazor frontend. Let's first add the handler:
 
@@ -282,7 +282,7 @@ public class AntiforgeryHandler : DelegatingHandler
 }
 ````
 
-..and register it in the client's *Program.cs* (overriding the standard HTTP client configuration; requires package Microsoft.Extensions.Http):
+..and register it in the client's `Program.cs` (overriding the standard HTTP client configuration; requires package Microsoft.Extensions.Http):
 
 ```cs
 // HTTP client configuration
@@ -299,7 +299,7 @@ This requires an additional reference in the client project:
 <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 ```
 
-If you restart the application again, the logon/logoff logic should work now. In addition you can display the contents of the session on the main page by adding this code to *Index.razor*:
+If you restart the application again, the logon/logoff logic should work now. In addition you can display the contents of the session on the main page by adding this code to `Index.razor`:
 
 ```
 @page "/"
@@ -322,7 +322,7 @@ If you restart the application again, the logon/logoff logic should work now. In
 ```
 
 ### Securing the local API
-The standard Blazor template contains an API endpoint (*WeatherForecastController.cs*). Try invoking the weather page from the UI. It works both in logged in and anonymous state. We want to change the code to make sure, that only authenticated users can call the API.
+The standard Blazor template contains an API endpoint (`WeatherForecastController.cs`). Try invoking the weather page from the UI. It works both in logged in and anonymous state. We want to change the code to make sure, that only authenticated users can call the API.
 
 The standard way in ASP.NET Core would be to add an authorization requirement to the endpoint, either on the controller/action or via the endpoint routing, e.g.:
 
@@ -355,14 +355,14 @@ Response status code does not indicate success: 401 (Unauthorized).
 
 The client code can properly respond to this, e.g. triggering a login redirect.
 
-When you logon now and call the API, you can put a breakpoint server-side and inspect that the API controller has access to the claims of the authenticated user via the *.User* property.
+When you logon now and call the API, you can put a breakpoint server-side and inspect that the API controller has access to the claims of the authenticated user via the `.User` property.
 
 ### Setting up a Blazor BFF client in IdentityServer
 In essence a BFF client is "just" a normal authorization code flow client:
 
 * use the code grant type
 * set a client secret
-* enable *AllowOfflineAccess* if you want to use refresh tokens
+* enable `AllowOfflineAccess` if you want to use refresh tokens
 * enable the required identity and resource scopes
 * set the redirect URIs for the OIDC handler
 

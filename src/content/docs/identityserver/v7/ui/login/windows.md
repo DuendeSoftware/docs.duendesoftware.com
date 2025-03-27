@@ -12,13 +12,13 @@ There are several ways how you can enable Windows authentication in ASP.NET Core
 See the [Microsoft documentation](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/windowsauth?view=aspnetcore-5.0&tabs=visual-studio) for additional information.
 
 ## On Windows using IIS hosting
-The typical ASP.NET Core *CreateDefaultBuilder* host setup enables support for IIS-based Windows authentication when hosting in IIS.
-Make sure that Windows authentication is enabled in *launchSettings.json* or your IIS configuration.
+The typical ASP.NET Core `CreateDefaultBuilder` host setup enables support for IIS-based Windows authentication when hosting in IIS.
+Make sure that Windows authentication is enabled in `launchSettings.json` or your IIS configuration.
 
 The IIS integration layer will configure a Windows authentication handler into DI that can be invoked via the authentication service.
 Typically in your IdentityServer it is advisable to disable the automatic behavior. 
 
-This is done in *ConfigureServices* (details vary depending on in-proc vs out-of-proc hosting)::
+This is done in `ConfigureServices` (details vary depending on in-proc vs out-of-proc hosting)::
 
 ```cs
 // configures IIS out-of-proc settings (see https://github.com/aspnet/AspNetCore/issues/14882)
@@ -36,14 +36,14 @@ builder.Services.Configure<IISServerOptions>(iis =>
 });
 ```
 
-You trigger Windows authentication by calling *ChallengeAsync* using the *Windows* scheme (or if you want to use a constant: *Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme*).
+You trigger Windows authentication by calling `ChallengeAsync` using the `Windows` scheme (or if you want to use a constant: `Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme`).
 
-This will send the *Www-Authenticate* header back to the browser which will then re-load the current URL including the Windows identity.
-You can tell that Windows authentication was successful, when you call *AuthenticateAsync* on the *Windows* scheme and the principal returned
-is of type *WindowsPrincipal*.
+This will send the `Www-Authenticate` header back to the browser which will then re-load the current URL including the Windows identity.
+You can tell that Windows authentication was successful, when you call `AuthenticateAsync` on the `Windows` scheme and the principal returned
+is of type `WindowsPrincipal`.
 
 The principal will have information like user and group SID and the Windows account name. The following snippet shows how to
-trigger authentication, and if successful convert the information into a standard *ClaimsPrincipal* for the temp-Cookie approach::
+trigger authentication, and if successful convert the information into a standard `ClaimsPrincipal` for the temp-Cookie approach::
 
 ```cs
 private async Task<IActionResult> ChallengeWindowsAsync(string returnUrl)

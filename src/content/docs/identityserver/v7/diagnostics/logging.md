@@ -10,32 +10,32 @@ The Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/funda
 
 We are roughly following the Microsoft guidelines for usage of log levels:
 
-* ***Trace*** 
+* **`Trace`** 
 
     For information that is valuable only to a developer troubleshooting an issue. These messages may contain sensitive application data like tokens and should not be enabled in a production environment.
 
-* ***Debug*** 
+* **`Debug`** 
 
     For following the internal flow and understanding why certain decisions are made. Has short-term usefulness during development and debugging.
 
-* ***Information*** 
+* **`Information`** 
 
     For tracking the general flow of the application. These logs typically have some long-term value.
 
-* ***Warning*** 
+* **`Warning`** 
 
     For abnormal or unexpected events in the application flow. These may include errors or other conditions that do not cause the application to stop, but which may need to be investigated.
 
-* ***Error*** 
+* **`Error`** 
 
     For errors and exceptions that cannot be handled. Examples: failed validation of a protocol request.
 
-* ***Critical*** 
+* **`Critical`** 
 
     For failures that require immediate attention. Examples: missing store implementation, invalid key material...
 
 :::note
-In production, logging might produce too much data. It is recommended you either turn it off, or default to the *Warning* level. Have a look at [events](/identityserver/v7/diagnostics/events) for more high-level production instrumentation.
+In production, logging might produce too much data. It is recommended you either turn it off, or default to the `Warning` level. Have a look at [events](/identityserver/v7/diagnostics/events) for more high-level production instrumentation.
 :::
 
 ### Setup for Serilog

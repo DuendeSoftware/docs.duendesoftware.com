@@ -9,7 +9,7 @@ This allows administrative and management tooling to be built on top of that dat
 In addition, since the session data has its own unique id and tracks clients that a user has used, then some types of tokens issued to these clients can be revoked.
 Finally, if clients support back-channel logout, then they can be notified that a user's session has been terminated, which allows them to also terminate the user's session within the client application.
 
-These features are all provided via the *ISessionManagementService* service.
+These features are all provided via the `ISessionManagementService` service.
 
 ## ISessionManagementService
 
@@ -17,7 +17,7 @@ The [session management service](/identityserver/v7/reference/services/session_m
 
 ### Quickstart UI
 
-The Quickstart UI contains a simple administrative page (under the "ServerSideSessions" folder) that uses the *ISessionManagementService* API.
+The Quickstart UI contains a simple administrative page (under the "ServerSideSessions" folder) that uses the `ISessionManagementService` API.
 
 :::note
 The Quickstart session administrative page requires a logged in user to manage sessions. We strongly recommend that you add additional authorization suitable to your organization by adding an authorization policy.
@@ -30,7 +30,7 @@ The session management page looks like this by default, but of course you are fr
 
 ### Querying sessions
 
-Use the *QuerySessionsAsync* API to access a paged list of user sessions.
+Use the `QuerySessionsAsync` API to access a paged list of user sessions.
 You can optionally filter on a user's claims mentioned above (subject identifier, session identifier, and/or display name).
 
 For example:
@@ -46,7 +46,7 @@ var userSessions = await _sessionManagementService.QuerySessionsAsync(new Sessio
 
 The results returned contains the matching users' session data, as well as paging information (depending if the store and backing database supports certain features such as total count and current page number).
 
-This paging information contains a *ResultsToken* and allows subsequent requests for next or previous pages (set *RequestPriorResults* to true for the previous page, otherwise the next page is assumed):
+This paging information contains a `ResultsToken` and allows subsequent requests for next or previous pages (set `RequestPriorResults` to true for the previous page, otherwise the next page is assumed):
 
 ```cs
 // this requests the first page
@@ -74,13 +74,13 @@ userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQue
 
 ### Terminating sessions
 
-To terminate session(s) for a user, use the *RemoveSessionsAsync* API.
-This accepts a *RemoveSessionsContext* which can filter on the subject and/or the session identifier to terminate.
+To terminate session(s) for a user, use the `RemoveSessionsAsync` API.
+This accepts a `RemoveSessionsContext` which can filter on the subject and/or the session identifier to terminate.
 It then also has flags for what to terminate or revoke.
 This allows deleting a user's session record in the store, any associated tokens or consents in the [operational database](/identityserver/v7/data/operational/grants), and/or notifying any clients via [back-channel logout](/identityserver/v7/ui/logout/notification#back-channel-server-side-clients) that the user's session has ended.
 There is also a list of client identifiers to control which clients are affected.
 
-An example to revoke everything for current sessions for subject id *12345* might be:
+An example to revoke everything for current sessions for subject id `12345` might be:
 
 ```cs
 await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
@@ -88,7 +88,7 @@ await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext {
 });
 ```
 
-Or to just revoke all refresh tokens for current sessions for subject id *12345* might be:
+Or to just revoke all refresh tokens for current sessions for subject id `12345` might be:
 
 ```cs
 await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
@@ -100,4 +100,4 @@ await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext {
 });
 ```
 
-Internally this uses the *IServerSideTicketStore*, *IPersistedGrantStore* and *IBackChannelLogoutService* features from IdentityServer.
+Internally this uses the `IServerSideTicketStore`, `IPersistedGrantStore` and `IBackChannelLogoutService` features from IdentityServer.

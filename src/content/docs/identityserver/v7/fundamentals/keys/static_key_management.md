@@ -12,9 +12,9 @@ your keys. With static configuration you are responsible for secure storage,
 loading and rotation of keys.
 
 ## Disabling Key Management
-The automatic key management feature can be disabled by setting the *Enabled*
-flag to *false* on the the *KeyManagement* property of
-[*IdentityServerOptions*](/identityserver/v7/reference/options#key-management):
+The automatic key management feature can be disabled by setting the `Enabled`
+flag to `false` on the the `KeyManagement` property of
+[`IdentityServerOptions`](/identityserver/v7/reference/options#key-management):
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
@@ -67,7 +67,7 @@ Console.WriteLine($"Certificate saved to {name}.pfx");
 ```
 
 ## Adding Keys
-Signing keys are added with the [*AddSigningCredential*](/identityserver/v7/reference/di#signing-keys) configuration method:
+Signing keys are added with the [`AddSigningCredential`](/identityserver/v7/reference/di#signing-keys) configuration method:
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer();
@@ -75,13 +75,13 @@ var key = LoadKeyFromVault(); // (Your code here)
 idsvrBuilder.AddSigningCredential(key, SecurityAlgorithms.RsaSha256);
 ```
 
-You can call *AddSigningCredential* multiple times if you want to register more
+You can call `AddSigningCredential` multiple times if you want to register more
 than one signing key. When you register multiple signing algorithms, the first
 one added will be the default used for signing tokens. Client and API resource
-definitions both have an *AllowedTokenSigningAlgorithm* property to override the
+definitions both have an `AllowedTokenSigningAlgorithm` property to override the
 default on a per resource and client basis.
 
-Another configuration method called *AddValidationKey* can
+Another configuration method called `AddValidationKey` can
 be called to register public keys that should be accepted for token validation.
 
 ## Key Storage
@@ -89,7 +89,7 @@ With automatic key management disabled, secure storage of the key material is
 left to you. This key material should be treated as highly sensitive. Key
 material should be encrypted at rest, and access to it should be restricted.
 
-Loading a key from disk into memory can be done using the *X509CertificateLoader*
+Loading a key from disk into memory can be done using the `X509CertificateLoader`
 found in .NET assuming your hosting environment has proper security practices in 
 place.
 
@@ -100,7 +100,7 @@ var importedCertificate = X509CertificateLoader.LoadPkcs12(bytes, "password");
 ```
 
 You may also choose to load a certificate from the current environment's 
-key store using the *X509Store* class.
+key store using the `X509Store` class.
 
 ```csharp
 // Pick the appropriate StoreName and StoreLocation
@@ -112,7 +112,7 @@ var certificate = store
     .First(c => c.Thumbprint == "<thumbprint>");
 ```
 
-If you're generating self-signed certificates using C#, you can use the *X509Store*
+If you're generating self-signed certificates using C#, you can use the `X509Store`
 to store the certificate into the current hosting environment as well.
 
 ```csharp

@@ -36,8 +36,8 @@ public class DynamicClientRegistrationRequest
 | IdentityProviderRestrictions { get; set; } | List of external IdPs that can be used with this client. If list is empty all IdPs are allowed. Defaults to empty. This property is an extension to the Dynamic Client Registration Protocol. |
 | IdentityTokenLifetime { get; set; } | The lifetime of identity tokens, in seconds. This property is an extension to the Dynamic Client Registration Protocol. |
 | InitiateLoginUri { get; set; } | URI using the https scheme that a third party can use to initiate a login by the relying party. |
-| Jwks { get; set; } | JWK Set document which contains the client's public keys. The *JwksUri* and *Jwks* parameters MUST NOT both be present in the same request or response. |
-| JwksUri { get; set; } | URL to a JWK Set document which contains the client's public keys. The *JwksUri* and *Jwks* parameters MUST NOT both be present in the same request or response. The default validator must be extended to make use of the *JwksUri*. The default implementation ignores this property.|
+| Jwks { get; set; } | JWK Set document which contains the client's public keys. The `JwksUri` and `Jwks` parameters MUST NOT both be present in the same request or response. |
+| JwksUri { get; set; } | URL to a JWK Set document which contains the client's public keys. The `JwksUri` and `Jwks` parameters MUST NOT both be present in the same request or response. The default validator must be extended to make use of the `JwksUri`. The default implementation ignores this property.|
 | LogoUri { get; set; } | Logo for the client. If present, the server should display this image to the end-user during approval. |
 | PostLogoutRedirectUris { get; set; } | List of post-logout redirection URIs for use in the end session endpoint. |
 | RedirectUris { get; set; } | List of redirection URI strings for use in redirect-based flows such as the authorization code flow. Clients using flows with redirection must register their redirection URI values. |
@@ -46,11 +46,11 @@ public class DynamicClientRegistrationRequest
 | RequireClientSecret { get; set; } | Boolean value specifying if a client secret is needed to request tokens at the token endpoint. This property is an extension to the Dynamic Client Registration Protocol. |
 | RequireConsent { get; set; } | Boolean value specifying whether consent is required in user-centric flows initiated by this client. This property is an extension to the Dynamic Client Registration Protocol. |
 | RequireSignedRequestObject { get; set; } | Boolean value specifying whether authorization requests must be protected as signed request objects and provided through either the request or request_uri parameters. |
-| Scope { get; set; } | String containing a space-separated list of scope values that the client can use when requesting access tokens. If omitted, the configuration API will register a client with the scopes set by the *DynamicClientRegistrationValidator.SetDefaultScopes* method, which defaults to no scopes. |
+| Scope { get; set; } | String containing a space-separated list of scope values that the client can use when requesting access tokens. If omitted, the configuration API will register a client with the scopes set by the `DynamicClientRegistrationValidator.SetDefaultScopes` method, which defaults to no scopes. |
 | SlidingRefreshTokenLifetime { get; set; } | The sliding lifetime of refresh tokens, in seconds. This property is an extension to the Dynamic Client Registration Protocol. |
-| SoftwareId { get; set; } | A unique identifier string (e.g., a Universally Unique Identifier (UUID)) assigned by the client developer or software publisher used by registration endpoints to identify the client software to be dynamically registered. Unlike "client_id", which is issued by the authorization server and SHOULD vary between instances, the "software_id" SHOULD remain the same for all instances of the client software. The "software_id" SHOULD remain the same across multiple updates or versions of the same piece of software. The value of this field is not intended to be human readable and is usually opaque to the client and authorization server. The default validator must be extended to make use of the *SoftwareId*. The default implementation ignores this property. |
+| SoftwareId { get; set; } | A unique identifier string (e.g., a Universally Unique Identifier (UUID)) assigned by the client developer or software publisher used by registration endpoints to identify the client software to be dynamically registered. Unlike "client_id", which is issued by the authorization server and SHOULD vary between instances, the "software_id" SHOULD remain the same for all instances of the client software. The "software_id" SHOULD remain the same across multiple updates or versions of the same piece of software. The value of this field is not intended to be human readable and is usually opaque to the client and authorization server. The default validator must be extended to make use of the `SoftwareId`. The default implementation ignores this property. |
 | SoftwareStatement { get; set; } | A software statement containing client metadata values about the client software as claims. This is a string value containing the entire signed JWT. The default validator must be extended to make use of the software statement. The default implementation ignores this property.|
-| SoftwareVersion { get; set; } | A version identifier string for the client software identified by "software_id". The value of the "software_version" SHOULD change on any update to the client software identified by the same "software_id". The value of this field is intended to be compared using string equality matching and no other comparison semantics are defined by this specification. The default validator must be extended to make use of the *SoftwareVersion*. The default implementation ignores this property. |
+| SoftwareVersion { get; set; } | A version identifier string for the client software identified by "software_id". The value of the "software_version" SHOULD change on any update to the client software identified by the same "software_id". The value of this field is intended to be compared using string equality matching and no other comparison semantics are defined by this specification. The default validator must be extended to make use of the `SoftwareVersion`. The default implementation ignores this property. |
 | TokenEndpointAuthenticationMethod { get; set; } | Requested Client Authentication method for the Token Endpoint. The supported options are client_secret_post, client_secret_basic, client_secret_jwt, private_key_jwt. |
 | UpdateAccessTokenClaimsOnRefresh { get; set; } | Boolean value specifying whether access token claims are updated during token refresh. This property is an extension to the Dynamic Client Registration Protocol. |
 
@@ -99,36 +99,36 @@ public class DynamicClientRegistrationValidationError : IStepResult, IDynamicCli
 #### Public Members
 | name | description |
 | --- | --- |
-| Error { get; set; } | Gets or sets the error code for the error that occurred during validation. Error codes defined by RFC 7591 are defined as constants in the *DynamicClientRegistrationErrors* class. |
+| Error { get; set; } | Gets or sets the error code for the error that occurred during validation. Error codes defined by RFC 7591 are defined as constants in the `DynamicClientRegistrationErrors` class. |
 | ErrorDescription { get; set; } | Gets or sets a human-readable description of the error that occurred during validation. |
 
 ## Marker Interfaces
 #### IDynamicClientRegistrationResponse
 Marker interface for the response to a dynamic client registration request. This
 interface has two implementations;
-[*DynamicClientRegistrationResponse*](#dynamicclientregistrationresponse) indicates
-success, while [*DynamicClientRegistrationError*](#dynamicclientregistrationerror) indicates
+[`DynamicClientRegistrationResponse`](#dynamicclientregistrationresponse) indicates
+success, while [`DynamicClientRegistrationError`](#dynamicclientregistrationerror) indicates
 failure.
 
 #### IDynamicClientRegistrationValidationResult
 Marker interface for the result of validating a dynamic client registration
 request. This interface has two implementations;
-[*DynamicClientRegistrationValidatedRequest*](#successfulstep) indicates
+[`DynamicClientRegistrationValidatedRequest`](#successfulstep) indicates
 success, while
-[*DynamicClientRegistrationError*](#dynamicclientregistrationerror) indicates
-failure. Note that the *DynamicClientRegistrationError* implements multiple
+[`DynamicClientRegistrationError`](#dynamicclientregistrationerror) indicates
+failure. Note that the `DynamicClientRegistrationError` implements multiple
 interfaces and can be used throughout the pipeline to convey errors.
 
 #### IStepResult
 Marker interface for the result of a step in the dynamic client registration
 validator or processor. This interface has two implementations;
-[*SuccessfulStep*](#successfulstep) indicates success, while
-[*DynamicClientRegistrationError*](#dynamicclientregistrationerror) indicates
-failure. Note that the *DynamicClientRegistrationError* implements multiple
+[`SuccessfulStep`](#successfulstep) indicates success, while
+[`DynamicClientRegistrationError`](#dynamicclientregistrationerror) indicates
+failure. Note that the `DynamicClientRegistrationError` implements multiple
 interfaces and can be used throughout the pipeline to convey errors.
 
 ### IStepResult Convenience Functions
-Your validation or processing steps can return a call to convenience functions in the static class *StepResult* to
+Your validation or processing steps can return a call to convenience functions in the static class `StepResult` to
 conveniently construct a success or failure from a step wrapped in a task.
 
 | name | description |

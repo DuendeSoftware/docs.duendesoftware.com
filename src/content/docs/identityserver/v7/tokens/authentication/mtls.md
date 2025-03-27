@@ -21,8 +21,8 @@ Use the [DI extensions methods](/identityserver/v7/reference/di) to add the serv
 idsvrBuilder.AddMutualTlsSecretValidators();
 ```
 
-Then add client secret of type *SecretTypes.X509CertificateName* (for PKI-based scenarios) 
-or *SecretTypes.X509CertificateThumbprint* (for self-issued certificates) to the client you want to authenticate.
+Then add client secret of type `SecretTypes.X509CertificateName` (for PKI-based scenarios) 
+or `SecretTypes.X509CertificateThumbprint` (for self-issued certificates) to the client you want to authenticate.
 
 For example::
 
@@ -51,10 +51,10 @@ new Client
 ```
 
 ### .NET client library
-When writing a client to connect to IdentityServer, the *SocketsHttpHandler* (or *HttpClientHandler* depending on your .NET version) 
+When writing a client to connect to IdentityServer, the `SocketsHttpHandler` (or `HttpClientHandler` depending on your .NET version) 
 class provides a convenient mechanism to add a client certificate to outgoing requests.
 
-Use such a handler with *HttpClient* to perform the client certificate authentication handshake at the TLS channel.
+Use such a handler with `HttpClient` to perform the client certificate authentication handshake at the TLS channel.
 The following snippet is using [IdentityModel](https://identitymodel.readthedocs.io) to read the discovery document and request a token:
 
 ```cs

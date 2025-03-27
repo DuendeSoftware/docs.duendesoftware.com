@@ -10,10 +10,10 @@ These endpoints are typically protected by IdentityServer itself.
 For simple scenarios, we give you some helpers. See the advanced section to understand more of the internal plumbing.
 
 :::note
-You could achieve the same by using either Microsoft's *JwtBearer* handler. But this requires more configuration and creates dependencies on external libraries that might lead to conflicts in future updates.
+You could achieve the same by using either Microsoft's `JwtBearer` handler. But this requires more configuration and creates dependencies on external libraries that might lead to conflicts in future updates.
 :::
 
-Start by registering your API as an *ApiScope*, (or resource) e.g.:
+Start by registering your API as an `ApiScope`, (or resource) e.g.:
 
 ```cs
 var scopes = new List<ApiScope>
@@ -34,7 +34,7 @@ new Client
 ```
 
 :::note
-The value of *IdentityServerConstants.LocalApi.ScopeName* is *IdentityServerApi*.
+The value of `IdentityServerConstants.LocalApi.ScopeName` is `IdentityServerApi`.
 :::
 
 To enable token validation for local APIs, add the following to your IdentityServer startup:
@@ -43,7 +43,7 @@ To enable token validation for local APIs, add the following to your IdentitySer
 builder.Services.AddLocalApiAuthentication();
 ```
 
-To protect an API controller, decorate it with an *Authorize* attribute using the *LocalApi.PolicyName* policy:
+To protect an API controller, decorate it with an `Authorize` attribute using the `LocalApi.PolicyName` policy:
 
 ```cs
 [Route("localApi")]
@@ -57,7 +57,7 @@ public class LocalApiController : ControllerBase
 }
 ```
 
-Authorized clients can then request a token for the *IdentityServerApi* scope and use it to call the API.
+Authorized clients can then request a token for the `IdentityServerApi` scope and use it to call the API.
 
 ## Discovery
 You can also add your endpoints to the discovery document if you want, e.g like this::
@@ -70,15 +70,15 @@ builder.Services.AddIdentityServer(options =>
 ```
 
 ## Advanced
-Under the covers, the *AddLocalApiAuthentication* helper does a couple of things:
+Under the covers, the `AddLocalApiAuthentication` helper does a couple of things:
 
-* adds an authentication handler that validates incoming tokens using IdentityServer's built-in token validation engine (the name of this handler is *IdentityServerAccessToken* or *IdentityServerConstants.LocalApi.AuthenticationScheme*
-* configures the authentication handler to require a scope claim inside the access token of value *IdentityServerApi*
-* sets up an authorization policy that checks for a scope claim of value *IdentityServerApi*
+* adds an authentication handler that validates incoming tokens using IdentityServer's built-in token validation engine (the name of this handler is `IdentityServerAccessToken` or `IdentityServerConstants.LocalApi.AuthenticationScheme`
+* configures the authentication handler to require a scope claim inside the access token of value `IdentityServerApi`
+* sets up an authorization policy that checks for a scope claim of value `IdentityServerApi`
 
 This covers the most common scenarios. You can customize this behavior in the following ways:
 
-* Add the authentication handler yourself by calling *services.AddAuthentication().AddLocalApi(...)*
+* Add the authentication handler yourself by calling `services.AddAuthentication().AddLocalApi(...)`
     * this way you can specify the required scope name yourself, or (by specifying no scope at all) accept any token from the current IdentityServer instance
 * Do your own scope validation/authorization in your controllers using custom policies or code, e.g.:
 

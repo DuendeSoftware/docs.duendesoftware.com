@@ -6,7 +6,7 @@ weight: 60
 
 Sometimes, extensibility code running on your IdentityServer needs access tokens to call other APIs. In this case it is not necessary to use the protocol endpoints. The tokens can be issued internally.
 
-*IIdentityServerTools* is a collection of useful internal tools that you might need when writing extensibility code
+`IIdentityServerTools` is a collection of useful internal tools that you might need when writing extensibility code
 for IdentityServer. To use it, inject it into your code, e.g. a controller::
 
 ```cs
@@ -16,7 +16,7 @@ for IdentityServer. To use it, inject it into your code, e.g. a controller::
     }
 ```
 
-The *IssueJwtAsync* method allows creating JWT tokens using the IdentityServer token creation engine. The *IssueClientJwtAsync* is an easier
+The `IssueJwtAsync` method allows creating JWT tokens using the IdentityServer token creation engine. The `IssueClientJwtAsync` is an easier
 version of that for creating tokens for server-to-server communication (e.g. when you have to call an IdentityServer protected API from your code):
 
 ```cs
@@ -31,4 +31,4 @@ public async Task<IActionResult> MyAction()
 }
 ```
 
-The *IIdentityServerTools* interface was added in v7 to allow mocking. Previous versions referenced the *IdentityServerTools* implementation class directly.
+The `IIdentityServerTools` interface was added in v7 to allow mocking. Previous versions referenced the `IdentityServerTools` implementation class directly.

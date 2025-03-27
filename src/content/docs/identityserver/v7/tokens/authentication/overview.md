@@ -16,7 +16,7 @@ All information in this section also applies to [API secrets](/identityserver/v7
 **We recommend using asymmetric client credentials like the [*private key jwt*](/identityserver/v7/tokens/authentication/jwt) or [*Mutual TLS*](/identityserver/v7/tokens/authentication/mtls) authentication method over shared secrets.**
 
 ## Assigning secrets
-A client secret is abstracted by the *Secret* class. It provides properties for setting the value and type as well as a description and expiration date.
+A client secret is abstracted by the `Secret` class. It provides properties for setting the value and type as well as a description and expiration date.
 
 ```cs
 var secret = new Secret
@@ -41,58 +41,58 @@ client.ClientSecrets = new[] { primary, secondary };
 ## Secret parsing
 During request processing, the secret must be somehow extracted from the incoming request. The various specs describe a couple of options, e.g. as part of the authorization header or the body payload.
 
-It is the job of implementations of the [ISecretParser](/identityserver/v7/reference/models/secrets#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the *AddSecretParser()* DI extension method.
+It is the job of implementations of the [ISecretParser](/identityserver/v7/reference/models/secrets#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the `AddSecretParser()` DI extension method.
 
 The following secret parsers are part of Duende IdentityServer:
 
-* ***Duende.IdentityServer.Validation.BasicAuthenticationSecretParser***
+* **`Duende.IdentityServer.Validation.BasicAuthenticationSecretParser`**
 
-    parses an OAuth basic authentication formatted *Authorization* header.
+    parses an OAuth basic authentication formatted `Authorization` header.
     Enabled by default.
 
-* ***Duende.IdentityServer.Validation.PostBodySecretParser***
+* **`Duende.IdentityServer.Validation.PostBodySecretParser`**
 
-    Parses from the *client_id* and *client_secret* body fields.
+    Parses from the `client_id` and `client_secret` body fields.
     Enabled by default.
 
-* ***Duende.IdentityServer.Validation.JwtBearerClientAssertionSecretParser***
+* **`Duende.IdentityServer.Validation.JwtBearerClientAssertionSecretParser`**
 
-    Parses a JWT on the *client_assertion* body field.
-    Can be enabled by calling the *AddJwtBearerClientAuthentication* DI extension method.
+    Parses a JWT on the `client_assertion` body field.
+    Can be enabled by calling the `AddJwtBearerClientAuthentication` DI extension method.
 
-* ***Duende.IdentityServer.Validation.MutualTlsSecretParser***
+* **`Duende.IdentityServer.Validation.MutualTlsSecretParser`**
 
-    Parses the *client_id* body field and TLS client certificate.
-    Can be enabled by calling the *AddMutualTlsSecretValidators* DI extension method.
+    Parses the `client_id` body field and TLS client certificate.
+    Can be enabled by calling the `AddMutualTlsSecretValidators` DI extension method.
 
 
 ## Secret validation
 It is the job of implementations of the [ISecretValidator](/identityserver/v7/reference/models/secrets#duendeidentityservervalidationisecretvalidator) interface to validate the extracted credentials.
 
-You can add secret validators by calling the *AddSecretValidator()* DI extension method.
+You can add secret validators by calling the `AddSecretValidator()` DI extension method.
 
 The following secret validators are part of Duende IdentityServer:
 
-* ***Duende.IdentityServer.Validation.HashedSharedSecretValidator***
+* **`Duende.IdentityServer.Validation.HashedSharedSecretValidator`**
 
     Validates shared secrets that are stored hashed.
     Enabled by default.
 
-* ***Duende.IdentityServer.Validation.PlainTextSharedSecretValidator***
+* **`Duende.IdentityServer.Validation.PlainTextSharedSecretValidator`**
 
     Validates shared secrets that are stored in plaintext.
 
-* ***Duende.IdentityServer.Validation.PrivateKeyJwtSecretValidator***
+* **`Duende.IdentityServer.Validation.PrivateKeyJwtSecretValidator`**
 
     Validates JWTs that are signed with either X.509 certificates or keys wrapped in a JWK.
-    Can be enabled by calling the *AddJwtBearerClientAuthentication* DI extension method.
+    Can be enabled by calling the `AddJwtBearerClientAuthentication` DI extension method.
 
-* ***Duende.IdentityServer.Validation.X509ThumbprintSecretValidator***
+* **`Duende.IdentityServer.Validation.X509ThumbprintSecretValidator`**
 
     Validates X.509 client certificates based on a thumbprint.
-    Can be enabled by calling the *AddMutualTlsSecretValidators* DI extension method.
+    Can be enabled by calling the `AddMutualTlsSecretValidators` DI extension method.
 
-* ***Duende.IdentityServer.Validation.X509NameSecretValidator***
+* **`Duende.IdentityServer.Validation.X509NameSecretValidator`**
 
     Validates X.509 client certificates based on a common name.
-    Can be enabled by calling the *AddMutualTlsSecretValidators* DI extension method.
+    Can be enabled by calling the `AddMutualTlsSecretValidators` DI extension method.

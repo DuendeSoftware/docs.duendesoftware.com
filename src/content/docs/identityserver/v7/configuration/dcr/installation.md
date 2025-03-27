@@ -37,7 +37,7 @@ Configuration API.
 
 #### Add and configure the store implementation
 
-The Configuration API uses the *IClientConfigurationStore* abstraction to
+The Configuration API uses the `IClientConfigurationStore` abstraction to
 persist new clients to the configuration store. Your Configuration API host
 needs an implementation of this interface. You can either use the built-in
 Entity Framework based implementation, or implement the interface yourself. See
@@ -64,8 +64,8 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
 ```cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 ```
-*MapDynamicClientRegistration* registers the DCR endpoints and returns an
-*IEndpointConventionBuilder* which you can use to define authorization
+`MapDynamicClientRegistration` registers the DCR endpoints and returns an
+`IEndpointConventionBuilder` which you can use to define authorization
 requirements for your DCR endpoint. See [Authorization](authorization) for more details.
 
 ## Shared Host for Configuration API and IdentityServer
@@ -83,7 +83,7 @@ builder.Services.AddIdentityServerConfiguration();
 
 #### Add and configure the store implementation
 
-The Configuration API uses the *IClientConfigurationStore* abstraction to
+The Configuration API uses the `IClientConfigurationStore` abstraction to
 persist new clients to the configuration store. Your Configuration API host
 needs an implementation of this interface. You can either use the built-in
 Entity Framework-based implementation, or implement the interface yourself.  See
@@ -110,6 +110,6 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 
 ```
-*MapDynamicClientRegistration* registers the DCR endpoints and returns an
-*IEndpointConventionBuilder* which you can use to define authorization
+`MapDynamicClientRegistration` registers the DCR endpoints and returns an
+`IEndpointConventionBuilder` which you can use to define authorization
 requirements for your DCR endpoint. See [Authorization](authorization) for more details.

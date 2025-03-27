@@ -48,7 +48,7 @@ Please uninstall the template package and install the latest version.
 ## Create the Solution and IdentityServer Project
 
 In this section, you will create a directory for the solution and use the
-*isempty* (IdentityServer Empty) template to create an ASP.NET Core application
+`isempty` (IdentityServer Empty) template to create an ASP.NET Core application
 that includes a basic IdentityServer setup.
 
 Back in the console, run the following commands to create the directory
@@ -76,27 +76,27 @@ cd src
 dotnet new isempty -n IdentityServer
 ```
 
-This will create the following files within a new *src/IdentityServer* directory:
+This will create the following files within a new `src/IdentityServer` directory:
 
-- *Properties/launchSettings.json* file - launch profile
-- *appsettings.json* - run time settings
-- *Config.cs* - definitions for [resources](/identityserver/v7/overview/terminology#resources) and
+- `Properties/launchSettings.json` file - launch profile
+- `appsettings.json` - run time settings
+- `Config.cs` - definitions for [resources](/identityserver/v7/overview/terminology#resources) and
 [clients](/identityserver/v7/overview/terminology#client) used by IdentityServer
-- *HostingExtensions.cs* - configuration for ASP.NET pipeline and services
+- `HostingExtensions.cs` - configuration for ASP.NET pipeline and services
   Notably, the IdentityServer services are configured here and the
   IdentityServer middleware is added to the pipeline here.
-- *IdentityServer.csproj* - project file with the IdentityServer NuGet package
+- `IdentityServer.csproj` - project file with the IdentityServer NuGet package
   added
-- *Program.cs* - main application entry point
+- `Program.cs` - main application entry point
 
 :::note
 
-The *src/IdentityServer/Properties/launchSettings.json* file created by the
-*isempty* template sets the *applicationUrl* to *https://localhost:5001*. You
+The `src/IdentityServer/Properties/launchSettings.json` file created by the
+`isempty` template sets the `applicationUrl` to `https://localhost:5001`. You
 can change the port that your IdentityServer host listens on by changing the
 port in this url. This url also sets the protocol (http or https) that the
 IdentityServer host will use. In production scenarios you should always use
-*https*.
+`https`.
 
 :::
 
@@ -128,8 +128,8 @@ complete access to an API that will be created later in this quickstart.
 
 Scope definitions can be loaded in many ways. This quickstart shows how to use a
 "code as configuration" approach. A minimal Config.cs was created by the
-template at *src/IdentityServer/Config.cs*. Open it and add an *ApiScope* to the
-*ApiScopes* property:
+template at `src/IdentityServer/Config.cs`. Open it and add an `ApiScope` to the
+`ApiScopes` property:
 
 ```csharp
 public static IEnumerable<ApiScope> ApiScopes =>
@@ -159,7 +159,7 @@ First, you'll add configuration for it to your IdentityServer project.
 In this quickstart, the client will not have an interactive user and will
 authenticate with IdentityServer using a client secret.
 
-Add this client definition to *Config.cs*:
+Add this client definition to `Config.cs`:
 
 ```cs
 public static IEnumerable<Client> Clients =>
@@ -218,7 +218,7 @@ public static WebApplication ConfigureServices(this WebApplicationBuilder builde
 ```
 
 That's it - your IdentityServer is now configured. If you run the project and
-then navigate to *https://localhost:5001/.well-known/openid-configuration* in
+then navigate to `https://localhost:5001/.well-known/openid-configuration` in
 your browser, you should see the [discovery document](/identityserver/v7/reference/endpoints/discovery).
 The discovery document is a standard endpoint in
 [OpenID Connect](https://openid.net/specs/openid-connect-discovery-1_0.html) and
@@ -231,8 +231,8 @@ and validate tokens, login and logout, etc.
 :::note
 
 On first startup, IdentityServer will use its automatic key management feature
-to create a signing key and store it in the *src/IdentityServer/keys* directory.
-To avoid accidentally disclosing cryptographic secrets, the entire *keys*
+to create a signing key and store it in the `src/IdentityServer/keys` directory.
+To avoid accidentally disclosing cryptographic secrets, the entire `keys`
 directory should be excluded from source control. It will be recreated if it is
 not present.
 
@@ -265,7 +265,7 @@ dotnet sln add ./src/Api
 Now you will add JWT Bearer Authentication to the API's ASP.NET pipeline. The
 goal is to authorize calls to your API using tokens issued by the IdentityServer
 project. To that end, you will add authentication middleware to the pipeline
-from the *Microsoft.AspNetCore.Authentication.JwtBearer* NuGet package. This
+from the `Microsoft.AspNetCore.Authentication.JwtBearer` NuGet package. This
 middleware will:
 
 - Find and parse a JWT sent with incoming requests as an *Authorization: Bearer*
@@ -298,8 +298,8 @@ builder.Services.AddAuthorization();
 :::note
 
 Audience validation is disabled here because access to the api is modeled with
-*ApiScopes* only. By default, no audience will be emitted unless the api is
-modeled with *ApiResources* instead. See
+`ApiScopes` only. By default, no audience will be emitted unless the api is
+modeled with `ApiResources` instead. See
 [here](/identityserver/v7/apis/aspnetcore/jwt#adding-audience-validation) for a
 more in-depth discussion.
 
@@ -319,10 +319,10 @@ through the eyes of the API.
 
 ### Configure API to listen on Port 6001
 
-Configure the API to run on *https://localhost:6001* only. You can do this by
+Configure the API to run on `https://localhost:6001` only. You can do this by
 editing the
 [launchSettings.json](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/Api/Properties/launchSettings.json)
-file in the *src/Api/Properties* directory. Change these settings for the *https* profile:
+file in the `src/Api/Properties` directory. Change these settings for the `https` profile:
 
 ```json
 "launchUrl": "identity",
@@ -331,8 +331,8 @@ file in the *src/Api/Properties* directory. Change these settings for the *https
 
 ### Test the identity endpoint
 
-Run the API project using the *https* profile and then navigate to the identity controller at
-*https://localhost:6001/identity* in a browser. This should return a 401 status
+Run the API project using the `https` profile and then navigate to the identity controller at
+`https://localhost:6001/identity` in a browser. This should return a 401 status
 code, which  means your API requires a credential and is now protected by
 IdentityServer.
 
@@ -371,7 +371,7 @@ dotnet add ./src/Client package Duende.IdentityModel
 IdentityModel includes a client library to use with the discovery endpoint. This
 way you only need to know the base address of IdentityServer - the actual
 endpoint addresses can be read from the metadata. Add the following to the
-client's Program.cs in the *src/Client/Program.cs* directory:
+client's Program.cs in the `src/Client/Program.cs` directory:
 
 ```cs
 using IdentityModel.Client;
@@ -389,7 +389,7 @@ if (disco.IsError)
 
 :::note
 
-If you get an error connecting, it may be that the development certificate for *localhost*
+If you get an error connecting, it may be that the development certificate for `localhost`
 is not trusted. You can run *dotnet dev-certs https --trust* in order to trust the
 development certificate. This only needs to be done once.
 
@@ -398,7 +398,7 @@ development certificate. This only needs to be done once.
 ### Request a token from IdentityServer
 
 Next you can use the information from the discovery document to request a token
-from *IdentityServer* to access *api1*:
+from `IdentityServer` to access `api1`:
 
 ```cs
 // request token
@@ -430,7 +430,7 @@ inspect the raw token.
 ### Calling the API
 
 To send the access token to the API you typically use the HTTP Authorization
-header. This is done using the *SetBearerToken* extension method:
+header. This is done using the `SetBearerToken` extension method:
 
 ```cs
 // call api
@@ -449,7 +449,7 @@ Console.WriteLine(JsonSerializer.Serialize(doc, new JsonSerializerOptions { Writ
 return 0;
 ```
 
-The completed *Program.cs* file can be found [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/Client/Program.cs).
+The completed `Program.cs` file can be found [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/Client/Program.cs).
 
 To test the flow, start the IdentityServer and API projects. Once they are
 running, run the Client project.
@@ -463,7 +463,7 @@ If you're using Visual Studio, here's how to start everything up:
 1. Right click the solution and select *Configure Startup Projects...*
 2. Choose *Multiple Startup Projects* and set the action for Api and IdentityServer to Start
 3. Run the solution and wait a moment for both the API and and IdentityServer to start
-4. Right click the *Client* project and select Debug -> Start Without Debugging.
+4. Right click the `Client` project and select Debug -> Start Without Debugging.
 
 :::note
 
@@ -483,7 +483,7 @@ token. The protocol ensures that this scope will only be in the token if the
 client requests it and IdentityServer allows the client to have that scope. You
 configured IdentityServer to allow this access by [including it in the
 allowedScopes property](#define-client).
-Add the following to the *Program.cs* file of the API:
+Add the following to the `Program.cs` file of the API:
 
 ```cs
 builder.Services.AddAuthorization(options =>
@@ -502,7 +502,7 @@ You can now enforce this policy at various levels, e.g.:
 - for all endpoints
 - for specific controllers, actions, or endpoints
 
-Add the policy to the identity endpoint in *src/Api/Program.cs*:
+Add the policy to the identity endpoint in `src/Api/Program.cs`:
 
 ```cs
 app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))

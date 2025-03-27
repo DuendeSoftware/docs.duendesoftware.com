@@ -9,44 +9,44 @@ weight: 30
 
 This class models an API.
 
-* ***Enabled***
+* **`Enabled`**
     
     Indicates if this resource is enabled and can be requested. Defaults to true.
 
-* ***Name***
+* **`Name`**
     
     The unique name of the API. This value is used for authentication with introspection and will be added to the audience of the outgoing access token.
 
-* ***DisplayName***
+* **`DisplayName`**
     
     This value can be used e.g. on the consent screen.
 
-* ***Description***
+* **`Description`**
     
     This value can be used e.g. on the consent screen.
     
-* ***RequireResourceIndicator***
+* **`RequireResourceIndicator`**
     
     Indicates if this API resource requires the resource indicator to request it, and expects access tokens issued to it will only ever contain this API resource as the audience.
 
-* ***ApiSecrets***
+* **`ApiSecrets`**
     
     The API secret is used for the introspection endpoint. The API can authenticate with introspection using the API name and secret.
 
-* ***AllowedAccessTokenSigningAlgorithms***
+* **`AllowedAccessTokenSigningAlgorithms`**
     
     List of allowed signing algorithms for access token. If empty, will use the server default signing algorithm.
 
-* ***UserClaims***
+* **`UserClaims`**
     
     List of associated user claim types that should be included in the access token.
 
-* ***Scopes***
+* **`Scopes`**
 
     List of API scope names. You need to create those using [ApiScope](api_scope).
 
 ## Defining API resources in appsettings.json
-The *AddInMemoryApiResource* extensions method also supports adding API resources from the ASP.NET Core configuration file::
+The `AddInMemoryApiResource` extensions method also supports adding API resources from the ASP.NET Core configuration file::
 
     "IdentityServer": {
         "IssuerUri": "urn:sso.company.com",
@@ -77,7 +77,7 @@ The *AddInMemoryApiResource* extensions method also supports adding API resource
         ]
     }
 
-Then pass the configuration section to the *AddInMemoryApiResource* method:
+Then pass the configuration section to the `AddInMemoryApiResource` method:
 
 ```cs
 idsvrBuilder.AddInMemoryApiResources(configuration.GetSection("IdentityServer:ApiResources"))

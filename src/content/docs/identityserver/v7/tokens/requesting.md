@@ -14,7 +14,7 @@ Prerequisites are:
 
 * define a [client](/identityserver/v7/fundamentals/clients) for the *client credentials* grant type
 * define an [API scope](/identityserver/v7/fundamentals/resources#apis) (and optionally a resource)
-* grant the client access to the scope via the [*AllowedScopes*](/identityserver/v7/reference/models/client#basics) property
+* grant the client access to the scope via the [`AllowedScopes`](/identityserver/v7/reference/models/client#basics) property
 
 According to the OAuth [specification](https://tools.ietf.org/html/rfc6749#section-4.4), you request a token by posting to the token endpoint:
 
@@ -121,9 +121,9 @@ In this scenario you typically use the authorization code flow which first invol
 Prerequisites are:
 
 * define a [client](/identityserver/v7/fundamentals/clients) for the *authorization code* grant type
-* define an [identity](/identityserver/v7/fundamentals/resources#identity-resources) resource, e.g. *openid*
+* define an [identity](/identityserver/v7/fundamentals/resources#identity-resources) resource, e.g. `openid`
 * define an [API scope](/identityserver/v7/fundamentals/resources#apis) (and optionally a resource)
-* grant the client access to both scopes via the [*AllowedScopes*](/identityserver/v7/reference/models/client#basics) property
+* grant the client access to both scopes via the [`AllowedScopes`](/identityserver/v7/reference/models/client#basics) property
 
 ### Front-channel
 The call to the authorize endpoint is done using a redirect in the browser:

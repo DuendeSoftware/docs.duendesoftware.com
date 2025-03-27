@@ -17,7 +17,7 @@ client.AccessTokenType = AccessTokenType.Reference;
 ```
 
 ## Enabling an API to consume reference tokens
-The introspection endpoint requires authentication - since the client of an introspection endpoint is typically an API, you configure the secret on the *ApiResource*:
+The introspection endpoint requires authentication - since the client of an introspection endpoint is typically an API, you configure the secret on the `ApiResource`:
 
 ```cs
     var api = new ApiResource("api1")

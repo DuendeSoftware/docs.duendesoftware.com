@@ -11,7 +11,7 @@ The [ISigningKeyStore](/identityserver/v7/reference/stores/signing_key_store) is
 
 ## Registering a custom signing key store
 
-To register a custom signing key store in the DI container, there is a *AddSigningKeyStore* helper on the *IIdentityServerBuilder*. 
+To register a custom signing key store in the DI container, there is a `AddSigningKeyStore` helper on the `IIdentityServerBuilder`. 
 For example:
 
 ```cs
@@ -20,13 +20,13 @@ builder.Services.AddIdentityServer()
 ```
 
 ## Key Lifecycle
-When keys are required, *LoadKeysAsync* will be called to load them all from the store. 
+When keys are required, `LoadKeysAsync` will be called to load them all from the store. 
 They are then cached automatically for some amount of time based on [configuration](/identityserver/v7/reference/options#key-management).
-Periodically a new key will be created, and *StoreKeyAsync* will be used to persist the new key.
-Once a key is past its retirement, *DeleteKeyAsync* will be used to purge the key from the store.
+Periodically a new key will be created, and `StoreKeyAsync` will be used to persist the new key.
+Once a key is past its retirement, `DeleteKeyAsync` will be used to purge the key from the store.
 
 ## Serialized Key
 The [SerializedKey](/identityserver/v7/reference/stores/signing_key_store#serializedkey) is the model that contains the key data to persist. 
 
-It is expected that the *Id* is the unique identifier for the key in the store. The *Data* property is the main payload of the key and contains a copy of all the other values. Some of the properties affect how the *Data* is processed (e.g. *DataProtected*), and the other properties are considered read-only and thus can't be changed to affect the behavior (e.g. changing the *Created* value will not affect the key lifetime, nor will changing *Algorithm* change which signing algorithm the key is used for).
+It is expected that the `Id` is the unique identifier for the key in the store. The `Data` property is the main payload of the key and contains a copy of all the other values. Some of the properties affect how the `Data` is processed (e.g. `DataProtected`), and the other properties are considered read-only and thus can't be changed to affect the behavior (e.g. changing the `Created` value will not affect the key lifetime, nor will changing `Algorithm` change which signing algorithm the key is used for).
 

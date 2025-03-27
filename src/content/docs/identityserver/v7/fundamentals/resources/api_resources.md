@@ -7,7 +7,7 @@ weight: 30
 
 When the API/resource surface gets larger, a flat list of scopes might become hard to  manage.
 
-In Duende IdentityServer, the *ApiResource* class allows for some additional organization as well as grouping and isolation of scopes as well as providing some common settings.
+In Duende IdentityServer, the `ApiResource` class allows for some additional organization as well as grouping and isolation of scopes as well as providing some common settings.
 
 Let's use the following scope definition as an example:
 
@@ -31,7 +31,7 @@ public static IEnumerable<ApiScope> GetApiScopes()
 }
 ```
 
-With *ApiResource* you can now create two logical APIs and their corresponding scopes:
+With `ApiResource` you can now create two logical APIs and their corresponding scopes:
 
 ```cs
 public static readonly IEnumerable<ApiResource> GetApiResources()
@@ -53,14 +53,14 @@ public static readonly IEnumerable<ApiResource> GetApiResources()
 
 Using the API resource grouping gives you the following additional features
 
-* support for the JWT *aud* claim. The value(s) of the audience claim will be the name of the API resource(s)
+* support for the JWT `aud` claim. The value(s) of the audience claim will be the name of the API resource(s)
 * support for adding common user claims across all contained scopes
 * support for introspection by assigning an API secret to the resource
 * support for configuring the access token signing algorithm for the resource
 
 Let's have a look at some example access tokens for the above resource configuration.
 
-Client requests: **invoice.read** and **invoice.pay**:
+Client requests: *`invoice.read`* and *`invoice.pay`*:
 
 ```json
     {
@@ -75,7 +75,7 @@ Client requests: **invoice.read** and **invoice.pay**:
     }
 ```
 
-Client requests: **invoice.read** and **customer.read**:
+Client requests: *`invoice.read`* and *`customer.read`*:
 
 ```json
     {
@@ -90,7 +90,7 @@ Client requests: **invoice.read** and **customer.read**:
     }
 ```
 
-Client requests: **manage**:
+Client requests: *`manage`*:
 
 ```json
     {
@@ -122,7 +122,7 @@ var customerResource = new ApiResource("customer", "Customer API")
     }
 ```
 
-If a client now requested a scope belonging to the *customer* resource, the access token would contain the additional claims (if provided by your [profile service](/identityserver/v7/reference/services/profile_service)).
+If a client now requested a scope belonging to the `customer` resource, the access token would contain the additional claims (if provided by your [profile service](/identityserver/v7/reference/services/profile_service)).
 
 ```json
     {
@@ -144,7 +144,7 @@ If a client now requested a scope belonging to the *customer* resource, the acce
 Your APIs might have certain requirements for the cryptographic algorithm used to sign the access tokens for that resource.
 An example could be regulatory requirements, or that you are starting to migrate your system to higher security algorithms.
 
-The following sample sets *PS256* as the required signing algorithm for the *invoices* API:
+The following sample sets `PS256` as the required signing algorithm for the `invoices` API:
 
 ```cs
 var invoiceApi = new ApiResource("invoice", "Invoice API")

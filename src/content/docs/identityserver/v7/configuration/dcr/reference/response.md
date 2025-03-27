@@ -5,7 +5,7 @@ weight: 40
 ---
 
 ## IDynamicClientRegistrationResponseGenerator
-The *IDynamicClientRegistrationResponseGenerator* interface defines the contract
+The `IDynamicClientRegistrationResponseGenerator` interface defines the contract
 for a service that generates dynamic client registration responses.
 
 ```csharp
@@ -26,7 +26,7 @@ public interface IDynamicClientRegistrationResponseGenerator
 
 ## DynamicClientRegistrationResponseGenerator 
 
-The *DynamicClientRegistrationResponseGenerator* is the default implementation of the *IDynamicClientRegistrationResponseGenerator*. If you wish to customize a particular aspect of response generation, you can extend this class and override the appropriate methods. You can also set JSON serialization options by overriding its *SerializerOptions* property.
+The `DynamicClientRegistrationResponseGenerator` is the default implementation of the `IDynamicClientRegistrationResponseGenerator`. If you wish to customize a particular aspect of response generation, you can extend this class and override the appropriate methods. You can also set JSON serialization options by overriding its `SerializerOptions` property.
 
 #### Members
 

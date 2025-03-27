@@ -11,21 +11,21 @@ All applications that the user has logged into via the browser during the user's
 
 The URL for the end session endpoint is available via discovery.
 
-* ***id_token_hint***
+* **`id_token_hint`**
 
     When the user is redirected to the endpoint, they will be prompted if they really want to sign-out. 
-    This prompt can be bypassed by a client sending the original *id_token* received from authentication.
-    This is passed as a query string parameter called *id_token_hint*.
+    This prompt can be bypassed by a client sending the original `id_token` received from authentication.
+    This is passed as a query string parameter called `id_token_hint`.
 
-* ***post_logout_redirect_uri***
+* **`post_logout_redirect_uri`**
 
-    If a valid *id_token_hint* is passed, then the client may also send a *post_logout_redirect_uri* parameter.
+    If a valid `id_token_hint` is passed, then the client may also send a `post_logout_redirect_uri` parameter.
     This can be used to allow the user to redirect back to the client after sign-out.
-    The value must match one of the client's pre-configured *PostLogoutRedirectUris*.
+    The value must match one of the client's pre-configured `PostLogoutRedirectUris`.
 
-* ***state***
+* **`state`**
 
-    If a valid *post_logout_redirect_uri* is passed, then the client may also send a *state* parameter.
+    If a valid `post_logout_redirect_uri` is passed, then the client may also send a `state` parameter.
     This will be returned back to the client as a query string parameter after the user redirects back to the client.
     This is typically used by clients to roundtrip state across the redirect.
 

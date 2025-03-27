@@ -12,14 +12,14 @@ especially in highly distributed systems.
 
 .NET 8 comes with first class support for Open Telemetry. IdentityServer emits traces, metrics and logs.
 
-#### [**Metrics**](metrics)
+#### [*`Metrics`*](metrics)
 Metrics are high level statistic counters. They provide an aggregated overview and can be used to set monitoring rules.
 
-#### **Logs**
+#### *`Logs`*
 OpenTelemetry in .NET 8 exports the logs written to the standard ILogger system. The logs are augmented with
 trace ids to be able to correlate log entries with traces.
 
-#### [**Traces**](traces)
+#### [*`Traces`*](traces)
 Traces shows individual requests and dependencies. The output is very useful for visualizing the control 
 flow and finding performance bottlenecks.
 

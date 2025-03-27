@@ -12,7 +12,7 @@ or manually, by loading the keys from a secured location with static
 configuration.
 
 IdentityServer supports [signing](https://tools.ietf.org/html/rfc7515) tokens
-using the *RS*, *PS* and *ES* family of cryptographic signing algorithms. 
+using the `RS`, `PS` and `ES` family of cryptographic signing algorithms. 
 
 TODO LIST CHILDREN HERE
 

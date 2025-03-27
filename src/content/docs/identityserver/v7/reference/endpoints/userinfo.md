@@ -7,7 +7,7 @@ weight: 4
 The UserInfo endpoint can be used to retrieve claims about a user (see [spec](https://openid.net/specs/openid-connect-core-1_0.html#userinfo)). 
 
 The caller needs to send a valid access token.
-Depending on the granted scopes, the UserInfo endpoint will return the mapped claims (at least the *openid* scope is required).
+Depending on the granted scopes, the UserInfo endpoint will return the mapped claims (at least the `openid` scope is required).
 
 ```text
 GET /connect/userinfo

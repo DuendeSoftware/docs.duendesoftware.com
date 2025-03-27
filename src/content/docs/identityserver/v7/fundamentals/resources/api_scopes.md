@@ -8,17 +8,17 @@ weight: 20
 Designing your API surface can be a complicated task. Duende IdentityServer provides a couple of primitives to help you with that.
 
 The original OAuth 2.0 specification has the concept of scopes, which is just defined as *the scope of access* that the client requests.
-Technically speaking, the *scope* parameter is a list of space delimited values - you need to provide the structure and semantics of it.
+Technically speaking, the `scope` parameter is a list of space delimited values - you need to provide the structure and semantics of it.
 
-In more complex systems, often the notion of a *resource* is introduced. This might be e.g. a physical or logical API. 
+In more complex systems, often the notion of a `resource` is introduced. This might be e.g. a physical or logical API. 
 In turn each API can potentially have scopes as well. Some scopes might be exclusive to that resource, and some scopes might be shared.
 
 Let's start with simple scopes first, and then we'll have a look how resources can help structure scopes.
 
 ### Scopes
-Let's model something very simple - a system that has three logical operations *read*, *write*, and *delete*.
+Let's model something very simple - a system that has three logical operations `read`, `write`, and `delete`.
 
-You can define them using the *ApiScope* class:
+You can define them using the `ApiScope` class:
 
 ```cs
 public static IEnumerable<ApiScope> GetApiScopes()
@@ -52,7 +52,7 @@ var mobileApp = new Client
 
 ### Authorization based on Scopes
 When a client asks for a scope (and that scope is allowed via configuration and not denied via consent), 
-the value of that scope will be included in the resulting access token as a claim of type *scope* (for both JWTs and introspection), e.g.:
+the value of that scope will be included in the resulting access token as a claim of type `scope` (for both JWTs and introspection), e.g.:
 
 ```json
 {
@@ -67,20 +67,20 @@ the value of that scope will be included in the resulting access token as a clai
 ```
 
 :::note
-The format of the *scope* parameter can be controlled by the *EmitScopesAsSpaceDelimitedStringInJwt* setting on the options.
+The format of the `scope` parameter can be controlled by the `EmitScopesAsSpaceDelimitedStringInJwt` setting on the options.
 Historically IdentityServer emitted scopes as an array, but you can switch to a space delimited string instead.
 :::
 
 The consumer of the access token can use that data to make sure that the client is actually allowed to invoke the corresponding functionality. See the [APIs](/identityserver/v7/apis) section for more information on protecting APIs with access tokens.
 
 :::caution
-Be aware, that scopes are purely for authorizing clients, not users. In other words, the *write* scope allows the client to invoke the functionality associated with the scope and is unrelated to the user's permission to do so. This additional user centric authorization is application logic and not covered by OAuth, yet still possibly important to implement in your API.
+Be aware, that scopes are purely for authorizing clients, not users. In other words, the `write` scope allows the client to invoke the functionality associated with the scope and is unrelated to the user's permission to do so. This additional user centric authorization is application logic and not covered by OAuth, yet still possibly important to implement in your API.
 :::
 
 ### Adding user claims
 You can add more identity information about the user to the access token.
 The additional claims added are based on the scope requested. 
-The following scope definition tells the configuration system that when a *write* scope gets granted the *user_level* claim should be added to the access token:
+The following scope definition tells the configuration system that when a `write` scope gets granted the `user_level` claim should be added to the access token:
 
 ```cs
 var writeScope = new ApiScope(
@@ -88,18 +88,18 @@ var writeScope = new ApiScope(
     displayName: "Write your data.",
     userClaims: new[] { "user_level" });
 ```
-This will pass the *user_level* claim as a requested claim type to the profile service, 
+This will pass the `user_level` claim as a requested claim type to the profile service, 
 so that the consumer of the access token can use this data as input for authorization decisions or business logic.
 
 :::note
-When using the scope-only model, no aud (audience) claim will be added to the token since this concept does not apply. If you need an aud claim, you can enable the *EmitStaticAudienceClaim* setting on the options. This will emit an aud claim in the *issuer_name/resources* format. If you need more control of the aud claim, use API resources.
+When using the scope-only model, no aud (audience) claim will be added to the token since this concept does not apply. If you need an aud claim, you can enable the `EmitStaticAudienceClaim` setting on the options. This will emit an aud claim in the `issuer_name/resources` format. If you need more control of the aud claim, use API resources.
 :::
 
 ### Parameterized Scopes
-Sometimes scopes have a certain structure, e.g. a scope name with an additional parameter: *transaction:id* or *read_patient:patientid*.
+Sometimes scopes have a certain structure, e.g. a scope name with an additional parameter: `transaction:id` or `read_patient:patientid`.
 
 In this case you would create a scope without the parameter part and assign that name to a client, but in addition provide some logic to parse the structure
-of the scope at runtime using the *IScopeParser* interface or by deriving from our default implementation, e.g.:
+of the scope at runtime using the `IScopeParser` interface or by deriving from our default implementation, e.g.:
 
 ```cs
 public class ParameterizedScopeParser : DefaultScopeParser

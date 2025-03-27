@@ -41,7 +41,7 @@ var client = new Client
 ```
 
 ## Passing request JWTs by reference
-If the *request_uri* parameter is used, IdentityServer will make an outgoing HTTP call to fetch the JWT from the specified URL.
+If the `request_uri` parameter is used, IdentityServer will make an outgoing HTTP call to fetch the JWT from the specified URL.
 
 You can customize the HTTP client used for this outgoing connection, e.g. to add caching or retry logic (e.g. via the Polly library):
 
@@ -59,11 +59,11 @@ idsvrBuilder.AddJwtRequestUriHttpClient(client =>
 ```
 
 :::note
-Request URI processing is disabled by default. Enable on the [Endpoints](/identityserver/v7/reference/options#endpoints) on the *IdentityServerOptions*. Also see the security considerations from the JAR [specification](https://tools.ietf.org/html/draft-ietf-oauth-jwsreq-23#section-10.4).
+Request URI processing is disabled by default. Enable on the [Endpoints](/identityserver/v7/reference/options#endpoints) on the `IdentityServerOptions`. Also see the security considerations from the JAR [specification](https://tools.ietf.org/html/draft-ietf-oauth-jwsreq-23#section-10.4).
 :::
 
 ## Accessing the request object data
 You can access the validated data from the request object in two ways:
 
-* Wherever you have access to the *ValidatedAuthorizeRequest*, the *RequestObjectValues* dictionary holds the values.
-* In the UI code you can call *IIdentityServerInteractionService.GetAuthorizationContextAsync*, the resulting [AuthorizationRequest](/identityserver/v7/reference/services/interaction_service#authorizationrequest) object contains the *RequestObjectValues* dictionary as well.
+* Wherever you have access to the `ValidatedAuthorizeRequest`, the `RequestObjectValues` dictionary holds the values.
+* In the UI code you can call `IIdentityServerInteractionService.GetAuthorizationContextAsync`, the resulting [AuthorizationRequest](/identityserver/v7/reference/services/interaction_service#authorizationrequest) object contains the `RequestObjectValues` dictionary as well.
