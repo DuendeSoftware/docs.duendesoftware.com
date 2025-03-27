@@ -19,19 +19,19 @@ Many of the fundamental configuration settings can be set on the options. See th
 
 Several convenience methods are provided for registering custom stores:
 
-* **`AddClientStore\<T>`**
+* **`AddClientStore<T>`**
     
     Registers a custom `IClientStore` implementation.
 
-* **`AddCorsPolicyService\<T>`**
+* **`AddCorsPolicyService<T>`**
     
     Registers a custom `ICorsPolicyService` implementation.
 
-* **`AddResourceStore\<T>`**
+* **`AddResourceStore<T>`**
     
     Registers a custom `IResourceStore` implementation.
 
-* **`AddIdentityProviderStore\<T>`**
+* **`AddIdentityProviderStore<T>`**
     
     Registers a custom `IIdentityProviderStore` implementation.
 
@@ -59,26 +59,26 @@ The [in-memory configuration stores](/identityserver/v7/data/configuration#in-me
 
 Extension methods to enable [caching for configuration data](/identityserver/v7/data/configuration#caching-configuration-data):
 
-* **`AddInMemoryCaching\<T>`**
+* **`AddInMemoryCaching<T>`**
     
-    To use any of the caches described below, an implementation of `ICache\<T>` must be registered in DI.
-    This API registers a default in-memory implementation of `ICache\<T>` that's based on ASP.NET Core's `MemoryCache`.
+    To use any of the caches described below, an implementation of `ICache<T>` must be registered in DI.
+    This API registers a default in-memory implementation of `ICache<T>` that's based on ASP.NET Core's `MemoryCache`.
 
-* **`AddClientStoreCache\<T>`**
+* **`AddClientStoreCache<T>`**
     Registers a `IClientStore` decorator implementation which will maintain an in-memory cache of `Client` configuration objects.
     The cache duration is configurable on the `Caching` configuration options on the `IdentityServerOptions`.
 
-* **`AddResourceStoreCache\<T>`**
+* **`AddResourceStoreCache<T>`**
     
     Registers a `IResourceStore` decorator implementation which will maintain an in-memory cache of `IdentityResource` and `ApiResource` configuration objects.
     The cache duration is configurable on the `Caching` configuration options on the `IdentityServerOptions`.
 
-* **`AddCorsPolicyCache\<T>`**
+* **`AddCorsPolicyCache<T>`**
     
     Registers a `ICorsPolicyService` decorator implementation which will maintain an in-memory cache of the results of the CORS policy service evaluation.
     The cache duration is configurable on the `Caching` configuration options on the `IdentityServerOptions`.
 
-* **`AddIdentityProviderStoreCache\<T>`**
+* **`AddIdentityProviderStoreCache<T>`**
     
     Registers a `IIdentityProviderStore` decorator implementation which will maintain an in-memory cache of `IdentityProvider` configuration objects.
     The cache duration is configurable on the `Caching` configuration options on the `IdentityServerOptions`.

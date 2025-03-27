@@ -37,7 +37,7 @@ Configuration data is used frequently during request processing.
 If this data is loaded from a database or other external store, then it might be expensive to frequently re-load the same data.
 
 Duende IdentityServer provides [convenience methods](/identityserver/v7/reference/di#caching-configuration-data) to enable caching data from the various stores.
-The caching implementation relies upon an `ICache\<T>` service and must also be added to DI. 
+The caching implementation relies upon an `ICache<T>` service and must also be added to DI. 
 For example:
 
 ```cs
@@ -72,8 +72,8 @@ builder.Services.AddIdentityServer(options => {
 ```
 
 Further customization of the cache is possible: 
-* If you wish to customize the caching behavior for the specific configuration objects, you can replace the `ICache\<T>` service implementation in the dependency injection system.
-* The default implementation of the `ICache\<T>` itself relies upon the `IMemoryCache` interface (and `MemoryCache` implementation) provided by .NET.
+* If you wish to customize the caching behavior for the specific configuration objects, you can replace the `ICache<T>` service implementation in the dependency injection system.
+* The default implementation of the `ICache<T>` itself relies upon the `IMemoryCache` interface (and `MemoryCache` implementation) provided by .NET.
 If you wish to customize the in-memory caching behavior, you can replace the `IMemoryCache` implementation in the dependency injection system.
 
 ## In-Memory Stores
