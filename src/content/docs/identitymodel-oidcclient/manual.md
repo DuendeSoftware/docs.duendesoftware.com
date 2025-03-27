@@ -9,7 +9,7 @@ In manual mode, OidcClient helps you with creating the necessary start
 URL and state parameters, but you need to coordinate with whatever
 browser you want to use, e.g.:
 
-```
+```csharp
 var options = new OidcClientOptions
 {
     Authority = "https://demo.duendesoftware.com",
@@ -28,7 +28,7 @@ When the browser work is done, OidcClient can take over to process the
 response, get the access/refresh tokens, contact userinfo endpoint
 etc..:
 
-```
+```csharp
 var result = await client.ProcessResponseAsync(data, state);
 ```
 

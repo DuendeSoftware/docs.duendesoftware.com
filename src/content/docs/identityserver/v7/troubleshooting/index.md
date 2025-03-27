@@ -13,7 +13,8 @@ Duende IdentityServer is a security product and by design the error messages ret
 Another common issue is that the logs are redacted and that the interesting/relevant information is overwritten with **'[PII is hidden]'**. (For example *The '[PII is hidden]' for signing cannot be smaller than '[PII is hidden]' bits*). This is a privacy  feature of the Microsoft.IdentityModel libraries that we use for token handling. The definition of possible PII in those libraries is very generous and includes key sizes, URLs etc.
 
 There is a static property that can be set to disable the redacting.
-```
+
+```csharp
 IdentityModelEventSource.ShowPII = true; 
 ```
 

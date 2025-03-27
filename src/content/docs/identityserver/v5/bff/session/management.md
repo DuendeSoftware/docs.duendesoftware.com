@@ -46,13 +46,13 @@ The following describes the default behavior of those endpoints. See the [extens
 ### Login
 The login endpoint triggers authentication with the scheme configured for challenge (typically the OpenID Connect handler).
 
-```
+```text
 GET /bff/login
 ```
 
 By default the login endpoint will redirect back to the root of the application after authentication is done. Alternatively you can use a different local URL instead:
 
-```
+```text
 GET /bff/login?returnUrl=/page2
 ```
 
@@ -63,7 +63,7 @@ The user endpoint returns data about the currently logged-on user and the sessio
 To protect against cross-site request forgery, you need to add a static header to the GET request. Both header name and  value can be configured on the [options](/identityserver/v5/bff/options).
 :::
 
-```
+```text
 GET bff/user
 
 x-csrf: 1
@@ -77,7 +77,7 @@ If your backend uses sliding cookies, you typically want to avoid that querying 
 This features requires either usage of server-side sessions, or .NET 6 or higher (or both).
 :::
 
-```
+```text
 GET bff/user?slide=false
 
 x-csrf: 1
@@ -139,13 +139,13 @@ This is the URL to trigger logout. If the upstream provider includes an *sid* cl
 ### Logout
 This endpoint triggers local and upstream logout. If the upstream IdP sent a session ID, this must be appended to the URL:
 
-```
+```text
 GET /bff/logout?sid=xyz
 ```
 
 By default the logout endpoint will redirect back to the root of the application after logout is done. Alternatively you can use a local URL instead:
 
-```
+```text
 GET /bff/logout?sid=xyz&returnUrl=/loggedout
 ```
 

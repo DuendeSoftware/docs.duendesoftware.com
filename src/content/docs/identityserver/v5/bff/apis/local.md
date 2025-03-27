@@ -17,7 +17,7 @@ This is a good first layer of defense, but makes the assumption that you can tru
 
 In addition to the cookie protection, we recommend requiring an additional custom header, for example:
 
-```
+```text
 GET /endpoint
 
 x-csrf: 1

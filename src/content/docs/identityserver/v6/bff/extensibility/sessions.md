@@ -70,7 +70,7 @@ public interface IUserSessionStore
 
 Once you have an implementation, you can register it when you enable server-side sessions:
 
-```
+```csharp
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddBff()

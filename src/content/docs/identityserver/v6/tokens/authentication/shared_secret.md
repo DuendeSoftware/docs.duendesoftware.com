@@ -39,7 +39,7 @@ var compromisedSecret = new Secret("just for demos, not prod!".Sha256());
 ## Authentication using a shared secret
 You can either send the client id/secret combination as part of the POST body::
 
-```
+```text
 POST /connect/token
 
 Content-type: application/x-www-form-urlencoded
@@ -54,7 +54,7 @@ Content-type: application/x-www-form-urlencoded
 
 ..or as a basic authentication header::
 
-```
+```text
 POST /connect/token
 
 Content-type: application/x-www-form-urlencoded

@@ -11,7 +11,7 @@ encoding](https://tools.ietf.org/html/rfc4648#section-5).
 IdentityModel includes the *Base64Url* class to help with
 encoding/decoding:
 
-```
+```csharp
 var text = "hello";
 var b64url = Base64Url.Encode(text);
 

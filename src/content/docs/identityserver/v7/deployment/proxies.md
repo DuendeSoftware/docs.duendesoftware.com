@@ -27,7 +27,7 @@ In a client codebase operating behind a proxy, you'll need to configure the *For
 environments. By default, *KnownNetworks* and *KnownProxies* support localhost with values of *127.0.0.1* and *::1* respectively. This is useful (and secure!) for local development
 environments and for solutions where the reverse proxy and the .NET web host runs on the same machine.
 
-```
+```csharp
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     // you may need to change these ForwardedHeaders 

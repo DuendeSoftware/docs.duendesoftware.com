@@ -44,7 +44,7 @@ You can share the same key for client authentication and [signed authorize reque
 ## Authentication using a private key JWT
 On the client side the, the caller must first generate the JWT, and then send it on the *assertion* body field:
 
-```
+```text
 POST /connect/token
 
 Content-type: application/x-www-form-urlencoded

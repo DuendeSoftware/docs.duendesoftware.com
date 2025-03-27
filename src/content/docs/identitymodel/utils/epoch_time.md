@@ -11,7 +11,7 @@ time](https://en.wikipedia.org/wiki/Unix_time) to represent date/times.
 IdentityModel contains extensions methods for *DateTime* to convert
 to/from Unix time:
 
-```
+```csharp
 var dt = DateTime.UtcNow;
 var unix = dt.ToEpochTime();
 ```

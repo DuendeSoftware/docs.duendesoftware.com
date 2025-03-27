@@ -15,7 +15,7 @@ It implements the token revocation specification [(RFC 7009)](https://tools.ietf
     
     either *access_token* or *refresh_token* (optional)
 
-```
+```text
 POST /connect/revocation HTTP/1.1
 Host: server.example.com
 Content-Type: application/x-www-form-urlencoded

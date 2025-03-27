@@ -12,7 +12,7 @@ extension method for *HttpClient*.
 The following code revokes an access token token at a revocation
 endpoint:
 
-```
+```csharp
 var client = new HttpClient();
 
 var result = await client.RevokeTokenAsync(new TokenRevocationRequest
@@ -32,6 +32,6 @@ and *Json* properties).
 Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
-```
+```csharp
 if (response.IsError) throw new Exception(response.Error);
 ```

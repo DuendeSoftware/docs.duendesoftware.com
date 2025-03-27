@@ -74,7 +74,7 @@ Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 toke
 
     the device code (required for *urn:ietf:params:oauth:grant-type:device_code* grant type)
 
-```
+```text
 POST /connect/token
 CONTENT-TYPE application/x-www-form-urlencoded
 

@@ -9,12 +9,12 @@ The UserInfo endpoint can be used to retrieve claims about a user (see [spec](ht
 The caller needs to send a valid access token.
 Depending on the granted scopes, the UserInfo endpoint will return the mapped claims (at least the *openid* scope is required).
 
-```
+```text
 GET /connect/userinfo
 Authorization: Bearer <access_token>
 ```
 
-```
+```text
 HTTP/1.1 200 OK
 Content-Type: application/json
 

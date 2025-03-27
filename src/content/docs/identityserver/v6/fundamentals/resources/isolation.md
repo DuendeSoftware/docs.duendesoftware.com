@@ -42,7 +42,7 @@ If the client would simply request a token for the *read* scope, the resulting a
 ### Machine to machine scenarios
 If the client in addition passes the *resource* parameter specifying the name of the resource where it wants to use the access token, the token engine can *down-scope* the resulting access token to the single resource, e.g.:
 
-```
+```text
 POST /token
 
 grant_type=client_credentials&
@@ -66,13 +66,13 @@ Thus resulting in an access token like this (some details omitted):
 ### Interactive applications
 The authorize endpoint supports the *resource* parameter as well, e.g.:
 
-```
+```text
 GET /authorize?client_id=client&response_type=code&scope=read&resource=urn:invoices
 ```
 
 Once the front-channel operations are done, the resulting code can be redeemed by passing the resource name on the token endpoint:
 
-```
+```text
 POST /token
 
 grant_type=authorization_code&
@@ -87,13 +87,13 @@ resource=urn:invoices
 ### Requesting access to multiple resources
 It is also possible to request access to multiple resources. This will result in multiple access tokens - one for each request resource.
 
-```
+```text
 GET /authorize?client_id=client&response_type=code&scope=read offline_access&resource=urn:invoices&resource=urn:products
 ```
 
 When you redeem the code, you need to specify for which resource you want to have an access token, e.g.:
 
-```
+```text
 POST /token
 
 grant_type=authorization_code&
@@ -107,7 +107,7 @@ resource=urn:invoices
 
 Which will return an access token for the invoices API and a refresh token. If you want to also retrieve the access token for the products API, you use the refresh token and make another roundtrip to the token endpoint.
 
-```
+```text
 POST /token
 
 grant_type=refresh_token&

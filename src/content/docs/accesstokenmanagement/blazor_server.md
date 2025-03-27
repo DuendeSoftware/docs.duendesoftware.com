@@ -25,7 +25,7 @@ The store interface is very simple. *StoreTokenAsync* adds a token to the store 
 
 Register your token store in the DI container and tell Duende.AccessTokenManagement to integrate with Blazor by calling *AddBlazorServerAccessTokenManagement<TTokenStore>*:
 
-```
+```cs
 builder.Services.AddOpenIdConnectAccessTokenManagement()
     .AddBlazorServerAccessTokenManagement<ServerSideTokenStore>();
 ```
@@ -66,7 +66,7 @@ Once registered and initialized, Duende.AccessTokenManagement will keep the stor
 
 If you've registered your token store with *AddBlazorServerAccessTokenManagement*, Duende.AccessTokenManagement will register the services necessary to attach tokens to outgoing HTTP requests automatically, using the same API as a non-blazor application. You inject an HTTP client factory and resolve named HTTP clients where ever you need to make HTTP requests, and you register the HTTP client's that use access tokens in the DI system with our extension method:
 
-```
+```cs
 builder.Services.AddUserAccessTokenHttpClient("demoApiClient", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");

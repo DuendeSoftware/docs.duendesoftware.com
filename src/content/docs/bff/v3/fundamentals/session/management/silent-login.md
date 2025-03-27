@@ -18,19 +18,19 @@ If the result is that a session has been established, then the application logic
 To trigger the silent login, the application code must have an *iframe* and then set its *src* to the silent login endpoint.
 For example in your HTML:
 
-```
+```html
 <iframe id="bff-silent-login"></iframe>
 ```
 
 And then in JavaScript:
 
-```
+```javascript
 document.querySelector('#bff-silent-login').src = '/bff/silent-login';
 ```
 
 To receive the result, the application should handle the *message* event in the browser and look for the *data.isLoggedIn* property on the event object:
 
-```
+```javascript
 window.addEventListener("message", e => {
   if (e.data && e.data.source === 'bff-silent-login' && e.data.isLoggedIn) {
       // we now have a user logged in silently, so reload this window

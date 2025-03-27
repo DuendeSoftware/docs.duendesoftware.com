@@ -10,7 +10,7 @@ implementing the
 [IBrowser](https://github.com/DuendeArchive/IdentityModel.OidcClient/blob/main/src/OidcClient/Browser/IBrowser.cs)
 interface:
 
-```
+```cs
 var options = new OidcClientOptions
 {
     Authority = "https://demo.duendesoftware.com",
@@ -26,6 +26,6 @@ var client = new OidcClient(options);
 Once that is done, authentication and token requests become one line of
 code:
 
-```
+```cs
 var result = await client.LoginAsync();
 ```

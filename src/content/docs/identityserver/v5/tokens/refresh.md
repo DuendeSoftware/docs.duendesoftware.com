@@ -17,7 +17,7 @@ You can request a refresh token by adding a scope called *offline_access* to the
 To get a new access token, you send the refresh token to the token endpoint.
 This will result in a new token response containing a new access token and its expiration and potentially also a new refresh token depending on the client configuration (see above).
 
-```
+```text
 POST /connect/token
 
     client_id=client&

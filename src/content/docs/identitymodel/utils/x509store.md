@@ -13,7 +13,7 @@ The *X509* class is a simplified API to load certificates from the
 store. The following code loads a certificate by name from the personal
 machine store:
 
-```
+```csharp
 var cert = X509
              .LocalMachine
              .My

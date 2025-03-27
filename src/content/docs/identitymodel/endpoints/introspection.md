@@ -11,7 +11,7 @@ extension method for *HttpClient*.
 
 The following code sends a reference token to an introspection endpoint:
 
-```
+```csharp
 var client = new HttpClient();
 
 var response = await client.IntrospectTokenAsync(new TokenIntrospectionRequest
@@ -32,7 +32,7 @@ raw response as well as to a parsed JSON document (via the *Raw* and
 Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
-```
+```csharp
 if (response.IsError) throw new Exception(response.Error);
 
 var isActive = response.IsActive;

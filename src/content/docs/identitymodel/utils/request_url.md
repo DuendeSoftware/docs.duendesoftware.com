@@ -7,7 +7,7 @@ sidebar:
 
 The *RequestUrl* class is a helper for creating URLs with query string parameters, e.g.:
 
-```
+```csharp
 var ru = new RequestUrl("https://server/endpoint");
 
 // produces https://server/endpoint?foo=foo&bar=bar
@@ -83,7 +83,7 @@ public static string CreateAuthorizeUrl(this RequestUrl request,
 
 Example:
 
-```
+```csharp
 var ru = new RequestUrl("https://demo.duendesoftware.com/connect/authorize");
 
 var url = ru.CreateAuthorizeUrl(
@@ -104,7 +104,7 @@ as keys/values.
 The *CreateEndSessionUrl* extensions methods supports the most common
 parameters:
 
-```
+```csharp
 /// <summary>
 /// Creates a end_session URL.
 /// </summary>

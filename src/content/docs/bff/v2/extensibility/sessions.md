@@ -11,7 +11,7 @@ If using the server-side sessions feature, you will need to have a store for the
 An Entity Framework Core based implementation of this store is provided. 
 If you wish to use some other type of store, then you can implement the *IUserSessionStore* interface:
 
-```
+```cs
 /// <summary>
 /// User session store
 /// </summary>

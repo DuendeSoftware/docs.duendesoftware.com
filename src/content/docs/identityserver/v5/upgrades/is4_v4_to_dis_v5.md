@@ -11,13 +11,13 @@ This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende Identi
 In your IdentityServer host project, update the IdentityServer NuGet being used from IdentityServer4 to Duende IdentityServer. 
 For example in your project file:
 
-```
+```xml
 <PackageReference Include="IdentityServer4" Version="4.1.1" />
 ```
 
 would change to the latest version of Duende IdentityServer:
 
-```
+```xml
 <PackageReference Include="Duende.IdentityServer" Version="5.2.0" />
 ```
 
@@ -27,14 +27,14 @@ If you're using any of the other IdentityServer4 packages, such as *IdentityServ
 
 Anywhere *IdentityServer4* was used as a namespace, replace it with *Duende.IdentityServer*. For example:
 
-```
+```csharp
 using IdentityServer4;
 using IdentityServer4.Models;
 ```
 
 would change to:
 
-```
+```charp
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 ```
@@ -55,7 +55,7 @@ This includes:
 If you are using the *Duende.IdentityServer.EntityFramework* package as the implementation for the database and you're using EntityFramework Core migrations as the mechanism for managing those schema changes over time, the commands below will update those migrations with the new changes.
 Note that you might need to adjust based on your specific organization of the migration files.
 
-```
+```bash
 dotnet ef migrations add UpdateToDuende_v5 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
 
 dotnet ef migrations add UpdateToDuende_v5 -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
@@ -63,9 +63,8 @@ dotnet ef migrations add UpdateToDuende_v5 -c ConfigurationDbContext -o Data/Mig
 
 Then to apply those changes to your database:
 
-```
+```bash
 dotnet ef database update -c PersistedGrantDbContext
-
 dotnet ef database update -c ConfigurationDbContext
 ```
 

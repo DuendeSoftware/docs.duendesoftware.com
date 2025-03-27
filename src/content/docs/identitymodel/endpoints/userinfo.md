@@ -11,7 +11,7 @@ endpoint is provided as an extension method for *HttpClient*.
 
 The following code sends an access token to the UserInfo endpoint:
 
-```
+```csharp
 var client = new HttpClient();
 
 var response = await client.GetUserInfoAsync(new UserInfoRequest
@@ -29,7 +29,7 @@ properties).
 Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
-```
+```csharp
 if (response.IsError) throw new Exception(response.Error);
 
 var claims = response.Claims;

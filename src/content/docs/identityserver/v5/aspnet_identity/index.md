@@ -12,7 +12,7 @@ To use this library, ensure that you have the NuGet package for the ASP.NET Iden
 It is called *Duende.IdentityServer.AspNetIdentity*.
 You can install it with:
 
-```
+```bash
 dotnet add package Duende.IdentityServer.AspNetIdentity
 ```
 
@@ -20,15 +20,17 @@ Next, configure ASP.NET Identity normally in your IdentityServer host with the s
 
 Then in your *Startup.cs*, use the *AddAspNetIdentity* extension method after the call to *AddIdentityServer*:
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
 
-        services.AddIdentityServer()
-            .AddAspNetIdentity<ApplicationUser>();
-    }
+    services.AddIdentityServer()
+        .AddAspNetIdentity<ApplicationUser>();
+}
+```
 
 *AddAspNetIdentity* requires as a generic parameter the class that models your user for ASP.NET Identity (and the same one passed to *AddIdentity* to configure ASP.NET Identity).
 This configures IdentityServer to use the ASP.NET Identity implementations of [IUserClaimsPrincipalFactory](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.iuserclaimsprincipalfactory-1) to convert the user data into claims, *IResourceOwnerPasswordValidator* to support the [password grant type](/identityserver/v5/tokens/password_grant), and *IProfileService* which uses the *IUserClaimsPrincipalFactory* to add [claims](/identityserver/v5/fundamentals/claims) to tokens.

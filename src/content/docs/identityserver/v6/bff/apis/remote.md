@@ -57,7 +57,7 @@ This is a good first layer of defense, but makes the assumption that you can tru
 
 For this reason, remote APIs automatically require an additional custom header on API endpoints. For example:
 
-```
+```text
 GET /endpoint
 
 x-csrf: 1

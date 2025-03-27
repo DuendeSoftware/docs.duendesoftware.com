@@ -118,7 +118,7 @@ IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize r
 
     URL of a pre-packaged JWT containing request parameters
 
-```
+```text
 GET /connect/authorize?
     client_id=client1&
     scope=openid email api1&

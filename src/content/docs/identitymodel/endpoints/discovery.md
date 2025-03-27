@@ -17,7 +17,7 @@ accessing the contents of the document.
 
 Example:
 
-```
+```csharp
 var client = new HttpClient();
 
 var disco = await client.GetDiscoveryDocumentAsync("https://demo.duendesoftware.com");
@@ -26,7 +26,7 @@ if (disco.IsError) throw new Exception(disco.Error);
 
 Standard elements can be accessed by using properties:
 
-```
+```csharp
 var tokenEndpoint = disco.TokenEndpoint;
 var keys = disco.KeySet.Keys;
 ```
@@ -34,7 +34,7 @@ var keys = disco.KeySet.Keys;
 Custom elements (or elements not covered by the standard properties) can
 be accessed like this:
 
-```
+```csharp
 // returns string or null
 var stringValue = disco.TryGetString("some_string_element");
 
@@ -63,7 +63,7 @@ Policy violation errors will set the `ErrorType` property on the
 All of the standard validation rules can be modified using the
 `DiscoveryPolicy` class, e.g. disabling the issuer name check:
 
-```
+```csharp
 var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
 {
     Address = "https://demo.duendesoftware.com",
@@ -77,7 +77,7 @@ var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
 When the URIs in the discovery document are on a different base address than the issuer URI, you may encounter the error *Endpoint is on a different host than authority*.
 For such scenario, additional endpoint base addresses can be configured:
 
-```
+```csharp
 var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
 {
     Address = "https://demo.duendesoftware.com",
@@ -92,7 +92,7 @@ You can also customize validation strategy based on the authority with
 your own implementation of `IAuthorityValidationStrategy`. By default,
 comparison uses ordinal string comparison. To switch to `Uri` comparison:
 
-```
+```csharp
 var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
 {
     Address = "https://demo.duendesoftware.com",
@@ -115,13 +115,13 @@ The `DiscoveryCache` class can help you with that.
 The following code will set-up the cache, retrieve the document the
 first time it is needed, and then cache it for 24 hours:
 
-```
+```csharp
 var cache = new DiscoveryCache("https://demo.duendesoftware.com");
 ```
 
 You can then access the document like this:
 
-```
+```csharp
 var disco = await cache.GetAsync();
 if (disco.IsError) throw new Exception(disco.Error);
 ```
@@ -141,7 +141,7 @@ return an `HttpClient` when needed.
 The following code will setup the discovery cache in DI and will use the
 `HttpClientFactory` to create clients:
 
-```
+```csharp
 services.AddSingleton<IDiscoveryCache>(r =>
 {
     var factory = r.GetRequiredService<IHttpClientFactory>();

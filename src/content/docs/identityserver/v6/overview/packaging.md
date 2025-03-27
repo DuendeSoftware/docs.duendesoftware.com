@@ -26,7 +26,7 @@ Contains templates for the dotnet CLI.
 
 You can install the templates using the following command:
 
-```
+```bash
 dotnet new -i Duende.IdentityServer.Templates
 ```
 

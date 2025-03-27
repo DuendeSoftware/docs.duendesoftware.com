@@ -78,7 +78,7 @@ Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 toke
 
     the backchannel authentication request id (required for *urn:openid:params:grant-type:ciba* grant type)
 
-```
+```text
 POST /connect/token
 CONTENT-TYPE application/x-www-form-urlencoded
 

@@ -30,8 +30,8 @@ The URL for the end session endpoint is available via discovery.
     This is typically used by clients to roundtrip state across the redirect.
 
 
-```
-    GET /connect/endsession?id_token_hint=...&post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A7017%2Findex.html
+```text
+GET /connect/endsession?id_token_hint=...&post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A7017%2Findex.html
 ```
 
 ## .NET client library

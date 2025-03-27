@@ -26,13 +26,13 @@ There is a sample project for this migration exercise. It is located [here](http
 In your IdentityServer host project, update the IdentityServer NuGet being used from IdentityServer4 v3 to IdentityServer4 v4. 
 For example in your project file:
 
-```
+```xml
 <PackageReference Include="IdentityServer4" Version="3.1.4" />
 ```
 
 would change to the latest version of IdentityServer4:
 
-```
+```xml
 <PackageReference Include="IdentityServer4" Version="4.1.2" />
 ```
 
@@ -48,25 +48,25 @@ This is only needed for the configuration database, not the operational one so n
 First for the operational database, we can simply apply EF Core migrations. 
 Note that you might need to adjust based on your specific organization of the migration files.
 
-```
+```bash
 dotnet ef migrations add Grants_v4 -c PersistedGrantDbContext -o Migrations/PersistedGrantDb
 ```
 
 Then to apply those changes to your database:
 
-```
+```bash
 dotnet ef database update -c PersistedGrantDbContext
 ```
 
 Next for the configuration database, we'll also add an EF Migration with:
 
-```
+```bash
 dotnet ef migrations add Config_v4 -c ConfigurationDbContext -o Migrations/ConfigurationDb
 ```
 
 When you run this, you should see the warnings from EF Core about this migration possibly losing data:
 
-```
+```text
 Build started...
 Build succeeded.
 info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
@@ -82,16 +82,15 @@ You could devise other approaches (like simply loading the SQL script from the f
 The SQL script to include is located [here](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3/blob/main/IdentityServerMigrationSample/ConfigurationDb_v4_delta.sql).
 Copy it into your project folder and then configure it as an embedded resource in the csproj file:
 
-```
+```xml
   <ItemGroup>
     <EmbeddedResource Include="ConfigurationDb_v4_delta.sql" />
   </ItemGroup>
-
 ```
 
 Then modify the migration that was just created. Remove all of the code in the *Up* and *Down* methods are replace the *Up* with this code, which will execute the custom SQL script:
 
-```
+```csharp
 using System.IO;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -123,7 +122,7 @@ Note that given that there is no *Down* implementation, this is a one-way update
 
 And now run the migration:
 
-```
+```bash
 dotnet ef database update -c ConfigurationDbContext
 ```
 

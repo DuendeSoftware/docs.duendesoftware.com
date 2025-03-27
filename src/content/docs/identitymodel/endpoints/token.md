@@ -22,7 +22,7 @@ grant type, but it also allows setting arbitrary other parameters via a
 dictionary. All other extensions methods ultimately call this method
 internally:
 
-```
+```csharp
 var client = new HttpClient();
 
 var response = await client.RequestTokenAsync(new TokenRequest
@@ -49,7 +49,7 @@ JSON document (via the *Raw* and *Json* properties).
 Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
-```
+```csharp
 if (response.IsError) throw new Exception(response.Error);
 
 var token = response.AccessToken;
@@ -62,7 +62,7 @@ Requesting a token using the *client_credentials* Grant Type
 The *RequestClientCredentialsToken* extension method has convenience
 properties for the *client_credentials* grant type:
 
-```
+```csharp
 var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
 {
     Address = "https://demo.duendesoftware.com/connect/token",
@@ -79,7 +79,7 @@ Requesting a token using the *password* Grant Type
 The *RequestPasswordToken* extension method has convenience properties
 for the *password* grant type:
 
-```
+```csharp
 var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
 {
     Address = "https://demo.duendesoftware.com/connect/token",
@@ -99,7 +99,7 @@ Requesting a token using the *authorization_code* Grant Type
 The *RequestAuthorizationCodeToken* extension method has convenience
 properties for the *authorization_code* grant type and PKCE:
 
-```
+```csharp
 var response = await client.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
 {
     Address = IdentityServerPipeline.TokenEndpoint,
@@ -121,7 +121,7 @@ Requesting a token using the *refresh_token* Grant Type
 The *RequestRefreshToken* extension method has convenience properties
 for the *refresh_token* grant type:
 
-```
+```csharp
 var response = await _client.RequestRefreshTokenAsync(new RefreshTokenRequest
 {
     Address = TokenEndpoint,
@@ -139,7 +139,7 @@ Requesting a Device Token
 The *RequestDeviceToken* extension method has convenience properties for
 the *urn:ietf:params:oauth:grant-type:device_code* grant type:
 
-```
+```csharp
 var response = await client.RequestDeviceTokenAsync(new DeviceTokenRequest
 {
     Address = disco.TokenEndpoint,

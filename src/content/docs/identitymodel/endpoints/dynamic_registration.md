@@ -11,7 +11,7 @@ is provided as an extension method for *HttpClient*.
 
 The following code sends a registration request:
 
-```
+```csharp
 var client = new HttpClient();
 
 var response = await client.RegisterClientAsync(new DynamicClientRegistrationRequest
@@ -40,7 +40,7 @@ properties).
 Before using the response, you should always check the *IsError*
 property to make sure the request was successful:
 
-```
+```csharp
 if (response.IsError) throw new Exception(response.Error);
 
 var clientId = response.ClientId;

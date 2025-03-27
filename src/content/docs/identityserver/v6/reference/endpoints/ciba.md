@@ -71,7 +71,7 @@ To validate these implementation specific values and use them to identity the us
     instead of providing all parameters as individual parameters, you can provide all of them as a JWT
 
 
-```
+```text
 POST /connect/ciba
 
     client_id=client1&
@@ -82,7 +82,7 @@ POST /connect/ciba
 
 And a successful response will look something like:
 
-```
+```text
 HTTP/1.1 200 OK
 Content-Type: application/json
 Cache-Control: no-store

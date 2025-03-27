@@ -15,17 +15,20 @@ needs.
 To host the configuration API separately from IdentityServer:
 
 #### Create a new empty web application
-```
+
+```bash
 dotnet new web -n Configuration
 ```
 
 #### Add the Duende.IdentityServer.Configuration package
-```
+
+```bash
 cd Configuration
 dotnet add package Duende.IdentityServer.Configuration
 ```
 
 #### Configure Services
+
 ```cs
 builder.Services.AddIdentityServerConfiguration(opt =>
     opt.LicenseKey = "<license>";
@@ -45,7 +48,7 @@ Entity Framework based implementation, or implement the interface yourself. See
 more details. If you wish to use the built-in implementation, install its NuGet
 package and add it to DI.
 
-```
+```bash
 dotnet add package Duende.IdentityServer.Configuration.EntityFramework
 ```
 
@@ -72,7 +75,7 @@ requirements for your DCR endpoint. See [Authorization](authorization) for more 
 To host the configuration API in the same host as IdentityServer:
 
 #### Add the Duende.IdentityServer.Configuration package
-```
+```bash
 dotnet add package Duende.IdentityServer.Configuration
 ```
 

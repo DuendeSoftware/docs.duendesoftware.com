@@ -15,7 +15,7 @@ First you need to add the *GrantType.Password* to the *AllowedGrantTypes* list o
 
 Then your client application would provide some means for the end-user to enter their credentials and post them to the token endpoint:
 
-```
+```text
 POST /token HTTP/1.1
 Host: demo.duendesoftware.com
 Content-Type: application/x-www-form-urlencoded

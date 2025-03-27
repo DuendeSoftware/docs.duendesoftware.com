@@ -10,7 +10,7 @@ It can be used to validate reference tokens, JWTs (if the consumer does not have
 
 The introspection endpoint requires authentication - since the client of an introspection endpoint is an API, you configure the secret on the *ApiResource*.
 
-```
+```text
 POST /connect/introspect
 Authorization: Basic xxxyyy
 
@@ -19,7 +19,7 @@ token=<token>
 
 A successful response will return a status code of 200, the token claims, the token type and a flag indicating the token is active:
 
-```
+```json
 {
     "iss": "https://localhost:5001",
     "nbf": 1729599599,
@@ -35,7 +35,7 @@ A successful response will return a status code of 200, the token claims, the to
 
 Unknown or expired tokens will be marked as inactive:
 
-```
+```json
 {
     "active": false,
 }

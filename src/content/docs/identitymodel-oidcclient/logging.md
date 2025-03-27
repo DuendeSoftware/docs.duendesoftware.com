@@ -10,7 +10,7 @@ OidcClient logs errors, warnings, and diagnostic information using
 logging provider to store your logs however you like. For example, you could configure
 [Serilog](https://github.com/serilog/serilog-extensions-hosting) like this:
 
-```
+```csharp
 var serilog = new LoggerConfiguration()
     .MinimumLevel.Verbose()
     .Enrich.FromLogContext()

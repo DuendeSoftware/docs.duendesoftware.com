@@ -32,7 +32,7 @@ In the above example it is clear that there are different versions active.
 ## Fixing
 To fix this, add explicit package references to upgrade the packages that are of lower version to the most recent version used.
 
-```
+```xml
 <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="7.4.0" />
 <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.4.0" />
 <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />

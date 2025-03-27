@@ -22,7 +22,7 @@ sense that comparing strings of equal length always performs the same amount of 
 
 Usage example:
 
-```
+```csharp
 var isEqual = TimeConstantComparer.IsEqual(key1, key2);
 ```
 
