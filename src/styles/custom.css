@@ -2,3 +2,13 @@
     --sl-content-width: 50rem;
     --sl-sidebar-width: 22rem;
 }
+
+.hero > img.light\:sl-hidden {
+    filter: drop-shadow(0 0 30px rgba(179, 4, 251, 0.8)) drop-shadow(0 0 100px rgb(200, 124, 243));
+    --webkit-mask-image: url('../assets/duende-logo-dark.svg');
+}
+
+.hero > img.dark\:sl-hidden {
+    filter: drop-shadow(0 0 10px rgba(246, 244, 244, 0.8)) drop-shadow(0 0 50px rgb(159, 0, 255));
+    --webkit-mask-image: url('../assets/duende-logo-dark.svg');
+}
