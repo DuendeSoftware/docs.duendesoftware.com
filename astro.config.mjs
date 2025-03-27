@@ -59,8 +59,8 @@ export default defineConfig({
 			],
 			title: 'Duende Software Docs',
 			logo: {
-				light: './src/assets/duende-logo.png',
-				dark: './src/assets/duende-logo-dark.png',
+				light: './src/assets/duende-logo.svg',
+				dark: './src/assets/duende-logo-dark.svg',
 				replacesTitle: true,
 			},
 			lastUpdated: true,
