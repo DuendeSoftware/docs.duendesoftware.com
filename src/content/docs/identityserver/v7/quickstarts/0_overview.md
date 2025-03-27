@@ -20,9 +20,14 @@ Every quickstart has a reference solution - you can find the code in the [sample
 The first thing you should do is install our templates:
 
 ```bash
-dotnet new install Duende.IdentityServer.Templates
+dotnet new install Duende.Templates
 ```
 
 They will be used as a starting point for the various tutorials.
+
+:::note
+You may have a previous version of Duende templates (`Duende.IdentityServer.Templates`) installed on your machine.
+Please uninstall the template package and install the latest version.
+:::
 
 <iframe width="853" height="505" src="https://www.youtube.com/embed/cxYmODQHErM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
