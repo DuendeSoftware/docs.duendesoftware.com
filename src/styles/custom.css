@@ -23,3 +23,8 @@
         opacity: 1;
     }
 }
+
+iframe {
+    aspect-ratio: 16/9;
+    width: 100%;
+}
