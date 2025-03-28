@@ -1,52 +1,25 @@
-/* Dark mode colors. */
-:root {
-    --sl-color-accent-low: #271d3a;
-    --sl-color-accent: #774fb9;
-    --sl-color-accent-high: #ccc2e8;
-    --sl-color-white: #ffffff;
-    --sl-color-gray-1: #eceef2;
-    --sl-color-gray-2: #c0c2c7;
-    --sl-color-gray-3: #888b96;
-    --sl-color-gray-4: #545861;
-    --sl-color-gray-5: #353841;
-    --sl-color-gray-6: #24272f;
-    --sl-color-black: #17181c;
-}
-/* Light mode colors. */
-:root[data-theme='light'] {
-    --sl-color-accent-low: #dad2ef;
-    --sl-color-accent: #7951bb;
-    --sl-color-accent-high: #382756;
-    --sl-color-white: #17181c;
-    --sl-color-gray-1: #24272f;
-    --sl-color-gray-2: #353841;
-    --sl-color-gray-3: #545861;
-    --sl-color-gray-4: #888b96;
-    --sl-color-gray-5: #c0c2c7;
-    --sl-color-gray-6: #eceef2;
-    --sl-color-gray-7: #f5f6f8;
-    --sl-color-black: #ffffff;
-}
+/* Style the Markdown heading links. */
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) > a {
+    color: var(--sl-color-white);
+    text-decoration: none;
+    position: relative;
+    padding-right: 16px;
+    display: block;
 
-.hero > img.light\:sl-hidden {
-    animation: pulsateDropShadow 2s infinite alternate;
-    --webkit-mask-image: url('../assets/duende-logo-dark.svg');
-    --color-1: rgba(179, 4, 251, 0.8);
-    --color-2: rgb(200, 124, 243);
-}
-
-.hero > img.dark\:sl-hidden {
-    animation: pulsateDropShadow 2s infinite alternate;
-    --webkit-mask-image: url('../assets/duende-logo-dark.svg');
-    --color-1: rgb(200, 124, 243);
-    --color-2: rgb(159, 0, 255);
-}
-
-@keyframes pulsateDropShadow {
-    0% {
-        filter: drop-shadow(0 0 30px var(--color-1)) drop-shadow(0 0 40px var(--color-2));
+    &::after {
+        content: "";
+        background-image: url("/src/assets/chain.svg");
+        background-size: 1em 1em;
+        background-repeat: no-repeat;
+        position: absolute;
+        right: 0;
+        width: 1em;
+        height: 1em;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
     }
-    100% {
-        filter: drop-shadow(0 0 50px var(--color-1)) drop-shadow(0 0 150px var(--color-2));
+
+    &:hover::after {
+        opacity: 1;
     }
 }
