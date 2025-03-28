@@ -34,7 +34,7 @@ using IdentityServer4.Models;
 
 would change to:
 
-```charp
+```csharp
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 ```
