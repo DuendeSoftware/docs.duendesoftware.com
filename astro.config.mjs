@@ -3,12 +3,14 @@ import {defineConfig} from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidator from 'starlight-links-validator';
 import starlightClientMermaid from '@pasqal-io/starlight-client-mermaid';
-import starlightAutoSidebar from 'starlight-auto-sidebar'
+import starlightAutoSidebar from 'starlight-auto-sidebar';
 import starlightGiscus from "starlight-giscus";
-import redirectFrom from 'astro-redirect-from'
+import redirectFrom from 'astro-redirect-from';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+	site: "https://docs.duendesoftware.com",
 	trailingSlash: 'ignore',
 	redirects: {
 		"/identityserver/v7/bff": "/bff/v3/",
@@ -47,6 +49,7 @@ export default defineConfig({
 		"/identityserver/v7/bff/session/management/diagnostics": "/bff/v3/fundamentals/session/management/diagnostics",
 	},
 	integrations: [
+		sitemap(),
 		redirectFrom({
 			contentDir: './src/content/docs'
 		}),
