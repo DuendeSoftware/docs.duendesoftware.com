@@ -37,8 +37,13 @@ the quickstarts. To install the templates open a console window and type the
 following command:
 
 ```console
-dotnet new install Duende.IdentityServer.Templates
+dotnet new install Duende.Templates
 ```
+
+{{% notice note %}}
+You may have a previous version of Duende templates (*Duende.IdentityServer.Templates*) installed on your machine.
+Please uninstall the template package and install the latest version.
+{{% /notice %}}
 
 ## Create the Solution and IdentityServer Project
 
