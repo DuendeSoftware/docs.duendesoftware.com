@@ -29,11 +29,24 @@
 }
 
 .hero > img.light\:sl-hidden {
-    filter: drop-shadow(0 0 30px rgba(179, 4, 251, 0.8)) drop-shadow(0 0 100px rgb(200, 124, 243));
+    animation: pulsateDropShadow 2s infinite alternate;
     --webkit-mask-image: url('../assets/duende-logo-dark.svg');
+    --color-1: rgba(179, 4, 251, 0.8);
+    --color-2: rgb(200, 124, 243);
 }
 
 .hero > img.dark\:sl-hidden {
-    filter: drop-shadow(0 0 10px rgba(246, 244, 244, 0.8)) drop-shadow(0 0 50px rgb(159, 0, 255));
+    animation: pulsateDropShadow 2s infinite alternate;
     --webkit-mask-image: url('../assets/duende-logo-dark.svg');
+    --color-1: rgb(200, 124, 243);
+    --color-2: rgb(159, 0, 255);
+}
+
+@keyframes pulsateDropShadow {
+    0% {
+        filter: drop-shadow(0 0 30px var(--color-1)) drop-shadow(0 0 40px var(--color-2));
+    }
+    100% {
+        filter: drop-shadow(0 0 50px var(--color-1)) drop-shadow(0 0 150px var(--color-2));
+    }
 }
