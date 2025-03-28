@@ -8,6 +8,7 @@ import starlightGiscus from "starlight-giscus";
 import redirectFrom from 'astro-redirect-from';
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import starlightHeadingBadges from "starlight-heading-badges";
 
 // https://astro.build/config
 export default defineConfig({
@@ -55,6 +56,7 @@ export default defineConfig({
 				'./src/styles/custom.css',
 			],
 			plugins: [
+				starlightHeadingBadges(),
 				starlightAutoSidebar(),
 				starlightGiscus({
 					repo: 'duendesoftware/community',
@@ -126,7 +128,7 @@ export default defineConfig({
 		}),
 		redirectFrom({
 			contentDir: './src/content/docs'
-		}),
+		})
 	],
 	markdown: {
 		rehypePlugins: [
