@@ -1,3 +1,35 @@
+/* Dark mode colors. */
+:root {
+    --sl-color-accent-low: #351041;
+    --sl-color-accent: #a000c8;
+    --sl-color-accent-high: #e1b6f2;
+    --sl-color-white: #ffffff;
+    --sl-color-gray-1: #eceef2;
+    --sl-color-gray-2: #c0c2c7;
+    --sl-color-gray-3: #888b96;
+    --sl-color-gray-4: #545861;
+    --sl-color-gray-5: #353841;
+    --sl-color-gray-6: #24272f;
+    --sl-color-black: #17181c;
+    --sl-content-width: 50rem;
+    --sl-sidebar-width: 22rem;
+}
+/* Light mode colors. */
+:root[data-theme='light'] {
+    --sl-color-accent-low: #eac9f7;
+    --sl-color-accent: #a200cb;
+    --sl-color-accent-high: #4d0b60;
+    --sl-color-white: #17181c;
+    --sl-color-gray-1: #24272f;
+    --sl-color-gray-2: #353841;
+    --sl-color-gray-3: #545861;
+    --sl-color-gray-4: #888b96;
+    --sl-color-gray-5: #c0c2c7;
+    --sl-color-gray-6: #eceef2;
+    --sl-color-gray-7: #f5f6f8;
+    --sl-color-black: #ffffff;
+}
+
 /* Style the Markdown heading links. */
 .sl-markdown-content :is(h1, h2, h3, h4, h5, h6) > a {
     color: var(--sl-color-white);

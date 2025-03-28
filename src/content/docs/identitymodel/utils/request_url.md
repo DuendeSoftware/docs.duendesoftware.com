@@ -37,7 +37,7 @@ string parameters.
 The *CreateAuthorizeUrl* extension method creates URLs for the authorize
 endpoint - it has support the most common parameters:
 
-```
+```csharp
 /// <summary>
 /// Creates an authorize URL.
 /// </summary>
