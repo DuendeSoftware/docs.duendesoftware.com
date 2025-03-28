@@ -6,7 +6,6 @@ import starlightClientMermaid from '@pasqal-io/starlight-client-mermaid';
 import starlightAutoSidebar from 'starlight-auto-sidebar';
 import starlightGiscus from "starlight-giscus";
 import redirectFrom from 'astro-redirect-from';
-import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
@@ -49,10 +48,6 @@ export default defineConfig({
 		"/identityserver/v7/bff/session/management/diagnostics": "/bff/v3/fundamentals/session/management/diagnostics",
 	},
 	integrations: [
-		sitemap(),
-		redirectFrom({
-			contentDir: './src/content/docs'
-		}),
 		starlight({
 			customCss: [
 				'./src/styles/custom.css',
@@ -126,6 +121,9 @@ export default defineConfig({
 					collapsed: true
 				}
 			]
+		}),
+		redirectFrom({
+			contentDir: './src/content/docs'
 		}),
 	],
 });

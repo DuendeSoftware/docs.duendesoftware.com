@@ -22,7 +22,6 @@
     "postinstall": "sed -i '' 's/validate: (input) => svgReg.test(toUTF8String(input, 0, 1e3))/validate: (input) => svgReg.test(toUTF8String(input))/' node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.3.0",
     "@astrojs/starlight": "^0.32.5",
     "@pasqal-io/starlight-client-mermaid": "^0.1.0",
     "astro": "^5.5.5",
