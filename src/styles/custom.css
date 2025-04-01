@@ -37,19 +37,22 @@
     text-decoration: none;
     position: relative;
     display: block;
+    padding-right: 1em;
 
     &::after {
         content: "";
         color: var(--sl-color-white);
         background-image: url("/src/assets/chain-dark.svg");
-        background-size: 1em 1em;
+        background-size: .5em .5em;
         background-repeat: no-repeat;
         position: absolute;
         right: 0;
-        width: 1em;
+        top: 33%;
+        width: .75em;
         height: 1em;
-        opacity: 0.5;
+        opacity: 0.3;
         transition: opacity 0.2s ease;
+        vertical-align: text-bottom;
     }
 
     &:hover::after {
