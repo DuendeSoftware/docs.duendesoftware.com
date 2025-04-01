@@ -1,6 +1,7 @@
 ---
 title: "Client Notifications"
-weight: 50
+sidebar:
+  order: 50
 ---
 
 

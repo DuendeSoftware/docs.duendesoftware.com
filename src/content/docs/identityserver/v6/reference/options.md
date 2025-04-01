@@ -1,6 +1,6 @@
 ---
 title: "IdentityServer Options"
-weight: 10
+order: 10
 ---
 
 #### Duende.IdentityServer.Configuration.IdentityServerOptions

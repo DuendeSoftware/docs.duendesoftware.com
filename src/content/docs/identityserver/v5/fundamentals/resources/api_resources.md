@@ -1,7 +1,7 @@
 ---
 title: "API Resources"
 date: 2020-09-10T08:22:12+02:00
-weight: 30
+order: 30
 ---
 
 When the API/resource surface gets larger, a flat list of scopes might become hard to  manage.

@@ -1,7 +1,7 @@
 ---
 title: "Response Generation"
 description: "DCR Reference"
-weight: 40
+order: 40
 ---
 
 ## IDynamicClientRegistrationResponseGenerator

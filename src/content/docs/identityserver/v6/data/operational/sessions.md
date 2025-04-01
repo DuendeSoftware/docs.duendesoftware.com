@@ -1,7 +1,7 @@
 ---
 title: "Server-Side Sessions"
 description: "Data Store"
-weight: 50
+order: 50
 ---
 
 (added in 6.1)

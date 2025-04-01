@@ -1,6 +1,6 @@
 ---
 title: "Ending the Session"
-weight: 20
+order: 20
 ---
 ## Removing the Authentication Cookie
 To remove the authentication cookie, simply use the ASP.NET Core *SignOutAsync* extension method on the *HttpContext*.

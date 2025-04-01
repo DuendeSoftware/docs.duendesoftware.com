@@ -1,7 +1,7 @@
 ---
 title: "Revocation Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 6
+order: 6
 ---
 
 This endpoint allows revoking access tokens (reference tokens only) and refresh token. 

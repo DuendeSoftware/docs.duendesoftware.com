@@ -1,6 +1,6 @@
 ---
 title: "Dynamic Client Registration"
-weight: 95
+order: 95
 chapter: true
 ---
 

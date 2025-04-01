@@ -1,6 +1,7 @@
 ---
 title: "Persisted Grant Store"
-weight: 42
+sidebar:
+  order: 42
 ---
 
 The `IPersistedGrantStore` interface is the contract for a service that stores,
@@ -8,7 +9,7 @@ retrieves, and deletes _persisted grants_. A _grant_ is a somewhat abstract
 concept that is used in various protocol flows and represents that a resource
 owner has given authorization of some kind. Grants that require server side
 state in IdentityServer are the _persisted grants_ stored by the
-`IPersistedGrantStore`. 
+`IPersistedGrantStore`.
 
 The `IPersistedGrantStore` is abstracted to allow for storage of several grant
 types, including authorization codes, refresh tokens, user consent, and
@@ -31,33 +32,34 @@ data access for your environment and usage.
 ### Duende.IdentityServer.Stores.IPersistedGrantStore
 
 #### Members
-| name                                                                        | description                                                   |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| Task StoreAsync(PersistedGrant grant);                                      | Stores a grant.                                               |
-| Task<PersistedGrant> GetAsync(string key);                                  | Retrieves a grant by its key.                                 |
-| Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter); | Retrieves all grants that fulfill the conditions of a filter. |
-| Task RemoveAsync(string key);                                               | Removes a grant by key.                                       |
-| Task RemoveAllAsync(PersistedGrantFilter filter);                           | Removes all grants that fulfill the conditions of a filter.   |
 
+| name                                                                        | description                                                   |
+|-----------------------------------------------------------------------------|---------------------------------------------------------------|
+| Task StoreAsync(PersistedGrant grant);                                      | Stores a grant.                                               |
+| Task<PersistedGrant> GetAsync(string key);                                  | Retrieves a grant by its key.                                 |
+| Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter); | Retrieves all grants that fulfill the conditions of a filter. |
+| Task RemoveAsync(string key);                                               | Removes a grant by key.                                       |
+| Task RemoveAllAsync(PersistedGrantFilter filter);                           | Removes all grants that fulfill the conditions of a filter.   |
 
 ### Duende.IdentityServer.Models.PersistedGrant
 
 #### Members
 
 | name                   | description                                                                                                                  |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| string Key             | A string that uniquely identifies the grant.                                                                                 |
-| string Type            | A string that specifies the type of grant. The possible values are constants in the `PersistedGrantTypes` class (see below). |
-| string SubjectId       | The identifier of the subject that granted authorization.                                                                    |
-| string SessionId       | The identifier of the session where the grant was made, if applicable.                                                       |
-| string ClientId        | The identifier of the client that was granted authorization.                                                                 |
-| string Description     | The description the user assigned to the device being authorized.                                                            |
-| DateTime CreationTime  | The time that the grant expires.                                                                                             |
-| DateTime? Expiration   | The time that the grant expires.                                                                                             |
-| DateTime? ConsumedTime | The time that the grant was consumed.                                                                                        |
-| string Data            | A serialized and data protected representation of the grant.                                                                 |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| string Key             | A string that uniquely identifies the grant.                                                                                 |
+| string Type            | A string that specifies the type of grant. The possible values are constants in the `PersistedGrantTypes` class (see below). |
+| string SubjectId       | The identifier of the subject that granted authorization.                                                                    |
+| string SessionId       | The identifier of the session where the grant was made, if applicable.                                                       |
+| string ClientId        | The identifier of the client that was granted authorization.                                                                 |
+| string Description     | The description the user assigned to the device being authorized.                                                            |
+| DateTime CreationTime  | The time that the grant expires.                                                                                             |
+| DateTime? Expiration   | The time that the grant expires.                                                                                             |
+| DateTime? ConsumedTime | The time that the grant was consumed.                                                                                        |
+| string Data            | A serialized and data protected representation of the grant.                                                                 |
 
 #### Key Property
+
 The `Key` property contains a SHA256 hash of the value used to refer to
 individual grants. For authorization codes, refresh tokens, and reference
 tokens, the stored `Key` hashes the actual value sent to the client as part of
@@ -98,7 +100,7 @@ encoded `Key`.
 
 The `Data` property contains information that is specific to the grant type. For
 example, consent records contain the scopes that the user consented to grant
-to the client.  
+to the client.
 
 The `Data` property also contains a copy of the `SubjectId`, `SessionId`,
 `ClientId`, `Description`, `CreationTime`, and `Expiration` properties when
@@ -106,10 +108,11 @@ those properties are applicable to the grant type. The copy in the `Data` is
 treated as authoritative by IdentityServer, in the sense that the copy is used
 when grants are retrieved from the store. The other properties exist to enable
 querying the grants and/or for informational purposes and should be treated as
-read-only. 
- 
+read-only.
+
 By default, the `Data` property is encrypted at rest using the ASP.NET Data
-Protection API. The [`DataProtectData` option](/identityserver/v7/reference/options#persistentgrants) can be used to disable this
+Protection API. The [`DataProtectData` option](/identityserver/v7/reference/options#persistentgrants) can be used to
+disable this
 encryption.
 
 #### Time Stamps
@@ -123,21 +126,24 @@ Authorization code records always include an `Expiration`. They expire after the
 [`AuthorizationCodeLifetime`](/identityserver/v7/reference/models/client#token) has
 elapsed, so they are initialized with their `Expiration` set that far into the
 future. Reference token records expire in the same way, with their `Expiration`
-controlled by the [`AccessTokenLifetime`](/identityserver/v7/reference/models/client#token). Refresh token records also always include
+controlled by the [`AccessTokenLifetime`](/identityserver/v7/reference/models/client#token). Refresh token records also
+always include
 `Expiration`, controlled by the `AbsoluteRefreshTokenLifetime` and
-`SlidingRefreshTokenLifetime` [client settings](/identityserver/v7/tokens/refresh#sliding-expiration). Custom grant records should set the
+`SlidingRefreshTokenLifetime` [client settings](/identityserver/v7/tokens/refresh#sliding-expiration). Custom grant
+records should set the
 `Expiration` to indicate that they are only usable for a length of time, or not
 set it to indicate that they can be used indefinitely.
 
 Some grants can set a `ConsumedTime` when they are used. This applies to grants
 that are intended to be used once and that need to be retained after their use
 for some purpose (for example, replay detection or to allow certain kinds of
-limited reuse). Refresh tokens can be [configured](/identityserver/v7/tokens/refresh#sliding) to have one-time use semantics. Refresh tokens
+limited reuse). Refresh tokens can be [configured](/identityserver/v7/tokens/refresh#sliding) to have one-time use
+semantics. Refresh tokens
 that are configured this way can be further configured to set a `ConsumedTime` when they are used.
 Authorization codes do not set a `ConsumedTime`. They are instead always removed
 on use. `ConsumedTime` is not applicable to reference tokens and consent, so
 they both never set it. Custom grant records should set the `ConsumedTime` if
-one-time use semantics are appropriate for the grant. 
+one-time use semantics are appropriate for the grant.
 
 #### PersistedGrantFilter
 

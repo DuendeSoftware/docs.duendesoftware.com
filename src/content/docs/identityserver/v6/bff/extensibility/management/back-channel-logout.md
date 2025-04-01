@@ -3,7 +3,7 @@ title: "BFF Back-Channel Logout Endpoint Extensibility"
 menuTitle: "Back-Channel Logout"
 linkTitle: "Back-Channel Logout"
 date: 2022-12-29T10:22:12+02:00
-weight: 60
+order: 60
 ---
 
 The back-channel logout endpoint has several extensibility points organized into two interfaces and their default implementations. The *IBackchannelLogoutService* is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic or to change how it validates incoming requests. When the back-channel logout endpoint receives a valid request, it revokes sessions using the *ISessionRevocationService*. 

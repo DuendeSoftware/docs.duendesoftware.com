@@ -1,6 +1,6 @@
 ---
 title: "External Logout Notification"
-weight: 80
+order: 80
 ---
 
 Federated sign-out is the situation where a user has used an external identity provider to log into IdentityServer, and then the user logs out of that external identity provider via a workflow unknown to IdentityServer.

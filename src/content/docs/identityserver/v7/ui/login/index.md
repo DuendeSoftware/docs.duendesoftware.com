@@ -1,7 +1,7 @@
 ---
-title: Login
+title: Getting Started
 sidebar:
-  order: 10
+  order: 1
 ---
 
 

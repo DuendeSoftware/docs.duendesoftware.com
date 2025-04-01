@@ -1,6 +1,6 @@
 ---
 title: "Remote APIs"
-weight: 20
+order: 20
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/apis/remote/"
 ---
 

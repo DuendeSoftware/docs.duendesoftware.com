@@ -1,6 +1,6 @@
 ---
 title: "Accepting Local Credentials"
-weight: 50
+order: 50
 ---
 
 The steps for implementing a local login page are:

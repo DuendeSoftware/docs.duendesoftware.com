@@ -1,6 +1,6 @@
 ---
 title: "Backchannel Authentication User Notification Service"
-weight: 90
+order: 90
 ---
 
 #### Duende.IdentityServer.Services.IBackchannelAuthenticationUserNotificationService

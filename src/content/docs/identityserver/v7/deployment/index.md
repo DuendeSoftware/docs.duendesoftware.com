@@ -2,9 +2,8 @@
 title: Deployment
 date: 2020-09-10T08:20:20+02:00
 sidebar:
-  order: 100
+  order: 1
 ---
-
 
 Because IdentityServer is made up of middleware and services that you use within an ASP.NET Core application, it can be hosted and deployed with the same diversity of technology as any other ASP.NET Core application. You have the choice about 
 - where to host your IdentityServer (on-prem or in the cloud, and if in the cloud, which one?)

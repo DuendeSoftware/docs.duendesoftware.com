@@ -1,6 +1,6 @@
 ---
 title: "Multi Factor Authentication"
-weight: 50
+order: 50
 ---
 
 Duende IdentityServer itself doesn't implement multi-factor authentication (MFA). MFA is part of the login process in the user interface which is the [responsibility of the hosting application](..). Microsoft provides some [general guidelines](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/mfa) on how to enable MFA in ASP.NET Core.

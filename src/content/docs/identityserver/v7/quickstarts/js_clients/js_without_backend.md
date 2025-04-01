@@ -1,19 +1,20 @@
 ---
 expiryDate: 2024-09-11
 title: "JavaScript applications without a backend"
-weight: 20
+sidebar:
+  order: 20
 ---
 
 :::note
 
 We recommend you do the quickstarts in order. If you'd like to start here, begin
-from a copy of the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
+from a copy of
+the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](../0_overview#preparation).
 
 :::
-
 
 This quickstart will show how to build a browser-based JavaScript client
 application without a backend. This means your application has no server-side
@@ -53,8 +54,8 @@ Modify the `JavaScriptClient` project to run on `https://localhost:5003`. Its
 
 ```json
 {
-    "$schema": "http://json.schemastore.org/launchsettings.json",
-    "profiles": {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
     "JavaScriptClient": {
       "commandName": "Project",
       "dotnetRunMessages": true,
@@ -126,6 +127,7 @@ and download the JavaScript files. Once downloaded, copy them into
 `src/JavaScriptClient/wwwroot` so they can be served by your application.
 
 ### Add your HTML and JavaScript files
+
 Next, add HTML and JavaScript files to the `src/JavaScriptClient/wwwroot`
 directory. You will need two HTML files and one JavaScript file (in addition to
 the `oidc-client.js` library). Add `index.html`, `callback.html`, and `app.js`
@@ -133,8 +135,9 @@ to `wwwroot`.
 
 *`index.html`*
 
-This will be the main page in your application. 
+This will be the main page in your application.
 It contains
+
 - buttons for the user to login, logout, and call the API
 - a `\<pre>` container used to show messages to the user
 - `\<script>` tags to include your two JavaScript files
@@ -145,18 +148,18 @@ It should look like this:
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title></title>
 </head>
 <body>
-    <button id="login">Login</button>
-    <button id="api">Call API</button>
-    <button id="logout">Logout</button>
+<button id="login">Login</button>
+<button id="api">Call API</button>
+<button id="logout">Logout</button>
 
-    <pre id="results"></pre>
+<pre id="results"></pre>
 
-    <script src="oidc-client.js"></script>
-    <script src="app.js"></script>
+<script src="oidc-client.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
 ```
@@ -168,18 +171,18 @@ First, add a helper function to display messages in the `\<pre>`:
 
 ```js
 function log() {
-  document.getElementById("results").innerText = "";
+    document.getElementById("results").innerText = "";
 
-  Array.prototype.forEach.call(arguments, function (msg) {
-    if (typeof msg !== "undefined") {
-      if (msg instanceof Error) {
-        msg = "Error: " + msg.message;
-      } else if (typeof msg !== "string") {
-        msg = JSON.stringify(msg, null, 2);
-      }
-      document.getElementById("results").innerText += msg + "\r\n";
-    }
-  });
+    Array.prototype.forEach.call(arguments, function (msg) {
+        if (typeof msg !== "undefined") {
+            if (msg instanceof Error) {
+                msg = "Error: " + msg.message;
+            } else if (typeof msg !== "string") {
+                msg = JSON.stringify(msg, null, 2);
+            }
+            document.getElementById("results").innerText += msg + "\r\n";
+        }
+    });
 }
 ```
 
@@ -198,12 +201,12 @@ configure and instantiate the `UserManager`:
 
 ```js
 var config = {
-  authority: "https://localhost:5001",
-  client_id: "js",
-  redirect_uri: "https://localhost:5003/callback.html",
-  response_type: "code",
-  scope: "openid profile api1",
-  post_logout_redirect_uri: "https://localhost:5003/index.html",
+    authority: "https://localhost:5001",
+    client_id: "js",
+    redirect_uri: "https://localhost:5003/callback.html",
+    response_type: "code",
+    scope: "openid profile api1",
+    post_logout_redirect_uri: "https://localhost:5003/index.html",
 };
 var mgr = new Oidc.UserManager(config);
 ```
@@ -218,15 +221,15 @@ Add this code to detect the user's session status in the JavaScript application:
 
 ```js
 mgr.events.addUserSignedOut(function () {
-  log("User signed out of IdentityServer");
+    log("User signed out of IdentityServer");
 });
 
 mgr.getUser().then(function (user) {
-  if (user) {
-    log("User logged in", user.profile);
-  } else {
-    log("User not logged in");
-  }
+    if (user) {
+        log("User logged in", user.profile);
+    } else {
+        log("User not logged in");
+    }
 });
 ```
 
@@ -240,32 +243,33 @@ application:
 
 ```js
 function login() {
-  mgr.signinRedirect();
+    mgr.signinRedirect();
 }
 
 function api() {
-  mgr.getUser().then(function (user) {
-    var url = "https://localhost:6001/identity";
+    mgr.getUser().then(function (user) {
+        var url = "https://localhost:6001/identity";
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.onload = function () {
-      log(xhr.status, JSON.parse(xhr.responseText));
-    };
-    xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
-    xhr.send();
-  });
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.onload = function () {
+            log(xhr.status, JSON.parse(xhr.responseText));
+        };
+        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
+        xhr.send();
+    });
 }
 
 function logout() {
-  mgr.signoutRedirect();
+    mgr.signoutRedirect();
 }
 ```
 
 :::note
 
-See the [client credentials quickstart](/identityserver/v7/quickstarts/1_client_credentials) for information on how to create the
-remote API used in the code above. 
+See the [client credentials quickstart](/identityserver/v7/quickstarts/1_client_credentials) for information on how to
+create the
+remote API used in the code above.
 
 :::
 
@@ -282,18 +286,18 @@ the signin process:
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title></title>
 </head>
 <body>
-    <script src="oidc-client.js"></script>
-    <script>
-        new Oidc.UserManager({response_mode:"query"}).signinRedirectCallback().then(function() {
-            window.location = "index.html";
-        }).catch(function(e) {
-            console.error(e);
-        });
-    </script>
+<script src="oidc-client.js"></script>
+<script>
+    new Oidc.UserManager({response_mode: "query"}).signinRedirectCallback().then(function () {
+        window.location = "index.html";
+    }).catch(function (e) {
+        console.error(e);
+    });
+</script>
 </body>
 </html>
 ```
@@ -367,7 +371,7 @@ Now you should be able to run the JavaScript client application:
 
 Click the "Login" button to sign the user in. Once the user is returned back to
 the JavaScript application, you should see their profile information:
- 
+
 ![image](../images/jsclient_logged_in.png)
 
 And click the "API" button to invoke the web API:

@@ -1,6 +1,6 @@
 ---
 title: "Refresh Token Service"
-weight: 50
+order: 50
 ---
 
 #### Duende.IdentityServer.Services.IRefreshTokenService

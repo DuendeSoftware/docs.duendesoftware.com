@@ -1,7 +1,7 @@
 ---
 title: "Session Management"
 description: "Server Side Sessions"
-weight: 10
+order: 10
 ---
 
 When using server-side sessions, there is a record of the user's authentication activity at IdentityServer.

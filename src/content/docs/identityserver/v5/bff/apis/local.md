@@ -1,6 +1,6 @@
 ---
 title: "Local APIs"
-weight: 10
+order: 10
 ---
 
 A local API can be any invocable functionality that is located inside the BFF host, for example an MVC controller or just a simple endpoint.

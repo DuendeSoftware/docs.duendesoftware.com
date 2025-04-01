@@ -1,7 +1,7 @@
 ---
 title: "BFF Session Management Endpoints"
 menuTitle: "Session Management Endpoints"
-weight: 20
+order: 20
 ---
 
 Duende.BFF adds endpoints for performing typical session-management operations such as triggering login and logout and getting information about the currently logged-on user. These endpoint are meant to be called by the frontend.

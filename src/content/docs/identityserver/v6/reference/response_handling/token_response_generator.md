@@ -1,6 +1,6 @@
 ---
 title: "Token Response Generator"
-weight: 20
+order: 20
 ---
 
 ## Duende.IdentityServer.ResponseHandling.ITokenResponseGenerator

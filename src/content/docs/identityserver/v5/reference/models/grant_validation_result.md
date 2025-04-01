@@ -1,7 +1,7 @@
 ---
 title: "Grant Validation Result"
 date: 2020-09-10T08:22:12+02:00
-weight: 45
+order: 45
 ---
 
 #### Duende.IdentityServer.Validation.GrantValidationResult

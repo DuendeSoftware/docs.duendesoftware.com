@@ -1,7 +1,8 @@
 ---
 title: "Adding API Endpoints to your IdentityServer"
 date: 2020-09-10T08:22:12+02:00
-weight: 20
+sidebar:
+  order: 20
 ---
 
 It's a common scenario to add additional API endpoints to the application hosting IdentityServer.

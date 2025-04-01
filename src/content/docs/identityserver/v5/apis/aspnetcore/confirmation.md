@@ -1,7 +1,7 @@
 ---
 title: "Validating Proof-of-Possession"
 date: 2020-09-10T08:22:12+02:00
-weight: 40
+order: 40
 ---
 
 If your IdentityServer added a [*cnf* claim](/identityserver/v5/tokens/pop) to the access token, you should validate that early in the pipeline. Ideally directly after the standard token validation is done, e.g. using a middleware:

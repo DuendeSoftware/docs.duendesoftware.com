@@ -1,7 +1,7 @@
 ---
 title: "Discovery Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+order: 1
 ---
 
 The [discovery endpoint](https://openid.net/specs/openid-connect-discovery-1_0.html) can be used to retrieve metadata about your IdentityServer - it returns information like the issuer name, key material, supported scopes etc. 

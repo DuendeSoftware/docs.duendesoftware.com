@@ -1,6 +1,7 @@
 ---
 title: Installation and Hosting
-weight: 10
+sidebar:
+  order: 10
 ---
 
 The Configuration API can be installed in a separate host from IdentityServer,

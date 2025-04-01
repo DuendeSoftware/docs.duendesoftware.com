@@ -1,6 +1,6 @@
 ---
 title: "Authorize Interaction Response Generator"
-weight: 10
+order: 10
 ---
 
 #### Duende.IdentityServer.ResponseHandling.IAuthorizeInteractionResponseGenerator

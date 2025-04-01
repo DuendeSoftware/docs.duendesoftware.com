@@ -1,6 +1,6 @@
 ---
 title: "IdentityServer (v5)"
-weight: 1
+order: 1
 ---
 
 # Duende IdentityServer v5 Documentation

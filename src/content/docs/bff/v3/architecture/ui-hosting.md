@@ -1,6 +1,6 @@
 ---
 title: "UI Hosting"
-weight: 11
+order: 11
 ---
 
 ## Hosting Options for the UI

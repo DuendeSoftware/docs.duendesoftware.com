@@ -1,7 +1,8 @@
 ---
 title: "Shared Secrets"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+sidebar:
+  order: 10
 ---
 
 Shared secrets is by far the most common technique for authenticating clients.
@@ -22,8 +23,8 @@ var secret = new Secret(hash);
 ```
 
 IdentityServer's Secrets are designed to operate on either a SHA256 or SHA512
-hash of the shared secret. The shared secret is not stored in IdentityServer - 
-only the hash. The client on the hand needs access to the clear text of the 
+hash of the shared secret. The shared secret is not stored in IdentityServer -
+only the hash. The client on the hand needs access to the clear text of the
 secret. It must send the clear text to authenticate itself.
 
 IdentityServer provides the `Sha256` and `Sha512` extension methods on strings
@@ -37,6 +38,7 @@ var compromisedSecret = new Secret("just for demos, not prod!".Sha256());
 ```
 
 ## Authentication using a shared secret
+
 You can either send the client id/secret combination as part of the POST body::
 
 ```
@@ -66,7 +68,9 @@ Authorization: Basic xxxxx
 ```
 
 ## .NET client library
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code.
+
+You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
+the protocol endpoint from .NET code.
 
 ```cs
 using IdentityModel.Client;

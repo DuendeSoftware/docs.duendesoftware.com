@@ -1,12 +1,13 @@
 ---
 title: "Using EntityFramework Core for configuration and operational data"
 date: 2020-09-10T08:22:12+02:00
-weight: 6
+sidebar:
+  order: 6
 ---
 
 Welcome to Quickstart 4 for Duende IdentityServer! In this quickstart you will
 move configuration and other temporary data into a database using Entity
-Framework. 
+Framework.
 
 In addition to the written steps below a YouTube video is available:
 
@@ -15,11 +16,11 @@ In addition to the written steps below a YouTube video is available:
 :::note
 
 We recommend you do the quickstarts in order. If you'd like to start here, begin
-from a copy of the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
+from a copy of
+the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](0_overview#preparation).
-
 
 :::
 
@@ -42,7 +43,9 @@ with the EntityFramework integration already added: *dotnet new isef*.
 :::
 
 ## Configure IdentityServer
+
 #### Install Duende.IdentityServer.EntityFramework
+
 IdentityServer's Entity Framework integration is provided by the
 `Duende.IdentityServer.EntityFramework` NuGet package. Run the following
 commands from the `src/IdentityServer` directory to replace the
@@ -67,6 +70,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
 #### Configuring the Stores
+
 `Duende.IdentityServer.EntityFramework` stores configuration and operational
 data in separate stores, each with their own DbContext.
 
@@ -104,6 +108,7 @@ public static WebApplication ConfigureServices(this WebApplicationBuilder builde
     //...
 }
 ```
+
 :::note
 
 You will use Entity Framework migrations later on in this quickstart to manage
@@ -127,9 +132,10 @@ necessary to that schema.
 One approach for managing those changes is to use [EF
 migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index),
 which is what this quickstart will use. If migrations are not your preference,
-then you can manage the schema changes in any way you see fit. 
+then you can manage the schema changes in any way you see fit.
 
 #### Adding Migrations
+
 To create migrations, you will need to install the Entity Framework Core CLI
 tool on your machine and the `Microsoft.EntityFrameworkCore.Design` NuGet
 package in IdentityServer. Run the following commands from the
@@ -141,12 +147,14 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 ```
 
 #### Handle Expected Exception
+
 The Entity Framework CLI internally starts up `IdentityServer` for a short time in order
 to read your database configuration. After it has read the configuration, it shuts
 `IdentityServer` down by throwing a `HostAbortedException` exception. We expect this
 exception to be unhandled and therefore stop `IdentityServer`. Since it is expected, you
 do not need to log it as a fatal error. Update the error logging code in
 `src/IdentityServer/Program.cs` as follows:
+
 ```csharp
 // See https://github.com/dotnet/runtime/issues/60600 re StopTheHostException
 catch (Exception ex) when (ex.GetType().Name is not "StopTheHostException")
@@ -167,6 +175,7 @@ You should now see a `src/IdentityServer/Data/Migrations/IdentityServer`
 directory in your project containing the code for your newly created migrations.
 
 #### Initializing the Database
+
 Now that you have the migrations, you can write code to create the database from
 them and seed the database with the same configuration data used in the previous
 quickstarts.
@@ -244,13 +253,15 @@ like SQL Lite Studio to connect and inspect the data.
 
 ![](images/ef_database.png)
 
-:::note 
+:::note
 
 The `InitializeDatabase` method is convenient way to seed the database, but this
 approach is not ideal to leave in to execute each time the application runs.
-Once your database is populated, consider removing the call to the API. 
+Once your database is populated, consider removing the call to the API.
 
 :::
 
 ## Run the client applications
-You should now be able to run any of the existing client applications and sign-in, get tokens, and call the API -- all based upon the database configuration.
+
+You should now be able to run any of the existing client applications and sign-in, get tokens, and call the API -- all
+based upon the database configuration.

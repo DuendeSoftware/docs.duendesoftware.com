@@ -2,7 +2,7 @@
 title: "BFF Login Endpoint Extensibility"
 menuTitle: "Login"
 date: 2022-12-30 10:55:24
-weight: 10
+order: 10
 ---
 
 The BFF login endpoint has extensibility points in two interfaces. The *ILoginService* is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The *IReturnUrlValidator* ensures that the *returnUrl* parameter passed to the login endpoint is safe to use.

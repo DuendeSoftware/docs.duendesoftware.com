@@ -1,7 +1,7 @@
 ---
 title: "ASP.NET Identity Integration"
 description: "Sample"
-weight: 30
+order: 30
 ---
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/AspNetIdentity)

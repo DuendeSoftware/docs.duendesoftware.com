@@ -1,10 +1,10 @@
 ---
 title: "Overview"
 sidebar:
-    order: 1
+  order: 1
 redirect_from:
   - /v5/identityserver/
-  - /v5/identityserver/
+  - /v6/identityserver/
   - /v7/identityserver/
 ---
 

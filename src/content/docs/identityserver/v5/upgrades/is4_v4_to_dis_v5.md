@@ -1,6 +1,6 @@
 ---
 title: "IdentityServer4 v4.1 to Duende IdentityServer v5"
-weight: 100
+order: 100
 newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/upgrades/"
 ---
 

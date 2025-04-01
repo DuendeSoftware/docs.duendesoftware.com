@@ -2,7 +2,7 @@
 title: "BFF Management Endpoints Extensibility"
 menuTitle: "Management Endpoints"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 ---
 
 The behavior of each [management endpoint](/identityserver/v6/bff/session/management) is defined in a service. When you add Duende.BFF to DI, a default implementation for every management endpoint gets registered:

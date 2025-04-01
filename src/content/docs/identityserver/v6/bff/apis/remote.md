@@ -1,6 +1,6 @@
 ---
 title: "Remote APIs"
-weight: 20
+order: 20
 ---
 
 A _Remote API_ is an API that is deployed separately from the BFF host. Remote APIs use access tokens to authenticate and authorize requests, but the frontend does not possess an access token to make requests to remote APIs directly. Instead, all access to remote APIs is proxied through the BFF, which authenticates the frontend using its authentication cookie, obtains the appropriate access token, and forwards the request to the Remote API with the token attached.

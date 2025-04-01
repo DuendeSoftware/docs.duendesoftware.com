@@ -1,7 +1,8 @@
 ---
 title: "Protecting an API using Client Credentials"
 date: 2020-09-10T08:22:12+02:00
-weight: 2
+sidebar:
+  order: 2
 ---
 
 Welcome to the first quickstart for IdentityServer! To see the full list of
@@ -21,8 +22,10 @@ client ID and secret and then use the token to gain access to the API.
 ## Source Code
 
 Finished source code for each quickstart in this series is available in the
-[Samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts) repository, and a reference implementation of
-this quickstart is available [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials).
+[Samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts) repository, and a reference
+implementation of
+this quickstart is
+available [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials).
 
 ## Video
 
@@ -81,7 +84,7 @@ This will create the following files within a new `src/IdentityServer` directory
 - `Properties/launchSettings.json` file - launch profile
 - `appsettings.json` - run time settings
 - `Config.cs` - definitions for [resources](/identityserver/v7/overview/terminology#resources) and
-[clients](/identityserver/v7/overview/terminology#client) used by IdentityServer
+  [clients](/identityserver/v7/overview/terminology#client) used by IdentityServer
 - `HostingExtensions.cs` - configuration for ASP.NET pipeline and services
   Notably, the IdentityServer services are configured here and the
   IdentityServer middleware is added to the pipeline here.
@@ -139,7 +142,8 @@ public static IEnumerable<ApiScope> ApiScopes =>
     };
 ```
 
-See the full file [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/IdentityServer/Config.cs).
+See the full
+file [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/IdentityServer/Config.cs).
 
 :::note
 
@@ -333,7 +337,7 @@ file in the `src/Api/Properties` directory. Change these settings for the `https
 
 Run the API project using the `https` profile and then navigate to the identity controller at
 `https://localhost:6001/identity` in a browser. This should return a 401 status
-code, which  means your API requires a credential and is now protected by
+code, which means your API requires a credential and is now protected by
 IdentityServer.
 
 ## Create the client project
@@ -449,7 +453,8 @@ Console.WriteLine(JsonSerializer.Serialize(doc, new JsonSerializerOptions { Writ
 return 0;
 ```
 
-The completed `Program.cs` file can be found [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/Client/Program.cs).
+The completed `Program.cs` file can be
+found [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/Client/Program.cs).
 
 To test the flow, start the IdentityServer and API projects. Once they are
 running, run the Client project.

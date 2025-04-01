@@ -1,6 +1,6 @@
 ---
 title: "ASP.NET Identity Integration"
-weight: 21
+order: 21
 ---
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v5/AspNetIdentity)

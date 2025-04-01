@@ -2,7 +2,7 @@
 title: "BFF User Endpoint Extensibility"
 menuTitle: "User"
 date: 2022-12-30 10:55:24
-weight: 50
+order: 50
 ---
 
 The BFF user endpoint can be customized by implementing the *IUserService* or by extending *DefaultUserService*, its default implementation. In most cases, extending the default implementation is preferred, as it has several virtual methods that can be overridden to customize particular aspects of how the request is processed. The *DefaultUserService*'s virtual methods are *ProcessRequestAsync*, *GetUserClaims*, and *GetManagementClaims*.

@@ -1,6 +1,6 @@
 ---
 title: "Inactivity Timeout"
-weight: 30
+order: 30
 ---
 
 A common requirement in several industries is the concept of a system-wide "inactivity timeout".

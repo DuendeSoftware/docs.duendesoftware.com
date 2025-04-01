@@ -1,7 +1,7 @@
 ---
 title: "Diagnostics"
 description: "Samples"
-weight: 50
+order: 50
 ---
 
 ### OpenTelemetry support

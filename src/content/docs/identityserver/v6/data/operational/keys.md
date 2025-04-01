@@ -1,6 +1,6 @@
 ---
 title: "Keys"
-weight: 40
+order: 40
 ---
 
 The [automatic key management](/identityserver/v6/fundamentals/keys/automatic_key_management) feature in Duende IdentityServer requires a store to persist keys that are dynamically created.

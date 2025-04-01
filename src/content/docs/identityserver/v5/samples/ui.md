@@ -1,6 +1,6 @@
 ---
 title: "User Interaction"
-weight: 20
+order: 20
 ---
 
 These samples illustrate customization of the [interactive pages](/identityserver/v5/ui) used in your IdentityServer.

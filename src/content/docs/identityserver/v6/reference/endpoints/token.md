@@ -1,7 +1,7 @@
 ---
 title: "Token Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 3
+order: 3
 ---
 
 The token endpoint can be used to programmatically request tokens.

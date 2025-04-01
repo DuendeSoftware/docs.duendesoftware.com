@@ -1,6 +1,7 @@
 ---
 title: Customization
-weight: 50
+sidebar:
+  order: 50
 ---
 
 The behavior of the Configuration API can be customized through the use of

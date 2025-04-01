@@ -1,7 +1,7 @@
 ---
 title: Samples
 sidebar:
-  order: 150
+  order: 1
 ---
 
 

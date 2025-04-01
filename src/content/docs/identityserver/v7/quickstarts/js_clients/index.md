@@ -1,7 +1,7 @@
 ---
 title: Building Browser-Based Client Applications
 sidebar:
-  order: 10
+  order: 1
 ---
 
 

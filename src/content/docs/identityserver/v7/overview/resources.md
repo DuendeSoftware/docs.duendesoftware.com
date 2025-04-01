@@ -1,7 +1,8 @@
 ---
 title: "Resources"
 description: "External Links"
-weight: 80
+sidebar:
+  order: 9
 ---
 
 Below are links to relevant topics:
@@ -11,7 +12,6 @@ Below are links to relevant topics:
 * [OAuth the good Parts (video from NDC Porto 2022)](https://www.youtube.com/watch?v=Ps8ep-glDfc)
 * [Securing SPAs and Blazor Applications using the BFF (video from NDC Porto 2022)](https://www.youtube.com/watch?v=xzRhabmlc8M)
 * [Automated OAuth Access Token Management for .NET Workers and ASP.NET Web Applications](https://www.youtube.com/watch?v=zr-LAYg5BCE)
-
 
 ## ASP.NET Security
 

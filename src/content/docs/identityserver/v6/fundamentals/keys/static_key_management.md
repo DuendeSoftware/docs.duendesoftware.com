@@ -1,7 +1,7 @@
 ---
 title: "Manual Key Management"
 date: 2022-11-21T11:24:12-05:00
-weight: 50
+order: 50
 ---
 
 Instead of using [Automatic Key Management](automatic_key_management), IdentityServer's signing keys can be set

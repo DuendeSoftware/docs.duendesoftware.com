@@ -1,6 +1,7 @@
 ---
 title: "Logout Context"
-weight: 10
+sidebar:
+  order: 10
 ---
 
 To correctly perform all the steps for logout, your logout page needs contextual information about the user's session and the client that initiated logout request.

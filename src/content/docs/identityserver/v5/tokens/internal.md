@@ -1,7 +1,7 @@
 ---
 title: "Issuing internal Tokens"
 date: 2020-09-10T08:22:12+02:00
-weight: 60
+order: 60
 ---
 
 Sometimes, extensibility code running on your IdentityServer needs access tokens to call other APIs. In this case it is not necessary to use the protocol endpoints. The tokens can be issued internally.

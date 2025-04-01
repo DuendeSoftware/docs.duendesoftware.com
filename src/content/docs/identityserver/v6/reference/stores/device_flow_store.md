@@ -1,6 +1,6 @@
 ---
 title: "Device Flow Store"
-weight: 43
+order: 43
 ---
 
 #### Duende.IdentityServer.Stores.IDeviceFlowStore

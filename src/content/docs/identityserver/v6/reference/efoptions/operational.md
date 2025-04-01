@@ -1,6 +1,6 @@
 ---
 title: "Operational Options"
-weight: 10
+order: 10
 ---
 
 #### Duende.IdentityServer.EntityFramework.Options.OperationalStoreOptions

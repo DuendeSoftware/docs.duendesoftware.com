@@ -1,6 +1,6 @@
 ---
 title: "Client Store"
-weight: 36
+order: 36
 ---
 
 #### Duende.IdentityServer.Stores.IClientStore

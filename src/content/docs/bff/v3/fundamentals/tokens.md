@@ -2,7 +2,7 @@
 title: "Token Management"
 description: "BFF - Overview"
 date: 2020-09-10T08:22:12+02:00
-weight: 50
+order: 50
 ---
 
 Duende.BFF includes an automatic token management feature. This uses the access and refresh token stored in the authentication session to always provide a current access token for outgoing API calls.

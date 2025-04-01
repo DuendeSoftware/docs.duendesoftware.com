@@ -1,6 +1,6 @@
 ---
 title: "Dynamic Providers"
-weight: 65
+order: 65
 ---
 
 ## Dynamic Identity Providers

@@ -1,7 +1,7 @@
 ---
 title: "Server-side Sessions"
 description: "BFF"
-weight: 40
+order: 40
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/server_side_sessions/"
 ---
 

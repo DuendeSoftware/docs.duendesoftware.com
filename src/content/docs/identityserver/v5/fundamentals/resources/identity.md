@@ -1,7 +1,7 @@
 ---
 title: "Identity Resources"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 ---
 
 An identity resource is a named group of claims about a user that can be requested using the *scope* parameter.

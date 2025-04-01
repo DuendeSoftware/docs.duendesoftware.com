@@ -1,7 +1,7 @@
 ---
 title: "Building Blazor WASM client applications"
 date: 2020-09-10T08:22:12+02:00
-weight: 15
+order: 15
 ---
 
 Similar to JavaScript SPAs, you can build Blazor WASM applications with and without a backend. Not having a backend has all the security disadvantages we discussed already in the JavaScript quickstart. 

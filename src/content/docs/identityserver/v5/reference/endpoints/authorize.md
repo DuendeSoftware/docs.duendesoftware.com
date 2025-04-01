@@ -1,7 +1,7 @@
 ---
 title: "Authorize Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 2
+order: 2
 ---
 
 The authorize endpoint can be used to request tokens or authorization codes via the browser.

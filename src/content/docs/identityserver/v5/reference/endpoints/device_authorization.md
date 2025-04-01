@@ -1,7 +1,7 @@
 ---
 title: "Device Authorization Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 8
+order: 8
 ---
 
 The device authorization endpoint can be used to request device and user codes.

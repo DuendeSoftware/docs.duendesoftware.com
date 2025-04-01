@@ -1,7 +1,7 @@
 ---
 title: "Introspection Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 5
+order: 5
 ---
 
 The introspection endpoint is an implementation of [RFC 7662](https://tools.ietf.org/html/rfc7662).

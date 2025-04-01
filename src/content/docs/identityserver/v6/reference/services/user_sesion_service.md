@@ -1,6 +1,6 @@
 ---
 title: "User Session Service"
-weight: 55
+order: 55
 ---
 
 The *IUserSession* interface is the contract for a service that manages the user's session and tracks the clients that are participating in the session.

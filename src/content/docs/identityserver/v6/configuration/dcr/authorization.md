@@ -1,6 +1,6 @@
 ---
 title: Authorization
-weight: 20
+order: 20
 ---
 
 You should consider your requirements and design authentication and

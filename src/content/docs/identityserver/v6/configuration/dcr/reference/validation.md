@@ -1,7 +1,7 @@
 ---
 title: "Validation"
 description: "DCR Reference"
-weight: 10
+order: 10
 ---
 
 ## IDynamicClientRegistrationValidator

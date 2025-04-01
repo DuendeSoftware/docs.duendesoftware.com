@@ -1,6 +1,7 @@
 ---
 title: "Entity Framework Integration"
-weight: 50
+sidebar:
+  order: 50
 ---
 
 An EntityFramework-based implementation is provided for the configuration and operational data extensibility points in IdentityServer.

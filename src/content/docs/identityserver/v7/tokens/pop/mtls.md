@@ -1,6 +1,7 @@
 ---
 title: "Mutual TLS"
-weight: 10
+sidebar:
+  order: 10
 ---
 
 ## Proof-of-possession using Mutual TLS

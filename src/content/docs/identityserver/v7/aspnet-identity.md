@@ -2,7 +2,7 @@
 title: ASP.NET Identity Integration
 description: Overview
 sidebar:
-  order: 4
+  order: 9
 ---
 
 

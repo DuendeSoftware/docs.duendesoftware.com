@@ -1,6 +1,6 @@
 ---
 title: "CORS Policy Service"
-weight: 36
+order: 36
 ---
 
 #### Duende.IdentityServer.Stores.ICorsPolicyService

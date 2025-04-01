@@ -1,6 +1,7 @@
 ---
 title: "Windows Authentication"
-weight: 70
+sidebar:
+  order: 70
 ---
 
 There are several ways how you can enable Windows authentication in ASP.NET Core (and thus in your IdentityServer).

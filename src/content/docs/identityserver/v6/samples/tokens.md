@@ -1,7 +1,7 @@
 ---
 title: "Requesting tokens"
 description: "Samples"
-weight: 30
+order: 30
 ---
 
 ### Extension grants and Token Exchange

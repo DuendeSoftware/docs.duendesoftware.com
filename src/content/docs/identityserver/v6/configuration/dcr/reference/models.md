@@ -1,7 +1,7 @@
 ---
 title: "Models"
 description: "DCR Reference"
-weight: 50
+order: 50
 ---
 
 ## DynamicClientRegistrationRequest

@@ -1,6 +1,6 @@
 ---
 title: "Session Expiration"
-weight: 20
+order: 20
 ---
 
 If a user abandons their session without triggering logout, the server-side session data will remain in the store by default.

@@ -1,7 +1,8 @@
 ---
 title: "Proxy Servers and Load Balancers"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+sidebar:
+  order: 10
 ---
 
 In typical deployments, your IdentityServer will be hosted behind a load balancer or reverse proxy. These and other network appliances often obscure information about the request before it reaches the host. Some of the behavior of IdentityServer and the ASP.NET authentication handlers depend on that information, most notably the scheme (HTTP vs HTTPS) of the request and the originating client IP address.

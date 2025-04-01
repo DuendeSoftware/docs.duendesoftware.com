@@ -2,10 +2,12 @@
 title: "Overview"
 description: "Quickstarts"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+sidebar:
+  order: 1
 ---
 
-The quickstarts provide step-by-step instructions for various common Duende IdentityServer scenarios. They start with the absolute basics and become more complex - it is recommended you do them in order.
+The quickstarts provide step-by-step instructions for various common Duende IdentityServer scenarios. They start with
+the absolute basics and become more complex - it is recommended you do them in order.
 
 * adding Duende IdentityServer to an ASP.NET Core application
 * configuring Duende IdentityServer
@@ -14,9 +16,11 @@ The quickstarts provide step-by-step instructions for various common Duende Iden
 * adding support for EntityFramework based configuration
 * adding support for ASP.NET Identity
 
-Every quickstart has a reference solution - you can find the code in the [samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts) folder.
+Every quickstart has a reference solution - you can find the code in
+the [samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts) folder.
 
 ## Preparation
+
 The first thing you should do is install our templates:
 
 ```bash

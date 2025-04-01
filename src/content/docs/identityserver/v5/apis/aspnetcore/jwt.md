@@ -1,7 +1,7 @@
 ---
 title: "Using JWTs"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 ---
 
 On ASP.NET Core, you typically use the [JWT authentication handler](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer) for validating JWT bearer tokens.

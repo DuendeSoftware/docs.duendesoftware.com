@@ -1,6 +1,6 @@
 ---
 title: "Integrating with External Providers"
-weight: 60
+order: 60
 ---
 
 ## External Identity Providers

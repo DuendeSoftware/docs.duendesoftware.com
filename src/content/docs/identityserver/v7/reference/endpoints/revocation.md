@@ -1,19 +1,20 @@
 ---
 title: "Revocation Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 6
+sidebar:
+  order: 6
 ---
 
-This endpoint allows revoking access tokens (reference tokens only) and refresh token. 
+This endpoint allows revoking access tokens (reference tokens only) and refresh token.
 It implements the token revocation specification [(RFC 7009)](https://tools.ietf.org/html/rfc7009).
 
 * **`token`**
-    
-    the token to revoke (required)
+
+  the token to revoke (required)
 
 * **`token_type_hint`**
-    
-    either `access_token` or `refresh_token` (optional)
+
+  either `access_token` or `refresh_token` (optional)
 
 ```text
 POST /connect/revocation HTTP/1.1
@@ -25,7 +26,9 @@ token=...&token_type_hint=refresh_token
 ```
 
 ## .NET client library
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code.
+
+You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
+the protocol endpoint from .NET code.
 
 ```cs
 using IdentityModel.Client;

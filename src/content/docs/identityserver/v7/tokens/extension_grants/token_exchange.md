@@ -1,10 +1,13 @@
 ---
 title: "Token Exchange"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+sidebar:
+  order: 10
 ---
 
-The OAuth Token Exchange specification ([RFC 8693](https://tools.ietf.org/html/rfc8693)) describes a general purpose mechanism for translating between token types. Common use cases are creating tokens for impersonation and delegation purposes - but it is not limited to that.
+The OAuth Token Exchange specification ([RFC 8693](https://tools.ietf.org/html/rfc8693)) describes a general purpose
+mechanism for translating between token types. Common use cases are creating tokens for impersonation and delegation
+purposes - but it is not limited to that.
 
 You can leverage the extension grant feature to implement your preferred token exchange logic.
 
@@ -92,25 +95,34 @@ client.AllowedGrantTypes = { OidcConstants.GrantTypes.TokenExchange };
 ```
 
 :::note
-Values sent to the token endpoint are logged, except well-known sensitive values that IdentityServer processes by default.
-Any sensitive values you use as input to your extension grant validator that you do not want included in the logs should be filtered.
-This can be done by adding those parameter names on the `Logging.TokenRequestSensitiveValuesFilter` collection on the [IdentityServerOptions](/identityserver/v7/reference/options#logging).
+Values sent to the token endpoint are logged, except well-known sensitive values that IdentityServer processes by
+default.
+Any sensitive values you use as input to your extension grant validator that you do not want included in the logs should
+be filtered.
+This can be done by adding those parameter names on the `Logging.TokenRequestSensitiveValuesFilter` collection on
+the [IdentityServerOptions](/identityserver/v7/reference/options#logging).
 :::
 
-
 ## Token Exchange for impersonation and delegation
-One of the primary use cases of the token exchange specification is creating tokens for identity delegation and impersonation scenarios. In these scenarios you want to forward certain token and identity information over multiple hops in a call chain.
+
+One of the primary use cases of the token exchange specification is creating tokens for identity delegation and
+impersonation scenarios. In these scenarios you want to forward certain token and identity information over multiple
+hops in a call chain.
 
 ![](images/token_exchange.png)
 
 ## Impersonation
-In the impersonation use case, API 1 doing the token exchange becomes "invisible". For API 2 it looks like as if the front end is doing a direct call. The token would look like this (simplified):
+
+In the impersonation use case, API 1 doing the token exchange becomes "invisible". For API 2 it looks like as if the
+front end is doing a direct call. The token would look like this (simplified):
 
 ```json
 {
   "client_id": "front_end",
   "sub": "123",
-  "scope": [ "api2" ]
+  "scope": [
+    "api2"
+  ]
 }
 ```
 
@@ -128,7 +140,8 @@ context.Result = new GrantValidationResult(
 ```
 
 ## Delegation
-In the delegation use case, the call chain is preserved using the `act` claim, e.g.: 
+
+In the delegation use case, the call chain is preserved using the `act` claim, e.g.:
 
 ```json
 {
@@ -136,13 +149,15 @@ In the delegation use case, the call chain is preserved using the `act` claim, e
   "act": {
     "client_id": "api1"
   },
-
   "sub": "123",
-  "scope": [ "api2" ]
+  "scope": [
+    "api2"
+  ]
 }
 ```
 
-For API 2 it still looks like that the front-end is making the call, but by inspecting the `act` claim, the API can learn about the traversed call chain.
+For API 2 it still looks like that the front-end is making the call, but by inspecting the `act` claim, the API can
+learn about the traversed call chain.
 
 The following code adds the `act` claim to the response:
 
@@ -166,7 +181,9 @@ context.Result = new GrantValidationResult(
     customResponse: customResponse);
 ```
 
-To emit the `act` claim into outgoing tokens, your [profile service](/identityserver/v7/reference/services/profile_service) must know about it. The following simple profile service emits the `act` claim if the token request is in the context of a token exchange operation:
+To emit the `act` claim into outgoing tokens,
+your [profile service](/identityserver/v7/reference/services/profile_service) must know about it. The following simple
+profile service emits the `act` claim if the token request is in the context of a token exchange operation:
 
 ```cs
 public class ProfileService : IProfileService

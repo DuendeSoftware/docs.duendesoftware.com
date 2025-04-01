@@ -1,7 +1,7 @@
 ---
 title: "Token Exchange"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 ---
 
 The OAuth Token Exchange specification ([RFC 8693](https://tools.ietf.org/html/rfc8693)) describes a general purpose mechanism for translating between token types. Common use cases are creating tokens for impersonation and delegation purposes - but it is not limited to that.

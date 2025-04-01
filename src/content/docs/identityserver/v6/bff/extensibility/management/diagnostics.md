@@ -2,7 +2,7 @@
 title: "BFF Diagnostics Endpoint Extensibility"
 menuTitle: "Diagnostics"
 date: 2022-12-29T10:22:12+02:00
-weight: 70
+order: 70
 ---
 
 The BFF diagnostics endpoint can be customized by implementing the *IDiagnosticsService* or by extending *DefaultDiagnosticsService*, its default implementation.

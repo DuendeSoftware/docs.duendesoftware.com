@@ -1,7 +1,7 @@
 ---
 title: "Clients"
 description: "Samples"
-weight: 45
+order: 45
 ---
 
 This section contains a collection of various client technologies connecting to IdentityServer.

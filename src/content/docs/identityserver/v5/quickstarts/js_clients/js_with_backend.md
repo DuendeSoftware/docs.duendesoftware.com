@@ -1,6 +1,6 @@
 ---
 title: "JavaScript applications with a backend"
-weight: 1
+order: 1
 ---
 
 :::note

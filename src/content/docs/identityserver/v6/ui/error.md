@@ -1,7 +1,7 @@
 ---
 title: "Error"
 date: 2020-09-10T08:22:12+02:00
-weight: 30
+order: 30
 ---
 
 The error page is used to display to the end user that an error has ocurred during a request to the [authorize endpoint](/identityserver/v6/reference/endpoints/authorize).

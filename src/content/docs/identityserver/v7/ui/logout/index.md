@@ -1,9 +1,8 @@
 ---
-title: Logout
+title: Getting Started
 sidebar:
-  order: 10
+  order: 1
 ---
-
 
 # Logout Page
 

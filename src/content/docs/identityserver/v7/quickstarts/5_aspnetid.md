@@ -1,16 +1,18 @@
 ---
 title: "Using ASP.NET Core Identity"
 date: 2020-09-10T08:22:12+02:00
-weight: 7
+sidebar:
+  order: 7
 ---
 
 Welcome to Quickstart 5 for Duende IdentityServer! In this quickstart you will
-integrate IdentityServer with ASP.NET Core Identity. 
+integrate IdentityServer with ASP.NET Core Identity.
 
 :::note
 
 We recommend you do the quickstarts in order. If you'd like to start here, begin
-from a copy of the [reference implementation of Quickstart 4](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/4_EntityFramework). 
+from a copy of
+the [reference implementation of Quickstart 4](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/4_EntityFramework).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](0_overview#preparation).
@@ -44,6 +46,7 @@ In addition to the written steps below a YouTube video is available:
 <iframe width="853" height="505" src="https://www.youtube.com/embed/blvZzYsr8uI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## New Project for ASP.NET Core Identity
+
 The first step is to add a new project for ASP.NET Core Identity to your
 solution. We provide a template that contains the minimal UI assets needed to
 use ASP.NET Core Identity with IdentityServer. You will eventually delete the
@@ -71,10 +74,12 @@ migrations.
 :::
 
 ## Inspect the new project
+
 Open the new project in the editor of your choice, and inspect the generated
 code. Much of it is the same from the prior quickstarts and templates. The
 following sections will describe some key differences and guide you through
 migrating configuration from the old IdentityServer Project, including:
+
 - The project file (`IdentityServerAspNetIdentity.csproj`)
 - Pipeline and service configuration (`HostingExtensions.cs`)
 - Resource and client configuration (Config.cs)
@@ -82,11 +87,13 @@ migrating configuration from the old IdentityServer Project, including:
 - Login and logout pages (Pages in `Pages/Account`)
 
 #### IdentityServerAspNetIdentity.csproj
+
 Notice the reference to `Duende.IdentityServer.AspNetIdentity`. This NuGet
 package contains the ASP.NET Core Identity integration components for
 IdentityServer.
 
 #### HostingExtensions.cs
+
 In `ConfigureServices` notice the necessary
 `AddDbContext<ApplicationDbContext>()` and *AddIdentity<ApplicationUser,
 IdentityRole>()* calls are done to configure ASP.NET Core Identity.
@@ -105,6 +112,7 @@ Note that *AddIdentity<ApplicationUser, IdentityRole>()* must be invoked before
 `AddIdentityServer()`.
 
 #### Config.cs
+
 `Config.cs` contains the hard-coded in-memory clients and resource definitions.
 To keep the same clients and API working as the prior quickstarts, we need to
 copy over the configuration data from the old IdentityServer project into this
@@ -192,6 +200,7 @@ rm -r ./src/IdentityServer
 ```
 
 #### Program.cs and SeedData.cs
+
 The application entry point in `Program.cs` is a little different than most
 ASP.NET Core projects. Notice that it looks for a command line argument called
 `/seed` which is used as a flag to seed the users in the ASP.NET Core Identity
@@ -202,6 +211,7 @@ Look at the `SeedData` class' code to see how the database is created and the
 first users are created.
 
 #### Account Pages
+
 Finally, take a look at the the pages in the
 `src/IdentityServerAspNetIdentity/Pages/Account` directory. These pages contain
 slightly different login and logout code than the prior quickstart and templates
@@ -214,6 +224,7 @@ Much of the rest of the code is the same from the prior quickstarts and
 templates.
 
 ## Logging in with the Web client
+
 At this point, you should be able to run all of the existing clients and
 samples. Launch the Web client application, and you should be redirected to
 IdentityServer to log in. Login with one of the users created by the seed
@@ -231,7 +242,8 @@ Congratulations, you're using users from ASP.NET Core Identity in
 IdentityServer!
 
 ## Adding Custom Profile Data
-Next you will add a custom property to your user model and include it as a 
+
+Next you will add a custom property to your user model and include it as a
 claim when the appropriate Identity Resource is requested.
 
 First, add a `FavoriteColor` property in
@@ -259,7 +271,6 @@ alice = new ApplicationUser
 In the same file, add code to recreate the database when you re-seed the data,
 by calling `EnsureDeleted` just before `Migrate`:
 
-
 ```csharp
 var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 context.Database.EnsureDeleted();
@@ -273,8 +284,9 @@ quickstart, it is not recommended in production!
 :::
 
 Next, create an ef migration for the CustomProfileData and reseed your user
-database. Run the following commands from the `src/IdentityServerAspNetIdentity` 
+database. Run the following commands from the `src/IdentityServerAspNetIdentity`
 directory:
+
 ```sh
 dotnet ef migrations add CustomProfileData
 dotnet run /seed
@@ -285,11 +297,13 @@ IdentityServer contains an extensibility point called the `IProfileService` that
 is responsible for retrieval of user claims. The ASP.NET Identity Integration
 includes an implementation of `IProfileService` that retrieves claims from
 ASP.NET Identity. You can extend that implementation to use the custom profile
-data as a source of claims data. [See here](/identityserver/v7/reference/services/profile_service) for more details on the profile
+data as a source of claims data. [See here](/identityserver/v7/reference/services/profile_service) for more details on
+the profile
 service.
 
 Create a new file called `src/IdentityServerAspNetIdentity/CustomProfileService.cs` and add the
 following code to it:
+
 ```csharp
 using Duende.IdentityServer.AspNetIdentity;
 using Duende.IdentityServer.Models;
@@ -321,6 +335,7 @@ namespace IdentityServerAspNetIdentity
 ```
 
 Register the `CustomProfileService` in `HostingExtensions.cs`:
+
 ```csharp
 builder.Services
     .AddIdentityServer(options =>
@@ -350,6 +365,7 @@ public static IEnumerable<IdentityResource> IdentityResources =>
 ```
 
 Allow the web client to request the color scope (also in `Config.cs`):
+
 ```csharp
 new Client
 {
@@ -391,6 +407,7 @@ Now restart the `IdentityServerAspNetIdentity` and `WebClient` projects, sign
 out and sign back in as alice, and you should see the favorite color claim.
 
 ## What's Missing?
+
 The rest of the code in this template is similar to the other quickstarts and
 templates we provide. You will notice that this template does not include UI
 code for user registration, password reset, and other things you might expect

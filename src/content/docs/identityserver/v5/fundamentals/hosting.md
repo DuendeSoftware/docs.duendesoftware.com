@@ -1,6 +1,6 @@
 ---
 title: "Hosting"
-weight: 10
+order: 10
 ---
 
 You add the Duende IdentityServer engine to any ASP.NET Core application by adding the relevant services to the dependency injection (DI) system and adding the middleware to the processing pipeline.

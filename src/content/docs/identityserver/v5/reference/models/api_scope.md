@@ -1,7 +1,7 @@
 ---
 title: "API Scope"
 date: 2020-09-10T08:22:12+02:00
-weight: 25
+order: 25
 ---
 
 #### Duende.IdentityServer.Models.ApiScope

@@ -1,6 +1,7 @@
 ---
 title: "Redirecting back to the client"
-weight: 30
+sidebar:
+  order: 30
 ---
 
 ## The Return URL and the Login Workflow

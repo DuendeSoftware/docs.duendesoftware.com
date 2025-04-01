@@ -1,7 +1,7 @@
 ---
 title: "Protecting an API using Client Credentials"
 date: 2020-09-10T08:22:12+02:00
-weight: 2
+order: 2
 ---
 
 The following quickstart provides step-by-step instructions for various common Duende IdentityServer scenarios. 

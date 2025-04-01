@@ -2,7 +2,7 @@
 title: "BFF Back-Channel Logout Endpoint"
 menuTitle: "Back-Channel Logout"
 date: 2022-12-29T10:22:12+02:00
-weight: 50
+order: 50
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/management/back-channel-logout/"
 ---
 

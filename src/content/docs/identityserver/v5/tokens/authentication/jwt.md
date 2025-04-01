@@ -1,7 +1,7 @@
 ---
 title: "Private Key JWTs"
 date: 2020-09-10T08:22:12+02:00
-weight: 20
+order: 20
 ---
 
 The OpenID Connect specification recommends a client authentication method based on asymmetric keys. With this approach, instead of transmitting the shared secret over the network, the client creates a JWT and signs it with its private key. Your IdentityServer only needs to store the corresponding key to be able to validate the signature.

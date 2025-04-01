@@ -1,6 +1,6 @@
 ---
 title: "Client Initiated Backchannel Authentication (CIBA)"
-weight: 120
+order: 120
 ---
 
 Duende IdentityServer supports the [Client-Initiated Backchannel Authentication Flow](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) (also known as CIBA).

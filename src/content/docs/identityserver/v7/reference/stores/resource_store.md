@@ -1,6 +1,7 @@
 ---
 title: "Resource Store"
-weight: 32
+sidebar:
+  order: 32
 ---
 
 #### Duende.IdentityServer.Stores.IResourceStore

@@ -1,6 +1,6 @@
 ---
 title: "Duende BFF Security Framework v2.x to v3.0"
-weight: 29
+order: 29
 sidebar:
     label: v2.x → v3.0
 ---

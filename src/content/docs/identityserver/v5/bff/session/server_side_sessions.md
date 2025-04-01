@@ -1,6 +1,6 @@
 ---
 title: "Server-side Sessions"
-weight: 40
+order: 40
 ---
 
 By default, ASP.NET Core's cookie handler will store all user session data in a protected cookie. This works very well unless cookie size or revocation becomes an issue.

@@ -1,7 +1,8 @@
 ---
 title: "Store"
 description: "DCR Reference"
-weight: 30
+sidebar:
+  order: 30
 ---
 
 ## IClientConfigurationStore

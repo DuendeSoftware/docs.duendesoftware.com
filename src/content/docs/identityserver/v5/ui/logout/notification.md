@@ -1,6 +1,6 @@
 ---
 title: "Client Notifications"
-weight: 50
+order: 50
 ---
 
 

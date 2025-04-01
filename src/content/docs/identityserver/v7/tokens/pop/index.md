@@ -1,7 +1,8 @@
 ---
 title: "Proof-of-Possession Access Tokens"
 date: 2020-09-10T08:22:12+02:00
-weight: 100
+sidebar:
+  order: 1
 chapter: true
 ---
 
@@ -17,10 +18,8 @@ This proof is called the *confirmation method* and is expressed via the standard
   "iat": 1609932801,
   "exp": 1609936401,
   "aud": "urn:resource1",
-
   "client_id": "web_app",
   "sub": "88421113",
-  
   "cnf": "confirmation_method"
 }
 ```

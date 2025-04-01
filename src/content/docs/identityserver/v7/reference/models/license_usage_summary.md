@@ -2,39 +2,41 @@
 title: "License Usage Summary"
 description: "Get detailed information about your IdentityServer usage"
 date: 2025-01-07T12:00:00+02:00
-weight: 90
+sidebar:
+  order: 90
 ---
 
 #### Duende.IdentityServer.Licensing.LicenseUsageSummary
 
-The `LicenseUsageSummary` class allows developers to get a 
-detailed summary of clients, issuers, and features used 
+The `LicenseUsageSummary` class allows developers to get a
+detailed summary of clients, issuers, and features used
 during the lifetime of an active .NET application for self-auditing
 purposes.
 
 * **`LicenseEdition`**
-    
-    Indicates the current IdentityServer instance's license edition.
+
+  Indicates the current IdentityServer instance's license edition.
 
 * **`ClientsUsed`**
-    
-    A `string` collection of clients used with the current IdentityServer instance.
+
+  A `string` collection of clients used with the current IdentityServer instance.
 
 * **`IssuersUsed`**
 
-    A `string` collection of issuers used with the current IdentityServer instance.
+  A `string` collection of issuers used with the current IdentityServer instance.
 
 * **`FeaturesUsed`**
 
-    A `string` collection of issuers used with the current IdentityServer instance.
+  A `string` collection of issuers used with the current IdentityServer instance.
 
 ## Using LicenseUsageSummary with .NET Lifetime Events
 
-In .NET, an [`IHost`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime) 
-implementation allows developers to subscribe to application 
-lifetime events, including **Application Started**, **Application Stopped**, 
-and **Application Stopping**. IdentityServer tracks usage metrics internally 
-and that information may be accessed by developers at any time during the application's lifetime 
+In .NET, an [
+`IHost`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime)
+implementation allows developers to subscribe to application
+lifetime events, including **Application Started**, **Application Stopped**,
+and **Application Stopping**. IdentityServer tracks usage metrics internally
+and that information may be accessed by developers at any time during the application's lifetime
 from the application's service collection using the following code snippet.
 
 ```csharp
@@ -56,7 +58,7 @@ app.Lifetime.ApplicationStopping.Register(() =>
 });
 ```
 
-Developers may also use common dependency injection techniques 
+Developers may also use common dependency injection techniques
 such as property or constructor injection.
 
 ```csharp

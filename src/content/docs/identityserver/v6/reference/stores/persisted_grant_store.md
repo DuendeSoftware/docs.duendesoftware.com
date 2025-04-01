@@ -1,6 +1,6 @@
 ---
 title: "Persisted Grant Store"
-weight: 42
+order: 42
 ---
 
 The *IPersistedGrantStore* interface is the contract for a service that stores,

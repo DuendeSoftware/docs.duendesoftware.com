@@ -2,7 +2,7 @@
 title: "Overview"
 description: "BFF"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+order: 1
 ---
 
 Duende.BFF is a library for building services that solve security and identity problems in browser based applications such as SPAs and Blazor WASM applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all of the OAuth and OIDC protocol interactions. Moving the protocol handling out of JavaScript provides important security benefits and works around changes in browser privacy rules that increasingly disrupt OAuth and OIDC protocol flows in browser based applications. The Duende.BFF library makes it easy to build and secure BFF hosts by providing [session and token management](/identityserver/v6/bff/session), [API endpoint protection](/identityserver/v6/bff/apis), and [logout notifications](/identityserver/v6/bff/session/management/back-channel-logout).

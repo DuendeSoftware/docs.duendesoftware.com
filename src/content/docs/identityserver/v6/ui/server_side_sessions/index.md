@@ -1,7 +1,7 @@
 ---
 title: "Server-Side Sessions"
 description: "Overview"
-weight: 140
+order: 140
 ---
 
 (added in 6.1)

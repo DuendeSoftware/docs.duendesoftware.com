@@ -1,7 +1,7 @@
 ---
 title: "End Session Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 7
+order: 7
 ---
 
 The end session endpoint can be used to trigger single sign-out in the browser (see [spec](https://openid.net/specs/openid-connect-rpinitiated-1_0.html)).

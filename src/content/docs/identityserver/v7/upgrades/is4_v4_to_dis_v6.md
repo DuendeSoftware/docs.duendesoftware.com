@@ -1,8 +1,8 @@
 ---
 title: "IdentityServer4 v4.1 to Duende IdentityServer v6"
-weight: 95
 sidebar:
-    label: v4.1 → v6.0
+  order: 95
+  label: v4.1 → v6.0
 ---
 
 This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende IdentityServer v6.

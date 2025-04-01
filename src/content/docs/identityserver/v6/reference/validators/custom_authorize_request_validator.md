@@ -1,6 +1,6 @@
 ---
 title: "Custom Authorize Request Validator"
-weight: 10
+order: 10
 ---
 
 #### Duende.IdentityServer.Validation.ICustomAuthorizeRequestValidator

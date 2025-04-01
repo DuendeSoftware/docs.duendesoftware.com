@@ -1,12 +1,14 @@
 ---
 title: "Token Management"
 date: 2024-07-23T08:22:12+02:00
-weight: 5
+sidebar:
+  order: 5
 ---
 
 Welcome to this Quickstart for Duende IdentityServer!
 
-The previous quickstart introduced [API access](3_api_access) with interactive applications, but by far the most complex task for a typical client is to manage the access token.
+The previous quickstart introduced [API access](3_api_access) with interactive applications, but by far the most complex
+task for a typical client is to manage the access token.
 
 In addition to the written steps below a YouTube video is available:
 
@@ -27,7 +29,8 @@ can help. It provides abstractions for storing tokens, automatic refresh of expi
 
 ## Requesting a refresh token
 
-To allow the _web_ client to request a refresh token set the _AllowOfflineAccess_ property to true in the client configuration.
+To allow the _web_ client to request a refresh token set the _AllowOfflineAccess_ property to true in the client
+configuration.
 
 Update the _Client_ in _src/IdentityServer/Config.cs_ as follows:
 
@@ -68,7 +71,8 @@ When running the solution the refresh token should now be visible under _Propert
 
 ## Automatically refreshing an access token
 
-In the WebClient project add a reference to the NuGet package `Duende.AccessTokenManagement.OpenIdConnect` and in _Program.cs_ add the needed types to dependency injection:
+In the WebClient project add a reference to the NuGet package `Duende.AccessTokenManagement.OpenIdConnect` and in
+_Program.cs_ add the needed types to dependency injection:
 
 ```cs
 builder.Services.AddOpenIdConnectAccessTokenManagement();
@@ -94,14 +98,19 @@ public async Task OnGet()
 
 There are two changes here that utilize the AccessTokenManagement NuGet package:
 
-- An object called tokenInfo containing all stored tokens is returned by the _GetUserAccessTokenAsync_ extension method. This will make sure the access token is _automatically refreshed_ using the refresh token if needed.
-- The _SetBearerToken_ extension method on HttpClient is used for convenience to place the access token in the needed HTTP header.
+- An object called tokenInfo containing all stored tokens is returned by the _GetUserAccessTokenAsync_ extension method.
+  This will make sure the access token is _automatically refreshed_ using the refresh token if needed.
+- The _SetBearerToken_ extension method on HttpClient is used for convenience to place the access token in the needed
+  HTTP header.
 
 ## Using a Named HttpClient
 
-On each call to OnGet in _CallApi.cshtml.cs_ a new HttpClient is created in the code above. Recommended however is to use the [HttpClientFactory](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory) pattern so that instances can be reused.
+On each call to OnGet in _CallApi.cshtml.cs_ a new HttpClient is created in the code above. Recommended however is to
+use the [HttpClientFactory](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory) pattern so that
+instances can be reused.
 
-`Duende.AccessTokenManagement.OpenIdConnect` builds on top of _HttpClientFactory_ to create HttpClient instances that automatically retrieve the needed access token and refresh if needed.
+`Duende.AccessTokenManagement.OpenIdConnect` builds on top of _HttpClientFactory_ to create HttpClient instances that
+automatically retrieve the needed access token and refresh if needed.
 
 In the client in _Program.cs_ under the call to _AddOpenIdConnectAccessTokenManagement_ register the HttpClient:
 
@@ -135,6 +144,7 @@ Now the _OnGet_ method in _CallApi.cshtml.cs_ can be even more straightforward:
 
 Note that:
 
-- The httpClientFactory is injected using a primary constructor. The type was registered when _AddOpenIdConnectAccessTokenManagement_ was called in _Program.cs_.
+- The httpClientFactory is injected using a primary constructor. The type was registered when
+  _AddOpenIdConnectAccessTokenManagement_ was called in _Program.cs_.
 - The client is created using the factory passing in the name of the client that was registered in _program.cs_.
 - No additional code is needed. The client will automatically retrieve the access token and refresh it if needed.

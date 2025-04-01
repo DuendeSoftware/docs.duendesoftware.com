@@ -1,7 +1,8 @@
 ---
 title: Overview
 description: Overview
-weight: 96
+sidebar:
+  order: 96
 ---
 
 (Added in 6.3)

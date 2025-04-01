@@ -1,7 +1,7 @@
 ---
 title: "Federation Gateway"
 date: 2020-09-10T08:22:12+02:00
-weight: 100
+order: 100
 ---
 
 Federation means that your IdentityServer offers authentication methods that use external authentication providers.

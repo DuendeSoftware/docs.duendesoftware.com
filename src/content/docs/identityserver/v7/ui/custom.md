@@ -1,6 +1,7 @@
 ---
 title: "Custom Pages"
-weight: 50
+sidebar:
+  order: 5
 ---
 
 In addition to the pages your IdentityServer is expected to provide, you can add any other pages you wish. 

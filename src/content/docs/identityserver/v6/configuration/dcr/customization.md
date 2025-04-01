@@ -1,6 +1,6 @@
 ---
 title: Customization
-weight: 50
+order: 50
 ---
 
 The behavior of the Configuration API can be customized through the use of

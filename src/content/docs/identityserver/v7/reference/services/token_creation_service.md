@@ -1,6 +1,7 @@
 ---
 title: "Token Creation Service"
-weight: 50
+sidebar:
+  order: 50
 ---
 
 IdentityServer uses an `ITokenCreationService` which is responsible for the creation
@@ -29,7 +30,8 @@ from a secondary data source, such as a profile service, database, or third-part
 when other approaches are not an option.
 
 Note that there are better places within IdentityServer's infrastructure to add
-additional claims, such as `IClaimService`, `ITokenService`, and [`IProfileService`](/identityserver/v7/reference/services/profile_service.md). We recommend investigating
+additional claims, such as `IClaimService`, `ITokenService`, and [
+`IProfileService`](/identityserver/v7/reference/services/profile_service.md). We recommend investigating
 whether overriding those interfaces would be enough before implementing `ITokenCreationService`.
 
 You can think of each of the services as providing the following functionality:
@@ -39,12 +41,12 @@ You can think of each of the services as providing the following functionality:
 - `IClaimsService`: Customizing claims on the Token
 - `IProfileService`: User-centric profile data used in the Token and UserInfo endpoint
 
-
 If, after research, you have still decided to implement `ITokenCreationService`, we recommend you
 inherit and override methods on `DefaultTokenCreationService`, specifically the `CreatePayloadAsync` method.
 
 :::caution
-Do not overload your tokens with large amounts of data, as it can lead to large JWTs and adversely affect system performance.
+Do not overload your tokens with large amounts of data, as it can lead to large JWTs and adversely affect system
+performance.
 :::
 
 ```csharp

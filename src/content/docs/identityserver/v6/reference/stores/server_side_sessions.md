@@ -1,7 +1,7 @@
 ---
 title: "Server-Side Session Store"
 description: "Reference"
-weight: 100
+order: 100
 ---
 
 #### Duende.IdentityServer.Stores.IServerSideSessionStore

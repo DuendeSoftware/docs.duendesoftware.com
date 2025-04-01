@@ -1,10 +1,12 @@
 ---
 title: "Overview"
-weight: 95
+sidebar:
+  order: 1
 chapter: true
 ---
 
-# Dynamic Client Registration 
+## Dynamic Client Registration
+
 Dynamic Client Registration (DCR) is the process of registering OAuth clients
 dynamically. The client provides information about itself and specifies its
 desired configuration in an HTTP request to the configuration endpoint. The

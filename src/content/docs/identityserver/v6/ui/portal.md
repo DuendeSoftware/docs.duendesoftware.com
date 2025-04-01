@@ -1,6 +1,6 @@
 ---
 title: "Client Application Portal"
-weight: 160
+order: 160
 ---
 
 (Added in 6.3)

@@ -1,7 +1,7 @@
 ---
 title: "Distributed Caching"
 date: 2020-09-10T08:22:12+02:00
-weight: 40
+order: 40
 ---
 
 Some optional features rely on ASP.NET Core distributed caching:

@@ -1,6 +1,6 @@
 ---
 title: "Backend for Frontend Pattern"
-weight: 40
+order: 40
 newContentUrl: https://docs.duendesoftware.com/bff/v3/samples/
 ---
 

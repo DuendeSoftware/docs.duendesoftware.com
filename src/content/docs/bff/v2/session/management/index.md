@@ -1,7 +1,7 @@
 ---
 title: "BFF Session Management Endpoints"
 menuTitle: "Session Management Endpoints"
-weight: 20
+order: 20
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/management/"
 ---
 

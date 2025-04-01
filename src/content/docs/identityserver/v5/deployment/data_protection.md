@@ -1,7 +1,7 @@
 ---
 title: "ASP.NET Core Data Protection"
 date: 2020-09-10T08:22:12+02:00
-weight: 20
+order: 20
 ---
 
 Duende IdentityServer relies on the built-in [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/) feature of ASP.NET for

@@ -1,7 +1,7 @@
 ---
 title: Troubleshooting
 sidebar:
-  order: 205
+  order: 1
 ---
 
 

@@ -1,7 +1,7 @@
 ---
 title: "Validating Proof-of-Possession"
 date: 2020-09-10T08:22:12+02:00
-weight: 40
+order: 40
 ---
 
 IdentityServer can [bind tokens to clients](/identityserver/v6/tokens/pop) using either mTLS or DPoP, creating a *Proof-of-Possession* (PoP) access token. When one of these mechanisms is used, APIs that use those access tokens for authorization need to validate the binding between the client and token. This document describes how to perform such validation, depending on which mechanism was used to produce a PoP token.

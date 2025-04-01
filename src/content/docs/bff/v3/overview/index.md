@@ -2,7 +2,7 @@
 title: "Overview"
 description: "BFF Security Framework"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+order: 1
 ---
 
 Single-Page Applications (SPAs) are increasingly common, offering rich functionality within the browser. Front-end development has rapidly evolved with new frameworks and changing browser security requirements. Consequently, best practices for securing these applications have also shifted dramatically. 

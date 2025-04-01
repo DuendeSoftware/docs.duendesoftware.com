@@ -1,6 +1,7 @@
 ---
 title: "Grants"
-weight: 30
+sidebar:
+  order: 30
 ---
 
 Many protocol flows produce state that represents a grant of one type or another.

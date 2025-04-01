@@ -1,6 +1,7 @@
 ---
 title: "Pushed Authorization Request Store"
-weight: 110
+sidebar:
+  order: 110
 ---
 
 The pushed authorization request store is responsible for creating, retrieving, and

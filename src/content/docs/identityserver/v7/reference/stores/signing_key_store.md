@@ -1,6 +1,7 @@
 ---
 title: "Signing Key Store"
-weight: 90
+sidebar:
+  order: 90
 ---
 
 #### Duende.IdentityServer.Stores.ISigningKeyStore
@@ -81,5 +82,6 @@ Used to dynamically load client configuration.
 ```
 
 :::note
-The `Data` property contains a copy of all of the values (and more) and is considered authoritative by IdentityServer, thus most of the other property values are considered informational and read-only.
+The `Data` property contains a copy of all of the values (and more) and is considered authoritative by IdentityServer,
+thus most of the other property values are considered informational and read-only.
 :::

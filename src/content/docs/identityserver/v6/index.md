@@ -1,6 +1,6 @@
 ---
 title: "IdentityServer (v6)"
-weight: 1
+order: 1
 ---
 
 # Duende IdentityServer v6 Documentation

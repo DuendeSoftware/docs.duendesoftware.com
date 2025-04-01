@@ -1,7 +1,7 @@
 ---
 title: "Configuration Options"
 description: "Entity Framework"
-weight: 20
+order: 20
 ---
 
 #### Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions

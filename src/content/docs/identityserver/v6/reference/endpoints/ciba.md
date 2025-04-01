@@ -1,6 +1,6 @@
 ---
 title: "Backchannel Authentication Endpoint"
-weight: 9
+order: 9
 ---
 
 The backchannel authentication endpoint is used by a client to initiate a [CIBA](/identityserver/v6/ui/ciba) request.

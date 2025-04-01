@@ -1,6 +1,6 @@
 ---
 title: "Signed Authorize Requests"
-weight: 150
+order: 150
 ---
 
 Instead of providing the parameters for an authorize request as individual query string key/value pairs, you can package them up in signed JWTs.

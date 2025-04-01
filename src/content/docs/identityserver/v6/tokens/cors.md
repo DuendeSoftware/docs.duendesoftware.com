@@ -1,7 +1,7 @@
 ---
 title: "Calling Endpoints from JavaScript"
 date: 2020-09-10T08:22:12+02:00
-weight: 200
+order: 200
 ---
 
 In JavaScript-based clients, some endpoints like the token endpoint (but also discovery) will be accessed via Ajax calls.

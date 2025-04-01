@@ -1,7 +1,8 @@
 ---
 title: "Response Generation"
 description: "DCR Reference"
-weight: 40
+sidebar:
+  order: 40
 ---
 
 ## IDynamicClientRegistrationResponseGenerator
@@ -32,4 +33,4 @@ The `DynamicClientRegistrationResponseGenerator` is the default implementation o
 
 | name | description |
 | --- | --- |
-| SerializerOptions { get; set; } | The options used for serializing json in responses. |
+| SerializerOptions { get; set; } | The options used for serializing json in responses. |

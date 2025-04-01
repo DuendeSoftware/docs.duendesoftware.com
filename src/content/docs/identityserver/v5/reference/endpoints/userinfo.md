@@ -1,7 +1,7 @@
 ---
 title: "UserInfo Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 4
+order: 4
 ---
 
 The UserInfo endpoint can be used to retrieve claims about a user (see [spec](https://openid.net/specs/openid-connect-core-1_0.html#userinfo)). 

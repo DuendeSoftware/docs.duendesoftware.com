@@ -1,6 +1,6 @@
 ---
 title: "Local APIs"
-weight: 10
+order: 10
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/apis/local/"
 ---
 

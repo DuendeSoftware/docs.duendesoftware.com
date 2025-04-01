@@ -1,6 +1,6 @@
 ---
 title: "Microsoft SPA and Blazor Templates"
-weight: 150
+order: 150
 ---
 
 Microsoft publishes templates for securing an API with token based security backed by the ASP.NET Identity identity management library. 

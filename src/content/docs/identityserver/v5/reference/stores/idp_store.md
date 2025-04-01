@@ -1,6 +1,6 @@
 ---
 title: "Identity Provider Store"
-weight: 36
+order: 36
 ---
 
 #### Duende.IdentityServer.Stores.IIdentityProviderStore

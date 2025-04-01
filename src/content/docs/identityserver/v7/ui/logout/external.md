@@ -1,6 +1,7 @@
 ---
 title: "External Logout"
-weight: 70
+sidebar:
+  order: 70
 ---
 
 When a user is [logging out](../logout), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.

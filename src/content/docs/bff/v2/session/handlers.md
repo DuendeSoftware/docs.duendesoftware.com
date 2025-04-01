@@ -1,7 +1,7 @@
 ---
 title: "ASP.NET Core Authentication System"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/handlers/"
 ---
 

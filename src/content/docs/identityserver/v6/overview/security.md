@@ -1,7 +1,7 @@
 ---
 title: "Security best-practices"
 date: 2020-09-10T08:22:12+02:00
-weight: 55
+order: 55
 ---
 
 This document describes how the integrity of software produced by Duende Software is maintained during the software development life cycle.

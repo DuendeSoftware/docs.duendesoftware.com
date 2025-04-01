@@ -1,6 +1,6 @@
 ---
 title: "Remote APIs"
-weight: 20
+order: 20
 ---
 
 For invoking APIs that are deployed on different servers, you have a couple of options:

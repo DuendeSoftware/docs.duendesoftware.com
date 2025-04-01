@@ -1,7 +1,7 @@
 ---
 title: "Authorization based on Scopes and other Claims"
 date: 2020-09-10T08:22:12+02:00
-weight: 30
+order: 30
 ---
 
 The access token will include additional claims that can be used for authorization, e.g. the *scope* claim will reflect the scope the client requested (and was granted) during the token request.

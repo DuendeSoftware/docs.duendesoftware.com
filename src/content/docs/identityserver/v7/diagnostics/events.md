@@ -1,16 +1,21 @@
 ---
 title: "Events"
 date: 2020-09-10T08:22:12+02:00
-weight: 20
+sidebar:
+  order: 20
 ---
 
-While logging is more low level "printf" style - events represent higher level information about certain operations in IdentityServer.
+While logging is more low level "printf" style - events represent higher level information about certain operations in
+IdentityServer.
 Events are structured data and include event IDs, success/failure information, categories and details.
 This makes it easy to query and analyze them and extract useful information that can be used for further processing.
 
-Events work great with structured logging stores like [ELK](https://www.elastic.co/webinars/introduction-elk-stack), [Seq](https://getseq.net) or [Splunk](https://www.splunk.com/).
+Events work great with structured logging stores
+like [ELK](https://www.elastic.co/webinars/introduction-elk-stack), [Seq](https://getseq.net)
+or [Splunk](https://www.splunk.com/).
 
 ### Emitting events
+
 Events are not turned on by default - but can be globally configured when `AddIdentityServer` is called, e.g.:
 
 ```cs
@@ -41,6 +46,7 @@ public async Task<IActionResult> Login(LoginInputModel model)
 ```
 
 ### Custom sinks
+
 Our default event sink will simply serialize the event class to JSON and forward it to the ASP.NET Core logging system.
 If you want to connect to a custom event store, implement the `IEventSink` interface and register it with DI.
 
@@ -84,49 +90,52 @@ public class SeqEventSink : IEventSink
 Add the `Serilog.Sinks.Seq` package to your host to make the above code work.
 
 ## Built-in events
+
 The following events are defined in IdentityServer:
 
 * **`ApiAuthenticationFailureEvent`** & **`ApiAuthenticationSuccessEvent`**
 
-    Gets raised for successful/failed API authentication at the introspection endpoint.
+  Gets raised for successful/failed API authentication at the introspection endpoint.
 
 * **`ClientAuthenticationSuccessEvent`** & **`ClientAuthenticationFailureEvent`**
-    
-    Gets raised for successful/failed client authentication at the token endpoint.
+
+  Gets raised for successful/failed client authentication at the token endpoint.
 
 * **`TokenIssuedSuccessEvent`** & **`TokenIssuedFailureEvent`**
 
-    Gets raised for successful/failed attempts to request identity tokens, access tokens, refresh tokens and authorization codes.
+  Gets raised for successful/failed attempts to request identity tokens, access tokens, refresh tokens and authorization
+  codes.
 
 * **`TokenIntrospectionSuccessEvent`** & **`TokenIntrospectionFailureEvent`**
 
-    Gets raised for successful token introspection requests.
+  Gets raised for successful token introspection requests.
 
 * **`TokenRevokedSuccessEvent`**
 
-    Gets raised for successful token revocation requests.
+  Gets raised for successful token revocation requests.
 
 * **`UserLoginSuccessEvent`** & **`UserLoginFailureEvent`**
 
-    Gets raised by the quickstart UI for successful/failed user logins.
+  Gets raised by the quickstart UI for successful/failed user logins.
 
 * **`UserLogoutSuccessEvent`**
 
-    Gets raised for successful logout requests.
+  Gets raised for successful logout requests.
 
 * **`ConsentGrantedEvent`** & **`ConsentDeniedEvent`**
 
-    Gets raised in the consent UI.
+  Gets raised in the consent UI.
 
 * **`UnhandledExceptionEvent`**
 
-    Gets raised for unhandled exceptions.
+  Gets raised for unhandled exceptions.
 
 * **`DeviceAuthorizationFailureEvent`** & **`DeviceAuthorizationSuccessEvent`**
 
-    Gets raised for successful/failed device authorization requests.
+  Gets raised for successful/failed device authorization requests.
 
 ### Custom events
+
 You can create your own events and emit them via our infrastructure.
 
 You need to derive from our base `Event` class which injects contextual information like activity ID, timestamp, etc.

@@ -1,7 +1,8 @@
 ---
 title: "Dynamic Request Validation and Customization"
 date: 2020-09-10T08:22:12+02:00
-weight: 50
+sidebar:
+  order: 50
 ---
 
 You can hook into the token request pipeline by implementing the [ICustomTokenRequestValidator](/identityserver/v7/reference/validators/custom_token_request_validator) interface.

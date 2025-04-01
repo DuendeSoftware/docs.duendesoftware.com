@@ -1,7 +1,8 @@
 ---
 title: "Migrating from Static Keys to Automatic Key Management"
 date: 2022-11-21T11:24:12-05:00
-weight: 50
+sidebar:
+  order: 50
 ---
 
 To migrate from static to automatic key management, you can set keys manually

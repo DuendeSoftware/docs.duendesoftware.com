@@ -1,7 +1,7 @@
 ---
 title: "TLS Client Certificates"
 date: 2020-09-10T08:22:12+02:00
-weight: 30
+order: 30
 ---
 
 Clients can use an X.509 client certificate as an authentication mechanism to endpoints in your IdentityServer.

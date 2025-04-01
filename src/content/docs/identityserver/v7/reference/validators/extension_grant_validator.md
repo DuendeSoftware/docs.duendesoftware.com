@@ -1,6 +1,7 @@
 ---
 title: "Extension Grant Validator"
-weight: 80
+sidebar:
+  order: 80
 ---
 
 #### Duende.IdentityServer.Validation.IExtensionGrantValidator
@@ -28,12 +29,13 @@ public interface IExtensionGrantValidator
 
 * **`GrantType`**
 
-    Specifies the name of the extension grant that the implementation wants to register for.
+  Specifies the name of the extension grant that the implementation wants to register for.
 
 * **`ValidateAsync`**
-    
-    This methods gets called at runtime, when a request comes in that is using the registered extension grant.
-    The job of this method is to validate the request and to populate `ExtensionGrantValidationContext.Result` with a [grant validation result](/identityserver/v7/reference/models/grant_validation_result)
+
+  This methods gets called at runtime, when a request comes in that is using the registered extension grant.
+  The job of this method is to validate the request and to populate `ExtensionGrantValidationContext.Result` with
+  a [grant validation result](/identityserver/v7/reference/models/grant_validation_result)
 
 The instance of the extension grant validator gets registered with:
 

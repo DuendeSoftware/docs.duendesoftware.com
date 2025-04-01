@@ -2,7 +2,7 @@
 title: "BFF Silent Login Endpoint"
 menuTitle: "Silent Login"
 date: 2022-12-29T10:22:12+02:00
-weight: 35
+order: 35
 ---
 
 Added in v1.2.0.

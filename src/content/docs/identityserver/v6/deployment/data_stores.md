@@ -2,7 +2,7 @@
 title: "IdentityServer Data Stores"
 description: "Deployment"
 date: 2020-09-10T08:22:12+02:00
-weight: 30
+order: 30
 ---
 
 IdentityServer itself is stateless and does not require server affinity - but there is data that needs to be shared between in multi-instance deployments.

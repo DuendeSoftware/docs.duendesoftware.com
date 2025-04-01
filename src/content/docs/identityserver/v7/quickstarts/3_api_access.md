@@ -1,7 +1,8 @@
 ---
 title: "ASP.NET Core and API access"
 date: 2020-09-10T08:22:12+02:00
-weight: 4
+sidebar:
+  order: 4
 ---
 
 Welcome to Quickstart 3 for Duende IdentityServer!
@@ -30,7 +31,8 @@ _IdentityServer_ will respond with two tokens:
 :::note
 
 We recommend you do the quickstarts in order. If you'd like to start here, begin
-from a copy of the [reference implementation of Quickstart 2](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/2*InteractiveAspNetCore).
+from a copy of
+the [reference implementation of Quickstart 2](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/2*InteractiveAspNetCore).
 Throughout this quickstart, paths are written relative to the base \_quickstart*
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](0_overview#preparation).
@@ -39,7 +41,8 @@ implementation. You will also need to [install the IdentityServer templates](0_o
 
 ## Modifying the client configuration
 
-The client configuration in IdentityServer requires one straightforward update. We should add the _api1_ resource to the allowed scopes list so that the client will have permission to access it.
+The client configuration in IdentityServer requires one straightforward update. We should add the _api1_ resource to the
+allowed scopes list so that the client will have permission to access it.
 
 Update the _Client_ in _src/IdentityServer/Config.cs_ as follows:
 
@@ -160,8 +163,9 @@ And update _src/WebClient/Pages/CallApi.cshtml_ as follows:
 Also add a link to the new page in _src/WebClient/Shared/\_Layout.cshtml_ with the following:
 
 ```html
+
 <li class="nav-item">
-  <a class="nav-link text-dark" asp-area="" asp-page="/CallApi">CallApi</a>
+    <a class="nav-link text-dark" asp-area="" asp-page="/CallApi">CallApi</a>
 </li>
 ```
 

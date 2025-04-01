@@ -2,7 +2,7 @@
 title: "Configuration Options"
 description: "BFF"
 date: 2020-09-10T08:22:12+02:00
-weight: 90
+order: 90
 newContentUrl: https://docs.duendesoftware.com/bff/v3/fundamentals/options/
 ---
 

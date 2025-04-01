@@ -1,7 +1,8 @@
 ---
 title: "Setup"
 date: 2020-09-10T08:22:12+02:00
-weight: 40
+sidebar:
+  order: 2
 ---
 
 To start emitting Otel tracing and metrics information you need 

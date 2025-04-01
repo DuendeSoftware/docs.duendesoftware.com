@@ -1,7 +1,7 @@
 ---
 title: "Overview"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+order: 1
 ---
 
 Confidential and credentialed clients need to authenticate with your IdentityServer before they can request tokens.

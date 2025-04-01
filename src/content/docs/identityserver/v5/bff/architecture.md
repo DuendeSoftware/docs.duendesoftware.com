@@ -1,7 +1,7 @@
 ---
 title: "Architecture"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 ---
 
 A BFF host is an ASP.NET Core application with the following logical building blocks:

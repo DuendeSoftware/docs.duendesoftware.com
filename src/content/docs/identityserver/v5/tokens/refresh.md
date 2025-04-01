@@ -1,7 +1,7 @@
 ---
 title: "Refreshing a Token"
 date: 2020-09-10T08:22:12+02:00
-weight: 20
+order: 20
 ---
 
 Access tokens have finite lifetimes. If a client needs long-lived access to a resource, [refresh tokens](https://datatracker.ietf.org/doc/html/rfc6749#section-1.5) can be used to request a new access token. This can be done with an API call and does not require any user interaction or interruption.

@@ -1,6 +1,6 @@
 ---
 title: "Custom Token Request Validator"
-weight: 20
+order: 20
 ---
 
 #### Duende.IdentityServer.Validation.ICustomTokenRequestValidator

@@ -1,7 +1,7 @@
 ---
 title: "Configuration API"
 description: "Samples"
-weight: 60
+order: 60
 ---
 
 ### Dynamic Client Registration Sample

@@ -1,7 +1,7 @@
 ---
 title: "Reference Tokens"
 date: 2020-09-10T08:22:12+02:00
-weight: 100
+order: 100
 ---
 
 When using reference tokens, Duende IdentityServer stores the contents of the token in the [persisted grant](/identityserver/v5/data/operational/grants) store and issues a unique identifier for this token back to the client.

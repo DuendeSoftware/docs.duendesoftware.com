@@ -1,7 +1,7 @@
 ---
 title: Response Generators
 sidebar:
-  order: 55
+  order: 1
 ---
 
 

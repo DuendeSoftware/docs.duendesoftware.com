@@ -1,6 +1,6 @@
 ---
 title: "Request Processing"
-weight: 20
+order: 20
 ---
 
 ## IDynamicClientRegistrationRequestProcessor

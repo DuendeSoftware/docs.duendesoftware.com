@@ -1,7 +1,7 @@
 ---
 title: "Management Endpoints"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 ---
 
 When you add Duende.BFF to DI - a default implementation for every management endpoint gets registered:

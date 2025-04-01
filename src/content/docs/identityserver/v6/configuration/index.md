@@ -1,7 +1,7 @@
 ---
 title: Configuration API
 description: Overview
-weight: 96
+order: 96
 ---
 
 (Added in 6.3)

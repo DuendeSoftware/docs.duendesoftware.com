@@ -1,6 +1,6 @@
 ---
 title: "Windows Authentication"
-weight: 22
+order: 22
 newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/samples/"
 ---
 

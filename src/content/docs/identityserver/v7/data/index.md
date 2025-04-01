@@ -1,7 +1,7 @@
 ---
 title: Data Stores and Persistence
 sidebar:
-  order: 80
+  order: 1
 ---
 
 

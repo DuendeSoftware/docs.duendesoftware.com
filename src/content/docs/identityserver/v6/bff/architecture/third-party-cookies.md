@@ -1,6 +1,6 @@
 ---
 title: "Third Party Cookies"
-weight: 12
+order: 12
 ---
 
 If the BFF and OpenID Connect Provider (OP) are hosted on different [sites](https://developer.mozilla.org/en-US/docs/Glossary/Site), then some browsers will block cookies from being sent during navigation between those sites. Almost all browsers have the option of blocking third party cookies. Safari and Firefox are the most widely used browsers that do so by default, while Chrome is planning to do so in the future. This change is being made to protect user privacy, but it also impacts OIDC flows traditionally used by SPAs. 

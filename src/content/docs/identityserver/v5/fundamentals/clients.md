@@ -1,7 +1,7 @@
 ---
 title: "Clients"
 date: 2020-09-10T08:22:12+02:00
-weight: 30
+order: 30
 ---
 
 [Clients](/identityserver/v5/overview/terminology#client) represent applications that can request tokens from your IdentityServer.

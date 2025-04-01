@@ -1,7 +1,7 @@
 ---
 title: "Resources"
 description: "External Links"
-weight: 80
+order: 80
 ---
 
 Below are links to relevant topics:

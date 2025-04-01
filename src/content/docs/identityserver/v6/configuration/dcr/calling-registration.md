@@ -1,6 +1,6 @@
 ---
 title: Calling the Registration Endpoint
-weight: 20
+order: 20
 ---
 
 The registration endpoint is invoked by making an HTTP POST request to the /connect/dcr endpoint with a json payload containing metadata describing the desired client as described in [RFC 7591](https://datatracker.ietf.org/doc/rfc7591/) and [OpenID Connect Dynamic Client Registration 1.0](https://openid.net/specs/openid-connect-registration-1_0.html).

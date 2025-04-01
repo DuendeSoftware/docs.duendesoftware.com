@@ -1,6 +1,6 @@
 ---
 title: "JavaScript applications without a backend"
-weight: 20
+order: 20
 newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/quickstarts/js_clients/"
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Options"
-weight: 60
+order: 60
 ---
 
 ## IdentityServerConfigurationOptions

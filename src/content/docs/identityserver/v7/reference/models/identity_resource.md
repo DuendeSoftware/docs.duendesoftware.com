@@ -2,7 +2,8 @@
 title: "Identity Resource"
 description: "Reference"
 date: 2020-09-10T08:22:12+02:00
-weight: 20
+sidebar:
+  order: 20
 ---
 
 #### Duende.IdentityServer.Models.IdentityResource
@@ -26,33 +27,36 @@ public static readonly IEnumerable<IdentityResource> IdentityResources =
 
 * **`Enabled`**
 
-    Indicates if this resource is enabled and can be requested. Defaults to true.
+  Indicates if this resource is enabled and can be requested. Defaults to true.
 
 * **`Name`**
-    
-    The unique name of the identity resource. This is the value a client will use for the scope parameter in the authorize request.
+
+  The unique name of the identity resource. This is the value a client will use for the scope parameter in the authorize
+  request.
 
 * **`DisplayName`**
-    
-    This value will be used e.g. on the consent screen.
+
+  This value will be used e.g. on the consent screen.
 
 * **`Description`**
-    
-    This value will be used e.g. on the consent screen.
+
+  This value will be used e.g. on the consent screen.
 
 * **`Required`**
-    
-    Specifies whether the user can de-select the scope on the consent screen (if the consent screen wants to implement such a feature). 
-    Defaults to false.
+
+  Specifies whether the user can de-select the scope on the consent screen (if the consent screen wants to implement
+  such a feature).
+  Defaults to false.
 
 * **`Emphasize`**
-    
-    Specifies whether the consent screen will emphasize this scope (if the consent screen wants to implement such a feature). Use this setting for sensitive or important scopes. Defaults to false.
+
+  Specifies whether the consent screen will emphasize this scope (if the consent screen wants to implement such a
+  feature). Use this setting for sensitive or important scopes. Defaults to false.
 
 * **`ShowInDiscoveryDocument`**
-    
-    Specifies whether this scope is shown in the discovery document. Defaults to `true`.
+
+  Specifies whether this scope is shown in the discovery document. Defaults to `true`.
 
 * **`UserClaims`**
 
-    List of associated user claim types that should be included in the identity token.
+  List of associated user claim types that should be included in the identity token.

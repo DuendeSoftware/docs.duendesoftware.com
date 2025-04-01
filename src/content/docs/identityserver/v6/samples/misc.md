@@ -1,6 +1,6 @@
 ---
 title: "Miscellaneous"
-weight: 1000
+order: 1000
 ---
 
 ### Securing Azure Functions

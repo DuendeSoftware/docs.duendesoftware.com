@@ -1,6 +1,7 @@
 ---
 title: "Browser-Based Applications with a BFF"
-weight: 10
+sidebar:
+  order: 10
 ---
 
 :::note

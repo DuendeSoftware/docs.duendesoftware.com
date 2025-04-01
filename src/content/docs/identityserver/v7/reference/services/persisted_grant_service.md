@@ -1,6 +1,7 @@
 ---
 title: "Persisted Grant Service"
-weight: 43
+sidebar:
+  order: 43
 ---
 
 #### Duende.IdentityServer.Services.IPersistedGrantService

@@ -1,6 +1,6 @@
 ---
 title: "License Key"
-weight: 60
+order: 60
 ---
 
 When deploying your IdentityServer to production, you will need to configure your license key.

@@ -1,6 +1,6 @@
 ---
 title: "Signing Key Store"
-weight: 90
+order: 90
 ---
 
 #### Duende.IdentityServer.Stores.ISigningKeyStore

@@ -1,23 +1,24 @@
 ---
 title: "Device Authorization Endpoint"
 date: 2020-09-10T08:22:12+02:00
-weight: 8
+sidebar:
+  order: 8
 ---
 
 The device authorization endpoint can be used to request device and user codes.
 This endpoint is used to start the device flow authorization process.
 
 * **`client_id`**
-    
-    client identifier (required)
+
+  client identifier (required)
 
 * **`client_secret`**
-    
-    client secret either in the post body, or as a basic authentication header. Optional.
+
+  client secret either in the post body, or as a basic authentication header. Optional.
 
 * **`scope`**
 
-    one or more registered scopes. If not specified, a token for all explicitly allowed scopes will be issued
+  one or more registered scopes. If not specified, a token for all explicitly allowed scopes will be issued
 
 ```text
 POST /connect/deviceauthorization
@@ -28,7 +29,9 @@ POST /connect/deviceauthorization
 ```
 
 ## .NET client library
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code.
+
+You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
+the protocol endpoint from .NET code.
 
 ```cs
 using IdentityModel.Client;

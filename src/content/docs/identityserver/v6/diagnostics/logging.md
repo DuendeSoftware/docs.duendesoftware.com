@@ -1,7 +1,7 @@
 ---
 title: "Logging"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 ---
 
 Duende IdentityServer uses the standard logging facilities provided by ASP.NET Core. You don't need to do any extra configuration.

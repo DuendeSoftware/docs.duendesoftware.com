@@ -1,7 +1,7 @@
 ---
 title: "Proxy Servers and Load Balancers"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+order: 10
 ---
 
 In most situations, your IdentityServer is hosted using the IIS/ASP.NET Core Module, Nginx, or Apache. Proxy servers, load balancers, and other network appliances often obscure information about the request before it reaches the host, e.g.:

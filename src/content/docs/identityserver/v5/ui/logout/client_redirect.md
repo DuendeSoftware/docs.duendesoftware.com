@@ -1,6 +1,6 @@
 ---
 title: "Returning to the Client"
-weight: 60
+order: 60
 ---
 
 If sign-out was initiated by a client application, then the client first redirected the user to the [end session endpoint](/identityserver/v5/reference/endpoints/end_session).

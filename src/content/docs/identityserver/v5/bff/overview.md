@@ -1,7 +1,7 @@
 ---
 title: "Overview"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+order: 1
 ---
 
 Writing a browser-based application is hard, and when it comes to security, the guidance changes every year. It all started with securing your Ajax calls with cookies until we learned that this is prone to CSRF attacks. Then the IETF made JS-based OAuth *official* by introducing the Implicit Flow; until we learned how hard it is to protect against XSS, token leakage and the threat of token exfiltration. Seems you cannot win.

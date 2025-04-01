@@ -1,6 +1,6 @@
 ---
 title: "Authentication Session"
-weight: 20
+order: 20
 ---
 
 #Regardless of how the user proves their identity on the login page, an authentication session must be established.

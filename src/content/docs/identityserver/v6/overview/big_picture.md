@@ -1,7 +1,7 @@
 ---
 title: "The big Picture"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+order: 1
 ---
 
 Most modern applications look more or less like this:

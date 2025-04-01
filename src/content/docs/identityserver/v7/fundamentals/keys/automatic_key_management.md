@@ -1,7 +1,8 @@
 ---
 title: "Automatic Key Management"
 date: 2022-11-21T11:24:12-05:00
-weight: 50
+sidebar:
+  order: 50
 ---
 
 Duende IdentityServer can manage signing keys for you using the Automatic

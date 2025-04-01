@@ -1,6 +1,6 @@
 ---
 title: "DPoP Proof Validator"
-weight: 40
+order: 40
 ---
 
 #### Duende.IdentityServer.Validation.IDPoPProofValidator

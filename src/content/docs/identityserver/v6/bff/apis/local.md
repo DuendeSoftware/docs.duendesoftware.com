@@ -1,6 +1,6 @@
 ---
 title: "Local APIs"
-weight: 10
+order: 10
 ---
 
 A _Local API_ is an API that is located within the BFF host. Local APIs are implemented with the familiar ASP.NET abstractions of API controllers or minimal API endpoints. 

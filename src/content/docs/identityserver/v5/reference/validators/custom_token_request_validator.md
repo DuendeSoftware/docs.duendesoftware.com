@@ -1,7 +1,7 @@
 ---
 title: "Custom Token Request Validator"
 date: 2020-09-10T08:22:12+02:00
-weight: 47
+order: 47
 ---
 
 #### Duende.IdentityServer.Validation.ICustomTokenRequestValidator

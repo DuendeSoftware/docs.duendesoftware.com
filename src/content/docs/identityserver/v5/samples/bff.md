@@ -1,6 +1,6 @@
 ---
 title: "Backend for Frontend Pattern"
-weight: 30
+order: 30
 ---
 
 This solution contains a collection of clients using our [BFF security framework](/identityserver/v5/bff).

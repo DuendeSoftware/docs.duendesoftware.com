@@ -2,7 +2,8 @@
 title: "Overview"
 description: "Tokens"
 date: 2020-09-10T08:22:12+02:00
-weight: 1
+sidebar:
+  order: 1
 ---
 
 Duende IdentityServer is a token service engine based on OAuth 2.x and OpenID Connect.

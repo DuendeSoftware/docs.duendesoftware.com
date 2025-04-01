@@ -1,10 +1,11 @@
 ---
 title: "Licensing"
-weight: 60
+sidebar:
+  order: 60
 ---
 
 IdentityServer is [free](#trial-mode) for development, testing and personal projects, but production use
-requires a [license](https://duendesoftware.com/products/identityserver). 
+requires a [license](https://duendesoftware.com/products/identityserver).
 
 ## Editions
 
@@ -17,14 +18,14 @@ economical option that is a good fit for organizations with basic needs. It's al
 choice if you have an aging IdentityServer4 implementation that needs to be updated and
 licensed. The Starter edition includes all the features that were part of
 IdentityServer4, along with support for the latest .NET releases, improved observability
-through OTEL support, and years of bug fixes and enhancements. 
+through OTEL support, and years of bug fixes and enhancements.
 
 #### Business Edition
 
 The Business edition adds additional features that go beyond the core protocol support
 included in the Starter edition. This is a popular license because it adds the most
-commonly needed tools and features outside a basic protocol implementation. Feature 
-highlights include support for server side sessions and automatic signing key management. 
+commonly needed tools and features outside a basic protocol implementation. Feature
+highlights include support for server side sessions and automatic signing key management.
 
 #### Enterprise Edition
 
@@ -37,6 +38,7 @@ when you have a specific threat model or architectural need for these features.
 ## License Key
 
 The license key can be configured in one of two ways:
+
 * Via a well-known file on the file system
 * Programmatically in your startup code
 
@@ -44,7 +46,7 @@ You can also use other configuration sources such as Azure Key Vault, by using t
 programmatic approach.
 
 :::note
-If you want to redistribute Duende IdentityServer as part of a product to your customers, 
+If you want to redistribute Duende IdentityServer as part of a product to your customers,
 you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).
 To include the license key with your product, we recommend loading it at startup
 from an embedded resource.
@@ -57,7 +59,7 @@ IdentityServer looks for a file named `Duende_License.key` in the
 If present, the content of the file will be used as the license key.
 
 We consider the license key to be private to your organization, but not necessarily a secret.
-If you're using private source control that is scoped to your organization, 
+If you're using private source control that is scoped to your organization,
 storing your license key within it is acceptable.
 
 #### Startup
@@ -82,12 +84,12 @@ builder.Services.AddIdentityServer(options =>
 
 #### Azure Key Vault
 
-When deploying IdentityServer to Microsoft Azure, you can make use of 
-[Azure Key Vault](https://azure.microsoft.com/products/key-vault/) to load the IdentityServer 
+When deploying IdentityServer to Microsoft Azure, you can make use of
+[Azure Key Vault](https://azure.microsoft.com/products/key-vault/) to load the IdentityServer
 license key at startup.
 
-Similarly to setting the license key programmatically, you can use the `AddIdentityServer` method 
-and use the overload  that accepts a lambda expression to configure the `LicenseKey` property for 
+Similarly to setting the license key programmatically, you can use the `AddIdentityServer` method
+and use the overload that accepts a lambda expression to configure the `LicenseKey` property for
 your IdentityServer.
 
 ```csharp
@@ -108,7 +110,7 @@ builder.Services.AddIdentityServer(options =>
 });
 ```
 
-If you are using [Azure App Configuration](https://azure.microsoft.com/products/app-configuration/), 
+If you are using [Azure App Configuration](https://azure.microsoft.com/products/app-configuration/),
 you can use a similar approach to load the license key into your IdentityServer host.
 
 ## License Validation and Logging
@@ -138,7 +140,7 @@ features will be disabled at runtime if your license does not include them, incl
 - DPoP
 - Resource Isolation
 - PAR
-- Dynamic Identity Providers 
+- Dynamic Identity Providers
 - CIBA
 
 Again, the absence of a license is permitted for development and testing, and therefore
@@ -178,7 +180,7 @@ We understand that when IdentityServer is redistributed, log messages from the l
 system are not likely to be very useful to your redistribution customers. For that reason,
 in a redistribution the severity of log messages from the license system is turned all the
 way down to the trace level. We also appreciate that it might be cumbersome to deploy
-updated licenses in this scenario, especially if the deployment of your software does not 
+updated licenses in this scenario, especially if the deployment of your software does not
 coincide with the duration of the IdentityServer license. In that situation, we ask that you
 update the license key at the next deployment of your software to your redistribution customers.
 Of course, you are always responsible for ensuring that your license is renewed.
@@ -188,12 +190,12 @@ Of course, you are always responsible for ensuring that your license is renewed.
 The severity of the log messages described above depend on the nature of the message and the type of
 license.
 
-| Type of Message              | Standard License        | Redistribution License (development*) | Redistribution License (production*) |
-|------------------------------|-------------------------|--------------------------------------|---------------------------------------|
-| Startup, missing license     | Warning                 | Warning                              | Warning                               |
-| Startup, license details     | Debug                   | Debug                                | Trace                                 |
-| Startup, valid license notice| Informational           | Informational                        | Trace                                 |
-| Startup, violations          | Error                   | Error                                | Trace                                 |
-| Runtime, violations          | Error                   | Error                                | Trace                                 |
+| Type of Message               | Standard License | Redistribution License (development*) | Redistribution License (production*) |
+|-------------------------------|------------------|---------------------------------------|--------------------------------------|
+| Startup, missing license      | Warning          | Warning                               | Warning                              |
+| Startup, license details      | Debug            | Debug                                 | Trace                                |
+| Startup, valid license notice | Informational    | Informational                         | Trace                                |
+| Startup, violations           | Error            | Error                                 | Trace                                |
+| Runtime, violations           | Error            | Error                                 | Trace                                |
 
 \* as determined by `IHostEnvironment.IsDevelopment()`

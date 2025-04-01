@@ -2,7 +2,8 @@
 title: "Requesting a Token"
 description: "Overview"
 date: 2020-09-10T08:22:12+02:00
-weight: 10
+sidebar:
+  order: 10
 ---
 
 A typical architecture is composed of two application (aka client) [types](/identityserver/v7/overview/terminology#client) - machine to machine calls and interactive applications.

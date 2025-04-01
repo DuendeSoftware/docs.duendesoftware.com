@@ -1,12 +1,14 @@
 ---
 title: "Configuration Options"
 description: "Entity Framework"
-weight: 20
+sidebar:
+  order: 20
 ---
 
 #### Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions
 
-These options are configurable when using the Entity Framework Core for the [configuration store](/identityserver/v7/data/configuration):
+These options are configurable when using the Entity Framework Core for
+the [configuration store](/identityserver/v7/data/configuration):
 
 You set the options at startup time in your `AddConfigurationStore` method:
 
@@ -24,21 +26,20 @@ Settings that affect the DbContext pooling feature of Entity Framework Core.
 
 * **`EnablePooling`**
 
-    Gets or set if EF DbContext pooling is enabled. Defaults to `false`.
+  Gets or set if EF DbContext pooling is enabled. Defaults to `false`.
 
-    
+
 * **`PoolSize`**
 
-    Gets or set the pool size to use when DbContext pooling is enabled. If not set, the EF default is used.
+  Gets or set the pool size to use when DbContext pooling is enabled. If not set, the EF default is used.
 
-    
 ## Schema
 
 Settings that affect the database schema and table names.
 
 * **`DefaultSchema`**
 
-    Gets or sets the default schema. Defaults to `null`.
+  Gets or sets the default schema. Defaults to `null`.
 
 `TableConfiguration` settings for each individual table (schema and name) managed by this feature:
 
@@ -67,7 +68,7 @@ Client related tables:
 * **`ClientClaim`**
 * **`ClientIdPRestriction`**
 * **`ClientCorsOrigin`**
-* **`ClientProperty`** 
+* **`ClientProperty`**
 
 API Scope related tables:
 

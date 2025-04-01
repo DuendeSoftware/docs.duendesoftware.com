@@ -1,6 +1,7 @@
 ---
 title: "Custom Authorize Request Validator"
-weight: 10
+sidebar:
+  order: 10
 ---
 
 #### Duende.IdentityServer.Validation.ICustomAuthorizeRequestValidator
@@ -23,6 +24,8 @@ public interface ICustomAuthorizeRequestValidator
 
 * **`ValidateAsync`**
 
-    This method gets called during authorize request processing. The context gives you access to request and response parameters.
+  This method gets called during authorize request processing. The context gives you access to request and response
+  parameters.
 
-    To fail the request, set the the `IsError`, the `Error`, and optionally the `ErrorDescription` properties on the `Result` object on the `CustomAuthorizeRequestValidationContext`.
+  To fail the request, set the the `IsError`, the `Error`, and optionally the `ErrorDescription` properties on the
+  `Result` object on the `CustomAuthorizeRequestValidationContext`.

@@ -1,6 +1,6 @@
 ---
 title: "Backchannel Authentication Interaction Service"
-weight: 80
+order: 80
 ---
 
 #### Duende.IdentityServer.Services.IBackchannelAuthenticationInteractionService
