@@ -68,7 +68,7 @@ export default defineConfig({
 					reactions: true,
 					inputPosition: 'top',
 					theme: {
-						auto: 'preferred_color_scheme',
+						auto: 'light',
 						dark: 'dark_dimmed',
 						light: 'preferred_color_scheme',
 					},
