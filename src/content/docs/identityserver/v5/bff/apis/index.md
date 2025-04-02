@@ -1,11 +1,9 @@
 ---
-title: API Endpoints
+title: Securing and Accessing API Endpoints
 sidebar:
+  label: API Endpoints
   order: 40
 ---
-
-
-# Securing and Accessing API Endpoints
 
 A typical frontend application will call two types of APIs:
 

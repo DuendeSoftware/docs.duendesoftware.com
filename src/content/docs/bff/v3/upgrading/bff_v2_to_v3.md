@@ -7,13 +7,11 @@ sidebar:
 
 ## What's New
 
-
 Duende BFF Security Framework v3.0 is a significant release that includes:
 
 * .NET 9 support
 * Blazor support 
 * Several fixes and improvements
-
 
 # Upgrading
 

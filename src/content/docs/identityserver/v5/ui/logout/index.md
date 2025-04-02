@@ -4,9 +4,6 @@ sidebar:
   order: 10
 ---
 
-
-# Logout Page
-
 The logout page is responsible for terminating the user's authentication session.
 This is a potentially complicated process and involves these steps:
 * Ending the session by removing the authentication session cookie in your IdentityServer.

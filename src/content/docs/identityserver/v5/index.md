@@ -1,9 +1,10 @@
 ---
-title: "IdentityServer (v5)"
-order: 1
+title: Duende IdentityServer v5 Documentation
+sidebar:
+  label: IdentityServer (v5)
+  order: 1
 ---
 
-# Duende IdentityServer v5 Documentation
 The most flexible & standards-compliant OpenID Connect and OAuth 2.0 framework for ASP.NET Core.
 
 :::note

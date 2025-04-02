@@ -1,11 +1,10 @@
 ---
-title: "Configuration Options"
-description: "BFF"
+title: BFF Configuration Options
+sidebar:
+  label: BFF Options
+description: "BFF configuration options"
 date: 2020-09-10T08:22:12+02:00
-order: 90
 ---
-
-# BFF Options
 
 The *Duende.BFF.BffOptions* allows to configure several aspects of the BFF framework.
 
@@ -133,6 +132,7 @@ builder.Services.AddBlazorServer(opt =>
 {
     // configure options here..
 })
+```
 
 The following options are available:
 
@@ -140,7 +140,6 @@ The following options are available:
     The delay, in milliseconds, between polling requests by the
     BffServerAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
     ms.
-
 
 # BFF Blazor Client Options
 

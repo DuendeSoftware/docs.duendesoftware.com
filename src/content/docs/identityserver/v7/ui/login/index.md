@@ -4,9 +4,6 @@ sidebar:
   order: 1
 ---
 
-
-# Login Page
-
 The login page is responsible for establishing the user's authentication session.
 This requires a user to present credentials and typically involves these steps:
 * Provide the user with a page to allow them to enter credentials locally, use an external login provider, or use some other means of authenticating.

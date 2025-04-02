@@ -4,9 +4,6 @@ sidebar:
   order: 10
 ---
 
-
-# JavaScript/SPA Client Applications
-
 When building JavaScript (or SPA) applications, there are two main styles: those
 with a backend and those without.
 

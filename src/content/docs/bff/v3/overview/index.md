@@ -7,9 +7,10 @@ order: 1
 
 Single-Page Applications (SPAs) are increasingly common, offering rich functionality within the browser. Front-end development has rapidly evolved with new frameworks and changing browser security requirements. Consequently, best practices for securing these applications have also shifted dramatically. 
 
-While implementing OAuth logic directly in the browser was once considered acceptable, this is no longer recommended. Storing any authentication state in the browser (such as access tokens) has proven to be inherently risky (see Threats against browser based applications). Because of this, the IETF is currently recommending delegating all authentication logic to a server-based host via a Backend-For-Frontend pattern as the preferred approach to securing modern web applications.". 
+While implementing OAuth logic directly in the browser was once considered acceptable, this is no longer recommended. Storing any authentication state in the browser (such as access tokens) has proven to be inherently risky (see Threats against browser based applications). Because of this, the IETF is currently recommending delegating all authentication logic to a server-based host via a Backend-For-Frontend pattern as the preferred approach to securing modern web applications.
 
 ## The Backend For Frontend Pattern
+
 The BFF pattern (Backend-For-Frontend) pattern states that every browser based application should also have a server side application that handles all authentication requirements, including performing authentication flows and securing access to api’s. 
 
 The server will now expose http endpoints that the browser can use to login, logout or interrogate the active session. With this, the browser based application can trigger an authentication flow by redirecting to a URL, such as /bff/login. Once the authentication process is completed, the server places a secure authentication cookie in the browser. This cookie is then used to authenticate all subsequent requests, until the user is logged out again. 
@@ -21,11 +22,12 @@ With this approach, the browser based application will not have direct access to
 As the name of this pattern already implies, the BFF backend is the (only) Backend for the Frontend. They should be considered part of the same application. It should only expose the api’s that the front-end needs to function. 
 
 ## 3rd party cookies
+
 In recent years, several browsers (notably Safari and Firefox) have started to block 3rd party cookies. Chrome is planning to do the same in the future. While this is done for valid privacy reasons, it also limits some of the functionality a browser based application can provide. A couple of particularly notable OIDC flows that don’t work for SPAs when third party cookies are blocked are OIDC Session Management and OIDC Silent Login via the prompt=none parameter.
 
 ## CSRF protection
-There is one thing to keep an eye out for with this pattern, and that’s Cross Site Request Forgery (CSRF). The browser automatically sends the authentication cookie for safe-listed cross origin requests, which exposes the application to CORS Attacks. Fortunately, this threat can easily be mitigated by a BFF solution by requiring a custom header to be passed along. See more on CORS protection.
 
+There is one thing to keep an eye out for with this pattern, and that’s Cross Site Request Forgery (CSRF). The browser automatically sends the authentication cookie for safe-listed cross origin requests, which exposes the application to CORS Attacks. Fortunately, this threat can easily be mitigated by a BFF solution by requiring a custom header to be passed along. See more on CORS protection.
 
 # The Duende BFF framework
 
