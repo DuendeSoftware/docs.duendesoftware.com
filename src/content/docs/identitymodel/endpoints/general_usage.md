@@ -1,7 +1,7 @@
 ---
 title: General Usage
 sidebar:
-  order: 10
+  order: 1
 ---
 
 

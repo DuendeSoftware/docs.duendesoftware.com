@@ -1,7 +1,7 @@
 ---
 title: Creating Authorize and EndSession URLs
 sidebar:
-  order: 60
+  order: 4
 ---
 
 The *RequestUrl* class is a helper for creating URLs with query string parameters, e.g.:

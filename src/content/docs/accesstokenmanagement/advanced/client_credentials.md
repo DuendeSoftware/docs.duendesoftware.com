@@ -1,10 +1,11 @@
 ---
 title: Customizing Client Credentials Token Management
 sidebar:
-  order: 10
+  label: Client Credentials
+  order: 1
 ---
 
-The most common way to use the access token management for machine to machine communication is described [here](../workers.md) - however you may want to customize certain aspects of it - here's what you can do.
+The most common way to use the access token management for machine to machine communication is described [here](/accesstokenmanagement/workers) - however you may want to customize certain aspects of it - here's what you can do.
 
 ## Client options
 

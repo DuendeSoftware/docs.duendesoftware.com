@@ -39,9 +39,9 @@ When using reference tokens, the cnf claim will be returned from the introspecti
 }
 ```
 
-This is done automatically if you [authenticate](../tokens/authentication/mtls) the client using a TLS client certificate.
+This is done automatically if you [authenticate](/identityserver/v5/tokens/authentication/mtls) the client using a TLS client certificate.
 
-The client must then use the same client certificate to call the APIs, and your APIs can [validate](../apis/aspnetcore/confirmation) the *cnf* claim by comparing it to the thumbprint of the client certificate on the TLS channel.
+The client must then use the same client certificate to call the APIs, and your APIs can [validate](/identityserver/v5/apis/aspnetcore/confirmation) the *cnf* claim by comparing it to the thumbprint of the client certificate on the TLS channel.
 
 If the access token would leak, it cannot be replayed without having access to the additional private key of the X.509 client certificate.
 

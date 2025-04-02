@@ -32,7 +32,7 @@ ASP.NET's data protection keys are sometimes confused with IdentityServer's sign
 Data protection is a cryptographic library that is part of the ASP.NET framework. Data protection uses private key cryptography to encrypt and sign sensitive data to ensure that it is only written and read by the application. The framework uses data protection to secure data that is commonly used by IdentityServer implementations, such as authentication cookies and anti-forgery tokens. In addition, IdentityServer itself uses data protection to protect sensitive data at rest, such as persisted grants, as well as sensitive data passed through the browser, such as the context objects passed to pages in the UI. The data protection keys are critical secrets for an IdentityServer implementation because they encrypt a great deal of sensitive data at rest and prevent sensitive data that is roundtripped through the browser from being tampered with.
 
 #### IdentityServer Signing Key
-Separately, IdentityServer needs cryptographic keys, called [signing keys](../fundamentals/keys), to sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client applications and APIs to validate token signatures using the public keys, which are published by IdentityServer through [discovery](../reference/endpoints/discovery). The private key component of the signing keys are also critical secrets for IdentityServer because a valid signature provides integrity and non-repudiation guarantees that allow client applications and APIs to trust those tokens. 
+Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/v6/fundamentals/keys), to sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client applications and APIs to validate token signatures using the public keys, which are published by IdentityServer through [discovery](/identityserver/v6/reference/endpoints/discovery). The private key component of the signing keys are also critical secrets for IdentityServer because a valid signature provides integrity and non-repudiation guarantees that allow client applications and APIs to trust those tokens. 
 
 ## Common Problems
 Common data protection problems occur when data is protected with a key that is not available when the data is later read. A common symptom is *CryptographicException*s in the IdentityServer logs. For example, when automatic key management fails to read its signing keys due to a data protection failure, IdentityServer will log an error message such as "Error unprotecting key with kid {Signing Key ID}.", and log the underlying *System.Security.Cryptography.CryptographicException*, with a message like "The key {Data Protection Key ID} was not found in the key ring." 
@@ -49,9 +49,9 @@ There are several ways that data protection problems can occur:
 ## Identity Server's Usage of Data Protection
 Duende IdentityServer's features that rely on data protection include
 
-* protecting signing keys at rest (if [automatic key management](../fundamentals/keys/automatic_key_management) is used and enabled)
-* protecting [persisted grants](../data/operational/grants) at rest (if enabled)
-* protecting [server-side session](../ui/server_side_sessions) data at rest (if enabled)
-* protecting [the state parameter](../ui/login/external#state-url-length-and-isecuredataformat) for external OIDC providers (if enabled)
-* protecting message payloads sent between pages in the UI (e.g. [logout context](../ui/logout/logout_context) and [error context](../ui/error)).
+* protecting signing keys at rest (if [automatic key management](/identityserver/v6/fundamentals/keys/automatic_key_management) is used and enabled)
+* protecting [persisted grants](/identityserver/v6/data/operational/grants) at rest (if enabled)
+* protecting [server-side session](/identityserver/v6/ui/server_side_sessions) data at rest (if enabled)
+* protecting [the state parameter](/identityserver/v6/ui/login/external#state-url-length-and-isecuredataformat) for external OIDC providers (if enabled)
+* protecting message payloads sent between pages in the UI (e.g. [logout context](/identityserver/v6/ui/logout/logout_context) and [error context](/identityserver/v6/ui/error)).
 * session management (because the ASP.NET Core cookie authentication handler requires it)

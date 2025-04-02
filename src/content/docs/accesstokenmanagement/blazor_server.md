@@ -1,7 +1,7 @@
 ---
 title: Blazor Server
 sidebar:
-  order: 20
+  order: 4
 ---
 
 Blazor Server applications have the same token management requirements as a regular ASP.NET Core web application. Because Blazor Server streams content to the application over a websocket, there often is no HTTP request or response to interact with during the execution of a Blazor Server application. You therefore cannot use *HttpContext* in a Blazor Server application as you would in a traditional ASP.NET Core web application.

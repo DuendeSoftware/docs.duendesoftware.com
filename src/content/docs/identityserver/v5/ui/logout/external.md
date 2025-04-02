@@ -3,7 +3,7 @@ title: "External Logout"
 order: 70
 ---
 
-When a user is [logging out](../logout), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.
+When a user is [logging out](/identityserver/v5/ui/logout), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.
 Not all external providers support sign-out, as it depends on the protocol and features they support.
 
 Don't forget that your logout page still needs to complete all the other steps to properly sign the user out.
@@ -49,7 +49,7 @@ These steps require the context passed as the *logoutId* parameter, so this stat
 We can do so by incorporating the *logoutId* value into the *RedirectUri*.
 
 If there is no *logoutId* parameter on the original logout page request, we still might have context that needs to be round tripped.
-We can obtain a *logoutId* to use by calling *CreateLogoutContextAsync* API on the [interaction service](../reference/services/interaction_service).
+We can obtain a *logoutId* to use by calling *CreateLogoutContextAsync* API on the [interaction service](/identityserver/v5/reference/services/interaction_service).
 
 For example:
 

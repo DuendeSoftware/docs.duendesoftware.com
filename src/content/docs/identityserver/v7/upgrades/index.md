@@ -1,6 +1,7 @@
 ---
-title: Overview
+title: Upgrading IdentityServer
 sidebar:
+  label: Overview
   order: 1
 ---
 

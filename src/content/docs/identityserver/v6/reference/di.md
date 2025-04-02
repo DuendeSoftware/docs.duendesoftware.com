@@ -14,7 +14,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 :::note
-Many of the fundamental configuration settings can be set on the options. See the *[IdentityServerOptions](../reference/options)* reference for more details.
+Many of the fundamental configuration settings can be set on the options. See the *[IdentityServerOptions](/identityserver/v6/reference/options)* reference for more details.
 :::
 
 
@@ -39,7 +39,7 @@ Several convenience methods are provided for registering custom stores:
     Registers a custom *IIdentityProviderStore* implementation.
 
 
-The [in-memory configuration stores](../data/configuration#in-memory-stores) can be registered in DI with the following extension methods.
+The [in-memory configuration stores](/identityserver/v6/data/configuration#in-memory-stores) can be registered in DI with the following extension methods.
 
 
 * ***AddInMemoryClients***
@@ -60,7 +60,7 @@ The [in-memory configuration stores](../data/configuration#in-memory-stores) can
 
 ## Caching Configuration Data
 
-Extension methods to enable [caching for configuration data](../data/configuration#caching-configuration-data):
+Extension methods to enable [caching for configuration data](/identityserver/v6/data/configuration#caching-configuration-data):
 
 * ***AddInMemoryCaching<T>***
     
@@ -101,16 +101,16 @@ The use of *TestUser* is not recommended in production.
 ## Signing keys
 Duende IdentityServer needs key material to sign tokens. This key material can
 either be created and 
-[managed automatically](../fundamentals/keys/automatic_key_management) 
+[managed automatically](/identityserver/v6/fundamentals/keys/automatic_key_management) 
 or 
-[configured statically](../fundamentals/keys/static_key_management).
+[configured statically](/identityserver/v6/fundamentals/keys/static_key_management).
 
 :::note
 
 We recommend that you use automatic key management. This section covers the
 configuration methods needed for manual configuration of signing keys, which are
 usually only needed if your license does not include automatic key management or
-if you are [migrating](../fundamentals/keys/migration) from manually
+if you are [migrating](/identityserver/v6/fundamentals/keys/migration) from manually
 managed keys to automatic key management.
 
 :::
@@ -154,7 +154,7 @@ The following are convenient to add additional features to your IdentityServer.
 
 * ***AddProfileService***
 
-    Adds an *[IProfileService](../reference/services/profile_service.md)* implementation.
+    Adds an *[IProfileService](/identityserver/v6/reference/services/profile_service)* implementation.
     The default implementation (found in *DefaultProfileService*) relies upon the authentication cookie as the only source of claims for issuing in tokens.
 
 * ***AddAuthorizeInteractionResponseGenerator***

@@ -9,7 +9,7 @@ Welcome to Quickstart 2 for Duende IdentityServer!
 
 In this quickstart, you will add support for interactive user authentication via
 the OpenID Connect protocol to the IdentityServer you built in [Quickstart
-1](1_client_credentials). Once that is in place, you will create
+1](/identityserver/v7/quickstarts/1_client_credentials). Once that is in place, you will create
 an ASP.NET Razor Pages application that will use IdentityServer for
 authentication.
 
@@ -20,7 +20,7 @@ from a copy of
 the [reference implementation of Quickstart 1](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](0_overview#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/v7/quickstarts/0_overview#preparation).
 
 :::
 
@@ -276,7 +276,7 @@ cookie (as they will be needed later).
 :::note
 
 This uses the *authorization code* flow with PKCE to connect to the OpenID
-Connect provider. See [here](../fundamentals/clients) for more
+Connect provider. See [here](/identityserver/v7/fundamentals/clients) for more
 information on protocol flows.
 
 :::

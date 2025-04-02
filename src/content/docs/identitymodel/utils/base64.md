@@ -1,7 +1,7 @@
 ---
 title: Base64 URL Encoding
 sidebar:
-  order: 40
+  order: 2
 ---
 
 JWT tokens are serialized using [Base64 URL

@@ -1,7 +1,7 @@
 ---
 title: Web Applications
 sidebar:
-  order: 20
+  order: 3
 ---
 
 This library automates all the tasks around access token lifetime management for user-centric web applications.

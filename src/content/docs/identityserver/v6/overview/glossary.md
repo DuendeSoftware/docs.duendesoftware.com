@@ -10,7 +10,7 @@ A client is a piece of software that requests tokens from your IdentityServer - 
 
 There are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server processes, etc.
 
-[More details](../fundamentals/clients)
+[More details](/identityserver/v6/fundamentals/clients)
 
 ## Automatic key management
 (Business Edition)
@@ -19,7 +19,7 @@ The automatic key management feature creates and manages key material for signin
 
 [More details](https://blog.duendesoftware.com/posts/20201028_key_management/)
 
-[Documentation](../fundamentals/keys/automatic_key_management)
+[Documentation](/identityserver/v6/fundamentals/keys/automatic_key_management)
 
 
 ## Server-side Session Management
@@ -33,7 +33,7 @@ The server-side session management feature extends the ASP.NET Core cookie authe
 
 [More details](https://blog.duendesoftware.com/posts/20220406_session_management/)
 
-[Documentation](../ui/server_side_sessions)
+[Documentation](/identityserver/v6/ui/server_side_sessions)
 
 
 ## BFF Security Framework
@@ -43,7 +43,7 @@ The Duende BFF (Backend for Frontend) security framework packages up guidance an
 
 [More details](https://blog.duendesoftware.com/posts/20210326_bff/)
 
-[Documentation](../bff)
+[Documentation](/identityserver/v6/bff)
 
 
 ## Dynamic Client Registration
@@ -51,7 +51,7 @@ The Duende BFF (Backend for Frontend) security framework packages up guidance an
 
 Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register clients and their configuration.
 
-[Documentation](../configuration)
+[Documentation](/identityserver/v6/configuration)
 
 ## Dynamic Authentication Providers
 (Enterprise Edition)
@@ -61,7 +61,7 @@ This is designed to address the performance concern as well as allowing changes 
 
 [More details](https://blog.duendesoftware.com/posts/20210517_dynamic_providers/)
 
-[Documentation](../ui/login/dynamicproviders)
+[Documentation](/identityserver/v6/ui/login/dynamicproviders)
 
 
 ## Resource Isolation
@@ -72,7 +72,7 @@ This allows API-specific features such as access token encryption and isolation 
 
 [More details](https://blog.duendesoftware.com/posts/20201230_resource_isolation/)
 
-[Documentation](../fundamentals/resources/isolation)
+[Documentation](/identityserver/v6/fundamentals/resources/isolation)
 
 
 ## CIBA
@@ -84,14 +84,14 @@ CIBA is one of the requirements to support the Financal-grade API compliance.
 
 [More details](https://blog.duendesoftware.com/posts/20220107_ciba/)
 
-[Documentation](../ui/ciba)
+[Documentation](/identityserver/v6/ui/ciba)
 
 ## Proof-of-Possession at the Application Layer / DPoP
 (Enterprise Edition)
 
 A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This mechanism allows for the detection of replay attacks with access and refresh tokens.
 
-[Documentation](../tokens/pop/dpop)
+[Documentation](/identityserver/v6/tokens/pop/dpop)
 
 ## Single Deployment
 A single deployment acts as a single OpenID Connect / OAuth authority hosted at a single URL. It can consist of multiple physical or virtual nodes for load-balancing or fail-over purposes.
@@ -117,4 +117,4 @@ Helpdesk system with guaranteed response time for Duende Software product issues
 ## Security Notification System
 Notification system for security bugs and/or reported vulnerabilities.
 
-[More details](../overview/security#vulnerability-management-process)
+[More details](/identityserver/v6/overview/security#vulnerability-management-process)

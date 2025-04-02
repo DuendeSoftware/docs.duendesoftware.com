@@ -1,7 +1,7 @@
 ---
 title: Logging
 sidebar:
-  order: 30
+  order: 4
 ---
 
 OidcClient logs errors, warnings, and diagnostic information using

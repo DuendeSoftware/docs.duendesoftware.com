@@ -9,7 +9,7 @@ When these records are cleaned up, you can optionally notify the client that the
 
 ## Expiration Configuration
 
-The expiration configuration features can be configured with the [server-side session options](../reference/options#server-side-sessions).
+The expiration configuration features can be configured with the [server-side session options](/identityserver/v6/reference/options#server-side-sessions).
 It is enabled by default, but if you wish to disable it or change how often IdentityServer will check for expired sessions, you can. 
 
 For example:
@@ -25,7 +25,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 ### Back-channel Logout
-When the session cleanup job removes expired records, it will by default also trigger [back-channel logout notifications](../ui/logout/notification#back-channel-server-side-clients) to client applications participating in the session. You can use this mechanism to create an [inactivity timeout](inactivity_timeout) that applies across all your client applications.
+When the session cleanup job removes expired records, it will by default also trigger [back-channel logout notifications](/identityserver/v6/ui/logout/notification#back-channel-server-side-clients) to client applications participating in the session. You can use this mechanism to create an [inactivity timeout](inactivity_timeout) that applies across all your client applications.
 
 The *ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout* flag enables this behavior, and it is on by default.
 

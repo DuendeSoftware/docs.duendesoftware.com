@@ -1,13 +1,14 @@
 ---
-title: Overview
+title: Protecting APIs
 date: 2020-09-10T08:20:20+02:00
 sidebar:
-   order: 1
+  label: Overview
+  order: 1
 ---
 
 Duende IdentityServer issues tokens for accessing resources.
 
-These resources are very often HTTP-based APIs, but could be also other "invocable" functionality like messaging endpoints, gRPC services or even good old XML Web Services. See the [issuing tokens](../tokens/overview) section on more information on access tokens and how to request them.
+These resources are very often HTTP-based APIs, but could be also other "invocable" functionality like messaging endpoints, gRPC services or even good old XML Web Services. See the [issuing tokens](/identityserver/v7/tokens/overview) section on more information on access tokens and how to request them.
 
 ## Adding API Endpoints to IdentityServer
 

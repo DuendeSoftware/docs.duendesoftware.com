@@ -97,4 +97,4 @@ private async Task<IActionResult> ChallengeWindowsAsync(string returnUrl)
 }
 ```
 
-A sample is provided [here](../samples/windowsauth#iis-hosting).
+A sample is provided [here](/identityserver/v5/samples/windowsauth#iis-hosting).

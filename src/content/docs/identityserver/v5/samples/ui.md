@@ -3,7 +3,7 @@ title: "User Interaction"
 order: 20
 ---
 
-These samples illustrate customization of the [interactive pages](../ui) used in your IdentityServer.
+These samples illustrate customization of the [interactive pages](/identityserver/v5/ui) used in your IdentityServer.
 
 ### SPA-style login page
 This sample shows an example of building the interactive pages (login, consent, logout, and error) as client-rendered (typical of SPAs), rather than server-rendered. Since there are many different SPA frameworks, the actual pages are coded using vanilla JavaScript.
@@ -18,7 +18,7 @@ Key takeaways:
 
 ### Adding other protocol types to dynamic providers
 
-The [dynamic providers](../ui/login/dynamicproviders) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to support additional protocol types, and specifically WS-Federation.
+The [dynamic providers](/identityserver/v5/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to support additional protocol types, and specifically WS-Federation.
 
 Key takeaways:
 

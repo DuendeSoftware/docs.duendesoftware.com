@@ -4,7 +4,7 @@ order: 1
 ---
 
 :::note
-For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview](../0_overview) first.
+For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview](/identityserver/v5/quickstarts/0_overview) first.
 :::
 
 This quickstart will show how to build a browser-based JavaScript client application with a backend. 
@@ -51,7 +51,7 @@ Modify the *JavaScriptClient* project to run on *https://localhost:5003*.
 ### Add services
 
 With the BFF pattern, the server-side code is responsible for triggering and receiving the OpenID Connect requests and responses.
-This means that for our JavaScript application the configuration for session management and OpenID Connect is really no different than our prior [MVC application quickstart](../3_api_access).
+This means that for our JavaScript application the configuration for session management and OpenID Connect is really no different than our prior [MVC application quickstart](/identityserver/v5/quickstarts/3_api_access).
 We will be using API controllers later, so we need a call to *AddControllers()*.
 Additionally, the BFF services need to be added with *AddBff()*.
 
@@ -410,7 +410,7 @@ The remote API path uses a "/remote" prefix to indicate that the BFF proxy shoul
 Notice both API calls require a *'X-CSRF': '1'* header, which acts as the anti-forgery token.
 
 :::note
-See the [client credentials quickstart](../quickstarts/1_client_credentials) for information on how to create the remote API used in the code above.
+See the [client credentials quickstart](/identityserver/v5/quickstarts/1_client_credentials) for information on how to create the remote API used in the code above.
 :::
 
 ## Run and test the API calls

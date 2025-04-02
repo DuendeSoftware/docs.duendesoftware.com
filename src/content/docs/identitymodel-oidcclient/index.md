@@ -1,6 +1,7 @@
 ---
 title: Duende.IdentityModel.OidcClient
 sidebar:
+  label: Overview
   order: 1
 ---
 
@@ -18,4 +19,3 @@ You can use OidcClient to build:
 - Android and iPhone apps with .NET MAUI
 - Windows Desktop Applications with WPF or WinForms
 - Cross Platform Console Applications
-

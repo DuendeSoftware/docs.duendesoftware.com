@@ -7,10 +7,10 @@ order: 40
 During an authorization request, if user consent is required the browser will be redirected to the consent page.
 
 :::note
-You can configure the consent requirement per client. By default no consent is required, but this setting can be changed via the *RequireConsent* [setting](../reference/models/client#consent-screen).
+You can configure the consent requirement per client. By default no consent is required, but this setting can be changed via the *RequireConsent* [setting](/identityserver/v6/reference/models/client#consent-screen).
 :::
 
-Consent is used to allow an end user to grant a client access to [resources](../fundamentals/resources).
+Consent is used to allow an end user to grant a client access to [resources](/identityserver/v6/fundamentals/resources).
 
 ## Consent Page
 In order for the user to grant consent, a consent page must be provided by the
@@ -35,12 +35,12 @@ Once the user has provided consent, the consent page must inform your IdentitySe
 
 ## Authorization Context
 Your IdentityServer will pass a *returnUrl* parameter to the consent page which contains the parameters of the authorization request.
-These parameters provide the context for the consent page, and can be read with help from the [interaction service](../reference/services/interaction_service).
+These parameters provide the context for the consent page, and can be read with help from the [interaction service](/identityserver/v6/reference/services/interaction_service).
 
 The *GetAuthorizationContextAsync* API will return an instance of *AuthorizationRequest*. Additional details about the client or resources can be obtained using the *IClientStore* and *IResourceStore* interfaces. 
 
 ## Informing IdentityServer of the consent result
-The *GrantConsentAsync* API on the [interaction service](../reference/services/interaction_service) allows the consent page to inform your IdentityServer of the outcome of consent (which might also be to deny the client access).
+The *GrantConsentAsync* API on the [interaction service](/identityserver/v6/reference/services/interaction_service) allows the consent page to inform your IdentityServer of the outcome of consent (which might also be to deny the client access).
 
 Your IdentityServer will temporarily persist the outcome of the consent.
 This persistence uses a cookie by default, as it only needs to last long enough to convey the outcome back to the authorization endpoint.
@@ -50,7 +50,7 @@ If you wish to use some other persistence between the consent page and the autho
 ## Returning the user to the authorization endpoint
 Once the consent page has informed IdentityServer of the outcome, the user can be redirected back to the *returnUrl*. 
 Your consent page should protect against open redirects by verifying that the *returnUrl* is valid.
-This can be done by calling *IsValidReturnUrl* on the [interaction service](../reference/services/interaction_service).
+This can be done by calling *IsValidReturnUrl* on the [interaction service](/identityserver/v6/reference/services/interaction_service).
 
 Also, if *GetAuthorizationContextAsync* returns a non-null result, then you can also trust that the *returnUrl* is valid.
 

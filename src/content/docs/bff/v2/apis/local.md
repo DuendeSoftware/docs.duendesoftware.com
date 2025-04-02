@@ -30,7 +30,7 @@ endpoints. The benefits of this style of Local Endpoint include
   the BFF proxied all requests to the endpoint.
 - Your BFF endpoint can include business logic to call the appropriate endpoints, which simplifies your front end code.
 
-Your local endpoints can leverage services like the HTTP client factory and Duende.BFF [token management](../tokens) to
+Your local endpoints can leverage services like the HTTP client factory and Duende.BFF [token management](/bff/v2/tokens) to
 make the outgoing calls. The following is a simplified example showing how local endpoints can obtain managed access
 tokens and use them to make requests to remote APIs.
 
@@ -66,7 +66,7 @@ public class MyApiController : ControllerBase
 The example above is simplified to demonstrate the way that you might obtain a token. Real local endpoints will
 typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic.
 Local endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you
-could proxy the requests through the BFF using either the [simple http forwarder](remote) or [YARP](yarp).
+could proxy the requests through the BFF using either the [simple http forwarder](/bff/v2/apis/remote) or [YARP](/bff/v2/apis/yarp).
 
 ## Securing Local API Endpoints
 

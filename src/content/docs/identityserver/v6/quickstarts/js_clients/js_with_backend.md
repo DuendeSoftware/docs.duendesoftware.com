@@ -10,7 +10,7 @@ We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base *quickstart*
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](../0_overview#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/v6/quickstarts/0_overview#preparation).
 
 :::
 
@@ -84,7 +84,7 @@ Modify the *JavaScriptClient* project to run on *https://localhost:5003*. Its
 
 In the BFF pattern, the server-side code triggers and receives OpenID Connect
 requests and responses. To do that, it needs the same services configured as the
-WebClient did in the prior [web application quickstart](../3_api_access). Additionally, the BFF services need to be added with
+WebClient did in the prior [web application quickstart](/identityserver/v6/quickstarts/3_api_access). Additionally, the BFF services need to be added with
 *AddBff()*. 
 
 Add the following to *src/JavaScriptClient/Program.cs*:
@@ -493,7 +493,7 @@ anti-forgery token.
 
 :::note
 
-See the [client credentials quickstart](../quickstarts/1_client_credentials) for information on how to create the
+See the [client credentials quickstart](/identityserver/v6/quickstarts/1_client_credentials) for information on how to create the
 remote API used in the code above. 
 
 :::

@@ -102,7 +102,7 @@ Duende.BFF's YARP extensions provide access token management and attach user or 
 }
 ```
 
-Similarly to the [simple HTTP forwarder](../bff/apis/remote#access-token-requirements), the allowed values for the token type are *User*, *Client*, *UserOrClient*. 
+Similarly to the [simple HTTP forwarder](/identityserver/v6/bff/apis/remote#access-token-requirements), the allowed values for the token type are *User*, *Client*, *UserOrClient*. 
 
 Routes that set the *Duende.Bff.Yarp.TokenType* metadata **require** the given type of access token. If it is unavailable (for example, if the *User* token type is specified but the request to the BFF is anonymous), then the proxied request will not be sent, and the BFF will return an HTTP 401: Unauthorized response.
 

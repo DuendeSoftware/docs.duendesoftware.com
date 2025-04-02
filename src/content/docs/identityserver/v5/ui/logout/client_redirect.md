@@ -3,7 +3,7 @@ title: "Returning to the Client"
 order: 60
 ---
 
-If sign-out was initiated by a client application, then the client first redirected the user to the [end session endpoint](../reference/endpoints/end_session).
+If sign-out was initiated by a client application, then the client first redirected the user to the [end session endpoint](/identityserver/v5/reference/endpoints/end_session).
 This can be determined if a *logoutId* is passed to the login page and the returned *LogoutRequest*'s *PostLogoutRedirectUri* is set.
 
 ## How to Redirect

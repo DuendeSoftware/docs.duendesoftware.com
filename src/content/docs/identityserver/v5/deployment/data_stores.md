@@ -25,4 +25,4 @@ For certain operations, IdentityServer needs a persistence store to keep state, 
 
 You can either use a traditional database for storing operational data, or use a cache with persistence features like Redis.
 
-Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](../data) section for more information.
+Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](/identityserver/v5/data) section for more information.

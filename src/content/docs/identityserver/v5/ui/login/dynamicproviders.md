@@ -11,7 +11,7 @@ Duende IdentityServer provides support for dynamic configuration of OpenID Conne
 
 ### Listing and displaying the dynamic providers on the login page
 
-The [identity provider store](../reference/stores/idp_store) can be used to query the database containing the dynamic providers.
+The [identity provider store](/identityserver/v5/reference/stores/idp_store) can be used to query the database containing the dynamic providers.
 
 ```cs
     /// <summary>
@@ -60,11 +60,11 @@ providers.AddRange(dynamicSchemes);
 
 ### Store and Configuration Data
 
-To use the dynamic providers feature an [identity provider store](../reference/stores/idp_store) must be provided that will load [model data](../reference/models/idp) for the OIDC identity provider to be used.
-If you're using the [Entity Framework Integration](../data/ef) then this is implemented for you.
+To use the dynamic providers feature an [identity provider store](/identityserver/v5/reference/stores/idp_store) must be provided that will load [model data](/identityserver/v5/reference/models/idp) for the OIDC identity provider to be used.
+If you're using the [Entity Framework Integration](/identityserver/v5/data/ef) then this is implemented for you.
 
 The configuration data for the OIDC provider is used to assign the configuration on the ASP.NET Core [OpenID Connect Options](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions) class, much like you would if you were to statically configure the options when using *AddOpenIdConnect()*.
-The [identity provider model documentation](../reference/models/idp) provides details for the model properties and how they are mapped to the options.
+The [identity provider model documentation](/identityserver/v5/reference/models/idp) provides details for the model properties and how they are mapped to the options.
 
 #### Customizing OpenIdConnectOptions
 
@@ -148,4 +148,4 @@ This means for your IdentityServer running at "https://sample.duendesoftware.com
 ### DynamicProviderOptions
 
 The *DynamicProviderOptions* is a new options class in the IdentityServer options object model.
-It provides [shared settings](../reference/options#dynamic-providers) for the dynamic identity providers feature.
+It provides [shared settings](/identityserver/v5/reference/options#dynamic-providers) for the dynamic identity providers feature.

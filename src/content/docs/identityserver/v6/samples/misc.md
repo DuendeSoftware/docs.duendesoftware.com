@@ -9,14 +9,14 @@ This sample shows how to parse and validate a JWT token issued by IdentityServer
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/JwtSecuredAzureFunction)
 
 ### Mutual TLS using Kestrel 
-This sample shows how to use Kestrel using MTLS for [client authentication](../tokens/authentication/mtls) and [proof of possession](../tokens/pop) API access.
+This sample shows how to use Kestrel using MTLS for [client authentication](/identityserver/v6/tokens/authentication/mtls) and [proof of possession](/identityserver/v6/tokens/pop) API access.
 Using Kestrel will not likely be how MTLS is configured in a production environment, but it is convenient for local testing.
 This approach requires DNS entries for *mtls.localhost* and *api.localhost* to resolve to *127.0.0.1*, and is easily configured by modifying your local *hosts* file.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/MTLS)
 
 ### DPoP
-This sample shows how to access APIs using DPoP for [proof of possession](../tokens/pop/dpop).
+This sample shows how to access APIs using DPoP for [proof of possession](/identityserver/v6/tokens/pop/dpop).
 It contains two different clients; one that uses client credentials and DPoP tokens, and another that is an interactive ASP.NET Core app using code flow to obtain the DPoP bound tokens. Both clients demonstrate the use of the *Duende.AccessTokenManagement* library with DPoP.
 The sample also contains an API with the necessary helper code to accept and validate DPoP bound access tokens. 
 
@@ -24,7 +24,7 @@ The sample also contains an API with the necessary helper code to accept and val
 
 ### Session Management
 
-This sample shows how to enable [server-side sessions](../ui/server_side_sessions) and configure the basic settings.
+This sample shows how to enable [server-side sessions](/identityserver/v6/ui/server_side_sessions) and configure the basic settings.
 The sample requires all three projects to be run at once.
 
 Things of note:

@@ -7,9 +7,9 @@ order: 45
 IdentityServer emits claims about users and clients into tokens. You are in full control of which claims you want to emit, in which situations you want to emit those claims, and where to retrieve those claims from.
 
 ## User claims
-User claims can be put in both identity and access tokens. The central extensibility point to implement for emitting claims is called the [profile service](../reference/services/profile_service).
+User claims can be put in both identity and access tokens. The central extensibility point to implement for emitting claims is called the [profile service](/identityserver/v5/reference/services/profile_service).
 
-Whenever IdentityServer creates tokens for a user, it invokes the registered profile service with a [context](../reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext) that presents detailed information about the current token request, including
+Whenever IdentityServer creates tokens for a user, it invokes the registered profile service with a [context](/identityserver/v5/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext) that presents detailed information about the current token request, including
 
 * the identity of the client who is requesting the token
 * the identity of the user
@@ -23,7 +23,7 @@ You can use different strategies to determine which claims you want to emit base
 * emit claims based on the requested resources
 
 :::note
-Generally speaking, we recommend using the [resource definitions](../fundamentals/resources) to associate user claims with resources. In that case your profile service receives an aggregated list of requested claim types based on the requested resources. The implementation is then as simple as returning the corresponding claim values back to the runtime.
+Generally speaking, we recommend using the [resource definitions](/identityserver/v5/fundamentals/resources) to associate user claims with resources. In that case your profile service receives an aggregated list of requested claim types based on the requested resources. The implementation is then as simple as returning the corresponding claim values back to the runtime.
 :::
 
 Here's a sample implementation of a profile service:
@@ -56,7 +56,7 @@ public class SampleProfileService : IProfileService
 The *Subject* property on the *ProfileDataRequestContext* contains the principal that was issued during user sign-in. Typically, the profile service will source some claims from the *Subject* and others from databases or other data sources.
 
 :::note
-The profile service also gets called for requests to the [userinfo endpoint](../reference/endpoints/userinfo). In that case, the *Subject* property will not contain the principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call. You can check the caller of the profile service by querying the *Caller* property on the context.
+The profile service also gets called for requests to the [userinfo endpoint](/identityserver/v5/reference/endpoints/userinfo). In that case, the *Subject* property will not contain the principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call. You can check the caller of the profile service by querying the *Caller* property on the context.
 :::
 
 ## Client claims
@@ -76,11 +76,11 @@ var client = new Client
 };
 ```
 
-All client claims will be by default prefixed with *client* to avoid accidental collision with user claims, e.g. the above claim would show up as *client_customer_id* in access tokens. You can change (or remove) that prefix by setting the *ClientClaimsPrefix* on the [client definition](../reference/models/client#token). 
+All client claims will be by default prefixed with *client* to avoid accidental collision with user claims, e.g. the above claim would show up as *client_customer_id* in access tokens. You can change (or remove) that prefix by setting the *ClientClaimsPrefix* on the [client definition](/identityserver/v5/reference/models/client#token). 
 
 :::note
 By default, client claims are only sent in the client credentials flow. If you want to enable them for other flows, you need to set the *AlwaysSendClientClaims* property on the client definition.
 :::
 
 ### Setting client claims dynamically
-If you want to set client claims dynamically, you could either do that at client load time (via a client [store](../data) implementation), or using a [custom token request validator](../tokens/dynamic_validation).
+If you want to set client claims dynamically, you could either do that at client load time (via a client [store](/identityserver/v5/data) implementation), or using a [custom token request validator](/identityserver/v5/tokens/dynamic_validation).

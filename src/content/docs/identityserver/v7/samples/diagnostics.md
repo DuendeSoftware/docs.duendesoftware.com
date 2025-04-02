@@ -9,7 +9,7 @@ sidebar:
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Diagnostics/Aspire)
 
-IdentityServer emits OpenTelemetry metrics, traces and logs (see [here](../diagnostics/otel) for more
+IdentityServer emits OpenTelemetry metrics, traces and logs (see [here](/identityserver/v7/diagnostics/otel) for more
 information). This sample uses .NET Aspire to
 display OpenTelemetry data. The solution contains an IdentityServer host, an API and a web client. The access token
 lifetime is set to a very small value to
@@ -27,6 +27,6 @@ traces, logs and metrics.
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Diagnostics/Otel)
 
 IdentityServer emits OpenTelemetry traces for input validators, stores and response generators (
-see [here](../diagnostics/otel) for more information).
+see [here](/identityserver/v7/diagnostics/otel) for more information).
 
 The sample shows how to setup Otel for console tracing.

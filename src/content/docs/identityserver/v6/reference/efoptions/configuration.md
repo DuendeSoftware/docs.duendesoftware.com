@@ -6,7 +6,7 @@ order: 20
 
 #### Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions
 
-These options are configurable when using the Entity Framework Core for the [configuration store](../data/configuration):
+These options are configurable when using the Entity Framework Core for the [configuration store](/identityserver/v6/data/configuration):
 
 You set the options at startup time in your *AddConfigurationStore* method:
 

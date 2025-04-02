@@ -67,11 +67,11 @@ using Duende.IdentityServer.Models;
 ## Step 4: Remove AddDeveloperSigningCredential
 
 If in `ConfigureServices` in your `Startup.cs` you were previously using `AddDeveloperSigningCredential`, that can be removed. 
-[Automatic key management](../fundamentals/keys/automatic_key_management) is now a built-in feature.
+[Automatic key management](/identityserver/v7/fundamentals/key_management) is now a built-in feature.
 
 ## Step 5: Update Database Schema (if needed)
 
-If you are using a [database](../data) for your configuration and operational data, then there are database schema updates.
+If you are using a [database](/identityserver/v7/data) for your configuration and operational data, then there are database schema updates.
 These include:
 
 * A new `Keys` table for the automatic key management feature in the operational database.
@@ -84,7 +84,7 @@ These include:
 IdentityServer is abstracted from the data store on multiple levels, so the exact steps involved in updating your data store will depend on your implementation details. 
 
 #### Custom Store Implementations
-The core of IdentityServer is written against the [store interfaces](../reference/stores), which abstract all the implementation details of actually storing data. If your IdentityServer implementation includes a custom implementation of those stores, then you will have to determine how best to include the changes in the model in the underlying data store and make any necessary changes to schemas, if your data store requires that.
+The core of IdentityServer is written against the [store interfaces](/identityserver/v7/reference/stores), which abstract all the implementation details of actually storing data. If your IdentityServer implementation includes a custom implementation of those stores, then you will have to determine how best to include the changes in the model in the underlying data store and make any necessary changes to schemas, if your data store requires that.
 
 #### Duende.IdentityServer.EntityFramework
 We also provide a default implementation of the stores in the `Duende.IdentityServer.EntityFramework` package, but this implementation is still highly abstracted because it is usable with any database that has an EF provider. Different database vendors have very different dialects of sql that have different syntax and type systems, so we don't provide schema changes directly. Instead, we provide the Entity Framework entities and mappings which can be used with Entity Framework's migrations feature to generate the schema updates that are needed in your database. 
@@ -114,7 +114,7 @@ Some organizations prefer to use other tools for managing schema changes. You're
 ## Step 6: Migrating signing keys (optional)
 
 In IdentityServer4, the common way to configure a signing key in `Startup` was to use `AddSigningCredential()` and provide key material (such as an `X509Certificate2`).
-In Duende IdentityServer the [automatic key management](../fundamentals/keys/automatic_key_management) feature can manage those keys for you.
+In Duende IdentityServer the [automatic key management](/identityserver/v7/fundamentals/key_management) feature can manage those keys for you.
 
 Since client apps and APIs commonly cache the key material published from the discovery document then when upgrading you need to consider how those applications will handle an upgraded token server with a new and different signing key.
 

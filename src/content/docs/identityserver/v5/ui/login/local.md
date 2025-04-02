@@ -79,5 +79,5 @@ namespace Sample.Pages.Account
 The above Razor page is expected to be located in the project at the path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the browser at the "/Account/Login" path.
 
 :::note
-While you can use any custom user database or identity management library for your users, we provide first class [integration support](../aspnet_identity) for ASP.NET Identity.
+While you can use any custom user database or identity management library for your users, we provide first class [integration support](/identityserver/v5/aspnet_identity) for ASP.NET Identity.
 :::

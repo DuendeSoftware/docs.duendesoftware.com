@@ -1,7 +1,7 @@
 ---
 title: Automatic Mode
 sidebar:
-  order: 20
+  order: 3
 ---
 
 In automatic mode, you can encapsulate all browser interactions by

@@ -1,7 +1,7 @@
 ---
 title: Fluent X.509 Certificate Store API
 sidebar:
-  order: 60
+  order: 5
 ---
 
 A common place to store X.509 certificates is the Windows X.509

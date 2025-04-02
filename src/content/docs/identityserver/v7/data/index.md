@@ -1,6 +1,7 @@
 ---
 title: Data Stores and Persistence
 sidebar:
+  label: Overview
   order: 1
 ---
 

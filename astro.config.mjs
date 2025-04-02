@@ -141,7 +141,7 @@ export default defineConfig({
 	],
 	markdown: {
 		rehypePlugins: [
-			rehypeAstroRelativeMarkdownLinks,
+			//rehypeAstroRelativeMarkdownLinks,
 			rehypeHeadingIds,
 			[
 				rehypeAutolinkHeadings,

@@ -6,16 +6,16 @@ sidebar:
   order: 10
 ---
 
-A typical architecture is composed of two application (aka client) [types](../overview/terminology#client) - machine to machine calls and interactive applications.
+A typical architecture is composed of two application (aka client) [types](/identityserver/v7/overview/terminology#client) - machine to machine calls and interactive applications.
 
 ## Machine to Machine communication
 In this scenario a headless application with no interactive user (e.g. a server daemon, batch job etc.) wants to call an API.
 
 Prerequisites are:
 
-* define a [client](../fundamentals/clients) for the *client credentials* grant type
-* define an [API scope](../fundamentals/resources#apis) (and optionally a resource)
-* grant the client access to the scope via the [`AllowedScopes`](../reference/models/client#basics) property
+* define a [client](/identityserver/v7/fundamentals/clients) for the *client credentials* grant type
+* define an [API scope](/identityserver/v7/fundamentals/resources#apis) (and optionally a resource)
+* grant the client access to the scope via the [`AllowedScopes`](/identityserver/v7/reference/models/client#basics) property
 
 According to the OAuth [specification](https://tools.ietf.org/html/rfc6749#section-4.4), you request a token by posting to the token endpoint:
 
@@ -121,10 +121,10 @@ In this scenario you typically use the authorization code flow which first invol
 
 Prerequisites are:
 
-* define a [client](../fundamentals/clients) for the *authorization code* grant type
-* define an [identity](../fundamentals/resources#identity-resources) resource, e.g. `openid`
-* define an [API scope](../fundamentals/resources#apis) (and optionally a resource)
-* grant the client access to both scopes via the [`AllowedScopes`](../reference/models/client#basics) property
+* define a [client](/identityserver/v7/fundamentals/clients) for the *authorization code* grant type
+* define an [identity](/identityserver/v7/fundamentals/resources#identity-resources) resource, e.g. `openid`
+* define an [API scope](/identityserver/v7/fundamentals/resources#apis) (and optionally a resource)
+* grant the client access to both scopes via the [`AllowedScopes`](/identityserver/v7/reference/models/client#basics) property
 
 ### Front-channel
 The call to the authorize endpoint is done using a redirect in the browser:
@@ -177,7 +177,7 @@ Pragma: no-cache
 ```
 
 :::note
-See the refresh token section for more information on how to deal with [refresh tokens](../tokens/refresh).
+See the refresh token section for more information on how to deal with [refresh tokens](/identityserver/v7/tokens/refresh).
 :::
 
 ### .NET client library

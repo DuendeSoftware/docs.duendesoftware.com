@@ -6,7 +6,7 @@ sidebar:
 date: 2020-09-10T08:22:12+02:00
 ---
 
-The behavior of each [management endpoint](../session/management) is defined in a service. When you add Duende.BFF to DI, a default implementation for every management endpoint gets registered:
+The behavior of each [management endpoint](/bff/v2/session/management) is defined in a service. When you add Duende.BFF to DI, a default implementation for every management endpoint gets registered:
 
 ```csharp
 // management endpoints

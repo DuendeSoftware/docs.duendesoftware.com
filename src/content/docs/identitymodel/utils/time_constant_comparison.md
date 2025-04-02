@@ -1,7 +1,7 @@
 ---
 title: Time-Constant String Comparison
 sidebar:
-  order: 60
+  order: 6
 ---
 
 When comparing strings in a security context (e.g. comparing keys), you should avoid

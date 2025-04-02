@@ -1,7 +1,7 @@
 ---
 title: Manual Mode
 sidebar:
-  order: 10
+  order: 2
 ---
 
 In manual mode, OidcClient helps you with creating the necessary start

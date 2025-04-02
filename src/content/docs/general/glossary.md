@@ -11,7 +11,7 @@ A client is a piece of software that requests tokens from your IdentityServer - 
 
 There are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server processes, etc.
 
-[More details](../identityserver/v7/fundamentals/clients)
+[More details](/identityserver/v7/fundamentals/clients)
 
 ## Automatic key management
 (Business Edition)
@@ -20,7 +20,7 @@ The automatic key management feature creates and manages key material for signin
 
 [More details](https://blog.duendesoftware.com/posts/20201028_key_management/)
 
-[Documentation](../identityserver/v7/fundamentals/key_management#automatic-key-management)
+[Documentation](/identityserver/v7/fundamentals/key_management#automatic-key-management)
 
 
 ## Server-side Session Management
@@ -34,7 +34,7 @@ The server-side session management feature extends the ASP.NET Core cookie authe
 
 [More details](https://blog.duendesoftware.com/posts/20220406_session_management/)
 
-[Documentation](../identityserver/v7/ui/server_side_sessions)
+[Documentation](/identityserver/v7/ui/server_side_sessions)
 
 ## BFF Security Framework
 (Business Edition)
@@ -43,14 +43,14 @@ The Duende BFF (Backend for Frontend) security framework packages up guidance an
 
 [More details](https://blog.duendesoftware.com/posts/20210326_bff/)
 
-[Documentation](../bff/v3)
+[Documentation](/bff/v3)
 
 ## Dynamic Client Registration
 (Business Edition)
 
 Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register clients and their configuration.
 
-[Documentation](../identityserver/v7/configuration)
+[Documentation](/identityserver/v7/configuration)
 
 ## Pushed Authorization Requests
 (Business Edition)
@@ -79,7 +79,7 @@ This allows API-specific features such as access token encryption and isolation 
 
 [More details](https://blog.duendesoftware.com/posts/20201230_resource_isolation/)
 
-[Documentation](../identityserver/v7/fundamentals/resources/isolation)
+[Documentation](/identityserver/v7/fundamentals/resources/isolation)
 
 
 ## CIBA
@@ -91,14 +91,14 @@ CIBA is one of the requirements to support the Financal-grade API compliance.
 
 [More details](https://blog.duendesoftware.com/posts/20220107_ciba/)
 
-[Documentation](../identityserver/v7/ui/ciba)
+[Documentation](/identityserver/v7/ui/ciba)
 
 ## Proof-of-Possession at the Application Layer / DPoP
 (Enterprise Edition)
 
 A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This mechanism allows for the detection of replay attacks with access and refresh tokens.
 
-[Documentation](../identityserver/v7/tokens/pop)
+[Documentation](/identityserver/v7/tokens/pop)
 
 ## Single Deployment
 A single deployment acts as a single OpenID Connect / OAuth authority hosted at a single URL. It can consist of multiple physical or virtual nodes for load-balancing or fail-over purposes.

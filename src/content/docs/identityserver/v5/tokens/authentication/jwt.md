@@ -38,7 +38,7 @@ The default default private key JWT secret validator expects either a base64 enc
     };
 
 :::note
-You can share the same key for client authentication and [signed authorize requests](../tokens/jar).
+You can share the same key for client authentication and [signed authorize requests](/identityserver/v5/tokens/jar).
 :::
 
 ## Authentication using a private key JWT
@@ -115,7 +115,7 @@ static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential
 }
 ```
 
-See [here](../samples/basics#jwt-based-client-authentication) for a sample for using JWT-based authentication.
+See [here](/identityserver/v5/samples/basics#jwt-based-client-authentication) for a sample for using JWT-based authentication.
 
 ### Using ASP.NET Core
 The OpenID Connect authentication handler in ASP.NET Core allows for replacing a static client secret with a dynamically created client assertion.
@@ -165,4 +165,4 @@ public class OidcEvents : OpenIdConnectEvents
 ```
 
 The assertion service would be a helper to create the JWT as shown above in the *CreateClientToken* method.
-See [here](../samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.
+See [here](/identityserver/v5/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using JWT-based authentication (and signed authorize requests) in ASP.NET Core.

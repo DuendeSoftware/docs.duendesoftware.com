@@ -19,10 +19,10 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-Many of the fundamental configuration settings can be set on the options. See the *[IdentityServerOptions](../reference/options)* reference for more details.
+Many of the fundamental configuration settings can be set on the options. See the *[IdentityServerOptions](/identityserver/v5/reference/options)* reference for more details.
 
 The builder object has a number of extension methods to add additional services to DI.
-You can see the full list in the [reference](../reference/di) section, but very commonly you start by adding the configuration stores for clients and resources, e.g.:
+You can see the full list in the [reference](/identityserver/v5/reference/di) section, but very commonly you start by adding the configuration stores for clients and resources, e.g.:
 
 ```cs
 var builder = services.AddIdentityServer()
@@ -31,7 +31,7 @@ var builder = services.AddIdentityServer()
     .AddInMemoryApiScopes(Config.ApiScopes)
 ```
 
-The above is using the in-memory stores, but we also support EntityFramework-based implementations and custom stores. See [here](../data) for more information.
+The above is using the in-memory stores, but we also support EntityFramework-based implementations and custom stores. See [here](/identityserver/v5/data) for more information.
 
 ## Pipeline
 You need to add the Duende IdentityServer middleware to the pipeline by calling *UseIdentityServer*.

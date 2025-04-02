@@ -14,7 +14,7 @@ loading and rotation of keys.
 ## Disabling Key Management
 The automatic key management feature can be disabled by setting the *Enabled*
 flag to *false* on the the *KeyManagement* property of
-[*IdentityServerOptions*](../reference/options#key-management):
+[*IdentityServerOptions*](/identityserver/v6/reference/options#key-management):
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -33,7 +33,7 @@ include:
 - Create certificates using your Public Key Infrastructure.
 
 ## Adding Keys
-Signing keys are added with the [*AddSigningCredential*](../reference/di#signing-keys) configuration method:
+Signing keys are added with the [*AddSigningCredential*](/identityserver/v6/reference/di#signing-keys) configuration method:
 
 ```cs
 var builder = services.AddIdentityServer();

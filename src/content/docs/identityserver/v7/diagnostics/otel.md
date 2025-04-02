@@ -28,7 +28,7 @@ Traces shows individual requests and dependencies. The output is very useful for
 flow and finding performance bottlenecks.
 
 This is an example of distributed traces from a web application calling an API (displayed using our 
-[Aspire sample](../../samples/diagnostics)). The web application uses a refresh token to call IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks url and then gets the keys from jwks endpoint.
+[Aspire sample](/identityserver/v7/samples/diagnostics)). The web application uses a refresh token to call IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks url and then gets the keys from jwks endpoint.
 ![](images/aspire_traces.png)
 
 ## Setup
@@ -238,7 +238,7 @@ multiple actual tokens (id_token, access token, refresh token).
 |error | Error label on errors |
 
 ### Metrics in the UI
-The [UI in your IdentityServer host](../ui/) can instrument these events to
+The [UI in your IdentityServer host](/identityserver/v7/ui/) can instrument these events to
 measure activities that occur during interactive flows, such as user login and logout.
 These events are not instrumented by the IdentityServer middleware or services because
 they are the responsibility of the UI. Our templated UI does instrument these events, and

@@ -1,7 +1,7 @@
 ---
 title: Workers
 sidebar:
-  order: 10
+  order: 2
 ---
 
 A common scenario in worker applications or background tasks (or really any demon-style applications) is to call APIs using an OAuth token obtained via the client credentials flow.

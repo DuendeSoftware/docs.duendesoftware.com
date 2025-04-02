@@ -6,7 +6,7 @@ order: 20
 
 Access tokens have finite lifetimes. If a client needs long-lived access to a resource, [refresh tokens](https://datatracker.ietf.org/doc/html/rfc6749#section-1.5) can be used to request a new access token. This can be done with an API call and does not require any user interaction or interruption.
 
-Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by setting the *AllowOfflineAccess* property to *true*. See the [client reference](../reference/models/client#refresh-token) section for additional refresh token related settings.
+Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by setting the *AllowOfflineAccess* property to *true*. See the [client reference](/identityserver/v5/reference/models/client#refresh-token) section for additional refresh token related settings.
 
 Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential flow.
 
@@ -74,4 +74,4 @@ Rotation can be configured via the *RefreshTokenUsage* client settings and is en
 #### Replay detection
 On top of one-time only semantics, you could also layer replay detection. This means that if you ever see the same refresh token used more than once, you could revoke all access to the client/user combination. Again – same caveat applies – while increasing the security, this might result in false positives.
 
-See the [reference](../reference/services/refresh_token_service) section for more customization of the refresh token service.
+See the [reference](/identityserver/v5/reference/services/refresh_token_service) section for more customization of the refresh token service.

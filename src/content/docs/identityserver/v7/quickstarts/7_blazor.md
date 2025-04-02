@@ -42,7 +42,7 @@ First add the following package references to the server project:
 
 Next, we will add OpenID Connect and OAuth support to the backend. For this we are adding the Microsoft OpenID Connect
 authentication handler for the protocol interactions with the token service, and the cookie authentication handler for
-managing the resulting authentication session. See [here](../../../bff/v2/session/handlers) for more background
+managing the resulting authentication session. See [here](/bff/v2/session/handlers) for more background
 information.
 
 The BFF services provide the logic to invoke the authentication plumbing from the frontend (more about this later).
@@ -189,7 +189,7 @@ This component needs to be implemented, and that's what we'll do next.
 ### Modifying the frontend (part 2)
 
 The BFF library has a server-side component that allows querying the current authentication session and state (
-see [here](../../../bff/v2/session/management/user)). We will now add a Blazor `AuthenticationStateProvider` that
+see [here](/bff/v2/session/management/user)). We will now add a Blazor `AuthenticationStateProvider` that
 will internally use this endpoint.
 
 Add a file with the following content:
@@ -297,7 +297,7 @@ fail: Duende.Bff.Endpoints.BffMiddleware[1]
 
 This is due to the antiforgery protection that is applied automatically to the management endpoints in the BFF host. To
 properly secure the call, you need to add a static `X-CSRF` header to the call.
-See [here](../../../bff/v2/apis/local) for more background information.
+See [here](/bff/v2/apis/local) for more background information.
 
 This can be easily accomplished by a delegating handler that can be plugged into the default HTTP client used by the
 Blazor frontend. Let's first add the handler:
@@ -433,7 +433,7 @@ var bffClient = new Client
 
 ### Further experiments
 
-Our Blazor BFF [sample](../../../bff/v2/samples/bff#blazor-wasm) is based on this Quickstart. In addition it shows
+Our Blazor BFF [sample](/bff/v2/samples#blazor-wasm) is based on this Quickstart. In addition it shows
 concepts like
 
 * better organization with components

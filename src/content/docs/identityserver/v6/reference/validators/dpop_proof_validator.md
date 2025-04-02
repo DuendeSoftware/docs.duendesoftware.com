@@ -5,7 +5,7 @@ order: 40
 
 #### Duende.IdentityServer.Validation.IDPoPProofValidator
 
-The *IDPoPProofValidator* interface is used to validate [DPoP](../tokens/pop/dpop) proof tokens submitted to IdentityServer.
+The *IDPoPProofValidator* interface is used to validate [DPoP](/identityserver/v6/tokens/pop/dpop) proof tokens submitted to IdentityServer.
 A default implementation is provided and can be overridden as necessary.
 
 ## IDPoPProofValidator APIs

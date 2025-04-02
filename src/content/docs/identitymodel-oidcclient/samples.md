@@ -1,7 +1,7 @@
 ---
 title: Samples
 sidebar:
-  order: 40
+  order: 5
 ---
 
 Samples of IdentityModel.OidcClient are available [on

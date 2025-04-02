@@ -5,7 +5,7 @@ date: 2020-09-10T08:22:12+02:00
 order: 30
 ---
 
-[Clients](../overview/terminology#client) represent applications that can request tokens from your IdentityServer.
+[Clients](/identityserver/v6/overview/terminology#client) represent applications that can request tokens from your IdentityServer.
 
 The details vary, but you typically define the following common settings for a client:
 

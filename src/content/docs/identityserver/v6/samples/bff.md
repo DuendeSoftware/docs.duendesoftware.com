@@ -3,7 +3,7 @@ title: "Backend for Frontend Pattern"
 order: 40
 ---
 
-This section contains a collection of clients using our [BFF security framework](../bff).
+This section contains a collection of clients using our [BFF security framework](/identityserver/v6/bff).
 
 ### JavaScript Frontend
 This sample shows how to use the BFF framework with a JavaScript-based frontend (e.g. SPA).
@@ -36,7 +36,7 @@ This sample shows how to have separate projects from the frontend and backend, u
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/BFF/SplitHosts)
 
 ### DPoP
-This sample shows how to configure the BFF to use [DPoP](../tokens/pop/dpop) to obtain sender-constrained tokens.
+This sample shows how to configure the BFF to use [DPoP](/identityserver/v6/tokens/pop/dpop) to obtain sender-constrained tokens.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/BFF/DPoP)
 

@@ -31,4 +31,4 @@ services.AddBff()
     });
 ```
 
-You can also use a custom store, see [extensibility](../bff/extensibility) for more information.
+You can also use a custom store, see [extensibility](/identityserver/v5/bff/extensibility) for more information.

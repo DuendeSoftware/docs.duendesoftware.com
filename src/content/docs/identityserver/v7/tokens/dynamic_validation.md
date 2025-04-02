@@ -5,7 +5,7 @@ sidebar:
   order: 50
 ---
 
-You can hook into the token request pipeline by implementing the [ICustomTokenRequestValidator](../reference/validators/custom_token_request_validator) interface.
+You can hook into the token request pipeline by implementing the [ICustomTokenRequestValidator](/identityserver/v7/reference/validators/custom_token_request_validator) interface.
 
 This allows you to
 

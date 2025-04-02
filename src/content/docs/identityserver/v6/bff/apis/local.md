@@ -18,7 +18,7 @@ Alternatively, you can make the data available as a service and make HTTP reques
 - Your BFF endpoint can expose a subset of your remote APIs so that they are called in a more controlled manner than if the BFF proxied all requests to the endpoint. 
 - Your BFF endpoint can include business logic to call the appropriate endpoints, which simplifies your front end code.
 
-Your local endpoints can leverage services like the HTTP client factory and Duende.BFF [token management](../bff/tokens) to make the outgoing calls. The following is a simplified example showing how local endpoints can obtain managed access tokens and use them to make requests to remote APIs.
+Your local endpoints can leverage services like the HTTP client factory and Duende.BFF [token management](/identityserver/v6/bff/tokens) to make the outgoing calls. The following is a simplified example showing how local endpoints can obtain managed access tokens and use them to make requests to remote APIs.
 
 
 ```cs

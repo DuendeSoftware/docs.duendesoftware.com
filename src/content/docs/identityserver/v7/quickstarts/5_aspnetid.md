@@ -15,7 +15,7 @@ from a copy of
 the [reference implementation of Quickstart 4](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/4_EntityFramework).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](0_overview#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/v7/quickstarts/0_overview#preparation).
 
 :::
 
@@ -297,7 +297,7 @@ IdentityServer contains an extensibility point called the `IProfileService` that
 is responsible for retrieval of user claims. The ASP.NET Identity Integration
 includes an implementation of `IProfileService` that retrieves claims from
 ASP.NET Identity. You can extend that implementation to use the custom profile
-data as a source of claims data. [See here](../reference/services/profile_service) for more details on
+data as a source of claims data. [See here](/identityserver/v7/reference/services/profile_service) for more details on
 the profile
 service.
 

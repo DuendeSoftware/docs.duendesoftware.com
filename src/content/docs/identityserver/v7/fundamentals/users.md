@@ -17,7 +17,7 @@ the security protocol (OpenID Connect and OAuth).
 
 :::note
 While you can use any custom user database or identity management library for your users, we
-provide [integration support](../aspnet_identity) for ASP.NET Identity.
+provide [integration support](/identityserver/v7/aspnet_identity) for ASP.NET Identity.
 :::
 
 ## Authorization Endpoint and Login Page Workflow
@@ -27,7 +27,7 @@ This is obvious if the client application is a web application, but it's also th
 mobile applications.
 
 When a user must login, the client application will redirect the user to the protocol endpoint called
-the [authorization endpoint](../reference/endpoints/authorize) in your IdentityServer server to request
+the [authorization endpoint](/identityserver/v7/reference/endpoints/authorize) in your IdentityServer server to request
 authentication.
 As part of the authorize request, your IdentityServer will typically display a login page for the user to enter their
 credentials.
@@ -43,7 +43,7 @@ It is very important that you understand how it works when building the login pa
 Recall the diagram showing the relationship of your custom UI pages and the IdentityServer middleware in your
 IdentityServer host application:
 
-![middleware diagram](../overview/images/middleware.png?height=500px)
+![middleware diagram](/identityserver/v7/overview/images/middleware.png?height=500px)
 
 When your IdentityServer receives an authorize request, it will inspect it for a current authentication session for a
 user. This authentication session is based on ASP.NET Core's authentication system and is ultimately determined by a
@@ -65,5 +65,5 @@ the protocol response and redirect to the client application.
 In addition to the login page, there are other pages that Duende IdentityServer expects (e.g. logout, error, consent),
 and you could implement custom pages as well (e.g. register, forgot password, etc.).
 Details about building these pages, and coverage of additional topics are in the
-[User Interaction](../ui)
+[User Interaction](/identityserver/v7/ui)
 section of this documentation.

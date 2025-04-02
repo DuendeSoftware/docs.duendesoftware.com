@@ -48,7 +48,7 @@ This sample shows how to have separate projects from the frontend and backend, u
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v3/SplitHosts)
 
 ### DPoP
-This sample shows how to configure the BFF to use [DPoP](../../../identityserver/v7/tokens/pop) to obtain sender-constrained tokens.
+This sample shows how to configure the BFF to use [DPoP](/identityserver/v7/tokens/pop) to obtain sender-constrained tokens.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v3/DPoP)
 

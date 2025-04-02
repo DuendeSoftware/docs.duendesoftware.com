@@ -114,7 +114,7 @@ roundtripped through the browser from being tampered with.
 
 #### IdentityServer Signing Key
 
-Separately, IdentityServer needs cryptographic keys, called [signing keys](fundamentals/key_management.md), to
+Separately, IdentityServer needs cryptographic keys, called [signing keys](fundamentals/key_management), to
 sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client
 applications and APIs to validate token signatures using the public keys, which are published by IdentityServer
 through [discovery](reference/endpoints/discovery). The private key component of the signing keys are
@@ -161,13 +161,13 @@ There are several ways that data protection problems can occur:
 Duende IdentityServer's features that rely on data protection include
 
 * protecting signing keys at rest (
-  if [automatic key management](./fundamentals/key_management.md#automatic-key-management) is used and enabled)
-* protecting [persisted grants](./data/operational.md#persisted-grant-service) at rest (if enabled)
-* protecting [server-side session](./ui/server_side_sessions) data at rest (if enabled)
-* protecting [the state parameter](./ui/login/external#state-url-length-and-isecuredataformat) for
+  if [automatic key management](/identityserver/v7/fundamentals/key_management#automatic-key-management) is used and enabled)
+* protecting [persisted grants](/identityserver/v7/data/operational#persisted-grant-service) at rest (if enabled)
+* protecting [server-side session](/identityserver/v7/ui/server_side_sessions) data at rest (if enabled)
+* protecting [the state parameter](/identityserver/v7/ui/login/external#state-url-length-and-isecuredataformat) for
   external OIDC providers (if enabled)
 * protecting message payloads sent between pages in the UI (
-  e.g. [logout context](./ui/logout/logout_context) and [error context](./ui/error)).
+  e.g. [logout context](/identityserver/v7/ui/logout/logout_context) and [error context](/identityserver/v7/ui/error)).
 * session management (because the ASP.NET Core cookie authentication handler requires it)
 
 ## IdentityServer Data Stores
@@ -194,14 +194,14 @@ For certain operations, IdentityServer needs a persistence store to keep state, 
 
 You can either use a traditional database for storing operational data, or use a cache with persistence features like Redis.
 
-Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](../data) section for more information.
+Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](/identityserver/v7/data) section for more information.
 
 ## Distributed Caching
 
 Some optional features rely on ASP.NET Core distributed caching:
 
 * [State data formatter for OpenID Connect](./ui/login/external#state-url-length-and-isecuredataformat)
-* Replay cache (e.g. for [JWT client credentials](./tokens/client_authentication.md#setting-up-a-private-key-jwt-secret))
+* Replay cache (e.g. for [JWT client credentials](./tokens/client_authentication#setting-up-a-private-key-jwt-secret))
 * [Device flow](./reference/stores/device_flow_store) throttling service
 * Authorization parameter store
 

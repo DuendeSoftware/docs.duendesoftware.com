@@ -1,10 +1,11 @@
 ---
 title: Customizing User Token Management
 sidebar:
-  order: 20
+  label: User Tokens
+  order: 2
 ---
 
-The most common way to use the access token management for interactive web applications is described [here](../web_apps.md) - however you may want to customise certain aspects of it - here's what you can do.
+The most common way to use the access token management for interactive web applications is described [here](/accesstokenmanagement/web_apps) - however you may want to customise certain aspects of it - here's what you can do.
 
 ## General options
 

@@ -1,7 +1,7 @@
 ---
 title: Device Authorization Endpoint
 sidebar:
-  order: 70
+  order: 7
 ---
 
 The client library for the [OAuth 2.0 device

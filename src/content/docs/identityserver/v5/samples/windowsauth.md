@@ -4,7 +4,7 @@ order: 22
 newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/samples/"
 ---
 
-This solution contains samples when using [Windows Authentication](../ui/login/windows).
+This solution contains samples when using [Windows Authentication](/identityserver/v5/ui/login/windows).
 
 ### IIS Hosting
 This sample shows how to use Windows Authentication when hosting your IdentityServer behind IIS (or IIS Express).

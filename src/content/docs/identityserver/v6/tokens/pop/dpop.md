@@ -18,7 +18,7 @@ Added in 6.3.0.
 }
 ```
 
-The client must then prove possession of the private key to call the APIs, and your APIs can [validate](../apis/aspnetcore/confirmation) the *cnf* claim by comparing it to the thumbprint of the client's public key in the JWK.
+The client must then prove possession of the private key to call the APIs, and your APIs can [validate](/identityserver/v6/apis/aspnetcore/confirmation) the *cnf* claim by comparing it to the thumbprint of the client's public key in the JWK.
 
 If the access token would leak, it cannot be replayed without having access to the private key of the JWK the client controls.
 
@@ -32,8 +32,8 @@ The main constraint is that it must be stored for as long as the client uses any
 #### Enabling DPoP in IdentityServer
 
 DPoP is something a client can use dynamically with no configuration in IdentityServer, but you can configure it as required.
-This is a per-client [setting](../reference/models/client#dpop) in your IdentityServer.
-There are additional client as well as [global](../reference/options#dpop) DPoP settings to control the behavior.
+This is a per-client [setting](/identityserver/v6/reference/models/client#dpop) in your IdentityServer.
+There are additional client as well as [global](/identityserver/v6/reference/options#dpop) DPoP settings to control the behavior.
 
 ```csharp
 new Client
@@ -90,4 +90,4 @@ Furthermore, any API invocations using the *AddClientCredentialsHttpClient* or *
 
 #### Enabling DPoP support in your API
 
-See [here](../apis/aspnetcore/confirmation#validating-dpop-proof-of-possession) for documentation describing how to enable DPoP in your APIs.
+See [here](/identityserver/v6/apis/aspnetcore/confirmation#validating-dpop-proof-of-possession) for documentation describing how to enable DPoP in your APIs.

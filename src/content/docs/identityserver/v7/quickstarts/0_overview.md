@@ -1,8 +1,9 @@
 ---
-title: "Overview"
+title: "Quickstarts"
 description: "Quickstarts"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Overview
   order: 1
 ---
 

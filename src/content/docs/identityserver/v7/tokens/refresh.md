@@ -11,7 +11,7 @@ access token. This can be done with an API call and does not require any user in
 
 Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by
 setting the `AllowOfflineAccess` property to `true`. See
-the [client reference](../reference/models/client#refresh-token) section for additional refresh token
+the [client reference](/identityserver/v7/reference/models/client#refresh-token) section for additional refresh token
 related settings.
 
 Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential
@@ -118,7 +118,7 @@ to produce a new token, but the response containing the new refresh token is los
 application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
 
 Reusable tokens may have better performance in
-the [persisted grants store](../reference/stores/persisted_grant_store). One-time use refresh tokens
+the [persisted grants store](/identityserver/v7/reference/stores/persisted_grant_store). One-time use refresh tokens
 require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens
 avoids those writes.
 
@@ -169,4 +169,4 @@ replay detection. The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUs
 used tokens persist and can be used to detect replays. The cleanup job should also be configured to not delete consumed
 tokens.
 
-See also: The [IRefreshTokenService](../reference/services/refresh_token_service) reference.
+See also: The [IRefreshTokenService](/identityserver/v7/reference/services/refresh_token_service) reference.

@@ -1,6 +1,7 @@
 ---
-title: Overview
+title: Duende IdentityServer Samples
 sidebar:
+  label: Overview
   order: 1
 ---
 

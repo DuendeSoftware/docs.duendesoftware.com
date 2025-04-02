@@ -5,7 +5,7 @@ newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/quickstarts/js
 ---
 
 :::note
-For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview](../0_overview) first.
+For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Overview](/identityserver/v5/quickstarts/0_overview) first.
 :::
 
 
@@ -215,7 +215,7 @@ function logout() {
 ```
 
 :::note
-See the [client credentials quickstart](../quickstarts/1_client_credentials) for information on how to create the api used in the code above.
+See the [client credentials quickstart](/identityserver/v5/quickstarts/1_client_credentials) for information on how to create the api used in the code above.
 :::
 
 **callback.html**

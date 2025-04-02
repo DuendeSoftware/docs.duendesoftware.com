@@ -22,10 +22,10 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options => { ... });
 ```
 
 Many of the fundamental configuration settings can be set on the options. See the
-`[IdentityServerOptions](../reference/options)` reference for more details.
+`[IdentityServerOptions](/identityserver/v7/reference/options)` reference for more details.
 
 The builder object has a number of extension methods to add additional services to DI.
-You can see the full list in the [reference](../reference/di) section, but very commonly you start by
+You can see the full list in the [reference](/identityserver/v7/reference/di) section, but very commonly you start by
 adding the configuration stores for clients and resources, e.g.:
 
 ```cs
@@ -37,7 +37,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer()
 ```
 
 The above is using the in-memory stores, but we also support EntityFramework-based implementations and custom stores.
-See [here](../data) for more information.
+See [here](/identityserver/v7/data) for more information.
 
 ## Request Pipeline
 

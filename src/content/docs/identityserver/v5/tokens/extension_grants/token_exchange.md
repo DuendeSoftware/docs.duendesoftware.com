@@ -94,7 +94,7 @@ client.AllowedGrantTypes = { OidcConstants.GrantTypes.TokenExchange };
 :::note
 Values sent to the token endpoint are logged, except well-known sensitive values that IdentityServer processes by default.
 Any sensitive values you use as input to your extension grant validator that you do not want included in the logs should be filtered.
-This can be done by adding those parameter names on the *Logging.TokenRequestSensitiveValuesFilter* collection on the [IdentityServerOptions](../reference/options#logging).
+This can be done by adding those parameter names on the *Logging.TokenRequestSensitiveValuesFilter* collection on the [IdentityServerOptions](/identityserver/v5/reference/options#logging).
 :::
 
 ## Token Exchange for impersonation and delegation
@@ -165,7 +165,7 @@ context.Result = new GrantValidationResult(
     customResponse: customResponse);
 ```
 
-To emit the *act* claim into outgoing tokens, your [profile service](../reference/services/profile_service) must know about it. The following simple profile service emits the *act* claim if the token request is in the context of a token exchange operation:
+To emit the *act* claim into outgoing tokens, your [profile service](/identityserver/v5/reference/services/profile_service) must know about it. The following simple profile service emits the *act* claim if the token request is in the context of a token exchange operation:
 
 ```cs
 public class ProfileService : IProfileService
@@ -189,4 +189,4 @@ public class ProfileService : IProfileService
 }
 ```
 
-See [here](../samples/extension_grants) for the full source code.
+See [here](/identityserver/v5/samples/extension_grants) for the full source code.

@@ -70,9 +70,9 @@ It makes sense to secure APIs with access tokens when those APIs need to be acce
 This would be an example of a shared API.
 But very often, an API that is co-hosted with a SPA front end really only exists to support the UI and won't expect to be invoked by any other application.
 In this case, it might be overkill to design this "local" API to require an access token.
-Also, there are a [variety of factors that make is undesirable](../bff/overview) (and sometimes impossible) for code running in the browser to fully manage tokens obtained from the OIDC/OAuth protocol.
+Also, there are a [variety of factors that make is undesirable](/identityserver/v6/bff/overview) (and sometimes impossible) for code running in the browser to fully manage tokens obtained from the OIDC/OAuth protocol.
 
-Thus, one additional improvement to the architecture presented so far would be to introduce the [BFF pattern](../bff/architecture).
+Thus, one additional improvement to the architecture presented so far would be to introduce the [BFF pattern](/identityserver/v6/bff/architecture).
 
 The BFF pattern changes the credential used from the SPA to the backend to instead use a cookie (much like the cookie used in IdentityServer).
 This would allow securing calls to a "local" API that is co-hosted in the backend. 
@@ -89,7 +89,7 @@ The picture below illustrates:
 
 **Step 4b:** If a remote API needs to be invoked, then the access token associated with the user's authentication session can be used. This access token is only available on the server. It can be used from the local API invoking a remote API, or a reverse proxy can be setup in the SPA host (e.g. using Microsoft's YARP) to allow more of a pass-through style so the SPA code can invoke the remote API without manual coding to pass along the access token.
 
-The [Duende BFF Security Framework](../bff/overview) makes this architecture easy to implement.
+The [Duende BFF Security Framework](/identityserver/v6/bff/overview) makes this architecture easy to implement.
 
 ## Migrating
 
@@ -101,12 +101,12 @@ The various extension methods that are provided for the template that sets up Du
 While this might be convenient when co-hosting, when you split the hosts into the recommended architecture then the configuration must be more explicit.
 
 Unfortunately what this means is that is it non-trivial to migrate a project from the template to the recommended architecture.
-Rather, it makes more sense to follow the [quickstart guides](../quickstarts) to setup a properly designed architecture.
+Rather, it makes more sense to follow the [quickstart guides](/identityserver/v6/quickstarts) to setup a properly designed architecture.
 Once that's in place, then it will be more obvious how to take any existing application created with the template and preserve the relevant application assets to use the token server you have setup in its own host.
 
-It is recommended you start with the [first quickstart](../quickstarts) (if you haven't already), and follow through the progression.
+It is recommended you start with the [first quickstart](/identityserver/v6/quickstarts) (if you haven't already), and follow through the progression.
 This will allow you to understand the configuration needed when using OIDC/OAuth.
-If you're already familiar with hosting and configuring IdentityServer, then you can jump right to the [JavaScript quickstart](../quickstarts/js_clients/js_with_backend) or the [Blazor quickstart](../quickstarts/7_blazor).
+If you're already familiar with hosting and configuring IdentityServer, then you can jump right to the [JavaScript quickstart](/identityserver/v6/quickstarts/js_clients/js_with_backend) or the [Blazor quickstart](/identityserver/v6/quickstarts/7_blazor).
 
 :::note
 It is worth noting why the template is designed the way it is.

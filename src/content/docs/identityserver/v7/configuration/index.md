@@ -1,7 +1,8 @@
 ---
-title: Overview
+title: Configuration API
 description: Overview
 sidebar:
+  label: Overview
   order: 1
 ---
 
@@ -26,4 +27,4 @@ and [special offers](https://duendesoftware.com/specialoffers) apply.
 The Configuration API's source code is available [on
 github](https://github.com/DuendeSoftware/products/tree/main/identity-server/src/Configuration).
 
-Samples of the Configuration API are available [here](../samples/configuration).
+Samples of the Configuration API are available [here](/identityserver/v7/samples/configuration).

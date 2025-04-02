@@ -19,7 +19,7 @@ Automatic Key Management is included in [IdentityServer](https://duendesoftware.
 
 ### Configuration
 Automatic Key Management is configured by the options in the *KeyManagement*
-property on the [*IdentityServerOptions*](../reference/options#key-management). 
+property on the [*IdentityServerOptions*](/identityserver/v6/reference/options#key-management). 
 
 ### Managed Key Lifecycle
 Keys created by Automatic Key Management move through several phases. First, new
@@ -55,12 +55,12 @@ var builder = services.AddIdentityServer(options =>
 
 ### Key storage
 Automatic Key Management stores keys through the abstraction of the
-[ISigningKeyStore](../data/operational/keys). You can implement this
+[ISigningKeyStore](/identityserver/v6/data/operational/keys). You can implement this
 extensibility point to customize the storage of your keys (perhaps using a key
 vault of some kind), or use one of the two implementations of the
 *ISigningKeyStore* that we provide:
  - the default *FileSystemKeyStore*, which writes keys to the file system.
- - the [EntityFramework operational store](../data/ef#operational-store) which writes keys to a database using
+ - the [EntityFramework operational store](/identityserver/v6/data/ef#operational-store) which writes keys to a database using
    EntityFramework.
 
 The default *FileSystemKeyStore* writes keys to the *KeyPath* directory
@@ -90,7 +90,7 @@ example, if you implement the *ISigningKeyStore* to store your keys in Azure Key
 Vault, you could safely disabled *DataProtectKeys*, relying on Azure Key Vault
 to encrypt your signing keys at rest.
 
-See the [deployment](../deployment) section for more information
+See the [deployment](/identityserver/v6/deployment) section for more information
 about setting up data protection.
 
 ### Manage multiple keys

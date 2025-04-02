@@ -9,7 +9,7 @@ A couple of particularly notable OIDC flows that don't work for SPAs when third 
 
 ## Session Management
 
-OIDC Session Management allows a client SPA to monitor the session at the OP by reading a cookie from the OP in a hidden iframe. If third party cookie blocking prevents the iframe from seeing that cookie, the SPA will not be able to monitor the session. The BFF solves this problem using [OIDC back-channel logout](../session/management/back-channel-logout). 
+OIDC Session Management allows a client SPA to monitor the session at the OP by reading a cookie from the OP in a hidden iframe. If third party cookie blocking prevents the iframe from seeing that cookie, the SPA will not be able to monitor the session. The BFF solves this problem using [OIDC back-channel logout](/bff/v2/session/management/back-channel-logout). 
 
 The BFF is able to operate server side, and is therefore able to have a back channel to the OP. When the session ends at the OP, it can send a back-channel message to the BFF, ending the session at the BFF.
 
@@ -20,9 +20,9 @@ Similarly to OIDC Session Management, OIDC Silent Login relies on a hidden ifram
 
 ### BFF with a Federation Gateway
 
-The BFF supports silent login from the SPA with the /bff/silent-login [endpoint](../session/management/silent-login). This endpoint is intended to be invoked in an iframe and issues a challenge to login non-interactively with *prompt=none*. Just as in a traditional SPA, this technique will be disrupted by third party cookie blocking when the BFF and OP are third parties.
+The BFF supports silent login from the SPA with the /bff/silent-login [endpoint](/bff/v2/session/management/silent-login). This endpoint is intended to be invoked in an iframe and issues a challenge to login non-interactively with *prompt=none*. Just as in a traditional SPA, this technique will be disrupted by third party cookie blocking when the BFF and OP are third parties.
 
-If you need silent login with a third party OP, we recommend that you use the [Federation Gateway](../../../identityserver/v7/ui/federation) pattern. In the federation gateway pattern, one identity provider (the gateway) federates with other remote identity providers. Because the client applications only interact with the gateway, the implementation details of the remote identity providers are abstracted. In this case, we shield the client application from the fact that the remote identity provider is a third party by hosting the gateway as a first party to the client. This makes the client application's requests for silent login always first party.
+If you need silent login with a third party OP, we recommend that you use the [Federation Gateway](/identityserver/v7/ui/federation) pattern. In the federation gateway pattern, one identity provider (the gateway) federates with other remote identity providers. Because the client applications only interact with the gateway, the implementation details of the remote identity providers are abstracted. In this case, we shield the client application from the fact that the remote identity provider is a third party by hosting the gateway as a first party to the client. This makes the client application's requests for silent login always first party.
 
 
 ### Alternatives

@@ -12,7 +12,7 @@ For invoking APIs that are deployed on different servers, you have a couple of o
 ### Manual API endpoints
 If you want to expose a frontend specific subset of your remote APIs or want to aggregate multiple remote APIs, it is a common practice to create local API endpoints that in turn call the remote APIs and present the data in a frontend specific way.
 
-You can use a MVC controller for this, and leverage services like the HTTP client factory and the Duende.BFF [token management](../bff/tokens) to make the outgoing calls. The following is a very simplified version of that:
+You can use a MVC controller for this, and leverage services like the HTTP client factory and the Duende.BFF [token management](/identityserver/v5/bff/tokens) to make the outgoing calls. The following is a very simplified version of that:
 
 ```cs
 [Route("myApi")]

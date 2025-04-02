@@ -7,9 +7,9 @@ order: 45
 IdentityServer emits claims about users and clients into tokens. You are in full control of which claims you want to emit, in which situations you want to emit those claims, and where to retrieve those claims from.
 
 ## User claims
-User claims can be emitted in both identity and access tokens and in the [userinfo endpoint](../reference/endpoints/userinfo). The central extensibility point to implement to emit claims is called the [profile service](../reference/services/profile_service). The profile service is responsible for both gathering claim data and deciding which claims should be emitted.
+User claims can be emitted in both identity and access tokens and in the [userinfo endpoint](/identityserver/v6/reference/endpoints/userinfo). The central extensibility point to implement to emit claims is called the [profile service](/identityserver/v6/reference/services/profile_service). The profile service is responsible for both gathering claim data and deciding which claims should be emitted.
 
-Whenever IdentityServer needs the claims for a user, it invokes the registered profile service with a [context](../reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext) that presents detailed information about the current request, including
+Whenever IdentityServer needs the claims for a user, it invokes the registered profile service with a [context](/identityserver/v6/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext) that presents detailed information about the current request, including
 
 * the client that is making the request
 * the identity of the user
@@ -27,9 +27,9 @@ You can use different strategies to determine which claims to emit based on the 
 You can filter the claims you emit to only include the claim types requested by the client. If your client requires consent, this will also give end users the opportunity to approve or deny sharing those claims with the client.
 
 Clients can request claims in several ways:
-- Requesting an [IdentityResource](../fundamentals/resources/identity) by including the scope parameter for the *IdentityResource* requests the claims associated with the *IdentityResource* in its *UserClaims* collection.
-- Requesting an [ApiScope](../fundamentals/resources/api_scopes) by including the scope parameter for the *ApiScope* requests the claims associated with the *ApiScope* in its *UserClaims* collection.
-- Requesting an [ApiResource](../fundamentals/resources/api_resources) by including the resource indicator parameter for the *ApiResource* requests the claims associated with the *ApiResource* in its *UserClaims* collection.
+- Requesting an [IdentityResource](/identityserver/v6/fundamentals/resources/identity) by including the scope parameter for the *IdentityResource* requests the claims associated with the *IdentityResource* in its *UserClaims* collection.
+- Requesting an [ApiScope](/identityserver/v6/fundamentals/resources/api_scopes) by including the scope parameter for the *ApiScope* requests the claims associated with the *ApiScope* in its *UserClaims* collection.
+- Requesting an [ApiResource](/identityserver/v6/fundamentals/resources/api_resources) by including the resource indicator parameter for the *ApiResource* requests the claims associated with the *ApiResource* in its *UserClaims* collection.
 
 The *RequestedClaimTypes* property of the *ProfileDataRequestContext* contains the collection of claims requested by the client.
 
@@ -79,7 +79,7 @@ Finally, you might have claims that are only appropriate for certain users or cl
 ### The Subject of the ProfileDataRequestContext
 When the profile service is invoked to add claims to tokens, the *Subject* property on the *ProfileDataRequestContext* contains the principal that was issued during user sign-in. Typically, the profile service will source some claims from the *Subject* and others from databases or other data sources.
 
-When the profile service is called for requests to the [userinfo endpoint](../reference/endpoints/userinfo), the *Subject* property will not contain the principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call. You can check the caller of the profile service by querying the *Caller* property on the context.
+When the profile service is called for requests to the [userinfo endpoint](/identityserver/v6/reference/endpoints/userinfo), the *Subject* property will not contain the principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call. You can check the caller of the profile service by querying the *Caller* property on the context.
 
 ## Client claims
 Client claims are a set of pre-defined claims that are emitted in access tokens. They are defined on a per-client basis, meaning that each client can have its own unique set of client claims. The following shows an example of a client that is associated with a certain customer in your system:
@@ -98,14 +98,14 @@ var client = new Client
 };
 ```
 
-To avoid accidental collision with user claims, client claims are prefixed with *client_*. For example, the above *ClientClaim* would be emitted as the *client_customer_id* claim type in access tokens. You can change or remove this prefix by setting the *ClientClaimsPrefix* on the [client definition](../reference/models/client#token). 
+To avoid accidental collision with user claims, client claims are prefixed with *client_*. For example, the above *ClientClaim* would be emitted as the *client_customer_id* claim type in access tokens. You can change or remove this prefix by setting the *ClientClaimsPrefix* on the [client definition](/identityserver/v6/reference/models/client#token). 
 
 :::note
 By default, client claims are only sent in the client credentials flow. If you want to enable them for other flows, you need to set the *AlwaysSendClientClaims* property on the client definition.
 :::
 
 ### Setting client claims dynamically
-If you want to set client claims dynamically, you could either do that at client load time (via a client [store](../data) implementation), or using a [custom token request validator](../tokens/dynamic_validation).
+If you want to set client claims dynamically, you could either do that at client load time (via a client [store](/identityserver/v6/data) implementation), or using a [custom token request validator](/identityserver/v6/tokens/dynamic_validation).
 
 
 ## Claim Serialization

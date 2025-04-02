@@ -8,7 +8,7 @@ sidebar:
 #### Duende.IdentityServer.Stores.IServerSideSessionStore
 
 Used to persist users' authentication session data when using
-the [server-side sessions feature](../ui/server_side_sessions).
+the [server-side sessions feature](/identityserver/v7/ui/server_side_sessions).
 
 ```cs
 /// <summary>

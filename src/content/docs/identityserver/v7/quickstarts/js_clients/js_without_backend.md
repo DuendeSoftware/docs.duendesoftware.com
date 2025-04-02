@@ -12,7 +12,7 @@ from a copy of
 the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](../0_overview#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/v7/quickstarts/0_overview#preparation).
 
 :::
 
@@ -94,7 +94,7 @@ now.
 
 ### Reference oidc-client
 
-In the prior [web application quickstart](../3_api_access), we used
+In the prior [web application quickstart](/identityserver/v7/quickstarts/3_api_access), we used
 a .NET library to handle the OpenID Connect protocol. In this quickstart, we
 need a similar library in the `JavaScriptClient` project, except one that works
 in JavaScript and is designed to run in the browser. The [oidc-client
@@ -267,7 +267,7 @@ function logout() {
 
 :::note
 
-See the [client credentials quickstart](../quickstarts/1_client_credentials) for information on how to
+See the [client credentials quickstart](/identityserver/v7/quickstarts/1_client_credentials) for information on how to
 create the
 remote API used in the code above.
 

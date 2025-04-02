@@ -1,7 +1,7 @@
 ---
 title: Dynamic Client Registration
 sidebar:
-  order: 60
+  order: 6
 ---
 
 The client library for [OpenID Connect Dynamic Client
