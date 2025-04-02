@@ -15,6 +15,7 @@ export default defineConfig({
 	site: "https://docs.duendesoftware.com",
 	trailingSlash: 'ignore',
 	redirects: {
+		"/identityserver/v7/fundamentals/license_key": "/general/licensing/",
 		"/identityserver/v7/bff": "/bff/v3/",
 		"/identityserver/v7/samples/bff": "/bff/v3/samples",
 		"/identityserver/v7/bff/architecture": "/bff/v3/architecture/",
@@ -99,7 +100,7 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: 'General Information',
-					autogenerate: {directory: 'general-information'}
+					autogenerate: {directory: 'general'}
 				},
 				{
 					label: 'IdentityServer',
