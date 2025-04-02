@@ -241,7 +241,7 @@ Navigating to the controller *https://localhost:6001/identity* on a browser shou
 This means your API requires a credential and is now protected by IdentityServer.
 
 :::note
-If you are wondering, why the above code disables audience validation, have a look [here](/identityserver/v5/fundamentals/resources/api_scopes) for a more in-depth discussion.
+If you are wondering, why the above code disables audience validation, have a look [here](../fundamentals/resources/api_scopes) for a more in-depth discussion.
 :::
 
 #### Creating the client

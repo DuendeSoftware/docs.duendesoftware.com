@@ -15,7 +15,7 @@ An example of this redirect can be seen in the [local login](local) topic.
 
 :::note
 Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#security_issues) via the *returnUrl* parameter. You should validate that the *returnUrl* refers to a well-known location.
-Either use the *Url.IsLocalUrl* helper from ASP.NET Core, or use the [interaction service](/identityserver/v5/reference/services/interaction_service#iidentityserverinteractionservice-apis) from Duende IdentityServer for APIs to validate the *returnUrl* parameter.
+Either use the *Url.IsLocalUrl* helper from ASP.NET Core, or use the [interaction service](../reference/services/interaction_service#iidentityserverinteractionservice-apis) from Duende IdentityServer for APIs to validate the *returnUrl* parameter.
 :::
 
 Keep in mind that this *returnUrl* is state that needs to be maintained during the user's login workflow.

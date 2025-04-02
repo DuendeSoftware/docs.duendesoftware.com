@@ -1,11 +1,10 @@
 ---
-title: Authentication & Session Management
+title: Overview
 date: 2020-09-10T08:20:20+02:00
 sidebar:
-  order: 20
+  order: 1
 newContentUrl: https://docs.duendesoftware.com/bff/v3/fundamentals/session/
 ---
-
 
 This section deals with setting up the following components
 

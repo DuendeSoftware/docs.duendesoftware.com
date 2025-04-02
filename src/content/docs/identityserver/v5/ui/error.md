@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 order: 30
 ---
 
-The error page is used to display to the end user than an error has ocurred during requests to the [authorize endpoint](/identityserver/v5/reference/endpoints/authorize).
+The error page is used to display to the end user than an error has ocurred during requests to the [authorize endpoint](../reference/endpoints/authorize).
 
 Commonly errors are due to misconfiguration, and there's not much an end user can do about that.
 But this allows the user to understand that something went wrong and that they are not in the middle of a successful workflow.
@@ -13,7 +13,7 @@ But this allows the user to understand that something went wrong and that they a
 
 Details of the error are provided to the error page via an *errorId* parameter.
 
-The [interaction service](/identityserver/v5/reference/services/interaction_service#iidentityserverinteractionservice-apis) provides a *GetErrorContextAsync* API that will extract that information from the *errorId*.
-The returned [ErrorMessage](/identityserver/v5/reference/services/interaction_service#errormessage) object contains these details.
+The [interaction service](../reference/services/interaction_service#iidentityserverinteractionservice-apis) provides a *GetErrorContextAsync* API that will extract that information from the *errorId*.
+The returned [ErrorMessage](../reference/services/interaction_service#errormessage) object contains these details.
 
 

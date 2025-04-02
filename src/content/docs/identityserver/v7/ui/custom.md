@@ -13,7 +13,7 @@ These custom pages can be made available to the end user as links from the stand
 
 As requests are made into the authorize endpoint, if a user already has an established authentication session then they will not be presented with a login page at your IdentityServer (as that is the normal expectation for single sign-on).
 
-Duende IdentityServer provides the [authorize interaction response generator](/identityserver/v7/reference/response_handling/authorize_interaction_response_generator) extensibility point to allow overriding or controlling the response from the authorize endpoint.
+Duende IdentityServer provides the [authorize interaction response generator](../reference/response_handling/authorize_interaction_response_generator) extensibility point to allow overriding or controlling the response from the authorize endpoint.
 
 ### Built-in AuthorizeInteractionResponseGenerator
 
@@ -58,5 +58,5 @@ Once the custom logic is complete on the page, then the URL in the `returnUrl` q
 
 :::note
 Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#security_issues) via the `returnUrl` parameter. You should validate that the `returnUrl` refers to a well-known location.
-Either use the `Url.IsLocalUrl` helper from ASP.NET Core, or use the [interaction service](/identityserver/v7/reference/services/interaction_service#iidentityserverinteractionservice-apis) from Duende IdentityServer for APIs to validate the `returnUrl` parameter.
+Either use the `Url.IsLocalUrl` helper from ASP.NET Core, or use the [interaction service](../reference/services/interaction_service#iidentityserverinteractionservice-apis) from Duende IdentityServer for APIs to validate the `returnUrl` parameter.
 :::

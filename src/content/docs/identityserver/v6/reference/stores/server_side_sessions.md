@@ -6,7 +6,7 @@ order: 100
 
 #### Duende.IdentityServer.Stores.IServerSideSessionStore
 
-Used to persist users' authentication session data when using the [server-side sessions feature](/identityserver/v6/ui/server_side_sessions).
+Used to persist users' authentication session data when using the [server-side sessions feature](../ui/server_side_sessions).
 
 ```cs
 /// <summary>

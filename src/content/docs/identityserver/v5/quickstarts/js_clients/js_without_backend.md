@@ -215,7 +215,7 @@ function logout() {
 ```
 
 :::note
-See the [client credentials quickstart](/identityserver/v5/quickstarts/1_client_credentials) for information on how to create the api used in the code above.
+See the [client credentials quickstart](../quickstarts/1_client_credentials) for information on how to create the api used in the code above.
 :::
 
 **callback.html**

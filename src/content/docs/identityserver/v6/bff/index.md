@@ -10,4 +10,4 @@ The Duende.BFF (Backend for Frontend) security framework packages the necessary 
 
 Duende.BFF is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business Edition or higher. The same [license](https://duendesoftware.com/products/identityserver#pricing) and [special offers](https://duendesoftware.com/specialoffers) apply.
 
-The source code for the BFF framework can be found [here](https://github.com/DuendeSoftware/BFF). Builds are distributed through NuGet [here](https://www.nuget.org/packages/Duende.BFF/), and samples are available [here](/identityserver/v6/samples/bff).
+The source code for the BFF framework can be found [here](https://github.com/DuendeSoftware/BFF). Builds are distributed through NuGet [here](https://www.nuget.org/packages/Duende.BFF/), and samples are available [here](../samples/bff).

@@ -11,7 +11,7 @@ This means you have the ability to customize any UI page (registration, login, p
 You have the ability to control the entire user experience while Duende IdentityServer provides the implementation of the security protocol (OpenID Connect and OAuth).
 
 :::note
-While you can use any custom user database or identity management library for your users, we provide [integration support](/identityserver/v6/aspnet_identity) for ASP.NET Identity.
+While you can use any custom user database or identity management library for your users, we provide [integration support](../aspnet_identity) for ASP.NET Identity.
 :::
 
 ## Authorization Endpoint and Login Page Workflow
@@ -19,7 +19,7 @@ While you can use any custom user database or identity management library for yo
 The standard mechanism to allow users to login is for the client application to use a web browser.
 This is obvious if the client application is a web application, but it's also the recommended practice for native and mobile applications.
 
-When a user must login, the client application will redirect the user to the protocol endpoint called the [authorization endpoint](/identityserver/v6/reference/endpoints/authorize) in your IdentityServer server to request authentication.
+When a user must login, the client application will redirect the user to the protocol endpoint called the [authorization endpoint](../reference/endpoints/authorize) in your IdentityServer server to request authentication.
 As part of the authorize request, your IdentityServer will typically display a login page for the user to enter their credentials.
 Once the user has authenticated, your IdentityServer will redirect the user back to the application with the protocol response.
 
@@ -46,5 +46,5 @@ This time the request to the authorize endpoint will have an authenticated sessi
 
 In addition to the login page, there are other pages that Duende IdentityServer expects (e.g. logout, error, consent), and you could implement custom pages as well (e.g. register, forgot password, etc.).
 Details about building these pages, and coverage of additional topics are in the 
-[User Interaction](/identityserver/v6/ui) 
+[User Interaction](../ui) 
 section of this documentation.

@@ -4,9 +4,6 @@ sidebar:
   order: 20
 ---
 
-
-## Overview
-
 This library automates all the tasks around access token lifetime management for user-centric web applications.
 
 While many of the details can be customized, by default the following is assumed:
@@ -16,7 +13,7 @@ While many of the details can be customized, by default the following is assumed
 * OpenID Connect authentication handler for authentication and access token requests against an OpenID Connect compliant token service
 * the token service returns a refresh token
 
-### Setup
+## Setup
 
 By default, the token management library will use the ASP.NET Core default authentication scheme for token storage (this is typically the cookie handler and its authentication session), and the default challenge scheme for deriving token client configuration for refreshing tokens or requesting client credential tokens (this is typically the OpenID Connect handler pointing to your trusted authority).
 
@@ -77,7 +74,7 @@ builder.Services.AddOpenIdConnectAccessTokenManagement();
 
 ```
 
-#### HTTP client factory
+### HTTP client factory
 
 Similar to the worker service support, you can register HTTP clients that automatically send the access token of the current user when making API calls. The message handler plumbing associated with those HTTP clients will try to make sure, the access token is always valid and not expired.
 
@@ -116,7 +113,7 @@ builder.Services.AddHttpClient<MasterDataClient>(client =>
     .AddClientAccessTokenHandler();
 ```
 
-### Usage
+## Usage
 
 There are three ways to interact with the token management service:
 
@@ -124,7 +121,7 @@ There are three ways to interact with the token management service:
 * HTTP context extension methods
 * HTTP client factory
 
-#### Manually
+### Manually
 
 You can get the current user and client access token manually by writing code against the `IUserTokenManagementService`.
 
@@ -153,7 +150,7 @@ public class HomeController : Controller
 }
 ```
 
-#### HTTP context extension methods
+### HTTP context extension methods
 
 There are three extension methods on the HTTP context that simplify interaction with the token management service:
 
@@ -174,7 +171,7 @@ public async Task<IActionResult> CallApi()
 }
 ```
 
-#### HTTP client factory
+### HTTP client factory
 
 Last but not least, if you registered clients with the factory, you can simply use them. They will try to make sure that a current access token is always sent along. If that is not possible, ultimately a 401 will be returned to the calling code.
 

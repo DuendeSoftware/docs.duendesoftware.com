@@ -13,5 +13,3 @@ specifications, such as standard scope, claim, and parameter names, and other co
 methods for performing common identity related operations.
 
 Duende.IdentityModel targets .NET Standard 2.0, making it suitable for .NET and .NET Framework.
-
-TODO LIST CHILDREN HERE

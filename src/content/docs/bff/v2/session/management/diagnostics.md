@@ -1,8 +1,9 @@
 ---
-title: "BFF Diagnostics Endpoint"
-menuTitle: "Diagnostics"
+title: "Diagnostics Endpoint"
+sidebar:
+    label: "Diagnostics"
+    order: 5
 date: 2022-12-29T10:22:12+02:00
-order: 40
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/management/diagnostics/"
 ---
 

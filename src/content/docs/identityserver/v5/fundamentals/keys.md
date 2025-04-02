@@ -21,7 +21,7 @@ Automatic key management is on by default, and creates RSA keys for *RS256* usag
 The keys are automatically rotated every 90 days, announced 14 days in advance, and retained for 14 days after it expires.
 :::
 
-You can configure the key management parameters on the [*IdentityServerOptions*](/identityserver/v5/reference/options#key-management), e.g.:
+You can configure the key management parameters on the [*IdentityServerOptions*](../reference/options#key-management), e.g.:
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -62,14 +62,14 @@ When you register multiple keys, the first key in the list will be the default k
 :::
 
 ### Key storage and protection
-By default the keys will be protected at rest using the ASP.NET Core Data Protection mechanism. See the [deployment](/identityserver/v5/deployment) section to learn more about setting up data protection.
+By default the keys will be protected at rest using the ASP.NET Core Data Protection mechanism. See the [deployment](../deployment) section to learn more about setting up data protection.
 
 Key storage defaults to the file system, but is extensible. We also provide EntityFramework integration.
 
 ## Static key configuration
 You can also statically configure your key material. A common scenario is to load keys from a key vault or other secured location at startup. With static configuration you are responsible for secure storage, loading and rotation of keys.
 
-For this purpose you disable the automatic key management, and load the keys manually with the [*AddSigningCredential*](/identityserver/v5/reference/di#signing-keys) DI extension method:
+For this purpose you disable the automatic key management, and load the keys manually with the [*AddSigningCredential*](../reference/di#signing-keys) DI extension method:
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -89,7 +89,7 @@ A signing key registered with *AddSigningCredential* will take precedence over a
 
 
 ## Disabling automatic key management
-The automatic key management feature can be disabled by setting the *Enabled* flag to *false* on the the [*IdentityServerOptions*](/identityserver/v5/reference/options#key-management), e.g.:
+The automatic key management feature can be disabled by setting the *Enabled* flag to *false* on the the [*IdentityServerOptions*](../reference/options#key-management), e.g.:
 
 ```cs
 var builder = services.AddIdentityServer(options =>

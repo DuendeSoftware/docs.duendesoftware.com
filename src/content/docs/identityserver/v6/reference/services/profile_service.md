@@ -6,7 +6,7 @@ order: 40
 
 #### Duende.IdentityServer.Services.IProfileService
 
-Encapsulates retrieval of user claims from a data source of your choice. See [here](/identityserver/v6/samples/ui#custom-profile-service) for a sample.
+Encapsulates retrieval of user claims from a data source of your choice. See [here](../samples/ui#custom-profile-service) for a sample.
 
 ```cs
 /// <summary>
@@ -45,7 +45,7 @@ Models the request for user claims and is the vehicle to return those claims. It
 
 * ***Subject***
     
-    The *ClaimsPrincipal* modeling the user associated with this request for profile data. When the profile service is invoked for tokens, the *Subject* property will contain the principal that was issued during user sign-in. When the profile service is called for requests to the [userinfo endpoint](/identityserver/v6/reference/endpoints/userinfo), the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call.
+    The *ClaimsPrincipal* modeling the user associated with this request for profile data. When the profile service is invoked for tokens, the *Subject* property will contain the principal that was issued during user sign-in. When the profile service is called for requests to the [userinfo endpoint](../reference/endpoints/userinfo), the *Subject* property will contain a claims principal populated with the claims in the access token used to authorize the userinfo call.
 
 * ***Client***
     

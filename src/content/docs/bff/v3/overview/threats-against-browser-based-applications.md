@@ -2,7 +2,8 @@
 title: "Threats against browser-based applications"
 description: "BFF Security Framework"
 date: 2020-09-10T08:22:12+02:00
-order: 1
+sidebar:
+  order: 2
 ---
 
 In this paragraph, let’s look at some of the common ways browser-based apps are typically attacked and what their consequences would be.

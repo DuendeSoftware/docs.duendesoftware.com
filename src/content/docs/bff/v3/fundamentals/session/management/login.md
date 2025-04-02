@@ -1,8 +1,9 @@
 ---
 title: "BFF Login Endpoint"
-menuTitle: "Login"
 date: 2020-09-10T08:22:12+02:00
-order: 20
+sidebar:
+  label: "Login"
+  order: 20
 ---
 
 The */bff/login* endpoint begins the authentication process. To use it, typically javascript code will navigate away from the frontend application to the login endpoint:

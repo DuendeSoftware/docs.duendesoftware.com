@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 order: 100
 ---
 
-When using reference tokens, Duende IdentityServer stores the contents of the token in the [persisted grant](/identityserver/v6/data/operational/grants) store and issues a unique identifier for this token back to the client.
+When using reference tokens, Duende IdentityServer stores the contents of the token in the [persisted grant](../data/operational/grants) store and issues a unique identifier for this token back to the client.
 
-The consumer of the token must use the [introspection](/identityserver/v6/reference/endpoints/introspection) endpoint to validate the token.
+The consumer of the token must use the [introspection](../reference/endpoints/introspection) endpoint to validate the token.
 
 ![](images/reference_tokens.png)
 

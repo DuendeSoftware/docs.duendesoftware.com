@@ -11,12 +11,12 @@ emit, in which situations you want to emit those claims, and where to retrieve t
 ## User claims
 
 User claims can be emitted in both identity and access tokens and in
-the [userinfo endpoint](/identityserver/v7/reference/endpoints/userinfo). The central extensibility point to implement
-to emit claims is called the [profile service](/identityserver/v7/reference/services/profile_service). The profile
+the [userinfo endpoint](../reference/endpoints/userinfo). The central extensibility point to implement
+to emit claims is called the [profile service](../reference/services/profile_service). The profile
 service is responsible for both gathering claim data and deciding which claims should be emitted.
 
 Whenever IdentityServer needs the claims for a user, it invokes the registered profile service with
-a [context](/identityserver/v7/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext)
+a [context](../reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext)
 that presents detailed information about the current request, including
 
 * the client that is making the request
@@ -39,11 +39,11 @@ consent, this will also give end users the opportunity to approve or deny sharin
 
 Clients can request claims in several ways:
 
-- Requesting an [IdentityResource](/identityserver/v7/fundamentals/resources/identity) by including the scope parameter
+- Requesting an [IdentityResource](../fundamentals/resources/identity) by including the scope parameter
   for the `IdentityResource` requests the claims associated with the `IdentityResource` in its `UserClaims` collection.
-- Requesting an [ApiScope](/identityserver/v7/fundamentals/resources/api_scopes) by including the scope parameter for
+- Requesting an [ApiScope](../fundamentals/resources/api_scopes) by including the scope parameter for
   the `ApiScope` requests the claims associated with the `ApiScope` in its `UserClaims` collection.
-- Requesting an [ApiResource](/identityserver/v7/fundamentals/resources/api_resources) by including the resource
+- Requesting an [ApiResource](../fundamentals/resources/api_resources) by including the resource
   indicator parameter for the `ApiResource` requests the claims associated with the `ApiResource` in its `UserClaims`
   collection.
 
@@ -109,7 +109,7 @@ contains the principal that was issued during user sign-in. Typically, the profi
 the `Subject` and others from databases or other data sources.
 
 When the profile service is called for requests to
-the [userinfo endpoint](/identityserver/v7/reference/endpoints/userinfo), the `Subject` property will not contain the
+the [userinfo endpoint](../reference/endpoints/userinfo), the `Subject` property will not contain the
 principal issued during user sign-in, since userinfo calls don't happen as part of a session. Instead, the `Subject`
 property will contain a claims principal populated with the claims in the access token used to authorize the userinfo
 call. You can check the caller of the profile service by querying the `Caller` property on the context.
@@ -136,7 +136,7 @@ var client = new Client
 
 To avoid accidental collision with user claims, client claims are prefixed with `client_`. For example, the above
 `ClientClaim` would be emitted as the `client_customer_id` claim type in access tokens. You can change or remove this
-prefix by setting the `ClientClaimsPrefix` on the [client definition](/identityserver/v7/reference/models/client#token).
+prefix by setting the `ClientClaimsPrefix` on the [client definition](../reference/models/client#token).
 
 :::note
 By default, client claims are only sent in the client credentials flow. If you want to enable them for other flows, you
@@ -146,8 +146,8 @@ need to set the `AlwaysSendClientClaims` property on the client definition.
 ### Setting client claims dynamically
 
 If you want to set client claims dynamically, you could either do that at client load time (via a
-client [store](/identityserver/v7/data) implementation), or using
-a [custom token request validator](/identityserver/v7/tokens/dynamic_validation).
+client [store](../data) implementation), or using
+a [custom token request validator](../tokens/dynamic_validation).
 
 ## Claim Serialization
 

@@ -5,21 +5,21 @@ sidebar:
 ---
 
 
-Configuration data models the information for [Clients](/identityserver/v6/fundamentals/clients) and [Resources](/identityserver/v6/fundamentals/resources).
+Configuration data models the information for [Clients](../fundamentals/clients) and [Resources](../fundamentals/resources).
 
 ## Stores
 
 Store interfaces are designed to abstract accessing the configuration data. 
 The stores used in Duende IdentityServer are:
-* [Client store](/identityserver/v6/reference/stores/client_store) for *Client* data.
-* [CORS policy service](/identityserver/v6/reference/stores/cors_policy_service) for [CORS support](/identityserver/v6/tokens/cors). Given that this is so closely tied to the *Client* configuration data, the CORS policy service is considered one of the configuration stores.
-* [Resource store](/identityserver/v6/reference/stores/resource_store) for *IdentityResource*, *ApiResource*, and *ApiScope* data.
-* [Identity Provider store](/identityserver/v6/reference/stores/idp_store) for *IdentityProvider* data.
+* [Client store](../reference/stores/client_store) for *Client* data.
+* [CORS policy service](../reference/stores/cors_policy_service) for [CORS support](../tokens/cors). Given that this is so closely tied to the *Client* configuration data, the CORS policy service is considered one of the configuration stores.
+* [Resource store](../reference/stores/resource_store) for *IdentityResource*, *ApiResource*, and *ApiScope* data.
+* [Identity Provider store](../reference/stores/idp_store) for *IdentityProvider* data.
 
 ## Registering Custom Stores
 
 Custom implementations of the stores must be registered in the DI system.
-There are [convenience methods](/identityserver/v6/reference/di#configuration-stores) for registering these.
+There are [convenience methods](../reference/di#configuration-stores) for registering these.
 For example:
 
 ```cs
@@ -38,7 +38,7 @@ public void ConfigureServices(IServiceCollection services)
 Configuration data is used frequently during request processing.
 If this data is loaded from a database or other external store, then it might be expensive to frequently re-load the same data.
 
-Duende IdentityServer provides [convenience methods](/identityserver/v6/reference/di#caching-configuration-data) to enable caching data from the various stores.
+Duende IdentityServer provides [convenience methods](../reference/di#caching-configuration-data) to enable caching data from the various stores.
 The caching implementation relies upon an *ICache<T>* service and must also be added to DI. 
 For example:
 
@@ -57,7 +57,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-The duration of the data in the default cache is configurable on the [IdentityServerOptions](/identityserver/v6/reference/options#caching).
+The duration of the data in the default cache is configurable on the [IdentityServerOptions](../reference/options#caching).
 For example:
 
 ```cs
@@ -84,7 +84,7 @@ If you wish to customize the in-memory caching behavior, you can replace the *IM
 
 ## In-Memory Stores
 
-The various [in-memory configuration APIs](/identityserver/v6/reference/di#configuration-stores) allow for configuring IdentityServer from an in-memory list of the various configuration objects.
+The various [in-memory configuration APIs](../reference/di#configuration-stores) allow for configuring IdentityServer from an in-memory list of the various configuration objects.
 These in-memory collections can be hard-coded in the hosting application, or could be loaded dynamically from a configuration file or a database.
 By design, though, these collections are only created when the hosting application is starting up.
 

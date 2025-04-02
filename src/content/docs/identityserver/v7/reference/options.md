@@ -86,13 +86,11 @@ Automatic key management settings. Available on the `KeyManagement` property of 
 
     Defaults to `RS256` without an X.509 certificate.
 
-  :::note
-  
+:::note 
 *X.509 certificates* have an expiration date, but IdentityServer does
-  not use this data to validate the certificate and throw an exception. If a certificate has expired then you
-  must decide whether to continue using it or replace it with a new certificate.
-  
-  :::
+not use this data to validate the certificate and throw an exception. If a certificate has expired then you
+must decide whether to continue using it or replace it with a new certificate.
+:::
 
 * **`RsaKeySize`**
     
@@ -306,7 +304,7 @@ Login/logout related settings. Available on the `Authentication` property of the
     An individual client can override this setting with its own `CoordinateLifetimeWithUserSession` configuration setting.
 
 ## Events
-Configures which [events](/identityserver/v7/diagnostics/events) should be raised at the  registered event sink.
+Configures which [events](../diagnostics/events) should be raised at the  registered event sink.
 
 * **`RaiseSuccessEvents`**
 
@@ -519,7 +517,7 @@ User interaction settings, including urls for pages in the UI, names of paramete
     The collection of OIDC prompt modes supported and that will be published in discovery. By
     default, this includes all values in `Constants.SupportedPromptModes`. If the
     `CreateAccountUrl` option is set, then the "create" value is also included. If additional
-    prompt values are added, a customized [`IAuthorizeInteractionResponseGenerator"`](/identityserver/v7/ui/custom) is also required to handle those values.
+    prompt values are added, a customized [`IAuthorizeInteractionResponseGenerator"`](../ui/custom) is also required to handle those values.
 
 ## Caching
 Caching settings for the stores. Available on the `Caching` property of the `IdentityServerOptions` object. These settings only apply if the respective caching has been enabled in the services configuration in startup.
@@ -587,7 +585,7 @@ OAuth device flow settings. Available on the `DeviceFlow` property of the `Ident
     The maximum frequency in seconds that a client may poll the token endpoint in the device flow. Defaults to `5`.
 
 ## Mutual TLS
-[Mutual TLS](/identityserver/v7/tokens/authentication/mtls) settings. Available on the `MutualTls` property of the `IdentityServerOptions` object.
+[Mutual TLS](../tokens/client_authentication.md) settings. Available on the `MutualTls` property of the `IdentityServerOptions` object.
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -634,7 +632,7 @@ Shared settings for persisted grants behavior.
     When Refresh tokens that are configured with RefreshTokenUsage.OneTime are used, this option controls if they will be deleted immediately or retained and marked as consumed. The default is on - immediately delete.
 
 ## Dynamic Providers
-Settings for [dynamic providers](/identityserver/v7/ui/login/dynamicproviders). Available on the `DynamicProviders` property of the `IdentityServerOptions` object.
+Settings for [dynamic providers](../ui/login/dynamicproviders). Available on the `DynamicProviders` property of the `IdentityServerOptions` object.
 
 * **`PathPrefix`**
     
@@ -649,7 +647,7 @@ Settings for [dynamic providers](/identityserver/v7/ui/login/dynamicproviders). 
     Scheme for signout. Defaults to the constant `IdentityServerConstants.DefaultCookieAuthenticationScheme`, which has the value "idsrv".
 
 ## CIBA
-[CIBA](/identityserver/v7/ui/ciba) settings.  Available on the `Ciba` property of the `IdentityServerOptions` object.
+[CIBA](../ui/ciba) settings.  Available on the `Ciba` property of the `IdentityServerOptions` object.
 
 * **`DefaultLifetime`**
     
@@ -660,7 +658,7 @@ Settings for [dynamic providers](/identityserver/v7/ui/login/dynamicproviders). 
     The maximum frequency in seconds that a client may poll the token endpoint in the CIBA flow. Defaults to 5.
 
 ## Server-side Sessions 
-Settings for [server-side sessions](/identityserver/v7/ui/server_side_sessions). Added in `v6.1`.  Available on the `ServerSideSessions` property of the `IdentityServerOptions` object.
+Settings for [server-side sessions](../ui/server_side_sessions). Added in `v6.1`.  Available on the `ServerSideSessions` property of the `IdentityServerOptions` object.
 
 * **`UserDisplayNameClaimType`**
     
@@ -746,13 +744,13 @@ discovery document or implement a custom *`IDiscoveryResponseGenerator`*.
 
 #### Strict Audience Validation
 
-When using [*private key JWT*](/identityserver/v7/tokens/authentication/jwt),
+When using [*private key JWT*](../tokens/client_authentication#private-key-jwts),
 there is a theoretical vulnerability where a Relying Party trusting multiple OpenID Providers
 could be attacked if one of the OpenID Providers is malicious or compromised.
 
 The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
 explicit `typ` header in the authentication JWT.
 
-You can [enable strict audience validation in Duende IdentityServer](/identityserver/v7/tokens/authentication/jwt#strict-audience-validation)
+You can [enable strict audience validation in Duende IdentityServer](../tokens/client_authentication#strict-audience-validation)
 using the *`StrictClientAssertionAudienceValidation`* flag, which strictly validates that
 the audience is equal to the issuer and validates the token's `typ` header.

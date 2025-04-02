@@ -32,10 +32,10 @@ Then in your *Startup.cs*, use the *AddAspNetIdentity* extension method after th
     }
 
 *AddAspNetIdentity* requires as a generic parameter the class that models your user for ASP.NET Identity (and the same one passed to *AddIdentity* to configure ASP.NET Identity).
-This configures IdentityServer to use the ASP.NET Identity implementations of [IUserClaimsPrincipalFactory](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.iuserclaimsprincipalfactory-1) to convert the user data into claims, *IResourceOwnerPasswordValidator* to support the [password grant type](/identityserver/v6/tokens/password_grant), and *IProfileService* which uses the *IUserClaimsPrincipalFactory* to add [claims](/identityserver/v6/fundamentals/claims) to tokens.
+This configures IdentityServer to use the ASP.NET Identity implementations of [IUserClaimsPrincipalFactory](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.iuserclaimsprincipalfactory-1) to convert the user data into claims, *IResourceOwnerPasswordValidator* to support the [password grant type](../tokens/password_grant), and *IProfileService* which uses the *IUserClaimsPrincipalFactory* to add [claims](../fundamentals/claims) to tokens.
 It also configures some of ASP.NET Identity's options for use with IdentityServer (such as claim types to use and authentication cookie settings).
 
 If you need to use your own implementation of *IUserClaimsPrincipalFactory*, then that is supported. Our implementation of the *IUserClaimsPrincipalFactory* will use the decorator pattern to encapsulate yours. For this to work properly, ensure that your implementation is registered in the DI system prior to calling the IdentityServer *AddAspNetIdentity* extension method.
 
 ## Template
-Alternatively, you can use the *isaspid* [template](/identityserver/v6/overview/packaging#templates) to create a starter IdentityServer host project configured to use ASP.NET Identity. See the [Quickstart Documentation](/identityserver/v6/quickstarts/5_aspnetid) for a detailed walkthrough. 
+Alternatively, you can use the *isaspid* [template](../overview/packaging#templates) to create a starter IdentityServer host project configured to use ASP.NET Identity. See the [Quickstart Documentation](../quickstarts/5_aspnetid) for a detailed walkthrough. 

@@ -4,7 +4,6 @@ sidebar:
   order: 10
 ---
 
-
 In manual mode, OidcClient helps you with creating the necessary start
 URL and state parameters, but you need to coordinate with whatever
 browser you want to use, e.g.:

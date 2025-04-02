@@ -9,4 +9,4 @@ newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/tokens/extensi
 
 This sample shows an implementation of the Token Exchange specification [RFC 8693](https://tools.ietf.org/html/rfc8693) via the Duende IdentityServer extension grant mechanism.
 
-See [here](/identityserver/v5/tokens/extension_grants) for more information on extension grants.
+See [here](../tokens/extension_grants) for more information on extension grants.

@@ -8,7 +8,7 @@ Instead of providing the parameters for an authorize request as individual query
 This makes the parameters tamper proof and you can authenticate the client already on the front-channel.
 
 :::note
-See [here](/identityserver/v7/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
+See [here](../samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
 :::
 
 You can either transmit them by value or by reference to the authorize endpoint - see the [spec](https://openid.net/specs/openid-connect-core-1_0.html#jwtrequests) for more details.
@@ -60,11 +60,11 @@ idsvrBuilder.AddJwtRequestUriHttpClient(client =>
 ```
 
 :::note
-Request URI processing is disabled by default. Enable on the [Endpoints](/identityserver/v7/reference/options#endpoints) on the `IdentityServerOptions`. Also see the security considerations from the JAR [specification](https://tools.ietf.org/html/draft-ietf-oauth-jwsreq-23#section-10.4).
+Request URI processing is disabled by default. Enable on the [Endpoints](../reference/options#endpoints) on the `IdentityServerOptions`. Also see the security considerations from the JAR [specification](https://tools.ietf.org/html/draft-ietf-oauth-jwsreq-23#section-10.4).
 :::
 
 ## Accessing the request object data
 You can access the validated data from the request object in two ways:
 
 * Wherever you have access to the `ValidatedAuthorizeRequest`, the `RequestObjectValues` dictionary holds the values.
-* In the UI code you can call `IIdentityServerInteractionService.GetAuthorizationContextAsync`, the resulting [AuthorizationRequest](/identityserver/v7/reference/services/interaction_service#authorizationrequest) object contains the `RequestObjectValues` dictionary as well.
+* In the UI code you can call `IIdentityServerInteractionService.GetAuthorizationContextAsync`, the resulting [AuthorizationRequest](../reference/services/interaction_service#authorizationrequest) object contains the `RequestObjectValues` dictionary as well.

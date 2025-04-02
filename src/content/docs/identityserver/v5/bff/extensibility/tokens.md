@@ -19,7 +19,7 @@ services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClientName, 
 ```
 
 :::note
-You can also supply client assertions to the token management library. See this [sample](/identityserver/v5/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for JWT-based client authentication.
+You can also supply client assertions to the token management library. See this [sample](../samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for JWT-based client authentication.
 :::
 
 ### Custom token storage

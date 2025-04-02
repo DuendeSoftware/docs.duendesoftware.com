@@ -263,7 +263,7 @@ function logout() {
 
 :::note
 
-See the [client credentials quickstart](/identityserver/v6/quickstarts/1_client_credentials) for information on how to create the
+See the [client credentials quickstart](../quickstarts/1_client_credentials) for information on how to create the
 remote API used in the code above. 
 
 :::

@@ -4,7 +4,6 @@ sidebar:
   order: 40
 ---
 
-
 Samples of IdentityModel.OidcClient are available [on
 GitHub](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples). Our samples
 show how to use a OidcClient with a variety of platforms and UI tools, including:

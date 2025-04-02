@@ -4,9 +4,6 @@ sidebar:
   order: 10
 ---
 
-
-## Overview
-
 A common scenario in worker applications or background tasks (or really any demon-style applications) is to call APIs using an OAuth token obtained via the client credentials flow.
 
 The access tokens need to be requested and cached (either locally or shared between multiple instances) and made available to the code calling the APIs. In case of expiration (or other token invalidation reasons), a new access token needs to be requested.
@@ -15,7 +12,7 @@ The actual business code should not need to be aware of any of this.
 
 Have a look for the `Worker` project in the [samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for running code.
 
-### Setup
+## Setup
 
 Start by adding a reference to the `Duende.AccessTokenManagement` Nuget package to your application.
 
@@ -46,7 +43,7 @@ services.AddClientCredentialsTokenManagement()
     });
 ```
 
-#### HTTP Client Factory
+### HTTP Client Factory
 
 You can register HTTP clients with the factory that will automatically use the above client definitions to request and use access tokens.
 
@@ -69,11 +66,11 @@ services.AddHttpClient<CatalogClient>(client =>
     .AddClientCredentialsTokenHandler("catalog.client");
 ```
 
-### Usage
+## Usage
 
 There are two fundamental ways to interact with token management - manually, or via the HTTP factory.
 
-#### Manual
+### Manual
 
 You can retrieve the current access token for a given token client via `IClientCredentialsTokenManagementService.GetAccessTokenAsync`.
 
@@ -110,7 +107,7 @@ public class WorkerManual : BackgroundService
 
 You can customize some of the per-request parameters by passing in an instance of `ClientCredentialsTokenRequestParameters`. This allows forcing a fresh token request (even if a cached token would exist) and also allows setting a per request scope, resource and client assertion.
 
-#### HTTP factory
+### HTTP factory
 
 If you have setup HTTP clients in the HTTP factory, then no token related code is needed at all, e.g.:
 

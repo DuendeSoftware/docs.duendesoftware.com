@@ -33,5 +33,5 @@ When using reference tokens, the cnf claim will be returned from the introspecti
 
 IdentityServer supports two styles of proof of possession tokens:
 
-* [Mutual TLS](/identityserver/v6/tokens/pop/mtls)
-* [DPoP](/identityserver/v6/tokens/pop/dpop)
+* [Mutual TLS](../tokens/pop/mtls)
+* [DPoP](../tokens/pop/dpop)

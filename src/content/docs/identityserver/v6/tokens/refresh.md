@@ -6,7 +6,7 @@ order: 20
 
 Access tokens have finite lifetimes. If a client needs long-lived access to a resource, [refresh tokens](https://datatracker.ietf.org/doc/html/rfc6749#section-1.5) can be used to request a new access token. This can be done with an API call and does not require any user interaction or interruption.
 
-Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by setting the *AllowOfflineAccess* property to *true*. See the [client reference](/identityserver/v6/reference/models/client#refresh-token) section for additional refresh token related settings.
+Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by setting the *AllowOfflineAccess* property to *true*. See the [client reference](../reference/models/client#refresh-token) section for additional refresh token related settings.
 
 Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential flow.
 
@@ -78,7 +78,7 @@ Confidential clients do not need one-time use refresh tokens because their token
 
 Reusable refresh tokens are robust to network failures in a way that one time use tokens are not. If a one-time use refresh token is used to produce a new token, but the response containing the new refresh token is lost due to a network issue, the client application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
 
-Reusable tokens may have better performance in the [persisted grants store](/identityserver/v6/reference/stores/persisted_grant_store). One-time use refresh tokens require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens avoids those writes.
+Reusable tokens may have better performance in the [persisted grants store](../reference/stores/persisted_grant_store). One-time use refresh tokens require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens avoids those writes.
 
 #### Accepting Consumed Tokens
 To make one time use tokens more robust to network failures, you can customize the behavior of the *RefreshTokenService* such that consumed tokens can be used under certain circumstances, perhaps for a small length of time after they are consumed. To do so, create a subclass of the *DefaultRefreshTokenService* and override its *AcceptConsumedTokenAsync(RefreshToken refreshToken)* method. This method takes a consumed refresh token and returns a boolean flag that indicates if that token should be accepted, that is, allowed to be used to obtain an access token. The default implementation in the *DefaultRefreshTokenService* rejects all consumed tokens, but your customized implementation could create a time window where consumed tokens can be used.
@@ -98,4 +98,4 @@ In addition to one-time only usage semantics, you might wish to add replay detec
 
 Implementing replay detection is similar to [accepting consumed tokens](#accepting-consumed-tokens). Extend the *AcceptConsumedTokenAsync* method of the *DefaultRefreshTokenService* and add the additional revocation or alerting behavior that you choose. In 6.3, the same new options that interact with accepting consumed tokens also interact with replay detection. The *PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUse* flag needs to be disabled so that used tokens persist and can be used to detect replays. The cleanup job should also be configured to not delete consumed tokens.
 
-See also: The [IRefreshTokenService](/identityserver/v6/reference/services/refresh_token_service) reference.
+See also: The [IRefreshTokenService](../reference/services/refresh_token_service) reference.

@@ -2,10 +2,12 @@
 title: Overview
 description: Overview
 sidebar:
-  order: 96
+  order: 1
 ---
 
-(Added in 6.3)
+:::tip
+Added in Duende IdentityServer 6.3
+:::
 
 The Configuration API is a collection of endpoints that allow for management and
 configuration of an IdentityServer implementation. The Configuration API can be
@@ -24,4 +26,4 @@ and [special offers](https://duendesoftware.com/specialoffers) apply.
 The Configuration API's source code is available [on
 github](https://github.com/DuendeSoftware/products/tree/main/identity-server/src/Configuration).
 
-Samples of the Configuration API are available [here](/identityserver/v7/samples/configuration).
+Samples of the Configuration API are available [here](../samples/configuration).

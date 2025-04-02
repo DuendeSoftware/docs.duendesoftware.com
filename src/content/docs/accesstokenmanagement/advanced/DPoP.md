@@ -4,7 +4,6 @@ sidebar:
   order: 40
 ---
 
-
 [DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) specifies how to bind an asymmetric key stored within a JSON Web Key (JWK) to an access token. This will make the access token bound to the key such that if the access token were to leak, it cannot be used without also having access to the private key of the corresponding JWK.
 
 The "Duende.AccessTokenManagement" library supports DPoP.

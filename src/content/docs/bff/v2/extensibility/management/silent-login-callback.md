@@ -1,8 +1,9 @@
 ---
 title: "BFF Silent Login Callback Extensibility"
-menuTitle: "Silent Login Callback"
+sidebar: 
+  label: "Silent Login Callback"
+  order: 30
 date: 2022-12-30 10:55:24
-order: 30
 ---
 
 The BFF silent login callback endpoint can be customized by implementing the *ISilentLoginCallbackService* or by extending *DefaultSilentLoginCallbackService*, its default implementation.

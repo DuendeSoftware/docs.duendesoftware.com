@@ -4,7 +4,6 @@ sidebar:
   order: 50
 ---
 
-
 The client library for the [OpenID Connect
 UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#userinfo)
 endpoint is provided as an extension method for *HttpClient*.

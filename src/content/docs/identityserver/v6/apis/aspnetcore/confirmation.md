@@ -4,11 +4,11 @@ date: 2020-09-10T08:22:12+02:00
 order: 40
 ---
 
-IdentityServer can [bind tokens to clients](/identityserver/v6/tokens/pop) using either mTLS or DPoP, creating a *Proof-of-Possession* (PoP) access token. When one of these mechanisms is used, APIs that use those access tokens for authorization need to validate the binding between the client and token. This document describes how to perform such validation, depending on which mechanism was used to produce a PoP token.
+IdentityServer can [bind tokens to clients](../tokens/pop) using either mTLS or DPoP, creating a *Proof-of-Possession* (PoP) access token. When one of these mechanisms is used, APIs that use those access tokens for authorization need to validate the binding between the client and token. This document describes how to perform such validation, depending on which mechanism was used to produce a PoP token.
 
 ### Validating mTLS Proof-of-Possession
 
-If you are using a [mutual TLS connection](/identityserver/v6/tokens/pop/mtls) to establish proof-of-possession, the resulting access token will contain a *cnf* claim containing the client's certificate thumbprint. APIs validate such tokens by comparing this thumbprint to the thumbprint of the client certificate in the mTLS connection. This validation should be performed early in the pipeline, ideally immediately after the standard validation of the access token.
+If you are using a [mutual TLS connection](../tokens/pop/mtls) to establish proof-of-possession, the resulting access token will contain a *cnf* claim containing the client's certificate thumbprint. APIs validate such tokens by comparing this thumbprint to the thumbprint of the client certificate in the mTLS connection. This validation should be performed early in the pipeline, ideally immediately after the standard validation of the access token.
 
 You can do so with custom middleware like this:
 
@@ -110,7 +110,7 @@ public class ConfirmationValidationMiddlewareOptions
 ```
 
 ### Validating DPoP Proof-of-Possession
-If you are using [DPoP](/identityserver/v6/tokens/pop/dpop) for proof-of-possession, there is a non-trivial amount of work needed to validate the *cnf* claim.
+If you are using [DPoP](../tokens/pop/dpop) for proof-of-possession, there is a non-trivial amount of work needed to validate the *cnf* claim.
 In addition to the normal validation mechanics of the access token itself, DPoP requires additional validation of the DPoP proof token sent in the "DPoP" HTTP request header.
 DPoP proof token processing involves requiring the DPoP scheme on the authorization header where the access token is sent, JWT validation of the proof token, "cnf" claim validation, HTTP method and URL validation, replay detection (which requires some storage for the replay information), nonce generation and validation, additional clock skew logic, and emitting the correct response headers in the case of the various validation errors.
 
@@ -137,6 +137,6 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-You can find this sample [here](/identityserver/v6/samples/misc#dpop). To use the
+You can find this sample [here](../samples/misc#dpop). To use the
 *ConfigureDPoPTokensForScheme* shown above, copy the *~/Api/DPoP code from the
 sample into you APIs.

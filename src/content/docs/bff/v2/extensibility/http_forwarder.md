@@ -1,7 +1,8 @@
 ---
 title: "HTTP Forwarder"
 date: 2020-09-10T08:22:12+02:00
-order: 40
+sidebar:
+  order: 40
 ---
 
 You can customize the HTTP forwarder behavior in two ways
@@ -10,6 +11,7 @@ You can customize the HTTP forwarder behavior in two ways
 * provide custom request/response transformation
 
 ### Custom HTTP clients
+
 By default, Duende.BFF will create and cache an HTTP client per configured route or local path.
 
 This invoker is setup like this:
@@ -24,7 +26,8 @@ var client = new HttpMessageInvoker(new SocketsHttpHandler
 });
 ```
 
-If you want to customize the HTTP client for specific paths, you can either implement the *IHttpMessageInvokerFactory* interface or derive from the *DefaultHttpMessageInvokerFactory*, e.g.:
+If you want to customize the HTTP client for specific paths, you can either implement the *IHttpMessageInvokerFactory*
+interface or derive from the *DefaultHttpMessageInvokerFactory*, e.g.:
 
 ```cs
 public class MyInvokerFactory : DefaultHttpMessageInvokerFactory
@@ -60,12 +63,13 @@ services.AddSingleton<IHttpMessageInvokerFactory, MyInvokerFactory>();
 ```
 
 ### Custom transformations
+
 In the standard configuration, BFF uses the YARP default behavior for forwarding HTTP requests. In addition we
 
 * remove the sensitive session cookie
 * add the current access token
 
-If you want to modify this behavior you can either implement *IHttpTransformerFactory* from scratch: 
+If you want to modify this behavior you can either implement *IHttpTransformerFactory* from scratch:
 
 ```cs
 public interface IHttpTransformerFactory
@@ -83,5 +87,6 @@ public interface IHttpTransformerFactory
 ...or derive from the *DefaultHttpTransformerFactory*.
 
 :::note
-The transformations are based on YARP's transform library and are extensible. See [here](https://microsoft.github.io/reverse-proxy/articles/transforms.html) for a full list of built-in transforms.
+The transformations are based on YARP's transform library and are extensible.
+See [here](https://microsoft.github.io/reverse-proxy/articles/transforms.html) for a full list of built-in transforms.
 :::

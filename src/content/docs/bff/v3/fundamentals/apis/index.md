@@ -1,8 +1,8 @@
 ---
 title: Securing and Accessing API Endpoints
 sidebar:
-  label: API Endpoints
-  order: 40
+  label: Overview
+  order: 1
 ---
 
 A frontend application using the BFF pattern can call two types of APIs:

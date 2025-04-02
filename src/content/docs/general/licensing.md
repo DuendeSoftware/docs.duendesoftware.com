@@ -5,15 +5,16 @@ sidebar:
   order: 1
 ---
 
-
+:::note
 IdentityServer is [free](#trial-mode) for development, testing and personal projects, but production use
 requires a [license](https://duendesoftware.com/products/identityserver).
+:::
 
 ## Editions
 
 There are three license editions which include different [features](https://duendesoftware.com/products/features).
 
-#### Starter Edition
+### Starter Edition
 
 The Starter edition includes the core OIDC and OAuth protocol implementation. This is an
 economical option that is a good fit for organizations with basic needs. It's also a great
@@ -22,14 +23,14 @@ licensed. The Starter edition includes all the features that were part of
 IdentityServer4, along with support for the latest .NET releases, improved observability
 through OTEL support, and years of bug fixes and enhancements.
 
-#### Business Edition
+### Business Edition
 
 The Business edition adds additional features that go beyond the core protocol support
 included in the Starter edition. This is a popular license because it adds the most
 commonly needed tools and features outside a basic protocol implementation. Feature
 highlights include support for server side sessions and automatic signing key management.
 
-#### Enterprise Edition
+### Enterprise Edition
 
 Finally, the Enterprise edition includes everything in the Business edition and adds
 support for features that are typically used by enterprises with particularly complex
@@ -54,7 +55,7 @@ To include the license key with your product, we recommend loading it at startup
 from an embedded resource.
 :::
 
-#### File System
+### File System
 
 IdentityServer looks for a file named `Duende_License.key` in the
 [ContentRootPath](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostenvironment.contentrootpath?view=dotnet-plat-ext-8.0#microsoft-extensions-hosting-ihostenvironment-contentrootpath).
@@ -64,7 +65,7 @@ We consider the license key to be private to your organization, but not necessar
 If you're using private source control that is scoped to your organization,
 storing your license key within it is acceptable.
 
-#### Startup
+### Startup
 
 If you prefer to load the license key programmatically, you can do so in your startup
 code. This allows you to use the ASP.NET configuration system to load the license key from
@@ -84,7 +85,7 @@ builder.Services.AddIdentityServer(options =>
 
 ```
 
-#### Azure Key Vault
+### Azure Key Vault
 
 When deploying IdentityServer to Microsoft Azure, you can make use of
 [Azure Key Vault](https://azure.microsoft.com/products/key-vault/) to load the IdentityServer
@@ -121,7 +122,7 @@ The license is validated at startup and during runtime. All license validation i
 self-contained and does not leave the host. There are no outbound calls related to license
 validation.
 
-#### Startup Validation
+### Startup Validation
 
 At startup, IdentityServer first checks for a license. If there is no license configured,
 IdentityServer logs a warning indicating that a license is required in a production
@@ -131,7 +132,7 @@ Next, assuming a license is configured, IdentityServer compares its configuratio
 license. If there are discrepancies between the license and the configuration,
 IdentityServer will write log messages indicating the nature of the problem.
 
-#### Runtime Validation
+### Runtime Validation
 
 Most common licensing issues, such as expiration of the license or configuring more
 clients than is included in the license do not prevent IdentityServer from functioning. We
@@ -149,7 +150,7 @@ Again, the absence of a license is permitted for development and testing, and th
 does not disable any of these features. Similarly, using an expired license that includes
 those features does not cause those features to be disabled.
 
-#### Trial Mode
+### Trial Mode
 
 Using IdentityServer without a license is considered Trial Mode. In Trial Mode, all
 enterprise features are enabled. Trial Mode is limited to 500 protocol requests. This

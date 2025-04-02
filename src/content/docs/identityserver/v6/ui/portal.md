@@ -3,7 +3,7 @@ title: "Client Application Portal"
 order: 160
 ---
 
-(Added in 6.3)
+{% badge text="Added in 6.3" variant="note" /%}
 
 You can create a client application portal within your IdentityServer host that contains links to client applications that are configured with an *InitiateLoginUri*. *InitiateLoginUri* is an optional URI that can be used to [initiate login](https://openid.net/specs/openid-connect-core-1_0.html#thirdpartyinitiatedlogin). Your IdentityServer host can check for clients with this property and render links to those applications. 
 

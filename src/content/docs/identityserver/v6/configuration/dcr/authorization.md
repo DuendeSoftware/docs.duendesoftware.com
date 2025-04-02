@@ -30,7 +30,7 @@ authentication scheme and an authorization policy that requires a particular
 scope to be present in the JWTs. You could choose any name for the scope that
 gives access to the Configuration APIs. Let's use the name
 "IdentityServer.Configuration" for this example. You would then define the
-"IdentityServer.Configuration" scope as an [ApiScope](/identityserver/v6/reference/models/api_scope) in your IdentityServer and allow the
+"IdentityServer.Configuration" scope as an [ApiScope](../reference/models/api_scope) in your IdentityServer and allow the
 appropriate clients to access it. An automated process running in a CI pipeline
 could be configured as an OAuth client that uses the client credentials flow and
 is allowed to request the "IdentityServer.Configuration" scope. It could obtain

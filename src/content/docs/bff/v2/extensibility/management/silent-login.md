@@ -1,8 +1,9 @@
 ---
 title: "BFF Silent Login Endpoint Extensibility"
-menuTitle: "Silent Login"
 date: 2022-12-30 10:55:24
-order: 20
+sidebar:
+  label: "Silent Login"
+  order: 20
 ---
 
 The BFF silent login endpoint can be customized by implementing the *ISilentLoginService* or by extending *DefaultSilentLoginService*, its default implementation.

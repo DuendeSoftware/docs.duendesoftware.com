@@ -1,12 +1,8 @@
 ---
-title: IdentityModel.OidcClient
+title: Duende.IdentityModel.OidcClient
 sidebar:
-  order: 30
+  order: 1
 ---
-
-
-Duende.IdentityModel.OidcClient
-========
 
 Duende.IdentityModel.OidcClient is an OpenID Connect (OIDC) client library for mobile and native
 applications in .NET. It is a certified OIDC relying party and implements [RFC
@@ -23,6 +19,3 @@ You can use OidcClient to build:
 - Windows Desktop Applications with WPF or WinForms
 - Cross Platform Console Applications
 
-Please refer to the following sections for details on how to use this library:
-
-TODO LIST CHILDREN HERE

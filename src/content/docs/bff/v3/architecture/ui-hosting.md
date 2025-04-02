@@ -1,6 +1,7 @@
 ---
 title: "UI Hosting"
-order: 11
+sidebar:
+  order: 2
 ---
 
 ## Hosting Options for the UI

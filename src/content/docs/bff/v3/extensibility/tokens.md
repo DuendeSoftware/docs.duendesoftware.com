@@ -2,7 +2,9 @@
 title: "Token Management"
 description: "BFF - Customization"
 date: 2020-09-10T08:22:12+02:00
-order: 30
+sidebar:
+  label: "Token Management"
+  order: 30
 ---
 
 The token management library does essentially two things:
@@ -20,7 +22,7 @@ builder.Services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClie
 ```
 
 :::note
-You can also supply client assertions to the token management library. See this [sample](/identityserver/v7/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for JWT-based client authentication.
+You can also supply client assertions to the token management library. See this [sample](../samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for JWT-based client authentication.
 :::
 
 ### Custom token storage

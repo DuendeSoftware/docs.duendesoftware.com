@@ -15,7 +15,7 @@ var builder = service.AddIdentityServer(options =>
 })
 ```
 
-Use the [DI extensions methods](/identityserver/v6/reference/di) to add the services to DI which contain a default implementation to do that either thumbprint or common-name based:
+Use the [DI extensions methods](../reference/di) to add the services to DI which contain a default implementation to do that either thumbprint or common-name based:
 
 ```cs
 builder.AddMutualTlsSecretValidators();

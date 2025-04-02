@@ -8,7 +8,7 @@ Duende.BFF integrates with Microsoft's full-featured reverse proxy [YARP](https:
 
 YARP includes many advanced features such as load balancing, service discovery, and session affinity. It also has its own extensibility mechanism. Duende.BFF includes YARP extensions for token management and anti-forgery protection so that you can combine the security and identity features of Duende.BFF with the flexible reverse proxy features of YARP.
 
-#### Adding YARP
+## Adding YARP
 To enable Duende.BFF's YARP integration, add a reference to the *Duende.BFF.Yarp* Nuget package to your project and add YARP and the BFF's YARP extensions to DI:
 
 ```cs
@@ -19,7 +19,7 @@ var yarpBuilder = services.AddReverseProxy()
     .AddBffExtensions();
 ```
 
-#### Configuring YARP
+## Configuring YARP
 YARP is most commonly configured by a config file. The following simple example forwards a local URL to a remote API:
 
 ```json
@@ -83,7 +83,7 @@ yarpBuilder.LoadFromMemory(
     });
 ```
 
-### Token management
+## Token management
 Duende.BFF's YARP extensions provide access token management and attach user or client access tokens automatically to proxied API calls. To enable this, add metadata with the name *Duende.Bff.Yarp.TokenType* to the route or cluster configuration:
 
 ```json
@@ -103,7 +103,7 @@ Duende.BFF's YARP extensions provide access token management and attach user or 
 }
 ```
 
-Similarly to the [simple HTTP forwarder](/bff/v2/apis/remote#access-token-requirements), the allowed values for the token type are *User*, *Client*, *UserOrClient*. 
+Similarly to the [simple HTTP forwarder](../apis/remote#access-token-requirements), the allowed values for the token type are *User*, *Client*, *UserOrClient*. 
 
 Routes that set the *Duende.Bff.Yarp.TokenType* metadata **require** the given type of access token. If it is unavailable (for example, if the *User* token type is specified but the request to the BFF is anonymous), then the proxied request will not be sent, and the BFF will return an HTTP 401: Unauthorized response.
 
@@ -130,7 +130,7 @@ yarpBuilder.LoadFromMemory(
 
 Again, the *WithAccessToken* method causes the route to require the given type of access token. If it is unavailable, the proxied request will not be made and the BFF will return an HTTP 401: Unauthorized response.
 
-#### Optional User Access Tokens
+## Optional User Access Tokens
 You can also attach user access tokens optionally by adding metadata named "Duende.Bff.Yarp.OptionalUserToken" to a YARP route.
 
 ```json
@@ -173,7 +173,7 @@ yarpBuilder.LoadFromMemory(
 );
 ```
 
-### Anti-forgery protection
+## Anti-forgery protection
 Duende.BFF's YARP extensions can also add anti-forgery protection to proxied API calls. Anti-forgery protection defends against CSRF attacks by requiring a custom header on API endpoints, for example:
 
 ```

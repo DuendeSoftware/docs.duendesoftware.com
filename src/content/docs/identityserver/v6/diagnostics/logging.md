@@ -35,7 +35,7 @@ We are roughly following the Microsoft guidelines for usage of log levels:
     For failures that require immediate attention. Examples: missing store implementation, invalid key material...
 
 :::note
-In production, logging might produce too much data. It is recommended you either turn it off, or default to the *Warning* level. Have a look at [events](/identityserver/v6/diagnostics/events) for more high-level production instrumentation.
+In production, logging might produce too much data. It is recommended you either turn it off, or default to the *Warning* level. Have a look at [events](../diagnostics/events) for more high-level production instrumentation.
 :::
 
 ### Setup for Serilog

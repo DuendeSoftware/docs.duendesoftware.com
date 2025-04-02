@@ -8,7 +8,7 @@ sidebar:
 #### Duende.IdentityServer.Services.IProfileService
 
 Encapsulates retrieval of user claims from a data source of your choice.
-See [here](/identityserver/v7/samples/ui#custom-profile-service) for a sample.
+See [here](../samples/ui#custom-profile-service) for a sample.
 
 ```cs
 /// <summary>

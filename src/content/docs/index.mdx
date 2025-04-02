@@ -19,30 +19,39 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid, LinkButton, LinkCard, Icon } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkButton, Badge } from '@astrojs/starlight/components';
 
 ## Products
 
 <CardGrid>
 	<Card title="IdentityServer" icon="open-book">
 		The most flexible and standards-compliant OpenID Connect and OAuth 2.0 framework for ASP.NET Core.
-
         <LinkButton href="/identityserver/v7/" variant="secondary">
           Learn more
         </LinkButton>
 	</Card>
 	<Card title="Backend-for-Frontend (BFF)" icon="seti:c-sharp">
 		Securing SPAs and Blazor WASM Applications once and for all, without storing tokens in the browser.
-
-        <LinkButton href="/bff/" variant="secondary">
+        <LinkButton href="/bff/v3" variant="secondary">
           Learn more
         </LinkButton>
 	</Card>
-	<Card title="Open Source" icon="github">
-		.NET identity libraries for access token management, OIDC, and OAuth 2.0 related protocol operations.
-
-        <LinkButton href="/foss/" variant="secondary">
+    <Card title="Access Token Management" icon="github">
+        <Badge text={'OSS'} /> .NET identity library for access token management.
+        <LinkButton href="/accesstokenmanagement/" variant="secondary">
+            Learn more
+        </LinkButton>
+    </Card>
+	<Card title="Identity Model" icon="github">
+        <Badge text={'OSS'} /> .NET identity library for OAuth 2.0 related protocol operations.
+        <LinkButton href="/identitymodel/" variant="secondary">
           Learn more
         </LinkButton>
 	</Card>
+    <Card title="OIDC Client" icon="github">
+        <Badge text={'OSS'} /> .NET identity libraries for OpenID Connect related protocol operations.
+        <LinkButton href="/identitymodel-oidcclient/" variant="secondary">
+            Learn more
+        </LinkButton>
+    </Card>
 </CardGrid>

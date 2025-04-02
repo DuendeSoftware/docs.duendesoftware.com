@@ -387,7 +387,7 @@ var builder = services.AddIdentityServer(options =>
     setting this to true, will set the claim regardless of the authentication method. (defaults to false).
 
 ## Dynamic Providers
-Shared settings for the [dynamic providers](/identityserver/v5/ui/login/dynamicproviders) feature.
+Shared settings for the [dynamic providers](../ui/login/dynamicproviders) feature.
 
 * ***PathPrefix***
     

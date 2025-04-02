@@ -30,5 +30,5 @@ says:
 
 Additionally, modern browsers have recently added or are planning to add privacy
 features that can break some front-channel protocol interactions. See 
-[here](/identityserver/v7/bff/overview#react-to-changes-in-the-browser-security-models) 
+[here](../bff/overview#react-to-changes-in-the-browser-security-models) 
 for more details.

@@ -410,7 +410,7 @@ The remote API path uses a "/remote" prefix to indicate that the BFF proxy shoul
 Notice both API calls require a *'X-CSRF': '1'* header, which acts as the anti-forgery token.
 
 :::note
-See the [client credentials quickstart](/identityserver/v5/quickstarts/1_client_credentials) for information on how to create the remote API used in the code above.
+See the [client credentials quickstart](../quickstarts/1_client_credentials) for information on how to create the remote API used in the code above.
 :::
 
 ## Run and test the API calls

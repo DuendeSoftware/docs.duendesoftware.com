@@ -3,7 +3,7 @@ title: "Backend for Frontend Pattern"
 order: 30
 ---
 
-This solution contains a collection of clients using our [BFF security framework](/identityserver/v5/bff).
+This solution contains a collection of clients using our [BFF security framework](../bff).
 
 ### JavaScript Frontend
 This sample shows how to use the BFF framework with a JavaScript-based frontend (e.g. SPA).

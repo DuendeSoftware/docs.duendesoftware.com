@@ -1,8 +1,9 @@
 ---
 title: "BFF Logout Endpoint"
-menuTitle: "Logout"
+sidebar:
+  label: "Logout"
+  order: 3
 date: 2022-12-29T10:22:12+02:00
-order: 30
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/management/logout/"
 ---
 

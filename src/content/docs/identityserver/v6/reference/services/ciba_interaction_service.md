@@ -5,7 +5,7 @@ order: 80
 
 #### Duende.IdentityServer.Services.IBackchannelAuthenticationInteractionService
 
-The *IBackchannelAuthenticationInteractionService* interface provides services for a user to access or complete a login requests for [CIBA](/identityserver/v6/ui/ciba).
+The *IBackchannelAuthenticationInteractionService* interface provides services for a user to access or complete a login requests for [CIBA](../ui/ciba).
 It is available from the dependency injection system and would normally be injected as a constructor parameter into your MVC controllers for the user interface of IdentityServer.
 
 
@@ -13,11 +13,11 @@ It is available from the dependency injection system and would normally be injec
 
 * ***GetPendingLoginRequestsForCurrentUserAsync***
     
-    Returns a collection of [BackchannelUserLoginRequest](/identityserver/v6/reference/models/ciba_login_request) objects which represent pending login requests for the current user.
+    Returns a collection of [BackchannelUserLoginRequest](../reference/models/ciba_login_request) objects which represent pending login requests for the current user.
 
 * ***GetLoginRequestByInternalIdAsync***
     
-    Returns the [BackchannelUserLoginRequest](/identityserver/v6/reference/models/ciba_login_request) object for the id.
+    Returns the [BackchannelUserLoginRequest](../reference/models/ciba_login_request) object for the id.
 
 * ***CompleteLoginRequestAsync***
     

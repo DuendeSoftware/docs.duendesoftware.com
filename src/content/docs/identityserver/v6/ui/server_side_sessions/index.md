@@ -9,7 +9,7 @@ order: 140
 ## Overview
 
 When a user logs in interactively, their authentication session is managed by the ASP.NET Core authentication system, and more specifically the cookie authentication handler.
-IdentityServer uses the [state in the cookie](/identityserver/v6/ui/login/session#well-known-claims-issued-from-the-login-page) to track the user's subject and session identifiers (i.e. the *sub* and *sid* claims), and the list of clients the user has logged into (which is used at logout time for [OIDC logout notification](/identityserver/v6/ui/logout/notification)).
+IdentityServer uses the [state in the cookie](../ui/login/session#well-known-claims-issued-from-the-login-page) to track the user's subject and session identifiers (i.e. the *sub* and *sid* claims), and the list of clients the user has logged into (which is used at logout time for [OIDC logout notification](../ui/logout/notification)).
 
 By default, this cookie is self-contained which means it contains all the state needed to track a user's session.
 While this does allow for a stateless server for session management, cookie size could be a problem, and it makes it difficult to know how many active user sessions there are in your system or revoke those sessions from an administrative standpoint.
@@ -41,7 +41,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 By default, the store for the server-side sessions will just be kept in-memory.
-For production scenarios you will want to configure a durable store either by using our [EntityFramework Core implementation](/identityserver/v6/data/ef#operational-store), or you can [implement the store yourself](/identityserver/v6/reference/stores/server_side_sessions).
+For production scenarios you will want to configure a durable store either by using our [EntityFramework Core implementation](../data/ef#operational-store), or you can [implement the store yourself](../reference/stores/server_side_sessions).
 
 :::note
 Order is important in the DI system.
@@ -51,7 +51,7 @@ When using *AddServerSideSessions*, this call needs to come after any custom *IR
 ### Data stored server-side
 
 The data stored for the user session is the data contained in the ASP.NET Core *AuthenticationTicket* class.
-This data will be serialized and protected using ASP.NET Core's [data protection](/identityserver/v6/deployment/data_protection) feature so as to protect any user PII.
+This data will be serialized and protected using ASP.NET Core's [data protection](../deployment/data_protection) feature so as to protect any user PII.
 Some of the values from the user's session are extracted and used as indices in the store so that specific sessions can be queried.
 These values are the user's:
 
@@ -59,8 +59,8 @@ These values are the user's:
 * session identifier (the *sid* claim value)
 * display name (an optional and configurable claim value)
 
-If you would like to query this data based on a user's display name, then the claim type used is configurable with the *ServerSideSessions.UserDisplayNameClaimType* property on the [IdentityServerOptions](/identityserver/v6/reference/options#authentication).
-This claim must be included in the claims when the user's [authentication session is established](/identityserver/v6/ui/login/session).
+If you would like to query this data based on a user's display name, then the claim type used is configurable with the *ServerSideSessions.UserDisplayNameClaimType* property on the [IdentityServerOptions](../reference/options#authentication).
+This claim must be included in the claims when the user's [authentication session is established](../ui/login/session).
 
 For example:
 
@@ -76,6 +76,6 @@ public void ConfigureServices(IServiceCollection services)
 
 ### IServerSideSessionStore
 
-The [*IServerSideSessionStore*](/identityserver/v6/reference/stores/server_side_sessions) is the abstraction for storing the server-side session.
+The [*IServerSideSessionStore*](../reference/stores/server_side_sessions) is the abstraction for storing the server-side session.
 
-A EntityFramework Core implementation is already provided as part of our [operational store](/identityserver/v6/data/ef#operational-store), but you can implement the [interface](/identityserver/v6/reference/stores/server_side_sessions) yourself for other backing implementations.
+A EntityFramework Core implementation is already provided as part of our [operational store](../data/ef#operational-store), but you can implement the [interface](../reference/stores/server_side_sessions) yourself for other backing implementations.

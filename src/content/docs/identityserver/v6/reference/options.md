@@ -293,7 +293,7 @@ Login/logout related settings. Available on the *Authentication* property of the
     An individual client can override this setting with its own *CoordinateLifetimeWithUserSession* configuration setting.
 
 ## Events
-Configures which [events](/identityserver/v6/diagnostics/events) should be raised at the  registered event sink.
+Configures which [events](../diagnostics/events) should be raised at the  registered event sink.
 
 * ***RaiseSuccessEvents***
 
@@ -570,7 +570,7 @@ OAuth device flow settings. Available on the *DeviceFlow* property of the *Ident
     The maximum frequency in seconds that a client may poll the token endpoint in the device flow. Defaults to *5*.
 
 ## Mutual TLS
-[Mutual TLS](/identityserver/v6/tokens/authentication/mtls) settings. Available on the *MutualTls* property of the *IdentityServerOptions* object.
+[Mutual TLS](../tokens/authentication/mtls) settings. Available on the *MutualTls* property of the *IdentityServerOptions* object.
 
 ```cs
 var builder = services.AddIdentityServer(options =>
@@ -617,7 +617,7 @@ Shared settings for persisted grants behavior.
     When Refresh tokens that are configured with RefreshTokenUsage.OneTime are used, this option controls if they will be deleted immediately or retained and marked as consumed. The default is on - immediately delete.
 
 ## Dynamic Providers
-Settings for [dynamic providers](/identityserver/v6/ui/login/dynamicproviders). Available on the *DynamicProviders* property of the *IdentityServerOptions* object.
+Settings for [dynamic providers](../ui/login/dynamicproviders). Available on the *DynamicProviders* property of the *IdentityServerOptions* object.
 
 * ***PathPrefix***
     
@@ -632,7 +632,7 @@ Settings for [dynamic providers](/identityserver/v6/ui/login/dynamicproviders). 
     Scheme for signout. Defaults to the constant *IdentityServerConstants.DefaultCookieAuthenticationScheme*, which has the value "idsrv".
 
 ## CIBA
-[CIBA](/identityserver/v6/ui/ciba) settings.  Available on the *Ciba* property of the *IdentityServerOptions* object.
+[CIBA](../ui/ciba) settings.  Available on the *Ciba* property of the *IdentityServerOptions* object.
 
 * ***DefaultLifetime***
     
@@ -643,7 +643,7 @@ Settings for [dynamic providers](/identityserver/v6/ui/login/dynamicproviders). 
     The maximum frequency in seconds that a client may poll the token endpoint in the CIBA flow. Defaults to 5.
 
 ## Server-side Sessions 
-Settings for [server-side sessions](/identityserver/v6/ui/server_side_sessions). Added in 6.1.  Available on the *ServerSideSessions* property of the *IdentityServerOptions* object.
+Settings for [server-side sessions](../ui/server_side_sessions). Added in 6.1.  Available on the *ServerSideSessions* property of the *IdentityServerOptions* object.
 
 * ***UserDisplayNameClaimType***
     

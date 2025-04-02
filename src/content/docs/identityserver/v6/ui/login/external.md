@@ -42,7 +42,7 @@ The options necessary will be different based on the protocol and identity provi
 ## Triggering the Authentication Handler
 
 To allow the user to be redirected to the external provider, there must be some code in your login page that triggers the handler.
-This can be done because you have provided the user with a button to click, or it could be due to inspecting some property of the [authorization context](/identityserver/v6/ui/login/#authorization-context), or it could be based on any other aspect of the request (e.g. such as the user entering their email).
+This can be done because you have provided the user with a button to click, or it could be due to inspecting some property of the [authorization context](../ui/login/#authorization-context), or it could be based on any other aspect of the request (e.g. such as the user entering their email).
 
 :::note
 The process of determining which identity provider to use is called *Home Realm Discovery*, or *HRD* for short.
@@ -75,7 +75,7 @@ This state is managed (by default) with another cookie using ASP.NET Core's cook
 This extra cookie is necessary since there are typically several redirects involved until you are done with the external authentication process.
 
 :::note
-If you are using ASP.NET Identity, many of these technical details are hidden from you. It is recommended that you also read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the ASP.NET Identity [quickstart](/identityserver/v6/quickstarts/5_aspnetid).
+If you are using ASP.NET Identity, many of these technical details are hidden from you. It is recommended that you also read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the ASP.NET Identity [quickstart](../quickstarts/5_aspnetid).
 :::
 
 One option on an external authentication handlers is called *SignInScheme*.
@@ -240,4 +240,4 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-See this [quickstart](/identityserver/v6/quickstarts/2_interactive) for step-by-step instructions for adding external authentication and configuring it.
+See this [quickstart](../quickstarts/2_interactive) for step-by-step instructions for adding external authentication and configuring it.

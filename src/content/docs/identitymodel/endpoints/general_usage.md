@@ -10,8 +10,8 @@ endpoints defined in OpenID Connect and OAuth 2.0. All of these
 libraries have a common design, let\'s examine the various layers using
 the client for the token endpoint.
 
-Request and response objects
-----------------------------
+## Request and response objects
+
 
 All protocol request are modelled as request objects and have a common
 base class called *ProtocolRequest* which has properties to set the
@@ -51,8 +51,7 @@ var tokenResponse = await ProtocolResponse
 Again these steps are automated using the extension methods. So let\'s
 have a look at an example next.
 
-Extension methods
------------------
+## Extension methods
 
 For each protocol interaction, an extension method for
 *HttpMessageInvoker* (that's the base class of *HttpClient*) exists.
@@ -97,8 +96,7 @@ Some client libraries also include a stateful client object (e.g.
 to find out more.
 :::
 
-Client Credential Style
-------------------------
+## Client Credential Style
 
 :::note
 We recommend only changing the Client Credential Style if you're experiencing

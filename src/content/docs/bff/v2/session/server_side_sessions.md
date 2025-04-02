@@ -1,7 +1,8 @@
 ---
 title: "Server-side Sessions"
 description: "BFF"
-order: 40
+sidebar:
+  order: 40
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/server_side_sessions/"
 ---
 
@@ -21,7 +22,7 @@ builder.Services.AddBff()
     .AddServerSideSessions();
 ```
 
-The default implementation stores the session in-memory. This is useful for testing, but for production you typically want a more robust storage mechanism. We provide an implementation of the session store built with EntityFramework (EF) that can be used with any database with an EF provider (e.g. Microsoft SQL Server). You can also use a custom store. See [extensibility](/bff/v2/extensibility/sessions#user-session-store) for more information.
+The default implementation stores the session in-memory. This is useful for testing, but for production you typically want a more robust storage mechanism. We provide an implementation of the session store built with EntityFramework (EF) that can be used with any database with an EF provider (e.g. Microsoft SQL Server). You can also use a custom store. See [extensibility](../extensibility/sessions#user-session-store) for more information.
 
 ## Using Entity Framework for the Server-side Session Store
 
@@ -55,7 +56,7 @@ builder.Services.AddBff(options => {
     .AddServerSideSessions();
 ```
 
-This requires an implementation of [*IUserSessionStoreCleanup*](/bff/v2/extensibility/sessions#user-session-store-cleanup) in the DI system.
+This requires an implementation of [*IUserSessionStoreCleanup*](../extensibility/sessions#user-session-store-cleanup) in the DI system.
 
 If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
 Just enable session cleanup:

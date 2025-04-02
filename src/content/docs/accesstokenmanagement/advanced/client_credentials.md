@@ -4,10 +4,9 @@ sidebar:
   order: 10
 ---
 
+The most common way to use the access token management for machine to machine communication is described [here](../workers.md) - however you may want to customize certain aspects of it - here's what you can do.
 
-The most common way to use the access token management for machine to machine communication is described [here](../workers) - however you may want to customize certain aspects of it - here's what you can do.
-
-### Client options
+## Client options
 
 You can add token client definitions to your host while configuring the DI container, e.g.:
 
@@ -90,7 +89,7 @@ services.AddSingleton<IConfigureOptions<ClientCredentialsClient>,
 	ClientCredentialsClientConfigureOptions>();
 ```
 
-#### Backchannel communication
+### Backchannel communication
 
 By default all backchannel communication will be done using a named client from the HTTP client factory. The name is `Duende.AccessTokenManagement.BackChannelHttpClient` which is also a constant called `ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName`.
 

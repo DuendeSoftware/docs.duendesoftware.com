@@ -4,7 +4,6 @@ sidebar:
   order: 60
 ---
 
-
 A common place to store X.509 certificates is the Windows X.509
 certificate store. The raw APIs for the store are a bit arcane (and also
 slightly changed between .NET Framework and .NET Core).

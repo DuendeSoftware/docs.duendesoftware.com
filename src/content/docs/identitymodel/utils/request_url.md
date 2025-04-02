@@ -4,7 +4,6 @@ sidebar:
   order: 60
 ---
 
-
 The *RequestUrl* class is a helper for creating URLs with query string parameters, e.g.:
 
 ```csharp

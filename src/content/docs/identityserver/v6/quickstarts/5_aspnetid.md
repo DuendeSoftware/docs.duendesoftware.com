@@ -265,7 +265,7 @@ IdentityServer contains an extensibility point called the *IProfileService* that
 is responsible for retrieval of user claims. The ASP.NET Identity Integration
 includes an implementation of *IProfileService* that retrieves claims from
 ASP.NET Identity. You can extend that implementation to use the custom profile
-data as a source of claims data. [See here](/identityserver/v6/reference/services/profile_service) for more details on the profile
+data as a source of claims data. [See here](../reference/services/profile_service) for more details on the profile
 service.
 
 Create a new class called *CustomProfileService* and add the following code to it:

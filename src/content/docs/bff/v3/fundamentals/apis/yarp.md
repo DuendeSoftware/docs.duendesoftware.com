@@ -1,6 +1,7 @@
 ---
 title: "YARP extensions"
-order: 30
+sidebar:
+  order: 30
 ---
 
 Duende.BFF integrates with Microsoft's full-featured reverse proxy [YARP](https://microsoft.github.io/reverse-proxy/).

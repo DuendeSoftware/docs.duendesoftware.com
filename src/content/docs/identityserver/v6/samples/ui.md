@@ -4,10 +4,10 @@ description: "Samples"
 order: 20
 ---
 
-These samples illustrate customization of the [interactive pages](/identityserver/v6/ui) used in your IdentityServer.
+These samples illustrate customization of the [interactive pages](../ui) used in your IdentityServer.
 
 ### Custom Profile Service
-This sample shows how to create a [custom profile service](/identityserver/v6/fundamentals/claims) to control what claims are issued from your IdentityServer. The majority of the sample is captured in *CustomProfileService.cs* in the *IdentityServer* project.
+This sample shows how to create a [custom profile service](../fundamentals/claims) to control what claims are issued from your IdentityServer. The majority of the sample is captured in *CustomProfileService.cs* in the *IdentityServer* project.
 
 Also, another part of the sample shows how to collect a custom claim during the login workflow when using an external login provider (this is done in the *ExternalLogin/Callback.cshtml.cs* processing logic). This claim value is then stored in the user's session, and is then ultimately copied into the created tokens via the custom profile service logic.
 
@@ -48,7 +48,7 @@ Key takeaways:
 
 ### Dynamic providers
 
-The [dynamic providers](/identityserver/v6/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample sets up a simple database with one dynamic OIDC provider.
+The [dynamic providers](../ui/login/dynamicproviders) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample sets up a simple database with one dynamic OIDC provider.
 
 Some key points about the *IdentityServer* project in the sample:
 
@@ -60,7 +60,7 @@ Some key points about the *IdentityServer* project in the sample:
 
 ### Adding other protocol types to dynamic providers
 
-The [dynamic providers](/identityserver/v6/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to support additional protocol types, and specifically WS-Federation.
+The [dynamic providers](../ui/login/dynamicproviders) feature allows for loading OpenID Connect identity provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to support additional protocol types, and specifically WS-Federation.
 
 Key takeaways:
 
@@ -80,7 +80,7 @@ Duende dynamic identity providers feature. The sample is minimalistic to show a 
 [link to source code](https://github.com/Sustainsys/Saml2.Samples/tree/main/v2/DuendeDynamicProviders)
 
 ### Client Initiated Backchannel Login (CIBA)
-This sample shows how a client can make [CIBA](/identityserver/v6/ui/ciba) login requests using Duende IdentityServer.
+This sample shows how a client can make [CIBA](../ui/ciba) login requests using Duende IdentityServer.
 To run the sample, the IdentityServer and API hosts should be started first.
 Next run the ConsoleCibaClient which will initiate the backchannel login request.
 The URL the user would receive to login and approve the request is being written out to the IdentityServer log (visible in the console window).

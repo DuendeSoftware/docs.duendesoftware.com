@@ -6,7 +6,7 @@ sidebar:
 
 #### Duende.IdentityServer.Validation.IExtensionGrantValidator
 
-Use an implementation of this interface to handle [extension grants](/identityserver/v7/tokens/extension_grants).
+Use an implementation of this interface to handle [extension grants](../tokens/extension_grants).
 
 ```cs
 public interface IExtensionGrantValidator
@@ -35,7 +35,7 @@ public interface IExtensionGrantValidator
 
   This methods gets called at runtime, when a request comes in that is using the registered extension grant.
   The job of this method is to validate the request and to populate `ExtensionGrantValidationContext.Result` with
-  a [grant validation result](/identityserver/v7/reference/models/grant_validation_result)
+  a [grant validation result](../reference/models/grant_validation_result)
 
 The instance of the extension grant validator gets registered with:
 

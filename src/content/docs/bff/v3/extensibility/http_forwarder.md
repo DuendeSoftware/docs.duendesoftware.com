@@ -1,7 +1,8 @@
 ---
 title: "HTTP Forwarder"
 date: 2020-09-10T08:22:12+02:00
-order: 40
+sidebar:
+  order: 40
 ---
 
 You can customize the HTTP forwarder behavior in two ways

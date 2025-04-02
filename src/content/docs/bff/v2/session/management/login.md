@@ -1,8 +1,9 @@
 ---
-title: "BFF Login Endpoint"
-menuTitle: "Login"
+title: "Login Endpoint"
 date: 2020-09-10T08:22:12+02:00
-order: 20
+sidebar:
+  label: "Login"
+  order: 1
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/management/login/"
 ---
 

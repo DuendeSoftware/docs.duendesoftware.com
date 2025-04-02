@@ -4,7 +4,6 @@ sidebar:
   order: 60
 ---
 
-
 The client library for [OpenID Connect Dynamic Client
 Registration](https://openid.net/specs/openid-connect-registration-1_0.html)
 is provided as an extension method for *HttpClient*.

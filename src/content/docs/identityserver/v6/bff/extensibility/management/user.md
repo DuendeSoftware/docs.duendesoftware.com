@@ -37,4 +37,4 @@ protected override IEnumerable<ClaimRecord> GetUserClaims(AuthenticateResult aut
 ```
 
 ## Management Claims
-*GetManagementClaims* is responsible for producing additional claims that are useful for user management. The default implementation creates *bff:session_expires_in*, *bff:session_state*, and *bff:logout_url* [claims](/identityserver/v6/bff/session/management/user#management-claims). Your implementation could change those claims or add additional custom claims. 
+*GetManagementClaims* is responsible for producing additional claims that are useful for user management. The default implementation creates *bff:session_expires_in*, *bff:session_state*, and *bff:logout_url* [claims](../bff/session/management/user#management-claims). Your implementation could change those claims or add additional custom claims. 

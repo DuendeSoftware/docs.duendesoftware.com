@@ -2,7 +2,7 @@
 title: Blazor support in the BFF Security Framework
 sidebar:
   label: Blazor Applications
-  order: 100
+  order: 1
 ---
 
 Microsoft Blazor is a framework for building interactive web applications using C# and .NET. Blazor allows developers to create rich, dynamic web UIs with the same ease as building desktop applications. 

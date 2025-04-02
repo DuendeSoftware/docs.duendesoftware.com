@@ -25,11 +25,11 @@ builder.Services.AddBff(options =>
 
 * ***LicenseKey***
 
-    This sets the license key for Duende.BFF. A business edition or higher license key is required for production deployments. The same license key is used in IdentityServer and the BFF. Just as in the [IdentityServer host](/identityserver/v7/fundamentals/license_key), you can either set the license key using this option in code or include *Duende_License.key* in the same directory as your BFF host.
+    This sets the license key for Duende.BFF. A business edition or higher license key is required for production deployments. The same license key is used in IdentityServer and the BFF. Just as in the [IdentityServer host](../../../general/licensing), you can either set the license key using this option in code or include *Duende_License.key* in the same directory as your BFF host.
 
 * ***AnonymousSessionResponse*** (added in 2.0)
 
-    This sets the response status code behavior on the [user endpoint](/bff/v3/fundamentals/session/management/user) to either return 401 or 200 with a *null* payload when the user is anonymous.
+    This sets the response status code behavior on the [user endpoint](../fundamentals/session/management/user) to either return 401 or 200 with a *null* payload when the user is anonymous.
 
 * ***DiagnosticsEnvironments***
  

@@ -1,6 +1,7 @@
 ---
 title: "Third Party Cookies"
-order: 12
+sidebar:
+  order: 3
 ---
 
 If the BFF and OpenID Connect Provider (OP) are hosted on different [sites](https://developer.mozilla.org/en-US/docs/Glossary/Site), then some browsers will block cookies from being sent during navigation between those sites. Almost all browsers have the option of blocking third party cookies. Safari and Firefox are the most widely used browsers that do so by default, while Chrome is planning to do so in the future. This change is being made to protect user privacy, but it also impacts OIDC flows traditionally used by SPAs. 
@@ -22,7 +23,7 @@ Similarly to OIDC Session Management, OIDC Silent Login relies on a hidden ifram
 
 The BFF supports silent login from the SPA with the /bff/silent-login [endpoint](/bff/v3/fundamentals/session/management/silent-login). This endpoint is intended to be invoked in an iframe and issues a challenge to login non-interactively with *prompt=none*. Just as in a traditional SPA, this technique will be disrupted by third party cookie blocking when the BFF and OP are third parties.
 
-If you need silent login with a third party OP, we recommend that you use the [Federation Gateway](/identityserver/v7/ui/federation) pattern. In the federation gateway pattern, one identity provider (the gateway) federates with other remote identity providers. Because the client applications only interact with the gateway, the implementation details of the remote identity providers are abstracted. In this case, we shield the client application from the fact that the remote identity provider is a third party by hosting the gateway as a first party to the client. This makes the client application's requests for silent login always first party.
+If you need silent login with a third party OP, we recommend that you use the [Federation Gateway](../ui/federation) pattern. In the federation gateway pattern, one identity provider (the gateway) federates with other remote identity providers. Because the client applications only interact with the gateway, the implementation details of the remote identity providers are abstracted. In this case, we shield the client application from the fact that the remote identity provider is a third party by hosting the gateway as a first party to the client. This makes the client application's requests for silent login always first party.
 
 
 ### Alternatives

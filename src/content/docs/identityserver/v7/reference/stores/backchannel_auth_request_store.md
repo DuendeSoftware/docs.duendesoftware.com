@@ -6,7 +6,7 @@ sidebar:
 
 #### Duende.IdentityServer.Stores.IBackChannelAuthenticationRequestStore
 
-Used to store backchannel login requests (for [CIBA](/identityserver/v7/ui/ciba)).
+Used to store backchannel login requests (for [CIBA](../ui/ciba)).
 
 ```cs
     /// <summary>

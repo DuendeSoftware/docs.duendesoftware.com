@@ -1,7 +1,8 @@
 ---
-title: "BFF Session Management Endpoints"
-menuTitle: "Session Management Endpoints"
-order: 20
+title: "Overview"
+sidebar:
+  label: "Overview"
+  order: 1
 newContentUrl: "https://docs.duendesoftware.com/bff/v3/fundamentals/session/management/"
 ---
 
@@ -28,6 +29,6 @@ app.MapBffManagementEndpoints();
 
 *MapBffManagementEndpoints* adds all BFF management endpoints. You can also map each endpoint individually by calling the various *MapBffManagementXxxEndpoint* methods, for example *endpoints.MapBffManagementLoginEndpoint()*.
 
-The following pages describe the default behavior of the management endpoints. See the [extensibility](/bff/v2/extensibility) section for information about how to customize the behavior of the endpoints.
+The following pages describe the default behavior of the management endpoints. See the [extensibility](../extensibility) section for information about how to customize the behavior of the endpoints.
 
 TODO LIST CHILDREN HERE

@@ -11,7 +11,7 @@ access token. This can be done with an API call and does not require any user in
 
 Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by
 setting the `AllowOfflineAccess` property to `true`. See
-the [client reference](/identityserver/v7/reference/models/client#refresh-token) section for additional refresh token
+the [client reference](../reference/models/client#refresh-token) section for additional refresh token
 related settings.
 
 Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential
@@ -76,7 +76,7 @@ instead.
 
 You can further reduce the attack surface of refresh tokens using the following techniques.
 
-#### Consent
+### Consent
 
 We encourage you to request consent when a client requests a refresh token, as it not only makes the user aware of the
 action being taken, but also provides them with an opportunity to opt-out if they choose.
@@ -84,7 +84,7 @@ action being taken, but also provides them with an opportunity to opt-out if the
 Duende IdentityServer will always ask for consent (if enabled) if the client asks for the `offline_access` scope which
 follows the recommendations in the OpenID Connect specification.
 
-#### Sliding expiration
+### Sliding expiration
 
 Refresh tokens usually have a much longer lifetime than access tokens. You can reduce their exposure by adding a sliding
 lifetime on top of the absolute lifetime. This allows for scenarios where a refresh token can be silently used if the
@@ -94,7 +94,7 @@ time. In other words, they auto-expire much quicker without potentially interfer
 You can use the `AbsoluteRefreshTokenLifetime` and `SlidingRefreshTokenLifetime` client settings to fine tune this
 behavior.
 
-#### Rotation
+### Rotation
 
 Rotation is configured with the `RefreshTokenUsage` client setting and, beginning in IdentityServer v7.0, is by default
 set to `ReUse` which disables rotation.
@@ -118,11 +118,11 @@ to produce a new token, but the response containing the new refresh token is los
 application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
 
 Reusable tokens may have better performance in
-the [persisted grants store](/identityserver/v7/reference/stores/persisted_grant_store). One-time use refresh tokens
+the [persisted grants store](../reference/stores/persisted_grant_store). One-time use refresh tokens
 require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens
 avoids those writes.
 
-#### Accepting Consumed Tokens
+### Accepting Consumed Tokens
 
 To make one time use tokens more robust to network failures, you can customize the behavior of the `RefreshTokenService`
 such that consumed tokens can be used under certain circumstances, perhaps for a small length of time after they are
@@ -149,7 +149,7 @@ This customization must be registered in the DI system as an implementation of t
 builder.Services.TryAddTransient<IRefreshTokenService, YourCustomRefreshTokenService>();
 ```
 
-#### Replay detection
+### Replay detection
 
 In addition to one-time only usage semantics, you might wish to add replay detection for refresh tokens. If a refresh
 token is configured for one-time only use but used multiple times, that means that either the client application is
@@ -169,4 +169,4 @@ replay detection. The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUs
 used tokens persist and can be used to detect replays. The cleanup job should also be configured to not delete consumed
 tokens.
 
-See also: The [IRefreshTokenService](/identityserver/v7/reference/services/refresh_token_service) reference.
+See also: The [IRefreshTokenService](../reference/services/refresh_token_service) reference.

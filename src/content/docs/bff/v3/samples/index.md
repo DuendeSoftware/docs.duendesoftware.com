@@ -4,8 +4,7 @@ sidebar:
   order: 150
 ---
 
-
-This section contains a collection of clients using our [BFF security framework](/bff/v3/).
+This section contains a collection of clients using our BFF security framework.
 
 ### JavaScript Frontend
 This sample shows how to use the BFF framework with a JavaScript-based frontend (e.g. SPA).
@@ -49,7 +48,7 @@ This sample shows how to have separate projects from the frontend and backend, u
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v3/SplitHosts)
 
 ### DPoP
-This sample shows how to configure the BFF to use [DPoP](/identityserver/v7/tokens/pop/dpop) to obtain sender-constrained tokens.
+This sample shows how to configure the BFF to use [DPoP](../../../identityserver/v7/tokens/pop) to obtain sender-constrained tokens.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v3/DPoP)
 

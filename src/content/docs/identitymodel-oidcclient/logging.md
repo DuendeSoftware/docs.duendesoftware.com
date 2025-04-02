@@ -4,7 +4,6 @@ sidebar:
   order: 30
 ---
 
-
 OidcClient logs errors, warnings, and diagnostic information using
 *Microsoft.Extensions.Logging.ILogger*, the standard .NET logging library. You can use any
 logging provider to store your logs however you like. For example, you could configure

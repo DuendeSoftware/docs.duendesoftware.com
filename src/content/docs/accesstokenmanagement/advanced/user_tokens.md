@@ -4,10 +4,10 @@ sidebar:
   order: 20
 ---
 
+The most common way to use the access token management for interactive web applications is described [here](../web_apps.md) - however you may want to customise certain aspects of it - here's what you can do.
 
-The most common way to use the access token management for interactive web applications is described [here](../web_apps) - however you may want to customise certain aspects of it - here's what you can do.
+## General options
 
-### General options
 You can pass in some global options when registering token management in DI.
 
 * `ChallengeScheme` - by default the OIDC configuration is inferred from the default challenge scheme. This is recommended approach. If for some reason your OIDC handler is not the default challenge scheme, you can set the scheme name on the options
@@ -28,9 +28,7 @@ builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
 });
 ```
 
-
-
-### Per request parameters
+## Per request parameters
 
 You can also modify token management parameters on a per-request basis. 
 
@@ -75,9 +73,7 @@ builder.Services.AddHttpClient<InvoiceClient>(client =>
     .AddUserAccessTokenHandler(new UserTokenRequestParameters { ... });
 ```
 
-
-
-### Token storage
+## Token storage
 
 By default the user's access and refresh token will be store in the ASP.NET Core autentication session (implemented by the cookie handler).
 

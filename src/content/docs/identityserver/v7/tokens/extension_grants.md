@@ -1,9 +1,24 @@
 ---
-title: "Token Exchange"
-date: 2020-09-10T08:22:12+02:00
+title: Extension Grants
+date: 2020-09-10T08:20:20+02:00
 sidebar:
-  order: 10
+  order: 40
 ---
+
+
+OAuth defines an extensibility point called extension grants.
+
+Extension grants allow adding support for non-standard token issuance scenarios, e.g.
+
+* token transformation
+    * SAML to JWT, or Windows to JWT
+    * delegation or impersonation
+* federation
+* encapsulating custom input parameters
+
+You can add support for additional grant types by implementing the [IExtensionGrantValidator](../reference/validators/extension_grant_validator) interface.
+
+## Token Exchange
 
 The OAuth Token Exchange specification ([RFC 8693](https://tools.ietf.org/html/rfc8693)) describes a general purpose
 mechanism for translating between token types. Common use cases are creating tokens for impersonation and delegation
@@ -15,8 +30,8 @@ Some of the logic is boilerplate:
 
 * read and validate incoming protocol parameters
 * validate incoming token
-    * using the built-in token validator if the token was issued by the same token service
-    * using a token type specific library if the token is coming from a trusted (but different) token service
+  * using the built-in token validator if the token was issued by the same token service
+  * using a token type specific library if the token is coming from a trusted (but different) token service
 * read contents of token to apply custom logic/authorization if needed
 * create response
 
@@ -100,7 +115,7 @@ default.
 Any sensitive values you use as input to your extension grant validator that you do not want included in the logs should
 be filtered.
 This can be done by adding those parameter names on the `Logging.TokenRequestSensitiveValuesFilter` collection on
-the [IdentityServerOptions](/identityserver/v7/reference/options#logging).
+the [IdentityServerOptions](../reference/options#logging).
 :::
 
 ## Token Exchange for impersonation and delegation
@@ -109,7 +124,7 @@ One of the primary use cases of the token exchange specification is creating tok
 impersonation scenarios. In these scenarios you want to forward certain token and identity information over multiple
 hops in a call chain.
 
-![](images/token_exchange.png)
+![](./images/token_exchange.png)
 
 ## Impersonation
 
@@ -182,7 +197,7 @@ context.Result = new GrantValidationResult(
 ```
 
 To emit the `act` claim into outgoing tokens,
-your [profile service](/identityserver/v7/reference/services/profile_service) must know about it. The following simple
+your [profile service](../reference/services/profile_service) must know about it. The following simple
 profile service emits the `act` claim if the token request is in the context of a token exchange operation:
 
 ```cs
@@ -207,4 +222,4 @@ public class ProfileService : IProfileService
 }
 ```
 
-See [here](/identityserver/v7/samples/tokens) for the full source code.
+See [here](../samples/tokens) for the full source code.

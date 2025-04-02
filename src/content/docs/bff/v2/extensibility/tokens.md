@@ -2,7 +2,8 @@
 title: "Token Management"
 description: "BFF - Customization"
 date: 2020-09-10T08:22:12+02:00
-order: 30
+sidebar:
+  order: 30
 ---
 
 The token management library does essentially two things:
@@ -12,7 +13,7 @@ The token management library does essentially two things:
 
 Both aspects can be customized.
 
-### Token service communication
+## Token service communication
 The token management library uses a named HTTP client from the HTTP client factory for all token service communication. You can provide a customized HTTP client yourself using the well-known name after calling *AddBff*:
 
 ```cs
@@ -20,10 +21,10 @@ builder.Services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClie
 ```
 
 :::note
-You can also supply client assertions to the token management library. See this [sample](/bff/v2/identityserver/v7/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for JWT-based client authentication.
+You can also supply client assertions to the token management library. See this [sample](./samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for JWT-based client authentication.
 :::
 
-### Custom token storage
+## Custom token storage
 We recommend that you use the default storage mechanism, as this will automatically be compatible with the Duende.BFF server-side sessions.
 
 If you do not use server-side sessions, then the access and refresh token will be stored in the protected session cookie. If you want to change this, you can take over token storage completely.
@@ -72,7 +73,7 @@ public interface IUserTokenStore
 }
 ```
 
-### Per-route customized token retrieval
+## Per-route customized token retrieval
 The token store defines how tokens are retrieved globally. However, you can add custom logic that changes the way that access tokens are retrieved on a per-route basis. For example, you might need to exchange a token to perform delegation or impersonation for some API calls, depending on the remote API. The interface that describes this extension point is the *IAccessTokenRetriever*.
 
 

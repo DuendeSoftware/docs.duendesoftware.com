@@ -9,6 +9,7 @@ import redirectFrom from 'astro-redirect-from';
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import starlightHeadingBadges from "starlight-heading-badges";
+import rehypeAstroRelativeMarkdownLinks from "astro-rehype-relative-markdown-links";
 
 // https://astro.build/config
 export default defineConfig({
@@ -78,6 +79,8 @@ export default defineConfig({
 				starlightLinksValidator({
 					errorOnFallbackPages: false,
 					errorOnInconsistentLocale: true,
+					errorOnRelativeLinks: false,
+					errorOnLocalLinks: false
 				})
 			],
 			title: 'Duende Software Docs',
@@ -138,6 +141,7 @@ export default defineConfig({
 	],
 	markdown: {
 		rehypePlugins: [
+			rehypeAstroRelativeMarkdownLinks,
 			rehypeHeadingIds,
 			[
 				rehypeAutolinkHeadings,

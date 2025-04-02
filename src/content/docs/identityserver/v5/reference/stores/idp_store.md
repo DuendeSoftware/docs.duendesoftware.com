@@ -5,7 +5,7 @@ order: 36
 
 #### Duende.IdentityServer.Stores.IIdentityProviderStore
 
-Used to dynamically load [identity provider configuration](/identityserver/v5/reference/models/idp).
+Used to dynamically load [identity provider configuration](../reference/models/idp).
 
 ```cs
     /// <summary>

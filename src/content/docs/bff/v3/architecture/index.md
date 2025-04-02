@@ -1,8 +1,8 @@
 ---
-title: "Architecture"
+title: "Overview"
 date: 2020-09-10T08:22:12+02:00
-order: 10
-chapter: true
+sidebar:
+  order: 1
 ---
 
 A BFF host is an ASP.NET Core application, tied to a single browser based application. It performs the following functions:

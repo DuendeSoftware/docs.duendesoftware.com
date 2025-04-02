@@ -4,7 +4,6 @@ sidebar:
   order: 20
 ---
 
-
 The client library for the [OpenID Connect discovery
 endpoint](https://openid.net/specs/openid-connect-discovery-1_0.html) is
 provided as an extension method for `HttpClient`. The

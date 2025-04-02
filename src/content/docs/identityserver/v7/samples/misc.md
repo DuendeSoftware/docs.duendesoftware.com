@@ -13,8 +13,8 @@ This sample shows how to parse and validate a JWT token issued by IdentityServer
 ### Mutual TLS using Kestrel
 
 This sample shows how to use Kestrel using MTLS
-for [client authentication](/identityserver/v7/tokens/authentication/mtls)
-and [proof of possession](/identityserver/v7/tokens/pop) API access.
+for [client authentication](../tokens/client_authentication)
+and [proof of possession](../tokens/pop) API access.
 Using Kestrel will not likely be how MTLS is configured in a production environment, but it is convenient for local
 testing.
 This approach requires DNS entries for `mtls.localhost` and `api.localhost` to resolve to `127.0.0.1`, and is easily
@@ -24,7 +24,7 @@ configured by modifying your local `hosts` file.
 
 ### DPoP
 
-This sample shows how to access APIs using DPoP for [proof of possession](/identityserver/v7/tokens/pop/dpop).
+This sample shows how to access APIs using DPoP for [proof of possession](../tokens/pop.md#proof-of-possession-styles).
 It contains two different clients; one that uses client credentials and DPoP tokens, and another that is an interactive
 ASP.NET Core app using code flow to obtain the DPoP bound tokens. Both clients demonstrate the use of the
 `Duende.AccessTokenManagement` library with DPoP.
@@ -35,7 +35,7 @@ DPoP bound access tokens.
 
 ### Session Management
 
-This sample shows how to enable [server-side sessions](/identityserver/v7/ui/server_side_sessions) and configure the
+This sample shows how to enable [server-side sessions](../ui/server_side_sessions) and configure the
 basic settings.
 The sample requires all three projects to be run at once.
 

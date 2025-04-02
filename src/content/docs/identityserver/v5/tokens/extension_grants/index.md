@@ -16,4 +16,4 @@ Extension grants allow adding support for non-standard token issuance scenarios,
 * federation
 * encapsulating custom input parameters
 
-You can add support for additional grant types by implementing the [IExtensionGrantValidator](/identityserver/v5/reference/validators/extension_grant_validator) interface.
+You can add support for additional grant types by implementing the [IExtensionGrantValidator](../reference/validators/extension_grant_validator) interface.

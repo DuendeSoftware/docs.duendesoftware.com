@@ -4,7 +4,6 @@ sidebar:
   order: 100
 ---
 
-
 Duende.BFF can be extended in the following areas
 
 * custom logic at the session management endpoints

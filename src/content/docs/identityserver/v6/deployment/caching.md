@@ -6,8 +6,8 @@ order: 40
 
 Some optional features rely on ASP.NET Core distributed caching:
 
-* [State data formatter for OpenID Connect](/identityserver/v6/ui/login/external#state-url-length-and-isecuredataformat)
-* Replay cache (e.g. for [JWT client credentials](/identityserver/v6/tokens/authentication/jwt))
+* [State data formatter for OpenID Connect](../ui/login/external#state-url-length-and-isecuredataformat)
+* Replay cache (e.g. for [JWT client credentials](../tokens/authentication/jwt))
 * [Device flow](../reference/stores/device_flow_store) throttling service
 * Authorization parameter store 
 

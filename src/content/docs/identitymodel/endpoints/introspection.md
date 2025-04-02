@@ -4,7 +4,6 @@ sidebar:
   order: 40
 ---
 
-
 The client library for [OAuth 2.0 token
 introspection](https://tools.ietf.org/html/rfc7662) is provided as an
 extension method for *HttpClient*.

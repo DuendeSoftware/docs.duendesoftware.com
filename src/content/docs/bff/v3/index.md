@@ -5,7 +5,6 @@ sidebar:
   order: 1
 ---
 
-
 The Duende.BFF (Backend for Frontend) security framework packages the necessary components to secure browser-based frontends (e.g. SPAs or Blazor applications) with ASP.NET Core backends.
 
 Duende.BFF is free for development, testing and personal projects, but production use requires a [license](https://duendesoftware.com/products/bff#pricing). [Special offers](https://duendesoftware.com/specialoffers) may apply.

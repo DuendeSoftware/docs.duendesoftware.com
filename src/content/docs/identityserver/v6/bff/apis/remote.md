@@ -5,7 +5,7 @@ order: 20
 
 A _Remote API_ is an API that is deployed separately from the BFF host. Remote APIs use access tokens to authenticate and authorize requests, but the frontend does not possess an access token to make requests to remote APIs directly. Instead, all access to remote APIs is proxied through the BFF, which authenticates the frontend using its authentication cookie, obtains the appropriate access token, and forwards the request to the Remote API with the token attached.
 
-There are two different ways to set up Remote API proxying in Duende.BFF. This page describes the built-in simple HTTP forwarder. Alternatively, you can integrate Duende.BFF with Microsoft's reverse proxy [YARP](/identityserver/v6/bff/apis/yarp), which allows for more complex reverse proxy features provided by YARP combined with the security and identity features of Duende.BFF.
+There are two different ways to set up Remote API proxying in Duende.BFF. This page describes the built-in simple HTTP forwarder. Alternatively, you can integrate Duende.BFF with Microsoft's reverse proxy [YARP](../bff/apis/yarp), which allows for more complex reverse proxy features provided by YARP combined with the security and identity features of Duende.BFF.
 
 ### Simple HTTP forwarder
 

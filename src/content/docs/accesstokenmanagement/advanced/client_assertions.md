@@ -4,7 +4,6 @@ sidebar:
   order: 30
 ---
 
-
 If your token client is using a client assertion instead of a shared secret, you can provide the assertion in two ways
 
 * use the request parameter mechanism to pass a client assertion to the management

@@ -80,7 +80,7 @@ Historically IdentityServer emitted scopes as an array, but you can switch to a 
 :::
 
 The consumer of the access token can use that data to make sure that the client is actually allowed to invoke the
-corresponding functionality. See the [APIs](/identityserver/v7/apis) section for more information on protecting APIs
+corresponding functionality. See the [APIs](../apis) section for more information on protecting APIs
 with access tokens.
 
 :::caution

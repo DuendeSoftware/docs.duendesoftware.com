@@ -1,8 +1,9 @@
 ---
 title: "BFF User Endpoint Extensibility"
-menuTitle: "User"
+sidebar:
+  label: "User"
+  order: 50
 date: 2022-12-30 10:55:24
-order: 50
 ---
 
 The BFF user endpoint can be customized by implementing the *IUserService* or by extending *DefaultUserService*, its default implementation. In most cases, extending the default implementation is preferred, as it has several virtual methods that can be overridden to customize particular aspects of how the request is processed. The *DefaultUserService*'s virtual methods are *ProcessRequestAsync*, *GetUserClaims*, and *GetManagementClaims*.
@@ -37,4 +38,4 @@ protected override IEnumerable<ClaimRecord> GetUserClaims(AuthenticateResult aut
 ```
 
 ## Management Claims
-*GetManagementClaims* is responsible for producing additional claims that are useful for user management. The default implementation creates *bff:session_expires_in*, *bff:session_state*, and *bff:logout_url* [claims](/bff/v2/session/management/user#management-claims). Your implementation could change those claims or add additional custom claims. 
+*GetManagementClaims* is responsible for producing additional claims that are useful for user management. The default implementation creates *bff:session_expires_in*, *bff:session_state*, and *bff:logout_url* [claims](../session/management/user#management-claims). Your implementation could change those claims or add additional custom claims. 

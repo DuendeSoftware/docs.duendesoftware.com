@@ -31,7 +31,7 @@ A GUID data type is a very common choice for the `sub`.
 Additional claims can be added to the cookie if desired or needed at other UI pages.
 For example, it's common to also issue a `name` claim which represents the user's display name.
 
-The claims issued in the cookie are passed as the `Subject` on the [ProfileDataRequestContext](/identityserver/v7/reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext) in the [profile service](/identityserver/v7/fundamentals/claims).
+The claims issued in the cookie are passed as the `Subject` on the [ProfileDataRequestContext](../reference/services/profile_service#duendeidentityservermodelsprofiledatarequestcontext) in the [profile service](../fundamentals/claims).
 
 
 ## Well Known Claims Issued From the Login Page
@@ -43,8 +43,8 @@ The claims are:
 * **`name`**: The display name of the user.
 * **`amr`**: Name of the [authentication method](https://tools.ietf.org/html/rfc8176) used for user authentication (defaults to `pwd`).
 * **`auth_time`**: Time in epoch format the user entered their credentials (defaults to the current time).
-* **`idp`**: Authentication scheme name of the external identity provider used for login. When not specified then the value defaults to `local` indicating that it was a local login. This is used to determine if a user must re-authenticate when clients make [authorization requests](/identityserver/v7/reference/endpoints/authorize) using the acr_values with an idp value, or the client has `IdentityProviderRestrictions`. If the user’s idp does not match the request, then they should re-authenticate.
-* **`tenant`**: Tenant identifier the user is associated with (if needed). This is used to determine if a user must re-authenticate when clients make [authorization requests](/identityserver/v7/reference/endpoints/authorize) using the `acr_values` with a `tenant` value. If the user's tenant does not match the request, then they should re-authenticate.
+* **`idp`**: Authentication scheme name of the external identity provider used for login. When not specified then the value defaults to `local` indicating that it was a local login. This is used to determine if a user must re-authenticate when clients make [authorization requests](../reference/endpoints/authorize) using the acr_values with an idp value, or the client has `IdentityProviderRestrictions`. If the user’s idp does not match the request, then they should re-authenticate.
+* **`tenant`**: Tenant identifier the user is associated with (if needed). This is used to determine if a user must re-authenticate when clients make [authorization requests](../reference/endpoints/authorize) using the `acr_values` with a `tenant` value. If the user's tenant does not match the request, then they should re-authenticate.
 
 
 While you can create the `ClaimsPrincipal` yourself, you can alternatively use IdentityServer extension methods and the `IdentityServerUser` class to make this easier:
@@ -63,7 +63,7 @@ await HttpContext.SignInAsync(user);
 Duende IdentityServer registers a cookie authentication handler by default for the authentication session. 
 The scheme that the handler in the authentication system is identified by is from the constant `IdentityServerConstants.DefaultCookieAuthenticationScheme`.
 
-When configuring IdentityServer, the [AuthenticationOptions](/identityserver/v7/reference/options#authentication) expose some settings to control the cookie (e.g. expiration and sliding). For example:
+When configuring IdentityServer, the [AuthenticationOptions](../reference/options#authentication) expose some settings to control the cookie (e.g. expiration and sliding). For example:
 
 ```csharp
 builder.Services.AddIdentityServer(options =>
@@ -74,11 +74,11 @@ builder.Services.AddIdentityServer(options =>
 ```
 
 :::note
-In addition to the authentication cookie, IdentityServer will issue an additional cookie which defaults to the name `idsrv.session`. This cookie is derived from the main authentication cookie, and it used for the check session endpoint for [browser-based JavaScript clients at signout time](/identityserver/v7/ui/logout/notification#browser-based-javascript-clients). It is kept in sync with the authentication cookie, and is removed when the user signs out.
+In addition to the authentication cookie, IdentityServer will issue an additional cookie which defaults to the name `idsrv.session`. This cookie is derived from the main authentication cookie, and it used for the check session endpoint for [browser-based JavaScript clients at signout time](../ui/logout/notification#browser-based-javascript-clients). It is kept in sync with the authentication cookie, and is removed when the user signs out.
 :::
 
 If you require more control over the cookie authentication handler you can register your own cookie handler.
-You can then configure IdentityServer to use your cookie handler by setting the `CookieAuthenticationScheme` on the [AuthenticationOptions](/identityserver/v7/reference/options#authentication). For example:
+You can then configure IdentityServer to use your cookie handler by setting the `CookieAuthenticationScheme` on the [AuthenticationOptions](../reference/options#authentication). For example:
 
 ```csharp
 builder.Services.AddAuthentication()

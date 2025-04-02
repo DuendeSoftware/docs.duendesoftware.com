@@ -71,8 +71,8 @@ This will create the following files within a new *src/IdentityServer* directory
 * *HostingExtensions.cs* - configuration for ASP.NET pipeline and services
   Notably, the IdentityServer services are configured here and the
   IdentityServer middleware is added to the pipeline here.
-* *Config.cs* - definitions for [resources](/identityserver/v6/overview/terminology#resources) and 
-[clients](/identityserver/v6/overview/terminology#client) used by IdentityServer
+* *Config.cs* - definitions for [resources](../overview/terminology#resources) and 
+[clients](../overview/terminology#client) used by IdentityServer
 
 
 :::note
@@ -135,7 +135,7 @@ see the display name on consent screens, etc.
 
 :::
 
-### Defining the client {#define-client}
+### Defining the client
 The next step is to configure a client application that you will use to access
 the API. You'll create the client application project later in this quickstart.
 First, you'll add configuration for it to your IdentityServer project.
@@ -200,7 +200,7 @@ public static WebApplication ConfigureServices(this WebApplicationBuilder builde
 
 That's it - your IdentityServer is now configured. If you run the project and
 then navigate to *https://localhost:5001/.well-known/openid-configuration* in
-your browser, you should see the [discovery document](/identityserver/v6/reference/endpoints/discovery). 
+your browser, you should see the [discovery document](../reference/endpoints/discovery). 
 The discovery document is a standard endpoint in 
 [OpenID Connect](https://openid.net/specs/openid-connect-discovery-1_0.html) and 
 [OAuth](https://datatracker.ietf.org/doc/html/rfc8414). It is
@@ -277,7 +277,7 @@ builder.Services.AddAuthentication("Bearer")
 Audience validation is disabled here because access to the api is modeled with
 *ApiScopes* only. By default, no audience will be emitted unless the api is
 modeled with *ApiResources* instead. See 
-[here](/identityserver/v6/apis/aspnetcore/jwt#adding-audience-validation) for a 
+[here](../apis/aspnetcore/jwt#adding-audience-validation) for a 
 more in-depth discussion. 
 
 :::
@@ -321,7 +321,9 @@ file in the *src/Api/Properties* directory. Change the application URL setting
 to be:
 
 ```json
-"applicationUrl": "https://localhost:6001"
+{
+  "applicationUrl": "https://localhost:6001"
+}
 ```
 
 ### Test the controller
@@ -473,7 +475,7 @@ to the API that will check for the presence of the "api1" scope in the access
 token. The protocol ensures that this scope will only be in the token if the
 client requests it and IdentityServer allows the client to have that scope. You
 configured IdentityServer to allow this access by [including it in the
-allowedScopes property](#define-client). Add the following to the
+allowedScopes property](#defining-the-client). Add the following to the
 *ConfigureServices* method in the API's *Program.cs* file:
 
 ```cs

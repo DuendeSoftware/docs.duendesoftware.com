@@ -7,7 +7,7 @@ sidebar:
 #### Duende.IdentityServer.Validation.IBackchannelAuthenticationUserValidator
 
 The `IBackchannelAuthenticationUserValidator` interface is used to validate request hints and identify the user for whom
-the [CIBA](/identityserver/v7/ui/ciba) request is intended.
+the [CIBA](../ui/ciba) request is intended.
 To use CIBA, you are expected to implement this interface and register it in the DI system.
 
 ## IBackchannelAuthenticationUserValidator APIs

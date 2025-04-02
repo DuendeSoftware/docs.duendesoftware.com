@@ -5,7 +5,7 @@ order: 10
 
 #### Duende.IdentityServer.EntityFramework.Options.OperationalStoreOptions
 
-These options are configurable when using the Entity Framework Core for the [operational store](/identityserver/v6/data/operational):
+These options are configurable when using the Entity Framework Core for the [operational store](../data/operational):
 
 You set the options at startup time in your *AddOperationalStore* method:
 

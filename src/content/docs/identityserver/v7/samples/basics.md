@@ -110,7 +110,7 @@ Key takeaways:
 
 ### MVC Client with Pushed Authorization Requests
 
-This sample shows how to use [Pushed Authorization Requests](/identityserver/v7/tokens/par) (PAR).
+This sample shows how to use [Pushed Authorization Requests](../tokens/par) (PAR).
 
 Key takeaways:
 

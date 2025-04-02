@@ -41,7 +41,7 @@ public void Configure(IApplicationBuilder app)
 *MapBffManagementEndpoints* adds all BFF management endpoints. You can also map every endpoint individually by calling the various *MapBffManagementXxxEndpoint* APIs, for example *endpoints.MapBffManagementLoginEndpoint()*.
 :::
 
-The following describes the default behavior of those endpoints. See the [extensibility](/identityserver/v5/bff/extensibility) section for more information how to provide custom implementations.
+The following describes the default behavior of those endpoints. See the [extensibility](../bff/extensibility) section for more information how to provide custom implementations.
 
 ### Login
 The login endpoint triggers authentication with the scheme configured for challenge (typically the OpenID Connect handler).
@@ -60,7 +60,7 @@ GET /bff/login?returnUrl=/page2
 The user endpoint returns data about the currently logged-on user and the session.
 
 :::note
-To protect against cross-site request forgery, you need to add a static header to the GET request. Both header name and  value can be configured on the [options](/identityserver/v5/bff/options).
+To protect against cross-site request forgery, you need to add a static header to the GET request. Both header name and  value can be configured on the [options](../bff/options).
 :::
 
 ```text
@@ -134,7 +134,7 @@ This is the session state value of the upstream OIDC provider that can be use fo
 
 **bff:logout_url**
 
-This is the URL to trigger logout. If the upstream provider includes an *sid* claim, the BFF logout endpoint requires this value as a query string parameter for CSRF protection. This behavior can be configured on the [options](/identityserver/v5/bff/options).
+This is the URL to trigger logout. If the upstream provider includes an *sid* claim, the BFF logout endpoint requires this value as a query string parameter for CSRF protection. This behavior can be configured on the [options](../bff/options).
 
 ### Logout
 This endpoint triggers local and upstream logout. If the upstream IdP sent a session ID, this must be appended to the URL:
@@ -150,7 +150,7 @@ GET /bff/logout?sid=xyz&returnUrl=/loggedout
 ```
 
 :::note
-The logout endpoint will trigger revocation of the user's refresh token (if present). This can be configured on the [options](/identityserver/v5/bff/options).
+The logout endpoint will trigger revocation of the user's refresh token (if present). This can be configured on the [options](../bff/options).
 :::
 
 ### Back-channel logout notifications

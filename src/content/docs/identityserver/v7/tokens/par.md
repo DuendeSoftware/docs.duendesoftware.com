@@ -1,10 +1,12 @@
 ---
-title: "Pushed Authorization Requests"
+title: Pushed Authorization Requests
 sidebar:
   order: 175
 ---
 
-(Added in 7.0)
+:::tip
+Added in Duende IdentityServer 7.0
+:::
 
 Pushed Authorization Requests (PAR) is a relatively new [OAuth standard](https://datatracker.ietf.org/doc/html/rfc9126)
 that improves the security of OAuth and OIDC flows by moving authorization parameters from the front channel to the back
@@ -50,7 +52,7 @@ the user will be redirected to login and other UI pages as necessary before bein
 authorization code which the client subsequently exchanges for tokens.
 
 A sample of how to implement this flow in an ASP.NET application is
-available [here](/identityserver/v7/samples/basics#par).
+available [here](../samples/basics#par).
 
 ## Data Store
 

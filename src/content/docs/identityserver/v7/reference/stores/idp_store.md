@@ -6,7 +6,7 @@ sidebar:
 
 #### Duende.IdentityServer.Stores.IIdentityProviderStore
 
-Used to dynamically load [identity provider configuration](/identityserver/v7/reference/models/idp).
+Used to dynamically load [identity provider configuration](../reference/models/idp).
 
 ```cs
     /// <summary>

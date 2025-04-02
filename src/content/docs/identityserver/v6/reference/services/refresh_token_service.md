@@ -55,4 +55,4 @@ could instead add a grace period to allow recovery after network failures or
 could treat this as a replay attack and take steps to notify the user and/or
 revoke their access.
 
-See also: [Refreshing a token](/identityserver/v6/tokens/refresh)
+See also: [Refreshing a token](../tokens/refresh)

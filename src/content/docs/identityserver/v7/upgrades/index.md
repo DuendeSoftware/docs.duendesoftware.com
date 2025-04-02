@@ -45,8 +45,3 @@ Then continue with "Upgrading from version 6.3" below.
 
 #### Upgrading from version 6.3
 Follow the [upgrade guide version 6.3 - 7.0](v6.3_to_v7.0)
-
-## All upgrade guides
-Here is a list of all upgrade guides.
-
-TODO LIST CHILDREN HERE

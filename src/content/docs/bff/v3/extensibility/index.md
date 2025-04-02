@@ -1,9 +1,8 @@
 ---
-title: Extensibility
+title: Overview
 sidebar:
   order: 100
 ---
-
 
 Duende.BFF can be extended in the following areas
 

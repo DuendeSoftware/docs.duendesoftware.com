@@ -5,7 +5,13 @@ sidebar:
   order: 9
 ---
 
-Below are links to relevant topics:
+## Demo Server
+
+You can try Duende IdentityServer with your favourite client library.
+
+We have a test instance at [demo.duendesoftware](https://demo.duendesoftware.com).
+
+On the main page you can find instructions on how to configure your client and how to call an API.
 
 ## OAuth and OIDC Fundamentals
 

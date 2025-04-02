@@ -4,7 +4,6 @@ sidebar:
   order: 50
 ---
 
-
 JWT tokens use so called [Epoch or Unix
 time](https://en.wikipedia.org/wiki/Unix_time) to represent date/times.
 

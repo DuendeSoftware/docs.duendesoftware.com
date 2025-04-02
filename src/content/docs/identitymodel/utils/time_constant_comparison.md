@@ -4,7 +4,6 @@ sidebar:
   order: 60
 ---
 
-
 When comparing strings in a security context (e.g. comparing keys), you should avoid
 leaking timing information. 
 

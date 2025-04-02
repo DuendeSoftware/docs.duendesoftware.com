@@ -4,7 +4,7 @@ date: 2020-09-10T08:22:12+02:00
 order: 40
 ---
 
-If your IdentityServer added a [*cnf* claim](/identityserver/v5/tokens/pop) to the access token, you should validate that early in the pipeline. Ideally directly after the standard token validation is done, e.g. using a middleware:
+If your IdentityServer added a [*cnf* claim](../tokens/pop) to the access token, you should validate that early in the pipeline. Ideally directly after the standard token validation is done, e.g. using a middleware:
 
 ```cs
 public void Configure(IApplicationBuilder app)

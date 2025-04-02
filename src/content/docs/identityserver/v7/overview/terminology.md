@@ -33,7 +33,7 @@ A user is a human that is using a registered client to access resources.
 
 ### Client
 
-A [client](/identityserver/v7/fundamentals/clients) is a piece of software that requests tokens from your
+A [client](../fundamentals/clients) is a piece of software that requests tokens from your
 IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting
 an access token). A client must be first registered with your IdentityServer before it can request tokens.
 
@@ -46,8 +46,8 @@ In this scenario two machines talk to each other (e.g. background processes, bat
 no interactive user present. To authorize this communication, your IdentityServer issues a token to the caller.
 
 In protocol terms, this scenario is called *Client Credentials Flow* and you can learn more about it in the issuing
-tokens [section](/identityserver/v7/tokens/requesting#machine-to-machine-communication) as well as in
-our [Quickstart](/identityserver/v7/quickstarts/1_client_credentials).
+tokens [section](../tokens/requesting#machine-to-machine-communication) as well as in
+our [Quickstart](../quickstarts/1_client_credentials).
 
 #### Interactive Applications
 
@@ -55,8 +55,8 @@ This is the most common type of client scenario: web applications, SPAs or nativ
 This scenario typically involves a browser for user interaction (e.g. for authentication or consent).
 
 In protocol terms, this scenario is called *Authorization Code Flow* and you can learn more about it in the issuing
-tokens [section](/identityserver/v7/tokens/requesting#interactive-applications) as well as in
-our [Quickstart](/identityserver/v7/quickstarts/2_interactive).
+tokens [section](../tokens/requesting#interactive-applications) as well as in
+our [Quickstart](../quickstarts/2_interactive).
 
 :::note
 A client application can potentially have many instances - e.g. your web application might be physically deployed on
@@ -66,7 +66,7 @@ phones. Logically these instances are still a single client.
 
 ### Resources
 
-[Resources](/identityserver/v7/fundamentals/resources) are something you want to protect with your IdentityServer -
+[Resources](../fundamentals/resources) are something you want to protect with your IdentityServer -
 either identity data of your users, or APIs.
 
 Every resource has a unique name - and clients use this name to specify to which resources they want to get access to.

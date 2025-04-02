@@ -41,7 +41,7 @@ If you're using any of the other IdentityServer4 packages, such as `IdentityServ
 
 ## Step 2: Update Database Schema with EF Core Migrations
 
-If you are using a [database](/identityserver/v7/data) for your configuration and operational data, then there is a bit of work.
+If you are using a [database](../data) for your configuration and operational data, then there is a bit of work.
 The reason is that for this type of schema restructuring EntityFramework Core's migrations can lose existing data.
 To handle this, the conversation from the old schema to the new will be performed by custom SQL.
 This is only needed for the configuration database, not the operational one so normal migrations will suffice for the operational database.

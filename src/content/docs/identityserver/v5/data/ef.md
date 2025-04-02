@@ -125,6 +125,6 @@ We do not provide any support for creating your database or migrating your data 
 You are expected to manage the database creation, schema changes, and data migration in any way your organization sees fit.
 
 Using EF migrations is one possible approach to this. 
-If you do wish to use migrations, then see the [EF quickstart](/identityserver/v5/quickstarts/4_ef) for samples on how to get started, or consult the Microsoft [documentation on EF migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index).
+If you do wish to use migrations, then see the [EF quickstart](../quickstarts/4_ef) for samples on how to get started, or consult the Microsoft [documentation on EF migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index).
 
 We also publish [sample SQL scripts](https://github.com/DuendeSoftware/products/tree/main/identity-server/migrations/IdentityServerDb/Migrations) for the current version of the database schema.

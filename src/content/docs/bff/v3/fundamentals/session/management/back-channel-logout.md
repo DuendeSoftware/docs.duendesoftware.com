@@ -1,8 +1,9 @@
 ---
 title: "BFF Back-Channel Logout Endpoint"
-menuTitle: "Back-Channel Logout"
 date: 2022-12-29T10:22:12+02:00
-order: 50
+sidebar:
+  label: "Back-Channel Logout"
+  order: 50
 ---
 
 The */bff/backchannel* endpoint is an implementation of the [OpenID Connect Back-Channel Logout](https://openid.net/specs/openid-connect-backchannel-1_0.html) specification. The remote identity provider can use this endpoint to end the BFF's session via a server to server call, without involving the user's browser. This design avoids problems with 3rd party cookies associated with front-channel logout.
