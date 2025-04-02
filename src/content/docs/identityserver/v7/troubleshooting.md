@@ -25,14 +25,14 @@ Asp.Net Core Data Protection is an encryption mechanism that is heavily used by 
 * The key {xxxxx-xxxx-xxx-xxx-xxxxxxx} was not found in the key ring.
 * Failed to unprotect AuthenticationTicket payload for key {key}
 
-See [our data protection guide](./deployment.md#data-protection-keys-and-identityservers-signing-keys) for more information.
+See [our data protection guide](./deployment#data-protection-keys-and-identityservers-signing-keys) for more information.
 
 ## Load Balancing, proxies and TLS offloading
 When running IdentityServer behind a load balancer it is important that IdentityServer still has access to the original request URL. IdentityServer uses that to create URLs that are included in the discovery document and in protocol messages.
 
 To diagnose, open the discovery document (append `/.well-known/openid-configuration` to your root IdentityServer host), e.g. https://demo.duendesoftware.com/.well-known/openid-configuration. Make sure that the URLs listed in there have the correct host name and are listed as https (assuming you are running under https, which you should).
 
-See [our proxy guide](deployment.md#proxy-servers-and-load-balancers) for more information.
+See [our proxy guide](/identityserver/v7/deployment#proxy-servers-and-load-balancers) for more information.
 
 ## TaskCancellationExceptions
 TaskCancellationExceptions occur when the incoming HTTP connection is terminated by the requestor. We pass the cancellation token along to Entity Framework so that it can cancel database queries and hopefully reduce load on your database. Both EF itself and the EF providers log those cancellations extremely aggressively before EF re-throws the exception. That unhandled exception then is handled by the IdentityServer middleware. This creates a lot of noise in the logs for what is actually expected behavior. It is normal for some HTTP requests to be canceled.

@@ -7,7 +7,7 @@ sidebar:
 
 Welcome to this Quickstart for Duende IdentityServer!
 
-The previous quickstart introduced [API access](3_api_access) with interactive applications, but by far the most complex
+The previous quickstart introduced [API access](/identityserver/v7/quickstarts/3_api_access) with interactive applications, but by far the most complex
 task for a typical client is to manage the access token.
 
 In addition to the written steps below a YouTube video is available:

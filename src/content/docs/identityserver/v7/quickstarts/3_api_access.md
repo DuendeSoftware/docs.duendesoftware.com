@@ -8,8 +8,8 @@ sidebar:
 Welcome to Quickstart 3 for Duende IdentityServer!
 
 The previous quickstarts introduced
-[API access](1_client_credentials) and
-[user authentication](2_interactive). This quickstart will bring
+[API access](/identityserver/v7/quickstarts/1_client_credentials) and
+[user authentication](/identityserver/v7/quickstarts/2_interactive). This quickstart will bring
 the two together.
 
 In addition to the written steps below a YouTube video is available:
