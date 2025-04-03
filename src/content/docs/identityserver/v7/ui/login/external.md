@@ -4,6 +4,11 @@ sidebar:
   order: 60
 ---
 
+
+Integrating with external identity providers enables your application to leverage trusted third-party authentication
+systems, such as social logins or corporate directories. This approach simplifies user login while ensuring secure and
+standardized authentication workflows.
+
 ## External Identity Providers
 
 One option for allowing your users to login is by using an external identity provider.

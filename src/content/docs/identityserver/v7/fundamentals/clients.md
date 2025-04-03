@@ -77,7 +77,7 @@ var interactiveClient = new Client
 The `AddInMemoryClients` extensions method also supports adding clients from the ASP.NET Core configuration file. This
 allows you to define static clients directly from the appsettings.json file:
 
-```json
+```json title=appsettings.json
 {
   "IdentityServer": {
     "Clients": [

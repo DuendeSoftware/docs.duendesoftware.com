@@ -68,11 +68,6 @@ export default defineConfig({
 					mapping: 'pathname',
 					reactions: true,
 					inputPosition: 'top',
-					theme: {
-						light: 'light',
-						dark: 'dark_dimmed',
-						auto: 'preferred_color_scheme',
-					},
 					lazy: true
 				}),
 				starlightClientMermaid({ /* options */}),

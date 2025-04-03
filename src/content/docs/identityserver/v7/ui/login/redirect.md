@@ -4,8 +4,6 @@ sidebar:
   order: 30
 ---
 
-## The Return URL and the Login Workflow
-
 Once the user has been logged in, they must complete the protocol workflow so they can ultimately be logged into the client.
 To facilitate this, the login page is passed a `returnUrl` query parameter which refers to the URL the prior request came from.
 This URL is, in essence, the same authorization endpoint to which the client made the original authorize request.

@@ -4,6 +4,10 @@ sidebar:
   order: 65
 ---
 
+Dynamic Identity Providers are a scalable solution for managing authentication with numerous external providers without
+incurring performance penalties or requiring application recompilation. This feature, included in the Enterprise Edition
+of Duende IdentityServer, enables providers to be configured dynamically from a store at runtime.
+
 ## Dynamic Identity Providers
 
 Normally authentication handlers for external providers are added into your IdentityServer using `AddAuthentication()`
@@ -24,18 +28,18 @@ The [identity provider store](/identityserver/v7/reference/stores/idp_store) can
 containing the dynamic providers.
 
 ```cs
+/// <summary>
+/// Interface to model storage of identity providers.
+/// </summary>
+public interface IIdentityProviderStore
+{
     /// <summary>
-    /// Interface to model storage of identity providers.
+    /// Gets all identity providers name.
     /// </summary>
-    public interface IIdentityProviderStore
-    {
-        /// <summary>
-        /// Gets all identity providers name.
-        /// </summary>
-        Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
+    Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
 
-        // other APIs omitted
-    }
+    // other APIs omitted
+}
 ```
 
 These results can then be used to populate the list of options presented to the user on the login page.
@@ -99,20 +103,20 @@ If it is needed to further customize the `OpenIdConnectOptions`, you can registe
 `IConfigureNamedOptions<OpenIdConnectOptions>`. For example:
 
 ```cs
-    public class CustomConfig : IConfigureNamedOptions<OpenIdConnectOptions>
+public class CustomConfig : IConfigureNamedOptions<OpenIdConnectOptions>
+{
+    public void Configure(string name, OpenIdConnectOptions options)
     {
-        public void Configure(string name, OpenIdConnectOptions options)
+        if (name == "MyScheme")
         {
-            if (name == "MyScheme")
-            {
-                options.ClaimActions.MapAll();
-            }
-        }
-
-        public void Configure(OpenIdConnectOptions options)
-        {
+            options.ClaimActions.MapAll();
         }
     }
+
+    public void Configure(OpenIdConnectOptions options)
+    {
+    }
+}
 ```
 
 And to register this in the DI system:
@@ -150,6 +154,7 @@ class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectO
 The above class would need to be configured in DI (as before):
 
 ```cs
+// Program.cs
 builder.Services.ConfigureOptions<CustomOidcConfigureOptions>();
 ```
 

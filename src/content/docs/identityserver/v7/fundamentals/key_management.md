@@ -28,13 +28,16 @@ material, including
 * announcement of upcoming new keys
 * maintenance of retired keys
 
-Automatic Key Management is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business Edition or higher.
+Automatic Key Management is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business
+Edition or higher.
 
 ### Configuration
+
 Automatic Key Management is configured by the options in the `KeyManagement`
 property on the [`IdentityServerOptions`](/identityserver/v7/reference/options#key-management).
 
 ### Managed Key Lifecycle
+
 Keys created by Automatic Key Management move through several phases. First, new
 keys are announced, that is, they are added to the list of keys in discovery,
 but not yet used for signing. After a configurable amount of `PropagationTime`,
@@ -67,13 +70,16 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 ```
 
 ### Key storage
+
 Automatic Key Management stores keys through the abstraction of the
 [ISigningKeyStore](/identityserver/v7/data/operational#keys). You can implement this
 extensibility point to customize the storage of your keys (perhaps using a key
 vault of some kind), or use one of the two implementations of the
 `ISigningKeyStore` that we provide:
+
 - the default `FileSystemKeyStore`, which writes keys to the file system.
-- the [EntityFramework operational store](/identityserver/v7/data/ef#operational-store) which writes keys to a database using
+- the [EntityFramework operational store](/identityserver/v7/data/ef#operational-store) which writes keys to a database
+  using
   EntityFramework.
 
 The default `FileSystemKeyStore` writes keys to the `KeyPath` directory
@@ -93,6 +99,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 ```
 
 ### Encryption of Keys at Rest
+
 The keys created by Automatic Key Management are sensitive cryptographic secrets
 that should be encrypted at rest. By default, keys managed by Automatic Key
 Management are protected at rest using ASP.NET Core Data Protection. This is
@@ -107,6 +114,7 @@ See the [deployment](/identityserver/v7/deployment) section for more information
 about setting up data protection.
 
 ### Manage multiple keys
+
 By default, Automatic Key Management will maintain a signing credential and
 validation keys for a single cryptographic algorithm (`RS256`). You can specify
 multiple keys, algorithms, and if those keys should additionally get wrapped in
@@ -152,6 +160,7 @@ your keys. With static configuration you are responsible for secure storage,
 loading and rotation of keys.
 
 ## Disabling Key Management
+
 The automatic key management feature can be disabled by setting the `Enabled`
 flag to `false` on the the `KeyManagement` property of
 [`IdentityServerOptions`](/identityserver/v7/reference/options#key-management):
@@ -162,14 +171,18 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
     options.KeyManagement.Enabled = false;
 });
 ```
+
 ## Key Creation
+
 Without automatic key management, you are responsible for creating your own
 cryptographic keys. Such keys can be created with many tools. Some options
 include:
 
 - Use the PowerShell commandlet
-  [New-SelfSignedCertificate](https://learn.microsoft.com/en-us/powershell/module/pki/new-selfsignedcertificate?view=windowsserver2022-ps) to self-sign your own certificate
-- Create certificates using [Azure KeyVault](https://learn.microsoft.com/en-us/azure/key-vault/certificates/certificate-scenarios)
+  [New-SelfSignedCertificate](https://learn.microsoft.com/en-us/powershell/module/pki/new-selfsignedcertificate?view=windowsserver2022-ps)
+  to self-sign your own certificate
+- Create certificates
+  using [Azure KeyVault](https://learn.microsoft.com/en-us/azure/key-vault/certificates/certificate-scenarios)
 - Create certificates using your Public Key Infrastructure.
 - Create certificates using C# (see bellow)
 
@@ -207,7 +220,9 @@ Console.WriteLine($"Certificate saved to {name}.pfx");
 ```
 
 ## Adding Keys
-Signing keys are added with the [`AddSigningCredential`](/identityserver/v7/reference/di#signing-keys) configuration method:
+
+Signing keys are added with the [`AddSigningCredential`](/identityserver/v7/reference/di#signing-keys) configuration
+method:
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer();
@@ -225,6 +240,7 @@ Another configuration method called `AddValidationKey` can
 be called to register public keys that should be accepted for token validation.
 
 ## Key Storage
+
 With automatic key management disabled, secure storage of the key material is
 left to you. This key material should be treated as highly sensitive. Key
 material should be encrypted at rest, and access to it should be restricted.
@@ -286,18 +302,21 @@ downtime that is acceptable, and the degree to which invalidating old tokens
 matters to you.
 
 ### Solution 1: Invalidate all caches when keys are rotated
+
 One solution to these problems is to invalidate the caches in all the client
 applications and APIs immediately after the key is rotated. In ASP.NET, the
 simplest way to do so is to restart the hosting process, which clears the cached
 signing keys of the authentication middleware.
 
 This is only appropriate if all of the following are true:
+
 - You have control over the deployment of all of the client applications.
 - You can tolerate a maintenance window in which your services are all
   restarted.
 - You don't mind that users will need to log in again after the key is rotated.
 
 ### Solution 2: Phased Rotation
+
 A more robust solution is to gradually transition from the old to the new key.
 This requires three phases.
 
@@ -329,7 +348,6 @@ platforms or that were customized to use a different value. Ultimately you have
 to decide how long to wait to proceed to phase 2 in order to ensure that all
 clients and APIs have updated their caches.
 
-
 #### Phase 2: Start signing with the new key
 
 Next, start signing tokens with the new key, but continue to publish the public
@@ -350,7 +368,7 @@ idsvrBuilder.AddValidationKey(oldKey, SecurityAlgorithms.RsaSha256)
 ```
 
 Again, you need to wait to proceed to phase 3. The delay here is typically
-shorter, because the reason for the delay is to ensure that  tokens signed with
+shorter, because the reason for the delay is to ensure that tokens signed with
 the old key remain valid until they expire. IdentityServer's token lifetime
 defaults to 1 hour, though it is configurable.
 
@@ -387,6 +405,7 @@ collection of validation keys along with the keys produced by automatic key
 management. When automatic key management is enabled and there are keys
 statically specified with `AddValidationkey`, the set of validation keys will
 include:
+
 - new keys created by automatic key management that are not yet used for signing
 - old keys created by automatic key management that are retired
 - the keys added explicitly with calls to `AddValidationKey`.
@@ -396,7 +415,7 @@ similar to the phased approach to [manual key rotation](#manual-key-rotation). T
 difference here is that you are phasing out the old key and allowing the
 automatically generated keys to phase in.
 
-## Phase 1: Announce new (automatic) key
+### Phase 1: Announce new (automatic) key
 
 First, enable automatic key management while continuing to register your old key
 as the signing credential. In this phase, the new automatically managed key will be
@@ -416,7 +435,7 @@ idsvrBuilder.AddSigningCredential(oldKey, SecurityAlgorithms.RsaSha256);
 Wait until all APIs and applications have updated their signing key caches, and
 then proceed to phase 2.
 
-## Phase 2: Start signing with the new (automatic) key
+### Phase 2: Start signing with the new (automatic) key
 
 Next, switch to using the new automatically managed keys for signing, but still
 keep the old key for validation purposes.
@@ -434,7 +453,8 @@ idsvrBuilder.AddValidationKey(oldKey, SecurityAlgorithms.RsaSha256);
 Keep the old key as a validation key until all tokens signed with that key are
 expired, and then proceed to phase 3.
 
-## Phase 3: Drop the old key
+### Phase 3: Drop the old key
+
 Now the static key configuration can be removed entirely.
 
 ```cs

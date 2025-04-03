@@ -4,6 +4,9 @@ sidebar:
   order: 20
 ---
 
+Learn how to correctly end a session in ASP.NET Core, including handling cookies and token revocation.
+
+
 ## Removing the Authentication Cookie
 
 To remove the authentication cookie, simply use the ASP.NET Core `SignOutAsync` extension method on the `HttpContext`.
