@@ -344,7 +344,7 @@ Update the client's applicationUrl in
 
 ```json
 {
-  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "WebClient": {
       "commandName": "Project",

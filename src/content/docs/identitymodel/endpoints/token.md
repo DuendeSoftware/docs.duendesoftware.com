@@ -2,6 +2,7 @@
 title: Token Endpoint
 sidebar:
   order: 3
+  label: Token
 ---
 
 The client library for the token endpoint ([OAuth

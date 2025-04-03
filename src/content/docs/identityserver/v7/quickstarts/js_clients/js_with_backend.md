@@ -2,6 +2,7 @@
 title: "Browser-Based Applications with a BFF"
 sidebar:
   order: 10
+  label: With a BFF
 ---
 
 :::note
@@ -66,7 +67,7 @@ Modify the `JavaScriptClient` project to run on `https://localhost:5003`. Its
 
 ```json
 {
-  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "JavaScriptClient": {
       "commandName": "Project",

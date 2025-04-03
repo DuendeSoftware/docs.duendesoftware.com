@@ -2,6 +2,7 @@
 title: Token Revocation Endpoint
 sidebar:
   order: 4
+  label: Token Revocation
 ---
 
 The client library for [OAuth 2.0 token

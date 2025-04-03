@@ -5,9 +5,9 @@ sidebar:
   order: 1
 ---
 
-(added in 6.1)
-
-## Overview
+:::tip
+Added in Duende IdentityServer 6.1
+:::
 
 When a user logs in interactively, their authentication session is managed by the ASP.NET Core authentication system, and more specifically the cookie authentication handler.
 IdentityServer uses the [state in the cookie](/identityserver/v7/ui/login/session#well-known-claims-issued-from-the-login-page) to track the user's subject and session identifiers (i.e. the `sub` and `sid` claims), and the list of clients the user has logged into (which is used at logout time for [OIDC logout notification](/identityserver/v7/ui/logout/notification)).

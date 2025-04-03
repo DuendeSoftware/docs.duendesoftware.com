@@ -1,8 +1,9 @@
 ---
-title: "Resources"
+title: "More Reading Resources"
 description: "External Links"
 sidebar:
   order: 9
+  label: More Resources
 ---
 
 ## Demo Server

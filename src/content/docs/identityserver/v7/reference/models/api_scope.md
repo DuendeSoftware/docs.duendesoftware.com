@@ -36,30 +36,32 @@ This class models an OAuth scope.
 The `AddInMemoryApiResource` extension method also supports adding clients from the ASP.NET Core configuration file::
 
 ```json
-"IdentityServer": {
-"IssuerUri": "urn:sso.company.com",
-"ApiScopes": [
 {
-"Name": "IdentityServerApi"
-},
-{
-"Name": "resource1.scope1"
-},
-{
-"Name": "resource2.scope1"
-},
-{
-"Name": "scope3"
-},
-{
-"Name": "shared.scope"
-},
-{
-"Name": "transaction",
-"DisplayName": "Transaction",
-"Description": "A transaction"
-}
-]
+  "IdentityServer": {
+    "IssuerUri": "urn:sso.company.com",
+    "ApiScopes": [
+      {
+        "Name": "IdentityServerApi"
+      },
+      {
+        "Name": "resource1.scope1"
+      },
+      {
+        "Name": "resource2.scope1"
+      },
+      {
+        "Name": "scope3"
+      },
+      {
+        "Name": "shared.scope"
+      },
+      {
+        "Name": "transaction",
+        "DisplayName": "Transaction",
+        "Description": "A transaction"
+      }
+    ]
+  }
 }
 ```
 

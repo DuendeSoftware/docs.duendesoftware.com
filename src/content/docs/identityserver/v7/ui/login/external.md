@@ -220,7 +220,7 @@ Typically, the `sub` value used to log the user in would be the user's unique id
 
 ## State, URL length, and ISecureDataFormat
 
-When redirecting to an external provider for sign-in, frequently state from the client application must be roundtripped.
+When redirecting to an external provider for sign-in, frequently state from the client application must be round-tripped.
 This means that state is captured prior to leaving the client and preserved until the user has returned to the client
 application.
 Many protocols, including OpenID Connect, allow passing some sort of state as a parameter as part of the request, and

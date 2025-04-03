@@ -6,8 +6,6 @@ order: 140
 
 (added in 6.1)
 
-## Overview
-
 When a user logs in interactively, their authentication session is managed by the ASP.NET Core authentication system, and more specifically the cookie authentication handler.
 IdentityServer uses the [state in the cookie](/identityserver/v6/ui/login/session#well-known-claims-issued-from-the-login-page) to track the user's subject and session identifiers (i.e. the *sub* and *sid* claims), and the list of clients the user has logged into (which is used at logout time for [OIDC logout notification](/identityserver/v6/ui/logout/notification)).
 

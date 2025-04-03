@@ -2,6 +2,7 @@
 title: UserInfo Endpoint
 sidebar:
   order: 5
+  label: UserInfo
 ---
 
 The client library for the [OpenID Connect

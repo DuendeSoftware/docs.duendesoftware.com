@@ -2,12 +2,13 @@
 title: General Usage
 sidebar:
   order: 1
+  label: General
 ---
 
 
 IdentityModel contains client libraries for many interactions with
 endpoints defined in OpenID Connect and OAuth 2.0. All of these
-libraries have a common design, let\'s examine the various layers using
+libraries have a common design, let's examine the various layers using
 the client for the token endpoint.
 
 ## Request and response objects

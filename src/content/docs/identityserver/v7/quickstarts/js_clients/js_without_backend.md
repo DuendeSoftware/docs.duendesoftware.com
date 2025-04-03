@@ -3,6 +3,7 @@ expiryDate: 2024-09-11
 title: "JavaScript applications without a backend"
 sidebar:
   order: 20
+  label: Without Backend
 ---
 
 :::note
@@ -54,7 +55,7 @@ Modify the `JavaScriptClient` project to run on `https://localhost:5003`. Its
 
 ```json
 {
-  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "JavaScriptClient": {
       "commandName": "Project",

@@ -2,6 +2,7 @@
 title: Token Introspection Endpoint
 sidebar:
   order: 4
+  label: Token Introspection
 ---
 
 The client library for [OAuth 2.0 token

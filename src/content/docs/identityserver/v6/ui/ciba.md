@@ -12,8 +12,6 @@ CIBA is included in [IdentityServer](https://duendesoftware.com/products/identit
 Duende IdentityServer supports the [*poll*](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#rfc.section.5) mode to allow a client to obtain the results of a backchannel login request.
 :::
 
-## Overview
-
 Normally when using OpenID Connect, a user accesses a client application on the same device they use to login to the OpenID Connect provider.
 For example, a user (via the browser) uses a web app (the client) and that same browser is redirected for the user to login at IdentityServer (the OpenID Connect provider), and this all takes place on the user's device (e.g. their computer). Another example would be that a user uses a mobile app (the client), and it launches the browser for the user to login at IdentityServer (the OpenID Connect provider), and this all takes place on the user's device (e.g. their mobile phone).
 

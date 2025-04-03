@@ -186,7 +186,7 @@ The above methods return various models.
 
 * **`ShowSignoutPrompt`**
 
-  Indicates if the user should be prompted for signout based upon the parameters passed to the end session endpoint.
+  Indicates if the user should be prompted to signout based upon the parameters passed to the end session endpoint.
 
 ### ConsentResponse
 

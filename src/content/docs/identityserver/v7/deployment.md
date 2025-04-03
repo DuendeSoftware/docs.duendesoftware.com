@@ -38,7 +38,7 @@ The `ForwardedHeaders` middleware reads the information in these headers on inco
 The appropriate configuration for the forwarded headers middleware depends on your environment. In general, you need to configure which headers it should respect, the IP address or IP address range of your proxy, and the number of proxies you expect (when there are multiple proxies, each one is captured in the X-Forwarded-* headers).
 
 There are two ways to configure this middleware:
-1. Enable the environment variable ASPNETCORE_FORWARDEDHEADERS_ENABLED. This is the simplest option, but doesn't give you as much control. It automatically adds the forwarded headers middleware to the pipeline, and configures it to accept forwarded headers from any single proxy, respecting the X-Forwarded-For and X-Forwarded-Proto headers. This is often the right choice for cloud hosted environments and Kubernetes clusters.
+1. Enable the environment variable `ASPNETCORE_FORWARDEDHEADERS_ENABLED`. This is the simplest option, but doesn't give you as much control. It automatically adds the forwarded headers middleware to the pipeline, and configures it to accept forwarded headers from any single proxy, respecting the X-Forwarded-For and X-Forwarded-Proto headers. This is often the right choice for cloud hosted environments and Kubernetes clusters.
 2. Configure the `ForwardedHeadersOptions` in DI, and use the ForwardedHeaders middleware explicitly in your pipeline. The advantage of configuring the middleware explicitly is that you can configure it in a way that is appropriate for your environment, if the defaults used by ASPNETCORE_FORWARDEDHEADERS_ENABLED are not what you need. Most notably, you can use the `KnownNetworks` or `KnownProxies` options to only accept headers sent by a known proxy, and you can set the `ForwardLimit` to allow for multiple proxies in front of your IdentityServer. This is often the right choice when you have more complex proxying going on, or if your proxy has a stable IP address.
 
 In a client codebase operating behind a proxy, you'll need to configure the `ForwardedHeadersOptions`. Be sure to correctly set values for `KnownNetworks` and `KnownProxies` for your production
@@ -110,7 +110,7 @@ authentication cookies and anti-forgery tokens. In addition, IdentityServer itse
 sensitive data at rest, such as persisted grants, as well as sensitive data passed through the browser, such as the
 context objects passed to pages in the UI. The data protection keys are critical secrets for an IdentityServer
 implementation because they encrypt a great deal of sensitive data at rest and prevent sensitive data that is
-roundtripped through the browser from being tampered with.
+round-tripped through the browser from being tampered with.
 
 #### IdentityServer Signing Key
 

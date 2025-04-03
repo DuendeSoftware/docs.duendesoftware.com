@@ -21,7 +21,6 @@ To move this data into a database that is persistent between restarts and across
 In addition to manually configuring EF support, there is also an IdentityServer template to create a new project with EF support, using *dotnet new isef*.
 :::
 
-## Overview
 Our EF integration library implements the required stores and services using the following DbContexts:
 
 * ConfigurationDbContext: used for configuration data such as clients, resources, and scopes

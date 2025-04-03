@@ -78,22 +78,33 @@ The `AddInMemoryClients` extensions method also supports adding clients from the
 allows you to define static clients directly from the appsettings.json file:
 
 ```json
-"IdentityServer": {
-"Clients": [
 {
-"Enabled": true,
-"ClientId": "local-dev",
-"ClientName": "Local Development",
-"ClientSecrets": [{"Value": "<Insert Sha256 hash of the secret encoded as Base64 string>"}],
-"AllowedGrantTypes": ["client_credentials"],
-"AllowedScopes": ["api1"],
-}
-]
+  "IdentityServer": {
+    "Clients": [
+      {
+        "Enabled": true,
+        "ClientId": "local-dev",
+        "ClientName": "Local Development",
+        "ClientSecrets": [
+          {
+            "Value": "<Insert Sha256 hash of the secret encoded as Base64 string>"
+          }
+        ],
+        "AllowedGrantTypes": [
+          "client_credentials"
+        ],
+        "AllowedScopes": [
+          "api1"
+        ]
+      }
+    ]
+  }
 }
 ```
 
 Then pass the configuration section to the `AddInMemoryClients` method:
 
 ```cs
+// Program.cs
 AddInMemoryClients(configuration.GetSection("IdentityServer:Clients"))
 ```

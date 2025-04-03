@@ -38,7 +38,7 @@ multiple IdentityServer instances, you will use the
 
 This quickstart shows how to add Entity Framework support to IdentityServer
 manually. There is also a template that will create a new IdentityServer project
-with the EntityFramework integration already added: *dotnet new isef*.
+with the EntityFramework integration already added: `dotnet new isef`.
 
 :::
 

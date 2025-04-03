@@ -2,6 +2,7 @@
 title: Device Authorization Endpoint
 sidebar:
   order: 7
+  label: Device Authorization
 ---
 
 The client library for the [OAuth 2.0 device

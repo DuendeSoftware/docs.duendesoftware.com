@@ -2,6 +2,7 @@
 title: Discovery Endpoint
 sidebar:
   order: 2
+  label: Discovery
 ---
 
 The client library for the [OpenID Connect discovery

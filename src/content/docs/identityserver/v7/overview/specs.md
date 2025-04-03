@@ -7,7 +7,7 @@ sidebar:
 
 Duende IdentityServer implements the following specifications:
 
-### OpenID Connect
+## OpenID Connect
 
 * OpenID Connect Core 1.0 ([spec](https://openid.net/specs/openid-connect-core-1_0.html))
 * OpenID Connect Discovery 1.0 ([spec](https://openid.net/specs/openid-connect-discovery-1_0.html))
@@ -20,7 +20,7 @@ Duende IdentityServer implements the following specifications:
 * Enterprise Edition: OpenID Connect Client-Initiated Backchannel Authentication (
   CIBA) ([spec](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html)).
 
-### OAuth 2.x
+## OAuth 2.x
 
 * OAuth 2.0 ([RFC 6749](https://tools.ietf.org/html/rfc6749))
 * OAuth 2.0 Bearer Token Usage ([RFC 6750](https://tools.ietf.org/html/rfc6750))

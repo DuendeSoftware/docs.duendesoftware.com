@@ -104,11 +104,11 @@ failures during normal operations. In contrast, operations tagged with a result 
 internal_error are abnormal and indicate an unhandled exception.  The error/success ratio
 can be used as a very high level health metric.
 
-|Tag|Description| 
-|---|---| 
-|error | Error label on errors| 
-|result | Success, error or internal_error | 
-|client | Id of client requesting the operation. May be empty. |
+| Tag    | Description                                          | 
+|--------|------------------------------------------------------| 
+| error  | Error label on errors                                | 
+| result | Success, error or internal_error                     | 
+| client | Id of client requesting the operation. May be empty. |
 
 #### Telemetry.Metrics.Counters.ActiveRequests
 Counter name: `active_requests`
@@ -116,10 +116,10 @@ Counter name: `active_requests`
 Gauge/up-down counter that shows current active requests that are processed by any IdentityServer endpoint.
 Note that the pages in the user interface are not IdentityServer endpoints and are not included in this count.
 
-|Tag|Description|
-|---|---|
-|endpoint | The type name for the endpoint processor |
-|path | The path of the request |
+| Tag      | Description                              |
+|----------|------------------------------------------|
+| endpoint | The type name for the endpoint processor |
+| path     | The path of the request                  |
 
 ### Detailed Metrics - Experimental
 These detailed metrics are instrumented by the IdentityServer middleware and services and track usage of specific
@@ -133,21 +133,21 @@ Counter name: `tokenservice.api.secret_validation`
 
 Number of successful/failed validations of API Secrets.
 
-|Tag|Description|
-|---|---|
-|api | The Api Id |
-|auth_method | Authentication method used |
-|error | Error label on errors |
+| Tag         | Description                |
+|-------------|----------------------------|
+| api         | The Api Id                 |
+| auth_method | Authentication method used |
+| error       | Error label on errors      |
 
 #### Telemetry.Metrics.Counters.BackchannelAuthentication
 Counter name: `tokenservice.backchannel_authentication`
 
 Number of successful/failed back channel authentications (CIBA).
 
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|error | Error label on errors |
+| Tag    | Description           |
+|--------|-----------------------|
+| client | The client Id         |
+| error  | Error label on errors |
 
 
 #### Telemetry.Metrics.Counters.ClientConfigValidation
@@ -164,20 +164,22 @@ Number of successful/failed client validations.
 Counter name: `tokenservice.client.secret_validation`
 
 Number of successful/failed client secret validations.
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|auth_method | The authentication method on success |
-|error | Error label on errors |
+
+| Tag         | Description                          |
+|-------------|--------------------------------------|
+| client      | The client Id                        |
+| auth_method | The authentication method on success |
+| error       | Error label on errors                |
 
 #### Telemetry.Metrics.Counters.DeviceAuthentication
 Counter name: `tokenservice.device_authentication`
 
 Number of successful/failed device authentications.
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|error | Error label on errors |
+
+| Tag    | Description           |
+|--------|-----------------------|
+| client | The client Id         |
+| error  | Error label on errors |
 
 #### Telemetry.Metrics.Counters.DynamicIdentityProviderValidation
 Counter name: `tokenservice.dynamic_identityprovider.validation`
@@ -192,11 +194,12 @@ Number of successful/failed validations of dynamic identity providers.
 Counter name: `tokenservice.introspection`
 
 Number of successful/failed token introspections.
-|Tag|Description|
-|---|---|
-|caller| The caller of the endpoint, a client id or api id.|
-|active| Was the token active? Only sent on success |
-|error | Error label on errors |
+
+| Tag    | Description                                        |
+|--------|----------------------------------------------------|
+| caller | The caller of the endpoint, a client id or api id. |
+| active | Was the token active? Only sent on success         |
+| error  | Error label on errors                              |
 
 #### Telemetry.Metrics.Counters.PushedAuthorizationRequest
 Counter name: `tokenservice.pushed_authorization_request`

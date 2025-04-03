@@ -2,6 +2,7 @@
 title: Building Browser-Based Client Applications
 sidebar:
   order: 1
+  label: Overview
 ---
 
 

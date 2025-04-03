@@ -67,9 +67,9 @@ dotnet new sln -n Quickstart
 This will create a quickstart directory that will serve as the root of the
 solution, a src subdirectory to hold your source code, and a solution file to
 organize your projects. Throughout the rest of the quickstart series, paths will
-be written relative to to the quickstart directory.
+be written relative to the quickstart directory.
 
-From the new quickstart directory, run the following commands to use the isempty
+From the new quickstart directory, run the following commands to use the `isempty`
 template to create a new project. The template creates a web project named
 IdentityServer with the IdentityServer package installed and minimal
 configuration added for it.
