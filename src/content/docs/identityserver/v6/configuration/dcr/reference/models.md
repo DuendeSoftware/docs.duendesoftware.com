@@ -131,11 +131,11 @@ interfaces and can be used throughout the pipeline to convey errors.
 Your validation or processing steps can return a call to convenience functions in the static class *StepResult* to
 conveniently construct a success or failure from a step wrapped in a task.
 
-| name | description |
-| --- | --- |
-| static Task\<IStepResult\> Success() | Indicates that the validation step was completed was completed successfully | 
-| static Task\<IStepResult\> Failure(string errorDescription) | Indicates that the validation step failed with the specified error description and the default error code of invalid_client_metadata | 
-| static Task\<IStepResult\> Failure(string errorDescription, string error) |Indicates that the validation step failed with the specified error description and error code | 
+| name                                                                    | description                                                                                                                          |
+|-------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| static Task<IStepResult> Success()                                      | Indicates that the validation step was completed was completed successfully                                                          | 
+| static Task<IStepResult> Failure(string errorDescription)               | Indicates that the validation step failed with the specified error description and the default error code of invalid_client_metadata | 
+| static Task<IStepResult> Failure(string errorDescription, string error) | Indicates that the validation step failed with the specified error description and error code                                        | 
 
 ## DynamicClientRegistrationValidatedRequest
 Represents a successfully validated dynamic client registration request.

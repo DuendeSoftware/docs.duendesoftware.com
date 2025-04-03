@@ -18,7 +18,7 @@ Every quickstart has a reference solution - you can find the code in the [sample
 ## Preparation
 The first thing you should do is install our templates:
 
-```bash
+```bash title=Terminal
 dotnet new --install Duende.IdentityServer.Templates
 ```
 

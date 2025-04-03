@@ -48,19 +48,19 @@ This is only needed for the configuration database, not the operational one so n
 First for the operational database, we can simply apply EF Core migrations. 
 Note that you might need to adjust based on your specific organization of the migration files.
 
-```bash
+```bash title=Terminal
 dotnet ef migrations add Grants_v4 -c PersistedGrantDbContext -o Migrations/PersistedGrantDb
 ```
 
 Then to apply those changes to your database:
 
-```bash
+```bash title=Terminal
 dotnet ef database update -c PersistedGrantDbContext
 ```
 
 Next for the configuration database, we'll also add an EF Migration with:
 
-```bash
+```bash title=Terminal
 dotnet ef migrations add Config_v4 -c ConfigurationDbContext -o Migrations/ConfigurationDb
 ```
 
@@ -122,7 +122,7 @@ Note that given that there is no *Down* implementation, this is a one-way update
 
 And now run the migration:
 
-```bash
+```bash title=Terminal
 dotnet ef database update -c ConfigurationDbContext
 ```
 

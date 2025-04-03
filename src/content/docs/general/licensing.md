@@ -167,12 +167,12 @@ In a future version, IdentityServer will shut down at that time instead.
 
 :::note
 When operating non-production environments, such as development, test, or QA, without a valid license key,
-you may run into this trial mode limitation.\
-\
+you may run into this trial mode limitation.
+
 To prevent your non-production IdentityServer from shutting down in the future, you can use your
 production license key. IdentityServer is [free](#trial-mode) for development, testing and personal projects,
-and we support using your production license in these environments when trial mode is not sufficient.\
-\
+and we support using your production license in these environments when trial mode is not sufficient.
+
 If you have feedback on trial mode, or specific use cases where you'd prefer other options,
 please [open a community discussion](https://github.com/DuendeSoftware/community/discussions).
 :::

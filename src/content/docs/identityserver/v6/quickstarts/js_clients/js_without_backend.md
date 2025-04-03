@@ -135,8 +135,8 @@ to *wwwroot*.
 This will be the main page in your application. 
 It contains
 - buttons for the user to login, logout, and call the API
-- a *\<pre>* container used to show messages to the user
-- *\<script>* tags to include your two JavaScript files
+- a `<pre>` container used to show messages to the user
+- `<script>` tags to include your two JavaScript files
 
 It should look like this:
 
@@ -163,7 +163,7 @@ It should look like this:
 **app.js**
 
 This will contain the main code for your application.
-First, add a helper function to display messages in the *\<pre>*:
+First, add a helper function to display messages in the `<pre>`:
 
 ```js
 function log() {

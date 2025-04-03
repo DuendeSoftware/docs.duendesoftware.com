@@ -22,11 +22,11 @@ Both the front-channel and JS-based notifications make use of cookies in iframes
 
 
 ### Front-channel server-side clients
-To sign the user out of the server-side client applications via the front-channel spec, the "logged out" page in IdentityServer must render an `\<iframe>` for each client that points to the corresponding notification endpoint at the client.
+To sign the user out of the server-side client applications via the front-channel spec, the "logged out" page in IdentityServer must render an `<iframe>` for each client that points to the corresponding notification endpoint at the client.
 
 Clients that wish to be notified must have the `FrontChannelLogoutUri` configuration value set.
 IdentityServer tracks which clients the user has signed into, and provides an API called `GetLogoutContextAsync` on the [IIdentityServerInteractionService](/identityserver/v7/reference/services/interaction_service#iidentityserverinteractionservice-apis). 
-This API returns a `LogoutRequest` object with a `SignOutIFrameUrl` property that your logged out page must render into an `\<iframe>`.
+This API returns a `LogoutRequest` object with a `SignOutIFrameUrl` property that your logged out page must render into an `<iframe>`.
 
 See the [Quickstart UI](https://github.com/DuendeSoftware/products/tree/main/identity-server/templates/src/UI) Logout page for an example.
 

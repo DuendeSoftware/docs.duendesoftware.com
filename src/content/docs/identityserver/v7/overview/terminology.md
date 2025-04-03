@@ -9,7 +9,7 @@ The specs, documentation and object model use a certain terminology that you sho
 
 ![](images/terminology.png)
 
-### Duende IdentityServer
+## Duende IdentityServer
 
 Duende IdentityServer is an OpenID Connect & OAuth engine - it implements the OpenID Connect and OAuth 2.0 family
 of [protocols](specs).
@@ -27,11 +27,11 @@ A typical implementation of Duende IdentityServer has a number of jobs and featu
 * manage and authenticate clients
 * issue identity and access tokens to clients
 
-### User
+## User
 
 A user is a human that is using a registered client to access resources.
 
-### Client
+## Client
 
 A [client](/identityserver/v7/fundamentals/clients) is a piece of software that requests tokens from your
 IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting
@@ -40,7 +40,7 @@ an access token). A client must be first registered with your IdentityServer bef
 While there are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server
 processes etc., they can all be put into two high-level categories.
 
-#### Machine to Machine Communication
+### Machine to Machine Communication
 
 In this scenario two machines talk to each other (e.g. background processes, batch jobs, server daemons), and there is
 no interactive user present. To authorize this communication, your IdentityServer issues a token to the caller.
@@ -49,7 +49,7 @@ In protocol terms, this scenario is called *Client Credentials Flow* and you can
 tokens [section](/identityserver/v7/tokens/requesting#machine-to-machine-communication) as well as in
 our [Quickstart](/identityserver/v7/quickstarts/1_client_credentials).
 
-#### Interactive Applications
+### Interactive Applications
 
 This is the most common type of client scenario: web applications, SPAs or native/mobile apps with interactive users.
 This scenario typically involves a browser for user interaction (e.g. for authentication or consent).
@@ -64,7 +64,7 @@ multiple servers for load-balancing purposes, or your mobile application might b
 phones. Logically these instances are still a single client.
 :::
 
-### Resources
+## Resources
 
 [Resources](/identityserver/v7/fundamentals/resources) are something you want to protect with your IdentityServer -
 either identity data of your users, or APIs.
@@ -76,14 +76,14 @@ Every resource has a unique name - and clients use this name to specify to which
 *`APIs`* APIs resources represent functionality a client wants to invoke - typically modelled as Web APIs, but not
 necessarily.
 
-### Identity Token
+## Identity Token
 
 An identity token represents the outcome of an authentication process. It contains at a bare minimum an identifier for
 the user
 (called the `sub` aka subject claim) and information about how and when the user authenticated. It can contain
 additional identity data.
 
-### Access Token
+## Access Token
 
 An access token allows access to an API resource. Clients request access tokens and forward them to the API.
 Access tokens contain information about the client and the user (if present).

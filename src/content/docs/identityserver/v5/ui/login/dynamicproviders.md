@@ -68,7 +68,7 @@ The [identity provider model documentation](/identityserver/v5/reference/models/
 
 #### Customizing OpenIdConnectOptions
 
-If it is needed to further customize the *OpenIdConnectOptions*, you can register in the DI system an instance of *IConfigureNamedOptions\<OpenIdConnectOptions>*. For example:
+If it is needed to further customize the `OpenIdConnectOptions`, you can register in the DI system an instance of `IConfigureNamedOptions<OpenIdConnectOptions>`. For example:
 
 ```cs
     public class CustomConfig : IConfigureNamedOptions<OpenIdConnectOptions>
@@ -98,9 +98,9 @@ And to register this in the DI system:
 
 #### Accessing OidcProvider data in IConfigureNamedOptions
 
-If your customization of the *OpenIdConnectOptions* requires per-provider data that you are storing on the *OidcProvider*, then we provide an abstraction for the *IConfigureNamedOptions\<OpenIdConnectOptions>*.
-This abstraction requires your code to derive from *ConfigureAuthenticationOptions\<OpenIdConnectOptions, OidcProvider>* (rather than *IConfigureNamedOptions\<OpenIdConnectOptions>*).
-For exmaple:
+If your customization of the *OpenIdConnectOptions* requires per-provider data that you are storing on the *OidcProvider*, then we provide an abstraction for the `IConfigureNamedOptions<OpenIdConnectOptions>`.
+This abstraction requires your code to derive from `ConfigureAuthenticationOptions<OpenIdConnectOptions, OidcProvider>` (rather than `IConfigureNamedOptions<OpenIdConnectOptions>`).
+For example:
 
 ```cs
 class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectOptions, OidcProvider>

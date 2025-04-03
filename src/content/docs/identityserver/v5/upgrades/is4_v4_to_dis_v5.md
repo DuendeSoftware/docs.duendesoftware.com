@@ -55,7 +55,7 @@ This includes:
 If you are using the *Duende.IdentityServer.EntityFramework* package as the implementation for the database and you're using EntityFramework Core migrations as the mechanism for managing those schema changes over time, the commands below will update those migrations with the new changes.
 Note that you might need to adjust based on your specific organization of the migration files.
 
-```bash
+```bash title=Terminal
 dotnet ef migrations add UpdateToDuende_v5 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
 
 dotnet ef migrations add UpdateToDuende_v5 -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
@@ -63,7 +63,7 @@ dotnet ef migrations add UpdateToDuende_v5 -c ConfigurationDbContext -o Data/Mig
 
 Then to apply those changes to your database:
 
-```bash
+```bash title=Terminal
 dotnet ef database update -c PersistedGrantDbContext
 dotnet ef database update -c ConfigurationDbContext
 ```

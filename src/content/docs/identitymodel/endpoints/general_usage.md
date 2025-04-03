@@ -36,7 +36,7 @@ var request = new ClientCredentialsTokenRequest
 While in theory you could now call *Prepare* (which internally sets the
 headers, body and address) and send the request via a plain
 *HttpClient*, typically there are more parameters with special semantics
-and encoding required. That\'s why we provide extension methods to do
+and encoding required. That's why we provide extension methods to do
 the low level work.
 
 Equally, a protocol response has a corresponding *ProtocolResponse*
@@ -49,7 +49,7 @@ var tokenResponse = await ProtocolResponse
     .FromHttpResponseAsync<TokenResponse>(httpResponse);
 ```
 
-Again these steps are automated using the extension methods. So let\'s
+Again these steps are automated using the extension methods. So let's
 have a look at an example next.
 
 ## Extension methods

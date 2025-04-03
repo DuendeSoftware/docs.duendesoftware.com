@@ -120,7 +120,7 @@ The salient piece to understand is a new `LoginWithWindows` action method in the
 quickstarts.
 Windows authentication is triggered, and once the result is determined the main authentication session cookie is created
 based on the `WindowsIdentity` results.
-Also, note there is some configuration in `Startup` with a call to `Configure\<IISOptions>` (mainly to set
+Also, note there is some configuration in `Startup` with a call to `Configure<IISOptions>` (mainly to set
 `AutomaticAuthentication` to `false`).
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/WindowsAuthentication)

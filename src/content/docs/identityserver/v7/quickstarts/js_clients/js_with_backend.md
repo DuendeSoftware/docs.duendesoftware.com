@@ -6,13 +6,11 @@ sidebar:
 ---
 
 :::note
-
 We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](/identityserver/v7/quickstarts/0_overview#preparation).
-
 :::
 
 In this quickstart, you will build a browser-based JavaScript client application
@@ -43,7 +41,7 @@ cookies will be sent from the front end to the BFF.
 Create a new ASP.NET Core web application and add it to the solution by running
 the following commands from the `src` directory:
 
-```console
+```bash title="Terminal"
 dotnet new web -n JavaScriptClient
 cd ..
 dotnet sln add ./src/JavaScriptClient
@@ -54,7 +52,7 @@ dotnet sln add ./src/JavaScriptClient
 Install NuGet packages to add BFF and OIDC support to the new project by running
 the following commands from the `src/JavaScriptClient` directory:
 
-```console
+```bash title="Terminal"
 dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 dotnet add package Duende.BFF
 dotnet add package Duende.BFF.Yarp
@@ -170,8 +168,8 @@ it.
 
 The index.html file will be the main page in your application. It contains
 - buttons for the user to login, logout, and call the APIs
-- a `\<pre>` container used to show messages to the user
-- a `\<script>` tag to include our JavaScript file
+- a `<pre>` container used to show messages to the user
+- a `<script>` tag to include our JavaScript file
 
 It should look like this:
 
@@ -199,7 +197,7 @@ It should look like this:
 
 The app.js file will contain the client-side code for your application.
 
-First, add a helper function to display messages in the `\<pre>`:
+First, add a helper function to display messages in the `<pre>`:
 
 ```js
 function log() {

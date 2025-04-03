@@ -96,7 +96,7 @@ properties and how they are mapped to the options.
 #### Customizing OpenIdConnectOptions
 
 If it is needed to further customize the `OpenIdConnectOptions`, you can register in the DI system an instance of
-`IConfigureNamedOptions\<OpenIdConnectOptions>`. For example:
+`IConfigureNamedOptions<OpenIdConnectOptions>`. For example:
 
 ```cs
     public class CustomConfig : IConfigureNamedOptions<OpenIdConnectOptions>
@@ -124,9 +124,9 @@ builder.Services.ConfigureOptions<CustomConfig>();
 #### Accessing OidcProvider data in IConfigureNamedOptions
 
 If your customization of the `OpenIdConnectOptions` requires per-provider data that you are storing on the
-`OidcProvider`, then we provide an abstraction for the `IConfigureNamedOptions\<OpenIdConnectOptions>`.
-This abstraction requires your code to derive from *ConfigureAuthenticationOptions\<OpenIdConnectOptions,
-OidcProvider>* (rather than `IConfigureNamedOptions\<OpenIdConnectOptions>`).
+`OidcProvider`, then we provide an abstraction for the `IConfigureNamedOptions<OpenIdConnectOptions>`.
+This abstraction requires your code to derive from `ConfigureAuthenticationOptions<OpenIdConnectOptions,
+OidcProvider>` (rather than `IConfigureNamedOptions<OpenIdConnectOptions>`).
 For example:
 
 ```cs

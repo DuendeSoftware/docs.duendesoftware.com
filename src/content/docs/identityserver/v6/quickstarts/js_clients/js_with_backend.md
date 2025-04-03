@@ -169,8 +169,8 @@ it.
 
 The index.html file will be the main page in your application. It contains
 - buttons for the user to login, logout, and call the APIs
-- a *\<pre>* container used to show messages to the user
-- a *\<script>* tag to include our JavaScript file
+- a `<pre>` container used to show messages to the user
+- a `<script>` tag to include our JavaScript file
 
 It should look like this:
 
@@ -198,7 +198,7 @@ It should look like this:
 
 The app.js file will contain the client-side code for your application.
 
-First, add a helper function to display messages in the *\<pre>*:
+First, add a helper function to display messages in the `<pre>`:
 
 ```js
 function log() {

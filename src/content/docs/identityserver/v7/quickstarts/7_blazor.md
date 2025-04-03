@@ -292,7 +292,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, BffAuthenticationStatePr
 
 If you run the server app now again, you will see a different error:
 
-```bash
+```bash title=Terminal
 fail: Duende.Bff.Endpoints.BffMiddleware[1]
       Anti-forgery validation failed. local path: '/bff/user'
 ```

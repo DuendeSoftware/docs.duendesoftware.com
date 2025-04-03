@@ -24,7 +24,7 @@ the [samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer
 
 The first thing you should do is install our templates:
 
-```bash
+```bash title=Terminal
 dotnet new install Duende.Templates
 ```
 

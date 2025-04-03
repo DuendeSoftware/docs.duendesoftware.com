@@ -36,7 +36,7 @@ Core Authentication libraries. If it is not correctly configured it might result
 * The key {xxxxx-xxxx-xxx-xxx-xxxxxxx} was not found in the key ring.
 * Failed to unprotect AuthenticationTicket payload for key {key}
 
-See [our data protection guide](./deployment#data-protection-keys-and-identityservers-signing-keys) for more
+See [our data protection guide](/identityserver/v7/deployment#data-protection-keys) for more
 information.
 
 ## Load Balancing, proxies and TLS offloading
@@ -81,7 +81,7 @@ comment/injection. This is not an IdentityServer issue but something that should
 
 ## Microsoft.IdentityModel Version Conflicts
 
-The Microsoft.IdentityModel.\* libraries used by Duende IdentityServer all have to be of exactly the same version. If
+The `Microsoft.IdentityModel.*` libraries used by Duende IdentityServer all have to be of exactly the same version. If
 they are not it can cause unexpected issues reading configuration data and tokens, i.e. **IDX10500: Signature validation
 failed. No security keys were provided to validate the signature.** or **System.MissingMethodException: Method not
 found 'Boolean Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfiguration(...)'**
@@ -152,6 +152,7 @@ To fix this, add explicit package references to upgrade the packages that are of
 version used.
 
 ```xml
+
 <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="7.4.0"/>
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.4.0"/>

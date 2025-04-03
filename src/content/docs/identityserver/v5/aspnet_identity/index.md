@@ -12,7 +12,7 @@ To use this library, ensure that you have the NuGet package for the ASP.NET Iden
 It is called *Duende.IdentityServer.AspNetIdentity*.
 You can install it with:
 
-```bash
+```bash title=Terminal
 dotnet add package Duende.IdentityServer.AspNetIdentity
 ```
 
