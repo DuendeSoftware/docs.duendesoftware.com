@@ -67,7 +67,7 @@ The following secret parsers are part of Duende IdentityServer:
 
 
 ## Secret validation
-It is the job of implementations of the [ISecretValidator](/identityserver/v6/reference/models/secrets#duendeidentityservervalidationisecretvalidator) interface to validate the extracted credentials.
+It is the job of implementations of the [ISecretValidator](/identityserver/v6/reference/models/secrets#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
 
 You can add secret parsers by calling the *AddSecretValidator()* DI extension method.
 

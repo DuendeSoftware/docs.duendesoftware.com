@@ -30,5 +30,5 @@ says:
 
 Additionally, modern browsers have recently added or are planning to add privacy
 features that can break some front-channel protocol interactions. See 
-[here](/bff/v3/overview#react-to-changes-in-the-browser-security-models) 
+[here](/bff/v3/overview#3rd-party-cookies) 
 for more details.

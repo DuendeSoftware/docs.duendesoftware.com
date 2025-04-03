@@ -42,14 +42,14 @@ The options necessary will be different based on the protocol and identity provi
 ## Triggering the Authentication Handler
 
 To allow the user to be redirected to the external provider, there must be some code in your login page that triggers the handler.
-This can be done because you have provided the user with a button to click, or it could be due to inspecting some property of the [authorization context](/identityserver/v5/ui/login/#authorization-context), or it could be based on any other aspect of the request (e.g. such as the user entering their email).
+This can be done because you have provided the user with a button to click, or it could be due to inspecting some property of the [authorization context](/identityserver/v5/ui/login), or it could be based on any other aspect of the request (e.g. such as the user entering their email).
 
 :::note
 The process of determining which identity provider to use is called *Home Realm Discovery*, or *HRD* for short.
 :::
 
 To invoke an external authentication handler use the *ChallengeAsync* extension method on the *HttpContext* (or using the MVC *ChallengeResult*).
-When triggering challenge, it's common to pass some properties to indicate the callback URL where you intend to process the external login results and any other state you need to maintain across the workflow (e.g. such as the [return URL passed to the login page](/identityserver/v5/ui/login#the-return-url-and-the-login-workflow)):
+When triggering challenge, it's common to pass some properties to indicate the callback URL where you intend to process the external login results and any other state you need to maintain across the workflow (e.g. such as the [return URL passed to the login page](/identityserver/v5/ui/login/redirect)):
 
 ```cs
 var callbackUrl = Url.Action("MyCallback");
@@ -131,7 +131,7 @@ On the callback page your typical tasks are:
 * New users might need additional steps and UI before they are allowed in. Typically this involves creating a new internal user account that is linked to the user from the external provider.
 * Store the external claims that you want to keep.
 * Delete the temporary cookie.
-* Establish the user's [authentication session](/identityserver/v5/ui/login#authentication-session).
+* Establish the user's [authentication session](/identityserver/v5/ui/login/session).
 * Complete the login workflow.
 
 ### Inspecting the External Identity

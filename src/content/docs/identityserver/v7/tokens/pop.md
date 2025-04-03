@@ -233,5 +233,5 @@ lost, the tokens can longer be used, and if the secret is leaked, the security b
 
 #### Enabling DPoP support in your API
 
-See [here](/identityserver/v7/apis/aspnetcore/confirmation#validating-dpop-proof-of-possession) for documentation
+See [here](/identityserver/v7/apis/aspnetcore/confirmation#validating-dpop) for documentation
 describing how to enable DPoP in your APIs.

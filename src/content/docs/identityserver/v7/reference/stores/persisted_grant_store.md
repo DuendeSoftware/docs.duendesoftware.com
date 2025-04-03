@@ -137,7 +137,7 @@ set it to indicate that they can be used indefinitely.
 Some grants can set a `ConsumedTime` when they are used. This applies to grants
 that are intended to be used once and that need to be retained after their use
 for some purpose (for example, replay detection or to allow certain kinds of
-limited reuse). Refresh tokens can be [configured](/identityserver/v7/tokens/refresh#sliding) to have one-time use
+limited reuse). Refresh tokens can be [configured](/identityserver/v7/tokens/refresh#sliding-expiration) to have one-time use
 semantics. Refresh tokens
 that are configured this way can be further configured to set a `ConsumedTime` when they are used.
 Authorization codes do not set a `ConsumedTime`. They are instead always removed

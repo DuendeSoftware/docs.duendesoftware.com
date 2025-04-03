@@ -39,7 +39,7 @@ Clients that wish to be notified must have the [BackChannelLogoutUri](/identitys
 #### Implementing Back-channel Logout in .NET Applications
 
 .NET does not have native support for back-channel logout notification.
-We do [provide a sample](/identityserver/v7/samples#mvc-client-with-back-channel-logout-notifications), though.
+We do [provide a sample](/identityserver/v7/samples), though.
 Alternatively, if you are using our BFF framework, back-channel logout is [already implemented](/bff/v3/fundamentals/session/management/back-channel-logout) for you.
 
 Back-channel logout notifications are logout tokens as specified by [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html#logouttoken). Beginning in v6.3, IdentityServer sets the `typ` header of the logout token to `logout+jwt` to comply with the final version of the specification. The [`LogoutTokenJwtType` option](/identityserver/v7/reference/options#main) can override this behavior.
