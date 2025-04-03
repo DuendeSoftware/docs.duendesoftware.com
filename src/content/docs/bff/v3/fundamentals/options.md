@@ -1,7 +1,7 @@
 ---
-title: BFF Configuration Options
+title: Configuration Options
 sidebar:
-  label: BFF Options
+  label: Configuration Options
 description: "BFF configuration options"
 date: 2020-09-10T08:22:12+02:00
 ---

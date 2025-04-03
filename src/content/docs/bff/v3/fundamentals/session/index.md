@@ -3,8 +3,8 @@ title: Authentication & Session Management
 date: 2020-09-10T08:20:20+02:00
 sidebar:
   order: 1
+  label: Overview
 ---
-
 
 This section deals with setting up the following components
 

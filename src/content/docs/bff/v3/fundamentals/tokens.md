@@ -12,19 +12,20 @@ For most scenarios, there is no additional configuration necessary. The token ma
 The easiest way to retrieve the current access token is to use an extension method on *HttpContext*:
 
 ```cs
-    var token = await HttpContext.GetUserAccessTokenAsync();
+var token = await HttpContext.GetUserAccessTokenAsync();
 ```
 
 You can then use the token to set it on an *HttpClient* instance:
 
 ```cs
-    var client = new HttpClient();
-    client.SetBearerToken(token);
+var client = new HttpClient();
+client.SetBearerToken(token);
 ```
 
 We recommend to leverage the *HttpClientFactory* to fabricate HTTP clients that are already aware of the token management plumbing. For this you would register a named client in your application startup e.g. like this:
 
 ```cs
+// Program.cs
 // registers HTTP client that uses the managed user access token
 builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
 {
@@ -65,8 +66,7 @@ If you prefer to use typed clients, you can do that as well:
 services.AddHttpClient<MyTypedApiClient>(client =>
 {
     client.BaseAddress = new Uri("https://remoteServer/");
-})
-    .AddUserAccessTokenHandler();
+}).AddUserAccessTokenHandler();
 ```
 
 And then use that client, for example like this on a controller's action method:

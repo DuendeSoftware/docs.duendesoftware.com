@@ -2,6 +2,7 @@
 title: Samples
 sidebar:
   order: 150
+  label: Overview
 ---
 
 This section contains a collection of clients using our BFF security framework.

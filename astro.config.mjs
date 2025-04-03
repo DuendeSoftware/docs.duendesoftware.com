@@ -107,7 +107,7 @@ export default defineConfig({
 				},
 				{
 					label: 'BFF Security Framework',
-					autogenerate: {directory: 'bff'},
+					autogenerate: {directory: 'bff/v3'},
 					collapsed: true
 				},
 				{

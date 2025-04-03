@@ -1,7 +1,8 @@
 ---
-title: Bff Blazor App
+title: Blazor Applications
 sidebar:
   order: 150
+  label: Blazor
 ---
 
 

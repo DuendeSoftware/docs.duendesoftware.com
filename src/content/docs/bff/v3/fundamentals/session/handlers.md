@@ -25,7 +25,7 @@ builder.Services.AddAuthentication(options =>
     .AddOpenIdConnect("oidc", options => { ... });
 ```
 
-### The OpenID Connect Authentication Handler
+## The OpenID Connect Authentication Handler
 The OIDC handler connects the application to the authentication / access token system.
 
 The exact settings depend on the OIDC provider and its configuration settings. We recommend:
@@ -70,7 +70,7 @@ builder.Services.AddAuthentication().AddOpenIdConnect("oidc", options =>
 ```
 The OIDC handler will use the default sign-in handler (the cookie handler) to establish a session after successful validation of the OIDC response.
 
-### The Cookie Handler
+## The Cookie Handler
 The cookie handler is responsible for establishing the session and manage authentication session related data.
 
 Things to consider:
@@ -96,7 +96,7 @@ builder.Services.AddAuthentication().AddCookie("cookie", options =>
 });
 ```
 
-#### Choosing between SameSite.Lax and SameSite.Strict
+### Choosing between SameSite.Lax and SameSite.Strict
 
 The [SameSite cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value) is a feature of modern browsers that restricts cookies so that they are only sent to pages originating from the [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) where the cookie was originally issued. This prevents CSRF attacks and helps with improving privacy, because cross-site requests will no longer implicitly include the user's credentials.
 

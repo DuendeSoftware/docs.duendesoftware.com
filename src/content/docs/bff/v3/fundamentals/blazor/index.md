@@ -1,7 +1,7 @@
 ---
 title: Blazor support in the BFF Security Framework
 sidebar:
-  label: Blazor Applications
+  label: Applications
   order: 1
 ---
 

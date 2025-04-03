@@ -1,7 +1,7 @@
 ---
 title: Overview
 sidebar:
-  order: 100
+  order: 1
 ---
 
 Duende.BFF can be extended in the following areas

@@ -67,7 +67,7 @@ This is the URL to trigger logout. If the upstream provider includes a *sid* cla
 ## Typical Usage
 To use the endpoint, make an http GET request to it from your frontend javascript code. For example, your application could use the fetch API to make requests to the user endpoint like this:
 
-```js
+```js title="session.js"
 var req = new Request("/user", {
   headers: new Headers({
     "X-CSRF": "1",
@@ -92,7 +92,7 @@ The *AnonymousSessionResponse* option allows you to change the behavior of the u
 ## Cookie Sliding
 If your ASP.NET Core session cookie is configured to use a sliding expiration, you need to be able to query the session state without extending the session's lifetime; a periodic check for user activity shouldn't itself count as user activity. To prevent the call to the user endpoint from sliding the cookie, add the *slide=false* parameter to the request.
 
-```js
+```js title="site.js"
 var req = new Request("/user?slide=false", {
   headers: new Headers({
     "X-CSRF": "1",

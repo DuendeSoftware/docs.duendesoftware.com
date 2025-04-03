@@ -3,6 +3,7 @@ title: "Blazor Rendering modes"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10
+  label: Rendering Modes
 ---
 
 Blazor supports [several rendering](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-9.0#render-modes) modes:

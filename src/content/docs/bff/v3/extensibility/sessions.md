@@ -3,9 +3,13 @@ title: "Session Management"
 description: "BFF Extensibility"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
-  label: "BFF Extensibility"
+  label: "Session Management"
   order: 20
 ---
+
+Server-side sessions enable secure and efficient storage of session data, allowing flexibility through custom
+implementations of the `IUserSessionStore` interface. This ensures adaptability to various storage solutions tailored to
+your application's needs.
 
 ## User Session Store
 
@@ -13,7 +17,7 @@ If using the server-side sessions feature, you will need to have a store for the
 An Entity Framework Core based implementation of this store is provided. 
 If you wish to use some other type of store, then you can implement the *IUserSessionStore* interface:
 
-```
+```csharp
 /// <summary>
 /// User session store
 /// </summary>
@@ -73,6 +77,7 @@ public interface IUserSessionStore
 Once you have an implementation, you can register it when you enable server-side sessions:
 
 ```csharp
+// Program.cs
 builder.Services.AddBff()
     .AddServerSideSessions<YourStoreClassName>();
 

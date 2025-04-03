@@ -18,7 +18,10 @@ Both aspects can be customized.
 The token management library uses a named HTTP client from the HTTP client factory for all token service communication. You can provide a customized HTTP client yourself using the well-known name after calling *AddBff*:
 
 ```cs
-builder.Services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClientName, configureClient => { ... });
+builder.Services.AddHttpClient(
+        AccessTokenManagementDefaults.BackChannelHttpClientName,
+        configureClient => { ... }
+    );
 ```
 
 :::note
@@ -100,9 +103,11 @@ You can implement this interface yourself or extend the *DefaultAccessTokenRetri
 Implementations of the *IAccessTokenRetriever* can be added to endpoints when they are mapped using the *WithAccessTokenRetriever* extension method:
 
 ```cs
-app.MapRemoteBffApiEndpoint("/API/impersonation", "https://API.example.com/endpoint/requiring/impersonation")
-    .RequireAccessToken(TokenType.User)
-    .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
+app.MapRemoteBffApiEndpoint(
+        "/API/impersonation", 
+        "https://API.example.com/endpoint/requiring/impersonation"
+    ).RequireAccessToken(TokenType.User)
+     .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```
 
 The *GetAccessToken* method will be invoked on every call to APIs that use the access token retriever. If retrieving the token is an expensive operation, you may need to cache it. It is up to your retriever code to perform caching.
