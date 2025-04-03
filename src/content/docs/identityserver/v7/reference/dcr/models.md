@@ -63,12 +63,12 @@ public class DynamicClientRegistrationResponse : DynamicClientRegistrationReques
 ```
 
 #### Public Members
-| name | description |
-| --- | --- |
-| ClientId { get; set; } | Gets or sets the client ID. |
-| ClientSecret { get; set; } | Gets or sets the client secret. |
-| ClientSecretExpiresAt { get; set; } | Gets or sets the expiration time of the client secret. |
-| ResponseTypes { get; set; } | List of the OAuth 2.0 response type strings that the client can use at the authorization endpoint. |
+| name                                | description                                                                                        |
+|-------------------------------------|----------------------------------------------------------------------------------------------------|
+| ClientId { get; set; }              | Gets or sets the client ID.                                                                        |
+| ClientSecret { get; set; }          | Gets or sets the client secret.                                                                    |
+| ClientSecretExpiresAt { get; set; } | Gets or sets the expiration time of the client secret.                                             |
+| ResponseTypes { get; set; }         | List of the OAuth 2.0 response type strings that the client can use at the authorization endpoint. |
 
 ## DynamicClientRegistrationContext
 Represents the context of a dynamic client registration request, including
@@ -81,12 +81,12 @@ public class DynamicClientRegistrationContext
 ```
 
 #### Public Members
-| name | description |
-| --- | --- |
-| Caller { get; set; } | The ClaimsPrincipal that made the DCR request. |
-| Client { get; set; } | The client model that is built up through validation and processing. |
-| Items { get; set; } | A collection where additional contextual information may be stored. This is intended as a place to pass additional custom state between validation steps. |
-| Request { get; set; } | The original dynamic client registration request. |
+| name                  | description                                                                                                                                               |
+|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Caller { get; set; }  | The ClaimsPrincipal that made the DCR request.                                                                                                            |
+| Client { get; set; }  | The client model that is built up through validation and processing.                                                                                      |
+| Items { get; set; }   | A collection where additional contextual information may be stored. This is intended as a place to pass additional custom state between validation steps. |
+| Request { get; set; } | The original dynamic client registration request.                                                                                                         |
 
 ## DynamicClientRegistrationError
 Represents an error that occurred during validation of a dynamic client
@@ -98,10 +98,10 @@ public class DynamicClientRegistrationValidationError : IStepResult, IDynamicCli
 ```
 
 #### Public Members
-| name | description |
-| --- | --- |
-| Error { get; set; } | Gets or sets the error code for the error that occurred during validation. Error codes defined by RFC 7591 are defined as constants in the `DynamicClientRegistrationErrors` class. |
-| ErrorDescription { get; set; } | Gets or sets a human-readable description of the error that occurred during validation. |
+| name                           | description                                                                                                                                                                         |
+|--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Error { get; set; }            | Gets or sets the error code for the error that occurred during validation. Error codes defined by RFC 7591 are defined as constants in the `DynamicClientRegistrationErrors` class. |
+| ErrorDescription { get; set; } | Gets or sets a human-readable description of the error that occurred during validation.                                                                                             |
 
 ## Marker Interfaces
 #### IDynamicClientRegistrationResponse
@@ -132,11 +132,11 @@ interfaces and can be used throughout the pipeline to convey errors.
 Your validation or processing steps can return a call to convenience functions in the static class `StepResult` to
 conveniently construct a success or failure from a step wrapped in a task.
 
-| name | description |
-| --- | --- |
-| static Task\<IStepResult\> Success() | Indicates that the validation step was completed was completed successfully | 
-| static Task\<IStepResult\> Failure(string errorDescription) | Indicates that the validation step failed with the specified error description and the default error code of invalid_client_metadata | 
-| static Task\<IStepResult\> Failure(string errorDescription, string error) |Indicates that the validation step failed with the specified error description and error code | 
+| name                                                                    | description                                                                                                                          |
+|-------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| static Task<IStepResult> Success()                                      | Indicates that the validation step was completed was completed successfully                                                          | 
+| static Task<IStepResult> Failure(string errorDescription)               | Indicates that the validation step failed with the specified error description and the default error code of invalid_client_metadata | 
+| static Task<IStepResult> Failure(string errorDescription, string error) | Indicates that the validation step failed with the specified error description and error code                                        | 
 
 ## DynamicClientRegistrationValidatedRequest
 Represents a successfully validated dynamic client registration request.

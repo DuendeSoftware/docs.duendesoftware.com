@@ -14,8 +14,8 @@ public class IdentityServerConfigurationOptions
 
 #### Public Members
 
-| name | description |
-| --- | --- |
+| name                                                                         | description                             |
+|------------------------------------------------------------------------------|-----------------------------------------|
 | [DynamicClientRegistration](#dynamicclientregistrationoptions) { get; set; } | Options for Dynamic Client Registration |
 
 ## DynamicClientRegistrationOptions
@@ -28,6 +28,6 @@ public class DynamicClientRegistrationOptions
 
 #### Public Members
 
-| name | description |
-| --- | --- |
+| name                         | description                                                                                                                                               |
+|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | SecretLifetime { get; set; } | Gets or sets the lifetime of secrets generated for clients. If unset, generated secrets will have no expiration. Defaults to null (secrets never expire). |

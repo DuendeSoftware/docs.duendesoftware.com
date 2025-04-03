@@ -23,16 +23,16 @@ var yarpBuilder = services.AddReverseProxy()
 YARP is most commonly configured by a config file. The following simple example forwards a local URL to a remote API:
 
 ```json
-"ReverseProxy": {
+{
+  "ReverseProxy": {
     "Routes": {
       "todos": {
         "ClusterId": "cluster1",
         "Match": {
-          "Path": "/todos/{**catch-all}",
+          "Path": "/todos/{**catch-all}"
         }
       }
     },
-
     "Clusters": {
       "cluster1": {
         "Destinations": {
@@ -42,6 +42,7 @@ YARP is most commonly configured by a config file. The following simple example 
         }
       }
     }
+  }
 }
 ```
 
@@ -87,19 +88,20 @@ yarpBuilder.LoadFromMemory(
 Duende.BFF's YARP extensions provide access token management and attach user or client access tokens automatically to proxied API calls. To enable this, add metadata with the name *Duende.Bff.Yarp.TokenType* to the route or cluster configuration:
 
 ```json
-"ReverseProxy": {
+{
+  "ReverseProxy": {
     "Routes": {
       "todos": {
         "ClusterId": "cluster1",
         "Match": {
-          "Path": "/todos/{**catch-all}",
+          "Path": "/todos/{**catch-all}"
         },
-        "Metadata": { 
-            "Duende.Bff.Yarp.TokenType": "User"
+        "Metadata": {
+          "Duende.Bff.Yarp.TokenType": "User"
         }
       }
-    },
-    // rest omitted
+    }
+  }
 }
 ```
 
@@ -134,19 +136,20 @@ Again, the *WithAccessToken* method causes the route to require the given type o
 You can also attach user access tokens optionally by adding metadata named "Duende.Bff.Yarp.OptionalUserToken" to a YARP route.
 
 ```json
-"ReverseProxy": {
+{
+  "ReverseProxy": {
     "Routes": {
       "todos": {
         "ClusterId": "cluster1",
         "Match": {
-          "Path": "/todos/{**catch-all}",
+          "Path": "/todos/{**catch-all}"
         },
-        "Metadata": { 
-            "Duende.Bff.Yarp.OptionalUserToken": "true"
+        "Metadata": {
+          "Duende.Bff.Yarp.OptionalUserToken": "true"
         }
       }
-    },
-    // rest omitted
+    }
+  }
 }
 ```
 
@@ -194,22 +197,24 @@ app.MapReverseProxy()
 app.MapBffReverseProxy();
 ```
 
-If you need more fine grained control over which routes should enforce the anti-forgery header, you can also annotate the route configuration by adding the *Duende.Bff.Yarp.AntiforgeryCheck* metadata to the route config:
+If you need more fine-grained control over which routes should enforce the anti-forgery header, you can also annotate the route configuration by adding the *Duende.Bff.Yarp.AntiforgeryCheck* metadata to the route config:
 
 ```json
-"ReverseProxy": {
+{
+  "ReverseProxy": {
     "Routes": {
       "todos": {
         "ClusterId": "cluster1",
         "Match": {
-          "Path": "/todos/{**catch-all}",
+          "Path": "/todos/{**catch-all}"
         },
-        "Metadata": { 
-            "Duende.Bff.Yarp.AntiforgeryCheck" : "true"
+        "Metadata": {
+          "Duende.Bff.Yarp.AntiforgeryCheck": "true"
         }
       }
-    },
+    }
     // rest omitted
+  }
 }
 ```
 

@@ -254,31 +254,31 @@ Consent requests granted or denied. The counters are per scope, so if a user con
 to multiple scopes, the counter is increased multiple times, one for each scope. This allows
 the scope name to be included as a tag without causing an explosion of combination of tags.
 
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|scope | The scope names|
-|consent | granted or denied |
+| Tag     | Description       |
+|---------|-------------------|
+| client  | The client Id     |
+| scope   | The scope names   |
+| consent | granted or denied |
 
 #### Telemetry.Metrics.Counters.GrantsRevoked
 Counter name: `tokenservice.grants_revoked`
 
 Revocation of grants.
 
-|Tag|Description|
-|---|---|
-|client | The client Id, if grants are revoked only for one client. If not set, the revocation was for all clients. |
+| Tag    | Description                                                                                               |
+|--------|-----------------------------------------------------------------------------------------------------------|
+| client | The client Id, if grants are revoked only for one client. If not set, the revocation was for all clients. |
 
 #### Telemetry.Metrics.Counters.UserLogin
 Counter names: `tokenservice.user_login`
 
 Successful and failed user logins.
 
-|Tag|Description|
-|---|---|
-|client | The client Id, if the login was caused by a request from a client |
-|idp | The idp (Asp.Net Core Scheme name) used to log in |
-|error | Error label on errors |
+| Tag    | Description                                                       |
+|--------|-------------------------------------------------------------------|
+| client | The client Id, if the login was caused by a request from a client |
+| idp    | The idp (Asp.Net Core Scheme name) used to log in                 |
+| error  | Error label on errors                                             |
 
 #### Telemetry.Metrics.Counters.UserLogout
 Counter name: `user_logout`
@@ -286,9 +286,9 @@ Counter name: `user_logout`
 User logout. Note that this is only raised on explicit user logout, not if the session times out. The number of logouts
 will typically be lower than the number of logins.
 
-|Tag|Description|
-|---|---|
-|idp | The idp (ASP.NET scheme name) logging out from |
+| Tag | Description                                    |
+|-----|------------------------------------------------|
+| idp | The idp (ASP.NET scheme name) logging out from |
 
 ## Traces
 
