@@ -5,6 +5,10 @@ sidebar:
   order: 3
 ---
 
+This document provides information on accessing Duende's source code, issue tracking, and community forums for support
+and discussions. It also outlines support policies, including priority support for enterprise users, and the procedure
+to report security vulnerabilities.
+
 ## Source Code
 
 You can find all source code for Duende Products and its supporting repos in
