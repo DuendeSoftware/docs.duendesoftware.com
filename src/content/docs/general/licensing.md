@@ -5,6 +5,11 @@ sidebar:
   order: 1
 ---
 
+Duende IdentityServer requires a license for production use, with three editions available (Starter, Business, and
+Enterprise) that offer various features based on organizational needs. Licenses can be configured via a file system,
+programmatic startup, or external configuration services like Azure Key Vault, with trial mode available for development
+and testing. Learn more about each in the following sections.
+
 :::note
 IdentityServer is [free](#trial-mode) for development, testing and personal projects, but production use
 requires a [license](https://duendesoftware.com/products/identityserver).
