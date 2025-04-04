@@ -16,7 +16,7 @@ All information in this section also applies to [API secrets](/identityserver/v6
 **We recommend using asymmetric client credentials like the [*private key jwt*](/identityserver/v6/tokens/authentication/jwt) or [*Mutual TLS*](/identityserver/v6/tokens/authentication/mtls) authentication method over shared secrets.**
 
 ## Assigning secrets
-A client secret is abstracted by the *Secret* class. It provides properties for setting the value and type as well as a description and expiration date.
+A client secret is abstracted by the *Secret* class. It provides properties for setting the value and type and a description and expiration date.
 
 ```cs
 var secret = new Secret

@@ -20,7 +20,7 @@ All samples use a demo instance of Duende.IdentityServer (https://demo.duendesof
 as their OIDC Provider. You can see its source code
 [here](https://github.com/DuendeSoftware/demo.duendesoftware.com).
 
-You can login with *alice/alice* or *bob/bob*
+You can log in with *alice/alice* or *bob/bob*
 
 ## Additional samples
 

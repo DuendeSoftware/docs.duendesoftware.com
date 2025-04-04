@@ -70,7 +70,7 @@ IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize r
     
     * ***login*** 
     
-        the login UI will be shown, even if the user is already signed-in and has a valid session
+        the login UI will be shown, even if the user is already signed in and has a valid session
 
 * ***code_challenge***
 
@@ -112,7 +112,7 @@ IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize r
 
 * ***request***
 
-    instead of providing all parameters as individual query string parameters, you can provide a subset or all of them as a JWT
+    instead of providing all parameters as individual query string parameters, you can provide a subset or all them as a JWT
 
 * ***request_uri***
 

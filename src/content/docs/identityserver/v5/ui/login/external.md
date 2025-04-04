@@ -128,7 +128,7 @@ On the callback page your typical tasks are:
 
 * Inspect the identity returned by the external provider.
 * Make a decision how you want to deal with that user. This might be different based on the fact if this is a new user or a returning user.
-* New users might need additional steps and UI before they are allowed in. Typically this involves creating a new internal user account that is linked to the user from the external provider.
+* New users might need additional steps and UI before they are allowed in. Typically, this involves creating a new internal user account that is linked to the user from the external provider.
 * Store the external claims that you want to keep.
 * Delete the temporary cookie.
 * Establish the user's [authentication session](/identityserver/v5/ui/login/session).
@@ -188,7 +188,7 @@ await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticat
 return Redirect(returnUrl);
 ```
 
-Typically, the *sub* value used to login the user would be the user's unique id from your local user database.
+Typically, the *sub* value used to log in the user would be the user's unique id from your local user database.
 
 ## State, URL length, and ISecureDataFormat
 

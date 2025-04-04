@@ -90,7 +90,7 @@ public static IEnumerable<Client> Get()
 
 * ***AllowedScopes***
     
-    By default a client has no access to any resources - specify the allowed resources by adding the corresponding scopes names
+    By default, a client has no access to any resources - specify the allowed resources by adding the corresponding scopes names
 
 * ***AllowOfflineAccess***
     
@@ -101,7 +101,7 @@ public static IEnumerable<Client> Get()
     Specifies whether this client is allowed to receive access tokens via the browser. 
     This is useful to harden flows that allow multiple response types 
     (e.g. by disallowing a hybrid flow client that is supposed to use *code id_token* to add the *token* response type 
-    and thus leaking the token to the browser.
+    and thus leaking the token to the browser).
 
 * ***Properties***
     
@@ -166,7 +166,7 @@ public static IEnumerable<Client> Get()
 
 * ***AccessTokenType***
     
-    Specifies whether the access token is a reference token or a self contained JWT token (defaults to *Jwt*).
+    Specifies whether the access token is a reference token or a self-contained JWT token (defaults to *Jwt*).
 
 * ***IncludeJwtId***
     
@@ -257,7 +257,7 @@ Device flow specific settings.
 
 * ***UserCodeType***
     
-    Specifies the type of user code to use for the client. Otherwise falls back to default.
+    Specifies the type of user code to use for the client. Otherwise, falls back to default.
 
 * ***DeviceCodeLifetime***
 

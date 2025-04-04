@@ -44,7 +44,7 @@ public class CustomizedBackchannelLogoutService : DefaultBackchannelLogoutServic
 ```
 If you need more control over the validation of the logout token, you can override *ValidateJwt*. The default implementation of *ValidateJwt* validates the token and produces a *ClaimsIdentity* using a *[JsonWebTokenHandler](https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/ValidatingTokens)* and the token validation parameters returned from *GetTokenValidationParameters*. Your override could call the base method and then manipulate this *ClaimsIdentity* or add a completely custom method for producing the *ClaimsIdentity* from the logout token.
 
-*ValidateLogoutTokenAsync* is the coarsest-grained validation method. It is is responsible for validating the incoming logout token and determining if logout should proceed, based on claims in the token. It returns a *ClaimsIdentity* if logout should proceed or null if it should not. Your override could prevent logout in certain circumstances by returning null. For example:
+*ValidateLogoutTokenAsync* is the coarsest-grained validation method. It is responsible for validating the incoming logout token and determining if logout should proceed, based on claims in the token. It returns a *ClaimsIdentity* if logout should proceed or null if it should not. Your override could prevent logout in certain circumstances by returning null. For example:
 
 ```csharp
 public class CustomizedBackchannelLogoutService : DefaultBackchannelLogoutService

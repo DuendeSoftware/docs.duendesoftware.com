@@ -59,7 +59,7 @@ For each protocol interaction, an extension method for
 The extension methods expect a request object and return a response
 object.
 
-It is your responsibility to setup and manage the lifetime of the
+It is your responsibility to set up and manage the lifetime of the
 *HttpClient*, e.g. manually:
 
 ```cs

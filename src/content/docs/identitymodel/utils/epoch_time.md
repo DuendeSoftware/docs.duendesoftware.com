@@ -4,7 +4,7 @@ sidebar:
   order: 3
 ---
 
-JWT tokens use so called [Epoch or Unix
+JWT tokens use so-called [Epoch or Unix
 time](https://en.wikipedia.org/wiki/Unix_time) to represent date/times.
 
 IdentityModel contains extensions methods for `DateTime` to convert

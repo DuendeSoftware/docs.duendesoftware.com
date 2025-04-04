@@ -74,7 +74,7 @@ see [here](https://openid.net/specs/openid-connect-core-1_0.html#authrequest).
 
     * **`login`**
 
-      the login UI will be shown, even if the user is already signed-in and has a valid session
+      the login UI will be shown, even if the user is already signed in and has a valid session
 
     * **`create`**
 
@@ -123,7 +123,7 @@ see [here](https://openid.net/specs/openid-connect-core-1_0.html#authrequest).
 
 * **`request`**
 
-  instead of providing all parameters as individual query string parameters, you can provide a subset or all of them as
+  instead of providing all parameters as individual query string parameters, you can provide a subset or all them as
   a JWT
 
 * **`request_uri`**

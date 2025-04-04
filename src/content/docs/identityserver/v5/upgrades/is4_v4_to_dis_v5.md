@@ -75,7 +75,7 @@ In Duende IdentityServer the [automatic key management](/identityserver/v5/funda
 
 Since client apps and APIs commonly cache the key material published from the discovery document then when upgrading you need to consider how those applications will handle an upgraded token server with a new and different signing key.
 
-If while upgrading you can simply restart all of the client apps and APIs that depend on those signing keys, then you can remove the old signing key and start to use the new automatic key management. 
+If while upgrading you can simply restart all the client apps and APIs that depend on those signing keys, then you can remove the old signing key and start to use the new automatic key management. 
 When they are restarted they will reload the discovery document and thus be aware of the new signing key.
 
 But if you can't restart all the client apps and APIs then you will need to maintain the prior signing key while still publishing the new keys produced from the automatic key management feature. 

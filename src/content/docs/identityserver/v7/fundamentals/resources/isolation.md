@@ -18,7 +18,7 @@ OAuth itself only knows about scopes - the (API) resource concept does not exist
     * resource specific processing like signing or encryption algorithms conflict
 * without sender-constraints, a resource could potentially re-use (or abuse) a token to call another contained resource directly
 
-To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds an additional request parameter for the authorize and token endpoint called `resource`. This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single value only, and all scopes belong to that single resource).
+To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds another request parameter for the authorize and token endpoint called `resource`. This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single value only, and all scopes belong to that single resource).
 
 ## Using the resource parameter
 Let's assume you have the following resource design and that the client is allowed access to all scopes:

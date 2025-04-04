@@ -8,13 +8,13 @@ A common scenario in worker applications or background tasks (or really any demo
 
 The access tokens need to be requested and cached (either locally or shared between multiple instances) and made available to the code calling the APIs. In case of expiration (or other token invalidation reasons), a new access token needs to be requested.
 
-The actual business code should not need to be aware of any of this.
+The actual business code should not need to be aware of this.
 
 Have a look for the `Worker` project in the [samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for running code.
 
 ## Setup
 
-Start by adding a reference to the `Duende.AccessTokenManagement` Nuget package to your application.
+Start by adding a reference to the `Duende.AccessTokenManagement` NuGet package to your application.
 
 You can add the necessary services to the DI system by calling `AddClientCredentialsTokenManagement()`. After that you can add one or more named client definitions by calling `AddClient`.
 
@@ -56,7 +56,7 @@ services.AddClientCredentialsHttpClient("invoices", "invoice.client", client =>
 });
 ```
 
-You can also setup a typed HTTP client to use a token client definition, e.g.:
+You can also set up a typed HTTP client to use a token client definition, e.g.:
 
 ```cs
 services.AddHttpClient<CatalogClient>(client =>
@@ -105,11 +105,11 @@ public class WorkerManual : BackgroundService
 }
 ```
 
-You can customize some of the per-request parameters by passing in an instance of `ClientCredentialsTokenRequestParameters`. This allows forcing a fresh token request (even if a cached token would exist) and also allows setting a per request scope, resource and client assertion.
+You can customize some of the per-request parameters by passing in an instance of `ClientCredentialsTokenRequestParameters`. This allows forcing a fresh token request (even if a cached token would exist) and also allows setting a per-request scope, resource and client assertion.
 
 ### HTTP factory
 
-If you have setup HTTP clients in the HTTP factory, then no token related code is needed at all, e.g.:
+If you have set up HTTP clients in the HTTP factory, then no token related code is needed at all, e.g.:
 
 ```cs
 public class WorkerHttpClient : BackgroundService

@@ -7,7 +7,7 @@ order: 65
 
 Normally authentication handlers for external providers are added into your IdentityServer using *AddAuthentication()* and *AddOpenIdConnect()*. This is fine for a handful of schemes, but the authentication handler architecture in ASP.NET Core was not designed for dozens or more statically registered in the DI system. At some point you will incur a performance penalty for having too many. Also, as you need to add or change this configuration you will need to re-compile and re-run your startup code for those changes to take effect.
 
-Duende IdentityServer provides support for dynamic configuration of OpenID Connect providers loaded from a store. This is designed to address the performance concern as well as allowing changes to the configuration to a running server.
+Duende IdentityServer provides support for dynamic configuration of OpenID Connect providers loaded from a store. This is designed to address the performance concern and allowing changes to the configuration to a running server.
 
 ### Listing and displaying the dynamic providers on the login page
 

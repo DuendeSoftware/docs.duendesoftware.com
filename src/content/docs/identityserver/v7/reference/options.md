@@ -205,7 +205,7 @@ If you want to take full control over the rendering of the discovery and jwks do
 
 * **`ShowEndpoints`**
 
-    Shows endpoints (authorization_endpoint, token_endpoint, etc) in the discovery document. Defaults to true.
+    Shows endpoints (authorization_endpoint, token_endpoint, etc.) in the discovery document. Defaults to true.
 * **`ShowKeySet`**
 
     Shows the jwks_uri in the discovery document and enables the jwks endpoint. Defaults to true.
@@ -592,7 +592,7 @@ var builder = services.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;
     
-    // use mtls sub-domain
+    // use mtls subdomain
     options.MutualTls.DomainName = "mtls";
 
     options.MutualTls.AlwaysEmitConfirmationClaim = true;
@@ -609,8 +609,8 @@ var builder = services.AddIdentityServer(options =>
 
 * **`DomainName`**
 
-    Specifies either the name of the sub-domain or full domain for running the MTLS endpoints. MTLS will use path-based endpoints if not set (the default).
-    Use a simple string (e.g. "mtls") to set a sub-domain, use a full domain name (e.g. "identityserver-mtls.io") to set a full domain name.
+    Specifies either the name of the subdomain or full domain for running the MTLS endpoints. MTLS will use path-based endpoints if not set (the default).
+    Use a simple string (e.g. "mtls") to set a subdomain, use a full domain name (e.g. "identityserver-mtls.io") to set a full domain name.
     When a full domain name is used, you also need to set the `IssuerName` to a fixed value.
 
 * **`AlwaysEmitConfirmationClaim`**

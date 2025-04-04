@@ -8,10 +8,10 @@ sidebar:
 
 Because IdentityServer is made up of middleware and services that you use within an ASP.NET Core application, it can be hosted and deployed with the same diversity of technology as any other ASP.NET Core application. You have the choice about 
 - where to host your IdentityServer (on-prem or in the cloud, and if in the cloud, which one?)
-- which web server to use (IIS, Kestrel, Nginx, Apache, etc)
+- which web server to use (IIS, Kestrel, Nginx, Apache, etc.)
 - how you'll scale and load-balance the deployment
-- what kind of deployment artifacts you'll publish (files in a folder, containers, etc)
-- how you'll manage the environment (a managed app service in the cloud, a Kubernetes cluster, etc)
+- what kind of deployment artifacts you'll publish (files in a folder, containers, etc.)
+- how you'll manage the environment (a managed app service in the cloud, a Kubernetes cluster, etc.)
 
 While this is a lot of decisions to make, this also means that your IdentityServer implementation can be built, deployed, hosted, and managed with the same technology that you're using for any other ASP.NET applications that you have.
 

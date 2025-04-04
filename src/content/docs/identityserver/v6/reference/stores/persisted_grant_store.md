@@ -32,7 +32,7 @@ data access for your environment and usage.
 
 #### Members
 | name                                                                        | description                                                   |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------- |
+|-----------------------------------------------------------------------------|---------------------------------------------------------------|
 | Task StoreAsync(PersistedGrant grant);                                      | Stores a grant.                                               |
 | Task<PersistedGrant> GetAsync(string key);                                  | Retrieves a grant by its key.                                 |
 | Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter); | Retrieves all grants that fulfill the conditions of a filter. |
@@ -45,14 +45,14 @@ data access for your environment and usage.
 #### Members
 
 | name                   | description                                                                                                                  |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------|
 | string Key             | A string that uniquely identifies the grant.                                                                                 |
 | string Type            | A string that specifies the type of grant. The possible values are constants in the *PersistedGrantTypes* class (see below). |
 | string SubjectId       | The identifier of the subject that granted authorization.                                                                    |
 | string SessionId       | The identifier of the session where the grant was made, if applicable.                                                       |
 | string ClientId        | The identifier of the client that was granted authorization.                                                                 |
 | string Description     | The description the user assigned to the device being authorized.                                                            |
-| DateTime CreationTime  | The time that the grant was created.                                                                                             |
+| DateTime CreationTime  | The time that the grant was created.                                                                                         |
 | DateTime? Expiration   | The time that the grant expires.                                                                                             |
 | DateTime? ConsumedTime | The time that the grant was consumed.                                                                                        |
 | string Data            | A serialized and data protected representation of the grant.                                                                 |

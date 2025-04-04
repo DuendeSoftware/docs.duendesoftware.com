@@ -87,7 +87,7 @@ controlled with the *DataProtectKeys* flag, which is on by default. We recommend
 leaving this flag on unless you are using a custom *ISigningKeyStore* to store
 your keys in a secure location that will ensure keys are encrypted at rest. For
 example, if you implement the *ISigningKeyStore* to store your keys in Azure Key
-Vault, you could safely disabled *DataProtectKeys*, relying on Azure Key Vault
+Vault, you could safely disable *DataProtectKeys*, relying on Azure Key Vault
 to encrypt your signing keys at rest.
 
 See the [deployment](/identityserver/v6/deployment) section for more information
@@ -115,12 +115,10 @@ options.KeyManagement.SigningAlgorithms = new[]
 ```
 
 :::note
-
 When you register multiple signing algorithms, the first in the list will be the
 default used for signing tokens. Client and API resource definitions both have
 an *AllowedTokenSigningAlgorithm* property to override the default on a per
 resource and client basis.
-
 :::
 
 

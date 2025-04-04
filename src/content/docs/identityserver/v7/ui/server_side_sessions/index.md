@@ -35,7 +35,7 @@ Business Edition or higher.
 With the addition and use of server-side sessions, more interesting architectural features are possible:
 
 * the ability to query and [manage sessions](session_management) from outside the browser that a user is logged into.
-* the ability to detect [session expiration](session_expiration) and perform cleanup both in IdentityServer as well as
+* the ability to detect [session expiration](session_expiration) and perform cleanup both in IdentityServer and
   in the client.
 * the ability to centralize and monitor session activity in order to achieve a
   system-wide [inactivity timeout](inactivity_timeout).

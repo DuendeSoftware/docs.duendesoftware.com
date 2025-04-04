@@ -10,7 +10,7 @@ Not all external providers support sign-out, as it depends on the protocol and f
 Don't forget that your logout page still needs to complete all the other steps to properly sign the user out.
 This is complicated if the logout page must redirect to an external provider to sign out.
 To achieve both, it is necessary to have the external provider to redirect the user back to your IdentityServer after signing out of the external provider.
-Across this redirect exchange, there will be state that must be maintained so the complete sign out workflow can complete successfully.
+Across this redirect exchange, there will be state that must be maintained so the complete sign-out workflow can complete successfully.
 
 ## Determining the Identity Provider
 
@@ -72,4 +72,4 @@ public async Task<IActionResult> Logout(string logoutId)
 }
 ```
 
-Once the user is signed-out of the external provider and then redirected back, the normal sign-out processing at your IdentityServer should execute which involves processing the `logoutId` and doing all necessary cleanup.
+Once the user is signed out of the external provider and then redirected back, the normal sign-out processing at your IdentityServer should execute which involves processing the `logoutId` and doing all necessary cleanup.

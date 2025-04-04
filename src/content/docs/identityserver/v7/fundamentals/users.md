@@ -26,7 +26,7 @@ The standard mechanism to allow users to login is for the client application to 
 This is obvious if the client application is a web application, but it's also the recommended practice for native and
 mobile applications.
 
-When a user must login, the client application will redirect the user to the protocol endpoint called
+When a user must log in, the client application will redirect the user to the protocol endpoint called
 the [authorization endpoint](/identityserver/v7/reference/endpoints/authorize) in your IdentityServer server to request
 authentication.
 As part of the authorize request, your IdentityServer will typically display a login page for the user to enter their

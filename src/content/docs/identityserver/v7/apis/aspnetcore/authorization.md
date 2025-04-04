@@ -30,7 +30,7 @@ builder.Services.AddAuthorization(options =>
 });
 ```
 
-..and then enforce it, e.g. using the routing table:
+...and then enforce it, e.g. using the routing table:
 
 ```cs
 app.MapControllers().RequireAuthorization("read_access");

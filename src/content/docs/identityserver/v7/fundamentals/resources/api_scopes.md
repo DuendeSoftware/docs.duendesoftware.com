@@ -86,7 +86,7 @@ with access tokens.
 :::caution
 Be aware, that scopes are purely for authorizing clients, not users. In other words, the `write` scope allows the client
 to invoke the functionality associated with the scope and is unrelated to the user's permission to do so. This
-additional user centric authorization is application logic and not covered by OAuth, yet still possibly important to
+additional user-centric authorization is application logic and not covered by OAuth, yet still possibly important to
 implement in your API.
 :::
 

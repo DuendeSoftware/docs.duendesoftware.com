@@ -13,7 +13,7 @@ You can customize the HTTP forwarder behavior in two ways
 ### Custom HTTP clients
 By default, Duende.BFF will create and cache an HTTP client per configured route or local path.
 
-This invoker is setup like this:
+This invoker is set up like this:
 
 ```cs
 var client = new HttpMessageInvoker(new SocketsHttpHandler
@@ -54,14 +54,14 @@ public class MyInvokerFactory : DefaultHttpMessageInvokerFactory
 }
 ```
 
-..and override our registration:
+...and override our registration:
 
 ```cs
 services.AddSingleton<IHttpMessageInvokerFactory, MyInvokerFactory>();
 ```
 
 ### Custom transformations
-In the standard configuration, BFF uses the YARP default behavior for forwarding HTTP requests. In addition we
+In the standard configuration, BFF uses the YARP default behavior for forwarding HTTP requests. In addition, we
 
 * remove the sensitive session cookie
 * add the current access token

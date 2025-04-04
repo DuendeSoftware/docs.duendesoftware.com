@@ -73,7 +73,7 @@ Historically IdentityServer emitted scopes as an array, but you can switch to a 
 The consumer of the access token can use that data to make sure that the client is actually allowed to invoke the corresponding functionality. See the [APIs](/identityserver/v5/apis) section for more information on protecting APIs with access tokens.
 
 :::caution
-Be aware, that scopes are purely for authorizing clients, not users. In other words, the *write* scope allows the client to invoke the functionality associated with the scope and is unrelated to the user's permission to do so. This additional user centric authorization is application logic and not covered by OAuth, yet still possibly important to implement in your API.
+Be aware, that scopes are purely for authorizing clients, not users. In other words, the *write* scope allows the client to invoke the functionality associated with the scope and is unrelated to the user's permission to do so. This additional user-centric authorization is application logic and not covered by OAuth, yet still possibly important to implement in your API.
 :::
 
 You can add more identity information about the user to the access token.

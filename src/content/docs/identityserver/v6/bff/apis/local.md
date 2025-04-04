@@ -77,7 +77,7 @@ The value of the header is not important, but its presence, combined with the co
 Additionally, API endpoints should handle scenarios where the session has expired or authorization fails without triggering an authentication redirect to the upstream identity provider. Instead, they should return Ajax-friendly status codes.
 
 ## Setup
-Duende.BFF can automate both the pre-processing step of requiring the custom anti-forgery header and the post-processing step of converting response codes for API endpoints. To do so, first add the BFF middleware to the pipeline, and then decorate your endpoints to indicate that they should receive BFF pre and post processing.
+Duende.BFF can automate both the pre-processing step of requiring the custom anti-forgery header and the post-processing step of converting response codes for API endpoints. To do so, first add the BFF middleware to the pipeline, and then decorate your endpoints to indicate that they should receive BFF pre- and post-processing.
 
 #### Add Middleware
 Add the BFF middleware to the pipeline by calling *UseBFF*. Note that the  middleware must be placed before the authorization middleware, but after routing.
@@ -99,7 +99,7 @@ public void Configure(IApplicationBuilder app)
 ```
 
 #### Decorate Endpoints
-Endpoints that require the pre and post processing described above must be decorated with a call to *AsBffApiEndpoint()*.
+Endpoints that require the pre- and post-processing described above must be decorated with a call to *AsBffApiEndpoint()*.
 
 For minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
 ```csharp
@@ -128,7 +128,7 @@ public class MyApiController : ControllerBase
 
 Disabling anti-forgery protection is possible but not recommended. Antiforgery protection defends against CSRF attacks, so opting out may cause security vulnerabilities. 
 
-However, if you are defending against CSRF attacks with some other mechanism, you can opt-out of Duende.BFF's CSRF protection. Depending on the version of Duende.BFF, use one of the following approaches.
+However, if you are defending against CSRF attacks with some other mechanism, you can opt out of Duende.BFF's CSRF protection. Depending on the version of Duende.BFF, use one of the following approaches.
 
 For *version 1.x*, set the *requireAntiForgeryCheck* parameter to *false* when adding the endpoint. For example:
 

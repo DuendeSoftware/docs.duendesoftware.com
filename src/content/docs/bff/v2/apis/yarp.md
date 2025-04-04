@@ -9,7 +9,7 @@ Duende.BFF integrates with Microsoft's full-featured reverse proxy [YARP](https:
 YARP includes many advanced features such as load balancing, service discovery, and session affinity. It also has its own extensibility mechanism. Duende.BFF includes YARP extensions for token management and anti-forgery protection so that you can combine the security and identity features of Duende.BFF with the flexible reverse proxy features of YARP.
 
 ## Adding YARP
-To enable Duende.BFF's YARP integration, add a reference to the *Duende.BFF.Yarp* Nuget package to your project and add YARP and the BFF's YARP extensions to DI:
+To enable Duende.BFF's YARP integration, add a reference to the *Duende.BFF.Yarp* NuGet package to your project and add YARP and the BFF's YARP extensions to DI:
 
 ```cs
 builder.Services.AddBff();

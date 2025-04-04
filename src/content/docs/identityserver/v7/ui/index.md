@@ -19,7 +19,7 @@ To allow full flexibility of the UI, including business rules and user flow, the
 
 ![Overview](images/host.png)
 
-Our templates include a [quick start UI](/identityserver/v7/quickstarts/2_interactive#add-the-ui) as well as a [quick start UI adapted to ASP.NET Identity](/identityserver/v7/quickstarts/5_aspnetid) which provide a starting point for all the necessary pages, ready to be customized.
+Our templates include a [quick start UI](/identityserver/v7/quickstarts/2_interactive#add-the-ui) and a [quick start UI adapted to ASP.NET Identity](/identityserver/v7/quickstarts/5_aspnetid) which provide a starting point for all the necessary pages, ready to be customized.
 
 ## Required Pages
 

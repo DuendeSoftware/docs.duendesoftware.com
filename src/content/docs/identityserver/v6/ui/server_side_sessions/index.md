@@ -22,7 +22,7 @@ Support for Server Side Sessions is included in [IdentityServer](https://duendes
 With the addition and use of server-side sessions, more interesting architectural features are possible:
 
 * the ability to query and [manage sessions](session_management) from outside the browser that a user is logged into.
-* the ability to detect [session expiration](session_expiration) and perform cleanup both in IdentityServer as well as in the client.
+* the ability to detect [session expiration](session_expiration) and perform cleanup both in IdentityServer and in the client.
 * the ability to centralize and monitor session activity in order to achieve a system-wide [inactivity timeout](inactivity_timeout).
 
 
@@ -49,7 +49,7 @@ When using *AddServerSideSessions*, this call needs to come after any custom *IR
 ### Data stored server-side
 
 The data stored for the user session is the data contained in the ASP.NET Core *AuthenticationTicket* class.
-This data will be serialized and protected using ASP.NET Core's [data protection](/identityserver/v6/deployment/data_protection) feature so as to protect any user PII.
+This data will be serialized and protected using ASP.NET Core's [data protection](/identityserver/v6/deployment/data_protection) feature to protect any user PII.
 Some of the values from the user's session are extracted and used as indices in the store so that specific sessions can be queried.
 These values are the user's:
 

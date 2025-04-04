@@ -128,7 +128,7 @@ On the callback page your typical tasks are:
 
 * Inspect the identity returned by the external provider.
 * Make a decision how you want to deal with that user. This might be different based on if this is a new user or a returning user.
-* New users might need additional steps and UI before they are allowed in. Typically this involves creating a new internal user account that is linked to the user from the external provider.
+* New users might need additional steps and UI before they are allowed in. Typically, this involves creating a new internal user account that is linked to the user from the external provider.
 * Store the external claims that you want to keep.
 * Delete the temporary cookie.
 * Establish the user's [authentication session](/identityserver/v6/ui/login/session).

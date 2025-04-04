@@ -38,12 +38,12 @@ All license validation is self-contained and does not leave the host (meaning th
 Any messages from the license validation layer will be emitted to the logging system.
 The level of the log entry depends on the nature of the message and the type of license.
 
-| Type of Message              | Standard License        | Redistribution License (development*) | Redistribution License (production*) |
-|------------------------------|-------------------------|--------------------------------------|---------------------------------------|
-| Startup, missing license     | Warning                 | Warning                              | Warning                               |
-| Startup, license details     | Debug                   | Debug                                | Trace                                 |
-| Startup, valid license notice| Informational           | Informational                        | Trace                                 |
-| Startup, violations          | Error                   | Error                                | Trace                                 |
-| Runtime, violations          | Error                   | Error                                | Trace                                 |
+| Type of Message               | Standard License | Redistribution License (development*) | Redistribution License (production*) |
+|-------------------------------|------------------|---------------------------------------|--------------------------------------|
+| Startup, missing license      | Warning          | Warning                               | Warning                              |
+| Startup, license details      | Debug            | Debug                                 | Trace                                |
+| Startup, valid license notice | Informational    | Informational                         | Trace                                |
+| Startup, violations           | Error            | Error                                 | Trace                                |
+| Runtime, violations           | Error            | Error                                 | Trace                                |
 
 \* as determined by *IHostEnvironment.IsDevelopment()*

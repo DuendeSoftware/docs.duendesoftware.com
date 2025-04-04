@@ -9,8 +9,8 @@ The ultimate job of Duende IdentityServer is to control access to resources.
 
 ## API Resources
 
-In Duende IdentityServer, the *ApiResource* class allows for some additional organization as well as grouping and
-isolation of scopes as well as providing some common settings.
+In Duende IdentityServer, the *ApiResource* class allows for some additional organization and grouping and
+isolation of scopes and providing some common settings.
 
 [Read More](/identityserver/v5/fundamentals/resources/api_resources)
 
@@ -54,7 +54,7 @@ couple of downsides, e.g.
 * without sender-constraints, a resource could potentially re-use (or abuse) a token to call another contained resource
   directly
 
-To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds an additional request parameter for the
+To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds another request parameter for the
 authorize and token endpoint called *resource*. This allows requesting a token for a specific resource (in other words -
 making sure the audience claim has a single value only, and all scopes belong to that single resource).
 

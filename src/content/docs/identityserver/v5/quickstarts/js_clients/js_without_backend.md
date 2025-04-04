@@ -14,7 +14,7 @@ This means your application has no server-side code that can support the fronten
 
 This design adds complexity (and thus security concerns) to your application, so consider if the ["BFF" pattern](js_with_backend) might be a better choice.
 
-In this quickstart the user will login to IdentityServer, invoke the web API with an access token issued by IdentityServer, and logout of IdentityServer. 
+In this quickstart the user will log in to IdentityServer, invoke the web API with an access token issued by IdentityServer, and logout of IdentityServer. 
 All of this will be driven from the JavaScript running in the browser.
 
 ## New Project for the JavaScript client
@@ -66,7 +66,7 @@ If that folder does not exist in your project, create it now.
 In one of the previous quickstarts in the ASP.NET Core MVC-based client project we used a library to handle the OpenID Connect protocol. 
 In this quickstart in the *JavaScriptClient* project we need a similar library, except one that works in JavaScript and is designed to run in the browser.
 The [oidc-client library](https://github.com/IdentityModel/oidc-client-js) is one such library. 
-It is available via [NPM](https://github.com/IdentityModel/oidc-client-js), or as a [direct download](https://github.com/IdentityModel/oidc-client-js/tree/release/dist) from github.
+It is available via [NPM](https://github.com/IdentityModel/oidc-client-js), or as a [direct download](https://github.com/IdentityModel/oidc-client-js/tree/release/dist) from GitHub.
 
 **NPM**
 
@@ -87,7 +87,7 @@ If you want to simply download the *oidc-client* JavaScript files manually, brow
 
 Next is to add your HTML and JavaScript files to *~/wwwroot*.
 We will have two HTML files and one application-specific JavaScript file (in addition to the *oidc-client.js* library).
-In *~/wwwroot*, add a HTML file named *index.html* and *callback.html*, and add a JavaScript file called *app.js*.
+In *~/wwwroot*, add an HTML file named *index.html* and *callback.html*, and add a JavaScript file called *app.js*.
 
 **index.html**
 

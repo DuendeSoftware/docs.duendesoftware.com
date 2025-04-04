@@ -8,7 +8,7 @@ sidebar:
 
 When the API/resource surface gets larger, a flat list of scopes might become hard to  manage.
 
-In Duende IdentityServer, the `ApiResource` class allows for some additional organization as well as grouping and isolation of scopes as well as providing some common settings.
+In Duende IdentityServer, the `ApiResource` class allows for some additional organization and grouping and isolation of scopes and providing some common settings.
 
 Let's use the following scope definition as an example:
 

@@ -7,10 +7,10 @@ sidebar:
 
 Because IdentityServer is made up of middleware and services that you use within an ASP.NET Core application, it can be hosted and deployed with the same diversity of technology as any other ASP.NET Core application. You have the choice about 
 - where to host your IdentityServer (on-prem or in the cloud, and if in the cloud, which one?)
-- which web server to use (IIS, Kestrel, Nginx, Apache, etc)
+- which web server to use (IIS, Kestrel, Nginx, Apache, etc.)
 - how you'll scale and load-balance the deployment
-- what kind of deployment artifacts you'll publish (files in a folder, containers, etc)
-- how you'll manage the environment (a managed app service in the cloud, a Kubernetes cluster, etc)
+- what kind of deployment artifacts you'll publish (files in a folder, containers, etc.)
+- how you'll manage the environment (a managed app service in the cloud, a Kubernetes cluster, etc.)
 
 While this is a lot of decisions to make, this also means that your IdentityServer implementation can be built, deployed, hosted, and managed with the same technology that you're using for any other ASP.NET applications that you have.
 
@@ -107,7 +107,7 @@ Data protection is a cryptographic library that is part of the ASP.NET framework
 cryptography to encrypt and sign sensitive data to ensure that it is only written and read by the application. The
 framework uses data protection to secure data that is commonly used by IdentityServer implementations, such as
 authentication cookies and anti-forgery tokens. In addition, IdentityServer itself uses data protection to protect
-sensitive data at rest, such as persisted grants, as well as sensitive data passed through the browser, such as the
+sensitive data at rest, such as persisted grants, and sensitive data passed through the browser, such as the
 context objects passed to pages in the UI. The data protection keys are critical secrets for an IdentityServer
 implementation because they encrypt a great deal of sensitive data at rest and prevent sensitive data that is
 round-tripped through the browser from being tampered with.
@@ -205,7 +205,7 @@ Some optional features rely on ASP.NET Core distributed caching:
 * [Device flow](./reference/stores/device_flow_store) throttling service
 * Authorization parameter store
 
-In order to work in a multi server environment, this needs to be set up correctly. Please consult the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed) for more details.
+In order to work in a multi-server environment, this needs to be set up correctly. Please consult the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed) for more details.
 
 ## Health Checks
 

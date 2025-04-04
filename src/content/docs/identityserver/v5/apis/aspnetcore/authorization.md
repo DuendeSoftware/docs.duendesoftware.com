@@ -32,7 +32,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-..and then enforce it, e.g. using the routing table:
+...and then enforce it, e.g. using the routing table:
 
 ```cs
     app.UseEndpoints(endpoints =>

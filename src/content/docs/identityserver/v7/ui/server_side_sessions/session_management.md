@@ -6,7 +6,7 @@ sidebar:
 ---
 
 When using server-side sessions, there is a record of the user's authentication activity at IdentityServer.
-This allows administrative and management tooling to be built on top of that data to query those sessions, as well as terminate them.
+This allows administrative and management tooling to be built on top of that data to query those sessions, and terminate them.
 In addition, since the session data has its own unique id and tracks clients that a user has used, then some types of tokens issued to these clients can be revoked.
 Finally, if clients support back-channel logout, then they can be notified that a user's session has been terminated, which allows them to also terminate the user's session within the client application.
 
@@ -21,7 +21,7 @@ The [session management service](/identityserver/v7/reference/services/session_m
 The Quickstart UI contains a simple administrative page (under the "ServerSideSessions" folder) that uses the `ISessionManagementService` API.
 
 :::note
-The Quickstart session administrative page requires a logged in user to manage sessions. We strongly recommend that you add additional authorization suitable to your organization by adding an authorization policy.
+The Quickstart session administrative page requires a logged-in user to manage sessions. We strongly recommend that you add additional authorization suitable to your organization by adding an authorization policy.
 :::
 
 The session management page looks like this by default, but of course you are free to customize or change it as needed:
@@ -45,7 +45,7 @@ var userSessions = await _sessionManagementService.QuerySessionsAsync(new Sessio
     });
 ```
 
-The results returned contains the matching users' session data, as well as paging information (depending if the store and backing database supports certain features such as total count and current page number).
+The results returned contains the matching users' session data, and paging information (depending on if the store and backing database supports certain features such as total count and current page number).
 
 This paging information contains a `ResultsToken` and allows subsequent requests for next or previous pages (set `RequestPriorResults` to true for the previous page, otherwise the next page is assumed):
 

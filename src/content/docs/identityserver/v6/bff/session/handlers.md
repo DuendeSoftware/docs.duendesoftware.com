@@ -9,7 +9,7 @@ You typically use the following two ASP.NET Core authentication handlers to impl
 * the OpenID Connect authentication handler to interact with the remote OIDC / OAuth token service, e.g. Duende IdentityServer
 * the cookie handler to do local session management
 
-Furthermore the BFF plumbing relies on the configuration of the ASP.NET Core default authentication schemes. This describes how the two handlers share the work.
+Furthermore, the BFF plumbing relies on the configuration of the ASP.NET Core default authentication schemes. This describes how the two handlers share the work.
 
 OpenID Connect for *challenge* and *signout* - cookies for all the other operations:
 

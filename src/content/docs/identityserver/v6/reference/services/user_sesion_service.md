@@ -14,15 +14,15 @@ The default implementation of the *IUserSession* is the *DefaultUserSession* cla
 ### Duende.IdentityServer.Services.IUserSession
 
 #### Members
-| name | description |
-| ---- | ----------- |
-| Task<string> CreateSessionIdAsync(ClaimsPrincipal principal, AuthenticationProperties properties) | Creates a session id and issues the session id cookie. |
-| Task<ClaimsPrincipal> GetUserAsync() | Gets the current authenticated user. |
-| Task<string?> GetSessionIdAsync() | Gets the current session identifier. |
-| Task EnsureSessionIdCookieAsync() | Ensures the session identifier cookie is synchronized with the current session identifier. |
-| Task RemoveSessionIdCookieAsync() | Removes the session identifier cookie. |
-| Task AddClientIdAsync(string clientId) | Adds a client to the list of clients the user has signed into during their session. |
-| Task<IEnumerable<string>> GetClientListAsync() | Gets the list of clients the user has signed into during their session. |
+| name                                                                                              | description                                                                                |
+|---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| Task<string> CreateSessionIdAsync(ClaimsPrincipal principal, AuthenticationProperties properties) | Creates a session id and issues the session id cookie.                                     |
+| Task<ClaimsPrincipal> GetUserAsync()                                                              | Gets the current authenticated user.                                                       |
+| Task<string?> GetSessionIdAsync()                                                                 | Gets the current session identifier.                                                       |
+| Task EnsureSessionIdCookieAsync()                                                                 | Ensures the session identifier cookie is synchronized with the current session identifier. |
+| Task RemoveSessionIdCookieAsync()                                                                 | Removes the session identifier cookie.                                                     |
+| Task AddClientIdAsync(string clientId)                                                            | Adds a client to the list of clients the user has signed into during their session.        |
+| Task<IEnumerable<string>> GetClientListAsync()                                                    | Gets the list of clients the user has signed into during their session.                    |
 
 #### GetUserAsync
 Generally *GetUserAsync* should be preferred over *IAuthenticationService.AuthenticateAsync* for two reasons:

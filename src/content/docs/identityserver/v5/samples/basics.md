@@ -41,7 +41,7 @@ Things of interest:
 Key takeaways:
 
 * configuring a client to receive reference tokens
-* setup an API resource with an API secret
+* set up an API resource with an API secret
 * configure an API to accept and validate reference tokens
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v5/Basics/Introspection)
@@ -72,7 +72,7 @@ Key takeaways:
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v5/Basics/MvcTokenManagement)
 
 ### MVC Client with JAR and JWT-based Authentication
-This sample shows how to use signed authorize requests, and JWT-based authentication for clients in MVC. It also show how to integrate that technique with automatic token management.
+This sample shows how to use signed authorize requests, and JWT-based authentication for clients in MVC. It also shows how to integrate that technique with automatic token management.
 
 Key takeaways:
 

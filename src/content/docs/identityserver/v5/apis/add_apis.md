@@ -23,7 +23,7 @@ var scopes = new List<ApiScope>
 };
 ```
 
-..and give your clients access to this API, e.g.:
+...and give your clients access to this API, e.g.:
 
 ```cs
 new Client
@@ -60,7 +60,7 @@ public class LocalApiController : ControllerBase
 Authorized clients can then request a token for the *IdentityServerApi* scope and use it to call the API.
 
 ## Discovery
-You can also add your endpoints to the discovery document if you want, e.g like this::
+You can also add your endpoints to the discovery document if you want, e.g.like this:
 
 ```cs
 services.AddIdentityServer(options =>
@@ -72,7 +72,7 @@ services.AddIdentityServer(options =>
 ## Advanced
 Under the covers, the *AddLocalApiAuthentication* helper does a couple of things:
 
-* adds an authentication handler that validates incoming tokens using IdentityServer's built-in token validation engine (the name of this handler is *IdentityServerAccessToken* or *IdentityServerConstants.LocalApi.AuthenticationScheme*
+* adds an authentication handler that validates incoming tokens using IdentityServer's built-in token validation engine (the name of this handler is *IdentityServerAccessToken* or *IdentityServerConstants.LocalApi.AuthenticationScheme*)
 * configures the authentication handler to require a scope claim inside the access token of value *IdentityServerApi*
 * sets up an authorization policy that checks for a scope claim of value *IdentityServerApi*
 

@@ -6,7 +6,7 @@ order: 150
 Microsoft publishes templates for securing an API with token based security backed by the ASP.NET Identity identity management library. 
 There are several templates; a couple for JavaScript-based SPA applications using React and Angular, and one for Blazor WASM style SPA applications. All of these use Duende IdentityServer as the token server to issue tokens to the client-side code in the browser for securing calls to an API.
 
-This upgrade guide discusses the design pattern of these templates and how you would migrate them to a more recommended architecture. This guide describes the high level architecture, and doesn't go into the specifics of any code, and as such should suffice for the SPA/JavaScript templates, as well as the Blazor WASM template.
+This upgrade guide discusses the design pattern of these templates and how you would migrate them to a more recommended architecture. This guide describes the high level architecture, and doesn't go into the specifics of any code, and as such should suffice for the SPA/JavaScript templates, and the Blazor WASM template.
 
 ## Template Architecture with a Single Host
 
@@ -14,7 +14,7 @@ Below is a picture showing the important moving parts of the template.
 The most important detail is that there is a single host for many different conceptual items, and this affects the security of the overall design. The one host serves up:
 
 * SPA Assets (HTML, CSS, and JS (React, Angular) or WASM (Blazor))
-* ASP.NET Identity UI Pages (for login, logout, registration, etc)
+* ASP.NET Identity UI Pages (for login, logout, registration, etc.)
 * Duende IdentityServer (middleware for OIDC/OAuth protocol endpoints)
 * The API
 
@@ -94,7 +94,7 @@ The [Duende BFF Security Framework](/identityserver/v6/bff/overview) makes this 
 ## Migrating
 
 The last aspect of the template which requires discussion is that there is configuration required when using OIDC/OAuth. 
-This configuration models the client application (the SPA) as well as the API being secured.
+This configuration models the client application (the SPA) and the API being secured.
 Typically, all the players (the app, the API, and the token server) require their own store for their relevant configuration data.
 Given that the template co-hosts all three of these, more great pains were taken to hide all of this configuration from the developer.
 The various extension methods that are provided for the template that sets up Duende IdentityServer, that performs the automatic configuration, and the client-side code that bootstraps the security in the browser all assume this co-hosting model.

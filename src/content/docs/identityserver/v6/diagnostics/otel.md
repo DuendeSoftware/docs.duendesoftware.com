@@ -60,7 +60,7 @@ builder.Services.AddOpenTelemetryTracing(builder =>
 This [sample](/identityserver/v6/samples/diagnostics#opentelemetry-support) uses the console exporter and can be used as a starting point.
 
 ### Tracing sources
-IdentityServer can emit very fine grained traces which is useful for performance troubleshooting and general exploration of the control flow.
+IdentityServer can emit very fine-grained traces which is useful for performance troubleshooting and general exploration of the control flow.
 
 This might be too detailed in production. 
 

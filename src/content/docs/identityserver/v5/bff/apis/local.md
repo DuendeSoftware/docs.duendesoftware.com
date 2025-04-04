@@ -11,7 +11,7 @@ These endpoints need to be secured to make sure that only the frontend can call 
 
 SameSite cookies are a built-in feature of modern browsers to make sure that a cookie only gets sent from a page that originates from the same site where the cookie was originally issued on.
 
-This is a good first layer of defense, but makes the assumption that you can trust all sub-domains of your top-level site, for example **.mycompany.com*.
+This is a good first layer of defense, but makes the assumption that you can trust all subdomains of your top-level site, for example **.mycompany.com*.
 
 **Anti-forgery header**
 
@@ -28,7 +28,7 @@ The fact that the header value is static is really not important. Its presence i
 In addition, API endpoints also need some special treatment in situations where the session has expired, or authorization fails. In these cases you want to avoid trigger an authentication redirect to the upstream IdP, but instead return Ajax-friendly status codes
 
 ### Setup
-Duende.BFF can automate above pre/post-processing of API endpoints. For that you need to add the BFF middleware to the pipeline:
+Duende.BFF can automate above pre- and post-processing of API endpoints. For that you need to add the BFF middleware to the pipeline:
 
 ```csharp
 public void Configure(IApplicationBuilder app)

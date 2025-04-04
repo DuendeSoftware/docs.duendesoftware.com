@@ -32,14 +32,14 @@ Things of note:
 *  Also in *Startup.cs* with the call to *AddIdentityServer* various settings are configured on the *ServerSideSessions* options object to control the behavior.
 * The client application configured in *Clients.cs* has *CoordinateLifetimeWithUserSession* enabled, which causes its refresh token to slide the server-side session for the user.
 * When launching the *IdentityServerHost* project, you should visit the *~/serversidesessions* page to see the active sessions. Note that there is no authorization on this page (so consider adding it based on your requirements).
-* Once you login, you should see a user's session in the list.
+* Once you log in, you should see a user's session in the list.
 * As the client app refreshes its access token, you should see the user's session expiration being extended.
 * When you revoke the user's session, the user should be logged out of the client app.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/SessionManagement)
 
 ### Session Migration
-This sample shows how to do seamless migration of existing cookie-based session when enabling server side sessions. Normally when server side sesssions are enabled all existing logged in sessions are invalidated
+This sample shows how to do seamless migration of existing cookie-based session when enabling server side sessions. Normally when server side sessions are enabled, all existing logged-in sessions are invalidated
 and the users are forced to log in again. If the application has sessions with long lifetimes where it would be a problem to have all users log in again the sessions can be migrated. Instructions for running the
 sample are in the HostingExtensions.cs file.
 

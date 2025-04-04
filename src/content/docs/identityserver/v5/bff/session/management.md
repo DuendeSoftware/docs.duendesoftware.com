@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 order: 20
 ---
 
-Duende.BFF adds endpoints for managing typical session-related operations like triggering login and logout and getting information about the currently logged-on user. These endpoint are meant to be called by the frontend.
+Duende.BFF adds endpoints for managing typical session-related operations like triggering login and logout and getting information about the currently logged-on user. These endpoints are meant to be called by the frontend.
 
-In addition we add an implementation of the OpenID Connect back-channel notification endpoint to overcome the restrictions of third party cookies in front-channel notification in modern browsers.
+In addition, we add an implementation of the OpenID Connect back-channel notification endpoint to overcome the restrictions of third party cookies in front-channel notification in modern browsers.
 
 You enable the endpoints by adding the relevant services into the DI container:
 
@@ -50,7 +50,7 @@ The login endpoint triggers authentication with the scheme configured for challe
 GET /bff/login
 ```
 
-By default the login endpoint will redirect back to the root of the application after authentication is done. Alternatively you can use a different local URL instead:
+By default, the login endpoint will redirect back to the root of the application after authentication is done. Alternatively you can use a different local URL instead:
 
 ```text
 GET /bff/login?returnUrl=/page2
@@ -60,7 +60,7 @@ GET /bff/login?returnUrl=/page2
 The user endpoint returns data about the currently logged-on user and the session.
 
 :::note
-To protect against cross-site request forgery, you need to add a static header to the GET request. Both header name and  value can be configured on the [options](/identityserver/v5/bff/options).
+To protect against cross-site request forgery, you need to add a static header to the GET request. Both the header name and value can be configured on the [options](/identityserver/v5/bff/options).
 :::
 
 ```text
@@ -130,7 +130,7 @@ This is the number of seconds the current session will be valid for
 
 **bff:session_state**
 
-This is the session state value of the upstream OIDC provider that can be use for the JavaScript *check_session* mechanism (if provided).
+This is the session state value of the upstream OIDC provider that can be used for the JavaScript *check_session* mechanism (if provided).
 
 **bff:logout_url**
 
@@ -143,7 +143,7 @@ This endpoint triggers local and upstream logout. If the upstream IdP sent a ses
 GET /bff/logout?sid=xyz
 ```
 
-By default the logout endpoint will redirect back to the root of the application after logout is done. Alternatively you can use a local URL instead:
+By default, the logout endpoint will redirect back to the root of the application after logout is done. Alternatively you can use a local URL instead:
 
 ```text
 GET /bff/logout?sid=xyz&returnUrl=/loggedout

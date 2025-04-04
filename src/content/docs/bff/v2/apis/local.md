@@ -108,7 +108,7 @@ status codes.
 
 Duende.BFF can automate both the pre-processing step of requiring the custom anti-forgery header and the post-processing
 step of converting response codes for API endpoints. To do so, first add the BFF middleware to the pipeline, and then
-decorate your endpoints to indicate that they should receive BFF pre and post processing.
+decorate your endpoints to indicate that they should receive BFF pre- and post-processing.
 
 ### Add Middleware
 
@@ -128,7 +128,7 @@ authorization middleware, but after routing.
 
 ### Decorate Endpoints
 
-Endpoints that require the pre and post processing described above must be decorated with a call to
+Endpoints that require the pre- and post-processing described above must be decorated with a call to
 *AsBffApiEndpoint()*.
 
 For minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
@@ -161,7 +161,7 @@ public class MyApiController : ControllerBase
 Disabling anti-forgery protection is possible but not recommended. Antiforgery protection defends against CSRF attacks,
 so opting out may cause security vulnerabilities.
 
-However, if you are defending against CSRF attacks with some other mechanism, you can opt-out of Duende.BFF's CSRF
+However, if you are defending against CSRF attacks with some other mechanism, you can opt out of Duende.BFF's CSRF
 protection. Depending on the version of Duende.BFF, use one of the following approaches.
 
 For *version 1.x*, set the `requireAntiForgeryCheck` parameter to `false` when adding the endpoint. For example:

@@ -9,11 +9,11 @@ order: 30
 This sample shows using ASP.NET Identity with Duende IdentityServer. 
 The intent was to show the least amount of code needed to get a working sample that used Microsoft's ASP.NET Identity user management library.
 
-The first step in creating the sample was to create a new project that used the ASP.NET Identity templates from Visual Studio ("Individual Accounts" for the authentication type). This provides all of the "out of the box" features from ASP.NET Identity for user management with only minor modifications, which are described below.
+The first step in creating the sample was to create a new project that used the ASP.NET Identity templates from Visual Studio ("Individual Accounts" for the authentication type). This provides all the "out of the box" features from ASP.NET Identity for user management with only minor modifications, which are described below.
 
 Then Duende IdentityServer was added to add OIDC/OAuth2 capabilities to the application. Only the minimal configuration was done to get Duende IdentityServer functional for this sample.
 
-Finally another project was added which acts as a OIDC client application to exercise the OIDC login (and logout) capabilities.
+Finally, another project was added which acts as a OIDC client application to exercise the OIDC login (and logout) capabilities.
 
 The changes to the template in the ASP.NET Identity project (i.e. "IdentityServerAspNetIdentity"):
 
@@ -27,6 +27,6 @@ In the client application:
 
 * A simple ASP.NET Core Razor Web Application was used as the starting point.
 * In *Startup.cs* the standard cookie and OIDC authentication configuration was added.
-* A secure page (*Secure.cshtml*) that required an authenticated user will render the logged in user's claim in the page.
+* A secure page (*Secure.cshtml*) that required an authenticated user will render the logged-in user's claim in the page.
 * The index page (*Index.cshtml*) was modified to allow a POST to trigger OIDC logout. 
 * A logout button was added to trigger the POST.

@@ -130,7 +130,7 @@ You will also typically need a distributed cache, used to perform replay detecti
 proofs. Duende.AspNetCore.Authentication.JwtBearer relies on `IDistributedCache` for this,
 so you can supply the cache implementation of your choice. See the 
 [Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-8.0)
-for more details on on setting up distributed caches, along with many examples, including Redis, CosmosDB, and
+for more details on setting up distributed caches, along with many examples, including Redis, CosmosDB, and
 Sql Server.
 
 A full sample using the default in memory caching is available

@@ -8,7 +8,7 @@ A BFF host is an ASP.NET Core application with the following logical building bl
 
 ![](images/BFF_blocks.png?height=30pc)
 
-These components deal with server-side protocol requests and responses, session and token management as well as providing and securing API endpoints for the frontend.
+These components deal with server-side protocol requests and responses, session and token management and providing and securing API endpoints for the frontend.
 
 In addition, the host serves the UI assets which could be HTML/JS/CSS, WASM, and/or server-rendered content.
 
@@ -28,7 +28,7 @@ On top of the cookie handler, we provide endpoints for login, logout and user/se
 
 **IdentityModel.AspNetCore**
 
-This library plugs into both the OpenID Connect and cookie handler to provide automatic access token management and storage. It provides both an imperative API as well as integration with the ASP.NET HTTP client factory.
+This library plugs into both the OpenID Connect and cookie handler to provide automatic access token management and storage. It provides both an imperative API and integration with the ASP.NET HTTP client factory.
 
 **API Endpoints**
 

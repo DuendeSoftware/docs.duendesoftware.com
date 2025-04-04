@@ -106,13 +106,11 @@ or
 [configured statically](/identityserver/v6/fundamentals/keys/static_key_management).
 
 :::note
-
 We recommend that you use automatic key management. This section covers the
 configuration methods needed for manual configuration of signing keys, which are
 usually only needed if your license does not include automatic key management or
 if you are [migrating](/identityserver/v6/fundamentals/keys/migration) from manually
 managed keys to automatic key management.
-
 :::
 
 Duende IdentityServer supports X.509 certificates (both raw files and a reference to the certificate store), 

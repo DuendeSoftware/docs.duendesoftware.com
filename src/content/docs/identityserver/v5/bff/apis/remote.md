@@ -12,7 +12,7 @@ For invoking APIs that are deployed on different servers, you have a couple of o
 ### Manual API endpoints
 If you want to expose a frontend specific subset of your remote APIs or want to aggregate multiple remote APIs, it is a common practice to create local API endpoints that in turn call the remote APIs and present the data in a frontend specific way.
 
-You can use a MVC controller for this, and leverage services like the HTTP client factory and the Duende.BFF [token management](/identityserver/v5/bff/tokens) to make the outgoing calls. The following is a very simplified version of that:
+You can use an MVC controller for this, and leverage services like the HTTP client factory and the Duende.BFF [token management](/identityserver/v5/bff/tokens) to make the outgoing calls. The following is a very simplified version of that:
 
 ```cs
 [Route("myApi")]
@@ -48,7 +48,7 @@ Our HTTP forwarder is useful when you realize that you are re-creating large par
 
 Duende.BFF uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally to give you a developer centric and simplified way to forward certain routes in your BFF to remote APIs. These routes have the same anti-forgery protection as local API endpoints, and also integrate with the automatic token management.
 
-To enable that feature, you need add a reference to the *Duende.BFF.Yarp* Nuget package and add the service to DI:
+To enable that feature, you need add a reference to the *Duende.BFF.Yarp* NuGet package and add the service to DI:
 
 ```cs
 services.AddBff()
@@ -74,7 +74,7 @@ There are several ways to influence security parameters of such an endpoint:
 
 **Require authorization**
 
-The endpoint integrates with the ASP.NET Core authorization system and you can attach a **RequireAuthorization** extension to specify an authorization policy that must be fulfilled before being able to invoke the endpoint.
+The endpoint integrates with the ASP.NET Core authorization system, and you can attach a **RequireAuthorization** extension to specify an authorization policy that must be fulfilled before being able to invoke the endpoint.
 
 **Access token requirements**
 
@@ -104,7 +104,7 @@ Instead of using simplified forwarder, you can also use a more feature complete 
 YARP has built-in features that you might need, e.g. load balancing, service discovery, session affinity etc. So instead of us wrapping YARP internally, you can also use YARP directly and add our services like anti-forgery protection and token management on top.
 
 #### Adding YARP
-To enable our YARP integration, add a reference to the *Duende.BFF.Yarp* Nuget package and add the YARP and our service to DI:
+To enable our YARP integration, add a reference to the *Duende.BFF.Yarp* NuGet package and add the YARP and our service to DI:
 
 ```cs
 services.AddBff();

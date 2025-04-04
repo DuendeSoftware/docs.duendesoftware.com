@@ -39,7 +39,7 @@ To start emitting Otel tracing and metrics information you need
 * start collecting traces and Metrics from the various IdentityServer sources (and other sources e.g. ASP.NET Core)
 
 For development a simple option is to export the tracing information to the console and use the Prometheus
-exporter to create a human readable /metrics endpoint for the metrics.
+exporter to create a human-readable `/metrics` endpoint for the metrics.
 
 Add the Open Telemetry configuration to your service setup.
 ```cs
@@ -66,7 +66,7 @@ openTelemetry.WithTracing(t => t
 Add the Prometheus exporter to the pipeline
 
 ```cs
-// Map /metrics that displays Otel data in human readable form.
+// Map /metrics that displays Otel data in human-readable form.
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
 ```
 
@@ -78,7 +78,7 @@ This setup will write the tracing information to the console and provide metrics
 Added in Duende IdentityServer v7.0
 :::
 
-OpenTelemetry metrics are run-time measurements that are are intended to provide an indication
+OpenTelemetry metrics are run-time measurements that are intended to provide an indication
 of overall health and are typically used to show graphs on a dashboard or to set up monitoring rules.
 When that monitoring reveals issues, traces and logs are used to investigate further. Open Telemetry monitoring
 tools often provide features to find the traces and logs corresponding to certain metrics.
@@ -86,13 +86,13 @@ tools often provide features to find the traces and logs corresponding to certai
 IdentityServer emits metrics from the IdentityServer middleware and services. Our quick start for the UI also
 [contains metrics](#metrics-in-the-ui) that can be used as a starting point for monitoring UI events.
 The metric counters that IdentityServer emits are designed to not contain any sensitive
-information. They often are tagged to indicate the source of the events.
+information. They are often tagged to indicate the source of the events.
 
 ### High level Metrics
 These metrics are instrumented by the IdentityServer middleware and services and are
 intended to describe the overall usage and health of the system. They could provide the
 starting point for building a metrics dashboard. The high level metrics are created by the
-the meter named "Duende.IdentityServer", which is the value of the
+meter named "Duende.IdentityServer", which is the value of the
 `Duende.IdentityServer.Telemetry.ServiceName` constant.
 
 #### Telemetry.Metrics.Counters.Operation
@@ -154,10 +154,11 @@ Number of successful/failed back channel authentications (CIBA).
 Counter name: `tokenservice.client.config_validation`
 
 Number of successful/failed client validations.
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|error | Error label on errors |
+
+| Tag    | Description           |
+|--------|-----------------------|
+| client | The client Id         |
+| error  | Error label on errors |
 
 
 #### Telemetry.Metrics.Counters.ClientSecretValidation
@@ -205,40 +206,44 @@ Number of successful/failed token introspections.
 Counter name: `tokenservice.pushed_authorization_request`
 
 Number of successful/failed pushed authorization requests.
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|error | Error label on errors |
+
+| Tag    | Description           |
+|--------|-----------------------|
+| client | The client Id         |
+| error  | Error label on errors |
 
 #### Telemetry.Metrics.Counters.ResourceOwnerAuthentication
 Counter name: `tokenservice.resourceowner_authentication`
 
 Number of successful/failed resource owner authentications.
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|error | Error label on errors |
+
+| Tag    | Description           |
+|--------|-----------------------|
+| client | The client Id         |
+| error  | Error label on errors |
 
 #### Telemetry.Metrics.Counters.Revocation
 Counter name: `tokenservice.revocation`
 
 Number of successful/failed token revocations.
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|error | Error label on errors |
+
+| Tag    | Description           |
+|--------|-----------------------|
+| client | The client Id         |
+| error  | Error label on errors |
 
 #### Telemetry.Metrics.Counters.TokenIssued
 Counter name: `tokenservice.token_issued`
 
 Number of successful/failed token issuance attempts. Note that a token issuance might include
 multiple actual tokens (id_token, access token, refresh token).
-|Tag|Description|
-|---|---|
-|client | The client Id |
-|grant_type | The grant type used |
-|authorize_request_type| The authorize request type, if information about it is available |
-|error | Error label on errors |
+
+| Tag                    | Description                                                      |
+|------------------------|------------------------------------------------------------------|
+| client                 | The client Id                                                    |
+| grant_type             | The grant type used                                              |
+| authorize_request_type | The authorize request type, if information about it is available |
+| error                  | Error label on errors                                            |
 
 ### Metrics in the UI
 The [UI in your IdentityServer host](/identityserver/v7/ui/) can instrument these events to
@@ -277,7 +282,7 @@ Successful and failed user logins.
 | Tag    | Description                                                       |
 |--------|-------------------------------------------------------------------|
 | client | The client Id, if the login was caused by a request from a client |
-| idp    | The idp (Asp.Net Core Scheme name) used to log in                 |
+| idp    | The idp (ASP.NET Core Scheme name) used to log in                 |
 | error  | Error label on errors                                             |
 
 #### Telemetry.Metrics.Counters.UserLogout
@@ -315,7 +320,7 @@ The following screenshot shows the ASP.NET Core OpenID Connect authentication ha
 
 ### Tracing sources
 
-IdentityServer can emit very fine grained traces which is useful for performance troubleshooting and general exploration
+IdentityServer can emit very fine-grained traces which is useful for performance troubleshooting and general exploration
 of the
 control flow.
 

@@ -95,7 +95,7 @@ Key takeaways:
 
 ### Using Sustainsys.Saml2 with dynamic providers
 
-The [Sustainsys.Saml2](https://saml2.sustainsys.com) open source library adds Saml2 protocol support to Asp.Net Core. It
+The [Sustainsys.Saml2](https://saml2.sustainsys.com) open source library adds Saml2 protocol support to ASP.NET Core. It
 can be used together with the
 Duende dynamic identity providers feature. The sample is minimalistic to show a simple Saml2 config and does not handle
 the complete set of Saml2 config options.
@@ -107,7 +107,7 @@ the complete set of Saml2 config options.
 This sample shows how a client can make [CIBA](/identityserver/v7/ui/ciba) login requests using Duende IdentityServer.
 To run the sample, the IdentityServer and API hosts should be started first.
 Next run the ConsoleCibaClient which will initiate the backchannel login request.
-The URL the user would receive to login and approve the request is being written out to the IdentityServer log (visible
+The URL the user would receive to log in and approve the request is being written out to the IdentityServer log (visible
 in the console window).
 Follow that URL, login as "alice", and then approve the login request to allow the client to receive the results.
 

@@ -57,7 +57,7 @@ Models the request for user claims and is the vehicle to return those claims. It
 
 * ***Caller***
     
-    An identifier for the context in which the claims are being requested (e.g. an identity token, an access token, or the user info endpoint. The constant *IdentityServerConstants.ProfileDataCallers* contains the different constant values.
+    An identifier for the context in which the claims are being requested (e.g. an identity token, an access token, or the user info endpoint). The constant *IdentityServerConstants.ProfileDataCallers* contains the different constant values.
 
 * ***IssuedClaims***
 
@@ -81,7 +81,7 @@ Models the request to determine if the user is currently allowed to obtain token
 
 * ***Caller***
     
-    An identifier for the context in which the claims are being requested (e.g. an identity token, an access token, or the user info endpoint. The constant *IdentityServerConstants.ProfileDataCallers* contains the different constant values.
+    An identifier for the context in which the claims are being requested (e.g. an identity token, an access token, or the user info endpoint). The constant *IdentityServerConstants.ProfileDataCallers* contains the different constant values.
 
 * ***IsActive***
     

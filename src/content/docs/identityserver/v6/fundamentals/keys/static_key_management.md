@@ -13,7 +13,7 @@ loading and rotation of keys.
 
 ## Disabling Key Management
 The automatic key management feature can be disabled by setting the *Enabled*
-flag to *false* on the the *KeyManagement* property of
+flag to *false* on the *KeyManagement* property of
 [*IdentityServerOptions*](/identityserver/v6/reference/options#key-management):
 
 ```cs
@@ -80,8 +80,8 @@ applications and APIs immediately after the key is rotated. In ASP.NET, the
 simplest way to do so is to restart the hosting process, which clears the cached
 signing keys of the authentication middleware.
 
-This is only appropriate if all of the following are true:
-- You have control over the deployment of all of the client applications.
+This is only appropriate if all the following are true:
+- You have control over the deployment of all the client applications.
 - You can tolerate a maintenance window in which your services are all
   restarted.
 - You don't mind that users will need to log in again after the key is rotated.

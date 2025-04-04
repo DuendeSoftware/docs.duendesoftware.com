@@ -93,14 +93,12 @@ This will create the following files within a new `src/IdentityServer` directory
 - `Program.cs` - main application entry point
 
 :::note
-
 The `src/IdentityServer/Properties/launchSettings.json` file created by the
 `isempty` template sets the `applicationUrl` to `https://localhost:5001`. You
 can change the port that your IdentityServer host listens on by changing the
 port in this url. This url also sets the protocol (http or https) that the
 IdentityServer host will use. In production scenarios you should always use
 `https`.
-
 :::
 
 Next, add the IdentityServer project to the solution. Back in the console,
@@ -118,7 +116,7 @@ Scope is a core feature of OAuth that allows you to express the extent or scope
 of access. Clients request scopes when they initiate the protocol, declaring
 what scope of access they want. IdentityServer then has to decide which scopes
 to include in the token. Just because the client has asked for something doesn't
-mean they should get it! There are built-in abstractions as well as
+mean they should get it! There are built-in abstractions and
 extensibility points that you can use to make this decision. Ultimately,
 IdentityServer issues a token to the client, which then uses the token to access
 APIs. APIs can check the scopes that were included in the token to make
@@ -146,12 +144,10 @@ See the full
 file [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/IdentityServer/Config.cs).
 
 :::note
-
-In production it is important to give your API a useful name and display name.
+In production, it is important to give your API a useful name and display name.
 Use these names to describe your API in simple terms to both developers and
 users. Developers will use the name to connect to your API, and end users will
 see the display name on consent screens, etc.
-
 :::
 
 ### Defining the client
@@ -233,13 +229,11 @@ and validate tokens, login and logout, etc.
 ![image](images/1_discovery.png)
 
 :::note
-
 On first startup, IdentityServer will use its automatic key management feature
 to create a signing key and store it in the `src/IdentityServer/keys` directory.
 To avoid accidentally disclosing cryptographic secrets, the entire `keys`
 directory should be excluded from source control. It will be recreated if it is
 not present.
-
 :::
 
 ## Create an API Project
@@ -300,13 +294,11 @@ builder.Services.AddAuthorization();
 ```
 
 :::note
-
 Audience validation is disabled here because access to the api is modeled with
 `ApiScopes` only. By default, no audience will be emitted unless the api is
 modeled with `ApiResources` instead. See
 [here](/identityserver/v7/apis/aspnetcore/jwt#adding-audience-validation) for a
 more in-depth discussion.
-
 :::
 
 ### Add an endpoint
@@ -364,7 +356,7 @@ dotnet sln add ./src/Client
 
 The token endpoint at IdentityServer implements the OAuth protocol, and you
 could use raw HTTP to access it. However, we have a client library called
-IdentityModel that encapsulates the protocol interaction in an easy to use API.
+IdentityModel that encapsulates the protocol interaction in an easy-to-use API.
 
 Add the *Duende.IdentityModel * NuGet package to your client by running the following command:
 
@@ -394,11 +386,9 @@ if (disco.IsError)
 ```
 
 :::note
-
 If you get an error connecting, it may be that the development certificate for `localhost`
 is not trusted. You can run *dotnet dev-certs https --trust* in order to trust the
 development certificate. This only needs to be done once.
-
 :::
 
 ### Request a token from IdentityServer
@@ -427,10 +417,8 @@ Console.WriteLine(tokenResponse.AccessToken);
 ```
 
 :::note
-
 Copy and paste the access token from the console to [jwt.ms](https://jwt.ms) to
 inspect the raw token.
-
 :::
 
 ### Calling the API
@@ -467,17 +455,15 @@ The output should look like this:
 
 If you're using Visual Studio, here's how to start everything up:
 
-1. Right click the solution and select *Configure Startup Projects...*
+1. Right-click the solution and select *Configure Startup Projects...*
 2. Choose *Multiple Startup Projects* and set the action for Api and IdentityServer to Start
-3. Run the solution and wait a moment for both the API and and IdentityServer to start
-4. Right click the `Client` project and select Debug -> Start Without Debugging.
+3. Run the solution and wait a moment for both the API and IdentityServer to start
+4. Right-click the `Client` project and select Debug -> Start Without Debugging.
 
 :::note
-
-By default an access token will contain claims about the
+By default, an access token will contain claims about the
 scope, lifetime (nbf and exp), the client ID (client_id) and the issuer name
 (iss).
-
 :::
 
 #### Authorization at the API
@@ -516,7 +502,7 @@ app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c
     .RequireAuthorization("ApiScope");
 ```
 
-Now you can run the API again and it will enforce that the api1 scope is present in the
+Now you can run the API again, and it will enforce that the api1 scope is present in the
 access token.
 
 ## Further experiments

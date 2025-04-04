@@ -13,7 +13,7 @@ Duende.BFF's simple HTTP forwarder maps routes in the BFF to a remote API surfac
 
 These routes receive automatic anti-forgery protection and integrate with automatic token management.
 
-To enable this feature, add a reference to the *Duende.BFF.Yarp* Nuget package, add the remote APIs service to DI, and call the *MapRemoteBFFApiEndpoint* method to create the mappings.
+To enable this feature, add a reference to the *Duende.BFF.Yarp* NuGet package, add the remote APIs service to DI, and call the *MapRemoteBFFApiEndpoint* method to create the mappings.
 
 #### Add Remote API Service to DI
 

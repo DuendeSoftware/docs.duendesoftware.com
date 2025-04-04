@@ -38,7 +38,7 @@ Content-type: application/x-www-form-urlencoded
     redirect_uri=https://myapp.com/callback
 ```
 
-..or as a basic authentication header::
+...or as a basic authentication header::
 
 ```text
 POST /connect/token

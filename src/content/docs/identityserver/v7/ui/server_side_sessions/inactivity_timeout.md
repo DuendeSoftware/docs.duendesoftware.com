@@ -11,7 +11,7 @@ But if the user were to be inactive for some amount of time (e.g. after walking 
 Unfortunately, the OpenID Connect protocol is primarily focused with signing users into applications, not distributed session management due to user inactivity.
 What makes this difficult to achieve is that there are many different artifacts from the protocol each with their own expiration (e.g. cookies, refresh tokens, and access tokens).
 Also, different entities in the system have control over the lifetime and renewal of these artifacts.
-Coordinating all of their expirations to become invalid at the same time is not trivial.
+Coordinating all their expirations to become invalid at the same time is not trivial.
 
 Despite the protocol not providing a formal solution to this requirement, it is still possible to achieve this while using features of the protocols and not resorting to the use of custom, out-of-band techniques.
 
@@ -45,7 +45,7 @@ When the user becomes inactive, the server-side session management system at Ide
 When this happens, the `ISessionCoordinationService` provides another operation to perform any client related cleanup for the session.
 This could invoke back-channel logout for any client the user has logged into during their session, or this could revoke any grants in the [operational store](/identityserver/v7/data/operational#grants) issued during the user's session.
 
-Clients that receive back-channel logout would know the user's session has ended, and can cleanup appropriately.
+Clients that receive back-channel logout would know the user's session has ended, and can clean up appropriately.
 But if back-channel is not used, then the client would need some other signal to consider the user's session has ended.
 The obvious signal would be if the refresh token request failed, then that would be an appropriate signal that the user's session has also ended.
 

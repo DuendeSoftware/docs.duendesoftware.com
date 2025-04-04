@@ -30,7 +30,7 @@ This class models an OAuth scope.
     List of associated user claim types that should be included in the access token.
 
 ## Defining API scope in appsettings.json
-The *AddInMemoryApiResource* extension method also supports adding clients from the ASP.NET Core configuration file::
+The *AddInMemoryApiResource* extension method also supports adding clients from the ASP.NET Core configuration file:
 
 ```json
 "IdentityServer": {

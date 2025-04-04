@@ -5,7 +5,7 @@ order: 40
 ---
 
 ### Product
-The licensed and supported libraries can be accessed via Nuget:
+The licensed and supported libraries can be accessed via NuGet:
 
 * [Duende IdentityServer](https://www.nuget.org/packages/Duende.IdentityServer)
 * [Duende IdentityServer EntityFramework Integration](https://www.nuget.org/packages/Duende.IdentityServer.EntityFramework)

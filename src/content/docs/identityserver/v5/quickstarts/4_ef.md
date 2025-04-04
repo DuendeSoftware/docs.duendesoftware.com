@@ -43,7 +43,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
 ### Database Schema Changes and Using EF Migrations
-The *Duende.IdentityServer.EntityFramework.Storage* Nuget package contains entity classes that map from Duende IdentityServer’s models.
+The *Duende.IdentityServer.EntityFramework.Storage* NuGet package contains entity classes that map from Duende IdentityServer’s models.
 As IdentityServer’s models change, so will the entity classes in *Duende.IdentityServer.EntityFramework.Storage*.
 As you use *Duende.IdentityServer.EntityFramework.Storage* and upgrade over time, you are responsible for your database schema and changes necessary to that schema as the entity classes change.
 
@@ -110,7 +110,7 @@ We can also seed the database with the in-memory configuration data that we alre
 The approach used in this quickstart is used to make it easy to get IdentityServer up and running. You should devise your own database creation and maintenance strategy that is appropriate for your architecture.
 :::
 
-In *Startup.cs* add this method to help initialize the database::
+In *Startup.cs* add this method to help initialize the database:
 
 ```cs
 private void InitializeDatabase(IApplicationBuilder app)
@@ -151,7 +151,7 @@ private void InitializeDatabase(IApplicationBuilder app)
 }
 ```
 
-The above code may require you to add the following namespaces to your file::
+The above code may require you to add the following namespaces to your file:
 
 ```cs
 using System.Linq;

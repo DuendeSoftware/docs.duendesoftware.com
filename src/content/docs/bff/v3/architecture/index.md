@@ -46,7 +46,7 @@ actions can also be programmatically invoked through an imperative API.
 
 ## API Endpoints
 
-In the BFF architecture, the frontend makes API calls to backend services via the BFF host exclusively. Typically the
+In the BFF architecture, the frontend makes API calls to backend services via the BFF host exclusively. Typically, the
 BFF acts as a reverse proxy to [remote APIs](/bff/v3/fundamentals/apis/remote), providing session and token management.
 Implementing local APIs within the BFF host is also [possible](/bff/v3/fundamentals/apis/local). Regardless, requests to
 APIs are authenticated with the session cookie and need to be secured with an anti-forgery protection header.

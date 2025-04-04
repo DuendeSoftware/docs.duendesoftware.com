@@ -8,7 +8,7 @@ sidebar:
 During an authorization request, if user consent is required the browser will be redirected to the consent page.
 
 :::note
-You can configure the consent requirement per client. By default no consent is required, but this setting can be changed via the `RequireConsent` [setting](/identityserver/v7/reference/models/client#consent-screen).
+You can configure the consent requirement per client. By default, no consent is required, but this setting can be changed via the `RequireConsent` [setting](/identityserver/v7/reference/models/client#consent-screen).
 :::
 
 Consent is used to allow an end user to grant a client access to [resources](/identityserver/v7/fundamentals/resources).
@@ -45,7 +45,7 @@ The `GrantConsentAsync` API on the [interaction service](/identityserver/v7/refe
 
 Your IdentityServer will temporarily persist the outcome of the consent.
 This persistence uses a cookie by default, as it only needs to last long enough to convey the outcome back to the authorization endpoint.
-This temporary persistence is different than the persistence used for the "remember my consent" feature (and it is the authorization endpoint which persists the "remember my consent" for the user).
+This temporary persistence is different from the persistence used for the "remember my consent" feature (and it is the authorization endpoint which persists the "remember my consent" for the user).
 If you wish to use some other persistence between the consent page and the authorization redirect, then you can implement `IMessageStore<ConsentResponse>` and register the implementation in DI.
 
 ## Returning the user to the authorization endpoint

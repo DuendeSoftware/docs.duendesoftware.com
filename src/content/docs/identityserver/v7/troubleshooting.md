@@ -5,7 +5,7 @@ sidebar:
 ---
 
 When troubleshooting an IdentityServer setup we have some tips and tricks to share. These are both ways to get more
-information out of the system as well as how to detect and fix some common problems.
+information out of the system and how to detect and fix some common problems.
 
 ## General Debugging Advice
 
@@ -29,11 +29,11 @@ data.
 
 ## Data protection
 
-Asp.Net Core Data Protection is an encryption mechanism that is heavily used by Duende.IdentityServer and the Asp.Net
+ASP.NET Core Data Protection is an encryption mechanism that is heavily used by Duende.IdentityServer and the ASP.NET
 Core Authentication libraries. If it is not correctly configured it might result in issues such as
 
 * Unable to unprotect the message.State.
-* The key {xxxxx-xxxx-xxx-xxx-xxxxxxx} was not found in the key ring.
+* The key `{xxxxx-xxxx-xxx-xxx-xxxxxxx} was not found in the key ring.
 * Failed to unprotect AuthenticationTicket payload for key {key}
 
 See [our data protection guide](/identityserver/v7/deployment#data-protection-keys) for more
@@ -53,7 +53,7 @@ See [our proxy guide](/identityserver/v7/deployment#proxy-servers-and-load-balan
 
 ## TaskCancellationExceptions
 
-TaskCancellationExceptions occur when the incoming HTTP connection is terminated by the requestor. We pass the
+TaskCancellationExceptions occur when the incoming HTTP connection is terminated by the requester. We pass the
 cancellation token along to Entity Framework so that it can cancel database queries and hopefully reduce load on your
 database. Both EF itself and the EF providers log those cancellations extremely aggressively before EF re-throws the
 exception. That unhandled exception then is handled by the IdentityServer middleware. This creates a lot of noise in the
@@ -111,9 +111,9 @@ services.AddIdentityServer(options =>
 ## Microsoft.IdentityModel versions
 
 Duende IdentityServer, the Microsoft external authentication handlers and other libraries all use the
-Microsoft.IdentityModel set of libraries. These libraries provides token and configuration handling features. The
-functionality is split up between different libraries and they all need to be **exactly the same version**. However this
-is not enforced by Nuget so it is common to end up with an application that brings in different versions of
+Microsoft.IdentityModel set of libraries. These libraries provide token and configuration handling features. The
+functionality is split up between different libraries, and they all need to be **exactly the same version**. However, this
+is not enforced by NuGet so it is common to end up with an application that brings in different versions of
 Microsoft.IdentityModel.* through transitive dependencies.
 
 ### Known Errors

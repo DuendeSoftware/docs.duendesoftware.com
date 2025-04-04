@@ -16,8 +16,8 @@ public interface IClientConfigurationStore
 
 #### Members
 
-| name | description |
-| --- | --- |
+| name        | description                               |
+|-------------|-------------------------------------------|
 | AddAsync(…) | Adds a client to the configuration store. |
 
 ## ClientConfigurationStore

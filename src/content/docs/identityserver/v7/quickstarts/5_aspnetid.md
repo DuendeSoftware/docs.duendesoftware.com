@@ -9,14 +9,12 @@ Welcome to Quickstart 5 for Duende IdentityServer! In this quickstart you will
 integrate IdentityServer with ASP.NET Core Identity.
 
 :::note
-
 We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of
 the [reference implementation of Quickstart 4](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/4_EntityFramework).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](/identityserver/v7/quickstarts/0_overview#preparation).
-
 :::
 
 IdentityServer's flexible design allows you to use any database you want to
@@ -34,11 +32,9 @@ needed to login and logout with ASP.NET Core Identity. All the other projects in
 this solution (for the clients and the API) will remain the same.
 
 :::note
-
 This quickstart assumes you are familiar with how ASP.NET Core Identity works.
 If you are not, it is recommended that you first [learn about
 it](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0).
-
 :::
 
 In addition to the written steps below a YouTube video is available:
@@ -212,7 +208,7 @@ first users are created.
 
 #### Account Pages
 
-Finally, take a look at the the pages in the
+Finally, take a look at the pages in the
 `src/IdentityServerAspNetIdentity/Pages/Account` directory. These pages contain
 slightly different login and logout code than the prior quickstart and templates
 because the login and logout processes now rely on ASP.NET Core Identity. Notice
@@ -225,7 +221,7 @@ templates.
 
 ## Logging in with the Web client
 
-At this point, you should be able to run all of the existing clients and
+At this point, you should be able to run all the existing clients and
 samples. Launch the Web client application, and you should be redirected to
 IdentityServer to log in. Login with one of the users created by the seed
 process (e.g., alice/Pass123$), and after that you will be redirected back to

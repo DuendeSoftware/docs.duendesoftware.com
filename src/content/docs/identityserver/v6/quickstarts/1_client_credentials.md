@@ -49,7 +49,7 @@ dotnet new sln -n Quickstart
 This will create a quickstart directory that will serve as the root of the
 solution, a src subdirectory to hold your source code, and a solution file to
 organize your projects. Throughout the rest of the quickstart series, paths will
-be written relative to to the quickstart directory. 
+be written relative to the quickstart directory. 
 
 From the new quickstart directory, run the following commands to use the isempty
 template to create a new project. The template creates a web project named
@@ -76,14 +76,12 @@ This will create the following files within a new *src/IdentityServer* directory
 
 
 :::note
-
 The *src/IdentityServer/Properties/launchSettings.json* file created by the
 *isempty* template sets the *applicationUrl* to *https://localhost:5001*. You
 can change the port that your IdentityServer host listens on by changing the
 port in this url. This url also sets the protocol (http or https) that the
 IdentityServer host will use. In production scenarios you should always use
 *https*. 
-
 :::
 
 Next, add the IdentityServer project to the solution. Back in the console,
@@ -100,7 +98,7 @@ Scope is a core feature of OAuth that allows you to express the extent or scope
 of access. Clients request scopes when they initiate the protocol, declaring
 what scope of access they want. IdentityServer then has to decide which scopes
 to include in the token. Just because the client has asked for something doesn't
-mean they should get it! There are built-in abstractions as well as
+mean they should get it! There are built-in abstractions and
 extensibility points that you can use to make this decision. Ultimately,
 IdentityServer issues a token to the client, which then uses the token to access
 APIs. APIs can check the scopes that were included in the token to make
@@ -127,12 +125,10 @@ public static IEnumerable<ApiScope> ApiScopes =>
 See the full file [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/Quickstarts/1_ClientCredentials/src/IdentityServer/Config.cs).
 
 :::note
-
-In production it is important to give your API a useful name and display name.
+In production, it is important to give your API a useful name and display name.
 Use these names to describe your API in simple terms to both developers and
 users. Developers will use the name to connect to your API, and end users will
 see the display name on consent screens, etc. 
-
 :::
 
 ### Defining the client
@@ -210,13 +206,11 @@ and validate tokens, login and logout, etc.
 ![image](images/1_discovery.png)
 
 :::note
-
 On first startup, IdentityServer will use its automatic key management feature
 to create a signing key and store it in the *src/IdentityServer/keys* directory.
 To avoid accidentally disclosing cryptographic secrets, the entire *keys*
 directory should be excluded from source control. It will be recreated if it is
 not present.
-
 :::
 
 ## Create an API Project
@@ -273,13 +267,11 @@ builder.Services.AddAuthentication("Bearer")
     });
 ```
 :::note 
-
 Audience validation is disabled here because access to the api is modeled with
 *ApiScopes* only. By default, no audience will be emitted unless the api is
 modeled with *ApiResources* instead. See 
 [here](/identityserver/v6/apis/aspnetcore/jwt#adding-audience-validation) for a 
 more in-depth discussion. 
-
 :::
 
 Add authentication middleware to the pipeline immediately before authorization:
@@ -352,10 +344,10 @@ dotnet sln add ./src/Client/Client.csproj
 ### Add the IdentityModel NuGet package
 The token endpoint at IdentityServer implements the OAuth protocol, and you
 could use raw HTTP to access it. However, we have a client library called
-IdentityModel that encapsulates the protocol interaction in an easy to use API.
+IdentityModel that encapsulates the protocol interaction in an easy-to-use API.
 
 Add the *IdentityModel* NuGet package to your client. This can be done either
-via Visual Studio's Nuget Package manager or dotnet CLI. From the *quickstart* 
+via Visual Studio's NuGet Package manager or dotnet CLI. From the *quickstart* 
 directory, run the following command:
 
 ```console
@@ -380,12 +372,10 @@ if (disco.IsError)
 ```
 
 :::note
-
 If you get an error connecting it may be that you are running *https* and the
 development certificate for *localhost* is not trusted. You can run `dotnet
 dev-certs https --trust` in order to trust the development certificate. This
 only needs to be done once. 
-
 :::
 
 ### Request a token from IdentityServer
@@ -413,10 +403,8 @@ Console.WriteLine(tokenResponse.AccessToken);
 ```
 
 :::note
-
 Copy and paste the access token from the console to [jwt.ms](https://jwt.ms) to
 inspect the raw token.
-
 :::
 
 ### Calling the API
@@ -450,21 +438,15 @@ The output should look like this:
 ![](images/1_client_screenshot.png)
 
 :::note 
-
 If you're using Visual Studio, here's how to start everything up:
-1. Right click the solution and select *Set Startup Projects*
+1. Right-click the solution and select *Set Startup Projects*
 2. Choose *Multiple Startup Projects* and set the action for Api and IdentityServer to Start
-3. Run the solution and wait a moment for both the API and and IdentityServer to start
-4. Right click the *Client* project and select Debug... Start New Instance.
+3. Run the solution and wait a moment for both the API and IdentityServer to start
+4. Right-click the *Client* project and select Debug... Start New Instance.
 
-:::
-
-:::note 
-
-By default an access token will contain claims about the
+By default, an access token will contain claims about the
 scope, lifetime (nbf and exp), the client ID (client_id) and the issuer name
 (iss).
-
 :::
 
 #### Authorization at the API
@@ -495,7 +477,7 @@ You can now enforce this policy at various levels, e.g.:
 * for all API endpoints
 * for specific controllers/actions
 
-Typically you set the policy for all controllers where they are mapped in
+Typically, you set the policy for all controllers where they are mapped in
 *src/Api/Program.cs*:
 
 ```cs

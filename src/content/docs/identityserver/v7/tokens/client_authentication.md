@@ -18,7 +18,7 @@ All information in this section also applies to [API secrets](/identityserver/v7
 
 ### Assigning secrets
 
-A client secret is abstracted by the `Secret` class. It provides properties for setting the value and type as well as a description and expiration date.
+A client secret is abstracted by the `Secret` class. It provides properties for setting the value and type and a description and expiration date.
 
 ```cs
 var secret = new Secret
@@ -150,7 +150,7 @@ Content-type: application/x-www-form-urlencoded
     redirect_uri=https://myapp.com/callback
 ```
 
-..or as a basic authentication header::
+...or as a basic authentication header::
 
 ```
 POST /connect/token
@@ -278,7 +278,7 @@ private static string CreateClientToken(SigningCredentials credential, string cl
 }
 ```
 
-..and the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the
+...and the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the
 protocol endpoint from .NET code.
 
 ```cs
@@ -414,7 +414,7 @@ idsvrBuilder.AddMutualTlsSecretValidators();
 Then add client secret of type `SecretTypes.X509CertificateName` (for PKI-based scenarios)
 or `SecretTypes.X509CertificateThumbprint` (for self-issued certificates) to the client you want to authenticate.
 
-For example::
+For example:
 
 ```cs
 new Client

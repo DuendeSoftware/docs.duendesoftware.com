@@ -4,7 +4,7 @@ order: 150
 ---
 
 Instead of providing the parameters for an authorize request as individual query string key/value pairs, you can package them up in signed JWTs.
-This makes the parameters tamper proof and you can authenticate the client already on the front-channel.
+This makes the parameters tamperproof and you can authenticate the client already on the front-channel.
 
 :::note
 See [here](/identityserver/v6/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.

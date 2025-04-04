@@ -48,7 +48,7 @@ Our products are off-the shelf downloadable developer components. They are not m
 
 * Potential security vulnerabilities can be responsibly disclosed via our [contact form](https://duendesoftware.com/contact/general).
    * We guarantee to reply within two US business days.
-* All licenses includes a security notification service.
+* All licenses include a security notification service.
    * Whenever a security vulnerability has been confirmed and fixed, customers will get a private update prior to public release.
 * We will publish an official advisory
 

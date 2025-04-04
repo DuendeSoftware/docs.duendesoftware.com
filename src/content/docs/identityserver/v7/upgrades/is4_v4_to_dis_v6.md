@@ -78,7 +78,7 @@ These include:
 * A new `RequireResourceIndicator` boolean column on the `ApiResources` table in the configuration database.
 * A new index on the `ConsumedTime` column in the `PersistedGrants` table ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/84)).
 * A new table called `IdentityProviders` for storing the OIDC provider details ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/188)).
-* Add missing columns for created, updated, etc to EF entities ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/356)).
+* Add missing columns for created, updated, etc. to EF entities ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/356)).
 * Add unique constraints to EF tables where duplicate records not allowed ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/355)).
 
 IdentityServer is abstracted from the data store on multiple levels, so the exact steps involved in updating your data store will depend on your implementation details. 
@@ -118,7 +118,7 @@ In Duende IdentityServer the [automatic key management](/identityserver/v7/funda
 
 Since client apps and APIs commonly cache the key material published from the discovery document then when upgrading you need to consider how those applications will handle an upgraded token server with a new and different signing key.
 
-If while upgrading you can simply restart all of the client apps and APIs that depend on those signing keys, then you can remove the old signing key and start to use the new automatic key management. 
+If while upgrading you can simply restart all the client apps and APIs that depend on those signing keys, then you can remove the old signing key and start to use the new automatic key management. 
 When they are restarted they will reload the discovery document and thus be aware of the new signing key.
 
 But if you can't restart all the client apps and APIs then you will need to maintain the prior signing key while still publishing the new keys produced from the automatic key management feature. 

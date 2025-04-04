@@ -62,7 +62,7 @@ When you register multiple keys, the first key in the list will be the default k
 :::
 
 ### Key storage and protection
-By default the keys will be protected at rest using the ASP.NET Core Data Protection mechanism. See the [deployment](/identityserver/v5/deployment) section to learn more about setting up data protection.
+By default, the keys will be protected at rest using the ASP.NET Core Data Protection mechanism. See the [deployment](/identityserver/v5/deployment) section to learn more about setting up data protection.
 
 Key storage defaults to the file system, but is extensible. We also provide EntityFramework integration.
 
@@ -89,7 +89,7 @@ A signing key registered with *AddSigningCredential* will take precedence over a
 
 
 ## Disabling automatic key management
-The automatic key management feature can be disabled by setting the *Enabled* flag to *false* on the the [*IdentityServerOptions*](/identityserver/v5/reference/options#key-management), e.g.:
+The automatic key management feature can be disabled by setting the *Enabled* flag to *false* on the [*IdentityServerOptions*](/identityserver/v5/reference/options#key-management), e.g.:
 
 ```cs
 var builder = services.AddIdentityServer(options =>

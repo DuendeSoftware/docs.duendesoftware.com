@@ -24,7 +24,7 @@ include:
 - old keys created by automatic key management that are retired 
 - the keys added explicitly with calls to *AddValidationKey*.
 
-The migration path from manual to automatic keys is a three phase process,
+The migration path from manual to automatic keys is a three-phase process,
 similar to the phased approach to [manual key rotation](static_key_management#rotation). The
 difference here is that you are phasing out the old key and allowing the
 automatically generated keys to phase in.

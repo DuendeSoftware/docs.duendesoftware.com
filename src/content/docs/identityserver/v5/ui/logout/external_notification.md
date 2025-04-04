@@ -4,7 +4,7 @@ order: 80
 ---
 
 Federated sign-out is the situation where a user has used an external identity provider to log into IdentityServer, and then the user logs out of that external identity provider via a workflow unknown to IdentityServer.
-When the user signs out, it will be useful for IdentityServer to be notified so that it can sign the user out of IdentityServer and all of the applications that use IdentityServer.
+When the user signs out, it will be useful for IdentityServer to be notified so that it can sign the user out of IdentityServer and all the applications that use IdentityServer.
 
 Not all external identity providers support federated sign-out, but those that do will provide a mechanism to notify clients that the user has signed out.
 This notification usually comes in the form of a request in an *<iframe>* from the external identity provider's "logged out" page.
@@ -14,7 +14,7 @@ What makes federated sign-out a special case (when compared to a normal [logout]
 In fact, each external IdentityProvider will have a different endpoint into your IdentityServer host. 
 This is due to that fact that each external identity provider might use a different protocol, and each middleware listens on different endpoints.
 
-The net effect of all of these factors is that there is no "logged out" page being rendered as we would on the normal sign-out workflow, 
+The net effect of all these factors is that there is no "logged out" page being rendered as we would on the normal sign-out workflow, 
 which means we are missing the sign-out notifications to IdentityServer's clients.
 We must add code for each of these federated sign-out endpoints to render the necessary notifications to achieve federated sign-out.
 

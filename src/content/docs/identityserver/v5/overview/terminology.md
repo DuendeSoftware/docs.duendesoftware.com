@@ -35,12 +35,12 @@ While there are many different client types, e.g. web applications, native mobil
 #### Machine to Machine Communication
 In this scenario two machines talk to each other (e.g. background processes, batch jobs, server daemons), and there is no interactive user present. To authorize this communication, your IdentityServer issues a token to the caller.
 
-In protocol terms, this scenario is called *Client Credentials Flow* and you can learn more about it in the issuing tokens [section](/identityserver/v5/tokens/requesting#machine-to-machine-communication) as well as in our [Quickstart](/identityserver/v5/quickstarts/1_client_credentials).
+In protocol terms, this scenario is called *Client Credentials Flow* and you can learn more about it in the issuing tokens [section](/identityserver/v5/tokens/requesting#machine-to-machine-communication) and in our [Quickstart](/identityserver/v5/quickstarts/1_client_credentials).
 
 #### Interactive Applications
 This is the most common type of client scenario: web applications, SPAs or native/mobile apps with interactive users.  This scenario typically involves a browser for user interaction (e.g. for authentication or consent). 
 
-In protocol terms, this scenario is called *Authorization Code Flow* and you can learn more about it in the issuing tokens [section](/identityserver/v5/tokens/requesting#interactive-applications) as well as in our [Quickstart](/identityserver/v5/quickstarts/2_interactive).
+In protocol terms, this scenario is called *Authorization Code Flow* and you can learn more about it in the issuing tokens [section](/identityserver/v5/tokens/requesting#interactive-applications) and in our [Quickstart](/identityserver/v5/quickstarts/2_interactive).
 
 :::note
 A client application can potentially have many instances - e.g. your web application might be physically deployed on multiple servers for load-balancing purposes, or your mobile application might be deployed to thousands of different phones. Logically these instances are still a single client.
@@ -53,7 +53,7 @@ Every resource has a unique name - and clients use this name to specify to which
 
 **Identity data** Identity information (aka claims) about a user, e.g. name or email address.
 
-**APIs** APIs resources represent functionality a client wants to invoke - typically modelled as Web APIs, but not necessarily.
+**APIs** API resources represent functionality a client wants to invoke - typically modelled as Web APIs, but not necessarily.
 
 ### Identity Token
 An identity token represents the outcome of an authentication process. It contains at a bare minimum an identifier for the user 

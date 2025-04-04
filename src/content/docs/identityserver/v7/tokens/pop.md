@@ -6,7 +6,7 @@ sidebar:
 chapter: true
 ---
 
-By default, OAuth access tokens are so called `bearer` tokens. This means they are not bound to a client and anybody who possesses the token can use it. The security concern here is that a leaked token could be used by a (malicious) third party to impersonate the client and/or user.
+By default, OAuth access tokens are so-called `bearer` tokens. This means they are not bound to a client and anybody who possesses the token can use it. The security concern here is that a leaked token could be used by a (malicious) third party to impersonate the client and/or user.
 
 On the other hand, `Proof-of-Possession` (PoP) tokens are bound to the client that requested the token. This is also often called sender constraining. This is done by using cryptography to prove that the sender of the token knows an additional secret only known to the client. 
 
@@ -169,7 +169,7 @@ tokens) that they are bound to.
 DPoP is something a client can use dynamically with no configuration in IdentityServer, but you can configure it as
 required.
 This is a per-client [setting](/identityserver/v7/reference/models/client#dpop) in your IdentityServer.
-There are additional client as well as [global](/identityserver/v7/reference/options#dpop) DPoP settings to control the
+There are additional client and [global](/identityserver/v7/reference/options#dpop) DPoP settings to control the
 behavior.
 
 ```csharp

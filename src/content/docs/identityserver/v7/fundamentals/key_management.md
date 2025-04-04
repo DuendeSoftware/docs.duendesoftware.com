@@ -122,11 +122,9 @@ an X.509 certificate. Automatic key management will create and rotate keys for
 each signing algorithm you specify.
 
 :::note
-
 *X.509 certificates* have an expiration date, but IdentityServer does
 not use this data to validate the certificate and throw an exception. If a certificate has expired then you
 must decide whether to continue using it or replace it with a new certificate.
-
 :::
 
 ```cs
@@ -162,7 +160,7 @@ loading and rotation of keys.
 ## Disabling Key Management
 
 The automatic key management feature can be disabled by setting the `Enabled`
-flag to `false` on the the `KeyManagement` property of
+flag to `false` on the `KeyManagement` property of
 [`IdentityServerOptions`](/identityserver/v7/reference/options#key-management):
 
 ```cs
@@ -308,9 +306,9 @@ applications and APIs immediately after the key is rotated. In ASP.NET, the
 simplest way to do so is to restart the hosting process, which clears the cached
 signing keys of the authentication middleware.
 
-This is only appropriate if all of the following are true:
+This is only appropriate if all the following are true:
 
-- You have control over the deployment of all of the client applications.
+- You have control over the deployment of all the client applications.
 - You can tolerate a maintenance window in which your services are all
   restarted.
 - You don't mind that users will need to log in again after the key is rotated.
@@ -410,7 +408,7 @@ include:
 - old keys created by automatic key management that are retired
 - the keys added explicitly with calls to `AddValidationKey`.
 
-The migration path from manual to automatic keys is a three phase process,
+The migration path from manual to automatic keys is a three-phase process,
 similar to the phased approach to [manual key rotation](#manual-key-rotation). The
 difference here is that you are phasing out the old key and allowing the
 automatically generated keys to phase in.

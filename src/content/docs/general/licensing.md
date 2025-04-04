@@ -136,7 +136,7 @@ IdentityServer will write log messages indicating the nature of the problem.
 
 Most common licensing issues, such as expiration of the license or configuring more
 clients than is included in the license do not prevent IdentityServer from functioning. We
-trust our customers and we don't want a simple oversight to cause an outage. However, some
+trust our customers, and we don't want a simple oversight to cause an outage. However, some
 features will be disabled at runtime if your license does not include them, including:
 
 - Server Side Sessions

@@ -9,4 +9,4 @@ order: 50
 
 IdentityServer emits OpenTelemetry traces for input validators, stores and response generators (see [here](/identityserver/v6/diagnostics/otel) for more information).
 
-The samples shows how to setup Otel for console tracing.
+The samples show how to set up Otel for console tracing.

@@ -32,4 +32,4 @@ public interface ICustomTokenRequestValidator
 
     The *CustomResponse* dictionary allows emitting additional response fields.
 
-    To fail the request, set the the *IsError*, the *Error*, and optionally the *ErrorDescription* properties on the *Result* object on the *CustomTokenRequestValidationContext*.
+    To fail the request, set the *IsError*, the *Error*, and optionally the *ErrorDescription* properties on the *Result* object on the *CustomTokenRequestValidationContext*.

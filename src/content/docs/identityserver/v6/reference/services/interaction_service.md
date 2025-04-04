@@ -52,7 +52,7 @@ It is available from the dependency injection system and would normally be injec
 
 * ***RevokeTokensForCurrentSessionAsync***
     
-    Revokes all of a user's consents and grants for clients the user has signed into during their current session.
+    Revokes all of a user's consents and grants for clients the user has signed in to during their current session.
 
 ## Returned models
 The above methods return various models.

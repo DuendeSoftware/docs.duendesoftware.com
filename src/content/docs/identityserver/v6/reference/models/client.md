@@ -91,7 +91,7 @@ public static IEnumerable<Client> Get()
 
 * ***AllowedScopes***
     
-    By default a client has no access to any resources - specify the allowed resources by adding the corresponding scopes names
+    By default, a client has no access to any resources - specify the allowed resources by adding the corresponding scopes names
 
 * ***AllowOfflineAccess***
     
@@ -175,7 +175,7 @@ public static IEnumerable<Client> Get()
 
 * ***AccessTokenType***
     
-    Specifies whether the access token is a reference token or a self contained JWT token (defaults to *Jwt*).
+    Specifies whether the access token is a reference token or a self-contained JWT token (defaults to *Jwt*).
 
 * ***IncludeJwtId***
     

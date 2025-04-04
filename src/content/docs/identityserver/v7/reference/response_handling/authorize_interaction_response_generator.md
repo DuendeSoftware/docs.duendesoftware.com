@@ -6,13 +6,13 @@ sidebar:
 
 #### Duende.IdentityServer.ResponseHandling.IAuthorizeInteractionResponseGenerator
 
-The `IAuthorizeInteractionResponseGenerator` interface models the logic for determining if user must login or consent
+The `IAuthorizeInteractionResponseGenerator` interface models the logic for determining if user must log in or consent
 when making requests to the authorization endpoint.
 
 :::note
 If a custom implementation of `IAuthorizeInteractionResponseGenerator` is desired, then
 it's [recommended](/identityserver/v7/ui/custom#built-in-authorizeinteractionresponsegenerator) to derive from the
-built-in `AuthorizeInteractionResponseGenerator` to inherit all the default logic pertaining to login and consent
+built-in `AuthorizeInteractionResponseGenerator` to inherit all the default logic pertaining to log in and consent
 semantics.
 :::
 
@@ -27,7 +27,7 @@ semantics.
 
 * **`IsLogin`**
 
-  Specifies if the user must login.
+  Specifies if the user must log in.
 
 * **`IsConsent`**
 

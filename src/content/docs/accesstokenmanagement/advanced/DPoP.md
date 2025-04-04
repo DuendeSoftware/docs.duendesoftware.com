@@ -10,7 +10,7 @@ The "Duende.AccessTokenManagement" library supports DPoP.
 
 ## DPoP Key
 
-The main piece that your hosting application needs to concern itself with is how to obtain (and manage) the DPoP key. This key (and signing algorithm) will be either a "RS", "PS", or "ES" style key, and needs to be in the form of a JSON Web Key (or JWK). Consult the specification for more details.
+The main piece that your hosting application needs to concern itself with is how to obtain (and manage) the DPoP key. This key (and signing algorithm) will be either an "RS", "PS", or "ES" style key, and needs to be in the form of a JSON Web Key (or JWK). Consult the specification for more details.
 
 The creation and management of this DPoP key is up to the policy of the client. For example is can be dynamically created when the client starts up, and can be periodically rotated. The main constraint is that it must be stored for as long as the client uses any access tokens (and possibly refresh tokens) that they are bound to, which this library will manage for you.
 
@@ -39,7 +39,7 @@ services.AddOpenIdConnectAccessTokenManagement(options =>
 });
 ```
 
-Similarly for an application using `AddClientCredentialsTokenManagement` it would look like this:
+Similarly, for an application using `AddClientCredentialsTokenManagement`, it would look like this:
 
 ```cs
 services.AddClientCredentialsTokenManagement()

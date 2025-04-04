@@ -60,7 +60,7 @@ Settings that affect the background cleanup of expired entries (tokens) from the
 
 * **`RemoveConsumedTokens`**
 
-  Gets or sets a value indicating whether consumed tokens will included in the automatic clean up.
+  Gets or sets a value indicating whether consumed tokens will be included in the automatic clean up.
   Defaults to `false`.
 
 * **`TokenCleanupInterval`**

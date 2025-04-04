@@ -24,7 +24,7 @@ The Configuration API is part of the
 Business Edition or higher. The same [license](https://duendesoftware.com/products/identityserver#pricing) 
 and [special offers](https://duendesoftware.com/specialoffers) apply.
 
-The Configuration API's source code is available [on
-github](https://github.com/DuendeSoftware/products/tree/main/identity-server/src/Configuration).
+The Configuration API source code is available [on
+GitHub](https://github.com/DuendeSoftware/products/tree/main/identity-server/src/Configuration).
 
 Samples of the Configuration API are available [here](/identityserver/v7/samples/configuration).

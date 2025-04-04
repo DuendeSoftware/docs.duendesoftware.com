@@ -146,7 +146,7 @@ component in `App.razor`:
 ```
 
 *`d)`* Last but not least, we will add some conditional rendering to the layout page to be able to trigger login/logout
-as well as displaying the current user name when logged in. This is achieved by using the `AuthorizeView` component in
+and displaying the current user name when logged in. This is achieved by using the `AuthorizeView` component in
 `MainLayout.razor`:
 
 ```razor
@@ -283,7 +283,7 @@ public class BffAuthenticationStateProvider
 }
 ```
 
-..and register it in the client's `Program.cs`:
+...and register it in the client's `Program.cs`:
 
 ```cs
 builder.Services.AddAuthorizationCore();
@@ -315,7 +315,7 @@ public class AntiforgeryHandler : DelegatingHandler
 }
 ````
 
-..and register it in the client's `Program.cs` (overriding the standard HTTP client configuration; requires package
+...and register it in the client's `Program.cs` (overriding the standard HTTP client configuration; requires package
 Microsoft.Extensions.Http):
 
 ```cs

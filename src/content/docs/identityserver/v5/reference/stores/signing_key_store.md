@@ -81,5 +81,5 @@ Used to dynamically load client configuration.
 ```
 
 :::note
-The *Data* property contains a copy of all of the values (and more) and is considered authoritative by IdentityServer, thus most of the other property values are considered informational and read-only.
+The *Data* property contains a copy of all the values (and more) and is considered authoritative by IdentityServer, thus most of the other property values are considered informational and read-only.
 :::

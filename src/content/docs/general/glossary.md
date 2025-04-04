@@ -29,7 +29,7 @@ The automatic key management feature creates and manages key material for signin
 The server-side session management feature extends the ASP.NET Core cookie authentication handler to maintain a user's authentication session state in a server-side store, rather than putting it all into a self-contained cookie. Using server-side sessions enables more architectural features in your IdentityServer, such as:
 
 * query and manage active user sessions (e.g. from an administrative app).
-* detect session expiration and perform cleanup both in IdentityServer as well as in client apps.
+* detect session expiration and perform cleanup, both in IdentityServer and in client apps.
 * centralize and monitor session activity in order to achieve a system-wide inactivity timeout.
 
 [More details](https://blog.duendesoftware.com/posts/20220406_session_management/)
@@ -64,7 +64,7 @@ Implementation of [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html). Provi
 (Enterprise Edition)
 
 The dynamic configuration feature allows dynamic loading of configuration for OpenID Connect providers from a store.
-This is designed to address the performance concern as well as allowing changes to the configuration to a running server.
+This is designed to address the performance concern and allowing changes to the configuration to a running server.
 
 [More details](https://blog.duendesoftware.com/posts/20210517_dynamic_providers/)
 
@@ -86,7 +86,7 @@ This allows API-specific features such as access token encryption and isolation 
 (Enterprise Edition)
 
 Duende IdentityServer supports the Client-Initiated Backchannel Authentication Flow (also known as CIBA).
-This allows a user to login with a higher security device (e.g. their mobile phone) than the device on which they are using an application (e.g. a public kiosk).
+This allows a user to log in with a higher security device (e.g. their mobile phone) than the device on which they are using an application (e.g. a public kiosk).
 CIBA is one of the requirements to support the Financal-grade API compliance.
 
 [More details](https://blog.duendesoftware.com/posts/20220107_ciba/)

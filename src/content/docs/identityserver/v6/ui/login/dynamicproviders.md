@@ -12,7 +12,7 @@ performance penalty for having too many. Also, as you need to add or change this
 re-compile and re-run your startup code for those changes to take effect.
 
 Duende IdentityServer provides support for dynamic configuration of OpenID Connect providers loaded from a store. This
-is designed to address the performance concern as well as allowing changes to the configuration to a running server.
+is designed to address the performance concern and allowing changes to the configuration to a running server.
 
 Support for Dynamic Identity Providers is included
 in [IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition.

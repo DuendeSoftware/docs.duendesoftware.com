@@ -46,7 +46,7 @@ In this scenario two machines talk to each other (e.g. background processes, bat
 no interactive user present. To authorize this communication, your IdentityServer issues a token to the caller.
 
 In protocol terms, this scenario is called *Client Credentials Flow* and you can learn more about it in the issuing
-tokens [section](/identityserver/v7/tokens/requesting#machine-to-machine-communication) as well as in
+tokens [section](/identityserver/v7/tokens/requesting#machine-to-machine-communication) and in
 our [Quickstart](/identityserver/v7/quickstarts/1_client_credentials).
 
 ### Interactive Applications
@@ -55,7 +55,7 @@ This is the most common type of client scenario: web applications, SPAs or nativ
 This scenario typically involves a browser for user interaction (e.g. for authentication or consent).
 
 In protocol terms, this scenario is called *Authorization Code Flow* and you can learn more about it in the issuing
-tokens [section](/identityserver/v7/tokens/requesting#interactive-applications) as well as in
+tokens [section](/identityserver/v7/tokens/requesting#interactive-applications) and in
 our [Quickstart](/identityserver/v7/quickstarts/2_interactive).
 
 :::note

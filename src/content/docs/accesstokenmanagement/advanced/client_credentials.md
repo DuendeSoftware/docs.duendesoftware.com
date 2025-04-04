@@ -31,7 +31,7 @@ You can set the following options:
 * `TokenEndpoint` - URL of the OAuth token endpoint where this token client requests tokens from
 * `ClientId` - client ID
 * `ClientSecret` - client secret (if a shared secret is used)
-* `ClientCredentialStyle` - Specifies how the client ID / secret is sent to the token endpoint. Options are using using the authorization header, or POST body values (defaults to header)
+* `ClientCredentialStyle` - Specifies how the client ID / secret is sent to the token endpoint. Options are using the authorization header, or POST body values (defaults to header)
 * `Scope` - the requested scope of access (if any)
 * `Resource` - the resource indicator (if any)
 
@@ -80,7 +80,7 @@ public class ClientCredentialsClientConfigureOptions : IConfigureNamedOptions<Cl
 }
 ```
 
-..and register the config options e.g. like this:
+You will also need to register the config options, for example:
 
 ```cs
 services.AddClientCredentialsTokenManagement();
@@ -92,7 +92,7 @@ services.AddSingleton<IConfigureOptions<ClientCredentialsClient>,
 
 ### Backchannel communication
 
-By default all backchannel communication will be done using a named client from the HTTP client factory. The name is `Duende.AccessTokenManagement.BackChannelHttpClient` which is also a constant called `ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName`.
+By default, all backchannel communication will be done using a named client from the HTTP client factory. The name is `Duende.AccessTokenManagement.BackChannelHttpClient` which is also a constant called `ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName`.
 
 You can register your own HTTP client with the factory using the above name and thus provide your own custom HTTP client.
 

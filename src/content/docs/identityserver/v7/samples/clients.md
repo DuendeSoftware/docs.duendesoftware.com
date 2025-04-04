@@ -10,7 +10,7 @@ This section contains a collection of various client technologies connecting to 
 ### .NET 4.8 Clients
 
 This sample shows how to add OpenID Connect code flow with PKCE to a .NET 4.8 WebForms client and a .NET 4.8 MVC Client.
-Each client can login, logout, make API requests to a .NET 4.8 WebApi using OAuth, and refresh access tokens.
+Each client can log in, logout, make API requests to a .NET 4.8 WebApi using OAuth, and refresh access tokens.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/clients/Owin)
 

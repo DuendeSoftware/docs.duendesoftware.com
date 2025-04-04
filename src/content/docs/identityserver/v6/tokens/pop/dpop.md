@@ -33,7 +33,7 @@ The main constraint is that it must be stored for as long as the client uses any
 
 DPoP is something a client can use dynamically with no configuration in IdentityServer, but you can configure it as required.
 This is a per-client [setting](/identityserver/v6/reference/models/client#dpop) in your IdentityServer.
-There are additional client as well as [global](/identityserver/v6/reference/options#dpop) DPoP settings to control the behavior.
+There are additional client and [global](/identityserver/v6/reference/options#dpop) DPoP settings to control the behavior.
 
 ```csharp
 new Client

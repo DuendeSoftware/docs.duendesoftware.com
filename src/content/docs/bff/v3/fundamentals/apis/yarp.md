@@ -13,7 +13,7 @@ YARP.
 
 ## Adding YARP
 
-To enable Duende.BFF's YARP integration, add a reference to the *Duende.BFF.Yarp* Nuget package to your project and add
+To enable Duende.BFF's YARP integration, add a reference to the *Duende.BFF.Yarp* NuGet package to your project and add
 YARP and the BFF's YARP extensions to DI:
 
 ```cs

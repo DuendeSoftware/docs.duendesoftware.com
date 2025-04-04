@@ -25,7 +25,7 @@ A successful response will return a status code of 200 and either an active or i
 }
 ```
 
-Unknown or expired tokens will be marked as inactive::
+Unknown or expired tokens will be marked as inactive:
 
 ```json
 {

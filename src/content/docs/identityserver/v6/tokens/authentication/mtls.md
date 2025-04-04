@@ -24,7 +24,7 @@ builder.AddMutualTlsSecretValidators();
 Then add client secret of type *SecretTypes.X509CertificateName* (for PKI-based scenarios) 
 or *SecretTypes.X509CertificateThumbprint* (for self-issued certificates) to the client you want to authenticate.
 
-For example::
+For example:
 
 ```cs
 new Client

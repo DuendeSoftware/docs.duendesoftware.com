@@ -16,7 +16,7 @@ Duende IdentityServer supports the [`poll`](https://openid.net/specs/openid-clie
 Normally when using OpenID Connect, a user accesses a client application on the same device they use to login to the OpenID Connect provider.
 For example, a user (via the browser) uses a web app (the client) and that same browser is redirected for the user to login at IdentityServer (the OpenID Connect provider), and this all takes place on the user's device (e.g. their computer). Another example would be that a user uses a mobile app (the client), and it launches the browser for the user to login at IdentityServer (the OpenID Connect provider), and this all takes place on the user's device (e.g. their mobile phone).
 
-CIBA allow the user to interact with the client application on a different device than the user uses to login.
+CIBA allow the user to interact with the client application on a different device than the user uses to log in.
 For example, the user can use a kiosk at the public library to access their data, but they perform the actual login on their mobile phone. Another example would be a user is at the bank and the bank teller wishes to access the user's account, so the user logs into mobile phone to grant that access.
 
 A nice feature of this workflow is that the user does not enter their credentials into the device the client application is accessed from, and instead a higher trust device can be used for the login step.
@@ -43,7 +43,7 @@ This method is passed a [BackchannelUserLoginRequest](/identityserver/v7/referen
 * **Step 5**: Next, the user should be presented with the information for the login request (e.g. via a web page at IdentityServer, or via any other means appropriate).
 The [IBackchannelAuthenticationInteractionService](/identityserver/v7/reference/services/ciba_interaction_service) can be used to access an indivdual [BackchannelUserLoginRequest](/identityserver/v7/reference/models/ciba_login_request) by its `InternalId`. Once the user has consented and allows the login, then the `CompleteLoginRequestAsync` method should be used to record the result (including which scopes the user has granted).
 
-* **Step 6**: Finally, the client, after polling for the result, will finally be issued the tokens it's requested (or a suitable error if the user has denied the request or it has timed out).
+* **Step 6**: Finally, the client, after polling for the result, will finally be issued the tokens it's requested (or a suitable error if the user has denied the request, or it has timed out).
 
 :::note
 We provide [a sample](/identityserver/v7/samples/misc) for the interactive pages a user might be presented with for the CIBA workflow.

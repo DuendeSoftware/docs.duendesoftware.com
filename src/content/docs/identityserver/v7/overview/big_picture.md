@@ -18,7 +18,7 @@ The most common interactions are:
 * Server-based applications communicate with web APIs
 * Web APIs communicate with web APIs (sometimes on their own, sometimes on behalf of a user)
 
-Typically each and every layer (front-end, middle-tier and back-end) has to protect resources and
+Typically, each and every layer (front-end, middle-tier and back-end) has to protect resources and
 implement authentication and/or authorization – often against the same user store.
 
 Outsourcing these fundamental security functions to a security token service prevents duplicating that functionality
@@ -33,7 +33,7 @@ Such a design divides security concerns into two parts:
 ## Authentication
 
 Authentication is needed when an application needs to know the identity of the current user.
-Typically these applications manage data on behalf of that user and need to make sure that this user can only
+Typically, these applications manage data on behalf of that user and need to make sure that this user can only
 access the data for which they are allowed. The most common example for that is (classic) web applications –
 but native and JS-based applications also have a need for authentication.
 
@@ -50,7 +50,7 @@ Applications have two fundamental ways with which they communicate with APIs –
 or delegating the user’s identity. Sometimes both methods need to be combined.
 
 OAuth2 is a protocol that allows applications to request access tokens from a security token service and use them
-to communicate with APIs. This delegation reduces complexity in both the client applications as well as the APIs since
+to communicate with APIs. This delegation reduces complexity in both the client applications and the APIs since
 authentication and authorization can be centralized.
 
 ## OpenID Connect and OAuth 2.0 – better together

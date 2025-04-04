@@ -6,7 +6,7 @@ sidebar:
 ---
 
 
-Upgrading to a new IdentityServer version is done by updating the Nuget package and handling any breaking
+Upgrading to a new IdentityServer version is done by updating the NuGet package and handling any breaking
 changes. Some updates contain changes to the stores used by IdentityServer that requires database
 schema updates. If you are using our Entity Framework based stores we recommend using Entity Framework
 Migrations.

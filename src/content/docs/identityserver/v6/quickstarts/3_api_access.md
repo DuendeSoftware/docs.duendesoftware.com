@@ -23,13 +23,11 @@ quickstart, you will add scopes for API resources to that request.
 2. the access token, allowing access to APIs on behalf of the logged on user
 
 :::note
-
 We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of the [reference implementation of Quickstart 2](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/Quickstarts/2_InteractiveAspNetCore).
 Throughout this quickstart, paths are written relative to the base *quickstart*
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](0_overview#preparation).
-
 :::
 
 

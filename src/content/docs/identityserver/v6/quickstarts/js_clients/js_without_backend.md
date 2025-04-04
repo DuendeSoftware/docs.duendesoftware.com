@@ -5,13 +5,11 @@ newContentUrl: "https://docs.duendesoftware.com/identityserver/v7/quickstarts/js
 ---
 
 :::note
-
 We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v6/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base *quickstart*
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](/identityserver/v6/quickstarts/0_overview#preparation).
-
 :::
 
 
@@ -26,7 +24,7 @@ This design adds complexity (and thus security concerns) to your application, so
 consider if the ["BFF" pattern](js_with_backend) might be a better
 choice.
 
-In this quickstart the user will login to IdentityServer, invoke an API with an
+In this quickstart the user will log in to IdentityServer, invoke an API with an
 access token issued by IdentityServer, and logout of IdentityServer. All of this
 will be driven from the JavaScript running in the browser.
 
@@ -95,12 +93,9 @@ now.
 In the prior [web application quickstart](/identityserver/v6/quickstarts/3_api_access), we used
 a .NET library to handle the OpenID Connect protocol. In this quickstart, we
 need a similar library in the *JavaScriptClient* project, except one that works
-in JavaScript and is designed to run in the browser. The [oidc-client
-library](https://github.com/IdentityModel/oidc-client-js) is one such library.
-It is available via [NPM](https://github.com/IdentityModel/oidc-client-js), or
-as a [direct
-download](https://github.com/IdentityModel/oidc-client-js/tree/release/dist)
-from github.
+in JavaScript and is designed to run in the browser. The [oidc-client library](https://github.com/IdentityModel/oidc-client-js)
+is one such library. It is available via [NPM](https://github.com/IdentityModel/oidc-client-js), or as a [direct download](https://github.com/IdentityModel/oidc-client-js/tree/release/dist)
+from GitHub.
 
 **NPM**
 
@@ -262,10 +257,8 @@ function logout() {
 ```
 
 :::note
-
 See the [client credentials quickstart](/identityserver/v6/quickstarts/1_client_credentials) for information on how to create the
 remote API used in the code above. 
-
 :::
 
 **callback.html**
@@ -388,9 +381,7 @@ You now have the start of a JavaScript client application that uses
 IdentityServer for sign-in, sign-out, and authenticating calls to web APIs.
 
 :::note
-
 Some browsers limit cross-site interactions (especially in iframes). In Safari,
 Firefox, or Brave you will notice that some important features will not work
 such as silent token renewal and check session monitoring.
-
 :::

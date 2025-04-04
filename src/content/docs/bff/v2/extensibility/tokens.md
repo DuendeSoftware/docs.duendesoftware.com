@@ -21,7 +21,7 @@ builder.Services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClie
 ```
 
 :::note
-You can also supply client assertions to the token management library. See these sample](/bff/v2/samples) for JWT-based client authentication.
+You can also supply client assertions to the token management library. See [these samples](/bff/v2/samples) for JWT-based client authentication.
 :::
 
 ## Custom token storage

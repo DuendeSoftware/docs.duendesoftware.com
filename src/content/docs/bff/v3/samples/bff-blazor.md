@@ -6,7 +6,7 @@ sidebar:
 ---
 
 
-This quickstart walks you through how to create a BFF Blazor application. The sourcecode for this quickstart is available on [github]([link to source code](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v3/Quickstarts/BlazorBffApp))
+This quickstart walks you through how to create a BFF Blazor application. The sourcecode for this quickstart is available on [GitHub](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v3/Quickstarts/BlazorBffApp)
 
 ## Creating the project structure
 
@@ -319,13 +319,14 @@ public class ServerWeatherClient : IWeatherClient
 ```
 
 
-Then add an endpoint to your http pipeline:
+Then add an endpoint to your HTTP pipeline:
 
 ```csharp
 app.MapGet("/WeatherForecast", (IWeatherClient weatherClient) => weatherClient.GetWeatherForecasts());
 ```
 
-Also register the 'server abstraction. 
+Also register the client abstraction:
+
 ```csharp
 builder.Services.AddSingleton<IWeatherClient, ServerWeatherClient>();
 ```

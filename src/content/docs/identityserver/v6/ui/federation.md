@@ -12,7 +12,7 @@ If you offer a number of these external authentication methods, often the term *
 
 Generally, this architecture allows shielding your client applications from the complexities of your authentication workflows and business requirements that go along with them.
 
-Your clients only need to trust the gateway, and the gateway coordinates all the communication and trust relationships with the external providers. This might involve switching between different protocols, token types, claim types etc. Also the gateway can make sure that all claims and identities that ultimately arrive at the client applications are trustworthy and in a format that the client expects.
+Your clients only need to trust the gateway, and the gateway coordinates all the communication and trust relationships with the external providers. This might involve switching between different protocols, token types, claim types etc. Also, the gateway can make sure that all claims and identities that ultimately arrive at the client applications are trustworthy and in a format that the client expects.
 
 There are a number of scenarios where this approach is commonly used.
 
@@ -31,7 +31,7 @@ With a federation gateway, you only need to adapt to these external systems at t
 It's very common to offer federation with your customers' authentication systems in SaaS scenarios. This way your customers get single-sign-on to your applications without having to explicitly create accounts in your identity system.
 
 ### Support for external authentication methods
-IdentityServer leverages the ASP.NET Core authentication infrastructure for communicating with external providers. This means that every authentication system that is supported by ASP.NET Core, can also be used in the context of IdentityServer. This includes support for commercial providers like Google, GitHub or LinkedIn (and [many more](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers)) as well as any OpenID Connect, SAML2p or WS-Federation based systems.
+IdentityServer leverages the ASP.NET Core authentication infrastructure for communicating with external providers. This means that every authentication system that is supported by ASP.NET Core, can also be used in the context of IdentityServer. This includes support for commercial providers like Google, GitHub or LinkedIn (and [many more](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers)) and any OpenID Connect, SAML2p or WS-Federation based systems.
 
 See the [Integrating with External Providers](/identityserver/v6/ui/login/external) section for more details.
 

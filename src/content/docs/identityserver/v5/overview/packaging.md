@@ -7,7 +7,7 @@ order: 40
 ### Product
 You can find the Duende IdentityServer source code on [GitHub](https://github.com/duendesoftware/IdentityServer).
 
-This repo is the source for the following main product Nuget packages:
+This repo is the source for the following main product NuGet packages:
 
 * [Duende IdentityServer](https://www.nuget.org/packages/Duende.IdentityServer)
 * [Duende IdentityServer EntityFramework Integration](https://www.nuget.org/packages/Duende.IdentityServer.EntityFramework)

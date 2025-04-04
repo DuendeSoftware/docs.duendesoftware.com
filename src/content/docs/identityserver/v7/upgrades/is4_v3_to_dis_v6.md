@@ -90,7 +90,7 @@ Copy it into your project folder and then configure it as an embedded resource i
 
 ```
 
-Then modify the migration that was just created. Remove all of the code in the `Up` and `Down` methods are replace the `Up` with this code, which will execute the custom SQL script:
+Then modify the migration that was just created. Remove all the code in the `Up` and `Down` methods are replace the `Up` with this code, which will execute the custom SQL script:
 
 ```
 using System.IO;
@@ -133,7 +133,7 @@ And your database should now be updated.
 
 ## Step 3: Verify your configuration database data
 
-At this point, you should be able to query your migrated database and see your data in tact. 
+At this point, you should be able to query your migrated database and see your data intact. 
 [This script](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3/blob/main/IdentityServerMigrationSample/query_v4.sql) allows you to query the new restructured tables.
 
 ## Step 4: Move onto the upgrade guide for Duende IdentityServer v6

@@ -68,7 +68,7 @@ To validate these implementation specific values and use them to identity the us
 
 * ***request***
 
-    instead of providing all parameters as individual parameters, you can provide all of them as a JWT
+    instead of providing all parameters as individual parameters, you can provide all them as a JWT
 
 
 ```text

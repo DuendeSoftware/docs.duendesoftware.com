@@ -60,7 +60,7 @@ By default, the discovery response is validated before it is returned to the cli
 Policy violation errors will set the `ErrorType` property on the
 `DiscoveryResponse` to `PolicyViolation`.
 
-All of the standard validation rules can be modified using the
+All the standard validation rules can be modified using the
 `DiscoveryPolicy` class, e.g. disabling the issuer name check:
 
 ```csharp
@@ -112,7 +112,7 @@ rotation.
 
 The `DiscoveryCache` class can help you with that.
 
-The following code will set-up the cache, retrieve the document the
+The following code will set up the cache, retrieve the document the
 first time it is needed, and then cache it for 24 hours:
 
 ```csharp
@@ -132,13 +132,13 @@ and also specify a custom discovery policy by passing in a
 
 ### Caching and HttpClient Instances
 
-By default the discovery cache will create a new instance of
+By default, the discovery cache will create a new instance of
 `HttpClient` every time it needs to access the discovery endpoint. You
 can modify this behavior in two ways, either by passing in a pre-created
 instance into the constructor, or by providing a function that will
 return an `HttpClient` when needed.
 
-The following code will setup the discovery cache in DI and will use the
+The following code will set up the discovery cache in DI and will use the
 `HttpClientFactory` to create clients:
 
 ```csharp

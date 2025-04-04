@@ -18,7 +18,7 @@ authentication.
 All the protocol support needed for OpenID Connect is already built into Duende IdentityServer.
 You need to provide the necessary UI parts for login, logout, consent and error.
 
-While the look & feel as well as the exact workflows will probably always differ in every
+While the look & feel and the exact workflows will probably always differ in every
 implementation, we provide an MVC-based sample UI that you can use as a starting point.
 
 This UI can be found in the Quickstart UI [repo](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI).
@@ -56,11 +56,11 @@ run from the src folder:
 We recommend using the self-host option over IIS Express. The rest of the docs assume you are using self-hosting on port 5002.
 :::
 
-To add support for OpenID Connect authentication to the MVC application, you first need to add the NuGet package containing the OpenID Connect handler to your project, e.g.::
+To add support for OpenID Connect authentication to the MVC application, you first need to add the NuGet package containing the OpenID Connect handler to your project, e.g.:
 
     dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 
-..then add the following to *ConfigureServices* in *Startup*:
+...then add the following to *ConfigureServices* in *Startup*:
 
 ```cs
 using System.IdentityModel.Tokens.Jwt;
@@ -89,7 +89,7 @@ services.AddAuthentication(options =>
 
 *AddAuthentication* adds the authentication services to DI.
 
-We are using a cookie to locally sign-in the user (via *Cookies* as the *DefaultScheme*),
+We are using a cookie to locally sign in the user (via *Cookies* as the *DefaultScheme*),
 and we set the *DefaultChallengeScheme* to *oidc* because when we need the user to login, we will be using the OpenID Connect protocol.
 
 We then use *AddCookie* to add the handler that can process cookies.
@@ -100,7 +100,7 @@ We then identify this client via the *ClientId* and the *ClientSecret*.
 *SaveTokens* is used to persist the tokens from IdentityServer in the cookie (as they will be needed later).
 
 :::note
-We use the so called *authorization code* flow with PKCE to connect to the OpenID Connect provider. See [here](/identityserver/v5/fundamentals/clients) for more information on protocol flows.
+We use the so-called *authorization code* flow with PKCE to connect to the OpenID Connect provider. See [here](/identityserver/v5/fundamentals/clients) for more information on protocol flows.
 :::
 
 And then to ensure the execution of the authentication services on each request, add *UseAuthentication* to *Configure* in *Startup*:
@@ -124,7 +124,7 @@ The *RequireAuthorization* method disables anonymous access for the entire appli
 You can also use the *[Authorize]* attribute, if you want to specify authorization on a per controller or action method basis.
 :::
 
-Also modify the home view to display the claims of the user as well as the cookie properties:
+Also modify the home view to display the claims of the user and the cookie properties:
 
 ```cs
 @using Microsoft.AspNetCore.Authentication
@@ -195,7 +195,7 @@ var builder = services.AddIdentityServer()
     .AddTestUsers(TestUsers.Users);
 ```
 
-When you navigate to the *TestUsers* class, you can see that two users called *alice* and *bob* as well as some identity claims are defined.
+When you navigate to the *TestUsers* class, you can see that two users called *alice* and *bob* and some identity claims are defined.
 You can use those users to login.
 
 ## Adding the MVC Client to the IdentityServer Configuration
@@ -251,8 +251,8 @@ You should see a redirect to the login page of the IdentityServer.
 
 ![](images/3_login.png)
 
-After that, the IdentityServer will redirect back to the MVC client, where the OpenID Connect authentication handler processes the response and signs-in the user locally by setting a cookie.
-Finally the MVC view will show the contents of the cookie.
+After that, the IdentityServer will redirect back to the MVC client, where the OpenID Connect authentication handler processes the response and signs in the user locally by setting a cookie.
+Finally, the MVC view will show the contents of the cookie.
 
 ![](images/3_claims.png)
 
@@ -263,7 +263,7 @@ Feel free to copy this token to [jwt.ms](https://jwt.ms) to inspect its content.
 The very last step is to add sign-out to the MVC client.
 
 With an authentication service like IdentityServer, it is not enough to clear the local application cookies.
-In addition you also need to make a roundtrip to the IdentityServer to clear the central single sign-on session.
+In addition, you also need to make a roundtrip to the IdentityServer to clear the central single sign-on session.
 
 The exact protocol steps are implemented inside the OpenID Connect handler, 
 simply add the following code to some controller to trigger the sign-out:
@@ -325,7 +325,7 @@ Next we will add support for external authentication.
 This is really easy, because all you really need is an ASP.NET Core compatible authentication handler.
 
 ASP.NET Core itself ships with support for Google, Facebook, Twitter, Microsoft Account and OpenID Connect.
-In addition you can find implementations for many other authentication providers [here](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers).
+In addition, you can find implementations for many other authentication providers [here](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers).
 
 ## Adding Google support
 To be able to use Google for authentication, you first need to register with them.
@@ -349,16 +349,15 @@ services.AddAuthentication()
         options.ClientSecret = "<insert here>";
     });
 ```
+
 By default, IdentityServer configures a cookie handler specifically for the results of external authentication (with the scheme based on the constant *IdentityServerConstants.ExternalCookieAuthenticationScheme*).
 The configuration for the Google handler is then using that cookie handler.
 
-Now run the MVC client and try to authenticate - you will see a Google button on the login page:
-
-.. image:: images/4_login_page.png
+Now run the MVC client and try to authenticate - you will see a Google button on the login page.
 
 After authentication with the MVC client, you can see that the claims are now being sourced from Google data.
 
-.. note:: If you are interested in the magic that automatically renders the Google button on the login page, inspect the *BuildLoginViewModel* method on the *AccountController*.
+Note: if you are interested in the magic that automatically renders the Google button on the login page, inspect the *BuildLoginViewModel* method on the *AccountController*.
 
 ## Adding an additional OpenID Connect-based external provider
 You can add an additional external provider.

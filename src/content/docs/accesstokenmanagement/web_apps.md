@@ -103,7 +103,7 @@ builder.Services.AddClientAccessTokenHttpClient("masterdata.client",
     configureClient: client => { client.BaseAddress = new Uri("https://api.company.com/masterdata/"); });
 ```
 
-..and as a typed client:
+As a typed client:
 
 ```cs
 builder.Services.AddHttpClient<MasterDataClient>(client =>

@@ -33,8 +33,8 @@ to derive from this class and add your own properties.
 :::
 
 The response is of type *RegistrationResponse* and has properties for
-the standard response parameters. You also have access to the the raw
-response as well as to a parsed JSON document (via the *Raw* and *Json*
+the standard response parameters. You also have access to the raw
+response and to a parsed JSON document (via the *Raw* and *Json*
 properties).
 
 Before using the response, you should always check the *IsError*

@@ -45,7 +45,7 @@ This class models an API.
     List of API scope names. You need to create those using [ApiScope](api_scope).
 
 ## Defining API resources in appsettings.json
-The *AddInMemoryApiResource* extensions method also supports adding API resources from the ASP.NET Core configuration file::
+The *AddInMemoryApiResource* extensions method also supports adding API resources from the ASP.NET Core configuration file:
 
     "IdentityServer": {
         "IssuerUri": "urn:sso.company.com",

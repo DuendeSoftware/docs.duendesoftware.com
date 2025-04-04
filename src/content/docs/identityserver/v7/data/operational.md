@@ -46,7 +46,7 @@ or to be used in risk assessment and threat mitigation scenarios (where suspicio
 For refresh tokens, this sort of custom logic would be performed in the [IRefreshTokenService](/identityserver/v7/reference/services/refresh_token_service).
 
 ### Grant Data
-The `Data` property of the model contains the authoritative copy of the values in the store. This data is protected at rest using the ASP.NET Data Protection API. With the exception of `ConsumedTime`, The other properties of the model should be treated as read-only.
+The `Data` property of the model contains the authoritative copy of the values in the store. This data is protected at rest using the ASP.NET Data Protection API. Except for `ConsumedTime`, the other properties of the model should be treated as read-only.
 
 ### Persisted Grant Service
 Working with the grants store directly might be too low level.
@@ -58,7 +58,7 @@ It abstracts and aggregates the different grant types into one concept, and allo
 The [automatic key management](/identityserver/v7/fundamentals/key_management#automatic-key-management) feature in Duende IdentityServer requires a store to persist keys that are dynamically created.
 
 ### Signing Key Store
-By default, the file system is used, but the storage of these keys is abstracted behind a extensible store interface.
+By default, the file system is used, but the storage of these keys is abstracted behind an extensible store interface.
 The [ISigningKeyStore](/identityserver/v7/reference/stores/signing_key_store) is that storage interface.
 
 ### Registering a custom signing key store

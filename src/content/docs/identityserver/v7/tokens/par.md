@@ -43,12 +43,12 @@ builder.Services.AddIdentityServer(options =>
 
 Using PAR is similar to other flows that use the authorization endpoint, but it adds an initial back-channel request to
 a new protocol endpoint for pushed authorization requests. This endpoint requires client authentication and accepts
-POSTed form-urlencoded data containing all of the same parameters that are accepted at the authorize endpoint.
+POSTed form-urlencoded data containing all the same parameters that are accepted at the authorize endpoint.
 
 The result of the PAR request is JSON containing an identifier (the `request_uri` property) and expiration information (
 the `expires_in` property). Clients then send that identifier to the authorize endpoint instead of the parameters that
 were just pushed. From there, the OAuth or OIDC flow continues as normal. For example, in the authorization code flow,
-the user will be redirected to login and other UI pages as necessary before being redirected back to the client with an
+the user will be redirected to log in and other UI pages as necessary before being redirected back to the client with an
 authorization code which the client subsequently exchanges for tokens.
 
 A sample of how to implement this flow in an ASP.NET application is

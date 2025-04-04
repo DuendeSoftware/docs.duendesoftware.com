@@ -10,10 +10,10 @@ For any pre-requisites (like e.g. templates) have a look at the [Quickstarts Ove
 This quickstart will show how to build a browser-based JavaScript client application with a backend. 
 This means your application will have server-side code that can support the frontend application code.
 
-In this quickstart we will be implementing the BFF pattern (with the help of the *Duende.BFF* library), which means the backend implements all of the security protocol interactions with the token server.
+In this quickstart we will be implementing the BFF pattern (with the help of the *Duende.BFF* library), which means the backend implements all the security protocol interactions with the token server.
 This simplifies the JavaScript in the client-side, and reduces the attack surface of the application.
 
-The features that will be shown in this quickstart will allow the user will login with IdentityServer, invoke a local API hosted in the backend (secured with cookie authentication), invoke a remote API running in a different host (secured with an access token), and logout of IdentityServer (again, all with the help of the backend).
+The features that will be shown in this quickstart will allow the user will log in with IdentityServer, invoke a local API hosted in the backend (secured with cookie authentication), invoke a remote API running in a different host (secured with an access token), and logout of IdentityServer (again, all with the help of the backend).
 
 ## New Project for the JavaScript client
 
@@ -51,7 +51,7 @@ Modify the *JavaScriptClient* project to run on *https://localhost:5003*.
 ### Add services
 
 With the BFF pattern, the server-side code is responsible for triggering and receiving the OpenID Connect requests and responses.
-This means that for our JavaScript application the configuration for session management and OpenID Connect is really no different than our prior [MVC application quickstart](/identityserver/v5/quickstarts/3_api_access).
+This means that for our JavaScript application the configuration for session management and OpenID Connect is really no different from our prior [MVC application quickstart](/identityserver/v5/quickstarts/3_api_access).
 We will be using API controllers later, so we need a call to *AddControllers()*.
 Additionally, the BFF services need to be added with *AddBff()*.
 
@@ -121,7 +121,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
 Next is to add your HTML and JavaScript files to *~/wwwroot*.
 We will have an HTML file and an application-specific JavaScript file.
-In *~/wwwroot*, add a HTML file named *index.html* and add a JavaScript file called *app.js*.
+In *~/wwwroot*, add an HTML file named *index.html* and add a JavaScript file called *app.js*.
 
 **index.html**
 
@@ -285,7 +285,7 @@ You should see that the user is not logged in initially.
 
 ![image](../images/jsbff_not_logged_in.png)
 
-Once you click the login button, the user should be redirected to login at IdentityServer.
+Once you click the login button, the user should be redirected to log in at IdentityServer.
 Once the *JavaScriptClient* application receives the response from IdentityServer then the user should appear logged in and their claims should be displayed.
  
 ![image](../images/jsbff_logged_in.png)
@@ -304,7 +304,7 @@ This would be perfect for APIs that only exist to support the JavaScript fronten
 The authentication for the local API will be based on the user's session cookie in the *JavaScriptClient* application.
 
 A remote API is an API running in some other host other than the *JavaScriptClient* application.
-This would be typical for APIs that are shared by many different applications (e.g. mobile app, other web apps, etc).
+This would be typical for APIs that are shared by many different applications (e.g. mobile app, other web apps, etc.).
 The authentication for remote APIs will use an access token. 
 Fortunately the *JavaScriptClient* application has an access token stored in the user's session.
 We will use the BFF proxy feature to accept a call from the JavaScript running in the browser authenticated with the user's session cookie, locate the access token for the user based on the user's session, and then proxy the call to the remote API sending the access token for authentication.
@@ -351,7 +351,7 @@ app.UseEndpoints(endpoints =>
 });
 ```
 The call to the *AsBffApiEndpoint()* fluent helper method adds BFF support to the local APIs.
-This includes anti-forgery protection as well as suppressing login redirects on authentication failures and instead returning 401 and 403 status codes under the appropriate circumstances.
+This includes anti-forgery protection and suppressing login redirects on authentication failures and instead returning 401 and 403 status codes under the appropriate circumstances.
 
 *MapRemoteBffApiEndpoint()* registers the BFF proxy for the remote API and configures it to pass the user's access token.
 
@@ -407,7 +407,7 @@ async function remoteApi() {
 
 The local API path uses the path as configured in the *Route* attribute applied to the *LocalApiController*.
 The remote API path uses a "/remote" prefix to indicate that the BFF proxy should be used, and the remaining path is what's then passed when invoking the remote API ("/identity" in this case).
-Notice both API calls require a *'X-CSRF': '1'* header, which acts as the anti-forgery token.
+Notice both API calls require an *'X-CSRF': '1'* header, which acts as the anti-forgery token.
 
 :::note
 See the [client credentials quickstart](/identityserver/v5/quickstarts/1_client_credentials) for information on how to create the remote API used in the code above.

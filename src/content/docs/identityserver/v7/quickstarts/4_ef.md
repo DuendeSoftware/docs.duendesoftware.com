@@ -14,14 +14,12 @@ In addition to the written steps below a YouTube video is available:
 <iframe width="853" height="505" src="https://www.youtube.com/embed/GKSp3StwaVA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 :::note
-
 We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of
 the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](/identityserver/v7/quickstarts/0_overview#preparation).
-
 :::
 
 In the previous quickstarts, you configured clients and scopes with code.
@@ -35,11 +33,9 @@ multiple IdentityServer instances, you will use the
 `Duende.IdentityServer.EntityFramework` library.
 
 :::note
-
 This quickstart shows how to add Entity Framework support to IdentityServer
 manually. There is also a template that will create a new IdentityServer project
 with the EntityFramework integration already added: `dotnet new isef`.
-
 :::
 
 ## Configure IdentityServer
@@ -110,13 +106,11 @@ public static WebApplication ConfigureServices(this WebApplicationBuilder builde
 ```
 
 :::note
-
 You will use Entity Framework migrations later on in this quickstart to manage
 the database schema. The call to `MigrationsAssembly(...)` tells Entity
 Framework that the host project will contain the migrations. This is necessary
 since the host project is in a different assembly than the one that contains the
 `DbContext` classes.
-
 :::
 
 ## Managing the Database Schema
@@ -181,11 +175,9 @@ them and seed the database with the same configuration data used in the previous
 quickstarts.
 
 :::note
-
 The approach used in this quickstart is used to make it easy to get
 IdentityServer up and running. You should devise your own database creation and
 maintenance strategy that is appropriate for your architecture.
-
 :::
 
 In `src/IdentityServer/HostingExtensions.cs`, add this method to initialize the
@@ -254,11 +246,9 @@ like SQL Lite Studio to connect and inspect the data.
 ![](images/ef_database.png)
 
 :::note
-
 The `InitializeDatabase` method is convenient way to seed the database, but this
 approach is not ideal to leave in to execute each time the application runs.
 Once your database is populated, consider removing the call to the API.
-
 :::
 
 ## Run the client applications

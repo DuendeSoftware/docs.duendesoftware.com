@@ -14,14 +14,12 @@ an ASP.NET Razor Pages application that will use IdentityServer for
 authentication.
 
 :::note
-
 We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of
 the [reference implementation of Quickstart 1](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](/identityserver/v7/quickstarts/0_overview#preparation).
-
 :::
 
 ## Video
@@ -62,11 +60,9 @@ that enable the UI. Note that there are three places to comment in - two in
 `ConfigurePipeline` and one in `ConfigureServices`.
 
 :::note
-
 There is also a template called `isinmem` which combines the basic
 IdentityServer from the `isempty` template with the quickstart UI from the
 `isui` template.
-
 :::
 
 Comment in the service registration and pipeline configuration, run the
@@ -85,7 +81,7 @@ protect and that clients want to access. In contrast to OAuth, scopes in OIDC
 represent identity data like user id, name or email address rather than APIs.
 
 Add support for the standard `openid` (subject id) and `profile` (first name,
-last name, etc) scopes by declaring them in `src/IdentityServer/Config.cs`:
+last name, etc.) scopes by declaring them in `src/IdentityServer/Config.cs`:
 
 ```cs
 public static IEnumerable<IdentityResource> IdentityResources =>
@@ -107,11 +103,9 @@ builder.Services.AddIdentityServer()
 ```
 
 :::note
-
 All standard scopes and their corresponding claims can be found in the OpenID
 Connect
 [specification](https://openid.net/specs/openid-connect-core-1_0.html#scopeclaims).
-
 :::
 
 ### Add Test Users
@@ -194,14 +188,12 @@ dotnet sln add ./src/WebClient
 ```
 
 :::note
-
 This version of the quickstarts uses [Razor
 Pages](https://docs.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-8.0&tabs=visual-studio)
 for the web client. If you prefer MVC, the conversion is straightforward. See
 the [quickstart for IdentityServer
 5](https://docs.duendesoftware.com/identityserver/v5/quickstarts/2_interactive/)
 that uses it.
-
 :::
 
 ### Install the OIDC NuGet Package
@@ -245,12 +237,10 @@ builder.Services.AddAuthentication(options =>
 ```
 
 :::note
-
 If you are unfamiliar with the fundamentals of how the ASP.NET Core
 authentication system works, then we recommend this recording of an
 [Introduction to ASP.NET Core Authentication and
 Authorization](https://www.youtube.com/watch?v=02Yh3sxzAYI).
-
 :::
 
 `AddAuthentication` registers the authentication services. Notice that in its
@@ -268,17 +258,15 @@ process the local cookie.
 Finally, `AddOpenIdConnect` is used to configure the handler that performs the
 OpenID Connect protocol. The `Authority` indicates where the trusted token
 service is located. The `ClientId` and the `ClientSecret` identify this client.
-The `Scope` is the collection of scopes that the client will request. By default
+The `Scope` is the collection of scopes that the client will request. By default,
 it includes the openid and profile scopes, but clear the collection and add them
 back for explicit clarity. `SaveTokens` is used to persist the tokens in the
 cookie (as they will be needed later).
 
 :::note
-
 This uses the *authorization code* flow with PKCE to connect to the OpenID
 Connect provider. See [here](/identityserver/v7/fundamentals/clients) for more
 information on protocol flows.
-
 :::
 
 ### Configure the Pipeline
@@ -297,12 +285,10 @@ app.MapRazorPages().RequireAuthorization();
 ```
 
 :::note
-
 See the ASP.NET Core documentation on [Razor Pages authorization
 conventions](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0)
 for more options that allow you to specify authorization on a per page or
 directory basis.
-
 :::
 
 ### Display the Auth Cookie
@@ -370,7 +356,7 @@ page in `IdentityServer`.
 
 After you log in, `IdentityServer` will redirect back to `WebClient`, where the
 OpenID Connect authentication handler will process the response and sign-in the
-user locally by setting a cookie. Finally the `WebClient`'s page will show the
+user locally by setting a cookie. Finally, the `WebClient`'s page will show the
 contents of the cookie.
 
 ![](images/2_claims.png)
@@ -604,12 +590,10 @@ the `WebClient` home page, showing that the user is now coming from Google with
 claims sourced from Google's data.
 
 :::note
-
 The Google button is rendered by the login page automatically when there are
 external providers registered as authentication schemes. See the
 `BuildModelAsync` method in `src/IdentityServer/Pages/Account/Login/Index.cshtml.cs` and
 the corresponding Razor template for more details.
-
 :::
 
 #### Adding an additional OpenID Connect-based external provider
@@ -657,12 +641,10 @@ in `WebClient` and note the differences between them, such as the distinct sub
 claims.
 
 :::note
-
 The quickstart UI auto-provisions external users. When an external user logs in
 for the first time, a new local user is created with a copy of all the external
 user's claims. This auto-provisioning process occurs in the `OnGet` method of
 `src/IdentityServer/Pages/ExternalLogin/Callback.cshtml.cs`, and is completely
 customizable. For example, you could modify `Callback` so that it will require
 registration before provisioning the external user.
-
 :::

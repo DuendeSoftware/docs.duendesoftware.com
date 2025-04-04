@@ -75,7 +75,7 @@ required to implement the `IBackchannelAuthenticationUserValidator` interface.
 
 * **`request`**
 
-  instead of providing all parameters as individual parameters, you can provide all of them as a JWT
+  instead of providing all parameters as individual parameters, you can provide all them as a JWT
 
 ```text
 POST /connect/ciba

@@ -52,7 +52,7 @@ specific semantics of your software statements, how you will issue them, how you
 will create the necessary trust relationship between the issuer and your
 Configuration API, and how the Configuration API will validate the software
 statements. The configuration API doesn't make any assumptions about that
-design. By default it does nothing with the *software_statement parameter*; to
-make use of it, [customize](customization#validation) the
+design. By default, it does nothing with the *software_statement parameter*.
+To make use of it, [customize](customization#validation) the
 *DynamicClientRegistrationValidator.ValidateSoftwareStatementAsync* extension
 point.

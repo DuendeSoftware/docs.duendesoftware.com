@@ -28,9 +28,9 @@ For web assembly rendering, you'll need to make the data available via a web ser
 
 When using auto-rendering mode, you'll need to make sure that the component get's a different 'data access' component for server rendering vs client rendering. Consider the following diagram:
 
-![local api's](../../images/bff_blazor_local_api.svg)
+![local APIs](../../images/bff_blazor_local_api.svg)
 
-In this diagram, you'll see the example **IDataAccessor** that has two implementations. One that accesses the data via a HTTP client (for use in WASM) and one that directly accesses the data. 
+In this diagram, you'll see the example **IDataAccessor** that has two implementations. One that accesses the data via an HTTP client (for use in WASM) and one that directly accesses the data. 
 
 The data is also exposed (and secured by the BFF) via a local api. 
 
@@ -77,7 +77,7 @@ internal class HttpClientDataAccessor(HttpClient client) : IDataAccessor
 
 ## Fetching data from remote APIs
 
-If your BFF needs to secure access to remote api's, then your components can both directly use a (typed) **HttpClient**. How this HttpClient is configured is quite different on the client vs the server though. 
+If your BFF needs to secure access to remote APIs, then your components can both directly use a (typed) **HttpClient**. How this HttpClient is configured is quite different on the client vs the server though. 
 
 
 * On the **Client**, the http client needs to be secured with the authentication cookie and CORS protection headers. This 
@@ -87,7 +87,7 @@ then calls the http endpoint on the server.
 
 This diagram shows this in more detail:
 
-![remote api's](../../images/bff_blazor_remote_api.svg)
+![remote APIs](../../images/bff_blazor_remote_api.svg)
 
 ```csharp
 // setup on the server

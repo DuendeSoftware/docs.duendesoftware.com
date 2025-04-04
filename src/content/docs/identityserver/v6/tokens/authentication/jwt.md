@@ -84,7 +84,7 @@ private static string CreateClientToken(SigningCredentials credential, string cl
 }
 ```
 
-..and the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code. 
+...and the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the protocol endpoint from .NET code. 
 
 ```cs
 using IdentityModel.Client;

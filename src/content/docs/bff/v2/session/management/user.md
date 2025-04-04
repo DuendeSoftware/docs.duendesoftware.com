@@ -12,7 +12,7 @@ The */bff/user* endpoint returns data about the currently logged-on user and the
 ## Output
 If there is no current session, the user endpoint returns a response indicating that the user is anonymous. By default, this is a 401 status code, but this can be [configured](#anonymous-session-response-option).
 
-If there is a current session, the user endpoint returns a JSON array containing the claims in the ASP.NET Core authentication session as well as several BFF specific claims. For example:
+If there is a current session, the user endpoint returns a JSON array containing the claims in the ASP.NET Core authentication session and several BFF specific claims. For example:
 
 ```json
 [
@@ -59,14 +59,14 @@ This is the number of seconds the current session will be valid for.
 
 **bff:session_state**
 
-This is the session state value of the upstream OIDC provider that can be use for the JavaScript *check_session* mechanism (if provided).
+This is the session state value of the upstream OIDC provider that can be used for the JavaScript *check_session* mechanism (if provided).
 
 **bff:logout_url**
 
 This is the URL to trigger logout. If the upstream provider includes a *sid* claim, the BFF logout endpoint requires this value as a query string parameter for CSRF protection. This behavior can be configured with the *RequireLogoutSessionId* in the [options](/bff/v2/options).
 
 ## Typical Usage
-To use the endpoint, make an http GET request to it from your frontend javascript code. For example, your application could use the fetch api to make requests to the user endpoint like this:
+To use the endpoint, make an HTTP GET request to it from your frontend javascript code. For example, your application could use the fetch api to make requests to the user endpoint like this:
 
 ```js
 var req = new Request("/user", {

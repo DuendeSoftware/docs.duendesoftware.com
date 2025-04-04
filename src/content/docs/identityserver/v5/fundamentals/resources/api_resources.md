@@ -6,8 +6,8 @@ order: 30
 
 When the API/resource surface gets larger, a flat list of scopes might become hard to manage.
 
-In Duende IdentityServer, the *ApiResource* class allows for some additional organization as well as grouping and
-isolation of scopes as well as providing some common settings.
+In Duende IdentityServer, the *ApiResource* class allows for some additional organization and grouping and
+isolation of scopes and providing some common settings.
 
 Let's use the following scope definition as an example:
 
@@ -55,7 +55,7 @@ Using the API resource grouping gives you the following additional features
 
 * support for the JWT *aud* claim. The value(s) of the audience claim will be the name of the API resource(s)
 * support for adding common user claims across all contained scopes
-* support for introspection by assigning a API secret to the resource
+* support for introspection by assigning an API secret to the resource
 * support for configuring the access token signing algorithm for the resource
 
 Let's have a look at some example access tokens for the above resource configuration.
@@ -63,7 +63,7 @@ Let's have a look at some example access tokens for the above resource configura
 Client requests: **invoice.read** and **invoice.pay**:
 
 ```json
-    {
+{
   "typ": "at+jwt"
 }.
 {
@@ -77,7 +77,7 @@ Client requests: **invoice.read** and **invoice.pay**:
 Client requests: **invoice.read** and **customer.read**:
 
 ```json
-    {
+{
   "typ": "at+jwt"
 }.
 {
@@ -94,7 +94,7 @@ Client requests: **invoice.read** and **customer.read**:
 Client requests: **manage**:
 
 ```json
-    {
+{
   "typ": "at+jwt"
 }.
 {

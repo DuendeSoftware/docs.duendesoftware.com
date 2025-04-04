@@ -17,8 +17,8 @@ is also responsible for passing the finished *Client* to the [store](store)
 
 #### Members
 
-| name | description |
-| --- | --- |
+| name            | description                                                                                                                                                                                 |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ProcessAsync(…) | Processes a valid dynamic client registration request, setting properties of the client that are not specified in the request, and storing the new client in the IClientConfigurationStore. |
 
 
@@ -38,15 +38,15 @@ that returns an [*IStepResult*](models#istepresult). The *DynamicClientRegistrat
 have its properties set, the DCR request, and other contextual information. The
 *IStepResult* either represents that the step succeeded or failed.
 
-| name | description |
-| --- | --- |
-| virtual AddClientId | Generates a client ID and adds it to the validatedRequest's client model. |
-| virtual AddClientSecret | Adds a client secret to a dynamic client registration request. |
+| name                    | description                                                               |
+|-------------------------|---------------------------------------------------------------------------|
+| virtual AddClientId     | Generates a client ID and adds it to the validatedRequest's client model. |
+| virtual AddClientSecret | Adds a client secret to a dynamic client registration request.            |
 
 ## Secret Generation
 The *AddClientSecret* method is responsible for adding the client's secret and
 plaintext of that secret to the context's *Items* dictionary for later use. If you want to customize secret generation more simply, you can override the GenerateSecret method, which only needs to return a tuple containing the secret and its plaintext.
 
-| name | description |
-| --- | --- |
+| name                   | description                                                   |
+|------------------------|---------------------------------------------------------------|
 | virtual GenerateSecret | Generates a secret for a dynamic client registration request. |

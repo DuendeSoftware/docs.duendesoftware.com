@@ -59,7 +59,7 @@ MVC controllers for the user interface of IdentityServer.
 
 * **`RevokeTokensForCurrentSessionAsync`**
 
-  Revokes all of a user's consents and grants for clients the user has signed into during their current session.
+  Revokes all of a user's consents and grants for clients the user has signed in to during their current session.
 
 ## Returned models
 

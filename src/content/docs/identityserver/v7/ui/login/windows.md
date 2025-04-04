@@ -17,7 +17,7 @@ The typical ASP.NET Core `CreateDefaultBuilder` host setup enables support for I
 Make sure that Windows authentication is enabled in `launchSettings.json` or your IIS configuration.
 
 The IIS integration layer will configure a Windows authentication handler into DI that can be invoked via the authentication service.
-Typically in your IdentityServer it is advisable to disable the automatic behavior. 
+Typically, in your IdentityServer it is advisable to disable the automatic behavior. 
 
 This is done in `ConfigureServices` (details vary depending on in-proc vs out-of-proc hosting)::
 
@@ -29,7 +29,7 @@ builder.Services.Configure<IISOptions>(iis =>
     iis.AutomaticAuthentication = false;
 });
 
-// ..or configures IIS in-proc settings
+// ...or configures IIS in-proc settings
 builder.Services.Configure<IISServerOptions>(iis =>
 {
     iis.AuthenticationDisplayName = "Windows";

@@ -136,7 +136,7 @@ Notice the use of the *SignInManager<ApplicationUser>* and *UserManager<Applicat
 Much of the rest of the code is the same from the prior quickstarts and templates.
 
 ## Logging in with the MVC client
-At this point, you should be able to run all of the existing clients and samples.
+At this point, you should be able to run all the existing clients and samples.
 Launch the MVC client application, and you should be able to click the "Secure" link to get logged in.
 
 ![](images/aspid_mvc_client.png)

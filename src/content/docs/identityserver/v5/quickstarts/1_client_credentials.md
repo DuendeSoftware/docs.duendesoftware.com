@@ -19,7 +19,7 @@ to gain access to the API.
 
 ## Source Code
 
-As with all of these quickstarts you can find the source code for it in
+As with all these quickstarts you can find the source code for it in
 the [docs](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v5/Quickstarts) repository.
 The project for this quickstart
 is [Quickstart #1: Securing an API using Client Credentials](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v5/Quickstarts/1_ClientCredentials).
@@ -109,7 +109,7 @@ users.
 
 The next step is to define a client application that we will use to access our new API.
 
-For this scenario, the client will not have an interactive user, and will authenticate using the so called client secret
+For this scenario, the client will not have an interactive user, and will authenticate using the so-called client secret
 with Duende IdentityServer.
 
 For this, add a client definition:
@@ -206,10 +206,10 @@ public class IdentityController : ControllerBase
 }
 ```
 
-This controller will be used later to test the authorization requirement, as well as visualize the claims identity
+This controller will be used later to test the authorization requirement, and visualize the claims identity
 through the eyes of the API.
 
-#### Adding a Nuget Dependency
+#### Adding a NuGet Dependency
 
 In order for the configuration step to work the NuGet package dependency has to be added, run this command in the root
 directory.
@@ -288,11 +288,11 @@ Then as before, add it to your solution using:
     dotnet sln add .\src\Client\Client.csproj
 
 The token endpoint at IdentityServer implements the OAuth 2.0 protocol, and you could use raw HTTP to access it.
-However, we have a client library called IdentityModel, that encapsulates the protocol interaction in an easy to use
+However, we have a client library called IdentityModel, that encapsulates the protocol interaction in an easy-to-use
 API.
 
 Add the *IdentityModel* NuGet package to your client.
-This can be done either via Visual Studio's Nuget Package manager or dotnet CLI::
+This can be done either via Visual Studio's NuGet Package manager or dotnet CLI::
 
     cd src
     cd client
@@ -410,7 +410,7 @@ You can now enforce this policy at various levels, e.g.
 * for all API endpoints
 * for specific controllers/actions
 
-Typically you setup the policy for all API endpoints in the routing system:
+Typically, you set up the policy for all API endpoints in the routing system:
 
 ```cs
 app.UseEndpoints(endpoints =>

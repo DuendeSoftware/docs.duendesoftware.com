@@ -19,13 +19,13 @@ supports the frontend application code. This is known as the Backend For
 Frontend (BFF) pattern. 
 
 You will implement the BFF pattern with the help of the `Duende.BFF` library.
-The backend will implement all of the security protocol interactions with the
+The backend will implement all the security protocol interactions with the
 token server and will be responsible for management of the tokens. The
 client-side JavaScript authenticates with the BFF using traditional cookie
 authentication. This simplifies the JavaScript in the client-side, and reduces
 the attack surface of the application.
 
-The features that will be shown in this quickstart will allow the user to login
+The features that will be shown in this quickstart will allow the user to log in
 with IdentityServer, invoke a local API hosted in the backend (secured with
 cookie authentication), invoke a remote API running in a different host (secured
 with an access token), and logout of IdentityServer.
@@ -85,7 +85,7 @@ Modify the `JavaScriptClient` project to run on `https://localhost:5003`. Its
 In the BFF pattern, the server-side code triggers and receives OpenID Connect
 requests and responses. To do that, it needs the same services configured as the
 WebClient did in the prior [web application quickstart](/identityserver/v7/quickstarts/3_api_access). Additionally, the BFF services need to be added with
-`AddBff()`. In addition the offline_access scope is requested that will result in
+`AddBff()`. In addition, the offline_access scope is requested that will result in
 a refresh token that will be used by the BFF library to automatically refresh the
 access token for the remote API if needed.
 
@@ -302,7 +302,7 @@ configuration entry in IdentityServer for the new JavaScript client.
 In the IdentityServer project locate the client configuration in
 `src/IdentityServer/Config.cs`. Add a new `Client` to the list for your new
 JavaScript application. Because this client uses the BFF pattern, the
-configuration will be very similar to the Web client. In addition requesting
+configuration will be very similar to the Web client. In addition, requesting
 the offline_access scope should be allowed for this client. It should have the
 configuration listed below:
 
@@ -339,8 +339,8 @@ You should see that the user is not logged in initially.
 ![image](../images/jsbff_not_logged_in.png)
 
 When you click the login button, you'll be redirected to IdentityServer to
-login. After you login, you'll be redirected back to the `JavaScriptClient`
-application, where you'll be signed into the Cookies authentication scheme with
+login. After you log in, you'll be redirected back to the `JavaScriptClient`
+application, where you'll be signed in with the Cookies authentication scheme with
 your tokens saved in the session.
 
 The app loads again, but this time it has a session cookie. So,
@@ -369,7 +369,7 @@ the user's session cookie.
 
 A remote API is an API running in some other host than the `JavaScriptClient`
 application. This is useful for APIs that are shared by many different
-applications (e.g. mobile app, other web apps, etc). Remote APIs are
+applications (e.g. mobile app, other web apps, etc.). Remote APIs are
 authenticated with an access token. Fortunately, the `JavaScriptClient`
 application has an access token stored in the user's session. You will use the
 BFF proxy feature to accept a call from the JavaScript running in the browser
@@ -384,7 +384,7 @@ Handlers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
 For simplicity, this quickstart uses a minimal API with its handler defined
 directly in `Program.cs`, but you can organize your Local APIs however you like.
 
-Add a handler to `src/JavaScriptClient/Program.cs` for the the local API:
+Add a handler to `src/JavaScriptClient/Program.cs` for the local API:
 ```cs
 [Authorize] 
 static IResult LocalIdentityHandler(ClaimsPrincipal user)
@@ -396,12 +396,10 @@ static IResult LocalIdentityHandler(ClaimsPrincipal user)
 ```
 
 :::note
-
 Local APIs often make requests to remote APIs that are authorized with the
 user's access token. To get the access token, call the `GetUserAccessTokenAsync`
 extension method on the `HttpContext`. For example: *var token = await
 HttpContext.GetUserAccessTokenAsync();*
-
 :::
 
 ### Update routing to accept local and remote API calls
@@ -423,7 +421,7 @@ API in the ASP.NET Core routing system. Add the code below to the endpoint confi
       .RequireAccessToken(Duende.Bff.TokenType.User);
 ```
 The call to the `AsBffApiEndpoint()` fluent helper method adds BFF support to
-the local APIs. This includes anti-forgery protection as well as suppressing
+the local APIs. This includes anti-forgery protection and suppressing
 login redirects on authentication failures and instead returning 401 and 403
 status codes under the appropriate circumstances.
 
@@ -477,21 +475,19 @@ async function remoteApi() {
 }
 ```
 
-The path for the local API is exactly what you set in the the call to `MapGet`
+The path for the local API is exactly what you set in the call to `MapGet`
 in `src/JavaScriptClient/Program.cs`. 
 
 The path for the remote API uses a "/remote" prefix to indicate that the BFF
 proxy should be used, and the remaining path is what's then passed when invoking
 the remote API ("/identity" in this case). 
 
-Notice both API calls require a *'X-CSRF': '1'* header, which acts as the
+Notice both API calls require an *'X-CSRF': '1'* header, which acts as the
 anti-forgery token.
 
 :::note
-
 See the [client credentials quickstart](/identityserver/v7/quickstarts/1_client_credentials) for information on how to create the
 remote API used in the code above. 
-
 :::
 
 ## Run and test the API calls

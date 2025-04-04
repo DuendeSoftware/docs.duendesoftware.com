@@ -31,7 +31,7 @@ var scopes = new List<ApiScope>
 };
 ```
 
-..and give your clients access to this API, e.g.:
+...and give your clients access to this API, e.g.:
 
 ```cs
 new Client
@@ -68,7 +68,7 @@ public class LocalApiController : ControllerBase
 Authorized clients can then request a token for the `IdentityServerApi` scope and use it to call the API.
 
 ## Discovery
-You can also add your endpoints to the discovery document if you want, e.g like this::
+You can also add your endpoints to the discovery document if you want, e.g.like this::
 
 ```cs
 builder.Services.AddIdentityServer(options =>

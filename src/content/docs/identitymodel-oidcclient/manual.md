@@ -25,7 +25,7 @@ var state = await client.PrepareLoginAsync();
 
 When the browser work is done, OidcClient can take over to process the
 response, get the access/refresh tokens, contact userinfo endpoint
-etc..:
+etc.:
 
 ```csharp
 var result = await client.ProcessResponseAsync(data, state);

@@ -26,12 +26,12 @@ Blazor is very flexible in how it renders applications (and even individual comp
 * **WASM** It's possible to create web assembly components that render completely in the browser. All interactivity is executed in the browser. 
 * **Auto** It's even possible to create components that initially render on the server, but then transition to WASM based rendering (and interactivity) when the WASM Components have been downloaded by the browser. 
 
-These rendering modes are very powerful, but also add additional complexity when it comes to authentication and authorization. Any code that executes on the server can directly access local resources, such has a database, but code that executes on the client needs to through a local http endpoint (that requires authentication). Accessing external API's is also different between server and client, where the client needs to go through a proxy which performs a token exchange. 
+These rendering modes are very powerful, but also add additional complexity when it comes to authentication and authorization. Any code that executes on the server can directly access local resources, such has a database, but code that executes on the client needs to through a local http endpoint (that requires authentication). Accessing external APIs is also different between server and client, where the client needs to go through a proxy which performs a token exchange. 
 
 For more information on this, see [rendering-modes](/bff/v3/fundamentals/blazor/rendering-modes)
 
 ### Authentication State
-The **AuthenticationState ** is contains information about the currently logged in user. This is partly populated from information from the user, but is also enriched with several management claims, such as the Logout URL. 
+The **AuthenticationState ** contains information about the currently logged-in user. This is partly populated from information from the user, but is also enriched with several management claims, such as the Logout URL. 
 
 Blazor uses AuthenticationStateProviders to make authentication state available to components. On the server, the authentication state is already mostly managed by the authentication framework. However, the BFF will add the Logout url to the claims using the **AddServerManagementClaimsTransform**.  On the client, there are some other claims that might be useful. The **BffClientAuthenticationStateProvider** will poll the server to update the client on the latest authentication state, such as the user's claims. This also notifies the front-end if the session is terminated on the server. 
 
