@@ -34,5 +34,8 @@
     "starlight-giscus": "^0.5.1",
     "starlight-heading-badges": "^0.5.0",
     "starlight-links-validator": "^0.14.3"
+  },
+  "devDependencies": {
+    "prettier": "3.5.3"
   }
 }
