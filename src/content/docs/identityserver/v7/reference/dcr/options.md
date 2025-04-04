@@ -4,6 +4,10 @@ sidebar:
   order: 60
 ---
 
+The page describes the `IdentityServerConfigurationOptions` class, which provides top-level configuration options for
+IdentityServer, including the `DynamicClientRegistrationOptions` class for managing dynamic client registration and
+secret lifetimes.
+
 ## IdentityServerConfigurationOptions
 
 Top level options for IdentityServer.Configuration.
@@ -12,7 +16,7 @@ Top level options for IdentityServer.Configuration.
 public class IdentityServerConfigurationOptions
 ```
 
-#### Public Members
+### Public Members
 
 | name                                                                         | description                             |
 |------------------------------------------------------------------------------|-----------------------------------------|
@@ -26,7 +30,7 @@ Options for dynamic client registration.
 public class DynamicClientRegistrationOptions
 ```
 
-#### Public Members
+### Public Members
 
 | name                         | description                                                                                                                                               |
 |------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|

@@ -29,6 +29,7 @@ Custom implementations of `IPersistedGrantStore`, and/or `IDeviceFlowStore` must
 For example:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer();
 
 builder.Services.AddTransient<IPersistedGrantStore, YourCustomPersistedGrantStore>();
@@ -67,6 +68,7 @@ To register a custom signing key store in the DI container, there is a `AddSigni
 For example:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddSigningKeyStore<YourCustomStore>();
 ```
@@ -104,6 +106,7 @@ It is still necessary to call `AddServerSideSessions` to enable the server-side 
 For example:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddServerSideSessions()
     .AddServerSideSessionStore<YourCustomStore>();
@@ -113,6 +116,7 @@ There is also an overloaded version of a `AddServerSideSessions` that will perfo
 For example:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddServerSideSessions<YourCustomStore>();
 ```
@@ -126,11 +130,11 @@ For example:
 
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddServerSideSessions()
     .AddOperationalStore(options =>
     {
        // ...
     });
-
 ```

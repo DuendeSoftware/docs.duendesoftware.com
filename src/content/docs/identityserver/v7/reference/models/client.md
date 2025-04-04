@@ -6,7 +6,7 @@ sidebar:
   order: 35
 ---
 
-#### Duende.IdentityServer.Models.Client
+## Duende.IdentityServer.Models.Client
 
 The `Client` class models an OpenID Connect or OAuth 2.0 client -
 e.g. a native application, a web application or a JS-based application.

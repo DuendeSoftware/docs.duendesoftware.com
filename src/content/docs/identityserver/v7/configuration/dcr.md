@@ -24,25 +24,30 @@ cases, you may find that hosting the two systems together better fits your
 needs.
 
 ### Separate Host for Configuration API
+
 To host the configuration API separately from IdentityServer:
 
 #### Create a new empty web application
+
 ```bash title=Terminal
 dotnet new web -n Configuration
 ```
 
 #### Add the Duende.IdentityServer.Configuration package
+
 ```bash title=Terminal
 cd Configuration
 dotnet add package Duende.IdentityServer.Configuration
 ```
 
 #### Configure Services
+
 ```cs
 builder.Services.AddIdentityServerConfiguration(opt =>
     opt.LicenseKey = "<license>";
 );
 ```
+
 The Configuration API feature is included in the IdentityServer Business edition
 license and higher. Use the same license key for IdentityServer and the
 Configuration API.
@@ -73,22 +78,27 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
 ```
 
 #### Map Configuration Endpoints
+
 ```cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 ```
+
 `MapDynamicClientRegistration` registers the DCR endpoints and returns an
 `IEndpointConventionBuilder` which you can use to define authorization
 requirements for your DCR endpoint. See [Authorization](authorization) for more details.
 
 ## Shared Host for Configuration API and IdentityServer
+
 To host the configuration API in the same host as IdentityServer:
 
 #### Add the Duende.IdentityServer.Configuration package
+
 ```bash title=Terminal
 dotnet add package Duende.IdentityServer.Configuration
 ```
 
 #### Add the Configuration API's services to the service collection:
+
 ```cs
 builder.Services.AddIdentityServerConfiguration();
 ```
@@ -98,7 +108,7 @@ builder.Services.AddIdentityServerConfiguration();
 The Configuration API uses the `IClientConfigurationStore` abstraction to
 persist new clients to the configuration store. Your Configuration API host
 needs an implementation of this interface. You can either use the built-in
-Entity Framework-based implementation, or implement the interface yourself.  See
+Entity Framework-based implementation, or implement the interface yourself. See
 [the IClientConfigurationStore reference](reference/store) for
 more details. If you wish to use the built-in implementation, install its NuGet
 package and add it to DI.
@@ -117,15 +127,17 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
     options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
 });
 ```
+
 #### Map Configuration Endpoints:
+
 ```cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 
 ```
+
 `MapDynamicClientRegistration` registers the DCR endpoints and returns an
 `IEndpointConventionBuilder` which you can use to define authorization
 requirements for your DCR endpoint. See [Authorization](authorization) for more details.
-
 
 ## Authorization
 
@@ -225,18 +237,32 @@ that occurs, errors are conveyed using the `DynamicClientRegistrationError`
 class.
 
 ### Validation
-To customize the validation process, you can either implement the `IDynamicClientRegistrationValidator` interface or extend from the default implementation of that interface, the `DynamicClientRegistrationValidator`. The default implementation includes many virtual methods, allowing you to use most of the base functionality and add your customization in a targeted manner.
 
-Each virtual method is responsible for validating a small number of parameters in the request and setting corresponding values on the client. The steps are passed a context object containing the client object that is being built up, the original request, the claims principal that made the request, and a dictionary of additional items that can be used to pass state between customized steps. Each step should update the client in the context and return an `IStepResult` to indicate success or failure.
+To customize the validation process, you can either implement the `IDynamicClientRegistrationValidator` interface or
+extend from the default implementation of that interface, the `DynamicClientRegistrationValidator`. The default
+implementation includes many virtual methods, allowing you to use most of the base functionality and add your
+customization in a targeted manner.
+
+Each virtual method is responsible for validating a small number of parameters in the request and setting corresponding
+values on the client. The steps are passed a context object containing the client object that is being built up, the
+original request, the claims principal that made the request, and a dictionary of additional items that can be used to
+pass state between customized steps. Each step should update the client in the context and return an `IStepResult` to
+indicate success or failure.
 
 For more details, see the [reference section on validation](reference/validation)
 
 ### Processing
-In a similar way, the request processor can be customized by implementing an `IDynamicClientRegistrationRequestProcessor` or by extending from the default `DynamicClientRegistrationRequestProcessor`. Again, the default request processor contains virtual methods that allow you to override a part of its functionality.
+
+In a similar way, the request processor can be customized by implementing an
+`IDynamicClientRegistrationRequestProcessor` or by extending from the default
+`DynamicClientRegistrationRequestProcessor`. Again, the default request processor contains virtual methods that allow
+you to override a part of its functionality.
 
 For more details, see the [reference section on request processing](reference/processing)
 
 ### Response Generation
-Finally, to customize the HTTP responses of the Configuration API, you can implement the `IDynamicClientRegistrationResponseGenerator` or extend from the default `DynamicClientRegistrationResponseGenerator`.
+
+Finally, to customize the HTTP responses of the Configuration API, you can implement the
+`IDynamicClientRegistrationResponseGenerator` or extend from the default `DynamicClientRegistrationResponseGenerator`.
 
 For more details, see the [reference section on response generation](reference/response)

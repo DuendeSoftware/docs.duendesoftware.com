@@ -6,7 +6,7 @@ sidebar:
   order: 90
 ---
 
-#### Duende.IdentityServer.Licensing.LicenseUsageSummary
+## Duende.IdentityServer.Licensing.LicenseUsageSummary
 
 The `LicenseUsageSummary` class allows developers to get a
 detailed summary of clients, issuers, and features used

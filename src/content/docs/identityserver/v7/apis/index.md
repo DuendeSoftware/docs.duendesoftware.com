@@ -92,15 +92,15 @@ This covers the most common scenarios. You can customize this behavior in the fo
 
 
 ```cs
-    builder.Services.AddAuthorization(options =>
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(IdentityServerConstants.LocalApi.PolicyName, policy =>
     {
-        options.AddPolicy(IdentityServerConstants.LocalApi.PolicyName, policy =>
-        {
-            policy.AddAuthenticationSchemes(IdentityServerConstants.LocalApi.AuthenticationScheme);
-            policy.RequireAuthenticatedUser();
-            // custom requirements
-        });
+        policy.AddAuthenticationSchemes(IdentityServerConstants.LocalApi.AuthenticationScheme);
+        policy.RequireAuthenticatedUser();
+        // custom requirements
     });
+});
 ```
 
 ## Claims Transformation

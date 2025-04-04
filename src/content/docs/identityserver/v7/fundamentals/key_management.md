@@ -53,6 +53,7 @@ when they are retired. All of these options are configurable in the
 `KeyManagement` options. For example:
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {   
     // new key every 30 days
@@ -91,6 +92,7 @@ If you are deploying in a load balanced environment and wish to use the
 access to the `KeyPath`.
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {   
     // set path to store keys
@@ -164,6 +166,7 @@ flag to `false` on the `KeyManagement` property of
 [`IdentityServerOptions`](/identityserver/v7/reference/options#key-management):
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.KeyManagement.Enabled = false;
@@ -223,6 +226,7 @@ Signing keys are added with the [`AddSigningCredential`](/identityserver/v7/refe
 method:
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer();
 var key = LoadKeyFromVault(); // (Your code here)
 idsvrBuilder.AddSigningCredential(key, SecurityAlgorithms.RsaSha256);

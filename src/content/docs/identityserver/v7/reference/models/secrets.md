@@ -5,7 +5,7 @@ sidebar:
   order: 70
 ---
 
-#### Duende.IdentityServer.Validation.ISecretParser
+## Duende.IdentityServer.Validation.ISecretParser
 
 Parses a secret from the raw HTTP request.
 

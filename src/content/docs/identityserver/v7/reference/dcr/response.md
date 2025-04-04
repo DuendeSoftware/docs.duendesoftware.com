@@ -13,7 +13,7 @@ for a service that generates dynamic client registration responses.
 public interface IDynamicClientRegistrationResponseGenerator
 ```
 
-#### Members
+### Members
 
 | name                     | description                                                              |
 |--------------------------|--------------------------------------------------------------------------|
@@ -29,7 +29,7 @@ public interface IDynamicClientRegistrationResponseGenerator
 
 The `DynamicClientRegistrationResponseGenerator` is the default implementation of the `IDynamicClientRegistrationResponseGenerator`. If you wish to customize a particular aspect of response generation, you can extend this class and override the appropriate methods. You can also set JSON serialization options by overriding its `SerializerOptions` property.
 
-#### Members
+### Members
 
 | name                            | description                                         |
 |---------------------------------|-----------------------------------------------------|

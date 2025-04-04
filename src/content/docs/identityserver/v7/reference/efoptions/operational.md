@@ -4,7 +4,7 @@ sidebar:
   order: 10
 ---
 
-#### Duende.IdentityServer.EntityFramework.Options.OperationalStoreOptions
+## Duende.IdentityServer.EntityFramework.Options.OperationalStoreOptions
 
 These options are configurable when using the Entity Framework Core for
 the [operational store](/identityserver/v7/data/operational):
@@ -19,7 +19,7 @@ builder.Services.AddIdentityServer()
     })
 ```
 
-## Pooling
+### Pooling
 
 Settings that affect the DbContext pooling feature of Entity Framework Core.
 
@@ -32,7 +32,7 @@ Settings that affect the DbContext pooling feature of Entity Framework Core.
 
   Gets or set the pool size to use when DbContext pooling is enabled. If not set, the EF default is used.
 
-## Schema
+### Schema
 
 Settings that affect the database schema and table names.
 
@@ -47,7 +47,7 @@ Settings that affect the database schema and table names.
 * **`Keys`**
 * **`ServerSideSessions`**
 
-## Persisted Grants Cleanup
+### Persisted Grants Cleanup
 
 Settings that affect the background cleanup of expired entries (tokens) from the persisted grants table.
 

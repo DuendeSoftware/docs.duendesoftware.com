@@ -5,7 +5,7 @@ sidebar:
   order: 20
 ---
 
-#### Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions
+## Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions
 
 These options are configurable when using the Entity Framework Core for
 the [configuration store](/identityserver/v7/data/configuration):
@@ -20,7 +20,7 @@ var builder = services.AddIdentityServer()
     })
 ```
 
-## Pooling
+### Pooling
 
 Settings that affect the DbContext pooling feature of Entity Framework Core.
 
@@ -33,7 +33,7 @@ Settings that affect the DbContext pooling feature of Entity Framework Core.
 
   Gets or set the pool size to use when DbContext pooling is enabled. If not set, the EF default is used.
 
-## Schema
+### Schema
 
 Settings that affect the database schema and table names.
 

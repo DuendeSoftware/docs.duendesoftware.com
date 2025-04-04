@@ -10,7 +10,7 @@ Added in Duende IdentityServer v6.1 and expanded in v7.0
 :::
 
 [OpenTelemetry](https://opentelemetry.io) is a collection of tools, APIs, and SDKs for generating and collecting
-telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior, 
+telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior,
 especially in highly distributed systems.
 
 .NET 8 comes with first class support for Open Telemetry. IdentityServer emits traces, metrics and logs.
@@ -20,15 +20,19 @@ especially in highly distributed systems.
 Metrics are high level statistic counters. They provide an aggregated overview and can be used to set monitoring rules.
 
 ### Logs
+
 OpenTelemetry in .NET 8 exports the logs written to the standard ILogger system. The logs are augmented with
 trace ids to be able to correlate log entries with traces.
 
 ### Traces
-Traces shows individual requests and dependencies. The output is very useful for visualizing the control 
+
+Traces shows individual requests and dependencies. The output is very useful for visualizing the control
 flow and finding performance bottlenecks.
 
-This is an example of distributed traces from a web application calling an API (displayed using our 
-[Aspire sample](/identityserver/v7/samples/diagnostics)). The web application uses a refresh token to call IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks url and then gets the keys from jwks endpoint.
+This is an example of distributed traces from a web application calling an API (displayed using our
+[Aspire sample](/identityserver/v7/samples/diagnostics)). The web application uses a refresh token to call
+IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks
+url and then gets the keys from jwks endpoint.
 ![](images/aspire_traces.png)
 
 ## Setup
@@ -42,7 +46,9 @@ For development a simple option is to export the tracing information to the cons
 exporter to create a human-readable `/metrics` endpoint for the metrics.
 
 Add the Open Telemetry configuration to your service setup.
+
 ```cs
+// Program.cs
 var openTelemetry = builder.Services.AddOpenTelemetry();
 
 openTelemetry.ConfigureResource(r => r
@@ -66,6 +72,7 @@ openTelemetry.WithTracing(t => t
 Add the Prometheus exporter to the pipeline
 
 ```cs
+// Program.cs
 // Map /metrics that displays Otel data in human-readable form.
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
 ```
@@ -89,6 +96,7 @@ The metric counters that IdentityServer emits are designed to not contain any se
 information. They are often tagged to indicate the source of the events.
 
 ### High level Metrics
+
 These metrics are instrumented by the IdentityServer middleware and services and are
 intended to describe the overall usage and health of the system. They could provide the
 starting point for building a metrics dashboard. The high level metrics are created by the
@@ -96,12 +104,13 @@ meter named "Duende.IdentityServer", which is the value of the
 `Duende.IdentityServer.Telemetry.ServiceName` constant.
 
 #### Telemetry.Metrics.Counters.Operation
+
 Counter name: `tokenservice.operation`
 
 Aggregated counter of failed and successful operations. The result tag indicates if an
 operation succeeded, failed, or caused an internal error. It is expected to have some
 failures during normal operations. In contrast, operations tagged with a result of
-internal_error are abnormal and indicate an unhandled exception.  The error/success ratio
+internal_error are abnormal and indicate an unhandled exception. The error/success ratio
 can be used as a very high level health metric.
 
 | Tag    | Description                                          | 
@@ -111,6 +120,7 @@ can be used as a very high level health metric.
 | client | Id of client requesting the operation. May be empty. |
 
 #### Telemetry.Metrics.Counters.ActiveRequests
+
 Counter name: `active_requests`
 
 Gauge/up-down counter that shows current active requests that are processed by any IdentityServer endpoint.
@@ -122,13 +132,15 @@ Note that the pages in the user interface are not IdentityServer endpoints and a
 | path     | The path of the request                  |
 
 ### Detailed Metrics - Experimental
+
 These detailed metrics are instrumented by the IdentityServer middleware and services and track usage of specific
 flows and features. These metrics are created by the meter named "Duende.IdentityServer.Experimental", which is
 the value of the `Duende.IdentityServer.Telemetry.ServiceName.Experimental` constant.
 The definition and tags of these counters may be changed between releases. Once the counters and tags
 are considered stable they will be moved to the `Duende.IdentityServer.Telemetry.ServiceName` meter.
 
-####  Telemetry.Metrics.Counters.ApiSecretValidation
+#### Telemetry.Metrics.Counters.ApiSecretValidation
+
 Counter name: `tokenservice.api.secret_validation`
 
 Number of successful/failed validations of API Secrets.
@@ -140,6 +152,7 @@ Number of successful/failed validations of API Secrets.
 | error       | Error label on errors      |
 
 #### Telemetry.Metrics.Counters.BackchannelAuthentication
+
 Counter name: `tokenservice.backchannel_authentication`
 
 Number of successful/failed back channel authentications (CIBA).
@@ -149,8 +162,8 @@ Number of successful/failed back channel authentications (CIBA).
 | client | The client Id         |
 | error  | Error label on errors |
 
-
 #### Telemetry.Metrics.Counters.ClientConfigValidation
+
 Counter name: `tokenservice.client.config_validation`
 
 Number of successful/failed client validations.
@@ -160,8 +173,8 @@ Number of successful/failed client validations.
 | client | The client Id         |
 | error  | Error label on errors |
 
-
 #### Telemetry.Metrics.Counters.ClientSecretValidation
+
 Counter name: `tokenservice.client.secret_validation`
 
 Number of successful/failed client secret validations.
@@ -173,6 +186,7 @@ Number of successful/failed client secret validations.
 | error       | Error label on errors                |
 
 #### Telemetry.Metrics.Counters.DeviceAuthentication
+
 Counter name: `tokenservice.device_authentication`
 
 Number of successful/failed device authentications.
@@ -183,6 +197,7 @@ Number of successful/failed device authentications.
 | error  | Error label on errors |
 
 #### Telemetry.Metrics.Counters.DynamicIdentityProviderValidation
+
 Counter name: `tokenservice.dynamic_identityprovider.validation`
 
 Number of successful/failed validations of dynamic identity providers.
@@ -192,6 +207,7 @@ Number of successful/failed validations of dynamic identity providers.
 |error | Error label on errors |
 
 #### Telemetry.Metrics.Counters.Introspection
+
 Counter name: `tokenservice.introspection`
 
 Number of successful/failed token introspections.
@@ -203,6 +219,7 @@ Number of successful/failed token introspections.
 | error  | Error label on errors                              |
 
 #### Telemetry.Metrics.Counters.PushedAuthorizationRequest
+
 Counter name: `tokenservice.pushed_authorization_request`
 
 Number of successful/failed pushed authorization requests.
@@ -213,6 +230,7 @@ Number of successful/failed pushed authorization requests.
 | error  | Error label on errors |
 
 #### Telemetry.Metrics.Counters.ResourceOwnerAuthentication
+
 Counter name: `tokenservice.resourceowner_authentication`
 
 Number of successful/failed resource owner authentications.
@@ -223,6 +241,7 @@ Number of successful/failed resource owner authentications.
 | error  | Error label on errors |
 
 #### Telemetry.Metrics.Counters.Revocation
+
 Counter name: `tokenservice.revocation`
 
 Number of successful/failed token revocations.
@@ -233,6 +252,7 @@ Number of successful/failed token revocations.
 | error  | Error label on errors |
 
 #### Telemetry.Metrics.Counters.TokenIssued
+
 Counter name: `tokenservice.token_issued`
 
 Number of successful/failed token issuance attempts. Note that a token issuance might include
@@ -246,6 +266,7 @@ multiple actual tokens (id_token, access token, refresh token).
 | error                  | Error label on errors                                            |
 
 ### Metrics in the UI
+
 The [UI in your IdentityServer host](/identityserver/v7/ui/) can instrument these events to
 measure activities that occur during interactive flows, such as user login and logout.
 These events are not instrumented by the IdentityServer middleware or services because
@@ -253,6 +274,7 @@ they are the responsibility of the UI. Our templated UI does instrument these ev
 you can alter and add metrics as needed to the UI in your context.
 
 #### Telemetry.Metrics.Counters.Consent
+
 Counter name: `tokenservice.consent`
 
 Consent requests granted or denied. The counters are per scope, so if a user consents
@@ -266,6 +288,7 @@ the scope name to be included as a tag without causing an explosion of combinati
 | consent | granted or denied |
 
 #### Telemetry.Metrics.Counters.GrantsRevoked
+
 Counter name: `tokenservice.grants_revoked`
 
 Revocation of grants.
@@ -275,6 +298,7 @@ Revocation of grants.
 | client | The client Id, if grants are revoked only for one client. If not set, the revocation was for all clients. |
 
 #### Telemetry.Metrics.Counters.UserLogin
+
 Counter names: `tokenservice.user_login`
 
 Successful and failed user logins.
@@ -286,6 +310,7 @@ Successful and failed user logins.
 | error  | Error label on errors                                             |
 
 #### Telemetry.Metrics.Counters.UserLogout
+
 Counter name: `user_logout`
 
 User logout. Note that this is only raised on explicit user logout, not if the session times out. The number of logouts

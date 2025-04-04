@@ -15,7 +15,7 @@ single `AddAsync` method.
 public interface IClientConfigurationStore
 ```
 
-#### Members
+### Members
 
 | name        | description                               |
 |-------------|-------------------------------------------|

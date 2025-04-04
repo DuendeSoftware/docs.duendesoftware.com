@@ -19,6 +19,7 @@ or [Splunk](https://www.splunk.com/).
 Events are not turned on by default - but can be globally configured when `AddIdentityServer` is called, e.g.:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer(options =>
 {
     options.Events.RaiseSuccessEvents = true;

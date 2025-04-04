@@ -6,7 +6,7 @@ sidebar:
   order: 30
 ---
 
-#### Duende.IdentityServer.Models.ApiResource
+## Duende.IdentityServer.Models.ApiResource
 
 This class models an API.
 

@@ -6,13 +6,17 @@ sidebar:
 ---
 
 ## DynamicClientRegistrationRequest
-Represents a dynamic client registration request. The parameters that are supported include a subset of the parameters [defined by IANA](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#client-metadata), and custom properties needed by IdentityServer.
+
+Represents a dynamic client registration request. The parameters that are supported include a subset of the
+parameters [defined by IANA](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#client-metadata),
+and custom properties needed by IdentityServer.
 
 ```csharp
 public class DynamicClientRegistrationRequest
 ```
 
 #### Public Members
+
 | name                                                | description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | AbsoluteRefreshTokenLifetime { get; set; }          | The absolute lifetime of refresh tokens, in seconds. This property is an extension to the Dynamic Client Registration Protocol.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -56,13 +60,16 @@ public class DynamicClientRegistrationRequest
 | UpdateAccessTokenClaimsOnRefresh { get; set; }      | Boolean value specifying whether access token claims are updated during token refresh. This property is an extension to the Dynamic Client Registration Protocol.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 ## DynamicClientRegistrationResponse
-Represents the response to a successful dynamic client registration request. This class extends the registration request by adding additional properties that are generated server side and not set by the client.
+
+Represents the response to a successful dynamic client registration request. This class extends the registration request
+by adding additional properties that are generated server side and not set by the client.
 
 ```csharp
 public class DynamicClientRegistrationResponse : DynamicClientRegistrationRequest, IDynamicClientRegistrationResponse
 ```
 
 #### Public Members
+
 | name                                | description                                                                                        |
 |-------------------------------------|----------------------------------------------------------------------------------------------------|
 | ClientId { get; set; }              | Gets or sets the client ID.                                                                        |
@@ -71,6 +78,7 @@ public class DynamicClientRegistrationResponse : DynamicClientRegistrationReques
 | ResponseTypes { get; set; }         | List of the OAuth 2.0 response type strings that the client can use at the authorization endpoint. |
 
 ## DynamicClientRegistrationContext
+
 Represents the context of a dynamic client registration request, including
 the original DCR request, the client model that is built up through validation
 and processing, the caller who made the DCR request, and other contextual
@@ -81,6 +89,7 @@ public class DynamicClientRegistrationContext
 ```
 
 #### Public Members
+
 | name                  | description                                                                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Caller { get; set; }  | The ClaimsPrincipal that made the DCR request.                                                                                                            |
@@ -89,6 +98,7 @@ public class DynamicClientRegistrationContext
 | Request { get; set; } | The original dynamic client registration request.                                                                                                         |
 
 ## DynamicClientRegistrationError
+
 Represents an error that occurred during validation of a dynamic client
 registration request. This class implements the appropriate [marker interfaces](#marker-interfaces) so
 that it can be returned from various points in the validator or processor.
@@ -98,13 +108,16 @@ public class DynamicClientRegistrationValidationError : IStepResult, IDynamicCli
 ```
 
 #### Public Members
+
 | name                           | description                                                                                                                                                                         |
 |--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Error { get; set; }            | Gets or sets the error code for the error that occurred during validation. Error codes defined by RFC 7591 are defined as constants in the `DynamicClientRegistrationErrors` class. |
 | ErrorDescription { get; set; } | Gets or sets a human-readable description of the error that occurred during validation.                                                                                             |
 
 ## Marker Interfaces
+
 #### IDynamicClientRegistrationResponse
+
 Marker interface for the response to a dynamic client registration request. This
 interface has two implementations;
 [`DynamicClientRegistrationResponse`](#dynamicclientregistrationresponse) indicates
@@ -112,6 +125,7 @@ success, while [`DynamicClientRegistrationError`](#dynamicclientregistrationerro
 failure.
 
 #### IDynamicClientRegistrationValidationResult
+
 Marker interface for the result of validating a dynamic client registration
 request. This interface has two implementations;
 [`DynamicClientRegistrationValidatedRequest`](#successfulstep) indicates
@@ -121,6 +135,7 @@ failure. Note that the `DynamicClientRegistrationError` implements multiple
 interfaces and can be used throughout the pipeline to convey errors.
 
 #### IStepResult
+
 Marker interface for the result of a step in the dynamic client registration
 validator or processor. This interface has two implementations;
 [`SuccessfulStep`](#successfulstep) indicates success, while
@@ -129,6 +144,7 @@ failure. Note that the `DynamicClientRegistrationError` implements multiple
 interfaces and can be used throughout the pipeline to convey errors.
 
 ### IStepResult Convenience Functions
+
 Your validation or processing steps can return a call to convenience functions in the static class `StepResult` to
 conveniently construct a success or failure from a step wrapped in a task.
 
@@ -139,6 +155,7 @@ conveniently construct a success or failure from a step wrapped in a task.
 | static Task<IStepResult> Failure(string errorDescription, string error) | Indicates that the validation step failed with the specified error description and error code                                        | 
 
 ## DynamicClientRegistrationValidatedRequest
+
 Represents a successfully validated dynamic client registration request.
 
 ```csharp
@@ -146,6 +163,7 @@ public class DynamicClientRegistrationValidatedRequest : DynamicClientRegistrati
 ```
 
 ## SuccessfulStep
+
 Represents a successful validation step.
 
 ```csharp

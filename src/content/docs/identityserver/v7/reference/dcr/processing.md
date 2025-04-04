@@ -4,6 +4,10 @@ sidebar:
   order: 20
 ---
 
+The page explains the `IDynamicClientRegistrationRequestProcessor` contract, its default implementation (
+`DynamicClientRegistrationRequestProcessor`), and the steps involved in processing a dynamic client registration
+request, including methods for generating client IDs, secrets, and customizing secret generation.
+
 ## IDynamicClientRegistrationRequestProcessor
 
 The `IDynamicClientRegistrationValidator` is the contract for the service that
@@ -17,7 +21,7 @@ checking the validity of the metadata supplied in the registration request, and
 using that metadata to set properties of a `Client` model. The request processor
 is also responsible for passing the finished `Client` to the [store](store)
 
-#### Members
+### Members
 
 | name            | description                                                                                                                                                                                 |
 |-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

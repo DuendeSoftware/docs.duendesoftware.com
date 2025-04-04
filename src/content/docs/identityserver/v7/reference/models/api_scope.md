@@ -6,7 +6,7 @@ sidebar:
   order: 25
 ---
 
-#### Duende.IdentityServer.Models.ApiScope
+## Duende.IdentityServer.Models.ApiScope
 
 This class models an OAuth scope.
 

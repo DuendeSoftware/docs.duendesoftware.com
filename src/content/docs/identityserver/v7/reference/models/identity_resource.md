@@ -6,7 +6,7 @@ sidebar:
   order: 20
 ---
 
-#### Duende.IdentityServer.Models.IdentityResource
+## Duende.IdentityServer.Models.IdentityResource
 
 This class models an identity resource.
 

@@ -4,7 +4,7 @@ sidebar:
   order: 80
 ---
 
-#### Duende.IdentityServer.Models.BackchannelUserLoginRequest
+## Duende.IdentityServer.Models.BackchannelUserLoginRequest
 
 Models the information to initiate a user login request for [CIBA](/identityserver/v7/ui/ciba).
 

@@ -5,7 +5,7 @@ sidebar:
   order: 45
 ---
 
-#### Duende.IdentityServer.Validation.GrantValidationResult
+## Duende.IdentityServer.Validation.GrantValidationResult
 
 The `GrantValidationResult` class models the outcome of grant validation
 for [extensions grants](/identityserver/v7/tokens/extension_grants)

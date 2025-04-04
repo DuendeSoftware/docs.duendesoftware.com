@@ -5,7 +5,7 @@ sidebar:
   order: 35
 ---
 
-#### Duende.IdentityServer.Models.OidcProvider
+## Duende.IdentityServer.Models.OidcProvider
 
 The `OidcProvider` models an external OpenID Connect provider for use in
 the [dynamic providers](/identityserver/v7/ui/login/dynamicproviders) feature.

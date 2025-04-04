@@ -60,7 +60,8 @@ If you need to change the schema for the Migration History Table, you can chain 
 ```csharp
 options.ConfigureDbContext = b =>
     b.UseSqlServer(connectionString,
-        sql => sql.MigrationsAssembly(migrationsAssembly).MigrationsHistoryTable("MyConfigurationMigrationTable", "myConfigurationSchema"));
+        sql => sql.MigrationsAssembly(migrationsAssembly)
+            .MigrationsHistoryTable("MyConfigurationMigrationTable", "myConfigurationSchema"));
 ```
 
 ### Enabling Caching for Configuration Store
@@ -72,7 +73,6 @@ builder.Services.AddIdentityServer()
     .AddConfigurationStore(options => { ... })
     // this is something you will want in production to reduce load on and requests to the DB
     .AddConfigurationStoreCache();
-
 ```
 
 ## Operational Store
@@ -98,7 +98,6 @@ builder.Services.AddIdentityServer()
         options.EnableTokenCleanup = true;
         options.TokenCleanupInterval = 3600; // interval in seconds (default is 3600)
     });
-
 ```
 
 To configure the operational store, use the `OperationalStoreOptions` options object passed to the configuration callback.
