@@ -10,8 +10,6 @@ interface Props {
 
 const { name, handle, cite } = Astro.props;
 
-console.log(Astro.props)
-
 const avatars = import.meta.glob<{ default: ImageMetadata }>('../assets/testimonials/*.png');
 const avatar = avatars[`../assets/testimonials/${handle}.png`];
 if (!avatar) {
