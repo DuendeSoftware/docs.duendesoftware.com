@@ -106,4 +106,7 @@ summary {
     flex-direction: row-reverse;
     justify-content: start;
     padding: 0.25rem;
+    .large {
+        font-weight: normal;
+    }
 }
