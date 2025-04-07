@@ -55,6 +55,11 @@ export default defineConfig({
       },
       social: [
         {
+          icon: "external",
+          label: "Duende Software",
+          href: "https://duendesoftware.com/",
+        },
+        {
           icon: "github",
           label: "GitHub",
           href: "https://github.com/DuendeSoftware",
