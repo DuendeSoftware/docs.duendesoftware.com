@@ -101,3 +101,9 @@ iframe {
         filter: drop-shadow(0 0 50px var(--color-1)) drop-shadow(0 0 150px var(--color-2));
     }
 }
+
+summary {
+    flex-direction: row-reverse;
+    justify-content: start;
+    padding: 0.25rem;
+}
