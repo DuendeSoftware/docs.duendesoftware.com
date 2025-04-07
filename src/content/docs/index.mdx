@@ -19,9 +19,14 @@ hero:
       variant: minimal
 ---
 
-import {Card, CardGrid, LinkButton, Badge} from '@astrojs/starlight/components';
-import TestimonialGrid from '~/components/testimonial-grid.astro';
-import Testimonial from '~/components/testimonial.astro';
+import {
+  Card,
+  CardGrid,
+  LinkButton,
+  Badge,
+} from "@astrojs/starlight/components";
+import TestimonialGrid from "~/components/testimonial-grid.astro";
+import Testimonial from "~/components/testimonial.astro";
 
 <CardGrid>
     <Card title="Install templates" icon="rocket">
@@ -38,41 +43,46 @@ import Testimonial from '~/components/testimonial.astro';
             Try it out
         </LinkButton>
     </Card>
+
 </CardGrid>
 
 <hr />
 
-<CardGrid stagger>
-    <Card title="IdentityServer" icon="open-book">
-        The most flexible and standards-compliant OpenID Connect and OAuth 2.0 framework for ASP.NET Core.
-        <LinkButton href="/identityserver/v7/" variant="secondary">
-            Learn more
-        </LinkButton>
-    </Card>
-    <Card title="Backend-for-Frontend (BFF)" icon="seti:c-sharp">
-        Securing SPAs and Blazor WASM Applications once and for all, without storing tokens in the browser.
-        <LinkButton href="/bff/v3" variant="secondary">
-            Learn more
-        </LinkButton>
-    </Card>
-    <Card title="Access Token Management" icon="github">
-        <Badge text={'OSS'}/> .NET identity library for access token management.
-        <LinkButton href="/accesstokenmanagement/" variant="secondary">
-            Learn more
-        </LinkButton>
-    </Card>
-    <Card title="Identity Model" icon="github">
-        <Badge text={'OSS'}/> .NET identity library for OAuth 2.0 related protocol operations.
-        <LinkButton href="/identitymodel/" variant="secondary">
-            Learn more
-        </LinkButton>
-    </Card>
-    <Card title="OIDC Client" icon="github">
-        <Badge text={'OSS'}/> .NET identity libraries for OpenID Connect related protocol operations.
-        <LinkButton href="/identitymodel-oidcclient/" variant="secondary">
-            Learn more
-        </LinkButton>
-    </Card>
+<CardGrid>
+  <Card title="IdentityServer" icon="open-book">
+    The most flexible and standards-compliant OpenID Connect and OAuth 2.0
+    framework for ASP.NET Core.
+    <LinkButton href="/identityserver/v7/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="Backend-for-Frontend (BFF)" icon="seti:c-sharp">
+    Securing SPAs and Blazor WASM Applications once and for all, without storing
+    tokens in the browser.
+    <LinkButton href="/bff/v3" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="Access Token Management" icon="github">
+    <Badge text={"OSS"} /> .NET identity library for access token management.
+    <LinkButton href="/accesstokenmanagement/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="Identity Model" icon="github">
+    <Badge text={"OSS"} /> .NET identity library for OAuth 2.0 related protocol
+    operations.
+    <LinkButton href="/identitymodel/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="OIDC Client" icon="github">
+    <Badge text={"OSS"} /> .NET identity libraries for OpenID Connect related
+    protocol operations.
+    <LinkButton href="/identitymodel-oidcclient/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
 </CardGrid>
 
 <TestimonialGrid title="What our customers are saying">
@@ -110,4 +120,5 @@ import Testimonial from '~/components/testimonial.astro';
         cite="https://twitter.com/adamralph">
         Duende IdentityServer is a great product. Shut up and take my money.
     </Testimonial>
+
 </TestimonialGrid>
