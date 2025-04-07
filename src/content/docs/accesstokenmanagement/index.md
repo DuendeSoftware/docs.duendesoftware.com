@@ -3,6 +3,8 @@ title: Duende.AccessTokenManagement
 sidebar:
   order: 1
   label: 'Overview'
+redirect_from:
+  - /foss/accesstokenmanagement/
 ---
 
 This library provides automatic access token management features for .NET worker and ASP.NET Core web applications:

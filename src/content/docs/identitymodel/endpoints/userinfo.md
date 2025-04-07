@@ -3,6 +3,8 @@ title: UserInfo Endpoint
 sidebar:
   order: 5
   label: UserInfo
+redirect_from:
+  - /foss/identitymodel/endpoints/userinfo/
 ---
 
 The client library for the [OpenID Connect

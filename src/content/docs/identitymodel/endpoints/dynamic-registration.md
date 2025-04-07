@@ -3,6 +3,8 @@ title: Dynamic Client Registration
 sidebar:
   order: 6
   label: Dynamic Client Registration
+redirect_from:
+  - /foss/identitymodel/endpoints/dynamic_registration/
 ---
 
 The client library for [OpenID Connect Dynamic Client

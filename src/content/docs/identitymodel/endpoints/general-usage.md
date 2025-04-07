@@ -3,6 +3,8 @@ title: General Usage
 sidebar:
   order: 1
   label: General
+redirect_from:
+  - /foss/identitymodel/endpoints/general_usage/
 ---
 
 

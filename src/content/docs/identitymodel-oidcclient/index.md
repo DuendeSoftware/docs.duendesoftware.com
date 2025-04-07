@@ -3,6 +3,8 @@ title: Duende.IdentityModel.OidcClient
 sidebar:
   label: Overview
   order: 1
+redirect_from:
+  - /foss/identitymodel-oidcclient/
 ---
 
 Duende.IdentityModel.OidcClient is an OpenID Connect (OIDC) client library for mobile and native

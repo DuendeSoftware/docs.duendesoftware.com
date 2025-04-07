@@ -3,6 +3,8 @@ title: Token Endpoint
 sidebar:
   order: 3
   label: Token
+redirect_from:
+  - /foss/identitymodel/endpoints/token/
 ---
 
 The client library for the token endpoint ([OAuth

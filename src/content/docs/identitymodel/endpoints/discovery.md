@@ -3,6 +3,8 @@ title: Discovery Endpoint
 sidebar:
   order: 2
   label: Discovery
+redirect_from:
+  - /foss/identitymodel/endpoints/discovery/
 ---
 
 The client library for the [OpenID Connect discovery

@@ -3,6 +3,8 @@ title: Device Authorization Endpoint
 sidebar:
   order: 7
   label: Device Authorization
+redirect_from:
+  - /foss/identitymodel/endpoints/device_authorize/
 ---
 
 The client library for the [OAuth 2.0 device

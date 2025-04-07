@@ -3,6 +3,8 @@ title: Token Introspection Endpoint
 sidebar:
   order: 4
   label: Token Introspection
+redirect_from:
+  - /foss/identitymodel/endpoints/introspection/
 ---
 
 The client library for [OAuth 2.0 token

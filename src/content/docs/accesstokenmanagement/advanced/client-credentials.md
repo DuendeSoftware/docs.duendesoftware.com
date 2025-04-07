@@ -3,6 +3,8 @@ title: Customizing Client Credentials Token Management
 sidebar:
   label: Client Credentials
   order: 1
+redirect_from:
+  - /foss/accesstokenmanagement/client_credentials/
 ---
 
 The most common way to use the access token management for machine to machine communication is described [here](/accesstokenmanagement/workers) - however you may want to customize certain aspects of it - here's what you can do.

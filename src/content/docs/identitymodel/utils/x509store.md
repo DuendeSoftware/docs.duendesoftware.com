@@ -2,6 +2,8 @@
 title: Fluent X.509 Certificate Store API
 sidebar:
   order: 5
+redirect_from:
+  - /foss/identitymodel/utils/x509store/
 ---
 
 A common place to store X.509 certificates is the Windows X.509

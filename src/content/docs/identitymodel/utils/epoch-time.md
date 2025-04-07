@@ -2,6 +2,8 @@
 title: Epoch Time Conversion
 sidebar:
   order: 3
+redirect_from:
+  - /foss/identitymodel/utils/epoch_time/
 ---
 
 JWT tokens use so-called [Epoch or Unix

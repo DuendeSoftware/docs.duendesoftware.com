@@ -2,6 +2,8 @@
 title: Web Applications
 sidebar:
   order: 3
+redirect_from:
+  - /foss/accesstokenmanagement/web_apps/
 ---
 
 This library automates all the tasks around access token lifetime management for user-centric web applications.

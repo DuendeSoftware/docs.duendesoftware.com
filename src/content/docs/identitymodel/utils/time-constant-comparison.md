@@ -2,6 +2,8 @@
 title: Time-Constant String Comparison
 sidebar:
   order: 6
+redirect_from:
+  - /foss/identitymodel/utils/time_constant_comparison/
 ---
 
 When comparing strings in a security context (e.g. comparing keys), you should avoid

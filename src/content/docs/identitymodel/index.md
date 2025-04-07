@@ -3,6 +3,8 @@ title: Duende.IdentityModel
 sidebar:
   order: 1
   label: "Overview"
+redirect_from:
+  - /foss/identitymodel/
 ---
 
 The Duende.IdentityModel package is the base library for OIDC and OAuth 2.0 related protocol

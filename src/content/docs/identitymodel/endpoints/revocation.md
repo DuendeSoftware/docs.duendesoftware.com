@@ -3,6 +3,8 @@ title: Token Revocation Endpoint
 sidebar:
   order: 4
   label: Token Revocation
+redirect_from:
+  - /foss/identitymodel/endpoints/revocation/
 ---
 
 The client library for [OAuth 2.0 token

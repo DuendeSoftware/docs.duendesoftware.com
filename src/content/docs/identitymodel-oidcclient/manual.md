@@ -2,6 +2,8 @@
 title: Manual Mode
 sidebar:
   order: 2
+redirect_from:
+  - /foss/identitymodel-oidcclient/manual/
 ---
 
 In manual mode, OidcClient helps you with creating the necessary start

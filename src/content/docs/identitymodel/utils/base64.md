@@ -2,6 +2,8 @@
 title: Base64 URL Encoding
 sidebar:
   order: 2
+redirect_from:
+  - /foss/identitymodel/utils/base64/
 ---
 
 JWT tokens are serialized using [Base64 URL

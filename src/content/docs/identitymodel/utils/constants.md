@@ -2,6 +2,8 @@
 title: Protocol and Claim Type Constants
 sidebar:
   order: 1
+redirect_from:
+  - /foss/identitymodel/utils/constants/
 ---
 
 When working with OAuth 2.0, OpenID Connect and claims, there are a lot
