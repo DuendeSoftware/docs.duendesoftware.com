@@ -66,7 +66,7 @@ export default defineConfig({
         },
         {
           label: "IdentityServer",
-          autogenerate: { directory: "identityserver/v7" },
+          autogenerate: { directory: "identityserver" },
           collapsed: true,
         },
         {
