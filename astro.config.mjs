@@ -53,11 +53,28 @@ export default defineConfig({
         baseUrl:
           "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/docs/",
       },
-      social: {
-        github: "https://github.com/DuendeSoftware",
-        blueSky: "https://bsky.app/profile/duendesoftware.com",
-        linkedin: "https://www.linkedin.com/company/duendesoftware/",
-      },
+      social: [
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/DuendeSoftware",
+        },
+        {
+          icon: "blueSky",
+          label: "Bluesky",
+          href: "https://bsky.app/profile/duendesoftware.com",
+        },
+        {
+          icon: "linkedin",
+          label: "LinkedIn",
+          href: "https://www.linkedin.com/company/duendesoftware/",
+        },
+        {
+          icon: "email",
+          label: "Email",
+          href: "mailto:contact@duendesoftware.com",
+        },
+      ],
       components: {},
       sidebar: [
         {
