@@ -19,7 +19,7 @@
     "astro": "astro",
     "linkchecker": "npm run build && lychee --no-progress --max-concurrency 16 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude github --root-dir \"$PWD/dist\" dist/**",
     "FYI": "https://github.com/withastro/astro/issues/13006",
-    "postinstall": "sed -i '' 's/validate: (input) => svgReg.test(toUTF8String(input, 0, 1e3))/validate: (input) => svgReg.test(toUTF8String(input))/' node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js"
+    "postinstall": "chmod +x fix-svg.sh && ./fix-svg.sh"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.1",

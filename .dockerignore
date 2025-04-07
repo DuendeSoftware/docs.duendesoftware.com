@@ -1,0 +1,35 @@
+# flyctl launch added from .gitignore
+# build output
+**\dist
+# generated types
+**\.astro
+
+# dependencies
+**\node_modules
+
+# logs
+**\npm-debug.log*
+**\yarn-debug.log*
+**\yarn-error.log*
+**\pnpm-debug.log*
+
+
+# environment variables
+**\.env
+**\.env.production
+
+# macOS-specific files
+**\.DS_Store
+**\.vscode\settings.json
+**\*.iml
+
+# flyctl launch added from .idea\.gitignore
+# Default ignored files
+.idea\shelf
+.idea\workspace.xml
+# Editor-based HTTP Client requests
+.idea\httpRequests
+# Datasource local storage ignored files
+.idea\dataSources
+.idea\dataSources.local.xml
+fly.toml
