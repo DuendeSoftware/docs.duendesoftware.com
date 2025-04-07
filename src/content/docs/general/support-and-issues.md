@@ -3,6 +3,10 @@ title: "Support & Issues"
 description: "how to get support and report issues"
 sidebar:
   order: 3
+redirect_from:
+  - /identityserver/v5/overview/support/
+  - /identityserver/v6/overview/support/
+  - /identityserver/v7/overview/support/
 ---
 
 This document provides information on accessing Duende's source code, issue tracking, and community forums for support

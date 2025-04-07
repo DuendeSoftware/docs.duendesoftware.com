@@ -3,6 +3,10 @@ title: "Security Best Practices"
 description: "information pertaining to Duende recommended best practices"
 sidebar:
   order: 2
+redirect_from:
+  - /identityserver/v5/overview/security/
+  - /identityserver/v6/overview/security/
+  - /identityserver/v7/overview/security/
 ---
 
 This document describes how the integrity of software produced by Duende Software is maintained during the software

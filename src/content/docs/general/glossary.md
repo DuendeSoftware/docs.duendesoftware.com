@@ -3,6 +3,10 @@ title: "Glossary"
 description: "commonly used words in the security space"
 sidebar:
   order: 4
+redirect_from: 
+  - /identityserver/v5/overview/glossary/
+  - /identityserver/v6/overview/glossary/
+  - /identityserver/v7/overview/glossary/
 ---
 
 The glossary below provides definitions and explanations of commonly used terms and features within the security and

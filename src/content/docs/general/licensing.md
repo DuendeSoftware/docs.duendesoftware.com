@@ -3,6 +3,10 @@ title: "Licensing"
 description: "information pertaining to Duende products"
 sidebar:
   order: 1
+redirect_from:
+  - /identityserver/v5/fundamentals/license_key/
+  - /identityserver/v6/fundamentals/license_key/
+  - /identityserver/v7/fundamentals/license_key/  
 ---
 
 Duende IdentityServer requires a license for production use, with three editions available (Starter, Business, and
