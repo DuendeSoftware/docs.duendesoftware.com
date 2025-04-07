@@ -63,7 +63,7 @@ this documentation.
 To allow the user to be redirected to the external provider, there must be some code in your login page that triggers
 the handler.
 This can be done because you have provided the user with a button to click, or it could be due to inspecting some
-property of the [authorization context](/identityserver/v7/ui/login/context), or it could be based on any
+property of the [authorization context](/identityserver/ui/login/context), or it could be based on any
 other aspect of the request (e.g. such as the user entering their email).
 
 :::note
@@ -74,7 +74,7 @@ To invoke an external authentication handler use the `ChallengeAsync` extension 
 the MVC `ChallengeResult`).
 When triggering challenge, it's common to pass some properties to indicate the callback URL where you intend to process
 the external login results and any other state you need to maintain across the workflow (e.g. such as
-the [return URL passed to the login page](/identityserver/v7/ui/login/redirect)):
+the [return URL passed to the login page](/identityserver/ui/login/redirect)):
 
 ```cs
 var callbackUrl = Url.Action("MyCallback");
@@ -103,7 +103,7 @@ authentication process.
 :::note
 If you are using ASP.NET Identity, many of these technical details are hidden from you. It is recommended that you also
 read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social) and do the
-ASP.NET Identity [quickstart](/identityserver/v7/quickstarts/5_aspnetid).
+ASP.NET Identity [quickstart](/identityserver/quickstarts/5-aspnetid/).
 :::
 
 One option on an external authentication handlers is called `SignInScheme`.
@@ -166,7 +166,7 @@ On the callback page your typical tasks are:
   internal user account that is linked to the user from the external provider.
 * Store the external claims that you want to keep.
 * Delete the temporary cookie.
-* Establish the user's [authentication session](/identityserver/v7/ui/login/session).
+* Establish the user's [authentication session](/identityserver/ui/login/session).
 * Complete the login workflow.
 
 ### Inspecting the External Identity
@@ -278,5 +278,5 @@ If only particular schemes are to be configured, then pass those schemes as para
 builder.Services.AddOidcStateDataFormatterCache("aad", "demoidsrv");
 ```
 
-See this [quickstart](/identityserver/v7/quickstarts/2_interactive) for step-by-step instructions for adding external
+See this [quickstart](/identityserver/quickstarts/2-interactive/) for step-by-step instructions for adding external
 authentication and configuring it.

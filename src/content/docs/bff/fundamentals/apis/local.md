@@ -55,7 +55,7 @@ public class MyApiController : ControllerBase
 }
 ```
 
-The example above is simplified to demonstrate the way that you might obtain a token. Real local endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Local endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](remote) or [YARP](yarp).
+The example above is simplified to demonstrate the way that you might obtain a token. Real local endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Local endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](/bff/fundamentals/apis/remote/) or [YARP](/bff/fundamentals/apis/yarp/).
 
 ## Securing Local API Endpoints
 Regardless of the style of data access used by a local API, it must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. To defend against such attacks and ensure that only the frontend can access these endpoints, we recommend implementing two layers of protection. 

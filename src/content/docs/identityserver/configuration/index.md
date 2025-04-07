@@ -21,7 +21,7 @@ distributed through the separate [Duende.IdentityServer.Configuration NuGet
 package](https://www.nuget.org/packages/Duende.IdentityServer.Configuration).
 
 In this initial release, the Configuration API supports the [Dynamic Client
-Registration](dcr) protocol. 
+Registration](/identityserver/configuration/dcr/) protocol. 
 
 The Configuration API is part of the
 [IdentityServer](https://duendesoftware.com/products/identityserver) 
@@ -31,4 +31,4 @@ and [special offers](https://duendesoftware.com/specialoffers) apply.
 The Configuration API source code is available [on
 GitHub](https://github.com/DuendeSoftware/products/tree/main/identity-server/src/Configuration).
 
-Samples of the Configuration API are available [here](/identityserver/v7/samples/configuration).
+Samples of the Configuration API are available [here](/identityserver/samples/configuration/).

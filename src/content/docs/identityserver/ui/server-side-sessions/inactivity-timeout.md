@@ -47,7 +47,7 @@ Below is a picture of the various types of requests to do this:
 
 When the user becomes inactive, the server-side session management system at IdentityServer can detect and remove the abandoned session.
 When this happens, the `ISessionCoordinationService` provides another operation to perform any client related cleanup for the session.
-This could invoke back-channel logout for any client the user has logged into during their session, or this could revoke any grants in the [operational store](/identityserver/v7/data/operational#grants) issued during the user's session.
+This could invoke back-channel logout for any client the user has logged into during their session, or this could revoke any grants in the [operational store](/identityserver/data/operational#grants) issued during the user's session.
 
 Clients that receive back-channel logout would know the user's session has ended, and can clean up appropriately.
 But if back-channel is not used, then the client would need some other signal to consider the user's session has ended.
@@ -66,9 +66,9 @@ Configuration is needed in both IdentityServer and client applications.
 
 To prepare IdentityServer, these features need to be enabled:
 
-1. Server-side sessions need to be [enabled](/identityserver/v7/ui/server_side_sessions#enabling-server-side-sessions).
-2. Either the global [`CoordinateClientLifetimesWithUserSession` option](/identityserver/v7/reference/options#authentication) should be enabled, or the client-specific [`CoordinateLifetimeWithUserSession` option](/identityserver/v7/reference/models/client#authentication--session-management) should be enabled.
-3. Enable back-channel logout for [session expiration](/identityserver/v7/ui/server_side_sessions/session_expiration) with the [`ExpiredSessionsTriggerBackchannelLogout` option](/identityserver/v7/reference/options#server-side-sessions).
+1. Server-side sessions need to be [enabled](/identityserver/ui/server-side-sessions#enabling-server-side-sessions).
+2. Either the global [`CoordinateClientLifetimesWithUserSession` option](/identityserver/reference/options#authentication) should be enabled, or the client-specific [`CoordinateLifetimeWithUserSession` option](/identityserver/reference/models/client#authentication--session-management) should be enabled.
+3. Enable back-channel logout for [session expiration](/identityserver/ui/server-side-sessions/session-expiration/) with the [`ExpiredSessionsTriggerBackchannelLogout` option](/identityserver/reference/options#server-side-sessions).
 
 
 ### Client Applications
@@ -87,7 +87,7 @@ To detect inactivity:
 
 #### Clients with Reference Access Tokens but without Refresh Tokens
 
-It's possible a client is using a [reference access token](/identityserver/v7/tokens/reference) and no refresh token.
+It's possible a client is using a [reference access token](/identityserver/tokens/reference) and no refresh token.
 The API would then use introspection to validate the token, which would then extend the associated user's session at IdentityServer.
 
 To detect inactivity: 

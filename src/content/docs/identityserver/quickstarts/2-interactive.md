@@ -195,8 +195,7 @@ dotnet sln add ./src/WebClient
 This version of the quickstarts uses [Razor
 Pages](https://docs.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-8.0&tabs=visual-studio)
 for the web client. If you prefer MVC, the conversion is straightforward. See
-the [quickstart for IdentityServer
-5](https://docs.duendesoftware.com/identityserver/v5/quickstarts/2_interactive/)
+the [quickstart for IdentityServer](/identityserver/quickstarts/2-interactive/)
 that uses it.
 :::
 

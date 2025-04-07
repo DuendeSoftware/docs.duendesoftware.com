@@ -16,14 +16,14 @@ IdentityServer offers multiple diagnostics possibilities. The logs contains deta
 are your best friend when troubleshooting. For security reasons the error messages returned
 to the UI/client are very brief - the logs always have all the details of what went wrong.
 
-[Read More](/identityserver/v7/diagnostics/logging)
+[Read More](/identityserver/diagnostics/logging)
 
 ## Open Telemetry
 
 Open Telemetry is the new standard way of emitting diagnostics information from a process and
 IdentityServer supports Traces (.NET Activities), Metrics and Logs.
 
-[Read More](/identityserver/v7/diagnostics/otel)
+[Read More](/identityserver/diagnostics/otel)
 
 ## Events
 
@@ -32,4 +32,4 @@ systems (APM). They used to have their own different APIs so IdentityServer only
 that could be used to call the APM's APIs. Thanks to Open Telemetry there is now a standardized
 way to emit diagnostic information from a process. The events may eventually be deprecated and removed.
 
-[Read More](/identityserver/v7/diagnostics/events)
+[Read More](/identityserver/diagnostics/events)

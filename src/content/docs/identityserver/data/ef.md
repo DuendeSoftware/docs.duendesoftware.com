@@ -23,7 +23,7 @@ dotnet add package Duende.IdentityServer.EntityFramework
 ```
 
 ## Configuration Store Support
-For storing [configuration data](configuration), then the configuration store can be used.
+For storing [configuration data](/identityserver/configuration/), then the configuration store can be used.
 This support provides implementations of the `IClientStore`, `IResourceStore`, `IIdentityProviderStore`, and the `ICorsPolicyService` extensibility points.
 These implementations use a `DbContext`-derived class called `ConfigurationDbContext` to model the tables in the database.
 
@@ -80,7 +80,7 @@ builder.Services.AddIdentityServer()
 ```
 
 ## Operational Store
-For storing [operational data](operational) then the operational store can be used.
+For storing [operational data](/identityserver/data/operational/) then the operational store can be used.
 This support provides implementations of the `IPersistedGrantStore`, `IDeviceFlowStore`, `IServerSideSessionStore`, and `ISigningKeyStore` extensibility points.
 The implementation uses a `DbContext`-derived class called `PersistedGrantDbContext` to model the table in the database.
 
@@ -135,7 +135,7 @@ This options class contains properties to control the operational store and `Per
 
 
 :::note
-The token cleanup feature does `not` remove persisted grants that are `consumed` (see [persisted grants](operational/grants#grant-expiration-and-consumption)). It only removes persisted grants that are beyond their `Expiration`.
+The token cleanup feature does `not` remove persisted grants that are `consumed` (see [persisted grants](/identityserver/reference/stores/persisted-grant-store/)). It only removes persisted grants that are beyond their `Expiration`.
 :::
 
 ## Database creation and schema changes across different versions of IdentityServer
@@ -145,6 +145,6 @@ We do not provide any support for creating your database or migrating your data 
 You are expected to manage the database creation, schema changes, and data migration in any way your organization sees fit.
 
 Using EF migrations is one possible approach to this. 
-If you do wish to use migrations, then see the [EF quickstart](/identityserver/v7/quickstarts/4_ef) for samples on how to get started, or consult the Microsoft [documentation on EF migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index).
+If you do wish to use migrations, then see the [EF quickstart](/identityserver/quickstarts/4-entity-framework/) for samples on how to get started, or consult the Microsoft [documentation on EF migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index).
 
 We publish a [sample app](https://github.com/DuendeSoftware/products/tree/main/identity-server/migrations/IdentityServerDb) that we use internally for creating databases to test the latest database schema (this is SQL Server specific).

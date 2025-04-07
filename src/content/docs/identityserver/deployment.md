@@ -7,6 +7,21 @@ redirect_from:
    - /v5/identityserver/deployment/
    - /v6/identityserver/deployment/
    - /v7/identityserver/deployment/
+   - /v5/identityserver/deployment/proxies/
+   - /v6/identityserver/deployment/proxies/
+   - /v7/identityserver/deployment/proxies/
+   - /v5/identityserver/deployment/data_protection/
+   - /v6/identityserver/deployment/data_protection/
+   - /v7/identityserver/deployment/data_protection/
+   - /v5/identityserver/deployment/data_stores/
+   - /v6/identityserver/deployment/data_stores/
+   - /v7/identityserver/deployment/data_stores/
+   - /v5/identityserver/deployment/caching/
+   - /v6/identityserver/deployment/caching/
+   - /v7/identityserver/deployment/caching/
+   - /v5/identityserver/deployment/health_checks/
+   - /v6/identityserver/deployment/health_checks/
+   - /v7/identityserver/deployment/health_checks/
 ---
 
 Because IdentityServer is made up of middleware and services that you use within an ASP.NET Core application, it can be hosted and deployed with the same diversity of technology as any other ASP.NET Core application. You have the choice about 
@@ -21,7 +36,7 @@ While this is a lot of decisions to make, this also means that your IdentityServ
 Microsoft publishes extensive [advice and documentation](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/) about deploying ASP.NET Core applications, and it is applicable to IdentityServer implementations. We're not attempting to replace that documentation - or the documentation for other tools that you might be using in your environment. Rather, this section of our documentation focuses on IdentityServer-specific deployment and hosting considerations. 
 
 :::note
-Our experience has been that these topics are very important. Some of our most common support requests are related to [Data Protection](data_protection) and [Load Balancing](proxies), so we strongly encourage you to review those pages, along with the rest of this chapter before deploying IdentityServer to production.
+Our experience has been that these topics are very important. Some of our most common support requests are related to [Data Protection](#data-protection-keys) and [Load Balancing](#proxy-servers-and-load-balancers), so we strongly encourage you to review those pages, along with the rest of this chapter before deploying IdentityServer to production.
 :::
 
 ## Proxy Servers and Load Balancers
@@ -118,10 +133,10 @@ round-tripped through the browser from being tampered with.
 
 #### IdentityServer Signing Key
 
-Separately, IdentityServer needs cryptographic keys, called [signing keys](fundamentals/key-management), to
+Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/fundamentals/key-management), to
 sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client
 applications and APIs to validate token signatures using the public keys, which are published by IdentityServer
-through [discovery](reference/endpoints/discovery). The private key component of the signing keys are
+through [discovery](/identityserver/reference/endpoints/discovery). The private key component of the signing keys are
 also critical secrets for IdentityServer because a valid signature provides integrity and non-repudiation guarantees
 that allow client applications and APIs to trust those tokens.
 
@@ -165,13 +180,13 @@ There are several ways that data protection problems can occur:
 Duende IdentityServer's features that rely on data protection include
 
 * protecting signing keys at rest (
-  if [automatic key management](/identityserver/v7/fundamentals/key_management#automatic-key-management) is used and enabled)
-* protecting [persisted grants](/identityserver/v7/data/operational#persisted-grant-service) at rest (if enabled)
-* protecting [server-side session](/identityserver/v7/ui/server_side_sessions) data at rest (if enabled)
-* protecting [the state parameter](/identityserver/v7/ui/login/external#state-url-length-and-isecuredataformat) for
+  if [automatic key management](/identityserver/fundamentals/key-management/#automatic-key-management) is used and enabled)
+* protecting [persisted grants](/identityserver/data/operational#persisted-grant-service) at rest (if enabled)
+* protecting [server-side session](/identityserver/ui/server-side-sessions/) data at rest (if enabled)
+* protecting [the state parameter](/identityserver/ui/login/external/#state-url-length-and-isecuredataformat) for
   external OIDC providers (if enabled)
 * protecting message payloads sent between pages in the UI (
-  e.g. [logout context](/identityserver/v7/ui/logout/logout_context) and [error context](/identityserver/v7/ui/error)).
+  e.g. [logout context](/identityserver/ui/logout/logout-context/) and [error context](/identityserver/ui/error)).
 * session management (because the ASP.NET Core cookie authentication handler requires it)
 
 ## IdentityServer Data Stores
@@ -198,15 +213,15 @@ For certain operations, IdentityServer needs a persistence store to keep state, 
 
 You can either use a traditional database for storing operational data, or use a cache with persistence features like Redis.
 
-Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](/identityserver/v7/data) section for more information.
+Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](/identityserver/data) section for more information.
 
 ## Distributed Caching
 
 Some optional features rely on ASP.NET Core distributed caching:
 
-* [State data formatter for OpenID Connect](./ui/login/external#state-url-length-and-isecuredataformat)
-* Replay cache (e.g. for [JWT client credentials](./tokens/client-authentication#setting-up-a-private-key-jwt-secret))
-* [Device flow](./reference/stores/device-flow-store) throttling service
+* [State data formatter for OpenID Connect](/identityserver/ui/login/external#state-url-length-and-isecuredataformat)
+* Replay cache (e.g. for [JWT client credentials](/identityserver/tokens/client-authentication#setting-up-a-private-key-jwt-secret))
+* [Device flow](/identityserver/reference/stores/device-flow-store) throttling service
 * Authorization parameter store
 
 In order to work in a multi-server environment, this needs to be set up correctly. Please consult the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed) for more details.

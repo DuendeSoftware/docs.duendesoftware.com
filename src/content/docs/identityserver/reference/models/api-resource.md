@@ -51,7 +51,7 @@ This class models an API.
 
 * **`Scopes`**
 
-  List of API scope names. You need to create those using [ApiScope](api-scope).
+  List of API scope names. You need to create those using [ApiScope](/identityserver/reference/models/api-scope/).
 
 ## Defining API resources in appsettings.json
 

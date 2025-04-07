@@ -15,7 +15,7 @@ when making requests to the authorization endpoint.
 
 :::note
 If a custom implementation of `IAuthorizeInteractionResponseGenerator` is desired, then
-it's [recommended](/identityserver/v7/ui/custom#built-in-authorizeinteractionresponsegenerator) to derive from the
+it's [recommended](/identityserver/ui/custom#built-in-authorizeinteractionresponsegenerator) to derive from the
 built-in `AuthorizeInteractionResponseGenerator` to inherit all the default logic pertaining to log in and consent
 semantics.
 :::

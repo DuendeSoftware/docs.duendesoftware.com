@@ -46,9 +46,9 @@ IdentityServer supports two styles of proof of possession tokens: **Mutual TLS**
 }
 ```
 
-This is done automatically if you [authenticate](/identityserver/v7/tokens/client_authentication#mutual-tls-client-certificates) the client using a TLS client certificate.
+This is done automatically if you [authenticate](/identityserver/tokens/client-authentication/#mutual-tls-client-certificates) the client using a TLS client certificate.
 
-The client must then use the same client certificate to call the APIs, and your APIs can [validate](/identityserver/v7/apis/aspnetcore/confirmation) the `cnf` claim by comparing it to the thumbprint of the client certificate on the TLS channel.
+The client must then use the same client certificate to call the APIs, and your APIs can [validate](/identityserver/apis/aspnetcore/confirmation) the `cnf` claim by comparing it to the thumbprint of the client certificate on the TLS channel.
 
 If the access token would leak, it cannot be replayed without having access to the additional private key of the X.509 client certificate.
 
@@ -151,7 +151,7 @@ embed the thumbprint of the public key JWK into the access token via the cnf cla
 ```
 
 The client must then prove possession of the private key to call the APIs, and your APIs
-can [validate](/identityserver/v7/apis/aspnetcore/confirmation) the `cnf` claim by comparing it to the thumbprint of the
+can [validate](/identityserver/apis/aspnetcore/confirmation) the `cnf` claim by comparing it to the thumbprint of the
 client's public key in the JWK.
 
 If the access token would leak, it cannot be replayed without having access to the private key of the JWK the client
@@ -171,8 +171,8 @@ tokens) that they are bound to.
 
 DPoP is something a client can use dynamically with no configuration in IdentityServer, but you can configure it as
 required.
-This is a per-client [setting](/identityserver/v7/reference/models/client#dpop) in your IdentityServer.
-There are additional client and [global](/identityserver/v7/reference/options#dpop) DPoP settings to control the
+This is a per-client [setting](/identityserver/reference/models/client#dpop) in your IdentityServer.
+There are additional client and [global](/identityserver/reference/options#dpop) DPoP settings to control the
 behavior.
 
 ```csharp
@@ -236,5 +236,5 @@ lost, the tokens can longer be used, and if the secret is leaked, the security b
 
 #### Enabling DPoP support in your API
 
-See [here](/identityserver/v7/apis/aspnetcore/confirmation#validating-dpop) for documentation
+See [here](/identityserver/apis/aspnetcore/confirmation#validating-dpop) for documentation
 describing how to enable DPoP in your APIs.

@@ -55,7 +55,7 @@ IdentityServer. This includes support for commercial providers like Google, GitH
 and [many more](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers)) and any OpenID Connect,
 SAML2p or WS-Federation based systems.
 
-See the [Integrating with External Providers](/identityserver/v7/ui/login/external) section for more details.
+See the [Integrating with External Providers](/identityserver/ui/login/external) section for more details.
 
 ## Home Realm Discovery
 
@@ -72,10 +72,10 @@ workflow, e.g.
 * the client application can give a hint to the gateway via a custom protocol parameter of IdentityServer's built-in
   support for the `idp` parameter on `acr_values`. In some case the client already knows the right authentication
   method, e.g. when your customers access your software via a customer-specific URL  (
-  see [here](/identityserver/v7/reference/endpoints/authorize#optional-parameters)).
+  see [here](/identityserver/reference/endpoints/authorize#optional-parameters)).
 * you restrict the available authentication methods per client in the client configuration using the
   `IdentityProviderRestrictions` property (
-  see [here](/identityserver/v7/reference/models/client#authentication--session-management))
+  see [here](/identityserver/reference/models/client#authentication--session-management))
 
 Every system is slightly different. Always start with the desired user experience, and then choose from the above
 options (or combinations) to implement the required flow.

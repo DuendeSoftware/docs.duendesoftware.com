@@ -9,11 +9,11 @@ redirect_from:
   - /identityserver/v7/samples/ui/
 ---
 
-These samples illustrate customization of the [interactive pages](/identityserver/v7/ui) used in your IdentityServer.
+These samples illustrate customization of the [interactive pages](/identityserver/ui) used in your IdentityServer.
 
 ### Custom Profile Service
 
-This sample shows how to create a [custom profile service](/identityserver/v7/fundamentals/claims) to control what
+This sample shows how to create a [custom profile service](/identityserver/fundamentals/claims) to control what
 claims are issued from your IdentityServer. The majority of the sample is captured in `CustomProfileService.cs` in the
 `IdentityServer` project.
 
@@ -69,7 +69,7 @@ Key takeaways:
 
 ### Dynamic providers
 
-The [dynamic providers](/identityserver/v7/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity
+The [dynamic providers](/identityserver/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity
 provider configuration dynamically from a store. This sample sets up a simple database with one dynamic OIDC provider.
 
 Some key points about the `IdentityServer` project in the sample:
@@ -83,7 +83,7 @@ Some key points about the `IdentityServer` project in the sample:
 
 ### Adding other protocol types to dynamic providers
 
-The [dynamic providers](/identityserver/v7/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity
+The [dynamic providers](/identityserver/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity
 provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to
 support additional protocol types, and specifically WS-Federation.
 
@@ -108,7 +108,7 @@ the complete set of Saml2 config options.
 
 ### Client Initiated Backchannel Login (CIBA)
 
-This sample shows how a client can make [CIBA](/identityserver/v7/ui/ciba) login requests using Duende IdentityServer.
+This sample shows how a client can make [CIBA](/identityserver/ui/ciba) login requests using Duende IdentityServer.
 To run the sample, the IdentityServer and API hosts should be started first.
 Next run the ConsoleCibaClient which will initiate the backchannel login request.
 The URL the user would receive to log in and approve the request is being written out to the IdentityServer log (visible

@@ -27,7 +27,7 @@ the browser. Also, invoking the API will be performed directly from the
 JavaScript in the browser.
 
 This design adds complexity (and thus security concerns) to your application, so
-consider if the ["BFF" pattern](js-with-backend) might be a better
+consider if the ["BFF" pattern](/identityserver/quickstarts/javascript-clients/js-with-backend/) might be a better
 choice.
 
 In this quickstart the user will log in to IdentityServer, invoke an API with an

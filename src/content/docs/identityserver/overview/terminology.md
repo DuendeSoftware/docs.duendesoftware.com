@@ -16,7 +16,7 @@ The specs, documentation and object model use a certain terminology that you sho
 ## Duende IdentityServer
 
 Duende IdentityServer is an OpenID Connect & OAuth engine - it implements the OpenID Connect and OAuth 2.0 family
-of [protocols](specs).
+of [protocols](/identityserver/overview/specs/).
 
 Different literature uses different terms for the same role - you probably also find the terms security token service,
 identity provider, authorization server, IP-STS and more.
@@ -37,7 +37,7 @@ A user is a human that is using a registered client to access resources.
 
 ## Client
 
-A [client](/identityserver/v7/fundamentals/clients) is a piece of software that requests tokens from your
+A [client](/identityserver/fundamentals/clients) is a piece of software that requests tokens from your
 IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting
 an access token). A client must be first registered with your IdentityServer before it can request tokens.
 
@@ -50,8 +50,8 @@ In this scenario two machines talk to each other (e.g. background processes, bat
 no interactive user present. To authorize this communication, your IdentityServer issues a token to the caller.
 
 In protocol terms, this scenario is called *Client Credentials Flow* and you can learn more about it in the issuing
-tokens [section](/identityserver/v7/tokens/requesting#machine-to-machine-communication) and in
-our [Quickstart](/identityserver/v7/quickstarts/1_client_credentials).
+tokens [section](/identityserver/tokens/requesting#machine-to-machine-communication) and in
+our [Quickstart](/identityserver/quickstarts/1-client-credentials/).
 
 ### Interactive Applications
 
@@ -59,8 +59,8 @@ This is the most common type of client scenario: web applications, SPAs or nativ
 This scenario typically involves a browser for user interaction (e.g. for authentication or consent).
 
 In protocol terms, this scenario is called *Authorization Code Flow* and you can learn more about it in the issuing
-tokens [section](/identityserver/v7/tokens/requesting#interactive-applications) and in
-our [Quickstart](/identityserver/v7/quickstarts/2_interactive).
+tokens [section](/identityserver/tokens/requesting#interactive-applications) and in
+our [Quickstart](/identityserver/quickstarts/2-interactive/).
 
 :::note
 A client application can potentially have many instances - e.g. your web application might be physically deployed on
@@ -70,7 +70,7 @@ phones. Logically these instances are still a single client.
 
 ## Resources
 
-[Resources](/identityserver/v7/fundamentals/resources) are something you want to protect with your IdentityServer -
+[Resources](/identityserver/fundamentals/resources) are something you want to protect with your IdentityServer -
 either identity data of your users, or APIs.
 
 Every resource has a unique name - and clients use this name to specify to which resources they want to get access to.

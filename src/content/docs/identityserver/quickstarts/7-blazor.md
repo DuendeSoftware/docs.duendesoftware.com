@@ -195,7 +195,7 @@ This component needs to be implemented, and that's what we'll do next.
 ## Modifying the frontend (part 2)
 
 The BFF library has a server-side component that allows querying the current authentication session and state (
-see [here](/bff/v2/session/management/user)). We will now add a Blazor `AuthenticationStateProvider` that
+see [here](/bff/fundamentals/session/management/user/)). We will now add a Blazor `AuthenticationStateProvider` that
 will internally use this endpoint.
 
 Add a file with the following content:
@@ -303,7 +303,7 @@ fail: Duende.Bff.Endpoints.BffMiddleware[1]
 
 This is due to the antiforgery protection that is applied automatically to the management endpoints in the BFF host. To
 properly secure the call, you need to add a static `X-CSRF` header to the call.
-See [here](/bff/v2/apis/local) for more background information.
+See [here](/bff/fundamentals/apis/local/) for more background information.
 
 This can be easily accomplished by a delegating handler that can be plugged into the default HTTP client used by the
 Blazor frontend. Let's first add the handler:

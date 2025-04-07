@@ -17,7 +17,7 @@ redirect_from:
 Duende IdentityServer is a token service engine based on OAuth 2.x and OpenID Connect.
 
 ## How to request tokens
-OIDC and OAuth contain two endpoints that can issue tokens - the [authorize endpoint](/identityserver/v7/reference/endpoints/authorize) and the [token endpoint](/identityserver/v7/reference/endpoints/token).
+OIDC and OAuth contain two endpoints that can issue tokens - the [authorize endpoint](/identityserver/reference/endpoints/authorize) and the [token endpoint](/identityserver/reference/endpoints/token).
 
 While the `authorize` endpoint can be used for some special cases, you typically use the `token` endpoint for issuing tokens.
 
@@ -55,7 +55,7 @@ This data is solely for the client application (the `aud` claim) that initiated 
 See the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html#idtoken) for more information on identity tokens.
 
 ### Access Token
-An access token is a data structure that allows a client to access a resource (e.g. an API - see the [protecting APIs](/identityserver/v7/apis) section for more details).
+An access token is a data structure that allows a client to access a resource (e.g. an API - see the [protecting APIs](/identityserver/apis) section for more details).
 
 The data associated with an access token typically includes the client ID, the requested scopes, an expiration time, and user information in case of an interactive application. Access tokens come in two flavours: JSON Web Tokens (JWT) or reference tokens.
 
@@ -84,7 +84,7 @@ In the case of JWTs, all claims are embedded into the token itself, e.g.:
 A reference token does not contain any data, but is a pointer to the token data stored in the token service. Reference tokens allow for immediate revocation (by deleting the token data from your IdentityServer data store), whereas a JWT can only be invalidated via expiration.
 
 :::note
-You can control the access token format on a per-client basis using the [AccessTokenType](/identityserver/v7/reference/models/client#token) setting.
+You can control the access token format on a per-client basis using the [AccessTokenType](/identityserver/reference/models/client#token) setting.
 :::
 
 See the [OAuth specification](https://tools.ietf.org/html/rfc6749#section-1.4) for more information on access tokens.

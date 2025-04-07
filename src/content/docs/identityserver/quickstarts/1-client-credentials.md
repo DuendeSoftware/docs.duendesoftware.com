@@ -223,7 +223,7 @@ public static WebApplication ConfigureServices(this WebApplicationBuilder builde
 
 That's it - your IdentityServer is now configured. If you run the project and
 then navigate to `https://localhost:5001/.well-known/openid-configuration` in
-your browser, you should see the [discovery document](/identityserver/v7/reference/endpoints/discovery).
+your browser, you should see the [discovery document](/identityserver/reference/endpoints/discovery/).
 The discovery document is a standard endpoint in
 [OpenID Connect](https://openid.net/specs/openid-connect-discovery-1_0.html) and
 [OAuth](https://datatracker.ietf.org/doc/html/rfc8414). It is

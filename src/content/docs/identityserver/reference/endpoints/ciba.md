@@ -8,7 +8,7 @@ redirect_from:
   - /identityserver/v7/reference/endpoints/ciba/
 ---
 
-The backchannel authentication endpoint is used by a client to initiate a [CIBA](/identityserver/v7/ui/ciba) request.
+The backchannel authentication endpoint is used by a client to initiate a [CIBA](/identityserver/ui/ciba) request.
 
 Clients must be configured with the `"urn:openid:params:grant-type:ciba"` grant type to use this endpoint.
 You can use the `OidcConstants.GrantTypes.Ciba` constant rather than hard coding the value for the CIBA grant type.

@@ -12,7 +12,7 @@ redirect_from:
 
 Duende IdentityServer issues tokens for accessing resources.
 
-These resources are very often HTTP-based APIs, but could be also other "invocable" functionality like messaging endpoints, gRPC services or even good old XML Web Services. See the [issuing tokens](/identityserver/v7/tokens/overview) section on more information on access tokens and how to request them.
+These resources are very often HTTP-based APIs, but could be also other "invocable" functionality like messaging endpoints, gRPC services or even good old XML Web Services. See the [issuing tokens](/identityserver/tokens/) section on more information on access tokens and how to request them.
 
 ## Adding API Endpoints to IdentityServer
 

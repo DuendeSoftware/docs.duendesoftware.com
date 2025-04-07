@@ -16,9 +16,9 @@ Added in Duende IdentityServer 6.1
 When a user logs in interactively, their authentication session is managed by the ASP.NET Core authentication system,
 and more specifically the cookie authentication handler.
 IdentityServer uses
-the [state in the cookie](/identityserver/v7/ui/login/session#well-known-claims-issued-from-the-login-page) to track the
+the [state in the cookie](/identityserver/ui/login/session#well-known-claims-issued-from-the-login-page) to track the
 user's subject and session identifiers (i.e. the `sub` and `sid` claims), and the list of clients the user has logged
-into (which is used at logout time for [OIDC logout notification](/identityserver/v7/ui/logout/notification)).
+into (which is used at logout time for [OIDC logout notification](/identityserver/ui/logout/notification)).
 
 By default, this cookie is self-contained which means it contains all the state needed to track a user's session.
 While this does allow for a stateless server for session management, cookie size could be a problem, and it makes it
@@ -38,11 +38,11 @@ Business Edition or higher.
 
 With the addition and use of server-side sessions, more interesting architectural features are possible:
 
-* the ability to query and [manage sessions](session-management) from outside the browser that a user is logged into.
-* the ability to detect [session expiration](session-expiration) and perform cleanup both in IdentityServer and
+* the ability to query and [manage sessions](/identityserver/ui/server-side-sessions/session-management/) from outside the browser that a user is logged into.
+* the ability to detect [session expiration](/identityserver/ui/server-side-sessions/session-expiration/) and perform cleanup both in IdentityServer and
   in the client.
 * the ability to centralize and monitor session activity in order to achieve a
-  system-wide [inactivity timeout](inactivity-timeout).
+  system-wide [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeout/).
 
 ### Enabling server-side sessions
 
@@ -57,8 +57,8 @@ builder.Services.AddIdentityServer()
 
 By default, the store for the server-side sessions will just be kept in-memory.
 For production scenarios you will want to configure a durable store either by using
-our [EntityFramework Core implementation](/identityserver/v7/data/ef#operational-store), or you
-can [implement the store yourself](/identityserver/v7/reference/stores/server_side_sessions).
+our [EntityFramework Core implementation](/identityserver/data/ef#operational-store), or you
+can [implement the store yourself](/identityserver/reference/stores/server-side-sessions/).
 
 :::note
 Order is important in the DI system.
@@ -75,7 +75,7 @@ data. The `AuthenticationProperties` is included in the call to `SignInAsync` th
 UI code.
 
 This data will be serialized and protected using ASP.NET
-Core's [data protection](/identityserver/v7/deployment#data-protection-keys) feature to protect any user PII from being
+Core's [data protection](/identityserver/deployment#data-protection-keys) feature to protect any user PII from being
 directly readable in the data store.
 To allow querying some of the values from the user's session are extracted and used as indices in the store. These
 values are the user's:
@@ -86,9 +86,9 @@ values are the user's:
 
 If you would like to query this data based on a user's display name, then the claim type used is configurable with the
 `ServerSideSessions.UserDisplayNameClaimType` property on
-the [IdentityServerOptions](/identityserver/v7/reference/options#authentication).
+the [IdentityServerOptions](/identityserver/reference/options#authentication).
 This claim must be included in the claims when the
-user's [authentication session is established](/identityserver/v7/ui/login/session).
+user's [authentication session is established](/identityserver/ui/login/session).
 
 For example:
 
@@ -101,9 +101,9 @@ builder.Services.AddIdentityServer(options => {
 
 ### IServerSideSessionStore
 
-The [`IServerSideSessionStore`](/identityserver/v7/reference/stores/server_side_sessions) is the abstraction for storing
+The [`IServerSideSessionStore`](/identityserver/reference/stores/server-side-sessions) is the abstraction for storing
 the server-side session.
 
 A EntityFramework Core implementation is already provided as part of
-our [operational store](/identityserver/v7/data/ef#operational-store), but you can implement
-the [interface](/identityserver/v7/reference/stores/server_side_sessions) yourself for other backing implementations.
+our [operational store](/identityserver/data/ef#operational-store), but you can implement
+the [interface](/identityserver/reference/stores/server-side-sessions/) yourself for other backing implementations.

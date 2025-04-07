@@ -9,7 +9,7 @@ redirect_from:
   - /identityserver/v7/ui/error/
 ---
 
-The error page is used to display to the end user that an error has occurred during a request to the [authorize endpoint](/identityserver/v7/reference/endpoints/authorize).
+The error page is used to display to the end user that an error has occurred during a request to the [authorize endpoint](/identityserver/reference/endpoints/authorize).
 
 When an error occurs, IdentityServer will redirect the user to a configurable `ErrorUrl`.
 ```csharp
@@ -35,5 +35,5 @@ builder.Services.AddIdentityServer(opt => {
 
 By default, the `ErrorId` is simply the string "errorId".
 
-The [interaction service](/identityserver/v7/reference/services/interaction_service#iidentityserverinteractionservice-apis) provides a `GetErrorContextAsync` API that will load error details for an `ErrorId`.
-The returned [ErrorMessage](/identityserver/v7/reference/services/interaction_service#errormessage) object contains these details.
+The [interaction service](/identityserver/reference/services/interaction-service/#iidentityserverinteractionservice-apis) provides a `GetErrorContextAsync` API that will load error details for an `ErrorId`.
+The returned [ErrorMessage](/identityserver/reference/services/interaction-service/#errormessage) object contains these details.

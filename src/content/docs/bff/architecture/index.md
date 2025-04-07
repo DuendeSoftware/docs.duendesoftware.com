@@ -38,8 +38,8 @@ Duende.BFF uses ASP.NET's Cookie handler for session management. The Cookie hand
 the application persisted in a digitally signed and encrypted cookie that is protected with modern cookie security
 features, including the Secure, HttpOnly and SameSite attributes. The handler also provides absolute and sliding session
 support, and has a flexible extensibility model, which Duende.BFF uses to
-implement [server-side session management](/bff/fundamentals/session/server_side_sessions)
-and [back-channel logout support](/bff/fundamentals/session/management/back-channel-logout).
+implement [server-side session management](/bff/fundamentals/session/server-side-sessions/)
+and [back-channel logout support](/bff/fundamentals/session/management/back-channel-logout/).
 
 ## Duende.AccessTokenManagement
 

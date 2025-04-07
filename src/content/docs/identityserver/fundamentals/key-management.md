@@ -38,7 +38,7 @@ Edition or higher.
 ### Configuration
 
 Automatic Key Management is configured by the options in the `KeyManagement`
-property on the [`IdentityServerOptions`](/identityserver/v7/reference/options#key-management).
+property on the [`IdentityServerOptions`](/identityserver/reference/options#key-management).
 
 ### Managed Key Lifecycle
 
@@ -77,13 +77,13 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 ### Key storage
 
 Automatic Key Management stores keys through the abstraction of the
-[ISigningKeyStore](/identityserver/v7/data/operational#keys). You can implement this
+[ISigningKeyStore](/identityserver/data/operational#keys). You can implement this
 extensibility point to customize the storage of your keys (perhaps using a key
 vault of some kind), or use one of the two implementations of the
 `ISigningKeyStore` that we provide:
 
 - the default `FileSystemKeyStore`, which writes keys to the file system.
-- the [EntityFramework operational store](/identityserver/v7/data/ef#operational-store) which writes keys to a database
+- the [EntityFramework operational store](/identityserver/data/ef#operational-store) which writes keys to a database
   using
   EntityFramework.
 
@@ -116,7 +116,7 @@ example, if you implement the `ISigningKeyStore` to store your keys in Azure Key
 Vault, you could safely disabled `DataProtectKeys`, relying on Azure Key Vault
 to encrypt your signing keys at rest.
 
-See the [deployment](/identityserver/v7/deployment) section for more information
+See the [deployment](/identityserver/deployment) section for more information
 about setting up data protection.
 
 ### Manage multiple keys
@@ -167,7 +167,7 @@ loading and rotation of keys.
 
 The automatic key management feature can be disabled by setting the `Enabled`
 flag to `false` on the `KeyManagement` property of
-[`IdentityServerOptions`](/identityserver/v7/reference/options#key-management):
+[`IdentityServerOptions`](/identityserver/reference/options#key-management):
 
 ```cs
 // Program.cs
@@ -226,7 +226,7 @@ Console.WriteLine($"Certificate saved to {name}.pfx");
 
 ## Adding Keys
 
-Signing keys are added with the [`AddSigningCredential`](/identityserver/v7/reference/di#signing-keys) configuration
+Signing keys are added with the [`AddSigningCredential`](/identityserver/reference/di#signing-keys) configuration
 method:
 
 ```cs

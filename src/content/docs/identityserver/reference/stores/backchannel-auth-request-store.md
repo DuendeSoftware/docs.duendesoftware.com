@@ -10,7 +10,7 @@ redirect_from:
 
 #### Duende.IdentityServer.Stores.IBackChannelAuthenticationRequestStore
 
-Used to store backchannel login requests (for [CIBA](/identityserver/v7/ui/ciba)).
+Used to store backchannel login requests (for [CIBA](/identityserver/ui/ciba)).
 
 ```cs
     /// <summary>

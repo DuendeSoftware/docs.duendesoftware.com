@@ -21,7 +21,7 @@ registered with your IdentityServer before it can request tokens and is identifi
 There are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server
 processes, etc.
 
-[More details](/identityserver/v7/fundamentals/clients)
+[More details](/identityserver/fundamentals/clients)
 
 ## Automatic key management :badge[Business]
 
@@ -30,7 +30,7 @@ handling this key material, including storage and rotation.
 
 [More details](https://blog.duendesoftware.com/posts/20201028_key_management/)
 
-[Documentation](/identityserver/v7/fundamentals/key_management#automatic-key-management)
+[Documentation](/identityserver/fundamentals/key-management/#automatic-key-management)
 
 ## Server-side Session Management :badge[Business]
 
@@ -44,7 +44,7 @@ server-side sessions enables more architectural features in your IdentityServer,
 
 [More details](https://blog.duendesoftware.com/posts/20220406_session_management/)
 
-[Documentation](/identityserver/v7/ui/server_side_sessions)
+[Documentation](/identityserver/ui/server-side-sessions/)
 
 ## BFF Security Framework :badge[Business]
 
@@ -53,21 +53,21 @@ browser-based frontends (e.g. SPAs or Blazor WASM applications) with ASP.NET Cor
 
 [More details](https://blog.duendesoftware.com/posts/20210326_bff/)
 
-[Documentation](/bff/v3)
+[Documentation](/bff/)
 
 ## Dynamic Client Registration :badge[Business]
 
 Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register
 clients and their configuration.
 
-[Documentation](/identityserver/v7/configuration)
+[Documentation](/identityserver/configuration)
 
 ## Pushed Authorization Requests :badge[Business]
 
 Implementation of [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html). Provides a more secure way to start a
 browser-based token/authentication request.
 
-[Documentation](/identityserver/v7/tokens/par)
+[Documentation](/identityserver/tokens/par)
 
 ## Dynamic Authentication Providers :badge[Enterprise]
 
@@ -78,7 +78,7 @@ This is designed to address the performance concern and allowing changes to the 
 
 [More details](https://blog.duendesoftware.com/posts/20210517_dynamic_providers/)
 
-[Documentation](/identityserver/v7/ui/login/dynamicproviders)
+[Documentation](/identityserver/ui/login/dynamicproviders)
 
 ## Resource Isolation :badge[Enterprise]
 
@@ -88,7 +88,7 @@ boundary.
 
 [More details](https://blog.duendesoftware.com/posts/20201230_resource_isolation/)
 
-[Documentation](/identityserver/v7/fundamentals/resources/isolation)
+[Documentation](/identityserver/fundamentals/resources/isolation)
 
 ## CIBA :badge[Enterprise]
 
@@ -99,14 +99,14 @@ CIBA is one of the requirements to support the Financal-grade API compliance.
 
 [More details](https://blog.duendesoftware.com/posts/20220107_ciba/)
 
-[Documentation](/identityserver/v7/ui/ciba)
+[Documentation](/identityserver/ui/ciba)
 
 ## Proof-of-Possession at the Application Layer / DPoP :badge[Enterprise]
 
 A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This
 mechanism allows for the detection of replay attacks with access and refresh tokens.
 
-[Documentation](/identityserver/v7/tokens/pop)
+[Documentation](/identityserver/tokens/pop)
 
 ## Single Deployment
 

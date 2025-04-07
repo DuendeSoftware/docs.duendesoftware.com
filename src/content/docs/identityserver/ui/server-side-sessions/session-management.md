@@ -18,7 +18,7 @@ These features are all provided via the `ISessionManagementService` service.
 
 ## ISessionManagementService
 
-The [session management service](/identityserver/v7/reference/services/session_management_service) provides administrative operations for querying and revoking the server-side sessions.
+The [session management service](/identityserver/reference/services/session-management-service/) provides administrative operations for querying and revoking the server-side sessions.
 
 ### Quickstart UI
 
@@ -82,7 +82,7 @@ userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQue
 To terminate session(s) for a user, use the `RemoveSessionsAsync` API.
 This accepts a `RemoveSessionsContext` which can filter on the subject and/or the session identifier to terminate.
 It then also has flags for what to terminate or revoke.
-This allows deleting a user's session record in the store, any associated tokens or consents in the [operational database](/identityserver/v7/data/operational#grants), and/or notifying any clients via [back-channel logout](/identityserver/v7/ui/logout/notification#back-channel-server-side-clients) that the user's session has ended.
+This allows deleting a user's session record in the store, any associated tokens or consents in the [operational database](/identityserver/data/operational#grants), and/or notifying any clients via [back-channel logout](/identityserver/ui/logout/notification#back-channel-server-side-clients) that the user's session has ended.
 There is also a list of client identifiers to control which clients are affected.
 
 An example to revoke everything for current sessions for subject id `12345` might be:

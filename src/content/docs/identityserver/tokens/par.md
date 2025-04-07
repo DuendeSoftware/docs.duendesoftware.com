@@ -56,7 +56,7 @@ the user will be redirected to log in and other UI pages as necessary before bei
 authorization code which the client subsequently exchanges for tokens.
 
 A sample of how to implement this flow in an ASP.NET application is
-available [here](/identityserver/v7/samples/basics#mvc-client-with-pushed-authorization-requests).
+available [here](/identityserver/samples/basics#mvc-client-with-pushed-authorization-requests).
 
 ## Data Store
 

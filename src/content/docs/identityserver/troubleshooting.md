@@ -40,7 +40,7 @@ Core Authentication libraries. If it is not correctly configured it might result
 * The key `{xxxxx-xxxx-xxx-xxx-xxxxxxx} was not found in the key ring.
 * Failed to unprotect AuthenticationTicket payload for key {key}
 
-See [our data protection guide](/identityserver/v7/deployment#data-protection-keys) for more
+See [our data protection guide](/identityserver/deployment#data-protection-keys) for more
 information.
 
 ## Load Balancing, proxies and TLS offloading
@@ -53,7 +53,7 @@ To diagnose, open the discovery document (append `/.well-known/openid-configurat
 e.g. https://demo.duendesoftware.com/.well-known/openid-configuration. Make sure that the URLs listed in there have the
 correct host name and are listed as https (assuming you are running under https, which you should).
 
-See [our proxy guide](/identityserver/v7/deployment#proxy-servers-and-load-balancers) for more information.
+See [our proxy guide](/identityserver/deployment#proxy-servers-and-load-balancers) for more information.
 
 ## TaskCancellationExceptions
 

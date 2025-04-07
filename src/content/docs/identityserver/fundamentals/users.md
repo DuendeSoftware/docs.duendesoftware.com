@@ -21,7 +21,7 @@ the security protocol (OpenID Connect and OAuth).
 
 :::note
 While you can use any custom user database or identity management library for your users, we
-provide [integration support](/identityserver/v7/aspnet_identity) for ASP.NET Identity.
+provide [integration support](/identityserver/aspnet-identity/) for ASP.NET Identity.
 :::
 
 ## Authorization Endpoint and Login Page Workflow
@@ -31,7 +31,7 @@ This is obvious if the client application is a web application, but it's also th
 mobile applications.
 
 When a user must log in, the client application will redirect the user to the protocol endpoint called
-the [authorization endpoint](/identityserver/v7/reference/endpoints/authorize) in your IdentityServer server to request
+the [authorization endpoint](/identityserver/reference/endpoints/authorize) in your IdentityServer server to request
 authentication.
 As part of the authorize request, your IdentityServer will typically display a login page for the user to enter their
 credentials.
@@ -69,5 +69,5 @@ the protocol response and redirect to the client application.
 In addition to the login page, there are other pages that Duende IdentityServer expects (e.g. logout, error, consent),
 and you could implement custom pages as well (e.g. register, forgot password, etc.).
 Details about building these pages, and coverage of additional topics are in the
-[User Interaction](/identityserver/v7/ui)
+[User Interaction](/identityserver/ui)
 section of this documentation.

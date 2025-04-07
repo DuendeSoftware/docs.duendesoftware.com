@@ -10,7 +10,7 @@ redirect_from:
 
 #### Duende.IdentityServer.Services.ISessionManagementService
 
-When using [server-side sessions](/identityserver/v7/ui/server_side_sessions), the `ISessionManagementService` provides
+When using [server-side sessions](/identityserver/ui/server-side-sessions/), the `ISessionManagementService` provides
 an administrative feature to query those sessions and terminate those sessions (including associated tokens, consents,
 and triggering back-channel logout to the clients).
 

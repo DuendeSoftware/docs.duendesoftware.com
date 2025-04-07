@@ -51,7 +51,7 @@ This means:
 
 The **ServerSideTokenStore**, together with the Blazor Server functionality in Duende.AccessTokenManagement is automatically registered when you register Blazor Server. 
 
-For more information on this, see [Blazor Server](https://docs.duendesoftware.com/foss/accesstokenmanagement/blazor_server/)
+For more information on this, see [Blazor Server](/accesstokenmanagement/blazor-server/)
 
 ## Adding the BFF Security framework to your Blazor application
 

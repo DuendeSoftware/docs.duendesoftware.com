@@ -317,7 +317,7 @@ Client initiated backchannel authentication specific settings.
 Added in 6.3.0.
 
 Settings specific to the Demonstration of Proof-of-Possession at the Application
-Layer ([DPoP](/identityserver/v7/tokens/pop)) feature.
+Layer ([DPoP](/identityserver/tokens/pop)) feature.
 
 * **`RequireDPoP`**
 

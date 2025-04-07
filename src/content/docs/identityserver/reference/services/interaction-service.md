@@ -206,7 +206,7 @@ The above methods return various models.
 
   Optional description the user can set for the grant (e.g. the name of the device being used when consent is given).
   This can be presented back to the user from
-  the [persisted grant service](/identityserver/v7/reference/services/persisted_grant_service).
+  the [persisted grant service](/identityserver/reference/services/persisted-grant-service/).
 
 * **`Error`**
 

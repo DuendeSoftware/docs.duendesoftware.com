@@ -45,7 +45,7 @@ If you're using any of the other IdentityServer4 packages, such as `IdentityServ
 
 ## Step 2: Update Database Schema with EF Core Migrations
 
-If you are using a [database](/identityserver/v7/data) for your configuration and operational data, then there is a bit of work.
+If you are using a [database](/identityserver/data) for your configuration and operational data, then there is a bit of work.
 The reason is that for this type of schema restructuring EntityFramework Core's migrations can lose existing data.
 To handle this, the conversation from the old schema to the new will be performed by custom SQL.
 This is only needed for the configuration database, not the operational one so normal migrations will suffice for the operational database.
@@ -143,4 +143,4 @@ At this point, you should be able to query your migrated database and see your d
 ## Step 4: Move onto the upgrade guide for Duende IdentityServer v6
 
 Once your project has been updated to IdentityServer4 v4, then you can work through the guide to update from IdentityServer4 v4 to Duende IdentityServer v6 (which should be far easier).
-Here is the [link to the next upgrade guide](is4-v4-to-dis-v6).
+Here is the [link to the next upgrade guide](/identityserver/upgrades/is4-v4-to-dis-v6).

@@ -15,7 +15,7 @@ Confidential and credentialed clients need to authenticate with your IdentitySer
 Duende IdentityServer has built-in support for various client credential types and authentication methods, and an extensible infrastructure to customize the authentication system.
 
 :::note
-All information in this section also applies to [API secrets](/identityserver/v7/reference/models/api_resource) for introspection.
+All information in this section also applies to [API secrets](/identityserver/reference/models/api-resource/) for introspection.
 :::
 
 **We recommend using asymmetric client credentials like the [*private key jwt*](#private-key-jwts) or [*Mutual TLS*](#mutual-tls-client-certificates) authentication method over shared secrets.**
@@ -47,7 +47,7 @@ client.ClientSecrets = new[] { primary, secondary };
 ### Secret parsing
 During request processing, the secret must be somehow extracted from the incoming request. The various specs describe a couple of options, e.g. as part of the authorization header or the body payload.
 
-It is the job of implementations of the [ISecretParser](/identityserver/v7/reference/models/secrets#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the `AddSecretParser()` DI extension method.
+It is the job of implementations of the [ISecretParser](/identityserver/reference/models/secrets#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the `AddSecretParser()` DI extension method.
 
 The following secret parsers are part of Duende IdentityServer:
 
@@ -73,7 +73,7 @@ The following secret parsers are part of Duende IdentityServer:
 
 
 ### Secret validation
-It is the job of implementations of the [ISecretValidator](/identityserver/v7/reference/models/secrets#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
+It is the job of implementations of the [ISecretValidator](/identityserver/reference/models/secrets#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
 
 You can add secret validators by calling the `AddSecretValidator()` DI extension method.
 
@@ -233,7 +233,7 @@ var client = new Client
 ```
 
 :::note
-You can share the same key for client authentication and [signed authorize requests](/identityserver/v7/tokens/jar).
+You can share the same key for client authentication and [signed authorize requests](/identityserver/tokens/jar).
 :::
 
 ### Authentication using a private key JWT
@@ -314,7 +314,7 @@ static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential
 }
 ```
 
-See [here](/identityserver/v7/samples/basics#jwt-based-client-authentication) for a sample for using JWT-based
+See [here](/identityserver/samples/basics#jwt-based-client-authentication) for a sample for using JWT-based
 authentication.
 
 ### Using ASP.NET Core
@@ -365,7 +365,7 @@ public class OidcEvents : OpenIdConnectEvents
 ```
 
 The assertion service would be a helper to create the JWT as shown above in the `CreateClientToken` method.
-See [here](/identityserver/v7/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using
+See [here](/identityserver/samples/basics#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using
 JWT-based authentication (and signed authorize requests) in ASP.NET Core.
 
 ## Strict Audience Validation
@@ -383,7 +383,7 @@ The OpenID Foundation proposed a two-part fix: strictly validate the audience an
 explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
 
 You can enable strict audience validation using the [
-*`StrictClientAssertionAudienceValidation`*](/identityserver/v7/reference/options#strict-audience-validation)
+*`StrictClientAssertionAudienceValidation`*](/identityserver/reference/options#strict-audience-validation)
 flag, which always strictly validates that the audience is equal to the issuer and validates the token's
 `typ` header, as specified in [RFC 7523 bis](https://datatracker.ietf.org/doc/draft-ietf-oauth-rfc7523bis/).
 
@@ -391,7 +391,7 @@ When *`StrictClientAssertionAudienceValidation`* is not enabled, validation beha
 on the `typ` header being present. When the token sets the `typ` header to `client-authentication+jwt`,
 IdentityServer assumes the client's intention is to apply strict audience validation.
 If `typ` is not
-present, [default audience validation](/identityserver/v7/apis/aspnetcore/jwt#adding-audience-validation)
+present, [default audience validation](/identityserver/apis/aspnetcore/jwt#adding-audience-validation)
 is used.
 
 ### Mutual TLS Client Certificates
@@ -408,7 +408,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 })
 ```
 
-Use the [DI extensions methods](/identityserver/v7/reference/di) to add the services to DI which contain a default
+Use the [DI extensions methods](/identityserver/reference/di) to add the services to DI which contain a default
 implementation to do that either thumbprint or common-name based:
 
 ```cs

@@ -10,7 +10,7 @@ redirect_from:
   - /v7/identityserver/fundamentals/clients/
 ---
 
-[Clients](/identityserver/v7/overview/terminology#client) represent applications that can request tokens from your
+[Clients](/identityserver/overview/terminology#client) represent applications that can request tokens from your
 IdentityServer.
 
 The details vary, but you typically define the following common settings for a client:
