@@ -43,6 +43,13 @@ export default defineConfig({
         }),
       ],
       title: "Duende Software Docs",
+      head: [
+        {
+          tag: "script",
+          content:
+            "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-MMR39D3G');",
+        },
+      ],
       logo: {
         light: "./src/assets/duende-logo.svg",
         dark: "./src/assets/duende-logo-dark.svg",
@@ -85,7 +92,9 @@ export default defineConfig({
           href: "https://blog.duendesoftware.com/index.xml",
         },
       ],
-      components: {},
+      components: {
+        SkipLink: "./src/components/SkipLink.astro",
+      },
       sidebar: [
         {
           label: "General Information",
