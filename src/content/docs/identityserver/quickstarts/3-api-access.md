@@ -35,7 +35,7 @@ _IdentityServer_ will respond with two tokens:
 :::note
 We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of
-the [reference implementation of Quickstart 2](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/2*InteractiveAspNetCore).
+the [reference implementation of Quickstart 2](https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v7/Quickstarts/2_InteractiveAspNetCore).
 Throughout this quickstart, paths are written relative to the base `_quickstart`
 directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview/#preparation).
