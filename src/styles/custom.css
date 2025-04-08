@@ -80,6 +80,10 @@ iframe {
     width: 100%;
 }
 
+.mermaid {
+    background: var(--sl-color-gray-1);
+}
+
 .hero > img {
     --size: min(10rem, calc(5rem + 6vw));
     --blur: calc(var(--size) / 5);
@@ -88,10 +92,7 @@ iframe {
     font-size: var(--size);
     line-height: var(--size);
     justify-content: center;
-    filter:
-            drop-shadow(0 calc(-1 * var(--x-shift)) var(--blur) var(--sl-color-black))
-            drop-shadow(calc(-1 * var(--x-shift)) var(--y-shift) var(--blur) var(--sl-color-red))
-            drop-shadow(var(--x-shift) var(--y-shift) var(--blur) var(--sl-color-purple));
+    filter: drop-shadow(0 calc(-1 * var(--x-shift)) var(--blur) var(--sl-color-black)) drop-shadow(calc(-1 * var(--x-shift)) var(--y-shift) var(--blur) var(--sl-color-red)) drop-shadow(var(--x-shift) var(--y-shift) var(--blur) var(--sl-color-purple));
     z-index: -1;
 }
 
@@ -104,3 +105,4 @@ summary {
         font-weight: normal;
     }
 }
+

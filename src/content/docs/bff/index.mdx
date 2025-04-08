@@ -19,29 +19,44 @@ redirect_from:
   - /bff/v2/overview/
 ---
 
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
 The Duende.BFF (Backend for Frontend) security framework packages the necessary components to secure browser-based frontends (e.g. SPAs or Blazor applications) with ASP.NET Core backends.
 
 Duende.BFF is free for development, testing and personal projects, but production use requires a license. Special offers may apply.
 
 The source code for the BFF framework can be found on GitHub. Builds are distributed through NuGet. Also check out the samples.
 
+<CardGrid>
+  <LinkCard
+    href="https://github.com/DuendeSoftware/products/tree/main/bff"
+    title="GitHub Repository"
+    description="View the source code for this library on GitHub."
+  />
+  <LinkCard
+    href="https://www.nuget.org/packages/Duende.BFF"
+    title="NuGet Package"
+    description="View the package on NuGet.org."
+  />
+</CardGrid>
+
 ## Background
 
-Single-Page Applications (SPAs) are increasingly common, offering rich functionality within the browser. Front-end development has rapidly evolved with new frameworks and changing browser security requirements. Consequently, best practices for securing these applications have also shifted dramatically. 
+Single-Page Applications (SPAs) are increasingly common, offering rich functionality within the browser. Front-end development has rapidly evolved with new frameworks and changing browser security requirements. Consequently, best practices for securing these applications have also shifted dramatically.
 
 While implementing OAuth logic directly in the browser was once considered acceptable, this is no longer recommended. Storing any authentication state in the browser (such as access tokens) has proven to be inherently risky (see Threats against browser based applications). Because of this, the IETF is currently recommending delegating all authentication logic to a server-based host via a Backend-For-Frontend pattern as the preferred approach to securing modern web applications.
 
 ## The Backend For Frontend Pattern
 
-The BFF pattern (Backend-For-Frontend) pattern states that every browser based application should also have a server side application that handles all authentication requirements, including performing authentication flows and securing access to APIs. 
+The BFF pattern (Backend-For-Frontend) pattern states that every browser based application should also have a server side application that handles all authentication requirements, including performing authentication flows and securing access to APIs.
 
-The server will now expose http endpoints that the browser can use to login, logout or interrogate the active session. With this, the browser based application can trigger an authentication flow by redirecting to a URL, such as /bff/login. Once the authentication process is completed, the server places a secure authentication cookie in the browser. This cookie is then used to authenticate all subsequent requests, until the user is logged out again. 
+The server will now expose http endpoints that the browser can use to login, logout or interrogate the active session. With this, the browser based application can trigger an authentication flow by redirecting to a URL, such as /bff/login. Once the authentication process is completed, the server places a secure authentication cookie in the browser. This cookie is then used to authenticate all subsequent requests, until the user is logged out again.
 
-The BFF should expose all APIs that the front-end wants to access securely. So it can either host APIs locally, or act as a reverse proxy towards external APIs. 
+The BFF should expose all APIs that the front-end wants to access securely. So it can either host APIs locally, or act as a reverse proxy towards external APIs.
 
-With this approach, the browser based application will not have direct access to the access token. So if the browser based application is compromised, for example with XSS attacks, there is no risk of the attacker stealing the access tokens. 
+With this approach, the browser based application will not have direct access to the access token. So if the browser based application is compromised, for example with XSS attacks, there is no risk of the attacker stealing the access tokens.
 
-As the name of this pattern already implies, the BFF backend is the (only) Backend for the Frontend. They should be considered part of the same application. It should only expose the APIs that the front-end needs to function. 
+As the name of this pattern already implies, the BFF backend is the (only) Backend for the Frontend. They should be considered part of the same application. It should only expose the APIs that the front-end needs to function.
 
 ## 3rd party cookies
 
@@ -53,39 +68,41 @@ There is one thing to keep an eye out for with this pattern, and that’s Cross 
 
 # The Duende BFF framework
 
-Duende.BFF is a library for building services that comply with the BFF pattern and solve security and identity problems in browser based applications such as SPAs and Blazor based applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all the OAuth and OIDC protocol interactions. It completely implements the latest recommendations from the IETF regarding security for browser based applications. 
+Duende.BFF is a library for building services that comply with the BFF pattern and solve security and identity problems in browser based applications such as SPAs and Blazor based applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all the OAuth and OIDC protocol interactions. It completely implements the latest recommendations from the IETF regarding security for browser based applications.
 
 It offers the following functionality:
-* Protection from Token Extraction attacks
-* Built-in CSRF Attack protection
-* Server Side OAuth2 Authentication
-* User Management APIs
-* Back-channel logout
-* Securing access to both local and external APIs by serving as a reverse proxy. 
-* Server side Session State Management
-* Blazor Authentication State Management
+
+- Protection from Token Extraction attacks
+- Built-in CSRF Attack protection
+- Server Side OAuth2 Authentication
+- User Management APIs
+- Back-channel logout
+- Securing access to both local and external APIs by serving as a reverse proxy.
+- Server side Session State Management
+- Blazor Authentication State Management
 
 ## The BFF Framework in an application architecture
 
-The following diagram illustrates how the Duende BFF Security Framework fits into a typical application architecture. 
+The following diagram illustrates how the Duende BFF Security Framework fits into a typical application architecture.
 
 ![Backend for Frontend application architecture diagram](./images/bff_application_architecture.svg)
 
-The browser based application runs inside the browser’s secure sandbox. It can be built using any type of front-end technology, such as via Vanilla-JS, React, Vue, WebComponents, Blazor, etc. 
+The browser based application runs inside the browser’s secure sandbox. It can be built using any type of front-end technology, such as via Vanilla-JS, React, Vue, WebComponents, Blazor, etc.
 
-When the user wants to log in, the app can redirect the browser to the authentication endpoints. This will trigger an OpenID Connect authentication flow, at the end of which, it will place an authentication cookie in the browser. This cookie has to be an HTTP Only Same Site and Secure cookie. This makes sure that the browser application cannot get the contents of the cookie, which makes stealing the session much more difficult. 
+When the user wants to log in, the app can redirect the browser to the authentication endpoints. This will trigger an OpenID Connect authentication flow, at the end of which, it will place an authentication cookie in the browser. This cookie has to be an HTTP Only Same Site and Secure cookie. This makes sure that the browser application cannot get the contents of the cookie, which makes stealing the session much more difficult.
 
-The browser will now automatically add the authentication cookie to all calls to the BFF, so all calls to the APIs are secured. This means that local api’s are already automatically secured. 
+The browser will now automatically add the authentication cookie to all calls to the BFF, so all calls to the APIs are secured. This means that local api’s are already automatically secured.
 
-The app cannot access external Api’s directly, because the authentication cookie won’t be sent to 3rd party applications. To overcome this, the BFF can proxy requests through the BFF host, while exchanging the authentication cookie for a bearer token that’s issued from the identity provider. This can be configured to include or exclude the user’s credentials. 
+The app cannot access external Api’s directly, because the authentication cookie won’t be sent to 3rd party applications. To overcome this, the BFF can proxy requests through the BFF host, while exchanging the authentication cookie for a bearer token that’s issued from the identity provider. This can be configured to include or exclude the user’s credentials.
 
-As mentioned earlier, the BFF needs protection against CSRF attacks, because of the nature of using authentication cookies. While .net has various built-in methods for protecting against CSRF attacks, they often require a bit of work to implement. The easiest way to protect (just as effective as the .Net provided security mechanisms) is just to require the use of a custom header. The BFF Security framework by default requires the app to add a custom header called x-csrf=1 to the application. Just the fact that this header must be present is enough to protect the BFF from CSRF attacks. 
+As mentioned earlier, the BFF needs protection against CSRF attacks, because of the nature of using authentication cookies. While .net has various built-in methods for protecting against CSRF attacks, they often require a bit of work to implement. The easiest way to protect (just as effective as the .Net provided security mechanisms) is just to require the use of a custom header. The BFF Security framework by default requires the app to add a custom header called x-csrf=1 to the application. Just the fact that this header must be present is enough to protect the BFF from CSRF attacks.
 
 ## Logical and Physical Sessions
 
-When implemented correctly, a user will think of their time interacting with a solution as _"one session"_ also known as the **"logical session"**. The user should not be concerned with the steps developers take to provide a seamless experience. Users want to use the app, get their tasks completed, and log out happy. 
+When implemented correctly, a user will think of their time interacting with a solution as _"one session"_ also known as the **"logical session"**. The user should not be concerned with the steps developers take to provide a seamless experience. Users want to use the app, get their tasks completed, and log out happy.
 
 ```mermaid
+%%{ init: { 'theme': 'neutral' } }%%
 sequenceDiagram
     actor Alice
     Alice->>App: /login
@@ -98,13 +115,14 @@ sequenceDiagram
 So while the user will only see (and care about) a single session, it's entirely possible that there will be multiple physical sessions active. For most distributed applications, including those implemented with BFF, **sessions are managed independently by each component of an application architecture.** This means that there are **N+1** physical sessions possible, where **N** is the number of sessions for each service in your solution, and the **+1** being the session managed on the BFF host. Since we are focusing on ASP.NET Core, those sessions typically are stored using the Cookie Authentication handler features of .NET.
 
 ```mermaid
+%%{ init: { 'theme': 'neutral' } }%%
 sequenceDiagram
     actor Alice
     Alice->>App: /login
     App->>Alice: /account
     App->>Service 1: request
     App-->>Service N...: N... request
-    box App session    
+    box App session
         participant App
     end
     box Service 1 session
@@ -115,15 +133,15 @@ sequenceDiagram
     end
 ```
 
-The separation allows each service to manage its session to its specific needs. While it can depend on your requirements, we find most developers want to coordinate the physical session lifetimes, creating a more predictable logical session. If that is your case, we recommend you first start by turning each physical session into a more powerful [server-side session](/bff/fundamentals/session/server-side-sessions/). 
+The separation allows each service to manage its session to its specific needs. While it can depend on your requirements, we find most developers want to coordinate the physical session lifetimes, creating a more predictable logical session. If that is your case, we recommend you first start by turning each physical session into a more powerful [server-side session](/bff/fundamentals/session/server-side-sessions/).
 
 Server-side sessions are instances that are persisted to data storage and allow for visibility into currently active sessions and better management techniques. Let's take a look at the advantages of server-side sessions. Server-side sessions at each component allows for:
 
 - Receiving back channel logout notifications
 - Forcibly end a user's session of that node
 - Store and view information about a session lifetime
-- Coordinate sessions across an application's components 
-- Different claims data 
+- Coordinate sessions across an application's components
+- Different claims data
 
 Server-side sessions at IdentityServer allow for more powerful features:
 
@@ -187,8 +205,9 @@ Browsers have built-in control when cookies should be sent. For example, by sett
 Browsers also have built-in **Cross Origin** protection. Most requests that go across different origins (not sites) will by default be subjected to CORS protection. This means that the server needs to say if the requests are safe to use cross-origin. The exclusion to this are requests that the browser considers safe. The following diagram (created based on this article [Wikipedia](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)) shows this quite clearly:
 
 ```mermaid
-flowchart LR;
-        A[JavaScript makes a cross-domain XHR call] --> B{Is it a GET or HEAD?};    
+%%{ init: { 'theme': 'neutral' } }%%
+flowchart TD;
+        A[JavaScript makes a cross-domain XHR call] --> B{Is it a GET or HEAD?};
     subgraph cors-safe
         B -->|Yes| X[Make actual XHR];
         B -->|No| C{Is it a POST?};
@@ -228,6 +247,7 @@ Many frameworks, including [dotnet](https://learn.microsoft.com/en-us/aspnet/cor
 The trick is to require a custom header on the APIs that you wish to protect. It doesn’t matter what that custom header is or what the value is, for example, some-header=1. The browser-based application now MUST send this header along with every request. However, if a page on the malicious subdomain wants to call this API, it also has to add this custom header. This custom header now triggers a CORS Preflight check. This pre-flight check will fail because it detects that the request is cross-origin. Now the API developer has to develop a CORS policy that will protect against CORS attacks.
 
 So, effective CSRF attack protection relies on these pillars:
+
 1. Using **Same-Site=strict** Cookies
 2. Requiring a specific header to be sent on every API request (IE: x-csrf=1)
 3. having a cors policy that restricts the cookies only to a list of white-listed **origins**.
