@@ -54,3 +54,40 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 | `npm run linkchecker`     | Run lychee link checker                          |
+
+## 🔀 Redirects
+
+There are two ways to restructure content:
+* Internal (move content around in the current structure)
+* External (move content outside the current structure)
+
+### Internal restructuring
+
+When doing internal restructuring, move the page to its new location and then update its frontmatter
+to include the old location:
+
+```yaml
+---
+title: Page title
+redirect_from:
+  - /old-path-to/content
+---
+
+Page content goes here
+```
+
+This will generate the page at the new location, and put a redirect to it at the old location.
+
+### External restructuring
+
+When moving a page outside the structure, or you need a redirect to another location altogether,
+edit the `astro.config.mjs` file and append a key/vaklue pair to the `redirects` property:
+
+```json
+redirects: {
+  "/identityserver/product-page": "https://duendesoftware.com/products/identityserver",
+},
+```
+
+This will remove the old page from the navigation structure, but keeps the URL around
+with a redirect to the new location.
