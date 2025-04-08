@@ -4,6 +4,8 @@ description: "information pertaining to Duende products"
 sidebar:
   order: 1
 redirect_from:
+  - /licensekey/
+  - /trial-mode/
   - /identityserver/v5/fundamentals/license_key/
   - /identityserver/v6/fundamentals/license_key/
   - /identityserver/v7/fundamentals/license_key/  

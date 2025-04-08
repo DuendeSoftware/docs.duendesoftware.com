@@ -3,6 +3,7 @@ title: Troubleshooting
 sidebar:
   order: 15
 redirect_from:
+  - /mim/
   - /identityserver/v5/troubleshooting/
   - /identityserver/v6/troubleshooting/
   - /identityserver/v7/troubleshooting/

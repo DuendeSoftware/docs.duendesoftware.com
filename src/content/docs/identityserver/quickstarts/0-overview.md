@@ -6,6 +6,7 @@ sidebar:
   label: Overview
   order: 1
 redirect_from:
+  - /quickstarts/
   - /identityserver/v5/quickstarts/
   - /identityserver/v5/quickstarts/0_overview/
   - /identityserver/v6/quickstarts/
