@@ -80,18 +80,19 @@ iframe {
     width: 100%;
 }
 
-.hero > img.light\:sl-hidden {
-    --webkit-mask-image: url('../assets/duende-logo-dark.svg');
-    --color-1: rgba(179, 4, 251, 0.8);
-    --color-2: rgb(200, 124, 243);
-    filter: drop-shadow(0 0 50px var(--color-1)) drop-shadow(0 0 150px var(--color-2))
-}
-
-.hero > img.dark\:sl-hidden {
-    --webkit-mask-image: url('../assets/duende-logo-dark.svg');
-    --color-1: rgb(200, 124, 243);
-    --color-2: rgb(159, 0, 255);
-    filter: drop-shadow(0 0 10px var(--color-1)) drop-shadow(0 0 75px var(--color-2))
+.hero > img {
+    --size: min(10rem, calc(5rem + 6vw));
+    --blur: calc(var(--size) / 5);
+    --x-shift: calc(var(--size) / 5);
+    --y-shift: calc(var(--size) / 10);
+    font-size: var(--size);
+    line-height: var(--size);
+    justify-content: center;
+    filter:
+            drop-shadow(0 calc(-1 * var(--x-shift)) var(--blur) var(--sl-color-black))
+            drop-shadow(calc(-1 * var(--x-shift)) var(--y-shift) var(--blur) var(--sl-color-red))
+            drop-shadow(var(--x-shift) var(--y-shift) var(--blur) var(--sl-color-purple));
+    z-index: -1;
 }
 
 summary {
