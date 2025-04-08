@@ -18,6 +18,7 @@
     --sl-content-width: 50rem;
     --sl-sidebar-width: 22rem;
 }
+
 /* Light mode colors. */
 :root[data-theme='light'] {
     --sl-color-accent-low: #916bdb;
@@ -80,32 +81,24 @@ iframe {
 }
 
 .hero > img.light\:sl-hidden {
-    animation: pulsateDropShadow 2s infinite alternate;
     --webkit-mask-image: url('../assets/duende-logo-dark.svg');
     --color-1: rgba(179, 4, 251, 0.8);
     --color-2: rgb(200, 124, 243);
+    filter: drop-shadow(0 0 50px var(--color-1)) drop-shadow(0 0 150px var(--color-2))
 }
 
 .hero > img.dark\:sl-hidden {
-    animation: pulsateDropShadow 2s infinite alternate;
     --webkit-mask-image: url('../assets/duende-logo-dark.svg');
     --color-1: rgb(200, 124, 243);
     --color-2: rgb(159, 0, 255);
-}
-
-@keyframes pulsateDropShadow {
-    0% {
-        filter: drop-shadow(0 0 30px var(--color-1)) drop-shadow(0 0 40px var(--color-2));
-    }
-    100% {
-        filter: drop-shadow(0 0 50px var(--color-1)) drop-shadow(0 0 150px var(--color-2));
-    }
+    filter: drop-shadow(0 0 10px var(--color-1)) drop-shadow(0 0 75px var(--color-2))
 }
 
 summary {
     flex-direction: row-reverse;
     justify-content: start;
     padding: 0.25rem;
+
     .large {
         font-weight: normal;
     }
