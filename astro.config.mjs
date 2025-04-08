@@ -76,8 +76,8 @@ export default defineConfig({
         },
         {
           icon: "email",
-          label: "Email",
-          href: "mailto:contact@duendesoftware.com",
+          label: "Contact",
+          href: "https://duendesoftware.com/contact/general",
         },
         {
           icon: "rss",
