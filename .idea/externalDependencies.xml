@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalDependencies">
+    <plugin id="mdx.js" />
+    <plugin id="org.intellij.plugins.markdown" />
     <plugin id="org.jetbrains.plugins.astro" />
   </component>
 </project>
