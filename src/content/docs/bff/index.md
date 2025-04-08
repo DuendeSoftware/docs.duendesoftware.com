@@ -180,11 +180,11 @@ Cookie-based authentication (when using Secure and HTTP Only cookies) effectivel
 
 #### Origins and Sites
 
-To a browser, a [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) is defined as TLD (top-level domain - 1). So, a single segment under a top-level domain, such as example in example.co.uk, where co.uk is the top-level domain. Any subdomain under that (so site1.example.co.uk and www.example.co.uk) are considered to be from the same site. Contrast this to an origin, which is the scheme + hostname + port. In the previous example, the origins would be https://example.co.uk and https://www.example.co.uk. The site is the same, but the origin is different.
+To a browser, a [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) is defined as TLD (top-level domain - 1). So, a single segment under a top-level domain, such as example in `example.co.uk`, where `co.uk` is the top-level domain. Any subdomain under that (so `site1.example.co.uk` and `www.example.co.uk`) are considered to be from the same site. Contrast this to an origin, which is the scheme + hostname + port. In the previous example, the origins would be `https://example.co.uk` and `https://www.example.co.uk`. The site is the same, but the origin is different.
 
 Browsers have built-in control when cookies should be sent. For example, by setting [SameSite=strict](https://owasp.org/www-community/SameSite), the browser will only send along cookies if you are navigating within the same **site** (not origins).
 
-Browsers also have built-in **Cross Origin** protection. Most requests that go across different origins (not sites) will by default be subjected to CORS protection. This means that the server needs to say if the requests are safe to use cross-origin. The exclusion to this are requests that the browser considers safe. The following diagram (created based on this article [wikipedia](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)) shows this quite clearly:
+Browsers also have built-in **Cross Origin** protection. Most requests that go across different origins (not sites) will by default be subjected to CORS protection. This means that the server needs to say if the requests are safe to use cross-origin. The exclusion to this are requests that the browser considers safe. The following diagram (created based on this article [Wikipedia](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)) shows this quite clearly:
 
 ```mermaid
 flowchart LR;
