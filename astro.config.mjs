@@ -95,7 +95,7 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/DuendeSoftware",
+          href: "https://github.com/DuendeSoftware/community",
         },
         {
           icon: "blueSky",
@@ -115,7 +115,7 @@ export default defineConfig({
         {
           icon: "rss",
           label: "Blog",
-          href: "https://blog.duendesoftware.com/index.xml",
+          href: "https://blog.duendesoftware.com/",
         },
       ],
       components: {
