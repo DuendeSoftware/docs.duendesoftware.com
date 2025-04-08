@@ -44,11 +44,37 @@ export default defineConfig({
       ],
       title: "Duende Software Docs",
       head: [
+        // Google Tag Manager
         {
           tag: "script",
           content:
             "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-MMR39D3G');",
         },
+        // --
+        // Preload Google Fonts
+        {
+          tag: "link",
+          attrs: {
+            href: "https://fonts.googleapis.com",
+            rel: "preconnect",
+          },
+        },
+        {
+          tag: "link",
+          attrs: {
+            href: "https://fonts.gstatic.com",
+            rel: "preconnect",
+            crossorigin: true,
+          },
+        },
+        {
+          tag: "link",
+          attrs: {
+            href: "https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap",
+            rel: "stylesheet",
+          },
+        },
+        // --
       ],
       logo: {
         light: "./src/assets/duende-logo.svg",
