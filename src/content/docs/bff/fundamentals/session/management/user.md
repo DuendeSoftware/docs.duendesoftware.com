@@ -5,8 +5,10 @@ sidebar:
   order: 25
 date: 2022-12-29T10:22:12+02:00
 redirect_from:
-  - /bff/v2/fundamentals/session/management/user/
+  - /bff/v2/session/management/user/
   - /bff/v3/fundamentals/session/management/user/
+  - /identityserver/v5/bff/session/management/user/
+  - /identityserver/v6/bff/session/management/user/
   - /identityserver/v7/bff/session/management/user/
 ---
 

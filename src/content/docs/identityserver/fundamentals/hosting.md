@@ -3,9 +3,9 @@ title: "Hosting"
 sidebar:
   order: 10
 redirect_from:
-  - /v5/identityserver/fundamentals/hosting/
-  - /v6/identityserver/fundamentals/hosting/
-  - /v7/identityserver/fundamentals/hosting/
+  - /identityserver/v5/fundamentals/hosting/
+  - /identityserver/v6/fundamentals/hosting/
+  - /identityserver/v7/fundamentals/hosting/
 ---
 
 You add the Duende IdentityServer engine to any ASP.NET Core application by adding the relevant services to the

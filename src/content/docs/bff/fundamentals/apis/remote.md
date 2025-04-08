@@ -3,8 +3,10 @@ title: "Remote APIs"
 sidebar:
   order: 20
 redirect_from:
-  - /bff/v2/fundamentals/apis/remote/
+  - /bff/v2/apis/remote/
   - /bff/v3/fundamentals/apis/remote/
+  - /identityserver/v5/bff/apis/remote/
+  - /identityserver/v6/bff/apis/remote/
   - /identityserver/v7/bff/apis/remote/
 ---
 

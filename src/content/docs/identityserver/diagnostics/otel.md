@@ -4,9 +4,14 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 50
 redirect_from:
-  - /v5/identityserver/diagnostics/otel/
-  - /v6/identityserver/diagnostics/otel/
-  - /v7/identityserver/diagnostics/otel/
+  - /identityserver/v6/diagnostics/otel/
+  - /identityserver/v6/diagnostics/otel/metrics/
+  - /identityserver/v6/diagnostics/otel/traces/
+  - /identityserver/v6/diagnostics/otel/setup/
+  - /identityserver/v7/diagnostics/otel/
+  - /identityserver/v7/diagnostics/otel/metrics/
+  - /identityserver/v7/diagnostics/otel/traces/
+  - /identityserver/v7/diagnostics/otel/setup/
 ---
 
 :::tip

@@ -3,8 +3,10 @@ title: "UI Hosting"
 sidebar:
   order: 2
 redirect_from:
-  - /bff/v2/ui-hosting/
-  - /bff/v3/ui-hosting/
+  - /bff/v2/architecture/ui-hosting/
+  - /bff/v3/architecture/ui-hosting/
+  - /identityserver/v5/bff/architecture/ui-hosting/
+  - /identityserver/v6/bff/architecture/ui-hosting/
   - /identityserver/v7/bff/architecture/ui-hosting/
 ---
 

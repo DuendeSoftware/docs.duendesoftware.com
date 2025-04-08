@@ -5,9 +5,9 @@ sidebar:
   order: 20
   label: Without Backend
 redirect_from:
-  - /v5/identityserver/quickstarts/js_clients/js_without_backend/
-  - /v6/identityserver/quickstarts/js_clients/js_without_backend/
-  - /v7/identityserver/quickstarts/js_clients/js_without_backend/
+  - /identityserver/v5/quickstarts/js_clients/js_without_backend/
+  - /identityserver/v6/quickstarts/js_clients/js_without_backend/
+  - /identityserver/v7/quickstarts/js_clients/js_without_backend/
 ---
 
 :::note

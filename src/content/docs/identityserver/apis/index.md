@@ -5,9 +5,12 @@ sidebar:
   label: Overview
   order: 1
 redirect_from:
-  - /v5/identityserver/apis/
-  - /v6/identityserver/apis/
-  - /v7/identityserver/apis/
+  - /identityserver/v5/apis/
+  - /identityserver/v5/apis/add_apis/
+  - /identityserver/v6/apis/
+  - /identityserver/v6/apis/add_apis/
+  - /identityserver/v7/apis/
+  - /identityserver/v7/apis/add_apis/
 ---
 
 Duende IdentityServer issues tokens for accessing resources.

@@ -5,9 +5,12 @@ sidebar:
   order: 9
   label: More Resources
 redirect_from:
-  - /v5/identityserver/overview/resources/
-  - /v6/identityserver/overview/resources/
-  - /v7/identityserver/overview/resources/
+  - /identityserver/v5/overview/demo_server/
+  - /identityserver/v5/overview/resources/
+  - /identityserver/v6/overview/demo_server/
+  - /identityserver/v6/overview/resources/
+  - /identityserver/v7/overview/demo_server/
+  - /identityserver/v7/overview/resources/
 ---
 
 ## Demo Server

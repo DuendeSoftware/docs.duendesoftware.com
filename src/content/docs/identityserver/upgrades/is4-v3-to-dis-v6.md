@@ -4,8 +4,11 @@ sidebar:
   order: 140
   label: v3.1 → v6.0
 redirect_from:
+  - /identityserver/v5/upgrades/is4_v3_to_dis_v5/
   - /identityserver/v5/upgrades/is4_v3_to_dis_v6/
+  - /identityserver/v6/upgrades/is4_v3_to_dis_v5/
   - /identityserver/v6/upgrades/is4_v3_to_dis_v6/
+  - /identityserver/v7/upgrades/is4_v3_to_dis_v5/
   - /identityserver/v7/upgrades/is4_v3_to_dis_v6/
 ---
 

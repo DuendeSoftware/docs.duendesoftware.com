@@ -4,8 +4,10 @@ sidebar:
   label: "Overview"
   order: 20
 redirect_from:
-  - /bff/v2/fundamentals/session/management/
+  - /bff/v2/session/management/
   - /bff/v3/fundamentals/session/management/
+  - /identityserver/v5/bff/session/management/
+  - /identityserver/v6/bff/session/management/
   - /identityserver/v7/bff/session/management/
 ---
 

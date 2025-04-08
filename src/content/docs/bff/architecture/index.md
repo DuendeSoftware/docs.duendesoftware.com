@@ -6,6 +6,8 @@ sidebar:
 redirect_from:
   - /bff/v2/architecture/
   - /bff/v3/architecture/
+  - /identityserver/v5/bff/architecture/
+  - /identityserver/v6/bff/architecture/
   - /identityserver/v7/bff/architecture/
 ---
 

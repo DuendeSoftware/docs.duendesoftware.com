@@ -3,7 +3,7 @@ title: Samples
 sidebar:
   order: 5
 redirect_from:
-  - /foss/identitymodel-oidcclient/samples/
+  - /foss/identitymodel.oidcclient/samples/
 ---
 
 Samples of IdentityModel.OidcClient are available [on

@@ -8,6 +8,8 @@ sidebar:
 redirect_from:
   - /bff/v2/extensibility/sessions/
   - /bff/v3/extensibility/sessions/
+  - /identityserver/v5/bff/extensibility/sessions/
+  - /identityserver/v6/bff/extensibility/sessions/
   - /identityserver/v7/bff/extensibility/sessions/
 ---
 

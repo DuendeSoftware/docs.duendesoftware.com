@@ -5,8 +5,10 @@ sidebar:
   label: "Back-Channel Logout"
   order: 50
 redirect_from:
-  - /bff/v2/fundamentals/session/management/back-channel-logout/
+  - /bff/v2/session/management/back-channel-logout/
   - /bff/v3/fundamentals/session/management/back-channel-logout/
+  - /identityserver/v5/bff/session/management/back-channel-logout/
+  - /identityserver/v6/bff/session/management/back-channel-logout/
   - /identityserver/v7/bff/session/management/back-channel-logout/
 ---
 

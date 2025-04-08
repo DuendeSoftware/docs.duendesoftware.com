@@ -5,9 +5,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 20
 redirect_from:
-  - /v5/identityserver/fundamentals/resources/api_scopes/
-  - /v6/identityserver/fundamentals/resources/api_scopes/
-  - /v7/identityserver/fundamentals/resources/api_scopes/
+  - /identityserver/v5/fundamentals/resources/api_scopes/
+  - /identityserver/v6/fundamentals/resources/api_scopes/
+  - /identityserver/v7/fundamentals/resources/api_scopes/
 ---
 
 Designing your API surface can be a complicated task. Duende IdentityServer provides a couple of primitives to help you

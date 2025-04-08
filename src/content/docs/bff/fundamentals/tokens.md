@@ -4,8 +4,10 @@ description: "BFF - Overview"
 date: 2020-09-10T08:22:12+02:00
 order: 50
 redirect_from:
-  - /bff/v2/fundamentals/tokens/
+  - /bff/v2/tokens/
   - /bff/v3/fundamentals/tokens/
+  - /identityserver/v5/bff/tokens/
+  - /identityserver/v6/bff/tokens/
   - /identityserver/v7/bff/tokens/
 ---
 

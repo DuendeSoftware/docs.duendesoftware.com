@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 3
 redirect_from:
-  - /v5/identityserver/overview/specs/
-  - /v6/identityserver/overview/specs/
-  - /v7/identityserver/overview/specs/
+  - /identityserver/v5/overview/specs/
+  - /identityserver/v6/overview/specs/
+  - /identityserver/v7/overview/specs/
 ---
 
 Duende IdentityServer implements the following specifications:

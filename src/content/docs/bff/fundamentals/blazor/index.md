@@ -4,8 +4,10 @@ sidebar:
   label: Applications
   order: 1
 redirect_from:
-  - /bff/v2/fundamentals/blazor/
+  - /bff/v2/blazor/
   - /bff/v3/fundamentals/blazor/
+  - /identityserver/v5/bff/fundamentals/blazor/
+  - /identityserver/v6/bff/fundamentals/blazor/
   - /identityserver/v7/bff/fundamentals/blazor/
 ---
 

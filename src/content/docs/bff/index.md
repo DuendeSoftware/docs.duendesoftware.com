@@ -6,11 +6,17 @@ sidebar:
   order: 1
   collapsed: true
 redirect_from:
-  - /bff/v2/
-  - /bff/v3/ 
+  - /identityserver/v5/bff/
+  - /identityserver/v5/bff/overview/
+  - /identityserver/v6/bff/
+  - /identityserver/v6/bff/overview/
   - /identityserver/v7/bff/
   - /identityserver/v7/bff/overview/
+  - /bff/v2/
+  - /bff/v3/
   - /bff/v3/overview/
+  - /bff/v3/overview/threats-against-browser-based-applications/
+  - /bff/v2/overview/
 ---
 
 The Duende.BFF (Backend for Frontend) security framework packages the necessary components to secure browser-based frontends (e.g. SPAs or Blazor applications) with ASP.NET Core backends.

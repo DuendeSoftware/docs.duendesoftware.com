@@ -4,9 +4,9 @@ sidebar:
   label: Overview
   order: 1
 redirect_from:
-  - /v5/identityserver/data/
-  - /v6/identityserver/data/
-  - /v7/identityserver/data/
+  - /identityserver/v5/data/
+  - /identityserver/v6/data/
+  - /identityserver/v7/data/
 ---
 
 Duende IdentityServer is backed by two kinds of data:

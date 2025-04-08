@@ -2,6 +2,9 @@
 title: "Token Response Generator"
 sidebar:
   order: 20
+redirect_from:
+  - /identityserver/v6/reference/response_handling/token_response_generator/
+  - /identityserver/v7/reference/response_handling/token_response_generator/
 ---
 
 ## Duende.IdentityServer.ResponseHandling.ITokenResponseGenerator

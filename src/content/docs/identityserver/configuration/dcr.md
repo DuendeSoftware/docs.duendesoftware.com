@@ -3,9 +3,16 @@ title: "Dynamic Client Registration"
 sidebar:
   order: 5
 redirect_from:
-  - /v5/identityserver/configuration/dcr/
-  - /v6/identityserver/configuration/dcr/
-  - /v7/identityserver/configuration/dcr/
+  - /identityserver/v6/configuration/dcr/
+  - /identityserver/v6/configuration/dcr/authorization/
+  - /identityserver/v6/configuration/dcr/calling-registration/
+  - /identityserver/v6/configuration/dcr/customization/
+  - /identityserver/v6/configuration/dcr/installation/
+  - /identityserver/v7/configuration/dcr/
+  - /identityserver/v7/configuration/dcr/authorization/
+  - /identityserver/v7/configuration/dcr/calling-registration/
+  - /identityserver/v7/configuration/dcr/customization/
+  - /identityserver/v7/configuration/dcr/installation/
 ---
 
 Dynamic Client Registration (DCR) is the process of registering OAuth clients

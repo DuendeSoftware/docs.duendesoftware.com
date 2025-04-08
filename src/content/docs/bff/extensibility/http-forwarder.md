@@ -6,6 +6,8 @@ sidebar:
 redirect_from:
   - /bff/v2/extensibility/http_forwarder/
   - /bff/v3/extensibility/http_forwarder/
+  - /identityserver/v5/bff/extensibility/proxy/
+  - /identityserver/v6/bff/extensibility/http_forwarder/
   - /identityserver/v7/bff/extensibility/http_forwarder/
 ---
 

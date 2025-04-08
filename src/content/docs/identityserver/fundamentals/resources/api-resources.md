@@ -5,9 +5,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 30
 redirect_from:
-  - /v5/identityserver/fundamentals/resources/api_resources/
-  - /v6/identityserver/fundamentals/resources/api_resources/
-  - /v7/identityserver/fundamentals/resources/api_resources/
+  - /identityserver/v5/fundamentals/resources/api_resources/
+  - /identityserver/v6/fundamentals/resources/api_resources/
+  - /identityserver/v7/fundamentals/resources/api_resources/
 ---
 
 When the API/resource surface gets larger, a flat list of scopes might become hard to  manage.

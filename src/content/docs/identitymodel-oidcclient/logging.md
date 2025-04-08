@@ -3,7 +3,7 @@ title: Logging
 sidebar:
   order: 4
 redirect_from:
-  - /foss/identitymodel-oidcclient/logging/
+  - /foss/identitymodel.oidcclient/logging/
 ---
 
 OidcClient logs errors, warnings, and diagnostic information using

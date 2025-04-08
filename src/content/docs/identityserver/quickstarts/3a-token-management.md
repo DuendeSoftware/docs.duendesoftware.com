@@ -4,9 +4,9 @@ date: 2024-07-23T08:22:12+02:00
 sidebar:
   order: 5
 redirect_from:
-  - /v5/identityserver/quickstarts/3a_token_management/
-  - /v6/identityserver/quickstarts/3a_token_management/
-  - /v7/identityserver/quickstarts/3a_token_management/
+  - /identityserver/v5/quickstarts/3a_token_management/
+  - /identityserver/v6/quickstarts/3a_token_management/
+  - /identityserver/v7/quickstarts/3a_token_management/
 ---
 
 Welcome to this Quickstart for Duende IdentityServer!

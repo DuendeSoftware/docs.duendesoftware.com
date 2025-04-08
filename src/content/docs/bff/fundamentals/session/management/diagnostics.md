@@ -5,8 +5,10 @@ sidebar:
   label: "Diagnostics"
   order: 40
 redirect_from:
-  - /bff/v2/fundamentals/session/management/diagnostics/
+  - /bff/v2/session/management/diagnostics/
   - /bff/v3/fundamentals/session/management/diagnostics/
+  - /identityserver/v5/bff/session/management/diagnostics/
+  - /identityserver/v6/bff/session/management/diagnostics/
   - /identityserver/v7/bff/session/management/diagnostics/
 ---
 

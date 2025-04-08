@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 20
 redirect_from:
-  - /v5/identityserver/apis/aspnetcore/reference/
-  - /v6/identityserver/apis/aspnetcore/reference/
-  - /v7/identityserver/apis/aspnetcore/reference/
+  - /identityserver/v5/apis/aspnetcore/reference/
+  - /identityserver/v6/apis/aspnetcore/reference/
+  - /identityserver/v7/apis/aspnetcore/reference/
 ---
 
 If you are using [reference tokens](/identityserver/tokens/reference), you need an authentication handler that

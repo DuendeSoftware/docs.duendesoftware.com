@@ -5,9 +5,9 @@ sidebar:
   order: 4
   label: Packaging & Builds
 redirect_from:
-  - /v5/identityserver/overview/packaging/
-  - /v6/identityserver/overview/packaging/
-  - /v7/identityserver/overview/packaging/
+  - /identityserver/v5/overview/packaging/
+  - /identityserver/v6/overview/packaging/
+  - /identityserver/v7/overview/packaging/
 ---
 
 ## Product

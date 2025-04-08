@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 2
 redirect_from:
-  - /v5/identityserver/quickstarts/1_client_credentials/
-  - /v6/identityserver/quickstarts/1_client_credentials/
-  - /v7/identityserver/quickstarts/1_client_credentials/
+  - /identityserver/v5/quickstarts/1_client_credentials/
+  - /identityserver/v6/quickstarts/1_client_credentials/
+  - /identityserver/v7/quickstarts/1_client_credentials/
 ---
 
 Welcome to the first quickstart for IdentityServer! To see the full list of

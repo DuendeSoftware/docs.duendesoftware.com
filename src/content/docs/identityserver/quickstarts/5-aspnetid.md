@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 7
 redirect_from:
-  - /v5/identityserver/quickstarts/5_aspnetid/
-  - /v6/identityserver/quickstarts/5_aspnetid/
-  - /v7/identityserver/quickstarts/5_aspnetid/
+  - /identityserver/v5/quickstarts/5_aspnetid/
+  - /identityserver/v6/quickstarts/5_aspnetid/
+  - /identityserver/v7/quickstarts/5_aspnetid/
 ---
 
 Welcome to Quickstart 5 for Duende IdentityServer! In this quickstart you will
@@ -233,13 +233,11 @@ the Web client application where your user's claims should be listed.
 
 ![](images/aspid_claims.png)
 
-You should also be able to go to the [call api
-page](https://localhost:5002/callapi) to invoke the API on behalf of the user:
+You should also be able to go to the call api page at `https://localhost:5002/callapi` to invoke the API on behalf of the user:
 
 ![](images/aspid_api_claims.png)
 
-Congratulations, you're using users from ASP.NET Core Identity in
-IdentityServer!
+Congratulations, you're using users from ASP.NET Core Identity in IdentityServer!
 
 ## Adding Custom Profile Data
 

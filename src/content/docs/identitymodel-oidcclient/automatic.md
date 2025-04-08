@@ -3,7 +3,7 @@ title: Automatic Mode
 sidebar:
   order: 3
 redirect_from:
-  - /foss/identitymodel-oidcclient/automatic/
+  - /foss/identitymodel.oidcclient/automatic/
 ---
 
 In automatic mode, you can encapsulate all browser interactions by

@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10
 redirect_from:
-  - /v5/identityserver/apis/aspnetcore/jwt/
-  - /v6/identityserver/apis/aspnetcore/jwt/
-  - /v7/identityserver/apis/aspnetcore/jwt/
+  - /identityserver/v5/apis/aspnetcore/jwt/
+  - /identityserver/v6/apis/aspnetcore/jwt/
+  - /identityserver/v7/apis/aspnetcore/jwt/
 ---
 
 On ASP.NET Core, you typically use the [JWT authentication handler](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer) for validating JWT bearer tokens.

@@ -4,9 +4,9 @@ sidebar:
   label: Overview
   order: 1
 redirect_from:
-  - /v5/identityserver/
-  - /v6/identityserver/
-  - /v7/identityserver/
+  - /identityserver/v5/
+  - /identityserver/v6/
+  - /identityserver/v7/
 ---
 
 

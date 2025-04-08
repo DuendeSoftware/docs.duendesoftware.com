@@ -5,8 +5,12 @@ sidebar:
   order: 30
 redirect_from:
   - /identityserver/v5/samples/tokens/
+  - /identityserver/v5/samples/extension_grants/
+  - /identityserver/v5/samples/pat/
   - /identityserver/v6/samples/tokens/
+  - /identityserver/v6/samples/extension_grants/
   - /identityserver/v7/samples/tokens/
+  - /identityserver/v7/samples/extension_grants/
 ---
 
 ### Extension grants and Token Exchange

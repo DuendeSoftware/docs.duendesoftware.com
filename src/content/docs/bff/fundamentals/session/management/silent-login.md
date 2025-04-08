@@ -5,8 +5,10 @@ sidebar:
   label: "Silent Login"
   order: 35
 redirect_from:
-  - /bff/v2/fundamentals/session/management/silent-login/
+  - /bff/v2/session/management/silent-login/
   - /bff/v3/fundamentals/session/management/silent-login/
+  - /identityserver/v5/bff/session/management/silent-login/
+  - /identityserver/v6/bff/session/management/silent-login/
   - /identityserver/v7/bff/session/management/silent-login/
 ---
 

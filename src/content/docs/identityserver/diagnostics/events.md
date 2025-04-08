@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 20
 redirect_from:
-  - /v5/identityserver/diagnostics/events/
-  - /v6/identityserver/diagnostics/events/
-  - /v7/identityserver/diagnostics/events/
+  - /identityserver/v5/diagnostics/events/
+  - /identityserver/v6/diagnostics/events/
+  - /identityserver/v7/diagnostics/events/
 ---
 
 While logging is more low level "printf" style - events represent higher level information about certain operations in

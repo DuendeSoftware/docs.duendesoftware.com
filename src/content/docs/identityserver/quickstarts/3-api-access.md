@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 4
 redirect_from:
-   - /v5/identityserver/quickstarts/3_api_access/
-   - /v6/identityserver/quickstarts/3_api_access/
-   - /v7/identityserver/quickstarts/3_api_access/
+   - /identityserver/v5/quickstarts/3_api_access/
+   - /identityserver/v6/quickstarts/3_api_access/
+   - /identityserver/v7/quickstarts/3_api_access/
 ---
 
 Welcome to Quickstart 3 for Duende IdentityServer!
@@ -165,7 +165,6 @@ And update _src/WebClient/Pages/CallApi.cshtml_ as follows:
 Also add a link to the new page in _src/WebClient/Shared/\_Layout.cshtml_ with the following:
 
 ```html
-
 <li class="nav-item">
     <a class="nav-link text-dark" asp-area="" asp-page="/CallApi">CallApi</a>
 </li>

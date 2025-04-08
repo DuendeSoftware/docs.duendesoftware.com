@@ -7,6 +7,8 @@ sidebar:
 redirect_from:
   - /bff/v2/extensibility/management/user/
   - /bff/v3/extensibility/management/user/
+  - /identityserver/v5/bff/extensibility/management/user/
+  - /identityserver/v6/bff/extensibility/management/user/
   - /identityserver/v7/bff/extensibility/management/user/
 ---
 

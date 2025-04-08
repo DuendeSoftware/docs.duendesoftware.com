@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 40
 redirect_from:
-  - /v5/identityserver/fundamentals/resources/isolation/
-  - /v6/identityserver/fundamentals/resources/isolation/
-  - /v7/identityserver/fundamentals/resources/isolation/
+  - /identityserver/v5/fundamentals/resources/isolation/
+  - /identityserver/v6/fundamentals/resources/isolation/
+  - /identityserver/v7/fundamentals/resources/isolation/
 ---
 
 :::note

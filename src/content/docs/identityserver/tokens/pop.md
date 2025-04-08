@@ -5,8 +5,14 @@ sidebar:
   order: 100
 redirect_from:
   - /identityserver/v5/tokens/pop/
+  - /identityserver/v5/tokens/pop/dpop/
+  - /identityserver/v5/tokens/pop/mtls/
   - /identityserver/v6/tokens/pop/
+  - /identityserver/v6/tokens/pop/dpop/
+  - /identityserver/v6/tokens/pop/mtls/
   - /identityserver/v7/tokens/pop/
+  - /identityserver/v7/tokens/pop/dpop/
+  - /identityserver/v7/tokens/pop/mtls/
 ---
 
 By default, OAuth access tokens are so-called `bearer` tokens. This means they are not bound to a client and anybody who possesses the token can use it. The security concern here is that a leaked token could be used by a (malicious) third party to impersonate the client and/or user.

@@ -7,6 +7,8 @@ sidebar:
 redirect_from:
   - /bff/v2/extensibility/management/back-channel-logout/
   - /bff/v3/extensibility/management/back-channel-logout/
+  - /identityserver/v5/bff/extensibility/management/back-channel-logout/
+  - /identityserver/v6/bff/extensibility/management/back-channel-logout/
   - /identityserver/v7/bff/extensibility/management/back-channel-logout/
 ---
 

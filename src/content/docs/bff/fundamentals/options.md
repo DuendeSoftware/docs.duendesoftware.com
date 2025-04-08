@@ -5,8 +5,10 @@ sidebar:
 description: "BFF configuration options"
 date: 2020-09-10T08:22:12+02:00
 redirect_from:
-  - /bff/v2/fundamentals/options/
+  - /bff/v2/options/
   - /bff/v3/fundamentals/options/
+  - /identityserver/v5/bff/options/
+  - /identityserver/v6/bff/options/
   - /identityserver/v7/bff/options/
 ---
 

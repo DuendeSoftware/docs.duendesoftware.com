@@ -5,9 +5,9 @@ sidebar:
   label: Overview
   order: 1
 redirect_from:
-  - /v5/identityserver/configuration/
-  - /v6/identityserver/configuration/
-  - /v7/identityserver/configuration/
+  - /identityserver/v5/configuration/
+  - /identityserver/v6/configuration/
+  - /identityserver/v7/configuration/
 ---
 
 :::tip

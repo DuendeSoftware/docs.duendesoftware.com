@@ -8,6 +8,8 @@ sidebar:
 redirect_from:
   - /bff/v2/extensibility/tokens/
   - /bff/v3/extensibility/tokens/
+  - /identityserver/v5/bff/extensibility/tokens/
+  - /identityserver/v6/bff/extensibility/tokens/
   - /identityserver/v7/bff/extensibility/tokens/
 ---
 

@@ -6,9 +6,9 @@ sidebar:
   label: Overview
 description: Index
 redirect_from:
-  - /v5/identityserver/fundamentals/resources/
-  - /v6/identityserver/fundamentals/resources/
-  - /v7/identityserver/fundamentals/resources/
+  - /identityserver/v5/fundamentals/resources/
+  - /identityserver/v6/fundamentals/resources/
+  - /identityserver/v7/fundamentals/resources/
 ---
 
 The ultimate job of Duende IdentityServer is to control access to resources.

@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 15
 redirect_from:
-  - /v5/identityserver/quickstarts/7_blazor/
-  - /v6/identityserver/quickstarts/7_blazor/
-  - /v7/identityserver/quickstarts/7_blazor/
+  - /identityserver/v5/quickstarts/7_blazor/
+  - /identityserver/v6/quickstarts/7_blazor/
+  - /identityserver/v7/quickstarts/7_blazor/
 ---
 
 Similar to JavaScript SPAs, you can build Blazor WASM applications with and without a backend. Not having a backend has

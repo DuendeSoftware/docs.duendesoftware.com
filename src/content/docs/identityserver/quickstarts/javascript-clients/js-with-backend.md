@@ -4,9 +4,9 @@ sidebar:
   order: 10
   label: With a BFF
 redirect_from:
-  - /v5/identityserver/quickstarts/js_clients/js_with_backend/
-  - /v6/identityserver/quickstarts/js_clients/js_with_backend/
-  - /v7/identityserver/quickstarts/js_clients/js_with_backend/
+  - /identityserver/v5/quickstarts/js_clients/js_with_backend/
+  - /identityserver/v6/quickstarts/js_clients/js_with_backend/
+  - /identityserver/v7/quickstarts/js_clients/js_with_backend/
 ---
 
 :::note

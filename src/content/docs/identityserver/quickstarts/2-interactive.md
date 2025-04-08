@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 3
 redirect_from:
-  - /v5/identityserver/quickstarts/2_interactive/
-  - /v6/identityserver/quickstarts/2_interactive/
-  - /v7/identityserver/quickstarts/2_interactive/
+  - /identityserver/v5/quickstarts/2_interactive/
+  - /identityserver/v6/quickstarts/2_interactive/
+  - /identityserver/v7/quickstarts/2_interactive/
 ---
 
 Welcome to Quickstart 2 for Duende IdentityServer!
@@ -70,7 +70,7 @@ IdentityServer from the `isempty` template with the quickstart UI from the
 :::
 
 Comment in the service registration and pipeline configuration, run the
-`IdentityServer` project, and navigate to https://localhost:5001. You should now
+`IdentityServer` project, and navigate to `https://localhost:5001`. You should now
 see a home page.
 
 Spend some time reading the pages and models, especially those in the

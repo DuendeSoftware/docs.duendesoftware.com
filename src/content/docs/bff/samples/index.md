@@ -6,6 +6,8 @@ sidebar:
 redirect_from:
   - /bff/v2/samples/
   - /bff/v3/samples/
+  - /identityserver/v5/samples/bff/
+  - /identityserver/v6/samples/bff/
   - /identityserver/v7/samples/bff/
 ---
 

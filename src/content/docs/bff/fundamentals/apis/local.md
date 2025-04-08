@@ -3,8 +3,10 @@ title: "Local APIs"
 sidebar:
   order: 10
 redirect_from:
-  - /bff/v2/fundamentals/apis/local/
+  - /bff/v2/apis/local/
   - /bff/v3/fundamentals/apis/local/
+  - /identityserver/v5/bff/apis/local/
+  - /identityserver/v6/bff/apis/local/
   - /identityserver/v7/bff/apis/local/
 ---
 

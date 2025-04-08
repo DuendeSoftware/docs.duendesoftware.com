@@ -4,8 +4,11 @@ sidebar:
   order: 150
   label: Blazor
 redirect_from:
-  - /bff/v2/samples/bff-blazor/
+  - /bff/v2/samples/bff/
   - /bff/v3/samples/bff-blazor/
+  - /bff/v3/samples/quickstarts/
+  - /identityserver/v5/bff/samples/bff-blazor/
+  - /identityserver/v6/bff/samples/bff-blazor/
   - /identityserver/v7/bff/samples/bff-blazor/
 ---
 

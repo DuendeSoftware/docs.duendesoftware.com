@@ -5,6 +5,8 @@ sidebar:
 redirect_from:
   - /bff/v2/architecture/third-party-cookies/
   - /bff/v3/architecture/third-party-cookies/
+  - /identityserver/v5/bff/architecture/third-party-cookies/
+  - /identityserver/v6/bff/architecture/third-party-cookies/
   - /identityserver/v7/bff/architecture/third-party-cookies/
 ---
 

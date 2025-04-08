@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 30
 redirect_from:
-  - /v5/identityserver/apis/aspnetcore/authorization/
-  - /v6/identityserver/apis/aspnetcore/authorization/
-  - /v7/identityserver/apis/aspnetcore/authorization/
+  - /identityserver/v5/apis/aspnetcore/authorization/
+  - /identityserver/v6/apis/aspnetcore/authorization/
+  - /identityserver/v7/apis/aspnetcore/authorization/
 ---
 
 The access token will include additional claims that can be used for authorization, e.g. the `scope` claim will reflect the scope the client requested (and was granted) during the token request.

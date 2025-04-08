@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 1
 redirect_from:
-  - /v5/identityserver/overview/big_picture/
-  - /v6/identityserver/overview/big_picture/
-  - /v7/identityserver/overview/big_picture/
+  - /identityserver/v5/overview/big_picture/
+  - /identityserver/v6/overview/big_picture/
+  - /identityserver/v7/overview/big_picture/
 ---
 
 Most modern applications look more or less like this:

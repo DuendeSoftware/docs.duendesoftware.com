@@ -4,8 +4,10 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 2
 redirect_from:
-  - /bff/v2/fundamentals/session/handlers/
+  - /bff/v2/session/handlers/
   - /bff/v3/fundamentals/session/handlers/
+  - /identityserver/v5/bff/session/handlers/
+  - /identityserver/v6/bff/session/handlers/
   - /identityserver/v7/bff/session/handlers/
 ---
 

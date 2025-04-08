@@ -5,8 +5,10 @@ sidebar:
   order: 10
   label: Rendering Modes
 redirect_from:
-  - /bff/v2/fundamentals/blazor/rendering-modes/
+  - /bff/v2/blazor/rendering-modes/
   - /bff/v3/fundamentals/blazor/rendering-modes/
+  - /identityserver/v5/bff/fundamentals/blazor/rendering-modes/
+  - /identityserver/v6/bff/fundamentals/blazor/rendering-modes/
   - /identityserver/v7/bff/fundamentals/blazor/rendering-modes/
 ---
 

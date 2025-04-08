@@ -3,9 +3,17 @@ title: Operational Data
 sidebar:
   order: 20
 redirect_from:
-  - /v5/identityserver/data/operational/
-  - /v6/identityserver/data/operational/
-  - /v7/identityserver/data/operational/
+  - /identityserver/v5/data/operational/
+  - /identityserver/v5/data/operational/grants/
+  - /identityserver/v5/data/operational/keys/
+  - /identityserver/v6/data/operational/
+  - /identityserver/v6/data/operational/grants/
+  - /identityserver/v6/data/operational/keys/
+  - /identityserver/v6/data/operational/sessions/
+  - /identityserver/v7/data/operational/
+  - /identityserver/v7/data/operational/grants/
+  - /identityserver/v7/data/operational/keys/
+  - /identityserver/v7/data/operational/sessions/
 ---
 
 

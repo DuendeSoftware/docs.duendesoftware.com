@@ -7,6 +7,8 @@ date: 2020-09-10T08:22:12+02:00
 redirect_from:
   - /bff/v2/extensibility/management/
   - /bff/v3/extensibility/management/
+  - /identityserver/v5/bff/extensibility/management/
+  - /identityserver/v6/bff/extensibility/management/
   - /identityserver/v7/bff/extensibility/management/
 ---
 

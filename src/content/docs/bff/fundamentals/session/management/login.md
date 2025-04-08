@@ -5,8 +5,10 @@ sidebar:
   label: "Login"
   order: 20
 redirect_from:
-  - /bff/v2/fundamentals/session/management/login/
+  - /bff/v2/session/management/login/
   - /bff/v3/fundamentals/session/management/login/
+  - /identityserver/v5/bff/session/management/login/
+  - /identityserver/v6/bff/session/management/login/
   - /identityserver/v7/bff/session/management/login/
 ---
 

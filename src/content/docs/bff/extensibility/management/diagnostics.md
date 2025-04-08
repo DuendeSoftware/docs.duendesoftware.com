@@ -7,6 +7,8 @@ sidebar:
 redirect_from:
   - /bff/v2/extensibility/management/diagnostics/
   - /bff/v3/extensibility/management/diagnostics/
+  - /identityserver/v5/bff/extensibility/management/diagnostics/
+  - /identityserver/v6/bff/extensibility/management/diagnostics/
   - /identityserver/v7/bff/extensibility/management/diagnostics/
 ---
 

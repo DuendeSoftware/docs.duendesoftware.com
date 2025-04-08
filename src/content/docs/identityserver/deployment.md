@@ -4,24 +4,24 @@ date: 2020-09-10T08:20:20+02:00
 sidebar:
   order: 10
 redirect_from:
-   - /v5/identityserver/deployment/
-   - /v6/identityserver/deployment/
-   - /v7/identityserver/deployment/
-   - /v5/identityserver/deployment/proxies/
-   - /v6/identityserver/deployment/proxies/
-   - /v7/identityserver/deployment/proxies/
-   - /v5/identityserver/deployment/data_protection/
-   - /v6/identityserver/deployment/data_protection/
-   - /v7/identityserver/deployment/data_protection/
-   - /v5/identityserver/deployment/data_stores/
-   - /v6/identityserver/deployment/data_stores/
-   - /v7/identityserver/deployment/data_stores/
-   - /v5/identityserver/deployment/caching/
-   - /v6/identityserver/deployment/caching/
-   - /v7/identityserver/deployment/caching/
-   - /v5/identityserver/deployment/health_checks/
-   - /v6/identityserver/deployment/health_checks/
-   - /v7/identityserver/deployment/health_checks/
+   - /identityserver/v5/deployment/
+   - /identityserver/v6/deployment/
+   - /identityserver/v7/deployment/
+   - /identityserver/v5/deployment/proxies/
+   - /identityserver/v6/deployment/proxies/
+   - /identityserver/v7/deployment/proxies/
+   - /identityserver/v5/deployment/data_protection/
+   - /identityserver/v6/deployment/data_protection/
+   - /identityserver/v7/deployment/data_protection/
+   - /identityserver/v5/deployment/data_stores/
+   - /identityserver/v6/deployment/data_stores/
+   - /identityserver/v7/deployment/data_stores/
+   - /identityserver/v5/deployment/caching/
+   - /identityserver/v6/deployment/caching/
+   - /identityserver/v7/deployment/caching/
+   - /identityserver/v5/deployment/health_checks/
+   - /identityserver/v6/deployment/health_checks/
+   - /identityserver/v7/deployment/health_checks/
 ---
 
 Because IdentityServer is made up of middleware and services that you use within an ASP.NET Core application, it can be hosted and deployed with the same diversity of technology as any other ASP.NET Core application. You have the choice about 

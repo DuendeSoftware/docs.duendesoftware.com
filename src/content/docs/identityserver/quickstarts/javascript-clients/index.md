@@ -4,9 +4,9 @@ sidebar:
   order: 1
   label: Overview
 redirect_from:
-  - /v5/identityserver/quickstarts/js_clients/
-  - /v6/identityserver/quickstarts/js_clients/
-  - /v7/identityserver/quickstarts/js_clients/
+  - /identityserver/v5/quickstarts/js_clients/
+  - /identityserver/v6/quickstarts/js_clients/
+  - /identityserver/v7/quickstarts/js_clients/
 ---
 
 

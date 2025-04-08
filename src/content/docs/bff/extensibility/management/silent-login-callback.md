@@ -7,6 +7,8 @@ sidebar:
 redirect_from:
   - /bff/v2/extensibility/management/silent-login-callback/
   - /bff/v3/extensibility/management/silent-login-callback/
+  - /identityserver/v5/bff/extensibility/management/silent-login-callback/
+  - /identityserver/v6/bff/extensibility/management/silent-login-callback/
   - /identityserver/v7/bff/extensibility/management/silent-login-callback/
 ---
 

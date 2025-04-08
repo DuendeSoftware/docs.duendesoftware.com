@@ -4,9 +4,15 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 50
 redirect_from:
-  - /v5/identityserver/fundamentals/key_management/
-  - /v6/identityserver/fundamentals/key_management/
-  - /v7/identityserver/fundamentals/key_management/
+  - /identityserver/v5/fundamentals/keys/
+  - /identityserver/v6/fundamentals/keys/
+  - /identityserver/v6/fundamentals/keys/migration/
+  - /identityserver/v6/fundamentals/keys/automatic_key_management/
+  - /identityserver/v6/fundamentals/keys/static_key_management/
+  - /identityserver/v7/fundamentals/keys/
+  - /identityserver/v7/fundamentals/keys/migration/
+  - /identityserver/v7/fundamentals/keys/automatic_key_management/
+  - /identityserver/v7/fundamentals/keys/static_key_management/
 ---
 
 Duende IdentityServer issues several types of tokens that are cryptographically

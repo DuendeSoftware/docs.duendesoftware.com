@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 45
 redirect_from:
-  - /v5/identityserver/fundamentals/claims/
-  - /v6/identityserver/fundamentals/claims/
-  - /v7/identityserver/fundamentals/claims/
+  - /identityserver/v5/fundamentals/claims/
+  - /identityserver/v6/fundamentals/claims/
+  - /identityserver/v7/fundamentals/claims/
 ---
 
 IdentityServer emits claims about users and clients into tokens. You are in full control of which claims you want to

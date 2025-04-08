@@ -3,9 +3,9 @@ title: "Entity Framework Integration"
 sidebar:
   order: 50
 redirect_from:
-  - /v5/identityserver/data/ef/
-  - /v6/identityserver/data/ef/
-  - /v7/identityserver/data/ef/
+  - /identityserver/v5/data/ef/
+  - /identityserver/v6/data/ef/
+  - /identityserver/v7/data/ef/
 ---
 
 An EntityFramework-based implementation is provided for the configuration and operational data extensibility points in IdentityServer.

@@ -5,8 +5,11 @@ sidebar:
   order: 20
 redirect_from:
   - /identityserver/v5/samples/ui/
+  - /identityserver/v5/samples/windowsauth/
   - /identityserver/v6/samples/ui/
+  - /identityserver/v6/samples/windowsauth/
   - /identityserver/v7/samples/ui/
+  - /identityserver/v7/samples/windowsauth/
 ---
 
 These samples illustrate customization of the [interactive pages](/identityserver/ui) used in your IdentityServer.
@@ -35,7 +38,7 @@ projects:
   requests don't meet its authentication requirements.
 - Client is a client application that uses IdentityServerHost to login and makes requests to the Api.
 
-To run the demo, start all three projects and navigate to the Client application at https://localhost:6001. From there,
+To run the demo, start all three projects and navigate to the Client application at `https://localhost:6001`. From there,
 you can click on links to pages that will trigger step up in various ways. For example, you could
 
 - Click on the secure page to trigger login.

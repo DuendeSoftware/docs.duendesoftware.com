@@ -5,9 +5,9 @@ sidebar:
   label: Overview
   order: 1
 redirect_from:
-  - /v5/identityserver/diagnostics/
-  - /v6/identityserver/diagnostics/
-  - /v7/identityserver/diagnostics/
+  - /identityserver/v5/diagnostics/
+  - /identityserver/v6/diagnostics/
+  - /identityserver/v7/diagnostics/
 ---
 
 ## Logging

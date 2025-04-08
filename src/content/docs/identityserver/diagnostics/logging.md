@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10
 redirect_from:
-  - /v5/identityserver/diagnostics/logging/
-  - /v6/identityserver/diagnostics/logging/
-  - /v7/identityserver/diagnostics/logging/
+  - /identityserver/v5/diagnostics/logging/
+  - /identityserver/v6/diagnostics/logging/
+  - /identityserver/v7/diagnostics/logging/
 ---
 
 Duende IdentityServer uses the standard logging facilities provided by ASP.NET Core. You don't need to do any extra

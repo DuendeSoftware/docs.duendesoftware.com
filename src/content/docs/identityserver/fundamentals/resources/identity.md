@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10
 redirect_from:
-  - /v5/identityserver/fundamentals/resources/identity/
-  - /v6/identityserver/fundamentals/resources/identity/
-  - /v7/identityserver/fundamentals/resources/identity/
+  - /identityserver/v5/fundamentals/resources/identity/
+  - /identityserver/v6/fundamentals/resources/identity/
+  - /identityserver/v7/fundamentals/resources/identity/
 ---
 
 An identity resource is a named group of claims about a user that can be requested using the `scope` parameter.

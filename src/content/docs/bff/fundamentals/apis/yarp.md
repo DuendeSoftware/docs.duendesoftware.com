@@ -3,8 +3,10 @@ title: "YARP extensions"
 sidebar:
   order: 30
 redirect_from:
-  - /bff/v2/fundamentals/apis/yarp/
+  - /bff/v2/apis/yarp/
   - /bff/v3/fundamentals/apis/yarp/
+  - /identityserver/v5/bff/apis/yarp/
+  - /identityserver/v6/bff/apis/yarp/
   - /identityserver/v7/bff/apis/yarp/
 ---
 

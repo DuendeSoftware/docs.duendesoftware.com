@@ -5,9 +5,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 30
 redirect_from:
-  - /v5/identityserver/fundamentals/clients/
-  - /v6/identityserver/fundamentals/clients/
-  - /v7/identityserver/fundamentals/clients/
+  - /identityserver/v5/fundamentals/clients/
+  - /identityserver/v6/fundamentals/clients/
+  - /identityserver/v7/fundamentals/clients/
 ---
 
 [Clients](/identityserver/overview/terminology#client) represent applications that can request tokens from your

@@ -7,6 +7,8 @@ sidebar:
 redirect_from:
   - /bff/v2/upgrading/
   - /bff/v3/upgrading/
+  - /identityserver/v5/bff/upgrading/
+  - /identityserver/v6/bff/upgrading/
   - /identityserver/v7/bff/upgrading/
 ---
 

@@ -5,6 +5,8 @@ sidebar:
 redirect_from:
   - /bff/v2/extensibility/
   - /bff/v3/extensibility/
+  - /identityserver/v5/bff/extensibility/
+  - /identityserver/v6/bff/extensibility/
   - /identityserver/v7/bff/extensibility/
 ---
 

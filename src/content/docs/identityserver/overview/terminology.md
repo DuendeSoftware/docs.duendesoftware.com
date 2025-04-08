@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 2
 redirect_from:
-  - /v5/identityserver/overview/terminology/
-  - /v6/identityserver/overview/terminology/
-  - /v7/identityserver/overview/terminology/
+  - /identityserver/v5/overview/terminology/
+  - /identityserver/v6/overview/terminology/
+  - /identityserver/v7/overview/terminology/
 ---
 
 The specs, documentation and object model use a certain terminology that you should be aware of.

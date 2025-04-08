@@ -6,8 +6,20 @@ sidebar:
   order: 140
 redirect_from:
   - /identityserver/v5/tokens/client_authentication/
+  - /identityserver/v5/tokens/authentication/overview/
+  - /identityserver/v5/tokens/authentication/shared_secret/
+  - /identityserver/v5/tokens/authentication/jwt/
+  - /identityserver/v5/tokens/authentication/mtls/
   - /identityserver/v6/tokens/client_authentication/
+  - /identityserver/v6/tokens/authentication/overview/
+  - /identityserver/v6/tokens/authentication/shared_secret/
+  - /identityserver/v6/tokens/authentication/jwt/
+  - /identityserver/v6/tokens/authentication/mtls/
   - /identityserver/v7/tokens/client_authentication/
+  - /identityserver/v7/tokens/authentication/overview/
+  - /identityserver/v7/tokens/authentication/shared_secret/
+  - /identityserver/v7/tokens/authentication/jwt/
+  - /identityserver/v7/tokens/authentication/mtls/
 ---
 
 Confidential and credentialed clients need to authenticate with your IdentityServer before they can request tokens.

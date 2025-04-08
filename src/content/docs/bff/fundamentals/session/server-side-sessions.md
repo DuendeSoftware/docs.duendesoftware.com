@@ -4,8 +4,10 @@ description: "BFF"
 sidebar:
   order: 40
 redirect_from:
-  - /bff/v2/fundamentals/session/sever_side_sessions/
-  - /bff/v3/fundamentals/session/sever_side_sessions/
+  - /bff/v2/session/server_side_sessions/
+  - /bff/v3/fundamentals/session/server_side_sessions/
+  - /identityserver/v5/bff/session/server_side_sessions/
+  - /identityserver/v6/bff/session/server_side_sessions/
   - /identityserver/v7/bff/session/server_side_sessions/
 ---
 

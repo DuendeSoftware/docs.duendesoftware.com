@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 6
 redirect_from:
-  - /v5/identityserver/quickstarts/4_ef/
-  - /v6/identityserver/quickstarts/4_ef/
-  - /v7/identityserver/quickstarts/4_ef/
+  - /identityserver/v5/quickstarts/4_ef/
+  - /identityserver/v6/quickstarts/4_ef/
+  - /identityserver/v7/quickstarts/4_ef/
 ---
 
 Welcome to Quickstart 4 for Duende IdentityServer! In this quickstart you will

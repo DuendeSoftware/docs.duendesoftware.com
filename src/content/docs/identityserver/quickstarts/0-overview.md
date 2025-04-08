@@ -6,9 +6,12 @@ sidebar:
   label: Overview
   order: 1
 redirect_from:
-  - /v5/identityserver/quickstarts/0_overview/
-  - /v6/identityserver/quickstarts/0_overview/
-  - /v7/identityserver/quickstarts/0_overview/
+  - /identityserver/v5/quickstarts/
+  - /identityserver/v5/quickstarts/0_overview/
+  - /identityserver/v6/quickstarts/
+  - /identityserver/v6/quickstarts/0_overview/
+  - /identityserver/v7/quickstarts/
+  - /identityserver/v7/quickstarts/0_overview/
 ---
 
 The quickstarts provide step-by-step instructions for various common Duende IdentityServer scenarios. They start with

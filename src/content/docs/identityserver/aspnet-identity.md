@@ -4,9 +4,9 @@ description: Overview
 sidebar:
   order: 9
 redirect_from:
-  - /v5/identityserver/aspnet_identity/
-  - /v6/identityserver/aspnet_identity/
-  - /v7/identityserver/aspnet_identity/
+  - /identityserver/v5/aspnet_identity/
+  - /identityserver/v6/aspnet_identity/
+  - /identityserver/v7/aspnet_identity/
 ---
 
 

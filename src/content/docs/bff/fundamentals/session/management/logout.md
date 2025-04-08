@@ -5,8 +5,10 @@ sidebar:
   label: "Logout"
   order: 30
 redirect_from:
-  - /bff/v2/fundamentals/session/management/logout/
+  - /bff/v2/session/management/logout/
   - /bff/v3/fundamentals/session/management/logout/
+  - /identityserver/v5/bff/session/management/logout/
+  - /identityserver/v6/bff/session/management/logout/
   - /identityserver/v7/bff/session/management/logout/
 ---
 

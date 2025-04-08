@@ -3,9 +3,9 @@ title: Configuration Data
 sidebar:
   order: 10
 redirect_from:
-  - /v5/identityserver/data/configuration/
-  - /v6/identityserver/data/configuration/
-  - /v7/identityserver/data/configuration/
+  - /identityserver/v5/data/configuration/
+  - /identityserver/v6/data/configuration/
+  - /identityserver/v7/data/configuration/
 ---
 
 

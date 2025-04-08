@@ -4,7 +4,7 @@ sidebar:
   label: User Tokens
   order: 2
 redirect_from:
-  - /foss/accesstokenmanagement/user_tokens/
+  - /foss/accesstokenmanagement/advanced/user_tokens/
 ---
 
 The most common way to use the access token management for interactive web applications is described [here](/accesstokenmanagement/web-apps/) - however you may want to customise certain aspects of it - here's what you can do.

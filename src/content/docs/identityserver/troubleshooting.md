@@ -3,9 +3,10 @@ title: Troubleshooting
 sidebar:
   order: 15
 redirect_from:
-  - /v5/identityserver/troubleshooting/
-  - /v6/identityserver/troubleshooting/
-  - /v7/identityserver/troubleshooting/
+  - /identityserver/v5/troubleshooting/
+  - /identityserver/v6/troubleshooting/
+  - /identityserver/v7/troubleshooting/
+  - /identityserver/v7/troubleshooting/wilson/
 ---
 
 When troubleshooting an IdentityServer setup we have some tips and tricks to share. These are both ways to get more
@@ -83,19 +84,10 @@ Log.Logger = new LoggerConfiguration()
 Data protected data can contain '--' (two dashes) and some firewalls disallow that because it looks like a sql
 comment/injection. This is not an IdentityServer issue but something that should be fixed on the firewall.
 
-## Microsoft.IdentityModel Version Conflicts
-
-The `Microsoft.IdentityModel.*` libraries used by Duende IdentityServer all have to be of exactly the same version. If
-they are not it can cause unexpected issues reading configuration data and tokens, i.e. **IDX10500: Signature validation
-failed. No security keys were provided to validate the signature.** or **System.MissingMethodException: Method not
-found 'Boolean Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfiguration(...)'**
-
-See [our guide](#microsoftidentitymodel-versions) for more information on how to diagnose and fix version issues.
-
 ## IdentityServerOptions.EmitStaticAudienceClaim and Token Validation
 
 Some token validation implementations require that all JWTs
-include an audience claim with the key/value of `"aud"` and `"&lt;issuer&gt;/resources"`.
+include an audience claim with the key/value of `"aud"` and `"<issuer>/resources"`.
 
 To add an audience claim to tokens created by IdentityServer, set the
 value of `IdentityServerOptions.EmitStaticAudienceClaim` to `true` during the setup
@@ -115,10 +107,15 @@ services.AddIdentityServer(options =>
 ## Microsoft.IdentityModel versions
 
 Duende IdentityServer, the Microsoft external authentication handlers and other libraries all use the
-Microsoft.IdentityModel set of libraries. These libraries provide token and configuration handling features. The
-functionality is split up between different libraries, and they all need to be **exactly the same version**. However, this
-is not enforced by NuGet so it is common to end up with an application that brings in different versions of
-Microsoft.IdentityModel.* through transitive dependencies.
+Microsoft.IdentityModel set of libraries. These libraries provide token and configuration handling features, and are 
+
+The `Microsoft.IdentityModel.*` libraries used by Duende IdentityServer all have to be of exactly the same version
+However, this is not enforced by NuGet so it is common to end up with an application that brings in different versions of
+`Microsoft.IdentityModel.*` through transitive dependencies.
+
+Version conflicts can cause unexpected issues reading configuration data and tokens, i.e. **IDX10500: Signature validation
+failed. No security keys were provided to validate the signature.** or **System.MissingMethodException: Method not
+found 'Boolean Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfiguration(...)'**
 
 ### Known Errors
 

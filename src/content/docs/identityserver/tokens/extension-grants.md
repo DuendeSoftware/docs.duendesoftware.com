@@ -5,8 +5,11 @@ sidebar:
   order: 40
 redirect_from:
   - /identityserver/v5/tokens/extension_grants/
+  - /identityserver/v5/tokens/extension_grants/token_exchange/
   - /identityserver/v6/tokens/extension_grants/
+  - /identityserver/v6/tokens/extension_grants/token_exchange/
   - /identityserver/v7/tokens/extension_grants/
+  - /identityserver/v7/tokens/extension_grants/token_exchange/
 ---
 
 

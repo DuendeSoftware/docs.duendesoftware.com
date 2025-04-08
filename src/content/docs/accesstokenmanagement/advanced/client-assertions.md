@@ -3,7 +3,7 @@ title: Client Assertions
 sidebar:
   order: 30
 redirect_from:
-  - /foss/accesstokenmanagement/client_assertions/
+  - /foss/accesstokenmanagement/advanced/client_assertions/
 ---
 
 If your token client is using a client assertion instead of a shared secret, you can provide the assertion in two ways

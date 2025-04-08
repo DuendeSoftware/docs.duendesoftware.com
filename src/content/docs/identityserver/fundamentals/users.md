@@ -4,9 +4,9 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 40
 redirect_from:
-  - /v5/identityserver/fundamentals/users/
-  - /v6/identityserver/fundamentals/users/
-  - /v7/identityserver/fundamentals/users/
+  - /identityserver/v5/fundamentals/users/
+  - /identityserver/v6/fundamentals/users/
+  - /identityserver/v7/fundamentals/users/
 ---
 
 ## Users and User Interface
