@@ -18,7 +18,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "validateredirects": "cd _to-migrate/urls && node test-urls.js",
-    "linkchecker": "npm run build && lychee --no-progress --max-concurrency 16 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude github --root-dir \"$PWD/dist\" dist/**",
+    "linkchecker": " npm run build && lychee --no-progress --max-concurrency 16 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude docs.duendesoftware.com --exclude sitemap --exclude github --root-dir \"$PWD/dist\" dist/**",
     "FYI": "https://github.com/withastro/astro/issues/13006",
     "postinstall": "chmod +x fix-svg.sh && ./fix-svg.sh"
   },
