@@ -231,11 +231,11 @@ IdentityServer to log in. Login with one of the users created by the seed
 process (e.g., alice/Pass123$), and after that you will be redirected back to
 the Web client application where your user's claims should be listed.
 
-![](images/aspid_claims.png)
+![ASP.NET Core application showing properties and claims on a ClaimsPrincipal](./images/aspid_claims.png)
 
 You should also be able to go to the call api page at `https://localhost:5002/callapi` to invoke the API on behalf of the user:
 
-![](images/aspid_api_claims.png)
+![Showing claims retrieved from an API in an ASP.NET Core application](./images/aspid_api_claims.png)
 
 Congratulations, you're using users from ASP.NET Core Identity in IdentityServer!
 

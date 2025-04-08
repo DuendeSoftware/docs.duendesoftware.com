@@ -20,14 +20,14 @@ functions:
 * Server-side Token Management
 * Blazor support with unified authentication state management across rendering modes.
 
-![BFF Security Framework Architecture Overview](../images/bff_application_architecture.svg?height=30pc)
+![BFF Security Framework Architecture Overview](../images/bff_application_architecture.svg)
 
 Duende.BFF builds on widely used tools and frameworks, including ASP.NET Core's OpenID Connect and cookie authentication
 handlers, YARP, and Duende.AccessTokenManagement. Duende.BFF combines these tools and adds additional security and
 application features that are useful with a BFF architecture so that you can focus on providing application logic
 instead of security logic:
 
-![Duende BFF Security Framework - components](../images/bff_blocs.svg?height=30pc)
+![Duende BFF Security Framework - components](../images/bff_blocs.svg)
 
 ## ASP.NET OpenID Connect Handler
 

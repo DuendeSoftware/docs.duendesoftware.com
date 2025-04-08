@@ -47,7 +47,7 @@ It is very important that you understand how it works when building the login pa
 Recall the diagram showing the relationship of your custom UI pages and the IdentityServer middleware in your
 IdentityServer host application:
 
-![middleware diagram](/src/content/docs/identityserver/v7/overview/images/middleware.png?height=500px)
+![middleware diagram](../overview/images/middleware.png)
 
 When your IdentityServer receives an authorize request, it will inspect it for a current authentication session for a
 user. This authentication session is based on ASP.NET Core's authentication system and is ultimately determined by a
@@ -57,7 +57,7 @@ If the user has never logged in there will be no cookie, and then the request to
 redirect to your login page. This is the entry point into your custom workflow that can take over to get the user logged
 in.
 
-![sign in flow](/src/content/docs/identityserver/v7/ui/images/signin_flow.png?height=500px)
+![sign in flow](../ui/images/signin_flow.png)
 
 Once the login page has finished logging in the user with the ASP.NET Core authentication system, it will redirect the
 user back to the authorize endpoint.

@@ -365,20 +365,20 @@ app.UseCors("default");
 
 Now you should be able to run the JavaScript client application:
 
-![image](../images/jsclient_not_logged_in.png)
+![Showing a user is not logged in to a JavaScript client](../images/jsclient_not_logged_in.png)
 
 Click the "Login" button to sign the user in. Once the user is returned back to
 the JavaScript application, you should see their profile information:
 
-![image](../images/jsclient_logged_in.png)
+![Showing claims after a client has logged in](../images/jsclient_logged_in.png)
 
 And click the "API" button to invoke the web API:
 
-![image](../images/jsclient_api_results.png)
+![Showing the API results from a JavaScript fetch](../images/jsclient_api_results.png)
 
 And finally click "Logout" to sign the user out.
 
-![image](../images/jsclient_signed_out.png)
+![Showing the IdentityServer Logged Out view](../images/jsclient_signed_out.png)
 
 You now have the start of a JavaScript client application that uses
 IdentityServer for sign-in, sign-out, and authenticating calls to web APIs.

@@ -69,7 +69,7 @@ It offers the following functionality:
 
 The following diagram illustrates how the Duende BFF Security Framework fits into a typical application architecture. 
 
-![doc](./images/bff_application_architecture.svg)
+![Backend for Frontend application architecture diagram](./images/bff_application_architecture.svg)
 
 The browser based application runs inside the browser’s secure sandbox. It can be built using any type of front-end technology, such as via Vanilla-JS, React, Vue, WebComponents, Blazor, etc. 
 

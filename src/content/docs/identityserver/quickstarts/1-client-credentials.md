@@ -230,7 +230,7 @@ The discovery document is a standard endpoint in
 used by your clients and APIs to retrieve configuration data needed to request
 and validate tokens, login and logout, etc.
 
-![image](images/1_discovery.png)
+![Browser showing discovery endpoint JSON](./images/1_discovery.png)
 
 :::note
 On first startup, IdentityServer will use its automatic key management feature
@@ -455,7 +455,7 @@ running, run the Client project.
 
 The output should look like this:
 
-![](images/1_client_screenshot.png)
+![Windows console showing claims for a bearer token](./images/1_client_screenshot.png)
 
 If you're using Visual Studio, here's how to start everything up:
 

@@ -14,7 +14,7 @@ Federation means that your IdentityServer offers authentication methods that use
 If you offer a number of these external authentication methods, often the term *Federation Gateway* is used to describe
 this architectural approach.
 
-![](images/federation.png)
+![Diagram showing the benefits of using a federation gateway](./images/federation.png)
 
 Generally, this architecture allows shielding your client applications from the complexities of your authentication
 workflows and business requirements that go along with them.

@@ -40,7 +40,7 @@ Internally IdentityServer provides a `ISessionCoordinationService` which is invo
 Its purpose is to then extend the lifetime of the server-side session. 
 Below is a picture of the various types of requests to do this:
 
-![](images/extending_session.png)
+![diagram demonstrating how to extend a session using IdentityServer](./images/extending_session.png)
 
 
 ### User Inactivity Detection and Session Termination
@@ -53,7 +53,7 @@ Clients that receive back-channel logout would know the user's session has ended
 But if back-channel is not used, then the client would need some other signal to consider the user's session has ended.
 The obvious signal would be if the refresh token request failed, then that would be an appropriate signal that the user's session has also ended.
 
-![](images/session_expired.png)
+![A diagram showing what happens when a session expires](./images/session_expired.png)
 
 Given this understanding, client applications can participate in this convention and IdentityServer can coordinate to achieve this system-wide "inactivity timeout" requirement.
 

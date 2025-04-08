@@ -29,7 +29,7 @@ A nice feature of this workflow is that the user does not enter their credential
 
 Below is a diagram that shows the high level steps involved with the CIBA workflow and the supporting services involved.
 
-![](images/ciba.png?height=30pc)
+![Showing how CIBA works in diagram form](./images/ciba.png)
 
 
 * **Step 1**: IdentityServer exposes a [backchannel authentication request endpoint](/identityserver/reference/endpoints/ciba) that the client uses to initiate the CIBA workflow.

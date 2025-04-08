@@ -30,7 +30,7 @@ The Quickstart session administrative page requires a logged-in user to manage s
 
 The session management page looks like this by default, but of course you are free to customize or change it as needed:
 
-![](images/session_query.png)
+![A table showing the active user sessions in IdentityServer](./images/session_query.png)
 
 
 ### Querying sessions

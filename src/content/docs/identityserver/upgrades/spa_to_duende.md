@@ -23,7 +23,7 @@ The most important detail is that there is a single host for many different conc
 * Duende IdentityServer (middleware for OIDC/OAuth protocol endpoints)
 * The API
 
-![](images/template_architecture.png)
+![A diagram showing the elements of a single-page application solution](./images/template_architecture.png)
 
 In terms of workflow for ultimately securing calls to the API, the logical steps taken are:
 
@@ -37,7 +37,7 @@ In terms of workflow for ultimately securing calls to the API, the logical steps
 
 The picture below shows these logical steps.
 
-![](images/template_workflow.png)
+![a diagram showing the sequencing of elements in a single-page application](./images/template_workflow.png)
 
 ## Architecture with Separate Hosts
 
@@ -51,7 +51,7 @@ Co-hosting the token server with the client application (and API) is counter to 
 Thus, the recommended approach is to host Duende IdentityServer (and then also the ASP.NET Identity Pages) in its own host separate from the app and API.
 Doing so would produce an architectural picture as such:
 
-![](images/token_server_separate_host.png)
+![a diagram showing how to separate a token server from the single page application host](./images/token_server_separate_host.png)
 
 The steps in the logical workflow would remain the same, but now the token server is independent from any one app or API.
 Also, each host now only has one credential type to be concerned with, which simplifies the security model.
@@ -78,7 +78,7 @@ And then if there is a "remote" API (e.g. a shared API) hosted elsewhere that ac
 
 The picture below illustrates:
 
-![](images/remote_api_host.png)
+![a diagram showing the placement of a remote API into the existing single-page application architecture](./images/remote_api_host.png)
 
 **Step 3:** This step from the prior diagrams now results in an authentication session cookie in the SPA application, and an optional access token (depending if a remote API needs to be invoked). This access token is associated with the user's session and would only ever be available on the server-side of the SPA host (i.e. the backend, or BFF).
 

@@ -42,7 +42,7 @@ This is an example of distributed traces from a web application calling an API (
 [Aspire sample](/identityserver/samples/diagnostics)). The web application uses a refresh token to call
 IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks
 url and then gets the keys from jwks endpoint.
-![](images/aspire_traces.png)
+![.NET Aspire dashboard showing Duende IdentityServer traces](./images/aspire_traces.png)
 
 ## Setup
 
@@ -337,18 +337,18 @@ Added in Duende IdentityServer v6.1
 
 Here's e.g. the output for a request to the discovery endpoint:
 
-![](images/otel_disco.png)
+![Honeycomb UI showing traces for discovery document endpoint](./images/otel_disco.png)
 
 When multiple applications send their traces to the same OTel server, this becomes super useful for following e.g.
 authentication flows over service boundaries.
 
 The following screenshot shows the ASP.NET Core OpenID Connect authentication handler redeeming the authorization code:
 
-![](images/otel_flow_1.png)
+![HoneyComb UI showing traces for the OpenID Connect authentication handler](images/otel_flow_1.png)
 
 ...and then contacting the userinfo endpoint:
 
-![](images/otel_flow_2.png)
+![Honeycomb UI showing traces for the userinfo endpoint](images/otel_flow_2.png)
 
 *The above screenshots are from https://www.honeycomb.io.*
 

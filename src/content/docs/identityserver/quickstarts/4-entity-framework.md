@@ -247,7 +247,7 @@ Now if you run the IdentityServer project, the database should be created and
 seeded with the quickstart configuration data. You should be able to use a tool
 like SQL Lite Studio to connect and inspect the data.
 
-![](images/ef_database.png)
+![SQLiteStudio showing the contents of an IdentityServer database](./images/ef_database.png)
 
 :::note
 The `InitializeDatabase` method is convenient way to seed the database, but this

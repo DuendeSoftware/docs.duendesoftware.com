@@ -16,7 +16,7 @@ back to the client.
 The consumer of the token must use the [introspection](/identityserver/reference/endpoints/introspection) endpoint to
 validate the token.
 
-![reference tokens diagram](images/reference_tokens.png)
+![reference tokens diagram](./images/reference_tokens.png)
 
 You can set the client's token type using the following client setting:
 

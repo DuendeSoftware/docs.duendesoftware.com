@@ -340,7 +340,7 @@ new Client
 At this point, you should be able to run the `JavaScriptClient` application.
 You should see that the user is not logged in initially.
 
-![image](../images/jsbff_not_logged_in.png)
+![A simple javascript client with multiple action buttons](../images/jsbff_not_logged_in.png)
 
 When you click the login button, you'll be redirected to IdentityServer to
 login. After you log in, you'll be redirected back to the `JavaScriptClient`
@@ -353,11 +353,11 @@ request. This allows the BFF middleware to authenticate the user and return user
 info. Once the `JavaScriptClient` application receives the response, the user
 should appear logged in and their claims should be displayed.
  
-![image](../images/jsbff_logged_in.png)
+![showing claims after the login action is invoked](../images/jsbff_logged_in.png)
 
 Finally, the logout button should successfully get the user logged out.
 
-![image](../images/jsbff_signed_out.png)
+![showing the logout view on IdentityServer](../images/jsbff_signed_out.png)
 
 
 ## Add API support
@@ -499,11 +499,11 @@ remote API used in the code above.
 At this point, you should be able to run the `JavaScriptClient` application and
 invoke the APIs. The local API should return something like this:
 
-![image](../images/jsbff_local_api.png)
+![showing a successful JavaScript fetch call to an API endpoint](../images/jsbff_local_api.png)
 
 And the remote API should return something like this:
 
-![image](../images/jsbff_remote_api.png)
+![showing a successful JavaScript call to a remote api hosted in BFF](../images/jsbff_remote_api.png)
 
 You now have the start of a JavaScript client application that uses
 IdentityServer for sign-in, sign-out, and authenticating calls to local and

@@ -355,14 +355,14 @@ Now everything should be in place to log in to `WebClient` using OIDC. Run
 by navigating to the protected home page. You should see a redirect to the login
 page in `IdentityServer`.
 
-![](images/2_login.png)
+![login screen for IdentityServer](./images/2_login.png)
 
 After you log in, `IdentityServer` will redirect back to `WebClient`, where the
 OpenID Connect authentication handler will process the response and sign-in the
 user locally by setting a cookie. Finally, the `WebClient`'s page will show the
 contents of the cookie.
 
-![](images/2_claims.png)
+![ASP.NET Core application showing ClaimsPrincipal's claims](./images/2_claims.png)
 
 As you can see, the cookie has two parts: the claims of the user and some
 metadata in the properties. This metadata also contains the original
@@ -455,7 +455,7 @@ to `ConfigureServices` in `src/WebClient/Program.cs`:
 After restarting the client app and logging back in, you should see additional user claims
 associated with the `profile` identity scope displayed on the page.
 
-![](images/2_additional_claims.png)
+![ASP.NET Core page showing additional claims](./images/2_additional_claims.png)
 
 ## Further Experiments
 
@@ -586,7 +586,7 @@ for external logins.
 Now run `IdentityServer` and `WebClient` and try to authenticate (you may need
 to log out and log back in). You will see a Google button on the login page.
 
-![](images/2_google_login.png)
+![IdentityServer login page showing Google as an external login option](./images/2_google_login.png)
 
 Click on Google and authenticate with a Google account. You should land back on
 the `WebClient` home page, showing that the user is now coming from Google with
