@@ -53,7 +53,7 @@ and is designed to be API friendly.
 Applications have two fundamental ways with which they communicate with APIs – using the application identity,
 or delegating the user’s identity. Sometimes both methods need to be combined.
 
-OAuth2 is a protocol that allows applications to request access tokens from a security token service and use them
+OAuth 2.0 is a protocol that allows applications to request access tokens from a security token service and use them
 to communicate with APIs. This delegation reduces complexity in both the client applications and the APIs since
 authentication and authorization can be centralized.
 
