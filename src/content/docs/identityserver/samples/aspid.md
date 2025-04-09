@@ -19,7 +19,7 @@ The first step in creating the sample was to create a new project that used the 
 Studio ("Individual Accounts" for the authentication type). This provides all the "out of the box" features from
 ASP.NET Identity for user management with only minor modifications, which are described below.
 
-Then Duende IdentityServer was added to add OIDC/OAuth2 capabilities to the application. Only the minimal configuration
+Then Duende IdentityServer was added to add OIDC/OAuth 2.0 capabilities to the application. Only the minimal configuration
 was done to get Duende IdentityServer functional for this sample.
 
 Finally, another project was added which acts as a OIDC client application to exercise the OIDC login (and logout)
