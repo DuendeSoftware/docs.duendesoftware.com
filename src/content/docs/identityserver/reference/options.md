@@ -15,6 +15,7 @@ The `IdentityServerOptions` is the central place to configure fundamental settin
 You set the options when registering IdentityServer at startup time, using a lambda expression in the AddIdentityServer method:
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     // configure options here..
@@ -241,6 +242,7 @@ If you want to take full control over the rendering of the discovery and jwks do
 Adds custom elements to the discovery document. For example:
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.Discovery.CustomEntries.Add("my_setting", "foo");
@@ -592,6 +594,7 @@ OAuth device flow settings. Available on the `DeviceFlow` property of the `Ident
 [Mutual TLS](/identityserver/tokens/client-authentication/) settings. Available on the `MutualTls` property of the `IdentityServerOptions` object.
 
 ```cs
+// Program.cs
 var builder = services.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;

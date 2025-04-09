@@ -75,6 +75,7 @@ public class CustomTokenCreationService : DefaultTokenCreationService
 After creating your new implementation, register the type in your application's service collection.
 
 ```csharp
+// Program.cs
 builder.Services.AddTransient<ITokenCreationService, CustomTokenCreationService>();
 ```
 

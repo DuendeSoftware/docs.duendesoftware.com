@@ -79,12 +79,14 @@ In the WebClient project add a reference to the NuGet package `Duende.AccessToke
 _Program.cs_ add the needed types to dependency injection:
 
 ```cs
+// Program.cs
 builder.Services.AddOpenIdConnectAccessTokenManagement();
 ```
 
 In _CallApi.cshtml.cs_ update the method body of `OnGet` as follows:
 
 ```cs
+// CallApi.cshtml.cs
 public async Task OnGet()
 {
     var tokenInfo = await HttpContext.GetUserAccessTokenAsync();
@@ -119,6 +121,7 @@ automatically retrieve the needed access token and refresh if needed.
 In the client in _Program.cs_ under the call to _AddOpenIdConnectAccessTokenManagement_ register the HttpClient:
 
 ```cs
+// Program.cs
 builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://localhost:6001");

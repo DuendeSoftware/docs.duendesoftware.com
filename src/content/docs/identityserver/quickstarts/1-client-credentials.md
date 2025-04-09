@@ -211,8 +211,10 @@ template adds a few things that are not used in this quickstart. Here's the
 minimal ConfigureServices method that is needed:
 
 ```csharp
+// Startup.cs
 public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
+    // Can also be found in Program.cs
     builder.Services.AddIdentityServer()
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients);
@@ -287,6 +289,7 @@ configure the JWT Bearer authentication provider as the default
 [Authentication Scheme](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-8.0#authentication-scheme).
 
 ```csharp
+// Program.cs
 builder.Services.AddAuthentication()
     .AddJwtBearer(options =>
     {
@@ -483,6 +486,7 @@ allowedScopes property](#defining-the-client).
 Add the following to the `Program.cs` file of the API:
 
 ```cs
+// Program.cs
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ApiScope", policy =>

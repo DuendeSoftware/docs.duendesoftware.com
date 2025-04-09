@@ -74,6 +74,7 @@ The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.Acce
 Using this library, you only need to register the token client in DI:
 
 ```cs
+// Program.cs
 builder.Services.AddAccessTokenManagement(options =>
 {
     options.Client.Clients.Add("client", new ClientCredentialsTokenRequest
@@ -89,6 +90,7 @@ builder.Services.AddAccessTokenManagement(options =>
 You can then add token management to an HTTP-factory provided client:
 
 ```cs
+// Program.cs
 builder.Services.AddClientAccessTokenClient("client", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");

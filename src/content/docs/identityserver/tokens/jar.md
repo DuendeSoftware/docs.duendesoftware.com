@@ -51,6 +51,7 @@ If the `request_uri` parameter is used, IdentityServer will make an outgoing HTT
 You can customize the HTTP client used for this outgoing connection, e.g. to add caching or retry logic (e.g. via the Polly library):
 
 ```cs
+// Program.cs
 idsvrBuilder.AddJwtRequestUriHttpClient(client =>
 {
     client.Timeout = TimeSpan.FromSeconds(30);

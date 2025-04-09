@@ -341,6 +341,7 @@ service. Configure IdentityServer for phase 1 by registering the new
 key as a validation key.
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = false;
@@ -368,6 +369,7 @@ be validated. The IdentityServer configuration change needed is simply to swap
 the signing credential and validation key.
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {  
     options.KeyManagement.Enabled = false;

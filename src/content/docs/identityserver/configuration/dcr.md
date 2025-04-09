@@ -54,6 +54,7 @@ dotnet add package Duende.IdentityServer.Configuration
 #### Configure Services
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServerConfiguration(opt =>
     opt.LicenseKey = "<license>";
 );
@@ -78,9 +79,11 @@ dotnet add package Duende.IdentityServer.Configuration.EntityFramework
 ```
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServerConfiguration(opt =>
     opt.LicenseKey = "<license>"
 ).AddClientConfigurationStore();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
 {
@@ -91,6 +94,7 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
 #### Map Configuration Endpoints
 
 ```cs
+// Program.cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 ```
 
@@ -111,6 +115,7 @@ dotnet add package Duende.IdentityServer.Configuration
 #### Add the Configuration API's services to the service collection:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServerConfiguration();
 ```
 
@@ -129,6 +134,7 @@ dotnet add package Duende.IdentityServer.Configuration.EntityFramework
 ```
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServerConfiguration(opt =>
     opt.LicenseKey = "<license>"
 ).AddClientConfigurationStore();
@@ -142,6 +148,7 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
 #### Map Configuration Endpoints:
 
 ```cs
+// Program.cs
 app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 
 ```

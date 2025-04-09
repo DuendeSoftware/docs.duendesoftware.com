@@ -55,6 +55,7 @@ The value of `IdentityServerConstants.LocalApi.ScopeName` is `IdentityServerApi`
 To enable token validation for local APIs, add the following to your IdentityServer startup:
 
 ```cs
+// Program.cs
 builder.Services.AddLocalApiAuthentication();
 ```
 
@@ -78,6 +79,7 @@ Authorized clients can then request a token for the `IdentityServerApi` scope an
 You can also add your endpoints to the discovery document if you want, e.g.like this::
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer(options =>
 {
     options.Discovery.CustomEntries.Add("local_api", "~/localapi");
@@ -99,6 +101,7 @@ This covers the most common scenarios. You can customize this behavior in the fo
 
 
 ```cs
+// Program.cs
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(IdentityServerConstants.LocalApi.PolicyName, policy =>
@@ -115,6 +118,7 @@ You can provide a callback to transform the claims of the incoming token after v
 Either use the helper method, e.g.:
 
 ```cs
+// Program.cs
 builder.Services.AddLocalApiAuthentication(principal =>
 {
     principal.Identities.First().AddClaim(new Claim("additional_claim", "additional_value"));

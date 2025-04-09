@@ -338,6 +338,7 @@ This is accomplished by handling the various events on the handler. We recommend
 separate type. This makes it easier to consume services from DI:
 
 ```cs
+// Program.cs
 // some details omitted
 builder.Services.AddTransient<OidcEvents>();
 
@@ -414,6 +415,7 @@ For this you need to associate a client certificate with a client in your Identi
 options.
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;

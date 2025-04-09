@@ -32,6 +32,7 @@ There are [convenience methods](/identityserver/reference/di/#configuration-stor
 For example:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddClientStore<YourCustomClientStore>()
     .AddCorsPolicyService<YourCustomCorsPolicyService>()
@@ -51,6 +52,7 @@ The caching implementation relies upon an `ICache<T>` service and must also be a
 For example:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddClientStore<YourCustomClientStore>()
     .AddCorsPolicyService<YourCustomCorsPolicyService>()
@@ -67,6 +69,7 @@ the [IdentityServerOptions](/identityserver/reference/options#caching).
 For example:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer(options => {
     options.Caching.ClientStoreExpiration = TimeSpan.FromMinutes(5);
     options.Caching.ResourceStoreExpiration = TimeSpan.FromMinutes(5);

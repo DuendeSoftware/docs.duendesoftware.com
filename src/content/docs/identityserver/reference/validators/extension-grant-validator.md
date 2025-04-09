@@ -44,5 +44,6 @@ public interface IExtensionGrantValidator
 The instance of the extension grant validator gets registered with:
 
 ```cs
+// Program.cs
 builder.AddExtensionGrantValidator<MyValidator>();
 ```

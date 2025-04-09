@@ -335,6 +335,7 @@ namespace IdentityServerAspNetIdentity
 Register the `CustomProfileService` in `HostingExtensions.cs`:
 
 ```csharp
+// HostingExtensions.cs
 builder.Services
     .AddIdentityServer(options =>
     {
@@ -385,6 +386,7 @@ In its `src/WebClient/Program.cs` file, add the color scope to the requested
 scopes, and add a claim action to map the favorite_color into the principal:
 
 ```csharp
+// Program.cs
 .AddOpenIdConnect("oidc", options =>
 {
     // ...

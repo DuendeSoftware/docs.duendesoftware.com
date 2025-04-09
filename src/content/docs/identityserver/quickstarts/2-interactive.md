@@ -100,6 +100,7 @@ Then register the identity resources in
 `src/IdentityServer/HostingExtensions.cs`:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
     .AddInMemoryApiScopes(Config.ApiScopes)
@@ -118,6 +119,7 @@ The sample UI also comes with an in-memory "user database". You can enable this
 by calling `AddTestUsers` in `src/IdentityServer/HostingExtensions.cs`:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
     .AddInMemoryApiScopes(Config.ApiScopes)
@@ -215,6 +217,7 @@ Then add the authentication service and register the cookie and OpenIdConnect au
 `src/WebClient/Program.cs`:
 
 ```cs
+// Program.cs
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = "Cookies";
@@ -441,6 +444,7 @@ access and setting the `GetClaimsFromUserInfoEndpoint` option. Add the following
 to `ConfigureServices` in `src/WebClient/Program.cs`:
 
 ```cs
+// Program.cs
 .AddOpenIdConnect("oidc", options =>
 {
     // ...
@@ -514,6 +518,7 @@ To add more claims to the identity:
   [ClaimAction](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.claimactions?view=aspnetcore-8.0)
   to map the new claim returned from the userinfo endpoint onto a user claim.
   ```csharp
+    // Program.cs
     .AddOpenIdConnect("oidc", options =>
     {
         // ...
@@ -562,6 +567,7 @@ Add the following to `ConfigureServices` in
 `src/IdentityServer/HostingExtensions.cs`:
 
 ```cs
+// Program.cs
 builder.Services.AddAuthentication()
     .AddGoogle("Google", options =>
     {
@@ -608,6 +614,7 @@ Register and configure the services for the OpenId Connect handler in
 `src/IdentityServer/HostingExtensions.cs`:
 
 ```cs
+// HostingExtensions.cs
 builder.Services.AddAuthentication()
     .AddGoogle("Google", options => { /* ... */ })
     .AddOpenIdConnect("oidc", "Demo IdentityServer", options =>

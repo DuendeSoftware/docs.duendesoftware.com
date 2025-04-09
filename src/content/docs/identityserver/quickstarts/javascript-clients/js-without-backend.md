@@ -342,6 +342,7 @@ One last bit of configuration that is necessary is to configure CORS in the
 Add the CORS service to the dependency injection system in `src/Api/Program.cs`:
 
 ```cs
+// Program.cs
 builder.Services.AddCors(options =>
 {
     // this defines a CORS policy called "default"
@@ -357,6 +358,7 @@ builder.Services.AddCors(options =>
 Then add the CORS middleware to the pipeline in `src/Api/Program.cs`.
 
 ```cs
+// Program.cs
 app.UseHttpsRedirection();
 app.UseCors("default");
 ```

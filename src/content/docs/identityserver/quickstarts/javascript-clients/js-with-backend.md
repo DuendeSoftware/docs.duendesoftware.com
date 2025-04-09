@@ -96,6 +96,7 @@ access token for the remote API if needed.
 Add the following to `src/JavaScriptClient/Program.cs`:
 
 ```cs
+// Program.cs
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Duende.Bff.Yarp;
@@ -140,6 +141,7 @@ WebClient, with the addition of the BFF middleware and the BFF endpoints.
 Continue by adding the following to `src/JavaScriptClient/Program.cs`:
 
 ```cs
+// Program.cs
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

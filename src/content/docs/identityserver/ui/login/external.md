@@ -44,6 +44,7 @@ configuration.
 For example, to use employee logins from Azure AD (AAD):
 
 ```csharp
+// Program.cs
 builder.Services.AddIdentityServer();
 
 builder.Services.AddAuthentication()
@@ -110,6 +111,7 @@ One option on an external authentication handlers is called `SignInScheme`.
 This specifies the cookie handler to manage the state:
 
 ```cs
+// Program.cs
 builder.Services.AddAuthentication()
     .AddOpenIdConnect("AAD", "Employee Login", options =>
     {
@@ -126,6 +128,7 @@ If you were to use our external cookie handler, then for the `SignInScheme` abov
 `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant:
 
 ```cs
+// Program.cs
 builder.Services.AddAuthentication()
     .AddOpenIdConnect("AAD", "Employee Login", options =>
     {
@@ -139,6 +142,7 @@ Alternatively, you can also register your own custom cookie handler instead.
 For example:
 
 ```cs
+// Program.cs
 builder.Services.AddAuthentication()
     .AddCookie("MyTempHandler")
     .AddOpenIdConnect("AAD", "Employee Login", options =>
@@ -253,6 +257,7 @@ If no parameters are passed, then all OpenID Connect handlers configured will us
 data format implementation:
 
 ```cs
+// Program.cs
 // configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.
 builder.Services.AddOidcStateDataFormatterCache();
 

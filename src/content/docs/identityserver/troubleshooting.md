@@ -95,6 +95,7 @@ value of `IdentityServerOptions.EmitStaticAudienceClaim` to `true` during the se
 of your IdentityServer instance (default: `false`).
 
 ```csharp
+// Program.cs
 services.AddIdentityServer(options =>
 {
     // add "aud" claim to JWT
@@ -134,7 +135,10 @@ Errors that we have seen because of IdentityModel version mismatches include:
 ### Diagnosing
 
 Run this command in powershell:
-`dotnet list package --include-transitive | sls "Microsoft.IdentityModel|System.IdentityModel"`
+
+```bash
+dotnet list package --include-transitive | sls "Microsoft.IdentityModel|System.IdentityModel"
+```
 
 The output should look something like this:
 
@@ -156,7 +160,6 @@ To fix this, add explicit package references to upgrade the packages that are of
 version used.
 
 ```xml
-
 <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="7.4.0"/>
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.4.0"/>

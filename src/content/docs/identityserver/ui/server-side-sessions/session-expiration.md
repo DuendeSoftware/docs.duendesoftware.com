@@ -25,6 +25,7 @@ sessions, you can.
 For example, to change the interval:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer(options => {
     options.ServerSideSessions.RemoveExpiredSessionsFrequency = TimeSpan.FromSeconds(60);
 })
@@ -34,6 +35,7 @@ builder.Services.AddIdentityServer(options => {
 To disable:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer(options => {
     options.ServerSideSessions.RemoveExpiredSessions = false;
 })

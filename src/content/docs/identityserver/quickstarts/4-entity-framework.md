@@ -85,6 +85,7 @@ To use these stores, replace the existing calls to `AddInMemoryClients`,
 `AddConfigurationStore` and `AddOperationalStore`, like this:
 
 ```cs
+// HostingExtensions.cs
 public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
     builder.Services.AddRazorPages();

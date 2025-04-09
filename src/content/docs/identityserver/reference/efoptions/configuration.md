@@ -17,6 +17,7 @@ the [configuration store](/identityserver/data/configuration):
 You set the options at startup time in your `AddConfigurationStore` method:
 
 ```cs
+// Program.cs
 var builder = services.AddIdentityServer()
     .AddConfigurationStore(options =>
     {

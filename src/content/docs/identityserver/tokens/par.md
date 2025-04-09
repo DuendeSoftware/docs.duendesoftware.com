@@ -37,6 +37,7 @@ requests will not be processed and instead log errors. If you have a starter edi
 `EnablePushedAuthorizationEndpoint` flag so that discovery indicates that your IdentityServer does not support PAR:
 
 ```cs
+// Program.cs
 builder.Services.AddIdentityServer(options =>
 {
     options.Endpoints.EnablePushedAuthorizationEndpoint = false;

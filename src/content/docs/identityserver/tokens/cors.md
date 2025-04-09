@@ -54,6 +54,7 @@ to `true` to allow all origins.
 For example, in `ConfigureServices`:
 
 ```cs
+// Program.cs
 builder.Services.AddSingleton<ICorsPolicyService>((container) =>
 {
     var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();

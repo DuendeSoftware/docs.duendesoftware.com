@@ -30,6 +30,7 @@ These implementations use a `DbContext`-derived class called `ConfigurationDbCon
 To use the configuration store support, in Program.cs use the `AddConfigurationStore` extension method after the call to `AddIdentityServer`:
 
 ```csharp
+// Program.cs
 const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=YourIdentityServerDatabase;trusted_connection=yes;";
 var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 
@@ -73,6 +74,7 @@ options.ConfigureDbContext = b =>
 To enable caching for the EF configuration store implementation, use the `AddConfigurationStoreCache` extension method:
 
 ```csharp
+// Program.cs
 builder.Services.AddIdentityServer()
     .AddConfigurationStore(options => { ... })
     // this is something you will want in production to reduce load on and requests to the DB
@@ -87,6 +89,7 @@ The implementation uses a `DbContext`-derived class called `PersistedGrantDbCont
 To use the operational store support, in Program.cs use the `AddOperationalStore` extension method after the call to `AddIdentityServer`:
 
 ```csharp
+// Program.cs
 const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=YourIdentityServerDatabase;trusted_connection=yes;";
 var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 

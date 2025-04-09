@@ -130,6 +130,7 @@ static SocketsHttpHandler GetHandler(X509Certificate2 certificate)
 The last step is to enable that feature in the options:
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     // other settings
@@ -201,6 +202,7 @@ DPoP is enabled by simply assigning the `DPoPJsonWebKey` on the client configura
 For example, here's how to configure a client credentials client:
 
 ```csharp
+// Program.cs
 builder.Services.AddClientCredentialsTokenManagement()
         .AddClient("demo_dpop_client", client =>
         {
@@ -213,6 +215,7 @@ builder.Services.AddClientCredentialsTokenManagement()
 And here's how to configure a code flow client:
 
 ```csharp
+// Program.cs
 builder.Services.AddAuthentication(...)
     .AddCookie("cookie", ...)
     .AddOpenIdConnect("oidc", ...);

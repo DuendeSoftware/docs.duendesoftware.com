@@ -14,6 +14,7 @@ redirect_from:
 to DI. Here's a list grouped by feature areas.
 
 ```cs
+// Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer();
 ```
 

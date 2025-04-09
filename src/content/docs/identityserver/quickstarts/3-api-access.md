@@ -79,6 +79,7 @@ requesting the _api1_ scope. This is done in the OpenID
 Connect handler configuration in _src/WebClient/Program.cs_:
 
 ```cs
+// Program.cs
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";

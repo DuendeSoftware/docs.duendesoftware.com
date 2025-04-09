@@ -107,6 +107,7 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
 You then register your grant validator with DI:
 
 ```cs
+// Program.cs
 idsvrBuilder.AddExtensionGrantValidator<TokenExchangeGrantValidator>();
 ```
 

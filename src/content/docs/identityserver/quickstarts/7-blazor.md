@@ -56,6 +56,7 @@ The BFF services provide the logic to invoke the authentication plumbing from th
 Add the following snippet to your `Program.cs` above the call to `builder.Build();`
 
 ```cs
+// Program.cs
 builder.Services.AddBff();
 
 builder.Services.AddAuthentication(options =>
@@ -94,6 +95,7 @@ The last step is to add the required middleware for authentication, authorizatio
 following snippet after the call to `UseRouting`:
 
 ```cs
+// Program.cs
 app.UseAuthentication();
 app.UseBff();
 app.UseAuthorization();
@@ -290,6 +292,7 @@ public class BffAuthenticationStateProvider
 ...and register it in the client's `Program.cs`:
 
 ```cs
+// Program.cs
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, BffAuthenticationStateProvider>();
 ```
@@ -323,6 +326,7 @@ public class AntiforgeryHandler : DelegatingHandler
 Microsoft.Extensions.Http):
 
 ```cs
+// Program.cs
 // HTTP client configuration
 builder.Services.AddTransient<AntiforgeryHandler>();
 

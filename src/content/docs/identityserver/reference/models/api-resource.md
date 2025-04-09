@@ -90,5 +90,6 @@ file:
 Then pass the configuration section to the `AddInMemoryApiResource` method:
 
 ```cs
+// Program.cs
 idsvrBuilder.AddInMemoryApiResources(configuration.GetSection("IdentityServer:ApiResources"))
 ```
