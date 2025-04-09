@@ -73,6 +73,9 @@
             background-image: url("/src/assets/chain-light.svg");
         }
     }
+    .mermaid {
+        background: var(--sl-color-gray-7);
+    }
 }
 
 iframe {

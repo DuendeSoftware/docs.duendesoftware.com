@@ -1,8 +1,9 @@
 ---
-title: "Overview"
+title: "Architecture"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 1
+  label: "Overview"
 redirect_from:
   - /bff/v2/architecture/
   - /bff/v3/architecture/

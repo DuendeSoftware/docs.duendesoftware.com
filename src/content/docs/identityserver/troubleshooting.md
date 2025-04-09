@@ -19,8 +19,8 @@ Duende IdentityServer is a security product and by design the error messages ret
 are very short. The actual error message is always written to the logs. The very first step in any troubleshooting
 should be to review the IdentityServer logs.
 
-Another common issue is that the logs are redacted and that the interesting/relevant information is overwritten with *
-*'[PII is hidden]'**. (For example *The '[PII is hidden]' for signing cannot be smaller than '[PII is hidden]' bits*).
+Another common issue is that the logs are redacted and that the interesting/relevant information is overwritten with 
+**'\[PII is hidden]'**. (For example *The '[PII is hidden]' for signing cannot be smaller than '[PII is hidden]' bits*).
 This is a privacy feature of the Microsoft.IdentityModel libraries that we use for token handling. The definition of
 possible PII in those libraries is very generous and includes key sizes, URLs etc.
 
@@ -39,7 +39,7 @@ ASP.NET Core Data Protection is an encryption mechanism that is heavily used by 
 Core Authentication libraries. If it is not correctly configured it might result in issues such as
 
 * Unable to unprotect the message.State.
-* The key `{xxxxx-xxxx-xxx-xxx-xxxxxxx} was not found in the key ring.
+* The key `{xxxxx-xxxx-xxx-xxx-xxxxxxx}` was not found in the key ring.
 * Failed to unprotect AuthenticationTicket payload for key {key}
 
 See [our data protection guide](/identityserver/deployment#data-protection-keys) for more
@@ -108,13 +108,15 @@ services.AddIdentityServer(options =>
 ## Microsoft.IdentityModel versions
 
 Duende IdentityServer, the Microsoft external authentication handlers and other libraries all use the
-Microsoft.IdentityModel set of libraries. These libraries provide token and configuration handling features, and are 
+Microsoft.IdentityModel set of libraries. These libraries provide token and configuration handling features, and are
 
 The `Microsoft.IdentityModel.*` libraries used by Duende IdentityServer all have to be of exactly the same version
-However, this is not enforced by NuGet so it is common to end up with an application that brings in different versions of
+However, this is not enforced by NuGet so it is common to end up with an application that brings in different versions
+of
 `Microsoft.IdentityModel.*` through transitive dependencies.
 
-Version conflicts can cause unexpected issues reading configuration data and tokens, i.e. **IDX10500: Signature validation
+Version conflicts can cause unexpected issues reading configuration data and tokens, i.e. **IDX10500: Signature
+validation
 failed. No security keys were provided to validate the signature.** or **System.MissingMethodException: Method not
 found 'Boolean Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfiguration(...)'**
 

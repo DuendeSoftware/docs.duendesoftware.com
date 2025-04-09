@@ -4,6 +4,7 @@ description: "Upgrading BFF"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 1
+  label: Overview
 redirect_from:
   - /bff/v2/upgrading/
   - /bff/v3/upgrading/
@@ -12,7 +13,22 @@ redirect_from:
   - /identityserver/v7/bff/upgrading/
 ---
 
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
 Upgrading to a new Duende.BFF version is done by updating the NuGet package and handling any breaking
 changes. Some updates contain changes to the stores used by IdentityServer that requires database
 schema updates. If you are using our Entity Framework based stores we recommend using Entity Framework
 Migrations.
+
+<CardGrid>
+  <LinkCard
+    href="https://github.com/DuendeSoftware/products/tree/main/bff"
+    title="GitHub Repository"
+    description="View the source code for this library on GitHub."
+  />
+  <LinkCard
+    href="https://www.nuget.org/packages/Duende.BFF"
+    title="NuGet Package"
+    description="View the package on NuGet.org."
+  />
+</CardGrid>

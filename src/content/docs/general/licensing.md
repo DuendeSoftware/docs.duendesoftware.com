@@ -91,9 +91,9 @@ content of the license key file.
 ```csharp
 builder.Services.AddIdentityServer(options =>
 {
-    options.LicenseKey = "eyJhbG..."; // the content of the license key file
+    // the content of the license key file
+    options.LicenseKey = "eyJhbG..."; 
 });
-
 ```
 
 ### Azure Key Vault
@@ -171,7 +171,9 @@ included in this limit. Beginning in IdentityServer 7.1, IdentityServer will log
 when the trial mode threshold is exceeded:
 
 ```text
-You are using IdentityServer in trial mode and have exceeded the trial threshold of 500 requests handled by IdentityServer. In a future version, you will need to restart the server or configure a license key to continue testing.
+You are using IdentityServer in trial mode and have exceeded the trial 
+threshold of 500 requests handled by IdentityServer. In a future version, 
+you will need to restart the server or configure a license key to continue testing.
 ```
 
 In a future version, IdentityServer will shut down at that time instead.
