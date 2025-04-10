@@ -16,7 +16,7 @@ This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende Identi
 
 :::note
 With any major release, there is always the possibility of some breaking changes.
-[This issue tracks](https://github.com/DuendeSoftware/IdentityServer/issues/351) the list of updates where a breaking change might affect your use of IdentityServer. It would be useful to review it to understand if any of these changes affect you.
+[This issue tracks](https://github.com/DuendeSoftware/products/issues/351) the list of updates where a breaking change might affect your use of IdentityServer. It would be useful to review it to understand if any of these changes affect you.
 :::
 
 ## Step 1: Update to .NET 6
@@ -83,10 +83,10 @@ These include:
 
 * A new `Keys` table for the automatic key management feature in the operational database.
 * A new `RequireResourceIndicator` boolean column on the `ApiResources` table in the configuration database.
-* A new index on the `ConsumedTime` column in the `PersistedGrants` table ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/84)).
-* A new table called `IdentityProviders` for storing the OIDC provider details ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/188)).
-* Add missing columns for created, updated, etc. to EF entities ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/356)).
-* Add unique constraints to EF tables where duplicate records not allowed ([more details](https://github.com/DuendeSoftware/IdentityServer/pull/355)).
+* A new index on the `ConsumedTime` column in the `PersistedGrants` table ([more details](https://github.com/DuendeSoftware/products/pull/84)).
+* A new table called `IdentityProviders` for storing the OIDC provider details ([more details](https://github.com/DuendeSoftware/products/pull/188)).
+* Add missing columns for created, updated, etc. to EF entities ([more details](https://github.com/DuendeSoftware/products/pull/356)).
+* Add unique constraints to EF tables where duplicate records not allowed ([more details](https://github.com/DuendeSoftware/products/pull/355)).
 
 IdentityServer is abstracted from the data store on multiple levels, so the exact steps involved in updating your data store will depend on your implementation details. 
 
