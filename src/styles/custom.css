@@ -33,7 +33,6 @@
     --sl-color-gray-6: #eceef2;
     --sl-color-gray-7: #f5f6f8;
     --sl-color-black: #ffffff;
-
 }
 
 /* Style the Markdown heading links. */
@@ -95,8 +94,15 @@ iframe {
     font-size: var(--size);
     line-height: var(--size);
     justify-content: center;
-    filter: drop-shadow(0 calc(-1 * var(--x-shift)) var(--blur) var(--sl-color-black)) drop-shadow(calc(-1 * var(--x-shift)) var(--y-shift) var(--blur) var(--sl-color-red)) drop-shadow(var(--x-shift) var(--y-shift) var(--blur) var(--sl-color-purple));
     z-index: -1;
+}
+
+.hero > img.light\:sl-hidden {
+    filter: drop-shadow(0 calc(-1 * var(--x-shift)) var(--blur) var(--sl-color-black)) drop-shadow(calc(-1 * var(--x-shift)) var(--y-shift) var(--blur) var(--sl-color-red)) drop-shadow(var(--x-shift) var(--y-shift) var(--blur) var(--sl-color-purple));
+}
+
+.hero > img.dark\:sl-hidden {
+    filter: drop-shadow(0 calc(-1 * var(--x-shift)) var(--blur) var(--sl-color-black)) drop-shadow(calc(-1 * var(--x-shift)) var(--y-shift) var(--blur) var(--sl-color-accent-low));
 }
 
 summary {
