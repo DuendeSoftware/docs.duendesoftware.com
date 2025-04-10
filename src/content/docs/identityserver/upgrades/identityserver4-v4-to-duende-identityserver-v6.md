@@ -1,8 +1,8 @@
 ---
 title: "IdentityServer4 v4.1 to Duende IdentityServer v6"
 sidebar:
-  order: 95
-  label: v4.1 → v6.0
+  order: 139
+  label: IdentityServer4 v4.1 → v6.0
 redirect_from:
   - /identityserver/v5/upgrades/is4_v4_to_dis_v5/
   - /identityserver/v5/upgrades/is4_v4_to_dis_v6/
