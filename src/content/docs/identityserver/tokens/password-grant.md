@@ -17,7 +17,7 @@ to use a browser-based flow instead - but in certain situation it is not feasibl
 The `password` grant type is deprecated per [OAuth 2.1](https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/).
 :::
 
-## Requesting a token using Password grant
+## Requesting A Token Using Password Grant
 
 First you need to add the `GrantType.Password` to the `AllowedGrantTypes` list of the client you want to use.
 
@@ -36,7 +36,7 @@ username=bob&
 password=password
 ```
 
-### .NET client library
+### .NET Client Library
 
 On .NET you can use the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library
 to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens using the `password` grant type,
@@ -60,7 +60,7 @@ var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
 });
 ```
 
-## Validating the token request
+## Validating The Token Request
 
 Since this flow is not generally recommended, no standard implementation for validating the token request and user
 credentials is included.

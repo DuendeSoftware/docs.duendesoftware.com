@@ -76,7 +76,7 @@ builder.Services.AddOpenIdConnectAccessTokenManagement();
 
 ```
 
-### HTTP client factory
+### HTTP Client Factory
 
 Similar to the worker service support, you can register HTTP clients that automatically send the access token of the current user when making API calls. The message handler plumbing associated with those HTTP clients will try to make sure, the access token is always valid and not expired.
 
@@ -152,7 +152,7 @@ public class HomeController : Controller
 }
 ```
 
-### HTTP context extension methods
+### HTTP Context Extension Methods
 
 There are three extension methods on the HTTP context that simplify interaction with the token management service:
 
@@ -173,7 +173,7 @@ public async Task<IActionResult> CallApi()
 }
 ```
 
-### HTTP client factory
+### HTTP Client Factory
 
 Last but not least, if you registered clients with the factory, you can simply use them. They will try to make sure that a current access token is always sent along. If that is not possible, ultimately a 401 will be returned to the calling code.
 

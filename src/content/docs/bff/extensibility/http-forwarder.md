@@ -66,7 +66,7 @@ public class MyInvokerFactory : DefaultHttpMessageInvokerFactory
 services.AddSingleton<IHttpMessageInvokerFactory, MyInvokerFactory>();
 ```
 
-### Custom transformations
+### Custom Transformations
 In the standard configuration, BFF uses the YARP default behavior for forwarding HTTP requests. In addition, we
 
 * remove the sensitive session cookie

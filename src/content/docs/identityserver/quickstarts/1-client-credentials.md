@@ -52,7 +52,7 @@ You may have a previous version of Duende templates (`Duende.IdentityServer.Temp
 Please uninstall the template package and install the latest version.
 :::
 
-## Create the Solution and IdentityServer Project
+## Create The Solution And IdentityServer Project
 
 In this section, you will create a directory for the solution and use the
 `isempty` (IdentityServer Empty) template to create an ASP.NET Core application
@@ -114,7 +114,7 @@ cd ..
 dotnet sln add ./src/IdentityServer
 ```
 
-### Defining an API Scope
+### Defining An API Scope
 
 Scope is a core feature of OAuth that allows you to express the extent or scope
 of access. Clients request scopes when they initiate the protocol, declaring
@@ -154,7 +154,7 @@ users. Developers will use the name to connect to your API, and end users will
 see the display name on consent screens, etc.
 :::
 
-### Defining the client
+### Defining The client
 
 The next step is to configure a client application that you will use to access
 the API. You'll create the client application project later in this quickstart.
@@ -242,7 +242,7 @@ directory should be excluded from source control. It will be recreated if it is
 not present.
 :::
 
-## Create an API Project
+## Create An API Project
 
 Next, add an API project to your solution. This API will serve protected
 resources that will be secured by IdentityServer.
@@ -308,7 +308,7 @@ modeled with `ApiResources` instead. See
 more in-depth discussion.
 :::
 
-### Add an endpoint
+### Add An Endpoint
 
 Replace the templated weather forecast endpoint with a new endpoint:
 
@@ -320,7 +320,7 @@ app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c
 This endpoint will be used to test authorization and to display the claims identity
 through the eyes of the API.
 
-### Configure API to listen on Port 6001
+### Configure API To Listen On Port 6001
 
 Configure the API to run on `https://localhost:6001` only. You can do this by
 editing the
@@ -334,14 +334,14 @@ file in the `src/Api/Properties` directory. Change these settings for the `https
 }
 ```
 
-### Test the identity endpoint
+### Test The Identity Endpoint
 
 Run the API project using the `https` profile and then navigate to the identity controller at
 `https://localhost:6001/identity` in a browser. This should return a 401 status
 code, which means your API requires a credential and is now protected by
 IdentityServer.
 
-## Create the client project
+## Create The Client Project
 
 The last step is to create a client that requests an access token and then uses
 that token to access the API. Your client will be a console project in your
@@ -359,7 +359,7 @@ cd ..
 dotnet sln add ./src/Client
 ```
 
-### Add the IdentityModel NuGet package
+### Add The IdentityModel NuGet Package
 
 The token endpoint at IdentityServer implements the OAuth protocol, and you
 could use raw HTTP to access it. However, we have a client library called
@@ -371,7 +371,7 @@ Add the *Duende.IdentityModel * NuGet package to your client by running the foll
 dotnet add ./src/Client package Duende.IdentityModel 
 ```
 
-### Retrieve the discovery document
+### Retrieve The Discovery Document
 
 IdentityModel includes a client library to use with the discovery endpoint. This
 way you only need to know the base address of IdentityServer - the actual
@@ -398,7 +398,7 @@ is not trusted. You can run *dotnet dev-certs https --trust* in order to trust t
 development certificate. This only needs to be done once.
 :::
 
-### Request a token from IdentityServer
+### Request A Token From IdentityServer
 
 Next you can use the information from the discovery document to request a token
 from `IdentityServer` to access `api1`:
@@ -428,7 +428,7 @@ Copy and paste the access token from the console to [jwt.ms](https://jwt.ms) to
 inspect the raw token.
 :::
 
-### Calling the API
+### Calling The API
 
 To send the access token to the API you typically use the HTTP Authorization
 header. This is done using the `SetBearerToken` extension method:
@@ -473,7 +473,7 @@ scope, lifetime (nbf and exp), the client ID (client_id) and the issuer name
 (iss).
 :::
 
-#### Authorization at the API
+#### Authorization At The API
 
 Right now, the API accepts any access token issued by your IdentityServer. In
 this section, you will add an [Authorization
@@ -513,7 +513,7 @@ app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c
 Now you can run the API again, and it will enforce that the api1 scope is present in the
 access token.
 
-## Further experiments
+## Further Experiments
 
 This quickstart focused on the success path:
 

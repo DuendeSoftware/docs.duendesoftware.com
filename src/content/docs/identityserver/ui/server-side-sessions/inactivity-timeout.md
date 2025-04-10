@@ -76,7 +76,7 @@ To prepare IdentityServer, these features need to be enabled:
 Depending on what protocol features the client is using, different approaches will need to be taken.
 The two main actions a client must take are to 1) notify IdentityServer of the user's activity, and 2) detect user inactivity at IdentityServer and terminate the user's session in the client.
 
-#### Clients with Refresh Tokens
+#### Clients With Refresh Tokens
 
 As the client uses the refresh token at IdentityServer, the user's session expiration will be extended.
 Be sure to configure the access token lifetime to be less than the server-side session lifetime at IdentityServer.
@@ -85,7 +85,7 @@ To detect inactivity:
 * Either handle refresh token request failure, and consider the session ended.
 * Or implement back-channel logout.
 
-#### Clients with Reference Access Tokens but without Refresh Tokens
+#### Clients With Reference Access Tokens But Without Refresh Tokens
 
 It's possible a client is using a [reference access token](/identityserver/tokens/reference) and no refresh token.
 The API would then use introspection to validate the token, which would then extend the associated user's session at IdentityServer.
@@ -94,7 +94,7 @@ To detect inactivity:
 * Either handle 401 errors from the API, and then consider the session ended.
 * Or implement back-channel logout.
 
-#### Clients without Access Tokens
+#### Clients Without Access Tokens
 
 Clients without access tokens have no way to notify IdentityServer that the user is still active.
 But they can implement back-channel logout to be notified that the user's session has ended.

@@ -24,7 +24,7 @@ To keep things simple, we will utilize our demo IdentityServer instance hosted a
 will provide more details on how to configure a Blazor client in your own IdentityServer at then end.
 :::
 
-## Setting up the project
+## Setting Up The Project
 
 The .NET 6 CLI includes a Blazor WASM with backend template. Create the directory where you want to work in, and run the
 following command:
@@ -35,7 +35,7 @@ dotnet new blazorwasm --hosted
 
 This will create three projects - server, client and shared.
 
-## Configuring the backend
+## Configuring The Backend
 
 First add the following package references to the server project:
 
@@ -112,7 +112,7 @@ login (e.g. using bob/bob), the browser will return to the Blazor application.
 In other words, the fundamental authentication plumbing is already working. Now we need to make the frontend aware of
 it.
 
-## Modifying the frontend (part 1)
+## Modifying The Frontend (Part 1)
 
 A couple of steps are necessary to add the security and identity plumbing to a Blazor application.
 
@@ -194,7 +194,7 @@ and the information about the currently logged on user.
 
 This component needs to be implemented, and that's what we'll do next.
 
-## Modifying the frontend (part 2)
+## Modifying The Frontend (Part 2)
 
 The BFF library has a server-side component that allows querying the current authentication session and state (
 see [here](/bff/fundamentals/session/management/user/)). We will now add a Blazor `AuthenticationStateProvider` that
@@ -364,7 +364,7 @@ of the session on the main page by adding this code to `Index.razor`:
 </AuthorizeView>
 ```
 
-## Securing the local API
+## Securing The Local API
 
 The standard Blazor template contains an API endpoint (`WeatherForecastController.cs`). Try invoking the weather page
 from the UI. It works both in logged in and anonymous state. We want to change the code to make sure, that only
@@ -407,7 +407,7 @@ The client code can properly respond to this, e.g. triggering a login redirect.
 When you logon now and call the API, you can put a breakpoint server-side and inspect that the API controller has access
 to the claims of the authenticated user via the `.User` property.
 
-## Setting up a Blazor BFF client in IdentityServer
+## Setting Up A Blazor BFF client In IdentityServer
 
 In essence a BFF client is "just" a normal authorization code flow client:
 
@@ -441,7 +441,7 @@ var bffClient = new Client
 };
 ```
 
-## Further experiments
+## Further Experiments
 
 Our Blazor BFF [sample](/bff/samples/#blazor-wasm) is based on this Quickstart. In addition it shows
 concepts like

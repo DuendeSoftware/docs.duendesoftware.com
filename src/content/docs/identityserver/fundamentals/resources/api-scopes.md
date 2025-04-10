@@ -60,7 +60,7 @@ var mobileApp = new Client
 }
 ```
 
-### Authorization based on Scopes
+### Authorization Based On Scopes
 
 When a client asks for a scope (and that scope is allowed via configuration and not denied via consent),
 the value of that scope will be included in the resulting access token as a claim of type `scope` (for both JWTs and
@@ -94,7 +94,7 @@ additional user-centric authorization is application logic and not covered by OA
 implement in your API.
 :::
 
-### Adding user claims
+### Adding User Claims
 
 You can add more identity information about the user to the access token.
 The additional claims added are based on the scope requested.

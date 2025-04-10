@@ -98,7 +98,7 @@ yarpBuilder.LoadFromMemory(
     });
 ```
 
-## Token management
+## Token Management
 
 Duende.BFF's YARP extensions provide access token management and attach user or client access tokens automatically to
 proxied API calls. To enable this, add metadata with the name *Duende.Bff.Yarp.TokenType* to the route or cluster
@@ -203,7 +203,7 @@ yarpBuilder.LoadFromMemory(
 );
 ```
 
-### Anti-forgery protection
+### Anti-forgery Protection
 
 Duende.BFF's YARP extensions can also add anti-forgery protection to proxied API calls. Anti-forgery protection defends
 against CSRF attacks by requiring a custom header on API endpoints, for example:

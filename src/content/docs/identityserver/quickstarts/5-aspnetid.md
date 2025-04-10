@@ -45,7 +45,7 @@ In addition to the written steps below a YouTube video is available:
 
 <iframe width="853" height="505" src="https://www.youtube.com/embed/blvZzYsr8uI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-## New Project for ASP.NET Core Identity
+## New Project For ASP.NET Core Identity
 
 The first step is to add a new project for ASP.NET Core Identity to your
 solution. We provide a template that contains the minimal UI assets needed to
@@ -73,7 +73,7 @@ you will need to change the provider used in the code and re-create the EF
 migrations.
 :::
 
-## Inspect the new project
+## Inspect The New Project
 
 Open the new project in the editor of your choice, and inspect the generated
 code. Much of it is the same from the prior quickstarts and templates. The
@@ -223,7 +223,7 @@ credentials and manage the authentication session.
 Much of the rest of the code is the same from the prior quickstarts and
 templates.
 
-## Logging in with the Web client
+## Logging In With The Web client
 
 At this point, you should be able to run all the existing clients and
 samples. Launch the Web client application, and you should be redirected to

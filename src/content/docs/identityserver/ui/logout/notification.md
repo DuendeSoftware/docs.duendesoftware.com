@@ -11,7 +11,7 @@ redirect_from:
 Client notifications are essential for ensuring applications are informed about user sign-out events in a secure and
 efficient manner.
 
-## Notifying clients that the user has signed out
+## Notifying Clients That The User Has Signed Out
 
 As part of the logout process you will want to ensure client applications are informed that the user has signed out.
 
@@ -31,7 +31,7 @@ sites, this will not work reliably. We recommend using back-channel notification
 supported [specifications](/identityserver/overview/specs/) page for links to the relevant documents.
 :::
 
-### Front-channel server-side clients
+### Front-channel Server-side Clients
 
 To sign the user out of the server-side client applications via the front-channel spec, the "logged out" page in
 IdentityServer must render an `<iframe>` for each client that points to the corresponding notification endpoint at the
@@ -46,7 +46,7 @@ an `<iframe>`.
 See the [Quickstart UI](https://github.com/DuendeSoftware/products/tree/main/identity-server/templates/src/UI) Logout
 page for an example.
 
-### Back-channel server-side clients
+### Back-channel Server-side Clients
 
 To sign the user out of the server-side client applications via the back-channel the `IBackChannelLogoutService` service
 can be used.
@@ -57,7 +57,7 @@ Clients that wish to be notified must have
 the [BackChannelLogoutUri](/identityserver/reference/models/client#authentication--session-management) configuration
 value set.
 
-#### Implementing Back-channel Logout in .NET Applications
+#### Implementing Back-channel Logout In .NET Applications
 
 .NET does not have native support for back-channel logout notification.
 We do [provide a sample](/identityserver/samples), though.
@@ -70,7 +70,7 @@ Beginning in v6.3, IdentityServer sets the `typ` header of the logout token to `
 version of the specification. The [`LogoutTokenJwtType` option](/identityserver/reference/options#main) can override
 this behavior.
 
-### Browser-based JavaScript clients
+### Browser-based JavaScript Clients
 
 There is nothing special you need to do to notify these clients that the user has signed out.
 

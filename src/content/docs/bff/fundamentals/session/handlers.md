@@ -102,7 +102,7 @@ builder.Services.AddAuthentication().AddCookie("cookie", options =>
 });
 ```
 
-### Choosing between SameSite.Lax and SameSite.Strict
+### Choosing Between SameSite.Lax and SameSite.Strict
 
 The [SameSite cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value) is a feature of modern browsers that restricts cookies so that they are only sent to pages originating from the [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) where the cookie was originally issued. This prevents CSRF attacks and helps with improving privacy, because cross-site requests will no longer implicitly include the user's credentials.
 

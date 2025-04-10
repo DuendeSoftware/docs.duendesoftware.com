@@ -19,7 +19,7 @@ There are two styles of local APIs:
 #### Self-Contained Local APIs
 These APIs reside within the BFF and don't make HTTP requests to other APIs. They access data controlled by the BFF itself, which can simplify the architecture of the system by reducing the number of APIs that must be deployed and managed. They are suitable for scenarios where the BFF is the sole consumer of the data. If you require data accessibility from other applications or services, this approach is probably not suitable.
 
-#### Local APIs that Make Requests using Managed Access Tokens
+#### Local APIs That Make Requests Using Managed Access Tokens
 Alternatively, you can make the data available as a service and make HTTP requests to that service from your BFF's local endpoints. The benefits of this style of Local Endpoint include
 - Your frontend's network access can be simplified into an aggregated call for the specific data that it needs, which reduces the amount of data that must be sent to the client.
 - Your BFF endpoint can expose a subset of your remote APIs so that they are called in a more controlled manner than if the BFF proxied all requests to the endpoint. 
@@ -62,14 +62,14 @@ The example above is simplified to demonstrate the way that you might obtain a t
 ## Securing Local API Endpoints
 Regardless of the style of data access used by a local API, it must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. To defend against such attacks and ensure that only the frontend can access these endpoints, we recommend implementing two layers of protection. 
 
-#### SameSite cookies
+#### SameSite Cookies
 
 [The SameSite cookie attribute](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value) is a feature of modern browsers that restricts cookies so that they are only sent to pages originating from the [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) where the cookie was originally issued.
 
 This is a good first layer of defense, but makes the assumption that you can trust all subdomains of your site. All subdomains within a registrable domain are considered the same site for purposes of SameSite cookies. Thus, if another application hosted on a subdomain within your site is infected with malware, it can make CSRF attacks against your application.
 
 
-#### Anti-forgery header
+#### Anti-forgery Header
 
 For this reason, we recommend requiring an additional custom header on API endpoints, for example:
 

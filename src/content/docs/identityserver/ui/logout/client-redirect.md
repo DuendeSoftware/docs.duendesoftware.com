@@ -11,7 +11,7 @@ redirect_from:
 If sign-out was initiated by a client application, then the client first redirected the user to the [end session endpoint](/identityserver/reference/endpoints/end-session/).
 This can be determined if a `logoutId` is passed to the login page and the returned `LogoutRequest`'s `PostLogoutRedirectUri` is set.
 
-## How to Redirect
+## How To Redirect
 
 If there is a `PostLogoutRedirectUri` value, then it's important how this URL is used to redirect the user.
 The logout page typically should not directly redirect the user to this URL.

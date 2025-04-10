@@ -53,7 +53,7 @@ This class models an API.
 
   List of API scope names. You need to create those using [ApiScope](/identityserver/reference/models/api-scope/).
 
-## Defining API resources in appsettings.json
+## Defining API resources In appsettings.json
 
 The `AddInMemoryApiResource` extensions method also supports adding API resources from the ASP.NET Core configuration
 file:

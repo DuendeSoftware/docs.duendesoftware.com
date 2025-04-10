@@ -33,7 +33,7 @@ The session management page looks like this by default, but of course you are fr
 ![A table showing the active user sessions in IdentityServer](./images/session_query.png)
 
 
-### Querying sessions
+### Querying Sessions
 
 Use the `QuerySessionsAsync` API to access a paged list of user sessions.
 You can optionally filter on a user's claims mentioned above (subject identifier, session identifier, and/or display name).
@@ -77,7 +77,7 @@ userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQue
 ```
 
 
-### Terminating sessions
+### Terminating Sessions
 
 To terminate session(s) for a user, use the `RemoveSessionsAsync` API.
 This accepts a `RemoveSessionsContext` which can filter on the subject and/or the session identifier to terminate.

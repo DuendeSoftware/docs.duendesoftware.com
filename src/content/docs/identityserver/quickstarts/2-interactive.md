@@ -32,7 +32,7 @@ In addition to the written steps below there's also a YouTube video available:
 
 <iframe width="853" height="505" src="https://www.youtube.com/embed/4aYj4xb7_Cg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-## Enable OIDC in IdentityServer
+## Enable OIDC In IdentityServer
 
 To enable OIDC in IdentityServer you need:
 
@@ -41,7 +41,7 @@ To enable OIDC in IdentityServer you need:
 - Configuration for an OIDC client
 - Users to log in with
 
-### Add the UI
+### Add The UI
 
 Support for the OpenID Connect protocol is already built into IdentityServer.
 You need to provide the User Interface for login, logout, consent and error.
@@ -55,7 +55,7 @@ from the `src/IdentityServer` directory:
 dotnet new isui
 ```
 
-### Enable the UI
+### Enable The UI
 
 Once you have added the UI, you will need to register its services and enable it
 in the pipeline. In `src/IdentityServer/HostingExtensions.cs` you will find
@@ -131,7 +131,7 @@ In the `TestUsers` class, you can see that two users called `alice` and `bob`
 are defined with some identity claims. You can use those users to login. Note
 that the test users' passwords match their usernames.
 
-### Register an OIDC client
+### Register An OIDC client
 
 The last step in the `IdentityServer` project is to add a new configuration
 entry for a client that will use OIDC to log in. You will create the application
@@ -181,7 +181,7 @@ public static IEnumerable<Client> Clients =>
     };
 ```
 
-## Create the OIDC client
+## Create The OIDC client
 
 Next you will create an ASP.NET web application that will allow interactive
 users to log in using OIDC. Use the webapp template to create the project. Run
@@ -201,7 +201,7 @@ the [quickstart for IdentityServer](/identityserver/quickstarts/2-interactive/)
 that uses it.
 :::
 
-### Install the OIDC NuGet Package
+### Install The OIDC NuGet Package
 
 To add support for OpenID Connect authentication to the `WebClient` project, you
 need to add the NuGet package containing the OpenID Connect handler. From the
@@ -275,7 +275,7 @@ Connect provider. See [here](/identityserver/fundamentals/clients/) for more
 information on protocol flows.
 :::
 
-### Configure the Pipeline
+### Configure The Pipeline
 
 Now add `UseAuthentication` to the ASP.NET pipeline in
 `src/WebClient/Program.cs`. Also chain a call to `RequireAuthorization` onto
@@ -297,7 +297,7 @@ for more options that allow you to specify authorization on a per page or
 directory basis.
 :::
 
-### Display the Auth Cookie
+### Display The Auth Cookie
 
 Modify `src/WebClient/Pages/Index.cshtml` to display the claims of the user and
 the cookie properties:
@@ -351,7 +351,7 @@ Update the client's applicationUrl in
 }
 ```
 
-## Test the client
+## Test The client
 
 Now everything should be in place to log in to `WebClient` using OIDC. Run
 `IdentityServer` and `WebClient` and then trigger the authentication handshake
@@ -372,7 +372,7 @@ metadata in the properties. This metadata also contains the original
 access and id tokens issued by `IdentityServer`. Feel free to copy these tokens
 to [jwt.ms](https://jwt.ms) to inspect their content.
 
-## Adding sign-out
+## Adding Sign-out
 
 Next you will add sign-out to `WebClient`.
 
@@ -433,7 +433,7 @@ within the navbar-nav list:
 Run the application again, and try logging out. Observe that you get redirected to the end session endpoint, and that
 both session cookies are cleared.
 
-## Getting claims from the UserInfo endpoint
+## Getting Claims From The UserInfo Endpoint
 
 You might have noticed that even though you've configured the client to be
 allowed to retrieve the `profile` identity scope, the claims associated with

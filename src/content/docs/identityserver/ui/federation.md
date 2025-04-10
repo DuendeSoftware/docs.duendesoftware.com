@@ -26,14 +26,14 @@ trustworthy and in a format that the client expects.
 
 There are a number of scenarios where this approach is commonly used.
 
-## Multiple authentication methods for users
+## Multiple Authentication Methods For Users
 
 Maybe your users should have multiple options how they can sign-in/up, e.g.
 
 * username/password or a commercial provider like Google or Microsoft Account
 * username/password or a commercial provider for customers, and Active Directory or Azure AD for employees
 
-## Integration of on-premise products with customer identity systems
+## Integration Of On-premise Products With Customer Identity Systems
 
 If you are building on-premise products, you have to integrate with a multitude of customer authentication systems.
 Maintaining variations of your business software for each product you have to integrate with, makes your software hard
@@ -47,7 +47,7 @@ applications are shielded from the technical details.
 It's very common to offer federation with your customers' authentication systems in SaaS scenarios. This way your
 customers get single-sign-on to your applications without having to explicitly create accounts in your identity system.
 
-## Support for external authentication methods
+## Support For External Authentication Methods
 
 IdentityServer leverages the ASP.NET Core authentication infrastructure for communicating with external providers. This
 means that every authentication system that is supported by ASP.NET Core, can also be used in the context of

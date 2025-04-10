@@ -50,7 +50,7 @@ In production, logging might produce too much data. It is recommended you either
 instrumentation.
 :::
 
-### Setup for Serilog
+### Setup For Serilog
 
 We personally like [Serilog](https://serilog.net) and
 the [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) package a lot. Give it a try:

@@ -9,7 +9,7 @@ redirect_from:
   - /identityserver/v7/fundamentals/users/
 ---
 
-## Users and User Interface
+## Users And User Interface
 
 The design of Duende IdentityServer allows you to use any user database and build any user interface (UI) workflow
 needed to satisfy your requirements.
@@ -24,7 +24,7 @@ While you can use any custom user database or identity management library for yo
 provide [integration support](/identityserver/aspnet-identity/) for ASP.NET Identity.
 :::
 
-## Authorization Endpoint and Login Page Workflow
+## Authorization Endpoint And Login Page Workflow
 
 The standard mechanism to allow users to login is for the client application to use a web browser.
 This is obvious if the client application is a web application, but it's also the recommended practice for native and

@@ -34,7 +34,7 @@ The back-channel logout endpoint depends
 on [server-side sessions in the BFF](/bff/fundamentals/session/server-side-sessions/), which must be enabled to use this
 endpoint. Note that such server-side sessions are distinct from server-side sessions in IdentityServer.
 
-## Revoke all sessions
+## Revoke All Sessions
 
 Back-channel logout tokens include a sub (subject ID) and sid (session ID) claim to describe which session should be
 revoked. By default, the back-channel logout endpoint will only revoke the specific session for the given subject ID and

@@ -24,7 +24,8 @@ OAuth itself only knows about scopes - the (API) resource concept does not exist
 
 To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds another request parameter for the authorize and token endpoint called `resource`. This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single value only, and all scopes belong to that single resource).
 
-## Using the resource parameter
+## Using The Resource Parameter
+
 Let's assume you have the following resource design and that the client is allowed access to all scopes:
 
 ```cs
@@ -44,7 +45,7 @@ var resources = new[]
 
 If the client would simply request a token for the `read` scope, the resulting access token would contain the audience of both the invoice and the products API and thus be accepted at both APIs.
 
-### Machine to machine scenarios
+### Machine to Machine Scenarios
 If the client in addition passes the `resource` parameter specifying the name of the resource where it wants to use the access token, the token engine can `down-scope` the resulting access token to the single resource, e.g.:
 
 ```text
@@ -68,7 +69,7 @@ Thus resulting in an access token like this (some details omitted):
 }
 ```
 
-### Interactive applications
+### Interactive Applications
 The authorize endpoint supports the `resource` parameter as well, e.g.:
 
 ```text
@@ -89,7 +90,7 @@ redirect_uri=...&
 resource=urn:invoices
 ```
 
-### Requesting access to multiple resources
+### Requesting Access To Multiple Resources
 It is also possible to request access to multiple resources. This will result in multiple access tokens - one for each request resource.
 
 ```text
@@ -125,7 +126,7 @@ resource=urn:products
 
 The end-result will be that the client has two access tokens - one for each resource and can manage their lifetime via the  refresh token.
 
-## Enforcing resource isolation
+## Enforcing Resource Isolation
 All examples so far used the `resource` parameter optionally. If you have API resources, where you want to make sure they are not sharing access tokens with other resources, you can enforce the resource indicator, e.g.:
 
 ```cs

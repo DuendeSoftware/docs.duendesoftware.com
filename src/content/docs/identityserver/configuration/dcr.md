@@ -24,7 +24,7 @@ response describing the new client, if the request is authorized and valid.
 DCR eliminates the need for a manual registration process, making it more
 efficient and less time-consuming to register new clients.
 
-## Installation and Hosting
+## Installation And Hosting
 
 The Configuration API can be installed in a separate host from IdentityServer,
 or in the same host. In many cases it is desirable to host the configuration API
@@ -34,17 +34,17 @@ keeps IdentityServer's access to the configuration data read-only. In other
 cases, you may find that hosting the two systems together better fits your
 needs.
 
-### Separate Host for Configuration API
+### Separate Host For Configuration API
 
 To host the configuration API separately from IdentityServer:
 
-#### Create a new empty web application
+#### Create A New Empty Web Application
 
 ```bash title=Terminal
 dotnet new web -n Configuration
 ```
 
-#### Add the Duende.IdentityServer.Configuration package
+#### Add The Duende.IdentityServer.Configuration Package
 
 ```bash title=Terminal
 cd Configuration
@@ -64,7 +64,7 @@ The Configuration API feature is included in the IdentityServer Business edition
 license and higher. Use the same license key for IdentityServer and the
 Configuration API.
 
-#### Add and configure the store implementation
+#### Add And Configure The Store Implementation
 
 The Configuration API uses the `IClientConfigurationStore` abstraction to
 persist new clients to the configuration store. Your Configuration API host
@@ -102,11 +102,11 @@ app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 `IEndpointConventionBuilder` which you can use to define authorization
 requirements for your DCR endpoint. See [Authorization](/identityserver/apis/aspnetcore/authorization/) for more details.
 
-## Shared Host for Configuration API and IdentityServer
+## Shared Host For Configuration API and IdentityServer
 
 To host the configuration API in the same host as IdentityServer:
 
-#### Add the Duende.IdentityServer.Configuration package
+#### Add The Duende.IdentityServer.Configuration Package
 
 ```bash title=Terminal
 dotnet add package Duende.IdentityServer.Configuration
@@ -119,7 +119,7 @@ dotnet add package Duende.IdentityServer.Configuration
 builder.Services.AddIdentityServerConfiguration();
 ```
 
-#### Add and configure the store implementation
+#### Add And Configure The Store Implementation
 
 The Configuration API uses the `IClientConfigurationStore` abstraction to
 persist new clients to the configuration store. Your Configuration API host
@@ -216,7 +216,7 @@ To make use of it, customize the
 `DynamicClientRegistrationValidator.ValidateSoftwareStatementAsync` extension
 point.
 
-## Calling the Registration Endpoint
+## Calling The Registration Endpoint
 
 The registration endpoint is invoked by making an HTTP POST request to the /connect/dcr endpoint with a json payload
 containing metadata describing the desired client as described in [RFC 7591](https://datatracker.ietf.org/doc/rfc7591/)

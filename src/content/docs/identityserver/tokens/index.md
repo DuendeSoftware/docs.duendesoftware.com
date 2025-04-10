@@ -16,7 +16,7 @@ redirect_from:
 
 Duende IdentityServer is a token service engine based on OAuth 2.x and OpenID Connect.
 
-## How to request tokens
+## How To Request Tokens
 OIDC and OAuth contain two endpoints that can issue tokens - the [authorize endpoint](/identityserver/reference/endpoints/authorize) and the [token endpoint](/identityserver/reference/endpoints/token).
 
 While the `authorize` endpoint can be used for some special cases, you typically use the `token` endpoint for issuing tokens.

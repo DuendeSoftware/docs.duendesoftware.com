@@ -133,7 +133,7 @@ builder.Services.AddIdentityServer()
     .AddServerSideSessions<YourCustomStore>();
 ```
 
-### EntityFramework store implementation
+### EntityFramework Store Implementation
 
 An EntityFramework Core implementation of the server-side session store is included in the [Entity Framework Integration](/identityserver/data/ef#operational-store) operational store.
 

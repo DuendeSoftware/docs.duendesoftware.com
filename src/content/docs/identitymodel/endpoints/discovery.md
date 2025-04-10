@@ -105,7 +105,7 @@ var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
 });
 ```
 
-### Caching the Discovery Document
+### Caching The Discovery Document
 
 You should periodically update your local copy of the discovery
 document, to be able to react to configuration changes on the server.
@@ -132,7 +132,7 @@ You can specify the cache duration using the `CacheDuration` property
 and also specify a custom discovery policy by passing in a
 `DiscoveryPolicy` to the constructor.
 
-### Caching and HttpClient Instances
+### Caching And HttpClient Instances
 
 By default, the discovery cache will create a new instance of
 `HttpClient` every time it needs to access the discovery endpoint. You

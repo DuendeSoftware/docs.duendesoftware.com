@@ -34,7 +34,7 @@ builder.Services.AddHttpClient(
 You can also supply client assertions to the token management library. See this [sample](/bff/samples) for JWT-based client authentication.
 :::
 
-### Custom token storage
+### Custom Token Storage
 We recommend that you use the default storage mechanism, as this will automatically be compatible with the Duende.BFF server-side sessions.
 
 If you do not use server-side sessions, then the access and refresh token will be stored in the protected session cookie. If you want to change this, you can take over token storage completely.
@@ -83,7 +83,7 @@ public interface IUserTokenStore
 }
 ```
 
-### Per-route customized token retrieval
+### Per-route Customized Token Retrieval
 The token store defines how tokens are retrieved globally. However, you can add custom logic that changes the way that access tokens are retrieved on a per-route basis. For example, you might need to exchange a token to perform delegation or impersonation for some API calls, depending on the remote API. The interface that describes this extension point is the *IAccessTokenRetriever*.
 
 

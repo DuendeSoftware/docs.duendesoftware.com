@@ -51,12 +51,12 @@ services.AddClientCredentialsTokenManagement()
    });
 ```
 
-## Proof Tokens at the token server's token endpoint
+## Proof Tokens At The Token Server's Token Endpoint
 
 Once the key has been configured for the client, then the library will use it to produce a DPoP proof token when calling the token server (including token renewals if relevant).
 There is nothing explicit needed on behalf of the developer using this library.
 
-### dpop_jkt at the token server's authorize endpoint
+### `dpop_jkt` At The token Server's Authorize Endpoint
 
 When using DPoP and `AddOpenIdConnectAccessTokenManagement`, this library will also automatically include the `dpop_jkt` parameter to the authorize endpoint.
 

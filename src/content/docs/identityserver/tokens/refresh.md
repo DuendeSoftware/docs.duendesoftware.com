@@ -21,12 +21,12 @@ related settings.
 Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential
 flow.
 
-## Requesting a refresh token
+## Requesting A Refresh Token
 
 You can request a refresh token by adding a scope called `offline_access` to the scope parameter list of the authorize
 request.
 
-#### Requesting an access token using a refresh token
+#### Requesting An Access Token Using A Refresh Token
 
 To get a new access token, you send the refresh token to the token endpoint.
 This will result in a new token response containing a new access token and its expiration and potentially also a new
@@ -41,7 +41,7 @@ POST /connect/token
     refresh_token=hdh922
 ```
 
-#### .NET client library
+#### .NET Client Library
 
 On .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io) client library
 to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) refresh tokens, e.g.:
@@ -65,7 +65,7 @@ var response = await client.RequestRefreshTokenAsync(new RefreshTokenRequest
 The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) library can be
 used to automate refresh & access token lifetime management in ASP.NET Core.
 
-## Binding refresh tokens
+## Binding Refresh Tokens
 
 Refresh tokens are a high-value target for attackers, because they typically have a much higher lifetime than access
 tokens.
@@ -88,7 +88,7 @@ action being taken, but also provides them with an opportunity to opt-out if the
 Duende IdentityServer will always ask for consent (if enabled) if the client asks for the `offline_access` scope which
 follows the recommendations in the OpenID Connect specification.
 
-### Sliding expiration
+### Sliding Expiration
 
 Refresh tokens usually have a much longer lifetime than access tokens. You can reduce their exposure by adding a sliding
 lifetime on top of the absolute lifetime. This allows for scenarios where a refresh token can be silently used if the
@@ -153,7 +153,7 @@ This customization must be registered in the DI system as an implementation of t
 builder.Services.TryAddTransient<IRefreshTokenService, YourCustomRefreshTokenService>();
 ```
 
-### Replay detection
+### Replay Detection
 
 In addition to one-time only usage semantics, you might wish to add replay detection for refresh tokens. If a refresh
 token is configured for one-time only use but used multiple times, that means that either the client application is

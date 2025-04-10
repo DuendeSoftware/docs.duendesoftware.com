@@ -44,7 +44,7 @@ With the addition and use of server-side sessions, more interesting architectura
 * the ability to centralize and monitor session activity in order to achieve a
   system-wide [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeout/).
 
-### Enabling server-side sessions
+### Enabling Server-side Sessions
 
 To enable server-side sessions, use the `AddServerSideSessions` extension method after adding IdentityServer to the DI
 system:
@@ -66,7 +66,7 @@ When using `AddServerSideSessions`, this call needs to come after any custom `IR
 has been registered.
 :::
 
-### Data stored server-side
+### Data Stored Server-side
 
 The data stored for the user session is the data contained in the ASP.NET Core `AuthenticationTicket` class. This
 includes

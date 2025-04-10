@@ -76,7 +76,7 @@ public class DataController : ControllerBase
 }
 ```
 
-#### Scope claim format
+#### Scope Claim Format
 
 Historically, Duende IdentityServer emitted the `scope` claims as an array in the JWT. This works very well with the .NET deserialization logic, which turns every array item into a separate claim of type `scope`.
 

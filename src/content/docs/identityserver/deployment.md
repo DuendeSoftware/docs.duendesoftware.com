@@ -196,7 +196,7 @@ Duende IdentityServer's features that rely on data protection include
 
 IdentityServer itself is stateless and does not require server affinity - but there is data that needs to be shared between in multi-instance deployments.
 
-### Configuration data
+### Configuration Data
 This typically includes:
 
 * resources
@@ -205,7 +205,7 @@ This typically includes:
 
 The way you store that data depends on your environment. In situations where configuration data rarely changes we recommend using the in-memory stores and code or configuration files. In highly dynamic environments (e.g. Saas) we recommend using a database or configuration service to load configuration dynamically.
 
-### Operational data
+### Operational Data
 For certain operations, IdentityServer needs a persistence store to keep state, this includes:
 
 * issuing authorization codes

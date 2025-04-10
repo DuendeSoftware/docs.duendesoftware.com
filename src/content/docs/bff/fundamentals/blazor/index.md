@@ -23,7 +23,7 @@ The following diagram shows how the support for Blazor applications in the Duend
 
 The BFF exposes endpoints to perform login / logout functionality. The actual authentication (to an identity server) is handled by the **OpenIDConnectHandler**. Once succesfully authenticated, the CookieAuthenticationHandler stores a secure, httponly cookie in the browser. This cookie is then responsible for authenticating all requests from the front-end to the BFF. 
 
-## Handling the various blazor rendering modes
+## Handling Blazor Rendering Modes
 
 Blazor is very flexible in how it renders applications (and even individual components) and where code is actually executed:
 
@@ -55,7 +55,7 @@ The **ServerSideTokenStore**, together with the Blazor Server functionality in D
 
 For more information on this, see [Blazor Server](/accesstokenmanagement/blazor-server/)
 
-## Adding the BFF Security framework to your Blazor application
+## Adding BFF To A Blazor Application
 
 Adding 
 

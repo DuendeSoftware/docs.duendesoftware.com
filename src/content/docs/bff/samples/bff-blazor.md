@@ -338,7 +338,7 @@ Also register the client abstraction:
 builder.Services.AddSingleton<IWeatherClient, ServerWeatherClient>();
 ```
 
-### Displaying weather information from the api
+### Displaying Weather Information From The API
 
 By default, the blazor template ships with a weather page. 
 

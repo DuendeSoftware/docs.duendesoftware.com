@@ -14,7 +14,7 @@ This sample shows how to parse and validate a JWT token issued by IdentityServer
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/JwtSecuredAzureFunction)
 
-### Mutual TLS using Kestrel
+### Mutual TLS Using Kestrel
 
 This sample shows how to use Kestrel using MTLS
 for [client authentication](/identityserver/tokens/client-authentication/)

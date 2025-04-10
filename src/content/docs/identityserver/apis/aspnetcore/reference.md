@@ -25,7 +25,7 @@ builder.Services.AddAuthentication("token")
     });
 ```
 
-## Supporting both JWTs and reference tokens
+## Supporting Both JWTs And Reference Tokens
 
 It is not uncommon to use the same API with both JWTs and reference tokens. In this case you set up two authentication
 handlers, make one the default handler and provide some forwarding logic, e.g.:

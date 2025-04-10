@@ -138,12 +138,12 @@ dotnet ef database update -c ConfigurationDbContext
 And your database should now be updated.
 
 
-## Step 3: Verify your configuration database data
+## Step 3: Verify Configuration Database Data
 
 At this point, you should be able to query your migrated database and see your data intact. 
 [This script](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3/blob/main/IdentityServerMigrationSample/query_v4.sql) allows you to query the new restructured tables.
 
-## Step 4: Move onto the upgrade guide for Duende IdentityServer v6
+## Step 4: Move Onto The Upgrade Guide For Duende IdentityServer v6
 
 Once your project has been updated to IdentityServer4 v4, then you can work through the guide to update from IdentityServer4 v4 to Duende IdentityServer v6 (which should be far easier).
 Here is the [link to the next upgrade guide](/identityserver/upgrades/is4-v4-to-dis-v6).

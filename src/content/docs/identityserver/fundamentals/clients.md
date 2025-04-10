@@ -21,7 +21,7 @@ The details vary, but you typically define the following common settings for a c
 * a network location where identity and/or access token gets sent to (called a redirect URI)
 * a list of scopes (aka resources) the client is allowed to access
 
-## Defining a client for server to server communication
+## Defining A Client For Server To Server Communication
 
 In this scenario no interactive user is present - a service (i.e. the client) wants to communicate with an API (i.e. the
 resource that supports the scope):
@@ -46,7 +46,7 @@ public class Clients
 }
 ```
 
-## Defining an interactive application for use authentication and delegated API access
+## Defining An Interactive Application: Authentication And Delegated API Access
 
 Interactive applications (e.g. web applications or native desktop/mobile applications) use the authorization code flow.
 This flow gives you the best security because the access tokens are transmitted via back-channel calls only (and gives
@@ -76,7 +76,7 @@ var interactiveClient = new Client
 };
 ```
 
-## Defining clients in appsettings.json
+## Defining Clients In `appsettings.json`
 
 The `AddInMemoryClients` extensions method also supports adding clients from the ASP.NET Core configuration file. This
 allows you to define static clients directly from the appsettings.json file:

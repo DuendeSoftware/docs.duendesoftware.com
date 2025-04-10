@@ -13,7 +13,7 @@ redirect_from:
   - /identityserver/v7/samples/extension_grants/
 ---
 
-### Extension grants and Token Exchange
+### Extension grants And Token Exchange
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/TokenExchange)
 

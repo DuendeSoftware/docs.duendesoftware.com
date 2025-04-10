@@ -31,7 +31,7 @@ ASP.NET Core has built-in facilities that can help you with some of those tasks
 [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki)
 can help. It provides abstractions for storing tokens, automatic refresh of expired tokens, etc.
 
-## Requesting a refresh token
+## Requesting A Refresh Token
 
 To allow the _web_ client to request a refresh token set the _AllowOfflineAccess_ property to true in the client
 configuration.
@@ -73,7 +73,7 @@ options.Scope.Add("offline_access");
 
 When running the solution the refresh token should now be visible under _Properties_ on the landing page of the client.
 
-## Automatically refreshing an access token
+## Automatically Refreshing An Access Token
 
 In the WebClient project add a reference to the NuGet package `Duende.AccessTokenManagement.OpenIdConnect` and in
 _Program.cs_ add the needed types to dependency injection:
@@ -109,7 +109,7 @@ There are two changes here that utilize the AccessTokenManagement NuGet package:
 - The _SetBearerToken_ extension method on HttpClient is used for convenience to place the access token in the needed
   HTTP header.
 
-## Using a Named HttpClient
+## Using A Named HttpClient
 
 On each call to OnGet in _CallApi.cshtml.cs_ a new HttpClient is created in the code above. Recommended however is to
 use the [HttpClientFactory](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory) pattern so that

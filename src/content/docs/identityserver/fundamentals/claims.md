@@ -12,7 +12,7 @@ redirect_from:
 IdentityServer emits claims about users and clients into tokens. You are in full control of which claims you want to
 emit, in which situations you want to emit those claims, and where to retrieve those claims from.
 
-## User claims
+## User Claims
 
 User claims can be emitted in both identity and access tokens and in
 the [userinfo endpoint](/identityserver/reference/endpoints/userinfo). The central extensibility point to implement
@@ -28,7 +28,7 @@ that presents detailed information about the current request, including
 * the type of the request (access token, id token, or userinfo)
 * the requested claim types, which are the claims types associated with requested scopes and resources
 
-### Strategies for Emitting Claims
+### Strategies For Emitting Claims
 
 You can use different strategies to determine which claims to emit based on the information in the profile context.
 
@@ -36,7 +36,7 @@ You can use different strategies to determine which claims to emit based on the 
 * emit claims based on user or client identity
 * always emit certain claims
 
-#### Emit claims based on the client's request
+#### Emit Claims Based On The Client's Request
 
 You can filter the claims you emit to only include the claim types requested by the client. If your client requires
 consent, this will also give end users the opportunity to approve or deny sharing those claims with the client.
@@ -76,7 +76,7 @@ public class SampleProfileService : DefaultProfileService
 }
 ```
 
-#### Always emit claims
+#### Always Emit Claims
 
 We generally recommend emitting claims based on the requested claim types, as that respects the scopes and resources
 requested by the client and gives the end user an opportunity to consent to this sharing of information. However, if you
@@ -101,12 +101,12 @@ public class SampleProfileService : DefaultProfileService
 }
 ```
 
-#### Emit claims based on the user or client identity
+#### Emit Claims Based On The User Or Client Identity
 
 Finally, you might have claims that are only appropriate for certain users or clients. Your `ProfileService` can add
 whatever filtering or logic that you like.
 
-### The Subject of the ProfileDataRequestContext
+### The Subject Of The ProfileDataRequestContext
 
 When the profile service is invoked to add claims to tokens, the `Subject` property on the `ProfileDataRequestContext`
 contains the principal that was issued during user sign-in. Typically, the profile service will source some claims from
@@ -118,7 +118,7 @@ principal issued during user sign-in, since userinfo calls don't happen as part 
 property will contain a claims principal populated with the claims in the access token used to authorize the userinfo
 call. You can check the caller of the profile service by querying the `Caller` property on the context.
 
-## Client claims
+## Client Claims
 
 Client claims are a set of pre-defined claims that are emitted in access tokens. They are defined on a per-client basis,
 meaning that each client can have its own unique set of client claims. The following shows an example of a client that
@@ -147,7 +147,7 @@ By default, client claims are only sent in the client credentials flow. If you w
 need to set the `AlwaysSendClientClaims` property on the client definition.
 :::
 
-### Setting client claims dynamically
+### Setting Client Claims Dynamically
 
 If you want to set client claims dynamically, you could either do that at client load time (via a
 client [store](/identityserver/data) implementation), or using

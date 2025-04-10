@@ -37,7 +37,7 @@ implements the corresponding protocol used by the provider. Many are available a
 need to find others (both commercial and free) for things like SAML2-P and other social login systems not provided by
 ASP.NET Core.
 
-## Registering Authentication Handlers for External Providers
+## Registering Authentication Handlers For External Providers
 
 Supporting an external provider is achieved by simply registering the handler in your IdentityServer's startup
 configuration.
@@ -59,7 +59,7 @@ display name of "Employee Login".
 The options necessary will be different based on the protocol and identity provider used, and are beyond the scope of
 this documentation.
 
-## Triggering the Authentication Handler
+## Triggering The Authentication Handler
 
 To allow the user to be redirected to the external provider, there must be some code in your login page that triggers
 the handler.
@@ -93,7 +93,7 @@ var props = new AuthenticationProperties
 return Challenge("AAD", props);
 ```
 
-## The Role of Cookies in External Logins
+## The Role Of Cookies In External Logins
 
 ASP.NET Core needs a way to manage the state produced from the result of the external login.
 This state is managed (by default) with another cookie using ASP.NET Core's cookie authentication handler.
@@ -159,7 +159,7 @@ directly to the main cookie handler. This typically involves handling events on 
 the correct claims transformation from the external identity source.
 :::
 
-## Handling the Callback
+## Handling The Callback
 
 On the callback page your typical tasks are:
 
@@ -173,7 +173,7 @@ On the callback page your typical tasks are:
 * Establish the user's [authentication session](/identityserver/ui/login/session).
 * Complete the login workflow.
 
-### Inspecting the External Identity
+### Inspecting The External Identity
 
 To access the result of the external login, invoke the `AuthenticateAsync` method.
 This will read the external cookie to retrieve the claims issued by the external provider and any other state you
@@ -207,7 +207,7 @@ var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
 The `sub` claim from the external cookie is the external provider's unique id for the user.
 This value should be used to locate your local user record for the user.
 
-### Establish Session, Clean Up, and Resume Workflow
+### Establish Session, Clean Up, And Resume Workflow
 
 Once your callback page logic has identified the user based on the external identity provider,
 it will log the user in and complete the original login workflow:
@@ -231,7 +231,7 @@ return Redirect(returnUrl);
 
 Typically, the `sub` value used to log the user in would be the user's unique id from your local user database.
 
-## State, URL length, and ISecureDataFormat
+## State, URL length, And ISecureDataFormat
 
 When redirecting to an external provider for sign-in, frequently state from the client application must be round-tripped.
 This means that state is captured prior to leaving the client and preserved until the user has returned to the client

@@ -25,7 +25,7 @@ For example, the user can use a kiosk at the public library to access their data
 
 A nice feature of this workflow is that the user does not enter their credentials into the device the client application is accessed from, and instead a higher trust device can be used for the login step.
 
-## CIBA Workflow in IdentityServer
+## CIBA Workflow In IdentityServer
 
 Below is a diagram that shows the high level steps involved with the CIBA workflow and the supporting services involved.
 

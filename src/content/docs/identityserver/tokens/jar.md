@@ -45,7 +45,7 @@ var client = new Client
 }
 ```
 
-## Passing request JWTs by reference
+## Passing Request JWTs By Reference
 If the `request_uri` parameter is used, IdentityServer will make an outgoing HTTP call to fetch the JWT from the specified URL.
 
 You can customize the HTTP client used for this outgoing connection, e.g. to add caching or retry logic (e.g. via the Polly library):
@@ -68,7 +68,7 @@ idsvrBuilder.AddJwtRequestUriHttpClient(client =>
 Request URI processing is disabled by default. Enable on the [Endpoints](/identityserver/reference/options#endpoints) on the `IdentityServerOptions`. Also see the security considerations from the JAR [specification](https://tools.ietf.org/html/draft-ietf-oauth-jwsreq-23#section-10.4).
 :::
 
-## Accessing the request object data
+## Accessing The Request Object Data
 You can access the validated data from the request object in two ways:
 
 * Wherever you have access to the `ValidatedAuthorizeRequest`, the `RequestObjectValues` dictionary holds the values.

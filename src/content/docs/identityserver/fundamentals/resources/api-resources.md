@@ -110,7 +110,7 @@ Client requests: *`manage`*:
     }
 ```
 
-### Adding user claims
+### Adding User Claims
 You can specify that an access token for an API resource (regardless of which scope is requested) should contain additional user claims. 
 
 ```cs
@@ -145,7 +145,8 @@ If a client now requested a scope belonging to the `customer` resource, the acce
     }
 ```
 
-### Setting a signing algorithm
+### Setting A Signing Algorithm
+
 Your APIs might have certain requirements for the cryptographic algorithm used to sign the access tokens for that resource.
 An example could be regulatory requirements, or that you are starting to migrate your system to higher security algorithms.
 

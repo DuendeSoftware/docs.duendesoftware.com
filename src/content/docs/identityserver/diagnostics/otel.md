@@ -274,7 +274,7 @@ multiple actual tokens (id_token, access token, refresh token).
 | authorize_request_type | The authorize request type, if information about it is available |
 | error                  | Error label on errors                                            |
 
-### Metrics in the UI
+### Metrics In The UI
 
 The [UI in your IdentityServer host](/identityserver/ui/) can instrument these events to
 measure activities that occur during interactive flows, such as user login and logout.
@@ -352,7 +352,7 @@ The following screenshot shows the ASP.NET Core OpenID Connect authentication ha
 
 *The above screenshots are from https://www.honeycomb.io.*
 
-### Tracing sources
+### Tracing Sources
 
 IdentityServer can emit very fine-grained traces which is useful for performance troubleshooting and general exploration
 of the

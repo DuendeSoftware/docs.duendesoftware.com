@@ -1,7 +1,7 @@
 # docs.duendesoftware.com
 
 ---
-## Private branch notice
+## Private Branch Notice
 
 This respository is a private clone of Duende docs.duendesoftware.com repository (it is not a GitHub fork).
 
@@ -61,7 +61,7 @@ There are two ways to restructure content:
 * Internal (move content around in the current structure)
 * External (move content outside the current structure)
 
-### Internal restructuring
+### Internal Restructuring
 
 When doing internal restructuring, move the page to its new location and then update its frontmatter
 to include the old location:
@@ -78,7 +78,7 @@ Page content goes here
 
 This will generate the page at the new location, and put a redirect to it at the old location.
 
-### External restructuring
+### External Restructuring
 
 When moving a page outside the structure, or you need a redirect to another location altogether,
 edit the `astro.config.mjs` file and append a key/vaklue pair to the `redirects` property:

@@ -69,7 +69,7 @@ directory:
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
-#### Configuring the Stores
+#### Configuring Rhe Stores
 
 `Duende.IdentityServer.EntityFramework` stores configuration and operational
 data in separate stores, each with their own DbContext.
@@ -118,7 +118,7 @@ since the host project is in a different assembly than the one that contains the
 `DbContext` classes.
 :::
 
-## Managing the Database Schema
+## Managing Database Schema
 
 The `Duende.IdentityServer.EntityFramework.Storage` NuGet package (installed as
 a dependency of `Duende.IdentityServer.EntityFramework`) contains entity classes
@@ -173,7 +173,7 @@ dotnet ef migrations add InitialIdentityServerConfigurationDbMigration -c Config
 You should now see a `src/IdentityServer/Data/Migrations/IdentityServer`
 directory in your project containing the code for your newly created migrations.
 
-#### Initializing the Database
+#### Initializing Database
 
 Now that you have the migrations, you can write code to create the database from
 them and seed the database with the same configuration data used in the previous
@@ -256,7 +256,7 @@ approach is not ideal to leave in to execute each time the application runs.
 Once your database is populated, consider removing the call to the API.
 :::
 
-## Run the client applications
+## Run The Client Applications
 
 You should now be able to run any of the existing client applications and sign-in, get tokens, and call the API -- all
 based upon the database configuration.

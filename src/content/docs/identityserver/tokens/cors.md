@@ -70,7 +70,7 @@ builder.Services.AddSingleton<ICorsPolicyService>((container) =>
 Use `AllowAll` with caution.
 :::
 
-## Mixing IdentityServer's CORS policy with ASP.NET Core's CORS policies
+## Mixing IdentityServer's CORS Policy With ASP.NET Core's CORS Policies
 
 IdentityServer uses the CORS middleware from ASP.NET Core to provide its CORS implementation.
 It is possible that your application that hosts IdentityServer might also require CORS for its own custom endpoints.

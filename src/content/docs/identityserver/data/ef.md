@@ -69,7 +69,7 @@ options.ConfigureDbContext = b =>
             .MigrationsHistoryTable("MyConfigurationMigrationTable", "myConfigurationSchema"));
 ```
 
-### Enabling Caching for Configuration Store
+### Enabling Caching For Configuration Store
 
 To enable caching for the EF configuration store implementation, use the `AddConfigurationStoreCache` extension method:
 
@@ -141,7 +141,8 @@ This options class contains properties to control the operational store and `Per
 The token cleanup feature does `not` remove persisted grants that are `consumed` (see [persisted grants](/identityserver/reference/stores/persisted-grant-store/)). It only removes persisted grants that are beyond their `Expiration`.
 :::
 
-## Database creation and schema changes across different versions of IdentityServer
+## Database Creation And Schema Changes Across Different IdentityServer Versions
+
 It is very likely that across different versions of IdentityServer (and the EF support) that the database schema will change to accommodate new and changing features.
 
 We do not provide any support for creating your database or migrating your data from one version to another. 

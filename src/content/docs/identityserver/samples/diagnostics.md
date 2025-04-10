@@ -9,7 +9,7 @@ redirect_from:
   - /identityserver/v7/samples/diagnostics/
 ---
 
-### OpenTelemetry with Aspire
+### OpenTelemetry With Aspire
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Diagnostics/Aspire)
 
@@ -26,7 +26,7 @@ launch the other projects.
 This sample is not intended to be a full Aspire sample, it simply uses Aspire as a local standalone tool for displaying
 traces, logs and metrics.
 
-### OpenTelemetry tracing
+### OpenTelemetry Tracing
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Diagnostics/Otel)
 

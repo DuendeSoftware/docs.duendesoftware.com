@@ -41,7 +41,7 @@ directory created in part 1, which is the root directory of the reference
 implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview/#preparation).
 :::
 
-## Modifying the client configuration
+## Modifying The Client Configuration
 
 The client configuration in IdentityServer requires one straightforward update. We should add the _api1_ resource to the
 allowed scopes list so that the client will have permission to access it.
@@ -72,7 +72,7 @@ new Client
 }
 ```
 
-## Modifying the Web client
+## Modifying The Web client
 
 Now configure the client to ask for access to api1 by
 requesting the _api1_ scope. This is done in the OpenID
@@ -113,7 +113,7 @@ access tokens in the properties of the authentication cookie. If
 you run the solution and authenticate, you will see the tokens on
 the page that displays the cookie claims and properties created in quickstart 2.
 
-## Using the access token
+## Using The Access Token
 
 Now you will use the access token to authorize requests from the _WebClient_ to
 the _Api_.

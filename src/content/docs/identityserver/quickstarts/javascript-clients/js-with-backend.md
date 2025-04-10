@@ -35,7 +35,7 @@ cookie authentication), invoke a remote API running in a different host (secured
 with an access token), and logout of IdentityServer.
 
 
-## New Project for the JavaScript client and BFF
+## New Project For The JavaScript Client And BFF
 
 Begin by creating a new project to host the JavaScript application and its BFF.
 A single project containing the front-end and its BFF facilitates cookie
@@ -51,7 +51,7 @@ cd ..
 dotnet sln add ./src/JavaScriptClient
 ```
 
-### Add additional NuGet packages
+### Add Additional NuGet Packages
 
 Install NuGet packages to add BFF and OIDC support to the new project by running
 the following commands from the `src/JavaScriptClient` directory:
@@ -62,7 +62,7 @@ dotnet add package Duende.BFF
 dotnet add package Duende.BFF.Yarp
 ```
 
-### Modify hosting
+### Modify Hosting
 
 Modify the `JavaScriptClient` project to run on `https://localhost:5003`. Its
 `Properties/launchSettings.json` should look like this:
@@ -84,7 +84,7 @@ Modify the `JavaScriptClient` project to run on `https://localhost:5003`. Its
 }
 ```
 
-### Add services
+### Add Services
 
 In the BFF pattern, the server-side code triggers and receives OpenID Connect
 requests and responses. To do that, it needs the same services configured as the
@@ -134,7 +134,7 @@ builder.Services
 var app = builder.Build();
 ```
 
-### Add middleware
+### Add Middleware
 
 Similarly, the middleware pipeline for this application will resemble the
 WebClient, with the addition of the BFF middleware and the BFF endpoints.
@@ -163,7 +163,7 @@ app.MapBffManagementEndpoints();
 app.Run();
 ```
 
-### Add your HTML and JavaScript files
+### Add HTML And JavaScript Files
 
 Next, add HTML and JavaScript files for your client-side application to the
 `wwwroot` directory in the `JavaScriptClient` project. Create that directory
@@ -300,7 +300,7 @@ async function remoteApi() {
 }
 ```
 
-## Add a client registration to IdentityServer for the JavaScript client
+## Add JavaScript Client Registration To IdentityServer 
 
 Now that the client application is ready to go, you need to define a
 configuration entry in IdentityServer for the new JavaScript client.
@@ -337,7 +337,7 @@ new Client
 }
 ```
 
-## Run and test login and logout
+## Run And Test Login And Logout
 
 At this point, you should be able to run the `JavaScriptClient` application.
 You should see that the user is not logged in initially.
@@ -362,7 +362,7 @@ Finally, the logout button should successfully get the user logged out.
 ![showing the logout view on IdentityServer](../images/jsbff_signed_out.png)
 
 
-## Add API support
+## Add API Support
 
 Now that you have login and logout working, you will add support to invoke both
 local and remote APIs.
@@ -383,7 +383,7 @@ authenticated with the user's session cookie, retrieve the access token for the
 user from the user's session, and then proxy the call to the remote API, sending
 the access token for authentication.
 
-### Define a local API
+### Define A Local API
 
 Local APIs can be defined using controllers or with [Minimal API Route
 Handlers](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0#route-handlers).
@@ -408,7 +408,7 @@ extension method on the `HttpContext`. For example: *var token = await
 HttpContext.GetUserAccessTokenAsync();*
 :::
 
-### Update routing to accept local and remote API calls
+### Update Routing To Accept Local And Remote API Calls
 
 Next, you need to register both the local API and the BFF proxy for the remote
 API in the ASP.NET Core routing system. Add the code below to the endpoint configuration code in `src/JavaScriptClient/Program.cs`.
@@ -434,7 +434,7 @@ status codes under the appropriate circumstances.
 `MapRemoteBffApiEndpoint()` registers the BFF proxy for the remote API and
 configures it to pass the user's access token.
 
-### Call the APIs from JavaScript
+### Call The APIs From JavaScript
 
 Back in `src/JavaScriptClient/wwwroot/app.js`, implement the two API button
 event handlers like this:
@@ -496,7 +496,7 @@ See the [client credentials quickstart](/identityserver/quickstarts/1-client-cre
 remote API used in the code above. 
 :::
 
-## Run and test the API calls
+## Run And Test The API Calls
 
 At this point, you should be able to run the `JavaScriptClient` application and
 invoke the APIs. The local API should return something like this:

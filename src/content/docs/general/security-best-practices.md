@@ -18,13 +18,13 @@ development life cycle.
 Our products are off-the shelf downloadable developer components. They are not managed services or SaaS - nor do we
 store, have access to, or process any of our customers' data or their customers' data.
 
-## Systems access
+## Systems Access
 
 * Multiple systems are used in the development life cycle, including GitHub, NuGet, and Microsoft Azure Key Vault.
 * Multi-factor authentication is required for all services mentioned above.
 * Only a limited subset of Duende Software employees act as administrators for each system.
 
-## Software development
+## Software Development
 
 * All code is stored in [GitHub](https://github.com/duendesoftware).
 * Any code added to a project must be added via pull request.
@@ -52,7 +52,7 @@ store, have access to, or process any of our customers' data or their customers'
 * Once on NuGet, the package is available for end users to update their own solutions.
 * End users still must take explicit action to upgrade after reviewing the package's release notes.
 
-## Vulnerability management process
+## Vulnerability Management Process
 
 * Potential security vulnerabilities can be responsibly disclosed via
   our [contact form](https://duendesoftware.com/contact/general).
@@ -92,7 +92,7 @@ root certificate to NuGet's code signing certificate bundle.
 * Packages released before January 1, 2025: Use
   Sectigo's [root certificate](http://crt.sectigo.com/SectigoPublicCodeSigningRootR46.p7c) (P7C).
 
-#### Trusting the DigiCert certificate
+#### Trusting The DigiCert Certificate
 
 Here is an example of how to configure NuGet to trust the DigiCert root CA on the dotnet sdk docker image.
 This applies for Duende packages released *`after`* January 1, 2025, such as IdentityServer 7.1 and newer versions.
@@ -132,7 +132,7 @@ After that, NuGet packages signed by Duende can be successfully verified, even i
 dotnet nuget verify Duende.IdentityServer.7.1.x.nupkg
 ```
 
-#### Trusting the Sectigo certificate
+#### Trusting The Sectigo Certificate
 
 Here is an example of how to configure NuGet to trust the Sectigo root CA on the dotnet sdk docker image for
 Duende packages released *`before`* January 1, 2025

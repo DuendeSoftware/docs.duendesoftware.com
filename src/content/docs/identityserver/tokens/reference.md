@@ -24,7 +24,7 @@ You can set the client's token type using the following client setting:
 client.AccessTokenType = AccessTokenType.Reference;
 ```
 
-## Enabling an API to consume reference tokens
+## Enabling An API To Consume Reference Tokens
 
 The introspection endpoint requires authentication - since the client of an introspection endpoint is typically an API,
 you configure the secret on the `ApiResource`:
@@ -37,7 +37,7 @@ you configure the secret on the `ApiResource`:
     }
 ```
 
-## Store Keys and Handles
+## Store Keys And Handles
 
 Reference tokens have a key, which is an internal identifier used in the data store, and a handle, which is an external
 value that is given to the client and never stored. The handle is 32 bytes of cryptographically strong random data

@@ -16,7 +16,8 @@ There are several ways how you can enable Windows authentication in ASP.NET Core
 
 See the [Microsoft documentation](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/windowsauth?view=aspnetcore-5.0&tabs=visual-studio) for additional information.
 
-## On Windows using IIS hosting
+## On Windows Using IIS hosting
+
 The typical ASP.NET Core `CreateDefaultBuilder` host setup enables support for IIS-based Windows authentication when hosting in IIS.
 Make sure that Windows authentication is enabled in `launchSettings.json` or your IIS configuration.
 

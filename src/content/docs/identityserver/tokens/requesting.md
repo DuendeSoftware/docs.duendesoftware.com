@@ -12,7 +12,8 @@ redirect_from:
 
 A typical architecture is composed of two application (aka client) [types](/identityserver/overview/terminology#client) - machine to machine calls and interactive applications.
 
-## Machine to Machine communication
+## Machine to Machine Communication
+
 In this scenario a headless application with no interactive user (e.g. a server daemon, batch job etc.) wants to call an API.
 
 Prerequisites are:
@@ -48,7 +49,7 @@ Pragma: no-cache
 }
 ```
 
-### .NET client library
+### .NET Client Library
 In .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens.
 
 The above token request would look like this in C#:
@@ -68,7 +69,8 @@ var response = await client.RequestClientCredentialsTokenAsync(new ClientCredent
 });
 ```
 
-### Automating token requests in ASP.NET Core and Worker applications
+### Automating Token Requests In ASP.NET Core And Worker Applications
+
 The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) library can automate client credential request and token lifetime management for you.
 
 Using this library, you only need to register the token client in DI:
@@ -118,7 +120,8 @@ public class DataController : Controller
 }
 ```
 
-## Interactive applications
+## Interactive Applications
+
 In this scenario, an interactive application like a web application or mobile/desktop app wants to call an API in the context of an authenticated user (see spec [here](https://openid.net/specs/openid-connect-core-1_0.html#codeflowauth)).
 
 You will receive three tokens - an identity token containing details about the end-user authentication, the access token to call the API, and a refresh token for access token lifetime management. The access token will also contain some information about the end-user (e.g. the user ID), so that the API can do authorization based on the user's identity.
@@ -186,7 +189,7 @@ Pragma: no-cache
 See the refresh token section for more information on how to deal with [refresh tokens](/identityserver/tokens/refresh).
 :::
 
-### .NET client library
+### .NET Client Library
 The most common client library for .NET is the OpenID Connect [authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication) handler for ASP.NET Core. This library handles the complete front- and back-channel interaction and coordination.
 
 You only need to configure it in your startup code:
@@ -223,5 +226,5 @@ builder.Services.AddAuthentication(options =>
     });
 ```
 
-### Automating token management in ASP.NET Core
+### Automating Token Management In ASP.NET Core
 The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) library can also be used to automate token lifetime management in ASP.NET Core applications for you.

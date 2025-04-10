@@ -55,7 +55,7 @@ the [interaction service](/identityserver/reference/services/interaction-service
 The `GetAuthorizationContextAsync` API will return an instance of `AuthorizationRequest`. Additional details about the
 client or resources can be obtained using the `IClientStore` and `IResourceStore` interfaces.
 
-## Informing IdentityServer of the consent result
+## Informing IdentityServer Of The Consent Result
 
 The `GrantConsentAsync` API on the [interaction service](/identityserver/reference/services/interaction-service/) allows
 the consent page to inform your IdentityServer of the outcome of consent (which might also be to deny the client
@@ -69,7 +69,7 @@ authorization endpoint which persists the "remember my consent" for the user).
 If you wish to use some other persistence between the consent page and the authorization redirect, then you can
 implement `IMessageStore<ConsentResponse>` and register the implementation in DI.
 
-## Returning the user to the authorization endpoint
+## Returning The User To The Authorization Endpoint
 
 Once the consent page has informed IdentityServer of the outcome, the user can be redirected back to the `returnUrl`.
 Your consent page should protect against open redirects by verifying that the `returnUrl` is valid.

@@ -11,7 +11,7 @@ redirect_from:
 To correctly perform all the steps for logout, your logout page needs contextual information about the user's session and the client that initiated logout request.
 This information is provided by the [LogoutRequest](/identityserver/reference/services/interaction-service/#logoutrequest) class and will provide your logout page data needed for the logout workflow.
 
-## Accessing the LogoutRequest and the `logoutId`
+## Accessing The LogoutRequest And The `logoutId`
 
 The logout page can be triggered in different ways:
 * Client Initiated Logout (protocol)

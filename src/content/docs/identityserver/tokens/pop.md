@@ -58,7 +58,8 @@ The client must then use the same client certificate to call the APIs, and your 
 
 If the access token would leak, it cannot be replayed without having access to the additional private key of the X.509 client certificate.
 
-### Combine TLS proof-of-possession with other authentication methods
+### Combine TLS Proof-of-possession With Other Authentication Methods
+
 It is not mandatory to authenticate your clients with a client certificate to get the benefit of proof-of-possession. You can combine this feature with an arbitrary client authentication method - or even no client authentication at all (e.g. for public mobile/native clients).
 
 In this scenario, the client would create an X.509 certificate on the fly, and use that to establish the TLS channel to your IdentityServer. As long as the certificate is accepted by your web server, your IdentityServer can embed the `cnf` claim, and your APIs can validate it.
@@ -126,7 +127,7 @@ static SocketsHttpHandler GetHandler(X509Certificate2 certificate)
 }
 ```
 
-#### Enabling support in your IdentityServer
+#### Enabling Support In IdentityServer
 The last step is to enable that feature in the options:
 
 ```cs
@@ -139,7 +140,9 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 });
 ```
 
-## Demonstrating Proof-of-Possession at the Application Layer (DPoP) :badge[>=6.3]
+## Demonstrating Proof-of-Possession at the Application Layer (DPoP)
+
+**Version: :badge[>=6.3]**
 
 [DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) is a security measure that addresses token replay
 attacks by making it difficult for attackers to use stolen tokens. Support for DPoP is included
@@ -174,7 +177,7 @@ For example is can be dynamically created when the client starts up, and can be 
 The main constraint is that it must be stored for as long as the client uses any access tokens (and possibly refresh
 tokens) that they are bound to.
 
-#### Enabling DPoP in IdentityServer
+#### Enabling DPoP In IdentityServer
 
 DPoP is something a client can use dynamically with no configuration in IdentityServer, but you can configure it as
 required.
@@ -192,7 +195,7 @@ new Client
 }
 ```
 
-#### Enabling DPoP support in your client
+#### Enabling DPoP Support In Your Client
 
 The easiest approach for supporting DPoP in your client is to use the DPoP support in the `Duende.AccessTokenManagement`
 library ([docs available here](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki/DPoP)).
@@ -243,7 +246,7 @@ will also automatically include a DPoP proof token. The implication is that the 
 that must be carefully managed, because any tokens requested with this secret will be bound to it; if the secret is
 lost, the tokens can longer be used, and if the secret is leaked, the security benefits of DPoP are lost.
 
-#### Enabling DPoP support in your API
+#### Enabling DPoP Support In Your API
 
 See [here](/identityserver/apis/aspnetcore/confirmation#validating-dpop) for documentation
 describing how to enable DPoP in your APIs.

@@ -56,7 +56,7 @@ authentication requirements, or try the user bob, who always requires MFA.
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/StepUp)
 
-### SPA-style login page
+### SPA-style Login Page
 
 This sample shows an example of building the interactive pages (login, consent, logout, and error) as client-rendered (
 typical of SPAs), rather than server-rendered. Since there are many different SPA frameworks, the actual pages are coded
@@ -70,7 +70,7 @@ Key takeaways:
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/SpaLoginUi)
 
-### Dynamic providers
+### Dynamic Providers
 
 The [dynamic providers](/identityserver/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity
 provider configuration dynamically from a store. This sample sets up a simple database with one dynamic OIDC provider.
@@ -84,7 +84,7 @@ Some key points about the `IdentityServer` project in the sample:
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/DynamicProviders)
 
-### Adding other protocol types to dynamic providers
+### Adding Other Protocol Types To Dynamic Providers
 
 The [dynamic providers](/identityserver/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity
 provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to
@@ -100,7 +100,7 @@ Key takeaways:
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/WsFederationDynamicProviders)
 
-### Using Sustainsys.Saml2 with dynamic providers
+### Using Sustainsys.Saml2 With Dynamic Providers
 
 The [Sustainsys.Saml2](https://saml2.sustainsys.com) open source library adds Saml2 protocol support to ASP.NET Core. It
 can be used together with the
@@ -120,7 +120,7 @@ Follow that URL, login as "alice", and then approve the login request to allow t
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/Ciba)
 
-### Windows Authentication with IIS Hosting
+### Windows Authentication With IIS Hosting
 
 This sample shows how to use Windows Authentication when hosting your IdentityServer behind IIS (or IIS Express).
 The salient piece to understand is a new `LoginWithWindows` action method in the `AccountController` from the

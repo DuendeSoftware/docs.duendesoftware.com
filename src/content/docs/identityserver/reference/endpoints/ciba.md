@@ -13,7 +13,7 @@ The backchannel authentication endpoint is used by a client to initiate a [CIBA]
 Clients must be configured with the `"urn:openid:params:grant-type:ciba"` grant type to use this endpoint.
 You can use the `OidcConstants.GrantTypes.Ciba` constant rather than hard coding the value for the CIBA grant type.
 
-### Required parameters
+### Required Parameters
 
 * **`scope`**
 
@@ -24,7 +24,7 @@ The client id and a client credential is required to authenticate to the endpoin
 that has been configured for it (much like the token endpoint).
 :::
 
-### Exactly one of these values is required
+### Exactly One Of These Values Is Required
 
 * **`login_hint`**
 
@@ -43,7 +43,7 @@ To validate these implementation specific values and use them to identity the us
 required to implement the `IBackchannelAuthenticationUserValidator` interface.
 :::
 
-### Optional parameters
+### Optional Parameters
 
 * **`binding_message`**
 
@@ -104,7 +104,7 @@ Cache-Control: no-store
 }
 ```
 
-## .NET client library
+## .NET Client Library
 
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
 the protocol endpoint from .NET code.

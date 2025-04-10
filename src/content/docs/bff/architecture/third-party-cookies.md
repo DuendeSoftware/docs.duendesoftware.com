@@ -25,7 +25,7 @@ OIDC Silent Login allows a client application to start its session without needi
 
 Similarly to OIDC Session Management, OIDC Silent Login relies on a hidden iframe, though in this case, the hidden iframe makes requests to the OP, passing the *prompt=none* parameter to indicate that user interaction isn't sensible. If that request includes the OP's session cookie, the OP can respond successfully and the application can obtain tokens. But if the request does not include a session - either because no session has been started or because the cookie has been blocked - then the silent login will fail, and the user will have to be redirected to the OP for an interactive login.
 
-### BFF with a Federation Gateway
+### BFF With A Federation Gateway
 
 The BFF supports silent login from the SPA with the /bff/silent-login [endpoint](/bff/fundamentals/session/management/silent-login). This endpoint is intended to be invoked in an iframe and issues a challenge to login non-interactively with *prompt=none*. Just as in a traditional SPA, this technique will be disrupted by third party cookie blocking when the BFF and OP are third parties.
 

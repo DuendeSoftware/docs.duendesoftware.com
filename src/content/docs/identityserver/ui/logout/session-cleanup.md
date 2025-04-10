@@ -11,7 +11,7 @@ redirect_from:
 Learn how to correctly end a session in ASP.NET Core, including handling cookies and token revocation.
 
 
-## Removing the Authentication Cookie
+## Removing The Authentication Cookie
 
 To remove the authentication cookie, simply use the ASP.NET Core `SignOutAsync` extension method on the `HttpContext`.
 You will need to pass the scheme used (which is provided by `IdentityServerConstants.DefaultCookieAuthenticationScheme`
@@ -33,7 +33,7 @@ If you are integrating with ASP.NET Identity, sign out using its `SignInManager`
 await _signInManager.SignOutAsync();
 ```
 
-### Prompting the User to Logout
+### Prompting The User To Logout
 
 Typically, you should prompt the user to logout which requires a POST to remove the cookie.
 Otherwise, an attacker could hotlink to your logout page causing the user to be automatically logged out.
@@ -51,7 +51,7 @@ Your logout page process can continue as if the user submitted the post back to 
 If your user has signed in with an external login, then it's likely that they should perform
 an [external logout](/identityserver/ui/logout/external/) of the external provider as well.
 
-### Revoking Client Tokens at Logout
+### Revoking Client Tokens At Logout
 
 During a user's session, long-lived tokens (e.g. refresh tokens) might have been created for client applications.
 If at logout time you would like to have those tokens revoked, then this can be done automatically by setting the

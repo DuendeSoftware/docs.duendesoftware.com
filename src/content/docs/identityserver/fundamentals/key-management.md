@@ -80,7 +80,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 });
 ```
 
-### Key storage
+### Key Storage
 
 Automatic Key Management stores keys through the abstraction of the
 [ISigningKeyStore](/identityserver/data/operational#keys). You can implement this
@@ -110,7 +110,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 });
 ```
 
-### Encryption of Keys at Rest
+### Encryption Of Keys at Rest
 
 The keys created by Automatic Key Management are sensitive cryptographic secrets
 that should be encrypted at rest. By default, keys managed by Automatic Key
@@ -125,7 +125,7 @@ to encrypt your signing keys at rest.
 See the [deployment](/identityserver/deployment) section for more information
 about setting up data protection.
 
-### Manage multiple keys
+### Manage Multiple Keys
 
 By default, Automatic Key Management will maintain a signing credential and
 validation keys for a single cryptographic algorithm (`RS256`). You can specify
@@ -313,7 +313,7 @@ on the level of control you have over client applications, the amount of
 downtime that is acceptable, and the degree to which invalidating old tokens
 matters to you.
 
-### Solution 1: Invalidate all caches when keys are rotated
+### Solution 1: Invalidate All Caches When Keys Are Rotated
 
 One solution to these problems is to invalidate the caches in all the client
 applications and APIs immediately after the key is rotated. In ASP.NET, the
@@ -332,7 +332,7 @@ This is only appropriate if all the following are true:
 A more robust solution is to gradually transition from the old to the new key.
 This requires three phases.
 
-#### Phase 1: Announce the new key
+#### Phase 1: Announce The New Key
 
 First, announce a new key that will be used for signing in the future. During
 this phase, continue to sign tokens with the old key. The idea is to allow for
@@ -361,7 +361,7 @@ platforms or that were customized to use a different value. Ultimately you have
 to decide how long to wait to proceed to phase 2 in order to ensure that all
 clients and APIs have updated their caches.
 
-#### Phase 2: Start signing with the new key
+#### Phase 2: Start Signing With The New Key
 
 Next, start signing tokens with the new key, but continue to publish the public
 key of the old key so that tokens that were signed with that key can continue to
@@ -386,7 +386,7 @@ shorter, because the reason for the delay is to ensure that tokens signed with
 the old key remain valid until they expire. IdentityServer's token lifetime
 defaults to 1 hour, though it is configurable.
 
-#### Phase 3: Remove the old key
+#### Phase 3: Remove The Old Key
 
 Once enough time has passed that there are no unexpired tokens signed with the
 old key, it is safe to completely remove the old key.
@@ -401,7 +401,7 @@ var newKey = LoadNewKeyFromVault();
 idsvrBuilder.AddSigningCredential(newKey, SecurityAlgorithms.RsaSha256);
 ```
 
-## Migrating from Static Keys to Automatic Key Management
+## Migrating From Static Keys To Automatic Key Management
 
 To migrate from static to automatic key management, you can set keys manually
 and enable automatic key management at the same time. This allows the automatic
@@ -429,7 +429,7 @@ similar to the phased approach to [manual key rotation](#manual-key-rotation). T
 difference here is that you are phasing out the old key and allowing the
 automatically generated keys to phase in.
 
-### Phase 1: Announce new (automatic) key
+### Phase 1: Announce New (Automatic) Key
 
 First, enable automatic key management while continuing to register your old key
 as the signing credential. In this phase, the new automatically managed key will be
@@ -449,7 +449,7 @@ idsvrBuilder.AddSigningCredential(oldKey, SecurityAlgorithms.RsaSha256);
 Wait until all APIs and applications have updated their signing key caches, and
 then proceed to phase 2.
 
-### Phase 2: Start signing with the new (automatic) key
+### Phase 2: Start Signing With The New (Automatic) Key
 
 Next, switch to using the new automatically managed keys for signing, but still
 keep the old key for validation purposes.

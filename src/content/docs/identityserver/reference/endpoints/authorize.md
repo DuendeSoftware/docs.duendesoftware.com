@@ -15,7 +15,7 @@ This process typically involves authentication of the end-user and optionally co
 IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize request parameters. For a full list,
 see [here](https://openid.net/specs/openid-connect-core-1_0.html#authrequest).
 
-### Required parameters
+### Required Parameters
 
 * **`client_id`**
 
@@ -45,7 +45,7 @@ see [here](https://openid.net/specs/openid-connect-core-1_0.html#authrequest).
 
     * ***code id_token token***
 
-### Optional parameters
+### Optional Parameters
 
 * **`response_mode`**
 
@@ -144,7 +144,7 @@ GET /connect/authorize?
     nonce=xyz 
 ```
 
-## .NET client library
+## .NET Client Library
 
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically create
 authorize request URLs from .NET code.

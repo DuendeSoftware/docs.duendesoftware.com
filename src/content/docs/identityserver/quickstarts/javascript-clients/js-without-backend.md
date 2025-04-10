@@ -34,7 +34,7 @@ In this quickstart the user will log in to IdentityServer, invoke an API with an
 access token issued by IdentityServer, and logout of IdentityServer. All of this
 will be driven from the JavaScript running in the browser.
 
-## New Project for the JavaScript client
+## New Project For The JavaScript Client
 
 Create a new project for the JavaScript application. Beyond being able to serve
 your application's html and javascript, there are no requirements on the
@@ -50,7 +50,7 @@ cd ..
 dotnet sln add ./src/JavaScriptClient
 ```
 
-### Modify hosting
+### Modify Hosting
 
 Modify the `JavaScriptClient` project to run on `https://localhost:5003`. Its
 `Properties/launchSettings.json` should look like this:
@@ -72,7 +72,7 @@ Modify the `JavaScriptClient` project to run on `https://localhost:5003`. Its
 }
 ```
 
-### Add the static file middleware
+### Add Static File Middleware
 
 Given that this project is designed to run client-side, all we need ASP.NET Core
 to do is to serve up the static HTML and JavaScript files that will make up our
@@ -126,7 +126,7 @@ repository](https://github.com/IdentityModel/oidc-client-js/tree/release/dist)
 and download the JavaScript files. Once downloaded, copy them into
 `src/JavaScriptClient/wwwroot` so they can be served by your application.
 
-### Add your HTML and JavaScript files
+### Add HTML And JavaScript Files
 
 Next, add HTML and JavaScript files to the `src/JavaScriptClient/wwwroot`
 directory. You will need two HTML files and one JavaScript file (in addition to
@@ -300,7 +300,7 @@ the signin process:
 </html>
 ```
 
-## Add a client registration to IdentityServer for the JavaScript client
+## Add JavaScript Client Registration To IdentityServer
 
 Now that the client application is ready to go, you need to define a
 configuration entry in IdentityServer for the new JavaScript client.
@@ -331,7 +331,7 @@ new Client
 }
 ```
 
-## Allowing Ajax calls to the Web API with CORS
+## Allowing Ajax Calls To The Web API With CORS
 
 One last bit of configuration that is necessary is to configure CORS in the
 `Api` project. This will allow Ajax calls to be made from
@@ -363,7 +363,7 @@ app.UseHttpsRedirection();
 app.UseCors("default");
 ```
 
-## Run the JavaScript application
+## Run The JavaScript Application
 
 Now you should be able to run the JavaScript client application:
 

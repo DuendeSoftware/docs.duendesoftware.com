@@ -31,7 +31,7 @@ builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
 });
 ```
 
-## Per request parameters
+## Per Request Parameters
 
 You can also modify token management parameters on a per-request basis. 
 

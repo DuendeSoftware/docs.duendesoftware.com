@@ -50,7 +50,7 @@ Microsoft's templates are easy-to-use at dev time from Visual Studio. They allow
 template proxies requests to the front end for you. At deploy time, that proxy is removed and the static assets of the
 site are served by the static file middleware.
 
-### Host the UI separately
+### Host The UI Separately
 
 You may want to host the UI outside the BFF. At development time, UI developers might prefer to run the frontend
 outside of Visual Studio (e.g., using the node cli). You might also want to have separate deployments of the frontend
@@ -82,7 +82,7 @@ In order for this architecture to work, the following things are needed:
 
 A sample of this approach is [available](/bff/samples#separate-host-for-ui).
 
-### Serve the index page from the BFF host
+### Serve The Index Page From The BFF Host
 
 Lastly, you could serve the index page of the SPA from the BFF, but have all the other static assets hosted on
 another host (presumably a CDN). This technique makes the UI and BFF have exactly the same origin, so the authentication

@@ -29,7 +29,7 @@ Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 token=...&token_type_hint=refresh_token
 ```
 
-## .NET client library
+## .NET Client Library
 
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
 the protocol endpoint from .NET code.

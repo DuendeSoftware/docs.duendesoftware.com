@@ -28,7 +28,7 @@ You can log in with *alice/alice* or *bob/bob*
 
 * [Unity3D](https://github.com/peterhorsley/Unity3D.Authentication.Example)
 
-## No longer maintained
+## No Longer Maintained
 
 These samples are no longer maintained because their underlying technology is no
 longer supported.

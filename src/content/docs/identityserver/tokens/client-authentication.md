@@ -32,7 +32,7 @@ All information in this section also applies to [API secrets](/identityserver/re
 
 **We recommend using asymmetric client credentials like the [*private key jwt*](#private-key-jwts) or [*Mutual TLS*](#mutual-tls-client-certificates) authentication method over shared secrets.**
 
-### Assigning secrets
+### Assigning Secrets
 
 A client secret is abstracted by the `Secret` class. It provides properties for setting the value and type and a description and expiration date.
 
@@ -56,7 +56,7 @@ var secondary = new Secret("bar");
 client.ClientSecrets = new[] { primary, secondary };
 ```
 
-### Secret parsing
+### Secret Parsing
 During request processing, the secret must be somehow extracted from the incoming request. The various specs describe a couple of options, e.g. as part of the authorization header or the body payload.
 
 It is the job of implementations of the [ISecretParser](/identityserver/reference/models/secrets#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the `AddSecretParser()` DI extension method.
@@ -84,7 +84,7 @@ The following secret parsers are part of Duende IdentityServer:
   Can be enabled by calling the `AddMutualTlsSecretValidators` DI extension method.
 
 
-### Secret validation
+### Secret Validation
 It is the job of implementations of the [ISecretValidator](/identityserver/reference/models/secrets#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
 
 You can add secret validators by calling the `AddSecretValidator()` DI extension method.
@@ -149,7 +149,7 @@ Anyone with access to the repository can see the secret.
 var compromisedSecret = new Secret("just for demos, not prod!".Sha256());
 ```
 
-### Authentication using a shared secret
+### Authentication Using A Shared Secret
 
 You can either send the client id/secret combination as part of the POST body::
 
@@ -179,7 +179,7 @@ Authorization: Basic xxxxx
     redirect_uri=https://myapp.com/callback
 ```
 
-### .NET client library
+### .NET Client Library
 
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
 the protocol endpoint from .NET code.
@@ -211,7 +211,7 @@ Your IdentityServer only needs to store the corresponding key to be able to vali
 The technique is described [here](https://openid.net/specs/openid-connect-core-1_0.html#clientauthentication) and is
 based on the OAuth JWT assertion specification [(RFC 7523)](https://tools.ietf.org/html/rfc7523).
 
-### Setting up a private key JWT secret
+### Setting Up A Private Key JWT Secret
 
 The default private key JWT secret validator expects either a base64 encoded X.509 certificate or
 a [JSON Web Key](https://tools.ietf.org/html/rfc7517) formatted RSA, EC or symmetric key on the secret definition:
@@ -248,7 +248,7 @@ var client = new Client
 You can share the same key for client authentication and [signed authorize requests](/identityserver/tokens/jar).
 :::
 
-### Authentication using a private key JWT
+### Authentication Using A Private Key JWT
 
 On the client side, the caller must first generate the JWT, and then send it on the `assertion` body field:
 
@@ -265,7 +265,7 @@ Content-type: application/x-www-form-urlencoded
     redirect_uri=https://myapp.com/callback
 ```
 
-### .NET client library
+### .NET Client Library
 
 You can use the [Microsoft JWT library](https://www.nuget.org/packages/System.IdentityModel.Tokens.Jwt/) to create JSON
 Web Tokens.
@@ -458,7 +458,7 @@ new Client
 }
 ```
 
-### .NET client library
+### .NET Client Library
 
 When writing a client to connect to IdentityServer, the `SocketsHttpHandler` (or `HttpClientHandler` depending on your
 .NET version)

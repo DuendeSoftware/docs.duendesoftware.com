@@ -61,7 +61,7 @@ public class OidcEvents : OpenIdConnectEvents
 
 Once registered and initialized, Duende.AccessTokenManagement will keep the store up to date automatically as tokens are refreshed.
 
-## Retrieving and using tokens
+## Retrieving And Using Tokens
 
 If you've registered your token store with `AddBlazorServerAccessTokenManagement`, Duende.AccessTokenManagement will register the services necessary to attach tokens to outgoing HTTP requests automatically, using the same API as a non-blazor application. You inject an HTTP client factory and resolve named HTTP clients where ever you need to make HTTP requests, and you register the HTTP client's that use access tokens in the DI system with our extension method:
 

@@ -14,7 +14,7 @@ The token endpoint can be used to programmatically request tokens.
 Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 token request parameters. For a full list,
 see [here](https://openid.net/specs/openid-connect-core-1_0.html#tokenrequest).
 
-### Required parameters
+### Required Parameters
 
 * **`client_id`**
 
@@ -34,7 +34,7 @@ see [here](https://openid.net/specs/openid-connect-core-1_0.html#tokenrequest).
 
     * ***extension grant***
 
-### Optional parameters
+### Optional Parameters
 
 * **`client_secret`**
 
@@ -96,7 +96,7 @@ CONTENT-TYPE application/x-www-form-urlencoded
     redirect_uri=https://myapp.com/callback
 ```
 
-## .NET client library
+## .NET Client Library
 
 You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
 the protocol endpoint from .NET code.

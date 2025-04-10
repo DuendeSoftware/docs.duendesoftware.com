@@ -26,7 +26,7 @@ is designed to address the performance concern and allowing changes to the confi
 Support for Dynamic Identity Providers is included
 in [IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition.
 
-### Listing and displaying the dynamic providers on the login page
+### Listing Dynamic Providers On The Login Page
 
 The [identity provider store](/identityserver/reference/stores/idp-store/) can be used to query the database
 containing the dynamic providers.
@@ -80,7 +80,7 @@ var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
 providers.AddRange(dynamicSchemes);
 ```
 
-### Store and Configuration Data
+### Store And Configuration Data
 
 To use the dynamic providers feature an [identity provider store](/identityserver/reference/stores/idp-store/) must be
 provided that will load [model data](/identityserver/reference/models/idp/) for the OIDC identity provider to be used.
@@ -129,7 +129,7 @@ And to register this in the DI system:
 builder.Services.ConfigureOptions<CustomConfig>();
 ```
 
-#### Accessing OidcProvider data in IConfigureNamedOptions
+#### Accessing OidcProvider Data In IConfigureNamedOptions
 
 If your customization of the `OpenIdConnectOptions` requires per-provider data that you are storing on the
 `OidcProvider`, then we provide an abstraction for the `IConfigureNamedOptions<OpenIdConnectOptions>`.

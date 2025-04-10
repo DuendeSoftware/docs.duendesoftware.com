@@ -13,7 +13,7 @@ These could be pages needed during login (e.g. registration, password reset), se
 
 These custom pages can be made available to the end user as links from the standard pages in your IdentityServer (i.e. login, consent), they can be rendered to the user during login page workflows, or they could be displayed as a result of requests into the authorize endpoint.
 
-## Authorize Endpoint Requests and Custom Pages
+## Authorize Endpoint Requests And Custom Pages
 
 As requests are made into the authorize endpoint, if a user already has an established authentication session then they will not be presented with a login page at your IdentityServer (as that is the normal expectation for single sign-on).
 

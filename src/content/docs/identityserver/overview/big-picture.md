@@ -57,7 +57,7 @@ OAuth 2.0 is a protocol that allows applications to request access tokens from a
 to communicate with APIs. This delegation reduces complexity in both the client applications and the APIs since
 authentication and authorization can be centralized.
 
-## OpenID Connect and OAuth 2.0 – better together
+## OpenID Connect And OAuth 2.0 – Better Together!
 
 OpenID Connect and OAuth 2.0 are very similar – in fact OpenID Connect is an extension on top of OAuth 2.0.
 The two fundamental security concerns, authentication and API access, are combined into a single protocol - often with a
@@ -67,7 +67,7 @@ We believe that the combination of OpenID Connect and OAuth 2.0 is the best appr
 applications for the foreseeable future. Duende IdentityServer is an implementation of these two protocols and is
 highly optimized to solve the typical security problems of today’s mobile, native and web applications.
 
-## How Duende IdentityServer can help
+## How Duende IdentityServer Can Help
 
 Duende IdentityServer is middleware that adds spec-compliant OpenID Connect and OAuth 2.0 endpoints to an arbitrary
 ASP.NET Core host.

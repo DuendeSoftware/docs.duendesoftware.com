@@ -11,7 +11,8 @@ redirect_from:
 
 On ASP.NET Core, you typically use the [JWT authentication handler](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer) for validating JWT bearer tokens.
 
-## Validating a JWT token
+## Validating A JWT token
+
 First you need to add a reference to the authentication handler in your API project:
 
 ```xml
@@ -36,7 +37,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 ```
 
-## Adding audience validation
+## Adding Audience Validation
+
 Simply making sure that the token is coming from a trusted issuer is not good enough for most cases.
 In more complex systems, you will have multiple resources and multiple clients. Not every client might be authorized to access every resource.
 

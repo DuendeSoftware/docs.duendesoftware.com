@@ -18,7 +18,7 @@ Duende BFF Security Framework v3.0 is a significant release that includes:
 
 If you rely on the default extension methods for wiring up the BFF, then V3 should be a drop-in replacement.
 
-### Migrating from custom implementations of IHttpMessageInvokerFactory
+### Migrating From Custom Implementations Of IHttpMessageInvokerFactory
 
 In Duende.BFF V2, there was an interface called `IHttpMessageInvokerFactory`. This class was responsible for creating
 and wiring up yarp's `HttpMessageInvoker`. This interface has been removed in favor YARP's
@@ -44,7 +44,7 @@ services.AddSingleton<IForwarderHttpClientFactory>(
      new BackChannelHttpMessageInvokerFactory(_apiHost.Server.CreateHandler()));
 ```
 
-### Migrating from custom implementations IHttpTransformerFactory
+### Migrating From Custom Implementations Of IHttpTransformerFactory
 
 The `IHttpTransformerFactory` was a way to globally configure the YARP tranform pipeline. In V3, the way that
 the default `endpoints.MapRemoteBffApiEndpoint()` method builds up the YARP transform has been simplified
@@ -52,7 +52,7 @@ significantly. Most of the logic has been pushed down to the *AccessTokenRequest
 
 Here are common scenario's for implementing your own *IHttpTransformerFactory* and how to upgrade:
 
-#### Replacing defaults
+#### Replacing Defaults
 
 If you used a custom implementation of `IHttpTransformerFactory` to change the default behavior of
 `MapRemoteBffApiEndpoint()`,
@@ -75,7 +75,7 @@ Another way of doing this is to create a custom extensionmethod `MyCustomMapRemo
 the `MapRemoteBffApiEndpoint()` and use that everywhere in your application. This is a great way to add other defaults
 that should apply to all endpoints, such as requiring a specific type of access token.
 
-#### Configuring transforms for a single route
+#### Configuring Transforms For A Single Route
 
 Another common usecase for overriding the `IHttpTransformerFactory` was to have a custom transform for a single route,
 by
@@ -107,7 +107,7 @@ DefaultTransformers. The map method also wasn't very explicit about what it did 
 verify if it wasn't called wrongly. You are now expected to call the method `MapRemoteBffApiEndpoint`. This method now has
 a nullable parameter that allows you to inject your own transformers.
 
-### AccessTokenRetrievalContext properties are now typed
+### AccessTokenRetrievalContext Properties Are Now Typed
 
 The LocalPath and ApiAddress properties are now typed. They used to be strings. If you rely on these, for example for
 implementing
@@ -125,12 +125,12 @@ public required PathString LocalPath { get; set; }
 public required Uri ApiAddress { get; set; }
 ```
 
-### AddAddEntityFrameworkServerSideSessionsServices has been renamed to AddEntityFrameworkServerSideSessionsServices
+### AddAddEntityFrameworkServerSideSessionsServices Renamed To AddEntityFrameworkServerSideSessionsServices
 
 If you used the method `AddAddEntityFrameworkServerSideSessionsServices()` in your code, please replace it with the
 corrected `AddEntityFrameworkServerSideSessionsServices()`.
 
-### StateProviderPollingDelay and StateProviderPollingInterval have been split into separate options for WebAssembly and Server.
+### StateProviderPollingDelay and StateProviderPollingInterval Split Into Separate Options For WebAssembly and Server.
 
 If you used `BffBlazorOptions.StateProviderPollingInterval` or `BffBlazorOptions.StateProviderPollingDelay` to configure
 different polling settings, you should now consider if this same setting applies to either Server, WASM or both. Set the

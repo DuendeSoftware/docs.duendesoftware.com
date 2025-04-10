@@ -126,7 +126,7 @@ This can be done by adding those parameter names on the `Logging.TokenRequestSen
 the [IdentityServerOptions](/identityserver/reference/options#logging).
 :::
 
-## Token Exchange for impersonation and delegation
+## Token Exchange For Impersonation And Delegation
 
 One of the primary use cases of the token exchange specification is creating tokens for identity delegation and
 impersonation scenarios. In these scenarios you want to forward certain token and identity information over multiple
