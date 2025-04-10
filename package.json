@@ -32,7 +32,7 @@
     "rehype-autolink-headings": "^7.1.0",
     "sharp": "^0.33.5",
     "starlight-auto-sidebar": "^0.1.1",
-    "starlight-giscus": "^0.6.0",
+    "starlight-giscus": "^0.6.1",
     "starlight-heading-badges": "^0.5.0",
     "starlight-links-validator": "^0.15.0",
     "starlight-llms-txt": "^0.5.0"
