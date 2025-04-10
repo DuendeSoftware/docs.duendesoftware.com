@@ -122,6 +122,7 @@ export default defineConfig({
       ],
       components: {
         SkipLink: "./src/components/SkipLink.astro",
+        Banner: "./src/components/Banner.astro",
       },
       sidebar: [
         {
