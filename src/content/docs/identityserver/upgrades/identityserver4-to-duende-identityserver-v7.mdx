@@ -49,6 +49,10 @@ Depending on the package version shown, your next steps will be different:
 
 The most straightforward upgrade path is to first update to the latest version of IdentityServer4 v4, and then continue to the latest Duende IdentityServer.
 
+:::tip[Sample project]
+We have a [sample project available on GitHub](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3), which contains database migration scripts for these changes.
+:::
+
 Between IdentityServer4 v3.x and v4.x, the configuration object model was updated:
 
 - The relation between `ApiResources` and `ApiScopes` was changed from parent-child to many-to-many.
@@ -61,10 +65,8 @@ Between IdentityServer4 v3.x and v4.x, the configuration object model was update
 
 IdentityServer4 projects that use the `IdentityServer4.EntityFramework` package or implement their own stores will need to update their code and/or database to reflect these changes.
 
+:::caution
 Database changes will need to be done using a custom migration script, as using the default Entity Framework Core migration will result in data loss. We'll look at this later in this upgrade guide.
-
-:::tip[Sample project]
-We have a [sample project available on GitHub](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3), which contains database migration scripts for these changes.
 :::
 
 ### Step 1: Update NuGet Packages
@@ -81,7 +83,7 @@ Make sure to change the version number for all IdentityServer4 packages, includi
 ### Step 2: Make Code Changes
 
 It's likely some code changes will be required, especially when using the IdentityServer UI templates.
-Visual Studio and JetBrains Rider provide great code completion that can be of help here.
+[Visual Studio](https://visualstudio.microsoft.com/) and [JetBrains Rider](https://www.jetbrains.com/rider/) provide great code completion that can be of help here.
 
 :::tip[Use the new Razor Pages templates]
 If you have not made customizations to the IdentityServer UI templates, consider replacing them with the new Razor Pages-based templates as shown in [the quickstart tutorials](../../quickstarts/0-overview).
@@ -248,6 +250,7 @@ We'll start with creating a migration that targets the `ConfigurationDbContext` 
 </Steps>
 
 Your database schema should now be updated. You can verify all data is intact, using the [queries outlined in `query_v4.sql`](https://github.com/DuendeArchive/UpgradeSample-IdentityServer4-v3/blob/main/IdentityServerMigrationSample/query_v4.sql).
+These queries may return a lot of data, consider adding a `TOP` clause if you want to only sample some of the migrated data.
 
 <details>
     <summary>View SQL queries to validate migration succeeded</summary>
