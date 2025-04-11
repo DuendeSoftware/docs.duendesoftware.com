@@ -14,7 +14,7 @@ This upgrade guide covers upgrading from IdentityServer4 to Duende IdentityServe
 IdentityServer4 reached its end of life (EOL) on December 13, 2022. It is strongly advised to migrate to Duende IdentityServer.
 
 Depending on your current version of IdentityServer4, different steps may be required.
-You can determine the version of IdentityServer4 by running the `dotnet list` command at the root of your project, or using NuGet tooling in Visual Studio or JetBrains Rider.
+You can determine the version of IdentityServer4 by running the `dotnet list` command at the root of your IdentityServer host project, or using NuGet tooling in Visual Studio or JetBrains Rider.
 
 <Tabs>
   <TabItem label="Windows">
@@ -38,8 +38,6 @@ This command will print a list of packages you are using in your solution, along
 ```bash title="Output"
    > IdentityServer4                            3.1.4       3.1.4
    > IdentityServer4.EntityFramework            3.1.4       3.1.4
-   > IdentityServer4.AccessTokenValidation      3.0.1       3.0.1
-   > IdentityServer4.AccessTokenValidation      2.6.0       2.6.0
 ```
 
 Depending on the package version shown, your next steps will be different:
@@ -62,6 +60,8 @@ Between IdentityServer4 v3.x and v4.x, the configuration object model was update
   - `ApiScopes` to `ApiResourceScopes`
 
 IdentityServer4 projects that use the `IdentityServer4.EntityFramework` package or implement their own stores will need to update their code and/or database to reflect these changes.
+
+Database changes will need to be done using a custom migration script, as using the default Entity Framework Core migration will result in data loss. We'll look at this later in this upgrade guide.
 
 :::tip[Sample project]
 We have a [sample project available on GitHub](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3), which contains database migration scripts for these changes.
@@ -97,7 +97,7 @@ A couple of compilation errors and required changes you may encounter:
   + await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
   ```
 
-- No overload method `SignInAsync` takes 5 arguments. The `HttpContext.SignInAsync` signature changed:
+- No overload method `SignInAsync` takes N arguments. The `HttpContext.SignInAsync` signature changed:
 
   ```diff lang="csharp" title="*.cs"
   // issue authentication cookie with subject ID and username
@@ -387,12 +387,14 @@ You can use Duende IdentityServer's built-in [manual or automatic key management
 Whether you are using a [database](../../data) or a [custom store implementation](../..//reference/stores) for your configuration and operational data, you'll need to make some changes.
 The exact steps involved in updating your data store will depend on your implementation details.
 
+In this section, we'll look at updating the database schema based on the stores provided in the `Duende.IdentityServer.EntityFramework` package:
+
 - Create a new `Keys` table for the automatic key management feature in the operational database.
 - Create a new `RequireResourceIndicator` boolean column on the `ApiResources` table in the configuration database.
 - Create a new index on the `ConsumedTime` column in the `PersistedGrants` table ([more details](https://github.com/DuendeSoftware/products/pull/84)).
 - Create a new table called `IdentityProviders` for storing the OIDC provider details ([more details](https://github.com/DuendeSoftware/products/pull/188)).
 - Add missing columns for created, updated, etc. to EF entities ([more details](https://github.com/DuendeSoftware/products/pull/356)).
-- Add unique constraints to EF tables where duplicate records not allowed ([more details](https://github.com/DuendeSoftware/products/pull/355)).
+- Add unique constraints to EF tables where duplicate records are not allowed ([more details](https://github.com/DuendeSoftware/products/pull/355)).
 - The server-side sessions feature requires a new table ([more details](https://github.com/DuendeSoftware/products/pull/743)).
 - The session coordination feature adds a column to the `Clients` table ([more details](https://github.com/DuendeSoftware/products/pull/820)).
 - Improve primary keys on the persisted grants table ([more details](https://github.com/DuendeSoftware/products/pull/793)).
@@ -403,14 +405,11 @@ The exact steps involved in updating your data store will depend on your impleme
   - `DPoPValidationMode` is a non-nullable column that controls the DPoP validation mechanism. Existing clients that are not using DPoP can set its value to `0`.
   - `DPoPClockSkew` is a non-nullable timespan that controls how much clock skew is allowed for a particular DPoP client. Existing clients that are not using DPoP can set its value to a timespan of length ``0.
 
-- The `ServerSideSession` entity now uses a 64-bit long as its primary key.
 - Two new properties have been added to the `Client` model:
   - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](../../tokens/par). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
   - `Client.PushedAuthorizationLifetime` is a new nullable integer property that controls the lifetime of pushed
     authorization requests (in seconds) for a client. It is safe to initialize this column to `null` for existing clients, which means the global value is used.
 - A new `PushedAuthorizationRequest` table has been added to store pushed authorization requests.
-
-In this section, we'll look at updating the database schema based on the stores provided in the `Duende.IdentityServer.EntityFramework` package.
 
 You'll need to create two database migrations that update the database schema: one that targets the `PersistedGrantDbContext` (for operational data), and one that targets the `ConfigurationDbContext` (for configuration data).
 Note that you may want to change the database migration paths in the examples below to match your project structure.
@@ -441,7 +440,7 @@ Note that you may want to change the database migration paths in the examples be
 
 ### Step 6: Migrate Signing Keys <Badge text="Optional" variant="note" size="small" />
 
-If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](../../fundamentals/key-management).
+If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](../../fundamentals/key-management) which is included in the Business license.
 
 :::tip[Determine if you are using a custom signing key]
 In `Startup.cs`, look for a call to `AddSigningCredential()` that uses key material such as an `X509Certificate2`.
@@ -453,32 +452,7 @@ When upgrading, consider how those applications will handle an upgraded token se
 - If you can restart all client apps and APIs that depend on your current signing key, you can remove the old signing key and start to use automatic key management. A restart reloads the discovery document and the new signing key.
 - If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](../../fundamentals/key-management#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
 
-### Step 7: Verify Data Protection Configuration
-
-Duende IdentityServer depends on [ASP.NET Data Protection](../../deployment#aspnet-core-data-protection) to encrypt and sign data using keys managed by ASP.NET.
-
-As part of your migration, verify the application name is set in your Data Protection configuration:
-
-```cs title="Program.cs" {4}
-builder.Services.AddDataProtection()
-  .PersistKeysTo...()
-  .ProtectKeysWith...()
-  .SetApplicationName("IdentityServer");
-```
-
-If an application name is set, you can skip this section. If no name is set, it is important to read on.
-
-Data Protection keys are isolated by application name, to prevent multiple applications from sharing encryption keys.
-If no application name is configured, ASP.NET Data Protection uses the content root path of the IdentityServer host as the application name.
-
-As a consequence, if your content root path changes, the default settings for data protection will prevent you from using your old data protection keys.
-
-.NET 6 introduced a change where the (default) content root path is now normalized to end with a directory separator.
-This means that your application name might change as part of this upgrade, and by extensions, existing data protection keys may become invalid.
-
-To prevent this from happening, you can explicitly set the application name to the content root path without the directory separator character, as [documented on Microsoft Learn](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-6.0#setapplicationname).
-
-### Step 8: Validate Your Deployment
+### Step 7: Validate Your Deployment
 
 Congratulations! Your upgrade is complete.
 
