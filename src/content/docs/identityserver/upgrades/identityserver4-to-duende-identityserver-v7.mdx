@@ -5,7 +5,6 @@ sidebar:
   label: IdentityServer4 → v7.2
 ---
 
-import { Badge } from "@astrojs/starlight/components";
 import { Code } from "astro/components";
 import { Steps } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
@@ -379,7 +378,7 @@ Replace all `IdentityModel` namespace usages with `Duende.IdentityModel`:
 
 If you are using fully-qualified names in your code, those will need to be updated as well.
 
-### Step 4: Remove AddDeveloperSigningCredential <Badge text="Optional" variant="note" size="small" />
+### Step 4: Remove AddDeveloperSigningCredential :badge[Optional]
 
 In your application startup code, typically found in the `ConfigureServices` method in `Startup.cs`, consider removing `AddDeveloperSigningCredential`.
 
@@ -441,7 +440,7 @@ Note that you may want to change the database migration paths in the examples be
 
 </Steps>
 
-### Step 6: Migrate Signing Keys <Badge text="Optional" variant="note" size="small" />
+### Step 6: Migrate Signing Keys :badge[Optional]
 
 If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](../../fundamentals/key-management) which is included in the Business license.
 
