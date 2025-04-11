@@ -41,6 +41,13 @@ Images can be added to `src/assets/` and embedded in Markdown with a relative li
 
 Static assets, like favicons, can be placed in the `public/` directory.
 
+## ✍️ Authoring
+
+Content can be authored in Markdown, in a `.md` or `.mdx` file. The Starlight documentation has some guidance on Markdown syntax, components, and more:
+
+* [Authoring Content in Markdown](https://starlight.astro.build/guides/authoring-content/)
+* [Using Components](https://starlight.astro.build/components/using-components/) (only in `.mdx`)
+
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:
