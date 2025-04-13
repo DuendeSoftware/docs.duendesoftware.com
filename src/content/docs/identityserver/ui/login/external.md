@@ -166,7 +166,7 @@ the correct claims transformation from the external identity source.
 `SignInScheme` of the external provider should always be `IdentityServerConstants.ExternalCookieAuthenticationScheme`. 
 The `SignOutScheme` depends on whether **ASP.NET Identity** is used or not:
 
-```csharp title="ASP.NET Identity"
+```csharp title="With ASP.NET Identity"
 // Program.cs
 builder.Services.AddAuthentication()
     .AddCookie("MyTempHandler")
