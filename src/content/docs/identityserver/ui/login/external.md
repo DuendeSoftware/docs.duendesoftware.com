@@ -107,7 +107,9 @@ read the Microsoft [docs](https://docs.microsoft.com/en-us/aspnet/core/security/
 ASP.NET Identity [quickstart](/identityserver/quickstarts/5-aspnetid/).
 :::
 
-One option on an external authentication handlers is called `SignInScheme`.
+### Sign In Scheme
+
+One option on external authentication handlers is called `SignInScheme`.
 This specifies the cookie handler to manage the state:
 
 ```cs
@@ -124,7 +126,7 @@ builder.Services.AddAuthentication()
 Given that this is such a common practice, IdentityServer registers a cookie handler specifically for this external
 provider workflow.
 The scheme is represented via the `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant.
-If you were to use our external cookie handler, then for the `SignInScheme` above you'd assign the value to be the
+If you were to use our external cookie handler, then for the `SignInScheme` above, you'd assign the value to be the
 `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant:
 
 ```cs
@@ -158,6 +160,35 @@ For specialized scenarios, you can also short-circuit the external cookie mechan
 directly to the main cookie handler. This typically involves handling events on the external handler to make sure you do
 the correct claims transformation from the external identity source.
 :::
+
+### Sign Out Scheme
+
+`SignInScheme` of the external provider should always be `IdentityServerConstants.ExternalCookieAuthenticationScheme`. 
+The `SignOutScheme` depends on whether **ASP.NET Identity** is used or not:
+
+```csharp title="With ASP.NET Identity"
+// Program.cs
+builder.Services.AddAuthentication()
+    .AddCookie("MyTempHandler")
+    .AddOpenIdConnect("AAD", "Employee Login", options =>
+    {
+        options.SignOutScheme = IdentityConstants.ApplicationScheme
+        // other options omitted
+    });
+```
+
+```csharp title="Without ASP.NET Identity"
+// Program.cs
+builder.Services.AddAuthentication()
+    .AddCookie("MyTempHandler")
+    .AddOpenIdConnect("AAD", "Employee Login", options =>
+    {
+        options.SignOutScheme = IdentityServerConstants.SignoutScheme
+        // other options omitted
+    });
+```
+
+Learn more about [ASP.NET Identity and its relationship to Duende IdentityServer](/identityserver/aspnet-identity/).
 
 ## Handling The Callback
 
@@ -233,7 +264,8 @@ Typically, the `sub` value used to log the user in would be the user's unique id
 
 ## State, URL length, And ISecureDataFormat
 
-When redirecting to an external provider for sign-in, frequently state from the client application must be round-tripped.
+When redirecting to an external provider for sign-in, frequently state from the client application must be
+round-tripped.
 This means that state is captured prior to leaving the client and preserved until the user has returned to the client
 application.
 Many protocols, including OpenID Connect, allow passing some sort of state as a parameter as part of the request, and
