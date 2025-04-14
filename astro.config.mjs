@@ -86,7 +86,7 @@ export default defineConfig({
       lastUpdated: true,
       editLink: {
         baseUrl:
-          "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/docs/",
+          "https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/",
       },
       social: [
         {
