@@ -35,7 +35,7 @@ breaking changes that affect your implementation.
 
 There are changes to the stores which requires database schema updates. If you use the Entity Framework
 based stores you need to apply the upgrade and database migrations
-from [6.0 - 6.1](/identityserver/upgrades/v6_0-to-v6_1/). Then
+from [6.0 - 6.1](v6_0-to-v6_1). Then
 continue with "Upgrading from version 6.2" below. If you are experienced with the Entity Framework
 Migrations Tooling you may also create a single migration 6.0-7.0.
 
@@ -48,17 +48,17 @@ version 6.2" guide below.
 
 There are changes to the stores which requires database schema updates. If you use the Entity Framework
 based stores you need to apply the upgrade and database migrations
-from [6.2 - 6.3](/identityserver/upgrades/v6_2-to-v6_3/). If you
+from [6.2 - 6.3](v6_2-to-v6_3). If you
 are experienced with the Entity Framework Migrations Tooling you may also create a single migration
 6.2-7.0.
 
 There were minor breaking changes in 6.3, most notably rotated refresh tokens are now deleted immediately
 on use by default. Review
-the [list in the upgrade guide](/identityserver/upgrades/v6_2-to-v6_3/#step-4-breaking-changes) to check
+the [list in the upgrade guide](v6_2-to-v6_3#step-4-breaking-changes) to check
 if any of them affect your implementation.
 
 Then continue with "Upgrading from version 6.3" below.
 
 #### Upgrading from version 6.3
 
-Follow the [upgrade guide version 6.3 - 7.0](/identityserver/upgrades/v6_3-to-v7_0/)
+Follow the [upgrade guide version 6.3 - 7.0](v6_3-to-v7_0)

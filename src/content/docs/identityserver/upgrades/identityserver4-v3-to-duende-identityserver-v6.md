@@ -2,7 +2,7 @@
 title: "IdentityServer4 v3.1 to Duende IdentityServer v6"
 sidebar:
   order: 140
-  label: v3.1 → v6.0
+  label: IdentityServer4 v3.1 → v6.0
 redirect_from:
   - /identityserver/v5/upgrades/is4_v3_to_dis_v5/
   - /identityserver/v5/upgrades/is4_v3_to_dis_v6/
@@ -146,4 +146,4 @@ At this point, you should be able to query your migrated database and see your d
 ## Step 4: Move Onto The Upgrade Guide For Duende IdentityServer v6
 
 Once your project has been updated to IdentityServer4 v4, then you can work through the guide to update from IdentityServer4 v4 to Duende IdentityServer v6 (which should be far easier).
-Here is the [link to the next upgrade guide](/identityserver/upgrades/is4-v4-to-dis-v6).
+Here is the [link to the next upgrade guide](identityserver4-v4-to-duende-identityserver-v6).

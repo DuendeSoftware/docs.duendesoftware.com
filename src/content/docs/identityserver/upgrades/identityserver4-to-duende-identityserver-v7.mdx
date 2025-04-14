@@ -1,0 +1,489 @@
+---
+title: "IdentityServer4 to Duende IdentityServer v7.2"
+sidebar:
+  order: 138
+  label: IdentityServer4 → v7.2
+---
+
+import { Code } from "astro/components";
+import { Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+This upgrade guide covers upgrading from IdentityServer4 to Duende IdentityServer v7.2.
+IdentityServer4 reached its end of life (EOL) on December 13, 2022. It is strongly advised to migrate to Duende IdentityServer.
+
+Depending on your current version of IdentityServer4, different steps may be required.
+You can determine the version of IdentityServer4 by running the `dotnet list` command at the root of your IdentityServer host project, or using NuGet tooling in Visual Studio or JetBrains Rider.
+
+<Tabs>
+  <TabItem label="Windows">
+    <Code
+      code={'dotnet list package | sls "IdentityServer4"'}
+      lang="bash"
+      title="Terminal"
+    />
+  </TabItem>
+  <TabItem label="macOS / Linux">
+    <Code
+      code={"dotnet list package | grep IdentityServer4"}
+      lang="bash"
+      title="Terminal"
+    />
+  </TabItem>
+</Tabs>
+
+This command will print a list of packages you are using in your solution, along with their version.
+
+```bash title="Output"
+   > IdentityServer4                            3.1.4       3.1.4
+   > IdentityServer4.EntityFramework            3.1.4       3.1.4
+```
+
+Depending on the package version shown, your next steps will be different:
+
+- If you are on IdentityServer v3.x, we recommend first [upgrading to IdentityServer4 v4.x](#identityserver4-v3x-to-identityserver-v4x), and then to [Duende IdentityServer](#identityserver4-v4x-to-duende-identityserver). The configuration object model changed between the two major versions of IdentityServer4, and we recommend upgrading step-by-step.
+- If you are on IdentityServer v4.x, you can immediately [upgrade to Duende IdentityServer](#identityserver4-v4x-to-duende-identityserver).
+
+## IdentityServer4 v3.x to IdentityServer v4.x
+
+The most straightforward upgrade path is to first update to the latest version of IdentityServer4 v4, and then continue to the latest Duende IdentityServer.
+
+:::tip[Sample project]
+We have a [sample project available on GitHub](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3), which contains database migration scripts for these changes.
+:::
+
+Between IdentityServer4 v3.x and v4.x, the configuration object model was updated:
+
+- The relation between `ApiResources` and `ApiScopes` was changed from parent-child to many-to-many.
+- A number of configuration types were renamed:
+  - `ApiProperties` to `ApiResourceProperties`
+  - `ApiSecrets` to `ApiResourceSecrets`
+  - `IdentityClaims` to `IdentityResourceClaims`
+  - `IdentityProperties` to `IdentityResourceProperties`
+  - `ApiScopes` to `ApiResourceScopes`
+
+IdentityServer4 projects that use the `IdentityServer4.EntityFramework` package or implement their own stores will need to update their code and/or database to reflect these changes.
+
+:::caution
+Database changes will need to be done using a custom migration script, as using the default Entity Framework Core migration will result in data loss. We'll look at this later in this upgrade guide.
+:::
+
+### Step 1: Update NuGet Packages
+
+Update the IdentityServer4 dependencies in your IdentityServer host project to version `4.1.2`.
+
+```diff lang="xml" title=".csproj"
+- <PackageReference Include="IdentityServer4" Version="3.1.4" />
++ <PackageReference Include="IdentityServer4" Version="4.1.2" />
+```
+
+Make sure to change the version number for all IdentityServer4 packages, including `IdentityServer4.EntityFramework` and `IdentityServer4.AspNetIdentity`.
+
+### Step 2: Make Code Changes
+
+It's likely some code changes will be required, especially when using the IdentityServer UI templates.
+[Visual Studio](https://visualstudio.microsoft.com/) and [JetBrains Rider](https://www.jetbrains.com/rider/) provide great code completion that can be of help here.
+
+:::tip[Use the new Razor Pages templates]
+If you have not made customizations to the IdentityServer UI templates, consider replacing them with the new Razor Pages-based templates as shown in [the quickstart tutorials](../../quickstarts/0-overview).
+:::
+
+A couple of compilation errors and required changes you may encounter:
+
+- The `IIdentityServerInteractionService.GetAllUserConsentsAsync` method was renamed to `IIdentityServerInteractionService.GetAllUserGrantsAsync`
+- `ConsentResponse.Denied` was removed. Use the `DenyAuthorizationAsync` instead:
+
+  ```diff lang="csharp" title="*.cs"
+  - await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
+  + await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
+  ```
+
+- No overload method `SignInAsync` takes N arguments. The `HttpContext.SignInAsync` signature changed:
+
+  ```diff lang="csharp" title="*.cs"
+  // issue authentication cookie with subject ID and username
+  - await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
+  + var isuser = new IdentityServerUser(user.SubjectId)
+  + {
+  +     DisplayName = user.Username
+  + };
+  +
+  + await HttpContext.SignInAsync(isuser);
+  ```
+
+* `AuthorizationRequest` doesn't contain definition for `ClientId`:
+
+  ```diff lang="csharp" title="*.cs"
+  - var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);
+  + var client = await _clientStore.FindEnabledClientByIdAsync(request.Client.ClientId);
+  ```
+
+* `AuthorizationRequest` doesn't contain definition for `ScopesRequested`:
+
+  ```diff lang="csharp" title="*.cs"
+  - var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
+  + var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ValidatedResources.RawScopeValues);
+  ```
+
+* `IClientStore` doesn't contain definition for `IsPkceClientAsync`:
+
+  ```diff lang="csharp" title="*.cs"
+  - if (await _clientStore.IsPkceClientAsync(context.ClientId))
+  + if (context.IsNativeClient())
+  ```
+
+* The name `ProcessLoginCallbackForOidc` does not exist in the current context:
+
+  ```diff lang="csharp" title="*.cs"
+  - ProcessLoginCallbackForOidc(result, additionalLocalClaims, localSignInProps);
+  - ProcessLoginCallbackForWsFed(result, additionalLocalClaims, localSignInProps);
+  - ProcessLoginCallbackForSaml2p(result, additionalLocalClaims, localSignInProps);
+  + ProcessLoginCallback(result, additionalLocalClaims, localSignInProps);
+  ```
+
+* `ConsentResponse` does not contain a definition for `ScopesConsented`:
+
+  ```diff lang="csharp" title="*.cs"
+  grantedConsent = new ConsentResponse
+  {
+      RememberConsent = model.RememberConsent,
+  -    ScopesConsented = scopes.ToArray()
+  +    ScopesValuesConsented = scopes.ToArray()
+  };
+  ```
+
+### Step 3: Update Database Schema
+
+If you are using the `IdentityServer4.EntityFramework` package to store configuration and operational data in a [database](../../data),
+you'll need to create two database migrations that update the database schema.
+Note that you may want to change the database migration paths in the examples below to reflect your project structure.
+
+:::caution
+Make sure to verify the database migrations as part of your IdentityServer4 upgrade, to ensure all configuration and operational data remains in place.
+:::
+
+For the operational data, you can create and apply an Entity Framework Core migration that targets the `PersistedGrantDbContext` database context.
+
+<Steps>
+
+1. Create the migration:
+
+   ```bash title="Terminal"
+   dotnet ef migrations add Grants_v4 -c PersistedGrantDbContext -o Migrations/PersistedGrantDb
+   ```
+
+2. Apply the migration to your database:
+
+   ```bash title="Terminal"
+   dotnet ef database update -c PersistedGrantDbContext
+   ```
+
+</Steps>
+
+For your configuration data, the conversation from the old schema to the new will need to be performed by applying a custom SQL script.
+We'll start with creating a migration that targets the `ConfigurationDbContext` database context:
+
+<Steps>
+
+1. Create the migration:
+
+   ```bash title="Terminal"
+   dotnet ef migrations add Config_v4 -c ConfigurationDbContext -o Migrations/ConfigurationDb
+   ```
+
+   You will see a message _"An operation was scaffolded that may result in the loss of data. Please review the migration for accuracy."_ in the output.
+   To avoid data loss, the migration will need to be updated.
+
+2. To ensure no data is lost, make sure to include the [`ConfigurationDb_v4_delta.sql`](https://github.com/DuendeArchive/UpgradeSample-IdentityServer4-v3/blob/main/IdentityServerMigrationSample/ConfigurationDb_v4_delta.sql)
+   script in your project.
+
+   You can add the script as an embedded resource by updating the `.csproj` file:
+
+   ```xml title=".csproj"
+   <ItemGroup>
+       <EmbeddedResource Include="ConfigurationDb_v4_delta.sql" />
+   </ItemGroup>
+   ```
+
+   :::note[Update the SQL script for your database type]
+   The `ConfigurationDb_v4_delta.sql` file assumes you are using SQL Server. If a different database server type is used for your IdentityServer host, you'll need to update the SQL script to use the correct syntax.
+   :::
+
+3. Modify the migration class that was just created and replace it with the following code:
+
+   ```csharp title="Config_v4.cs"
+   using System.IO;
+   using Microsoft.EntityFrameworkCore.Migrations;
+
+   namespace IdentityServerMigrationSample.Migrations.ConfigurationDb
+   {
+       public partial class Config_v4 : Migration
+       {
+           protected override void Up(MigrationBuilder migrationBuilder)
+           {
+               var assembly = typeof(Program).Assembly;
+
+               using (var s = assembly.GetManifestResourceStream("IdentityServerMigrationSample.ConfigurationDb_v4_delta.sql"))
+               {
+                   using (StreamReader sr = new StreamReader(s))
+                   {
+                       var sql = sr.ReadToEnd();
+                       migrationBuilder.Sql(sql);
+                   }
+               }
+           }
+
+           protected override void Down(MigrationBuilder migrationBuilder)
+           {
+           }
+       }
+   }
+   ```
+
+4. Apply the migration to your database:
+
+   ```bash title="Terminal"
+   dotnet ef database update -c ConfigurationDbContext
+   ```
+
+</Steps>
+
+Your database schema should now be updated. You can verify all data is intact, using the [queries outlined in `query_v4.sql`](https://github.com/DuendeArchive/UpgradeSample-IdentityServer4-v3/blob/main/IdentityServerMigrationSample/query_v4.sql).
+These queries may return a lot of data, consider adding a `TOP` clause if you want to only sample some of the migrated data.
+
+<details>
+    <summary>View SQL queries to validate migration succeeded</summary>
+
+    ```sql title="query_v4.sql"
+    SELECT * FROM __EFMigrationsHistory
+
+    SELECT * FROM ApiResourceClaims
+    SELECT * FROM ApiResourceProperties
+    SELECT * FROM ApiResources
+    SELECT * FROM ApiResourceScopes
+    SELECT * FROM ApiResourceSecrets
+
+    SELECT * FROM ApiScopeClaims
+    SELECT * FROM ApiScopes
+    SELECT * FROM ApiScopeProperties
+
+    SELECT * FROM ClientClaims
+    SELECT * FROM ClientCorsOrigins
+    SELECT * FROM ClientGrantTypes
+    SELECT * FROM ClientIdPRestrictions
+    SELECT * FROM ClientPostLogoutRedirectUris
+    SELECT * FROM ClientProperties
+    SELECT * FROM ClientRedirectUris
+    SELECT * FROM Clients
+    SELECT * FROM ClientScopes
+    SELECT * FROM ClientSecrets
+
+    SELECT * FROM DeviceCodes
+    SELECT * FROM PersistedGrants
+
+    SELECT * FROM IdentityResourceClaims
+    SELECT * FROM IdentityResourceProperties
+    SELECT * FROM IdentityResources
+    ```
+
+</details>
+
+With the migration to IdentityServer v4.x complete, you can [upgrade to Duende IdentityServer](#identityserver4-v4x-to-duende-identityserver).
+
+## IdentityServer4 v4.x to Duende IdentityServer
+
+Upgrading from IdentityServer4 v4.x to Duende IdentityServer consists of several tasks: updating the target .NET version, updating NuGet packages, and performing database schema migrations.
+
+### Step 1: Update the .NET Version
+
+In this guide, we'll update to .NET 8 LTS. If your application targets a newer .NET version, you can use that newer version for the IdentityServer host as well.
+
+Update the IdentityServer target framework:
+
+```diff lang="xml" title=".csproj"
+- <TargetFramework>netcoreapp3.1</TargetFramework>
++ <TargetFramework>net8.0</TargetFramework>
+```
+
+Some of your project dependencies may need updating as part of changing the target framework.
+For example, `Microsoft.EntityFrameworkCore.SqlServer` and `Microsoft.AspNetCore.Authentication.Google` will need to be updated to the version matching your target framework.
+
+:::tip[Updating .NET and ASP.NET Core]
+Depending on the amount of customization in your IdentityServer4 host and UI templates, there may be code changes needed based on updates to .NET and ASP.NET Core.
+Make sure to consult the ASP.NET Core migration guides provided by Microsoft.
+
+<details>
+    <summary>Breaking changes in .NET</summary>
+
+    * [Breaking changes in .NET Core 3.1](https://learn.microsoft.com/en-us/dotnet/core/compatibility/3.1)
+    * [Breaking changes in .NET 5](https://learn.microsoft.com/en-us/dotnet/core/compatibility/5.0)
+    * [Breaking changes in .NET 6](https://learn.microsoft.com/en-us/dotnet/core/compatibility/6.0)
+    * [Breaking changes in .NET 7](https://learn.microsoft.com/en-us/dotnet/core/compatibility/7.0)
+    * [Breaking changes in .NET 8](https://learn.microsoft.com/en-us/dotnet/core/compatibility/8.0)
+    * [Breaking changes in .NET 9](https://learn.microsoft.com/en-us/dotnet/core/compatibility/9.0)
+
+</details>
+
+<details>
+    <summary>ASP.NET Core migration guides</summary>
+
+    * [Migrate from ASP.NET Core 3.1 to 6.0](https://learn.microsoft.com/en-us/aspnet/core/migration/31-to-60)
+    * [Migrate from ASP.NET Core 6.0 to 7.0](https://learn.microsoft.com/en-us/aspnet/core/migration/60-70)
+    * [Migrate from ASP.NET Core 7.0 to 8.0](https://learn.microsoft.com/en-us/aspnet/core/migration/70-80)
+    * [Migrate from ASP.NET Core 8.0 to 9.0](https://learn.microsoft.com/en-us/aspnet/core/migration/80-90)
+
+</details>
+:::
+
+### Step 2: Update NuGet Packages
+
+Update the IdentityServer4 dependencies in your IdentityServer host project to Duende IdentityServer.
+
+```diff lang="xml" title=".csproj"
+- <PackageReference Include="IdentityServer4" Version="4.1.2" />
++ <PackageReference Include="Duende.IdentityServer" Version="7.2.0" />
+```
+
+You'll need to make a similar change for all IdentityServer4 packages, including `IdentityServer4.EntityFramework` and `IdentityServer4.AspNetIdentity`. For example:
+
+```diff lang="xml" title=".csproj"
+- <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
++ <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.2.0" />
+```
+
+The IdentityModel package was renamed to Duende IdentityModel, and needs updating if you reference it directly:
+
+```diff lang="xml" title=".csproj"
+- <PackageReference Include="IdentityModel" Version="x.y.z" />
++ <PackageReference Include="Duende.IdentityModel" Version="7.0.0" />
+```
+
+### Step 3: Update Namespaces
+
+In your project source code, replace all `IdentityServer4` namespace usages with `Duende.IdentityServer`:
+
+```diff lang="csharp" title="*.cs"
+- using IdentityServer4;
+- using IdentityServer4.Models;
++ using Duende.IdentityServer;
++ using Duende.IdentityServer.Models;
+```
+
+Replace all `IdentityModel` namespace usages with `Duende.IdentityModel`:
+
+```diff lang="csharp" title="*.cs"
+- using IdentityModel;
++ using Duende.IdentityModel;
+```
+
+If you are using fully-qualified names in your code, those will need to be updated as well.
+
+### Step 4: Remove AddDeveloperSigningCredential :badge[Optional]
+
+In your application startup code, typically found in the `ConfigureServices` method in `Startup.cs`, consider removing `AddDeveloperSigningCredential`.
+
+You can use Duende IdentityServer's built-in [manual or automatic key management](../../fundamentals/key-management) instead.
+
+### Step 5: Update Database Schema
+
+Whether you are using a [database](../../data) or a [custom store implementation](../..//reference/stores) for your configuration and operational data, you'll need to make some changes.
+The exact steps involved in updating your data store will depend on your implementation details.
+
+In this section, we'll look at updating the database schema based on the stores provided in the `Duende.IdentityServer.EntityFramework` package:
+
+- Create a new `Keys` table for the automatic key management feature in the operational database.
+- Create a new `RequireResourceIndicator` boolean column on the `ApiResources` table in the configuration database.
+- Create a new index on the `ConsumedTime` column in the `PersistedGrants` table ([more details](https://github.com/DuendeSoftware/products/pull/84)).
+- Create a new table called `IdentityProviders` for storing the OIDC provider details ([more details](https://github.com/DuendeSoftware/products/pull/188)).
+- Add missing columns for created, updated, etc. to EF entities ([more details](https://github.com/DuendeSoftware/products/pull/356)).
+- Add unique constraints to EF tables where duplicate records are not allowed ([more details](https://github.com/DuendeSoftware/products/pull/355)).
+- The server-side sessions feature requires a new table ([more details](https://github.com/DuendeSoftware/products/pull/743)).
+- The session coordination feature adds a column to the `Clients` table ([more details](https://github.com/DuendeSoftware/products/pull/820)).
+- Improve primary keys on the persisted grants table ([more details](https://github.com/DuendeSoftware/products/pull/793)).
+- Add new properties to the [`Duende.IdentityServer.Models.Client` model](/identityserver/reference/models/client):
+
+  - `InitiateLoginUri` is a nullable string used for Third Party Initiated Login.
+  - `RequireDPoP` is a non-nullable boolean flag that controls if a client is required to use [DPoP](../../tokens/pop).
+  - `DPoPValidationMode` is a non-nullable column that controls the DPoP validation mechanism. Existing clients that are not using DPoP can set its value to `0`.
+  - `DPoPClockSkew` is a non-nullable timespan that controls how much clock skew is allowed for a particular DPoP client. Existing clients that are not using DPoP can set its value to a timespan of length ``0.
+
+- Two new properties have been added to the `Client` model:
+  - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](../../tokens/par). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
+  - `Client.PushedAuthorizationLifetime` is a new nullable integer property that controls the lifetime of pushed
+    authorization requests (in seconds) for a client. It is safe to initialize this column to `null` for existing clients, which means the global value is used.
+- A new `PushedAuthorizationRequest` table has been added to store pushed authorization requests.
+
+You'll need to create two database migrations that update the database schema: one that targets the `PersistedGrantDbContext` (for operational data), and one that targets the `ConfigurationDbContext` (for configuration data).
+Note that you may want to change the database migration paths in the examples below to match your project structure.
+
+<Steps>
+
+1. Create the migrations for the operational and configuration database context:
+
+   ```bash title="Terminal"
+   dotnet ef migrations add UpdateToDuende_v7_0 -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
+   dotnet ef migrations add UpdateToDuende_v7_0 -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
+   ```
+
+   :::note
+   You may see a warning _"An operation was scaffolded that may result in the loss of data. Please review the migration for accuracy."_.
+   The column length for redirect URIs (for both login and logout) was reduced from 2000 to 400 to overcome database index size limits.
+   Unless you are using redirect URIs greater than 400 characters, this should not affect you.
+   :::
+
+2. Apply the migrations to your database:
+
+   ```bash title="Terminal"
+   dotnet ef database update -c PersistedGrantDbContext
+   dotnet ef database update -c ConfigurationDbContext
+   ```
+
+</Steps>
+
+### Step 6: Migrate Signing Keys :badge[Optional]
+
+If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](../../fundamentals/key-management) which is included in the Business license.
+
+:::tip[Determine if you are using a custom signing key]
+In `Startup.cs`, look for a call to `AddSigningCredential()` that uses key material such as an `X509Certificate2`.
+:::
+
+Client apps and APIs typically cache the key material published from IdentityServer's discovery document.
+When upgrading, consider how those applications will handle an upgraded token server with a new and different signing key.
+
+- If you can restart all client apps and APIs that depend on your current signing key, you can remove the old signing key and start to use automatic key management. A restart reloads the discovery document and the new signing key.
+- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](../../fundamentals/key-management#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
+
+### Step 7: Validate Your Deployment
+
+Congratulations! Your upgrade is complete.
+
+Make sure to validate and test your Duende IdentityServer is working as expected, and check integrations with your client applications and APIs.
+
+:::note
+IdentityServer is free for development, testing and personal projects, but production use
+requires a [license](https://duendesoftware.com/products/identityserver).
+:::
+
+## Breaking changes
+
+Duende IdentityServer is a Software Development Kit (SDK) that you can use to build your own identity and access management solutions (IAM).
+Being an SDK, there is a lot of potential for customization during the implementation. Depending on your specific project, breaking changes might affect your use of IdentityServer.
+
+As part of your upgrade from IdentityServer4 to Duende IdentityServer, we recommend reviewing these breaking changes to understand if any of them affect you.
+
+- [Quickstart UI updated to use Razor Pages](https://github.com/DuendeSoftware/IdentityServer/pull/263)
+- [Addition of cancellation token to store APIs](https://github.com/DuendeSoftware/IdentityServer/pull/405)
+- [Store DbContext constructors to support DbContext pooling](https://github.com/DuendeSoftware/IdentityServer/pull/260)
+- [CustomRedirectResult returnUrl changes](https://github.com/DuendeSoftware/IdentityServer/pull/358)
+- [Add missing columns for created, updated, etc to EF entities](https://github.com/DuendeSoftware/IdentityServer/pull/356)
+- [Add unique constraints to EF tables where duplicate records not allowed](https://github.com/DuendeSoftware/IdentityServer/pull/355)
+- [Added grant handle versioning suffix](https://github.com/DuendeSoftware/IdentityServer/pull/404)
+- [Many HttpContext extensions marked obsolete](https://github.com/DuendeSoftware/IdentityServer/pull/414)
+- [New APIs to the ICache interface](https://github.com/DuendeSoftware/IdentityServer/pull/421)
+- [New Client columns for CIBA](https://github.com/DuendeSoftware/IdentityServer/pull/498)
+- [openid no longer implicit in OidcProvider scope collection](https://github.com/DuendeSoftware/IdentityServer/pull/507)
+- [JwtRequestValidator signature changes](https://github.com/DuendeSoftware/IdentityServer/pull/537)
+- [Changes in AppAuth URL validator for logout](https://github.com/DuendeSoftware/IdentityServer/pull/619)
+- [Use of EmailClaimType option in ASP.NET Identity integration](https://github.com/DuendeSoftware/IdentityServer/pull/625)
+- `ClientConfigurationStore` now uses `IConfigurationDbContext` to allow for customization. If you have a customized Entity Framework Core-based store, you may need to update your constructors.
