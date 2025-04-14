@@ -28,6 +28,7 @@ import {
   LinkButton,
   Badge,
 } from "@astrojs/starlight/components";
+import Newsletter from "~/components/Newsletter.astro";
 import TestimonialGrid from "~/components/testimonial-grid.astro";
 import Testimonial from "~/components/testimonial.astro";
 
@@ -48,8 +49,6 @@ import Testimonial from "~/components/testimonial.astro";
     </Card>
 
 </CardGrid>
-
-<hr />
 
 <CardGrid>
   <Card title="IdentityServer" icon="open-book">
@@ -86,4 +85,11 @@ import Testimonial from "~/components/testimonial.astro";
       Learn more
     </LinkButton>
   </Card>
+  <Card title="Coming Soon" icon="seti:yml">
+    Stay tuned for more exciting products and tools to enhance your identity and
+    security solutions. We're constantly working on new ways to make your
+    applications more secure and easier to manage.
+  </Card>
 </CardGrid>
+
+<Newsletter />

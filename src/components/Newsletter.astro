@@ -1,0 +1,83 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+---
+<div class="hubspot-form-wrapper">
+  <div class="newsletter-pitch">
+    <p class="newsletter-title">
+      <Icon name="email" label="Duende Newsletter" />
+      Subscribe To Our Newsletter!</p>
+    <p class="newsletter-subtitle">Stay ahead in the world of identity and access management!</p>
+    <ul>
+      <li>Latest security best practices</li>
+      <li>Product updates and releases</li>
+      <li>Technical tips and implementation guides</li>
+      <li>Industry news and trends</li>
+    </ul>
+    <p>Join our community of developers and security professionals building secure applications.</p>
+  </div>
+  <hubspot-form></hubspot-form>
+</div>
+
+<style>
+  .newsletter-title {
+    display: flex;
+    font-size: var(--sl-text-3xl);
+    font-weight: 500;
+    svg {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .newsletter-subtitle {
+    font-size: var(--sl-text-lg);
+    font-weight: 400;
+  }
+
+  .hubspot-form-wrapper {
+    display: flex;
+    --sl-card-border: var(--sl-color-purple);
+    --sl-card-bg: var(--sl-color-purple-low);
+    border: 1px solid var(--sl-color-gray-5);
+    background-color: var(--sl-color-black);
+    padding: clamp(1rem, calc(0.125rem + 3vw), 2.5rem);
+    flex-direction: row;
+    gap: clamp(0.5rem, calc(0.125rem + 1vw), 1rem);
+    flex-wrap: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .hubspot-form-wrapper {
+      flex-wrap: wrap;
+    }
+  }
+
+  .newsletter-pitch {
+    vertical-align: baseline;
+    align-content: center;
+  }
+
+</style>
+
+<script>
+  import "https://js.hsforms.net/forms/embed/v2.js";
+
+  class HubspotForm extends HTMLElement {
+    constructor() {
+      super();
+
+      const div = document.createElement("div");
+      div.className = `hubspot-form-${Math.random().toString(36).substring(2, 10)}`;
+      this.appendChild(div);
+
+      hbspt.forms.create({
+        portalId: "47428297",
+        formId: "bdd9b287-d141-46e2-8b1f-90ce29fd262e",
+        region: "na1",
+        target: `.${div.className}`
+      });
+    }
+  }
+
+  customElements.define("hubspot-form", HubspotForm);
+</script>
+
