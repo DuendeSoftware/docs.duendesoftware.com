@@ -115,3 +115,74 @@ summary {
     }
 }
 
+
+/* hubspot forms */
+.form-columns-2 {
+    display: flex;
+    align-items: baseline;
+}
+
+.hubspot-form-container {
+    padding: 1rem 0;
+}
+
+.hs-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.hs-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.hs-input {
+    padding: 0.5rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0.25rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+    width: 90%;
+}
+
+.hs-form-required {
+    color: var(--sl-color-accent-high);
+    margin-left: 0.25rem;
+}
+
+.hs-button {
+    font-size: var(--sl-text-lg);
+    background: transparent;
+    color: var(--sl-color-white);
+    border: 1px solid var(--sl-color-white);
+    border-radius: 999rem;
+    padding: 1rem 1.5rem;
+    line-height: 1.1875;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.hs-error-msgs {
+    margin: 0;
+    padding: 0.1rem;
+    list-style: none;
+}
+
+.hs-error-msg {
+    text-decoration:var(--sl-color-accent-high) ;
+    color: var(--sl-color-accent-high);
+    font-size: 0.875rem;
+}
+
+.form-columns-1, .form-columns-2 {
+    &:has(> *[style*="display: none"]:only-child) {
+        display: none;
+        height: 0;
+        width: 0;
+        margin:0;
+    }
+}
+/* end hubspot forms */
+

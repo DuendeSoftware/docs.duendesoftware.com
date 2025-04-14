@@ -28,6 +28,7 @@ import {
   LinkButton,
   Badge,
 } from "@astrojs/starlight/components";
+import Newsletter from "~/components/Newsletter.astro";
 import TestimonialGrid from "~/components/testimonial-grid.astro";
 import Testimonial from "~/components/testimonial.astro";
 
@@ -48,8 +49,6 @@ import Testimonial from "~/components/testimonial.astro";
     </Card>
 
 </CardGrid>
-
-<hr />
 
 <CardGrid>
   <Card title="IdentityServer" icon="open-book">
@@ -87,3 +86,7 @@ import Testimonial from "~/components/testimonial.astro";
     </LinkButton>
   </Card>
 </CardGrid>
+
+<hr />
+
+<Newsletter />
