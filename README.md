@@ -1,16 +1,5 @@
 # docs.duendesoftware.com
 
----
-## Private Branch Notice
-
-This respository is a private clone of Duende docs.duendesoftware.com repository (it is not a GitHub fork).
-
-- Use this repository when you want to **privately** collaborate and align on changes prior to applying them to the public repository.
-- The default branch is `main`.
-- There is a branch `upstream-main` which may be updated from the upstream `main` branch manually.
-- There are no branch rulesets or other restrictions applied.
----
-
 ## Getting Started
 
 You will need Node 22+ installed on your operating system and in the PATH.
