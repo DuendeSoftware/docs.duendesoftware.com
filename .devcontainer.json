@@ -4,7 +4,8 @@
     "vscode": {
       "extensions": [
         "astro-build.astro-vscode",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "ms-vscode.powershell"
       ]
     }
   },
