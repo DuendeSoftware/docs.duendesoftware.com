@@ -4,8 +4,11 @@ sidebar:
   order: 10
 redirect_from:
   - /identityserver/v5/reference/options/
+  - /identityserver/v5/reference/
   - /identityserver/v6/reference/options/
+  - /identityserver/v6/reference/
   - /identityserver/v7/reference/options/
+  - /identityserver/v7/reference/
 ---
 
 #### Duende.IdentityServer.Configuration.IdentityServerOptions
