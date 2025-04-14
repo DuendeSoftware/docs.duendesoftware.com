@@ -1,15 +1,7 @@
 {
   "name": "docs.duendesoftware.com",
-  "version": "0.0.1",
-  "scripts": {
-    "v7": "hugo server --port 1313 --navigateToChanged --source IdentityServer/v7/docs",
-    "v6": "hugo server --port 1312 --navigateToChanged --source IdentityServer/v6/docs",
-    "v5": "hugo server --port 1311 --navigateToChanged --source IdentityServer/v5/docs",
-    "foss": "hugo server --port 1314 --navigateToChanged --source FOSS",
-    "bff-v3": "hugo server --port 1316 --navigateToChanged --source BFF/v3/docs",
-    "bff-v2": "hugo server --port 1315 --navigateToChanged --source BFF/v2/docs",
-    "linkchecker": "./build.sh && lychee --no-progress --max-concurrency 16 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude github --root-dir \"$PWD/root\" root/**"
-  },
+  "type": "module",
+  "version": "2.0.0",
   "description": "Documentation for Duende Software products",
   "keywords": [],
   "homepage": "docs.duendesoftware.com",
@@ -18,5 +10,35 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/DuendeSoftware/docs.duendesoftware.com.git"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "validateredirects": "cd _to-migrate/urls && node test-urls.js",
+    "linkchecker": " npm run build && lychee --no-progress --max-concurrency 16 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude docs.duendesoftware.com --exclude sitemap --exclude github --root-dir \"$PWD/dist\" dist/**",
+    "FYI": "https://github.com/withastro/astro/issues/13006",
+    "postinstall": "chmod +x fix-svg.sh && ./fix-svg.sh"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^6.3.1",
+    "@astrojs/starlight": "^0.33.0",
+    "@pasqal-io/starlight-client-mermaid": "^0.1.0",
+    "astro": "^5.6.1",
+    "astro-redirect-from": "^1.3.0",
+    "astro-rehype-relative-markdown-links": "^0.18.1",
+    "rehype-autolink-headings": "^7.1.0",
+    "sharp": "^0.33.5",
+    "starlight-auto-sidebar": "^0.1.1",
+    "starlight-giscus": "^0.6.1",
+    "starlight-heading-badges": "^0.5.0",
+    "starlight-links-validator": "^0.15.0",
+    "starlight-llms-txt": "^0.5.0"
+  },
+  "devDependencies": {
+    "node-fetch": "^3.3.2",
+    "prettier": "3.5.3"
   }
 }

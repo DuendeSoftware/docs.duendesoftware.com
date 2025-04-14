@@ -1,0 +1,33 @@
+---
+title: Access Token Management
+sidebar:
+  order: 1
+  label: "Overview"
+redirect_from:
+  - /foss/accesstokenmanagement/
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+The `Duende.AccessTokenManagement` library provides automatic access token management features for .NET worker and ASP.NET Core web applications:
+
+- automatic acquisition and lifetime management of client credentials based access tokens for machine-to-machine communication
+- automatic access token lifetime management using a refresh token for API calls on-behalf of the currently logged-in user
+- revocation of access tokens
+
+<CardGrid>
+  <LinkCard
+    href="https://github.com/DuendeSoftware/foss/tree/main/access-token-management"
+    title="GitHub Repository"
+    description="View the source code for this library on GitHub."
+  />
+  <LinkCard
+    href="https://www.nuget.org/packages/Duende.AccessTokenManagement/"
+    title="NuGet Package"
+    description="View the package on NuGet.org."
+  />
+</CardGrid>
+
+## License and Feedback
+
+**Duende.AccessTokenManagement** is released as open source under the Apache 2.0 license. Bug reports, feature requests and contributions are welcome. If you have an idea for a new feature or significant code change you'd like to propose, please start with a GitHub issue so that we can discuss it. Thanks in advance!

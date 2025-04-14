@@ -1,0 +1,89 @@
+---
+title: Duende Software<br/> Docs
+head:
+  - tag: title
+    content: Duende Software Docs
+description: Get started building your .NET applications with IdentityServer, Backend-for-Frontend (BFF) and our open-source tools.
+template: splash
+giscus: false
+hero:
+  tagline: Get started building your .NET applications with IdentityServer, Backend-for-Frontend (BFF) and our open-source tools.
+  image:
+    dark: ../../assets/duende-logo-dark.svg
+    light: ../../assets/duende-logo.svg
+  actions:
+    - text: Explore docs
+      link: /identityserver/
+      icon: right-arrow
+      variant: primary
+    - text: Join our Community
+      link: https://github.com/DuendeSoftware/community
+      icon: external
+      variant: minimal
+---
+
+import {
+  Card,
+  CardGrid,
+  LinkButton,
+  Badge,
+} from "@astrojs/starlight/components";
+import TestimonialGrid from "~/components/testimonial-grid.astro";
+import Testimonial from "~/components/testimonial.astro";
+
+<CardGrid>
+    <Card title="Install templates" icon="rocket">
+
+        Install the Duende templates to get started quickly.
+
+        ```bash title="Terminal"
+        dotnet new install Duende.Templates
+        ```
+    </Card>
+    <Card title="Demo Server" icon="setting" href="https://demo.duendesoftware.com">
+        Try out our IdentityServer demo server.
+        <LinkButton href="https://demo.duendesoftware.com" variant="secondary">
+            Try it out
+        </LinkButton>
+    </Card>
+
+</CardGrid>
+
+<hr />
+
+<CardGrid>
+  <Card title="IdentityServer" icon="open-book">
+    The most flexible and standards-compliant OpenID Connect and OAuth 2.0
+    framework for ASP.NET Core.
+    <LinkButton href="/identityserver/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="Backend-for-Frontend (BFF)" icon="seti:c-sharp">
+    Securing SPAs and Blazor WASM Applications once and for all, without storing
+    tokens in the browser.
+    <LinkButton href="/bff/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="Access Token Management" icon="github">
+    <Badge text={"OSS"} /> .NET identity library for access token management.
+    <LinkButton href="/accesstokenmanagement/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="Identity Model" icon="github">
+    <Badge text={"OSS"} /> .NET identity library for OAuth 2.0 related protocol
+    operations.
+    <LinkButton href="/identitymodel/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="OIDC Client" icon="github">
+    <Badge text={"OSS"} /> .NET identity libraries for OpenID Connect related
+    protocol operations.
+    <LinkButton href="/identitymodel-oidcclient/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+</CardGrid>

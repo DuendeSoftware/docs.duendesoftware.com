@@ -1,0 +1,61 @@
+---
+title: "Packaging and Builds"
+date: 2020-09-10T08:22:12+02:00
+sidebar:
+  order: 4
+  label: Packaging & Builds
+redirect_from:
+  - /identityserver/v5/overview/packaging/
+  - /identityserver/v6/overview/packaging/
+  - /identityserver/v7/overview/packaging/
+---
+
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+
+## Product
+
+The licensed and supported libraries can be accessed via NuGet:
+
+- [Duende IdentityServer](https://www.nuget.org/packages/Duende.IdentityServer)
+- [Duende IdentityServer EntityFramework Integration](https://www.nuget.org/packages/Duende.IdentityServer.EntityFramework)
+- [Duende IdentityServer ASP.NET Identity Integration](https://www.nuget.org/packages/Duende.IdentityServer.AspNetIdentity)
+
+## Templates
+
+Contains Duende templates for the `dotnet` CLI to help jump start your Duende-powered solutions.
+
+:::note
+You may have a previous version of Duende templates (`Duende.IdentityServer.Templates`) installed on your machine.
+Please uninstall the template package and install the latest version.
+:::
+
+You can install the templates using the following command:
+
+```bash title=Terminal
+dotnet new -i Duende.Templates
+```
+
+<CardGrid>
+  <LinkCard
+    description="NuGet Package for IdentityServer Templates"
+    href="https://www.nuget.org/packages/Duende.Templates"
+    title="Templates"
+    target="_blank"
+  />
+  <LinkCard
+    description="Source code for IdentityServer Templates"
+    href="https://github.com/DuendeSoftware/IdentityServer.Templates"
+    title="Source Code"
+  />
+</CardGrid>
+
+## UI
+
+Duende IdentityServer does not contain any UI, because this is always custom to the project.
+We still provide you with
+the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/products/tree/main/identity-server/templates/src/UI)
+as a starting point for your modifications.
+
+## Source Code
+
+You can find the Duende IdentityServer source code on [GitHub](https://github.com/duendesoftware/IdentityServer).

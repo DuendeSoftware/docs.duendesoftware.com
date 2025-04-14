@@ -20,19 +20,18 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          hugo-version: '0.140.2'
-      - name: Run hugo
+          node-version: 22
+      - name: Run build
         run: |
           echo $PWD
-          export HUGO_ENV='production' 
           ./build.sh
       - name: Link Checker
         uses: lycheeverse/lychee-action@v2
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          args: "--no-progress --max-concurrency 8 --accept 200,429 --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude \"https://github.com/DuendeArchive/IdentityModel.AspNetCore/\" --root-dir \"$PWD/root\" root/**"
+          args: "--no-progress --max-concurrency 8 --accept 200,429 --exclude-path root/llms.txt --exclude-path root/llms-full.txt --exclude-path root/llms-small.txt --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude docs.duendesoftware.com --exclude sitemap --exclude \"https://github.com/DuendeArchive/IdentityModel.AspNetCore/\" --root-dir \"$PWD/root\" root/**"
           fail: true
