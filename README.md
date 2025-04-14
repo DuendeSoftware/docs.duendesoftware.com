@@ -18,6 +18,8 @@ You will need Node 22+ installed on your operating system and in the PATH.
 * Run `npm install` to restore all dependencies.
 * Use `npm run dev` to run the documentation site locally.
 
+Alternatively in VS Code, GitHub Codespaces or WebStorm, you can use the devcontainer to get a development environment set up.
+
 ## Project Structure
 
 This project uses Astro + Starlight. You'll see the following folders and files:
