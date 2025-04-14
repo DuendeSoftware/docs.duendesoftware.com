@@ -115,6 +115,8 @@ summary {
     }
 }
 
+
+/* hubspot forms */
 .form-columns-2 {
     display: flex;
     align-items: baseline;
@@ -159,7 +161,6 @@ summary {
     padding: 1rem 1.5rem;
     line-height: 1.1875;
     text-decoration: none;
-    font-weight: 500;
     cursor: pointer;
 }
 
@@ -183,5 +184,5 @@ summary {
         margin:0;
     }
 }
+/* end hubspot forms */
 
-/* hubspot forms */
