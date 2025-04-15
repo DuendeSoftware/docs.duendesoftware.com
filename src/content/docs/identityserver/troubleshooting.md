@@ -191,7 +191,7 @@ pooling on the operational store has solved this in the past:
 
 ### Entity Framework Core & Microsoft SQL OPENJSON
 
-Entity Framework Core version 8 introduced a new behaviour when creating `WHERE IN()` sql clauses. Previously the
+Entity Framework Core version 8 introduced a new behaviour when creating `WHERE IN()` sql clauses. Previously, the
 possible values were supplied as parameters, which meant that the query text was dependent on the number of items
 in the collection. This was solved by sending the parameters as a JSON object and using `OPENJSON` to read the parameters.
 While this enabled query plan caching, it unfortunately caused Microsoft SQL Server to generate bad query execution plans.
