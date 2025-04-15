@@ -11,6 +11,9 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import starlightHeadingBadges from "starlight-heading-badges";
 import starlightLlmsTxt from "starlight-llms-txt";
 import rehypeAstroRelativeMarkdownLinks from "astro-rehype-relative-markdown-links";
+import opengraphImages from "astro-opengraph-images";
+import { duendeOpenGraphImage } from "./src/components/duende-og-image.js";
+import * as fs from "node:fs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -123,6 +126,7 @@ export default defineConfig({
       components: {
         SkipLink: "./src/components/SkipLink.astro",
         Banner: "./src/components/Banner.astro",
+        Head: "./src/components/Head.astro",
       },
       sidebar: [
         {
@@ -161,6 +165,21 @@ export default defineConfig({
     }),
     redirectFrom({
       contentDir: "./src/content/docs",
+    }),
+    opengraphImages({
+      options: {
+        fonts: [
+          {
+            name: "Roboto",
+            weight: 400,
+            style: "normal",
+            data: fs.readFileSync(
+              "node_modules/@fontsource/roboto/files/roboto-latin-400-normal.woff",
+            ),
+          },
+        ],
+      },
+      render: duendeOpenGraphImage,
     }),
   ],
   markdown: {

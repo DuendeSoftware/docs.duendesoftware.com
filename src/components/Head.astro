@@ -1,0 +1,11 @@
+---
+import { getImagePath } from "astro-opengraph-images";
+
+const { head } = Astro.locals.starlightRoute;
+const { url, site } = Astro;
+const openGraphImageUrl = getImagePath({ url, site });
+---
+
+{head.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
+{openGraphImageUrl && (<meta property="og:image" content={openGraphImageUrl} />)}
+
