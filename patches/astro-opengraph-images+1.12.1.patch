@@ -1,0 +1,26 @@
+diff --git a/node_modules/astro-opengraph-images/dist/hook.js b/node_modules/astro-opengraph-images/dist/hook.js
+index f3d7f1e..94763fe 100644
+--- a/node_modules/astro-opengraph-images/dist/hook.js
++++ b/node_modules/astro-opengraph-images/dist/hook.js
+@@ -30,7 +30,7 @@ async function handlePage({ page, options, render, dir, logger }) {
+     let pngFile = htmlFile.replace(/\.html$/, ".png");
+     // remove leading dist/ from the path
+     await fs.writeFile(pngFile, resvg.render().asPng());
+-    pngFile = pngFile.replace(path.join(process.cwd(), "dist"), "").replace(/\\/g, "/");
++    pngFile = pngFile.replace(dir.pathname, "").replace(/\\/g, "/");
+     if (pngFile.startsWith("/"))
+         pngFile = pngFile.slice(1);
+     // convert the image path to a URL
+diff --git a/node_modules/astro-opengraph-images/src/hook.ts b/node_modules/astro-opengraph-images/src/hook.ts
+index 2a16806..eb4e385 100644
+--- a/node_modules/astro-opengraph-images/src/hook.ts
++++ b/node_modules/astro-opengraph-images/src/hook.ts
+@@ -55,7 +55,7 @@ async function handlePage({ page, options, render, dir, logger }: HandlePageInpu
+ 
+   // remove leading dist/ from the path
+   await fs.writeFile(pngFile, resvg.render().asPng());
+-  pngFile = pngFile.replace(path.join(process.cwd(), "dist"), "").replace(/\\/g, "/");
++  pngFile = pngFile.replace(`/${dir.pathname}`, "").replace(/\\/g, "/");
+   if (pngFile.startsWith("/")) pngFile = pngFile.slice(1);
+ 
+   // convert the image path to a URL

@@ -1,1 +1,0 @@
-(Get-Content node_modules\astro\dist\assets\utils\vendor\image-size\types\svg.js) -replace 'validate: \(input\) => svgReg.test\(toUTF8String\(input, 0, 1e3\)\)', 'validate: (input) => svgReg.test(toUTF8String(input))' | Set-Content node_modules\astro\dist\assets\utils\vendor\image-size\types\svg.js

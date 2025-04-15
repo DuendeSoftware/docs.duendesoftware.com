@@ -1,0 +1,13 @@
+diff --git a/node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js b/node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js
+index 0f22881..41cd9ef 100644
+--- a/node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js
++++ b/node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js
+@@ -72,7 +72,7 @@ function calculateByViewbox(attrs, viewbox) {
+ }
+ const SVG = {
+   // Scan only the first kilo-byte to speed up the check on larger files
+-  validate: (input) => svgReg.test(toUTF8String(input, 0, 1e3)),
++  validate: (input) => svgReg.test(toUTF8String(input)),
+   calculate(input) {
+     const root = extractorRegExps.root.exec(toUTF8String(input));
+     if (root) {
