@@ -166,3 +166,39 @@ version used.
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0"/>
 </ItemGroup>
 ```
+
+## Performance Issues
+
+In some installations, upgrading .NET and IdentityServer has caused performance issues. Since the IdentityServer and
+.NET version upgrades typically are done on the same time, it is sometimes hard to tell what the root cause is
+for the performance degradation. When working with installations to find the root cause, there are some dependencies
+that have been found to cause issues in specific verisons.
+
+### PostgreSQL Pooling
+There are issues with some versions of the PostgreSQL client library that gives large memory consuption. Enabling
+pooling on the operational store has solved this in the past:
+
+```csharp
+.AddOperationalStore(options =>
+   {
+      // Enable pooling:
+      options.EnablePooling = true;
+
+      // More settings....
+   })
+```
+
+### Entity Framework Core & Microsoft SQL OPENJSON
+Entity Framework Core version 8 introduced a new behaviour when creating `WHERE IN()` sql clauses. Previously the
+possible values where supplied as parameters, which meant that the query text was dependendent on the number of items
+in the collection. This was solved by sending the parameters as a JSON object and using `OPENJSON` to read the parameters.
+While this enabled query plan caching, it unfortunately caused MSSQL Server to generate bad query execution plans.
+
+Please see [this EF Core GitHub Issue](https://github.com/dotnet/efcore/issues/32394#issuecomment-2266634632) for information
+and possible mitigations.
+
+### Azure
+The `Azure.Core` package versions 1.41.0 and prior had an issue that caused delays when accessing Azure resources.
+This could be Azure blob storage or key vault for data protection or Azure SQL Server for stores, especially if managed
+identities are used. This package is typically not referenced directly, but brought in as a transient dependency 
+through other packages. Ensure to use version 1.42.0 or later if you are hosting on Azure.
