@@ -33,5 +33,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          args: "--no-progress --max-concurrency 8 --accept 200,429 --exclude-path root/llms.txt --exclude-path root/llms-full.txt --exclude-path root/llms-small.txt --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude docs.duendesoftware.com --exclude sitemap --exclude \"https://github.com/DuendeArchive/IdentityModel.AspNetCore/\" --exclude '\.(png|jpg|webp)$' --root-dir \"$PWD/root\" root/**"
+          args: "--no-progress --max-concurrency 8 --accept 200,429 --exclude-path root/llms.txt --exclude-path root/llms-full.txt --exclude-path root/llms-small.txt --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude docs.duendesoftware.com --exclude sitemap --exclude \"https://github.com/DuendeArchive/IdentityModel.AspNetCore/\" --root-dir \"$PWD/root\" root/**"
           fail: true
