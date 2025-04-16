@@ -245,3 +245,26 @@ Architectural issues that may be causing connection resiliency issues you may wa
 - Under-provisioned database instance with limited resources or connections available.
 - Datacenter networking issues caused by incorrect zoning choices.
 - Under-provisioned application host with limited cores/threads.
+
+## Cookie and Header Size Limits and Management
+
+The default cookie size limit is `4096` bytes. This is a limit imposed by the browser. In practice, this limit is
+enough for most applications. However, there are some scenarios where the default limit is not enough. ASP.NET Core will chunk cookies into multiple parts if they exceed the limit, but you may still run into `Bad Request - Request Too Long` when trying to set a cookie during the authentication process.
+
+Here are some ways to manage the cookie size during authentication:
+
+### Initiate a `SignOutAsync` during `Challenge`
+
+When invoking `Challenge`, be sure to call `SignOutAsync` before returning the challenge result. This will ensure any existing session cookie is removed and a new one is created.
+
+### Set SaveTokens to `false`
+
+When dealing with external authentication, you may want to set `SaveTokens` to `false` when calling `AddOpenIdConnect` to avoid storing the tokens in the cookie. Storing these tokens may not be necessary for your use case and thus take up unnecessary space.
+
+### Set MapInboundClaims to `false`
+
+When dealing with external authentication, you may want to set `MapInboundClaims` to `false` when calling `AddOpenIdConnect` to avoid mapping the claims from the external provider to the local user. Microsoft's namespace for external claims is `http://schemas.microsoft.com/identity/claims/` is larger than the claim names used by OpenID Connect and can take up unnecessary space.
+
+### Implement `OnTicketReceived` To Reduce Cookie Size
+
+When dealing with external authentication, you may want to implement `OnTicketReceived` to reduce the size of the cookie. This is a callback that is invoked after the authentication process is complete. You can use this callback to remove any claims that are not needed by your solution.
