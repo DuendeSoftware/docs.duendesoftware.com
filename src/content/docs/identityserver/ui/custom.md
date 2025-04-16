@@ -1,5 +1,6 @@
 ---
 title: "Custom Pages"
+description: "Guide for implementing custom pages in IdentityServer beyond standard authentication pages, including integration with the authorize endpoint and extending the interaction response generator."
 sidebar:
   order: 5
 redirect_from:

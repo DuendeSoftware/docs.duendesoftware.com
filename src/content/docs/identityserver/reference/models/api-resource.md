@@ -1,6 +1,6 @@
 ---
 title: "API Resource"
-description: "Model Reference"
+description: "Reference documentation for the ApiResource class which models an API in Duende IdentityServer, including its properties and configuration options."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 30
@@ -73,7 +73,7 @@ file:
             {
                 "Name": "resource2",
                 "DisplayName": "Resource #2",
-                
+
                 "UserClaims": [
                     "name",
                     "email"

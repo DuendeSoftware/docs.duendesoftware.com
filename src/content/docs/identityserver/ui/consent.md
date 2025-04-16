@@ -1,5 +1,6 @@
 ---
 title: "Consent"
+description: "Documentation for implementing the consent page in IdentityServer, which allows users to grant client applications permission to access protected resources."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 4
@@ -78,6 +79,3 @@ the [interaction service](/identityserver/reference/services/interaction-service
 
 Also, if `GetAuthorizationContextAsync` returns a non-null result, then you can also trust that the `returnUrl` is
 valid.
-
-
-

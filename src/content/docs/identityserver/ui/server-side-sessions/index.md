@@ -1,6 +1,6 @@
 ---
 title: "Overview"
-description: "Overview"
+description: "An introduction to IdentityServer's server-side sessions feature, which stores authentication state on the server rather than in cookies for improved manageability and security."
 sidebar:
   order: 1
 redirect_from:

@@ -1,5 +1,6 @@
 ---
 title: Authentication & Session Management
+description: Learn how to set up authentication and session management components in ASP.NET Core BFF applications, including OpenID Connect, cookie handling, and back-channel logout support.
 date: 2020-09-10T08:20:20+02:00
 sidebar:
   order: 1

@@ -1,5 +1,6 @@
 ---
 title: "Using Reference Tokens"
+description: "Guide for implementing reference token validation in ASP.NET Core APIs using OAuth 2.0 token introspection"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 20
@@ -11,7 +12,7 @@ redirect_from:
 
 If you are using [reference tokens](/identityserver/tokens/reference), you need an authentication handler that
 implements the back-channel validation via the [OAuth 2.0 token introspection](https://tools.ietf.org/html/rfc7662)
-protocol, e.g. [this](https://github.com/IdentityModel/IdentityModel.AspNetCore.OAuth2Introspection) one:.
+protocol, e.g. [this](https://github.com/IdentityModel/IdentityModel.AspNetCore.OAuth2Introspection) one:
 
 ```cs
 builder.Services.AddAuthentication("token")

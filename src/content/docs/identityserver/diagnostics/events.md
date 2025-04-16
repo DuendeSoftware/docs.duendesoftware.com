@@ -1,5 +1,6 @@
 ---
 title: "Events"
+description: Documentation about IdentityServer's event system for structured logging and monitoring of important operations
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 20

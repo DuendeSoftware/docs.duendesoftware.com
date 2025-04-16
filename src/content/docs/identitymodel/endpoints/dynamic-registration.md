@@ -1,5 +1,6 @@
 ---
 title: Dynamic Client Registration
+description: Documentation for OpenID Connect Dynamic Client Registration library extension method for HttpClient that enables client registration and response handling
 sidebar:
   order: 6
   label: Dynamic Client Registration

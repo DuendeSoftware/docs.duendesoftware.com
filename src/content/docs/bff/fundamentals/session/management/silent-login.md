@@ -1,5 +1,6 @@
 ---
 title: "BFF Silent Login Endpoint"
+description: "Endpoint for non-interactive authentication using an existing session at the remote identity provider"
 date: 2022-12-29T10:22:12+02:00
 sidebar:
   label: "Silent Login"

@@ -1,5 +1,6 @@
 ---
 title: Client Assertions
+description: Learn how to use client assertions instead of shared secrets for token client authentication in Duende.AccessTokenManagement.
 sidebar:
   order: 30
 redirect_from:

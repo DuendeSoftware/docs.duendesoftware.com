@@ -1,5 +1,6 @@
 ---
 title: "BFF User Endpoint"
+description: The BFF user endpoint provides information about the currently authenticated user and their session status
 sidebar:
   label: "User"
   order: 25

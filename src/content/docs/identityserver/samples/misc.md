@@ -1,5 +1,6 @@
 ---
 title: "Miscellaneous"
+description: "A collection of specialized IdentityServer samples covering Azure Functions security, mutual TLS with Kestrel, DPoP for proof of possession, server-side session management, and session migration techniques."
 sidebar:
   order: 1000
 redirect_from:

@@ -1,5 +1,6 @@
 ---
 title: "Identity Provider"
+description: "Reference documentation for identity provider models in Duende IdentityServer, including OidcProvider for external OpenID Connect providers, IdentityProviderName, and the base IdentityProvider class."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 35

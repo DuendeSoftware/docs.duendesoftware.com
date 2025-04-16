@@ -1,6 +1,6 @@
 ---
 title: "Validation"
-description: "DCR Reference"
+description: "Reference documentation for Dynamic Client Registration (DCR) validation process, including validation steps, interfaces, and client property configuration."
 sidebar:
   order: 10
 redirect_from:

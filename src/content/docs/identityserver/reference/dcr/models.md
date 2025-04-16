@@ -1,6 +1,6 @@
 ---
 title: "Models"
-description: "DCR Reference"
+description: "Reference documentation for the models and interfaces used in Dynamic Client Registration (DCR), including request/response objects and validation context."
 sidebar:
   order: 50
 redirect_from:

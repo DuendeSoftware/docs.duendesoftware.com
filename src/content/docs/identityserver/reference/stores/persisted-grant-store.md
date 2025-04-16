@@ -1,5 +1,6 @@
 ---
 title: "Persisted Grant Store"
+description: Documentation for the IPersistedGrantStore interface which manages storage and retrieval of authorization grants such as refresh tokens, reference tokens, and user consent.
 sidebar:
   order: 42
 redirect_from:
@@ -163,12 +164,12 @@ one-time use semantics are appropriate for the grant.
         /// Subject id of the user.
         /// </summary>
         public string SubjectId { get; set; }
-        
+
         /// <summary>
         /// Session id used for the grant.
         /// </summary>
         public string SessionId { get; set; }
-        
+
         /// <summary>
         /// Client id the grant was issued to.
         /// </summary>

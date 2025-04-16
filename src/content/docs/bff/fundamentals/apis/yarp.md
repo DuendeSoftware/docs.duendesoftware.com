@@ -1,5 +1,6 @@
 ---
 title: "YARP extensions"
+description: Integration of Duende.BFF with Microsoft's YARP reverse proxy, including token management and anti-forgery protection features.
 sidebar:
   order: 30
 redirect_from:

@@ -1,5 +1,6 @@
 ---
 title: Pushed Authorization Requests
+description: "A comprehensive guide to implementing Pushed Authorization Requests (PAR) in IdentityServer, an OAuth standard that enhances security by moving authorization parameters from the front channel to the back channel, with details on licensing, client usage, data storage, and configuration options."
 sidebar:
   order: 175
 redirect_from:
@@ -88,4 +89,3 @@ retrieve, and consume pushed requests. Pushed requests that are not used are rem
       global configuration is used.
 - The `EndpointOptions` now includes a new flag to enable or disable the PAR endpoint:
   `EnablePushedAuthorizationEndpoint`, which defaults to `true`.
-

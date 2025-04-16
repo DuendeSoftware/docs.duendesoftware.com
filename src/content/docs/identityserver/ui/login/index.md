@@ -1,5 +1,6 @@
 ---
 title: Getting Started
+description: "Guide to implementing the login page in IdentityServer, which establishes user authentication sessions and can be configured through LoginUrl settings."
 sidebar:
   order: 1
 redirect_from:

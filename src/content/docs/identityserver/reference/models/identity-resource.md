@@ -1,6 +1,6 @@
 ---
 title: "Identity Resource"
-description: "Reference"
+description: "Reference documentation for the IdentityResource class which models an identity resource in Duende IdentityServer, including standard and custom identity resources and their properties."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 20

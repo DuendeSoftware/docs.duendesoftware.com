@@ -1,5 +1,6 @@
 ---
 title: "Dependency Injection Extension Methods"
+description: "A comprehensive guide to IdentityServer's dependency injection extension methods for configuring services, stores, caching, signing keys and other features."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Dependency Injection

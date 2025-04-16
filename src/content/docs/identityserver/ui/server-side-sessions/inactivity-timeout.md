@@ -1,5 +1,6 @@
 ---
 title: "Inactivity Timeout"
+description: "A guide to implementing system-wide inactivity timeout in IdentityServer using server-side sessions to coordinate user activity tracking and session termination across all applications."
 sidebar:
   order: 3
 redirect_from:
@@ -98,4 +99,3 @@ To detect inactivity:
 
 Clients without access tokens have no way to notify IdentityServer that the user is still active.
 But they can implement back-channel logout to be notified that the user's session has ended.
-

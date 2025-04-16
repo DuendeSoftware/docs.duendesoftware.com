@@ -1,5 +1,6 @@
 ---
 title: "Device Flow Interaction Service"
+description: Documentation for the IDeviceFlowInteractionService interface which provides services for user interfaces to communicate with IdentityServer during device flow authorization.
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 65

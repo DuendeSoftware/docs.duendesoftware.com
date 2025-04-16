@@ -1,5 +1,6 @@
 ---
 title: "UI Hosting"
+description: A guide exploring different UI hosting strategies and their benefits when using Backend-for-Frontend (BFF) systems
 sidebar:
   order: 2
 redirect_from:

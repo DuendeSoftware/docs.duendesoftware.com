@@ -1,6 +1,6 @@
 ---
 title: "User Interaction"
-description: "Samples"
+description: "Samples demonstrating customization of IdentityServer's interactive pages, including custom profile services, step-up authentication, SPA-style login pages, dynamic identity providers, CIBA implementation, and Windows authentication integration."
 sidebar:
   order: 20
 redirect_from:
@@ -131,4 +131,3 @@ Also, note there is some configuration in `Startup` with a call to `Configure<II
 `AutomaticAuthentication` to `false`).
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/UserInteraction/WindowsAuthentication)
-

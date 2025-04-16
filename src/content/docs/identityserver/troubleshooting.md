@@ -1,6 +1,7 @@
 ---
-title: Troubleshooting
+title: Duende IdentityServer Troubleshooting
 sidebar:
+  label: Troubleshooting
   order: 15
 redirect_from:
   - /mim/

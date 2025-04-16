@@ -1,6 +1,6 @@
 ---
-expiryDate: 2024-09-11
-title: "JavaScript applications without a backend"
+title: "JavaScript Applications Without A Backend"
+description: "Learn how to build a client-side JavaScript application that interacts directly with IdentityServer for authentication and API access without a backend server."
 sidebar:
   order: 20
   label: Without Backend

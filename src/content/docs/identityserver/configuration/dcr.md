@@ -1,5 +1,6 @@
 ---
 title: "Dynamic Client Registration"
+description: "Learn how to configure and use Dynamic Client Registration (DCR) to automatically register OAuth clients with IdentityServer"
 sidebar:
   order: 5
 redirect_from:

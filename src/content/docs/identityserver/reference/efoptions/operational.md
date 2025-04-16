@@ -1,5 +1,6 @@
 ---
 title: "Operational Options"
+description: "Configure Entity Framework Core operational store options including database schema, pooling settings, and cleanup parameters for persisted grants."
 sidebar:
   order: 10
 redirect_from:

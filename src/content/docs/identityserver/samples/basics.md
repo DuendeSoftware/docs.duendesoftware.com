@@ -1,5 +1,6 @@
 ---
 title: "Basics"
+description: "A collection of common IdentityServer scenarios including client credentials, JWT-based authentication, reference tokens, MVC clients, token management, and back-channel logout notifications."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10

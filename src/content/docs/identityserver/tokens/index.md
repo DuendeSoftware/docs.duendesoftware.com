@@ -1,6 +1,6 @@
 ---
 title: "Requesting Tokens"
-description: "Tokens"
+description: "An overview of token types in Duende IdentityServer, including identity tokens, access tokens, and refresh tokens, along with information on how to request them through the authorize and token endpoints."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Overview

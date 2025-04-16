@@ -1,5 +1,6 @@
 ---
 title: "Device Flow Store"
+description: Documentation for the IDeviceFlowStore interface which manages storage of authorization grants for the device flow authentication process.
 sidebar:
   order: 43
 redirect_from:

@@ -1,6 +1,6 @@
 ---
 title: "Server-Side Session Store"
-description: "Reference"
+description: "Documentation for the IServerSideSessionStore interface and related models for managing server-side user authentication session data."
 sidebar:
   order: 100
 redirect_from:

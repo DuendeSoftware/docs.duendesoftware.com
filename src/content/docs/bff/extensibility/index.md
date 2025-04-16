@@ -1,6 +1,8 @@
 ---
-title: Overview
+title: BFF Extensibility
+description: Overview of the extensibility points available in Duende.BFF for customizing session management, HTTP forwarding, and data storage
 sidebar:
+  label: Overview
   order: 1
 redirect_from:
   - /bff/v2/extensibility/

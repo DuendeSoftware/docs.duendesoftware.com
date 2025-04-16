@@ -1,5 +1,6 @@
 ---
 title: Operational Data
+description: Documentation for managing dynamic operational data in IdentityServer including grants, keys, and server-side sessions
 sidebar:
   order: 20
 redirect_from:

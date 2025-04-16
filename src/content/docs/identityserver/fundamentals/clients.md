@@ -1,6 +1,6 @@
 ---
 title: "Clients"
-description: "Fundamentals"
+description: "Learn about configuring and managing client applications that can request tokens from IdentityServer"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 30

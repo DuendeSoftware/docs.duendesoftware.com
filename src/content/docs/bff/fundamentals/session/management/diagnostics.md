@@ -1,5 +1,6 @@
 ---
 title: "BFF Diagnostics Endpoint"
+description: Learn about the BFF diagnostics endpoint that provides access to user and client access tokens for development testing purposes.
 date: 2022-12-29T10:22:12+02:00
 sidebar:
   label: "Diagnostics"

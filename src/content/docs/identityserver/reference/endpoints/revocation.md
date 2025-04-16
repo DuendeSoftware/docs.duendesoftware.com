@@ -1,5 +1,6 @@
 ---
 title: "Revocation Endpoint"
+description: "Learn about the revocation endpoint that allows invalidating access and refresh tokens according to RFC 7009 specification."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 6

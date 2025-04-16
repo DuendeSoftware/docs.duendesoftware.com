@@ -1,5 +1,6 @@
 ---
 title: "Microsoft SPA and Blazor Templates"
+description: "A guide for migrating from Microsoft's SPA and Blazor templates to a recommended Duende IdentityServer architecture with separate token server hosting and BFF pattern implementation."
 sidebar:
   order: 200
   label: SPA → Duende 

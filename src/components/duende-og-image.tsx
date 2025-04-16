@@ -31,8 +31,8 @@ export async function duendeOpenGraphImage({
             "flex flex-col justify-end justify-items-start w-full h-full p-20",
           )}
         >
-          <h1 style={twj("text-[100px] text-bold text-white")}>{title}</h1>
-          <div style={twj("text-2xl text-bold mb-3 text-white")}>
+          <h1 style={twj("text-[75px] text-bold text-white")}>{title}</h1>
+          <div style={twj("text-3xl text-bold mb-3 text-white")}>
             {description}
           </div>
         </div>

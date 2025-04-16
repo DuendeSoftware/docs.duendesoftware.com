@@ -1,5 +1,6 @@
 ---
-title: Blazor support in the BFF Security Framework
+title: BFF Security Framework Blazor Support
+description: Learn how to integrate and use the BFF Security Framework with Microsoft Blazor applications for secure authentication and authorization.
 sidebar:
   label: Applications
   order: 1

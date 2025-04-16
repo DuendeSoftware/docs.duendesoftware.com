@@ -1,5 +1,6 @@
 ---
 title: "Users and Logging In"
+description: "Overview of user management, authentication workflows, and UI customization options in Duende IdentityServer"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 40

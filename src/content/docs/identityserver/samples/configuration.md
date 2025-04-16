@@ -1,6 +1,6 @@
 ---
 title: "Configuration API"
-description: "Samples"
+description: "Samples demonstrating the IdentityServer.Configuration API for Dynamic Client Registration (DCR), permissions management, CI/CD pipeline integration with Personal Access Tokens, and software statement implementation."
 sidebar:
   order: 60
 redirect_from:

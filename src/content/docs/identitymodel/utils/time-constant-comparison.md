@@ -1,5 +1,6 @@
 ---
 title: Time-Constant String Comparison
+description: Learn about implementing secure string comparison to prevent timing attacks in security-sensitive contexts using TimeConstantComparer
 sidebar:
   order: 6
 redirect_from:

@@ -1,5 +1,6 @@
 ---
 title: "Dynamic Request Validation and Customization"
+description: "A guide to implementing the ICustomTokenRequestValidator interface to extend the token request pipeline with additional validation logic, custom processing, response parameter additions, and on-the-fly parameter modifications."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 50

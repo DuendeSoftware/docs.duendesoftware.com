@@ -1,5 +1,6 @@
 ---
 title: "Refreshing a Token"
+description: "Documentation for refresh token management in IdentityServer, including requesting, using and securing refresh tokens for long-lived access to resources"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 20

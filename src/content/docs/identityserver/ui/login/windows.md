@@ -1,5 +1,6 @@
 ---
 title: "Windows Authentication"
+description: "Guide to implementing Windows authentication in IdentityServer using various approaches including IIS hosting, HTTP.SYS hosting, and the Negotiate authentication handler, with detailed configuration instructions and code examples."
 sidebar:
   order: 70
 redirect_from:
@@ -86,7 +87,7 @@ private async Task<IActionResult> ChallengeWindowsAsync(string returnUrl)
         var groups = wi.Groups.Translate(typeof(NTAccount));
         var roles = groups.Select(x => new Claim(JwtClaimTypes.Role, x.Value));
         id.AddClaims(roles);
-        
+
         await HttpContext.SignInAsync(
             IdentityServerConstants.ExternalCookieAuthenticationScheme,
             new ClaimsPrincipal(id),

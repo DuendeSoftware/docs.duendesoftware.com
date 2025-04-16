@@ -1,5 +1,6 @@
 ---
 title: "Dynamic Providers"
+description: "Documentation for IdentityServer's Dynamic Identity Providers feature, which enables configuring external authentication providers from a store at runtime without performance penalties or application recompilation."
 sidebar:
   order: 65
 redirect_from:

@@ -1,5 +1,6 @@
 ---
 title: "Profile Service"
+description: Documentation for the IProfileService interface which encapsulates retrieval of user claims and determines if users are active for token issuance.
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 40

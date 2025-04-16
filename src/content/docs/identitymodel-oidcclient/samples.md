@@ -1,6 +1,8 @@
 ---
-title: Samples
+title: Duende IdentityModel OIDC Client Samples
+description: A collection of sample applications demonstrating how to use IdentityModel.OidcClient with various platforms and UI frameworks.
 sidebar:
+  label: Samples
   order: 5
 redirect_from:
   - /foss/identitymodel.oidcclient/samples/

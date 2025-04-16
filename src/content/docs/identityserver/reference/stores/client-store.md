@@ -1,5 +1,6 @@
 ---
 title: "Client Store"
+description: Documentation for the IClientStore interface which is used to dynamically load client configuration by client ID.
 sidebar:
   order: 36
 redirect_from:
@@ -26,4 +27,3 @@ Used to dynamically load client configuration.
         Task<Client> FindClientByIdAsync(string clientId);
     }
 ```
-

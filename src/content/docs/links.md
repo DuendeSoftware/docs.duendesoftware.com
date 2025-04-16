@@ -1,5 +1,6 @@
 ---
 title: Quick links
+description: A collection of frequently accessed links for Duende documentation, licensing, and community resources.
 giscus: false
 sidebar:
   hidden: true

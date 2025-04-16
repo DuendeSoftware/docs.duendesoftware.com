@@ -1,6 +1,6 @@
 ---
 title: "Configuration Options"
-description: "Entity Framework"
+description: "Configuration options available when using Entity Framework Core as the configuration store in IdentityServer"
 sidebar:
   order: 20
 redirect_from:

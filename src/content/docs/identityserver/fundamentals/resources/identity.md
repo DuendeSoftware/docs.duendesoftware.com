@@ -1,5 +1,6 @@
 ---
 title: "Identity Resources"
+description: Learn about identity resources in Duende IdentityServer - named groups of claims about users that can be requested using scopes
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10

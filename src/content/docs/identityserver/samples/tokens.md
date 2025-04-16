@@ -1,6 +1,6 @@
 ---
 title: "Requesting tokens"
-description: "Samples"
+description: "Samples demonstrating token-related features in IdentityServer, including extension grants for Token Exchange implementation and Personal Access Tokens (PAT) for API integrations without full OAuth clients."
 sidebar:
   order: 30
 redirect_from:

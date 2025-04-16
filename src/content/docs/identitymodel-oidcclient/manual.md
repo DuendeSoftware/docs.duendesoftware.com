@@ -1,5 +1,6 @@
 ---
-title: Manual Mode
+title: OIDC Client Manual Mode
+description: "Guide for implementing manual mode in OidcClient to handle browser interactions and token processing"
 sidebar:
   order: 2
 redirect_from:

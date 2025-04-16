@@ -1,5 +1,6 @@
 ---
 title: Token Endpoint
+description: Documentation for the OAuth 2.0 and OpenID Connect token endpoint client library, providing extension methods for HttpClient to handle various token request flows
 sidebar:
   order: 3
   label: Token

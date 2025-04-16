@@ -1,5 +1,6 @@
 ---
 title: Building Browser-Based Client Applications
+description: Overview of browser-based client application patterns and security considerations when implementing JavaScript clients with IdentityServer
 sidebar:
   order: 1
   label: Overview

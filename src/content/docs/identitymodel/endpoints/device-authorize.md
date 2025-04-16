@@ -1,5 +1,6 @@
 ---
 title: Device Authorization Endpoint
+description: Documentation for OAuth 2.0 device flow authorization endpoint using HttpClient extension methods
 sidebar:
   order: 7
   label: Device Authorization

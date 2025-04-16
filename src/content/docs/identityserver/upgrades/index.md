@@ -1,5 +1,6 @@
 ---
 title: Upgrading IdentityServer
+description: "Guide for upgrading between IdentityServer versions, including instructions for database migrations, breaking changes, and version-specific upgrade paths."
 sidebar:
   label: Overview
   order: 1

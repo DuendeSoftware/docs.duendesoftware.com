@@ -1,5 +1,6 @@
 ---
 title: "Third Party Cookies"
+description: Learn about the impact of third-party cookie blocking on OIDC flows and how the BFF pattern addresses these challenges
 sidebar:
   order: 3
 redirect_from:

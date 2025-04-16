@@ -1,6 +1,6 @@
 ---
 title: "Store"
-description: "DCR Reference"
+description: "Reference documentation for the Dynamic Client Registration (DCR) store interfaces and implementations used to manage client configurations in IdentityServer"
 sidebar:
   order: 30
 redirect_from:

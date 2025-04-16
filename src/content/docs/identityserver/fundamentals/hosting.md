@@ -1,5 +1,6 @@
 ---
 title: "Hosting"
+description: Learn how to host and configure Duende IdentityServer in ASP.NET Core applications by adding services and middleware to the pipeline
 sidebar:
   order: 10
 redirect_from:

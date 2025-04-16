@@ -1,5 +1,6 @@
 ---
 title: Data Stores and Persistence
+description: Overview of IdentityServer data stores types, including configuration and operational data, and their implementation options
 sidebar:
   label: Overview
   order: 1

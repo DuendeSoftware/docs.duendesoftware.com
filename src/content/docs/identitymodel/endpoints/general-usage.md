@@ -1,5 +1,6 @@
 ---
 title: General Usage
+description: Overview of IdentityModel client libraries common design patterns and usage for OpenID Connect and OAuth 2.0 endpoint interactions.
 sidebar:
   order: 1
   label: General

@@ -1,5 +1,6 @@
 ---
 title: "Resource Store"
+description: Documentation for the IResourceStore interface which dynamically loads identity resources, API scopes, and API resources for authorization decisions.
 sidebar:
   order: 32
 redirect_from:
@@ -27,7 +28,7 @@ Used to dynamically load resource configuration.
         /// Gets API scopes by scope name.
         /// </summary>
         Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames);
-        
+
         /// <summary>
         /// Gets API resources by scope name.
         /// </summary>

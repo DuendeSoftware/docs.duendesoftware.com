@@ -1,5 +1,6 @@
 ---
 title: Entity Framework Core Options
+description: Configuration options available when using Entity Framework Core as the storage implementation for IdentityServer.
 sidebar:
   label: EF Options
   order: 1

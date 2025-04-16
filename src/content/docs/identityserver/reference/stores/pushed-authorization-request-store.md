@@ -1,5 +1,6 @@
 ---
 title: "Pushed Authorization Request Store"
+description: Documentation for the IPushedAuthorizationRequestStore interface which manages the storage, retrieval, and consumption of pushed authorization requests in the OAuth PAR flow.
 sidebar:
   order: 110
 redirect_from:
@@ -78,7 +79,7 @@ public class PushedAuthorizationRequest
     /// </summary>
 
     public DateTime ExpiresAtUtc { get; set; }
-    
+
     /// <summary>
     /// The data protected content of the pushed authorization request.  
     /// </summary>

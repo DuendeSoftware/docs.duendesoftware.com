@@ -1,5 +1,6 @@
 ---
 title: "Issuing Tokens based on User Passwords"
+description: "A guide to implementing the deprecated password grant type in IdentityServer for legacy applications, covering token requests, client library usage, and custom validation of user credentials."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 30

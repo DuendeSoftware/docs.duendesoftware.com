@@ -1,5 +1,6 @@
 ---
 title: "Open Telemetry"
+description: Documentation for OpenTelemetry integration in IdentityServer, covering metrics, traces and logs collection for monitoring and diagnostics
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 50

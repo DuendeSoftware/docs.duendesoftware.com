@@ -1,5 +1,6 @@
 ---
 title: "Persisted Grant Service"
+description: Documentation for the IPersistedGrantService interface which provides access to a user's grants for managing consent and authorization data.
 sidebar:
   order: 43
 redirect_from:

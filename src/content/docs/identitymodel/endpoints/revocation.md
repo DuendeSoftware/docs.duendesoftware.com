@@ -1,5 +1,6 @@
 ---
 title: Token Revocation Endpoint
+description: Client library implementation for OAuth 2.0 token revocation endpoint using HttpClient extension methods
 sidebar:
   order: 4
   label: Token Revocation

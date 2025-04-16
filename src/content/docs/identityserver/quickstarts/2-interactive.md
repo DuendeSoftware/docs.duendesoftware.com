@@ -1,5 +1,6 @@
 ---
-title: "Interactive Applications with ASP.NET Core"
+title: "Interactive Applications With ASP.NET Core"
+description: "Learn how to add interactive user authentication to an ASP.NET Core application using OpenID Connect and IdentityServer, including configuring the UI, managing user login/logout, and accessing claims."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 3

@@ -1,5 +1,6 @@
 ---
 title: "BFF Session Management Endpoints"
+description: Overview of Duende.BFF endpoints for session management operations including login, logout, and user information retrieval
 sidebar:
   label: "Overview"
   order: 20

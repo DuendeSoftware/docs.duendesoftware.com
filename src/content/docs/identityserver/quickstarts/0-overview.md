@@ -1,6 +1,6 @@
 ---
-title: "Quickstarts"
-description: "Quickstarts"
+title: "IdentityServer Quickstarts"
+description: "Step-by-step tutorials for implementing common Duende IdentityServer scenarios, from basic setup to advanced features."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Overview

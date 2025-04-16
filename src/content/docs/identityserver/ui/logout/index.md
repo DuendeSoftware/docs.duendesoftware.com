@@ -1,5 +1,6 @@
 ---
 title: Getting Started
+description: "Guide to implementing the logout page in IdentityServer, which terminates user authentication sessions and handles session cleanup across clients and external providers."
 sidebar:
   order: 1
 redirect_from:

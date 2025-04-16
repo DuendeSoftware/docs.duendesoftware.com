@@ -1,5 +1,6 @@
 ---
 title: "Client Application Portal"
+description: "Documentation for creating a client application portal within IdentityServer that provides links to applications configured with InitiateLoginUri, enabling a seamless single sign-on experience for users."
 sidebar:
   order: 160
 redirect_from:

@@ -1,6 +1,6 @@
 ---
 title: "Requesting a Token"
-description: "Overview"
+description: "Guide explaining how to request tokens for both machine-to-machine communication and interactive applications, including code examples for .NET implementations"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10

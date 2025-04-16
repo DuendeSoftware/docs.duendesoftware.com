@@ -1,5 +1,6 @@
 ---
 title: "Entity Framework Integration"
+description: "Documentation for using Entity Framework with IdentityServer to store configuration and operational data in any EF-supported database"
 sidebar:
   order: 50
 redirect_from:

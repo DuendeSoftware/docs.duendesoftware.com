@@ -1,5 +1,6 @@
 ---
 title: "Terminology"
+description: "Learn about the key terms and concepts used in IdentityServer, including clients, resources, tokens, and user authentication flows."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 2

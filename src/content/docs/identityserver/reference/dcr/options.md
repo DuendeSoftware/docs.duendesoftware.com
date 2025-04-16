@@ -1,5 +1,6 @@
 ---
 title: "Options"
+description: "Reference documentation for the IdentityServer configuration options related to dynamic client registration and secret lifetimes."
 sidebar:
   order: 60
 redirect_from:

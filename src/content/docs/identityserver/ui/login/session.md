@@ -1,5 +1,6 @@
 ---
 title: "Authentication Session"
+description: "Guide to establishing and configuring authentication sessions in IdentityServer using ASP.NET Core's cookie authentication system, including required claims, session management, and cookie handler configuration options."
 sidebar:
   order: 2
 redirect_from:

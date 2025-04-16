@@ -1,5 +1,6 @@
 ---
 title: Blazor Applications
+description: A walkthrough showing how to set up and configure a BFF (Backend For Frontend) application using Blazor
 sidebar:
   order: 150
   label: Blazor

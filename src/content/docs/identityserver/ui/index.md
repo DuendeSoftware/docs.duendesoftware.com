@@ -1,6 +1,6 @@
 ---
 title: User Interaction
-description: User Interaction Overview
+description: "Overview of IdentityServer's user interaction architecture, explaining how the UI is separated from the core engine to enable customization of login, logout, consent, and error pages for various authentication scenarios."
 sidebar:
   label: Overview
   order: 1
@@ -34,4 +34,3 @@ As browser requests are made to the protocol endpoints in your IdentityServer im
 * [Consent](/identityserver/ui/consent/): allows the user to grant resource access to clients (typically only used if the client is third-party).
 
 [Additional custom pages](/identityserver/ui/custom/) that you might want are then also possible (e.g. password reset, registration), and those are typically available to the user as links from one of the above pages.
-

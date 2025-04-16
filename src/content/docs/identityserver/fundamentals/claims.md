@@ -1,5 +1,6 @@
 ---
 title: "Claims"
+description: Learn about how IdentityServer emits and manages claims for users and clients, including claim emission strategies and serialization
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 45

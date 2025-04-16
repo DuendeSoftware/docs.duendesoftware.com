@@ -1,5 +1,6 @@
 ---
 title: "Architecture"
+description: Overview of BFF host architecture, including authentication, session management, and integration with ASP.NET Core components
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 1

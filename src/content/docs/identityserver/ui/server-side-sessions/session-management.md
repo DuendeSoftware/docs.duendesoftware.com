@@ -1,6 +1,6 @@
 ---
 title: "Session Management"
-description: "Server Side Sessions"
+description: "Documentation on using the ISessionManagementService to query and terminate user sessions in IdentityServer, including revoking tokens and sending back-channel logout notifications."
 sidebar:
   order: 2
 redirect_from:

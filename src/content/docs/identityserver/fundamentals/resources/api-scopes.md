@@ -1,6 +1,6 @@
 ---
 title: "API Scopes"
-description: "Overview"
+description: "Learn about API scopes in IdentityServer, how to define and use them for access control, and how they work with OAuth 2.0"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 20

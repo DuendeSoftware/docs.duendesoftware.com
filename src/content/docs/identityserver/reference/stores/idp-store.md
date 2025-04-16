@@ -1,5 +1,6 @@
 ---
 title: "Identity Provider Store"
+description: Documentation for the IIdentityProviderStore interface which dynamically loads identity provider configurations for external authentication.
 sidebar:
   order: 36
 redirect_from:
