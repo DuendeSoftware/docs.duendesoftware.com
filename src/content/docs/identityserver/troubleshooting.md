@@ -166,3 +166,81 @@ version used.
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0"/>
 </ItemGroup>
 ```
+
+## Performance Issues
+
+In some installations, upgrading .NET and IdentityServer has caused performance issues. Since the IdentityServer and
+.NET version upgrades typically are done at the same time, it is sometimes hard to tell what the root cause is
+for the performance degradation. When working with installations to find the root cause, there are some dependencies
+that have been found to cause issues in specific verisons.
+
+### PostgreSQL Pooling
+
+There are issues with some versions of the PostgreSQL client library that gives large memory consumption. Enabling
+pooling on the operational store has solved this in the past:
+
+```csharp
+.AddOperationalStore(options =>
+   {
+      // Enable pooling:
+      options.EnablePooling = true;
+
+      // More settings....
+   })
+```
+
+### Entity Framework Core & Microsoft SQL OPENJSON
+
+Entity Framework Core version 8 introduced a new behaviour when creating `WHERE IN()` sql clauses. Previously, the
+possible values were supplied as parameters, which meant that the query text was dependent on the number of items
+in the collection. This was solved by sending the parameters as a JSON object and using `OPENJSON` to read the parameters.
+While this enabled query plan caching, it unfortunately caused Microsoft SQL Server to generate bad query execution plans.
+
+Please see [this EF Core GitHub Issue](https://github.com/dotnet/efcore/issues/32394#issuecomment-2266634632) for information
+and possible mitigations.
+
+### Microsoft Azure
+
+The `Azure.Core` package versions `1.41.0` and prior had an issue that caused delays when accessing Azure resources.
+This could be Azure blob storage or key vault for data protection or Azure SQL Server for stores, especially if managed
+identities are used. This package is typically not referenced directly but brought in as a transient dependency 
+through other packages. Ensure to use version `1.42.0` or later if you are hosting on Azure.
+
+### Entity Framework Core, Microsoft.Data.SqlClient, and SqlServerRetryingExecutionStrategy
+
+As more developers migrate their database-powered application to the cloud,
+they will need to handle intermittent connection failures. In most cases, these transient connection failures occur and resolve in a short period of time, allowing the application to self-correct and continue processing requests. The strategy is known as **connection resiliency**. 
+
+In recent versions of Entity Framework Core and `Microsoft.Data.SqlClient`, you can enable this retry strategy explicitly, but in the case of `Microsoft.Data.SqlClient`, when operating in a cloud environment, this strategy is enabled by default or defined in the connection string.
+
+```csharp
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    optionsBuilder
+        .UseSqlServer(
+            @"Server=(localdb)\mssqllocaldb;Database=EFMiscellanous.ConnectionResiliency;Trusted_Connection=True;ConnectRetryCount=0",
+            options => options.EnableRetryOnFailure());
+}
+```
+
+In most cases, this is a _good feature to have enabled_ but there are drawbacks that can cause severe system degradation.
+
+- Enabling retry on failure causes Entity Framework Core to buffer the result set. This significantly increases memory requirements and causes garbage collection pauses.
+- Some versions of `Microsoft.Data.SqlClient` call `Thread.Sleep` that can lock threads for up to **_10 seconds_**. This can lead to thread exhaustion and server unresponsiveness. We've isolated this issue to versions.
+
+  | Microsoft.EntityFrameworkCore.SqlServer | Microsoft.Data.SqlClient | Status     |
+  |:----------------------------------------|:-------------------------|:-----------|
+  | `8.0.0`                                 | `>=5.1.1`                | ✅ Good     |
+  | `8.0.3`                                 | `>=5.1.5`                | ❌ Affected |
+  | `8.0.4`                                 | `>=5.1.5`                | ❌ Affected |
+  | `8.0.6`                                 | `>=5.1.5`                | ❌ Affected |
+  | `8.0.11`                                | `>=5.1.6`                | ✅ Good     |
+  | `9.0.1`                                 | `>=5.1.6`                | ✅ Good     |
+  | `>9.0.1`                                | `>=6.0.0`                | ❌ Affected |
+
+Architectural issues that may be causing connection resiliency issues you may want to investigate:
+
+- Lack of caching in a high-load production environment.
+- Under-provisioned database instance with limited resources or connections available.
+- Datacenter networking issues caused by incorrect zoning choices.
+- Under-provisioned application host with limited cores/threads.
