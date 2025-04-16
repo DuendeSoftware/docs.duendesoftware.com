@@ -1,6 +1,6 @@
 ---
 title: Pushed Authorization Requests
-description: "A comprehensive guide to implementing Pushed Authorization Requests (PAR) in IdentityServer, an OAuth standard that enhances security by moving authorization parameters from the front channel to the back channel, with details on licensing, client usage, data storage, and configuration options."
+description: "Pushed Authorization Requests (PAR) in IdentityServer, an OAuth standard that enhances security by moving authorization parameters from the front channel to the back channel."
 sidebar:
   order: 175
 redirect_from:

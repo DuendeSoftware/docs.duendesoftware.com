@@ -10,7 +10,25 @@ const imageBase64 = `data:image/png;base64,${fs.readFileSync(filePath).toString(
 export async function duendeOpenGraphImage({
   title,
   description,
+  url,
 }: RenderFunctionInput): Promise<React.ReactNode> {
+  let category =
+    url
+      .match(/\/([\w-]+)\//)
+      ?.at(1)
+      ?.toLowerCase() ?? "";
+
+  const categoryMap: Record<string, string> = {
+    bff: "BFF",
+    identityserver: "IdentityServer",
+    accesstokenmanagement: "Access Token Management",
+    identitymodel: "IdentityModel",
+    general: "General",
+    "identitymodel-oidcclient": "IdentityModel OIDC Client",
+  };
+
+  category = categoryMap[category] ?? "General";
+
   return Promise.resolve(
     <div
       style={{
@@ -31,7 +49,12 @@ export async function duendeOpenGraphImage({
             "flex flex-col justify-end justify-items-start w-full h-full p-20",
           )}
         >
-          <h1 style={twj("text-[75px] text-bold text-white")}>{title}</h1>
+          {category && (
+            <div style={twj("text-2xl italic font-bold text-gray-500 mt-4")}>
+              {category}
+            </div>
+          )}
+          <h1 style={twj("text-[70px] text-bold text-white")}>{title}</h1>
           <div style={twj("text-3xl text-bold mb-3 text-white")}>
             {description}
           </div>

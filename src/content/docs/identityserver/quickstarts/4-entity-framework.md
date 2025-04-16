@@ -1,5 +1,5 @@
 ---
-title: "Entity Framework Core For Configuration & Operational data"
+title: "Entity Framework Core: Configuration & Operational Data"
 description: "Learn how to configure IdentityServer to use Entity Framework Core for storing configuration and operational data in a persistent database."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
