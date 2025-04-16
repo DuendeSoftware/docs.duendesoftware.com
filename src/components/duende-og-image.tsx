@@ -4,7 +4,12 @@ const { twj } = await import("tw-to-css");
 import fs from "node:fs";
 import path from "node:path";
 
-const filePath = path.join(process.cwd(), "src", "assets", "duende-og-bg.png");
+const filePath = path.join(
+  process.cwd(),
+  "src",
+  "assets",
+  "duende-og-bg-2.png",
+);
 const imageBase64 = `data:image/png;base64,${fs.readFileSync(filePath).toString("base64")}`;
 
 export async function duendeOpenGraphImage({
