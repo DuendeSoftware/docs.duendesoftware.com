@@ -1,6 +1,6 @@
 ---
 title: "Security Best Practices"
-description: "information pertaining to Duende recommended best practices"
+description: "A comprehensive guide to security practices and procedures used in Duende Software development lifecycle"
 sidebar:
   order: 2
 redirect_from:

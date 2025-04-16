@@ -1,6 +1,6 @@
 ---
 title: "Response Generation"
-description: "DCR Reference"
+description: "Reference documentation for dynamic client registration response generation, including interfaces and implementations for handling HTTP responses in the registration process."
 sidebar:
   order: 40
 redirect_from:

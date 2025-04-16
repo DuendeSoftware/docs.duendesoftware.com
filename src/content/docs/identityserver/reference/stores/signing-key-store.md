@@ -1,5 +1,6 @@
 ---
 title: "Signing Key Store"
+description: Documentation for the ISigningKeyStore interface which manages the storage, retrieval, and deletion of cryptographic keys used for signing tokens.
 sidebar:
   order: 90
 redirect_from:
@@ -52,7 +53,7 @@ Used to dynamically load client configuration.
         /// Version number of serialized key.
         /// </summary>
         public int Version { get; set; }
-        
+
         /// <summary>
         /// Key identifier.
         /// </summary>
@@ -62,7 +63,7 @@ Used to dynamically load client configuration.
         /// Date key was created.
         /// </summary>
         public DateTime Created { get; set; }
-        
+
         /// <summary>
         /// The algorithm.
         /// </summary>
@@ -77,7 +78,7 @@ Used to dynamically load client configuration.
         /// Serialized data for key.
         /// </summary>
         public string Data { get; set; }
-        
+
         /// <summary>
         /// Indicates if data is protected.
         /// </summary>

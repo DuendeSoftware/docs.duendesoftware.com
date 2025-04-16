@@ -1,10 +1,10 @@
 ---
 title: Stores
+description: An overview of IdentityServer's persistence layer abstractions that manage configuration and operational data for authentication and authorization processes.
 date: 2020-09-10T08:20:20+02:00
 sidebar:
   label: Overview
   order: 1
-description: Index
 redirect_from:
   - /identityserver/v5/reference/stores/
   - /identityserver/v6/reference/stores/
@@ -24,5 +24,3 @@ Common types of stores include:
 
 IdentityServer provides default in-memory implementations of these stores for development scenarios, and extensibility
 points to implement custom stores using various database technologies for production environments.
-
-

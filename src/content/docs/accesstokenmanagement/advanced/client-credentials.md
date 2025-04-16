@@ -1,5 +1,6 @@
 ---
 title: Customizing Client Credentials Token Management
+description: Learn how to customize client credentials token management including client options, backchannel communication, and token caching configurations.
 sidebar:
   label: Client Credentials
   order: 1

@@ -1,5 +1,6 @@
 ---
-title: "Browser-Based Applications with a BFF"
+title: "Browser-Based Applications With A BFF"
+description: "Guide to building secure browser-based JavaScript applications using the Backend For Frontend (BFF) pattern with Duende.BFF library"
 sidebar:
   order: 10
   label: With a BFF

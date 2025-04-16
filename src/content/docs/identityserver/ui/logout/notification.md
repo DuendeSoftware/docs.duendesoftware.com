@@ -1,5 +1,6 @@
 ---
 title: "Client Notifications"
+description: "Comprehensive guide to client notification mechanisms in IdentityServer, covering front-channel, back-channel, and JavaScript-based approaches for informing applications about user sign-out events."
 sidebar:
   order: 50
 redirect_from:
@@ -76,4 +77,3 @@ There is nothing special you need to do to notify these clients that the user ha
 
 The clients, though, must perform monitoring on the `check_session_iframe`, and this is implemented by spec compliant
 client libraries, e.g. the [oidc-client JavaScript library](https://github.com/IdentityModel/oidc-client-js/).
-

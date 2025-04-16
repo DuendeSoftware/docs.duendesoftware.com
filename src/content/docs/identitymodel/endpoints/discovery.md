@@ -1,5 +1,6 @@
 ---
 title: Discovery Endpoint
+description: Documentation for using the OpenID Connect discovery endpoint client library, including configuration, validation, and caching features
 sidebar:
   order: 2
   label: Discovery

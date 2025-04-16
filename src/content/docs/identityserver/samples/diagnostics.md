@@ -1,6 +1,6 @@
 ---
 title: "Diagnostics"
-description: "Samples"
+description: "Samples demonstrating IdentityServer's diagnostic capabilities with OpenTelemetry integration, including metrics, traces, and logs visualization with .NET Aspire and console tracing."
 sidebar:
   order: 50
 redirect_from:

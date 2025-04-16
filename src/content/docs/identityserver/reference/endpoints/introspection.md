@@ -1,5 +1,6 @@
 ---
 title: "Introspection Endpoint"
+description: "Documentation for the RFC 7662 compliant introspection endpoint used to validate reference tokens, JWTs, and refresh tokens."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 5

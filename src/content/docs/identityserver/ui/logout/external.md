@@ -1,5 +1,6 @@
 ---
 title: "External Logout"
+description: "Guide to implementing logout from external identity providers in IdentityServer, including detecting provider usage, redirecting users for sign-out, and maintaining state across the redirect flow."
 sidebar:
   order: 70
 redirect_from:

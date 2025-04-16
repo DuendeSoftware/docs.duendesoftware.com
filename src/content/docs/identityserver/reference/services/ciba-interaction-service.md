@@ -1,5 +1,6 @@
 ---
 title: "Backchannel Authentication Interaction Service"
+description: Documentation for the IBackchannelAuthenticationInteractionService interface which provides services for accessing and completing CIBA login requests.
 sidebar:
   order: 80
 redirect_from:
@@ -18,7 +19,7 @@ MVC controllers for the user interface of IdentityServer.
 ## IBackchannelAuthenticationInteractionService APIs
 
 * **`GetPendingLoginRequestsForCurrentUserAsync`**
-    
+
   Returns a collection of [BackchannelUserLoginRequest](/identityserver/reference/models/ciba-login-request/) objects
   which represent pending login requests for the current user.
 
@@ -61,4 +62,3 @@ Models the data needed for a user to complete a backchannel authentication reque
   The session id to associate with the completion request if the Subject is provided.
   If the Subject is not provided, then this property is ignored in favor of the session id provided by the
   `IUserSession` service.
-

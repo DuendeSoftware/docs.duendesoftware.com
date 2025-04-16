@@ -1,5 +1,6 @@
 ---
 title: "Blazor Rendering modes"
+description: Overview of Blazor rendering modes and how they affect data access patterns in BFF applications
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10

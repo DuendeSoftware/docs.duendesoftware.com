@@ -4,7 +4,7 @@ date: 2020-09-10T08:20:20+02:00
 sidebar:
   order: 1
   label: Overview
-description: Index
+description: Overview of resource types in Duende IdentityServer including API resources, identity resources, API scopes, and resource isolation concepts
 redirect_from:
   - /identityserver/v5/fundamentals/resources/
   - /identityserver/v6/fundamentals/resources/

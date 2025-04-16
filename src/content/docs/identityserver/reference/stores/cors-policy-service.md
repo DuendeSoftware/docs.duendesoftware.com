@@ -1,5 +1,6 @@
 ---
 title: "CORS Policy Service"
+description: Documentation for the ICorsPolicyService interface which determines if CORS requests from specific origins are allowed to access protocol endpoints.
 sidebar:
   order: 36
 redirect_from:

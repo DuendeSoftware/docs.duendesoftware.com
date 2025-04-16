@@ -1,5 +1,6 @@
 ---
 title: "Backchannel Authentication Request Store"
+description: Documentation for the IBackChannelAuthenticationRequestStore interface which is used to store and manage backchannel authentication requests for CIBA flows.
 sidebar:
   order: 80
 redirect_from:
@@ -32,7 +33,7 @@ Used to store backchannel login requests (for [CIBA](/identityserver/ui/ciba)).
         /// Gets the request.
         /// </summary>
         Task<BackChannelAuthenticationRequest> GetByAuthenticationRequestIdAsync(string requestId);
-        
+
         /// <summary>
         /// Gets the request.
         /// </summary>
@@ -87,7 +88,7 @@ Used to store backchannel login requests (for [CIBA](/identityserver/ui/ciba)).
         /// Gets or sets the requested scopes.
         /// </summary>
         public IEnumerable<string> RequestedScopes { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the requested resource indicators.
         /// </summary>

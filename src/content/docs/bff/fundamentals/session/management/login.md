@@ -1,5 +1,6 @@
 ---
 title: "BFF Login Endpoint"
+description: Learn how to initiate authentication and handle return URLs using the BFF login endpoint in your frontend applications
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: "Login"

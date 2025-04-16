@@ -1,5 +1,6 @@
 ---
 title: Fluent X.509 Certificate Store API
+description: Provides a simplified, fluent API for accessing and managing X.509 certificates in the Windows certificate store.
 sidebar:
   order: 5
 redirect_from:

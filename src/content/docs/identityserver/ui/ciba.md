@@ -1,5 +1,6 @@
 ---
 title: "Client Initiated Backchannel Authentication (CIBA)"
+description: "Documentation for implementing CIBA in IdentityServer, a workflow that allows users to authenticate on a trusted device while accessing services from a different device."
 sidebar:
   order: 7
 redirect_from:

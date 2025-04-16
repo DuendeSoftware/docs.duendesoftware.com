@@ -1,5 +1,6 @@
 ---
-title: "ASP.NET Core and API access"
+title: "ASP.NET Core And API access"
+description: "Learn how to combine user authentication with API access by requesting both identity and API scopes during the OpenID Connect login flow."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 4

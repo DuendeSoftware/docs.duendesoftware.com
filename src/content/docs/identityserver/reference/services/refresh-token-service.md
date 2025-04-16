@@ -1,5 +1,6 @@
 ---
 title: "Refresh Token Service"
+description: Documentation for the IRefreshTokenService interface which handles validation, creation, and updating of refresh tokens with customization options for handling consumed tokens.
 sidebar:
   order: 50
 redirect_from:
@@ -20,7 +21,7 @@ public interface IRefreshTokenService
     /// Validates a refresh token.
     /// </summary>
     Task<TokenValidationResult> ValidateRefreshTokenAsync(string token, Client client);
-    
+
     /// <summary>
     /// Creates the refresh token.
     /// </summary>

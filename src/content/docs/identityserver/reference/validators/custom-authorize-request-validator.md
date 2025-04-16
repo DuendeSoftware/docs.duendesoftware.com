@@ -1,5 +1,6 @@
 ---
 title: "Custom Authorize Request Validator"
+description: Documentation for the ICustomAuthorizeRequestValidator interface which allows inserting custom validation logic into the authorization request pipeline.
 sidebar:
   order: 10
 redirect_from:

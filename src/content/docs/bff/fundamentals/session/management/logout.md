@@ -1,5 +1,6 @@
 ---
 title: "BFF Logout Endpoint"
+description: Learn how to use the BFF logout endpoint to sign out users and handle CSRF protection in your application
 date: 2022-12-29T10:22:12+02:00
 sidebar:
   label: "Logout"

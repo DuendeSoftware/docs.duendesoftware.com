@@ -1,5 +1,6 @@
 ---
 title: Extension Grants
+description: "A guide to implementing OAuth extension grants in IdentityServer for non-standard token issuance scenarios, with a focus on token exchange for impersonation and delegation using the IExtensionGrantValidator interface."
 date: 2020-09-10T08:20:20+02:00
 sidebar:
   order: 40
@@ -56,30 +57,30 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
 
     // register for urn:ietf:params:oauth:grant-type:token-exchange
     public string GrantType => OidcConstants.GrantTypes.TokenExchange;
-    
+
     public async Task ValidateAsync(ExtensionGrantValidationContext context)
     {
         // default response is error
         context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest);
-        
+
         // the spec allows for various token types, most commonly you return an access token
         var customResponse = new Dictionary<string, object>
         {
             { OidcConstants.TokenResponse.IssuedTokenType, OidcConstants.TokenTypeIdentifiers.AccessToken }
         };
-        
+
         // read the incoming token
         var subjectToken = context.Request.Raw.Get(OidcConstants.TokenRequest.SubjectToken);
-        
+
         // and the token type
         var subjectTokenType = context.Request.Raw.Get(OidcConstants.TokenRequest.SubjectTokenType);
-        
+
         // mandatory parameters
         if (string.IsNullOrWhiteSpace(subjectToken))
         {
             return;
         }
-        
+
         // for our impersonation/delegation scenario we require an access token
         if (!string.Equals(subjectTokenType, OidcConstants.TokenTypeIdentifiers.AccessToken))
         {
@@ -96,7 +97,7 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
         // these are two values you typically care about
         var sub = validationResult.Claims.First(c => c.Type == JwtClaimTypes.Subject).Value;
         var clientId = validationResult.Claims.First(c => c.Type == JwtClaimTypes.ClientId).Value;
-        
+
         // add any custom logic here (if needed)
 
         // create response
@@ -222,7 +223,7 @@ public class ProfileService : IProfileService
                 context.IssuedClaims.Add(act);
             }
         }
-        
+
         // rest omitted
     }
 

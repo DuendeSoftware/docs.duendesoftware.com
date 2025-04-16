@@ -1,5 +1,6 @@
 ---
 title: "Resource Isolation"
+description: Learn about isolating OAuth resources and using the resource parameter to control access token scope and audience
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 40

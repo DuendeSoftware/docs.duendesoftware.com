@@ -1,6 +1,6 @@
 ---
 title: "Client"
-description: "Model Reference"
+description: "Reference documentation for the Client class which models an OpenID Connect or OAuth 2.0 client in Duende IdentityServer, including configuration for authentication, tokens, consent, refresh tokens, and advanced features."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 35
@@ -27,9 +27,9 @@ public static IEnumerable<Client> Get()
         {
             ClientId = "machine",
             ClientSecrets = { Configuration["machine.secret"] },
-            
+
             AllowedGrantTypes = GrantTypes.ClientCredentials,
-            
+
             AllowedScopes = machineScopes
         },
 
@@ -39,11 +39,11 @@ public static IEnumerable<Client> Get()
         new Client
         {
             ClientId = "web",
-            
+
             ClientSecrets = { new Secret(Configuration["web.secret"]) },
 
             AllowedGrantTypes = GrantTypes.Code,
-            
+
             RedirectUris = { "https://myapp.com:/signin-oidc" },
             PostLogoutRedirectUris = { "https://myapp.com/signout-callback-oidc" },
 

@@ -1,5 +1,6 @@
 ---
 title: "Authorize Interaction Response Generator"
+description: Documentation for the IAuthorizeInteractionResponseGenerator interface which determines if a user must log in or consent when making requests to the authorization endpoint.
 sidebar:
   order: 10
 redirect_from:

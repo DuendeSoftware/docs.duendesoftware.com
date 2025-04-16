@@ -1,5 +1,6 @@
 ---
 title: "Returning to the Client"
+description: "Guide to properly redirecting users back to client applications after logout in IdentityServer, ensuring front-channel notifications are processed correctly."
 sidebar:
   order: 60
 redirect_from:

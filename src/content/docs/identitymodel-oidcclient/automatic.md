@@ -1,6 +1,8 @@
 ---
-title: Automatic Mode
+title: OIDC Client Automatic Mode
+description: Learn how to implement automatic OAuth/OIDC authentication by encapsulating browser interactions using OidcClient
 sidebar:
+  label: Automatic Mode
   order: 3
 redirect_from:
   - /foss/identitymodel.oidcclient/automatic/

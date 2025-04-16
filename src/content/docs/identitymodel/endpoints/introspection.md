@@ -1,5 +1,6 @@
 ---
 title: Token Introspection Endpoint
+description: Learn how to use the OAuth 2.0 token introspection endpoint to validate and inspect access tokens using HttpClient extensions.
 sidebar:
   order: 4
   label: Token Introspection

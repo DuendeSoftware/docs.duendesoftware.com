@@ -1,5 +1,6 @@
 ---
 title: "Multi Factor Authentication"
+description: "Overview of multi-factor authentication (MFA) implementation options in IdentityServer, including using ASP.NET Core capabilities in the hosting application or relying on upstream providers in federation scenarios."
 sidebar:
   order: 50
 redirect_from:

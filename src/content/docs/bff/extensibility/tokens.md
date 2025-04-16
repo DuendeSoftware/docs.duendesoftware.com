@@ -1,6 +1,6 @@
 ---
 title: "Token Management"
-description: "BFF - Customization"
+description: Learn how to customize token storage and management in the BFF framework, including HTTP client configuration and per-route token retrieval
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: "Token Management"

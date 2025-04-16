@@ -1,5 +1,6 @@
 ---
 title: "Backchannel Authentication Endpoint"
+description: "Documentation for the CIBA endpoint which allows clients to initiate backchannel authentication requests for users without browser interaction"
 sidebar:
   order: 9
 redirect_from:

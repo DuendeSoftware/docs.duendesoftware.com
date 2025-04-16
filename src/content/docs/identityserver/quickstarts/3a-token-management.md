@@ -1,5 +1,6 @@
 ---
 title: "Token Management"
+description: "Learn how to manage access tokens in interactive applications, including requesting refresh tokens, caching, and automatic token refresh using Duende.AccessTokenManagement."
 date: 2024-07-23T08:22:12+02:00
 sidebar:
   order: 5

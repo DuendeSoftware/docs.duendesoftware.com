@@ -1,5 +1,6 @@
 ---
 title: "Session Expiration"
+description: "Documentation on IdentityServer's session expiration feature, which automatically cleans up expired server-side sessions and can notify client applications via back-channel logout."
 sidebar:
   order: 20
 redirect_from:
@@ -50,4 +51,3 @@ to client applications participating in the session. You can use this mechanism 
 an [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeout/) that applies across all your client applications.
 
 The `ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout` flag enables this behavior, and it is on by default.
-

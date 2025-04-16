@@ -1,5 +1,6 @@
 ---
-title: "Protecting an API using Client Credentials"
+title: "Protecting An API With Client Credentials"
+description: "Learn how to set up IdentityServer to protect an API using client credentials, implementing server-to-server authentication with access tokens."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 2

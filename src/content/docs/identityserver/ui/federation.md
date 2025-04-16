@@ -1,5 +1,6 @@
 ---
 title: "Federation Gateway"
+description: "Guide to implementing federation in IdentityServer, allowing it to act as a gateway that offers multiple external authentication providers while shielding client applications from authentication complexities."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 6

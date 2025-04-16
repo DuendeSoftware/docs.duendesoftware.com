@@ -1,6 +1,7 @@
 ---
 title: "Session Management"
-description: "BFF Extensibility"
+description: Configure and implement custom server-side session storage and lifecycle management through IUserSessionStore interface
+
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: "Session Management"

@@ -1,6 +1,6 @@
 ---
 title: "ASP.NET Identity Integration"
-description: "Sample"
+description: "A sample demonstrating how to integrate ASP.NET Identity with Duende IdentityServer using minimal code to create a working user management system with OIDC capabilities."
 sidebar:
   order: 30
 redirect_from:

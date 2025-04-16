@@ -1,5 +1,6 @@
 ---
 title: "Session Management Service"
+description: Documentation for the ISessionManagementService interface which provides administrative features to query and terminate server-side sessions, including associated tokens and consents.
 sidebar:
   order: 57
 redirect_from:
@@ -24,7 +25,7 @@ public interface ISessionManagementService
     /// Queries all the session related data for a user.
     /// </summary>
     Task<QueryResult<UserSession>> QuerySessionsAsync(SessionQuery filter = null, CancellationToken cancellationToken = default);
-    
+
     /// <summary>
     /// Removes all the session related data for a user.
     /// </summary>

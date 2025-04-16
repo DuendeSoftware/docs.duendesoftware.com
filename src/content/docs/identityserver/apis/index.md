@@ -1,5 +1,6 @@
 ---
 title: Protecting APIs
+description: Learn how to secure and protect your APIs using Duende IdentityServer's token-based authentication and authorization
 date: 2020-09-10T08:20:20+02:00
 sidebar:
   label: Overview

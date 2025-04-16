@@ -1,5 +1,6 @@
 ---
 title: "Error"
+description: "Documentation for implementing the error page in IdentityServer, which displays information to users when errors occur during the authorization process."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 3

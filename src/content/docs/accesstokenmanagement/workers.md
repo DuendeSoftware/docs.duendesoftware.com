@@ -1,5 +1,6 @@
 ---
 title: Workers
+description: Learn how to manage OAuth access tokens in worker applications and background tasks using Duende.AccessTokenManagement
 sidebar:
   order: 2
 redirect_from:

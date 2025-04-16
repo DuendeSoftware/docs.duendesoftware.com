@@ -1,5 +1,6 @@
 ---
 title: "Custom Token Request Validator"
+description: Documentation for the ICustomTokenRequestValidator interface which allows inserting custom validation logic into token requests with the ability to modify request parameters and response fields.
 sidebar:
   order: 20
 redirect_from:

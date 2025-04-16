@@ -1,5 +1,6 @@
 ---
 title: "Reference Tokens"
+description: "Documentation about reference tokens in Duende IdentityServer, including how they are stored, accessed, and configured for both clients and APIs."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 100

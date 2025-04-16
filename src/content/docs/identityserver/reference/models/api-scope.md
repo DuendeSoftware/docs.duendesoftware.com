@@ -1,6 +1,6 @@
 ---
 title: "API Scope"
-description: "Model Reference"
+description: "Reference documentation for the ApiScope class which models an OAuth scope in Duende IdentityServer, including its properties and configuration options."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 25
@@ -15,7 +15,7 @@ redirect_from:
 This class models an OAuth scope.
 
 * **`Enabled`**
-    
+
   Indicates if this resource is enabled and can be requested. Defaults to true.
 
 * **`Name`**

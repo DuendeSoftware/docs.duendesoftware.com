@@ -1,5 +1,6 @@
 ---
 title: "BFF Back-Channel Logout Endpoint"
+description: Documentation for the OpenID Connect Back-Channel Logout endpoint implementation in BFF, enabling server-to-server session termination without browser involvement.
 date: 2022-12-29T10:22:12+02:00
 sidebar:
   label: "Back-Channel Logout"

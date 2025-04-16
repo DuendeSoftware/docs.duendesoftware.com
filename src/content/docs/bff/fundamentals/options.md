@@ -2,7 +2,7 @@
 title: Configuration Options
 sidebar:
   label: Configuration Options
-description: "BFF configuration options"
+description: "Comprehensive guide to configuring Duende BFF framework including general settings, paths, session management, and API options"
 date: 2020-09-10T08:22:12+02:00
 redirect_from:
   - /bff/v2/options/

@@ -1,5 +1,6 @@
 ---
 title: "Accepting Local Credentials"
+description: "Guide to implementing a local login page in IdentityServer that validates username/password credentials, issues authentication cookies, and includes a sample Razor Page implementation."
 sidebar:
   order: 50
 redirect_from:
@@ -59,7 +60,7 @@ namespace Sample.Pages.Account
         public string Username { get; set; }
         [BindProperty]
         public string Password { get; set; }
-        
+
         public async Task<IActionResult> OnPost()
         {
             if (Username == "alice" && Password == "password")
@@ -69,7 +70,7 @@ namespace Sample.Pages.Account
                 };
                 var identity = new ClaimsIdentity(claims, "pwd");
                 var user = new ClaimsPrincipal(identity);
-                
+
                 await HttpContext.SignInAsync(user);
 
                 if (Url.IsLocalUrl(ReturnUrl))

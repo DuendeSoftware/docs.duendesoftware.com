@@ -1,6 +1,6 @@
 ---
 title: "License Usage Summary"
-description: "Get detailed information about your IdentityServer usage"
+description: "Reference documentation for the LicenseUsageSummary class which provides detailed information about clients, issuers, and features used in Duende IdentityServer for self-auditing and license compliance."
 date: 2025-01-07T12:00:00+02:00
 sidebar:
   order: 90

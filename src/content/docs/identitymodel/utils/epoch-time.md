@@ -1,5 +1,6 @@
 ---
 title: Epoch Time Conversion
+description: Learn about converting between DateTime and Unix/Epoch time formats in IdentityModel for JWT tokens
 sidebar:
   order: 3
 redirect_from:

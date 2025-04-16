@@ -1,5 +1,6 @@
 ---
 title: "Signed Authorize Requests"
+description: "A guide to implementing JWT Secured Authorization Requests (JAR) in IdentityServer, allowing authorization parameters to be packaged in signed JWTs for tamperproof requests and front-channel client authentication."
 sidebar:
   order: 150
 redirect_from:
@@ -23,7 +24,7 @@ Duende IdentityServer requires the request JWTs to be signed. We support X509 ce
 var client = new Client
 {
     ClientId = "foo",
-    
+
     // set this to true to accept signed requests only
     RequireRequestObject = true,
 

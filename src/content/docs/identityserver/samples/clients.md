@@ -1,6 +1,6 @@
 ---
 title: "Clients"
-description: "Samples"
+description: "A collection of client technology samples demonstrating how to connect different platforms like .NET 4.8 WebForms, MVC, and .NET MAUI to IdentityServer."
 sidebar:
   order: 45
 redirect_from:

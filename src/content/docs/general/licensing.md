@@ -1,6 +1,6 @@
 ---
 title: "Licensing"
-description: "information pertaining to Duende products"
+description: "Details about Duende IdentityServer licensing requirements, editions, configuration options, and trial mode functionality"
 sidebar:
   order: 1
 redirect_from:

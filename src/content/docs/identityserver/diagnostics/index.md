@@ -1,5 +1,6 @@
 ---
 title: "Diagnostics"
+description: Overview of IdentityServer's diagnostic capabilities including logging, OpenTelemetry integration, and event system for monitoring and troubleshooting
 date: 2020-09-10T08:20:20+02:00
 sidebar:
   label: Overview

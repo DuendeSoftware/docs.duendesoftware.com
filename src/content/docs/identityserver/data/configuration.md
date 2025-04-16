@@ -1,5 +1,6 @@
 ---
 title: Configuration Data
+description: "Documentation about configuration data models and stores in Duende IdentityServer, including client, resource, and identity provider stores"
 sidebar:
   order: 10
 redirect_from:

@@ -1,6 +1,8 @@
 ---
-title: Logging
+title: OIDC Client Logging
+description: Learn how to configure and customize logging in OidcClient using Microsoft.Extensions.Logging.ILogger
 sidebar:
+  label: Logging
   order: 4
 redirect_from:
   - /foss/identitymodel.oidcclient/logging/

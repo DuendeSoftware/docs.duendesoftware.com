@@ -1,5 +1,6 @@
 ---
 title: "Remote APIs"
+description: Learn how to configure and secure remote API access through BFF using HTTP forwarding and token management.
 sidebar:
   order: 20
 redirect_from:

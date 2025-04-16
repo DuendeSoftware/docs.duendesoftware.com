@@ -1,5 +1,6 @@
 ---
 title: "Discovery Endpoint"
+description: "Learn about the discovery endpoint that provides metadata about your IdentityServer configuration, including issuer name, key material, and supported scopes."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 1

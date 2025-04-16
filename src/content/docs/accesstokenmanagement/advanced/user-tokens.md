@@ -1,5 +1,6 @@
 ---
 title: Customizing User Token Management
+description: Learn how to customize user token management options, per-request parameters, and token storage mechanisms in ASP.NET Core applications.
 sidebar:
   label: User Tokens
   order: 2

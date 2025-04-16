@@ -1,5 +1,6 @@
 ---
 title: Protocol and Claim Type Constants
+description: Explore constant string classes provided by IdentityModel for OAuth 2.0, OpenID Connect protocol values, and JWT claim types
 sidebar:
   order: 1
 redirect_from:

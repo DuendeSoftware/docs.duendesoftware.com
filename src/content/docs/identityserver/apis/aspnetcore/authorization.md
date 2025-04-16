@@ -1,5 +1,6 @@
 ---
-title: "Authorization based on Scopes and other Claims"
+title: "Authorization based on Scopes and Claims"
+description: "Guide for implementing authorization using scope claims and ASP.NET Core authorization policies with IdentityServer access tokens"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 30

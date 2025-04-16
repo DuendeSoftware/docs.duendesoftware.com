@@ -1,5 +1,6 @@
 ---
 title: "Ending the Session"
+description: "Guide to correctly ending a session in IdentityServer, including removing authentication cookies, handling external logins, and revoking client tokens during logout."
 sidebar:
   order: 20
 redirect_from:
@@ -9,7 +10,6 @@ redirect_from:
 ---
 
 Learn how to correctly end a session in ASP.NET Core, including handling cookies and token revocation.
-
 
 ## Removing The Authentication Cookie
 

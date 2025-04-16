@@ -1,5 +1,6 @@
 ---
 title: "ASP.NET Core Authentication System"
+description: Learn how to configure and use ASP.NET Core authentication handlers for OpenID Connect and cookie-based session management in BFF applications
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 2

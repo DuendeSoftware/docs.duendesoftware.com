@@ -1,5 +1,6 @@
 ---
 title: Duende IdentityServer Samples
+description: A collection of runnable samples demonstrating various IdentityServer scenarios with source code available in the GitHub repository.
 sidebar:
   label: Overview
   order: 1

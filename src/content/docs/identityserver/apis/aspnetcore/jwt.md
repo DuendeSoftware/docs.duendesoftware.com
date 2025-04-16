@@ -1,5 +1,6 @@
 ---
 title: "Using JWTs"
+description: "Guide for validating JWT bearer tokens in ASP.NET Core applications using the JWT authentication handler"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 10

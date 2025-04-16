@@ -1,5 +1,6 @@
 ---
 title: DPoP
+description: DPoP (Demonstrating Proof-of-Possession) is a security mechanism that binds access tokens to specific cryptographic keys to prevent token theft and misuse.
 sidebar:
   order: 40
 redirect_from:

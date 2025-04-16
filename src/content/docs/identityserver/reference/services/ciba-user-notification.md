@@ -1,5 +1,6 @@
 ---
 title: "Backchannel Authentication User Notification Service"
+description: Documentation for the IBackchannelAuthenticationUserNotificationService interface which is used to notify users when a CIBA login request has been made.
 sidebar:
   order: 90
 redirect_from:
@@ -20,4 +21,3 @@ To use CIBA, you are expected to implement this interface and register it in the
 
   Sends a notification for the user to login via
   the [BackchannelUserLoginRequest](/identityserver/reference/models/ciba-login-request/) parameter.
-

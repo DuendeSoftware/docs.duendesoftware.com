@@ -1,5 +1,6 @@
 ---
 title: Web Applications
+description: Learn how to manage access tokens in web applications, including setup, configuration, and usage with HTTP clients
 sidebar:
   order: 3
 redirect_from:

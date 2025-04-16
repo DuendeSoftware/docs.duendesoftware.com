@@ -1,5 +1,6 @@
 ---
 title: Securing and Accessing API Endpoints
+description: Learn about the different types of APIs in a BFF architecture and how to secure and access them properly
 sidebar:
   label: Overview
   order: 1

@@ -1,5 +1,6 @@
 ---
 title: Base64 URL Encoding
+description: Documentation for Base64 URL encoding and decoding utilities in IdentityModel, used for JWT token serialization
 sidebar:
   order: 2
 redirect_from:

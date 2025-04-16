@@ -1,6 +1,6 @@
 ---
 title: Configuration API
-description: Overview
+description: Documentation for the Configuration API endpoints that enable management and configuration of IdentityServer implementations
 sidebar:
   label: Overview
   order: 1

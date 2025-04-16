@@ -1,5 +1,6 @@
 ---
 title: Blazor Server
+description: Learn how to manage access tokens in Blazor Server applications and handle token storage and HTTP client usage with Duende.AccessTokenManagement.
 sidebar:
   order: 4
 redirect_from:

@@ -1,6 +1,6 @@
 ---
 title: "Token Management"
-description: "BFF - Overview"
+description: "Learn how to manage and utilize access tokens in BFF applications for secure API communication"
 date: 2020-09-10T08:22:12+02:00
 order: 50
 redirect_from:

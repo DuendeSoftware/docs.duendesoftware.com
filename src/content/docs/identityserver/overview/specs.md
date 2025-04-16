@@ -1,5 +1,6 @@
 ---
 title: "Supported Specifications"
+description: "A comprehensive list of supported OpenID Connect and OAuth 2.x specifications implemented in Duende IdentityServer"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 3

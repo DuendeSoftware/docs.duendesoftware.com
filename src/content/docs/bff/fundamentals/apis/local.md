@@ -1,5 +1,6 @@
 ---
 title: "Local APIs"
+description: Documentation about Local APIs in BFF, including self-contained APIs and those using managed access tokens, along with securing endpoints and configuration details.
 sidebar:
   order: 10
 redirect_from:

@@ -1,6 +1,6 @@
 ---
 title: "Server-side Sessions"
-description: "BFF"
+description: "Learn how to implement and configure server-side sessions in BFF to manage user session data storage and enable session revocation capabilities"
 sidebar:
   order: 40
 redirect_from:

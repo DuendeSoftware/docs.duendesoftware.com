@@ -1,6 +1,6 @@
 ---
 title: "API Resources"
-description: "Overview"
+description: "Learn how API Resources in Duende IdentityServer help organize and group scopes, manage token claims, and control access token properties"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 30
