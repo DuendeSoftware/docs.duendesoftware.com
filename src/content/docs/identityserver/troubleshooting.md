@@ -267,4 +267,4 @@ When dealing with external authentication, you may want to set `MapInboundClaims
 
 ### Implement `OnTicketReceived` To Reduce Cookie Size
 
-When dealing with external authentication, you may want to implement `OnTicketReceived` to reduce the size of the cookie. This is a callback that is invoked after the authentication process is complete. You can use this callback to remove any claims that are not needed by your solution.
+When dealing with external authentication, you may want to implement `OnTicketReceived` to reduce the size of the cookie. This is a callback that is invoked after the external authentication process is complete. You can use this callback to remove any claims that are not needed by your solution.
