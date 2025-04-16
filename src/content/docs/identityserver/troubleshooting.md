@@ -225,7 +225,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
 In most cases, this is a _good feature to have enabled_ but there are drawbacks that can cause severe system degradation.
 
-- Enabling retry on failure causes Entity Framework Core to buffer the result set. Significantly increasing memory requirements and causing garbage collection pauses. 
+- Enabling retry on failure causes Entity Framework Core to buffer the result set. This significantly increases memory requirements and causes garbage collection pauses.
 - Some versions of `Microsoft.Data.SqlClient` call `Thread.Sleep` that can lock threads for up to **_10 seconds_**. This can lead to thread exhaustion and server unresponsiveness. We've isolated this issue to versions.
 
   | Microsoft.EntityFrameworkCore.SqlServer | Microsoft.Data.SqlClient | Status     |
