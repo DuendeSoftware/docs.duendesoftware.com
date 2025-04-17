@@ -35,7 +35,6 @@
     "jsdom": "^26.0.0",
     "patch-package": "^8.0.0",
     "react": "^19.0.0",
-    "rehype-autolink-headings": "^7.1.0",
     "satori": "^0.12.1",
     "sharp": "^0.34.1",
     "starlight-auto-sidebar": "^0.1.1",

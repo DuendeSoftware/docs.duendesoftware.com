@@ -195,14 +195,6 @@ export default defineConfig({
           },
         },
       ],
-      rehypeHeadingIds,
-      [
-        rehypeAutolinkHeadings,
-        {
-          // Wrap the heading text in a link.
-          behavior: "wrap",
-        },
-      ],
     ],
   },
 });
