@@ -14,6 +14,9 @@ jobs:
     env: 
       AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v2
@@ -46,6 +49,10 @@ jobs:
     env: 
       AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
     name: Close Pull Request Job
     steps:
       - name: Close Pull Request
