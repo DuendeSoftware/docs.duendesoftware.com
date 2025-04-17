@@ -6,8 +6,6 @@ import starlightClientMermaid from "@pasqal-io/starlight-client-mermaid";
 import starlightAutoSidebar from "starlight-auto-sidebar";
 import starlightGiscus from "starlight-giscus";
 import redirectFrom from "astro-redirect-from";
-import { rehypeHeadingIds } from "@astrojs/markdown-remark";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import starlightHeadingBadges from "starlight-heading-badges";
 import starlightLlmsTxt from "starlight-llms-txt";
 import rehypeAstroRelativeMarkdownLinks from "astro-rehype-relative-markdown-links";
