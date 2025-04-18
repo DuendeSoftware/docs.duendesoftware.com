@@ -234,11 +234,13 @@ builder.Services.ConfigureOptions<CustomConfig>();
 
 :::note
 In your `IConfigureNamedOptions<OpenIdConnectOptions>`, you can use constructor injection to access other services.
-For example, if you need to access your Entity Framework Core database context to retrieve additional data for a given
-(dynamic) authentication scheme, you can do so if needed.
+Beware of performance, for example when accessing your Entity Framework Core database context here.
+We recommend caching any additional data you may need as part of configuring options.
 
-If you require data from the `IIdentityProvider` store, you can use the `ConfigureAuthenticationOptions<>` base class
-to further customize your dynamic identity provider, as we'll see in the next section.
+Note that the `OidcProvider` class has a `Properties` bag that can be used to store additional dynamic identity provider
+configuration data you could use to further customize the `OpenIdConnectOptions`. When you require this (or other) data
+from the `IIdentityProvider` store, you can use the `ConfigureAuthenticationOptions<>` base class to further customize 
+your dynamic identity provider, as we'll see in the next section.
 :::
 
 ### Accessing OidcProvider Data In IConfigureNamedOptions
