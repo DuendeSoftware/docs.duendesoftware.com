@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import starlight from "@astrojs/starlight";
 import starlightLinksValidator from "starlight-links-validator";
 import starlightClientMermaid from "@pasqal-io/starlight-client-mermaid";
@@ -18,6 +18,18 @@ export default defineConfig({
   site: "https://docs.duendesoftware.com",
   trailingSlash: "ignore",
   redirects: {},
+  experimental: {
+    fonts: [
+      {
+        provider: fontProviders.google(),
+        name: "Roboto",
+        cssVariable: "--font-roboto",
+        weights: ["100 900", "bold"],
+        styles: ["normal", "italic"],
+        display: "swap",
+      },
+    ],
+  },
   integrations: [
     starlight({
       customCss: ["./src/styles/custom.css"],
