@@ -10,7 +10,7 @@ redirect_from:
 ---
 
 Dynamic Identity Providers are a scalable solution for managing authentication with lots of external providers, without
-incurring performance penalties or requiring application recompilation. This feature, included in the Enterprise Edition
+incurring performance penalties or requiring application recompilation. This feature, included in the [Enterprise Edition](/general/licensing/#enterprise-edition)
 of Duende IdentityServer, enables providers to be configured dynamically from a store at runtime.
 
 ## Dynamic Identity Providers
@@ -76,7 +76,7 @@ builder.Services
 The identity provider store only provides an interface to query dynamic providers and does not provide any methods to add, update, or delete identity providers.
 For custom store implementations, this means you'll need to implement a mechanism for populating the store with identity providers.
 
-If you're using the Entity Provider Core stored from the `Duende.IdentityServer.EntityFramework.Storage` NuGet package,
+If you're using the Entity Framework Core identity provider store from the `Duende.IdentityServer.EntityFramework.Storage` NuGet package,
 you can use the `ConfigurationDbContext` database context directly to add, update or remove dynamic identity providers:
 
 ```csharp title="SeedData.cs"
@@ -183,12 +183,12 @@ There are three paths that are set on the `OpenIdConnectOptions`:
 * [RemoteSignOutPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions.remotesignoutpath).
   This is the OIDC front channel logout URI protocol value. The suffix `"/signout"` is used for this path.
 
-For your IdentityServer running at "https://sample.duendesoftware.com" and an OIDC identity provider whose
+For your IdentityServer running at `https://sample.duendesoftware.com` and an OIDC identity provider whose
 scheme is "idp1", your client configuration with the external OIDC identity provider would be:
 
-* The redirect URI would be "https://sample.duendesoftware.com/federation/idp1/signin"
-* The post logout redirect URI would be "https://sample.duendesoftware.com/federation/idp1/signout-callback"
-* The front channel logout URI would be "https://sample.duendesoftware.com/federation/idp1/signout"
+* The redirect URI would be `https://sample.duendesoftware.com/federation/idp1/signin`
+* The post logout redirect URI would be `https://sample.duendesoftware.com/federation/idp1/signout-callback`
+* The front channel logout URI would be `https://sample.duendesoftware.com/federation/idp1/signout`
 
 
 ## Advanced Configuration
@@ -411,9 +411,9 @@ Google authentication handler, a similar implementation detail may exist for the
 builder.Services.ConfigureOptions<OAuthPostConfigureOptions<GoogleOptions, GoogleHandler>>();
 ```
 
-### 4. Use Your Custom IdentityProvider
+### 4. Use A Custom IdentityProvider
 
-With these building blocks in place, you can start using your custom identity provider type with Duende IdentityServer
+With these building blocks in place, you can start using a custom identity provider type with Duende IdentityServer
 dynamic identity providers!
 
 ```csharp title="Program.cs"
