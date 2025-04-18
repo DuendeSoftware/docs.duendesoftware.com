@@ -1,12 +1,12 @@
 ---
 import { getImagePath } from "astro-opengraph-images";
 import { Font } from "astro:assets";
+import Default from '@astrojs/starlight/components/Head.astro'
 
-const { head } = Astro.locals.starlightRoute;
 const { url, site } = Astro;
 const openGraphImageUrl = getImagePath({ url, site });
 ---
 
-{head.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
+<Default />
 {openGraphImageUrl && (<meta property="og:image" content={openGraphImageUrl} />)}
 <Font cssVariable="--font-roboto" preload />
