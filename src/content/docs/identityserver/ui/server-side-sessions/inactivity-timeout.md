@@ -41,7 +41,7 @@ Internally IdentityServer provides a `ISessionCoordinationService` which is invo
 Its purpose is to then extend the lifetime of the server-side session. 
 Below is a picture of the various types of requests to do this:
 
-![diagram demonstrating how to extend a session using IdentityServer](./images/extending_session.png)
+![diagram demonstrating how to extend a session using IdentityServer](./images/extending_session.svg)
 
 
 ### User Inactivity Detection and Session Termination
