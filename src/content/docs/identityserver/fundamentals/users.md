@@ -58,7 +58,7 @@ If the user has never logged in there will be no cookie, and then the request to
 redirect to your login page. This is the entry point into your custom workflow that can take over to get the user logged
 in.
 
-![sign in flow](../ui/images/signin_flow.png)
+![sign in flow](../ui/images/signin_flow.svg)
 
 Once the login page has finished logging in the user with the ASP.NET Core authentication system, it will redirect the
 user back to the authorize endpoint.

@@ -21,7 +21,7 @@ The design goal of Duende IdentityServer is to provide a full implementation of 
 
 To allow full flexibility of the UI, including business rules and user flow, the UI is separated from the core IdentityServer engine. The engine implements the endpoints specified in the protocols and hands off control to your code in the UI as necessary.
 
-![diagram showing how IdentityServer middleware is hosted in an ASP.NET Core application](./images/host.png)
+![diagram showing how IdentityServer middleware is hosted in an ASP.NET Core application](./images/host.svg)
 
 Our templates include a [quick start UI](/identityserver/quickstarts/2-interactive/#add-the-ui) and a [quick start UI adapted to ASP.NET Identity](/identityserver/quickstarts/5-aspnetid/) which provide a starting point for all the necessary pages, ready to be customized.
 
