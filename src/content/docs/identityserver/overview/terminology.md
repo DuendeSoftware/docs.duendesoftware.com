@@ -12,7 +12,7 @@ redirect_from:
 
 The specs, documentation and object model use a certain terminology that you should be aware of.
 
-![a basic diagrams showing the relationship between users, clients, identityserver, and resources](./images/terminology.png)
+![a basic diagrams showing the relationship between users, clients, identityserver, and resources](./images/terminology.svg)
 
 ## Duende IdentityServer
 

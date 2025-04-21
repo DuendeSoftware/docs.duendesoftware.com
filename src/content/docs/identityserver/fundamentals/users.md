@@ -48,7 +48,7 @@ It is very important that you understand how it works when building the login pa
 Recall the diagram showing the relationship of your custom UI pages and the IdentityServer middleware in your
 IdentityServer host application:
 
-![middleware diagram](../overview/images/middleware.png)
+![middleware diagram](../overview/images/middleware.svg)
 
 When your IdentityServer receives an authorize request, it will inspect it for a current authentication session for a
 user. This authentication session is based on ASP.NET Core's authentication system and is ultimately determined by a
