@@ -5,6 +5,7 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 100
 redirect_from:
+  - /identityserver/apis/aspnetcore/dpop/
   - /identityserver/v5/tokens/pop/
   - /identityserver/v5/tokens/pop/dpop/
   - /identityserver/v5/tokens/pop/mtls/
