@@ -143,7 +143,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 
 ## Demonstrating Proof-of-Possession at the Application Layer (DPoP)
 
-**Version: :badge[>=6.3]**
+**Version:** <span data-shb-badge data-shb-badge-variant="default">&gt;=6.3</span>
 
 [DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) is a security measure that addresses token replay
 attacks by making it difficult for attackers to use stolen tokens. Support for DPoP is included
