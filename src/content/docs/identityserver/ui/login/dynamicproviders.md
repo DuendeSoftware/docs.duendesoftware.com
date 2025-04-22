@@ -15,15 +15,16 @@ of Duende IdentityServer, enables providers to be configured dynamically from a 
 
 ## Dynamic Identity Providers
 
-Authentication handlers for external providers are typically added into your IdentityServer using `AddAuthentication()`
-and `AddOpenIdConnect()`. This is fine for a handful of schemes, but becomes harder to manage if you have too many of them.
+Authentication handlers for external providers are typically added into your IdentityServer using `AddAuthentication()`,
+`AddOpenIdConnect()`, `AddSaml2()`, and other helper methods. This is fine for a handful of schemes, but becomes harder
+to manage if you have too many of them.
 Additionally, you'd have to re-run your startup code for new authentication handlers to be picked up by ASP.NET Core.
 
 The authentication handler architecture in ASP.NET Core was not designed to have many statically registered authentication
 handlers registered in the service container and Dependency Injection (DI) system. At some point you will incur a
 performance penalty for having too many of them.
 
-Duende IdentityServer provides support for dynamic configuration of OpenID Connect providers loaded from a store.
+Duende IdentityServer provides support for dynamic configuration of authentication handlers loaded from a store.
 Dynamic configuration addresses the performance concern and allows changes to the configuration to a running server.
 
 Support for Dynamic Identity Providers is included in the [Duende IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition.
@@ -174,6 +175,11 @@ few social providers statically configured that you would want to display.
 As part of the architecture of the dynamic providers feature, different callback paths are required and are
 automatically set to follow a convention. The convention of these paths follows the form of `~/federation/{scheme}/{suffix}`.
 
+:::tip
+Even if you don't use dynamic providers yet, you may want to consider adopting this pattern for the callback paths.
+This will make it easier to transition to dynamic providers in the future.
+:::
+
 There are three paths that are set on the `OpenIdConnectOptions`:
 
 * [CallbackPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.remoteauthenticationoptions.callbackpath).
@@ -298,7 +304,13 @@ builder.Services
 ## Using Non-OIDC Authentication Handlers 
 
 Dynamic identity providers in Duende IdentityServer come with an implementation that supports OpenId Connect providers to be registered.
-In your solution, it may be necessary to support other authentication providers, such as the `GoogleHandler`, or a SAML-based authentication provider.
+In your solution, it may be necessary to support other authentication providers, such as a SAML-based authentication provider.
+
+We have two samples that show how to use non-OIDC authentication handlers with dynamic identity providers:
+* Adding the [WS-Federation protocol type](../../../identityserver/samples/ui/#adding-other-protocol-types-to-dynamic-providers)
+* Adding the [Saml2 protocol type](../../../identityserver/samples/ui/#using-sustainsyssaml2-with-dynamic-providers), using the [Sustainsys.Saml2](https://saml2.sustainsys.com/) open source library
+
+In this section, we'll look at a minimal example of how to add other authentication handlers, such as the `GoogleHandler`, to dynamic identity providers, 
 
 To register other authentication handlers, you can use the `AddProviderType<T, TOptions, TIdentityProvider>(string scheme)` method on the `DynamicProviderOptions` object,
 where `T` is the authentication handler type, `TOptions` is the options type for that particular handler, and `TIdentityProvider` is the identity provider type that models the dynamic provider.
