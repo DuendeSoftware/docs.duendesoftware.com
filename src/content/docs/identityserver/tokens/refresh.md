@@ -44,8 +44,8 @@ POST /connect/token
 
 #### .NET Client Library
 
-On .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io) client library
-to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) refresh tokens, e.g.:
+On .NET you can leverage the [Duende IdentityModel](../../../identitymodel) client library
+to [request](../../../identitymodel/endpoints/token) refresh tokens, e.g.:
 
 ```cs
 using IdentityModel.Client;

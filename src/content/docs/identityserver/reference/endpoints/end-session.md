@@ -43,7 +43,7 @@ GET /connect/endsession?id_token_hint=...&post_logout_redirect_uri=http%3A%2F%2F
 
 ## .NET Client Library
 
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically create end
+You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically create end
 sessions request URLs from .NET code.
 
 ```cs

@@ -19,7 +19,7 @@ The discovery endpoint is available via `/.well-known/openid-configuration` rela
 
 ## .NET Client Library
 
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
+You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
