@@ -11,6 +11,7 @@ import starlightLlmsTxt from "starlight-llms-txt";
 import rehypeAstroRelativeMarkdownLinks from "astro-rehype-relative-markdown-links";
 import opengraphImages from "astro-opengraph-images";
 import { duendeOpenGraphImage } from "./src/components/duende-og-image.js";
+import rehypeExternalLinks from "rehype-external-links";
 import * as fs from "node:fs";
 
 // https://astro.build/config
@@ -75,7 +76,7 @@ export default defineConfig({
             defer: true,
             async: true,
           },
-        }
+        },
       ],
       logo: {
         light: "./src/assets/duende-logo.svg",
@@ -189,6 +190,13 @@ export default defineConfig({
               base: false,
             },
           },
+        },
+      ],
+      [
+        rehypeExternalLinks,
+        {
+          target: "_blank",
+          rel: ["noopener", "noreferrer"],
         },
       ],
     ],
