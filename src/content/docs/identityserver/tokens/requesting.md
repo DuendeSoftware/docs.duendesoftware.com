@@ -50,7 +50,7 @@ Pragma: no-cache
 ```
 
 ### .NET Client Library
-In .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens.
+In .NET you can use the [Duende IdentityModel](../../../identitymodel) client library to [request](../../../identitymodel/endpoints/token) tokens.
 
 The above token request would look like this in C#:
 
@@ -72,36 +72,37 @@ var response = await client.RequestClientCredentialsTokenAsync(new ClientCredent
 ### Automating Token Requests In ASP.NET Core And Worker Applications
 
 The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) library can automate client credential request and token lifetime management for you.
+Using this library, you can enable access token management for an HTTP client provided by `IHttpClientFactory`.
 
-Using this library, you only need to register the token client in DI:
+You can add the necessary services to ASP.NET Core's service provider by calling `AddClientCredentialsTokenManagement()`. One or more named client definitions need to be registered by calling `AddClient()`.
 
 ```cs
 // Program.cs
-builder.Services.AddAccessTokenManagement(options =>
-{
-    options.Client.Clients.Add("client", new ClientCredentialsTokenRequest
+builder.Services.AddClientCredentialsTokenManagement()
+    .AddClient("client", client =>
     {
-        Address = "https://demo.duendesoftware.com/connect/token",
-        ClientId = "m2m",
-        ClientSecret = "secret",
-        Scope = "api"
+        client.TokenEndpoint = "https://demo.duendesoftware.com/connect/token";
+        
+        client.ClientId = "m2m";
+        client.ClientSecret = "secret";
+        client.Scope = "api";
     });
-});
 ```
 
-You can then add token management to an HTTP-factory provided client:
+You can then register named HTTP clients with `IHttpClientFactory`. These named clients will automatically use the above client definitions to request and use access tokens.
 
 ```cs
 // Program.cs
-builder.Services.AddClientAccessTokenClient("client", configureClient: client =>
+builder.Services.AddClientAccessTokenHttpClient("client", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 });
 ```
 
-...and finally use the client with automatic token management in your application code:
+In your application code, you can then use the named HTTP client with automatic token management to call the API:
 
 ```cs
+// DataController.cs
 public class DataController : Controller
 {
     IHttpClientFactory _factory;
