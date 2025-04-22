@@ -17,7 +17,7 @@ of Duende IdentityServer, enables providers to be configured dynamically from a 
 
 Normally authentication handlers for external providers are added into your IdentityServer using `AddAuthentication()`
 and `AddOpenIdConnect()`. This is fine for a handful of schemes, but the authentication handler architecture in ASP.NET
-Core was not designed for dozens or more statically registered in the DI system. At some point you will incur a
+Core was not designed for dozens or more statically registered in the ASP.NET Core service provider. At some point you will incur a
 performance penalty for having too many. Also, as you need to add or change this configuration you will need to
 re-compile and re-run your startup code for those changes to take effect.
 
@@ -104,7 +104,7 @@ properties and how they are mapped to the options.
 
 #### Customizing OpenIdConnectOptions
 
-If it is needed to further customize the `OpenIdConnectOptions`, you can register in the DI system an instance of
+If it is needed to further customize the `OpenIdConnectOptions`, you can register in the ASP.NET Core service provider an instance of
 `IConfigureNamedOptions<OpenIdConnectOptions>`. For example:
 
 ```cs
@@ -124,7 +124,7 @@ public class CustomConfig : IConfigureNamedOptions<OpenIdConnectOptions>
 }
 ```
 
-And to register this in the DI system:
+And to register this in the ASP.NET Core service provider:
 
 ```cs
 builder.Services.ConfigureOptions<CustomConfig>();
@@ -156,7 +156,7 @@ class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectO
 }
 ```
 
-The above class would need to be configured in DI (as before):
+The above class would need to be configured in the ASP.NET Core service provider (as before):
 
 ```cs
 // Program.cs

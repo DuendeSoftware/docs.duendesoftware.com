@@ -176,7 +176,7 @@ public async Task<IActionResult> CallApi()
 
 ### HTTP Client Factory
 
-Last but not least, if you registered clients with the factory, you can simply use them. They will try to make sure that a current access token is always sent along. If that is not possible, ultimately a 401 will be returned to the calling code.
+Last but not least, if you registered clients with the factory, you can use them. They will try to make sure that a current access token is always sent along. If that is not possible, ultimately a 401 will be returned to the calling code.
 
 ```cs
 public async Task<IActionResult> CallApi()

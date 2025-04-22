@@ -12,7 +12,7 @@ The most common way to use the access token management for machine to machine co
 
 ## Client options
 
-You can add token client definitions to your host while configuring the DI container, e.g.:
+You can add token client definitions to your host while configuring the ASP.NET Core service provider, e.g.:
 
 ```cs
 services.AddClientCredentialsTokenManagement()
@@ -53,7 +53,7 @@ services.Configure<ClientCredentialsClient>("invoices", client =>
 });
 ```
 
-Or use the `IConfigureNamedOptions` if you need access to the DI container during registration, e.g.:
+Or use the `IConfigureNamedOptions` if you need access to the ASP.NET Core service provider during registration, e.g.:
 
 ```cs
 public class ClientCredentialsClientConfigureOptions : IConfigureNamedOptions<ClientCredentialsClient>

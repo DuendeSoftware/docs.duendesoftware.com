@@ -12,7 +12,7 @@ redirect_from:
 ---
 
 `AddIdentityServer` return a builder object that provides many extension methods to add IdentityServer specific services
-to DI. Here's a list grouped by feature areas.
+to the ASP.NET Core service provider. Here's a list grouped by feature areas.
 
 ```cs
 // Program.cs
@@ -72,7 +72,7 @@ enable [caching for configuration data](/identityserver/data/configuration#cachi
 
 * **`AddInMemoryCaching<T>`**
 
-  To use any of the caches described below, an implementation of `ICache<T>` must be registered in DI.
+  To use any of the caches described below, an implementation of `ICache<T>` must be registered in the ASP.NET Core service provider.
   This API registers a default in-memory implementation of `ICache<T>` that's based on ASP.NET Core's `MemoryCache`.
 
 * **`AddClientStoreCache<T>`**

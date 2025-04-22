@@ -366,7 +366,7 @@ clients and APIs have updated their caches.
 
 Next, start signing tokens with the new key, but continue to publish the public
 key of the old key so that tokens that were signed with that key can continue to
-be validated. The IdentityServer configuration change needed is simply to swap
+be validated. The IdentityServer configuration change needed is to swap
 the signing credential and validation key.
 
 ```cs

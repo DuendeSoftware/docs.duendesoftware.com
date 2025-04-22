@@ -47,7 +47,7 @@ development time. Visual Studio includes SPA templates that start up a SPA and p
 Samples of Duende.BFF that take this approach using [React](/bff/samples#reactjs-frontend)
 and [Angular](/bff/samples#angular-frontend) are available.
 
-Microsoft's templates are easy-to-use at dev time from Visual Studio. They allow you to simply run the solution, and the
+Microsoft's templates are easy-to-use at dev time from Visual Studio. They allow you to run the solution, and the
 template proxies requests to the front end for you. At deploy time, that proxy is removed and the static assets of the
 site are served by the static file middleware.
 

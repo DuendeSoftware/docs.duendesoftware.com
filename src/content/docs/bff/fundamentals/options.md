@@ -97,7 +97,7 @@ builder.Services.AddBff(options =>
 * ***EnableSessionCleanup***
 
     Indicates if expired server side sessions should be cleaned up.
-    This requires an implementation of IUserSessionStoreCleanup to be registered in the DI system.
+    This requires an implementation of IUserSessionStoreCleanup to be registered in the ASP.NET Core service provider.
     Defaults to *false*.
 
 * ***SessionCleanupInterval***

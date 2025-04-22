@@ -44,9 +44,9 @@ The picture below shows these logical steps.
 
 While the above architecture works, there are some disadvantages to the design presented in the template.
 There is an obvious complexity in using two different credential types in the single host (cookies and tokens).
-There are great pains taken in the template (hidden away in various extension methods and clever configuration in the DI system) to accept the access token for the API calls, but only accept the authentication cookie to the ASP.NET Identity Pages and the Duende IdentityServer endpoints.
+There are great pains taken in the template (hidden away in various extension methods and clever configuration in the ASP.NET Core service provider) to accept the access token for the API calls, but only accept the authentication cookie to the ASP.NET Identity Pages and the Duende IdentityServer endpoints.
 
-Related to this, co-hosting your token server (i.e. Duende IdentityServer) with the application and API is simply not the recommended pattern.
+Related to this, co-hosting your token server (i.e. Duende IdentityServer) with the application and API is not the recommended pattern.
 The intent of using a token server is to enable centralization of user authentication, which enables single sign-on for users.
 Co-hosting the token server with the client application (and API) is counter to that goal.
 Thus, the recommended approach is to host Duende IdentityServer (and then also the ASP.NET Identity Pages) in its own host separate from the app and API.

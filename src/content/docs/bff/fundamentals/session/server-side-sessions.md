@@ -61,7 +61,7 @@ builder.Services.AddBff(options => {
     .AddServerSideSessions();
 ```
 
-This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the DI system.
+This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
 
 If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
 Just enable session cleanup:

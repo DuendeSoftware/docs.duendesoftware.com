@@ -40,8 +40,7 @@ ASP.NET Core.
 
 ## Registering Authentication Handlers For External Providers
 
-Supporting an external provider is achieved by simply registering the handler in your IdentityServer's startup
-configuration.
+Supporting an external provider is achieved by registering the handler in your IdentityServer's startup configuration.
 For example, to use employee logins from Azure AD (AAD):
 
 ```csharp
@@ -282,9 +281,9 @@ You can implement this yourself by implementing `ISecureDataFormat<Authenticatio
 `OpenIdConnectOptions`.
 
 Fortunately, IdentityServer provides an implementation of this for you, backed by the `IDistributedCache` implementation
-registered in the DI container (e.g. the standard `MemoryDistributedCache`).
-To use the IdentityServer provided secure data format implementation, simply call the `AddOidcStateDataFormatterCache`
-extension method on the `IServiceCollection` when configuring DI.
+registered in the ASP.NET Core service provider (e.g. the standard `MemoryDistributedCache`).
+To use the IdentityServer provided secure data format implementation, call the `AddOidcStateDataFormatterCache`
+extension method on the `IServiceCollection` when configuring the service provider.
 
 If no parameters are passed, then all OpenID Connect handlers configured will use the IdentityServer provided secure
 data format implementation:

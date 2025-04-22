@@ -28,7 +28,7 @@ The stores used in Duende IdentityServer are:
 
 ## Registering Custom Stores
 
-Custom implementations of the stores must be registered in the DI system.
+Custom implementations of the stores must be registered in the ASP.NET Core service provider.
 There are [convenience methods](/identityserver/reference/di/#configuration-stores) for registering these.
 For example:
 
@@ -49,7 +49,7 @@ same data.
 
 Duende IdentityServer provides [convenience methods](/identityserver/reference/di#caching-configuration-data) to
 enable caching data from the various stores.
-The caching implementation relies upon an `ICache<T>` service and must also be added to DI.
+The caching implementation relies upon an `ICache<T>` service and must also be added to the ASP.NET Core service provider.
 For example:
 
 ```cs

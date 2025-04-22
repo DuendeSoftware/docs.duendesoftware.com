@@ -15,7 +15,7 @@ the token endpoint. A response in this context refers to an object model that de
 serialized and transmitted in the HTTP response.
 
 The default implementation is the `TokenResponseGenerator` class. You can customize the behavior of the token endpoint
-by providing your own implementation of the `ITokenResponseGenerator` to the DI system.
+by providing your own implementation of the `ITokenResponseGenerator` to the ASP.NET Core service provider.
 
 To create a customized implementation of `ITokenResponseGenerator`, we recommend that you create a class that derives
 from the default implementation. Your custom implementation should override the appropriate virtual methods of the

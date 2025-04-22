@@ -20,7 +20,7 @@ configured.
 
 One approach to configuring CORS is to use the `AllowedCorsOrigins` collection on
 the [client configuration](/identityserver/reference/models/client#authentication--session-management).
-Simply add the origin of the client to the collection and the default configuration in IdentityServer will consult these
+Add the origin of the client to the collection and the default configuration in IdentityServer will consult these
 values to allow cross-origin calls from the origins.
 
 :::note
@@ -40,16 +40,15 @@ CORS policy.
 The single method to implement is: *Task<bool> IsOriginAllowedAsync(string origin)*.
 Return `true` if the `origin` is allowed, `false` otherwise.
 
-Once implemented, simply register the implementation in DI and IdentityServer will then use your custom implementation.
+Once implemented, register the implementation in the ASP.NET Core service provider and IdentityServer will then use your custom implementation.
 
 ### DefaultCorsPolicyService
 
-If you simply wish to hard-code a set of allowed origins, then there is a pre-built `ICorsPolicyService` implementation
+If you wish to hard-code a set of allowed origins, then there is a pre-built `ICorsPolicyService` implementation
 you can use called `DefaultCorsPolicyService`.
 
 This would be configured as a singleton in DI, and hard-coded with its `AllowedOrigins` collection, or setting the flag
-`AllowAll`
-to `true` to allow all origins.
+`AllowAll` to `true` to allow all origins.
 
 For example, in `ConfigureServices`:
 
@@ -88,8 +87,8 @@ too should continue to work normally.
 The one scenario where there might be a conflict between your use of the ASP.NET Core CORS services and IdentityServer
 is if you decide to create a custom `ICorsPolicyProvider`.
 Given the design of the ASP.NET Core's CORS services and middleware, IdentityServer implements its own custom
-`ICorsPolicyProvider` and registers it in the DI system.
+`ICorsPolicyProvider` and registers it in the ASP.NET Core service provider.
 Fortunately, the IdentityServer implementation is designed to use the decorator pattern to wrap any existing
-`ICorsPolicyProvider` that is already registered in DI.
-What this means is that you can also implement the `ICorsPolicyProvider`, but it simply needs to be registered prior to
-IdentityServer in DI (e.g. in `ConfigureServices`).
+`ICorsPolicyProvider` that is already registered in the service provider.
+What this means is that you can also implement the `ICorsPolicyProvider`, but it needs to be registered prior to
+IdentityServer in the service provider (e.g. in `ConfigureServices`).
