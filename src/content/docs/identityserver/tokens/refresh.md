@@ -44,8 +44,8 @@ POST /connect/token
 
 #### .NET Client Library
 
-On .NET you can leverage the [IdentityModel](https://identitymodel.readthedocs.io) client library
-to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) refresh tokens, e.g.:
+On .NET you can leverage the [Duende IdentityModel](../../../identitymodel) client library
+to [request](../../../identitymodel/endpoints/token) refresh tokens, e.g.:
 
 ```cs
 using IdentityModel.Client;
@@ -148,7 +148,7 @@ the amount of time that must elapse before tokens marked as consumed will be del
 Token Service to allow for consumed tokens to be used for some period of time, then we recommend configuring the
 `ConsumedTokenCleanupDelay` to the same time period.
 
-This customization must be registered in the DI system as an implementation of the `IRefreshTokenService`:
+This customization must be registered in the ASP.NET Core service provider as an implementation of the `IRefreshTokenService`:
 
 ```csharp
 builder.Services.TryAddTransient<IRefreshTokenService, YourCustomRefreshTokenService>();

@@ -5,6 +5,7 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 100
 redirect_from:
+  - /identityserver/apis/aspnetcore/dpop/
   - /identityserver/v5/tokens/pop/
   - /identityserver/v5/tokens/pop/dpop/
   - /identityserver/v5/tokens/pop/mtls/
@@ -143,7 +144,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 
 ## Demonstrating Proof-of-Possession at the Application Layer (DPoP)
 
-**Version: :badge[>=6.3]**
+**Version:** <span data-shb-badge data-shb-badge-variant="default">&gt;=6.3</span>
 
 [DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) is a security measure that addresses token replay
 attacks by making it difficult for attackers to use stolen tokens. Support for DPoP is included
@@ -201,7 +202,7 @@ new Client
 The easiest approach for supporting DPoP in your client is to use the DPoP support in the `Duende.AccessTokenManagement`
 library ([docs available here](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki/DPoP)).
 It provides DPoP client support for both client credentials and code flow style clients.
-DPoP is enabled by simply assigning the `DPoPJsonWebKey` on the client configuration.
+DPoP is enabled by assigning the `DPoPJsonWebKey` on the client configuration.
 
 For example, here's how to configure a client credentials client:
 

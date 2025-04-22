@@ -57,7 +57,7 @@ Here are common scenario's for implementing your own *IHttpTransformerFactory* a
 
 If you used a custom implementation of `IHttpTransformerFactory` to change the default behavior of
 `MapRemoteBffApiEndpoint()`,
-for example to add additional transforms, then you can now inject a custom delegate into the DI container:
+for example to add additional transforms, then you can now inject a custom delegate into the ASP.NET Core service provider:
 
 ```csharp
 services.AddSingleton<BffYarpTransformBuilder>(CustomDefaultYarpTransforms);

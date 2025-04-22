@@ -13,7 +13,7 @@ Once the user has been logged in, they must complete the protocol workflow so th
 To facilitate this, the login page is passed a `returnUrl` query parameter which refers to the URL the prior request came from.
 This URL is, in essence, the same authorization endpoint to which the client made the original authorize request.
 
-In the request to your login page where it logs the user in with a call to `SignInAsync`, it would then simply use the `returnUrl` to redirect the response back.
+In the request to your login page where it logs the user in with a call to `SignInAsync`, it would then use the `returnUrl` to redirect the response back.
 This will cause the browser to re-issue the original authorize request from the client allowing your IdentityServer to complete the protocol work.
 An example of this redirect can be seen in the [local login](/identityserver/ui/login/local/) topic.
 

@@ -19,7 +19,7 @@ Have a look for the `Worker` project in the [samples folder](https://github.com/
 
 Start by adding a reference to the `Duende.AccessTokenManagement` NuGet package to your application.
 
-You can add the necessary services to the DI system by calling `AddClientCredentialsTokenManagement()`. After that you can add one or more named client definitions by calling `AddClient`.
+You can add the necessary services to the ASP.NET Core service provider by calling `AddClientCredentialsTokenManagement()`. After that you can add one or more named client definitions by calling `AddClient`.
 
 ```cs
 // default cache

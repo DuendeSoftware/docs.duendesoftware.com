@@ -17,7 +17,7 @@ of Duende IdentityServer, enables providers to be configured dynamically from a 
 
 Authentication handlers for external providers are typically added into your IdentityServer using `AddAuthentication()`
 and `AddOpenIdConnect()`. This is fine for a handful of schemes, but becomes harder to manage if you have too many of them.
-Additionally, you'd have to re-compile and re-run your startup code for new authentication handlers to be picked up by ASP.NET Core.
+Additionally, you'd have to re-run your startup code for new authentication handlers to be picked up by ASP.NET Core.
 
 The authentication handler architecture in ASP.NET Core was not designed to have many statically registered authentication
 handlers registered in the service container and Dependency Injection (DI) system. At some point you will incur a
@@ -190,7 +190,6 @@ scheme is "idp1", your client configuration with the external OIDC identity prov
 * The post logout redirect URI would be `https://sample.duendesoftware.com/federation/idp1/signout-callback`
 * The front channel logout URI would be `https://sample.duendesoftware.com/federation/idp1/signout`
 
-
 ## Advanced Configuration
 
 Dynamic identity providers in Duende IdentityServer come with a number of defaults and expose configuration options
@@ -226,7 +225,7 @@ public class CustomConfig : IConfigureNamedOptions<OpenIdConnectOptions>
 }
 ```
 
-You will need to register the named options type in the service container at startup:
+You will need to register the named options type in the ASP.NET Core service container at startup:
 
 ```csharp title="Program.cs"
 builder.Services.ConfigureOptions<CustomConfig>();
@@ -272,7 +271,7 @@ class CustomOidcConfigureOptions : ConfigureAuthenticationOptions<OpenIdConnectO
 }
 ```
 
-You will need to register the options type in the service container at startup:
+You will need to register the options type in the service provider at startup:
 
 ```csharp title="Program.cs"
 builder.Services.ConfigureOptions<CustomOidcConfigureOptions>();

@@ -19,7 +19,7 @@ putting your IdentityServer into a separate application.
 
 ## Dependency Injection System
 
-You add the necessary services to the DI system by calling `AddIdentityServer` at application startup:
+You add the necessary services to the ASP.NET Core service provider by calling `AddIdentityServer` at application startup:
 
 ```cs
 //Program.cs
@@ -29,7 +29,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options => { ... });
 Many of the fundamental configuration settings can be set on the options. See the
 `[IdentityServerOptions](/identityserver/reference/options)` reference for more details.
 
-The builder object has a number of extension methods to add additional services to DI.
+The builder object has a number of extension methods to add additional services to the ASP.NET Core service provider.
 You can see the full list in the [reference](/identityserver/reference/di) section, but very commonly you start by
 adding the configuration stores for clients and resources, e.g.:
 

@@ -59,7 +59,7 @@ client.ClientSecrets = new[] { primary, secondary };
 ### Secret Parsing
 During request processing, the secret must be somehow extracted from the incoming request. The various specs describe a couple of options, e.g. as part of the authorization header or the body payload.
 
-It is the job of implementations of the [ISecretParser](/identityserver/reference/models/secrets#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the `AddSecretParser()` DI extension method.
+It is the job of implementations of the [ISecretParser](/identityserver/reference/models/secrets#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the `AddSecretParser()` service provider extension method.
 
 The following secret parsers are part of Duende IdentityServer:
 
@@ -76,18 +76,18 @@ The following secret parsers are part of Duende IdentityServer:
 * **`Duende.IdentityServer.Validation.JwtBearerClientAssertionSecretParser`**
 
   Parses a JWT on the `client_assertion` body field.
-  Can be enabled by calling the `AddJwtBearerClientAuthentication` DI extension method.
+  Can be enabled by calling the `AddJwtBearerClientAuthentication` service provider extension method.
 
 * **`Duende.IdentityServer.Validation.MutualTlsSecretParser`**
 
   Parses the `client_id` body field and TLS client certificate.
-  Can be enabled by calling the `AddMutualTlsSecretValidators` DI extension method.
+  Can be enabled by calling the `AddMutualTlsSecretValidators` service provider extension method.
 
 
 ### Secret Validation
 It is the job of implementations of the [ISecretValidator](/identityserver/reference/models/secrets#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
 
-You can add secret validators by calling the `AddSecretValidator()` DI extension method.
+You can add secret validators by calling the `AddSecretValidator()` service provider extension method.
 
 The following secret validators are part of Duende IdentityServer:
 
@@ -103,17 +103,17 @@ The following secret validators are part of Duende IdentityServer:
 * **`Duende.IdentityServer.Validation.PrivateKeyJwtSecretValidator`**
 
   Validates JWTs that are signed with either X.509 certificates or keys wrapped in a JWK.
-  Can be enabled by calling the `AddJwtBearerClientAuthentication` DI extension method.
+  Can be enabled by calling the `AddJwtBearerClientAuthentication` service provider extension method.
 
 * **`Duende.IdentityServer.Validation.X509ThumbprintSecretValidator`**
 
   Validates X.509 client certificates based on a thumbprint.
-  Can be enabled by calling the `AddMutualTlsSecretValidators` DI extension method.
+  Can be enabled by calling the `AddMutualTlsSecretValidators` service provider extension method.
 
 * **`Duende.IdentityServer.Validation.X509NameSecretValidator`**
 
   Validates X.509 client certificates based on a common name.
-  Can be enabled by calling the `AddMutualTlsSecretValidators` DI extension method.
+  Can be enabled by calling the `AddMutualTlsSecretValidators` service provider extension method.
 
 ## Shared Secrets
 
@@ -181,7 +181,7 @@ Authorization: Basic xxxxx
 
 ### .NET Client Library
 
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
+You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
@@ -294,7 +294,7 @@ private static string CreateClientToken(SigningCredentials credential, string cl
 }
 ```
 
-...and the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the
+...and the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with the
 protocol endpoint from .NET code.
 
 ```cs
@@ -422,8 +422,8 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 })
 ```
 
-Use the [DI extensions methods](/identityserver/reference/di) to add the services to DI which contain a default
-implementation to do that either thumbprint or common-name based:
+Use the [ASP.NET Core service provider extensions methods](/identityserver/reference/di) to add the services to the
+ASP.NET Core service provider. A default implementation is available to do that either thumbprint or common-name based:
 
 ```cs
 idsvrBuilder.AddMutualTlsSecretValidators();
@@ -465,7 +465,7 @@ When writing a client to connect to IdentityServer, the `SocketsHttpHandler` (or
 class provides a convenient mechanism to add a client certificate to outgoing requests.
 
 Use such a handler with `HttpClient` to perform the client certificate authentication handshake at the TLS channel.
-The following snippet is using [IdentityModel](https://identitymodel.readthedocs.io) to read the discovery document and
+The following snippet is using [Duende IdentityModel](../../../identitymodel) to read the discovery document and
 request a token:
 
 ```cs

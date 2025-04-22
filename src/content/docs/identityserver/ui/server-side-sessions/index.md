@@ -61,7 +61,7 @@ our [EntityFramework Core implementation](/identityserver/data/ef#operational-st
 can [implement the store yourself](/identityserver/reference/stores/server-side-sessions/).
 
 :::note
-Order is important in the DI system.
+Order is important in the ASP.NET Core service provider.
 When using `AddServerSideSessions`, this call needs to come after any custom `IRefreshTokenService` implementation that
 has been registered.
 :::

@@ -44,7 +44,7 @@ var resources = new[]
 };
 ```
 
-If the client would simply request a token for the `read` scope, the resulting access token would contain the audience of both the invoice and the products API and thus be accepted at both APIs.
+If the client would request a token for the `read` scope, the resulting access token would contain the audience of both the invoice and the products API and thus be accepted at both APIs.
 
 ### Machine to Machine Scenarios
 If the client in addition passes the `resource` parameter specifying the name of the resource where it wants to use the access token, the token engine can `down-scope` the resulting access token to the single resource, e.g.:

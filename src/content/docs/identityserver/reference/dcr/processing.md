@@ -60,8 +60,8 @@ have its properties set, the DCR request, and other contextual information. The
 ## Secret Generation
 
 The `AddClientSecret` method is responsible for adding the client's secret and
-plaintext of that secret to the context's `Items` dictionary for later use. If you want to customize secret generation
-more simply, you can override the GenerateSecret method, which only needs to return a tuple containing the secret and
+plaintext of that secret to the context's `Items` dictionary for later use. If you want to customize secret generation,
+you can override the GenerateSecret method, which only needs to return a tuple containing the secret and
 its plaintext.
 
 | name                   | description                                                   |
