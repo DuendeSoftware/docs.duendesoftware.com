@@ -68,7 +68,7 @@ authorization endpoint.
 This temporary persistence is different from the persistence used for the "remember my consent" feature (and it is the
 authorization endpoint which persists the "remember my consent" for the user).
 If you wish to use some other persistence between the consent page and the authorization redirect, then you can
-implement `IMessageStore<ConsentResponse>` and register the implementation in DI.
+implement `IMessageStore<ConsentResponse>` and register the implementation with the service provider.
 
 ## Returning The User To The Authorization Endpoint
 

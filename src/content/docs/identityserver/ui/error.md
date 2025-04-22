@@ -41,7 +41,7 @@ builder.Services.AddIdentityServer(opt => {
 })
 ```
 
-By default, the `ErrorId` is simply the string "errorId".
+By default, the `ErrorId` is the string "errorId".
 
 The [interaction service](/identityserver/reference/services/interaction-service/#iidentityserverinteractionservice-apis)
 provides a `GetErrorContextAsync` API that will load error details for an `ErrorId`.

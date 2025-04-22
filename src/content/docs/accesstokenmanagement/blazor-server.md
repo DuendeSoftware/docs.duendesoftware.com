@@ -21,9 +21,9 @@ Fortunately, Duende.AccessTokenManagement provides a straightforward solution to
 
 Since the tokens cannot be managed in the authentication session, you need to store them somewhere else. The options include an in-memory data structure, a distributed cache like redis, or a database. Duende.AccessTokenManagement describes this store for tokens with the *IUserTokenStore* interface. In non-blazor scenarios, the default implementation that stores the tokens in the session is used. In your Blazor server application, you'll need to decide where you want to store the tokens and implement the store interface.
 
-The store interface is very simple. `StoreTokenAsync` adds a token to the store for a particular user, `GetTokenAsync` retrieves the user's token, and *ClearTokenAsync* clears the tokens stored for a particular user. A sample implementation that stores the tokens in memory can be found in the *ServerSideTokenStore* in the [*BlazorServer* sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/BlazorServer).
+The store interface is straightforward. `StoreTokenAsync` adds a token to the store for a particular user, `GetTokenAsync` retrieves the user's token, and *ClearTokenAsync* clears the tokens stored for a particular user. A sample implementation that stores the tokens in memory can be found in the *ServerSideTokenStore* in the [*BlazorServer* sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/BlazorServer).
 
-Register your token store in the DI container and tell Duende.AccessTokenManagement to integrate with Blazor by calling `AddBlazorServerAccessTokenManagement<TTokenStore>`:
+Register your token store in the ASP.NET Core service provider and tell Duende.AccessTokenManagement to integrate with Blazor by calling `AddBlazorServerAccessTokenManagement<TTokenStore>`:
 
 ```cs
 builder.Services.AddOpenIdConnectAccessTokenManagement()
@@ -64,7 +64,7 @@ Once registered and initialized, Duende.AccessTokenManagement will keep the stor
 
 ## Retrieving And Using Tokens
 
-If you've registered your token store with `AddBlazorServerAccessTokenManagement`, Duende.AccessTokenManagement will register the services necessary to attach tokens to outgoing HTTP requests automatically, using the same API as a non-blazor application. You inject an HTTP client factory and resolve named HTTP clients where ever you need to make HTTP requests, and you register the HTTP client's that use access tokens in the DI system with our extension method:
+If you've registered your token store with `AddBlazorServerAccessTokenManagement`, Duende.AccessTokenManagement will register the services necessary to attach tokens to outgoing HTTP requests automatically, using the same API as a non-blazor application. You inject an HTTP client factory and resolve named HTTP clients where ever you need to make HTTP requests, and you register the HTTP client's that use access tokens in the ASP.NET Core service provider with our extension method:
 
 ```cs
 builder.Services.AddUserAccessTokenHttpClient("demoApiClient", configureClient: client =>

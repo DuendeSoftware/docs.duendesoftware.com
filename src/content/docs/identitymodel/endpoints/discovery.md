@@ -129,19 +129,16 @@ var disco = await cache.GetAsync();
 if (disco.IsError) throw new Exception(disco.Error);
 ```
 
-You can specify the cache duration using the `CacheDuration` property
-and also specify a custom discovery policy by passing in a
-`DiscoveryPolicy` to the constructor.
+You can specify the cache duration using the `CacheDuration` property and also specify a custom discovery policy by
+passing in a `DiscoveryPolicy` to the constructor.
 
 ### Caching And HttpClient Instances
 
-By default, the discovery cache will create a new instance of
-`HttpClient` every time it needs to access the discovery endpoint. You
-can modify this behavior in two ways, either by passing in a pre-created
-instance into the constructor, or by providing a function that will
-return an `HttpClient` when needed.
+By default, the discovery cache will create a new instance of `HttpClient` every time it needs to access the discovery
+endpoint. You can modify this behavior in two ways, either by passing in a pre-created instance into the constructor,
+or by providing a function that will return an `HttpClient` when needed.
 
-The following code will set up the discovery cache in DI and will use the
+The following code will set up the discovery cache in the ASP.NET Core service provider and will use the
 `HttpClientFactory` to create clients:
 
 ```csharp

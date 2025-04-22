@@ -13,7 +13,7 @@ redirect_from:
 
 The `IBackchannelAuthenticationUserNotificationService` interface is used to contact users when
 a [CIBA](/identityserver/ui/ciba) login request has been made.
-To use CIBA, you are expected to implement this interface and register it in the DI system.
+To use CIBA, you are expected to implement this interface and register it in the ASP.NET Core service provider.
 
 ## IBackchannelAuthenticationUserNotificationService APIs
 

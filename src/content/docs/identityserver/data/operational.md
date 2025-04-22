@@ -38,7 +38,7 @@ The persistence for grants is abstracted behind two interfaces:
 
 ### Registering Custom Stores
 
-Custom implementations of `IPersistedGrantStore`, and/or `IDeviceFlowStore` must be registered in the DI system.
+Custom implementations of `IPersistedGrantStore`, and/or `IDeviceFlowStore` must be registered in the ASP.NET Core service provider.
 For example:
 
 ```cs
@@ -77,7 +77,7 @@ The [ISigningKeyStore](/identityserver/reference/stores/signing-key-store/) is t
 
 ### Registering a custom signing key store
 
-To register a custom signing key store in the DI container, there is a `AddSigningKeyStore` helper on the `IIdentityServerBuilder`.
+To register a custom signing key store in the ASP.NET Core service provider, there is a `AddSigningKeyStore` helper on the `IIdentityServerBuilder`.
 For example:
 
 ```cs
@@ -114,7 +114,7 @@ The methods on the [IServerSideSessionStore](/identityserver/reference/stores/se
 
 ### Registering a custom store
 
-To register a custom server-side session store in the DI container, there is a `AddServerSideSessionStore` helper on the `IIdentityServerBuilder`.
+To register a custom server-side session store in the ASP.NET Core service provider, there is a `AddServerSideSessionStore` helper on the `IIdentityServerBuilder`.
 It is still necessary to call `AddServerSideSessions` to enable the server-side session feature.
 For example:
 

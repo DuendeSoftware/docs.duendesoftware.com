@@ -33,7 +33,7 @@ builder.Services.AddIdentityServer(options =>
 });
 ```
 
-To emit an event use the `IEventService` from the DI container and call the `RaiseAsync` method, e.g.:
+To emit an event use the `IEventService` from the ASP.NET Core service provider and call the `RaiseAsync` method, e.g.:
 
 ```cs
 public async Task<IActionResult> Login(LoginInputModel model)
@@ -53,8 +53,8 @@ public async Task<IActionResult> Login(LoginInputModel model)
 
 ### Custom sinks
 
-Our default event sink will simply serialize the event class to JSON and forward it to the ASP.NET Core logging system.
-If you want to connect to a custom event store, implement the `IEventSink` interface and register it with DI.
+Our default event sink will serialize the event class to JSON and forward it to the ASP.NET Core logging system.
+If you want to connect to a custom event store, implement the `IEventSink` interface and register it with the ASP.NET Core service provider.
 
 The following example uses [Seq](https://getseq.net) to emit events:
 

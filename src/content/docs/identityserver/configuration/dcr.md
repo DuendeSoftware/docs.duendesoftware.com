@@ -73,7 +73,7 @@ needs an implementation of this interface. You can either use the built-in
 Entity Framework based implementation, or implement the interface yourself. See
 [the IClientConfigurationStore reference](/identityserver/reference/stores/) for
 more details. If you wish to use the built-in implementation, install its NuGet
-package and add it to DI.
+package and add it to the ASP.NET Core service provider.
 
 ```bash title=Terminal
 dotnet add package Duende.IdentityServer.Configuration.EntityFramework
@@ -128,7 +128,7 @@ needs an implementation of this interface. You can either use the built-in
 Entity Framework-based implementation, or implement the interface yourself. See
 [the IClientConfigurationStore reference](/identityserver/reference/stores/client-store/) for
 more details. If you wish to use the built-in implementation, install its NuGet
-package and add it to DI.
+package and add it to the ASP.NET Core service provider.
 
 ```bash title=Terminal
 dotnet add package Duende.IdentityServer.Configuration.EntityFramework

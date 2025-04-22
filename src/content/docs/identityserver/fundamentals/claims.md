@@ -156,8 +156,8 @@ a [custom token request validator](/identityserver/tokens/dynamic-validation/).
 
 ## Claim Serialization
 
-Claim values are serialized based on the `ClaimValueType` of the claim. Claims that don't specify a ClaimValueType are
-simply serialized as strings. Claims that specify a ClaimValueType of `System.Security.Claims.ClaimValueTypes.Integer`,
+Claim values are serialized based on the `ClaimValueType` of the claim. Claims that don't specify a `ClaimValueType` are
+serialized as strings. Claims that specify a `ClaimValueType` of `System.Security.Claims.ClaimValueTypes.Integer`,
 `System.Security.Claims.ClaimValueTypes.Integer32`, `System.Security.Claims.ClaimValueTypes.Integer64`,
 `System.Security.Claims.ClaimValueTypes.Double`, or `System.Security.Claims.ClaimValueTypes.Boolean` are parsed as the
 corresponding type, while those that specify `IdentityServerConstants.ClaimValueTypes.Json` are serialized to JSON using

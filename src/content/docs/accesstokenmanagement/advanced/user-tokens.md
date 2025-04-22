@@ -12,7 +12,7 @@ The most common way to use the access token management for interactive web appli
 
 ## General options
 
-You can pass in some global options when registering token management in DI.
+You can pass in some global options when registering token management in the ASP.NET Core service provider.
 
 * `ChallengeScheme` - by default the OIDC configuration is inferred from the default challenge scheme. This is recommended approach. If for some reason your OIDC handler is not the default challenge scheme, you can set the scheme name on the options
 * `UseChallengeSchemeScopedTokens` - the general assumption is that you only have one OIDC handler configured. If that is not the case, token management needs to maintain multiple sets of token artefacts simultaneously. You can opt in to that feature using this setting.

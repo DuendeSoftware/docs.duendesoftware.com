@@ -16,7 +16,7 @@ Duende.BFF adds endpoints for performing typical session-management operations s
 
 In addition, Duende.BFF adds an implementation of the OpenID Connect back-channel notification endpoint to overcome the restrictions of third party cookies in front-channel notification in modern browsers.
 
-You enable the endpoints by adding the relevant services into the DI container:
+You enable the endpoints by adding the relevant services into the ASP.NET Core service provider:
 
 ```csharp
 // Program.cs

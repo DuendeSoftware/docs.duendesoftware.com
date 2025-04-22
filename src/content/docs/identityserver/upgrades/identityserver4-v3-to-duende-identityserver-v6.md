@@ -53,7 +53,7 @@ The reason is that for this type of schema restructuring EntityFramework Core's 
 To handle this, the conversation from the old schema to the new will be performed by custom SQL.
 This is only needed for the configuration database, not the operational one so normal migrations will suffice for the operational database.
 
-First for the operational database, we can simply apply EF Core migrations. 
+First for the operational database, we can apply EF Core migrations. 
 Note that you might need to adjust based on your specific organization of the migration files.
 
 ```
@@ -85,7 +85,7 @@ Done. To undo this action, use 'ef migrations remove'
 
 To ensure we don't lose data, we will add a custom SQL script to run instead of the generated migration.
 To ensure the script is available to the migration we will include the script into the project as an embedded resource.
-You could devise other approaches (like simply loading the SQL script from the filesystem) based on your preferences.
+You could devise other approaches (like loading the SQL script from the filesystem) based on your preferences.
 
 The SQL script to include is located [here](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3/blob/main/IdentityServerMigrationSample/ConfigurationDb_v4_delta.sql).
 Copy it into your project folder and then configure it as an embedded resource in the csproj file:
