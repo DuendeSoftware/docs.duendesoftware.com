@@ -12,7 +12,7 @@ redirect_from:
 
 Most modern applications look more or less like this:
 
-![an architecture diagram for modern applications with clients and services](./images/appArch.png)
+![an architecture diagram for modern applications with clients and services](./images/application-architecture.svg)
 
 The most common interactions are:
 
@@ -31,7 +31,7 @@ across those applications and endpoints.
 
 Restructuring the application to support a security token service leads to the following architecture and protocols:
 
-![an architecture diagram showing where OAuth 2.0 is used](./images/protocols.png)
+![an architecture diagram showing where OAuth 2.0 is used](./images/protocols.svg)
 
 Such a design divides security concerns into two parts:
 
@@ -78,7 +78,7 @@ depending on your needs)
 and add the IdentityServer middleware to that application. The middleware adds the necessary protocol heads to the
 application so that clients can talk to it using those standard protocols.
 
-![IdentityServer middleware diagram and its relatinship in the ASP.NET Core pipeline](./images/middleware.png)
+![IdentityServer middleware diagram and its relatinship in the ASP.NET Core pipeline](./images/middleware.svg)
 
 The hosting application can be as complex as you want, but we typically recommend to keep the attack surface as small as
 possible by including
