@@ -181,7 +181,7 @@ Authorization: Basic xxxxx
 
 ### .NET Client Library
 
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with
+You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
@@ -294,7 +294,7 @@ private static string CreateClientToken(SigningCredentials credential, string cl
 }
 ```
 
-...and the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically interact with the
+...and the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with the
 protocol endpoint from .NET code.
 
 ```cs
@@ -465,7 +465,7 @@ When writing a client to connect to IdentityServer, the `SocketsHttpHandler` (or
 class provides a convenient mechanism to add a client certificate to outgoing requests.
 
 Use such a handler with `HttpClient` to perform the client certificate authentication handshake at the TLS channel.
-The following snippet is using [IdentityModel](https://identitymodel.readthedocs.io) to read the discovery document and
+The following snippet is using [Duende IdentityModel](../../../identitymodel) to read the discovery document and
 request a token:
 
 ```cs

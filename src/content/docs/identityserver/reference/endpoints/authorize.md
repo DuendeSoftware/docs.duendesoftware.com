@@ -147,7 +147,7 @@ GET /connect/authorize?
 
 ## .NET Client Library
 
-You can use the [IdentityModel](https://identitymodel.readthedocs.io) client library to programmatically create
+You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically create
 authorize request URLs from .NET code.
 
 ```cs

@@ -39,8 +39,8 @@ password=password
 
 ### .NET Client Library
 
-On .NET you can use the [IdentityModel](https://identitymodel.readthedocs.io/en/latest/) client library
-to [request](https://identitymodel.readthedocs.io/en/latest/client/token.html) tokens using the `password` grant type,
+On .NET you can use the [Duende IdentityModel](../../../identitymodel) client library
+to [request](../../../identitymodel/endpoints/token) tokens using the `password` grant type,
 e.g.:
 
 ```cs
