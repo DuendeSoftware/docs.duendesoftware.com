@@ -5,6 +5,7 @@ sidebar:
   label: Overview
   order: 1
 redirect_from:
+  - /bff/apis/
   - /bff/v2/apis/
   - /bff/v3/fundamentals/apis/
   - /identityserver/v5/bff/apis/
