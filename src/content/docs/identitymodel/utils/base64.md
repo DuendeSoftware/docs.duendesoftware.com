@@ -8,7 +8,7 @@ redirect_from:
 ---
 
 :::note
-ASP.NET Core has built-in support via
+ASP.NET Core has built-in support for Base64 encoding and decoding via
 [WebEncoders.Base64UrlEncode](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.webencoders.base64urlencode)
 and
 [WebEncoders.Base64UrlDecode](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.webencoders.base64urldecode).
