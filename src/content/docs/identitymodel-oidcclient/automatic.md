@@ -8,7 +8,7 @@ redirect_from:
   - /foss/identitymodel.oidcclient/automatic/
 ---
 
-OpenID Connect (OIDC) is a simple identity layer on top of the OAuth 2.0
+OpenID Connect (OIDC) is an identity layer on top of the OAuth 2.0
 protocol. It allows clients to verify the identity of the end-user based on
 the authentication performed by an authorization server, as well as obtain
 basic profile information.
