@@ -60,7 +60,7 @@ The `OidcClient` logs at the following levels:
 - `Information`
 - `Error`
 
-You can set the log level in your `appSettings.json` by modifying the following snippet.
+You can set the log level in your `appsettings.json` by modifying the following snippet.
 
 ```json
 {
