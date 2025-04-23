@@ -82,7 +82,7 @@ host application. For example, a Windows-specific implementation will not work w
 For a simple example, the following code shows how to use the
 [SystemBrowser](https://github.com/DuendeSoftware/foss/blob/main/identity-model-oidc-client/clients/ConsoleClientWithBrowser/SystemBrowser.cs)
 to invoke a browser on the host desktop platform. The `SystemBrowser` is a naive implementation that uses the
-[System.Diagnostics.Process](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process) class to invoke the browser.
+[System.Diagnostics.Process](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process) class to start the system default browser.
 
 ```cs
 var options = new OidcClientOptions
