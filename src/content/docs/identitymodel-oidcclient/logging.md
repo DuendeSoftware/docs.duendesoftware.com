@@ -36,8 +36,7 @@ var app = builder.Build();
 var client = app.Services.GetService<OidcClient>();
 ```
 
-You can use any
-logging provider to store your logs however you like by setting the `LoggerFactory` property on `OidcClientOptions`.
+You can use any logging provider to store your logs however you like, by setting the `LoggerFactory` property on `OidcClientOptions`.
 
 For example, you could configure
 [Serilog](https://github.com/serilog/serilog-extensions-hosting) like this:
