@@ -74,8 +74,8 @@ public class BrowserResult : Result
 }
 ```
 
-:::note
-The `IBrowser` implementation must be specific to the platform and environment and must be provided by the
+:::note[Browser is platform-specific]
+The `IBrowser` implementation is specific to the platform and environment and must be provided by the
 host application. For example, a Windows-specific implementation will not work within a macOS, iOS, Android, or Linux environment.
 :::
 
