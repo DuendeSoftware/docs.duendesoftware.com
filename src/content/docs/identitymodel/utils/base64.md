@@ -7,22 +7,49 @@ redirect_from:
   - /foss/identitymodel/utils/base64/
 ---
 
-JWT tokens are serialized using [Base64 URL
-encoding](https://tools.ietf.org/html/rfc4648#section-5).
+:::note
+ASP.NET Core has built-in support for Base64 encoding and decoding via
+[WebEncoders.Base64UrlEncode](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.webencoders.base64urlencode)
+and
+[WebEncoders.Base64UrlDecode](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.webencoders.base64urldecode).
+:::
+
+JWT serialization involves transforming the three core components of a JWT (Header, Payload, Signature) into a single, compact, URL-safe string. [Base64 URL encoding](https://tools.ietf.org/html/rfc4648#section-5) is used instead of standard Base64 because it doesn't include characters like `+`, `/`, or `=`, making it safe to use directly in URLs and HTTP headers without requiring further encoding.
+
+## WebEncoders Encode and Decode
+
+To use the built-in .NET support, ensure you have the following package installed:
+
+```bash
+dotnet add package Microsoft.AspNetCore.WebUtilities
+```
+
+Then use the following code:
+
+```csharp
+using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
+
+var bytes = "hello"u8.ToArray();
+var b64url = WebEncoders.Base64UrlEncode(bytes);
+
+bytes = WebEncoders.Base64UrlDecode(b64url);
+
+var text = Encoding.UTF8.GetString(bytes); 
+Console.WriteLine(text);
 
 IdentityModel includes the *Base64Url* class to help with
 encoding/decoding:
 
 ```csharp
-var text = "hello";
-var b64url = Base64Url.Encode(text);
+using System.Text;
+using Duende.IdentityModel;
 
-text = Base64Url.Decode(b64url);
+var bytes = "hello"u8.ToArray();
+var b64url = Base64Url.Encode(bytes);
+
+bytes = Base64Url.Decode(b64url);
+
+var text = Encoding.UTF8.GetString(bytes); 
+Console.WriteLine(text);
 ```
-
-:::note
-ASP.NET Core has built-in support via
-[WebEncoders.Base64UrlEncode](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.webencoders.base64urlencode)
-and
-[WebEncoders.Base64UrlDecode](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.webutilities.webencoders.base64urldecode).
-:::

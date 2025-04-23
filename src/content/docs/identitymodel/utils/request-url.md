@@ -3,7 +3,7 @@ title: Creating Authorize and EndSession URLs
 description: Helper utilities for creating OAuth2/OpenID Connect authorization and end session URLs with query parameters
 sidebar:
   order: 4
-  label: Creating Authorize & EndSession URLs
+  label: Authorize & EndSession URLs
 redirect_from:
   - /foss/identitymodel/utils/request_url/
 ---
