@@ -37,8 +37,6 @@ bytes = WebEncoders.Base64UrlDecode(b64url);
 
 var text = Encoding.UTF8.GetString(bytes); 
 Console.WriteLine(text);
-```
-## Base64Url :badge[obselete]
 
 IdentityModel includes the *Base64Url* class to help with
 encoding/decoding:
