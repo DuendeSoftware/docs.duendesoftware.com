@@ -183,6 +183,7 @@ export default defineConfig({
     }),
   ],
   markdown: {
+    remarkPlugins: [removeMarkdownExtensions],
     rehypePlugins: [
       [
         rehypeAstroRelativeMarkdownLinks,
@@ -202,7 +203,6 @@ export default defineConfig({
           rel: ["noopener", "noreferrer"],
         },
       ],
-      [removeMarkdownExtensions, {}],
     ],
   },
 });

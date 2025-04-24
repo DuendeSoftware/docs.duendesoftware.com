@@ -1,35 +1,28 @@
 import { visit } from "unist-util-visit";
 import type { Node, Parent } from "unist";
+import type { Plugin } from "unified";
 
 interface Element extends Parent {
-  type: "element";
-  tagName: string;
-  properties: {
-    [key: string]: unknown;
-  };
-  content: Node;
+  type: "link";
+  url: string;
   children: Node[];
 }
 
-export default function removeMarkdownExtensions(): (tree: Node) => void {
+const removeMarkdownExtensions: Plugin = function () {
   return (tree: Node) => {
-    visit(tree, "element", (node: Element) => {
-      if (
-        node.tagName === "a" &&
-        node.properties &&
-        typeof node.properties.href === "string"
-      ) {
-        const match = /(?:\/index)?\.(md|mdx)(#.*)?$/;
-        if (match.test(node.properties.href)) {
-          let date = new Date().toLocaleTimeString("en-US", { hour12: false });
+    visit(tree, "link", (node: Element) => {
+      const match = /(?:\/index)?\.(md|mdx)(#.*)?$/;
+      if (match.test(node.url)) {
+        let date = new Date().toLocaleTimeString("en-US", { hour12: false });
 
-          console.log(
-            `\x1b[90m${date}\x1b[0m \x1b[95m[🔥 *.md(x)]\x1b[0m ${node.properties.href}`,
-          );
+        console.log(
+          `\x1b[90m${date}\x1b[0m \x1b[95m[🔥 *.md(x)]\x1b[0m ${node.url}`,
+        );
 
-          node.properties.href = node.properties.href.replace(match, "$2");
-        }
+        node.url = node.url.replace(match, "$2");
       }
     });
   };
-}
+};
+
+export default removeMarkdownExtensions;
