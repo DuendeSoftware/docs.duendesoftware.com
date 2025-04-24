@@ -8,9 +8,9 @@ redirect_from:
   - /foss/identitymodel/endpoints/dynamic_registration/
 ---
 
-The client library for [OpenID Connect Dynamic Client
-Registration](https://openid.net/specs/openid-connect-registration-1_0.html)
-is provided as an extension method for *HttpClient*.
+The client library for [OpenID Connect Dynamic Client Registration](https://openid.net/specs/openid-connect-registration-1_0.html)
+is provided as an extension method for [
+`System.Net.Http.HttpClient`](https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient).
 
 The following code sends a registration request:
 

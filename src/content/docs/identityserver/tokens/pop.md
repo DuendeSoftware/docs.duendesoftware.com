@@ -200,7 +200,7 @@ new Client
 #### Enabling DPoP Support In Your Client
 
 The easiest approach for supporting DPoP in your client is to use the DPoP support in the `Duende.AccessTokenManagement`
-library ([docs available here](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki/DPoP)).
+library ([docs available here](/accesstokenmanagement/advanced/dpop/)).
 It provides DPoP client support for both client credentials and code flow style clients.
 DPoP is enabled by assigning the `DPoPJsonWebKey` on the client configuration.
 
