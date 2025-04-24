@@ -75,7 +75,7 @@ Key takeaways:
 ### MVC Client with automatic Access Token Management
 
 This sample shows how to
-use [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) to automatically
+use [Duende.AccessTokenManagement](/accesstokenmanagement) to automatically
 manage access tokens.
 
 The sample uses a special client in the sample IdentityServer with a short token lifetime (75 seconds). When repeating
