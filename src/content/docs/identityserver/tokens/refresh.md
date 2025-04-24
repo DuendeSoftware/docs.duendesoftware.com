@@ -63,7 +63,7 @@ var response = await client.RequestRefreshTokenAsync(new RefreshTokenRequest
 });
 ```
 
-The [Duende.AccessTokenManagement](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki) library can be
+The [Duende.AccessTokenManagement](/accesstokenmanagement) library can be
 used to automate refresh & access token lifetime management in ASP.NET Core.
 
 ## Binding Refresh Tokens
