@@ -183,7 +183,7 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [removeMarkdownExtensions],
+    remarkPlugins: [[removeMarkdownExtensions, { ignoreRelativeLinks: true }]],
     rehypePlugins: [
       [
         rehypeAstroRelativeMarkdownLinks,

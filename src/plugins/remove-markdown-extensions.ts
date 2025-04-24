@@ -8,10 +8,22 @@ interface Element extends Parent {
   children: Node[];
 }
 
-const removeMarkdownExtensions: Plugin = function () {
+interface RemoveMarkdownExtensionsOptions {
+  ignoreRelativeLinks?: boolean;
+}
+
+const match = /(?:\/index)?\.(md|mdx)(#.*)?$/;
+
+const removeMarkdownExtensions: Plugin = function ({
+  ignoreRelativeLinks = false,
+}: RemoveMarkdownExtensionsOptions = {}) {
   return (tree: Node) => {
     visit(tree, "link", (node: Element) => {
-      const match = /(?:\/index)?\.(md|mdx)(#.*)?$/;
+      // ignore relative links if configured
+      if (ignoreRelativeLinks && node.url.startsWith("./")) {
+        return;
+      }
+
       if (match.test(node.url)) {
         let date = new Date().toLocaleTimeString("en-US", { hour12: false });
 
