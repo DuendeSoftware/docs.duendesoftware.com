@@ -10,11 +10,17 @@ redirect_from:
   - /identityserver/v7/apis/aspnetcore/confirmation/
 ---
 
-IdentityServer can [bind tokens to clients](/identityserver/tokens/pop#proof-of-possession-styles) using either mTLS or DPoP, creating a `Proof-of-Possession` (PoP) access token. When one of these mechanisms is used, APIs that use those access tokens for authorization need to validate the binding between the client and token. This document describes how to perform such validation, depending on which mechanism was used to produce a PoP token.
+IdentityServer can [bind tokens to clients](/identityserver/tokens/pop#proof-of-possession-styles) using either mTLS or
+DPoP, creating a `Proof-of-Possession` (PoP) access token. When one of these mechanisms is used, APIs that use those
+access tokens for authorization need to validate the binding between the client and token. This document describes how
+to perform such validation, depending on which mechanism was used to produce a PoP token.
 
 ### Validating mTLS
 
-If you are using a [mutual TLS connection](/identityserver/tokens/pop#mutual-tls) to establish proof-of-possession, the resulting access token will contain a `cnf` claim containing the client's certificate thumbprint. APIs validate such tokens by comparing this thumbprint to the thumbprint of the client certificate in the mTLS connection. This validation should be performed early in the pipeline, ideally immediately after the standard validation of the access token.
+If you are using a [mutual TLS connection](/identityserver/tokens/pop#mutual-tls) to establish proof-of-possession, the
+resulting access token will contain a `cnf` claim containing the client's certificate thumbprint. APIs validate such
+tokens by comparing this thumbprint to the thumbprint of the client certificate in the mTLS connection. This validation
+should be performed early in the pipeline, ideally immediately after the standard validation of the access token.
 
 You can do so with custom middleware like this:
 
@@ -28,7 +34,8 @@ app.UseConfirmationValidation();
 app.UseAuthorization();
 ```
 
-Here, `UseConfirmationValidation` is an extension method that registers the middleware that performs the necessary validation:
+Here, `UseConfirmationValidation` is an extension method that registers the middleware that performs the necessary
+validation:
 
 ```cs
 public static class ConfirmationValidationExtensions
@@ -109,11 +116,31 @@ public class ConfirmationValidationMiddlewareOptions
 ```
 
 ### Validating DPoP
-If you are using [DPoP](/identityserver/tokens/pop) for proof-of-possession, there is a non-trivial amount of work needed to validate the `cnf` claim.
-In addition to the normal validation mechanics of the access token itself, DPoP requires additional validation of the DPoP proof token sent in the "DPoP" HTTP request header.
-DPoP proof token processing involves requiring the DPoP scheme on the authorization header where the access token is sent, JWT validation of the proof token, "cnf" claim validation, HTTP method and URL validation, replay detection (which requires some storage for the replay information), nonce generation and validation, additional clock skew logic, and emitting the correct response headers in the case of the various validation errors.
 
-You can use the `Duende.AspNetCore.Authentication.JwtBearer` NuGet package to implement this validation. With this package, the configuration necessary in your startup can be as simple as this:
+When using [DPoP](/identityserver/tokens/pop#enabling-dpop-in-identityserver) for proof-of-possession, validating the `cnf` claim requires several
+steps:
+
+1. Validating the access token as normal
+2. Validating the DPoP proof token from the `DPoP` HTTP request header
+3. Ensuring the authorization header uses the DPoP scheme
+4. Validating the JWT format of the proof token
+5. Verifying the `cnf` claim matches between tokens
+6. Validating the HTTP method and URL match the request
+7. Detecting replay attacks using storage
+8. Managing nonce generation and validation
+9. Handling clock skew between systems
+10. Returning appropriate error response headers when validation fails
+
+This comprehensive validation process requires careful implementation to ensure security. Luckily for
+developers, we've implemented these steps into an easy-to-use library.
+
+You can use the `Duende.AspNetCore.Authentication.JwtBearer` NuGet package to implement this validation.
+
+```bash
+dotnet add package Duende.AspnetCore.Authentication.JwtBearer
+```
+
+With this package, the configuration necessary in your startup can be as simple as this:
 
 ```cs
 // adds the normal JWT bearer validation
@@ -132,8 +159,8 @@ builder.Services.ConfigureDPoPTokensForScheme("token");
 ```
 
 You will also typically need a distributed cache, used to perform replay detection of DPoP
-proofs. Duende.AspNetCore.Authentication.JwtBearer relies on `IDistributedCache` for this,
-so you can supply the cache implementation of your choice. See the 
+proofs. `Duende.AspNetCore.Authentication.JwtBearer` relies on `IDistributedCache` for this,
+so you can supply the cache implementation of your choice. See the
 [Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-8.0)
 for more details on setting up distributed caches, along with many examples, including Redis, CosmosDB, and
 Sql Server.
