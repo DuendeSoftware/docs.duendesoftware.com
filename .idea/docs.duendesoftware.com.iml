@@ -6,6 +6,8 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/root" />
+      <excludeFolder url="file://$MODULE_DIR$/.astro" />
+      <excludeFolder url="file://$MODULE_DIR$/.fleet" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
