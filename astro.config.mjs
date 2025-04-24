@@ -1,4 +1,3 @@
-// @ts-check
 import { defineConfig, fontProviders } from "astro/config";
 import starlight from "@astrojs/starlight";
 import starlightLinksValidator from "starlight-links-validator";
@@ -10,9 +9,13 @@ import starlightHeadingBadges from "starlight-heading-badges";
 import starlightLlmsTxt from "starlight-llms-txt";
 import rehypeAstroRelativeMarkdownLinks from "astro-rehype-relative-markdown-links";
 import opengraphImages from "astro-opengraph-images";
-import { duendeOpenGraphImage } from "./src/components/duende-og-image.js";
 import rehypeExternalLinks from "rehype-external-links";
 import * as fs from "node:fs";
+
+// don't convert to path aliases, it doesn't work here
+// https://github.com/withastro/astro/issues/9782
+import { duendeOpenGraphImage } from "./src/plugins/duende-og-image.js";
+import removeMarkdownExtensions from "./src/plugins/remove-markdown-extensions.js";
 
 // https://astro.build/config
 export default defineConfig({
@@ -199,6 +202,7 @@ export default defineConfig({
           rel: ["noopener", "noreferrer"],
         },
       ],
+      [removeMarkdownExtensions, {}],
     ],
   },
 });
