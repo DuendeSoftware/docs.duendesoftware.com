@@ -3,6 +3,7 @@ title: "Device Authorization Endpoint"
 description: "Documentation for the device authorization endpoint which handles device flow authentication requests and issues device and user codes for authorization."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Device Authorization
   order: 8
 redirect_from:
   - /identityserver/v5/reference/endpoints/device_authorization/
@@ -35,11 +36,11 @@ POST /connect/deviceauthorization
 
 ## .NET Client Library
 
-You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
+You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 

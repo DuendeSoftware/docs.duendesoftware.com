@@ -2,6 +2,7 @@
 title: "Calling Endpoints from JavaScript"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: CORS
   order: 200
 redirect_from:
   - /identityserver/v5/tokens/cors/

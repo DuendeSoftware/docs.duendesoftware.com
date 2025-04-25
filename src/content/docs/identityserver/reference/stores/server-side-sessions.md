@@ -2,6 +2,7 @@
 title: "Server-Side Session Store"
 description: "Documentation for the IServerSideSessionStore interface and related models for managing server-side user authentication session data."
 sidebar:
+  label: Server-Side Sessions
   order: 100
 redirect_from:
   - /identityserver/v5/reference/stores/server_side_sessions/

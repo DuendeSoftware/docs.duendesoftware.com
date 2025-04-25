@@ -1,7 +1,8 @@
 ---
-title: "Entity Framework Integration"
+title: "Entity Framework Core Integration"
 description: "Documentation for using Entity Framework with IdentityServer to store configuration and operational data in any EF-supported database"
 sidebar:
+  label: EF Core
   order: 50
 redirect_from:
   - /identityserver/v5/data/ef/

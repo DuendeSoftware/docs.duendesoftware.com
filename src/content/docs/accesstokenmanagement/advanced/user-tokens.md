@@ -8,19 +8,28 @@ redirect_from:
   - /foss/accesstokenmanagement/advanced/user_tokens/
 ---
 
-The most common way to use the access token management for interactive web applications is described [here](/accesstokenmanagement/web-apps/) - however you may want to customise certain aspects of it - here's what you can do.
+The most common way
+to use [access token management is for interactive web applications](/accesstokenmanagement/web-apps.md) -
+however, you may want to customize certain aspects of it. Here's what you can do.
 
-## General options
+## General Options
 
 You can pass in some global options when registering token management in the ASP.NET Core service provider.
 
-* `ChallengeScheme` - by default the OIDC configuration is inferred from the default challenge scheme. This is recommended approach. If for some reason your OIDC handler is not the default challenge scheme, you can set the scheme name on the options
-* `UseChallengeSchemeScopedTokens` - the general assumption is that you only have one OIDC handler configured. If that is not the case, token management needs to maintain multiple sets of token artefacts simultaneously. You can opt in to that feature using this setting.
-* `ClientCredentialsScope` - when requesting client credentials tokens from the OIDC provider, the scope parameter will not be set since its value cannot be inferred from the OIDC configuration. With this setting you can set the value of the scope parameter.
+* `ChallengeScheme` - by default the OIDC configuration is inferred from the default challenge scheme. This is
+  recommended approach. If for some reason your OIDC handler is not the default challenge scheme, you can set the scheme
+  name on the options
+* `UseChallengeSchemeScopedTokens` - the general assumption is that you only have one OIDC handler configured. If that
+  is not the case, token management needs to maintain multiple sets of token artefacts simultaneously. You can opt in to
+  that feature using this setting.
+* `ClientCredentialsScope` - when requesting client credentials tokens from the OIDC provider, the scope parameter will
+  not be set since its value cannot be inferred from the OIDC configuration. With this setting you can set the value of
+  the scope parameter.
 * `ClientCredentialsResource` - same as previous, but for the resource parameter
 * `ClientCredentialStyle` - specifies how client credentials are transmitted to the OIDC provider
 
-```cs
+```csharp
+// Program.cs
 builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
 {
     options.ChallengeScheme = "schmeName";
@@ -34,7 +43,7 @@ builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
 
 ## Per Request Parameters
 
-You can also modify token management parameters on a per-request basis. 
+You can also modify token management parameters on a per-request basis.
 
 The `UserTokenRequestParameters` class can be used for that:
 
@@ -47,20 +56,21 @@ The `UserTokenRequestParameters` class can be used for that:
 
 The request parameters can be passed via the manual API:
 
-```cs
+```csharp
 var token = await _tokenManagementService.GetAccessTokenAsync(User, new UserAccessTokenRequestParameters { ... });
 ```
 
 ...the extension methods
 
-```cs
+```csharp
 var token = await HttpContext.GetUserAccessTokenAsync(
   new UserTokenRequestParameters { ... });
 ```
 
 ...or the HTTP client factory
 
-```cs
+```csharp
+// Program.cs
 // registers HTTP client that uses the managed user access token
 builder.Services.AddUserAccessTokenHttpClient("invoices",
     parameters: new UserTokenRequestParameters { ... },
@@ -77,9 +87,10 @@ builder.Services.AddHttpClient<InvoiceClient>(client =>
     .AddUserAccessTokenHandler(new UserTokenRequestParameters { ... });
 ```
 
-## Token storage
+## Token Storage
 
-By default, the user's access and refresh token will be store in the ASP.NET Core authentication session (implemented by the cookie handler).
+By default, the user's access and refresh token will be store in the ASP.NET Core authentication session (implemented by
+the cookie handler).
 
 You can modify this in two ways
 

@@ -1,7 +1,9 @@
 ---
 title: Epoch Time Conversion
+date: 2024-04-17
 description: Learn about converting between DateTime and Unix/Epoch time formats in IdentityModel for JWT tokens
 sidebar:
+  label: "Epoch Time"
   order: 3
 redirect_from:
   - /foss/identitymodel/utils/epoch_time/
@@ -15,15 +17,16 @@ and
 [DateTimeOffset.ToUnixTimeSeconds](https://docs.microsoft.com/en-us/dotnet/api/system.datetimeoffset.tounixtimeseconds).
 :::
 
-JWT tokens use so-called [Epoch or Unix
-time](https://en.wikipedia.org/wiki/Unix_time) to represent date/times.
+JSON Web Token (JWT) tokens use so-called [Epoch or Unix time](https://en.wikipedia.org/wiki/Unix_time) to represent
+date/times, which is the number of seconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
 
 ## DateTimeOffset To Epoch Time
 
-In .NET you can convert `DateTimeOffset` to Unix time via the two methods
-of `ToUnixTimeSeconds` and `ToUnixTimeMilliseconds`:
+In .NET, you can convert `DateTimeOffset` to Unix time via the two methods of `ToUnixTimeSeconds` and
+`ToUnixTimeMilliseconds`:
 
 ```csharp
+// EpochTimeExamples.cs
 var seconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 var milliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 ```
@@ -34,11 +37,11 @@ IdentityModel contains extensions methods for `DateTime` to convert
 to/from Unix time:
 
 ```csharp
+// DateTimeExtensionExample.cs
 var dt = DateTime.UtcNow;
+// The time returned is in seconds
 var unix = dt.ToEpochTime();
 ```
-
-The time returned is in seconds.
 
 
 

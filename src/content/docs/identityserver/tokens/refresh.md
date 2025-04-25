@@ -3,6 +3,7 @@ title: "Refreshing a Token"
 description: "Documentation for refresh token management in IdentityServer, including requesting, using and securing refresh tokens for long-lived access to resources"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Refreshes
   order: 20
 redirect_from:
   - /identityserver/v5/tokens/refresh/
@@ -16,7 +17,7 @@ access token. This can be done with an API call and does not require any user in
 
 Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by
 setting the `AllowOfflineAccess` property to `true`. See
-the [client reference](/identityserver/reference/models/client#refresh-token) section for additional refresh token
+the [client reference](/identityserver/reference/models/client.md#refresh-token) section for additional refresh token
 related settings.
 
 Refresh tokens are supported for the following flows: authorization code, hybrid and resource owner password credential
@@ -44,11 +45,11 @@ POST /connect/token
 
 #### .NET Client Library
 
-On .NET you can leverage the [Duende IdentityModel](../../../identitymodel) client library
-to [request](../../../identitymodel/endpoints/token) refresh tokens, e.g.:
+On .NET you can leverage the [Duende IdentityModel](/identitymodel/index.mdx) client library
+to [request](/identitymodel/endpoints/token.md) refresh tokens, e.g.:
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 
@@ -76,7 +77,7 @@ are issued to and the client is required to authenticate itself in order to do s
 token issued to a confidential client cannot use it without the client's credentials.
 
 Refresh tokens issued to public clients are not bound to the client in the same way, since the client cannot
-authenticate itself. We recommend that such refresh tokens be sender-constrained using [Proof of Possession](/identityserver/tokens/pop/)
+authenticate itself. We recommend that such refresh tokens be sender-constrained using [Proof of Possession](/identityserver/tokens/pop.md)
 instead.
 
 You can further reduce the attack surface of refresh tokens using the following techniques.
@@ -123,7 +124,7 @@ to produce a new token, but the response containing the new refresh token is los
 application has no way to recover without the user logging in again. Reusable refresh tokens do not have this problem.
 
 Reusable tokens may have better performance in
-the [persisted grants store](/identityserver/reference/stores/persisted-grant-store/). One-time use refresh tokens
+the [persisted grants store](/identityserver/reference/stores/persisted-grant-store.md). One-time use refresh tokens
 require additional records to be written to the store whenever a token is refreshed. Using reusable refresh tokens
 avoids those writes.
 
@@ -174,4 +175,4 @@ replay detection. The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUs
 used tokens persist and can be used to detect replays. The cleanup job should also be configured to not delete consumed
 tokens.
 
-See also: The [IRefreshTokenService](/identityserver/reference/services/refresh-token-service/) reference.
+See also: The [IRefreshTokenService](/identityserver/reference/services/refresh-token-service.md) reference.

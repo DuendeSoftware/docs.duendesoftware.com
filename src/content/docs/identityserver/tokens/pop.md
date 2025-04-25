@@ -3,6 +3,7 @@ title: "Proof-of-Possession Access Tokens"
 description: "Documentation for Proof-of-Possession (PoP) tokens, which enhance security by cryptographically binding tokens to clients, including both Mutual TLS and DPoP implementations."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Proof-of-Possession
   order: 100
 redirect_from:
   - /identityserver/apis/aspnetcore/dpop/

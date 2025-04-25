@@ -3,6 +3,7 @@ title: "Client Authentication"
 description: "A comprehensive guide to client authentication methods in Duende IdentityServer, including shared secrets, private key JWTs, and mutual TLS client certificates, with implementation examples and security considerations."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Client Authentication
   order: 140
 redirect_from:
   - /identityserver/v5/tokens/client_authentication/
@@ -85,7 +86,7 @@ The following secret parsers are part of Duende IdentityServer:
 
 
 ### Secret Validation
-It is the job of implementations of the [ISecretValidator](/identityserver/reference/models/secrets#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
+It is the job of implementations of the [ISecretValidator](/identityserver/reference/models/secrets.md#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
 
 You can add secret validators by calling the `AddSecretValidator()` service provider extension method.
 
@@ -153,7 +154,7 @@ var compromisedSecret = new Secret("just for demos, not prod!".Sha256());
 
 You can either send the client id/secret combination as part of the POST body::
 
-```
+```http request
 POST /connect/token
 
 Content-type: application/x-www-form-urlencoded
@@ -168,7 +169,7 @@ Content-type: application/x-www-form-urlencoded
 
 ...or as a basic authentication header::
 
-```
+```http request
 POST /connect/token
 
 Content-type: application/x-www-form-urlencoded
@@ -181,11 +182,11 @@ Authorization: Basic xxxxx
 
 ### .NET Client Library
 
-You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
+You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 
@@ -252,7 +253,7 @@ You can share the same key for client authentication and [signed authorize reque
 
 On the client side, the caller must first generate the JWT, and then send it on the `assertion` body field:
 
-```
+```http request
 POST /connect/token
 
 Content-type: application/x-www-form-urlencoded
@@ -298,7 +299,7 @@ private static string CreateClientToken(SigningCredentials credential, string cl
 protocol endpoint from .NET code.
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential)
 {

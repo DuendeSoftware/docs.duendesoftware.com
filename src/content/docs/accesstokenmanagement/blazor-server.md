@@ -1,13 +1,15 @@
 ---
-title: Blazor Server
+title: Blazor Server Access Token Management
+date: 2024-10-12
 description: Learn how to manage access tokens in Blazor Server applications and handle token storage and HTTP client usage with Duende.AccessTokenManagement.
 sidebar:
+  label: Blazor
   order: 4
 redirect_from:
   - /foss/accesstokenmanagement/blazor_server/
 ---
 
-Blazor Server applications have the same token management requirements as a regular ASP.NET Core web application. Because Blazor Server streams content to the application over a websocket, there often is no HTTP request or response to interact with during the execution of a Blazor Server application. You therefore cannot use *HttpContext* in a Blazor Server application as you would in a traditional ASP.NET Core web application.
+Blazor Server applications have the same token management requirements as a regular ASP.NET Core web application. Because Blazor Server streams content to the application over a websocket, there often is no HTTP request or response to interact with during the execution of a Blazor Server application. You therefore cannot use `HttpContext` in a Blazor Server application as you would in a traditional ASP.NET Core web application.
 
 This means:
 
@@ -15,7 +17,7 @@ This means:
 * you cannot use the ASP.NET authentication session to store tokens
 * the normal mechanism used to automatically attach tokens to Http Clients making API calls won't work
 
-Fortunately, Duende.AccessTokenManagement provides a straightforward solution to these problems. Also see the [*BlazorServer* sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/BlazorServer) for source code of a full example.
+Fortunately, `Duende.AccessTokenManagement` provides a straightforward solution to these problems. Also see the [*BlazorServer* sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/BlazorServer) for source code of a full example.
 
 ## Token storage
 
@@ -25,14 +27,16 @@ The store interface is straightforward. `StoreTokenAsync` adds a token to the st
 
 Register your token store in the ASP.NET Core service provider and tell Duende.AccessTokenManagement to integrate with Blazor by calling `AddBlazorServerAccessTokenManagement<TTokenStore>`:
 
-```cs
+```csharp
+// Program.cs
 builder.Services.AddOpenIdConnectAccessTokenManagement()
     .AddBlazorServerAccessTokenManagement<ServerSideTokenStore>();
 ```
 
 Once you've registered your token store, you need to use it. You initialize the token store with the `TokenValidated` event in the OpenID Connect handler:
 
-```cs
+```csharp
+// OidcEvents.cs
 public class OidcEvents : OpenIdConnectEvents
 {
     private readonly IUserTokenStore _store;
@@ -60,13 +64,14 @@ public class OidcEvents : OpenIdConnectEvents
 }
 ```
 
-Once registered and initialized, Duende.AccessTokenManagement will keep the store up to date automatically as tokens are refreshed.
+Once registered and initialized, `Duende.AccessTokenManagement` will keep the store up to date automatically as tokens are refreshed.
 
 ## Retrieving And Using Tokens
 
 If you've registered your token store with `AddBlazorServerAccessTokenManagement`, Duende.AccessTokenManagement will register the services necessary to attach tokens to outgoing HTTP requests automatically, using the same API as a non-blazor application. You inject an HTTP client factory and resolve named HTTP clients where ever you need to make HTTP requests, and you register the HTTP client's that use access tokens in the ASP.NET Core service provider with our extension method:
 
 ```cs
+// Program.cs
 builder.Services.AddUserAccessTokenHttpClient("demoApiClient", configureClient: client =>
 {
     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");

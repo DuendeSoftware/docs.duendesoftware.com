@@ -2,6 +2,7 @@
 title: "IdentityServer Options"
 description: Documentation of all configuration options in Duende IdentityServer, including settings for key management, endpoints, authentication, events, logging, CORS, Content Security Policy, device flow, mutual TLS, dynamic providers, CIBA, server-side sessions, validation and other core features.
 sidebar:
+  label: Options
   order: 10
 redirect_from:
   - /identityserver/v5/reference/options/

@@ -1,7 +1,9 @@
 ---
-title: Workers
+title: Service Workers and Background Tasks
+date: 2024-10-12
 description: Learn how to manage OAuth access tokens in worker applications and background tasks using Duende.AccessTokenManagement
 sidebar:
+  label: Service Workers
   order: 2
 redirect_from:
   - /foss/accesstokenmanagement/workers/
@@ -13,15 +15,20 @@ The access tokens need to be requested and cached (either locally or shared betw
 
 The actual business code should not need to be aware of this.
 
-Have a look for the `Worker` project in the [samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for running code.
+Have a look for the [`Worker` project in the samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for running code.
 
 ## Setup
 
 Start by adding a reference to the `Duende.AccessTokenManagement` NuGet package to your application.
 
+```bash
+dotnet add package Duende.AccessTokenManagement
+```
+
 You can add the necessary services to the ASP.NET Core service provider by calling `AddClientCredentialsTokenManagement()`. After that you can add one or more named client definitions by calling `AddClient`.
 
-```cs
+```csharp
+// Program.cs
 // default cache
 services.AddDistributedMemoryCache();
 
@@ -52,7 +59,8 @@ You can register HTTP clients with the factory that will automatically use the a
 
 The following code registers an HTTP client called `invoices` to automatically use the `invoice.client` definition:
 
-```cs
+```csharp
+// Program.cs
 services.AddClientCredentialsHttpClient("invoices", "invoice.client", client =>
 {
     client.BaseAddress = new Uri("https://apis.company.com/invoice/");
@@ -61,7 +69,8 @@ services.AddClientCredentialsHttpClient("invoices", "invoice.client", client =>
 
 You can also set up a typed HTTP client to use a token client definition, e.g.:
 
-```cs
+```csharp
+// Program.cs
 services.AddHttpClient<CatalogClient>(client =>
     {
         client.BaseAddress = new Uri("https://apis.company.com/catalog/");
@@ -77,7 +86,8 @@ There are two fundamental ways to interact with token management - manually, or 
 
 You can retrieve the current access token for a given token client via `IClientCredentialsTokenManagementService.GetAccessTokenAsync`.
 
-```cs
+```csharp
+// WorkerManual.cs
 public class WorkerManual : BackgroundService
 {
     private readonly IHttpClientFactory _clientFactory;
@@ -114,7 +124,8 @@ You can customize some of the per-request parameters by passing in an instance o
 
 If you have set up HTTP clients in the HTTP factory, then no token related code is needed at all, e.g.:
 
-```cs
+```csharp
+// WorkerHttpClient.cs
 public class WorkerHttpClient : BackgroundService
 {
     private readonly ILogger<WorkerHttpClient> _logger;
@@ -139,4 +150,4 @@ public class WorkerHttpClient : BackgroundService
 }
 ```
 
-**remark** The clients in the factory have a message handler attached to them that automatically re-tries the request in case of a 401 response code. The request get re-sent with a newly requested access token. If this still results in a 401, the response is returned to the caller.
+**remark** The clients in the factory have a message handler attached to them that automatically re-tries the request in case of a `401` response code. The request get re-sent with a newly requested access token. If this still results in a `401`, the response is returned to the caller.

@@ -2,6 +2,7 @@
 title: "Client Store"
 description: Documentation for the IClientStore interface which is used to dynamically load client configuration by client ID.
 sidebar:
+  label: Client
   order: 36
 redirect_from:
   - /identityserver/v5/reference/stores/client_store/
@@ -14,16 +15,16 @@ redirect_from:
 Used to dynamically load client configuration.
 
 ```cs
+/// <summary>
+/// Retrieval of client configuration
+/// </summary>
+public interface IClientStore
+{
     /// <summary>
-    /// Retrieval of client configuration
+    /// Finds a client by id
     /// </summary>
-    public interface IClientStore
-    {
-        /// <summary>
-        /// Finds a client by id
-        /// </summary>
-        /// <param name="clientId">The client id</param>
-        /// <returns>The client</returns>
-        Task<Client> FindClientByIdAsync(string clientId);
-    }
+    /// <param name="clientId">The client id</param>
+    /// <returns>The client</returns>
+    Task<Client> FindClientByIdAsync(string clientId);
+}
 ```

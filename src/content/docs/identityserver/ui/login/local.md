@@ -2,6 +2,7 @@
 title: "Accepting Local Credentials"
 description: "Guide to implementing a local login page in IdentityServer that validates username/password credentials, issues authentication cookies, and includes a sample Razor Page implementation."
 sidebar:
+  label: Local Credentials
   order: 50
 redirect_from:
   - /identityserver/v5/ui/login/local/

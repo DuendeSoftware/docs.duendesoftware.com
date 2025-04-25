@@ -3,6 +3,7 @@ title: "UserInfo Endpoint"
 description: "Reference documentation for the UserInfo endpoint, which allows retrieval of authenticated user claims using a valid access token."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: UserInfo
   order: 4
 redirect_from:
   - /identityserver/v5/reference/endpoints/userinfo/
@@ -36,17 +37,31 @@ Content-Type: application/json
 
 ## .NET Client Library
 
-You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
+You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 
-var response = await client.GetUserInfoAsync(new UserInfoRequest
+var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
+
+var token = await client.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
+{
+    Address = disco.TokenEndpoint,
+
+    ClientId = "client",
+    ClientSecret = "secret",
+
+    Code = "...",
+    CodeVerifier = "...",
+    RedirectUri = "https://app.com/callback"
+});
+
+var userInfo = await client.GetUserInfoAsync(new UserInfoRequest
 {
     Address = disco.UserInfoEndpoint,
-    Token = token
+    Token = token.AccessToken
 });
 ```

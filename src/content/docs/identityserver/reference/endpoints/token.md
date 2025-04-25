@@ -3,6 +3,7 @@ title: "Token Endpoint"
 description: "Documentation for the token endpoint that enables programmatic token requests using various grant types and parameters in Duende IdentityServer."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Token
   order: 3
 redirect_from:
   - /identityserver/v5/reference/endpoints/token/
@@ -99,11 +100,11 @@ CONTENT-TYPE application/x-www-form-urlencoded
 
 ## .NET Client Library
 
-You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
+You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 

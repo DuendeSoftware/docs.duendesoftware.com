@@ -3,6 +3,7 @@ title: "Introspection Endpoint"
 description: "Documentation for the RFC 7662 compliant introspection endpoint used to validate reference tokens, JWTs, and refresh tokens."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Introspection
   order: 5
 redirect_from:
   - /identityserver/v5/reference/endpoints/introspection/
@@ -54,11 +55,11 @@ An invalid request will return a 400, an unauthorized request 401.
 
 ## .NET Client Library
 
-You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
+You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 

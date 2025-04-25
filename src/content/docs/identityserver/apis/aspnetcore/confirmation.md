@@ -3,6 +3,7 @@ title: "Validating Proof-of-Possession"
 description: "Guide for validating Proof-of-Possession (PoP) access tokens in ASP.NET Core using mTLS or DPoP mechanisms"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Validate PoP
   order: 40
 redirect_from:
   - /identityserver/v5/apis/aspnetcore/confirmation/

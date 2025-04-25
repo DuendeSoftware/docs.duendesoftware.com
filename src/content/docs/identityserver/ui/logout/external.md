@@ -2,6 +2,7 @@
 title: "External Logout"
 description: "Guide to implementing logout from external identity providers in IdentityServer, including detecting provider usage, redirecting users for sign-out, and maintaining state across the redirect flow."
 sidebar:
+  label: External Logout
   order: 70
 redirect_from:
   - /identityserver/v5/ui/logout/external/

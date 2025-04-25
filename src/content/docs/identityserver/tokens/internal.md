@@ -3,6 +3,7 @@ title: "Issuing Internal Tokens"
 description: "A guide to using the IIdentityServerTools interface for creating JWT tokens internally within IdentityServer's extensibility code, without going through the protocol endpoints."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Internal Tokens
   order: 60
 redirect_from:
   - /identityserver/v5/tokens/internal/
