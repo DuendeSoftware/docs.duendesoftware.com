@@ -9,7 +9,8 @@ redirect_from:
   - /foss/accesstokenmanagement/web_apps/
 ---
 
-The `Duende.AccessTokenManagement` library automates all the tasks around access token lifetime management for user-centric web applications.
+The `Duende.AccessTokenManagement` library automates all the tasks around access token lifetime management for
+user-centric web applications.
 
 To use this library, start by adding the library to your .NET projects.
 
@@ -21,14 +22,16 @@ While many of the details can be customized, by default the following is assumed
 
 * ASP.NET Core web application
 * cookie authentication handler for session management
-* OpenID Connect authentication handler for authentication and access token requests against an OpenID Connect compliant token service
+* OpenID Connect authentication handler for authentication and access token requests against an OpenID Connect compliant
+  token service
 * the token service returns a refresh token
 
 ## Setup
 
-
-
-By default, the token management library will use the ASP.NET Core default authentication scheme for token storage (this is typically the cookie handler and its authentication session), and the default challenge scheme for deriving token client configuration for refreshing tokens or requesting client credential tokens (this is typically the OpenID Connect handler pointing to your trusted authority).
+By default, the token management library will use the ASP.NET Core default authentication scheme for token storage (this
+is typically the cookie handler and its authentication session), and the default challenge scheme for deriving token
+client configuration for refreshing tokens or requesting client credential tokens (this is typically the OpenID Connect
+handler pointing to your trusted authority).
 
 ```csharp
 // Program.cs
@@ -89,7 +92,9 @@ builder.Services.AddOpenIdConnectAccessTokenManagement();
 
 ### HTTP Client Factory
 
-Similar to the worker service support, you can register HTTP clients that automatically send the access token of the current user when making API calls. The message handler plumbing associated with those HTTP clients will try to make sure, the access token is always valid and not expired.
+Similar to the worker service support, you can register HTTP clients that automatically send the access token of the
+current user when making API calls. The message handler plumbing associated with those HTTP clients will try to make
+sure, the access token is always valid and not expired.
 
 ```csharp
 // Program.cs
@@ -110,7 +115,9 @@ builder.Services.AddHttpClient<InvoiceClient>(client =>
     .AddUserAccessTokenHandler();
 ```
 
-Of course, the ASP.NET Core web application host could also do machine to machine API calls that are independent of a user. In this case all the token client configuration can be inferred from the OpenID Connect handler configuration. The following registers an HTTP client that uses a client credentials token for outgoing calls:
+Of course, the ASP.NET Core web application host could also do machine to machine API calls that are independent of a
+user. In this case all the token client configuration can be inferred from the OpenID Connect handler configuration. The
+following registers an HTTP client that uses a client credentials token for outgoing calls:
 
 ```csharp
 // registers HTTP client that uses the managed client access token
@@ -170,8 +177,10 @@ public class HomeController : Controller
 
 There are three extension methods on the HTTP context that simplify interaction with the token management service:
 
-* `GetUserAccessTokenAsync` - returns an access token representing the user. If the current access token is expired, it will be refreshed.
-* `GetClientAccessTokenAsync` - returns an access token representing the client. If the current access token is expired, a new one will be requested
+* `GetUserAccessTokenAsync` - returns an access token representing the user. If the current access token is expired, it
+  will be refreshed.
+* `GetClientAccessTokenAsync` - returns an access token representing the client. If the current access token is expired,
+  a new one will be requested
 * `RevokeRefreshTokenAsync` - revokes the refresh token
 
 ```csharp
@@ -189,7 +198,9 @@ public async Task<IActionResult> CallApi()
 
 ### HTTP Client Factory
 
-Last but not least, if you registered clients with the factory, you can use them. They will try to make sure that a current access token is always sent along. If that is not possible, ultimately a 401 will be returned to the calling code.
+Last but not least, if you registered clients with the factory, you can use them. They will try to make sure that a
+current access token is always sent along. If that is not possible, ultimately a 401 will be returned to the calling
+code.
 
 ```csharp
 public async Task<IActionResult> CallApi()
