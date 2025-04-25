@@ -12,7 +12,7 @@ redirect_from:
 ---
 
 A typical architecture is composed of two application (aka
-client) [types](/identityserver/overview/terminology#client) - machine-to-machine calls and interactive applications.
+client) [types](/identityserver/overview/terminology.md#client) - machine-to-machine calls and interactive applications.
 
 ## Machine-to-machine Communication
 
@@ -21,9 +21,9 @@ API.
 
 Prerequisites are:
 
-* define a [client](/identityserver/fundamentals/clients) for the *client credentials* grant type
-* define an [API scope](/identityserver/fundamentals/resources/api-scopes/) (and optionally a resource)
-* grant the client access to the scope via the [`AllowedScopes`](/identityserver/reference/models/client#basics)
+* define a [client](/identityserver/fundamentals/clients.md) for the *client credentials* grant type
+* define an [API scope](/identityserver/fundamentals/resources/api-scopes.md) (and optionally a resource)
+* grant the client access to the scope via the [`AllowedScopes`](/identityserver/reference/models/client.md#basics)
   property
 
 According to the OAuth [specification](https://tools.ietf.org/html/rfc6749#section-4.4), you request a token by posting
@@ -63,7 +63,7 @@ The above token request would look like this in C#:
 
 ```csharp
 // Program.cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 
@@ -208,7 +208,7 @@ Pragma: no-cache
 ```
 
 :::note
-See the refresh token section for more information on how to deal with [refresh tokens](/identityserver/tokens/refresh).
+See the refresh token section for more information on how to deal with [refresh tokens](/identityserver/tokens/refresh.md).
 :::
 
 ### .NET Client Library

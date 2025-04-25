@@ -380,9 +380,9 @@ endpoint addresses can be read from the metadata. Add the following to the
 client's Program.cs in the `src/Client/Program.cs` directory:
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
-// discover endpoints from metadata
+// discovery endpoints from metadata
 var client = new HttpClient();
 var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
 if (disco.IsError)

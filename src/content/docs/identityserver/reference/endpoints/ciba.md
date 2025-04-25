@@ -83,7 +83,7 @@ required to implement the `IBackchannelAuthenticationUserValidator` interface.
 
   instead of providing all parameters as individual parameters, you can provide all them as a JWT
 
-```text
+```http request
 POST /connect/ciba
 
     client_id=client1&
@@ -94,7 +94,7 @@ POST /connect/ciba
 
 And a successful response will look something like:
 
-```text
+```http request
 HTTP/1.1 200 OK
 Content-Type: application/json
 Cache-Control: no-store
@@ -108,11 +108,11 @@ Cache-Control: no-store
 
 ## .NET Client Library
 
-You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
+You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 

@@ -55,11 +55,11 @@ An invalid request will return a 400, an unauthorized request 401.
 
 ## .NET Client Library
 
-You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with
+You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
 ```cs
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 
