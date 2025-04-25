@@ -62,7 +62,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * You can link to header anchors using the `#` symbol, for example `[multiple authentication methods](/identityserver/ui/federation.md#multiple-authentication-methods-for-users)`.
 * Link relevant text. Prefer `learn more about [improving the sign-in experience]` over `click [here] to learn more`.
 * Run `npm run linkchecker` to validate all links (note this will ignore links to GitHub because of rate limits in place).
-* When a markdown link is long (75+ characters) or a link is repeated multiple times on a page, prefer moving the link to the bottom of the file and usings markdown anchor syntax `[test.cs][repo-test-file]`
+* When a markdown link is long (75+ characters) or a link is repeated multiple times on a page, prefer moving the link to the bottom of the file and using markdown anchor syntax `[test.cs][repo-test-file]`
 
 ### Code Block Style
 
