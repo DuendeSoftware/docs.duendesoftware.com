@@ -39,6 +39,16 @@ Content can be authored in Markdown, in a `.md` or `.mdx` file. The Starlight do
 * [Authoring Content in Markdown](https://starlight.astro.build/guides/authoring-content/)
 * [Using Components](https://starlight.astro.build/components/using-components/) (only in `.mdx`)
 
+### Linking Rules
+
+* Always prefer linking internally over linking externally. For example, when you talk about data protection, prefer an internal link over a link to external sites.
+* When linking to external content, consider writing one or two sentences about the context and what the reader will learn on the linked page.
+* When linking other pages, use a path that starts at the content root, like `/identityserver/troubleshooting.md`. Use the `.md(x)` file extension - Starlight will update the link to the correct format on build.
+* When linking to external resources, use the full URL using HTTPS.
+* You can link to header anchors using the `#` symbol, for example `[multiple authentication methods](/identityserver/ui/federation.md#multiple-authentication-methods-for-users)`.
+* Link relevant text. Prefer `learn more about [improving the sign-in experience]` over `click [here] to learn more`.
+* Run `npm run linkchecker` to validate all links (note this will ignore links to GitHub because of rate limits in place).
+
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:
