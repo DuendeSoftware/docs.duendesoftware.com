@@ -8,7 +8,7 @@ redirect_from:
   - /foss/accesstokenmanagement/advanced/client_credentials/
 ---
 
-The most common way to use the access token management for [machine-to-machine communication](/accesstokenmanagement/workers) - however you may want to customize certain aspects of it - here's what you can do.
+The most common way to use the access token management for [machine-to-machine communication](/accesstokenmanagement/workers) - however, you may want to customize certain aspects of it. Here's what you can do.
 
 ## Client Options
 
