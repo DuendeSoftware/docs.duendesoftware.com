@@ -110,7 +110,7 @@ public class WorkerManual : BackgroundService
 
 You can customize some of the per-request parameters by passing in an instance of `ClientCredentialsTokenRequestParameters`. This allows forcing a fresh token request (even if a cached token would exist) and also allows setting a per-request scope, resource and client assertion.
 
-### HTTP factory
+### HTTP Factory
 
 If you have set up HTTP clients in the HTTP factory, then no token related code is needed at all, e.g.:
 
