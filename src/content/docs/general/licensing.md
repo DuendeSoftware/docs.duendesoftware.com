@@ -12,6 +12,13 @@ redirect_from:
   - /identityserver/v7/fundamentals/license_key/  
 ---
 
+<!-- snippet: HelloWorld -->
+```cs
+// Program.cs
+Console.WriteLine("Hello, Maarten!");
+```
+<!-- endSnippet -->
+
 Duende IdentityServer requires a license for production use, with three editions available (Starter, Business, and
 Enterprise) that offer various features based on organizational needs. Licenses can be configured via a file system,
 programmatic startup, or external configuration services like Azure Key Vault, with trial mode available for development
