@@ -7,7 +7,7 @@ redirect_from:
   - /foss/accesstokenmanagement/workers/
 ---
 
-A common scenario in worker applications or background tasks (or really any demon-style applications) is to call APIs using an OAuth token obtained via the client credentials flow.
+A common scenario in worker applications or background tasks (or really any daemon-style applications) is to call APIs using an OAuth token obtained via the client credentials flow.
 
 The access tokens need to be requested and cached (either locally or shared between multiple instances) and made available to the code calling the APIs. In case of expiration (or other token invalidation reasons), a new access token needs to be requested.
 
