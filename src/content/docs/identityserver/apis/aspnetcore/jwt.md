@@ -48,7 +48,7 @@ In OAuth there are two complementary mechanisms to embed more information about 
 
 If you designed your APIs around the concept of [API resources](/identityserver/fundamentals/resources/api-resources/), your IdentityServer will emit the `aud` claim by default (`api1` in this example):
 
-```jwt
+```text
 {
     "typ": "at+jwt",
     "kid": "123"
