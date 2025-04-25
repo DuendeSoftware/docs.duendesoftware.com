@@ -20,7 +20,10 @@ const removeMarkdownExtensions: Plugin = function ({
   return (tree: Node) => {
     visit(tree, "link", (node: Element) => {
       // ignore relative links if configured
-      if (ignoreRelativeLinks && node.url.startsWith("./")) {
+      if (
+        ignoreRelativeLinks &&
+        (node.url.startsWith("./") || node.url.startsWith("../"))
+      ) {
         return;
       }
 
