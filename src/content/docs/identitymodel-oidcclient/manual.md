@@ -10,7 +10,7 @@ redirect_from:
 
 OpenID Connect is a protocol that allows you to authenticate users
 using a browser and involves browser-based interactions. When using this
-library you can choose between two modes: [automatic](./automatic.md) and manual.
+library you can choose between two modes: [automatic](/identitymodel-oidcclient/automatic.md) and manual.
 
 We recommend using automatic mode when possible, but sometimes you need
 to use manual mode when you want to handle browser interactions yourself.

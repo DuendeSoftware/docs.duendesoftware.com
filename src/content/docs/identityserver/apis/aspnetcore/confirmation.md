@@ -10,7 +10,7 @@ redirect_from:
   - /identityserver/v7/apis/aspnetcore/confirmation/
 ---
 
-IdentityServer can [bind tokens to clients](/identityserver/tokens/pop#proof-of-possession-styles) using either mTLS or
+IdentityServer can [bind tokens to clients](/identityserver/tokens/pop.md#proof-of-possession-styles) using either mTLS or
 DPoP, creating a `Proof-of-Possession` (PoP) access token. When one of these mechanisms is used, APIs that use those
 access tokens for authorization need to validate the binding between the client and token. This document describes how
 to perform such validation, depending on which mechanism was used to produce a PoP token.
