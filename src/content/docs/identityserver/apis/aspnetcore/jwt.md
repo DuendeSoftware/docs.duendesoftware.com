@@ -1,8 +1,9 @@
 ---
-title: "Using JWTs"
+title: "Using JSON Web Tokens (JWTs)"
 description: "Guide for validating JWT bearer tokens in ASP.NET Core applications using the JWT authentication handler"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: JWTs
   order: 10
 redirect_from:
   - /identityserver/v5/apis/aspnetcore/jwt/
@@ -12,7 +13,7 @@ redirect_from:
 
 On ASP.NET Core, you typically use the [JWT authentication handler](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer) for validating JWT bearer tokens.
 
-## Validating A JWT token
+## Validating A JWT
 
 First you need to add a reference to the authentication handler in your API project:
 
@@ -47,7 +48,7 @@ In OAuth there are two complementary mechanisms to embed more information about 
 
 If you designed your APIs around the concept of [API resources](/identityserver/fundamentals/resources/api-resources/), your IdentityServer will emit the `aud` claim by default (`api1` in this example):
 
-```json
+```jwt
 {
     "typ": "at+jwt",
     "kid": "123"

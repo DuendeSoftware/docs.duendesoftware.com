@@ -1,8 +1,9 @@
 ---
-title: "Using Reference Tokens"
+title: "Reference Tokens"
 description: "Guide for implementing reference token validation in ASP.NET Core APIs using OAuth 2.0 token introspection"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Reference Tokens
   order: 20
 redirect_from:
   - /identityserver/v5/apis/aspnetcore/reference/

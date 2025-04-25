@@ -2,6 +2,7 @@
 title: "Backchannel Authentication Interaction Service"
 description: Documentation for the IBackchannelAuthenticationInteractionService interface which provides services for accessing and completing CIBA login requests.
 sidebar:
+  label: Backchannel Authentication Interaction
   order: 80
 redirect_from:
   - /identityserver/v5/reference/services/ciba_interaction_service/

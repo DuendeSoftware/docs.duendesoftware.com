@@ -3,6 +3,7 @@ title: "Authorize Endpoint"
 description: "Documentation for the authorize endpoint which handles browser-based token and authorization code requests, including authentication and consent flows."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Authorize
   order: 2
 redirect_from:
   - /identityserver/v5/reference/endpoints/authorize/

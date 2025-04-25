@@ -2,6 +2,7 @@
 title: "Pushed Authorization Request Store"
 description: Interface for managing pushed authorization requests storage in OAuth PAR flow.
 sidebar:
+  label: Pushed Authorization Request
   order: 110
 redirect_from:
   - /identityserver/v5/reference/stores/pushed_authorization_request_store/

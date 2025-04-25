@@ -2,6 +2,7 @@
 title: Client Assertions
 description: Learn how to use client assertions instead of shared secrets for token client authentication in Duende.AccessTokenManagement.
 sidebar:
+  label: Client Assertions
   order: 30
 redirect_from:
   - /foss/accesstokenmanagement/advanced/client_assertions/
@@ -14,34 +15,36 @@ If your token client is using a client assertion instead of a shared secret, you
 
 Here's a sample client assertion service using the Microsoft JWT library:
 
-```cs
-public class ClientAssertionService : IClientAssertionService
+```csharp
+// ClientAssertionService.cs
+using Duende.AccessTokenManagement;
+using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
+
+public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> options)
+    : IClientAssertionService
 {
-    private readonly IOptionsSnapshot<ClientCredentialsClient> _options;
-
-    public ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> options)
-    {
-        _options = options;
-    }
-
     public Task<ClientAssertion?> GetClientAssertionAsync(
       string? clientName = null, TokenRequestParameters? parameters = null)
     {
         if (clientName == "invoice")
         {
-            var options = _options.Get(clientName);
+            var options1 = options.Get(clientName);
 
             var descriptor = new SecurityTokenDescriptor
             {
-                Issuer = options.ClientId,
-                Audience = options.TokenEndpoint,
+                Issuer = options1.ClientId,
+                Audience = options1.TokenEndpoint,
                 Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = GetSigningCredential(),
 
                 Claims = new Dictionary<string, object>
                 {
                     { JwtClaimTypes.JwtId, Guid.NewGuid().ToString() },
-                    { JwtClaimTypes.Subject, options.ClientId! },
+                    { JwtClaimTypes.Subject, options1.ClientId! },
                     { JwtClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime() }
                 },
 
@@ -62,6 +65,11 @@ public class ClientAssertionService : IClientAssertionService
         }
 
         return Task.FromResult<ClientAssertion?>(null);
+    }
+
+    private SigningCredentials GetSigningCredential()
+    {
+        throw new NotImplementedException();
     }
 }
 ```

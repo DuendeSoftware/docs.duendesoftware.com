@@ -2,6 +2,7 @@
 title: "Backchannel Authentication Endpoint"
 description: "Documentation for the CIBA endpoint which allows clients to initiate backchannel authentication requests for users without browser interaction"
 sidebar:
+  label: Backchannel Authentication
   order: 9
 redirect_from:
   - /identityserver/v5/reference/endpoints/ciba/

@@ -1,7 +1,8 @@
 ---
-title: "Ending the Session"
+title: "Session Cleanup and Logout"
 description: "Guide to correctly ending a session in IdentityServer, including removing authentication cookies, handling external logins, and revoking client tokens during logout."
 sidebar:
+  label: End Sessions
   order: 20
 redirect_from:
   - /identityserver/v5/ui/logout/session_cleanup/
@@ -17,19 +18,27 @@ To remove the authentication cookie, use the ASP.NET Core `SignOutAsync` extensi
 You will need to pass the scheme used (which is provided by `IdentityServerConstants.DefaultCookieAuthenticationScheme`
 unless you have changed it):
 
-```cs
-await HttpContext.SignOutAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme);
+```csharp
+// LogOut.cshtml.cs
+await HttpContext.SignOutAsync(
+    Duende
+        .IdentityServer
+        .IdentityServerConstants
+        .DefaultCookieAuthenticationScheme
+);
 ```
 
 Or you can use the overload that will sign out of the default authentication scheme:
 
-```cs
+```csharp
+// LogOut.cshtml.cs
 await HttpContext.SignOutAsync();
 ```
 
 If you are integrating with ASP.NET Identity, sign out using its `SignInManager` instead:
 
-```cs
+```csharp
+// LogOut.cshtml.cs
 await _signInManager.SignOutAsync();
 ```
 

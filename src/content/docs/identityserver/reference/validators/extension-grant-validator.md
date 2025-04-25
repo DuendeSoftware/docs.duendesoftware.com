@@ -2,6 +2,7 @@
 title: "Extension Grant Validator"
 description: Documentation for the IExtensionGrantValidator interface which enables custom OAuth grant types by handling validation of extension grant requests.
 sidebar:
+  label: Extension Grant
   order: 80
 redirect_from:
   - /identityserver/v5/reference/validators/extension_grant_validator/

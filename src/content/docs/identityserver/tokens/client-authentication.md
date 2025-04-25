@@ -3,6 +3,7 @@ title: "Client Authentication"
 description: "A comprehensive guide to client authentication methods in Duende IdentityServer, including shared secrets, private key JWTs, and mutual TLS client certificates, with implementation examples and security considerations."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Client Authentication
   order: 140
 redirect_from:
   - /identityserver/v5/tokens/client_authentication/

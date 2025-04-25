@@ -2,6 +2,7 @@
 title: "External Logout Notification"
 description: "Documentation on federated sign-out in IdentityServer, explaining how external identity provider logout notifications are automatically processed to sign users out across all connected applications."
 sidebar:
+  label: External Logout Notification
   order: 80
 redirect_from:
   - /identityserver/v5/ui/logout/external_notification/

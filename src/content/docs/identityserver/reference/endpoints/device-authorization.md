@@ -3,6 +3,7 @@ title: "Device Authorization Endpoint"
 description: "Documentation for the device authorization endpoint which handles device flow authentication requests and issues device and user codes for authorization."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Device Authorization
   order: 8
 redirect_from:
   - /identityserver/v5/reference/endpoints/device_authorization/

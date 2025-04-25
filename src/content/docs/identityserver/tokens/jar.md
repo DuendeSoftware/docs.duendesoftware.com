@@ -1,7 +1,9 @@
 ---
 title: "Signed Authorize Requests"
-description: "A guide to implementing JWT Secured Authorization Requests (JAR) in IdentityServer, allowing authorization parameters to be packaged in signed JWTs for tamperproof requests and front-channel client authentication."
+description: "JWT Secured Authorization Request (JAR) is a security enhancement that allows authorization parameters to be packaged in signed JWTs, providing tamperproof requests and front-channel client authentication in IdentityServer."
+date: 2024-01-20
 sidebar:
+  label: "Signed Requests"
   order: 150
 redirect_from:
   - /identityserver/v5/tokens/jar/

@@ -45,4 +45,6 @@ var result = await client.ProcessResponseAsync(data, state);
 ```
 
 When using this manual mode, and processing the response, the `ProcessResponseAsync` method will return a
-[`LoginResult`](https://github.com/DuendeSoftware/foss/blob/19370c6d4820a684d41d1d40b8192ee8b873b8f0/identity-model-oidc-client/src/IdentityModel.OidcClient/LoginResult.cs) which will contain a `ClaimsPrincipal` with the user's claims along with the `IdentityToken` and `AccessToken`.
+[`LoginResult`][login-result-cs] which will contain a `ClaimsPrincipal` with the user's claims along with the `IdentityToken` and `AccessToken`.
+
+[login-result-cs]: https://github.com/DuendeSoftware/foss/blob/19370c6d4820a684d41d1d40b8192ee8b873b8f0/identity-model-oidc-client/src/IdentityModel.OidcClient/LoginResult.cs

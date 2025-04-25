@@ -1,8 +1,9 @@
 ---
-title: "Issuing Tokens based on User Passwords"
+title: "Issuing Tokens Based On User Passwords"
 description: "A guide to implementing the deprecated password grant type in IdentityServer for legacy applications, covering token requests, client library usage, and custom validation of user credentials."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Password Grants
   order: 30
 redirect_from:
   - /identityserver/v5/tokens/password_grant/
@@ -39,12 +40,13 @@ password=password
 
 ### .NET Client Library
 
-On .NET you can use the [Duende IdentityModel](../../../identitymodel) client library
-to [request](../../../identitymodel/endpoints/token) tokens using the `password` grant type,
+On .NET you can use the [Duende IdentityModel](/identitymodel/index.mdx) client library
+to [request](/identitymodel/endpoints/token.md) tokens using the `password` grant type,
 e.g.:
 
-```cs
-using IdentityModel.Client;
+```csharp
+// Program.cs
+using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
 
@@ -68,7 +70,8 @@ credentials is included.
 To add support for it, you need to implement and [register](/identityserver/reference/di#additional-services) an
 implementation of the `IResourceOwnerPasswordValidator` interface:
 
-```cs
+```csharp
+// IResourceOwnerPasswordValidator.cs
 public interface IResourceOwnerPasswordValidator
 {
     /// <summary>
@@ -82,4 +85,4 @@ public interface IResourceOwnerPasswordValidator
 The context contains parsed protocol parameters like `UserName` and `Password` and the raw request.
 
 It is the job of the validator to implement the password validation and set the `Result` property on the context
-accordingly (see the [Grant Validation Result](/identityserver/reference/models/grant-validation-result/) reference).
+accordingly (see the [Grant Validation Result](/identityserver/reference/models/grant-validation-result.md) reference).

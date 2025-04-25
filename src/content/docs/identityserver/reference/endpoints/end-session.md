@@ -3,6 +3,7 @@ title: "End Session Endpoint"
 description: "The end session endpoint enables single sign-out functionality in OpenID Connect, allowing users to terminate their sessions across multiple client applications."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: End Session
   order: 7
 redirect_from:
   - /identityserver/v5/reference/endpoints/end_session/

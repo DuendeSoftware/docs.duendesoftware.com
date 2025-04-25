@@ -3,6 +3,7 @@ title: "UserInfo Endpoint"
 description: "Reference documentation for the UserInfo endpoint, which allows retrieval of authenticated user claims using a valid access token."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: UserInfo
   order: 4
 redirect_from:
   - /identityserver/v5/reference/endpoints/userinfo/

@@ -2,6 +2,7 @@
 title: "Identity Provider Store"
 description: Documentation for the IIdentityProviderStore interface which dynamically loads identity provider configurations for external authentication.
 sidebar:
+  label: Identity Provider
   order: 36
 redirect_from:
   - /identityserver/v5/reference/stores/idp_store/
@@ -14,23 +15,23 @@ redirect_from:
 Used to dynamically load [identity provider configuration](/identityserver/reference/models/idp).
 
 ```cs
+/// <summary>
+/// Interface to model storage of identity providers.
+/// </summary>
+public interface IIdentityProviderStore
+{
     /// <summary>
-    /// Interface to model storage of identity providers.
+    /// Gets all identity providers name.
     /// </summary>
-    public interface IIdentityProviderStore
-    {
-        /// <summary>
-        /// Gets all identity providers name.
-        /// </summary>
-        Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
+    Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
 
-        /// <summary>
-        /// Gets the identity provider by scheme name.
-        /// </summary>
-        /// <param name="scheme"></param>
-        /// <returns></returns>
-        Task<IdentityProvider> GetBySchemeAsync(string scheme);
-    }
+    /// <summary>
+    /// Gets the identity provider by scheme name.
+    /// </summary>
+    /// <param name="scheme"></param>
+    /// <returns></returns>
+    Task<IdentityProvider> GetBySchemeAsync(string scheme);
+}
 ```
 
 The `IdentityProvider` is intended to be a base class to model arbitrary identity providers.

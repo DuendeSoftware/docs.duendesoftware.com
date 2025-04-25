@@ -8,13 +8,14 @@ redirect_from:
   - /foss/accesstokenmanagement/advanced/client_credentials/
 ---
 
-The most common way to use the access token management for machine to machine communication is described [here](/accesstokenmanagement/workers) - however you may want to customize certain aspects of it - here's what you can do.
+The most common way to use the access token management for [machine-to-machine communication](/accesstokenmanagement/workers) - however you may want to customize certain aspects of it - here's what you can do.
 
-## Client options
+## Client Options
 
 You can add token client definitions to your host while configuring the ASP.NET Core service provider, e.g.:
 
-```cs
+```csharp
+// Program.cs
 services.AddClientCredentialsTokenManagement()
   .AddClient("invoices", client =>
   {
@@ -40,7 +41,8 @@ You can set the following options:
 
 Internally the standard .NET options system is used to register the configuration. This means you can also register clients like this:
 
-```cs
+```csharp
+// Program.cs
 services.Configure<ClientCredentialsClient>("invoices", client =>
 {
     client.TokenEndpoint = "https://sts.company.com/connect/token";
@@ -55,37 +57,43 @@ services.Configure<ClientCredentialsClient>("invoices", client =>
 
 Or use the `IConfigureNamedOptions` if you need access to the ASP.NET Core service provider during registration, e.g.:
 
-```cs
-public class ClientCredentialsClientConfigureOptions : IConfigureNamedOptions<ClientCredentialsClient>
-{
-    private readonly DiscoveryCache _cache;
+```csharp
+// ClientCredentialsClientConfigureOptions.cs
+using Duende.AccessTokenManagement;
+using Duende.IdentityModel.Client;
+using Microsoft.Extensions.Options;
 
-    public ClientCredentialsClientConfigureOptions(DiscoveryCache cache)
-    {
-        _cache = cache;
-    }
-    
-    public void Configure(string name, ClientCredentialsClient options)
+public class ClientCredentialsClientConfigureOptions(DiscoveryCache cache)
+    : IConfigureNamedOptions<ClientCredentialsClient>
+{
+    public void Configure(string? name, ClientCredentialsClient options)
     {
         if (name == "invoices")
         {
-            var disco = _cache.GetAsync().GetAwaiter().GetResult();
+            var disco = cache.GetAsync().GetAwaiter().GetResult();
 
             options.TokenEndpoint = disco.TokenEndpoint;
             
-            client.ClientId = "4a632e2e-0466-4e5a-a094-0455c6105f57";
-   	    client.ClientSecret = "e8ae294a-d5f3-4907-88fa-c83b3546b70c";
+            options.ClientId = "4a632e2e-0466-4e5a-a094-0455c6105f57";
+            options.ClientSecret = "e8ae294a-d5f3-4907-88fa-c83b3546b70c";
 
-    	    client.Scope = "list";
-    	    client.Resource = "urn:invoices";
+            options.Scope = "list";
+            options.Resource = "urn:invoices";
         }
+    }
+
+    public void Configure(ClientCredentialsClient options)
+    {
+        // implement default configure
+        Configure("", options);
     }
 }
 ```
 
 You will also need to register the config options, for example:
 
-```cs
+```csharp
+// Program.cs
 services.AddClientCredentialsTokenManagement();
 
 services.AddSingleton(new DiscoveryCache("https://sts.company.com"));
@@ -93,7 +101,7 @@ services.AddSingleton<IConfigureOptions<ClientCredentialsClient>,
 	ClientCredentialsClientConfigureOptions>();
 ```
 
-### Backchannel communication
+### Backchannel Communication
 
 By default, all backchannel communication will be done using a named client from the HTTP client factory. The name is `Duende.AccessTokenManagement.BackChannelHttpClient` which is also a constant called `ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName`.
 
@@ -111,6 +119,7 @@ By default, tokens will be cached using the `IDistributedCache` abstraction in A
 For development purposes, you can use the `MemoryDistributedCache`:
 
 ```cs
+// Program.cs
 services.AddDistributedMemoryCache();
 ```
 
@@ -122,6 +131,7 @@ For production deployments, we recommend using a [distributed cache](https://lea
 The built-in cache in `Duende.AccessTokenManagment` uses two settings from the options, which apply with any `IDistributedCache`: 
 
 ```cs
+// Program.cs
 services.AddClientCredentialsTokenManagement(options =>
     {
         options.CacheLifetimeBuffer = 60;

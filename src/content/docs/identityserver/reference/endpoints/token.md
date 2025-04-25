@@ -3,6 +3,7 @@ title: "Token Endpoint"
 description: "Documentation for the token endpoint that enables programmatic token requests using various grant types and parameters in Duende IdentityServer."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Token
   order: 3
 redirect_from:
   - /identityserver/v5/reference/endpoints/token/

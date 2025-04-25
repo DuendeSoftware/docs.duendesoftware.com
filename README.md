@@ -62,6 +62,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * You can link to header anchors using the `#` symbol, for example `[multiple authentication methods](/identityserver/ui/federation.md#multiple-authentication-methods-for-users)`.
 * Link relevant text. Prefer `learn more about [improving the sign-in experience]` over `click [here] to learn more`.
 * Run `npm run linkchecker` to validate all links (note this will ignore links to GitHub because of rate limits in place).
+* When a markdown link is long (75+ characters) or a link is repeated multiple times on a page, prefer moving the link to the bottom of the file and usings markdown anchor syntax `[test.cs][repo-test-file]`
 
 ### Code Block Style
 
@@ -74,19 +75,23 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Make sure examples are runnable and complete. The goal is "Copy-paste from docs". Include namespaces, a result, and other prerequisites that are not obvious to someone new to the code.
 * Inline comments can be used to explain essential parts of the code. Expressive code can highlight line numbers, show diffs, and more.
 * Mention NuGet packages as a `bash` code block showing how to install it (`dotnet add package ...`). Link to the NuGet Gallery.
+* When referencing a property, field, class, or other symbol in text, use the `test` format instead of *test*.
+* Values should also be back-ticked, especially HTTP Status codes like `404` or `401`.
+* Make sure code blocks start at the very first character space and don't have excessive starting padding.
 
 ### Frontmatter Rules
 
 * Always have a `title` property to set the page title.
-* Always have a `description` property to set the page description.
+* Always have a `description` property to set the page description. This is a summary of the page's core content.
 * Always have a `date` property to set the creation/significant update date for a page. Use the `YYYY-MM-DD` format.
-* Add the `sidebar` property and include the `label`. The `label` is used in the menu, and should typically be shorter than the more descriptive `title`. For example:
+* Add the `sidebar` property and must include the `label` and `order`. The `label` is used in the menu, and should typically be shorter than the more descriptive `title`. For example:
+
     ```yaml
     title: "Using IdentityServer As A Federation Gateway"
     sidebar:
       label: "Federation"
+      order: 1
     ```
-* In the `sidebar` property, use `order` to re-order entries in the navigation bar.
 
 ## 🧞 Commands
 

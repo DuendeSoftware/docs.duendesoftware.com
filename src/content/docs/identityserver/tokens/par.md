@@ -2,6 +2,7 @@
 title: Pushed Authorization Requests
 description: "Pushed Authorization Requests (PAR) in IdentityServer, an OAuth standard that enhances security by moving authorization parameters from the front channel to the back channel."
 sidebar:
+  label: Pushed Authorization Requests
   order: 175
 redirect_from:
   - /identityserver/v5/tokens/par/

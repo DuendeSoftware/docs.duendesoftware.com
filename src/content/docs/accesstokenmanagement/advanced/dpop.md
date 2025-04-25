@@ -1,7 +1,8 @@
 ---
-title: DPoP
-description: DPoP (Demonstrating Proof-of-Possession) is a security mechanism that binds access tokens to specific cryptographic keys to prevent token theft and misuse.
+title: Demonstrating Proof-of-Possession (DPoP)
+description: Demonstrating Proof-of-Possession is a security mechanism that binds access tokens to specific cryptographic keys to prevent token theft and misuse.
 sidebar:
+  label: DPoP
   order: 40
 redirect_from:
   - /foss/accesstokenmanagement/advanced/dpop/
@@ -19,11 +20,18 @@ The creation and management of this DPoP key is up to the policy of the client. 
 
 Creating a JWK in .NET is simple:
 
-```cs
+```csharp
+// Program.cs
+using System.Security.Cryptography;
+using System.Text.Json;
+using Microsoft.IdentityModel.Tokens;
+
 var rsaKey = new RsaSecurityKey(RSA.Create(2048));
 var jwkKey = JsonWebKeyConverter.ConvertFromSecurityKey(rsaKey);
 jwkKey.Alg = "PS256";
 var jwk = JsonSerializer.Serialize(jwkKey);
+
+Console.WriteLine(jwk);
 ```
 
 ## Key Configuration
@@ -36,6 +44,7 @@ Once you have a JWK you wish to use, then it must be configured or made availabl
 Here's a sample configuring the key in an application using `AddOpenIdConnectAccessTokenManagement` in the startup code:
 
 ```cs
+// Program.cs
 services.AddOpenIdConnectAccessTokenManagement(options =>
 {
     options.DPoPJsonWebKey = jwk;
@@ -45,6 +54,7 @@ services.AddOpenIdConnectAccessTokenManagement(options =>
 Similarly, for an application using `AddClientCredentialsTokenManagement`, it would look like this:
 
 ```cs
+// Program.cs
 services.AddClientCredentialsTokenManagement()
    .AddClient("client_name", options =>
    {
@@ -61,7 +71,7 @@ There is nothing explicit needed on behalf of the developer using this library.
 
 When using DPoP and `AddOpenIdConnectAccessTokenManagement`, this library will also automatically include the `dpop_jkt` parameter to the authorize endpoint.
 
-## Proof Tokens at the API
+## Proof Tokens At The API
 
 Once the library has obtained a DPoP bound access token for the client, then if your application is using any of the `HttpClient` client factory helpers (e.g. `AddClientCredentialsHttpClient` or `AddUserAccessTokenHttpClient`) then those outbound HTTP requests will automatically include a DPoP proof token for the associated DPoP access token.
 
