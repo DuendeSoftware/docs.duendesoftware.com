@@ -39,6 +39,20 @@ Content can be authored in Markdown, in a `.md` or `.mdx` file. The Starlight do
 * [Authoring Content in Markdown](https://starlight.astro.build/guides/authoring-content/)
 * [Using Components](https://starlight.astro.build/components/using-components/) (only in `.mdx`)
 
+Use a spell checker like [Grazie](https://www.jetbrains.com/grazie/) or [Grammarly](https://www.grammarly.com/) to check your content for spelling and grammar errors.
+WebStorm has Grazie as a built-in spell checker and grammar checker, and supports a good default writing style.
+
+### Writing Style
+
+* Use the active voice. For example, use "Enable" instead of "Enabled" or "Enabling".
+* Use the second person ("you" not "I" or "we"). "You" is the reader of the documentation. "We" is Duende Software.
+* Use sentence case in text. Titles use Title Case.
+* Use the Oxford comma.
+* Avoid words like "very", "simple", "easy", ...
+* "As well as" can be written as "and".
+* Avoid flowery language.
+* When using acronyms, use the full form with parentheses the first time you use it. For example, use "Multi-Factor Authentication (MFA)" instead of "MFA".
+
 ### Linking Rules
 
 * Always prefer linking internally over linking externally. For example, when you talk about data protection, prefer an internal link over a link to external sites.
@@ -48,6 +62,31 @@ Content can be authored in Markdown, in a `.md` or `.mdx` file. The Starlight do
 * You can link to header anchors using the `#` symbol, for example `[multiple authentication methods](/identityserver/ui/federation.md#multiple-authentication-methods-for-users)`.
 * Link relevant text. Prefer `learn more about [improving the sign-in experience]` over `click [here] to learn more`.
 * Run `npm run linkchecker` to validate all links (note this will ignore links to GitHub because of rate limits in place).
+
+### Code Block Style
+
+* Use triple backticks to enclose code blocks.
+* Use a language identifier to specify the language (e.g. `csharp`, `bash`, `json`, `html`, `javascript`, `typescript`, `css`, `json`)
+* Add a title to the code block. You can do this adding the title as a comment in the first line of the code block (e.g. `// Program.cs`).
+* Use [expressive code features](https://starlight.astro.build/guides/authoring-content/#expressive-code-features).
+* Readers should not need to scroll horizontally to read a code example. Simplify and condense the code as much as possible.
+* If writing C#, use the latest syntax — including top-level statements, collection expressions, ...
+* Make sure examples are runnable and complete. The goal is "Copy-paste from docs". Include namespaces, a result, and other prerequisites that are not obvious to someone new to the code.
+* Inline comments can be used to explain essential parts of the code. Expressive code can highlight line numbers, show diffs, and more.
+* Mention NuGet packages as a `bash` code block showing how to install it (`dotnet add package ...`). Link to the NuGet Gallery.
+
+### Frontmatter Rules
+
+* Always have a `title` property to set the page title.
+* Always have a `description` property to set the page description.
+* Always have a `date` property to set the creation/significant update date for a page. Use the `YYYY-MM-DD` format.
+* Add the `sidebar` property and include the `label`. The `label` is used in the menu, and should typically be shorter than the more descriptive `title`. For example:
+    ```yaml
+    title: "Using IdentityServer As A Federation Gateway"
+    sidebar:
+      label: "Federation"
+    ```
+* In the `sidebar` property, use `order` to re-order entries in the navigation bar.
 
 ## 🧞 Commands
 
