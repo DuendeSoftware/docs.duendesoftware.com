@@ -20,9 +20,8 @@ show how to use a OidcClient with a variety of platforms and UI tools, including
 - [Windows Console Applications](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/HttpSysConsoleClient) (relies on an HttpListener - a wrapper around the windows HTTP.sys driver)
 - [Windows Console Applications using custom uri schemes](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/WindowsConsoleSystemBrowser)
 
-All samples use a demo instance of Duende.IdentityServer (https://demo.duendesoftware.com)
-as their OIDC Provider. You can see its source code
-[here](https://github.com/DuendeSoftware/demo.duendesoftware.com).
+All samples use a [demo instance of Duende IdentityServer](https://demo.duendesoftware.com)
+as their OIDC Provider. You can see its [source code on GitHub](https://github.com/DuendeSoftware/demo.duendesoftware.com).
 
 You can log in with *alice/alice* or *bob/bob*
 

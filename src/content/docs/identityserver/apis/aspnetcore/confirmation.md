@@ -166,5 +166,5 @@ so you can supply the cache implementation of your choice. See the
 for more details on setting up distributed caches, along with many examples, including Redis, CosmosDB, and
 Sql Server.
 
-A full sample using the default in memory caching is available
-[here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/DPoP).
+A full sample [using the default in memory caching](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/DPoP)
+is available on GitHub.

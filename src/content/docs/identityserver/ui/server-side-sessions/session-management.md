@@ -42,11 +42,11 @@ For example:
 
 ```cs
 var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        CountRequested = 10,
-        SubjectId = "12345",
-        DisplayName = "Bob",
-    });
+{
+    CountRequested = 10,
+    SubjectId = "12345",
+    DisplayName = "Bob",
+});
 ```
 
 The results returned contains the matching users' session data, and paging information (depending on if the store and backing database supports certain features such as total count and current page number).
@@ -56,24 +56,24 @@ This paging information contains a `ResultsToken` and allows subsequent requests
 ```cs
 // this requests the first page
 var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        CountRequested = 10,
-    });
+{
+    CountRequested = 10,
+});
 
 // this requests the next page relative to the previous results
 userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        ResultsToken = userSessions.ResultsToken,
-        CountRequested = 10,
-    });
+{
+    ResultsToken = userSessions.ResultsToken,
+    CountRequested = 10,
+});
 
 // this requests the prior page relative to the previous results
 userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
-    {
-        ResultsToken = userSessions.ResultsToken,
-        RequestPriorResults = true,
-        CountRequested = 10,
-    });
+{
+    ResultsToken = userSessions.ResultsToken,
+    RequestPriorResults = true,
+    CountRequested = 10,
+});
 ```
 
 
