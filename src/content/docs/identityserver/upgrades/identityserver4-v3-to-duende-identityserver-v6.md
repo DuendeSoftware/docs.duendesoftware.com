@@ -13,7 +13,7 @@ redirect_from:
 ---
 
 This upgrade guide covers upgrading from IdentityServer4 v3.1.x to Duende IdentityServer v6.
-This upgrade is a complex one because the configuration object model had some non-trivial changes from IdentityServer4 v3 to IdentityServer4 v4.
+This upgrade is more complex because the configuration object model had some non-trivial changes from IdentityServer4 v3 to IdentityServer4 v4.
 
 In short, in IdentityServer4 v3 there was a parent-child relationship between the ApiResources and the ApiScopes.
 Then in IdentityServer4 v4 the ApiScopes was promoted to be its own top-level configuration. 
@@ -21,11 +21,11 @@ This meant that the child collection under the ApiResources was renamed to ApiRe
 
 If you were using a database for this configuration, then this means that configuration changed from a parent-child, to two top-level tables with a join table between them (to put it loosely). The new ApiResourcesScopes table was created to act as that join table.
 
-Also, all the prior tables that were associated with the ApiResources were prefixed with "Api" and that prefix became "ApiResource" to better indicate the association. 
+Also, all the prior tables associated with the `ApiResources` were prefixed with "Api" and that prefix became "ApiResource" to better indicate the association. 
 Then any new tables associated with the new top-level ApiScopes have the "ApiScope" prefix to indicate that association.
 
-In order to properly update the database, the easiest approach is to first update to the latest of IdentityServer4 v4. 
-Once that's complete, then it's very simple to move to Duende IdentityServer v5.
+To properly update the database, the easiest approach is to first update to the latest of IdentityServer4 v4. 
+Once that's complete, then it's straightforward to move to Duende IdentityServer v5.
 
 There is a sample project for this migration exercise. It is located [here](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3).
 
@@ -50,7 +50,7 @@ If you're using any of the other IdentityServer4 packages, such as `IdentityServ
 
 If you are using a [database](/identityserver/data) for your configuration and operational data, then there is a bit of work.
 The reason is that for this type of schema restructuring EntityFramework Core's migrations can lose existing data.
-To handle this, the conversation from the old schema to the new will be performed by custom SQL.
+To handle this, custom SQL will perform the conversation from the old schema to the new.
 This is only needed for the configuration database, not the operational one so normal migrations will suffice for the operational database.
 
 First for the operational database, we can apply EF Core migrations. 
