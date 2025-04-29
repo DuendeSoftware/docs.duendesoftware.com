@@ -95,7 +95,7 @@ The [`IServerSideSessionStore`](/identityserver/reference/stores/server-side-ses
 An EntityFramework Core implementation is already provided as part of our [operational store](/identityserver/data/ef#operational-store), but you can implement
 the [interface](/identityserver/reference/stores/server-side-sessions/) yourself for other backing implementations.
 
-:::caution[Performance when listing sessions]
+:::caution[Prefer `GetSessionsAsync` over `QuerySessionsAsync`]
 When listing sessions, prefer `GetSessionsAsync` over `QuerySessionsAsync`.
 The `QuerySessionsAsync` method performs a full-text search and may be slower to retrieve a list of sessions than `GetSessionsAsync`.
 Use `QuerySessionsAsync` only when more advanced filtering is required for the solution you are building.
