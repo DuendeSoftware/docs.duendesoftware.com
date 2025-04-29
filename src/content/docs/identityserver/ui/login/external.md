@@ -35,9 +35,15 @@ Connect, SAML2-P, or WS-Federation).
 :::
 
 To ease integration with external providers, it is recommended to use an authentication handler for ASP.NET Core that
-implements the corresponding protocol used by the provider. Many are available as part of ASP.NET Core, but you might
-need to find others (both commercial and free) for things like SAML2-P and other social login systems not provided by
-ASP.NET Core.
+implements the corresponding protocol used by the provider.
+
+:::tip[Third-party ASP.NET Core authentication handlers]
+Many third-party authentication handlers are available as part of ASP.NET Core. You might need to find others
+(both commercial and free) for things like SAML2-P and other social login systems not provided by ASP.NET Core.
+
+Find a non-exhaustive list of available [ASP.NET Core authentication handlers](#third-party-aspnet-core-authentication-handlers)
+further on this page.
+:::
 
 ## Registering Authentication Handlers For External Providers
 
@@ -318,3 +324,23 @@ builder.Services.AddOidcStateDataFormatterCache("aad", "demoidsrv");
 
 See this [quickstart](/identityserver/quickstarts/2-interactive/) for step-by-step instructions for adding external
 authentication and configuring it.
+
+## Third-Party ASP.NET Core Authentication Handlers
+
+In this section, find a non-exhaustive list of first-party and third-party ASP.NET authentication handlers that you can use in any ASP.NET Core application.
+
+| Authentication handler / Service                                                                                                                                                                                            | Type         |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| [Cookie authentication](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie)                                                                                                                       | Part of .NET |
+| [OpenID Connect](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication)                                                                                                   | Part of .NET |
+| [JWT Bearer authentication](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-jwt-bearer-authentication)                                                                                      | Part of .NET |
+| [Certificate authentication](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/certauth)                                                                                                                | Part of .NET |
+| [Windows authentication](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/windowsauth)                                                                                                                 | Part of .NET |
+| [WS-Federation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/ws-federation)                                                                                                                        | Part of .NET |
+| [Facebook / Meta](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins)                                                                                                             | Part of .NET |
+| [Microsoft Account](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins)                                                                                                          | Part of .NET |
+| [Twitter / X](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins)                                                                                                                  | Part of .NET |
+| [Sustainsys Saml2](https://sustainsys.com/sustainsyssaml2-libraries)                                                                                                                                                        | Open-source |
+| Many social providers in [AspNet.Security.OAuth.Providers](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers)<br /><em><small>Airtable, Apple ID, GitHub, Hubspot, Instagram, Okta, Slack, ...</small></em> | Open-source |
+| [Rock Solid Knowledge SAML2P](https://www.identityserver.com/products/saml2p)                                                                                                                                               | Commercial |
+| [Rock Solid Knowledge WS-Federation](https://www.identityserver.com/products/ws-federation)                                                                                                                                 | Commercial |
