@@ -80,6 +80,6 @@ var response = await client.IntrospectTokenAsync(new TokenIntrospectionRequest
     ClientId = "resource1",
     ClientSecret = "secret",
 
-    Token = dsf43534j33kkl..
+    Token = "<PLACEHOLDER_TOKEN>" // Replace with the actual token
 });
 ```
