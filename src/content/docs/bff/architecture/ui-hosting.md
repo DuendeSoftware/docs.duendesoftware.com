@@ -1,6 +1,6 @@
 ---
 title: "UI Hosting"
-description: A guide exploring different UI hosting strategies and their benefits when using Backend-for-Frontend (BFF) systems
+description: A guide exploring different UI hosting strategies and their benefits when using Backend For Frontend (BFF) systems
 sidebar:
   order: 2
 redirect_from:
@@ -12,7 +12,7 @@ redirect_from:
 ---
 
 When building modern web applications, selecting the right hosting strategy for your UI assets is crucial for optimizing
-performance, simplifying deployment, and ensuring seamless integration with Backend-for-Frontend (BFF) systems. This
+performance, simplifying deployment, and ensuring seamless integration with Backend For Frontend (BFF) systems. This
 guide explores various hosting approaches and their benefits.
 
 ## Hosting Options for the UI

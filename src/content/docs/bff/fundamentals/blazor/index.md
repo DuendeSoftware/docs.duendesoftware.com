@@ -14,7 +14,7 @@ redirect_from:
 
 Microsoft Blazor is a framework for building interactive web applications using C# and .NET. Blazor allows developers to create rich, dynamic web UIs with the same ease as building desktop applications. 
 
-The Duende BFF (Backend for Frontend) Security Framework addresses common security challenges faced by Blazor applications. It provides a unified approach to managing authentication and authorization, ensuring secure interactions between the client and server. 
+The Duende Backend For Frontend (BFF) Security Framework addresses common security challenges faced by Blazor applications. It provides a unified approach to managing authentication and authorization, ensuring secure interactions between the client and server. 
 
 ## Architecture
 
