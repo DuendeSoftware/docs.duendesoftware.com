@@ -340,7 +340,7 @@ Logging related settings, including filters that will remove sensitive values an
 
 * **`AuthorizeRequestSensitiveValuesFilter`**
     
-    Collection of parameter names passed to the authorize endpoint that are considered sensitive and will be redacted in logs. Note that authorization parameters pushed to the Pushed Authorization Request (PAR) endpoint are eventually handled by the authorize request pipeline. This filter should be configured to exclude sensitive values wether or not they are pushed, and usually should be set to the same value as `PushedAuthorizationSensitiveValuesFilter`. Defaults to `client_secret`, `client_assertion`, `id_token_hint`. The default value was changed in versions 7.2.2, 7.1.2, and 7.0.9 to include `client_secret` and `client_assertion`. 
+    Collection of parameter names passed to the authorize endpoint that are considered sensitive and will be redacted in logs. Note that authorization parameters pushed to the Pushed Authorization Request (PAR) endpoint are eventually handled by the authorize request pipeline. This filter should be configured to exclude sensitive values wether or not they are pushed, and usually should be set to the same value as `PushedAuthorizationSensitiveValuesFilter`. Defaults to `client_secret`, `client_assertion`, `id_token_hint`. The default value was changed in version 7.2.2 to include `client_secret` and `client_assertion`. 
 
 * **`PushedAuthorizationSensitiveValuesFilter`**
     
