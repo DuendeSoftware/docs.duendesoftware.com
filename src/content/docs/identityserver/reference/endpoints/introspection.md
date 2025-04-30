@@ -16,7 +16,7 @@ The introspection endpoint is an implementation of [RFC 7662](https://tools.ietf
 It can be used to validate reference tokens, JWTs (if the consumer does not have support for appropriate JWT or
 cryptographic libraries) and refresh tokens. Refresh tokens can only be introspected by the client that requested them.
 
-The introspection endpoint requires authentication. Since the request to the introspection endpoint is typically done by an API, which is not an OAuth client the [`ApiResource`](/identityserver/fundamentals/resources/api-resources) is used to configure credentials:
+The introspection endpoint requires authentication. Since the request to the introspection endpoint is typically done by an API, which is not an OAuth client, the [`ApiResource`](/identityserver/fundamentals/resources/api-resources) is used to configure credentials:
 
 ```cs
 new ApiResource("resource1")
