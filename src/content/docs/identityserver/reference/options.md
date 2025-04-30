@@ -340,15 +340,19 @@ Logging related settings, including filters that will remove sensitive values an
 
 * **`AuthorizeRequestSensitiveValuesFilter`**
     
-    Collection of parameter names passed to the authorize endpoint that are considered sensitive and will be excluded from logging. Defaults to `id_token_hint`.
+    Collection of parameter names passed to the authorize endpoint that are considered sensitive and will be redacted in logs. Note that authorization parameters pushed to the Pushed Authorization Request (PAR) endpoint are eventually handled by the authorize request pipeline. This filter should be configured to exclude sensitive values wether or not they are pushed, and usually should be set to the same value as `PushedAuthorizationSensitiveValuesFilter`. Defaults to `client_secret`, `client_assertion`, `id_token_hint`. The default value was changed in version 7.2.2 to include `client_secret` and `client_assertion`. 
+
+* **`PushedAuthorizationSensitiveValuesFilter`**
+    
+    Collection of parameter names passed to the Pushed Authorization Request (PAR) endpoint that are considered sensitive and will be redacted in logs. Note that authorization parameters pushed to the PAR endpoint are eventually handled by the authorize request pipeline. This filter should be configured to exclude sensitive values that are pushed, and usually should be set to the same value as `AuthorizeRequestSensitiveValuesFilter`. Defaults to `client_secret`, `client_assertion`, `id_token_hint`.
 
 * **`TokenRequestSensitiveValuesFilter`**
     
-    Collection of parameter names passed to the token endpoint that are considered sensitive and will be excluded from logging. In `v7.0` and earlier, defaults to `client_secret`, `password`, `client_assertion`, `refresh_token`, and `device_code`. In `v7.1`, `subject_token` is also excluded.
+    Collection of parameter names passed to the token endpoint that are considered sensitive and will be redacted in logs. In `v7.0` and earlier, defaults to `client_secret`, `password`, `client_assertion`, `refresh_token`, and `device_code`. In `v7.1`, `subject_token` is also excluded.
 
 * **`BackchannelAuthenticationRequestSensitiveValuesFilter`**
   
-    Collection of parameter names passed to the backchannel authentication endpoint that are considered sensitive and will be excluded from logging. Defaults to `client_secret`, `client_assertion`, and `id_token_hint`.
+    Collection of parameter names passed to the backchannel authentication endpoint that are considered sensitive and will be redacted in logs. Defaults to `client_secret`, `client_assertion`, and `id_token_hint`.
 
 * **`UnhandledExceptionLoggingFilter`** (added in `v6.2`)
   
