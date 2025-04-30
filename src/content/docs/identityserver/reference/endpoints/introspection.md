@@ -21,7 +21,7 @@ The introspection endpoint requires authentication. Since the request to the int
 ```cs
 new ApiResource("resource1")
 {
-    Scopes = { .. },
+    Scopes = { "scope1", "scope2" }, // Replace "scope1", "scope2" with the actual scopes required for your API
 
     ApiSecrets =
     {
