@@ -18,7 +18,7 @@ cryptographic libraries) and refresh tokens. Refresh tokens can only be introspe
 
 The introspection endpoint requires authentication. Since the request to the introspection endpoint is typically done by an API, which is not an OAuth client, the [`ApiResource`](/identityserver/fundamentals/resources/api-resources) is used to configure credentials:
 
-```cs
+```csharp
 new ApiResource("resource1")
 {
     Scopes = { "scope1", "scope2" }, // Replace "scope1", "scope2" with the actual scopes required for your API
