@@ -16,8 +16,20 @@ The introspection endpoint is an implementation of [RFC 7662](https://tools.ietf
 It can be used to validate reference tokens, JWTs (if the consumer does not have support for appropriate JWT or
 cryptographic libraries) and refresh tokens. Refresh tokens can only be introspected by the client that requested them.
 
-The introspection endpoint requires authentication - since the client of an introspection endpoint is an API, you
-configure the secret on the `ApiResource`.
+The introspection endpoint requires authentication. Since the request to the introspection endpoint is typically done by an API, which is not an OAuth client the [`ApiResource`](/identityserver/fundamentals/resources/api-resources) is used to configure credentials:
+
+```cs
+new ApiResource("resource1")
+{
+    Scopes = { .. },
+
+    ApiSecrets =
+    {
+        new Secret("secret".Sha256())
+    }
+}
+```
+Here the id used for authentication is the name of the `ApiResource`: "resource1" and the secret the configured secret. The introspection endpoint uses HTTP basic auth to communicate these credentials:
 
 ```text
 POST /connect/introspect
@@ -26,8 +38,7 @@ Authorization: Basic xxxyyy
 token=<token>
 ```
 
-A successful response will return a status code of 200, the token claims, the token type and a flag indicating the token
-is active:
+A successful response will return a status code of 200, the token claims, the token type and a flag indicating the token is active:
 
 ```json
 {
@@ -66,9 +77,9 @@ var client = new HttpClient();
 var response = await client.IntrospectTokenAsync(new TokenIntrospectionRequest
 {
     Address = "https://demo.duendesoftware.com/connect/introspect",
-    ClientId = "api1",
+    ClientId = "resource1",
     ClientSecret = "secret",
 
-    Token = accessToken
+    Token = dsf43534j33kkl..
 });
 ```
