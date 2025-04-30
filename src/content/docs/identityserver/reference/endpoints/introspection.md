@@ -38,7 +38,7 @@ Authorization: Basic xxxyyy
 token=<token>
 ```
 
-A successful response will return a status code of 200, the token claims, the token type and a flag indicating the token is active:
+A successful response will return a status code of 200, the token claims, the token type, and a flag indicating the token is active:
 
 ```json
 {
