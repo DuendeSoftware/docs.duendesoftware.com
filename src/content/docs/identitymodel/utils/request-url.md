@@ -1,6 +1,6 @@
 ---
 title: Creating Authorize and EndSession URLs
-description: Helper utilities for creating OAuth2/OpenID Connect authorization and end session URLs with query parameters
+description: Helper utilities for creating OAuth 2.0/OpenID Connect authorization and end session URLs with query parameters
 sidebar:
   order: 4
   label: Authorize & EndSession URLs
