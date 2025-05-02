@@ -78,7 +78,9 @@ To enable caching for the EF configuration store implementation, use the `AddCon
 ```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
-    .AddConfigurationStore(options => { ... })
+    .AddConfigurationStore(options => {
+        // ... 
+    })
     // this is something you will want in production to reduce load on and requests to the DB
     .AddConfigurationStoreCache();
 ```

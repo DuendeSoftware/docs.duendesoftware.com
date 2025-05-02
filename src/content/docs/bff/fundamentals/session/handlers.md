@@ -28,8 +28,12 @@ builder.Services.AddAuthentication(options =>
         options.DefaultChallengeScheme = "oidc";
         options.DefaultSignOutScheme = "oidc";
     })
-    .AddCookie("cookie", options => { ... })
-    .AddOpenIdConnect("oidc", options => { ... });
+    .AddCookie("cookie", options => {
+        // ... 
+    })
+    .AddOpenIdConnect("oidc", options => {
+        // ... 
+    });
 ```
 
 ## The OpenID Connect Authentication Handler

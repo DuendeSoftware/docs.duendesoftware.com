@@ -26,8 +26,9 @@ The token management library uses a named HTTP client from the HTTP client facto
 ```cs
 builder.Services.AddHttpClient(
         AccessTokenManagementDefaults.BackChannelHttpClientName,
-        configureClient => { ... }
-    );
+        configureClient => {
+            // ... 
+        });
 ```
 
 :::note

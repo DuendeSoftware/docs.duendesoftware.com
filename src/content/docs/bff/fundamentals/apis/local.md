@@ -106,11 +106,12 @@ Endpoints that require the pre- and post-processing described above must be deco
 
 For Minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
 ```csharp
-app.MapPost("/foo", context => { ... })
+app.MapPost("/foo", context => {
+        // ... 
+    })
     .RequireAuthorization()  // no anonymous access
     .AsBffApiEndpoint();     // BFF pre/post processing
 ```
-
 
 For MVC controllers, you can similarly apply BFF pre- and post-processing to controller actions when they are mapped.
 ```csharp
@@ -124,7 +125,9 @@ Alternatively, you can apply the *[BffApi]* attribute directly to the controller
 [Route("myApi")]
 [BffApi]
 public class MyApiController : ControllerBase
-{ ... }
+{
+    // ...
+}
 ```
 
 #### Disabling Anti-forgery Protection
@@ -144,7 +147,9 @@ app.MapControllers()
     .AsBffApiEndpoint(requireAntiforgeryCheck: false);
 
 // simple endpoint
-app.MapPost("/foo", context => { /* ... */ })
+app.MapPost("/foo", context => {
+        // ... 
+    })
     .RequireAuthorization()
     // WARNING: Disabling antiforgery protection may make
     // your APIs vulnerable to CSRF attacks
