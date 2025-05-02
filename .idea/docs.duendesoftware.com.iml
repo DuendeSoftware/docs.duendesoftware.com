@@ -8,6 +8,9 @@
       <excludeFolder url="file://$MODULE_DIR$/root" />
       <excludeFolder url="file://$MODULE_DIR$/.astro" />
       <excludeFolder url="file://$MODULE_DIR$/.fleet" />
+      <excludeFolder url="file://$MODULE_DIR$/dotnet/samples/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/dotnet/samples/samples/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/dotnet/samples/samples/obj" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

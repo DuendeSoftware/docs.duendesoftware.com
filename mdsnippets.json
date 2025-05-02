@@ -2,5 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/SimonCropp/MarkdownSnippets/master/schema.json",
   "Convention": "InPlaceOverwrite",
   "DocumentExtensions": [ "md", "mdx" ],
-  "OmitSnippetLinks": true
+  "OmitSnippetLinks": true,
+  "UrlsAsSnippets": [
+    "https://gist.githubusercontent.com/khalidabuhakmeh/4fd93946439a50eae86e179a22c4e22f/raw/2d862af158dc7770e280577dd192845c0cf26e44/Program.cs"
+  ]
 }

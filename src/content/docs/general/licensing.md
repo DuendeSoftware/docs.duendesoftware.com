@@ -15,7 +15,14 @@ redirect_from:
 <!-- snippet: HelloWorld -->
 ```cs
 // Program.cs
-Console.WriteLine("Hello, Maarten!");
+Console.WriteLine("Hello, Duende!");
+```
+<!-- endSnippet -->
+
+<!-- snippet: HelloWorldGist -->
+```cs
+// Program.cs
+Console.WriteLine("Hello, Remote Code Snippet!");
 ```
 <!-- endSnippet -->
 

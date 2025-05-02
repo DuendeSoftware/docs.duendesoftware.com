@@ -1,4 +1,4 @@
 ﻿// begin-snippet: HelloWorld
 // Program.cs
-Console.WriteLine("Hello, Maarten!");
+Console.WriteLine("Hello, Duende!");
 // end-snippet
