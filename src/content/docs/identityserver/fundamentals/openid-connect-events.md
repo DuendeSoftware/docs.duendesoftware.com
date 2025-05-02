@@ -22,6 +22,7 @@ dotnet package add Microsoft.AspNetCore.Authentication.OpenIdConnect
 Followed by adding the `OpenIdConnectHandler` to your application.
 
 ```csharp
+// Program.cs
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = "cookie";
