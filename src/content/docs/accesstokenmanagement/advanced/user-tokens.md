@@ -57,14 +57,19 @@ The `UserTokenRequestParameters` class can be used for that:
 The request parameters can be passed via the manual API:
 
 ```csharp
-var token = await _tokenManagementService.GetAccessTokenAsync(User, new UserAccessTokenRequestParameters { ... });
+var token = await _tokenManagementService
+    .GetAccessTokenAsync(User, new UserAccessTokenRequestParameters {
+        // ... 
+    });
 ```
 
 ...the extension methods
 
 ```csharp
 var token = await HttpContext.GetUserAccessTokenAsync(
-  new UserTokenRequestParameters { ... });
+    new UserTokenRequestParameters {
+        // ... 
+    });
 ```
 
 ...or the HTTP client factory
@@ -73,7 +78,9 @@ var token = await HttpContext.GetUserAccessTokenAsync(
 // Program.cs
 // registers HTTP client that uses the managed user access token
 builder.Services.AddUserAccessTokenHttpClient("invoices",
-    parameters: new UserTokenRequestParameters { ... },
+    parameters: new UserTokenRequestParameters {
+        // ... 
+    },
     configureClient: client => 
        { 
          client.BaseAddress = new Uri("https://api.company.com/invoices/"); 
@@ -84,7 +91,9 @@ builder.Services.AddHttpClient<InvoiceClient>(client =>
     {
         client.BaseAddress = new Uri("https://api.company.com/invoices/");
     })
-    .AddUserAccessTokenHandler(new UserTokenRequestParameters { ... });
+    .AddUserAccessTokenHandler(new UserTokenRequestParameters {
+        // ... 
+    });
 ```
 
 ## Token Storage
