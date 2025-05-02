@@ -62,7 +62,7 @@ From here you can use the `options.Events` property to subscribe to the events y
 
 ## OpenID Connect Events
 
-All events either occur before a request is sent to the identity provider or after a response is received from the
+All events either occur before a request is sent to the identity provider, or after a response is received from the
 identity provider. Understanding the direction of these events can help you determine when to subscribe to them. Let's call events coming from the identity provider **incoming** and events going to the identity provider **outgoing** for an easier understanding.
 
 | **Event Name**                           | **Usage**    |
