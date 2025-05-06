@@ -67,8 +67,10 @@ such as property or constructor injection.
 
 ```csharp
 // An ASP.NET Core MVC Controller
-public class MyController: Controller {
-    public MyController(LicenseUsageSummary summary) {
+public class MyController : Controller
+{
+    public MyController(LicenseUsageSummary summary)
+    {
         // use the summary information    
     }
 }
