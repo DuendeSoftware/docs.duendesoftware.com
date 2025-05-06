@@ -125,4 +125,13 @@ Key takeaways:
   would normally be sent in that redirect with the resulting request uri. See the `ParOidcEvents.cs` file for more
   details.
 
+:::note
+This sample is only relevant if you're using .NET 8 or lower.
+
+[.NET 9 has support for PAR built-in][ms-learn-par], and the ASP.NET OIDC authentication handler will automatically use 
+PAR when the authority supports it, based on the discovery metadata.  
+:::
+
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcPar)
+
+[ms-learn-par]: https://learn.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-9.0?view=aspnetcore-9.0#openidconnecthandler-adds-support-for-pushed-authorization-requests-par
