@@ -93,7 +93,7 @@ public class WorkerManual : BackgroundService
     private readonly IHttpClientFactory _clientFactory;
     private readonly IClientCredentialsTokenManagementService _tokenManagementService;
 
-    public WorkerManualIHttpClientFactory factory, IClientCredentialsTokenManagementService tokenManagementService)
+    public WorkerManual(IHttpClientFactory factory, IClientCredentialsTokenManagementService tokenManagementService)
     {
         _clientFactory = factory;
         _tokenManagementService = tokenManagementService;
