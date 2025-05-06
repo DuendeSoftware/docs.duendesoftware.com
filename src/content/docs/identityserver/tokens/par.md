@@ -60,7 +60,7 @@ authorization code which the client subsequently exchanges for tokens.
 
 If you're building an ASP.NET Core application using .NET 9 or higher, using PAR is very straightforward:
 
-```cs {13-15}
+```csharp {13-15}
 // Program.cs
 builder.Services
     .AddAuthentication(options =>

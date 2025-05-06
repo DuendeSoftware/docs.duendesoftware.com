@@ -128,7 +128,7 @@ Key takeaways:
 :::note
 This sample is only relevant if you're using .NET 8 or lower.
 
-[.NET 9 has support for PAR built-in][ms-learn-par], and the ASP.NET OIDC authentication handler will automatically use 
+[.NET 9 has support for PAR built-in][ms-learn-par], and the ASP.NET Core OIDC authentication handler will automatically use 
 PAR when the authority supports it, based on the discovery metadata.  
 :::
 
