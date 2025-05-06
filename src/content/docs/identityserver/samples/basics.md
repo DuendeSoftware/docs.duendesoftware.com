@@ -21,7 +21,7 @@ Key takeaways:
 
 * how to request a token using client credentials
 * how to use a shared secret
-* how to use access token
+* how to use an access token
 
 [link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/ClientCredentials)
 
