@@ -58,7 +58,27 @@ were just pushed. From there, the OAuth or OIDC flow continues as normal. For ex
 the user will be redirected to log in and other UI pages as necessary before being redirected back to the client with an
 authorization code which the client subsequently exchanges for tokens.
 
-A sample of how to implement this flow in an ASP.NET application is
+If you're building an ASP.NET Core application using .NET 9 or higher, using PAR is very straightforward:
+
+```csharp {13-15}
+// Program.cs
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+    })
+    .AddCookie()
+    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, oidcOptions =>
+    {
+        // Your authority, client ID, ... configuration goes here.
+        
+        // By default, PushedAuthorizationBehavior is set to PushedAuthorizationBehavior.UseIfAvailable. 
+        // You can also require using PAR:
+        oidcOptions.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Require;
+    });
+```
+.NET 8 does not have built-in support for PAR. If you're using .NET 8, we have a sample of how to implement this flow
 available [here](/identityserver/samples/basics#mvc-client-with-pushed-authorization-requests).
 
 ## Data Store
