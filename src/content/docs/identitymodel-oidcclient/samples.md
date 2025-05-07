@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 Samples of IdentityModel.OidcClient are available [on
-GitHub](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples). Our samples
+GitHub](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples). Our samples
 show how to use a OidcClient with a variety of platforms and UI tools, including:
 
 - [.NET MAUI](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/Maui)
