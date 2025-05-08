@@ -141,13 +141,16 @@ Note that the pages in the user interface are not IdentityServer endpoints and a
 | endpoint | The type name for the endpoint processor |
 | path     | The path of the request                  |
 
-### Detailed Metrics - Experimental
+### Detailed Metrics
 
 These detailed metrics are instrumented by the IdentityServer middleware and services and track usage of specific
-flows and features. These metrics are created by the meter named "Duende.IdentityServer.Experimental", which is
-the value of the `Duende.IdentityServer.Telemetry.ServiceName.Experimental` constant.
-The definition and tags of these counters may be changed between releases. Once the counters and tags
-are considered stable they will be moved to the `Duende.IdentityServer.Telemetry.ServiceName` meter.
+flows and features.
+
+:::note
+In IdentityServer versions <span data-shb-badge data-shb-badge-variant="default">&lt;7.3</span>, 
+these metrics are created by the meter named "Duende.IdentityServer.Experimental", starting with IdentityServer 7.3,
+they are created by the meter named "Duende.IdentityServer".
+:::
 
 #### Telemetry.Metrics.Counters.ApiSecretValidation
 
