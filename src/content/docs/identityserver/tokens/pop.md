@@ -70,7 +70,7 @@ In this scenario, the client would create an X.509 certificate on the fly, and u
 #### .NET Client
 In .NET it is straight-forward to create an X.509 certificate on the fly and use it to open a TLS connection.
 
-```cs
+```csharp
 static X509Certificate2 CreateClientCertificate(string name)
 {
     X500DistinguishedName distinguishedName = new X500DistinguishedName($"CN={name}");
@@ -101,7 +101,7 @@ static X509Certificate2 CreateClientCertificate(string name)
 
 Then use this client certificate on the TLS channel to request the token:
 
-```cs
+```csharp
 static async Task<TokenResponse> RequestTokenAsync()
 {
     var client = new HttpClient(GetHandler(ClientCertificate));
@@ -109,10 +109,13 @@ static async Task<TokenResponse> RequestTokenAsync()
     var disco = await client.GetDiscoveryDocumentAsync("https://demo.duendesoftware.com");
     if (disco.IsError) throw new Exception(disco.Error);
 
-        var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+    var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
     {
         Address = disco.MtlsEndpointAliases.TokenEndpoint,
-
+        
+        // The default ClientCredentialStyle value is ClientCredentialStyle.AuthorizationHeader, which does not work in a Mutual TLS scenario
+        ClientCredentialStyle = ClientCredentialStyle.PostBody,
+        
         ClientId = "client",
         Scope = "api1"
     });
@@ -133,7 +136,7 @@ static SocketsHttpHandler GetHandler(X509Certificate2 certificate)
 #### Enabling Support In IdentityServer
 The last step is to enable that feature in the options:
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
