@@ -37,7 +37,7 @@ All information in this section also applies to [API secrets](/identityserver/re
 
 A client secret is abstracted by the `Secret` class. It provides properties for setting the value and type and a description and expiration date.
 
-```cs
+```csharp
 var secret = new Secret
 {
     Value = "foo",
@@ -50,7 +50,7 @@ var secret = new Secret
 
 You can assign multiple secrets to a client to enable roll-over scenarios, e.g.:
 
-```cs
+```csharp
 var primary = new Secret("foo");
 var secondary = new Secret("bar");
 
@@ -128,7 +128,7 @@ From a security point of view they have some shortcomings
 
 The following creates a shared secret:
 
-```cs
+```csharp
 // loadSecret is responsible for loading a SHA256 or SHA512 hash of a good,
 // high-entropy secret from a secure storage location
 var hash = loadSecretHash(); 
@@ -146,7 +146,7 @@ when prototyping or during demos to get started quickly. However, the clear text
 of secrets used in production should never be written down in your source code.
 Anyone with access to the repository can see the secret.
 
-```cs
+```csharp
 var compromisedSecret = new Secret("just for demos, not prod!".Sha256());
 ```
 
@@ -185,7 +185,7 @@ Authorization: Basic xxxxx
 You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
-```cs
+```csharp
 using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
@@ -217,7 +217,7 @@ based on the OAuth JWT assertion specification [(RFC 7523)](https://tools.ietf.o
 The default private key JWT secret validator expects either a base64 encoded X.509 certificate or
 a [JSON Web Key](https://tools.ietf.org/html/rfc7517) formatted RSA, EC or symmetric key on the secret definition:
 
-```cs
+```csharp
 var client = new Client
 {
     ClientId = "client.jwt",
@@ -271,7 +271,7 @@ Content-type: application/x-www-form-urlencoded
 You can use the [Microsoft JWT library](https://www.nuget.org/packages/System.IdentityModel.Tokens.Jwt/) to create JSON
 Web Tokens.
 
-```cs
+```csharp
 private static string CreateClientToken(SigningCredentials credential, string clientId, string tokenEndpoint)
 {
     var now = DateTime.UtcNow;
@@ -298,7 +298,7 @@ private static string CreateClientToken(SigningCredentials credential, string cl
 ...and the [Duende IdentityModel](../../../identitymodel) client library to programmatically interact with the
 protocol endpoint from .NET code.
 
-```cs
+```csharp
 using Duende.IdentityModel.Client;
 
 static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential)
@@ -338,7 +338,7 @@ created client assertion.
 This is accomplished by handling the various events on the handler. We recommend to encapsulate the event handler in a
 separate type. This makes it easier to consume services from DI:
 
-```cs
+```csharp
 // Program.cs
 // some details omitted
 builder.Services.AddTransient<OidcEvents>();
@@ -358,7 +358,7 @@ builder.Services.AddAuthentication(options =>
 
 In your event handler you can inject code before the handler redeems the code:
 
-```cs
+```csharp
 public class OidcEvents : OpenIdConnectEvents
 {
     private readonly AssertionService _assertionService;
@@ -415,7 +415,7 @@ Clients can use an X.509 client certificate as an authentication mechanism to en
 For this you need to associate a client certificate with a client in your IdentityServer and enable MTLS support on the
 options.
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
@@ -426,7 +426,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 Use the [ASP.NET Core service provider extensions methods](/identityserver/reference/di) to add the services to the
 ASP.NET Core service provider. A default implementation is available to do that either thumbprint or common-name based:
 
-```cs
+```csharp
 idsvrBuilder.AddMutualTlsSecretValidators();
 ```
 
@@ -435,7 +435,7 @@ or `SecretTypes.X509CertificateThumbprint` (for self-issued certificates) to the
 
 For example:
 
-```cs
+```csharp
 new Client
 {
     ClientId = "mtls.client",
@@ -469,7 +469,7 @@ Use such a handler with `HttpClient` to perform the client certificate authentic
 The following snippet is using [Duende IdentityModel](../../../identitymodel) to read the discovery document and
 request a token:
 
-```cs
+```csharp
 static async Task<TokenResponse> RequestTokenAsync()
 {
     var handler = new SocketsHttpHandler();
@@ -484,6 +484,10 @@ static async Task<TokenResponse> RequestTokenAsync()
     var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
     {
         Address = disco.MtlEndpointAliases.TokenEndpoint,
+        
+        // The default ClientCredentialStyle value is ClientCredentialStyle.AuthorizationHeader, which does not work in a Mutual TLS scenario
+        ClientCredentialStyle = ClientCredentialStyle.PostBody,
+        
         ClientId = "mtls.client",
         Scope = "api1"
     });
