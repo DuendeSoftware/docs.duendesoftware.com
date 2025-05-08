@@ -56,8 +56,8 @@ instrumentation.
 We personally like [Serilog](https://serilog.net) and
 the [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) package a lot. Give it a try:
 
-```cs
-//Program.cs
+```csharp
+// Program.cs
 Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
 Log.Logger = new LoggerConfiguration()
@@ -71,4 +71,42 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Logging.AddSeriLog();
+```
+
+You can also use ASP.NET Core's configuration pattern to configure Serilog using `appsettings.json` and other configuration sources.
+To do so, you first need to tell Serilog to read its configuration from the `IConfiguration` root:
+
+```csharp {11}
+// Program.cs
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console(
+        outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
+        formatProvider: CultureInfo.InvariantCulture)
+    .Enrich.FromLogContext()
+    .ReadFrom.Configuration(ctx.Configuration));
+```
+
+Then, in your `appsettings.json` file, you can set the default minimum log level and log level overrides like so:
+
+```json {12}
+// appsettings.json
+
+{
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Debug",
+      "Override": {
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information",
+        "Microsoft.AspNetCore.Authentication": "Debug",
+        "System": "Warning",
+        "Duende": "Verbose" // As an example, we've enabled more verbose logging for the Duende.* namespace
+      }
+    }
+  }
+}
 ```
