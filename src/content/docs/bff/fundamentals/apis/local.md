@@ -85,7 +85,7 @@ The value of the header is not important, but its presence, combined with the co
 Additionally, API endpoints should handle scenarios where the session has expired or authorization fails without triggering an authentication redirect to the upstream identity provider. Instead, they should return Ajax-friendly status codes.
 
 ## Setup
-Duende.BFF can automate both the pre-processing step of requiring the custom anti-forgery header and the post-processing step of converting response codes for API endpoints. To do so, first add the BFF middleware to the pipeline, and then decorate your endpoints to indicate that they should receive BFF pre- and post-processing.
+Duende.BFF can automate the pre-processing step of requiring the custom anti-forgery header. To do so, first add the BFF middleware to the pipeline, and then decorate your endpoints to indicate that they should receive BFF pre-processing.
 
 #### Add Middleware
 Add the BFF middleware to the pipeline by calling *UseBFF*. Note that the  middleware must be placed before the authorization middleware, but after routing.
