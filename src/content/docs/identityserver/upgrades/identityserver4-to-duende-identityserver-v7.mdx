@@ -351,7 +351,7 @@ You'll need to make a similar change for all IdentityServer4 packages, including
 + <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.2.0" />
 ```
 
-The IdentityModel package was renamed to Duende IdentityModel, and needs updating if you reference it directly:
+The IdentityModel package was renamed to Duende IdentityModel and needs updating if you reference it directly:
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="IdentityModel" Version="x.y.z" />
@@ -454,14 +454,66 @@ When upgrading, consider how those applications will handle an upgraded token se
 - If you can restart all client apps and APIs that depend on your current signing key, you can remove the old signing key and start to use automatic key management. A restart reloads the discovery document and the new signing key.
 - If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](../../fundamentals/key-management#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
 
-### Step 7: Validate Your Deployment
+### Step 7: Verify Data Protection Configuration :badge[Optional]
+
+Duende IdentityServer depends on [ASP.NET Data Protection](/identityserver/deployment.md#aspnet-core-data-protection) to encrypt and sign data using keys managed by ASP.NET.
+
+As part of your migration, verify the application name is set in your Data Protection configuration:
+
+```csharp title="Program.cs" {4}
+builder.Services.AddDataProtection()
+    .PersistKeysTo...()
+    .ProtectKeysWith...()
+    .SetApplicationName("IdentityServerXYZ");
+```
+
+If an application name is set, you can skip this section.
+
+Data Protection keys are isolated by application name, to prevent multiple applications from sharing encryption keys.
+
+If no application name is configured, ASP.NET Data Protection uses the content root path of the IdentityServer host as the application name.
+As a consequence, if your content root path changes, the default settings for data protection will prevent you from using your old data protection keys.
+
+Between different .NET versions, this default setting has changed:
+
+| Version  | Default                                                        |
+| -------- | -------------------------------------------------------------- |
+| .NET 3.1 | Content root path without directory separator suffix           |
+| .NET 5   | Content root path without directory separator suffix           |
+| .NET 6   | Content root path (normalized with directory separator suffix) |
+| .NET 7+  | Content root path without directory separator suffix           |
+
+Your application name might change (and existing data protection keys may become invalid) if you are currently targeting .NET 6 and do not have the application name set explicitly.
+
+To prevent this from happening, you can explicitly set the application name to the content root path without the directory separator character, as [documented on Microsoft Learn](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-6.0#setapplicationname).
+
+:::tip[Getting the current application name]
+In your current (pre-upgraded) IdentityServer version, you can query the application name used and set it explicitly in your upgraded deployment:
+
+```csharp
+// ...
+
+var app = builder.Build();
+
+// ...
+var applicationName = app.Services
+    .GetRequiredService<IOptions<DataProtectionOptions>>()
+    .Value.ApplicationDiscriminator;
+
+// applicationName is now the (auto-generated?) application name
+// - you can use it in your upgraded IdentityServer version
+```
+
+:::
+
+### Step 8: Validate Your Deployment
 
 Congratulations! Your upgrade is complete.
 
 Make sure to validate and test your Duende IdentityServer is working as expected, and check integrations with your client applications and APIs.
 
 :::note
-IdentityServer is free for development, testing and personal projects, but production use
+IdentityServer is free for development, testing, and personal projects, but production use
 requires a [license](https://duendesoftware.com/products/identityserver).
 :::
 
@@ -476,7 +528,7 @@ As part of your upgrade from IdentityServer4 to Duende IdentityServer, we recomm
 - [Addition of cancellation token to store APIs](https://github.com/DuendeSoftware/IdentityServer/pull/405)
 - [Store DbContext constructors to support DbContext pooling](https://github.com/DuendeSoftware/IdentityServer/pull/260)
 - [CustomRedirectResult returnUrl changes](https://github.com/DuendeSoftware/IdentityServer/pull/358)
-- [Add missing columns for created, updated, etc to EF entities](https://github.com/DuendeSoftware/IdentityServer/pull/356)
+- [Add missing columns for created, updated, etc. to EF entities](https://github.com/DuendeSoftware/IdentityServer/pull/356)
 - [Add unique constraints to EF tables where duplicate records not allowed](https://github.com/DuendeSoftware/IdentityServer/pull/355)
 - [Added grant handle versioning suffix](https://github.com/DuendeSoftware/IdentityServer/pull/404)
 - [Many HttpContext extensions marked obsolete](https://github.com/DuendeSoftware/IdentityServer/pull/414)
