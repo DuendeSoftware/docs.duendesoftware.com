@@ -541,19 +541,64 @@ will automatically include requested claims from the test users added in
 Adding support for external authentication to your IdentityServer can be done
 with very little code; all that is needed is an authentication handler.
 
-ASP.NET Core ships with handlers for Google, Facebook, Twitter, Microsoft
-Account, and OpenID Connect. In addition, you can find handlers for many
-other authentication providers
-[here](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers).
+ASP.NET Core ships with handlers for OpenID Connect, and provides [integrations for Google, Facebook, Microsoft Account, Entra ID, and more](/identityserver/ui/login/external.md#third-party-aspnet-core-authentication-handlers).
 
-#### Add Google support
+In this section, you'll register the Duende IdentityServer demo instance at `demo.duendesoftware.com` as an external provider.
+Since no other configuration is required apart from your IdentityServer, it is a good starting point.
+You'll also see [how to add Google authentication support](#add-google-support).
+
+#### Adding An Additional OpenID Connect-Based External Provider
+
+A cloud-hosted [demo instance of Duende IdentityServer](https://demo.duendesoftware.com) can be added as an additional external provider.
+
+Register and configure the services for the OpenId Connect handler in`src/IdentityServer/HostingExtensions.cs`:
+
+```cs
+// HostingExtensions.cs
+builder.Services.AddAuthentication()
+    .AddOpenIdConnect("oidc", "Sign-in with demo.duendesoftware.com", options =>
+    {
+        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+        options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+        options.SaveTokens = true;
+
+        options.Authority = "https://demo.duendesoftware.com";
+        options.ClientId = "interactive.confidential";
+        options.ClientSecret = "secret";
+        options.ResponseType = "code";
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+    });
+```
+
+Now if you try to authenticate, you should see an additional *Sign-in with demo.duendesoftware.com* button to log in to
+the cloud-hosted demo IdentityServer. If you click that button, you will be redirected to https://demo.duendesoftware.com/.
+
+Check that the page's location has changed and then log in using the `alice` or `bob` users (their passwords are their usernames, just as
+they are for the local test users). You should land back at `WebClient`, authenticated with a demo user.
+
+The demo users are logically distinct entities from the local test users, even though they happen to have identical usernames.
+Inspect their claims in `WebClient` and note the differences between them, such as the distinct `sub` claims.
+
+:::note
+The quickstart UI auto-provisions external users. When an external user logs in for the first time, a new local user is
+created with a copy of all the external user's claims. This auto-provisioning process occurs in the `OnGet` method of
+`src/IdentityServer/Pages/ExternalLogin/Callback.cshtml.cs`, and is completely customizable.
+For example, you could modify `Callback` so that it will require registration before provisioning the external user.
+:::
+
+#### Add Google Support
 
 :::note[`Microsoft.AspnetCore.Authentication.Google` no longer maintained]
 Before .NET 10, the `Microsoft.AspnetCore.Authentication.Google` package was provided by Microsoft. Starting with .NET 10,
 Microsoft [stopped shipping new versions of the `Microsoft.AspnetCore.Authentication.Google` package](https://github.com/dotnet/aspnetcore/issues/61817).
 
-Starting with .NET 5, Google started shipping the [`Google.Apis.Auth.AspNetCore3`](https://www.nuget.org/packages/Google.Apis.Auth.AspNetCore3/)
-package. We recommend using this package going forward.
+To add Google authentication, we recommend using the [`Google.Apis.Auth.AspNetCore3`](https://www.nuget.org/packages/Google.Apis.Auth.AspNetCore3/)
+package that is shipped by Google.
 :::
 
 To use Google for authentication, you need to:
@@ -581,10 +626,8 @@ builder.Services.AddAuthentication()
         {
             options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
   
-            options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-            options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-          
-            options.CallbackPath = "/signin-google";
+            options.ClientId = "" builder.Configuration["Authentication:Google:ClientId"];
+            options.ClientSecret = ""builder.Configuration["Authentication:Google:ClientSecret"];
         });
 ```
 
@@ -613,57 +656,4 @@ claims sourced from Google's data.
 The Google button is rendered by the login page automatically when there are external providers registered as
 authentication schemes. See the `BuildModelAsync` method in `src/IdentityServer/Pages/Account/Login/Index.cshtml.cs` and
 the corresponding Razor template for more details.
-:::
-
-#### Adding An Additional OpenID Connect-Based External Provider
-
-A [cloud-hosted demo](https://demo.duendesoftware.com) version of Duende
-IdentityServer can be added as an additional external provider.
-
-Register and configure the services for the OpenId Connect handler in`src/IdentityServer/HostingExtensions.cs`:
-
-```cs
-// HostingExtensions.cs
-builder.Services.AddAuthentication()
-    .AddGoogleOpenIdConnect(/* ... */)
-    .AddOpenIdConnect("oidc", "Demo IdentityServer", options =>
-    {
-        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-        options.SignOutScheme = IdentityServerConstants.SignoutScheme;
-        options.SaveTokens = true;
-
-        options.Authority = "https://demo.duendesoftware.com";
-        options.ClientId = "interactive.confidential";
-        options.ClientSecret = "secret";
-        options.ResponseType = "code";
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            NameClaimType = "name",
-            RoleClaimType = "role"
-        };
-    });
-```
-
-Now if you try to authenticate, you should see an additional button to log in to
-the cloud-hosted Demo IdentityServer. If you click that button, you will be
-redirected to https://demo.duendesoftware.com/. Note that the demo site is using
-the same UI as your site, so there will not be very much that changes visually
-when you're redirected. Check that the page's location has changed and then log
-in using the alice or bob users (their passwords are their usernames, just as
-they are for the local test users). You should land back at `WebClient`,
-authenticated with a demo user.
-
-The demo users are logically distinct entities from the local test
-users, even though they happen to have identical usernames. Inspect their claims
-in `WebClient` and note the differences between them, such as the distinct sub
-claims.
-
-:::note
-The quickstart UI auto-provisions external users. When an external user logs in
-for the first time, a new local user is created with a copy of all the external
-user's claims. This auto-provisioning process occurs in the `OnGet` method of
-`src/IdentityServer/Pages/ExternalLogin/Callback.cshtml.cs`, and is completely
-customizable. For example, you could modify `Callback` so that it will require
-registration before provisioning the external user.
 :::
