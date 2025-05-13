@@ -549,7 +549,7 @@ other authentication providers
 #### Add Google support
 
 :::note[`Microsoft.AspnetCore.Authentication.Google` no longer maintained]
-Before .NET 10, a package `Microsoft.AspnetCore.Authentication.Google` was provided by Microsoft. Starting with .NET 10,
+Before .NET 10, the `Microsoft.AspnetCore.Authentication.Google` package was provided by Microsoft. Starting with .NET 10,
 Microsoft [stopped shipping new versions of the `Microsoft.AspnetCore.Authentication.Google` package](https://github.com/dotnet/aspnetcore/issues/61817).
 
 Starting with .NET 5, Google started shipping the [`Google.Apis.Auth.AspNetCore3`](https://www.nuget.org/packages/Google.Apis.Auth.AspNetCore3/)
