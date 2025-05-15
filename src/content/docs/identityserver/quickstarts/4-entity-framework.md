@@ -70,7 +70,7 @@ directory:
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
-#### Configuring Rhe Stores
+#### Configuring The Stores
 
 `Duende.IdentityServer.EntityFramework` stores configuration and operational
 data in separate stores, each with their own DbContext.
@@ -85,7 +85,7 @@ To use these stores, replace the existing calls to `AddInMemoryClients`,
 `ConfigureServices` method in `src/IdentityServer/HostingExtensions.cs` with
 `AddConfigurationStore` and `AddOperationalStore`, like this:
 
-```cs
+```csharp
 // HostingExtensions.cs
 public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
 {
@@ -189,7 +189,7 @@ maintenance strategy that is appropriate for your architecture.
 In `src/IdentityServer/HostingExtensions.cs`, add this method to initialize the
 database:
 
-```cs
+```csharp
 private static void InitializeDatabase(IApplicationBuilder app)
 {
     using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()!.CreateScope())
@@ -230,7 +230,7 @@ private static void InitializeDatabase(IApplicationBuilder app)
 
 Call `InitializeDatabase` from the `ConfigurePipeline` method:
 
-```cs
+```csharp
 public static WebApplication ConfigurePipeline(this WebApplication app)
 { 
     app.UseSerilogRequestLogging();
