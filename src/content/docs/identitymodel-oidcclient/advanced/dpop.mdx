@@ -1,0 +1,92 @@
+---
+title: Demonstrating Proof-of-Possession (DPoP)
+description: Learn how to leverage Demonstrating Proof-of-Possession when using OidcClient to build a native OIDC client.
+sidebar:
+  label: DPoP
+  order: 1
+---
+
+{/* Should we repeat ourselves here? This is the same paragraph as for Duende.AccessTokenManagement */}
+
+[DPoP][dpop-spec] specifies how to bind an asymmetric key stored
+within a JSON Web Key (JWK) to an access token. This will make the access token bound to the key such that if the
+access token were to leak, it cannot be used without also having access to the private key of the corresponding JWK.
+
+The `Duende.IdentityModel.OidcClient.Extensions` library adds supports for DPoP to OidcClient.
+
+## DPoP Key
+
+Before we begin, your application needs to have a DPoP key, in the form of a
+JSON Web Key (or JWK). According to the [DPoP specification][dpop-spec], this
+key needs to use an asymmetric algorithm ("RS", "ES", or "PS" style).
+
+:::note
+This means that the client application is responsible for creating the DPoP key,
+rotating it, and managing its lifetime. For as long as there are access tokens
+(and possibly refresh tokens) bound to a DPoP key, that key needs to remain
+available to the client application.
+:::
+
+Creating a JWK in .NET is pretty straightforward using the `Duende.IdentityModel.OidcClient.Extensions` library:
+
+```csharp
+// Program.cs
+using Duende.IdentityModel.OidcClient.DPoP;
+
+// Creates a JWK using the PS256 algorithm:
+var jwk = JsonWebKeys.CreateRsaJson();
+
+Console.WriteLine(jwk);
+```
+
+:::caution
+In a production scenario, you'll want to store this JWK in a secure location
+and use DataProtection to further protect the JWK.
+:::
+
+## Initializing the OIDC client with DPoP support
+
+Now that we have a JWK, we need to extend the `OidcClientOptions` to configure DPoP:
+
+```csharp
+// Program.cs
+using Duende.IdentityModel.OidcClient;
+using Duende.IdentityModel.OidcClient.DPoP;
+
+var options = new OidcClientOptions
+{
+    Authority = "https://demo.duendesoftware.com",
+    ClientId = "native.dpop",
+    Scope = "openid profile email offline_access",
+    // ...
+};
+
+// creates a new JWK, or returns an existing one
+var jwk = GetDPoPJwk();
+
+// Enable DPoP
+options.ConfigureDPoP(jwk);
+
+var oidcClient = new OidcClient(options);
+```
+
+## Proof Tokens for the API
+
+After configuring the `OidcClientOptions` with DPoP support and creating an
+`OidcClient` instance, you can use this instance to create an `HttpMessageHandler` which
+will:
+
+- manage access and refresh tokens
+- add DPoP proof tokens to HTTP requests
+
+```csharp
+// Program.cs
+var sessionRefreshToken = "..."; // read from a previous session, if any
+
+var handler = oidcClient.CreateDPoPHandler(jwk, sessionRefreshToken);
+var apiClient = new HttpClient(handler);
+```
+
+For a full example, have a look at our [WPF with the system browser](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/Wpf) sample.
+
+[dpop-spec]: https://datatracker.ietf.org/doc/html/rfc9449
