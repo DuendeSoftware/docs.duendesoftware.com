@@ -75,7 +75,9 @@ Settings that affect the background cleanup of expired entries (tokens) from the
 
 * **`TokenCleanupBatchSize`**
 
-  Gets or sets the number of records to remove at a time. Defaults to `100`.
+  Gets or sets the number of records to remove per batch operation.
+  The cleanup job will perform multiple batch operations as long as there are more records to remove than the configured `TokenCleanupBatchSize`. 
+  Defaults to `100`.
 
 * **`FuzzTokenCleanupStart`**
 
