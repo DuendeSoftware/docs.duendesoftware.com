@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Building Browser-Based Client Applications on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/quickstarts/js_clients/</link>
+    <description>Recent content in Building Browser-Based Client Applications on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/quickstarts/js_clients/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Browser-Based Applications with a BFF</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/js_clients/js_with_backend/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/js_clients/js_with_backend/</guid>
+      <description>We recommend you do the quickstarts in order. If you&amp;rsquo;d like to start here, begin from a copy of the reference implementation of Quickstart 3. Throughout this quickstart, paths are written relative to the base quickstart directory created in part 1, which is the root directory of the reference implementation. You will also need to install the IdentityServer templates.&#xA;In this quickstart, you will build a browser-based JavaScript client application with a backend.</description>
+    </item>
+  </channel>
+</rss>

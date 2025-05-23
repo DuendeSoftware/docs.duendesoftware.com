@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Server-Side Sessions on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/ui/server_side_sessions/</link>
+    <description>Recent content in Server-Side Sessions on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/ui/server_side_sessions/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Session Management</title>
+      <link>http://localhost:1313/identityserver/v7/ui/server_side_sessions/session_management/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/server_side_sessions/session_management/</guid>
+      <description>When using server-side sessions, there is a record of the user&amp;rsquo;s authentication activity at IdentityServer. This allows administrative and management tooling to be built on top of that data to query those sessions, as well as terminate them. In addition, since the session data has its own unique id and tracks clients that a user has used, then some types of tokens issued to these clients can be revoked. Finally, if clients support back-channel logout, then they can be notified that a user&amp;rsquo;s session has been terminated, which allows them to also terminate the user&amp;rsquo;s session within the client application.</description>
+    </item>
+    <item>
+      <title>Session Expiration</title>
+      <link>http://localhost:1313/identityserver/v7/ui/server_side_sessions/session_expiration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/server_side_sessions/session_expiration/</guid>
+      <description>If a user abandons their session without triggering logout, the server-side session data will remain in the store by default. In order to clean up these expired records, there is an automatic cleanup mechanism that periodically scans for expired sessions. When these records are cleaned up, you can optionally notify the client that the session has ended via back-channel logout.&#xA;Expiration Configuration The expiration configuration features can be configured with the server-side session options.</description>
+    </item>
+    <item>
+      <title>Inactivity Timeout</title>
+      <link>http://localhost:1313/identityserver/v7/ui/server_side_sessions/inactivity_timeout/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/server_side_sessions/inactivity_timeout/</guid>
+      <description>A common requirement in several industries is the concept of a system-wide &amp;ldquo;inactivity timeout&amp;rdquo;. The expectation is that if a user is active in the system, then their authentication session should continue to be active. But if the user were to be inactive for some amount of time (e.g. after walking away from their computer), then this inactivity should cause the user to be logged out of the entire system.</description>
+    </item>
+  </channel>
+</rss>

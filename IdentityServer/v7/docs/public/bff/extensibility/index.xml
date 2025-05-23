@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Extensibility on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/bff/extensibility/</link>
+    <description>Recent content in Extensibility on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/bff/extensibility/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Session Management</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/sessions/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/sessions/</guid>
+      <description>User Session Store If using the server-side sessions feature, you will need to have a store for the session data. An Entity Framework Core based implementation of this store is provided. If you wish to use some other type of store, then you can implement the IUserSessionStore interface:&#xA;/// &amp;lt;summary&amp;gt;&#xD;/// User session store&#xD;/// &amp;lt;/summary&amp;gt;&#xD;public interface IUserSessionStore&#xD;{&#xD;/// &amp;lt;summary&amp;gt;&#xD;/// Retrieves a user session&#xD;/// &amp;lt;/summary&amp;gt;&#xD;/// &amp;lt;param name=&amp;#34;key&amp;#34;&amp;gt;&amp;lt;/param&amp;gt;&#xD;/// &amp;lt;param name=&amp;#34;cancellationToken&amp;#34;&amp;gt;A token that can be used to request cancellation of the asynchronous operation.</description>
+    </item>
+    <item>
+      <title>Token Management</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/tokens/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/tokens/</guid>
+      <description>The token management library does essentially two things:&#xA;stores access and refresh tokens in the current session refreshes access tokens automatically at the token service when needed Both aspects can be customized.&#xA;Token service communication The token management library uses a named HTTP client from the HTTP client factory for all token service communication. You can provide a customized HTTP client yourself using the well-known name after calling AddBff:&#xA;builder.Services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClientName, configureClient =&amp;gt; { .</description>
+    </item>
+    <item>
+      <title>HTTP Forwarder</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/http_forwarder/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/http_forwarder/</guid>
+      <description>You can customize the HTTP forwarder behavior in two ways&#xA;provide a customized HTTP client for outgoing calls provide custom request/response transformation Custom HTTP clients By default, Duende.BFF will create and cache an HTTP client per configured route or local path.&#xA;This invoker is setup like this:&#xA;var client = new HttpMessageInvoker(new SocketsHttpHandler { UseProxy = false, AllowAutoRedirect = false, AutomaticDecompression = DecompressionMethods.None, UseCookies = false }); If you want to customize the HTTP client for specific paths, you can either implement the IHttpMessageInvokerFactory interface or derive from the DefaultHttpMessageInvokerFactory, e.</description>
+    </item>
+  </channel>
+</rss>

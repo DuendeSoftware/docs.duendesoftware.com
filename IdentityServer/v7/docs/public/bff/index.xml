@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BFF Security Framework on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/bff/</link>
+    <description>Recent content in BFF Security Framework on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/bff/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Overview</title>
+      <link>http://localhost:1313/identityserver/v7/bff/overview/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/overview/</guid>
+      <description>Duende.BFF is a library for building services that solve security and identity problems in browser based applications such as SPAs and Blazor WASM applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all of the OAuth and OIDC protocol interactions. Moving the protocol handling out of JavaScript provides important security benefits and works around changes in browser privacy rules that increasingly disrupt OAuth and OIDC protocol flows in browser based applications.</description>
+    </item>
+    <item>
+      <title>Token Management</title>
+      <link>http://localhost:1313/identityserver/v7/bff/tokens/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/tokens/</guid>
+      <description>Duende.BFF includes an automatic token management feature. This uses the access and refresh token stored in the authentication session to always provide a current access token for outgoing API calls.&#xA;For most scenarios, there is no additional configuration necessary. The token management will infer the configuration and token endpoint URL from the metadata of the OpenID Connect provider.&#xA;The easiest way to retrieve the current access token is to use an extension method on HttpContext:</description>
+    </item>
+    <item>
+      <title>Configuration Options</title>
+      <link>http://localhost:1313/identityserver/v7/bff/options/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/options/</guid>
+      <description>The Duende.BFF.BffOptions allows to configure several aspects of the BFF framework.&#xA;You set the options at startup time:&#xA;builder.Services.AddBff(options =&amp;gt; { // configure options here.. }) General EnforceBffMiddleware&#xA;Enables checks in the user management endpoints that ensure that the BFF middleware has been added to the pipeline. Since the middleware performs important security checks, this protects from accidental configuration errors. You can disable this check if it interferes with some custom logic you might have.</description>
+    </item>
+  </channel>
+</rss>

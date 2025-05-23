@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Requesting Tokens on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/tokens/</link>
+    <description>Recent content in Requesting Tokens on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/tokens/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Overview</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/overview/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/overview/</guid>
+      <description>Duende IdentityServer is a token service engine based on OAuth 2.x and OpenID Connect.&#xA;How to request tokens OIDC and OAuth contain two endpoints that can issue tokens - the authorize endpoint and the token endpoint.&#xA;While the authorize endpoint can be used for some special cases, you typically use the token endpoint for issuing tokens.&#xA;Token Types The following token types are supported.&#xA;Identity Token During user authentication, your IdentityServer collects data about the user, e.</description>
+    </item>
+    <item>
+      <title>Requesting a Token</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/requesting/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/requesting/</guid>
+      <description>A typical architecture is composed of two application (aka client) types - machine to machine calls and interactive applications.&#xA;Machine to Machine communication In this scenario a headless application with no interactive user (e.g. a server daemon, batch job etc.) wants to call an API.&#xA;Prerequisites are:&#xA;define a client for the client credentials grant type define an API scope (and optionally a resource) grant the client access to the scope via the AllowedScopes property According to the OAuth specification, you request a token by posting to the token endpoint:</description>
+    </item>
+    <item>
+      <title>Refreshing a Token</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/refresh/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/refresh/</guid>
+      <description>Access tokens have finite lifetimes. If a client needs long-lived access to a resource, refresh tokens can be used to request a new access token. This can be done with an API call and does not require any user interaction or interruption.&#xA;Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by setting the AllowOfflineAccess property to true. See the client reference section for additional refresh token related settings.</description>
+    </item>
+    <item>
+      <title>Issuing Tokens based on User Passwords</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/password_grant/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/password_grant/</guid>
+      <description>The password grant type is an OAuth 2.0 protocol flow for authenticating end-users at the token endpoint. It is designed for legacy applications, and it is generally recommended to use a browser-based flow instead - but in certain situation it is not feasible to change existing applications.&#xA;The password grant type is deprecated per OAuth 2.1.&#xA;Requesting a token using Password grant First you need to add the GrantType.Password to the AllowedGrantTypes list of the client you want to use.</description>
+    </item>
+    <item>
+      <title>Dynamic Request Validation and Customization</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/dynamic_validation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/dynamic_validation/</guid>
+      <description>You can hook into the token request pipeline by implementing the ICustomTokenRequestValidator interface.&#xA;This allows you to&#xA;add additional token request validation logic do custom per-client processing add custom response parameters return custom errors and error descriptions modify parameters on-the-fly access token lifetime and type client claims confirmation method The following example emits additional claims and changes the token lifetime on-the-fly based on a granted scope.&#xA;public class TransactionScopeTokenRequestValidator : ICustomTokenRequestValidator { public Task ValidateAsync(CustomTokenRequestValidationContext context) { var transaction = context .</description>
+    </item>
+    <item>
+      <title>Issuing Internal Tokens</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/internal/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/internal/</guid>
+      <description>Sometimes, extensibility code running on your IdentityServer needs access tokens to call other APIs. In this case it is not necessary to use the protocol endpoints. The tokens can be issued internally.&#xA;IIdentityServerTools is a collection of useful internal tools that you might need when writing extensibility code for IdentityServer. To use it, inject it into your code, e.g. a controller::&#xA;public MyController(IIdentityServerTools tools) { _tools = tools; } The IssueJwtAsync method allows creating JWT tokens using the IdentityServer token creation engine.</description>
+    </item>
+    <item>
+      <title>Reference Tokens</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/reference/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/reference/</guid>
+      <description>When using reference tokens, Duende IdentityServer stores the contents of the token in the persisted grant store and issues a unique identifier for this token back to the client.&#xA;The consumer of the token must use the introspection endpoint to validate the token.&#xA;You can set the token type of a client using the following client setting:&#xA;client.AccessTokenType = AccessTokenType.Reference; Enabling an API to consume reference tokens The introspection endpoint requires authentication - since the client of an introspection endpoint is typically an API, you configure the secret on the ApiResource:</description>
+    </item>
+    <item>
+      <title>Signed Authorize Requests</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/jar/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/jar/</guid>
+      <description>Instead of providing the parameters for an authorize request as individual query string key/value pairs, you can package them up in signed JWTs. This makes the parameters tamper proof and you can authenticate the client already on the front-channel.&#xA;See here for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.&#xA;You can either transmit them by value or by reference to the authorize endpoint - see the spec for more details.</description>
+    </item>
+    <item>
+      <title>Pushed Authorization Requests</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/par/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/par/</guid>
+      <description>(Added in 7.0)&#xA;Pushed Authorization Requests (PAR) is a relatively new OAuth standard that improves the security of OAuth and OIDC flows by moving authorization parameters from the front channel to the back channel (that is, from redirect URLs in the browser to direct machine to machine http calls on the back end).&#xA;This prevents an attacker in the browser from&#xA;seeing authorization parameters (which could leak PII) and from tampering with those parameters (e.</description>
+    </item>
+    <item>
+      <title>Calling Endpoints from JavaScript</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/cors/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/cors/</guid>
+      <description>In JavaScript-based clients, some endpoints like the token endpoint (but also discovery) will be accessed via Ajax calls.&#xA;Given that your IdentityServer will most likely be hosted on a different origin than these clients, this implies that Cross-Origin Resource Sharing (CORS) will need to be configured.&#xA;Client-based CORS Configuration One approach to configuring CORS is to use the AllowedCorsOrigins collection on the client configuration. Simply add the origin of the client to the collection and the default configuration in IdentityServer will consult these values to allow cross-origin calls from the origins.</description>
+    </item>
+  </channel>
+</rss>

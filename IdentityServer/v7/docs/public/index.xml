@@ -1,0 +1,1370 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Home on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/</link>
+    <description>Recent content in Home on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 23 Jul 2024 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Discovery Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/discovery/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/discovery/</guid>
+      <description>The discovery endpoint can be used to retrieve metadata about your IdentityServer - it returns information like the issuer name, key material, supported scopes etc.&#xA;The discovery endpoint is available via /.well-known/openid-configuration relative to the base address, e.g.:&#xA;https://demo.duendesoftware.com/.well-known/openid-configuration&#xD;.NET client library You can use the IdentityModel client library to programmatically interact with the protocol endpoint from .NET code.&#xA;var client = new HttpClient(); var disco = await client.GetDiscoveryDocumentAsync(&amp;#34;https://demo.duendesoftware.com&amp;#34;); </description>
+    </item>
+    <item>
+      <title>Overview</title>
+      <link>http://localhost:1313/identityserver/v7/bff/overview/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/overview/</guid>
+      <description>Duende.BFF is a library for building services that solve security and identity problems in browser based applications such as SPAs and Blazor WASM applications. It is used to create a backend host that is paired with a frontend application. This backend is called the Backend For Frontend (BFF) host, and is responsible for all of the OAuth and OIDC protocol interactions. Moving the protocol handling out of JavaScript provides important security benefits and works around changes in browser privacy rules that increasingly disrupt OAuth and OIDC protocol flows in browser based applications.</description>
+    </item>
+    <item>
+      <title>Overview</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/0_overview/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/0_overview/</guid>
+      <description>The quickstarts provide step by step instructions for various common Duende IdentityServer scenarios. They start with the absolute basics and become more complex - it is recommended you do them in order.&#xA;adding Duende IdentityServer to an ASP.NET Core application configuring Duende IdentityServer issuing tokens for various clients securing web applications and APIs adding support for EntityFramework based configuration adding support for ASP.NET Identity Every quickstart has a reference solution - you can find the code in the samples folder.</description>
+    </item>
+    <item>
+      <title>Overview</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/authentication/overview/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/authentication/overview/</guid>
+      <description>Confidential and credentialed clients need to authenticate with your IdentityServer before they can request tokens.&#xA;Duende IdentityServer has built-in support for various client credential types and authentication methods, and an extensible infrastructure to customize the authentication system.&#xA;All information in this section also applies to API secrets for introspection.&#xA;We recommend using asymmetric client credentials like the private key jwt or Mutual TLS authentication method over shared secrets.&#xA;Assigning secrets A client secret is abstracted by the Secret class.</description>
+    </item>
+    <item>
+      <title>Overview</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/overview/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/overview/</guid>
+      <description>Duende IdentityServer is a token service engine based on OAuth 2.x and OpenID Connect.&#xA;How to request tokens OIDC and OAuth contain two endpoints that can issue tokens - the authorize endpoint and the token endpoint.&#xA;While the authorize endpoint can be used for some special cases, you typically use the token endpoint for issuing tokens.&#xA;Token Types The following token types are supported.&#xA;Identity Token During user authentication, your IdentityServer collects data about the user, e.</description>
+    </item>
+    <item>
+      <title>The big Picture</title>
+      <link>http://localhost:1313/identityserver/v7/overview/big_picture/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/big_picture/</guid>
+      <description>Most modern applications look more or less like this:&#xA;The most common interactions are:&#xA;Browsers communicate with web applications Web applications communicate with web APIs (sometimes on their own, sometimes on behalf of a user) Browser-based applications communicate with web APIs Native applications communicate with web APIs Server-based applications communicate with web APIs Web APIs communicate with web APIs (sometimes on their own, sometimes on behalf of a user) Typically each and every layer (front-end, middle-tier and back-end) has to protect resources and implement authentication and/or authorization – often against the same user store.</description>
+    </item>
+    <item>
+      <title>Authorize Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/authorize/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/authorize/</guid>
+      <description>The authorize endpoint can be used to request tokens or authorization codes via the browser. This process typically involves authentication of the end-user and optionally consent.&#xA;IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize request parameters. For a full list, see here.&#xA;Required parameters client_id&#xA;identifier of the client&#xA;scope&#xA;one or more registered scopes&#xA;redirect_uri&#xA;must exactly match one of the allowed redirect URIs for that client</description>
+    </item>
+    <item>
+      <title>Protecting an API using Client Credentials</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/1_client_credentials/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/1_client_credentials/</guid>
+      <description>Welcome to the first quickstart for IdentityServer! To see the full list of quickstarts, please see Quickstarts Overview.&#xA;This first quickstart provides step by step instructions to set up IdentityServer in the most basic scenario: protecting APIs for server-to-server communication. You will create a solution containing three projects:&#xA;An Identity Server An API that requires authentication A client that accesses that API The client will request an access token from IdentityServer using its client ID and secret and then use the token to gain access to the API.</description>
+    </item>
+    <item>
+      <title>Interactive Applications with ASP.NET Core</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/2_interactive/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/2_interactive/</guid>
+      <description>Welcome to Quickstart 2 for Duende IdentityServer!&#xA;In this quickstart, you will add support for interactive user authentication via the OpenID Connect protocol to the IdentityServer you built in Quickstart 1. Once that is in place, you will create an ASP.NET Razor Pages application that will use IdentityServer for authentication.&#xA;We recommend you do the quickstarts in order. If you&amp;rsquo;d like to start here, begin from a copy of the reference implementation of Quickstart 1.</description>
+    </item>
+    <item>
+      <title>Token Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/token/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/token/</guid>
+      <description>The token endpoint can be used to programmatically request tokens.&#xA;Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 token request parameters. For a full list, see here.&#xA;Required parameters client_id&#xA;client identifier; not necessary in body if it is present in the authorization header&#xA;grant_type&#xA;authorization_code&#xA;client_credentials&#xA;password&#xA;refresh_token&#xA;urn:ietf:params:oauth:grant-type:device_code&#xA;extension grant&#xA;Optional parameters client_secret&#xA;client secret for confidential/credentials clients - either in the post body, or as a basic authentication header.</description>
+    </item>
+    <item>
+      <title>ASP.NET Core and API access</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/3_api_access/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/3_api_access/</guid>
+      <description>Welcome to Quickstart 3 for Duende IdentityServer!&#xA;The previous quickstarts introduced API access and user authentication. This quickstart will bring the two together.&#xA;In addition to the written steps below a YouTube video is available:&#xA;OpenID Connect and OAuth combine elegantly; you can achieve both user authentication and api access in a single exchange with the token service.&#xA;In Quickstart 2, the token request in the login process asked for only identity resources, that is, only scopes such as profile and openid.</description>
+    </item>
+    <item>
+      <title>UserInfo Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/userinfo/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/userinfo/</guid>
+      <description>The UserInfo endpoint can be used to retrieve claims about a user (see spec).&#xA;The caller needs to send a valid access token. Depending on the granted scopes, the UserInfo endpoint will return the mapped claims (at least the openid scope is required).&#xA;GET /connect/userinfo&#xD;Authorization: Bearer &amp;lt;access_token&amp;gt; HTTP/1.1 200 OK&#xD;Content-Type: application/json&#xD;{&#xD;&amp;#34;sub&amp;#34;: &amp;#34;248289761001&amp;#34;,&#xD;&amp;#34;name&amp;#34;: &amp;#34;Bob Smith&amp;#34;,&#xD;&amp;#34;given_name&amp;#34;: &amp;#34;Bob&amp;#34;,&#xD;&amp;#34;family_name&amp;#34;: &amp;#34;Smith&amp;#34;&#xD;} .NET client library You can use the IdentityModel client library to programmatically interact with the protocol endpoint from .</description>
+    </item>
+    <item>
+      <title>Token Management</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/3a_token_management/</link>
+      <pubDate>Tue, 23 Jul 2024 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/3a_token_management/</guid>
+      <description>Welcome to this Quickstart for Duende IdentityServer!&#xA;The previous quickstart introduced API access with interactive applications, but by far the most complex task for a typical client is to manage the access token.&#xA;In addition to the written steps below a YouTube video is available:&#xA;Given that the access token has a finite lifetime, you typically want to&#xA;request a refresh token in addition to the access token at login time cache those tokens use the access token to call APIs until it expires use the refresh token to get a new access token repeat the process of caching and refreshing with the new token ASP.</description>
+    </item>
+    <item>
+      <title>Introspection Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/introspection/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/introspection/</guid>
+      <description>The introspection endpoint is an implementation of RFC 7662.&#xA;It can be used to validate reference tokens, JWTs (if the consumer does not have support for appropriate JWT or cryptographic libraries) and refresh tokens. Refresh tokens can only be introspected by the client that requested them.&#xA;The introspection endpoint requires authentication - since the client of an introspection endpoint is an API, you configure the secret on the ApiResource.&#xA;POST /connect/introspect&#xD;Authorization: Basic xxxyyy&#xD;token=&amp;lt;token&amp;gt; A successful response will return a status code of 200, the token claims, the token type and a flag indicating the token is active:</description>
+    </item>
+    <item>
+      <title>Revocation Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/revocation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/revocation/</guid>
+      <description>This endpoint allows revoking access tokens (reference tokens only) and refresh token. It implements the token revocation specification (RFC 7009).&#xA;token&#xA;the token to revoke (required)&#xA;token_type_hint&#xA;either access_token or refresh_token (optional)&#xA;POST /connect/revocation HTTP/1.1&#xD;Host: server.example.com&#xD;Content-Type: application/x-www-form-urlencoded&#xD;Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW&#xD;token=...&amp;amp;token_type_hint=refresh_token .NET client library You can use the IdentityModel client library to programmatically interact with the protocol endpoint from .NET code.&#xA;using IdentityModel.Client; var client = new HttpClient(); var result = await client.</description>
+    </item>
+    <item>
+      <title>Using EntityFramework Core for configuration and operational data</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/4_ef/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/4_ef/</guid>
+      <description>Welcome to Quickstart 4 for Duende IdentityServer! In this quickstart you will move configuration and other temporary data into a database using Entity Framework.&#xA;In addition to the written steps below a YouTube video is available:&#xA;We recommend you do the quickstarts in order. If you&amp;rsquo;d like to start here, begin from a copy of the reference implementation of Quickstart 3. Throughout this quickstart, paths are written relative to the base quickstart directory created in part 1, which is the root directory of the reference implementation.</description>
+    </item>
+    <item>
+      <title>End Session Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/end_session/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/end_session/</guid>
+      <description>The end session endpoint can be used to trigger single sign-out in the browser (see spec).&#xA;To use the end session endpoint a client application will redirect the user&amp;rsquo;s browser to the end session URL. All applications that the user has logged into via the browser during the user&amp;rsquo;s session can participate in the sign-out.&#xA;The URL for the end session endpoint is available via discovery.&#xA;id_token_hint&#xA;When the user is redirected to the endpoint, they will be prompted if they really want to sign-out.</description>
+    </item>
+    <item>
+      <title>Using ASP.NET Core Identity</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/5_aspnetid/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/5_aspnetid/</guid>
+      <description>Welcome to Quickstart 5 for Duende IdentityServer! In this quickstart you will integrate IdentityServer with ASP.NET Core Identity.&#xA;We recommend you do the quickstarts in order. If you&amp;rsquo;d like to start here, begin from a copy of the reference implementation of Quickstart 4. Throughout this quickstart, paths are written relative to the base quickstart directory created in part 1, which is the root directory of the reference implementation. You will also need to install the IdentityServer templates.</description>
+    </item>
+    <item>
+      <title>Device Authorization Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/device_authorization/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/device_authorization/</guid>
+      <description>The device authorization endpoint can be used to request device and user codes. This endpoint is used to start the device flow authorization process.&#xA;client_id&#xA;client identifier (required)&#xA;client_secret&#xA;client secret either in the post body, or as a basic authentication header. Optional.&#xA;scope&#xA;one or more registered scopes. If not specified, a token for all explicitly allowed scopes will be issued&#xA;POST /connect/deviceauthorization&#xD;client_id=client1&amp;amp;&#xD;client_secret=secret&amp;amp;&#xD;scope=openid api1 .NET client library You can use the IdentityModel client library to programmatically interact with the protocol endpoint from .</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/ciba/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/ciba/</guid>
+      <description>The backchannel authentication endpoint is used by a client to initiate a CIBA request.&#xA;Clients must be configured with the &amp;ldquo;urn:openid:params:grant-type:ciba&amp;rdquo; grant type to use this endpoint. You can use the OidcConstants.GrantTypes.Ciba constant rather than hard coding the value for the CIBA grant type.&#xA;Required parameters scope&#xA;one or more registered scopes&#xA;The client id and a client credential is required to authenticate to the endpoint using any valid form of authentication that has been configured for it (much like the token endpoint).</description>
+    </item>
+    <item>
+      <title>BFF Login Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/login/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/login/</guid>
+      <description>The BFF login endpoint has extensibility points in two interfaces. The ILoginService is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The IReturnUrlValidator ensures that the returnUrl parameter passed to the login endpoint is safe to use.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.</description>
+    </item>
+    <item>
+      <title>ASP.NET Core Authentication System</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/handlers/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/handlers/</guid>
+      <description>You typically use the following two ASP.NET Core authentication handlers to implement remote authentication:&#xA;the OpenID Connect authentication handler to interact with the remote OIDC / OAuth token service, e.g. Duende IdentityServer the cookie handler to do local session management Furthermore the BFF plumbing relies on the configuration of the ASP.NET Core default authentication schemes. This describes how the two handlers share the work.&#xA;OpenID Connect for challenge and signout - cookies for all the other operations:</description>
+    </item>
+    <item>
+      <title>Basics</title>
+      <link>http://localhost:1313/identityserver/v7/samples/basics/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/basics/</guid>
+      <description>This solution contains a collection of common scenarios.&#xA;Client Credentials This sample shows how to use the client_credentials grant type. This is typically used for machine to machine communication.&#xA;Key takeaways:&#xA;how to request a token using client credentials how to use a shared secret how to use access token link to source code&#xA;JWT-based Client Authentication This sample shows how to use the client_credentials grant type with JWT-based client authentication.</description>
+    </item>
+    <item>
+      <title>Identity Resources</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/resources/identity/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/resources/identity/</guid>
+      <description>An identity resource is a named group of claims about a user that can be requested using the scope parameter.&#xA;The OpenID Connect specification suggests a couple of standard scope name to claim type mappings that might be useful to you for inspiration, but you can freely design them yourself.&#xA;One of them is actually mandatory, the openid scope, which tells the provider to return the sub (subject id) claim in the identity token.</description>
+    </item>
+    <item>
+      <title>Logging</title>
+      <link>http://localhost:1313/identityserver/v7/diagnostics/logging/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/diagnostics/logging/</guid>
+      <description>Duende IdentityServer uses the standard logging facilities provided by ASP.NET Core. You don&amp;rsquo;t need to do any extra configuration.&#xA;The Microsoft documentation has a good intro and a description of the built-in logging providers.&#xA;We are roughly following the Microsoft guidelines for usage of log levels:&#xA;Trace&#xA;For information that is valuable only to a developer troubleshooting an issue. These messages may contain sensitive application data like tokens and should not be enabled in a production environment.</description>
+    </item>
+    <item>
+      <title>Metrics</title>
+      <link>http://localhost:1313/identityserver/v7/diagnostics/otel/metrics/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/diagnostics/otel/metrics/</guid>
+      <description>(added in v7.0)&#xA;OpenTelemetry metrics are run-time measurements that are are intended to provide an indication of overall health and are typically used to show graphs on a dashboard or to set up monitoring rules. When that monitoring reveals issues, traces and logs are used to investigate further. Open Telemetry monitoring tools often provide features to find the traces and logs corresponding to certain metrics.&#xA;IdentityServer emits metrics from the IdentityServer middleware and services.</description>
+    </item>
+    <item>
+      <title>Proxy Servers and Load Balancers</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/proxies/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/proxies/</guid>
+      <description>In typical deployments, your IdentityServer will be hosted behind a load balancer or reverse proxy. These and other network appliances often obscure information about the request before it reaches the host. Some of the behavior of IdentityServer and the ASP.NET authentication handlers depend on that information, most notably the scheme (HTTP vs HTTPS) of the request and the originating client IP address.&#xA;Requests to your IdentityServer that come through a proxy will appear to come from that proxy instead of its true source on the Internet or corporate network.</description>
+    </item>
+    <item>
+      <title>Requesting a Token</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/requesting/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/requesting/</guid>
+      <description>A typical architecture is composed of two application (aka client) types - machine to machine calls and interactive applications.&#xA;Machine to Machine communication In this scenario a headless application with no interactive user (e.g. a server daemon, batch job etc.) wants to call an API.&#xA;Prerequisites are:&#xA;define a client for the client credentials grant type define an API scope (and optionally a resource) grant the client access to the scope via the AllowedScopes property According to the OAuth specification, you request a token by posting to the token endpoint:</description>
+    </item>
+    <item>
+      <title>Shared Secrets</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/authentication/shared_secret/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/authentication/shared_secret/</guid>
+      <description>Shared secrets is by far the most common technique for authenticating clients.&#xA;From a security point of view they have some shortcomings&#xA;the shared secrets must be transmitted over the network during authentication they should not be persisted in clear text to reduce the risk of leaking them they should have high entropy to avoid brute-force attacks The following creates a shared secret:&#xA;// loadSecret is responsible for loading a SHA256 or SHA512 hash of a good, // high-entropy secret from a secure storage location var hash = loadSecretHash(); var secret = new Secret(hash); IdentityServer&amp;rsquo;s Secrets are designed to operate on either a SHA256 or SHA512 hash of the shared secret.</description>
+    </item>
+    <item>
+      <title>Terminology</title>
+      <link>http://localhost:1313/identityserver/v7/overview/terminology/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/terminology/</guid>
+      <description>The specs, documentation and object model use a certain terminology that you should be aware of.&#xA;Duende IdentityServer Duende IdentityServer is an OpenID Connect &amp;amp; OAuth engine - it implements the OpenID Connect and OAuth 2.0 family of protocols.&#xA;Different literature uses different terms for the same role - you probably also find the terms security token service, identity provider, authorization server, IP-STS and more.&#xA;But they are in a nutshell all the same: a piece of software that issues security tokens to clients.</description>
+    </item>
+    <item>
+      <title>Token Exchange</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/extension_grants/token_exchange/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/extension_grants/token_exchange/</guid>
+      <description>The OAuth Token Exchange specification (RFC 8693) describes a general purpose mechanism for translating between token types. Common use cases are creating tokens for impersonation and delegation purposes - but it is not limited to that.&#xA;You can leverage the extension grant feature to implement your preferred token exchange logic.&#xA;Some of the logic is boilerplate:&#xA;read and validate incoming protocol parameters validate incoming token using the built-in token validator if the token was issued by the same token service using a token type specific library if the token is coming from a trusted (but different) token service read contents of token to apply custom logic/authorization if needed create response Here&amp;rsquo;s a simple implementation of the above steps:</description>
+    </item>
+    <item>
+      <title>Using JWTs</title>
+      <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/jwt/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/aspnetcore/jwt/</guid>
+      <description>On ASP.NET Core, you typically use the JWT authentication handler for validating JWT bearer tokens.&#xA;Validating a JWT token First you need to add a reference to the authentication handler in your API project:&#xA;&amp;lt;PackageReference Include=&amp;#34;Microsoft.AspNetCore.Authentication.JwtBearer&amp;#34; /&amp;gt; If all you care about is making sure that an access token comes from your trusted IdentityServer, the following snippet shows the typical JWT validation configuration for ASP.NET Core:&#xA;builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) .AddJwtBearer(options =&amp;gt; { // base-address of your identityserver options.</description>
+    </item>
+    <item>
+      <title>Authorize Interaction Response Generator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/response_handling/authorize_interaction_response_generator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/response_handling/authorize_interaction_response_generator/</guid>
+      <description>Duende.IdentityServer.ResponseHandling.IAuthorizeInteractionResponseGenerator The IAuthorizeInteractionResponseGenerator interface models the logic for determining if user must login or consent when making requests to the authorization endpoint.&#xA;If a custom implementation of IAuthorizeInteractionResponseGenerator is desired, then it&amp;rsquo;s recommended to derive from the built-in AuthorizeInteractionResponseGenerator to inherit all the default logic pertaining to login and consent semantics.&#xA;IAuthorizeInteractionResponseGenerator APIs ProcessInteractionAsync&#xA;Returns the InteractionResponse based on the ValidatedAuthorizeRequest an and optional ConsentResponse if the user was shown a consent page.</description>
+    </item>
+    <item>
+      <title>Browser-Based Applications with a BFF</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/js_clients/js_with_backend/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/js_clients/js_with_backend/</guid>
+      <description>We recommend you do the quickstarts in order. If you&amp;rsquo;d like to start here, begin from a copy of the reference implementation of Quickstart 3. Throughout this quickstart, paths are written relative to the base quickstart directory created in part 1, which is the root directory of the reference implementation. You will also need to install the IdentityServer templates.&#xA;In this quickstart, you will build a browser-based JavaScript client application with a backend.</description>
+    </item>
+    <item>
+      <title>Configuration Data</title>
+      <link>http://localhost:1313/identityserver/v7/data/configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/configuration/</guid>
+      <description>Configuration data models the information for Clients and Resources.&#xA;Stores Store interfaces are designed to abstract accessing the configuration data. The stores used in Duende IdentityServer are:&#xA;Client store for Client data. CORS policy service for CORS support. Given that this is so closely tied to the Client configuration data, the CORS policy service is considered one of the configuration stores. Resource store for IdentityResource, ApiResource, and ApiScope data. Identity Provider store for IdentityProvider data.</description>
+    </item>
+    <item>
+      <title>Custom Authorize Request Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/custom_authorize_request_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/custom_authorize_request_validator/</guid>
+      <description>Duende.IdentityServer.Validation.ICustomAuthorizeRequestValidator Allows running custom code as part of the authorization issuance pipeline at the authorization endpoint.&#xA;/// &amp;lt;summary&amp;gt; /// Allows inserting custom validation logic into authorize requests /// &amp;lt;/summary&amp;gt; public interface ICustomAuthorizeRequestValidator { /// &amp;lt;summary&amp;gt; /// Custom validation logic for the authorize request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;context&amp;#34;&amp;gt;The context.&amp;lt;/param&amp;gt; Task ValidateAsync(CustomAuthorizeRequestValidationContext context); } ValidateAsync&#xA;This method gets called during authorize request processing. The context gives you access to request and response parameters.</description>
+    </item>
+    <item>
+      <title>Hosting</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/hosting/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/hosting/</guid>
+      <description>You add the Duende IdentityServer engine to any ASP.NET Core application by adding the relevant services to the dependency injection (DI) system and adding the middleware to the processing pipeline.&#xA;While technically you could share the ASP.NET Core host between Duende IdentityServer, clients or APIs. We recommend putting your IdentityServer into a separate application.&#xA;DI system You add the necessary services to the DI system by calling AddIdentityServer at application startup:</description>
+    </item>
+    <item>
+      <title>IdentityServer Options</title>
+      <link>http://localhost:1313/identityserver/v7/reference/options/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/options/</guid>
+      <description>Duende.IdentityServer.Configuration.IdentityServerOptions The IdentityServerOptions is the central place to configure fundamental settings in Duende IdentityServer.&#xA;You set the options when registering IdentityServer at startup time, using a lambda expression in the AddIdentityServer method:&#xA;var idsvrBuilder = builder.Services.AddIdentityServer(options =&amp;gt; { // configure options here.. }) Main Top-level settings. Available directly on the IdentityServerOptions object.&#xA;IssuerUri&#xA;The name of the token server, used in the discovery document as the issuer claim and in JWT tokens and introspection responses as the iss claim.</description>
+    </item>
+    <item>
+      <title>Installation and Hosting</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/installation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/installation/</guid>
+      <description>The Configuration API can be installed in a separate host from IdentityServer, or in the same host. In many cases it is desirable to host the configuration API and IdentityServer separately. This facilitates the ability to restrict access to the configuration API at the network level separately from IdentityServer and keeps IdentityServer&amp;rsquo;s access to the configuration data read-only. In other cases, you may find that hosting the two systems together better fits your needs.</description>
+    </item>
+    <item>
+      <title>Local APIs</title>
+      <link>http://localhost:1313/identityserver/v7/bff/apis/local/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/apis/local/</guid>
+      <description>A Local API is an API that is located within the BFF host. Local APIs are implemented with the familiar ASP.NET abstractions of API controllers or minimal API endpoints.&#xA;There are two styles of local APIs:&#xA;Self-contained Local APIs Local APIs that Make Requests using Managed Access Tokens Self-Contained Local APIs These APIs reside within the BFF and don&amp;rsquo;t make HTTP requests to other APIs. They access data controlled by the BFF itself, which can simplify the architecture of the system by reducing the number of APIs that must be deployed and managed.</description>
+    </item>
+    <item>
+      <title>Logout Context</title>
+      <link>http://localhost:1313/identityserver/v7/ui/logout/logout_context/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/logout/logout_context/</guid>
+      <description>To correctly perform all the steps for logout, your logout page needs contextual information about the user&amp;rsquo;s session and the client that initiated logout request. This information is provided by the LogoutRequest class and will provide your logout page data needed for the logout workflow.&#xA;Accessing the LogoutRequest and the logoutId The logout page can be triggered in different ways:&#xA;Client Initiated Logout (protocol) External Provider Logout Notification (protocol) Direct User Access (non-protocol) If the logout page is being triggered by a protocol workflow, then this means Duende IdentityServer has redirected the user&amp;rsquo;s browser to the logout page.</description>
+    </item>
+    <item>
+      <title>Microsoft.IdentityModel.* versions</title>
+      <link>http://localhost:1313/identityserver/v7/troubleshooting/wilson/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/troubleshooting/wilson/</guid>
+      <description>Duende IdentityServer, the Microsoft external authentication handlers and other libraries all use the Microsoft.IdentityModel set of libraries. These libraries provides token and configuration handling features. The functionality is split up between different libraries and they all need to be exactly the same version. However this is not enfored by Nuget so it is common to end up with an application that brings in different versions of Microsoft.IdentityModel.* through transitive dependencies.</description>
+    </item>
+    <item>
+      <title>Mutual TLS</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/pop/mtls/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/pop/mtls/</guid>
+      <description>Proof-of-possession using Mutual TLS RFC 8705 specifies how to bind a TLS client certificate to an access token. With this method your IdentityServer will embed the SHA-256 thumbprint of the X.509 client certificate into the access token via the cnf claim, e.g.:&#xA;{ // rest omitted &amp;#34;cnf&amp;#34;: { &amp;#34;x5t#S256&amp;#34;: &amp;#34;bwcK0esc3ACC3DB2Y5_lESsXE8o9ltc05O89jdN-dg2&amp;#34; } } This is done automatically if you authenticate the client using a TLS client certificate.&#xA;The client must then use the same client certificate to call the APIs, and your APIs can validate the cnf claim by comparing it to the thumbprint of the client certificate on the TLS channel.</description>
+    </item>
+    <item>
+      <title>Operational Options</title>
+      <link>http://localhost:1313/identityserver/v7/reference/efoptions/operational/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/efoptions/operational/</guid>
+      <description>Duende.IdentityServer.EntityFramework.Options.OperationalStoreOptions These options are configurable when using the Entity Framework Core for the operational store:&#xA;You set the options at startup time in your AddOperationalStore method:&#xA;builder.Services.AddIdentityServer() .AddOperationalStore(options =&amp;gt; { // configure options here.. }) Pooling Settings that affect the DbContext pooling feature of Entity Framework Core.&#xA;EnablePooling&#xA;Gets or set if EF DbContext pooling is enabled. Defaults to false.&#xA;PoolSize&#xA;Gets or set the pool size to use when DbContext pooling is enabled.</description>
+    </item>
+    <item>
+      <title>Session Management</title>
+      <link>http://localhost:1313/identityserver/v7/ui/server_side_sessions/session_management/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/server_side_sessions/session_management/</guid>
+      <description>When using server-side sessions, there is a record of the user&amp;rsquo;s authentication activity at IdentityServer. This allows administrative and management tooling to be built on top of that data to query those sessions, as well as terminate them. In addition, since the session data has its own unique id and tracks clients that a user has used, then some types of tokens issued to these clients can be revoked. Finally, if clients support back-channel logout, then they can be notified that a user&amp;rsquo;s session has been terminated, which allows them to also terminate the user&amp;rsquo;s session within the client application.</description>
+    </item>
+    <item>
+      <title>Validation</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/reference/validation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/reference/validation/</guid>
+      <description>IDynamicClientRegistrationValidator The IDynamicClientRegistrationValidator is the contract for the service that validates a dynamic client registration request. It contains a single ValidateAsync(&amp;hellip;) method.&#xA;Conceptually, the validation step is responsible for checking the validity of the metadata supplied in the registration request, and using that metadata to set properties of a Client model. In contrast, the IDynamicClientRegistrationRequestProcessor is responsible for setting properties on the Client model that are generated by the Configuration API itself.</description>
+    </item>
+    <item>
+      <title>UI Hosting</title>
+      <link>http://localhost:1313/identityserver/v7/bff/architecture/ui-hosting/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/architecture/ui-hosting/</guid>
+      <description>Hosting Options for the UI There are several options for hosting the UI assets when using a BFF.&#xA;Host the assets within the BFF host using the static file middleware Host the assets within the BFF host using the Microsoft SPA Templates Host the UI and BFF separately on subdomains of the same site and use CORS to allow cross origin requests Serves the index page of the UI from the BFF host, and all other assets are loaded from another domain, such as a CDN Static File Middleware Hosting the UI together with the BFF is the simplest choice, as requests from the front end to the backend will automatically include the authentication cookie and not require CORS headers.</description>
+    </item>
+    <item>
+      <title>Third Party Cookies</title>
+      <link>http://localhost:1313/identityserver/v7/bff/architecture/third-party-cookies/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/architecture/third-party-cookies/</guid>
+      <description>If the BFF and OpenID Connect Provider (OP) are hosted on different sites, then some browsers will block cookies from being sent during navigation between those sites. Almost all browsers have the option of blocking third party cookies. Safari and Firefox are the most widely used browsers that do so by default, while Chrome is planning to do so in the future. This change is being made to protect user privacy, but it also impacts OIDC flows traditionally used by SPAs.</description>
+    </item>
+    <item>
+      <title>Building Blazor WASM client applications</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/7_blazor/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/7_blazor/</guid>
+      <description>Similar to JavaScript SPAs, you can build Blazor WASM applications with and without a backend. Not having a backend has all the security disadvantages we discussed already in the JavaScript quickstart.&#xA;If you are building Blazor WASM apps that do not deal with sensitive data and you want to use the no-backend approach, have a look at the standard Microsoft templates, which are using this style.&#xA;In this quickstart we will focus on how to build a Blazor WASM application using our Duende.</description>
+    </item>
+    <item>
+      <title>BFF Silent Login Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/silent-login/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/silent-login/</guid>
+      <description>The BFF silent login endpoint can be customized by implementing the ISilentLoginService or by extending DefaultSilentLoginService, its default implementation.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.&#xA;For example, you could take whatever actions you need before normal processing of the request like this:&#xA;public override Task ProcessRequestAsync(HttpContext context) { // Custom logic here return base.</description>
+    </item>
+    <item>
+      <title>Adding API Endpoints to your IdentityServer</title>
+      <link>http://localhost:1313/identityserver/v7/apis/add_apis/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/add_apis/</guid>
+      <description>It&amp;rsquo;s a common scenario to add additional API endpoints to the application hosting IdentityServer. These endpoints are typically protected by IdentityServer itself.&#xA;For simple scenarios, we give you some helpers. See the advanced section to understand more of the internal plumbing.&#xA;You could achieve the same by using either Microsoft&amp;rsquo;s JwtBearer handler. But this requires more configuration and creates dependencies on external libraries that might lead to conflicts in future updates.</description>
+    </item>
+    <item>
+      <title>API Scopes</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/resources/api_scopes/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/resources/api_scopes/</guid>
+      <description>Designing your API surface can be a complicated task. Duende IdentityServer provides a couple of primitives to help you with that.&#xA;The original OAuth 2.0 specification has the concept of scopes, which is just defined as the scope of access that the client requests. Technically speaking, the scope parameter is a list of space delimited values - you need to provide the structure and semantics of it.&#xA;In more complex systems, often the notion of a resource is introduced.</description>
+    </item>
+    <item>
+      <title>ASP.NET Core Data Protection</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/data_protection/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/data_protection/</guid>
+      <description>Duende IdentityServer makes extensive use of ASP.NET&amp;rsquo;s data protection feature. It is crucial that you configure data protection correctly before you start using your IdentityServer in production.&#xA;In local development, ASP.NET automatically creates data protection keys, but in a deployed environment, you will need to ensure that your data protection keys are stored in a persistent way and shared across all load balanced instances of your IdentityServer implementation. This means you&amp;rsquo;ll need to choose where to store and how to protect the data protection keys, as appropriate for your environment.</description>
+    </item>
+    <item>
+      <title>BFF Login Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/login/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/login/</guid>
+      <description>The /bff/login endpoint begins the authentication process. To use it, typically javascript code will navigate away from the frontend application to the login endpoint:&#xA;window.location = &amp;#34;/bff/login&amp;#34;; In Blazor, instead use the NavigationManager to navigate to the login endpoint:&#xA;Navigation.NavigateTo($&amp;#34;bff/login&amp;#34;, forceLoad: true); The login endpoint triggers an authentication challenge using the default challenge scheme, which will typically use the OpenID Connect handler.&#xA;Return Url After authentication is complete, the login endpoint will redirect back to your front end application.</description>
+    </item>
+    <item>
+      <title>DI Extension Methods</title>
+      <link>http://localhost:1313/identityserver/v7/reference/di/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/di/</guid>
+      <description>AddIdentityServer return a builder object that provides many extension methods to add IdentityServer specific services to DI. Here&amp;rsquo;s a list grouped by feature areas.&#xA;var idsvrBuilder = builder.Services.AddIdentityServer(); Many of the fundamental configuration settings can be set on the options. See the IdentityServerOptions reference for more details.&#xA;Configuration Stores Several convenience methods are provided for registering custom stores:&#xA;AddClientStore&amp;lt;T&amp;gt;&#xA;Registers a custom IClientStore implementation.&#xA;AddCorsPolicyService&amp;lt;T&amp;gt;&#xA;Registers a custom ICorsPolicyService implementation.</description>
+    </item>
+    <item>
+      <title>Events</title>
+      <link>http://localhost:1313/identityserver/v7/diagnostics/events/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/diagnostics/events/</guid>
+      <description>While logging is more low level &amp;ldquo;printf&amp;rdquo; style - events represent higher level information about certain operations in IdentityServer. Events are structured data and include event IDs, success/failure information, categories and details. This makes it easy to query and analyze them and extract useful information that can be used for further processing.&#xA;Events work great with structured logging stores like ELK, Seq or Splunk.&#xA;Emitting events Events are not turned on by default - but can be globally configured when AddIdentityServer is called, e.</description>
+    </item>
+    <item>
+      <title>Identity Resource</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/identity_resource/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/identity_resource/</guid>
+      <description>Duende.IdentityServer.Models.IdentityResource This class models an identity resource.&#xA;public static readonly IEnumerable&amp;lt;IdentityResource&amp;gt; IdentityResources = new[] { // some standard scopes from the OIDC spec new IdentityResources.OpenId(), new IdentityResources.Profile(), new IdentityResources.Email(), // custom identity resource with some associated claims new IdentityResource(&amp;#34;custom.profile&amp;#34;, userClaims: new[] { JwtClaimTypes.Name, JwtClaimTypes.Email, &amp;#34;location&amp;#34;, JwtClaimTypes.Address }) }; Enabled&#xA;Indicates if this resource is enabled and can be requested. Defaults to true.&#xA;Name&#xA;The unique name of the identity resource. This is the value a client will use for the scope parameter in the authorize request.</description>
+    </item>
+    <item>
+      <title>Private Key JWTs</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/authentication/jwt/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/authentication/jwt/</guid>
+      <description>The OpenID Connect specification recommends a client authentication method based on asymmetric keys. With this approach, instead of transmitting the shared secret over the network, the client creates a JWT and signs it with its private key. Your IdentityServer only needs to store the corresponding key to be able to validate the signature.&#xA;The technique is described here and is based on the OAuth JWT assertion specification (RFC 7523).&#xA;Setting up a private key JWT secret The default private key JWT secret validator expects either a base64 encoded X.</description>
+    </item>
+    <item>
+      <title>Refreshing a Token</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/refresh/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/refresh/</guid>
+      <description>Access tokens have finite lifetimes. If a client needs long-lived access to a resource, refresh tokens can be used to request a new access token. This can be done with an API call and does not require any user interaction or interruption.&#xA;Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by setting the AllowOfflineAccess property to true. See the client reference section for additional refresh token related settings.</description>
+    </item>
+    <item>
+      <title>Session Management</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/sessions/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/sessions/</guid>
+      <description>User Session Store If using the server-side sessions feature, you will need to have a store for the session data. An Entity Framework Core based implementation of this store is provided. If you wish to use some other type of store, then you can implement the IUserSessionStore interface:&#xA;/// &amp;lt;summary&amp;gt;&#xD;/// User session store&#xD;/// &amp;lt;/summary&amp;gt;&#xD;public interface IUserSessionStore&#xD;{&#xD;/// &amp;lt;summary&amp;gt;&#xD;/// Retrieves a user session&#xD;/// &amp;lt;/summary&amp;gt;&#xD;/// &amp;lt;param name=&amp;#34;key&amp;#34;&amp;gt;&amp;lt;/param&amp;gt;&#xD;/// &amp;lt;param name=&amp;#34;cancellationToken&amp;#34;&amp;gt;A token that can be used to request cancellation of the asynchronous operation.</description>
+    </item>
+    <item>
+      <title>Traces</title>
+      <link>http://localhost:1313/identityserver/v7/diagnostics/otel/traces/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/diagnostics/otel/traces/</guid>
+      <description>(added in v6.1)&#xA;Here&amp;rsquo;s e.g. the output for a request to the discovery endpoint:&#xA;When multiple applications send their traces to the same OTel server, this becomes super useful for following e.g. authentication flows over service boundaries.&#xA;The following screenshot shows the ASP.NET Core OpenID Connect authentication handler redeeming the authorization code:&#xA;&amp;hellip;and then contacting the userinfo endpoint:&#xA;The above screenshots are from https://www.honeycomb.io.&#xA;Tracing sources IdentityServer can emit very fine grained traces which is useful for performance troubleshooting and general exploration of the control flow.</description>
+    </item>
+    <item>
+      <title>Using Reference Tokens</title>
+      <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/reference/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/aspnetcore/reference/</guid>
+      <description>If you are using reference tokens, you need an authentication handler that implements the back-channel validation via the OAuth 2.0 token introspection protocol, e.g. this one:.&#xA;builder.Services.AddAuthentication(&amp;#34;token&amp;#34;) .AddOAuth2Introspection(&amp;#34;token&amp;#34;, options =&amp;gt; { options.Authority = Constants.Authority; // this maps to the API resource name and secret options.ClientId = &amp;#34;resource1&amp;#34;; options.ClientSecret = &amp;#34;secret&amp;#34;; }); Supporting both JWTs and reference tokens It is not uncommon to use the same API with both JWTs and reference tokens.</description>
+    </item>
+    <item>
+      <title>Authentication Session</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/session/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/session/</guid>
+      <description>Authentication Session Regardless of how the user proves their identity on the login page, an authentication session must be established. This authentication session is based on ASP.NET Core’s authentication system, and is tracked with a cookie managed by the cookie authentication handler.&#xA;To establish the session, ASP.NET Core provides a SignInAsync extension method on the HttpContext. This API accepts a ClaimsPrincipal which contains claims that describe the user. IdentityServer requires a special claim called sub whose value uniquely identifies the user.</description>
+    </item>
+    <item>
+      <title>Authorization</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/authorization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/authorization/</guid>
+      <description>You should consider your requirements and design authentication and authorization policy for the Configuration API, if required. The specifications that define DCR envision both open registration, where authentication and authorization are absent and all client software can register with the authorization server, and protected registration, where an initial access token is required in order to register.&#xA;The Configuration API creates standard ASP.NET endpoints that can be protected through traditional ASP.NET authorization.</description>
+    </item>
+    <item>
+      <title>Calling the Registration Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/calling-registration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/calling-registration/</guid>
+      <description>The registration endpoint is invoked by making an HTTP POST request to the /connect/dcr endpoint with a json payload containing metadata describing the desired client as described in RFC 7591 and OpenID Connect Dynamic Client Registration 1.0.&#xA;The supported metadata properties are listed in the reference section on the DynamicClientRegistrationRequest model. A mixture of standardized and IdentityServer-specific properties are supported. Most standardized properties that are applicable to the client credentials or code flow grants (the two grants we support) are supported.</description>
+    </item>
+    <item>
+      <title>Configuration Options</title>
+      <link>http://localhost:1313/identityserver/v7/reference/efoptions/configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/efoptions/configuration/</guid>
+      <description>Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions These options are configurable when using the Entity Framework Core for the configuration store:&#xA;You set the options at startup time in your AddConfigurationStore method:&#xA;var builder = services.AddIdentityServer() .AddConfigurationStore(options =&amp;gt; { // configure options here.. }) Pooling Settings that affect the DbContext pooling feature of Entity Framework Core.&#xA;EnablePooling&#xA;Gets or set if EF DbContext pooling is enabled. Defaults to false.&#xA;PoolSize&#xA;Gets or set the pool size to use when DbContext pooling is enabled.</description>
+    </item>
+    <item>
+      <title>Custom Token Request Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/custom_token_request_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/custom_token_request_validator/</guid>
+      <description>Duende.IdentityServer.Validation.ICustomTokenRequestValidator Allows running custom code as part of the token issuance pipeline at the token endpoint.&#xA;/// &amp;lt;summary&amp;gt; /// Allows inserting custom validation logic into token requests /// &amp;lt;/summary&amp;gt; public interface ICustomTokenRequestValidator { /// &amp;lt;summary&amp;gt; /// Custom validation logic for a token request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;context&amp;#34;&amp;gt;The context.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt; /// The validation result /// &amp;lt;/returns&amp;gt; Task ValidateAsync(CustomTokenRequestValidationContext context); } ValidateAsync&#xA;This method gets called during token request processing. The context gives you access to request and response parameters.</description>
+    </item>
+    <item>
+      <title>DPoP</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/pop/dpop/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/pop/dpop/</guid>
+      <description>Proof-of-possession using Demonstrating Proof-of-Possession at the Application Layer (DPoP) Added in 6.3.0.&#xA;DPoP is a security measure that addresses token replay attacks by making it difficult for attackers to use stolen tokens. Support for DPoP is included in IdentityServer Enterprise Edition. DPoP specifies how to bind an asymmetric key stored within a JSON Web Key (JWK) to an access token. With this enabled your IdentityServer will embed the thumbprint of the public key JWK into the access token via the cnf claim, e.</description>
+    </item>
+    <item>
+      <title>Ending the Session</title>
+      <link>http://localhost:1313/identityserver/v7/ui/logout/session_cleanup/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/logout/session_cleanup/</guid>
+      <description>Removing the Authentication Cookie To remove the authentication cookie, simply use the ASP.NET Core SignOutAsync extension method on the HttpContext. You will need to pass the scheme used (which is provided by IdentityServerConstants.DefaultCookieAuthenticationScheme unless you have changed it):&#xA;await HttpContext.SignOutAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme); Or you can use the overload that will simply sign-out of the default authentication scheme:&#xA;await HttpContext.SignOutAsync(); If you are integrating with ASP.NET Identity, sign out using its SignInManager instead:</description>
+    </item>
+    <item>
+      <title>Remote APIs</title>
+      <link>http://localhost:1313/identityserver/v7/bff/apis/remote/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/apis/remote/</guid>
+      <description>A Remote API is an API that is deployed separately from the BFF host. Remote APIs use access tokens to authenticate and authorize requests, but the frontend does not possess an access token to make requests to remote APIs directly. Instead, all access to remote APIs is proxied through the BFF, which authenticates the frontend using its authentication cookie, obtains the appropriate access token, and forwards the request to the Remote API with the token attached.</description>
+    </item>
+    <item>
+      <title>Request Processing</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/reference/processing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/reference/processing/</guid>
+      <description>IDynamicClientRegistrationRequestProcessor The IDynamicClientRegistrationValidator is the contract for the service that processes a dynamic client registration request. It contains a single ProcessAsync(&amp;hellip;) method.&#xA;Conceptually, the request processing step is responsible for setting properties on the Client model that are generated by the Configuration API itself. In contrast, the IDynamicClientRegistrationRequestProcessor is responsible for checking the validity of the metadata supplied in the registration request, and using that metadata to set properties of a Client model.</description>
+    </item>
+    <item>
+      <title>Session Expiration</title>
+      <link>http://localhost:1313/identityserver/v7/ui/server_side_sessions/session_expiration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/server_side_sessions/session_expiration/</guid>
+      <description>If a user abandons their session without triggering logout, the server-side session data will remain in the store by default. In order to clean up these expired records, there is an automatic cleanup mechanism that periodically scans for expired sessions. When these records are cleaned up, you can optionally notify the client that the session has ended via back-channel logout.&#xA;Expiration Configuration The expiration configuration features can be configured with the server-side session options.</description>
+    </item>
+    <item>
+      <title>Token Response Generator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/response_handling/token_response_generator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/response_handling/token_response_generator/</guid>
+      <description>Duende.IdentityServer.ResponseHandling.ITokenResponseGenerator The ITokenResponseGenerator interface is the contract for the service that generates responses to valid requests to the token endpoint. A response in this context refers to an object model that describes the content that will be serialized and transmitted in the HTTP response.&#xA;The default implementation is the TokenResponseGenerator class. You can customize the behavior of the token endpoint by providing your own implementation of the ITokenResponseGenerator to the DI system.</description>
+    </item>
+    <item>
+      <title>User Interaction</title>
+      <link>http://localhost:1313/identityserver/v7/samples/ui/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/ui/</guid>
+      <description>These samples illustrate customization of the interactive pages used in your IdentityServer.&#xA;Custom Profile Service This sample shows how to create a custom profile service to control what claims are issued from your IdentityServer. The majority of the sample is captured in CustomProfileService.cs in the IdentityServer project.&#xA;Also, another part of the sample shows how to collect a custom claim during the login workflow when using an external login provider (this is done in the ExternalLogin/Callback.</description>
+    </item>
+    <item>
+      <title>BFF User Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/user/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/user/</guid>
+      <description>The /bff/user endpoint returns data about the currently logged-on user and the session. It is typically invoked at application startup to check if the user has authenticated, and if so, to get profile data about the user. It can also be used to periodically query if the session is still valid.&#xA;Output If there is no current session, the user endpoint returns a response indicating that the user is anonymous. By default, this is a 401 status code, but this can be configured.</description>
+    </item>
+    <item>
+      <title>API Scope</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/api_scope/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/api_scope/</guid>
+      <description>Duende.IdentityServer.Models.ApiScope This class models an OAuth scope.&#xA;Enabled&#xA;Indicates if this resource is enabled and can be requested. Defaults to true.&#xA;Name&#xA;The unique name of the API. This value is used for authentication with introspection and will be added to the audience of the outgoing access token.&#xA;DisplayName&#xA;This value can be used e.g. on the consent screen.&#xA;Description&#xA;This value can be used e.g. on the consent screen.</description>
+    </item>
+    <item>
+      <title>BFF Silent Login Callback Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/silent-login-callback/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/silent-login-callback/</guid>
+      <description>The BFF silent login callback endpoint can be customized by implementing the ISilentLoginCallbackService or by extending DefaultSilentLoginCallbackService, its default implementation.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.&#xA;For example, you could take whatever actions you need before normal processing of the request like this:&#xA;public override Task ProcessRequestAsync(HttpContext context) { // Custom logic here return base.</description>
+    </item>
+    <item>
+      <title>BFF Logout Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/logout/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/logout/</guid>
+      <description>The /bff/logout endpoint signs out of the appropriate ASP.NET Core authentication schemes to both delete the BFF&amp;rsquo;s session cookie and to sign out from the remote identity provider. To use the logout endpoint, typically your javascript code will navigate away from your front end to the logout endpoint, similar to the login endpoint. However, unlike the login endpoint, the logout endpoint requires CSRF protection, otherwise an attacker could destroy sessions by making cross-site GET requests.</description>
+    </item>
+    <item>
+      <title>API Resource</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/api_resource/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/api_resource/</guid>
+      <description>Duende.IdentityServer.Models.ApiResource This class models an API.&#xA;Enabled&#xA;Indicates if this resource is enabled and can be requested. Defaults to true.&#xA;Name&#xA;The unique name of the API. This value is used for authentication with introspection and will be added to the audience of the outgoing access token.&#xA;DisplayName&#xA;This value can be used e.g. on the consent screen.&#xA;Description&#xA;This value can be used e.g. on the consent screen.&#xA;RequireResourceIndicator</description>
+    </item>
+    <item>
+      <title>API Resources</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/resources/api_resources/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/resources/api_resources/</guid>
+      <description>When the API/resource surface gets larger, a flat list of scopes might become hard to manage.&#xA;In Duende IdentityServer, the ApiResource class allows for some additional organization as well as grouping and isolation of scopes as well as providing some common settings.&#xA;Let&amp;rsquo;s use the following scope definition as an example:&#xA;public static IEnumerable&amp;lt;ApiScope&amp;gt; GetApiScopes() { return new List&amp;lt;ApiScope&amp;gt; { // invoice API specific scopes new ApiScope(name: &amp;#34;invoice.read&amp;#34;, displayName: &amp;#34;Reads your invoices.</description>
+    </item>
+    <item>
+      <title>Authorization based on Scopes and other Claims</title>
+      <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/authorization/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/aspnetcore/authorization/</guid>
+      <description>The access token will include additional claims that can be used for authorization, e.g. the scope claim will reflect the scope the client requested (and was granted) during the token request.&#xA;In ASP.NET core, the contents of the JWT payload get transformed into claims and packaged up in a ClaimsPrincipal. So you can always write custom validation or authorization logic in C#:&#xA;public IActionResult Get() { var isAllowed = User.HasClaim(&amp;#34;scope&amp;#34;, &amp;#34;read&amp;#34;); // rest omitted } For better encapsulation and re-use, consider using the ASP.</description>
+    </item>
+    <item>
+      <title>Clients</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/clients/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/clients/</guid>
+      <description>Clients represent applications that can request tokens from your IdentityServer.&#xA;The details vary, but you typically define the following common settings for a client:&#xA;a unique client ID a secret if needed the allowed interactions with the token service (called a grant type) a network location where identity and/or access token gets sent to (called a redirect URI) a list of scopes (aka resources) the client is allowed to access Defining a client for server to server communication In this scenario no interactive user is present - a service (i.</description>
+    </item>
+    <item>
+      <title>Error</title>
+      <link>http://localhost:1313/identityserver/v7/ui/error/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/error/</guid>
+      <description>The error page is used to display to the end user that an error has ocurred during a request to the authorize endpoint.&#xA;When an error occurs, IdentityServer will redirect the user to a configurable ErrorUrl.&#xA;builder.Services.AddIdentityServer(opt =&amp;gt; { opt.UserInteraction.ErrorUrl = &amp;#34;/path/to/error&amp;#34;; }) The default ErrorUrl is &amp;ldquo;/home/error&amp;rdquo;. The quickstart UI includes a basic implementation of an error page at that route.&#xA;Errors are commonly due to misconfiguration, and there&amp;rsquo;s not much an end user can do about that.</description>
+    </item>
+    <item>
+      <title>IdentityServer Data Stores</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/data_stores/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/data_stores/</guid>
+      <description>IdentityServer itself is stateless and does not require server affinity - but there is data that needs to be shared between in multi-instance deployments.&#xA;Configuration data This typically includes:&#xA;resources clients startup configuration, e.g. key material, external provider settings etc… The way you store that data depends on your environment. In situations where configuration data rarely changes we recommend using the in-memory stores and code or configuration files. In highly dynamic environments (e.</description>
+    </item>
+    <item>
+      <title>Issuing Tokens based on User Passwords</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/password_grant/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/password_grant/</guid>
+      <description>The password grant type is an OAuth 2.0 protocol flow for authenticating end-users at the token endpoint. It is designed for legacy applications, and it is generally recommended to use a browser-based flow instead - but in certain situation it is not feasible to change existing applications.&#xA;The password grant type is deprecated per OAuth 2.1.&#xA;Requesting a token using Password grant First you need to add the GrantType.Password to the AllowedGrantTypes list of the client you want to use.</description>
+    </item>
+    <item>
+      <title>Supported Specifications</title>
+      <link>http://localhost:1313/identityserver/v7/overview/specs/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/specs/</guid>
+      <description>Duende IdentityServer implements the following specifications:&#xA;OpenID Connect OpenID Connect Core 1.0 (spec) OpenID Connect Discovery 1.0 (spec) OpenID Connect RP-Initiated Logout 1.0 (spec) OpenID Connect Session Management 1.0 (spec) OpenID Connect Front-Channel Logout 1.0 (spec) OpenID Connect Back-Channel Logout 1.0 (spec) Multiple Response Types (spec) Form Post Response Mode (spec) Enterprise Edition: OpenID Connect Client-Initiated Backchannel Authentication (CIBA) (spec). OAuth 2.x OAuth 2.0 (RFC 6749) OAuth 2.0 Bearer Token Usage (RFC 6750) JSON Web Token (RFC 7519) OAuth 2.</description>
+    </item>
+    <item>
+      <title>TLS Client Certificates</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/authentication/mtls/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/authentication/mtls/</guid>
+      <description>Clients can use an X.509 client certificate as an authentication mechanism to endpoints in your IdentityServer.&#xA;For this you need to associate a client certificate with a client in your IdentityServer and enable MTLS support on the options.&#xA;var idsvrBuilder = builder.Services.AddIdentityServer(options =&amp;gt; { options.MutualTls.Enabled = true; }) Use the DI extensions methods to add the services to DI which contain a default implementation to do that either thumbprint or common-name based:</description>
+    </item>
+    <item>
+      <title>Token Management</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/tokens/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/tokens/</guid>
+      <description>The token management library does essentially two things:&#xA;stores access and refresh tokens in the current session refreshes access tokens automatically at the token service when needed Both aspects can be customized.&#xA;Token service communication The token management library uses a named HTTP client from the HTTP client factory for all token service communication. You can provide a customized HTTP client yourself using the well-known name after calling AddBff:&#xA;builder.Services.AddHttpClient(AccessTokenManagementDefaults.BackChannelHttpClientName, configureClient =&amp;gt; { .</description>
+    </item>
+    <item>
+      <title>ASP.NET Identity Integration</title>
+      <link>http://localhost:1313/identityserver/v7/samples/aspid/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/aspid/</guid>
+      <description>link to source code&#xA;This sample shows using ASP.NET Identity with Duende IdentityServer. The intent was to show the least amount of code needed to get a working sample that used Microsoft&amp;rsquo;s ASP.NET Identity user management library.&#xA;The first step in creating the sample was to create a new project that used the ASP.NET Identity templates from Visual Studio (&amp;ldquo;Individual Accounts&amp;rdquo; for the authentication type). This provides all of the &amp;ldquo;out of the box&amp;rdquo; features from ASP.</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication User Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/ciba_user_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/ciba_user_validator/</guid>
+      <description>Duende.IdentityServer.Validation.IBackchannelAuthenticationUserValidator The IBackchannelAuthenticationUserValidator interface is used to validate request hints and identify the user for whom the CIBA request is intended. To use CIBA, you are expected to implement this interface and register it in the DI system.&#xA;IBackchannelAuthenticationUserValidator APIs ValidateRequestAsync&#xA;Validates the backchannel login request with the provided BackchannelAuthenticationUserValidatorContext for the current request. Returns a BackchannelAuthenticationUserValidationResult object.&#xA;BackchannelAuthenticationUserValidatorContext Models the information to validate and identity the user for a CIBA login request.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v6.3 to v7.0</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v6.3_to_v7.0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v6.3_to_v7.0/</guid>
+      <description>What&amp;rsquo;s New IdentityServer v7.0 includes support for .NET 8, pushed authorization requests, OpenTelemetry metrics, cleanup job improvements, and many other fixes and enhancements. Please see our release notes for complete details.&#xA;Step 1: Update .NET Version In your IdentityServer host project, update the version of the .NET framework. For example in your project file:&#xA;&amp;lt;TargetFramework&amp;gt;net6.0&amp;lt;/TargetFramework&amp;gt; would change to:&#xA;&amp;lt;TargetFramework&amp;gt;net8.0&amp;lt;/TargetFramework&amp;gt; Any NuGet packages that you are using that target an older version of .</description>
+    </item>
+    <item>
+      <title>Grants</title>
+      <link>http://localhost:1313/identityserver/v7/data/operational/grants/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/operational/grants/</guid>
+      <description>Many protocol flows produce state that represents a grant of one type or another. These include authorization and device codes, reference and refresh tokens, and remembered user consent.&#xA;Stores The persistence for grants is abstracted behind two interfaces:&#xA;The persisted grant store is a common store for most grants. The device flow store is a specialized store for device grants. Registering Custom Stores Custom implementations of IPersistedGrantStore, and/or IDeviceFlowStore must be registered in the DI system.</description>
+    </item>
+    <item>
+      <title>Inactivity Timeout</title>
+      <link>http://localhost:1313/identityserver/v7/ui/server_side_sessions/inactivity_timeout/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/server_side_sessions/inactivity_timeout/</guid>
+      <description>A common requirement in several industries is the concept of a system-wide &amp;ldquo;inactivity timeout&amp;rdquo;. The expectation is that if a user is active in the system, then their authentication session should continue to be active. But if the user were to be inactive for some amount of time (e.g. after walking away from their computer), then this inactivity should cause the user to be logged out of the entire system.</description>
+    </item>
+    <item>
+      <title>Redirecting back to the client</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/redirect/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/redirect/</guid>
+      <description>The Return URL and the Login Workflow Once the user has been logged in, they must complete the protocol workflow so they can ultimately be logged into the client. To facilitate this, the login page is passed a returnUrl query parameter which refers to the URL the prior request came from. This URL is, in essence, the same authorization endpoint to which the client made the original authorize request.&#xA;In the request to your login page where it logs the user in with a call to SignInAsync, it would then simply use the returnUrl to redirect the response back.</description>
+    </item>
+    <item>
+      <title>Requesting tokens</title>
+      <link>http://localhost:1313/identityserver/v7/samples/tokens/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/tokens/</guid>
+      <description>Extension grants and Token Exchange link to source code&#xA;This sample shows an implementation of the Token Exchange specification RFC 8693 via the Duende IdentityServer extension grant mechanism.&#xA;See here for more information on extension grants.&#xA;Personal Access Tokens (PAT) link to source code&#xA;This sample shows how to provide a self-service UI to create access tokens. This is a common approach to enable integrations with APIs without having to create full-blown OAuth clients.</description>
+    </item>
+    <item>
+      <title>Store</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/reference/store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/reference/store/</guid>
+      <description>IClientConfigurationStore The IClientConfigurationStore interface defines the contract for a service that communication with the client configuration data store. It contains a single AddAsync method.&#xA;public interface IClientConfigurationStore Members name description AddAsync(…) Adds a client to the configuration store. ClientConfigurationStore The ClientConfigurationStore is the default implementation of the IClientConfigurationStore. It uses Entity Framework to communicate with the client configuration store, and is intended to be used when IdentityServer is configured to use the Entity Framework based configuration stores.</description>
+    </item>
+    <item>
+      <title>YARP extensions</title>
+      <link>http://localhost:1313/identityserver/v7/bff/apis/yarp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/apis/yarp/</guid>
+      <description>Duende.BFF integrates with Microsoft&amp;rsquo;s full-featured reverse proxy YARP.&#xA;YARP includes many advanced features such as load balancing, service discovery, and session affinity. It also has its own extensibility mechanism. Duende.BFF includes YARP extensions for token management and anti-forgery protection so that you can combine the security and identity features of Duende.BFF with the flexible reverse proxy features of YARP.&#xA;Adding YARP To enable Duende.BFF&amp;rsquo;s YARP integration, add a reference to the Duende.</description>
+    </item>
+    <item>
+      <title>Resource Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/resource_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/resource_store/</guid>
+      <description>Duende.IdentityServer.Stores.IResourceStore Used to dynamically load resource configuration.&#xA;/// &amp;lt;summary&amp;gt; /// Resource retrieval /// &amp;lt;/summary&amp;gt; public interface IResourceStore { /// &amp;lt;summary&amp;gt; /// Gets identity resources by scope name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;IdentityResource&amp;gt;&amp;gt; FindIdentityResourcesByScopeNameAsync(IEnumerable&amp;lt;string&amp;gt; scopeNames); /// &amp;lt;summary&amp;gt; /// Gets API scopes by scope name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;ApiScope&amp;gt;&amp;gt; FindApiScopesByNameAsync(IEnumerable&amp;lt;string&amp;gt; scopeNames); /// &amp;lt;summary&amp;gt; /// Gets API resources by scope name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;ApiResource&amp;gt;&amp;gt; FindApiResourcesByScopeNameAsync(IEnumerable&amp;lt;string&amp;gt; scopeNames); /// &amp;lt;summary&amp;gt; /// Gets API resources by API resource name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;ApiResource&amp;gt;&amp;gt; FindApiResourcesByNameAsync(IEnumerable&amp;lt;string&amp;gt; apiResourceNames); /// &amp;lt;summary&amp;gt; /// Gets all resources.</description>
+    </item>
+    <item>
+      <title>BFF Silent Login Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/silent-login/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/silent-login/</guid>
+      <description>Added in v1.2.0.&#xA;The /bff/silent-login endpoint triggers authentication similarly to the login endpoint, but in a non-interactive way.&#xA;The expected usage pattern is that the application code loads in the browser and triggers a request to the User Endpoint. If that indicates that there is no BFF session, then the Silent Login Endpoint can be requested to attempt to automatically log the user in, using an existing session at the remote identity provider.</description>
+    </item>
+    <item>
+      <title>Client</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/client/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/client/</guid>
+      <description>Duende.IdentityServer.Models.Client The Client class models an OpenID Connect or OAuth 2.0 client - e.g. a native application, a web application or a JS-based application.&#xA;public static IEnumerable&amp;lt;Client&amp;gt; Get() { return new List&amp;lt;Client&amp;gt; { /////////////////////////////////////////// // machine to machine client ////////////////////////////////////////// new Client { ClientId = &amp;#34;machine&amp;#34;, ClientSecrets = { Configuration[&amp;#34;machine.secret&amp;#34;] }, AllowedGrantTypes = GrantTypes.ClientCredentials, AllowedScopes = machineScopes }, /////////////////////////////////////////// // web client ////////////////////////////////////////// new Client { ClientId = &amp;#34;web&amp;#34;, ClientSecrets = { new Secret(Configuration[&amp;#34;web.</description>
+    </item>
+    <item>
+      <title>Identity Provider</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/idp/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/idp/</guid>
+      <description>Duende.IdentityServer.Models.OidcProvider The OidcProvider models an external OpenID Connect provider for use in the dynamic providers feature. Its properties map to the Open ID Connect options class from ASP.NET Core, and those properties include:&#xA;Enabled&#xA;Specifies if provider is enabled. Defaults to true.&#xA;Scheme&#xA;Scheme name for the provider.&#xA;DisplayName&#xA;Display name for the provider.&#xA;Type&#xA;Protocol type of the provider. Defaults to &amp;ldquo;oidc&amp;rdquo; for the OidcProvider.&#xA;Authority&#xA;The base address of the OIDC provider.</description>
+    </item>
+    <item>
+      <title>Client Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/client_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/client_store/</guid>
+      <description>Duende.IdentityServer.Stores.IClientStore Used to dynamically load client configuration.&#xA;/// &amp;lt;summary&amp;gt; /// Retrieval of client configuration /// &amp;lt;/summary&amp;gt; public interface IClientStore { /// &amp;lt;summary&amp;gt; /// Finds a client by id /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;clientId&amp;#34;&amp;gt;The client id&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;The client&amp;lt;/returns&amp;gt; Task&amp;lt;Client&amp;gt; FindClientByIdAsync(string clientId); } </description>
+    </item>
+    <item>
+      <title>CORS Policy Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/cors_policy_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/cors_policy_service/</guid>
+      <description>Duende.IdentityServer.Stores.ICorsPolicyService Used to determine if CORS requests are allowed to certain protocol endpoints.&#xA;/// &amp;lt;summary&amp;gt; /// Service that determines if CORS is allowed. /// &amp;lt;/summary&amp;gt; public interface ICorsPolicyService { /// &amp;lt;summary&amp;gt; /// Determines whether origin is allowed. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;origin&amp;#34;&amp;gt;The origin.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task&amp;lt;bool&amp;gt; IsOriginAllowedAsync(string origin); } </description>
+    </item>
+    <item>
+      <title>Identity Provider Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/idp_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/idp_store/</guid>
+      <description>Duende.IdentityServer.Stores.IIdentityProviderStore Used to dynamically load identity provider configuration.&#xA;/// &amp;lt;summary&amp;gt; /// Interface to model storage of identity providers. /// &amp;lt;/summary&amp;gt; public interface IIdentityProviderStore { /// &amp;lt;summary&amp;gt; /// Gets all identity providers name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;IdentityProviderName&amp;gt;&amp;gt; GetAllSchemeNamesAsync(); /// &amp;lt;summary&amp;gt; /// Gets the identity provider by scheme name. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;scheme&amp;#34;&amp;gt;&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task&amp;lt;IdentityProvider&amp;gt; GetBySchemeAsync(string scheme); } The IdentityProvider is intended to be a base class to model arbitrary identity providers.</description>
+    </item>
+    <item>
+      <title>BFF Logout Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/logout/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/logout/</guid>
+      <description>The BFF logout endpoint has extensibility points in two interfaces. The IlogoutService is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The IReturnUrlValidator ensures that the returnUrl parameter passed to the logout endpoint is safe to use.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.</description>
+    </item>
+    <item>
+      <title>BFF Diagnostics Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/diagnostics/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/diagnostics/</guid>
+      <description>The /bff/diagnostics endpoint returns the current user and client access token for testing purposes. The endpoint tries to retrieve and show current tokens. It may invoke both a refresh token flow for the user access token and a client credential flow for the client access token.&#xA;To use the diagnostics endpoint, make a GET request to /bff/diagnostics. Typically this is done in a browser to diagnose a problem during development.</description>
+    </item>
+    <item>
+      <title>Consent</title>
+      <link>http://localhost:1313/identityserver/v7/ui/consent/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/consent/</guid>
+      <description>During an authorization request, if user consent is required the browser will be redirected to the consent page.&#xA;You can configure the consent requirement per client. By default no consent is required, but this setting can be changed via the RequireConsent setting.&#xA;Consent is used to allow an end user to grant a client access to resources.&#xA;Consent Page In order for the user to grant consent, a consent page must be provided by the hosting application.</description>
+    </item>
+    <item>
+      <title>Distributed Caching</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/caching/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/caching/</guid>
+      <description>Some optional features rely on ASP.NET Core distributed caching:&#xA;State data formatter for OpenID Connect Replay cache (e.g. for JWT client credentials) Device flow throttling service Authorization parameter store In order to work in a multi server environment, this needs to be set up correctly. Please consult the Microsoft documentation for more details.</description>
+    </item>
+    <item>
+      <title>HTTP Forwarder</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/http_forwarder/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/http_forwarder/</guid>
+      <description>You can customize the HTTP forwarder behavior in two ways&#xA;provide a customized HTTP client for outgoing calls provide custom request/response transformation Custom HTTP clients By default, Duende.BFF will create and cache an HTTP client per configured route or local path.&#xA;This invoker is setup like this:&#xA;var client = new HttpMessageInvoker(new SocketsHttpHandler { UseProxy = false, AllowAutoRedirect = false, AutomaticDecompression = DecompressionMethods.None, UseCookies = false }); If you want to customize the HTTP client for specific paths, you can either implement the IHttpMessageInvokerFactory interface or derive from the DefaultHttpMessageInvokerFactory, e.</description>
+    </item>
+    <item>
+      <title>Packaging and Builds</title>
+      <link>http://localhost:1313/identityserver/v7/overview/packaging/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/packaging/</guid>
+      <description>Product The licensed and supported libraries can be accessed via Nuget:&#xA;Duende IdentityServer Duende IdentityServer EntityFramework Integration Duende IdentityServer ASP.NET Identity Integration UI Duende IdentityServer does not contain any UI, because this is always custom to the project. We still provide you a starting point for your modifications.&#xA;standard UI UI with ASP.NET Identity integration Templates Contains templates for the dotnet CLI.&#xA;Nuget package source code You can install the templates using the following command:</description>
+    </item>
+    <item>
+      <title>Profile Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/profile_service/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/profile_service/</guid>
+      <description>Duende.IdentityServer.Services.IProfileService Encapsulates retrieval of user claims from a data source of your choice. See here for a sample.&#xA;/// &amp;lt;summary&amp;gt; /// This interface allows IdentityServer to connect to your user and profile store. /// &amp;lt;/summary&amp;gt; public interface IProfileService { /// &amp;lt;summary&amp;gt; /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint) /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;context&amp;#34;&amp;gt;The context.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task GetProfileDataAsync(ProfileDataRequestContext context); /// &amp;lt;summary&amp;gt; /// This method gets called whenever identity server needs to determine if the user is valid or active (e.</description>
+    </item>
+    <item>
+      <title>Resource Isolation</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/resources/isolation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/resources/isolation/</guid>
+      <description>This is an Enterprise Edition feature.&#xA;OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view. This means that all the requested scope and audience combination get merged into a single access token. This has a couple of downsides, e.g.&#xA;tokens can become very powerful (and big) if such a token leaks, it allows access to multiple resources resources within that single token might have conflicting settings, e.</description>
+    </item>
+    <item>
+      <title>Setup</title>
+      <link>http://localhost:1313/identityserver/v7/diagnostics/otel/setup/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/diagnostics/otel/setup/</guid>
+      <description>To start emitting Otel tracing and metrics information you need&#xA;add the Otel libraries to your IdentityServer and client applications start collecting traces and Metrics from the various IdentityServer sources (and other sources e.g. ASP.NET Core) For development a simple option is to export the tracing information to the console and use the Prometheus exporter to create a human readable /metrics endpoint for the metrics.&#xA;Add the Open Telemetry configuration to your service setup.</description>
+    </item>
+    <item>
+      <title>Users and Logging In</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/users/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/users/</guid>
+      <description>Users and User Interface The design of Duende IdentityServer allows you to use any user database and build any user interface (UI) workflow needed to satisfy your requirements. This means you have the ability to customize any UI page (registration, login, password reset, etc.), support any credential type (password, MFA, etc.), use any user database (greenfield or legacy), and/or use federated logins from any provider (social or enterprise). You have the ability to control the entire user experience while Duende IdentityServer provides the implementation of the security protocol (OpenID Connect and OAuth).</description>
+    </item>
+    <item>
+      <title>Validating Proof-of-Possession</title>
+      <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/confirmation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/aspnetcore/confirmation/</guid>
+      <description>IdentityServer can bind tokens to clients using either mTLS or DPoP, creating a Proof-of-Possession (PoP) access token. When one of these mechanisms is used, APIs that use those access tokens for authorization need to validate the binding between the client and token. This document describes how to perform such validation, depending on which mechanism was used to produce a PoP token.&#xA;Validating mTLS Proof-of-Possession If you are using a mutual TLS connection to establish proof-of-possession, the resulting access token will contain a cnf claim containing the client&amp;rsquo;s certificate thumbprint.</description>
+    </item>
+    <item>
+      <title>Backend for Frontend Pattern</title>
+      <link>http://localhost:1313/identityserver/v7/samples/bff/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/bff/</guid>
+      <description>This section contains a collection of clients using our BFF security framework.&#xA;JavaScript Frontend This sample shows how to use the BFF framework with a JavaScript-based frontend (e.g. SPA).&#xA;link to source code&#xA;ReactJs Frontend This sample shows how to use the BFF framework with the .NET 6 React template.&#xA;link to source code&#xA;Angular Frontend This sample shows how to use the BFF framework with the .NET 6 Angular template.</description>
+    </item>
+    <item>
+      <title>DPoP Proof Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/dpop_proof_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/dpop_proof_validator/</guid>
+      <description>Duende.IdentityServer.Validation.IDPoPProofValidator The IDPoPProofValidator interface is used to validate DPoP proof tokens submitted to IdentityServer. A default implementation is provided and can be overridden as necessary.&#xA;IDPoPProofValidator APIs ValidateAsync&#xA;Validates a DPoP proof token with the provided DPoPProofValidatonContext for the current request. Returns a DPoPProofValidatonResult object.&#xA;DPoPProofValidatonContext Models the information to validate a DPoP proof token request.&#xA;Client&#xA;The Client making the request.&#xA;ProofToken&#xA;The proof token sent with the request.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v6.2 to v6.3</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v6.2_to_v6.3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v6.2_to_v6.3/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v6.2 to v6.3 (release notes).&#xA;What&amp;rsquo;s New Duende IdentityServer 6.3 adds:&#xA;Support for OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer (DPoP) , a new OAuth specification for sender-constraining refresh tokens and access tokens.&#xA;A new Configuration API distributed through the separate Duende.IdentityServer.Configuration nuget package that supports the OAuth and OIDC Dynamic Client Registration specifications.&#xA;Support for 3rd party initiated login through the new client configuration property InitiateLoginUri.</description>
+    </item>
+    <item>
+      <title>Keys</title>
+      <link>http://localhost:1313/identityserver/v7/data/operational/keys/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/operational/keys/</guid>
+      <description>The automatic key management feature in Duende IdentityServer requires a store to persist keys that are dynamically created.&#xA;Signing Key Store By default, the file system is used, but the storage of these keys is abstracted behind a extensible store interface. The ISigningKeyStore is that storage interface.&#xA;Registering a custom signing key store To register a custom signing key store in the DI container, there is a AddSigningKeyStore helper on the IIdentityServerBuilder.</description>
+    </item>
+    <item>
+      <title>Login Context</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/context/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/context/</guid>
+      <description>The returnUrl query parameter passed to the login page refers to the URL the prior request came from. This URL typically refers to the IdentityServer authorization endpoint and contains the original request parameters sent from the client. These parameters might contain information your login page needs to customize its workflow. Some examples would be for branding, dynamic page customization (e.g. which external login providers to use), or controlling what credentials the client application expects (e.</description>
+    </item>
+    <item>
+      <title>Response Generation</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/reference/response/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/reference/response/</guid>
+      <description>IDynamicClientRegistrationResponseGenerator The IDynamicClientRegistrationResponseGenerator interface defines the contract for a service that generates dynamic client registration responses.&#xA;public interface IDynamicClientRegistrationResponseGenerator Members name description WriteBadRequestError(…) Writes a bad request error to the HTTP context. WriteContentTypeError(…) Writes a content type error to the HTTP response. WriteProcessingError(…) Writes a processing error to the HTTP context. WriteResponse(…) Writes a response object to the HTTP context with the given status code. WriteSuccessResponse(…) Writes a success response to the HTTP context.</description>
+    </item>
+    <item>
+      <title>Server-side Sessions</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/server_side_sessions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/server_side_sessions/</guid>
+      <description>By default, ASP.NET Core&amp;rsquo;s cookie handler will store all user session data in a protected cookie. This works very well unless cookie size or revocation becomes an issue.&#xA;Duende.BFF includes all the plumbing to store your sessions server-side. The cookie will then only be used to transmit the session ID between the browser and the BFF host. This has the following advantages&#xA;the cookie size will be very small and constant - regardless how much data (e.</description>
+    </item>
+    <item>
+      <title>Persisted Grant Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/persisted_grant_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/persisted_grant_store/</guid>
+      <description>The IPersistedGrantStore interface is the contract for a service that stores, retrieves, and deletes persisted grants. A grant is a somewhat abstract concept that is used in various protocol flows and represents that a resource owner has given authorization of some kind. Grants that require server side state in IdentityServer are the persisted grants stored by the IPersistedGrantStore.&#xA;The IPersistedGrantStore is abstracted to allow for storage of several grant types, including authorization codes, refresh tokens, user consent, and reference tokens.</description>
+    </item>
+    <item>
+      <title>Device Flow Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/device_flow_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/device_flow_store/</guid>
+      <description>Duende.IdentityServer.Stores.IDeviceFlowStore Models storage of grants for the device flow.&#xA;/// &amp;lt;summary&amp;gt; /// Interface for the device flow store /// &amp;lt;/summary&amp;gt; public interface IDeviceFlowStore { /// &amp;lt;summary&amp;gt; /// Stores the device authorization request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;deviceCode&amp;#34;&amp;gt;The device code.&amp;lt;/param&amp;gt; /// &amp;lt;param name=&amp;#34;userCode&amp;#34;&amp;gt;The user code.&amp;lt;/param&amp;gt; /// &amp;lt;param name=&amp;#34;data&amp;#34;&amp;gt;The data.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task StoreDeviceAuthorizationAsync(string deviceCode, string userCode, DeviceCode data); /// &amp;lt;summary&amp;gt; /// Finds device authorization by user code. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;userCode&amp;#34;&amp;gt;The user code.</description>
+    </item>
+    <item>
+      <title>Persisted Grant Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/persisted_grant_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/persisted_grant_service/</guid>
+      <description>Duende.IdentityServer.Services.IPersistedGrantService Provides access to a user&amp;rsquo;s grants.&#xA;/// &amp;lt;summary&amp;gt; /// Implements persisted grant logic /// &amp;lt;/summary&amp;gt; public interface IPersistedGrantService { /// &amp;lt;summary&amp;gt; /// Gets all grants for a given subject ID. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;subjectId&amp;#34;&amp;gt;The subject identifier.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task&amp;lt;IEnumerable&amp;lt;Grant&amp;gt;&amp;gt; GetAllGrantsAsync(string subjectId); /// &amp;lt;summary&amp;gt; /// Removes all grants for a given subject id, and optionally client id and session id combination. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;subjectId&amp;#34;&amp;gt;The subject identifier.&amp;lt;/param&amp;gt; /// &amp;lt;param name=&amp;#34;clientId&amp;#34;&amp;gt;The client identifier (optional).</description>
+    </item>
+    <item>
+      <title>Claims</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/claims/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/claims/</guid>
+      <description>IdentityServer emits claims about users and clients into tokens. You are in full control of which claims you want to emit, in which situations you want to emit those claims, and where to retrieve those claims from.&#xA;User claims User claims can be emitted in both identity and access tokens and in the userinfo endpoint. The central extensibility point to implement to emit claims is called the profile service. The profile service is responsible for both gathering claim data and deciding which claims should be emitted.</description>
+    </item>
+    <item>
+      <title>Grant Validation Result</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/grant_validation_result/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/grant_validation_result/</guid>
+      <description>Duende.IdentityServer.Validation.GrantValidationResult The GrantValidationResult class models the outcome of grant validation for extensions grants and resource owner password grants.&#xA;It models either a successful validation result with claims (e.g. subject ID) or an invalid result with an error code and message, e.g.:&#xA;public class ExtensionGrantValidator : IExtensionGrantValidator { public Task ValidateAsync(ExtensionGrantValidationContext context) { // some validation steps if (success) { context.Result = new GrantValidationResult( subject: &amp;#34;818727&amp;#34;, authenticationMethod: &amp;#34;custom&amp;#34;, claims: extraClaims); } else { // custom error message context.</description>
+    </item>
+    <item>
+      <title>Clients</title>
+      <link>http://localhost:1313/identityserver/v7/samples/clients/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/clients/</guid>
+      <description>This section contains a collection of various client technologies connecting to IdentityServer.&#xA;.NET 4.8 Clients This sample shows how to add OpenID Connect code flow with PKCE to a .NET 4.8 WebForms client and a .NET 4.8 MVC Client. Each client can login, logout, make API requests to a .NET 4.8 WebApi using OAuth, and refresh access tokens.&#xA;link to source code&#xA;.NET MAUI client This sample shows how to use the IdentityModel.</description>
+    </item>
+    <item>
+      <title>BFF User Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/user/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/user/</guid>
+      <description>The BFF user endpoint can be customized by implementing the IUserService or by extending DefaultUserService, its default implementation. In most cases, extending the default implementation is preferred, as it has several virtual methods that can be overridden to customize particular aspects of how the request is processed. The DefaultUserService&amp;rsquo;s virtual methods are ProcessRequestAsync, GetUserClaims, and GetManagementClaims.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.</description>
+    </item>
+    <item>
+      <title>BFF Back-Channel Logout Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/back-channel-logout/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/back-channel-logout/</guid>
+      <description>The /bff/backchannel endpoint is an implementation of the OpenID Connect Back-Channel Logout specification. The remote identity provider can use this endpoint to end the BFF&amp;rsquo;s session via a server to server call, without involving the user&amp;rsquo;s browser. This design avoids problems with 3rd party cookies associated with front-channel logout.&#xA;Typical Usage The back-channel logout endpoint is invoked by the remote identity provider when it determines that sessions should be ended. IdentityServer will send back-channel logout requests if you configure your client&amp;rsquo;s BackChannelLogoutUri.</description>
+    </item>
+    <item>
+      <title>Automatic Key Management</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/keys/automatic_key_management/</link>
+      <pubDate>Mon, 21 Nov 2022 11:24:12 -0500</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/keys/automatic_key_management/</guid>
+      <description>Duende IdentityServer can manage signing keys for you using the Automatic Key Management feature.&#xA;Automatic Key Management follows best practices for handling signing key material, including&#xA;automatic rotation of keys secure storage of keys at rest using data protection announcement of upcoming new keys maintenance of retired keys Automatic Key Management is included in IdentityServer Business Edition or higher.&#xA;Configuration Automatic Key Management is configured by the options in the KeyManagement property on the IdentityServerOptions.</description>
+    </item>
+    <item>
+      <title>Manual Key Management</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/keys/static_key_management/</link>
+      <pubDate>Mon, 21 Nov 2022 11:24:12 -0500</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/keys/static_key_management/</guid>
+      <description>Instead of using Automatic Key Management, IdentityServer&amp;rsquo;s signing keys can be set manually. Automatic Key Management is generally recommended, but if you want to explicitly control your keys statically, or you have a license that does not include the feature (e.g. the Starter Edition), you will need to manually manage your keys. With static configuration you are responsible for secure storage, loading and rotation of keys.&#xA;Disabling Key Management The automatic key management feature can be disabled by setting the Enabled flag to false on the the KeyManagement property of IdentityServerOptions:</description>
+    </item>
+    <item>
+      <title>Migrating from Static Keys to Automatic Key Management</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/keys/migration/</link>
+      <pubDate>Mon, 21 Nov 2022 11:24:12 -0500</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/keys/migration/</guid>
+      <description>To migrate from static to automatic key management, you can set keys manually and enable automatic key management at the same time. This allows the automatic key management feature to begin creating keys and announce them in discovery, while you continue to use the old statically configured key. Eventually you can transition from the statically configured key to the automatically managed keys.&#xA;A signing key registered with AddSigningCredential will take precedence over any keys created by the automatic key management feature.</description>
+    </item>
+    <item>
+      <title>Dynamic Request Validation and Customization</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/dynamic_validation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/dynamic_validation/</guid>
+      <description>You can hook into the token request pipeline by implementing the ICustomTokenRequestValidator interface.&#xA;This allows you to&#xA;add additional token request validation logic do custom per-client processing add custom response parameters return custom errors and error descriptions modify parameters on-the-fly access token lifetime and type client claims confirmation method The following example emits additional claims and changes the token lifetime on-the-fly based on a granted scope.&#xA;public class TransactionScopeTokenRequestValidator : ICustomTokenRequestValidator { public Task ValidateAsync(CustomTokenRequestValidationContext context) { var transaction = context .</description>
+    </item>
+    <item>
+      <title>Support and Issues</title>
+      <link>http://localhost:1313/identityserver/v7/overview/support/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/support/</guid>
+      <description>Source Code You can find all source code for IdentityServer and its supporting repos in our organization.&#xA;Issue Tracker The IdentityServer issue tracker and pull requests allow you to follow the current work and submit questions or bug reports.&#xA;Milestones / release notes&#xA;Support See here for our support policy.&#xA;Standard support and feature requests are handled via our public support forum. Please start a discussion there if you need help.</description>
+    </item>
+    <item>
+      <title>Token Management</title>
+      <link>http://localhost:1313/identityserver/v7/bff/tokens/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/tokens/</guid>
+      <description>Duende.BFF includes an automatic token management feature. This uses the access and refresh token stored in the authentication session to always provide a current access token for outgoing API calls.&#xA;For most scenarios, there is no additional configuration necessary. The token management will infer the configuration and token endpoint URL from the metadata of the OpenID Connect provider.&#xA;The easiest way to retrieve the current access token is to use an extension method on HttpContext:</description>
+    </item>
+    <item>
+      <title>Accepting Local Credentials</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/local/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/local/</guid>
+      <description>The steps for implementing a local login page are:&#xA;Validate the user&amp;rsquo;s credentials Issue the authentication cookie Redirect the user to the return URL The code below shows a sample Razor Page that could act as a login page. This sample hard codes the logic for the credentials. In production code, use your custom user database or identity management library here.&#xA;If you are using ASP.NET Identity for user management, our Identity Server ASP.</description>
+    </item>
+    <item>
+      <title>Client Notifications</title>
+      <link>http://localhost:1313/identityserver/v7/ui/logout/notification/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/logout/notification/</guid>
+      <description>Notifying clients that the user has signed-out As part of the logout process you will want to ensure client applications are informed that the user has signed out.&#xA;This is done by sending a notification to an endpoint provided by the each client application. Depending on your architecture, there are three supported techniques to call these endpoints:&#xA;front-channel notifications via the browser back-channel notifications via server-side call a PostMessage-based notification for JavaScript clients Regardless which technique you are using, Duende IdentityServer keeps track of the client applications involved with the current user session and provides helpers and automated ways of invoking the notification mechanisms.</description>
+    </item>
+    <item>
+      <title>Custom Pages</title>
+      <link>http://localhost:1313/identityserver/v7/ui/custom/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/custom/</guid>
+      <description>In addition to the pages your IdentityServer is expected to provide, you can add any other pages you wish. These could be pages needed during login (e.g. registration, password reset), self-service pages to allow the user to manage their profile (e.g. change password, change email), or even more specialized pages for various user workflows (e.g. password expired, or EULA).&#xA;These custom pages can be made available to the end user as links from the standard pages in your IdentityServer (i.</description>
+    </item>
+    <item>
+      <title>Customization</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/customization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/customization/</guid>
+      <description>The behavior of the Configuration API can be customized through the use of several extension points that control the steps that occur when a dynamic client registration request arrives.&#xA;First, the incoming request is validated to ensure that it is syntactically valid and semantically correct. The result of the validation process is a model which will either contain error details or a validated Client model.&#xA;When validation succeeds, the validated request is passed on to the request processor.</description>
+    </item>
+    <item>
+      <title>Diagnostics</title>
+      <link>http://localhost:1313/identityserver/v7/samples/diagnostics/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/diagnostics/</guid>
+      <description>OpenTelemetry with Aspire link to source code&#xA;IdentityServer emits OpenTelemetry metcis, traces and logs (see here for more information). This sample uses .NET Aspire to display OpenTelemetry data. The solution contains an IdentityServer host, an API and a web client. The access token lifetime is set to a very small value to force frequent refresh token flows.&#xA;Running the sample requires the dotnet aspire workload to be installed with dotnet workload install aspire.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v6.1 to v6.2</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v6.1_to_v6.2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v6.1_to_v6.2/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v6.1 to v6.2 (release notes).&#xA;What&amp;rsquo;s New Duende IdentityServer 6.2 adds:&#xA;Support for .NET 7.0 A new option that can help filter unhandled exceptions out of the logs Bug fixes and ongoing maintenance There are no changes to the data stores in this release.&#xA;Step 1: Update NuGet package In your IdentityServer host project, update the version of the NuGet. For example in your project file:</description>
+    </item>
+    <item>
+      <title>Entity Framework Integration</title>
+      <link>http://localhost:1313/identityserver/v7/data/ef/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/ef/</guid>
+      <description>An EntityFramework-based implementation is provided for the configuration and operational data extensibility points in IdentityServer. The use of EntityFramework allows any EF-supported database to be used with this library.&#xA;The features provided by this library are broken down into two main areas: configuration store and operational store support. These two different areas can be used independently or together, based upon the needs of the hosting application.&#xA;To use this library, ensure that you have the NuGet package for the EntityFramework integration.</description>
+    </item>
+    <item>
+      <title>Health Checks</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/health_checks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/health_checks/</guid>
+      <description>You can use ASP.NET&amp;rsquo;s health checks to monitor the health of your IdentityServer deployment. Health checks can contain arbitrary logic to test various conditions of a system. One common strategy for checking the health of IdentityServer is to make discovery requests. Successful discovery responses indicate not just that the IdentityServer host is running and able to receive requests and generate responses, but also that it was able to communicate with the configuration store.</description>
+    </item>
+    <item>
+      <title>Models</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/reference/models/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/reference/models/</guid>
+      <description>DynamicClientRegistrationRequest Represents a dynamic client registration request. The parameters that are supported include a subset of the parameters defined by IANA, and custom properties needed by IdentityServer.&#xA;public class DynamicClientRegistrationRequest Public Members name description AbsoluteRefreshTokenLifetime { get; set; } The absolute lifetime of refresh tokens, in seconds. This property is an extension to the Dynamic Client Registration Protocol. AccessTokenLifetime { get; set; } The lifetime of access tokens, in seconds. This property is an extension to the Dynamic Client Registration Protocol.</description>
+    </item>
+    <item>
+      <title>Multi Factor Authentication</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/mfa/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/mfa/</guid>
+      <description>Duende IdentityServer itself doesn&amp;rsquo;t implement multi-factor authentication (MFA). MFA is part of the login process in the user interface which is the responsibility of the hosting application. Microsoft provides some general guidelines on how to enable MFA in ASP.NET Core.&#xA;MFA hosted in IdentityServer An IdentityServer implementation can include MFA in its login page using anything that works with ASP.NET Core. One approach is to use ASP.NET Identity&amp;rsquo;s MFA support.</description>
+    </item>
+    <item>
+      <title>Refresh Token Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/refresh_token_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/refresh_token_service/</guid>
+      <description>Duende.IdentityServer.Services.IRefreshTokenService All refresh token handling is implemented in the DefaultRefreshTokenService (which is the default implementation of the IRefreshTokenService interface):&#xA;public interface IRefreshTokenService { /// &amp;lt;summary&amp;gt; /// Validates a refresh token. /// &amp;lt;/summary&amp;gt; Task&amp;lt;TokenValidationResult&amp;gt; ValidateRefreshTokenAsync(string token, Client client); /// &amp;lt;summary&amp;gt; /// Creates the refresh token. /// &amp;lt;/summary&amp;gt; Task&amp;lt;string&amp;gt; CreateRefreshTokenAsync(ClaimsPrincipal subject, Token accessToken, Client client); /// &amp;lt;summary&amp;gt; /// Updates the refresh token. /// &amp;lt;/summary&amp;gt; Task&amp;lt;string&amp;gt; UpdateRefreshTokenAsync(string handle, RefreshToken refreshToken, Client client); } The behavior of the refresh token service is complex.</description>
+    </item>
+    <item>
+      <title>Server-Side Sessions</title>
+      <link>http://localhost:1313/identityserver/v7/data/operational/sessions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/operational/sessions/</guid>
+      <description>(added in 6.1)&#xA;The server-side sessions feature in Duende IdentityServer requires a store to persist a user&amp;rsquo;s session data.&#xA;Server-Side Session Store The IServerSideSessionStore abstracts storing the server-side session data. ServerSideSession objects act as the storage entity, and provide several properties uses as metadata for the session. The Ticket property contains the actual serailized data used by the ASP.NET Cookie Authentication handler.&#xA;The methods on the IServerSideSessionStore are used to orchestrate the various management functions needed by the server-side sessions feature.</description>
+    </item>
+    <item>
+      <title>Security best-practices</title>
+      <link>http://localhost:1313/identityserver/v7/overview/security/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/security/</guid>
+      <description>This document describes how the integrity of software produced by Duende Software is maintained during the software development life cycle.&#xA;Data processing Our products are off-the shelf downloadable developer components. They are not managed services or SaaS - nor do we store, have access to, or process any of our customers&amp;rsquo; data or their customers&amp;rsquo; data.&#xA;Systems access Multiple systems are used in the development life cycle, including GitHub, NuGet, and Microsoft Azure Key Vault.</description>
+    </item>
+    <item>
+      <title>User Session Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/user_sesion_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/user_sesion_service/</guid>
+      <description>The IUserSession interface is the contract for a service that manages the user&amp;rsquo;s session and tracks the clients that are participating in the session.&#xA;User sessions are identified by the session identifier, which is a unique random number assigned when the user initially logs in. When client applications request tokens for a flow that involves a user, that client application&amp;rsquo;s id is recorded in the user&amp;rsquo;s session. Using that information, IdentityServer can determine which applications are participating in the current session.</description>
+    </item>
+    <item>
+      <title>Session Management Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/session_management_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/session_management_service/</guid>
+      <description>Duende.IdentityServer.Services.ISessionManagementService When using server-side sessions, the ISessionManagementService provides an administrative feature to query those sessions and terminate those sessions (including associated tokens, consents, and triggering back-channel logout to the clients).&#xA;/// &amp;lt;summary&amp;gt; /// Session management service /// &amp;lt;/summary&amp;gt; public interface ISessionManagementService { /// &amp;lt;summary&amp;gt; /// Queries all the session related data for a user. /// &amp;lt;/summary&amp;gt; Task&amp;lt;QueryResult&amp;lt;UserSession&amp;gt;&amp;gt; QuerySessionsAsync(SessionQuery filter = null, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Removes all the session related data for a user.</description>
+    </item>
+    <item>
+      <title>BFF Back-Channel Logout Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/back-channel-logout/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/back-channel-logout/</guid>
+      <description>The back-channel logout endpoint has several extensibility points organized into two interfaces and their default implementations. The IBackchannelLogoutService is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic or to change how it validates incoming requests. When the back-channel logout endpoint receives a valid request, it revokes sessions using the ISessionRevocationService.&#xA;Request Processing You can add custom logic to the endpoint by implementing the IBackchannelLogoutService or by extending its default implementation (Duende.</description>
+    </item>
+    <item>
+      <title>Demo Server</title>
+      <link>http://localhost:1313/identityserver/v7/overview/demo_server/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/demo_server/</guid>
+      <description>You can try Duende IdentityServer with your favourite client library. We have a test instance at demo.duendesoftware.&#xA;On the main page you can find instructions on how to configure your client and how to call an API.</description>
+    </item>
+    <item>
+      <title>IdentityServer Interaction Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/interaction_service/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/interaction_service/</guid>
+      <description>Duende.IdentityServer.Services.IIdentityServerInteractionService The IIdentityServerInteractionService interface is intended to provide services to be used by the user interface to communicate with IdentityServer, mainly pertaining to user interaction. It is available from the dependency injection system and would normally be injected as a constructor parameter into your MVC controllers for the user interface of IdentityServer.&#xA;IIdentityServerInteractionService APIs GetAuthorizationContextAsync&#xA;Returns the AuthorizationRequest based on the returnUrl passed to the login or consent pages.&#xA;IsValidReturnUrl</description>
+    </item>
+    <item>
+      <title>Issuing Internal Tokens</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/internal/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/internal/</guid>
+      <description>Sometimes, extensibility code running on your IdentityServer needs access tokens to call other APIs. In this case it is not necessary to use the protocol endpoints. The tokens can be issued internally.&#xA;IIdentityServerTools is a collection of useful internal tools that you might need when writing extensibility code for IdentityServer. To use it, inject it into your code, e.g. a controller::&#xA;public MyController(IIdentityServerTools tools) { _tools = tools; } The IssueJwtAsync method allows creating JWT tokens using the IdentityServer token creation engine.</description>
+    </item>
+    <item>
+      <title>Configuration API</title>
+      <link>http://localhost:1313/identityserver/v7/samples/configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/configuration/</guid>
+      <description>Dynamic Client Registration Sample This sample of the IdentityServer.Configuration API shows how to make simple Dynamic Client Registration (DCR) requests. link to source code&#xA;Permissions Sample This sample of the IdentityServer.Configuration API shows how you might make authorization decisions during Dynamic Client Registration (DCR). link to source code&#xA;CI/CD Pipeline Sample using a Personal Access Token This sample of the IdentityServer.Configuration API shows how you might use Personal Access Tokens to authorize access to the configuration API in a CI/CD pipeline.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v6.0 to v6.1</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v6.0_to_v6.1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v6.0_to_v6.1/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v6.0 to v6.1 (release notes).&#xA;Step 1: Update NuGet package In your IdentityServer host project, update the version of the NuGet. For example in your project file:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;6.0.0&amp;#34; /&amp;gt; would change to:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;6.1.0&amp;#34; /&amp;gt; Step 2: Update Database Schema (if needed) If you are using a database for your configuration or operational data, then there is a database schema update.</description>
+    </item>
+    <item>
+      <title>Integrating with External Providers</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/external/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/external/</guid>
+      <description>External Identity Providers One option for allowing your users to login is by using an external identity provider. These external providers can be a social login for your users (e.g. Google), a corporate login system (e.g. Azure AD for employees), or some other login system your users use.&#xA;The workflow using an external provider is much like the workflow from one of your client applications using your IdentityServer. Your login page must redirect the user to the identity provider for login, and the identity provider will redirect the user to a callback endpoint in your IdentityServer to process the results.</description>
+    </item>
+    <item>
+      <title>Licensing</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/license_key/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/license_key/</guid>
+      <description>IdentityServer is free for development, testing and personal projects, but production use requires a license.&#xA;Editions There are three license editions which include different features.&#xA;Starter Edition The Starter edition includes the core OIDC and OAuth protocol implementation. This is an economical option that is a good fit for organizations with basic needs. It&amp;rsquo;s also a great choice if you have an aging IdentityServer4 implementation that needs to be updated and licensed.</description>
+    </item>
+    <item>
+      <title>Options</title>
+      <link>http://localhost:1313/identityserver/v7/configuration/dcr/reference/options/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/configuration/dcr/reference/options/</guid>
+      <description>IdentityServerConfigurationOptions Top level options for IdentityServer.Configuration.&#xA;public class IdentityServerConfigurationOptions Public Members name description DynamicClientRegistration { get; set; } Options for Dynamic Client Registration DynamicClientRegistrationOptions Options for dynamic client registration.&#xA;public class DynamicClientRegistrationOptions Public Members name description SecretLifetime { get; set; } Gets or sets the lifetime of secrets generated for clients. If unset, generated secrets will have no expiration. Defaults to null (secrets never expire). </description>
+    </item>
+    <item>
+      <title>Returning to the Client</title>
+      <link>http://localhost:1313/identityserver/v7/ui/logout/client_redirect/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/logout/client_redirect/</guid>
+      <description>If sign-out was initiated by a client application, then the client first redirected the user to the end session endpoint. This can be determined if a logoutId is passed to the login page and the returned LogoutRequest&amp;rsquo;s PostLogoutRedirectUri is set.&#xA;How to Redirect If there is a PostLogoutRedirectUri value, then it&amp;rsquo;s important how this URL is used to redirect the user. The logout page typically should not directly redirect the user to this URL.</description>
+    </item>
+    <item>
+      <title>Device Flow Interaction Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/device_flow_interaction_service/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/device_flow_interaction_service/</guid>
+      <description>Duende.IdentityServer.Services.IDeviceFlowInteractionService The IDeviceFlowInteractionService interface is intended to provide services to be used by the user interface to communicate with Duende IdentityServer during device flow authorization. It is available from the dependency injection system and would normally be injected as a constructor parameter into your MVC controllers for the user interface of IdentityServer.&#xA;IDeviceFlowInteractionService APIs GetAuthorizationContextAsync&#xA;Returns the DeviceFlowAuthorizationRequest based on the userCode passed to the login or consent pages.&#xA;DeviceFlowInteractionResult</description>
+    </item>
+    <item>
+      <title>Dynamic Providers</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/dynamicproviders/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/dynamicproviders/</guid>
+      <description>Dynamic Identity Providers Normally authentication handlers for external providers are added into your IdentityServer using AddAuthentication() and AddOpenIdConnect(). This is fine for a handful of schemes, but the authentication handler architecture in ASP.NET Core was not designed for dozens or more statically registered in the DI system. At some point you will incur a performance penalty for having too many. Also, as you need to add or change this configuration you will need to re-compile and re-run your startup code for those changes to take effect.</description>
+    </item>
+    <item>
+      <title>BFF Diagnostics Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/diagnostics/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/diagnostics/</guid>
+      <description>The BFF diagnostics endpoint can be customized by implementing the IDiagnosticsService or by extending DefaultDiagnosticsService, its default implementation.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.&#xA;For example, you could take whatever actions you need before normal processing of the request like this:&#xA;public override Task ProcessRequestAsync(HttpContext context) { // Custom logic here return base.</description>
+    </item>
+    <item>
+      <title>Glossary</title>
+      <link>http://localhost:1313/identityserver/v7/overview/glossary/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/glossary/</guid>
+      <description>Client A client is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting an access token). A client must be first registered with your IdentityServer before it can request tokens and is identified by a unique client ID.&#xA;There are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server processes, etc.</description>
+    </item>
+    <item>
+      <title>Secrets</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/secrets/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/secrets/</guid>
+      <description>Duende.IdentityServer.Validation.ISecretParser Parses a secret from the raw HTTP request.&#xA;public interface ISecretParser { /// &amp;lt;summary&amp;gt; /// Tries to find a secret on the context that can be used for authentication /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;context&amp;#34;&amp;gt;The HTTP context.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;A parsed secret&amp;lt;/returns&amp;gt; Task&amp;lt;ParsedSecret&amp;gt; ParseAsync(HttpContext context); /// &amp;lt;summary&amp;gt; /// Returns the authentication method name that this parser implements /// &amp;lt;/summary&amp;gt; /// &amp;lt;value&amp;gt;The authentication method.&amp;lt;/value&amp;gt; string AuthenticationMethod { get; } } AuthenticationMethod&#xA;The name of the authentication method that this parser registers for.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v5.2 to v6.0</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v5.2_to_v6.0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v5.2_to_v6.0/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v5.2 to v6.0 (release notes). The most significant aspect of this upgrade is that Duende IdentityServer v6.0 targets .NET 6, and CIBA support was added.&#xA;With any major release, there is always the possibility of some breaking changes. This issue tracks the list of updates where a breaking change might affect your use of IdentityServer. It would be useful to review it to understand if any of these changes affect you.</description>
+    </item>
+    <item>
+      <title>External Logout</title>
+      <link>http://localhost:1313/identityserver/v7/ui/logout/external/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/logout/external/</guid>
+      <description>When a user is logging out, and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider. Not all external providers support sign-out, as it depends on the protocol and features they support.&#xA;Don&amp;rsquo;t forget that your logout page still needs to complete all the other steps to properly sign the user out. This is complicated if the logout page must redirect to an external provider to sign out.</description>
+    </item>
+    <item>
+      <title>Windows Authentication</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/windows/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/windows/</guid>
+      <description>There are several ways how you can enable Windows authentication in ASP.NET Core (and thus in your IdentityServer).&#xA;On Windows using IIS hosting (both in- and out-of process) On Windows using HTTP.SYS hosting On any platform using the Negotiate authentication handler (added in ASP.NET Core 3.0) See the Microsoft documentation for additional information.&#xA;On Windows using IIS hosting The typical ASP.NET Core CreateDefaultBuilder host setup enables support for IIS-based Windows authentication when hosting in IIS.</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication Interaction Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/ciba_interaction_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/ciba_interaction_service/</guid>
+      <description>Duende.IdentityServer.Services.IBackchannelAuthenticationInteractionService The IBackchannelAuthenticationInteractionService interface provides services for a user to access or complete a login requests for CIBA. It is available from the dependency injection system and would normally be injected as a constructor parameter into your MVC controllers for the user interface of IdentityServer.&#xA;IBackchannelAuthenticationInteractionService APIs GetPendingLoginRequestsForCurrentUserAsync&#xA;Returns a collection of BackchannelUserLoginRequest objects which represent pending login requests for the current user.&#xA;GetLoginRequestByInternalIdAsync&#xA;Returns the BackchannelUserLoginRequest object for the id.</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication Request Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/backchannel_auth_request_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/backchannel_auth_request_store/</guid>
+      <description>Duende.IdentityServer.Stores.IBackChannelAuthenticationRequestStore Used to store backchannel login requests (for CIBA).&#xA;/// &amp;lt;summary&amp;gt; /// Interface for the backchannel authentication request store /// &amp;lt;/summary&amp;gt; public interface IBackChannelAuthenticationRequestStore { /// &amp;lt;summary&amp;gt; /// Creates the request. /// &amp;lt;/summary&amp;gt; Task&amp;lt;string&amp;gt; CreateRequestAsync(BackChannelAuthenticationRequest request); /// &amp;lt;summary&amp;gt; /// Gets the requests. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;BackChannelAuthenticationRequest&amp;gt;&amp;gt; GetLoginsForUserAsync(string subjectId, string clientId = null); /// &amp;lt;summary&amp;gt; /// Gets the request. /// &amp;lt;/summary&amp;gt; Task&amp;lt;BackChannelAuthenticationRequest&amp;gt; GetByAuthenticationRequestIdAsync(string requestId); /// &amp;lt;summary&amp;gt; /// Gets the request. /// &amp;lt;/summary&amp;gt; Task&amp;lt;BackChannelAuthenticationRequest&amp;gt; GetByInternalIdAsync(string id); /// &amp;lt;summary&amp;gt; /// Removes the request.</description>
+    </item>
+    <item>
+      <title>Backchannel User Login Request</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/ciba_login_request/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/ciba_login_request/</guid>
+      <description>Duende.IdentityServer.Models.BackchannelUserLoginRequest Models the information to initiate a user login request for CIBA.&#xA;InternalId&#xA;Ihe identifier of the request in the store.&#xA;Subject&#xA;The subject for whom the login request is intended.&#xA;BindingMessage&#xA;The binding message used in the request.&#xA;AuthenticationContextReferenceClasses&#xA;The acr_values used in the request.&#xA;Tenant&#xA;The tenant value from the acr_values used the request.&#xA;IdP&#xA;The idp value from the acr_values used in the request.&#xA;RequestedResourceIndicators&#xA;The resource indicator values used in the request.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v5.1 to v5.2</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v5.1_to_v5.2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v5.1_to_v5.2/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v5.1 to v5.2 (release notes).&#xA;Step 1: Update NuGet package In your IdentityServer host project, update the version of the NuGet. For example in your project file:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;5.1.0&amp;#34; /&amp;gt; would change to:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;5.2.0&amp;#34; /&amp;gt; Step 2: Update Database Schema (if needed) If you are using a database for your configuration data, then there is a database schema update for the new Dynamic Providers feature (more details).</description>
+    </item>
+    <item>
+      <title>Extension Grant Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/extension_grant_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/extension_grant_validator/</guid>
+      <description>Duende.IdentityServer.Validation.IExtensionGrantValidator Use an implementation of this interface to handle extension grants.&#xA;public interface IExtensionGrantValidator { /// &amp;lt;summary&amp;gt; /// Handles the custom grant request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;request&amp;#34;&amp;gt;The validation context.&amp;lt;/param&amp;gt; Task ValidateAsync(ExtensionGrantValidationContext context); /// &amp;lt;summary&amp;gt; /// Returns the grant type this validator can deal with /// &amp;lt;/summary&amp;gt; /// &amp;lt;value&amp;gt; /// The type of the grant. /// &amp;lt;/value&amp;gt; string GrantType { get; } } GrantType&#xA;Specifies the name of the extension grant that the implementation wants to register for.</description>
+    </item>
+    <item>
+      <title>External Logout Notification</title>
+      <link>http://localhost:1313/identityserver/v7/ui/logout/external_notification/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/logout/external_notification/</guid>
+      <description>Federated sign-out is the situation where a user has used an external identity provider to log into IdentityServer, and then the user logs out of that external identity provider via a workflow unknown to IdentityServer. When the user signs out, it will be useful for IdentityServer to be notified so that it can sign the user out of IdentityServer and all of the applications that use IdentityServer.&#xA;Not all external identity providers support federated sign-out, but those that do will provide a mechanism to notify clients that the user has signed out.</description>
+    </item>
+    <item>
+      <title>Resources</title>
+      <link>http://localhost:1313/identityserver/v7/overview/resources/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/resources/</guid>
+      <description>Below are links to relevant topics:&#xA;OAuth and OIDC Fundamentals OAuth the good Parts (video from NDC Porto 2022) Securing SPAs and Blazor Applications using the BFF (video from NDC Porto 2022) Automated OAuth Access Token Management for .NET Workers and ASP.NET Web Applications ASP.NET Security Introduction to ASP.NET Core Authentication and Authorization ASP.NET Cookie Authentication Documentation Supporting External Authentication Providers Part 1 Supporting External Authentication Providers Part 2 End-User Authorization Authorization for Modern Applications (video from DevConf 2018) </description>
+    </item>
+    <item>
+      <title>Configuration Options</title>
+      <link>http://localhost:1313/identityserver/v7/bff/options/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/options/</guid>
+      <description>The Duende.BFF.BffOptions allows to configure several aspects of the BFF framework.&#xA;You set the options at startup time:&#xA;builder.Services.AddBff(options =&amp;gt; { // configure options here.. }) General EnforceBffMiddleware&#xA;Enables checks in the user management endpoints that ensure that the BFF middleware has been added to the pipeline. Since the middleware performs important security checks, this protects from accidental configuration errors. You can disable this check if it interferes with some custom logic you might have.</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication User Notification Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/ciba_user_notification/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/ciba_user_notification/</guid>
+      <description>Duende.IdentityServer.Services.IBackchannelAuthenticationUserNotificationService The IBackchannelAuthenticationUserNotificationService interface is used to contact users when a CIBA login request has been made. To use CIBA, you are expected to implement this interface and register it in the DI system.&#xA;IBackchannelAuthenticationUserNotificationService APIs SendLoginRequestAsync&#xA;Sends a notification for the user to login via the BackchannelUserLoginRequest parameter.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v5.0 to v5.1</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v5.0_to_v5.1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v5.0_to_v5.1/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v5.0 to v5.1 (release notes). Fortunately there&amp;rsquo;s not much to do :)&#xA;Step 1: Update NuGet package In your IdentityServer host project, update the version of the NuGet. For example in your project file:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;5.0.0&amp;#34; /&amp;gt; would change to:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;5.1.0&amp;#34; /&amp;gt; Step 2: Update Database Schema (if needed) If you are using the Duende.IdentityServer.EntityFramework package as the implementation for the database for your operational data, then there is a small database schema update.</description>
+    </item>
+    <item>
+      <title>Signing Key Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/signing_key_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/signing_key_store/</guid>
+      <description>Duende.IdentityServer.Stores.ISigningKeyStore Used to dynamically load client configuration.&#xA;/// &amp;lt;summary&amp;gt; /// Interface to model storage of serialized keys. /// &amp;lt;/summary&amp;gt; public interface ISigningKeyStore { /// &amp;lt;summary&amp;gt; /// Returns all the keys in storage. /// &amp;lt;/summary&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task&amp;lt;IEnumerable&amp;lt;SerializedKey&amp;gt;&amp;gt; LoadKeysAsync(); /// &amp;lt;summary&amp;gt; /// Persists new key in storage. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;key&amp;#34;&amp;gt;&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task StoreKeyAsync(SerializedKey key); /// &amp;lt;summary&amp;gt; /// Deletes key from storage. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;id&amp;#34;&amp;gt;&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task DeleteKeyAsync(string id); } SerializedKey /// &amp;lt;summary&amp;gt; /// Serialized key.</description>
+    </item>
+    <item>
+      <title>IdentityServer4 v4.1 to Duende IdentityServer v6</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/is4_v4_to_dis_v6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/is4_v4_to_dis_v6/</guid>
+      <description>This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende IdentityServer v6.&#xA;With any major release, there is always the possibility of some breaking changes. This issue tracks the list of updates where a breaking change might affect your use of IdentityServer. It would be useful to review it to understand if any of these changes affect you.&#xA;Step 1: Update to .NET 6 In your IdentityServer host project, update the version of the .</description>
+    </item>
+    <item>
+      <title>Federation Gateway</title>
+      <link>http://localhost:1313/identityserver/v7/ui/federation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/federation/</guid>
+      <description>Federation means that your IdentityServer offers authentication methods that use external authentication providers.&#xA;If you offer a number of these external authentication methods, often the term Federation Gateway is used to describe this architectural approach.&#xA;Generally, this architecture allows shielding your client applications from the complexities of your authentication workflows and business requirements that go along with them.&#xA;Your clients only need to trust the gateway, and the gateway coordinates all the communication and trust relationships with the external providers.</description>
+    </item>
+    <item>
+      <title>Reference Tokens</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/reference/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/reference/</guid>
+      <description>When using reference tokens, Duende IdentityServer stores the contents of the token in the persisted grant store and issues a unique identifier for this token back to the client.&#xA;The consumer of the token must use the introspection endpoint to validate the token.&#xA;You can set the token type of a client using the following client setting:&#xA;client.AccessTokenType = AccessTokenType.Reference; Enabling an API to consume reference tokens The introspection endpoint requires authentication - since the client of an introspection endpoint is typically an API, you configure the secret on the ApiResource:</description>
+    </item>
+    <item>
+      <title>IHttpResponseWriter</title>
+      <link>http://localhost:1313/identityserver/v7/reference/response_handling/http_response_writer/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/response_handling/http_response_writer/</guid>
+      <description>The IHttpResponseWriter interface is the contract for services that can produce HTTP responses for IEndpointResults. This is a low level abstraction that is intended to be used if you need to customize the serialization, encoding, or HTTP headers in a response from a protocol endpoint.&#xA;Duende.IdentityServer.Hosting.IHttpResponseWriter /// &amp;lt;summary&amp;gt; /// Contract for a service that writes appropriate http responses for &amp;lt;see /// cref=&amp;#34;IEndpointResult&amp;#34;/&amp;gt; objects. /// &amp;lt;/summary&amp;gt; public interface IHttpResponseWriter&amp;lt;in T&amp;gt; where T : IEndpointResult { /// &amp;lt;summary&amp;gt; /// Writes the endpoint result to the HTTP response.</description>
+    </item>
+    <item>
+      <title>Server-Side Session Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/server_side_sessions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/server_side_sessions/</guid>
+      <description>Duende.IdentityServer.Stores.IServerSideSessionStore Used to persist users&amp;rsquo; authentication session data when using the server-side sessions feature.&#xA;/// &amp;lt;summary&amp;gt; /// User session store /// &amp;lt;/summary&amp;gt; public interface IServerSideSessionStore { /// &amp;lt;summary&amp;gt; /// Retrieves a session /// &amp;lt;/summary&amp;gt; Task&amp;lt;ServerSideSession&amp;gt; GetSessionAsync(string key, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Creates a session /// &amp;lt;/summary&amp;gt; Task CreateSessionAsync(ServerSideSession session, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Updates a session /// &amp;lt;/summary&amp;gt; Task UpdateSessionAsync(ServerSideSession session, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Deletes a session /// &amp;lt;/summary&amp;gt; Task DeleteSessionAsync(string key, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Gets sessions for a specific subject id and/or session id /// &amp;lt;/summary&amp;gt; Task&amp;lt;IReadOnlyCollection&amp;lt;ServerSideSession&amp;gt;&amp;gt; GetSessionsAsync(SessionFilter filter, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Deletes sessions for a specific subject id and/or session id /// &amp;lt;/summary&amp;gt; Task DeleteSessionsAsync(SessionFilter filter, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Queries sessions based on filter /// &amp;lt;/summary&amp;gt; Task&amp;lt;QueryResult&amp;lt;ServerSideSession&amp;gt;&amp;gt; QuerySessionsAsync(SessionQuery filter = null, CancellationToken cancellationToken = default); } ServerSideSession /// &amp;lt;summary&amp;gt; /// A user session /// &amp;lt;/summary&amp;gt; public class ServerSideSession { /// &amp;lt;summary&amp;gt; /// The key /// &amp;lt;/summary&amp;gt; public string Key { get; set; } = default!</description>
+    </item>
+    <item>
+      <title>Pushed Authorization Request Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/pushed_authorization_request_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/pushed_authorization_request_store/</guid>
+      <description>The pushed authorization request store is responsible for creating, retrieving, and consuming pushed authorization requests.&#xA;Duende.IdentityServer.Stores.IPushedAuthorizationRequestStore /// &amp;lt;summary&amp;gt; /// The interface for a service that stores pushed authorization requests. /// &amp;lt;/summary&amp;gt; public interface IPushedAuthorizationRequestStore { /// &amp;lt;summary&amp;gt; /// Stores the pushed authorization request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;pushedAuthorizationRequest&amp;#34;&amp;gt;The request.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task StoreAsync(PushedAuthorizationRequest pushedAuthorizationRequest); /// &amp;lt;summary&amp;gt; /// Consumes the pushed authorization request, indicating that it should not /// be used again.</description>
+    </item>
+    <item>
+      <title>Client Initiated Backchannel Authentication (CIBA)</title>
+      <link>http://localhost:1313/identityserver/v7/ui/ciba/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/ciba/</guid>
+      <description>Duende IdentityServer supports the Client-Initiated Backchannel Authentication Flow (also known as CIBA). CIBA is one of the requirements to support the Financial-grade API compliance.&#xA;CIBA is included in IdentityServer Enterprise Edition.&#xA;Duende IdentityServer supports the poll mode to allow a client to obtain the results of a backchannel login request.&#xA;Overview Normally when using OpenID Connect, a user accesses a client application on the same device they use to login to the OpenID Connect provider.</description>
+    </item>
+    <item>
+      <title>IdentityServer4 v3.1 to Duende IdentityServer v6</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/is4_v3_to_dis_v6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/is4_v3_to_dis_v6/</guid>
+      <description>This upgrade guide covers upgrading from IdentityServer4 v3.1.x to Duende IdentityServer v6. This upgrade is a complex one because the configuration object model had some non-trivial changes from IdentityServer4 v3 to IdentityServer4 v4.&#xA;In short, in IdentityServer4 v3 there was a parent-child relationship between the ApiResources and the ApiScopes. Then in IdentityServer4 v4 the ApiScopes was promoted to be its own top-level configuration. This meant that the child collection under the ApiResources was renamed to ApiResourcesScopes and it contained a reference to the new top-level ApiScopes.</description>
+    </item>
+    <item>
+      <title>Microsoft SPA and Blazor Templates</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/spa_to_duende/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/spa_to_duende/</guid>
+      <description>Microsoft publishes templates for securing an API with token based security backed by the ASP.NET Identity identity management library. There are several templates; a couple for JavaScript-based SPA applications using React and Angular, and one for Blazor WASM style SPA applications. All of these use Duende IdentityServer as the token server to issue tokens to the client-side code in the browser for securing calls to an API.&#xA;This upgrade guide discusses the design pattern of these templates and how you would migrate them to a more recommended architecture.</description>
+    </item>
+    <item>
+      <title>Signed Authorize Requests</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/jar/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/jar/</guid>
+      <description>Instead of providing the parameters for an authorize request as individual query string key/value pairs, you can package them up in signed JWTs. This makes the parameters tamper proof and you can authenticate the client already on the front-channel.&#xA;See here for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.&#xA;You can either transmit them by value or by reference to the authorize endpoint - see the spec for more details.</description>
+    </item>
+    <item>
+      <title>Client Application Portal</title>
+      <link>http://localhost:1313/identityserver/v7/ui/portal/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/portal/</guid>
+      <description>(Added in 6.3)&#xA;You can create a client application portal within your IdentityServer host that contains links to client applications that are configured with an InitiateLoginUri. InitiateLoginUri is an optional URI that can be used to initiate login. Your IdentityServer host can check for clients with this property and render links to those applications.&#xA;Those links are just links to pages within your client applications that will start an OIDC challenge when the user follows them.</description>
+    </item>
+    <item>
+      <title>Pushed Authorization Requests</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/par/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/par/</guid>
+      <description>(Added in 7.0)&#xA;Pushed Authorization Requests (PAR) is a relatively new OAuth standard that improves the security of OAuth and OIDC flows by moving authorization parameters from the front channel to the back channel (that is, from redirect URLs in the browser to direct machine to machine http calls on the back end).&#xA;This prevents an attacker in the browser from&#xA;seeing authorization parameters (which could leak PII) and from tampering with those parameters (e.</description>
+    </item>
+    <item>
+      <title>Calling Endpoints from JavaScript</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/cors/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/cors/</guid>
+      <description>In JavaScript-based clients, some endpoints like the token endpoint (but also discovery) will be accessed via Ajax calls.&#xA;Given that your IdentityServer will most likely be hosted on a different origin than these clients, this implies that Cross-Origin Resource Sharing (CORS) will need to be configured.&#xA;Client-based CORS Configuration One approach to configuring CORS is to use the AllowedCorsOrigins collection on the client configuration. Simply add the origin of the client to the collection and the default configuration in IdentityServer will consult these values to allow cross-origin calls from the origins.</description>
+    </item>
+    <item>
+      <title>Miscellaneous</title>
+      <link>http://localhost:1313/identityserver/v7/samples/misc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/misc/</guid>
+      <description>Securing Azure Functions This sample shows how to parse and validate a JWT token issued by IdentityServer inside an Azure Function.&#xA;link to source code&#xA;Mutual TLS using Kestrel This sample shows how to use Kestrel using MTLS for client authentication and proof of possession API access. Using Kestrel will not likely be how MTLS is configured in a production environment, but it is convenient for local testing. This approach requires DNS entries for mtls.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reference on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/reference/</link>
+    <description>Recent content in Reference on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/reference/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IdentityServer Options</title>
+      <link>http://localhost:1313/identityserver/v7/reference/options/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/options/</guid>
+      <description>Duende.IdentityServer.Configuration.IdentityServerOptions The IdentityServerOptions is the central place to configure fundamental settings in Duende IdentityServer.&#xA;You set the options when registering IdentityServer at startup time, using a lambda expression in the AddIdentityServer method:&#xA;var idsvrBuilder = builder.Services.AddIdentityServer(options =&amp;gt; { // configure options here.. }) Main Top-level settings. Available directly on the IdentityServerOptions object.&#xA;IssuerUri&#xA;The name of the token server, used in the discovery document as the issuer claim and in JWT tokens and introspection responses as the iss claim.</description>
+    </item>
+    <item>
+      <title>DI Extension Methods</title>
+      <link>http://localhost:1313/identityserver/v7/reference/di/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/di/</guid>
+      <description>AddIdentityServer return a builder object that provides many extension methods to add IdentityServer specific services to DI. Here&amp;rsquo;s a list grouped by feature areas.&#xA;var idsvrBuilder = builder.Services.AddIdentityServer(); Many of the fundamental configuration settings can be set on the options. See the IdentityServerOptions reference for more details.&#xA;Configuration Stores Several convenience methods are provided for registering custom stores:&#xA;AddClientStore&amp;lt;T&amp;gt;&#xA;Registers a custom IClientStore implementation.&#xA;AddCorsPolicyService&amp;lt;T&amp;gt;&#xA;Registers a custom ICorsPolicyService implementation.</description>
+    </item>
+  </channel>
+</rss>

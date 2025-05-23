@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Operational Data on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/data/operational/</link>
+    <description>Recent content in Operational Data on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/data/operational/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Grants</title>
+      <link>http://localhost:1313/identityserver/v7/data/operational/grants/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/operational/grants/</guid>
+      <description>Many protocol flows produce state that represents a grant of one type or another. These include authorization and device codes, reference and refresh tokens, and remembered user consent.&#xA;Stores The persistence for grants is abstracted behind two interfaces:&#xA;The persisted grant store is a common store for most grants. The device flow store is a specialized store for device grants. Registering Custom Stores Custom implementations of IPersistedGrantStore, and/or IDeviceFlowStore must be registered in the DI system.</description>
+    </item>
+    <item>
+      <title>Keys</title>
+      <link>http://localhost:1313/identityserver/v7/data/operational/keys/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/operational/keys/</guid>
+      <description>The automatic key management feature in Duende IdentityServer requires a store to persist keys that are dynamically created.&#xA;Signing Key Store By default, the file system is used, but the storage of these keys is abstracted behind a extensible store interface. The ISigningKeyStore is that storage interface.&#xA;Registering a custom signing key store To register a custom signing key store in the DI container, there is a AddSigningKeyStore helper on the IIdentityServerBuilder.</description>
+    </item>
+    <item>
+      <title>Server-Side Sessions</title>
+      <link>http://localhost:1313/identityserver/v7/data/operational/sessions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/operational/sessions/</guid>
+      <description>(added in 6.1)&#xA;The server-side sessions feature in Duende IdentityServer requires a store to persist a user&amp;rsquo;s session data.&#xA;Server-Side Session Store The IServerSideSessionStore abstracts storing the server-side session data. ServerSideSession objects act as the storage entity, and provide several properties uses as metadata for the session. The Ticket property contains the actual serailized data used by the ASP.NET Cookie Authentication handler.&#xA;The methods on the IServerSideSessionStore are used to orchestrate the various management functions needed by the server-side sessions feature.</description>
+    </item>
+  </channel>
+</rss>

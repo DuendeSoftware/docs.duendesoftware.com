@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Client Authentication on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/tokens/authentication/</link>
+    <description>Recent content in Client Authentication on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/tokens/authentication/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Overview</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/authentication/overview/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/authentication/overview/</guid>
+      <description>Confidential and credentialed clients need to authenticate with your IdentityServer before they can request tokens.&#xA;Duende IdentityServer has built-in support for various client credential types and authentication methods, and an extensible infrastructure to customize the authentication system.&#xA;All information in this section also applies to API secrets for introspection.&#xA;We recommend using asymmetric client credentials like the private key jwt or Mutual TLS authentication method over shared secrets.&#xA;Assigning secrets A client secret is abstracted by the Secret class.</description>
+    </item>
+    <item>
+      <title>Shared Secrets</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/authentication/shared_secret/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/authentication/shared_secret/</guid>
+      <description>Shared secrets is by far the most common technique for authenticating clients.&#xA;From a security point of view they have some shortcomings&#xA;the shared secrets must be transmitted over the network during authentication they should not be persisted in clear text to reduce the risk of leaking them they should have high entropy to avoid brute-force attacks The following creates a shared secret:&#xA;// loadSecret is responsible for loading a SHA256 or SHA512 hash of a good, // high-entropy secret from a secure storage location var hash = loadSecretHash(); var secret = new Secret(hash); IdentityServer&amp;rsquo;s Secrets are designed to operate on either a SHA256 or SHA512 hash of the shared secret.</description>
+    </item>
+    <item>
+      <title>Private Key JWTs</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/authentication/jwt/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/authentication/jwt/</guid>
+      <description>The OpenID Connect specification recommends a client authentication method based on asymmetric keys. With this approach, instead of transmitting the shared secret over the network, the client creates a JWT and signs it with its private key. Your IdentityServer only needs to store the corresponding key to be able to validate the signature.&#xA;The technique is described here and is based on the OAuth JWT assertion specification (RFC 7523).&#xA;Setting up a private key JWT secret The default private key JWT secret validator expects either a base64 encoded X.</description>
+    </item>
+    <item>
+      <title>TLS Client Certificates</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/authentication/mtls/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/authentication/mtls/</guid>
+      <description>Clients can use an X.509 client certificate as an authentication mechanism to endpoints in your IdentityServer.&#xA;For this you need to associate a client certificate with a client in your IdentityServer and enable MTLS support on the options.&#xA;var idsvrBuilder = builder.Services.AddIdentityServer(options =&amp;gt; { options.MutualTls.Enabled = true; }) Use the DI extensions methods to add the services to DI which contain a default implementation to do that either thumbprint or common-name based:</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Overview on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/overview/</link>
+    <description>Recent content in Overview on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/overview/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The big Picture</title>
+      <link>http://localhost:1313/identityserver/v7/overview/big_picture/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/big_picture/</guid>
+      <description>Most modern applications look more or less like this:&#xA;The most common interactions are:&#xA;Browsers communicate with web applications Web applications communicate with web APIs (sometimes on their own, sometimes on behalf of a user) Browser-based applications communicate with web APIs Native applications communicate with web APIs Server-based applications communicate with web APIs Web APIs communicate with web APIs (sometimes on their own, sometimes on behalf of a user) Typically each and every layer (front-end, middle-tier and back-end) has to protect resources and implement authentication and/or authorization – often against the same user store.</description>
+    </item>
+    <item>
+      <title>Terminology</title>
+      <link>http://localhost:1313/identityserver/v7/overview/terminology/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/terminology/</guid>
+      <description>The specs, documentation and object model use a certain terminology that you should be aware of.&#xA;Duende IdentityServer Duende IdentityServer is an OpenID Connect &amp;amp; OAuth engine - it implements the OpenID Connect and OAuth 2.0 family of protocols.&#xA;Different literature uses different terms for the same role - you probably also find the terms security token service, identity provider, authorization server, IP-STS and more.&#xA;But they are in a nutshell all the same: a piece of software that issues security tokens to clients.</description>
+    </item>
+    <item>
+      <title>Supported Specifications</title>
+      <link>http://localhost:1313/identityserver/v7/overview/specs/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/specs/</guid>
+      <description>Duende IdentityServer implements the following specifications:&#xA;OpenID Connect OpenID Connect Core 1.0 (spec) OpenID Connect Discovery 1.0 (spec) OpenID Connect RP-Initiated Logout 1.0 (spec) OpenID Connect Session Management 1.0 (spec) OpenID Connect Front-Channel Logout 1.0 (spec) OpenID Connect Back-Channel Logout 1.0 (spec) Multiple Response Types (spec) Form Post Response Mode (spec) Enterprise Edition: OpenID Connect Client-Initiated Backchannel Authentication (CIBA) (spec). OAuth 2.x OAuth 2.0 (RFC 6749) OAuth 2.0 Bearer Token Usage (RFC 6750) JSON Web Token (RFC 7519) OAuth 2.</description>
+    </item>
+    <item>
+      <title>Packaging and Builds</title>
+      <link>http://localhost:1313/identityserver/v7/overview/packaging/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/packaging/</guid>
+      <description>Product The licensed and supported libraries can be accessed via Nuget:&#xA;Duende IdentityServer Duende IdentityServer EntityFramework Integration Duende IdentityServer ASP.NET Identity Integration UI Duende IdentityServer does not contain any UI, because this is always custom to the project. We still provide you a starting point for your modifications.&#xA;standard UI UI with ASP.NET Identity integration Templates Contains templates for the dotnet CLI.&#xA;Nuget package source code You can install the templates using the following command:</description>
+    </item>
+    <item>
+      <title>Support and Issues</title>
+      <link>http://localhost:1313/identityserver/v7/overview/support/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/support/</guid>
+      <description>Source Code You can find all source code for IdentityServer and its supporting repos in our organization.&#xA;Issue Tracker The IdentityServer issue tracker and pull requests allow you to follow the current work and submit questions or bug reports.&#xA;Milestones / release notes&#xA;Support See here for our support policy.&#xA;Standard support and feature requests are handled via our public support forum. Please start a discussion there if you need help.</description>
+    </item>
+    <item>
+      <title>Security best-practices</title>
+      <link>http://localhost:1313/identityserver/v7/overview/security/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/security/</guid>
+      <description>This document describes how the integrity of software produced by Duende Software is maintained during the software development life cycle.&#xA;Data processing Our products are off-the shelf downloadable developer components. They are not managed services or SaaS - nor do we store, have access to, or process any of our customers&amp;rsquo; data or their customers&amp;rsquo; data.&#xA;Systems access Multiple systems are used in the development life cycle, including GitHub, NuGet, and Microsoft Azure Key Vault.</description>
+    </item>
+    <item>
+      <title>Demo Server</title>
+      <link>http://localhost:1313/identityserver/v7/overview/demo_server/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/demo_server/</guid>
+      <description>You can try Duende IdentityServer with your favourite client library. We have a test instance at demo.duendesoftware.&#xA;On the main page you can find instructions on how to configure your client and how to call an API.</description>
+    </item>
+    <item>
+      <title>Glossary</title>
+      <link>http://localhost:1313/identityserver/v7/overview/glossary/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/glossary/</guid>
+      <description>Client A client is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting an access token). A client must be first registered with your IdentityServer before it can request tokens and is identified by a unique client ID.&#xA;There are many different client types, e.g. web applications, native mobile or desktop applications, SPAs, server processes, etc.</description>
+    </item>
+    <item>
+      <title>Resources</title>
+      <link>http://localhost:1313/identityserver/v7/overview/resources/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/overview/resources/</guid>
+      <description>Below are links to relevant topics:&#xA;OAuth and OIDC Fundamentals OAuth the good Parts (video from NDC Porto 2022) Securing SPAs and Blazor Applications using the BFF (video from NDC Porto 2022) Automated OAuth Access Token Management for .NET Workers and ASP.NET Web Applications ASP.NET Security Introduction to ASP.NET Core Authentication and Authorization ASP.NET Cookie Authentication Documentation Supporting External Authentication Providers Part 1 Supporting External Authentication Providers Part 2 End-User Authorization Authorization for Modern Applications (video from DevConf 2018) </description>
+    </item>
+  </channel>
+</rss>

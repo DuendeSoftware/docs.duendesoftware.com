@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Proof-of-Possession Access Tokens on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/tokens/pop/</link>
+    <description>Recent content in Proof-of-Possession Access Tokens on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 01 Jan 0001 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/tokens/pop/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mutual TLS</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/pop/mtls/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/pop/mtls/</guid>
+      <description>Proof-of-possession using Mutual TLS RFC 8705 specifies how to bind a TLS client certificate to an access token. With this method your IdentityServer will embed the SHA-256 thumbprint of the X.509 client certificate into the access token via the cnf claim, e.g.:&#xA;{ // rest omitted &amp;#34;cnf&amp;#34;: { &amp;#34;x5t#S256&amp;#34;: &amp;#34;bwcK0esc3ACC3DB2Y5_lESsXE8o9ltc05O89jdN-dg2&amp;#34; } } This is done automatically if you authenticate the client using a TLS client certificate.&#xA;The client must then use the same client certificate to call the APIs, and your APIs can validate the cnf claim by comparing it to the thumbprint of the client certificate on the TLS channel.</description>
+    </item>
+    <item>
+      <title>DPoP</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/pop/dpop/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/pop/dpop/</guid>
+      <description>Proof-of-possession using Demonstrating Proof-of-Possession at the Application Layer (DPoP) Added in 6.3.0.&#xA;DPoP is a security measure that addresses token replay attacks by making it difficult for attackers to use stolen tokens. Support for DPoP is included in IdentityServer Enterprise Edition. DPoP specifies how to bind an asymmetric key stored within a JSON Web Key (JWK) to an access token. With this enabled your IdentityServer will embed the thumbprint of the public key JWK into the access token via the cnf claim, e.</description>
+    </item>
+  </channel>
+</rss>

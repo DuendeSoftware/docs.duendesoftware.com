@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Resources on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/fundamentals/resources/</link>
+    <description>Recent content in Resources on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/fundamentals/resources/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Identity Resources</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/resources/identity/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/resources/identity/</guid>
+      <description>An identity resource is a named group of claims about a user that can be requested using the scope parameter.&#xA;The OpenID Connect specification suggests a couple of standard scope name to claim type mappings that might be useful to you for inspiration, but you can freely design them yourself.&#xA;One of them is actually mandatory, the openid scope, which tells the provider to return the sub (subject id) claim in the identity token.</description>
+    </item>
+    <item>
+      <title>API Scopes</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/resources/api_scopes/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/resources/api_scopes/</guid>
+      <description>Designing your API surface can be a complicated task. Duende IdentityServer provides a couple of primitives to help you with that.&#xA;The original OAuth 2.0 specification has the concept of scopes, which is just defined as the scope of access that the client requests. Technically speaking, the scope parameter is a list of space delimited values - you need to provide the structure and semantics of it.&#xA;In more complex systems, often the notion of a resource is introduced.</description>
+    </item>
+    <item>
+      <title>API Resources</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/resources/api_resources/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/resources/api_resources/</guid>
+      <description>When the API/resource surface gets larger, a flat list of scopes might become hard to manage.&#xA;In Duende IdentityServer, the ApiResource class allows for some additional organization as well as grouping and isolation of scopes as well as providing some common settings.&#xA;Let&amp;rsquo;s use the following scope definition as an example:&#xA;public static IEnumerable&amp;lt;ApiScope&amp;gt; GetApiScopes() { return new List&amp;lt;ApiScope&amp;gt; { // invoice API specific scopes new ApiScope(name: &amp;#34;invoice.read&amp;#34;, displayName: &amp;#34;Reads your invoices.</description>
+    </item>
+    <item>
+      <title>Resource Isolation</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/resources/isolation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/resources/isolation/</guid>
+      <description>This is an Enterprise Edition feature.&#xA;OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view. This means that all the requested scope and audience combination get merged into a single access token. This has a couple of downsides, e.g.&#xA;tokens can become very powerful (and big) if such a token leaks, it allows access to multiple resources resources within that single token might have conflicting settings, e.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Endpoints on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/reference/endpoints/</link>
+    <description>Recent content in Endpoints on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/reference/endpoints/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Discovery Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/discovery/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/discovery/</guid>
+      <description>The discovery endpoint can be used to retrieve metadata about your IdentityServer - it returns information like the issuer name, key material, supported scopes etc.&#xA;The discovery endpoint is available via /.well-known/openid-configuration relative to the base address, e.g.:&#xA;https://demo.duendesoftware.com/.well-known/openid-configuration&#xD;.NET client library You can use the IdentityModel client library to programmatically interact with the protocol endpoint from .NET code.&#xA;var client = new HttpClient(); var disco = await client.GetDiscoveryDocumentAsync(&amp;#34;https://demo.duendesoftware.com&amp;#34;); </description>
+    </item>
+    <item>
+      <title>Authorize Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/authorize/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/authorize/</guid>
+      <description>The authorize endpoint can be used to request tokens or authorization codes via the browser. This process typically involves authentication of the end-user and optionally consent.&#xA;IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize request parameters. For a full list, see here.&#xA;Required parameters client_id&#xA;identifier of the client&#xA;scope&#xA;one or more registered scopes&#xA;redirect_uri&#xA;must exactly match one of the allowed redirect URIs for that client</description>
+    </item>
+    <item>
+      <title>Token Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/token/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/token/</guid>
+      <description>The token endpoint can be used to programmatically request tokens.&#xA;Duende IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 token request parameters. For a full list, see here.&#xA;Required parameters client_id&#xA;client identifier; not necessary in body if it is present in the authorization header&#xA;grant_type&#xA;authorization_code&#xA;client_credentials&#xA;password&#xA;refresh_token&#xA;urn:ietf:params:oauth:grant-type:device_code&#xA;extension grant&#xA;Optional parameters client_secret&#xA;client secret for confidential/credentials clients - either in the post body, or as a basic authentication header.</description>
+    </item>
+    <item>
+      <title>UserInfo Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/userinfo/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/userinfo/</guid>
+      <description>The UserInfo endpoint can be used to retrieve claims about a user (see spec).&#xA;The caller needs to send a valid access token. Depending on the granted scopes, the UserInfo endpoint will return the mapped claims (at least the openid scope is required).&#xA;GET /connect/userinfo&#xD;Authorization: Bearer &amp;lt;access_token&amp;gt; HTTP/1.1 200 OK&#xD;Content-Type: application/json&#xD;{&#xD;&amp;#34;sub&amp;#34;: &amp;#34;248289761001&amp;#34;,&#xD;&amp;#34;name&amp;#34;: &amp;#34;Bob Smith&amp;#34;,&#xD;&amp;#34;given_name&amp;#34;: &amp;#34;Bob&amp;#34;,&#xD;&amp;#34;family_name&amp;#34;: &amp;#34;Smith&amp;#34;&#xD;} .NET client library You can use the IdentityModel client library to programmatically interact with the protocol endpoint from .</description>
+    </item>
+    <item>
+      <title>Introspection Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/introspection/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/introspection/</guid>
+      <description>The introspection endpoint is an implementation of RFC 7662.&#xA;It can be used to validate reference tokens, JWTs (if the consumer does not have support for appropriate JWT or cryptographic libraries) and refresh tokens. Refresh tokens can only be introspected by the client that requested them.&#xA;The introspection endpoint requires authentication - since the client of an introspection endpoint is an API, you configure the secret on the ApiResource.&#xA;POST /connect/introspect&#xD;Authorization: Basic xxxyyy&#xD;token=&amp;lt;token&amp;gt; A successful response will return a status code of 200, the token claims, the token type and a flag indicating the token is active:</description>
+    </item>
+    <item>
+      <title>Revocation Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/revocation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/revocation/</guid>
+      <description>This endpoint allows revoking access tokens (reference tokens only) and refresh token. It implements the token revocation specification (RFC 7009).&#xA;token&#xA;the token to revoke (required)&#xA;token_type_hint&#xA;either access_token or refresh_token (optional)&#xA;POST /connect/revocation HTTP/1.1&#xD;Host: server.example.com&#xD;Content-Type: application/x-www-form-urlencoded&#xD;Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW&#xD;token=...&amp;amp;token_type_hint=refresh_token .NET client library You can use the IdentityModel client library to programmatically interact with the protocol endpoint from .NET code.&#xA;using IdentityModel.Client; var client = new HttpClient(); var result = await client.</description>
+    </item>
+    <item>
+      <title>End Session Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/end_session/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/end_session/</guid>
+      <description>The end session endpoint can be used to trigger single sign-out in the browser (see spec).&#xA;To use the end session endpoint a client application will redirect the user&amp;rsquo;s browser to the end session URL. All applications that the user has logged into via the browser during the user&amp;rsquo;s session can participate in the sign-out.&#xA;The URL for the end session endpoint is available via discovery.&#xA;id_token_hint&#xA;When the user is redirected to the endpoint, they will be prompted if they really want to sign-out.</description>
+    </item>
+    <item>
+      <title>Device Authorization Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/device_authorization/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/device_authorization/</guid>
+      <description>The device authorization endpoint can be used to request device and user codes. This endpoint is used to start the device flow authorization process.&#xA;client_id&#xA;client identifier (required)&#xA;client_secret&#xA;client secret either in the post body, or as a basic authentication header. Optional.&#xA;scope&#xA;one or more registered scopes. If not specified, a token for all explicitly allowed scopes will be issued&#xA;POST /connect/deviceauthorization&#xD;client_id=client1&amp;amp;&#xD;client_secret=secret&amp;amp;&#xD;scope=openid api1 .NET client library You can use the IdentityModel client library to programmatically interact with the protocol endpoint from .</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/reference/endpoints/ciba/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/endpoints/ciba/</guid>
+      <description>The backchannel authentication endpoint is used by a client to initiate a CIBA request.&#xA;Clients must be configured with the &amp;ldquo;urn:openid:params:grant-type:ciba&amp;rdquo; grant type to use this endpoint. You can use the OidcConstants.GrantTypes.Ciba constant rather than hard coding the value for the CIBA grant type.&#xA;Required parameters scope&#xA;one or more registered scopes&#xA;The client id and a client credential is required to authenticate to the endpoint using any valid form of authentication that has been configured for it (much like the token endpoint).</description>
+    </item>
+  </channel>
+</rss>

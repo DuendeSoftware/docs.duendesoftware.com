@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Protecting APIs on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/apis/</link>
+    <description>Recent content in Protecting APIs on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/apis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Adding API Endpoints to your IdentityServer</title>
+      <link>http://localhost:1313/identityserver/v7/apis/add_apis/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/add_apis/</guid>
+      <description>It&amp;rsquo;s a common scenario to add additional API endpoints to the application hosting IdentityServer. These endpoints are typically protected by IdentityServer itself.&#xA;For simple scenarios, we give you some helpers. See the advanced section to understand more of the internal plumbing.&#xA;You could achieve the same by using either Microsoft&amp;rsquo;s JwtBearer handler. But this requires more configuration and creates dependencies on external libraries that might lead to conflicts in future updates.</description>
+    </item>
+  </channel>
+</rss>

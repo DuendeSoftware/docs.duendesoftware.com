@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Key Management on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/fundamentals/keys/</link>
+    <description>Recent content in Key Management on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 21 Nov 2022 11:24:12 -0500</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/fundamentals/keys/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Automatic Key Management</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/keys/automatic_key_management/</link>
+      <pubDate>Mon, 21 Nov 2022 11:24:12 -0500</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/keys/automatic_key_management/</guid>
+      <description>Duende IdentityServer can manage signing keys for you using the Automatic Key Management feature.&#xA;Automatic Key Management follows best practices for handling signing key material, including&#xA;automatic rotation of keys secure storage of keys at rest using data protection announcement of upcoming new keys maintenance of retired keys Automatic Key Management is included in IdentityServer Business Edition or higher.&#xA;Configuration Automatic Key Management is configured by the options in the KeyManagement property on the IdentityServerOptions.</description>
+    </item>
+    <item>
+      <title>Manual Key Management</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/keys/static_key_management/</link>
+      <pubDate>Mon, 21 Nov 2022 11:24:12 -0500</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/keys/static_key_management/</guid>
+      <description>Instead of using Automatic Key Management, IdentityServer&amp;rsquo;s signing keys can be set manually. Automatic Key Management is generally recommended, but if you want to explicitly control your keys statically, or you have a license that does not include the feature (e.g. the Starter Edition), you will need to manually manage your keys. With static configuration you are responsible for secure storage, loading and rotation of keys.&#xA;Disabling Key Management The automatic key management feature can be disabled by setting the Enabled flag to false on the the KeyManagement property of IdentityServerOptions:</description>
+    </item>
+    <item>
+      <title>Migrating from Static Keys to Automatic Key Management</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/keys/migration/</link>
+      <pubDate>Mon, 21 Nov 2022 11:24:12 -0500</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/keys/migration/</guid>
+      <description>To migrate from static to automatic key management, you can set keys manually and enable automatic key management at the same time. This allows the automatic key management feature to begin creating keys and announce them in discovery, while you continue to use the old statically configured key. Eventually you can transition from the statically configured key to the automatically managed keys.&#xA;A signing key registered with AddSigningCredential will take precedence over any keys created by the automatic key management feature.</description>
+    </item>
+  </channel>
+</rss>

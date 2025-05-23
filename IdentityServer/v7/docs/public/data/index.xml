@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data Stores and Persistence on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/data/</link>
+    <description>Recent content in Data Stores and Persistence on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/data/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Configuration Data</title>
+      <link>http://localhost:1313/identityserver/v7/data/configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/configuration/</guid>
+      <description>Configuration data models the information for Clients and Resources.&#xA;Stores Store interfaces are designed to abstract accessing the configuration data. The stores used in Duende IdentityServer are:&#xA;Client store for Client data. CORS policy service for CORS support. Given that this is so closely tied to the Client configuration data, the CORS policy service is considered one of the configuration stores. Resource store for IdentityResource, ApiResource, and ApiScope data. Identity Provider store for IdentityProvider data.</description>
+    </item>
+    <item>
+      <title>Entity Framework Integration</title>
+      <link>http://localhost:1313/identityserver/v7/data/ef/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/data/ef/</guid>
+      <description>An EntityFramework-based implementation is provided for the configuration and operational data extensibility points in IdentityServer. The use of EntityFramework allows any EF-supported database to be used with this library.&#xA;The features provided by this library are broken down into two main areas: configuration store and operational store support. These two different areas can be used independently or together, based upon the needs of the hosting application.&#xA;To use this library, ensure that you have the NuGet package for the EntityFramework integration.</description>
+    </item>
+  </channel>
+</rss>

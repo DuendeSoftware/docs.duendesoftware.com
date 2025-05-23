@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Login on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/ui/login/</link>
+    <description>Recent content in Login on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/ui/login/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Authentication Session</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/session/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/session/</guid>
+      <description>Authentication Session Regardless of how the user proves their identity on the login page, an authentication session must be established. This authentication session is based on ASP.NET Core’s authentication system, and is tracked with a cookie managed by the cookie authentication handler.&#xA;To establish the session, ASP.NET Core provides a SignInAsync extension method on the HttpContext. This API accepts a ClaimsPrincipal which contains claims that describe the user. IdentityServer requires a special claim called sub whose value uniquely identifies the user.</description>
+    </item>
+    <item>
+      <title>Redirecting back to the client</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/redirect/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/redirect/</guid>
+      <description>The Return URL and the Login Workflow Once the user has been logged in, they must complete the protocol workflow so they can ultimately be logged into the client. To facilitate this, the login page is passed a returnUrl query parameter which refers to the URL the prior request came from. This URL is, in essence, the same authorization endpoint to which the client made the original authorize request.&#xA;In the request to your login page where it logs the user in with a call to SignInAsync, it would then simply use the returnUrl to redirect the response back.</description>
+    </item>
+    <item>
+      <title>Login Context</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/context/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/context/</guid>
+      <description>The returnUrl query parameter passed to the login page refers to the URL the prior request came from. This URL typically refers to the IdentityServer authorization endpoint and contains the original request parameters sent from the client. These parameters might contain information your login page needs to customize its workflow. Some examples would be for branding, dynamic page customization (e.g. which external login providers to use), or controlling what credentials the client application expects (e.</description>
+    </item>
+    <item>
+      <title>Accepting Local Credentials</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/local/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/local/</guid>
+      <description>The steps for implementing a local login page are:&#xA;Validate the user&amp;rsquo;s credentials Issue the authentication cookie Redirect the user to the return URL The code below shows a sample Razor Page that could act as a login page. This sample hard codes the logic for the credentials. In production code, use your custom user database or identity management library here.&#xA;If you are using ASP.NET Identity for user management, our Identity Server ASP.</description>
+    </item>
+    <item>
+      <title>Multi Factor Authentication</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/mfa/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/mfa/</guid>
+      <description>Duende IdentityServer itself doesn&amp;rsquo;t implement multi-factor authentication (MFA). MFA is part of the login process in the user interface which is the responsibility of the hosting application. Microsoft provides some general guidelines on how to enable MFA in ASP.NET Core.&#xA;MFA hosted in IdentityServer An IdentityServer implementation can include MFA in its login page using anything that works with ASP.NET Core. One approach is to use ASP.NET Identity&amp;rsquo;s MFA support.</description>
+    </item>
+    <item>
+      <title>Integrating with External Providers</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/external/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/external/</guid>
+      <description>External Identity Providers One option for allowing your users to login is by using an external identity provider. These external providers can be a social login for your users (e.g. Google), a corporate login system (e.g. Azure AD for employees), or some other login system your users use.&#xA;The workflow using an external provider is much like the workflow from one of your client applications using your IdentityServer. Your login page must redirect the user to the identity provider for login, and the identity provider will redirect the user to a callback endpoint in your IdentityServer to process the results.</description>
+    </item>
+    <item>
+      <title>Dynamic Providers</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/dynamicproviders/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/dynamicproviders/</guid>
+      <description>Dynamic Identity Providers Normally authentication handlers for external providers are added into your IdentityServer using AddAuthentication() and AddOpenIdConnect(). This is fine for a handful of schemes, but the authentication handler architecture in ASP.NET Core was not designed for dozens or more statically registered in the DI system. At some point you will incur a performance penalty for having too many. Also, as you need to add or change this configuration you will need to re-compile and re-run your startup code for those changes to take effect.</description>
+    </item>
+    <item>
+      <title>Windows Authentication</title>
+      <link>http://localhost:1313/identityserver/v7/ui/login/windows/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/login/windows/</guid>
+      <description>There are several ways how you can enable Windows authentication in ASP.NET Core (and thus in your IdentityServer).&#xA;On Windows using IIS hosting (both in- and out-of process) On Windows using HTTP.SYS hosting On any platform using the Negotiate authentication handler (added in ASP.NET Core 3.0) See the Microsoft documentation for additional information.&#xA;On Windows using IIS hosting The typical ASP.NET Core CreateDefaultBuilder host setup enables support for IIS-based Windows authentication when hosting in IIS.</description>
+    </item>
+  </channel>
+</rss>

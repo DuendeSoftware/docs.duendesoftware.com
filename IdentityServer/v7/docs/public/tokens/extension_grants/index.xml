@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Extension Grants on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/tokens/extension_grants/</link>
+    <description>Recent content in Extension Grants on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/tokens/extension_grants/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Token Exchange</title>
+      <link>http://localhost:1313/identityserver/v7/tokens/extension_grants/token_exchange/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/tokens/extension_grants/token_exchange/</guid>
+      <description>The OAuth Token Exchange specification (RFC 8693) describes a general purpose mechanism for translating between token types. Common use cases are creating tokens for impersonation and delegation purposes - but it is not limited to that.&#xA;You can leverage the extension grant feature to implement your preferred token exchange logic.&#xA;Some of the logic is boilerplate:&#xA;read and validate incoming protocol parameters validate incoming token using the built-in token validator if the token was issued by the same token service using a token type specific library if the token is coming from a trusted (but different) token service read contents of token to apply custom logic/authorization if needed create response Here&amp;rsquo;s a simple implementation of the above steps:</description>
+    </item>
+  </channel>
+</rss>

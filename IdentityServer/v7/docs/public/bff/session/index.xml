@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Authentication &amp; Session Management on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/bff/session/</link>
+    <description>Recent content in Authentication &amp; Session Management on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/bff/session/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ASP.NET Core Authentication System</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/handlers/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/handlers/</guid>
+      <description>You typically use the following two ASP.NET Core authentication handlers to implement remote authentication:&#xA;the OpenID Connect authentication handler to interact with the remote OIDC / OAuth token service, e.g. Duende IdentityServer the cookie handler to do local session management Furthermore the BFF plumbing relies on the configuration of the ASP.NET Core default authentication schemes. This describes how the two handlers share the work.&#xA;OpenID Connect for challenge and signout - cookies for all the other operations:</description>
+    </item>
+    <item>
+      <title>Server-side Sessions</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/server_side_sessions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/server_side_sessions/</guid>
+      <description>By default, ASP.NET Core&amp;rsquo;s cookie handler will store all user session data in a protected cookie. This works very well unless cookie size or revocation becomes an issue.&#xA;Duende.BFF includes all the plumbing to store your sessions server-side. The cookie will then only be used to transmit the session ID between the browser and the BFF host. This has the following advantages&#xA;the cookie size will be very small and constant - regardless how much data (e.</description>
+    </item>
+  </channel>
+</rss>

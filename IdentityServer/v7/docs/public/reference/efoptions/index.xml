@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>EF Options on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/reference/efoptions/</link>
+    <description>Recent content in EF Options on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/reference/efoptions/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Operational Options</title>
+      <link>http://localhost:1313/identityserver/v7/reference/efoptions/operational/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/efoptions/operational/</guid>
+      <description>Duende.IdentityServer.EntityFramework.Options.OperationalStoreOptions These options are configurable when using the Entity Framework Core for the operational store:&#xA;You set the options at startup time in your AddOperationalStore method:&#xA;builder.Services.AddIdentityServer() .AddOperationalStore(options =&amp;gt; { // configure options here.. }) Pooling Settings that affect the DbContext pooling feature of Entity Framework Core.&#xA;EnablePooling&#xA;Gets or set if EF DbContext pooling is enabled. Defaults to false.&#xA;PoolSize&#xA;Gets or set the pool size to use when DbContext pooling is enabled.</description>
+    </item>
+    <item>
+      <title>Configuration Options</title>
+      <link>http://localhost:1313/identityserver/v7/reference/efoptions/configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/efoptions/configuration/</guid>
+      <description>Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions These options are configurable when using the Entity Framework Core for the configuration store:&#xA;You set the options at startup time in your AddConfigurationStore method:&#xA;var builder = services.AddIdentityServer() .AddConfigurationStore(options =&amp;gt; { // configure options here.. }) Pooling Settings that affect the DbContext pooling feature of Entity Framework Core.&#xA;EnablePooling&#xA;Gets or set if EF DbContext pooling is enabled. Defaults to false.&#xA;PoolSize&#xA;Gets or set the pool size to use when DbContext pooling is enabled.</description>
+    </item>
+  </channel>
+</rss>

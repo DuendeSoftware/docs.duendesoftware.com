@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Diagnostics on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/diagnostics/</link>
+    <description>Recent content in Diagnostics on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/diagnostics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Logging</title>
+      <link>http://localhost:1313/identityserver/v7/diagnostics/logging/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/diagnostics/logging/</guid>
+      <description>Duende IdentityServer uses the standard logging facilities provided by ASP.NET Core. You don&amp;rsquo;t need to do any extra configuration.&#xA;The Microsoft documentation has a good intro and a description of the built-in logging providers.&#xA;We are roughly following the Microsoft guidelines for usage of log levels:&#xA;Trace&#xA;For information that is valuable only to a developer troubleshooting an issue. These messages may contain sensitive application data like tokens and should not be enabled in a production environment.</description>
+    </item>
+    <item>
+      <title>Events</title>
+      <link>http://localhost:1313/identityserver/v7/diagnostics/events/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/diagnostics/events/</guid>
+      <description>While logging is more low level &amp;ldquo;printf&amp;rdquo; style - events represent higher level information about certain operations in IdentityServer. Events are structured data and include event IDs, success/failure information, categories and details. This makes it easy to query and analyze them and extract useful information that can be used for further processing.&#xA;Events work great with structured logging stores like ELK, Seq or Splunk.&#xA;Emitting events Events are not turned on by default - but can be globally configured when AddIdentityServer is called, e.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Upgrading on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/upgrades/</link>
+    <description>Recent content in Upgrading on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/upgrades/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Duende IdentityServer v6.3 to v7.0</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v6.3_to_v7.0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v6.3_to_v7.0/</guid>
+      <description>What&amp;rsquo;s New IdentityServer v7.0 includes support for .NET 8, pushed authorization requests, OpenTelemetry metrics, cleanup job improvements, and many other fixes and enhancements. Please see our release notes for complete details.&#xA;Step 1: Update .NET Version In your IdentityServer host project, update the version of the .NET framework. For example in your project file:&#xA;&amp;lt;TargetFramework&amp;gt;net6.0&amp;lt;/TargetFramework&amp;gt; would change to:&#xA;&amp;lt;TargetFramework&amp;gt;net8.0&amp;lt;/TargetFramework&amp;gt; Any NuGet packages that you are using that target an older version of .</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v6.2 to v6.3</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v6.2_to_v6.3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v6.2_to_v6.3/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v6.2 to v6.3 (release notes).&#xA;What&amp;rsquo;s New Duende IdentityServer 6.3 adds:&#xA;Support for OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer (DPoP) , a new OAuth specification for sender-constraining refresh tokens and access tokens.&#xA;A new Configuration API distributed through the separate Duende.IdentityServer.Configuration nuget package that supports the OAuth and OIDC Dynamic Client Registration specifications.&#xA;Support for 3rd party initiated login through the new client configuration property InitiateLoginUri.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v6.1 to v6.2</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v6.1_to_v6.2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v6.1_to_v6.2/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v6.1 to v6.2 (release notes).&#xA;What&amp;rsquo;s New Duende IdentityServer 6.2 adds:&#xA;Support for .NET 7.0 A new option that can help filter unhandled exceptions out of the logs Bug fixes and ongoing maintenance There are no changes to the data stores in this release.&#xA;Step 1: Update NuGet package In your IdentityServer host project, update the version of the NuGet. For example in your project file:</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v6.0 to v6.1</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v6.0_to_v6.1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v6.0_to_v6.1/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v6.0 to v6.1 (release notes).&#xA;Step 1: Update NuGet package In your IdentityServer host project, update the version of the NuGet. For example in your project file:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;6.0.0&amp;#34; /&amp;gt; would change to:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;6.1.0&amp;#34; /&amp;gt; Step 2: Update Database Schema (if needed) If you are using a database for your configuration or operational data, then there is a database schema update.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v5.2 to v6.0</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v5.2_to_v6.0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v5.2_to_v6.0/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v5.2 to v6.0 (release notes). The most significant aspect of this upgrade is that Duende IdentityServer v6.0 targets .NET 6, and CIBA support was added.&#xA;With any major release, there is always the possibility of some breaking changes. This issue tracks the list of updates where a breaking change might affect your use of IdentityServer. It would be useful to review it to understand if any of these changes affect you.</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v5.1 to v5.2</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v5.1_to_v5.2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v5.1_to_v5.2/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v5.1 to v5.2 (release notes).&#xA;Step 1: Update NuGet package In your IdentityServer host project, update the version of the NuGet. For example in your project file:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;5.1.0&amp;#34; /&amp;gt; would change to:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;5.2.0&amp;#34; /&amp;gt; Step 2: Update Database Schema (if needed) If you are using a database for your configuration data, then there is a database schema update for the new Dynamic Providers feature (more details).</description>
+    </item>
+    <item>
+      <title>Duende IdentityServer v5.0 to v5.1</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/v5.0_to_v5.1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/v5.0_to_v5.1/</guid>
+      <description>This upgrade guide covers upgrading from Duende IdentityServer v5.0 to v5.1 (release notes). Fortunately there&amp;rsquo;s not much to do :)&#xA;Step 1: Update NuGet package In your IdentityServer host project, update the version of the NuGet. For example in your project file:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;5.0.0&amp;#34; /&amp;gt; would change to:&#xA;&amp;lt;PackageReference Include=&amp;#34;Duende.IdentityServer&amp;#34; Version=&amp;#34;5.1.0&amp;#34; /&amp;gt; Step 2: Update Database Schema (if needed) If you are using the Duende.IdentityServer.EntityFramework package as the implementation for the database for your operational data, then there is a small database schema update.</description>
+    </item>
+    <item>
+      <title>IdentityServer4 v4.1 to Duende IdentityServer v6</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/is4_v4_to_dis_v6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/is4_v4_to_dis_v6/</guid>
+      <description>This upgrade guide covers upgrading from IdentityServer4 v4.1.x to Duende IdentityServer v6.&#xA;With any major release, there is always the possibility of some breaking changes. This issue tracks the list of updates where a breaking change might affect your use of IdentityServer. It would be useful to review it to understand if any of these changes affect you.&#xA;Step 1: Update to .NET 6 In your IdentityServer host project, update the version of the .</description>
+    </item>
+    <item>
+      <title>IdentityServer4 v3.1 to Duende IdentityServer v6</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/is4_v3_to_dis_v6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/is4_v3_to_dis_v6/</guid>
+      <description>This upgrade guide covers upgrading from IdentityServer4 v3.1.x to Duende IdentityServer v6. This upgrade is a complex one because the configuration object model had some non-trivial changes from IdentityServer4 v3 to IdentityServer4 v4.&#xA;In short, in IdentityServer4 v3 there was a parent-child relationship between the ApiResources and the ApiScopes. Then in IdentityServer4 v4 the ApiScopes was promoted to be its own top-level configuration. This meant that the child collection under the ApiResources was renamed to ApiResourcesScopes and it contained a reference to the new top-level ApiScopes.</description>
+    </item>
+    <item>
+      <title>Microsoft SPA and Blazor Templates</title>
+      <link>http://localhost:1313/identityserver/v7/upgrades/spa_to_duende/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/upgrades/spa_to_duende/</guid>
+      <description>Microsoft publishes templates for securing an API with token based security backed by the ASP.NET Identity identity management library. There are several templates; a couple for JavaScript-based SPA applications using React and Angular, and one for Blazor WASM style SPA applications. All of these use Duende IdentityServer as the token server to issue tokens to the client-side code in the browser for securing calls to an API.&#xA;This upgrade guide discusses the design pattern of these templates and how you would migrate them to a more recommended architecture.</description>
+    </item>
+  </channel>
+</rss>

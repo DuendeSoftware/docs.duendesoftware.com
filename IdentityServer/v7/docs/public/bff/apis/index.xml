@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>API Endpoints on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/bff/apis/</link>
+    <description>Recent content in API Endpoints on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/bff/apis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Local APIs</title>
+      <link>http://localhost:1313/identityserver/v7/bff/apis/local/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/apis/local/</guid>
+      <description>A Local API is an API that is located within the BFF host. Local APIs are implemented with the familiar ASP.NET abstractions of API controllers or minimal API endpoints.&#xA;There are two styles of local APIs:&#xA;Self-contained Local APIs Local APIs that Make Requests using Managed Access Tokens Self-Contained Local APIs These APIs reside within the BFF and don&amp;rsquo;t make HTTP requests to other APIs. They access data controlled by the BFF itself, which can simplify the architecture of the system by reducing the number of APIs that must be deployed and managed.</description>
+    </item>
+    <item>
+      <title>Remote APIs</title>
+      <link>http://localhost:1313/identityserver/v7/bff/apis/remote/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/apis/remote/</guid>
+      <description>A Remote API is an API that is deployed separately from the BFF host. Remote APIs use access tokens to authenticate and authorize requests, but the frontend does not possess an access token to make requests to remote APIs directly. Instead, all access to remote APIs is proxied through the BFF, which authenticates the frontend using its authentication cookie, obtains the appropriate access token, and forwards the request to the Remote API with the token attached.</description>
+    </item>
+    <item>
+      <title>YARP extensions</title>
+      <link>http://localhost:1313/identityserver/v7/bff/apis/yarp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/apis/yarp/</guid>
+      <description>Duende.BFF integrates with Microsoft&amp;rsquo;s full-featured reverse proxy YARP.&#xA;YARP includes many advanced features such as load balancing, service discovery, and session affinity. It also has its own extensibility mechanism. Duende.BFF includes YARP extensions for token management and anti-forgery protection so that you can combine the security and identity features of Duende.BFF with the flexible reverse proxy features of YARP.&#xA;Adding YARP To enable Duende.BFF&amp;rsquo;s YARP integration, add a reference to the Duende.</description>
+    </item>
+  </channel>
+</rss>

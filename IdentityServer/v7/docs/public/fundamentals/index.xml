@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fundamentals on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/fundamentals/</link>
+    <description>Recent content in Fundamentals on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/fundamentals/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hosting</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/hosting/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/hosting/</guid>
+      <description>You add the Duende IdentityServer engine to any ASP.NET Core application by adding the relevant services to the dependency injection (DI) system and adding the middleware to the processing pipeline.&#xA;While technically you could share the ASP.NET Core host between Duende IdentityServer, clients or APIs. We recommend putting your IdentityServer into a separate application.&#xA;DI system You add the necessary services to the DI system by calling AddIdentityServer at application startup:</description>
+    </item>
+    <item>
+      <title>Clients</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/clients/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/clients/</guid>
+      <description>Clients represent applications that can request tokens from your IdentityServer.&#xA;The details vary, but you typically define the following common settings for a client:&#xA;a unique client ID a secret if needed the allowed interactions with the token service (called a grant type) a network location where identity and/or access token gets sent to (called a redirect URI) a list of scopes (aka resources) the client is allowed to access Defining a client for server to server communication In this scenario no interactive user is present - a service (i.</description>
+    </item>
+    <item>
+      <title>Users and Logging In</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/users/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/users/</guid>
+      <description>Users and User Interface The design of Duende IdentityServer allows you to use any user database and build any user interface (UI) workflow needed to satisfy your requirements. This means you have the ability to customize any UI page (registration, login, password reset, etc.), support any credential type (password, MFA, etc.), use any user database (greenfield or legacy), and/or use federated logins from any provider (social or enterprise). You have the ability to control the entire user experience while Duende IdentityServer provides the implementation of the security protocol (OpenID Connect and OAuth).</description>
+    </item>
+    <item>
+      <title>Claims</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/claims/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/claims/</guid>
+      <description>IdentityServer emits claims about users and clients into tokens. You are in full control of which claims you want to emit, in which situations you want to emit those claims, and where to retrieve those claims from.&#xA;User claims User claims can be emitted in both identity and access tokens and in the userinfo endpoint. The central extensibility point to implement to emit claims is called the profile service. The profile service is responsible for both gathering claim data and deciding which claims should be emitted.</description>
+    </item>
+    <item>
+      <title>Licensing</title>
+      <link>http://localhost:1313/identityserver/v7/fundamentals/license_key/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/fundamentals/license_key/</guid>
+      <description>IdentityServer is free for development, testing and personal projects, but production use requires a license.&#xA;Editions There are three license editions which include different features.&#xA;Starter Edition The Starter edition includes the core OIDC and OAuth protocol implementation. This is an economical option that is a good fit for organizations with basic needs. It&amp;rsquo;s also a great choice if you have an aging IdentityServer4 implementation that needs to be updated and licensed.</description>
+    </item>
+  </channel>
+</rss>

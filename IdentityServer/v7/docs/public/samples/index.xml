@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Samples on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/samples/</link>
+    <description>Recent content in Samples on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/samples/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Basics</title>
+      <link>http://localhost:1313/identityserver/v7/samples/basics/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/basics/</guid>
+      <description>This solution contains a collection of common scenarios.&#xA;Client Credentials This sample shows how to use the client_credentials grant type. This is typically used for machine to machine communication.&#xA;Key takeaways:&#xA;how to request a token using client credentials how to use a shared secret how to use access token link to source code&#xA;JWT-based Client Authentication This sample shows how to use the client_credentials grant type with JWT-based client authentication.</description>
+    </item>
+    <item>
+      <title>User Interaction</title>
+      <link>http://localhost:1313/identityserver/v7/samples/ui/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/ui/</guid>
+      <description>These samples illustrate customization of the interactive pages used in your IdentityServer.&#xA;Custom Profile Service This sample shows how to create a custom profile service to control what claims are issued from your IdentityServer. The majority of the sample is captured in CustomProfileService.cs in the IdentityServer project.&#xA;Also, another part of the sample shows how to collect a custom claim during the login workflow when using an external login provider (this is done in the ExternalLogin/Callback.</description>
+    </item>
+    <item>
+      <title>ASP.NET Identity Integration</title>
+      <link>http://localhost:1313/identityserver/v7/samples/aspid/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/aspid/</guid>
+      <description>link to source code&#xA;This sample shows using ASP.NET Identity with Duende IdentityServer. The intent was to show the least amount of code needed to get a working sample that used Microsoft&amp;rsquo;s ASP.NET Identity user management library.&#xA;The first step in creating the sample was to create a new project that used the ASP.NET Identity templates from Visual Studio (&amp;ldquo;Individual Accounts&amp;rdquo; for the authentication type). This provides all of the &amp;ldquo;out of the box&amp;rdquo; features from ASP.</description>
+    </item>
+    <item>
+      <title>Requesting tokens</title>
+      <link>http://localhost:1313/identityserver/v7/samples/tokens/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/tokens/</guid>
+      <description>Extension grants and Token Exchange link to source code&#xA;This sample shows an implementation of the Token Exchange specification RFC 8693 via the Duende IdentityServer extension grant mechanism.&#xA;See here for more information on extension grants.&#xA;Personal Access Tokens (PAT) link to source code&#xA;This sample shows how to provide a self-service UI to create access tokens. This is a common approach to enable integrations with APIs without having to create full-blown OAuth clients.</description>
+    </item>
+    <item>
+      <title>Backend for Frontend Pattern</title>
+      <link>http://localhost:1313/identityserver/v7/samples/bff/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/bff/</guid>
+      <description>This section contains a collection of clients using our BFF security framework.&#xA;JavaScript Frontend This sample shows how to use the BFF framework with a JavaScript-based frontend (e.g. SPA).&#xA;link to source code&#xA;ReactJs Frontend This sample shows how to use the BFF framework with the .NET 6 React template.&#xA;link to source code&#xA;Angular Frontend This sample shows how to use the BFF framework with the .NET 6 Angular template.</description>
+    </item>
+    <item>
+      <title>Clients</title>
+      <link>http://localhost:1313/identityserver/v7/samples/clients/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/clients/</guid>
+      <description>This section contains a collection of various client technologies connecting to IdentityServer.&#xA;.NET 4.8 Clients This sample shows how to add OpenID Connect code flow with PKCE to a .NET 4.8 WebForms client and a .NET 4.8 MVC Client. Each client can login, logout, make API requests to a .NET 4.8 WebApi using OAuth, and refresh access tokens.&#xA;link to source code&#xA;.NET MAUI client This sample shows how to use the IdentityModel.</description>
+    </item>
+    <item>
+      <title>Diagnostics</title>
+      <link>http://localhost:1313/identityserver/v7/samples/diagnostics/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/diagnostics/</guid>
+      <description>OpenTelemetry with Aspire link to source code&#xA;IdentityServer emits OpenTelemetry metcis, traces and logs (see here for more information). This sample uses .NET Aspire to display OpenTelemetry data. The solution contains an IdentityServer host, an API and a web client. The access token lifetime is set to a very small value to force frequent refresh token flows.&#xA;Running the sample requires the dotnet aspire workload to be installed with dotnet workload install aspire.</description>
+    </item>
+    <item>
+      <title>Configuration API</title>
+      <link>http://localhost:1313/identityserver/v7/samples/configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/configuration/</guid>
+      <description>Dynamic Client Registration Sample This sample of the IdentityServer.Configuration API shows how to make simple Dynamic Client Registration (DCR) requests. link to source code&#xA;Permissions Sample This sample of the IdentityServer.Configuration API shows how you might make authorization decisions during Dynamic Client Registration (DCR). link to source code&#xA;CI/CD Pipeline Sample using a Personal Access Token This sample of the IdentityServer.Configuration API shows how you might use Personal Access Tokens to authorize access to the configuration API in a CI/CD pipeline.</description>
+    </item>
+    <item>
+      <title>Miscellaneous</title>
+      <link>http://localhost:1313/identityserver/v7/samples/misc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/samples/misc/</guid>
+      <description>Securing Azure Functions This sample shows how to parse and validate a JWT token issued by IdentityServer inside an Azure Function.&#xA;link to source code&#xA;Mutual TLS using Kestrel This sample shows how to use Kestrel using MTLS for client authentication and proof of possession API access. Using Kestrel will not likely be how MTLS is configured in a production environment, but it is convenient for local testing. This approach requires DNS entries for mtls.</description>
+    </item>
+  </channel>
+</rss>

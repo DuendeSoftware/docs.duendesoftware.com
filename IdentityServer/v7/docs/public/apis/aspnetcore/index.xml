@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Protecting APIs using ASP.NET Core on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/</link>
+    <description>Recent content in Protecting APIs using ASP.NET Core on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/apis/aspnetcore/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Using JWTs</title>
+      <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/jwt/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/aspnetcore/jwt/</guid>
+      <description>On ASP.NET Core, you typically use the JWT authentication handler for validating JWT bearer tokens.&#xA;Validating a JWT token First you need to add a reference to the authentication handler in your API project:&#xA;&amp;lt;PackageReference Include=&amp;#34;Microsoft.AspNetCore.Authentication.JwtBearer&amp;#34; /&amp;gt; If all you care about is making sure that an access token comes from your trusted IdentityServer, the following snippet shows the typical JWT validation configuration for ASP.NET Core:&#xA;builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) .AddJwtBearer(options =&amp;gt; { // base-address of your identityserver options.</description>
+    </item>
+    <item>
+      <title>Using Reference Tokens</title>
+      <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/reference/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/aspnetcore/reference/</guid>
+      <description>If you are using reference tokens, you need an authentication handler that implements the back-channel validation via the OAuth 2.0 token introspection protocol, e.g. this one:.&#xA;builder.Services.AddAuthentication(&amp;#34;token&amp;#34;) .AddOAuth2Introspection(&amp;#34;token&amp;#34;, options =&amp;gt; { options.Authority = Constants.Authority; // this maps to the API resource name and secret options.ClientId = &amp;#34;resource1&amp;#34;; options.ClientSecret = &amp;#34;secret&amp;#34;; }); Supporting both JWTs and reference tokens It is not uncommon to use the same API with both JWTs and reference tokens.</description>
+    </item>
+    <item>
+      <title>Authorization based on Scopes and other Claims</title>
+      <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/authorization/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/aspnetcore/authorization/</guid>
+      <description>The access token will include additional claims that can be used for authorization, e.g. the scope claim will reflect the scope the client requested (and was granted) during the token request.&#xA;In ASP.NET core, the contents of the JWT payload get transformed into claims and packaged up in a ClaimsPrincipal. So you can always write custom validation or authorization logic in C#:&#xA;public IActionResult Get() { var isAllowed = User.HasClaim(&amp;#34;scope&amp;#34;, &amp;#34;read&amp;#34;); // rest omitted } For better encapsulation and re-use, consider using the ASP.</description>
+    </item>
+    <item>
+      <title>Validating Proof-of-Possession</title>
+      <link>http://localhost:1313/identityserver/v7/apis/aspnetcore/confirmation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/apis/aspnetcore/confirmation/</guid>
+      <description>IdentityServer can bind tokens to clients using either mTLS or DPoP, creating a Proof-of-Possession (PoP) access token. When one of these mechanisms is used, APIs that use those access tokens for authorization need to validate the binding between the client and token. This document describes how to perform such validation, depending on which mechanism was used to produce a PoP token.&#xA;Validating mTLS Proof-of-Possession If you are using a mutual TLS connection to establish proof-of-possession, the resulting access token will contain a cnf claim containing the client&amp;rsquo;s certificate thumbprint.</description>
+    </item>
+  </channel>
+</rss>

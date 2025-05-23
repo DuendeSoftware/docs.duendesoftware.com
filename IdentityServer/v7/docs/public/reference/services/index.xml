@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Services on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/reference/services/</link>
+    <description>Recent content in Services on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/reference/services/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Profile Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/profile_service/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/profile_service/</guid>
+      <description>Duende.IdentityServer.Services.IProfileService Encapsulates retrieval of user claims from a data source of your choice. See here for a sample.&#xA;/// &amp;lt;summary&amp;gt; /// This interface allows IdentityServer to connect to your user and profile store. /// &amp;lt;/summary&amp;gt; public interface IProfileService { /// &amp;lt;summary&amp;gt; /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint) /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;context&amp;#34;&amp;gt;The context.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task GetProfileDataAsync(ProfileDataRequestContext context); /// &amp;lt;summary&amp;gt; /// This method gets called whenever identity server needs to determine if the user is valid or active (e.</description>
+    </item>
+    <item>
+      <title>Persisted Grant Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/persisted_grant_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/persisted_grant_service/</guid>
+      <description>Duende.IdentityServer.Services.IPersistedGrantService Provides access to a user&amp;rsquo;s grants.&#xA;/// &amp;lt;summary&amp;gt; /// Implements persisted grant logic /// &amp;lt;/summary&amp;gt; public interface IPersistedGrantService { /// &amp;lt;summary&amp;gt; /// Gets all grants for a given subject ID. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;subjectId&amp;#34;&amp;gt;The subject identifier.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task&amp;lt;IEnumerable&amp;lt;Grant&amp;gt;&amp;gt; GetAllGrantsAsync(string subjectId); /// &amp;lt;summary&amp;gt; /// Removes all grants for a given subject id, and optionally client id and session id combination. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;subjectId&amp;#34;&amp;gt;The subject identifier.&amp;lt;/param&amp;gt; /// &amp;lt;param name=&amp;#34;clientId&amp;#34;&amp;gt;The client identifier (optional).</description>
+    </item>
+    <item>
+      <title>Refresh Token Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/refresh_token_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/refresh_token_service/</guid>
+      <description>Duende.IdentityServer.Services.IRefreshTokenService All refresh token handling is implemented in the DefaultRefreshTokenService (which is the default implementation of the IRefreshTokenService interface):&#xA;public interface IRefreshTokenService { /// &amp;lt;summary&amp;gt; /// Validates a refresh token. /// &amp;lt;/summary&amp;gt; Task&amp;lt;TokenValidationResult&amp;gt; ValidateRefreshTokenAsync(string token, Client client); /// &amp;lt;summary&amp;gt; /// Creates the refresh token. /// &amp;lt;/summary&amp;gt; Task&amp;lt;string&amp;gt; CreateRefreshTokenAsync(ClaimsPrincipal subject, Token accessToken, Client client); /// &amp;lt;summary&amp;gt; /// Updates the refresh token. /// &amp;lt;/summary&amp;gt; Task&amp;lt;string&amp;gt; UpdateRefreshTokenAsync(string handle, RefreshToken refreshToken, Client client); } The behavior of the refresh token service is complex.</description>
+    </item>
+    <item>
+      <title>User Session Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/user_sesion_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/user_sesion_service/</guid>
+      <description>The IUserSession interface is the contract for a service that manages the user&amp;rsquo;s session and tracks the clients that are participating in the session.&#xA;User sessions are identified by the session identifier, which is a unique random number assigned when the user initially logs in. When client applications request tokens for a flow that involves a user, that client application&amp;rsquo;s id is recorded in the user&amp;rsquo;s session. Using that information, IdentityServer can determine which applications are participating in the current session.</description>
+    </item>
+    <item>
+      <title>Session Management Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/session_management_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/session_management_service/</guid>
+      <description>Duende.IdentityServer.Services.ISessionManagementService When using server-side sessions, the ISessionManagementService provides an administrative feature to query those sessions and terminate those sessions (including associated tokens, consents, and triggering back-channel logout to the clients).&#xA;/// &amp;lt;summary&amp;gt; /// Session management service /// &amp;lt;/summary&amp;gt; public interface ISessionManagementService { /// &amp;lt;summary&amp;gt; /// Queries all the session related data for a user. /// &amp;lt;/summary&amp;gt; Task&amp;lt;QueryResult&amp;lt;UserSession&amp;gt;&amp;gt; QuerySessionsAsync(SessionQuery filter = null, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Removes all the session related data for a user.</description>
+    </item>
+    <item>
+      <title>IdentityServer Interaction Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/interaction_service/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/interaction_service/</guid>
+      <description>Duende.IdentityServer.Services.IIdentityServerInteractionService The IIdentityServerInteractionService interface is intended to provide services to be used by the user interface to communicate with IdentityServer, mainly pertaining to user interaction. It is available from the dependency injection system and would normally be injected as a constructor parameter into your MVC controllers for the user interface of IdentityServer.&#xA;IIdentityServerInteractionService APIs GetAuthorizationContextAsync&#xA;Returns the AuthorizationRequest based on the returnUrl passed to the login or consent pages.&#xA;IsValidReturnUrl</description>
+    </item>
+    <item>
+      <title>Device Flow Interaction Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/device_flow_interaction_service/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/device_flow_interaction_service/</guid>
+      <description>Duende.IdentityServer.Services.IDeviceFlowInteractionService The IDeviceFlowInteractionService interface is intended to provide services to be used by the user interface to communicate with Duende IdentityServer during device flow authorization. It is available from the dependency injection system and would normally be injected as a constructor parameter into your MVC controllers for the user interface of IdentityServer.&#xA;IDeviceFlowInteractionService APIs GetAuthorizationContextAsync&#xA;Returns the DeviceFlowAuthorizationRequest based on the userCode passed to the login or consent pages.&#xA;DeviceFlowInteractionResult</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication Interaction Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/ciba_interaction_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/ciba_interaction_service/</guid>
+      <description>Duende.IdentityServer.Services.IBackchannelAuthenticationInteractionService The IBackchannelAuthenticationInteractionService interface provides services for a user to access or complete a login requests for CIBA. It is available from the dependency injection system and would normally be injected as a constructor parameter into your MVC controllers for the user interface of IdentityServer.&#xA;IBackchannelAuthenticationInteractionService APIs GetPendingLoginRequestsForCurrentUserAsync&#xA;Returns a collection of BackchannelUserLoginRequest objects which represent pending login requests for the current user.&#xA;GetLoginRequestByInternalIdAsync&#xA;Returns the BackchannelUserLoginRequest object for the id.</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication User Notification Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/services/ciba_user_notification/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/services/ciba_user_notification/</guid>
+      <description>Duende.IdentityServer.Services.IBackchannelAuthenticationUserNotificationService The IBackchannelAuthenticationUserNotificationService interface is used to contact users when a CIBA login request has been made. To use CIBA, you are expected to implement this interface and register it in the DI system.&#xA;IBackchannelAuthenticationUserNotificationService APIs SendLoginRequestAsync&#xA;Sends a notification for the user to login via the BackchannelUserLoginRequest parameter.</description>
+    </item>
+  </channel>
+</rss>

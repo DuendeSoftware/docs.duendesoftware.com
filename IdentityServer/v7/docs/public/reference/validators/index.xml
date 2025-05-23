@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Validators on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/reference/validators/</link>
+    <description>Recent content in Validators on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/reference/validators/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Custom Authorize Request Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/custom_authorize_request_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/custom_authorize_request_validator/</guid>
+      <description>Duende.IdentityServer.Validation.ICustomAuthorizeRequestValidator Allows running custom code as part of the authorization issuance pipeline at the authorization endpoint.&#xA;/// &amp;lt;summary&amp;gt; /// Allows inserting custom validation logic into authorize requests /// &amp;lt;/summary&amp;gt; public interface ICustomAuthorizeRequestValidator { /// &amp;lt;summary&amp;gt; /// Custom validation logic for the authorize request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;context&amp;#34;&amp;gt;The context.&amp;lt;/param&amp;gt; Task ValidateAsync(CustomAuthorizeRequestValidationContext context); } ValidateAsync&#xA;This method gets called during authorize request processing. The context gives you access to request and response parameters.</description>
+    </item>
+    <item>
+      <title>Custom Token Request Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/custom_token_request_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/custom_token_request_validator/</guid>
+      <description>Duende.IdentityServer.Validation.ICustomTokenRequestValidator Allows running custom code as part of the token issuance pipeline at the token endpoint.&#xA;/// &amp;lt;summary&amp;gt; /// Allows inserting custom validation logic into token requests /// &amp;lt;/summary&amp;gt; public interface ICustomTokenRequestValidator { /// &amp;lt;summary&amp;gt; /// Custom validation logic for a token request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;context&amp;#34;&amp;gt;The context.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt; /// The validation result /// &amp;lt;/returns&amp;gt; Task ValidateAsync(CustomTokenRequestValidationContext context); } ValidateAsync&#xA;This method gets called during token request processing. The context gives you access to request and response parameters.</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication User Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/ciba_user_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/ciba_user_validator/</guid>
+      <description>Duende.IdentityServer.Validation.IBackchannelAuthenticationUserValidator The IBackchannelAuthenticationUserValidator interface is used to validate request hints and identify the user for whom the CIBA request is intended. To use CIBA, you are expected to implement this interface and register it in the DI system.&#xA;IBackchannelAuthenticationUserValidator APIs ValidateRequestAsync&#xA;Validates the backchannel login request with the provided BackchannelAuthenticationUserValidatorContext for the current request. Returns a BackchannelAuthenticationUserValidationResult object.&#xA;BackchannelAuthenticationUserValidatorContext Models the information to validate and identity the user for a CIBA login request.</description>
+    </item>
+    <item>
+      <title>DPoP Proof Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/dpop_proof_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/dpop_proof_validator/</guid>
+      <description>Duende.IdentityServer.Validation.IDPoPProofValidator The IDPoPProofValidator interface is used to validate DPoP proof tokens submitted to IdentityServer. A default implementation is provided and can be overridden as necessary.&#xA;IDPoPProofValidator APIs ValidateAsync&#xA;Validates a DPoP proof token with the provided DPoPProofValidatonContext for the current request. Returns a DPoPProofValidatonResult object.&#xA;DPoPProofValidatonContext Models the information to validate a DPoP proof token request.&#xA;Client&#xA;The Client making the request.&#xA;ProofToken&#xA;The proof token sent with the request.</description>
+    </item>
+    <item>
+      <title>Extension Grant Validator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/validators/extension_grant_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/validators/extension_grant_validator/</guid>
+      <description>Duende.IdentityServer.Validation.IExtensionGrantValidator Use an implementation of this interface to handle extension grants.&#xA;public interface IExtensionGrantValidator { /// &amp;lt;summary&amp;gt; /// Handles the custom grant request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;request&amp;#34;&amp;gt;The validation context.&amp;lt;/param&amp;gt; Task ValidateAsync(ExtensionGrantValidationContext context); /// &amp;lt;summary&amp;gt; /// Returns the grant type this validator can deal with /// &amp;lt;/summary&amp;gt; /// &amp;lt;value&amp;gt; /// The type of the grant. /// &amp;lt;/value&amp;gt; string GrantType { get; } } GrantType&#xA;Specifies the name of the extension grant that the implementation wants to register for.</description>
+    </item>
+  </channel>
+</rss>

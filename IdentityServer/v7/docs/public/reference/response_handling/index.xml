@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Response Generators on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/reference/response_handling/</link>
+    <description>Recent content in Response Generators on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/reference/response_handling/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Authorize Interaction Response Generator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/response_handling/authorize_interaction_response_generator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/response_handling/authorize_interaction_response_generator/</guid>
+      <description>Duende.IdentityServer.ResponseHandling.IAuthorizeInteractionResponseGenerator The IAuthorizeInteractionResponseGenerator interface models the logic for determining if user must login or consent when making requests to the authorization endpoint.&#xA;If a custom implementation of IAuthorizeInteractionResponseGenerator is desired, then it&amp;rsquo;s recommended to derive from the built-in AuthorizeInteractionResponseGenerator to inherit all the default logic pertaining to login and consent semantics.&#xA;IAuthorizeInteractionResponseGenerator APIs ProcessInteractionAsync&#xA;Returns the InteractionResponse based on the ValidatedAuthorizeRequest an and optional ConsentResponse if the user was shown a consent page.</description>
+    </item>
+    <item>
+      <title>Token Response Generator</title>
+      <link>http://localhost:1313/identityserver/v7/reference/response_handling/token_response_generator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/response_handling/token_response_generator/</guid>
+      <description>Duende.IdentityServer.ResponseHandling.ITokenResponseGenerator The ITokenResponseGenerator interface is the contract for the service that generates responses to valid requests to the token endpoint. A response in this context refers to an object model that describes the content that will be serialized and transmitted in the HTTP response.&#xA;The default implementation is the TokenResponseGenerator class. You can customize the behavior of the token endpoint by providing your own implementation of the ITokenResponseGenerator to the DI system.</description>
+    </item>
+    <item>
+      <title>IHttpResponseWriter</title>
+      <link>http://localhost:1313/identityserver/v7/reference/response_handling/http_response_writer/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/response_handling/http_response_writer/</guid>
+      <description>The IHttpResponseWriter interface is the contract for services that can produce HTTP responses for IEndpointResults. This is a low level abstraction that is intended to be used if you need to customize the serialization, encoding, or HTTP headers in a response from a protocol endpoint.&#xA;Duende.IdentityServer.Hosting.IHttpResponseWriter /// &amp;lt;summary&amp;gt; /// Contract for a service that writes appropriate http responses for &amp;lt;see /// cref=&amp;#34;IEndpointResult&amp;#34;/&amp;gt; objects. /// &amp;lt;/summary&amp;gt; public interface IHttpResponseWriter&amp;lt;in T&amp;gt; where T : IEndpointResult { /// &amp;lt;summary&amp;gt; /// Writes the endpoint result to the HTTP response.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Architecture on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/bff/architecture/</link>
+    <description>Recent content in Architecture on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 01 Jan 0001 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/bff/architecture/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>UI Hosting</title>
+      <link>http://localhost:1313/identityserver/v7/bff/architecture/ui-hosting/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/architecture/ui-hosting/</guid>
+      <description>Hosting Options for the UI There are several options for hosting the UI assets when using a BFF.&#xA;Host the assets within the BFF host using the static file middleware Host the assets within the BFF host using the Microsoft SPA Templates Host the UI and BFF separately on subdomains of the same site and use CORS to allow cross origin requests Serves the index page of the UI from the BFF host, and all other assets are loaded from another domain, such as a CDN Static File Middleware Hosting the UI together with the BFF is the simplest choice, as requests from the front end to the backend will automatically include the authentication cookie and not require CORS headers.</description>
+    </item>
+    <item>
+      <title>Third Party Cookies</title>
+      <link>http://localhost:1313/identityserver/v7/bff/architecture/third-party-cookies/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/architecture/third-party-cookies/</guid>
+      <description>If the BFF and OpenID Connect Provider (OP) are hosted on different sites, then some browsers will block cookies from being sent during navigation between those sites. Almost all browsers have the option of blocking third party cookies. Safari and Firefox are the most widely used browsers that do so by default, while Chrome is planning to do so in the future. This change is being made to protect user privacy, but it also impacts OIDC flows traditionally used by SPAs.</description>
+    </item>
+  </channel>
+</rss>

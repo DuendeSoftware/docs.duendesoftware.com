@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Deployment on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/deployment/</link>
+    <description>Recent content in Deployment on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/deployment/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proxy Servers and Load Balancers</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/proxies/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/proxies/</guid>
+      <description>In typical deployments, your IdentityServer will be hosted behind a load balancer or reverse proxy. These and other network appliances often obscure information about the request before it reaches the host. Some of the behavior of IdentityServer and the ASP.NET authentication handlers depend on that information, most notably the scheme (HTTP vs HTTPS) of the request and the originating client IP address.&#xA;Requests to your IdentityServer that come through a proxy will appear to come from that proxy instead of its true source on the Internet or corporate network.</description>
+    </item>
+    <item>
+      <title>ASP.NET Core Data Protection</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/data_protection/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/data_protection/</guid>
+      <description>Duende IdentityServer makes extensive use of ASP.NET&amp;rsquo;s data protection feature. It is crucial that you configure data protection correctly before you start using your IdentityServer in production.&#xA;In local development, ASP.NET automatically creates data protection keys, but in a deployed environment, you will need to ensure that your data protection keys are stored in a persistent way and shared across all load balanced instances of your IdentityServer implementation. This means you&amp;rsquo;ll need to choose where to store and how to protect the data protection keys, as appropriate for your environment.</description>
+    </item>
+    <item>
+      <title>IdentityServer Data Stores</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/data_stores/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/data_stores/</guid>
+      <description>IdentityServer itself is stateless and does not require server affinity - but there is data that needs to be shared between in multi-instance deployments.&#xA;Configuration data This typically includes:&#xA;resources clients startup configuration, e.g. key material, external provider settings etc… The way you store that data depends on your environment. In situations where configuration data rarely changes we recommend using the in-memory stores and code or configuration files. In highly dynamic environments (e.</description>
+    </item>
+    <item>
+      <title>Distributed Caching</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/caching/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/caching/</guid>
+      <description>Some optional features rely on ASP.NET Core distributed caching:&#xA;State data formatter for OpenID Connect Replay cache (e.g. for JWT client credentials) Device flow throttling service Authorization parameter store In order to work in a multi server environment, this needs to be set up correctly. Please consult the Microsoft documentation for more details.</description>
+    </item>
+    <item>
+      <title>Health Checks</title>
+      <link>http://localhost:1313/identityserver/v7/deployment/health_checks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/deployment/health_checks/</guid>
+      <description>You can use ASP.NET&amp;rsquo;s health checks to monitor the health of your IdentityServer deployment. Health checks can contain arbitrary logic to test various conditions of a system. One common strategy for checking the health of IdentityServer is to make discovery requests. Successful discovery responses indicate not just that the IdentityServer host is running and able to receive requests and generate responses, but also that it was able to communicate with the configuration store.</description>
+    </item>
+  </channel>
+</rss>

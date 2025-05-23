@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Models on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/reference/models/</link>
+    <description>Recent content in Models on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/reference/models/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Identity Resource</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/identity_resource/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/identity_resource/</guid>
+      <description>Duende.IdentityServer.Models.IdentityResource This class models an identity resource.&#xA;public static readonly IEnumerable&amp;lt;IdentityResource&amp;gt; IdentityResources = new[] { // some standard scopes from the OIDC spec new IdentityResources.OpenId(), new IdentityResources.Profile(), new IdentityResources.Email(), // custom identity resource with some associated claims new IdentityResource(&amp;#34;custom.profile&amp;#34;, userClaims: new[] { JwtClaimTypes.Name, JwtClaimTypes.Email, &amp;#34;location&amp;#34;, JwtClaimTypes.Address }) }; Enabled&#xA;Indicates if this resource is enabled and can be requested. Defaults to true.&#xA;Name&#xA;The unique name of the identity resource. This is the value a client will use for the scope parameter in the authorize request.</description>
+    </item>
+    <item>
+      <title>API Scope</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/api_scope/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/api_scope/</guid>
+      <description>Duende.IdentityServer.Models.ApiScope This class models an OAuth scope.&#xA;Enabled&#xA;Indicates if this resource is enabled and can be requested. Defaults to true.&#xA;Name&#xA;The unique name of the API. This value is used for authentication with introspection and will be added to the audience of the outgoing access token.&#xA;DisplayName&#xA;This value can be used e.g. on the consent screen.&#xA;Description&#xA;This value can be used e.g. on the consent screen.</description>
+    </item>
+    <item>
+      <title>API Resource</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/api_resource/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/api_resource/</guid>
+      <description>Duende.IdentityServer.Models.ApiResource This class models an API.&#xA;Enabled&#xA;Indicates if this resource is enabled and can be requested. Defaults to true.&#xA;Name&#xA;The unique name of the API. This value is used for authentication with introspection and will be added to the audience of the outgoing access token.&#xA;DisplayName&#xA;This value can be used e.g. on the consent screen.&#xA;Description&#xA;This value can be used e.g. on the consent screen.&#xA;RequireResourceIndicator</description>
+    </item>
+    <item>
+      <title>Client</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/client/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/client/</guid>
+      <description>Duende.IdentityServer.Models.Client The Client class models an OpenID Connect or OAuth 2.0 client - e.g. a native application, a web application or a JS-based application.&#xA;public static IEnumerable&amp;lt;Client&amp;gt; Get() { return new List&amp;lt;Client&amp;gt; { /////////////////////////////////////////// // machine to machine client ////////////////////////////////////////// new Client { ClientId = &amp;#34;machine&amp;#34;, ClientSecrets = { Configuration[&amp;#34;machine.secret&amp;#34;] }, AllowedGrantTypes = GrantTypes.ClientCredentials, AllowedScopes = machineScopes }, /////////////////////////////////////////// // web client ////////////////////////////////////////// new Client { ClientId = &amp;#34;web&amp;#34;, ClientSecrets = { new Secret(Configuration[&amp;#34;web.</description>
+    </item>
+    <item>
+      <title>Identity Provider</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/idp/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/idp/</guid>
+      <description>Duende.IdentityServer.Models.OidcProvider The OidcProvider models an external OpenID Connect provider for use in the dynamic providers feature. Its properties map to the Open ID Connect options class from ASP.NET Core, and those properties include:&#xA;Enabled&#xA;Specifies if provider is enabled. Defaults to true.&#xA;Scheme&#xA;Scheme name for the provider.&#xA;DisplayName&#xA;Display name for the provider.&#xA;Type&#xA;Protocol type of the provider. Defaults to &amp;ldquo;oidc&amp;rdquo; for the OidcProvider.&#xA;Authority&#xA;The base address of the OIDC provider.</description>
+    </item>
+    <item>
+      <title>Grant Validation Result</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/grant_validation_result/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/grant_validation_result/</guid>
+      <description>Duende.IdentityServer.Validation.GrantValidationResult The GrantValidationResult class models the outcome of grant validation for extensions grants and resource owner password grants.&#xA;It models either a successful validation result with claims (e.g. subject ID) or an invalid result with an error code and message, e.g.:&#xA;public class ExtensionGrantValidator : IExtensionGrantValidator { public Task ValidateAsync(ExtensionGrantValidationContext context) { // some validation steps if (success) { context.Result = new GrantValidationResult( subject: &amp;#34;818727&amp;#34;, authenticationMethod: &amp;#34;custom&amp;#34;, claims: extraClaims); } else { // custom error message context.</description>
+    </item>
+    <item>
+      <title>Secrets</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/secrets/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/secrets/</guid>
+      <description>Duende.IdentityServer.Validation.ISecretParser Parses a secret from the raw HTTP request.&#xA;public interface ISecretParser { /// &amp;lt;summary&amp;gt; /// Tries to find a secret on the context that can be used for authentication /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;context&amp;#34;&amp;gt;The HTTP context.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;A parsed secret&amp;lt;/returns&amp;gt; Task&amp;lt;ParsedSecret&amp;gt; ParseAsync(HttpContext context); /// &amp;lt;summary&amp;gt; /// Returns the authentication method name that this parser implements /// &amp;lt;/summary&amp;gt; /// &amp;lt;value&amp;gt;The authentication method.&amp;lt;/value&amp;gt; string AuthenticationMethod { get; } } AuthenticationMethod&#xA;The name of the authentication method that this parser registers for.</description>
+    </item>
+    <item>
+      <title>Backchannel User Login Request</title>
+      <link>http://localhost:1313/identityserver/v7/reference/models/ciba_login_request/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/models/ciba_login_request/</guid>
+      <description>Duende.IdentityServer.Models.BackchannelUserLoginRequest Models the information to initiate a user login request for CIBA.&#xA;InternalId&#xA;Ihe identifier of the request in the store.&#xA;Subject&#xA;The subject for whom the login request is intended.&#xA;BindingMessage&#xA;The binding message used in the request.&#xA;AuthenticationContextReferenceClasses&#xA;The acr_values used in the request.&#xA;Tenant&#xA;The tenant value from the acr_values used the request.&#xA;IdP&#xA;The idp value from the acr_values used in the request.&#xA;RequestedResourceIndicators&#xA;The resource indicator values used in the request.</description>
+    </item>
+  </channel>
+</rss>

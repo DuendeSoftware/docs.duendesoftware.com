@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>User Interaction on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/ui/</link>
+    <description>Recent content in User Interaction on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Sep 2020 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/ui/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Error</title>
+      <link>http://localhost:1313/identityserver/v7/ui/error/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/error/</guid>
+      <description>The error page is used to display to the end user that an error has ocurred during a request to the authorize endpoint.&#xA;When an error occurs, IdentityServer will redirect the user to a configurable ErrorUrl.&#xA;builder.Services.AddIdentityServer(opt =&amp;gt; { opt.UserInteraction.ErrorUrl = &amp;#34;/path/to/error&amp;#34;; }) The default ErrorUrl is &amp;ldquo;/home/error&amp;rdquo;. The quickstart UI includes a basic implementation of an error page at that route.&#xA;Errors are commonly due to misconfiguration, and there&amp;rsquo;s not much an end user can do about that.</description>
+    </item>
+    <item>
+      <title>Consent</title>
+      <link>http://localhost:1313/identityserver/v7/ui/consent/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/consent/</guid>
+      <description>During an authorization request, if user consent is required the browser will be redirected to the consent page.&#xA;You can configure the consent requirement per client. By default no consent is required, but this setting can be changed via the RequireConsent setting.&#xA;Consent is used to allow an end user to grant a client access to resources.&#xA;Consent Page In order for the user to grant consent, a consent page must be provided by the hosting application.</description>
+    </item>
+    <item>
+      <title>Custom Pages</title>
+      <link>http://localhost:1313/identityserver/v7/ui/custom/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/custom/</guid>
+      <description>In addition to the pages your IdentityServer is expected to provide, you can add any other pages you wish. These could be pages needed during login (e.g. registration, password reset), self-service pages to allow the user to manage their profile (e.g. change password, change email), or even more specialized pages for various user workflows (e.g. password expired, or EULA).&#xA;These custom pages can be made available to the end user as links from the standard pages in your IdentityServer (i.</description>
+    </item>
+    <item>
+      <title>Federation Gateway</title>
+      <link>http://localhost:1313/identityserver/v7/ui/federation/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/federation/</guid>
+      <description>Federation means that your IdentityServer offers authentication methods that use external authentication providers.&#xA;If you offer a number of these external authentication methods, often the term Federation Gateway is used to describe this architectural approach.&#xA;Generally, this architecture allows shielding your client applications from the complexities of your authentication workflows and business requirements that go along with them.&#xA;Your clients only need to trust the gateway, and the gateway coordinates all the communication and trust relationships with the external providers.</description>
+    </item>
+    <item>
+      <title>Client Initiated Backchannel Authentication (CIBA)</title>
+      <link>http://localhost:1313/identityserver/v7/ui/ciba/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/ciba/</guid>
+      <description>Duende IdentityServer supports the Client-Initiated Backchannel Authentication Flow (also known as CIBA). CIBA is one of the requirements to support the Financial-grade API compliance.&#xA;CIBA is included in IdentityServer Enterprise Edition.&#xA;Duende IdentityServer supports the poll mode to allow a client to obtain the results of a backchannel login request.&#xA;Overview Normally when using OpenID Connect, a user accesses a client application on the same device they use to login to the OpenID Connect provider.</description>
+    </item>
+    <item>
+      <title>Client Application Portal</title>
+      <link>http://localhost:1313/identityserver/v7/ui/portal/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/ui/portal/</guid>
+      <description>(Added in 6.3)&#xA;You can create a client application portal within your IdentityServer host that contains links to client applications that are configured with an InitiateLoginUri. InitiateLoginUri is an optional URI that can be used to initiate login. Your IdentityServer host can check for clients with this property and render links to those applications.&#xA;Those links are just links to pages within your client applications that will start an OIDC challenge when the user follows them.</description>
+    </item>
+  </channel>
+</rss>

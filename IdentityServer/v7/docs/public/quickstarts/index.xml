@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Quickstarts on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/quickstarts/</link>
+    <description>Recent content in Quickstarts on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 23 Jul 2024 08:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/quickstarts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Overview</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/0_overview/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/0_overview/</guid>
+      <description>The quickstarts provide step by step instructions for various common Duende IdentityServer scenarios. They start with the absolute basics and become more complex - it is recommended you do them in order.&#xA;adding Duende IdentityServer to an ASP.NET Core application configuring Duende IdentityServer issuing tokens for various clients securing web applications and APIs adding support for EntityFramework based configuration adding support for ASP.NET Identity Every quickstart has a reference solution - you can find the code in the samples folder.</description>
+    </item>
+    <item>
+      <title>Protecting an API using Client Credentials</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/1_client_credentials/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/1_client_credentials/</guid>
+      <description>Welcome to the first quickstart for IdentityServer! To see the full list of quickstarts, please see Quickstarts Overview.&#xA;This first quickstart provides step by step instructions to set up IdentityServer in the most basic scenario: protecting APIs for server-to-server communication. You will create a solution containing three projects:&#xA;An Identity Server An API that requires authentication A client that accesses that API The client will request an access token from IdentityServer using its client ID and secret and then use the token to gain access to the API.</description>
+    </item>
+    <item>
+      <title>Interactive Applications with ASP.NET Core</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/2_interactive/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/2_interactive/</guid>
+      <description>Welcome to Quickstart 2 for Duende IdentityServer!&#xA;In this quickstart, you will add support for interactive user authentication via the OpenID Connect protocol to the IdentityServer you built in Quickstart 1. Once that is in place, you will create an ASP.NET Razor Pages application that will use IdentityServer for authentication.&#xA;We recommend you do the quickstarts in order. If you&amp;rsquo;d like to start here, begin from a copy of the reference implementation of Quickstart 1.</description>
+    </item>
+    <item>
+      <title>ASP.NET Core and API access</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/3_api_access/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/3_api_access/</guid>
+      <description>Welcome to Quickstart 3 for Duende IdentityServer!&#xA;The previous quickstarts introduced API access and user authentication. This quickstart will bring the two together.&#xA;In addition to the written steps below a YouTube video is available:&#xA;OpenID Connect and OAuth combine elegantly; you can achieve both user authentication and api access in a single exchange with the token service.&#xA;In Quickstart 2, the token request in the login process asked for only identity resources, that is, only scopes such as profile and openid.</description>
+    </item>
+    <item>
+      <title>Token Management</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/3a_token_management/</link>
+      <pubDate>Tue, 23 Jul 2024 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/3a_token_management/</guid>
+      <description>Welcome to this Quickstart for Duende IdentityServer!&#xA;The previous quickstart introduced API access with interactive applications, but by far the most complex task for a typical client is to manage the access token.&#xA;In addition to the written steps below a YouTube video is available:&#xA;Given that the access token has a finite lifetime, you typically want to&#xA;request a refresh token in addition to the access token at login time cache those tokens use the access token to call APIs until it expires use the refresh token to get a new access token repeat the process of caching and refreshing with the new token ASP.</description>
+    </item>
+    <item>
+      <title>Using EntityFramework Core for configuration and operational data</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/4_ef/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/4_ef/</guid>
+      <description>Welcome to Quickstart 4 for Duende IdentityServer! In this quickstart you will move configuration and other temporary data into a database using Entity Framework.&#xA;In addition to the written steps below a YouTube video is available:&#xA;We recommend you do the quickstarts in order. If you&amp;rsquo;d like to start here, begin from a copy of the reference implementation of Quickstart 3. Throughout this quickstart, paths are written relative to the base quickstart directory created in part 1, which is the root directory of the reference implementation.</description>
+    </item>
+    <item>
+      <title>Using ASP.NET Core Identity</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/5_aspnetid/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/5_aspnetid/</guid>
+      <description>Welcome to Quickstart 5 for Duende IdentityServer! In this quickstart you will integrate IdentityServer with ASP.NET Core Identity.&#xA;We recommend you do the quickstarts in order. If you&amp;rsquo;d like to start here, begin from a copy of the reference implementation of Quickstart 4. Throughout this quickstart, paths are written relative to the base quickstart directory created in part 1, which is the root directory of the reference implementation. You will also need to install the IdentityServer templates.</description>
+    </item>
+    <item>
+      <title>Building Blazor WASM client applications</title>
+      <link>http://localhost:1313/identityserver/v7/quickstarts/7_blazor/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/quickstarts/7_blazor/</guid>
+      <description>Similar to JavaScript SPAs, you can build Blazor WASM applications with and without a backend. Not having a backend has all the security disadvantages we discussed already in the JavaScript quickstart.&#xA;If you are building Blazor WASM apps that do not deal with sensitive data and you want to use the no-backend approach, have a look at the standard Microsoft templates, which are using this style.&#xA;In this quickstart we will focus on how to build a Blazor WASM application using our Duende.</description>
+    </item>
+  </channel>
+</rss>

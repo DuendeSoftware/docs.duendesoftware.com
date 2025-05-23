@@ -1,0 +1,9699 @@
+<!DOCTYPE html>
+<html lang="en" class="js csstransforms3d">
+  <head><script src="/identityserver/v7/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=identityserver/v7/livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.125.7">
+    <meta name="description" content="">
+
+
+    <link rel="icon" href="/identityserver/v7/images/favicon.png" type="image/png">
+
+    <title>Extension Grants :: Duende IdentityServer Documentation</title>
+
+    
+    <link href="/identityserver/v7/css/nucleus.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/css/fontawesome-all.min.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/css/hybrid.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/css/featherlight.min.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/css/perfect-scrollbar.min.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/jquery-ui-1.13.2.custom/jquery-ui.min.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/css/jquery-ui-autocomplete-customizations.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/css/syntax.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/css/theme.css?1731564391" rel="stylesheet">
+    <link href="/identityserver/v7/css/hugo-theme.css?1731564391" rel="stylesheet">
+    
+    
+
+    <meta property="og:title" content="Duende Software Documentation">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://docs.duendesoftware.com">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="The most flexible and standards-compliant OpenID Connect and OAuth 2.0 framework for ASP.NET Core.">
+    <meta property="og:image" content="https://docs.duendesoftware.com/images/meta-docs.png">
+    <meta property="og:image:alt" content="Duende Software Documentation" />
+
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:site" content="@DuendeIdentity" />
+    <meta property="twitter:title" content="Duende Software Documentation" />
+    <meta property="twitter:description" content="The most flexible and standards-compliant OpenID Connect and OAuth 2.0 framework for ASP.NET Core." />
+    <meta property="twitter:image" content="https://docs.duendesoftware.com/images/meta-docs.png" />
+    <meta property="twitter:image:alt" content="Duende Software Documentation" />
+
+    <script src="/identityserver/v7/js/jquery-3.3.1.min.js?1731564391"></script>
+
+    <style>
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    
+  </head>
+  <body class="" data-url="/identityserver/v7/tokens/extension_grants/">
+    <nav id="sidebar" class="">
+
+
+
+  <div id="header-wrapper">
+    <div id="header">
+      <a id="logo" href="http://localhost:1313/identityserver/v7/">
+  <img src="/identityserver/v7/images/logo.png" />
+</a>
+    </div>
+    
+        <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="search" placeholder="Search...">
+    <span data-search-clear=""><i class="fas fa-times"></i></span>
+</div>
+
+<script type="text/javascript" src="/identityserver/v7/js/lunr.min.js?1731564391"></script>
+<script type="text/javascript" src="/identityserver/v7/jquery-ui-1.13.2.custom/jquery-ui.min.js?1731564391"></script>
+<script type="text/javascript">
+    
+        var baseurl = "http:\/\/localhost:1313\/identityserver\/v7\/";
+    
+</script>
+<script type="text/javascript" src="/identityserver/v7/js/search.js?1731564391"></script>
+
+    
+  </div>
+
+    <div class="highlightable">
+    <ul class="topics">
+
+        
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/overview/" title="Overview" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/overview/">
+          Overview
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/big_picture/" title="The big Picture" class="dd-item ">
+        <a href="/identityserver/v7/overview/big_picture/">
+        The big Picture
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/terminology/" title="Terminology" class="dd-item ">
+        <a href="/identityserver/v7/overview/terminology/">
+        Terminology
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/specs/" title="Supported Specifications" class="dd-item ">
+        <a href="/identityserver/v7/overview/specs/">
+        Supported Specifications
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/packaging/" title="Packaging and Builds" class="dd-item ">
+        <a href="/identityserver/v7/overview/packaging/">
+        Packaging and Builds
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/support/" title="Support and Issues" class="dd-item ">
+        <a href="/identityserver/v7/overview/support/">
+        Support and Issues
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/security/" title="Security best-practices" class="dd-item ">
+        <a href="/identityserver/v7/overview/security/">
+        Security best-practices
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/demo_server/" title="Demo Server" class="dd-item ">
+        <a href="/identityserver/v7/overview/demo_server/">
+        Demo Server
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/glossary/" title="Glossary" class="dd-item ">
+        <a href="/identityserver/v7/overview/glossary/">
+        Glossary
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/overview/resources/" title="Resources" class="dd-item ">
+        <a href="/identityserver/v7/overview/resources/">
+        Resources
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/fundamentals/" title="Fundamentals" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/fundamentals/">
+          Fundamentals
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/hosting/" title="Hosting" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/hosting/">
+        Hosting
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/fundamentals/resources/" title="Resources" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/fundamentals/resources/">
+          Resources
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/resources/identity/" title="Identity Resources" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/resources/identity/">
+        Identity Resources
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/resources/api_scopes/" title="API Scopes" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/resources/api_scopes/">
+        API Scopes
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/resources/api_resources/" title="API Resources" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/resources/api_resources/">
+        API Resources
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/resources/isolation/" title="Resource Isolation" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/resources/isolation/">
+        Resource Isolation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/clients/" title="Clients" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/clients/">
+        Clients
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/users/" title="Users and Logging In" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/users/">
+        Users and Logging In
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/claims/" title="Claims" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/claims/">
+        Claims
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/fundamentals/keys/" title="Key Management" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/fundamentals/keys/">
+          Key Management
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/keys/automatic_key_management/" title="Automatic Key Management" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/keys/automatic_key_management/">
+        Automatic Key Management
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/keys/static_key_management/" title="Manual Key Management" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/keys/static_key_management/">
+        Manual Key Management
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/keys/migration/" title="Migrating from Static Keys to Automatic Key Management" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/keys/migration/">
+        Migrating from Static Keys to Automatic Key Management
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/fundamentals/license_key/" title="Licensing" class="dd-item ">
+        <a href="/identityserver/v7/fundamentals/license_key/">
+        Licensing
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/quickstarts/" title="Quickstarts" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/quickstarts/">
+          Quickstarts
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/0_overview/" title="Overview" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/0_overview/">
+        Overview
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/1_client_credentials/" title="Protecting an API using Client Credentials" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/1_client_credentials/">
+        Protecting an API using Client Credentials
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/2_interactive/" title="Interactive Applications with ASP.NET Core" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/2_interactive/">
+        Interactive Applications with ASP.NET Core
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/3_api_access/" title="ASP.NET Core and API access" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/3_api_access/">
+        ASP.NET Core and API access
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/3a_token_management/" title="Token Management" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/3a_token_management/">
+        Token Management
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/4_ef/" title="Using EntityFramework Core for configuration and operational data" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/4_ef/">
+        Using EntityFramework Core for configuration and operational data
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/5_aspnetid/" title="Using ASP.NET Core Identity" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/5_aspnetid/">
+        Using ASP.NET Core Identity
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/quickstarts/js_clients/" title="Building Browser-Based Client Applications" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/quickstarts/js_clients/">
+          Building Browser-Based Client Applications
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/js_clients/js_with_backend/" title="Browser-Based Applications with a BFF" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/js_clients/js_with_backend/">
+        Browser-Based Applications with a BFF
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/quickstarts/7_blazor/" title="Building Blazor WASM client applications" class="dd-item ">
+        <a href="/identityserver/v7/quickstarts/7_blazor/">
+        Building Blazor WASM client applications
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/ui/" title="User Interaction" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/ui/">
+          User Interaction
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/ui/login/" title="Login" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/ui/login/">
+          Login
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/login/session/" title="Authentication Session" class="dd-item ">
+        <a href="/identityserver/v7/ui/login/session/">
+        Authentication Session
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/login/redirect/" title="Redirecting back to the client" class="dd-item ">
+        <a href="/identityserver/v7/ui/login/redirect/">
+        Redirecting back to the client
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/login/context/" title="Login Context" class="dd-item ">
+        <a href="/identityserver/v7/ui/login/context/">
+        Login Context
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/login/local/" title="Accepting Local Credentials" class="dd-item ">
+        <a href="/identityserver/v7/ui/login/local/">
+        Accepting Local Credentials
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/login/mfa/" title="Multi Factor Authentication" class="dd-item ">
+        <a href="/identityserver/v7/ui/login/mfa/">
+        Multi Factor Authentication
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/login/external/" title="Integrating with External Providers" class="dd-item ">
+        <a href="/identityserver/v7/ui/login/external/">
+        Integrating with External Providers
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/login/dynamicproviders/" title="Dynamic Providers" class="dd-item ">
+        <a href="/identityserver/v7/ui/login/dynamicproviders/">
+        Dynamic Providers
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/login/windows/" title="Windows Authentication" class="dd-item ">
+        <a href="/identityserver/v7/ui/login/windows/">
+        Windows Authentication
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/ui/logout/" title="Logout" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/ui/logout/">
+          Logout
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/logout/logout_context/" title="Logout Context" class="dd-item ">
+        <a href="/identityserver/v7/ui/logout/logout_context/">
+        Logout Context
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/logout/session_cleanup/" title="Ending the Session" class="dd-item ">
+        <a href="/identityserver/v7/ui/logout/session_cleanup/">
+        Ending the Session
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/logout/notification/" title="Client Notifications" class="dd-item ">
+        <a href="/identityserver/v7/ui/logout/notification/">
+        Client Notifications
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/logout/client_redirect/" title="Returning to the Client" class="dd-item ">
+        <a href="/identityserver/v7/ui/logout/client_redirect/">
+        Returning to the Client
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/logout/external/" title="External Logout" class="dd-item ">
+        <a href="/identityserver/v7/ui/logout/external/">
+        External Logout
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/logout/external_notification/" title="External Logout Notification" class="dd-item ">
+        <a href="/identityserver/v7/ui/logout/external_notification/">
+        External Logout Notification
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/error/" title="Error" class="dd-item ">
+        <a href="/identityserver/v7/ui/error/">
+        Error
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/consent/" title="Consent" class="dd-item ">
+        <a href="/identityserver/v7/ui/consent/">
+        Consent
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/custom/" title="Custom Pages" class="dd-item ">
+        <a href="/identityserver/v7/ui/custom/">
+        Custom Pages
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/federation/" title="Federation Gateway" class="dd-item ">
+        <a href="/identityserver/v7/ui/federation/">
+        Federation Gateway
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/ciba/" title="Client Initiated Backchannel Authentication (CIBA)" class="dd-item ">
+        <a href="/identityserver/v7/ui/ciba/">
+        Client Initiated Backchannel Authentication (CIBA)
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/ui/server_side_sessions/" title="Server-Side Sessions" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/ui/server_side_sessions/">
+          Server-Side Sessions
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/server_side_sessions/session_management/" title="Session Management" class="dd-item ">
+        <a href="/identityserver/v7/ui/server_side_sessions/session_management/">
+        Session Management
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/server_side_sessions/session_expiration/" title="Session Expiration" class="dd-item ">
+        <a href="/identityserver/v7/ui/server_side_sessions/session_expiration/">
+        Session Expiration
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/server_side_sessions/inactivity_timeout/" title="Inactivity Timeout" class="dd-item ">
+        <a href="/identityserver/v7/ui/server_side_sessions/inactivity_timeout/">
+        Inactivity Timeout
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/ui/portal/" title="Client Application Portal" class="dd-item ">
+        <a href="/identityserver/v7/ui/portal/">
+        Client Application Portal
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/tokens/" title="Requesting Tokens" class="dd-item 
+        parent
+        
+        
+        ">
+      <a href="/identityserver/v7/tokens/">
+          Requesting Tokens
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/overview/" title="Overview" class="dd-item ">
+        <a href="/identityserver/v7/tokens/overview/">
+        Overview
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/requesting/" title="Requesting a Token" class="dd-item ">
+        <a href="/identityserver/v7/tokens/requesting/">
+        Requesting a Token
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/refresh/" title="Refreshing a Token" class="dd-item ">
+        <a href="/identityserver/v7/tokens/refresh/">
+        Refreshing a Token
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/password_grant/" title="Issuing Tokens based on User Passwords" class="dd-item ">
+        <a href="/identityserver/v7/tokens/password_grant/">
+        Issuing Tokens based on User Passwords
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/tokens/extension_grants/" title="Extension Grants" class="dd-item 
+        
+        active
+        
+        ">
+      <a href="/identityserver/v7/tokens/extension_grants/">
+          Extension Grants
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/extension_grants/token_exchange/" title="Token Exchange" class="dd-item ">
+        <a href="/identityserver/v7/tokens/extension_grants/token_exchange/">
+        Token Exchange
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/dynamic_validation/" title="Dynamic Request Validation and Customization" class="dd-item ">
+        <a href="/identityserver/v7/tokens/dynamic_validation/">
+        Dynamic Request Validation and Customization
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/internal/" title="Issuing Internal Tokens" class="dd-item ">
+        <a href="/identityserver/v7/tokens/internal/">
+        Issuing Internal Tokens
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/tokens/pop/" title="Proof-of-Possession Access Tokens" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/tokens/pop/">
+          Proof-of-Possession Access Tokens
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/pop/mtls/" title="Mutual TLS" class="dd-item ">
+        <a href="/identityserver/v7/tokens/pop/mtls/">
+        Mutual TLS
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/pop/dpop/" title="DPoP" class="dd-item ">
+        <a href="/identityserver/v7/tokens/pop/dpop/">
+        DPoP
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/reference/" title="Reference Tokens" class="dd-item ">
+        <a href="/identityserver/v7/tokens/reference/">
+        Reference Tokens
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/tokens/authentication/" title="Client Authentication" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/tokens/authentication/">
+          Client Authentication
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/authentication/overview/" title="Overview" class="dd-item ">
+        <a href="/identityserver/v7/tokens/authentication/overview/">
+        Overview
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/authentication/shared_secret/" title="Shared Secrets" class="dd-item ">
+        <a href="/identityserver/v7/tokens/authentication/shared_secret/">
+        Shared Secrets
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/authentication/jwt/" title="Private Key JWTs" class="dd-item ">
+        <a href="/identityserver/v7/tokens/authentication/jwt/">
+        Private Key JWTs
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/authentication/mtls/" title="TLS Client Certificates" class="dd-item ">
+        <a href="/identityserver/v7/tokens/authentication/mtls/">
+        TLS Client Certificates
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/jar/" title="Signed Authorize Requests" class="dd-item ">
+        <a href="/identityserver/v7/tokens/jar/">
+        Signed Authorize Requests
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/par/" title="Pushed Authorization Requests" class="dd-item ">
+        <a href="/identityserver/v7/tokens/par/">
+        Pushed Authorization Requests
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/tokens/cors/" title="Calling Endpoints from JavaScript" class="dd-item ">
+        <a href="/identityserver/v7/tokens/cors/">
+        Calling Endpoints from JavaScript
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/apis/" title="Protecting APIs" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/apis/">
+          Protecting APIs
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/apis/aspnetcore/" title="Protecting APIs using ASP.NET Core" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/apis/aspnetcore/">
+          Protecting APIs using ASP.NET Core
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/apis/aspnetcore/jwt/" title="Using JWTs" class="dd-item ">
+        <a href="/identityserver/v7/apis/aspnetcore/jwt/">
+        Using JWTs
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/apis/aspnetcore/reference/" title="Using Reference Tokens" class="dd-item ">
+        <a href="/identityserver/v7/apis/aspnetcore/reference/">
+        Using Reference Tokens
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/apis/aspnetcore/authorization/" title="Authorization based on Scopes and other Claims" class="dd-item ">
+        <a href="/identityserver/v7/apis/aspnetcore/authorization/">
+        Authorization based on Scopes and other Claims
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/apis/aspnetcore/confirmation/" title="Validating Proof-of-Possession" class="dd-item ">
+        <a href="/identityserver/v7/apis/aspnetcore/confirmation/">
+        Validating Proof-of-Possession
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/apis/add_apis/" title="Adding API Endpoints to your IdentityServer" class="dd-item ">
+        <a href="/identityserver/v7/apis/add_apis/">
+        Adding API Endpoints to your IdentityServer
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/data/" title="Data Stores and Persistence" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/data/">
+          Data Stores and Persistence
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/data/configuration/" title="Configuration Data" class="dd-item ">
+        <a href="/identityserver/v7/data/configuration/">
+        Configuration Data
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/data/operational/" title="Operational Data" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/data/operational/">
+          Operational Data
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/data/operational/grants/" title="Grants" class="dd-item ">
+        <a href="/identityserver/v7/data/operational/grants/">
+        Grants
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/data/operational/keys/" title="Keys" class="dd-item ">
+        <a href="/identityserver/v7/data/operational/keys/">
+        Keys
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/data/operational/sessions/" title="Server-Side Sessions" class="dd-item ">
+        <a href="/identityserver/v7/data/operational/sessions/">
+        Server-Side Sessions
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/data/ef/" title="Entity Framework Integration" class="dd-item ">
+        <a href="/identityserver/v7/data/ef/">
+        Entity Framework Integration
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/diagnostics/" title="Diagnostics" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/diagnostics/">
+          Diagnostics
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/diagnostics/logging/" title="Logging" class="dd-item ">
+        <a href="/identityserver/v7/diagnostics/logging/">
+        Logging
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/diagnostics/events/" title="Events" class="dd-item ">
+        <a href="/identityserver/v7/diagnostics/events/">
+        Events
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/diagnostics/otel/" title="OpenTelemetry" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/diagnostics/otel/">
+          OpenTelemetry
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/diagnostics/otel/metrics/" title="Metrics" class="dd-item ">
+        <a href="/identityserver/v7/diagnostics/otel/metrics/">
+        Metrics
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/diagnostics/otel/traces/" title="Traces" class="dd-item ">
+        <a href="/identityserver/v7/diagnostics/otel/traces/">
+        Traces
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/diagnostics/otel/setup/" title="Setup" class="dd-item ">
+        <a href="/identityserver/v7/diagnostics/otel/setup/">
+        Setup
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/aspnet_identity/" title="ASP.NET Identity Integration" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/aspnet_identity/">
+          ASP.NET Identity Integration
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/bff/" title="BFF Security Framework" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/bff/">
+          BFF Security Framework
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/overview/" title="Overview" class="dd-item ">
+        <a href="/identityserver/v7/bff/overview/">
+        Overview
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/bff/architecture/" title="Architecture" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/bff/architecture/">
+          Architecture
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/architecture/ui-hosting/" title="UI Hosting" class="dd-item ">
+        <a href="/identityserver/v7/bff/architecture/ui-hosting/">
+        UI Hosting
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/architecture/third-party-cookies/" title="Third Party Cookies" class="dd-item ">
+        <a href="/identityserver/v7/bff/architecture/third-party-cookies/">
+        Third Party Cookies
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/bff/session/" title="Authentication &amp; Session Management" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/bff/session/">
+          Authentication &amp; Session Management
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/session/handlers/" title="ASP.NET Core Authentication System" class="dd-item ">
+        <a href="/identityserver/v7/bff/session/handlers/">
+        ASP.NET Core Authentication System
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/bff/session/management/" title="BFF Session Management Endpoints" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/bff/session/management/">
+          Session Management Endpoints
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/session/management/login/" title="BFF Login Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/bff/session/management/login/">
+        Login
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/session/management/user/" title="BFF User Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/bff/session/management/user/">
+        User
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/session/management/logout/" title="BFF Logout Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/bff/session/management/logout/">
+        Logout
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/session/management/silent-login/" title="BFF Silent Login Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/bff/session/management/silent-login/">
+        Silent Login
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/session/management/diagnostics/" title="BFF Diagnostics Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/bff/session/management/diagnostics/">
+        Diagnostics
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/session/management/back-channel-logout/" title="BFF Back-Channel Logout Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/bff/session/management/back-channel-logout/">
+        Back-Channel Logout
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/session/server_side_sessions/" title="Server-side Sessions" class="dd-item ">
+        <a href="/identityserver/v7/bff/session/server_side_sessions/">
+        Server-side Sessions
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/bff/apis/" title="API Endpoints" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/bff/apis/">
+          API Endpoints
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/apis/local/" title="Local APIs" class="dd-item ">
+        <a href="/identityserver/v7/bff/apis/local/">
+        Local APIs
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/apis/remote/" title="Remote APIs" class="dd-item ">
+        <a href="/identityserver/v7/bff/apis/remote/">
+        Remote APIs
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/apis/yarp/" title="YARP extensions" class="dd-item ">
+        <a href="/identityserver/v7/bff/apis/yarp/">
+        YARP extensions
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/tokens/" title="Token Management" class="dd-item ">
+        <a href="/identityserver/v7/bff/tokens/">
+        Token Management
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/options/" title="Configuration Options" class="dd-item ">
+        <a href="/identityserver/v7/bff/options/">
+        Configuration Options
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/bff/extensibility/" title="Extensibility" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/bff/extensibility/">
+          Extensibility
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/bff/extensibility/management/" title="BFF Management Endpoints Extensibility" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/bff/extensibility/management/">
+          Management Endpoints
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/management/login/" title="BFF Login Endpoint Extensibility" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/management/login/">
+        Login
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/management/silent-login/" title="BFF Silent Login Endpoint Extensibility" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/management/silent-login/">
+        Silent Login
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/management/silent-login-callback/" title="BFF Silent Login Callback Extensibility" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/management/silent-login-callback/">
+        Silent Login Callback
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/management/logout/" title="BFF Logout Endpoint Extensibility" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/management/logout/">
+        Logout
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/management/user/" title="BFF User Endpoint Extensibility" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/management/user/">
+        User
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/management/back-channel-logout/" title="BFF Back-Channel Logout Endpoint Extensibility" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/management/back-channel-logout/">
+        Back-Channel Logout
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/management/diagnostics/" title="BFF Diagnostics Endpoint Extensibility" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/management/diagnostics/">
+        Diagnostics
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/sessions/" title="Session Management" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/sessions/">
+        Session Management
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/tokens/" title="Token Management" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/tokens/">
+        Token Management
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/bff/extensibility/http_forwarder/" title="HTTP Forwarder" class="dd-item ">
+        <a href="/identityserver/v7/bff/extensibility/http_forwarder/">
+        HTTP Forwarder
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/configuration/" title="Configuration API" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/configuration/">
+          Configuration API
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/configuration/dcr/" title="Dynamic Client Registration" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/configuration/dcr/">
+          Dynamic Client Registration
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/installation/" title="Installation and Hosting" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/installation/">
+        Installation and Hosting
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/authorization/" title="Authorization" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/authorization/">
+        Authorization
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/calling-registration/" title="Calling the Registration Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/calling-registration/">
+        Calling the Registration Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/customization/" title="Customization" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/customization/">
+        Customization
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/configuration/dcr/reference/" title="Reference" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/configuration/dcr/reference/">
+          Reference
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/reference/validation/" title="Validation" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/reference/validation/">
+        Validation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/reference/processing/" title="Request Processing" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/reference/processing/">
+        Request Processing
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/reference/store/" title="Store" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/reference/store/">
+        Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/reference/response/" title="Response Generation" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/reference/response/">
+        Response Generation
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/reference/models/" title="Models" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/reference/models/">
+        Models
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/configuration/dcr/reference/options/" title="Options" class="dd-item ">
+        <a href="/identityserver/v7/configuration/dcr/reference/options/">
+        Options
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/deployment/" title="Deployment" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/deployment/">
+          Deployment
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/deployment/proxies/" title="Proxy Servers and Load Balancers" class="dd-item ">
+        <a href="/identityserver/v7/deployment/proxies/">
+        Proxy Servers and Load Balancers
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/deployment/data_protection/" title="ASP.NET Core Data Protection" class="dd-item ">
+        <a href="/identityserver/v7/deployment/data_protection/">
+        ASP.NET Core Data Protection
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/deployment/data_stores/" title="IdentityServer Data Stores" class="dd-item ">
+        <a href="/identityserver/v7/deployment/data_stores/">
+        IdentityServer Data Stores
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/deployment/caching/" title="Distributed Caching" class="dd-item ">
+        <a href="/identityserver/v7/deployment/caching/">
+        Distributed Caching
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/deployment/health_checks/" title="Health Checks" class="dd-item ">
+        <a href="/identityserver/v7/deployment/health_checks/">
+        Health Checks
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/upgrades/" title="Upgrading" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/upgrades/">
+          Upgrading
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/v6.3_to_v7.0/" title="Duende IdentityServer v6.3 to v7.0" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/v6.3_to_v7.0/">
+        Duende IdentityServer v6.3 to v7.0
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/v6.2_to_v6.3/" title="Duende IdentityServer v6.2 to v6.3" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/v6.2_to_v6.3/">
+        Duende IdentityServer v6.2 to v6.3
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/v6.1_to_v6.2/" title="Duende IdentityServer v6.1 to v6.2" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/v6.1_to_v6.2/">
+        Duende IdentityServer v6.1 to v6.2
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/v6.0_to_v6.1/" title="Duende IdentityServer v6.0 to v6.1" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/v6.0_to_v6.1/">
+        Duende IdentityServer v6.0 to v6.1
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/v5.2_to_v6.0/" title="Duende IdentityServer v5.2 to v6.0" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/v5.2_to_v6.0/">
+        Duende IdentityServer v5.2 to v6.0
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/v5.1_to_v5.2/" title="Duende IdentityServer v5.1 to v5.2" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/v5.1_to_v5.2/">
+        Duende IdentityServer v5.1 to v5.2
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/v5.0_to_v5.1/" title="Duende IdentityServer v5.0 to v5.1" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/v5.0_to_v5.1/">
+        Duende IdentityServer v5.0 to v5.1
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/is4_v4_to_dis_v6/" title="IdentityServer4 v4.1 to Duende IdentityServer v6" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/is4_v4_to_dis_v6/">
+        IdentityServer4 v4.1 to Duende IdentityServer v6
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/is4_v3_to_dis_v6/" title="IdentityServer4 v3.1 to Duende IdentityServer v6" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/is4_v3_to_dis_v6/">
+        IdentityServer4 v3.1 to Duende IdentityServer v6
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/upgrades/spa_to_duende/" title="Microsoft SPA and Blazor Templates" class="dd-item ">
+        <a href="/identityserver/v7/upgrades/spa_to_duende/">
+        Microsoft SPA and Blazor Templates
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/samples/" title="Samples" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/samples/">
+          Samples
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/basics/" title="Basics" class="dd-item ">
+        <a href="/identityserver/v7/samples/basics/">
+        Basics
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/ui/" title="User Interaction" class="dd-item ">
+        <a href="/identityserver/v7/samples/ui/">
+        User Interaction
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/aspid/" title="ASP.NET Identity Integration" class="dd-item ">
+        <a href="/identityserver/v7/samples/aspid/">
+        ASP.NET Identity Integration
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/tokens/" title="Requesting tokens" class="dd-item ">
+        <a href="/identityserver/v7/samples/tokens/">
+        Requesting tokens
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/bff/" title="Backend for Frontend Pattern" class="dd-item ">
+        <a href="/identityserver/v7/samples/bff/">
+        Backend for Frontend Pattern
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/clients/" title="Clients" class="dd-item ">
+        <a href="/identityserver/v7/samples/clients/">
+        Clients
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/diagnostics/" title="Diagnostics" class="dd-item ">
+        <a href="/identityserver/v7/samples/diagnostics/">
+        Diagnostics
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/configuration/" title="Configuration API" class="dd-item ">
+        <a href="/identityserver/v7/samples/configuration/">
+        Configuration API
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/samples/misc/" title="Miscellaneous" class="dd-item ">
+        <a href="/identityserver/v7/samples/misc/">
+        Miscellaneous
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/reference/" title="Reference" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/reference/">
+          Reference
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/options/" title="IdentityServer Options" class="dd-item ">
+        <a href="/identityserver/v7/reference/options/">
+        IdentityServer Options
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/reference/efoptions/" title="EF Options" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/reference/efoptions/">
+          EF Options
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/efoptions/operational/" title="Operational Options" class="dd-item ">
+        <a href="/identityserver/v7/reference/efoptions/operational/">
+        Operational Options
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/efoptions/configuration/" title="Configuration Options" class="dd-item ">
+        <a href="/identityserver/v7/reference/efoptions/configuration/">
+        Configuration Options
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/di/" title="DI Extension Methods" class="dd-item ">
+        <a href="/identityserver/v7/reference/di/">
+        DI Extension Methods
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/reference/endpoints/" title="Endpoints" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/reference/endpoints/">
+          Endpoints
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/discovery/" title="Discovery Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/discovery/">
+        Discovery Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/authorize/" title="Authorize Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/authorize/">
+        Authorize Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/token/" title="Token Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/token/">
+        Token Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/userinfo/" title="UserInfo Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/userinfo/">
+        UserInfo Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/introspection/" title="Introspection Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/introspection/">
+        Introspection Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/revocation/" title="Revocation Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/revocation/">
+        Revocation Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/end_session/" title="End Session Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/end_session/">
+        End Session Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/device_authorization/" title="Device Authorization Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/device_authorization/">
+        Device Authorization Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/endpoints/ciba/" title="Backchannel Authentication Endpoint" class="dd-item ">
+        <a href="/identityserver/v7/reference/endpoints/ciba/">
+        Backchannel Authentication Endpoint
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/reference/models/" title="Models" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/reference/models/">
+          Models
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/models/identity_resource/" title="Identity Resource" class="dd-item ">
+        <a href="/identityserver/v7/reference/models/identity_resource/">
+        Identity Resource
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/models/api_scope/" title="API Scope" class="dd-item ">
+        <a href="/identityserver/v7/reference/models/api_scope/">
+        API Scope
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/models/api_resource/" title="API Resource" class="dd-item ">
+        <a href="/identityserver/v7/reference/models/api_resource/">
+        API Resource
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/models/client/" title="Client" class="dd-item ">
+        <a href="/identityserver/v7/reference/models/client/">
+        Client
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/models/idp/" title="Identity Provider" class="dd-item ">
+        <a href="/identityserver/v7/reference/models/idp/">
+        Identity Provider
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/models/grant_validation_result/" title="Grant Validation Result" class="dd-item ">
+        <a href="/identityserver/v7/reference/models/grant_validation_result/">
+        Grant Validation Result
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/models/secrets/" title="Secrets" class="dd-item ">
+        <a href="/identityserver/v7/reference/models/secrets/">
+        Secrets
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/models/ciba_login_request/" title="Backchannel User Login Request" class="dd-item ">
+        <a href="/identityserver/v7/reference/models/ciba_login_request/">
+        Backchannel User Login Request
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/reference/services/" title="Services" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/reference/services/">
+          Services
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/profile_service/" title="Profile Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/profile_service/">
+        Profile Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/persisted_grant_service/" title="Persisted Grant Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/persisted_grant_service/">
+        Persisted Grant Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/refresh_token_service/" title="Refresh Token Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/refresh_token_service/">
+        Refresh Token Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/user_sesion_service/" title="User Session Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/user_sesion_service/">
+        User Session Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/session_management_service/" title="Session Management Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/session_management_service/">
+        Session Management Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/interaction_service/" title="IdentityServer Interaction Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/interaction_service/">
+        IdentityServer Interaction Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/device_flow_interaction_service/" title="Device Flow Interaction Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/device_flow_interaction_service/">
+        Device Flow Interaction Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/ciba_interaction_service/" title="Backchannel Authentication Interaction Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/ciba_interaction_service/">
+        Backchannel Authentication Interaction Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/services/ciba_user_notification/" title="Backchannel Authentication User Notification Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/services/ciba_user_notification/">
+        Backchannel Authentication User Notification Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/reference/response_handling/" title="Response Generators" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/reference/response_handling/">
+          Response Generators
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/response_handling/authorize_interaction_response_generator/" title="Authorize Interaction Response Generator" class="dd-item ">
+        <a href="/identityserver/v7/reference/response_handling/authorize_interaction_response_generator/">
+        Authorize Interaction Response Generator
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/response_handling/token_response_generator/" title="Token Response Generator" class="dd-item ">
+        <a href="/identityserver/v7/reference/response_handling/token_response_generator/">
+        Token Response Generator
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/response_handling/http_response_writer/" title="IHttpResponseWriter" class="dd-item ">
+        <a href="/identityserver/v7/reference/response_handling/http_response_writer/">
+        IHttpResponseWriter
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/reference/stores/" title="Stores" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/reference/stores/">
+          Stores
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/resource_store/" title="Resource Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/resource_store/">
+        Resource Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/client_store/" title="Client Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/client_store/">
+        Client Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/cors_policy_service/" title="CORS Policy Service" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/cors_policy_service/">
+        CORS Policy Service
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/idp_store/" title="Identity Provider Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/idp_store/">
+        Identity Provider Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/persisted_grant_store/" title="Persisted Grant Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/persisted_grant_store/">
+        Persisted Grant Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/device_flow_store/" title="Device Flow Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/device_flow_store/">
+        Device Flow Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/backchannel_auth_request_store/" title="Backchannel Authentication Request Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/backchannel_auth_request_store/">
+        Backchannel Authentication Request Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/signing_key_store/" title="Signing Key Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/signing_key_store/">
+        Signing Key Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/server_side_sessions/" title="Server-Side Session Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/server_side_sessions/">
+        Server-Side Session Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/stores/pushed_authorization_request_store/" title="Pushed Authorization Request Store" class="dd-item ">
+        <a href="/identityserver/v7/reference/stores/pushed_authorization_request_store/">
+        Pushed Authorization Request Store
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/reference/validators/" title="Validators" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/reference/validators/">
+          Validators
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/validators/custom_authorize_request_validator/" title="Custom Authorize Request Validator" class="dd-item ">
+        <a href="/identityserver/v7/reference/validators/custom_authorize_request_validator/">
+        Custom Authorize Request Validator
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/validators/custom_token_request_validator/" title="Custom Token Request Validator" class="dd-item ">
+        <a href="/identityserver/v7/reference/validators/custom_token_request_validator/">
+        Custom Token Request Validator
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/validators/ciba_user_validator/" title="Backchannel Authentication User Validator" class="dd-item ">
+        <a href="/identityserver/v7/reference/validators/ciba_user_validator/">
+        Backchannel Authentication User Validator
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/validators/dpop_proof_validator/" title="DPoP Proof Validator" class="dd-item ">
+        <a href="/identityserver/v7/reference/validators/dpop_proof_validator/">
+        DPoP Proof Validator
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/reference/validators/extension_grant_validator/" title="Extension Grant Validator" class="dd-item ">
+        <a href="/identityserver/v7/reference/validators/extension_grant_validator/">
+        Extension Grant Validator
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/identityserver/v7/troubleshooting/" title="Troubleshooting" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/identityserver/v7/troubleshooting/">
+          Troubleshooting
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+      <li data-nav-id="/identityserver/v7/troubleshooting/wilson/" title="Microsoft.IdentityModel.* versions" class="dd-item ">
+        <a href="/identityserver/v7/troubleshooting/wilson/">
+        Microsoft.IdentityModel.* versions
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+         
+    </ul>
+
+    
+    
+
+    
+    <section id="footer">
+      
+
+    </section>
+  </div>
+</nav>
+
+
+
+
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                  
+                  
+                  
+                  <div id="top-github-link">
+                    <a class="github-link" title='Edit this page' href="https://github.com/DuendeSoftware/docs.duendesoftware.com/edit/main/IdentityServer/v7/docs/content/tokens/extension_grants/_index.md" target="blank">
+                      <i class="fas fa-code-branch"></i>
+                      <span id="top-github-link-text">Edit this page</span>
+                    </a>
+                  </div>
+                  
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='/identityserver/v7/'>Home</a> > <a href='/identityserver/v7/tokens/'>Requesting Tokens</a> > Extension Grants
+          
+        
+          
+        
+          
+        
+                 
+                  </span>
+                </div>
+                
+              </div>
+            </div>
+            
+        <div id="head-tags">
+        
+        </div>
+        
+          <div id="chapter">
+        
+        <div id="body-inner">
+          
+
+        
+
+
+
+	<h1 id="extension-grants">Extension Grants</h1>
+<p>OAuth defines an extensibility point called extension grants.</p>
+<p>Extension grants allow adding support for non-standard token issuance scenarios, e.g.</p>
+<ul>
+<li>token transformation
+<ul>
+<li>SAML to JWT, or Windows to JWT</li>
+<li>delegation or impersonation</li>
+</ul>
+</li>
+<li>federation</li>
+<li>encapsulating custom input parameters</li>
+</ul>
+<p>You can add support for additional grant types by implementing the <a href="/identityserver/v7/reference/validators/extension_grant_validator/">IExtensionGrantValidator</a> interface.</p>
+
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
+        
+            </div> 
+        
+        </div> 
+        
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+        
+        
+
+
+	 
+	 
+		
+			<a class="nav nav-prev" href="/identityserver/v7/tokens/password_grant/" title="Issuing Tokens based on User Passwords"> <i class="fa fa-chevron-left"></i></a>
+		
+		
+			<a class="nav nav-next" href="/identityserver/v7/tokens/extension_grants/token_exchange/" title="Token Exchange" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+	
+    </div>
+
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="/identityserver/v7/js/clipboard.min.js?1731564391"></script>
+    <script src="/identityserver/v7/js/perfect-scrollbar.min.js?1731564391"></script>
+    <script src="/identityserver/v7/js/perfect-scrollbar.jquery.min.js?1731564391"></script>
+    <script src="/identityserver/v7/js/jquery.sticky.js?1731564391"></script>
+    <script src="/identityserver/v7/js/featherlight.min.js?1731564391"></script>
+    <script src="/identityserver/v7/js/highlight.pack.js?1731564391"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="/identityserver/v7/js/modernizr.custom-3.6.0.js?1731564391"></script>
+    <script src="/identityserver/v7/js/learn.js?1731564391"></script>
+    <script src="/identityserver/v7/js/hugo-learn.js?1731564391"></script>
+
+    <link href="/identityserver/v7/mermaid/mermaid.css?1731564391" rel="stylesheet" />
+    <script src="/identityserver/v7/mermaid/mermaid.js?1731564391"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    
+
+  </body>
+</html>

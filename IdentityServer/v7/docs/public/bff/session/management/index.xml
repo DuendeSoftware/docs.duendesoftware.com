@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BFF Session Management Endpoints on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/bff/session/management/</link>
+    <description>Recent content in BFF Session Management Endpoints on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 29 Dec 2022 10:22:12 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/bff/session/management/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BFF Login Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/login/</link>
+      <pubDate>Thu, 10 Sep 2020 08:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/login/</guid>
+      <description>The /bff/login endpoint begins the authentication process. To use it, typically javascript code will navigate away from the frontend application to the login endpoint:&#xA;window.location = &amp;#34;/bff/login&amp;#34;; In Blazor, instead use the NavigationManager to navigate to the login endpoint:&#xA;Navigation.NavigateTo($&amp;#34;bff/login&amp;#34;, forceLoad: true); The login endpoint triggers an authentication challenge using the default challenge scheme, which will typically use the OpenID Connect handler.&#xA;Return Url After authentication is complete, the login endpoint will redirect back to your front end application.</description>
+    </item>
+    <item>
+      <title>BFF User Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/user/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/user/</guid>
+      <description>The /bff/user endpoint returns data about the currently logged-on user and the session. It is typically invoked at application startup to check if the user has authenticated, and if so, to get profile data about the user. It can also be used to periodically query if the session is still valid.&#xA;Output If there is no current session, the user endpoint returns a response indicating that the user is anonymous. By default, this is a 401 status code, but this can be configured.</description>
+    </item>
+    <item>
+      <title>BFF Logout Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/logout/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/logout/</guid>
+      <description>The /bff/logout endpoint signs out of the appropriate ASP.NET Core authentication schemes to both delete the BFF&amp;rsquo;s session cookie and to sign out from the remote identity provider. To use the logout endpoint, typically your javascript code will navigate away from your front end to the logout endpoint, similar to the login endpoint. However, unlike the login endpoint, the logout endpoint requires CSRF protection, otherwise an attacker could destroy sessions by making cross-site GET requests.</description>
+    </item>
+    <item>
+      <title>BFF Silent Login Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/silent-login/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/silent-login/</guid>
+      <description>Added in v1.2.0.&#xA;The /bff/silent-login endpoint triggers authentication similarly to the login endpoint, but in a non-interactive way.&#xA;The expected usage pattern is that the application code loads in the browser and triggers a request to the User Endpoint. If that indicates that there is no BFF session, then the Silent Login Endpoint can be requested to attempt to automatically log the user in, using an existing session at the remote identity provider.</description>
+    </item>
+    <item>
+      <title>BFF Diagnostics Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/diagnostics/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/diagnostics/</guid>
+      <description>The /bff/diagnostics endpoint returns the current user and client access token for testing purposes. The endpoint tries to retrieve and show current tokens. It may invoke both a refresh token flow for the user access token and a client credential flow for the client access token.&#xA;To use the diagnostics endpoint, make a GET request to /bff/diagnostics. Typically this is done in a browser to diagnose a problem during development.</description>
+    </item>
+    <item>
+      <title>BFF Back-Channel Logout Endpoint</title>
+      <link>http://localhost:1313/identityserver/v7/bff/session/management/back-channel-logout/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/session/management/back-channel-logout/</guid>
+      <description>The /bff/backchannel endpoint is an implementation of the OpenID Connect Back-Channel Logout specification. The remote identity provider can use this endpoint to end the BFF&amp;rsquo;s session via a server to server call, without involving the user&amp;rsquo;s browser. This design avoids problems with 3rd party cookies associated with front-channel logout.&#xA;Typical Usage The back-channel logout endpoint is invoked by the remote identity provider when it determines that sessions should be ended. IdentityServer will send back-channel logout requests if you configure your client&amp;rsquo;s BackChannelLogoutUri.</description>
+    </item>
+  </channel>
+</rss>

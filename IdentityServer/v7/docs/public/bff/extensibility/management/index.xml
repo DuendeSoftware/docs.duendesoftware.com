@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BFF Management Endpoints Extensibility on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/</link>
+    <description>Recent content in BFF Management Endpoints Extensibility on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 30 Dec 2022 10:55:24 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/identityserver/v7/bff/extensibility/management/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BFF Login Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/login/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/login/</guid>
+      <description>The BFF login endpoint has extensibility points in two interfaces. The ILoginService is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The IReturnUrlValidator ensures that the returnUrl parameter passed to the login endpoint is safe to use.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.</description>
+    </item>
+    <item>
+      <title>BFF Silent Login Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/silent-login/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/silent-login/</guid>
+      <description>The BFF silent login endpoint can be customized by implementing the ISilentLoginService or by extending DefaultSilentLoginService, its default implementation.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.&#xA;For example, you could take whatever actions you need before normal processing of the request like this:&#xA;public override Task ProcessRequestAsync(HttpContext context) { // Custom logic here return base.</description>
+    </item>
+    <item>
+      <title>BFF Silent Login Callback Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/silent-login-callback/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/silent-login-callback/</guid>
+      <description>The BFF silent login callback endpoint can be customized by implementing the ISilentLoginCallbackService or by extending DefaultSilentLoginCallbackService, its default implementation.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.&#xA;For example, you could take whatever actions you need before normal processing of the request like this:&#xA;public override Task ProcessRequestAsync(HttpContext context) { // Custom logic here return base.</description>
+    </item>
+    <item>
+      <title>BFF Logout Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/logout/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/logout/</guid>
+      <description>The BFF logout endpoint has extensibility points in two interfaces. The IlogoutService is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The IReturnUrlValidator ensures that the returnUrl parameter passed to the logout endpoint is safe to use.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.</description>
+    </item>
+    <item>
+      <title>BFF User Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/user/</link>
+      <pubDate>Fri, 30 Dec 2022 10:55:24 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/user/</guid>
+      <description>The BFF user endpoint can be customized by implementing the IUserService or by extending DefaultUserService, its default implementation. In most cases, extending the default implementation is preferred, as it has several virtual methods that can be overridden to customize particular aspects of how the request is processed. The DefaultUserService&amp;rsquo;s virtual methods are ProcessRequestAsync, GetUserClaims, and GetManagementClaims.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.</description>
+    </item>
+    <item>
+      <title>BFF Back-Channel Logout Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/back-channel-logout/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/back-channel-logout/</guid>
+      <description>The back-channel logout endpoint has several extensibility points organized into two interfaces and their default implementations. The IBackchannelLogoutService is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic or to change how it validates incoming requests. When the back-channel logout endpoint receives a valid request, it revokes sessions using the ISessionRevocationService.&#xA;Request Processing You can add custom logic to the endpoint by implementing the IBackchannelLogoutService or by extending its default implementation (Duende.</description>
+    </item>
+    <item>
+      <title>BFF Diagnostics Endpoint Extensibility</title>
+      <link>http://localhost:1313/identityserver/v7/bff/extensibility/management/diagnostics/</link>
+      <pubDate>Thu, 29 Dec 2022 10:22:12 +0200</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/bff/extensibility/management/diagnostics/</guid>
+      <description>The BFF diagnostics endpoint can be customized by implementing the IDiagnosticsService or by extending DefaultDiagnosticsService, its default implementation.&#xA;Request Processing ProcessRequestAsync is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.&#xA;For example, you could take whatever actions you need before normal processing of the request like this:&#xA;public override Task ProcessRequestAsync(HttpContext context) { // Custom logic here return base.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Stores on Duende IdentityServer Documentation</title>
+    <link>http://localhost:1313/identityserver/v7/reference/stores/</link>
+    <description>Recent content in Stores on Duende IdentityServer Documentation</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="http://localhost:1313/identityserver/v7/reference/stores/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Resource Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/resource_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/resource_store/</guid>
+      <description>Duende.IdentityServer.Stores.IResourceStore Used to dynamically load resource configuration.&#xA;/// &amp;lt;summary&amp;gt; /// Resource retrieval /// &amp;lt;/summary&amp;gt; public interface IResourceStore { /// &amp;lt;summary&amp;gt; /// Gets identity resources by scope name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;IdentityResource&amp;gt;&amp;gt; FindIdentityResourcesByScopeNameAsync(IEnumerable&amp;lt;string&amp;gt; scopeNames); /// &amp;lt;summary&amp;gt; /// Gets API scopes by scope name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;ApiScope&amp;gt;&amp;gt; FindApiScopesByNameAsync(IEnumerable&amp;lt;string&amp;gt; scopeNames); /// &amp;lt;summary&amp;gt; /// Gets API resources by scope name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;ApiResource&amp;gt;&amp;gt; FindApiResourcesByScopeNameAsync(IEnumerable&amp;lt;string&amp;gt; scopeNames); /// &amp;lt;summary&amp;gt; /// Gets API resources by API resource name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;ApiResource&amp;gt;&amp;gt; FindApiResourcesByNameAsync(IEnumerable&amp;lt;string&amp;gt; apiResourceNames); /// &amp;lt;summary&amp;gt; /// Gets all resources.</description>
+    </item>
+    <item>
+      <title>Client Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/client_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/client_store/</guid>
+      <description>Duende.IdentityServer.Stores.IClientStore Used to dynamically load client configuration.&#xA;/// &amp;lt;summary&amp;gt; /// Retrieval of client configuration /// &amp;lt;/summary&amp;gt; public interface IClientStore { /// &amp;lt;summary&amp;gt; /// Finds a client by id /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;clientId&amp;#34;&amp;gt;The client id&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;The client&amp;lt;/returns&amp;gt; Task&amp;lt;Client&amp;gt; FindClientByIdAsync(string clientId); } </description>
+    </item>
+    <item>
+      <title>CORS Policy Service</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/cors_policy_service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/cors_policy_service/</guid>
+      <description>Duende.IdentityServer.Stores.ICorsPolicyService Used to determine if CORS requests are allowed to certain protocol endpoints.&#xA;/// &amp;lt;summary&amp;gt; /// Service that determines if CORS is allowed. /// &amp;lt;/summary&amp;gt; public interface ICorsPolicyService { /// &amp;lt;summary&amp;gt; /// Determines whether origin is allowed. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;origin&amp;#34;&amp;gt;The origin.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task&amp;lt;bool&amp;gt; IsOriginAllowedAsync(string origin); } </description>
+    </item>
+    <item>
+      <title>Identity Provider Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/idp_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/idp_store/</guid>
+      <description>Duende.IdentityServer.Stores.IIdentityProviderStore Used to dynamically load identity provider configuration.&#xA;/// &amp;lt;summary&amp;gt; /// Interface to model storage of identity providers. /// &amp;lt;/summary&amp;gt; public interface IIdentityProviderStore { /// &amp;lt;summary&amp;gt; /// Gets all identity providers name. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;IdentityProviderName&amp;gt;&amp;gt; GetAllSchemeNamesAsync(); /// &amp;lt;summary&amp;gt; /// Gets the identity provider by scheme name. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;scheme&amp;#34;&amp;gt;&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task&amp;lt;IdentityProvider&amp;gt; GetBySchemeAsync(string scheme); } The IdentityProvider is intended to be a base class to model arbitrary identity providers.</description>
+    </item>
+    <item>
+      <title>Persisted Grant Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/persisted_grant_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/persisted_grant_store/</guid>
+      <description>The IPersistedGrantStore interface is the contract for a service that stores, retrieves, and deletes persisted grants. A grant is a somewhat abstract concept that is used in various protocol flows and represents that a resource owner has given authorization of some kind. Grants that require server side state in IdentityServer are the persisted grants stored by the IPersistedGrantStore.&#xA;The IPersistedGrantStore is abstracted to allow for storage of several grant types, including authorization codes, refresh tokens, user consent, and reference tokens.</description>
+    </item>
+    <item>
+      <title>Device Flow Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/device_flow_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/device_flow_store/</guid>
+      <description>Duende.IdentityServer.Stores.IDeviceFlowStore Models storage of grants for the device flow.&#xA;/// &amp;lt;summary&amp;gt; /// Interface for the device flow store /// &amp;lt;/summary&amp;gt; public interface IDeviceFlowStore { /// &amp;lt;summary&amp;gt; /// Stores the device authorization request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;deviceCode&amp;#34;&amp;gt;The device code.&amp;lt;/param&amp;gt; /// &amp;lt;param name=&amp;#34;userCode&amp;#34;&amp;gt;The user code.&amp;lt;/param&amp;gt; /// &amp;lt;param name=&amp;#34;data&amp;#34;&amp;gt;The data.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task StoreDeviceAuthorizationAsync(string deviceCode, string userCode, DeviceCode data); /// &amp;lt;summary&amp;gt; /// Finds device authorization by user code. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;userCode&amp;#34;&amp;gt;The user code.</description>
+    </item>
+    <item>
+      <title>Backchannel Authentication Request Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/backchannel_auth_request_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/backchannel_auth_request_store/</guid>
+      <description>Duende.IdentityServer.Stores.IBackChannelAuthenticationRequestStore Used to store backchannel login requests (for CIBA).&#xA;/// &amp;lt;summary&amp;gt; /// Interface for the backchannel authentication request store /// &amp;lt;/summary&amp;gt; public interface IBackChannelAuthenticationRequestStore { /// &amp;lt;summary&amp;gt; /// Creates the request. /// &amp;lt;/summary&amp;gt; Task&amp;lt;string&amp;gt; CreateRequestAsync(BackChannelAuthenticationRequest request); /// &amp;lt;summary&amp;gt; /// Gets the requests. /// &amp;lt;/summary&amp;gt; Task&amp;lt;IEnumerable&amp;lt;BackChannelAuthenticationRequest&amp;gt;&amp;gt; GetLoginsForUserAsync(string subjectId, string clientId = null); /// &amp;lt;summary&amp;gt; /// Gets the request. /// &amp;lt;/summary&amp;gt; Task&amp;lt;BackChannelAuthenticationRequest&amp;gt; GetByAuthenticationRequestIdAsync(string requestId); /// &amp;lt;summary&amp;gt; /// Gets the request. /// &amp;lt;/summary&amp;gt; Task&amp;lt;BackChannelAuthenticationRequest&amp;gt; GetByInternalIdAsync(string id); /// &amp;lt;summary&amp;gt; /// Removes the request.</description>
+    </item>
+    <item>
+      <title>Signing Key Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/signing_key_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/signing_key_store/</guid>
+      <description>Duende.IdentityServer.Stores.ISigningKeyStore Used to dynamically load client configuration.&#xA;/// &amp;lt;summary&amp;gt; /// Interface to model storage of serialized keys. /// &amp;lt;/summary&amp;gt; public interface ISigningKeyStore { /// &amp;lt;summary&amp;gt; /// Returns all the keys in storage. /// &amp;lt;/summary&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task&amp;lt;IEnumerable&amp;lt;SerializedKey&amp;gt;&amp;gt; LoadKeysAsync(); /// &amp;lt;summary&amp;gt; /// Persists new key in storage. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;key&amp;#34;&amp;gt;&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task StoreKeyAsync(SerializedKey key); /// &amp;lt;summary&amp;gt; /// Deletes key from storage. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;id&amp;#34;&amp;gt;&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task DeleteKeyAsync(string id); } SerializedKey /// &amp;lt;summary&amp;gt; /// Serialized key.</description>
+    </item>
+    <item>
+      <title>Server-Side Session Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/server_side_sessions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/server_side_sessions/</guid>
+      <description>Duende.IdentityServer.Stores.IServerSideSessionStore Used to persist users&amp;rsquo; authentication session data when using the server-side sessions feature.&#xA;/// &amp;lt;summary&amp;gt; /// User session store /// &amp;lt;/summary&amp;gt; public interface IServerSideSessionStore { /// &amp;lt;summary&amp;gt; /// Retrieves a session /// &amp;lt;/summary&amp;gt; Task&amp;lt;ServerSideSession&amp;gt; GetSessionAsync(string key, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Creates a session /// &amp;lt;/summary&amp;gt; Task CreateSessionAsync(ServerSideSession session, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Updates a session /// &amp;lt;/summary&amp;gt; Task UpdateSessionAsync(ServerSideSession session, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Deletes a session /// &amp;lt;/summary&amp;gt; Task DeleteSessionAsync(string key, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Gets sessions for a specific subject id and/or session id /// &amp;lt;/summary&amp;gt; Task&amp;lt;IReadOnlyCollection&amp;lt;ServerSideSession&amp;gt;&amp;gt; GetSessionsAsync(SessionFilter filter, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Deletes sessions for a specific subject id and/or session id /// &amp;lt;/summary&amp;gt; Task DeleteSessionsAsync(SessionFilter filter, CancellationToken cancellationToken = default); /// &amp;lt;summary&amp;gt; /// Queries sessions based on filter /// &amp;lt;/summary&amp;gt; Task&amp;lt;QueryResult&amp;lt;ServerSideSession&amp;gt;&amp;gt; QuerySessionsAsync(SessionQuery filter = null, CancellationToken cancellationToken = default); } ServerSideSession /// &amp;lt;summary&amp;gt; /// A user session /// &amp;lt;/summary&amp;gt; public class ServerSideSession { /// &amp;lt;summary&amp;gt; /// The key /// &amp;lt;/summary&amp;gt; public string Key { get; set; } = default!</description>
+    </item>
+    <item>
+      <title>Pushed Authorization Request Store</title>
+      <link>http://localhost:1313/identityserver/v7/reference/stores/pushed_authorization_request_store/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/identityserver/v7/reference/stores/pushed_authorization_request_store/</guid>
+      <description>The pushed authorization request store is responsible for creating, retrieving, and consuming pushed authorization requests.&#xA;Duende.IdentityServer.Stores.IPushedAuthorizationRequestStore /// &amp;lt;summary&amp;gt; /// The interface for a service that stores pushed authorization requests. /// &amp;lt;/summary&amp;gt; public interface IPushedAuthorizationRequestStore { /// &amp;lt;summary&amp;gt; /// Stores the pushed authorization request. /// &amp;lt;/summary&amp;gt; /// &amp;lt;param name=&amp;#34;pushedAuthorizationRequest&amp;#34;&amp;gt;The request.&amp;lt;/param&amp;gt; /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt; Task StoreAsync(PushedAuthorizationRequest pushedAuthorizationRequest); /// &amp;lt;summary&amp;gt; /// Consumes the pushed authorization request, indicating that it should not /// be used again.</description>
+    </item>
+  </channel>
+</rss>
