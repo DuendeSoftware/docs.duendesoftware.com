@@ -69,12 +69,6 @@ export default defineConfig({
           content:
             "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-MMR39D3G');",
         },
-        // Reo.dev
-        {
-          tag: "script",
-          content:
-            "!function(){var e,t,n;e='abfbaac4dad2301',t=function(){Reo.init({clientID:'abfbaac4dad2301'})},(n=document.createElement('script')).src='https://static.reo.dev/'+e+'/reo.js',n.defer=!0,n.onload=t,document.head.appendChild(n)}();",
-        },
         // HubSpot
         {
           tag: "script",
