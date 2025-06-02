@@ -1,0 +1,35 @@
+---
+import Default from '@astrojs/starlight/components/Pagination.astro'
+---
+
+<Default />
+
+<hr/>
+
+<div>
+  Copyright © 2021-2025 Duende Software. All rights reserved.<br />
+  <a href="https://duendesoftware.com/privacy">Privacy Policy</a> | <a href="https://duendesoftware.com/terms">Terms of Service</a> |
+  Sample and snippet code under  <a href="https://github.com/DuendeSoftware/docs.duendesoftware.com/blob/main/LICENSE-CODE">MIT License</a>
+</div>
+
+<style>
+  @layer starlight.core {
+    hr {
+      border: 1px solid var(--sl-color-gray-5);
+    }
+
+    div {
+      font-size: 0.8rem;
+    }
+
+    a {
+      gap: 0.5rem;
+      align-items: center;
+      text-decoration: none;
+      color: var(--sl-color-gray-3);
+    }
+    a:hover {
+      color: var(--sl-color-white);
+    }
+  }
+</style>
