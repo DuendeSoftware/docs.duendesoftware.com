@@ -38,7 +38,7 @@ These rendering modes are very powerful, but also add additional complexity when
 For more information on this, see [rendering-modes](/bff/fundamentals/blazor/rendering-modes)
 
 ### Authentication State
-The **AuthenticationState ** contains information about the currently logged-in user. This is partly populated from information from the user, but is also enriched with several management claims, such as the Logout URL. 
+The `AuthenticationState` contains information about the currently logged-in user. This is partly populated from information from the user, but is also enriched with several management claims, such as the Logout URL. 
 
 Blazor uses AuthenticationStateProviders to make authentication state available to components. On the server, the authentication state is already mostly managed by the authentication framework. However, the BFF will add the Logout url to the claims using the **AddServerManagementClaimsTransform**.  On the client, there are some other claims that might be useful. The **BffClientAuthenticationStateProvider** will poll the server to update the client on the latest authentication state, such as the user's claims. This also notifies the front-end if the session is terminated on the server. 
 
