@@ -45,8 +45,9 @@ Now let's look at some more details!
 
 ## The OpenID Connect Authentication Handler
 
-The OIDC handler connects the application to the authentication / access token system.
-It can use any OpenID Connect provider: [Duende IdentityServer](https://duendesoftware.com/products/identityserver/),
+The OpenID Connect (OIDC) handler connects the application to the authentication / access token system.
+
+It can be configured to use any OpenID Connect provider: [Duende IdentityServer](https://duendesoftware.com/products/identityserver/),
 [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id), [Auth0](https://auth0.com/),
 [Google Cloud Identity Platform](https://cloud.google.com/identity-platform), [Amazon Cognito](https://aws.amazon.com/cognito/), and more.
 
