@@ -110,3 +110,53 @@ Then, in your `appsettings.json` file, you can set the default minimum log level
   }
 }
 ```
+
+## Filtering Exceptions
+
+The `LoggingOptions` class allows developers to filter out any exceptions that
+could potentially lead to log bloat. For example, in a web application, developers
+should expect to see `OperationCanceledException` as clients end HTTP requests
+abruptly for many reasons. It's such a common occurrence to see this exception that
+the default filter included with IdentityServer excludes it by default.
+
+```csharp
+/// <summary>
+/// Called when the IdentityServer middleware detects an unhandled exception, and is used to determine if the exception is logged.
+/// Returns true to emit the log, false to suppress.
+/// </summary>
+public Func<HttpContext, Exception, bool> UnhandledExceptionLoggingFilter = (context, exception) =>
+{
+    var result = !(context.RequestAborted.IsCancellationRequested && exception is OperationCanceledException);
+    return result;
+};
+```
+
+To apply custom filtering, you can set the `UnhandledExceptionLoggingFilter` property on
+the `LoggingOptions` for your `IdentityServerOptions`.
+
+```csharp
+var isBuilder = builder.Services.AddIdentityServer(options =>
+    {
+        options.Logging.UnhandledExceptionLoggingFilter =
+            (ctx, ex) => {
+                if (ctx.User is { Identity.Name: "Jeff" }) 
+                {
+                    // Oh Jeff...
+                    return false;
+                }
+
+                if (ex.Message.Contains("Oops"))
+                {
+                    // ignore this exception
+                    return false;
+                }
+
+                // this is a real exception
+                return true;
+            };
+    })
+    .AddTestUsers(TestUsers.Users)
+    .AddLicenseSummary();
+```
+
+Returning `true` means the exception will be logged, while returning `false` indicates the exception should not be logged.

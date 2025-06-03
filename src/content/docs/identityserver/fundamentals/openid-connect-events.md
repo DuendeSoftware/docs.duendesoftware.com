@@ -77,6 +77,7 @@ identity provider. Understanding the direction of these events can help you dete
 | `OnTokenResponseReceived`                | **Incoming** |
 | `OnTokenValidated`                       | **Incoming** |
 | `OnUserInformationReceived`              | **Incoming** |
+| `OnTicketReceived`                       | **Incoming** |
 | `OnPushAuthorization` (**.NET 9+ only**) | **Outgoing** |
 
 ## Commonly Subscribed Events
@@ -173,6 +174,15 @@ For ASP.NET Core developers, the most commonly subscribed events are:
 - **Example use case**: Extend or modify user claims based on the additional information retrieved from the UserInfo
   endpoint.
 - **Commonly subscribed**: Sometimes, if extra claims processing is required.
+
+### OnTicketReceived
+
+- **When called**: Invoked after the OpenID Connect authentication flow is complete and before the authentication ticket
+  is returned.
+- **How often**: Called once per successful authentication flow completion.
+- **Example use case**: Modify the final authentication ticket, perform additional validation, or execute custom logic
+  before completing the authentication process.
+- **Commonly subscribed**: Sometimes, when final authentication customization is needed before completing the flow or for diagnostics and troubleshooting purposes.
 
 ### OnPushAuthorization
 

@@ -65,9 +65,9 @@ that enable the UI. Note that there are three places to comment in - two in
 `ConfigurePipeline` and one in `ConfigureServices`.
 
 :::note
-There is also a template called `isinmem` which combines the basic
-IdentityServer from the `isempty` template with the quickstart UI from the
-`isui` template.
+There is also a template called `duende-is-inmem` which combines the basic
+IdentityServer from the `duende-is-empty` template with the quickstart UI from the
+`duende-is-ui` template.
 :::
 
 Comment in the service registration and pipeline configuration, run the

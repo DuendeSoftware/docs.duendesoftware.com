@@ -36,7 +36,7 @@ available [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentitySer
 
 In addition to the written steps below there's also a YouTube video available:
 
-<iframe width="853" height="505" src="https://www.youtube.com/embed/3-1QY8s2C9k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="853" height="505" src="https://www.youtube.com/embed/EhuCpbH7Ad0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Preparation
 
