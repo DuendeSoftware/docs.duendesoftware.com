@@ -17,8 +17,8 @@ redirect_from:
 This section deals with setting up the following components
 
 * the ASP.NET Core authentication system
-* the OpenID Connect handler
-* the cookie handler
+  * the OpenID Connect handler
+  * the cookie handler
 * the BFF session management endpoints
 * server-side sessions
 * back-channel logout support
