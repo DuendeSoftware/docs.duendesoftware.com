@@ -1,5 +1,7 @@
 # docs.duendesoftware.com
 
+Welcome to the documentation of all [Duende Software](https://duendesoftware.com) products and open-source tools!
+
 ## Getting Started
 
 You will need Node 22+ installed on your operating system and in the PATH.
@@ -143,3 +145,12 @@ redirects: {
 
 This will remove the old page from the navigation structure, but keeps the URL around
 with a redirect to the new location.
+
+## ⚖️ License
+
+For all licensing information, refer to the relevant license files:
+
+* [LICENSE](LICENSE) - License for the documentation site content.
+* [LICENSE-CODE](LICENSE-CODE) - License for the code samples.
+
+The Astro documentation engine is licensed under the [MIT license](https://github.com/withastro/astro/blob/main/LICENSE).

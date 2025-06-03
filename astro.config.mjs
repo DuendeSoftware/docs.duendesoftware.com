@@ -133,6 +133,7 @@ export default defineConfig({
         SkipLink: "./src/components/SkipLink.astro",
         Banner: "./src/components/Banner.astro",
         Head: "./src/components/Head.astro",
+        Pagination: "./src/components/Pagination.astro",
       },
       sidebar: [
         {
