@@ -271,7 +271,7 @@ When dealing with external authentication, you may want to implement `OnTicketRe
 
 ## X.509 Certificates
 
-When your IdentityServer setup is hosted in a Windows environment, there's a high possibility that private key material
+When your IdentityServer is hosted in a Windows environment, it is possible that private key material
 is being stored or read from a user profile location. On Azure however, App Services are typically configured not to load
 a user profile because this brings overhead and is often not needed. This can result in runtime errors when IdentityServer
 attempts to generate or load key material:
@@ -302,9 +302,9 @@ To fix this issue on Azure hosted web applications, add the following environmen
 WEBSITE_LOAD_USER_PROFILE=1
 ```
 
-When saving this environment variable, your App Service will restart and Kudu (the engine behind git deployments in Azure App Service)
+After saving this environment variable, your App Service will restart and Kudu (the engine behind git deployments in Azure App Service)
 will load the user profile when running your web application.
-For more information about this and other Kudu configurable settings, see https://github.com/projectkudu/kudu/wiki/Configurable-settings. 
+For more information about this and other Kudu configuration options, see https://github.com/projectkudu/kudu/wiki/Configurable-settings. 
 
 If you're hosting the web application using IIS on Windows, you'll need to configure the application pool to load the user profile. See https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/advanced?view=aspnetcore-9.0#data-protection
 for more information on how to configure the application pool.
