@@ -268,3 +268,61 @@ When dealing with external authentication, you may want to set `MapInboundClaims
 ### Implement `OnTicketReceived` To Reduce Cookie Size
 
 When dealing with external authentication, you may want to implement `OnTicketReceived` to reduce the size of the cookie. This is a callback that is invoked after the external authentication process is complete. You can use this callback to remove any claims that are not needed by your solution.
+
+## X.509 Certificates
+
+When your IdentityServer is hosted in a Windows environment, it is possible that private key material
+is being stored or read from a user profile location. On Azure however, App Services are typically configured not to load
+a user profile because this brings overhead and is often not needed. This can result in runtime errors when IdentityServer
+attempts to generate or load key material:
+
+```text
+System.Security.Cryptography.CryptographicException: Access denied.
+   at System.Security.Cryptography.X509Certificates.X509CertificateLoader.ImportPfx(ReadOnlySpan`1 data, ReadOnlySpan`1 password, X509KeyStorageFlags keyStorageFlags)
+   at System.Security.Cryptography.X509Certificates.X509CertificateLoader.LoadPkcs12NoLimits(ReadOnlyMemory`1 data, ReadOnlySpan`1 password, X509KeyStorageFlags keyStorageFlags, Pkcs12Return& earlyReturn)
+   at System.Security.Cryptography.X509Certificates.X509CertificateLoader.LoadPkcs12(ReadOnlyMemory`1 data, ReadOnlySpan`1 password, X509KeyStorageFlags keyStorageFlags, Pkcs12LoaderLimits loaderLimits)
+   at System.Security.Cryptography.X509Certificates.X509CertificateLoader.LoadPkcs12Pal(ReadOnlySpan`1 data, ReadOnlySpan`1 password, X509KeyStorageFlags keyStorageFlags, Pkcs12LoaderLimits loaderLimits)
+   at System.Security.Cryptography.X509Certificates.CertificatePal.FromBlobOrFile(ReadOnlySpan`1 rawData, String fileName, SafePasswordHandle password, X509KeyStorageFlags keyStorageFlags)
+   at System.Security.Cryptography.X509Certificates.X509Certificate..ctor(Byte[] rawData, String password, X509KeyStorageFlags keyStorageFlags)
+   at System.Security.Cryptography.X509Certificates.X509Certificate2..ctor(Byte[] rawData, String password, X509KeyStorageFlags keyStorageFlags)
+   at Duende.IdentityServer.Services.KeyManagement.X509KeyContainer.ToSecurityKey() in /_/identity-server/src/IdentityServer/Services/Default/KeyManagement/X509KeyContainer.cs:line 108
+   at Duende.IdentityServer.Services.KeyManagement.AutomaticKeyManagerKeyStore.<>c.<GetValidationKeysAsync>b__5_0(KeyContainer x) in /_/identity-server/src/IdentityServer/Services/Default/KeyManagement/AutomaticKeyManagerKeyStore.cs:line 106
+   at System.Linq.Enumerable.ArraySelectIterator`2.Fill(ReadOnlySpan`1 source, Span`1 destination, Func`2 func)
+   at System.Linq.Enumerable.ArraySelectIterator`2.ToArray()
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at Duende.IdentityServer.Services.KeyManagement.AutomaticKeyManagerKeyStore.GetValidationKeysAsync() in /_/identity-server/src/IdentityServer/Services/Default/KeyManagement/AutomaticKeyManagerKeyStore.cs:line 106
+   at Duende.IdentityServer.Services.DefaultKeyMaterialService.GetValidationKeysAsync() in /_/identity-server/src/IdentityServer/Services/Default/DefaultKeyMaterialService.cs:line 112
+   at Duende.IdentityServer.ResponseHandling.DiscoveryResponseGenerator.CreateDiscoveryDocumentAsync(String baseUrl, String issuerUri) in /_/identity-server/src/IdentityServer/ResponseHandling/Default/DiscoveryResponseGenerator.cs:line 110
+   at Duende.IdentityServer.Endpoints.DiscoveryEndpoint.ProcessAsync(HttpContext context) in /_/identity-server/src/IdentityServer/Endpoints/DiscoveryEndpoint.cs:line 82
+   at Duende.IdentityServer.Hosting.IdentityServerMiddleware.Invoke(HttpContext context, IdentityServerOptions options, IEndpointRouter router, IUserSession userSession, IEventService events, IIssuerNameService issuerNameService, ISessionCoordinationService sessionCoordinationService) in /_/identity-server/src/IdentityServer/Hosting/IdentityServerMiddleware.cs:line 109
+```
+
+To fix this issue on Azure hosted web applications, add the following environment variable to the App Service:
+```text
+WEBSITE_LOAD_USER_PROFILE=1
+```
+
+After saving this environment variable, your App Service will restart and Kudu (the engine behind git deployments in Azure App Service)
+will load the user profile when running your web application.
+For more information about this and other Kudu configuration options, see https://github.com/projectkudu/kudu/wiki/Configurable-settings. 
+
+If you're hosting the web application using IIS on Windows, you'll need to configure the application pool to load the user profile. See https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/advanced?view=aspnetcore-9.0#data-protection
+for more information on how to configure the application pool.
+
+### Why does a web application need to load a user profile to work with X.509 certificates?
+
+The `X509Certificate2` class in .NET stores the private key part of a certificate somewhere else depending on the use of `X509KeyStorageFlags`:
+* `X509KeyStorageFlags.MachineKeySet` stores the private key in a `Keys` registry subfolder of the certificate store.
+* `X509KeyStorageFlags.UserKeySet` stores the private key in the current user's roaming profile folder, e.g. `%AppData%\Microsoft\SystemCertificates\My\Keys`.
+
+When loading a certificate containing both a public and private key in .NET, the private key may also end up in different locations:
+* Machine keys end up in the `%ProgramData%\Microsoft\Crypto\RSA\MachineKeys` folder.
+* User keys are stored in the current user's roaming profile folder but this time in a different location: `%AppData%\Microsoft\Crypto\RSA`
+
+If you don't explicitly use the `X509KeyStorageFlags.MachineKeySet` flag value, the default behavior is to use `X509KeyStorageFlags.DefaultKeySet`.
+According to the [.NET documentation][1], this means: _The default key set is used. **The user key set is usually the default**_.
+
+When an application runs without an active user profile, any private key material stored in a user profile can't be accessed.
+Even loading a certificate can fail, since the load operation could attempt to store the private key material in the user profile.
+
+[1]: https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags
