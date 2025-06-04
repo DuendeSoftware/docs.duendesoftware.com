@@ -31,7 +31,7 @@ purposes.
 
 * **`FeaturesUsed`**
 
-  A `string` collection of issuers used with the current IdentityServer instance.
+  A `string` collection of features has been used since the IdentityServer instance ran.
 
 ## Using LicenseUsageSummary with .NET Lifetime Events
 
