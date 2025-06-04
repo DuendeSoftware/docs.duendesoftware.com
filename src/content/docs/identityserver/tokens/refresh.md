@@ -175,8 +175,10 @@ Keep in mind that these actions are disruptive and possibly alarming to the user
 positives.
 :::
 
-While replay and re-use detection can be useful, they can be tricky to implement. In load-balanced environments,
-some form of synchronization will be required to avoid race conditions.
+While replay and re-use detection can be useful, they can be tricky to implement due to potential race conditions.
+On the server, you'll need a robust synchronization across instances (e.g. using our persisted grant store).
+On the client, refresh operations will have to be coordinated to not end up with invalid refresh tokens
+(e.g. when multiple client instances refresh in an uncontrolled way).
 
 Implementing replay detection can be done in a similar way to [accepting consumed tokens](#accepting-consumed-tokens). Extending the
 `AcceptConsumedTokenAsync` method of the `DefaultRefreshTokenService`, you can add the additional revocation or alerting
