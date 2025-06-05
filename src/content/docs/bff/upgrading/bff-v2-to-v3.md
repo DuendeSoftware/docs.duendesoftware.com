@@ -1,9 +1,9 @@
 ---
 title: "Duende BFF Security Framework v2.x to v3.0"
 description: Guide for upgrading Duende BFF Security Framework from version 2.x to version 3.0, including migration steps for custom implementations and breaking changes.
-order: 29
 sidebar:
   label: v2.x → v3.0
+  order: 30
 redirect_from:
   - /bff/v2/upgrading/bff_v2_to_v3/
   - /bff/v3/upgrading/bff_v2_to_v3/
