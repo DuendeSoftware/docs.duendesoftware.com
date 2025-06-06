@@ -13,7 +13,7 @@ Duende BFF Security Framework v4.0 is a significant release that includes:
 * Support for login prompts
 * Several fixes and improvements
 
-The extensibility approach has been drastically changed, and many `virtual` methods containing implementation logiv are now internal.
+The extensibility approach has been drastically changed, and many `virtual` methods containing implementation logic are now internal instead.
 
 :::caution[Duende BFF Security Framework v4 is still in preview]
 The Duende BFF Security Framework v4 is still in preview (currently [preview 1](https://github.com/DuendeSoftware/products/releases/edit/bff-4.0.0-Preview1)).
