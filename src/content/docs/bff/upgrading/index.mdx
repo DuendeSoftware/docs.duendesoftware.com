@@ -1,6 +1,6 @@
 ---
 title: "Upgrading BFF Security Framework"
-description: "Guide for upgrading Duende.BFF versions, including NuGet package updates and database schema migrations"
+description: "Guide for upgrading Duende.BFF versions, including NuGet package updates"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 1
@@ -15,10 +15,7 @@ redirect_from:
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
-Upgrading to a new Duende.BFF version is done by updating the NuGet package and handling any breaking
-changes. Some updates contain changes to the stores used by IdentityServer that requires database
-schema updates. If you are using our Entity Framework based stores we recommend using Entity Framework
-Migrations.
+Upgrading to a new Duende.BFF version is done by updating the NuGet package and handling any breaking changes.
 
 <CardGrid>
   <LinkCard
