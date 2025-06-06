@@ -42,7 +42,7 @@ app.MapRemoteBffApiEndpoint("/api/optional-user-token", "https://localhost:5010"
 
 * The enum `TokenType` has been renamed to `RequiredTokenType`.
 * The methods to configure the token type have all been replaced with a new method `WithAccessToken()`
-* Requesting an optional access token should not be done with the method `WithOptionalUserAccessToken()` but with `RequiredTokenType.UserOrNone`
+* Requesting an optional access token should no longer be done by calling `WithOptionalUserAccessToken()`. Use `WithAccessToken(RequiredTokenType.UserOrNone)` instead.
 
 ### Configuring Token Types In YARP
 
