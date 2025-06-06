@@ -105,7 +105,7 @@ You can statically add a list of frontends by calling the `AddFrontends` method.
 
 #### Loading Configuration From `IConfiguration`
 
-Loading configuration, including openid connect configuration from an `IConfiguration` is now supported:
+Loading configuration, including OpenID Connect configuration from `IConfiguration` is now supported:
 
 ```csharp
 services.AddBff().LoadConfiguration(bffConfig);
