@@ -98,57 +98,59 @@ Additionally, API endpoints should handle scenarios where the session has expire
 
 Duende.BFF can automate the pre-processing step of requiring the custom anti-forgery header. To do so, first add the BFF middleware to the pipeline, and then decorate your endpoints to indicate that they should receive BFF pre-processing.
 
+{/* prettier-ignore */}
 <Steps>
 
-1. **Add Middleware to the pipeline**
+1.  **Add Middleware to the pipeline**
 
-   Add the BFF middleware to the pipeline by calling `UseBff`. Note that the middleware must be placed before the authorization middleware, but after routing.
+    Add the BFF middleware to the pipeline by calling `UseBff`. Note that the middleware must be placed before the authorization middleware, but after routing.
 
-   ```csharp {5}
-   // Program.cs
-   app.UseAuthentication();
-   app.UseRouting();
+    ```csharp {5}
+    // Program.cs
+    app.UseAuthentication();
+    app.UseRouting();
 
-   app.UseBff();
+    app.UseBff();
 
-   app.UseAuthorization();
+    app.UseAuthorization();
 
-   // map endpoints
-   ```
-
-2. **Decorate Endpoints**
-
-    Endpoints that require the pre- and post-processing described above must be decorated with a call to `AsBffApiEndpoint()`.
-
-    For Minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
-
-    ```csharp {4-5}
-    app.MapPost("/foo", context => {
-        // ...
-    })
-        .RequireAuthorization()  // no anonymous access
-        .AsBffApiEndpoint();     // BFF pre/post processing
+    // map endpoints
     ```
 
-    For MVC controllers, you can similarly apply BFF pre- and post-processing to controller actions when they are mapped.
+2.  **Decorate Endpoints**
 
-    ```csharp {2-3}
-    app.MapControllers()
-        .RequireAuthorization()  // no anonymous access
-        .AsBffApiEndpoint();     // BFF pre/post processing
-    ```
+        Endpoints that require the pre- and post-processing described above must be decorated with a call to `AsBffApiEndpoint()`.
 
-    Alternatively, you can apply the `[BffApi]` attribute directly to the controller or action.
+        For Minimal API endpoints, you can apply BFF pre- and post-processing when they are mapped.
 
-    ```csharp {2}
-    [Route("myApi")]
-    [BffApi]
-    public class MyApiController : ControllerBase
-    {
-        // ...
-    }
-    ```
-</Steps>
+        ```csharp {4-5}
+        app.MapPost("/foo", context => {
+            // ...
+        })
+            .RequireAuthorization()  // no anonymous access
+            .AsBffApiEndpoint();     // BFF pre/post processing
+        ```
+
+        For MVC controllers, you can similarly apply BFF pre- and post-processing to controller actions when they are mapped.
+
+        ```csharp {2-3}
+        app.MapControllers()
+            .RequireAuthorization()  // no anonymous access
+            .AsBffApiEndpoint();     // BFF pre/post processing
+        ```
+
+        Alternatively, you can apply the `[BffApi]` attribute directly to the controller or action.
+
+        ```csharp {2}
+        [Route("myApi")]
+        [BffApi]
+        public class MyApiController : ControllerBase
+        {
+            // ...
+        }
+        ```
+
+    </Steps>
 
 ### Disabling Anti-forgery Protection
 
