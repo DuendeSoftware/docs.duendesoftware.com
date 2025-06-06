@@ -46,7 +46,7 @@ app.MapRemoteBffApiEndpoint("/api/optional-user-token", "https://localhost:5010"
 
 ### Configuring Token Types In YARP
 
-The required token type configuration in yarp has also changed slightly. It uses the enum values from `RequiredTokenType`.
+The required token type configuration in YARP has also changed slightly. It uses the enum values from `RequiredTokenType`.
 
 ### Extending The BFF
 
