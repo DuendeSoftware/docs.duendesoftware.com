@@ -111,7 +111,7 @@ Loading configuration, including OpenID Connect configuration from `IConfigurati
 services.AddBff().LoadConfiguration(bffConfig);
 ```
 
-Using this, you can configure your openid connect options, including secrets and configure the list of frontends. This also adds a file watcher, to automatically add / remove frontends from the config file.
+This enables you to configure your OpenID Connect options, including secrets, and configure the list of frontends. This also adds a file watcher, to automatically add / remove frontends from the config file.
 
 See the type `BffConfiguration` to see what settings can be configured.
 
