@@ -121,7 +121,7 @@ It's fairly common to deploy your application in such a way to have the BFF be t
 
 If you publish your frontend code to a cdn with absolute paths (for example by specifying a base path in your vite config), then all static content is loaded directly from the CDN.
 
-You can configure the location of your Index HTML by specifying:
+You can configure the location of your `index.html` by specifying:
 
 ```csharp
 .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
