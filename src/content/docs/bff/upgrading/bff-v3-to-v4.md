@@ -66,7 +66,7 @@ services.AddBff()
     .WithDefaultCookieOptions(options => {
         // The cookie options are automatically configured with recommended practices.
         // However, you can change the config here. 
-    };
+    });
 ```
 
 Adding this will automatically configure a Cookie and OpenID Connect flow.

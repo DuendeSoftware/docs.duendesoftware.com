@@ -10,6 +10,9 @@ redirect_from:
   - /identityserver/v7/quickstarts/js_clients/js_with_backend/
 ---
 
+import { Code } from "astro/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
 :::note
 We recommend you do the quickstarts in order. If you'd like to start here, begin
 from a copy of the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
@@ -21,7 +24,7 @@ implementation. You will also need to [install the IdentityServer templates](/id
 In this quickstart, you will build a browser-based JavaScript client application
 with a backend. This means your application will have server-side code that
 supports the frontend application code. This is known as the Backend For
-Frontend (BFF) pattern. 
+Frontend (BFF) pattern.
 
 You will implement the BFF pattern with the help of the `Duende.BFF` library.
 The backend will implement all the security protocol interactions with the
@@ -34,7 +37,6 @@ The features that will be shown in this quickstart will allow the user to log in
 with IdentityServer, invoke a local API hosted in the backend (secured with
 cookie authentication), invoke a remote API running in a different host (secured
 with an access token), and logout of IdentityServer.
-
 
 ## New Project For The JavaScript Client And BFF
 
@@ -96,44 +98,83 @@ access token for the remote API if needed.
 
 Add the following to `src/JavaScriptClient/Program.cs`:
 
-```cs
-// Program.cs
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Duende.Bff.Yarp;
-using Microsoft.AspNetCore.Authorization;
+{/* prettier-ignore */}
+<Tabs syncKey="bffVersion">
+  <TabItem label="Duende BFF v4">
+    ```csharp
+    // Program.cs
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using Duende.Bff.Yarp;
+    using Microsoft.AspNetCore.Authorization;
 
-var builder = WebApplication.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthorization();
+    builder.Services.AddAuthorization();
 
-builder.Services
-    .AddBff()
-    .AddRemoteApis();
+    builder.Services
+        .AddBff()
+        .WithDefaultOpenIdConnectOptions(options =>
+        {
+            options.Authority = "https://localhost:5001";
+            options.ClientId = "bff";
+            options.ClientSecret = "secret";
+            options.ResponseType = "code";
+            options.Scope.Add("api1");
+            options.Scope.Add("offline_access");
+            options.SaveTokens = true;
+            options.GetClaimsFromUserInfoEndpoint = true;
+            options.MapInboundClaims = false;
+        }
+        .WithDefaultCookieOptions()
+        .AddRemoteApis();
 
-builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultScheme = "Cookies";
-        options.DefaultChallengeScheme = "oidc";
-        options.DefaultSignOutScheme = "oidc";
-    })
-    .AddCookie("Cookies")
-    .AddOpenIdConnect("oidc", options =>
-    {
-        options.Authority = "https://localhost:5001";
-        options.ClientId = "bff";
-        options.ClientSecret = "secret";
-        options.ResponseType = "code";
-        options.Scope.Add("api1");
-        options.Scope.Add("offline_access");
-        options.SaveTokens = true;
-        options.GetClaimsFromUserInfoEndpoint = true;
-        options.MapInboundClaims = false;
-    });
+    var app = builder.Build();
+    ```
 
-var app = builder.Build();
-```
+  </TabItem>
+  <TabItem label="Duende BFF v3">
+    ```csharp
+    // Program.cs
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using Duende.Bff.Yarp;
+    using Microsoft.AspNetCore.Authorization;
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddAuthorization();
+
+    builder.Services
+        .AddBff()
+        .AddRemoteApis();
+
+    builder.Services
+        .AddAuthentication(options =>
+        {
+            options.DefaultScheme = "Cookies";
+            options.DefaultChallengeScheme = "oidc";
+            options.DefaultSignOutScheme = "oidc";
+        })
+        .AddCookie("Cookies")
+        .AddOpenIdConnect("oidc", options =>
+        {
+            options.Authority = "https://localhost:5001";
+            options.ClientId = "bff";
+            options.ClientSecret = "secret";
+            options.ResponseType = "code";
+            options.Scope.Add("api1");
+            options.Scope.Add("offline_access");
+            options.SaveTokens = true;
+            options.GetClaimsFromUserInfoEndpoint = true;
+            options.MapInboundClaims = false;
+        });
+
+    var app = builder.Build();
+    ```
+
+  </TabItem>
+</Tabs>
 
 ### Add Middleware
 
@@ -171,9 +212,10 @@ Next, add HTML and JavaScript files for your client-side application to the
 (`src/JavaScriptClient/wwwroot`) and add an `index.html` and an `app.js` file to
 it.
 
-*`index.html`*
+_`index.html`_
 
 The index.html file will be the main page in your application. It contains
+
 - buttons for the user to login, logout, and call the APIs
 - a `<pre>` container used to show messages to the user
 - a `<script>` tag to include our JavaScript file
@@ -183,11 +225,11 @@ It should look like this:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8" />
     <title></title>
-</head>
-<body>
+  </head>
+  <body>
     <button id="login">Login</button>
     <button id="local">Call Local API</button>
     <button id="remote">Call Remote API</button>
@@ -196,11 +238,11 @@ It should look like this:
     <pre id="results"></pre>
 
     <script src="app.js"></script>
-</body>
+  </body>
 </html>
 ```
 
-*`app.js`*
+_`app.js`_
 
 The app.js file will contain the client-side code for your application.
 
@@ -221,7 +263,6 @@ function log() {
     }
   });
 }
-
 ```
 
 Next, you can use the BFF `user` management endpoint to query if the user is
@@ -290,18 +331,16 @@ function logout() {
 }
 ```
 
-Finally, add empty stubs for the other button event handler functions. 
+Finally, add empty stubs for the other button event handler functions.
 You will implement those after you get login and logout working.
 
 ```js
-async function localApi() {
-}
+async function localApi() {}
 
-async function remoteApi() {
-}
+async function remoteApi() {}
 ```
 
-## Add JavaScript Client Registration To IdentityServer 
+## Add JavaScript Client Registration To IdentityServer
 
 Now that the client application is ready to go, you need to define a
 configuration entry in IdentityServer for the new JavaScript client.
@@ -321,7 +360,7 @@ new Client
     ClientSecrets = { new Secret("secret".Sha256()) },
 
     AllowedGrantTypes = GrantTypes.Code,
-    
+
     // where to redirect to after login
     RedirectUris = { "https://localhost:5003/signin-oidc" },
 
@@ -355,13 +394,12 @@ when it makes the HTTP request to get userClaims, that cookie is included in the
 request. This allows the BFF middleware to authenticate the user and return user
 info. Once the `JavaScriptClient` application receives the response, the user
 should appear logged in and their claims should be displayed.
- 
+
 ![showing claims after the login action is invoked](../images/jsbff_logged_in.png)
 
 Finally, the logout button should successfully get the user logged out.
 
 ![showing the logout view on IdentityServer](../images/jsbff_signed_out.png)
-
 
 ## Add API Support
 
@@ -392,8 +430,9 @@ For simplicity, this quickstart uses a minimal API with its handler defined
 directly in `Program.cs`, but you can organize your Local APIs however you like.
 
 Add a handler to `src/JavaScriptClient/Program.cs` for the local API:
+
 ```cs
-[Authorize] 
+[Authorize]
 static IResult LocalIdentityHandler(ClaimsPrincipal user)
 {
     var name = user.FindFirst("name")?.Value ?? user.FindFirst("sub")?.Value;
@@ -405,8 +444,8 @@ static IResult LocalIdentityHandler(ClaimsPrincipal user)
 :::note
 Local APIs often make requests to remote APIs that are authorized with the
 user's access token. To get the access token, call the `GetUserAccessTokenAsync`
-extension method on the `HttpContext`. For example: *var token = await
-HttpContext.GetUserAccessTokenAsync();*
+extension method on the `HttpContext`. For example: _var token = await
+HttpContext.GetUserAccessTokenAsync();_
 :::
 
 ### Update Routing To Accept Local And Remote API Calls
@@ -427,6 +466,7 @@ API in the ASP.NET Core routing system. Add the code below to the endpoint confi
   app.MapRemoteBffApiEndpoint("/remote", "https://localhost:6001")
       .WithAccessToken(Duende.Bff.AccessTokenManagement.RequiredTokenType.User);
 ```
+
 The call to the `AsBffApiEndpoint()` fluent helper method adds BFF support to
 the local APIs. This includes anti-forgery protection and suppressing
 login redirects on authentication failures and instead returning 401 and 403
@@ -483,18 +523,18 @@ async function remoteApi() {
 ```
 
 The path for the local API is exactly what you set in the call to `MapGet`
-in `src/JavaScriptClient/Program.cs`. 
+in `src/JavaScriptClient/Program.cs`.
 
 The path for the remote API uses a "/remote" prefix to indicate that the BFF
 proxy should be used, and the remaining path is what's then passed when invoking
-the remote API ("/identity" in this case). 
+the remote API ("/identity" in this case).
 
-Notice both API calls require an *'X-CSRF': '1'* header, which acts as the
+Notice both API calls require an _'X-CSRF': '1'_ header, which acts as the
 anti-forgery token.
 
 :::note
 See the [client credentials quickstart](/identityserver/quickstarts/1-client-credentials/) for information on how to create the
-remote API used in the code above. 
+remote API used in the code above.
 :::
 
 ## Run And Test The API Calls

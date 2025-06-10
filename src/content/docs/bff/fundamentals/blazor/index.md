@@ -66,7 +66,7 @@ builder.Services.AddBff()
     .AddBlazorServer();
 
 
-// ... <snip>..
+// ... <snip> ...
 
 // Add the BFF middleware which performs anti forgery protection
 app.UseBff();
@@ -78,11 +78,10 @@ app.UseAntiforgery();
 // This has to be added after 'UseAuthorization()'
 app.MapBffManagementEndpoints();
 
-// .. <snip>
+// ... <snip> ...
 ```
 
 ```csharp
-
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.Services
@@ -90,5 +89,4 @@ builder.Services
     .AddCascadingAuthenticationState();
 
 builder.Services.AddLocalApiHttpClient<WeatherHttpClient>();
-
 ```
