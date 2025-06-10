@@ -425,7 +425,7 @@ API in the ASP.NET Core routing system. Add the code below to the endpoint confi
       .AsBffApiEndpoint();
 
   app.MapRemoteBffApiEndpoint("/remote", "https://localhost:6001")
-      .RequireAccessToken(Duende.Bff.TokenType.User);
+      .WithAccessToken(Duende.Bff.AccessTokenManagement.RequiredTokenType.User);
 ```
 The call to the `AsBffApiEndpoint()` fluent helper method adds BFF support to
 the local APIs. This includes anti-forgery protection and suppressing

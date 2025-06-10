@@ -113,7 +113,7 @@ Implementations of the *IAccessTokenRetriever* can be added to endpoints when th
 app.MapRemoteBffApiEndpoint(
         "/API/impersonation", 
         "https://API.example.com/endpoint/requiring/impersonation"
-    ).RequireAccessToken(TokenType.User)
+    ).WithAccessToken(RequiredTokenType.User)
      .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```
 
