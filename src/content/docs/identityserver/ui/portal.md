@@ -87,5 +87,5 @@ app.MapGet("/signin-idp", async (HttpContext http) =>
 
 For the challenge to work, an OpenID Connect schema must be configured in your client application.
 When multiple OpenID Connect schemas are registered, you can also use the `Results.Challenge()` overload that allows
-you to target a specific schema.
+you to target a specific scheme.
 
