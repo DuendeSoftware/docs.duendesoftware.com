@@ -15,7 +15,7 @@ that are configured with an `InitiateLoginUri`. The `InitiateLoginUri` URI prope
 
 Your IdentityServer host can check for clients with this property, and render links to those applications for the
 currently authenticated user.  Doing so gives the user a client application portal that lets them start using each
-application, where navigating to  an application link starts an OpenID Connect challenge with the application. 
+application, where navigating to an application link starts an OpenID Connect challenge with the application. 
 
 This creates a curious pattern, where the user follows a link from the portal page in the IdentityServer host to
 an external application only to have that application immediately redirect back to the IdentityServer host's
