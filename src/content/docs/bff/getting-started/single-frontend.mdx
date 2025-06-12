@@ -3,7 +3,7 @@ title: Getting Started - Single Frontend
 description: A guide on how to create a BFF application with a single frontend. 
 sidebar:
   order: 10
-  label: Single frontend
+  label: "Single Frontend"
 ---
 import { Code } from "astro/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
@@ -11,7 +11,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 Duende.BFF (Backend for Frontend) is a library that helps you build secure, modern web applications by acting as a security gateway between your frontend and backend APIs. This guide will walk you through setting up a simple BFF application with a single frontend.
 
 :::note
-Duende.BFF V4 introduces this new way of configuring the BFF, which automatically configures the BFF using recommended practices. If you're upgrading from V3, please refer to the [upgrade guide](/bff/upgrading/bff-v3-to-v4)
+Duende.BFF V4 introduced a new way of configuring the BFF, which automatically configures the BFF using recommended practices. If you're upgrading from V3, please refer to the [upgrade guide](/bff/upgrading/bff-v3-to-v4).
 :::
 
 ## Prerequisites
@@ -19,9 +19,9 @@ Duende.BFF V4 introduces this new way of configuring the BFF, which automaticall
 - .NET 8.0 or later
 - A frontend application (e.g., React, Angular, Vue, or plain JavaScript)
 
-## Setting up a BFF project
+## Setting Up A BFF project
 
-### 1. Create a New ASP.NET Core Project
+### 1. Create A New ASP.NET Core Project
 
 Create a new ASP.NET Core Web Application:
 
@@ -30,7 +30,7 @@ dotnet new web -n MyBffApp
 cd MyBffApp
 ```
 
-### 2. Add the Duende.BFF NuGet Package
+### 2. Add The Duende.BFF NuGet Package
 
 Install the Duende.BFF package:
 
@@ -38,7 +38,7 @@ Install the Duende.BFF package:
 dotnet add package Duende.BFF
 ```
 
-### 3. Configure BFF in `Program.cs`
+### 3. Configure BFF In `Program.cs`
 
 Add the following to your `Program.cs`:
 
@@ -136,15 +136,15 @@ Add the following to your `Program.cs`:
 
 Make sure to replace the Authority, ClientID and ClientSecret with values from your identity provider. Also consider if the scopes are correct. 
 
-## Adding local api's
+## Adding Local APIs
 
-If your browser based application uses local api's, you can add those directly to your BFF app. The BFF supports both controllers and minimal api's to create local api's.
-
-
+If your browser-based application uses local APIs, you can add those directly to your BFF app. The BFF supports both controllers and minimal APIs to create local API endpoints.
 
 
 
-## Adding remote api's
+
+
+## Adding Remote APIs
 
 ## Adding Server Side Sessions
 

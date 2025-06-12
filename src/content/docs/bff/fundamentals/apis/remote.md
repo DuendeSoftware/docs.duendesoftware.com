@@ -43,7 +43,7 @@ The `MapRemoteBffApiEndpoint` extension method maps a path and all sub-paths bel
 
 ```csharp
 // Program.cs
-app.MapRemoteBffApiEndpoint("/API/users", "https://remoteHost/users")
+app.MapRemoteBffApiEndpoint("/api/users", "https://remoteHost/users")
     .WithAccessToken(RequiredTokenType.User);
 ```
 
