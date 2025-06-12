@@ -50,6 +50,7 @@ Requests to your IdentityServer that come through a proxy will appear to come fr
 
 Common symptoms of this problem are
 - HTTPS requests get downgraded to HTTP
+- HTTP issuer is being published instead of HTTPS in `.well-known/openid-configuration`
 - Host names are incorrect in the discovery document or on redirect
 - Cookies are not sent with the secure attribute, which can especially cause problems with the samesite cookie attribute.
 
