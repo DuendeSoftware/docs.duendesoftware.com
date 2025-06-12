@@ -27,13 +27,13 @@ Frontends can be added or removed dynamically from the system, without having to
 The Duende BFF V4 library doesn't ship with an abstraction to store or read frontends from a database. It's possible to implement this by creating your own store (based on your requirements), then modify the `FrontendCollection` at run-time. 
 :::
 
-## A typical example
+## A Typical Example
 
 Consider an enterprise that hosts multiple browser based applications. Each of these applications is developed by a separate team and as such, has it's own deployment schedule. 
 
-There are some 'internally facing' applications that are exclusively used by internal employees. These internal employees are all present in Microsoft Entra ID, so these internally facing applications should directly authenticate against Microsoft Entra ID. These applications also use several internal api's, that due to the sensitivity, should not be accessible by external users. However, they also use some of the more common api's. These apps are only accessible via an internal DNS name, such as `https://app1.internal.example.com`. 
+There are some internal-facing applications that are exclusively used by internal employees. These internal employees are all present in Microsoft Entra ID, so these internal-facing applications should directly authenticate against Microsoft Entra ID. These applications also use several internal APIs, that due to the sensitivity, should not be accessible by external users. However, they also use some of the more common APIs. These apps are only accessible via an internal DNS name, such as `https://app1.internal.example.com`. 
 
-There are also several public facing applications, that are used directly by customers. These users should be able to log in using their own identity, such as a GMail, Twitter or other provider. This authentication process is handled by Duende IdentityServer. There is constant development ongoing on these applications and it's not uncommon for new applications to be introduced. There should be single sign-on across all these public facing applications. They are all available on the same domain name, but use path based routing to distinguish themselves, such as `https://app.example.com/app1`
+There are also several public facing applications, that are used directly by customers. These users should be able to log in using their own identity, via providers like Google, Twitter, or others. This authentication process is handled by Duende IdentityServer. There is constant development ongoing on these applications and it's not uncommon for new applications to be introduced. There should be single sign-on across all these public facing applications. They are all available on the same domain name, but use path based routing to distinguish themselves, such as `https://app.example.com/app1`
 
 There is also a partner portal. This partner portal can only be accessed by employees of the partners. Each partner should be able to bring their own identity provider. This is implemented using the [Dynamic Providers](/identityserver/ui/login/dynamicproviders/) feature of Duende IdentityServer. 
 
