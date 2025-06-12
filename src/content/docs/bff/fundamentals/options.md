@@ -19,7 +19,7 @@ You set the options at startup time:
 ```cs
 builder.Services.AddBff(options =>
 {
-    // configure options here..
+    // configure options here...
 })
 ```
 
@@ -154,7 +154,7 @@ In WASM, you configure the **BffBlazorClientOptions** using the **AddBffBlazorCl
 ```csharp
 builder.Services.AddBffBlazorClient(opt =>
 {
-    // configure options here..
+    // configure options here...
 })
 ```
 

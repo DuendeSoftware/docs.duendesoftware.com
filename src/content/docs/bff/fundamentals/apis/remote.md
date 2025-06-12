@@ -43,15 +43,15 @@ The `MapRemoteBffApiEndpoint` extension method maps a path and all sub-paths bel
 
 ```csharp
 // Program.cs
-app.MapRemoteBffApiEndpoint("/API/users", "https://remoteHost/users")
-    .RequireAccessToken(TokenType.User);
+app.MapRemoteBffApiEndpoint("/api/users", "https://remoteHost/users")
+    .WithAccessToken(RequiredTokenType.User);
 ```
 
 :::note
 This example opens up the complete */users* API namespace to the frontend, and thus, to the outside world. While it is convenient to register API paths this way, consider if you need to be more specific hen designing the forwarding paths to prevent accidentally exposing unintended endpoints.
 :::
 
-The `RequireAccessToken` method can be added to [specify token requirements](#access-token-requirements) for the remote API. The BFF will automatically forward the correct access token to the remote API, which will be scoped to the client application, the user, or either.
+The `WithAccessToken` method can be added to [specify token requirements](#access-token-requirements) for the remote API. The BFF will automatically forward the correct access token to the remote API, which will be scoped to the client application, the user, or either.
 
 ## Securing Remote APIs
 
@@ -81,11 +81,19 @@ The value of the header is not important, but its presence, combined with the co
 
 #### Require authorization
 
-The `MapRemoteBffApiEndpoint` method returns the appropriate type to integrate with the ASP.NET Core authorization system. You can attach authorization policies to remote endpoints using `RequireAuthorization` extension method, just as you would for a standard ASP.NET core endpoint created with `MapGet`. The authorization middleware will then enforce that policy before forwarding requests on that route to the remote endpoint.
+The `MapRemoteBffApiEndpoint` method returns the appropriate type to integrate with the ASP.NET Core authorization system. You can attach authorization policies to remote endpoints using the `WithAccessToken` extension method, just as you would for a standard ASP.NET core endpoint created with `MapGet`. The authorization middleware will then enforce that policy before forwarding requests on that route to the remote endpoint.
+
+:::note
+In Duende.BFF version 3, use the `MapRemoteBffApiEndpoint` method with the `RequireAuthorization` extension method to attach authorization policies.
+:::
 
 #### Access token requirements
 
-Remote APIs sometimes allow anonymous access, but usually require an access token, and the type of access token (user or client) will vary as well. You can specify access token requirements via the `RequireAccessToken` extension method. Its `TokenType` parameter has three options:
+Remote APIs sometimes allow anonymous access, but usually require an access token, and the type of access token (user or client) will vary as well. You can specify access token requirements via the `WithAccessToken` extension method. Its `RequiredTokenType` parameter has three options:
+
+* `None`
+
+    No token is required.
 
 * `User`
 
@@ -99,7 +107,9 @@ Remote APIs sometimes allow anonymous access, but usually require an access toke
 
     Either a valid user access token or a valid client access token (as fallback) is required and will be forwarded to the remote API.
 
-You can also use the `WithOptionalUserAccessToken` extension method to specify that the API should be called with a user access token if one is available and anonymously if not.
+* `UserOrNone`
+
+    A valid user access token will be forwarded to the remote API when logged in. No access token will be sent when not logged in, and no OIDC flow is challenged to get an access token.
 
 :::note
 These settings only specify the logic that is applied before the API call gets proxied. The remote APIs you are calling should always specify their own authorization and token requirements.

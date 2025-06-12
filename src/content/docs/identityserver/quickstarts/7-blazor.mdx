@@ -10,6 +10,9 @@ redirect_from:
   - /identityserver/v7/quickstarts/7_blazor/
 ---
 
+import { Code } from "astro/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
 Similar to JavaScript SPAs, you can build Blazor WASM applications with and without a backend. Not having a backend has
 all the security disadvantages we discussed already in the JavaScript quickstart.
 
@@ -56,41 +59,82 @@ The BFF services provide the logic to invoke the authentication plumbing from th
 
 Add the following snippet to your `Program.cs` above the call to `builder.Build();`
 
-```cs
-// Program.cs
-builder.Services.AddBff();
+{/* prettier-ignore */}
+<Tabs syncKey="bffVersion">
+  <TabItem label="Duende BFF v4">
+    ```cs
+    // Program.cs
+    builder.Services
+        .AddBff()
+        .WithDefaultOpenIdConnectOptions(options =>
+        {
+            options.Authority = "https://demo.duendesoftware.com";
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = "cookie";
-        options.DefaultChallengeScheme = "oidc";
-        options.DefaultSignOutScheme = "oidc";
-    })
-    .AddCookie("cookie", options =>
-    {
-        options.Cookie.Name = "__Host-blazor";
-        options.Cookie.SameSite = SameSiteMode.Strict;
-    })
-    .AddOpenIdConnect("oidc", options =>
-    {
-        options.Authority = "https://demo.duendesoftware.com";
+            options.ClientId = "interactive.confidential";
+            options.ClientSecret = "secret";
+            options.ResponseType = "code";
+            options.ResponseMode = "query";
 
-        options.ClientId = "interactive.confidential";
-        options.ClientSecret = "secret";
-        options.ResponseType = "code";
-        options.ResponseMode = "query";
+            options.Scope.Clear();
+            options.Scope.Add("openid");
+            options.Scope.Add("profile");
+            options.Scope.Add("api");
+            options.Scope.Add("offline_access");
 
-        options.Scope.Clear();
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
-        options.Scope.Add("api");
-        options.Scope.Add("offline_access");
+            options.MapInboundClaims = false;
+            options.GetClaimsFromUserInfoEndpoint = true;
+            options.SaveTokens = true;
+        }
+        .WithDefaultCookieOptions(options =>
+        {
+            options.Cookie.Name = "__Host-blazor";
+            options.Cookie.SameSite = SameSiteMode.Strict;
+        });
+    ```
 
-        options.MapInboundClaims = false;
-        options.GetClaimsFromUserInfoEndpoint = true;
-        options.SaveTokens = true;
-    });
-```
+  </TabItem>
+  {/* prettier-ignore */}
+  <TabItem label="Duende BFF v3">
+  ```cs
+  // Program.cs
+  builder.Services.AddBff();
+
+  builder.Services
+      .AddAuthentication(options =>
+      {
+          options.DefaultScheme = "cookie";
+          options.DefaultChallengeScheme = "oidc";
+          options.DefaultSignOutScheme = "oidc";
+      })
+      .AddCookie("cookie", options =>
+      {
+          options.Cookie.Name = "__Host-blazor";
+          options.Cookie.SameSite = SameSiteMode.Strict;
+      })
+      .AddOpenIdConnect("oidc", options =>
+      {
+          options.Authority = "https://demo.duendesoftware.com";
+
+          options.ClientId = "interactive.confidential";
+          options.ClientSecret = "secret";
+          options.ResponseType = "code";
+          options.ResponseMode = "query";
+
+          options.Scope.Clear();
+          options.Scope.Add("openid");
+          options.Scope.Add("profile");
+          options.Scope.Add("api");
+          options.Scope.Add("offline_access");
+
+          options.MapInboundClaims = false;
+          options.GetClaimsFromUserInfoEndpoint = true;
+          options.SaveTokens = true;
+      });
+
+    ```
+
+  </TabItem>
+</Tabs>
 
 The last step is to add the required middleware for authentication, authorization and BFF session management. Add the
 following snippet after the call to `UseRouting`:
@@ -102,7 +146,7 @@ app.UseBff();
 app.UseAuthorization();
 
 app.MapBffManagementEndpoints();
-```
+````
 
 Finally you can run the server project. This will start the host, which will in turn deploy the Blazor application to
 your browser.
@@ -117,20 +161,20 @@ it.
 
 A couple of steps are necessary to add the security and identity plumbing to a Blazor application.
 
-*`a)`* Add the authentication/authorization related package to the client project file:
+_`a)`_ Add the authentication/authorization related package to the client project file:
 
 ```xml
 
 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.0"/>
 ```
 
-*`b)`* Add a using statement to `_Imports.razor` to bring the above package in scope:
+_`b)`_ Add a using statement to `_Imports.razor` to bring the above package in scope:
 
 ```cs
 @using Microsoft.AspNetCore.Components.Authorization
 ```
 
-*`c)`* To propagate the current authentication state to all pages in your Blazor client, you add a special component
+_`c)`_ To propagate the current authentication state to all pages in your Blazor client, you add a special component
 called `CascadingAuthenticationState` to your application. This is done by wrapping the Blazor router with that
 component in `App.razor`:
 
@@ -152,7 +196,7 @@ component in `App.razor`:
 </CascadingAuthenticationState>
 ```
 
-*`d)`* Last but not least, we will add some conditional rendering to the layout page to be able to trigger login/logout
+_`d)`_ Last but not least, we will add some conditional rendering to the layout page to be able to trigger login/logout
 and displaying the current user name when logged in. This is achieved by using the `AuthorizeView` component in
 `MainLayout.razor`:
 
@@ -211,18 +255,18 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Blazor6.Client.BFF;
 
-public class BffAuthenticationStateProvider 
+public class BffAuthenticationStateProvider
     : AuthenticationStateProvider
 {
-    private static readonly TimeSpan UserCacheRefreshInterval 
+    private static readonly TimeSpan UserCacheRefreshInterval
         = TimeSpan.FromSeconds(60);
 
     private readonly HttpClient _client;
     private readonly ILogger<BffAuthenticationStateProvider> _logger;
 
-    private DateTimeOffset _userLastCheck 
+    private DateTimeOffset _userLastCheck
         = DateTimeOffset.FromUnixTimeSeconds(0);
-    private ClaimsPrincipal _cachedUser 
+    private ClaimsPrincipal _cachedUser
         = new ClaimsPrincipal(new ClaimsIdentity());
 
     public BffAuthenticationStateProvider(
@@ -321,7 +365,7 @@ public class AntiforgeryHandler : DelegatingHandler
         return base.SendAsync(request, cancellationToken);
     }
 }
-````
+```
 
 ...and register it in the client's `Program.cs` (overriding the standard HTTP client configuration; requires package
 Microsoft.Extensions.Http):
@@ -412,11 +456,11 @@ to the claims of the authenticated user via the `.User` property.
 
 In essence a BFF client is "just" a normal authorization code flow client:
 
-* use the code grant type
-* set a client secret
-* enable `AllowOfflineAccess` if you want to use refresh tokens
-* enable the required identity and resource scopes
-* set the redirect URIs for the OIDC handler
+- use the code grant type
+- set a client secret
+- enable `AllowOfflineAccess` if you want to use refresh tokens
+- enable the required identity and resource scopes
+- set the redirect URIs for the OIDC handler
 
 Below is a typical code snippet for the client definition:
 
@@ -424,7 +468,7 @@ Below is a typical code snippet for the client definition:
 var bffClient = new Client
 {
     ClientId = "bff",
-    
+
     ClientSecrets =
     {
         new Secret("secret".Sha256())
@@ -447,6 +491,6 @@ var bffClient = new Client
 Our Blazor BFF [sample](/bff/samples/#blazor-wasm) is based on this Quickstart. In addition it shows
 concepts like
 
-* better organization with components
-* reacting to logout
-* using the authorize attribute to trigger automatic redirects to the login page
+- better organization with components
+- reacting to logout
+- using the authorize attribute to trigger automatic redirects to the login page

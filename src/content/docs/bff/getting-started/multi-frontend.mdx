@@ -1,0 +1,184 @@
+---
+title: Getting Started - Multiple Frontends
+description: A guide on how to create a BFF application with multiple frontends. 
+sidebar:
+  order: 20
+  label: "Multiple Frontends"
+  badge:
+    text: v4
+    variant: tip
+---
+import { Code } from "astro/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Duende.BFF (Backend for Frontend) supports multiple frontends in a single BFF host. This is useful for scenarios where you want to serve several SPAs or frontend apps from the same backend, each with their own authentication and API proxying configuration.
+
+:::note
+Multi-frontend support is available in Duende.BFF v4 and later. The v3-style of wiring up BFF is not supported for this scenario.
+:::
+
+## Prerequisites
+
+- .NET 8.0 or later
+- Multiple frontend applications (e.g., React, Angular, Vue, or plain JavaScript)
+
+## Setting Up A BFF Project For Multiple Frontends
+
+### 1. Create A New ASP.NET Core Project
+
+```sh
+dotnet new web -n MyMultiBffApp
+cd MyMultiBffApp
+```
+
+### 2. Add The Duende.BFF NuGet Package
+
+```sh
+dotnet add package Duende.BFF
+```
+
+### 3. OpenID Connect Configuration
+
+Configure OpenID Connect authentication for your BFF host. This is similar to the single frontend setup, but applies to all frontends unless overridden per frontend.
+
+```csharp
+    builder.Services.AddBff()
+        .WithDefaultOpenIdConnectOptions(options =>
+        {
+            options.Authority = "https://demo.duendesoftware.com";
+            options.ClientId = "interactive.confidential";
+            options.ClientSecret = "secret";
+            options.ResponseType = "code";
+            options.ResponseMode = "query";
+
+            options.GetClaimsFromUserInfoEndpoint = true;
+            options.SaveTokens = true;
+            options.MapInboundClaims = false;
+
+            options.Scope.Clear();
+            options.Scope.Add("openid");
+            options.Scope.Add("profile");
+
+            // Add this scope if you want to receive refresh tokens
+            options.Scope.Add("offline_access");
+        })
+        .WithDefaultCookieOptions(options =>
+        {
+            // Because we use an identity server that's configured on a different site
+            // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+            // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
+            // The user would have to refresh the page to get the cookie.
+            // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+            options.Cookie.SameSite = SameSiteMode.Lax;
+        });
+
+    builder.Services.AddAuthorization();
+
+    var app = builder.Build();
+
+    app.UseAuthentication();
+    app.UseRouting();
+
+    // adds antiforgery protection for local APIs
+    app.UseBff();
+
+    // adds authorization for local and remote API endpoints
+    app.UseAuthorization();
+
+    app.Run();
+```
+### 4. Configure BFF In `Program.cs`
+
+{/* prettier-ignore */}
+<Tabs syncKey="bffFrontendConfig">
+  {/* prettier-ignore */}
+  <TabItem label="Static">
+
+  Register multiple frontends directly in code using `AddFrontends`:
+
+  ```csharp
+  builder.Services.AddBff()
+      .AddFrontends(
+          new BffFrontend(BffFrontendName.Parse("default-frontend"))
+              .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
+          new BffFrontend(BffFrontendName.Parse("admin-frontend"))
+              .WithIndexHtmlUrl(new Uri("https://localhost:5005/admin/index.html"))
+      );
+  
+  // ...existing code for authentication, authorization, etc.
+  ```
+
+  </TabItem>
+  {/* prettier-ignore */}
+  <TabItem label="From Config">
+
+  You can also load frontend configuration from an `IConfiguration` source, such as a JSON file:
+
+  Example `bffconfig.json`:
+
+  ```json
+  {
+    "defaultOidcSettings": null,
+    "defaultCookieSettings": null,
+    "frontends": {
+      "from_config": {
+        "indexHtmlUrl": "https://localhost:5005/static/index.html",
+        "matchingPath": "/from-config",
+        "oidc": {
+          "clientId": "bff.multi-frontend.config"
+        },
+        "remoteApis": [
+          {
+            "localPath": "/api/client-token",
+            "targetUri": "https://localhost:5010",
+            "tokenRequirement": "Client"
+          }
+        ]
+      }
+    }
+  }
+  ```
+
+  Load and use the configuration in `Program.cs`:
+
+  ```csharp
+  var bffConfig = new ConfigurationBuilder()
+      .AddJsonFile("bffconfig.json")
+      .Build();
+
+  builder.Services.AddBff()
+      .LoadConfiguration(bffConfig);
+  
+  // ...existing code for authentication, authorization, etc.
+  ```
+
+  </TabItem>
+</Tabs>
+
+
+### 5. Remote API Proxying
+
+You can configure remote API proxying in two ways:
+
+- **Single YARP proxy for all frontends:**
+  You can set up a single YARP proxy for all frontends, as shown in the [Single Frontend Guide](/bff/getting-started/single-frontend#5-adding-remote-apis).
+
+- **Direct proxying per frontend:**
+  You can configure remote APIs for each frontend individually:
+
+  ```csharp
+  builder.Services.AddBff()
+      .AddFrontends(
+          new BffFrontend(BffFrontendName.Parse("default-frontend"))
+              .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
+              .WithRemoteApis(
+                  new RemoteApi(LocalPath.Parse("/api/user-token"), new Uri("https://localhost:5010"))
+              )
+      );
+  ```
+
+This allows each frontend to have its own set of proxied remote APIs.
+
+### 6. Server Side Sessions
+
+Server side session configuration is the same as in the single frontend scenario. See the [Single Frontend Guide](/bff/getting-started/single-frontend#6-adding-server-side-sessions) for details.

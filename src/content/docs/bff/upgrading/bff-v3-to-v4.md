@@ -40,7 +40,7 @@ app.MapRemoteBffApiEndpoint("/api/optional-user-token", "https://localhost:5010"
 +    .WithAccessToken(RequiredTokenType.UserOrNone);            
 ```
 
-* The enum `TokenType` has been renamed to `RequiredTokenType`.
+* The enum `TokenType` has been renamed to `RequiredTokenType`, and moved from the `Duende.Bff` to `Duende.Bff.AccessTokenManagement` namespace.
 * The methods to configure the token type have all been replaced with a new method `WithAccessToken()`
 * Requesting an optional access token should no longer be done by calling `WithOptionalUserAccessToken()`. Use `WithAccessToken(RequiredTokenType.UserOrNone)` instead.
 
@@ -66,7 +66,7 @@ services.AddBff()
     .WithDefaultCookieOptions(options => {
         // The cookie options are automatically configured with recommended practices.
         // However, you can change the config here. 
-    };
+    });
 ```
 
 Adding this will automatically configure a Cookie and OpenID Connect flow.
