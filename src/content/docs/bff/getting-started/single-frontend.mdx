@@ -1,0 +1,150 @@
+---
+title: Getting Started - Single Frontend
+description: A guide on how to create a BFF application with a single frontend. 
+sidebar:
+  order: 10
+  label: Single frontend
+---
+import { Code } from "astro/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Duende.BFF (Backend for Frontend) is a library that helps you build secure, modern web applications by acting as a security gateway between your frontend and backend APIs. This guide will walk you through setting up a simple BFF application with a single frontend.
+
+:::note
+Duende.BFF V4 introduces this new way of configuring the BFF, which automatically configures the BFF using recommended practices. If you're upgrading from V3, please refer to the [upgrade guide](/bff/upgrading/bff-v3-to-v4)
+:::
+
+## Prerequisites
+
+- .NET 8.0 or later
+- A frontend application (e.g., React, Angular, Vue, or plain JavaScript)
+
+## Setting up a BFF project
+
+### 1. Create a New ASP.NET Core Project
+
+Create a new ASP.NET Core Web Application:
+
+```sh
+dotnet new web -n MyBffApp
+cd MyBffApp
+```
+
+### 2. Add the Duende.BFF NuGet Package
+
+Install the Duende.BFF package:
+
+```sh
+dotnet add package Duende.BFF
+```
+
+### 3. Configure BFF in `Program.cs`
+
+Add the following to your `Program.cs`:
+
+{/* prettier-ignore */}
+<Tabs syncKey="bffVersion">
+  {/* prettier-ignore */}
+  <TabItem label="Duende BFF v4">
+    ```csharp
+    // BFF setup for blazor
+    builder.Services.AddBff()
+        .WithDefaultOpenIdConnectOptions(options =>
+        {
+            options.Authority = "https://demo.duendesoftware.com";
+            options.ClientId = "interactive.confidential";
+            options.ClientSecret = "secret";
+            options.ResponseType = "code";
+            options.ResponseMode = "query";
+
+            options.GetClaimsFromUserInfoEndpoint = true;
+            options.SaveTokens = true;
+            options.MapInboundClaims = false;
+
+            options.Scope.Clear();
+            options.Scope.Add("openid");
+            options.Scope.Add("profile");
+
+            // Add this scope if you want to receive refresh tokens
+            options.Scope.Add("offline_access");
+        }
+        .WithDefaultCookieOptions(options =>
+        {
+            // Because we use an identity server that's configured on a different site
+            // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+            // Setting it to Strict would cause the authentication cookie not to be sent after loggin in.
+            // The user would have to refresh the page to get the cookie.
+            // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+            options.Cookie.SameSite = SameSiteMode.Lax;
+        });
+
+    builder.Services.AddAuthorization();
+    ```
+
+  </TabItem>
+  {/* prettier-ignore */}
+  <TabItem label="Duende BFF v3">
+    ```csharp
+    // BFF setup for blazor
+    builder.Services.AddBff();
+
+    // Configure the authentication
+    builder.Services
+        .AddAuthentication(options =>
+        {
+            options.DefaultScheme = "cookie";
+            options.DefaultChallengeScheme = "oidc";
+            options.DefaultSignOutScheme = "oidc";
+        })
+        .AddCookie("cookie", options =>
+        {
+            // Configure the cookie with __Host prefix for maximum security
+            options.Cookie.Name = "__Host-blazor";
+
+            // Because we use an identity server that's configured on a different site
+            // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+            // Setting it to Strict would cause the authentication cookie not to be sent after loggin in.
+            // The user would have to refresh the page to get the cookie.
+            // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+            options.Cookie.SameSite = SameSiteMode.Lax;
+        })
+        .AddOpenIdConnect("oidc", options =>
+        {
+            options.Authority = "https://demo.duendesoftware.com";
+            options.ClientId = "interactive.confidential";
+            options.ClientSecret = "secret";
+            options.ResponseType = "code";
+            options.ResponseMode = "query";
+
+            options.GetClaimsFromUserInfoEndpoint = true;
+            options.SaveTokens = true;
+            options.MapInboundClaims = false;
+
+            options.Scope.Clear();
+            options.Scope.Add("openid");
+            options.Scope.Add("profile");
+
+            // Add this scope if you want to receive refresh tokens
+            options.Scope.Add("offline_access");
+        });
+
+    builder.Services.AddAuthorization();
+
+    ```
+  </TabItem>
+</Tabs>
+
+Make sure to replace the Authority, ClientID and ClientSecret with values from your identity provider. Also consider if the scopes are correct. 
+
+## Adding local api's
+
+If your browser based application uses local api's, you can add those directly to your BFF app. The BFF supports both controllers and minimal api's to create local api's.
+
+
+
+
+
+## Adding remote api's
+
+## Adding Server Side Sessions
+

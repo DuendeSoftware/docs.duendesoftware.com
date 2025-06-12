@@ -72,8 +72,6 @@ Then you need to configure the application to use the BFF Blazor application. Ad
         }
         .WithDefaultCookieOptions(options =>
         {
-            options.Cookie.Name = "__Host-blazor";
-
             // Because we use an identity server that's configured on a different site
             // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
             // Setting it to Strict would cause the authentication cookie not to be sent after loggin in.
@@ -109,6 +107,7 @@ Then you need to configure the application to use the BFF Blazor application. Ad
         })
         .AddCookie("cookie", options =>
         {
+            // Configure the cookie with __Host prefix for maximum security
             options.Cookie.Name = "__Host-blazor";
 
             // Because we use an identity server that's configured on a different site
