@@ -4,6 +4,9 @@ description: "Reference documentation for the LicenseUsageSummary class which pr
 date: 2025-01-07T12:00:00+02:00
 sidebar:
   order: 90
+  badge:
+    text: v7.1
+    variant: tip
 redirect_from:
   - /identityserver/v5/reference/models/license_usage_summary/
   - /identityserver/v6/reference/models/license_usage_summary/
@@ -11,6 +14,8 @@ redirect_from:
 ---
 
 ## Duende.IdentityServer.Licensing.LicenseUsageSummary
+
+<span data-shb-badge data-shb-badge-variant="default">Added in 7.1</span>
 
 The `LicenseUsageSummary` class allows developers to get a
 detailed summary of clients, issuers, and features used
