@@ -1,3 +1,6 @@
 label: "Server-Side Sessions"
 collapsed: true
 order: 8
+badge:
+  text: v6.1
+  variant: tip
