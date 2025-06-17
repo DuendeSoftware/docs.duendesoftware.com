@@ -14,18 +14,19 @@ The `Duende.IdentityModel.OidcClient.Extensions` library adds supports for DPoP 
 
 ## DPoP Key
 
-Before we begin, your application needs to have a DPoP key, in the form of a
+Before we begin, your application needs to have a DPoP key in the form of a
 JSON Web Key (or JWK). According to the [DPoP specification][dpop-spec], this
 key needs to use an asymmetric algorithm ("RS", "ES", or "PS" style).
 
 :::note
-This means that the client application is responsible for creating the DPoP key,
+The client application is responsible for creating the DPoP key,
 rotating it, and managing its lifetime. For as long as there are access tokens
 (and possibly refresh tokens) bound to a DPoP key, that key needs to remain
 available to the client application.
 :::
 
-Creating a JWK in .NET is pretty straightforward using the `Duende.IdentityModel.OidcClient.Extensions` library:
+You can create a JWK in .NET using the `Duende.IdentityModel.OidcClient.Extensions` library.
+The `JsonWebKeys` class has several static methods to help with creating JWKs using various algorithms.
 
 ```csharp
 // Program.cs
@@ -39,12 +40,18 @@ Console.WriteLine(jwk);
 
 :::caution
 In a production scenario, you'll want to store this JWK in a secure location
-and use DataProtection to further protect the JWK.
+and use ASP.NET's [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/) to further
+protect the JWK. See [our data protection guide](/identityserver/deployment#aspnet-core-data-protection) for more
+information.
 :::
 
 ## Initializing the OIDC client with DPoP support
 
-Now that we have a JWK, we need to extend the `OidcClientOptions` to configure DPoP:
+We will need to extend the `OidcClientOptions` before we can use DPoP.
+
+After creating the `OidcClientOptions`
+to connect our client application with the Identity Provider, we retrieve a JWK to use for DPoP, and add that JWK
+to our `options` by calling the `ConfigureDPoP` extension method:
 
 ```csharp
 // Program.cs
@@ -70,12 +77,15 @@ var oidcClient = new OidcClient(options);
 
 ## Proof Tokens for the API
 
-After configuring the `OidcClientOptions` with DPoP support and creating an
+Now that we've configured the `OidcClientOptions` with DPoP support and created an
 `OidcClient` instance, you can use this instance to create an `HttpMessageHandler` which
 will:
 
 - manage access and refresh tokens
 - add DPoP proof tokens to HTTP requests
+
+The `OidcClient` provides `CreateDPoPHandler` as a convenience method to create such a handler,
+which can be used with the .NET `HttpClient`.
 
 ```csharp
 // Program.cs
