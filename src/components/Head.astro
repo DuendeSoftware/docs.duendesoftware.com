@@ -1,12 +1,12 @@
 ---
 import { getImagePath } from "astro-opengraph-images";
 import { Font } from "astro:assets";
-import Default from '@astrojs/starlight/components/Head.astro'
+import Default from "@astrojs/starlight/components/Head.astro";
 
 const { url, site } = Astro;
 const openGraphImageUrl = getImagePath({ url, site });
 ---
 
 <Default />
-{openGraphImageUrl && (<meta property="og:image" content={openGraphImageUrl} />)}
-<Font cssVariable="--font-roboto" preload />
+{openGraphImageUrl && <meta property="og:image" content={openGraphImageUrl} />}
+<Font cssVariable="--font-roboto" />

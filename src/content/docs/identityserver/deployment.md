@@ -50,22 +50,23 @@ Requests to your IdentityServer that come through a proxy will appear to come fr
 
 Common symptoms of this problem are
 - HTTPS requests get downgraded to HTTP
+- HTTP issuer is being published instead of HTTPS in `.well-known/openid-configuration`
 - Host names are incorrect in the discovery document or on redirect
 - Cookies are not sent with the secure attribute, which can especially cause problems with the samesite cookie attribute.
 
-In almost all cases, these problems can be solved by adding the ASP.NET `ForwardedHeaders` middleware to your pipeline. Most network infrastructure that proxies requests will set the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) and [X-Forwarded-Proto](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) HTTP headers to describe the original request's IP address and scheme.
+In almost all cases, these problems can be solved by adding the ASP.NET `ForwardedHeaders` middleware to your pipeline. Most network infrastructure that proxies requests will set the [`X-Forwarded-For`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) and [`X-Forwarded-Proto`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto) HTTP headers to describe the original request's IP address and scheme.
 
 The `ForwardedHeaders` middleware reads the information in these headers on incoming requests and makes it available to the rest of the ASP.NET pipeline by updating the [`HttpContext.HttpRequest`](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/use-http-context?view=aspnetcore-7.0#httprequest). This transformation should be done early in the pipeline, certainly before the IdentityServer middleware and ASP.NET authentication middleware process requests, so that the presence of a proxy is abstracted away first.
 
 The appropriate configuration for the forwarded headers middleware depends on your environment. In general, you need to configure which headers it should respect, the IP address or IP address range of your proxy, and the number of proxies you expect (when there are multiple proxies, each one is captured in the X-Forwarded-* headers).
 
 There are two ways to configure this middleware:
-1. Enable the environment variable `ASPNETCORE_FORWARDEDHEADERS_ENABLED`. This is the simplest option, but doesn't give you as much control. It automatically adds the forwarded headers middleware to the pipeline, and configures it to accept forwarded headers from any single proxy, respecting the X-Forwarded-For and X-Forwarded-Proto headers. This is often the right choice for cloud hosted environments and Kubernetes clusters.
-2. Configure the `ForwardedHeadersOptions` in DI, and use the ForwardedHeaders middleware explicitly in your pipeline. The advantage of configuring the middleware explicitly is that you can configure it in a way that is appropriate for your environment, if the defaults used by ASPNETCORE_FORWARDEDHEADERS_ENABLED are not what you need. Most notably, you can use the `KnownNetworks` or `KnownProxies` options to only accept headers sent by a known proxy, and you can set the `ForwardLimit` to allow for multiple proxies in front of your IdentityServer. This is often the right choice when you have more complex proxying going on, or if your proxy has a stable IP address.
+1. Enable the environment variable `ASPNETCORE_FORWARDEDHEADERS_ENABLED`. This is the simplest option, but doesn't give you as much control. It automatically adds the forwarded headers middleware to the pipeline, and configures it to accept forwarded headers from any single proxy, respecting the `X-Forwarded-For` and `X-Forwarded-Proto` headers. This is often the right choice for cloud hosted environments and Kubernetes clusters.
+2. Configure the `ForwardedHeadersOptions` in DI, and use the ForwardedHeaders middleware explicitly in your pipeline. The advantage of configuring the middleware explicitly is that you can configure it in a way that is appropriate for your environment, if the defaults used by `ASPNETCORE_FORWARDEDHEADERS_ENABLED` are not what you need. Most notably, you can use the `KnownNetworks` or `KnownProxies` options to only accept headers sent by a known proxy, and you can set the `ForwardLimit` to allow for multiple proxies in front of your IdentityServer. This is often the right choice when you have more complex proxying going on, or if your proxy has a stable IP address.
 
-In a client codebase operating behind a proxy, you'll need to configure the `ForwardedHeadersOptions`. Be sure to correctly set values for `KnownNetworks` and `KnownProxies` for your production
-environments. By default, `KnownNetworks` and `KnownProxies` support localhost with values of `127.0.0.1` and `::1` respectively. This is useful (and secure!) for local development
-environments and for solutions where the reverse proxy and the .NET web host runs on the same machine.
+By default, `KnownNetworks` and `KnownProxies` support localhost with values of `127.0.0.1/8` and `::1` respectively. This is useful (and secure!) for local development environments and for solutions where the reverse proxy and the .NET web host runs on the same machine.
+
+In production environments when operating behind a proxy, you'll need to configure the `ForwardedHeadersOptions`. Be sure to correctly set values for `KnownNetworks` and `KnownProxies` for your environments, as otherwise requests may be blocked.
 
 ```csharp
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -87,7 +88,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 ```
 
-Please consult the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer) for more details.
+Please consult the [Microsoft documentation on configuring ASP.NET Core to work with proxy servers and load balancers](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer) for more details.
 
 ## ASP.NET Core Data Protection
 

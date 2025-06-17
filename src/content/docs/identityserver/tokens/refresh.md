@@ -73,7 +73,7 @@ Refresh tokens are a high-value target for attackers, because they typically hav
 tokens.
 
 However, refresh tokens for _confidential clients_ are bound to that client; they can only be used by the client they
-are issued to and the client is required to authenticate itself in order to do so. An attacker able to obtain a refresh
+are issued to and the client is required to authenticate itself to do so. An attacker able to obtain a refresh
 token issued to a confidential client cannot use it without the client's credentials.
 
 Refresh tokens issued to public clients are not bound to the client in the same way, since the client cannot
@@ -132,15 +132,15 @@ avoids those writes.
 
 To make one time use tokens more robust to network failures, you can customize the behavior of the `RefreshTokenService`
 such that consumed tokens can be used under certain circumstances, perhaps for a small length of time after they are
-consumed. To do so, create a subclass of the `DefaultRefreshTokenService` and override its *AcceptConsumedTokenAsync(
-RefreshToken refreshToken)* method. This method takes a consumed refresh token and returns a boolean flag that indicates
+consumed. To do so, create a subclass of the `DefaultRefreshTokenService` and override its `AcceptConsumedTokenAsync(
+RefreshToken refreshToken)` method. This method takes a consumed refresh token and returns a boolean flag that indicates
 if that token should be accepted, that is, allowed to be used to obtain an access token. The default implementation in
 the `DefaultRefreshTokenService` rejects all consumed tokens, but your customized implementation could create a time
 window where consumed tokens can be used.
 
 New options added In 6.3 interact with this feature. The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUse`
 flag will cause OneTime refresh tokens to be deleted on use, rather than marked as consumed. This flag will need to be
-disabled in order to allow a customized Refresh Token Service to use consumed tokens.
+disabled to allow a customized Refresh Token Service to use consumed tokens.
 
 Consumed tokens can be cleaned up by a background process, enabled with the existing
 `OperationalStoreOptions.EnableTokenCleanup` and `OperationalStoreOptions.RemoveConsumedTokens` flags. Starting in 6.3,
@@ -157,22 +157,37 @@ builder.Services.TryAddTransient<IRefreshTokenService, YourCustomRefreshTokenSer
 
 ### Replay Detection
 
-In addition to one-time only usage semantics, you might wish to add replay detection for refresh tokens. If a refresh
-token is configured for one-time only use but used multiple times, that means that either the client application is
-accidentally mis-using the token (a bug), a network failure is preventing the client application from rotating
-properly (see above), or an attacker is attempting a replay attack. Depending on your security requirements, you might
-decide to treat this situation as an attack, and take action. What you might do is, if a consumed refresh token is ever
-used, revoke all access for that client/user combination. This could include deleting refresh tokens, revoking access
-tokens (if they are introspection tokens), ending the user's server side session, and sending back-channel logout
-notifications to client applications. You might also consider alerting the user to suspicious activity on their account.
+In addition to one-time only usage semantics, you can add replay detection for refresh tokens.
+Multiple uses of a one-time-only refresh token may indicate:
+
+* A client application bug
+* Network failure during token rotation
+* A potential replay attack
+
+Depending on your security requirements, you can treat this situation as an attack, and take action.
+If a consumed refresh token is ever used, you could revoke all access for that client/user combination.
+This could include deleting refresh tokens, revoking access tokens (if they are introspection tokens),
+ending the user's server side session, and sending back-channel logout notifications to client applications.
+You can also consider alerting the user to suspicious activity on their account.
+
+:::caution
 Keep in mind that these actions are disruptive and possibly alarming to the user, and there is a potential for false
 positives.
+:::
 
-Implementing replay detection is similar to [accepting consumed tokens](#accepting-consumed-tokens). Extend the
-`AcceptConsumedTokenAsync` method of the `DefaultRefreshTokenService` and add the additional revocation or alerting
-behavior that you choose. In 6.3, the same new options that interact with accepting consumed tokens also interact with
-replay detection. The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUse` flag needs to be disabled so that
-used tokens persist and can be used to detect replays. The cleanup job should also be configured to not delete consumed
+While replay and re-use detection can be useful, they can be tricky to implement due to potential race conditions.
+On the server, you'll need a robust synchronization across instances (e.g. using our persisted grant store).
+On the client, refresh operations will have to be coordinated to not end up with invalid refresh tokens
+(e.g. when multiple client instances refresh in an uncontrolled way).
+
+Implementing replay detection can be done in a similar way to [accepting consumed tokens](#accepting-consumed-tokens). Extending the
+`AcceptConsumedTokenAsync` method of the `DefaultRefreshTokenService`, you can add the additional revocation or alerting
+behavior that you choose. Depending on your scenario, overriding the `CreateRefreshTokenAsync`,
+`ValidateRefreshTokenAsync` and `UpdateRefreshTokenAsync` methods may also be desired.
+
+The options that interact with accepting consumed tokens also interact with replay detection.
+The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUse` flag needs to be disabled so that used tokens persist 
+and can be used to detect replays. The cleanup job should also be configured to not delete consumed
 tokens.
 
 See also: The [IRefreshTokenService](/identityserver/reference/services/refresh-token-service.md) reference.

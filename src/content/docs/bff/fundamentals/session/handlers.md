@@ -17,9 +17,14 @@ You typically use the following two ASP.NET Core authentication handlers to impl
 * the OpenID Connect authentication handler to interact with the remote OIDC / OAuth token service, e.g. Duende IdentityServer
 * the cookie handler to do local session management
 
-Furthermore, the BFF plumbing relies on the configuration of the ASP.NET Core default authentication schemes. This describes how the two handlers share the work.
+The BFF relies on the configuration of the ASP.NET Core default authentication schemes. Both the OpenID Connect authentication
+handler and cookie handler need to be configured, with the ASP.NET Core authentication system default schemes specified:
 
-OpenID Connect for *challenge* and *signout* - cookies for all the other operations:
+* `DefaultScheme` should be the cookie handler, so the BFF can do local session management;
+* `DefaultChallengeScheme` should be the OpenID Connect handler, so the BFF defaults to remote authentication;
+* `DefaultSignOutScheme` should be the OpenID Connect handler, so the BFF uses remote sign-out.
+
+A minimal configuration looks like this:
 
 ```csharp
 builder.Services.AddAuthentication(options =>
@@ -36,14 +41,21 @@ builder.Services.AddAuthentication(options =>
     });
 ```
 
-## The OpenID Connect Authentication Handler
-The OIDC handler connects the application to the authentication / access token system.
+Now let's look at some more details!
 
-The exact settings depend on the OIDC provider and its configuration settings. We recommend:
+## The OpenID Connect Authentication Handler
+
+The OpenID Connect (OIDC) handler connects the application to the authentication / access token system.
+
+It can be configured to use any OpenID Connect provider: [Duende IdentityServer](https://duendesoftware.com/products/identityserver/),
+[Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id), [Auth0](https://auth0.com/),
+[Google Cloud Identity Platform](https://cloud.google.com/identity-platform), [Amazon Cognito](https://aws.amazon.com/cognito/), and more.
+
+The exact settings to use depend on the OIDC provider and its configuration settings. We recommend to:
 
 * use authorization code flow with PKCE
 * use a *response_mode* of *query* since this plays nicer with *SameSite* cookies
-* use a strong client secret. Since the BFF can be a confidential client, it is totally possible to use strong client authentication like JWT assertions, JAR or MTLS. Shared secrets work as well of course.
+* use a strong client secret. Since the BFF can be a confidential client, it is possible to use strong client authentication like JWT assertions, JAR, or mTLS. Shared secrets work as well.
 * turn off inbound claims mapping
 * save the tokens into the authentication session so they can be automatically managed
 * request a refresh token using the *offline_access* scope
@@ -82,6 +94,7 @@ builder.Services.AddAuthentication().AddOpenIdConnect("oidc", options =>
 The OIDC handler will use the default sign-in handler (the cookie handler) to establish a session after successful validation of the OIDC response.
 
 ## The Cookie Handler
+
 The cookie handler is responsible for establishing the session and manage authentication session related data.
 
 Things to consider:

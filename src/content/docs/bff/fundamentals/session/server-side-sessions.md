@@ -69,10 +69,11 @@ Just enable session cleanup:
 ```csharp
 var cn = _configuration.GetConnectionString("db");
         
-builder.Services.AddBff(options => {
+builder.Services.AddBff(options =>
+    {
         options.EnableSessionCleanup = true;
     })
-    .AddEntityFrameworkServerSideSessions(options=> 
+    .AddEntityFrameworkServerSideSessions(options => 
     {
         options.UseSqlServer(cn);        
     });

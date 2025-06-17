@@ -126,17 +126,17 @@ This options class contains properties to control the operational store and `Per
 `EnableTokenCleanup`
     Indicates whether expired grants and pushed authorization requests will be automatically cleaned up from the database. The default is `false`.
 
-`RemoveConsumedTokens` [added in 5.1]
+`RemoveConsumedTokens` <span data-shb-badge data-shb-badge-variant="default">added &gt;=5.1</span>
     Indicates whether consumed grants will be automatically cleaned up from the database. The default is `false`.
         
 `TokenCleanupInterval`
     The token cleanup interval (in seconds). The default is 3600 (1 hour).
 
-`ConsumedTokenCleanupDelay` [added in 6.3]
+`ConsumedTokenCleanupDelay` <span data-shb-badge data-shb-badge-variant="default">added &gt;=6.3</span>
     The consumed token cleanup delay (in seconds). The default is 0. This delay is the amount of time that must elapse before tokens marked as consumed can be deleted. Note that only refresh tokens with
     OneTime usage can be marked as consumed. 
 
-`FuzzTokenCleanupStart` [added in 7.0]
+`FuzzTokenCleanupStart` <span data-shb-badge data-shb-badge-variant="default">added &gt;=7.0</span>
     The background token cleanup job runs at a configured interval. If multiple nodes run the cleanup job at the same time, update conflicts might occur in the store. To reduce the probability of that happening, the startup time can be fuzzed. When enabled, the first run is scheduled at a random time between the host startup and the configured
     TokenCleanupInterval. Subsequent runs are run on the configured TokenCleanupInterval. Defaults to `true`.
 

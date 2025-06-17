@@ -15,7 +15,8 @@ IdentityServer4 reached its end of life (EOL) on December 13, 2022. It is strong
 Depending on your current version of IdentityServer4, different steps may be required.
 You can determine the version of IdentityServer4 by running the `dotnet list` command at the root of your IdentityServer host project, or using NuGet tooling in Visual Studio or JetBrains Rider.
 
-<Tabs>
+{/* prettier-ignore */}
+<Tabs syncKey="operatingSystem">
   <TabItem label="Windows">
     <Code
       code={'dotnet list package | sls "IdentityServer4"'}
@@ -164,6 +165,7 @@ Make sure to verify the database migrations as part of your IdentityServer4 upgr
 
 For the operational data, you can create and apply an Entity Framework Core migration that targets the `PersistedGrantDbContext` database context.
 
+{/* prettier-ignore */}
 <Steps>
 
 1. Create the migration:
@@ -183,6 +185,7 @@ For the operational data, you can create and apply an Entity Framework Core migr
 For your configuration data, the conversation from the old schema to the new will need to be performed by applying a custom SQL script.
 We'll start with creating a migration that targets the `ConfigurationDbContext` database context:
 
+{/* prettier-ignore */}
 <Steps>
 
 1. Create the migration:
@@ -416,6 +419,7 @@ In this section, we'll look at updating the database schema based on the stores 
 You'll need to create two database migrations that update the database schema: one that targets the `PersistedGrantDbContext` (for operational data), and one that targets the `ConfigurationDbContext` (for configuration data).
 Note that you may want to change the database migration paths in the examples below to match your project structure.
 
+{/* prettier-ignore */}
 <Steps>
 
 1. Create the migrations for the operational and configuration database context:

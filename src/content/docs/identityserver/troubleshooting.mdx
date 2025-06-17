@@ -11,6 +11,9 @@ redirect_from:
   - /identityserver/v7/troubleshooting/wilson/
 ---
 
+import { Code } from "astro/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
 When troubleshooting an IdentityServer setup we have some tips and tricks to share. These are both ways to get more
 information out of the system and how to detect and fix some common problems.
 
@@ -20,15 +23,15 @@ Duende IdentityServer is a security product and by design the error messages ret
 are very short. The actual error message is always written to the logs. The very first step in any troubleshooting
 should be to review the IdentityServer logs.
 
-Another common issue is that the logs are redacted and that the interesting/relevant information is overwritten with 
-**'\[PII is hidden]'**. (For example *The '[PII is hidden]' for signing cannot be smaller than '[PII is hidden]' bits*).
+Another common issue is that the logs are redacted and that the interesting/relevant information is overwritten with
+**'\[PII is hidden]'**. (For example _The '[PII is hidden]' for signing cannot be smaller than '[PII is hidden]' bits_).
 This is a privacy feature of the Microsoft.IdentityModel libraries that we use for token handling. The definition of
 possible PII in those libraries is very generous and includes key sizes, URLs etc.
 
 There is a static property that can be set to disable the redacting.
 
 ```csharp
-IdentityModelEventSource.ShowPII = true; 
+IdentityModelEventSource.ShowPII = true;
 ```
 
 We recommend to always set this flag to true in any development and test environment that does not contain real personal
@@ -39,9 +42,9 @@ data.
 ASP.NET Core Data Protection is an encryption mechanism that is heavily used by Duende.IdentityServer and the ASP.NET
 Core Authentication libraries. If it is not correctly configured it might result in issues such as
 
-* Unable to unprotect the message.State.
-* The key `{xxxxx-xxxx-xxx-xxx-xxxxxxx}` was not found in the key ring.
-* Failed to unprotect AuthenticationTicket payload for key {key}
+- Unable to unprotect the message.State.
+- The key `{xxxxx-xxxx-xxx-xxx-xxxxxxx}` was not found in the key ring.
+- Failed to unprotect AuthenticationTicket payload for key `{key}`
 
 See [our data protection guide](/identityserver/deployment#data-protection-keys) for more
 information.
@@ -126,18 +129,18 @@ found 'Boolean Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfig
 
 Errors that we have seen because of IdentityModel version mismatches include:
 
-* IDX10500: Signature validation failed. No security keys were provided to validate the signature.
-* System.MissingMethodException: Method not found 'Boolean
+- IDX10500: Signature validation failed. No security keys were provided to validate the signature.
+- System.MissingMethodException: Method not found 'Boolean
   Microsoft.IdentityModel.Tokens.TokenUtilities.IsRecoverableConfiguration(...)'
-* Microsoft.AspNetCore.Authentication.AuthenticationFailureException: An error was encountered while handling the remote
+- Microsoft.AspNetCore.Authentication.AuthenticationFailureException: An error was encountered while handling the remote
   login. ---> System.InvalidOperationException: An invalid request URI was provided. Either the request URI must be an
   absolute URI or BaseAddress must be set.
 
 ### Diagnosing
 
-Run this command in powershell:
+Run this command in PowerShell:
 
-```bash
+```powershell
 dotnet list package --include-transitive | sls "Microsoft.IdentityModel|System.IdentityModel"
 ```
 
@@ -153,7 +156,7 @@ The output should look something like this:
    > System.IdentityModel.Tokens.Jwt                            7.0.3
 ```
 
-In the above example it is clear that there are different versions active.
+In the example above, it is clear that there are different versions active.
 
 ### Fixing
 
@@ -173,7 +176,7 @@ version used.
 In some installations, upgrading .NET and IdentityServer has caused performance issues. Since the IdentityServer and
 .NET version upgrades typically are done at the same time, it is sometimes hard to tell what the root cause is
 for the performance degradation. When working with installations to find the root cause, there are some dependencies
-that have been found to cause issues in specific verisons.
+that have been found to cause issues in specific versions.
 
 ### PostgreSQL Pooling
 
@@ -204,13 +207,13 @@ and possible mitigations.
 
 The `Azure.Core` package versions `1.41.0` and prior had an issue that caused delays when accessing Azure resources.
 This could be Azure blob storage or key vault for data protection or Azure SQL Server for stores, especially if managed
-identities are used. This package is typically not referenced directly but brought in as a transient dependency 
+identities are used. This package is typically not referenced directly but brought in as a transient dependency
 through other packages. Ensure to use version `1.42.0` or later if you are hosting on Azure.
 
 ### Entity Framework Core, Microsoft.Data.SqlClient, and SqlServerRetryingExecutionStrategy
 
 As more developers migrate their database-powered application to the cloud,
-they will need to handle intermittent connection failures. In most cases, these transient connection failures occur and resolve in a short period of time, allowing the application to self-correct and continue processing requests. The strategy is known as **connection resiliency**. 
+they will need to handle intermittent connection failures. In most cases, these transient connection failures occur and resolve in a short period of time, allowing the application to self-correct and continue processing requests. The strategy is known as **connection resiliency**.
 
 In recent versions of Entity Framework Core and `Microsoft.Data.SqlClient`, you can enable this retry strategy explicitly, but in the case of `Microsoft.Data.SqlClient`, when operating in a cloud environment, this strategy is enabled by default or defined in the connection string.
 
@@ -229,8 +232,8 @@ In most cases, this is a _good feature to have enabled_ but there are drawbacks 
 - Enabling retry on failure causes Entity Framework Core to buffer the result set. This significantly increases memory requirements and causes garbage collection pauses.
 - Some versions of `Microsoft.Data.SqlClient` call `Thread.Sleep` that can lock threads for up to **_10 seconds_**. This can lead to thread exhaustion and server unresponsiveness. We've isolated this issue to versions.
 
-  | Microsoft.EntityFrameworkCore.SqlServer | Microsoft.Data.SqlClient | Status     |
-  |:----------------------------------------|:-------------------------|:-----------|
+  | Microsoft.EntityFrameworkCore.SqlServer | Microsoft.Data.SqlClient | Status      |
+  | :-------------------------------------- | :----------------------- | :---------- |
   | `8.0.0`                                 | `>=5.1.1`                | ✅ Good     |
   | `8.0.3`                                 | `>=5.1.5`                | ❌ Affected |
   | `8.0.4`                                 | `>=5.1.5`                | ❌ Affected |
@@ -268,3 +271,144 @@ When dealing with external authentication, you may want to set `MapInboundClaims
 ### Implement `OnTicketReceived` To Reduce Cookie Size
 
 When dealing with external authentication, you may want to implement `OnTicketReceived` to reduce the size of the cookie. This is a callback that is invoked after the external authentication process is complete. You can use this callback to remove any claims that are not needed by your solution.
+
+## URL and Query String Size Limits and Management
+
+While most browsers currently support URLs longer than 2000 characters, web servers may still return an error status code
+when they find that the URL or query string is too long.
+
+For most authentication flows, URLs will stay well under 2000 characters in length. When federating to an external
+identity provider, however, URLs can quickly grow too large because of all the query parameters that were added.
+
+Web servers can respond differently when a URL or query string is too large:
+
+- Apache responds with `414 Request-URI Too Large` when a URL exceeds 8190 bytes.
+- IIS responds with `404 Not Found` and uses two different substatus codes depending on the issue:
+  - If the URL exceeds 4096 bytes, the substatus code is `404.14 URL Too Long`.
+  - If the query string exceeds 2048 bytes, the substatus code is `404.15 Query String Too Long`.
+- Nginx responds with `414 Request-URI Too Large` when a URL exceeds 8192 bytes.
+
+To fix this issue, there are two solutions:
+
+### Reduce State Query Parameter Size
+
+When IdentityServer redirects the user to an external Identity Provider, it includes a data protected `state` query parameter.
+The combination of this `state` parameter with other data being added by the external IdP can cause the URL to become too large.
+You can drastically reduce the size of the `state` parameter by storing the state in IdentityServer, rather than passing it along
+in the request URL.
+
+See [External Providers - State, URL length, And ISecureDataFormat](/identityserver/ui/login/external/#state-url-length-and-isecuredataformat)
+for more information about this workaround.
+
+### Increase the Maximum Size of URL or Query String data
+
+Depending on the web server you're using, you can change the maximum size of the URL or query string.
+
+:::caution
+While increasing the size limits may work for your use case, the first solution is a more robust way to reduce the size
+of the query string when federating with an external identity provider.
+:::
+
+{/* prettier-ignore */}
+<Tabs>
+  <TabItem label="Apache">
+    You can increase the value for `LimitRequestLine` to allow longer URLs, by adding or changing this directive in your
+    server config file (for all virtual hosts), or for specific virtual hosts in their respective `<VirtualHost></VirtualHost>` entry.
+
+    See https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestline for more information.
+
+  </TabItem>
+  <TabItem label="Microsoft IIS">
+    Configure the `requestLimits` XML element to increase the max URL and query string size in your `web.config` file:
+    <Code
+      lang="xml"
+      title="web.config"
+      code={`
+      <configuration>
+        <system.webServer>
+          <security>
+            <requestFiltering>
+              <requestLimits maxUrl="8192" maxQueryString="4096" />
+            </requestFiltering>
+          </security>
+        </system.webServer>
+      </configuration>
+      `}
+    />
+    See https://learn.microsoft.com/en-us/iis/configuration/system.webserver/security/requestfiltering/requestlimits/ for more information.
+  </TabItem>
+  <TabItem label="Nginx">
+    You can increase the size for each buffer in `large_client_header_buffers` to allow longer URLs, by adding or changing this directive in the
+    `http { }` context (for all virtual servers), or for specific virtual servers in their respective `server { }` entry.
+
+    This setting has two parameters:
+    - the number of buffers
+    - the size of each buffer
+
+    The second parameter, the size of the each buffer, determines the maximum URL length.
+
+    See https://nginx.org/en/docs/http/ngx_http_core_module.html#large_client_header_buffers for more information.
+
+  </TabItem>
+</Tabs>
+
+## X.509 Certificates
+
+When your IdentityServer is hosted in a Windows environment, it is possible that private key material
+is being stored or read from a user profile location. On Azure however, App Services are typically configured not to load
+a user profile because this brings overhead and is often not needed. This can result in runtime errors when IdentityServer
+attempts to generate or load key material:
+
+```text
+System.Security.Cryptography.CryptographicException: Access denied.
+   at System.Security.Cryptography.X509Certificates.X509CertificateLoader.ImportPfx(ReadOnlySpan`1 data, ReadOnlySpan`1 password, X509KeyStorageFlags keyStorageFlags)
+   at System.Security.Cryptography.X509Certificates.X509CertificateLoader.LoadPkcs12NoLimits(ReadOnlyMemory`1 data, ReadOnlySpan`1 password, X509KeyStorageFlags keyStorageFlags, Pkcs12Return& earlyReturn)
+   at System.Security.Cryptography.X509Certificates.X509CertificateLoader.LoadPkcs12(ReadOnlyMemory`1 data, ReadOnlySpan`1 password, X509KeyStorageFlags keyStorageFlags, Pkcs12LoaderLimits loaderLimits)
+   at System.Security.Cryptography.X509Certificates.X509CertificateLoader.LoadPkcs12Pal(ReadOnlySpan`1 data, ReadOnlySpan`1 password, X509KeyStorageFlags keyStorageFlags, Pkcs12LoaderLimits loaderLimits)
+   at System.Security.Cryptography.X509Certificates.CertificatePal.FromBlobOrFile(ReadOnlySpan`1 rawData, String fileName, SafePasswordHandle password, X509KeyStorageFlags keyStorageFlags)
+   at System.Security.Cryptography.X509Certificates.X509Certificate..ctor(Byte[] rawData, String password, X509KeyStorageFlags keyStorageFlags)
+   at System.Security.Cryptography.X509Certificates.X509Certificate2..ctor(Byte[] rawData, String password, X509KeyStorageFlags keyStorageFlags)
+   at Duende.IdentityServer.Services.KeyManagement.X509KeyContainer.ToSecurityKey() in /_/identity-server/src/IdentityServer/Services/Default/KeyManagement/X509KeyContainer.cs:line 108
+   at Duende.IdentityServer.Services.KeyManagement.AutomaticKeyManagerKeyStore.<>c.<GetValidationKeysAsync>b__5_0(KeyContainer x) in /_/identity-server/src/IdentityServer/Services/Default/KeyManagement/AutomaticKeyManagerKeyStore.cs:line 106
+   at System.Linq.Enumerable.ArraySelectIterator`2.Fill(ReadOnlySpan`1 source, Span`1 destination, Func`2 func)
+   at System.Linq.Enumerable.ArraySelectIterator`2.ToArray()
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at Duende.IdentityServer.Services.KeyManagement.AutomaticKeyManagerKeyStore.GetValidationKeysAsync() in /_/identity-server/src/IdentityServer/Services/Default/KeyManagement/AutomaticKeyManagerKeyStore.cs:line 106
+   at Duende.IdentityServer.Services.DefaultKeyMaterialService.GetValidationKeysAsync() in /_/identity-server/src/IdentityServer/Services/Default/DefaultKeyMaterialService.cs:line 112
+   at Duende.IdentityServer.ResponseHandling.DiscoveryResponseGenerator.CreateDiscoveryDocumentAsync(String baseUrl, String issuerUri) in /_/identity-server/src/IdentityServer/ResponseHandling/Default/DiscoveryResponseGenerator.cs:line 110
+   at Duende.IdentityServer.Endpoints.DiscoveryEndpoint.ProcessAsync(HttpContext context) in /_/identity-server/src/IdentityServer/Endpoints/DiscoveryEndpoint.cs:line 82
+   at Duende.IdentityServer.Hosting.IdentityServerMiddleware.Invoke(HttpContext context, IdentityServerOptions options, IEndpointRouter router, IUserSession userSession, IEventService events, IIssuerNameService issuerNameService, ISessionCoordinationService sessionCoordinationService) in /_/identity-server/src/IdentityServer/Hosting/IdentityServerMiddleware.cs:line 109
+```
+
+To fix this issue on Azure hosted web applications, add the following environment variable to the App Service:
+
+```text
+WEBSITE_LOAD_USER_PROFILE=1
+```
+
+After saving this environment variable, your App Service will restart and Kudu (the engine behind git deployments in Azure App Service)
+will load the user profile when running your web application.
+For more information about this and other Kudu configuration options, see https://github.com/projectkudu/kudu/wiki/Configurable-settings.
+
+If you're hosting the web application using IIS on Windows, you'll need to configure the application pool to load the user profile. See https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/advanced?view=aspnetcore-9.0#data-protection
+for more information on how to configure the application pool.
+
+### Why does a web application need to load a user profile to work with X.509 certificates?
+
+The `X509Certificate2` class in .NET stores the private key part of a certificate somewhere else depending on the use of `X509KeyStorageFlags`:
+
+- `X509KeyStorageFlags.MachineKeySet` stores the private key in a `Keys` registry subfolder of the certificate store.
+- `X509KeyStorageFlags.UserKeySet` stores the private key in the current user's roaming profile folder, e.g. `%AppData%\Microsoft\SystemCertificates\My\Keys`.
+
+When loading a certificate containing both a public and private key in .NET, the private key may also end up in different locations:
+
+- Machine keys end up in the `%ProgramData%\Microsoft\Crypto\RSA\MachineKeys` folder.
+- User keys are stored in the current user's roaming profile folder but this time in a different location: `%AppData%\Microsoft\Crypto\RSA`
+
+If you don't explicitly use the `X509KeyStorageFlags.MachineKeySet` flag value, the default behavior is to use `X509KeyStorageFlags.DefaultKeySet`.
+According to the [.NET documentation][1], this means: _The default key set is used. **The user key set is usually the default**_.
+
+When an application runs without an active user profile, any private key material stored in a user profile can't be accessed.
+Even loading a certificate can fail, since the load operation could attempt to store the private key material in the user profile.
+
+[1]: https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags
