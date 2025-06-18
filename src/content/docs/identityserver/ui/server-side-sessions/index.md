@@ -9,9 +9,7 @@ redirect_from:
   - /identityserver/v7/ui/server_side_sessions/
 ---
 
-:::tip
-Added in Duende IdentityServer 6.1
-:::
+<span data-shb-badge data-shb-badge-variant="default">Added in 6.1</span>
 
 When a user logs in interactively, their authentication session is managed by the ASP.NET Core authentication system,
 and more specifically the cookie authentication handler.
