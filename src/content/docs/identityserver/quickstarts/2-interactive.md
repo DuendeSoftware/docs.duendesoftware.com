@@ -555,7 +555,12 @@ Register and configure the services for the OpenId Connect handler in`src/Identi
 
 ```cs
 // HostingExtensions.cs
-builder.Services.AddAuthentication()
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = "Cookies";
+        options.DefaultChallengeScheme = "oidc";
+    })
+    .AddCookie("Cookies")
     .AddOpenIdConnect("oidc", "Sign-in with demo.duendesoftware.com", options =>
     {
         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
