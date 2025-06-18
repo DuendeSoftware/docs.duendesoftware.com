@@ -9,9 +9,12 @@ redirect_from:
   - /identityserver/v7/ui/server_side_sessions/session_expiration/
 ---
 
-If the user session ends when the session cookie expires without explicitly triggering logout, there is most likely the
+import { Code } from "astro/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+If the user session ends when the session cookie expires without explicitly triggering logout, there is most likely a
 need to clean up the server-side session data.
-In order to remove these expired records, there is an automatic cleanup mechanism that periodically scans for expired
+To remove these expired records, there is an automatic cleanup mechanism that periodically scans for expired
 sessions.
 When these records are cleaned up, you can optionally notify the client that the session has ended via back-channel
 logout.
@@ -25,7 +28,7 @@ sessions, you can.
 
 For example, to change the interval:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options => {
     options.ServerSideSessions.RemoveExpiredSessionsFrequency = TimeSpan.FromSeconds(60);
@@ -35,7 +38,7 @@ builder.Services.AddIdentityServer(options => {
 
 To disable:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options => {
     options.ServerSideSessions.RemoveExpiredSessions = false;
@@ -51,3 +54,37 @@ to client applications participating in the session. You can use this mechanism 
 an [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeout/) that applies across all your client applications.
 
 The `ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout` flag enables this behavior, and it is on by default.
+
+### Configuring Server-Side Session Lifetime
+
+If you need to change the default lifetime of server-side sessions, there are two ways to do so, depending on whether
+you're using ASP.NET Core Identity or not.
+
+<Tabs>
+    <TabItem label="Default behavior">
+        The default session lifetime of 10 hours is inherited from the [`IdentityServerOptions.Authentication.CookieLifetime`](/identityserver/reference/options/#authentication) property.
+        When configuring IdentityServer, you can override this setting like so:
+
+        <Code
+            lang="csharp"
+            title="Program.cs"
+            code={`
+builder.Services.AddIdentityServer(options => {
+    options.Authentication.CookieLifetime = TimeSpan.FromMinutes(42);
+});`}
+        />
+    </TabItem>
+    <TabItem label="ASP.NET Core Identity">
+        When using ASP.NET Core Identity, the server-side session follows the lifetime of ASP.NET Core Identity's session cookie, which is 14 days by default.
+        To change the lifetime, you need to reconfigure the application cookie using the `ConfigureApplicationCookie` extension method:
+
+        <Code
+            lang="csharp"
+            title="Program.cs"
+            code={`
+builder.Services.ConfigureApplicationCookie(options => {
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(42);
+});`}
+        />
+    </TabItem>
+</Tabs>
