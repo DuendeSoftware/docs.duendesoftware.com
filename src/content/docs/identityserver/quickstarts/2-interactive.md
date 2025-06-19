@@ -555,12 +555,7 @@ Register and configure the services for the OpenId Connect handler in`src/Identi
 
 ```cs
 // HostingExtensions.cs
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = "Cookies";
-        options.DefaultChallengeScheme = "oidc";
-    })
-    .AddCookie("Cookies")
+builder.Services.AddAuthentication()
     .AddOpenIdConnect("oidc", "Sign-in with demo.duendesoftware.com", options =>
     {
         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
@@ -622,7 +617,7 @@ IdentityServer specific option.
 Add the following to `ConfigureServices` in `src/IdentityServer/HostingExtensions.cs`:
 
 ```cs
-// Program.cs
+// HostingExtensions.cs
 builder.Services.AddAuthentication()
     .AddGoogleOpenIdConnect(
         authenticationScheme: GoogleOpenIdConnectDefaults.AuthenticationScheme,
@@ -631,8 +626,8 @@ builder.Services.AddAuthentication()
         {
             options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
   
-            options.ClientId = "" builder.Configuration["Authentication:Google:ClientId"];
-            options.ClientSecret = ""builder.Configuration["Authentication:Google:ClientSecret"];
+            options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+            options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
         });
 ```
 
