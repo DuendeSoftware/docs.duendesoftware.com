@@ -120,7 +120,7 @@ export default defineConfig({
         {
           icon: "rss",
           label: "Blog",
-          href: "https://blog.duendesoftware.com/",
+          href: "https://duendesoftware.com/blog",
         },
       ],
       components: {
