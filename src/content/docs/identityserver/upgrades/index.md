@@ -16,6 +16,14 @@ changes. Some updates contain changes to the stores used by IdentityServer that 
 schema updates. If you are using our Entity Framework based stores we recommend using Entity Framework
 Migrations.
 
+## Upgrading from version 7.2 to 7.3
+
+See [IdentityServer v7.2 to v7.3](/identityserver/upgrades/v7_2-to-v7_3.md).
+
+## Upgrading from version 7.1 to 7.2
+
+See [IdentityServer v7.1 to v7.2](/identityserver/upgrades/v7_1-to-v7_2.md).
+
 ## Upgrading from version 7.0 to 7.1
 
 IdentityServer v7.1 includes support for **.NET 9** and many other smaller fixes and
@@ -36,30 +44,30 @@ breaking changes that affect your implementation.
 
 There are changes to the stores which requires database schema updates. If you use the Entity Framework
 based stores you need to apply the upgrade and database migrations
-from [6.0 - 6.1](v6_0-to-v6_1). Then
-continue with "Upgrading from version 6.2" below. If you are experienced with the Entity Framework
-Migrations Tooling you may also create a single migration 6.0-7.0.
+from [6.0 - 6.1](/identityserver/upgrades/v6_0-to-v6_1.md). Then
+continue with the [Upgrading from version 6.2](#upgrading-from-version-62) guide. If you are experienced with the Entity Framework
+Migrations Tooling you may also create a single migration from 6.0 to 7.0.
 
 #### Upgrading from version 6.1
 
-There no schema changes or other breaking changes between 6.1 abd 6.2. Follow the "Upgrading from
-version 6.2" guide below.
+There no schema changes or other breaking changes between 6.1 and 6.2.
+Follow the [Upgrading from version 6.2](#upgrading-from-version-62) guide.
 
 #### Upgrading from version 6.2
 
 There are changes to the stores which requires database schema updates. If you use the Entity Framework
 based stores you need to apply the upgrade and database migrations
-from [6.2 - 6.3](v6_2-to-v6_3). If you
-are experienced with the Entity Framework Migrations Tooling you may also create a single migration
-6.2-7.0.
+from [6.2 - 6.3](/identityserver/upgrades/v6_2-to-v6_3.md). If you
+are experienced with the Entity Framework Migrations Tooling you may also create a single migration from
+6.2 to 7.0.
 
 There were minor breaking changes in 6.3, most notably rotated refresh tokens are now deleted immediately
 on use by default. Review
-the [list in the upgrade guide](v6_2-to-v6_3#step-4-breaking-changes) to check
+the [list in the upgrade guide](/identityserver/upgrades/v6_2-to-v6_3.md#step-4-breaking-changes) to check
 if any of them affect your implementation.
 
 Then continue with "Upgrading from version 6.3" below.
 
 #### Upgrading from version 6.3
 
-Follow the [upgrade guide version 6.3 - 7.0](v6_3-to-v7_0)
+Follow the [upgrade guide version 6.3 - 7.0](/identityserver/upgrades/v6_3-to-v7_0.md)
