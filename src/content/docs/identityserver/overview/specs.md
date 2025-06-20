@@ -23,8 +23,7 @@ Duende IdentityServer implements the following specifications:
 * OpenID Connect Back-Channel Logout 1.0 ([spec](https://openid.net/specs/openid-connect-backchannel-1_0.html))
 * Multiple Response Types ([spec](https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html))
 * Form Post Response Mode ([spec](https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html))
-* Enterprise Edition: OpenID Connect Client-Initiated Backchannel Authentication (
-  CIBA) ([spec](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html)).
+* Enterprise Edition: OpenID Connect Client-Initiated Backchannel Authentication (CIBA) ([spec](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html)).
 
 ## OAuth 2.x
 
@@ -50,3 +49,5 @@ Duende IdentityServer implements the following specifications:
 * Enterprise Edition: Resource Indicators for OAuth 2.0 ([RFC 8707](https://tools.ietf.org/html/rfc8707))
 * Enterprise Edition: OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer /
   DPoP ([RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449))
+* FAPI 2.0 Security Profile ([spec](https://openid.net/specs/fapi-security-profile-2_0-final.html))
+* JSON Web Token (JWT) Response for OAuth Token Introspection ([RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html))
