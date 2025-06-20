@@ -69,7 +69,7 @@ Then you need to configure the application to use the BFF Blazor application. Ad
 
             options.TokenValidationParameters.NameClaimType = "name";
             options.TokenValidationParameters.RoleClaimType = "role";
-        }
+        })
         .WithDefaultCookieOptions(options =>
         {
             // Because we use an identity server that's configured on a different site
