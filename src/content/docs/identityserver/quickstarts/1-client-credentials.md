@@ -81,7 +81,7 @@ configuration added for it.
 
 ```console
 cd src
-dotnet new isempty -n IdentityServer
+dotnet new duende-is-empty -n IdentityServer
 ```
 
 This will create the following files within a new `src/IdentityServer` directory:
