@@ -463,7 +463,7 @@ API in the ASP.NET Core routing system. Add the code below to the endpoint confi
   app.MapGet("/local/identity", LocalIdentityHandler)
       .AsBffApiEndpoint();
 
-  app.MapRemoteBffApiEndpoint("/remote", "https://localhost:6001")
+  app.MapRemoteBffApiEndpoint("/remote", new Uri("https://localhost:6001"))
       .WithAccessToken(Duende.Bff.AccessTokenManagement.RequiredTokenType.User);
 ```
 

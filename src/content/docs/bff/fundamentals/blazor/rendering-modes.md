@@ -99,7 +99,7 @@ This diagram shows this in more detail:
 ```csharp
 // setup on the server
 
-app.MapRemoteBffApiEndpoint("/remote-apis/user-token", "https://localhost:5010")
+app.MapRemoteBffApiEndpoint("/remote-apis/user-token", new Uri("https://localhost:5010"))
 
 builder.Services.AddUserAccessTokenHttpClient("callApi",
     configureClient: client => client.BaseAddress = new Uri("https://localhost:5010/"));
