@@ -20,7 +20,8 @@ Diagnostics data is [written to logs periodically](/identityserver/reference/opt
 your operations team to help analyze your IdentityServer configuration.
 
 Diagnostics information is never automatically shared with Duende. In support scenarios, you can choose to manually share
-this diagnostics data with [Duende priority support](/general/support-and-issues.md/#priority-support) to provide additional context.
+this diagnostics data with [Duende priority support](/general/support-and-issues.md/#priority-support) to provide additional context. If needed, you can redact/remove
+entries before doing so.
 
 ## Diagnostics Data Contents
 
@@ -31,9 +32,9 @@ The diagnostics data contains the following information:
 * Assembly information for [IdentityServer-related assemblies](https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Licensing/V2/Diagnostics/DiagnosticEntries/AssemblyInfoDiagnosticEntry.cs#L17)
   * .NET runtime version
   * Assembly name and version
-* Registered authentication schemes
+* Registered authentication schemes (does not include [dynamic providers](/identityserver/ui/login/dynamicproviders.md))
   * Name of the scheme and authentication handler type
-* Registered implementations of Duende IdentityServer extension points
+* Registered non-default implementations of Duende IdentityServer extension points
   * Extension point type, implementation type, assembly name and version
 * [`IdentityServerOptions`](/identityserver/reference/options.md) configuration
 * [Data Protection](/identityserver/deployment.md#aspnet-core-data-protection) configuration
@@ -44,7 +45,7 @@ The diagnostics data contains the following information:
 * Token issue counts (for various token types)
 * Endpoint usage (only for IdentityServer endpoints)
 * Clients configuration (limited to first 100 clients, excluding sensitive information/secrets)
-* Resources configuration
+* Resources configuration (limited to the first 100 resources)
   * Identity resources
   * API resources
   * API scopes
@@ -54,7 +55,7 @@ Diagnostics data [is formatted as JSON](#diagnostics-data-format).
 ## Capturing Diagnostics Data
 
 The IdentityServer diagnostics data is [written to logs periodically](/identityserver/reference/options.md#diagnostics).
-By default, you will see log entries similar to the following in your IdentityServer logs every hour:
+By default, you will see log entries similar to the following in your IdentityServer logs
 
 ```log
 info: Duende.IdentityServer.Diagnostics.Summary[7000]
