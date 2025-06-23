@@ -3,8 +3,8 @@ title: "Packaging and Builds"
 description: "A guide to Duende IdentityServer packages, templates, UI components, and source code accessibility"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
-  order: 4
-  label: Packaging & Builds
+order: 4
+label: Packaging & Builds
 redirect_from:
   - /identityserver/v5/overview/packaging/
   - /identityserver/v6/overview/packaging/
@@ -63,7 +63,7 @@ Duende IdentityServer Quickstart UI (UI assets only)        duende-is-ui        
 Duende IdentityServer with ASP.NET Core Identity            duende-is-aspid       [C#]      Web/Duende/IdentityServer
 Duende IdentityServer with Entity Framework Stores          duende-is-ef          [C#]      Web/Duende/IdentityServer
 Duende IdentityServer with In-Memory Stores and Test Users  duende-is-inmem       [C#]      Web/Duende/IdentityServer
-Duende IdentityServer Quickstart                            duende-is-quickstart  [C#]      Web/Duende/IdentityServer
+Duende IdentityServer                                       duende-is             [C#]      Web/Duende/IdentityServer
 ```
 
 ## Template Descriptions
@@ -144,13 +144,10 @@ internal static class HostingExtensions
             app.UseDeveloperExceptionPage();
         }
 
-        // uncomment if you want to add a UI
         app.UseStaticFiles();
         app.UseRouting();
 
         app.UseIdentityServer();
-
-        // uncomment if you want to add a UI
         app.UseAuthorization();
         app.MapRazorPages().RequireAuthorization();
 
@@ -242,7 +239,7 @@ The template targets SQLite by default, but we have included scripts to easily s
 The quick start template is our most feature-rich offering and a great starting point for developers who want a simple yet effective UI/UX experience.
 
 ```bash
-dotnet new duende-is-quickstart
+dotnet new duende-is
 ```
 
 The template is built on the Entity Framework Core template but provides an administrative UI for managing clients, scopes, and claims against a database storage engine. It also has a diagnostics dashboard showing system information, including the licensing tier and features currently used in your IdentityServer deployment.
@@ -264,11 +261,4 @@ provide you with an instance of Duende IdentityServer that has a user store powe
 library.
 
 [Please read our ASP.NET Identity documentation](/identityserver/aspnet-identity/), to learn more about this integration.
-
-
-
-
-
-
-
 
