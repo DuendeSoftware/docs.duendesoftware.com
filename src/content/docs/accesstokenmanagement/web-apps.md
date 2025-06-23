@@ -1,5 +1,5 @@
 ---
-  title: Web Applications
+title: Web Applications
 data: 2024-10-24
 description: Learn how to manage access tokens in web applications, including setup, configuration, and usage with HTTP clients.
 sidebar:
