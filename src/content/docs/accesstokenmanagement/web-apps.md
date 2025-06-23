@@ -1,7 +1,7 @@
 ---
-title: Web Applications
+  title: Web Applications
 data: 2024-10-24
-description: Learn how to manage access tokens in web applications, including setup, configuration, and usage with HTTP clients
+description: Learn how to manage access tokens in web applications, including setup, configuration, and usage with HTTP clients.
 sidebar:
   label: Web Apps
   order: 3
@@ -9,13 +9,13 @@ redirect_from:
   - /foss/accesstokenmanagement/web_apps/
 ---
 
-The `Duende.AccessTokenManagement` library automates all the tasks around access token lifetime management for
+The `Duende.AccessTokenManagement.OpenIdConnect` library automates all the tasks around access token lifetime management for
 user-centric web applications.
 
 To use this library, start by adding the library to your .NET projects.
 
 ```bash
-dotnet add package Duende.AccessTokenManagement
+dotnet add package Duende.AccessTokenManagement.OpenIdConnect
 ```
 
 While many of the details can be customized, by default the following is assumed:

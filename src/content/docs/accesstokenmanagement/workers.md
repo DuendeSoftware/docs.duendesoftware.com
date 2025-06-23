@@ -1,7 +1,7 @@
 ---
 title: Service Workers and Background Tasks
 date: 2024-10-12
-description: Learn how to manage OAuth access tokens in worker applications and background tasks using Duende.AccessTokenManagement
+description: Learn how to manage OAuth access tokens in worker applications and background tasks using Duende.AccessTokenManagement.
 sidebar:
   label: Service Workers
   order: 2

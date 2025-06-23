@@ -12,9 +12,11 @@ import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
 The `Duende.AccessTokenManagement` library provides automatic access token management features for .NET worker and ASP.NET Core web applications:
 
-- automatic acquisition and lifetime management of client credentials based access tokens for machine-to-machine communication
-- automatic access token lifetime management using a refresh token for API calls on-behalf of the currently logged-in user
+- automatic acquisition and lifetime management of client credentials based access tokens for machine-to-machine communication (using the `Duende.AccessTokenManagement` package)
+- automatic access token lifetime management using a refresh token for API calls on-behalf of the currently logged-in user (using the `Duende.AccessTokenManagement.OpenIdConnect` package)
 - revocation of access tokens
+
+## Machine-to-machine token management
 
 To get started, install the NuGet Package:
 
@@ -22,17 +24,42 @@ To get started, install the NuGet Package:
 dotnet add package Duende.AccessTokenManagement
 ```
 
+See [Service Workers and Background Tasks](/accesstokenmanagement/workers.md) for more information on how to get started.
+
 <CardGrid>
-  <LinkCard
-    href="https://github.com/DuendeSoftware/foss/tree/main/access-token-management"
-    title="GitHub Repository"
-    description="View the source code for this library on GitHub."
-  />
-  <LinkCard
-    href="https://www.nuget.org/packages/Duende.AccessTokenManagement/"
-    title="NuGet Package"
-    description="View the package on NuGet.org."
-  />
+    <LinkCard
+        href="https://github.com/DuendeSoftware/foss/tree/main/access-token-management"
+        title="GitHub Repository"
+        description="View the source code for this library on GitHub."
+    />
+    <LinkCard
+        href="https://www.nuget.org/packages/Duende.AccessTokenManagement/"
+        title="NuGet Package"
+        description="View the package on NuGet.org."
+    />
+</CardGrid>
+
+## User token management
+
+To get started, install the NuGet Package:
+
+```bash
+dotnet add package Duende.AccessTokenManagement.OpenIdConnect
+```
+
+See [Web Applications](/accesstokenmanagement/web-apps.md) for more information on how to get started.
+
+<CardGrid>
+    <LinkCard
+        href="https://github.com/DuendeSoftware/foss/tree/main/access-token-management"
+        title="GitHub Repository"
+        description="View the source code for this library on GitHub."
+    />
+    <LinkCard
+        href="https://www.nuget.org/packages/Duende.AccessTokenManagement.OpenIdConnect/"
+        title="NuGet Package"
+        description="View the package on NuGet.org."
+    />
 </CardGrid>
 
 ## License and Feedback
