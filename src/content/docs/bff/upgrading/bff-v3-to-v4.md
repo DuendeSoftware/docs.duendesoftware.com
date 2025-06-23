@@ -30,13 +30,17 @@ The syntax for configuring remote APIs has changed slightly:
 
 ```diff lang="csharp" title="Program.cs"
 // Use a client credentials token
-app.MapRemoteBffApiEndpoint("/api/client-token", "https://localhost:5010")
+- app.MapRemoteBffApiEndpoint("/api/client-token", "https://localhost:5010")
 -    .RequireAccessToken(TokenType.Client);
+
++ app.MapRemoteBffApiEndpoint("/api/client-token", new Uri("https://localhost:5010"))
 +    .WithAccessToken(RequiredTokenType.Client);      
 
 // Use the client token only if the user is logged in
-app.MapRemoteBffApiEndpoint("/api/optional-user-token", "https://localhost:5010")
+- app.MapRemoteBffApiEndpoint("/api/optional-user-token", "https://localhost:5010")
 -    .WithOptionalUserAccessToken();
+
++ app.MapRemoteBffApiEndpoint("/api/optional-user-token", new Uri("https://localhost:5010"))
 +    .WithAccessToken(RequiredTokenType.UserOrNone);            
 ```
 
