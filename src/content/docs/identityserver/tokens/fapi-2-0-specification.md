@@ -8,13 +8,11 @@ sidebar:
     variant: tip
 ---
 
-:::note
-Available **ONLY** in Duende IdentityServer 7.3+
-:::
+<span data-shb-badge data-shb-badge-variant="default">Added in 7.3</span>
 
-The FAPI 2.0 Security Profile is an API security profile based on the OAuth 2.0 Authorization Framework. Its goal is to protect APIs in high-value scenarios and is a set of OAuth Security best current practice (BCP) recommendations. These high-value scenarios include assets typically deployed in the fields of e-health and e-government, which may provide consumers with sensitive data and mission-critical functionality.
+The [FAPI 2.0 Security Profile](https://openid.net/specs/fapi-security-profile-2_0-final.html) is an API security profile based on the OAuth 2.0 Authorization Framework. Its goal is to protect APIs in high-value scenarios and is a set of OAuth Security best current practice (BCP) recommendations. These high-value scenarios include assets typically deployed in the fields of e-health and e-government, which may provide consumers with sensitive data and mission-critical functionality.
 
-Duende Identity Server implements the FAPI 2.0 BCP features so you can build, deploy, and maintain a FAPI 2.0 Security profile as part of your overall security posture. Let's discuss what those features are and how to enable them.
+Duende IdentityServer implements the FAPI 2.0 BCP features so you can build, deploy, and maintain a FAPI 2.0 Security profile as part of your overall security posture. Let's discuss those features and how to enable them.
 
 ## FAPI 2.0 Required Features
 
@@ -27,14 +25,14 @@ When customizing IdentityServer for FAPI 2.0 compliance, follow the rules listed
 1. Distribute discovery metadata (such as the authorization endpoint) via the metadata document.
 2. Reject requests using the resource owner password credentials grant.
 3. Only support confidential clients.
-4. Only issue sender-constrained access tokens; 
+4. Only issue sender-constrained access tokens.
 5. Use one of the following methods for sender-constrained access tokens: MTLS and DPoP.
-6. Authenticate clients using one of the methods of MTLS or `private_key_jwt`. 
+6. Authenticate clients using one of the methods of mTLS or `private_key_jwt`. 
 7. Shall not expose open redirectors.
 8. Only accept the issuer identifier value as a string in the `aud` claim received in client authentication assertions.
 9. Do not use refresh token rotation except in extraordinary circumstances.
-10. If using DPoP, may use the server-provided nonce mechanism.
-11. Issue authorization codes with a maximum lifetime of 60 seconds;
+10. If using DPoP, use the server-provided nonce mechanism.
+11. Issue authorization codes with a maximum lifetime of 60 seconds.
 12. If using DPoP, shall support "Authorization Code Binding to DPoP Key".
 13. To accommodate clock offsets, shall accept JWTs with an `iat` or `nbf` timestamp between 0 and 10 seconds in the future, but reject JWTs with an `iat` or `nbf` timestamp greater than 60 seconds in the future. 
 14. Restrict the privileges associated with an access token to the minimum required for the particular application or use case.
@@ -43,35 +41,43 @@ Luckily, many of these rules are enabled by default and do not require any code 
 
 ```csharp
 builder.Services.AddIdentityServer(opt =>
+{
+    if (builder.Environment.IsProduction())
     {
-        if (builder.Environment.IsProduction())
-        {
-            opt.KeyManagement.KeyPath = "/tmp/keys";
-        }
-        opt.KeyManagement.SigningAlgorithms.Add(new SigningAlgorithmOptions(SecurityAlgorithms.RsaSsaPssSha256));
+        opt.KeyManagement.KeyPath = "/tmp/keys";
+    }
+    opt.KeyManagement.SigningAlgorithms.Add(new SigningAlgorithmOptions(SecurityAlgorithms.RsaSsaPssSha256));
 
-        opt.DPoP.SupportedDPoPSigningAlgorithms = [
-            SecurityAlgorithms.RsaSsaPssSha256,
-            SecurityAlgorithms.RsaSsaPssSha384,
-            SecurityAlgorithms.RsaSsaPssSha512,
+    opt.DPoP.SupportedDPoPSigningAlgorithms = [
+        SecurityAlgorithms.RsaSsaPssSha256,
+        SecurityAlgorithms.RsaSsaPssSha384,
+        SecurityAlgorithms.RsaSsaPssSha512,
 
-            SecurityAlgorithms.EcdsaSha256,
-            SecurityAlgorithms.EcdsaSha384,
-            SecurityAlgorithms.EcdsaSha512
-        ];
-        opt.AllowedJwtAlgorithms = [
-            SecurityAlgorithms.RsaSsaPssSha256,
-            SecurityAlgorithms.RsaSsaPssSha384,
-            SecurityAlgorithms.RsaSsaPssSha512,
+        SecurityAlgorithms.EcdsaSha256,
+        SecurityAlgorithms.EcdsaSha384,
+        SecurityAlgorithms.EcdsaSha512
+    ];
+    opt.SupportedClientAssertionSigningAlgorithms = [
+        SecurityAlgorithms.RsaSsaPssSha256,
+        SecurityAlgorithms.RsaSsaPssSha384,
+        SecurityAlgorithms.RsaSsaPssSha512,
 
-            SecurityAlgorithms.EcdsaSha256,
-            SecurityAlgorithms.EcdsaSha384,
-            SecurityAlgorithms.EcdsaSha512
-        ];
-        opt.JwtValidationClockSkew = TimeSpan.FromSeconds(10);
+        SecurityAlgorithms.EcdsaSha256,
+        SecurityAlgorithms.EcdsaSha384,
+        SecurityAlgorithms.EcdsaSha512
+    ];
+    opt.SupportedRequestObjectSigningAlgorithms = [
+        SecurityAlgorithms.RsaSsaPssSha256,
+        SecurityAlgorithms.RsaSsaPssSha384,
+        SecurityAlgorithms.RsaSsaPssSha512,
 
-        opt.Discovery.CustomEntries.Add("token_endpoint_auth_signing_alg_values_supported", new string[] { "PS256" });
-    })
+        SecurityAlgorithms.EcdsaSha256,
+        SecurityAlgorithms.EcdsaSha384,
+        SecurityAlgorithms.EcdsaSha512
+    ];
+    opt.JwtValidationClockSkew = TimeSpan.FromSeconds(10);
+
+})
 ```
 
 The general configuration for IdentityServer includes two notable changes from what you may see in a typical authorization server implementation.
@@ -150,7 +156,7 @@ Let's review the four elements that turn a client into a FAPI 2.0-compliant clie
 3. Enable DPoP security for the client.
 4. Enable Pushed Authorization Requests
 
-That's it. You now have a FAPI 2.0-compliant client. Next, let's look at
+That's it. You now have a FAPI 2.0-compliant client.
 
 Now that our authorization server's client configuration is FAPI 2.0 compliant, we'll need our clients to comply with the requirements.
 
@@ -186,4 +192,4 @@ You are now FAPI 2.0 compliant and ready to secure your high-value assets with D
 
 ## Private Key JWT vs. MTLS
 
-While the FAPI 2.0 allows for choice in securing communication between the authorization server and clients, we recommend that developers implementing FAPI 2.0 start with private key JWTs before choosing MTLS. Both are supported with Duende IdentityServer, but implementing MTLS is relatively challenging to maintain in a production environment. You are responsible for your deployment and production environments, so you are ultimately best suited to decide which option to move forward with.
+While the FAPI 2.0 allows for choice in securing communication between the authorization server and clients, we recommend that developers implementing FAPI 2.0 start with private key JWTs before choosing mTLS. Both are supported with Duende IdentityServer, but [implementing mTLS](/identityserver/tokens/client-authentication.md#mutual-tls-client-certificates) is relatively challenging to maintain in a production environment. You are responsible for your deployment and production environments, so you are ultimately best suited to decide which option to move forward with.
