@@ -28,6 +28,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 ```
 
 ## Main
+
 Top-level settings. Available directly on the `IdentityServerOptions` object.
 
 * **`IssuerUri`**
@@ -76,6 +77,7 @@ Top-level settings. Available directly on the `IdentityServerOptions` object.
 
 
 ## Key management
+
 Automatic key management settings. Available on the `KeyManagement` property of the `IdentityServerOptions` object.
 
 * **`Enabled`**
@@ -159,6 +161,7 @@ must decide whether to continue using it or replace it with a new certificate.
     Defaults to 1 minute.
 
 ## Endpoints
+
 Endpoint settings, including flags to disable individual endpoints and support for the request_uri JAR parameter. Available on the `Endpoints` property of the `IdentityServerOptions` object.
 
 * **`EnableAuthorizeEndpoint`**
@@ -209,6 +212,7 @@ Endpoint settings, including flags to disable individual endpoints and support f
   Enables the `request_uri` parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the request_uri parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).
 
 ## Discovery
+
 Discovery settings, including flags to toggle sections of the discovery document and settings to add custom entries to it. Available on the `Discovery` property of the `IdentityServerOptions` object. 
 
 If you want to take full control over the rendering of the discovery and jwks documents, you can implement the `IDiscoveryResponseGenerator` interface (or derive from our default implementation).
@@ -315,6 +319,7 @@ Login/logout related settings. Available on the `Authentication` property of the
     An individual client can override this setting with its own `CoordinateLifetimeWithUserSession` configuration setting.
 
 ## Events
+
 Configures which [events](/identityserver/diagnostics/events) should be raised at the  registered event sink.
 
 * **`RaiseSuccessEvents`**
@@ -336,6 +341,7 @@ Configures which [events](/identityserver/diagnostics/events) should be raised a
 
 
 ## Logging
+
 Logging related settings, including filters that will remove sensitive values and unwanted exceptions from logs. Available on the `Logging` property of the `IdentityServerOptions` object.
 
 * **`AuthorizeRequestSensitiveValuesFilter`**
@@ -535,6 +541,7 @@ User interaction settings, including urls for pages in the UI, names of paramete
     prompt values are added, a customized [`IAuthorizeInteractionResponseGenerator"`](/identityserver/ui/custom) is also required to handle those values.
 
 ## Caching
+
 Caching settings for the stores. Available on the `Caching` property of the `IdentityServerOptions` object. These settings only apply if the respective caching has been enabled in the services configuration in startup.
 
 * **`ClientStoreExpiration`**
@@ -559,6 +566,7 @@ Caching settings for the stores. Available on the `Caching` property of the `Ide
 
 
 ## CORS
+
 CORS settings for IdentityServer's endpoints. Available on the `Cors` property of the `IdentityServerOptions` object. The underlying CORS implementation is provided from ASP.NET Core, and as such it is automatically registered in the dependency injection system. 
 
 * **`CorsPolicyName`**
@@ -578,6 +586,7 @@ CORS settings for IdentityServer's endpoints. Available on the `Cors` property o
     Defaults to `null` indicating no caching header is set on the response.
 
 ## Content Security Policy
+
 Settings for Content Security Policy (CSP) headers that IdentityServer emits. Available on the `Csp` property of the `IdentityServerOptions` object.
 
 * **`Level`**
@@ -589,6 +598,7 @@ Settings for Content Security Policy (CSP) headers that IdentityServer emits. Av
     Indicates if the older `X-Content-Security-Policy` CSP header should also be emitted in addition to the standards-based header value. Defaults to `true`.
 
 ## Device Flow
+
 OAuth device flow settings. Available on the `DeviceFlow` property of the `IdentityServerOptions` object.
 
 * **`DefaultUserCodeType`**
@@ -600,6 +610,7 @@ OAuth device flow settings. Available on the `DeviceFlow` property of the `Ident
     The maximum frequency in seconds that a client may poll the token endpoint in the device flow. Defaults to `5`.
 
 ## Mutual TLS
+
 [Mutual TLS](/identityserver/tokens/client-authentication/) settings. Available on the `MutualTls` property of the `IdentityServerOptions` object.
 
 ```cs
@@ -636,6 +647,7 @@ var builder = services.AddIdentityServer(options =>
     setting this to true, will set the claim regardless of the authentication method. Defaults to false.
 
 ## PersistentGrants
+
 Shared settings for persisted grants behavior.
 
 * **`DataProtectData`**
@@ -648,6 +660,7 @@ Shared settings for persisted grants behavior.
     When Refresh tokens that are configured with RefreshTokenUsage.OneTime are used, this option controls if they will be deleted immediately or retained and marked as consumed. The default is on - immediately delete.
 
 ## Dynamic Providers
+
 Settings for [dynamic providers](/identityserver/ui/login/dynamicproviders). Available on the `DynamicProviders` property of the `IdentityServerOptions` object.
 
 * **`PathPrefix`**
@@ -663,6 +676,7 @@ Settings for [dynamic providers](/identityserver/ui/login/dynamicproviders). Ava
     Scheme for signout. Defaults to the constant `IdentityServerConstants.DefaultCookieAuthenticationScheme`, which has the value "idsrv".
 
 ## CIBA
+
 [CIBA](/identityserver/ui/ciba) settings.  Available on the `Ciba` property of the `IdentityServerOptions` object.
 
 * **`DefaultLifetime`**
@@ -673,7 +687,8 @@ Settings for [dynamic providers](/identityserver/ui/login/dynamicproviders). Ava
     
     The maximum frequency in seconds that a client may poll the token endpoint in the CIBA flow. Defaults to 5.
 
-## Server-side Sessions 
+## Server-Side Sessions 
+
 Settings for [server-side sessions](/identityserver/ui/server-side-sessions/). Added in `v6.1`.  Available on the `ServerSideSessions` property of the `IdentityServerOptions` object.
 
 * **`UserDisplayNameClaimType`**
@@ -714,6 +729,7 @@ Settings for [server-side sessions](/identityserver/ui/server-side-sessions/). A
     "ssh:", "tel:", "view-source:", "ws:", "wss:"]*.
 
 ## DPoP
+
 Added in 6.3.0.
 
 Demonstration of Proof-of-Possession settings. Available on the `DPoP` property of the `IdentityServerOptions` object.
@@ -738,7 +754,21 @@ Demonstration of Proof-of-Possession settings. Available on the `DPoP` property 
 
     Controls the lifetime of pushed authorization requests. The pushed authorization request's lifetime begins when the request to the PAR endpoint is received, and is validated until the authorize endpoint returns a response to the client application. Note that user interaction, such as entering credentials or granting consent, may need to occur before the authorize endpoint can do so. Setting the lifetime too low will likely cause login failures for interactive users, if pushed authorization requests expire before those users complete authentication. Some security profiles, such as the FAPI 2.0 Security Profile recommend an expiration within 10 minutes to prevent attackers from pre-generating requests. To balance these constraints, this lifetime defaults to 10 minutes. 
 
+## Diagnostics
+
+[Diagnostic data](/identityserver/diagnostics/data.mdx) settings. Added in `v7.3`. Available on the `Diagnostics` property of the `IdentityServerOptions` object.
+
+* **`LogFrequency`**
+
+  Frequency at which the diagnostic data is logged. Defaults to 1 hour.
+
+* **`ChunkSize`**
+
+  Maximum size of diagnostic data log message chunks in kilobytes. Defaults to 8160 bytes. 8 KB is a conservative limit for the max size of a log message that is imposed by some logging tools. 
+  We take 32 bytes less than that to allow for additional formatting of the log message.
+
 ## Preview Features
+
 Preview Features settings. Available on the `Preview` property of the `IdentityServerOptions` object.
 
 :::note
