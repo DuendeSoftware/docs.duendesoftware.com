@@ -104,4 +104,4 @@ the cookie handler).
 You can modify this in two ways
 
 * the cookie handler itself has an extensible storage mechanism via the `TicketStore` mechanism
-* replace the store altogether by providing an `IUserTokenStore` implementation
+* replace the store altogether by providing an `IUserTokenStore` implementation and registering it in the service provider at application startup
