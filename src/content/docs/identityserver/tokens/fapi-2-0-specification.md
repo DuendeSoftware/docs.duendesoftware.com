@@ -26,7 +26,7 @@ When customizing IdentityServer for FAPI 2.0 compliance, follow the rules listed
 2. Reject requests using the resource owner password credentials grant.
 3. Only support confidential clients.
 4. Only issue sender-constrained access tokens.
-5. Use one of the following methods for sender-constrained access tokens: MTLS and DPoP.
+5. Use one of the following methods for sender-constrained access tokens: mTLS and DPoP.
 6. Authenticate clients using one of the methods of mTLS or `private_key_jwt`. 
 7. Shall not expose open redirectors.
 8. Only accept the issuer identifier value as a string in the `aud` claim received in client authentication assertions.
