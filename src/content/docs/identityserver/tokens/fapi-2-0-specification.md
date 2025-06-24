@@ -91,8 +91,8 @@ That's it for the server. Next, let's examine how to configure the clients to me
 
 Clients must also follow strict recommendations to be considered FAPI 2.0 compliant.
 
-1. Support sender-constrained access tokens using one or both methods: MTLS and DPoP.
-2. Support client authentication using one or both methods: MTLS and `private_key_jwt`.
+1. Support sender-constrained access tokens using one or both methods: mTLS and DPoP.
+2. Support client authentication using one or both methods: mTLS and `private_key_jwt`.
 3. Send access tokens in the HTTP header
 4. Do not expose open redirectors
 5. If using `private_key_jwt`, shall use the authorization server's issuer identifier value in the `aud` claim in client authentication assertions. The issuer identifier value shall be sent as a string, not as an array item.
