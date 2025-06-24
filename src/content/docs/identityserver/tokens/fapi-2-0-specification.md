@@ -97,7 +97,7 @@ Clients must also follow strict recommendations to be considered FAPI 2.0 compli
 4. Do not expose open redirectors
 5. If using `private_key_jwt`, shall use the authorization server's issuer identifier value in the `aud` claim in client authentication assertions. The issuer identifier value shall be sent as a string, not as an array item.
 6. Shall support refresh tokens and their rotation;
-7. If using MTLS client authentication or MTLS sender-constrained access tokens,`mtls_endpoint_aliases` metadata should be supported.
+7. If using mTLS client authentication or mTLS sender-constrained access tokens,`mtls_endpoint_aliases` metadata should be supported.
 8. If using DPoP, shall support the server-provided nonce mechanism.
 9. Only use authorization server metadata (such as the authorization endpoint) retrieved from the metadata document.
 10. Ensure that the issuer URL used to retrieve the authorization server metadata is obtained from an authoritative source and using a secure channel, such that an attacker cannot modify it.
