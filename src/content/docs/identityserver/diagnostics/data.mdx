@@ -1,0 +1,1033 @@
+---
+title: Diagnostics Data
+sidebar:
+  label: Diagnostics Data
+  order: 16
+  badge:
+    text: v7.3
+    variant: tip
+---
+
+import { Code } from "astro/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+<span data-shb-badge data-shb-badge-variant="default">Added in 7.3</span>
+
+To make troubleshooting easier, newer versions of IdentityServer can collect important configuration and operational
+diagnostics data from your IdentityServer host.
+
+Diagnostics data is [written to logs periodically](/identityserver/reference/options.md#diagnostics), and can be used by
+your operations team to help analyze your IdentityServer configuration.
+
+Diagnostics information is never automatically shared with Duende. In support scenarios, you can choose to manually share
+this diagnostics data with [Duende priority support](/general/support-and-issues.md/#priority-support) to provide additional context. If needed, you can redact/remove
+entries before doing so.
+
+## Diagnostics Data Contents
+
+Diagnostics data contains information that is relevant to the configuration and behavior of your IdentityServer instance.
+
+The diagnostics data contains the following information:
+
+* Assembly information for [IdentityServer-related assemblies](https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Licensing/V2/Diagnostics/DiagnosticEntries/AssemblyInfoDiagnosticEntry.cs#L17)
+  * .NET runtime version
+  * IdentityServer version
+  * Assembly name and version
+* Registered authentication schemes (does not include [dynamic providers](/identityserver/ui/login/dynamicproviders.md))
+  * Name of the scheme and authentication handler type
+* Registered non-default implementations of Duende IdentityServer extension points
+  * Extension point type, implementation type, assembly name and version
+* [`IdentityServerOptions`](/identityserver/reference/options.md) configuration
+* [Data Protection](/identityserver/deployment.md#aspnet-core-data-protection) configuration
+  * `ApplicationDiscriminator`, `XmlEncryptor` and `XmlRepository`
+* Basic server information
+  * Host name
+* [License Usage Summary](/identityserver/reference/models/license-usage-summary.md) data
+* Token issue counts (for various token types)
+* Endpoint usage (only for IdentityServer endpoints)
+* Clients configuration (limited to first 100 clients, excluding sensitive information/secrets)
+* Resources configuration (limited to the first 100 resources)
+  * Identity resources
+  * API resources
+  * API scopes
+
+Diagnostics data [is formatted as JSON](#diagnostics-data-format).
+
+## Capturing Diagnostics Data
+
+The IdentityServer diagnostics data is [written to logs periodically](/identityserver/reference/options.md#diagnostics).
+By default, you will see log entries similar to the following in your IdentityServer logs
+
+```log
+info: Duende.IdentityServer.Diagnostics.Summary[7000]
+Diagnostic data (1 of 2): { ...
+info: Duende.IdentityServer.Diagnostics.Summary[7000]
+Diagnostic data (2 of 2): ... }
+```
+
+Diagnostics data [may be chunked](/identityserver/reference/options.md#diagnostics), and you will need to concatenate chunks
+to collect the full diagnostics JSON data.
+
+To capture diagnostics data from your IdentityServer instance, you can log entries written to the
+`Duende.IdentityServer.Diagnostics.Summary` log category. You may want to set up your IdentityServer logging to filter
+diagnostics data and emit these to a separate log provider/sink.
+
+Let's look at some examples of how you can filter diagnostics data and write it to a separate log file.
+Note that to read the contents of this log file, you will need access to your IdentityServer host storage
+(or use another provider/sink to extract log data).
+
+### .NET Core Default Logger
+
+To write log entries to a file using the default [.NET Core `ILogger` API](https://learn.microsoft.com/en-us/dotnet/core/extensions/logging),
+you will need a log provider that supports doing this. In the example below, we are using the [`NReco.Logging.File`](https://www.nuget.org/packages/NReco.Logging.File)
+package.
+
+{/* prettier-ignore */}
+<Tabs>
+    <TabItem label="In code">
+        Use the `AddFile()` extension method to add a file logger to your `ILoggingBuilder` instance.
+        The `FilterLogEntry` property on the file logger can be used to filter log entries based on the log category,
+        which is what we are using to filter the `Duende.IdentityServer.Diagnostics.Summary` log category.
+
+        <Code
+            lang="csharp"
+            title="Program.cs"
+            code={`// ...
+builder.Services.AddLogging(configure =>
+{
+    configure.AddFile("diagnostics.log", options =>
+    {
+        options.Append = true;
+        options.FilterLogEntry = entry =>
+            entry.LogName == "Duende.IdentityServer.Diagnostics.Summary";
+    });
+});`}
+        />
+    </TabItem>
+    <TabItem label="With configuration pattern">
+        The file logger will need to be registered in your application. Use the `AddFile()` extension method to add a
+        file logger to your `ILoggingBuilder` instance. Note the `NReco.Logging.File` requires a file name to be specified.
+
+        <Code
+            lang="csharp"
+            title="Program.cs"
+            code={`// ...
+builder.Services.AddLogging(configure =>
+{
+    configure.AddFile("diagnostics.log", append: true);
+});`}
+        />
+
+        In your `appsettings.json`, you can configure the file logger to filter log entries based on the log category.
+        <Code
+            lang="json"
+            title="appsettings.json"
+            code={`{
+      "Logging": {
+          "LogLevel": {
+              "Default": "Information",
+              "Microsoft.AspNetCore": "Warning",
+              "Duende.IdentityServer.Diagnostics.Summary": "None"
+          },
+          "File": {
+              "LogLevel": {
+                  "Default": "None",
+                  "Duende.IdentityServer.Diagnostics.Summary": "Information"
+              }
+          }
+      }
+  }`}
+        />
+    </TabItem>
+</Tabs>
+
+### Serilog
+
+When using [Serilog](https://serilog.net/), you can configure a separate file logger sink to write `Duende.IdentityServer.Diagnostics.Summary` log entries to.
+
+{/* prettier-ignore */}
+<Tabs>
+    <TabItem label="In code">
+        In the `UseSerilog()` extension method's configuration builder, you can add a file logger that
+        filters log messages and only emits those from the `Duende.IdentityServer.Diagnostics.Summary` category.
+
+        The console logger (or another default logger you are using) can be configured to exclude this category.
+
+        <Code
+            lang="csharp"
+            title="Program.cs"
+            code={`// ...
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .MinimumLevel.Debug()
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+        .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
+        .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+        .MinimumLevel.Override("System", LogEventLevel.Warning)
+        .WriteTo.Logger(fileLogger =>
+        {
+            fileLogger
+                .WriteTo.File("./diagnostics/diagnostic.log",
+                    rollingInterval: RollingInterval.Day,
+                    fileSizeLimitBytes: 1024 * 1024 * 10, // 10 MB
+                    rollOnFileSizeLimit: true,
+                    outputTemplate:
+                    "[{Timestamp:HH:mm:ss} {Level} {EventId}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+                .Filter.ByIncludingOnly(Matching.FromSource("Duende.IdentityServer.Diagnostics.Summary"));
+        })
+        .WriteTo.Logger(consoleLogger =>
+        {
+            consoleLogger
+                .WriteTo.Console(
+                    outputTemplate:
+                    "[{Timestamp:HH:mm:ss} {Level} {EventId}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+                .Filter.ByExcluding(Matching.FromSource("Duende.IdentityServer.Diagnostics.Summary"));
+        });`}
+        />
+    </TabItem>
+    <TabItem label="With configuration pattern">
+        When using the configuration pattern, you can configure the file logger to filter log entries based on the log category.
+        Note that you will need the [`Serilog.Expressions`](https://github.com/serilog/serilog-expressions) package installed and
+        configured in your IdentityServer host
+
+        In your `appsettings.json`, you can configure Serilog to filter log entries based on the log category.
+        <Code
+            lang="json"
+            title="appsettings.json"
+            code={`{
+    "Serilog":{
+        "Using":[
+            "Serilog.Sinks.Console",
+            "Serilog.Sinks.File"
+        ],
+        "Enrich":[
+            "FromLogContext"
+        ],
+        "MinimumLevel":{
+            "Default":"Debug",
+            "Override":{
+                "Microsoft":"Warning",
+                "Microsoft.Hosting.Lifetime":"Information",
+                "Microsoft.AspNetCore.Authentication":"Debug",
+                "System":"Warning"
+            }
+        },
+        "WriteTo":[
+            {
+                "Name":"Logger",
+                "Args":{
+                    "configureLogger":{
+                        "WriteTo":[
+                            {
+                                "Name":"File",
+                                "Args":{
+                                    "path":"diagnostics/identity-server-diagnostics.log",
+                                    "outputTemplate":"[{Timestamp:HH:mm:ss} {Level} {EventId}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
+                                    "rollingInterval":"Day",
+                                    "fileSizeLimitBytes":10000000,
+                                    "rollOnFileSizeLimit":true
+                                }
+                            }
+                        ],
+                        "Filter":[
+                            {
+                                "Name":"ByIncludingOnly",
+                                "Args":{
+                                    "expression":"StartsWith(SourceContext, 'Duende.IdentityServer.Diagnostics.Summary')"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "Name":"Logger",
+                "Args":{
+                    "configureLogger":{
+                        "WriteTo":[
+                            {
+                                "Name":"Console",
+                                "Args":{
+                                    "outputTemplate":"[{Timestamp:HH:mm:ss} {Level} {EventId}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}"
+                                }
+                            }
+                        ],
+                        "Filter":[
+                            {
+                                "Name":"ByExcluding",
+                                "Args":{
+                                    "expression":"SourceContext = 'Duende.IdentityServer.Diagnostics.Summary'"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}`}
+        />
+    </TabItem>
+</Tabs>
+
+### log4net
+
+When using [log4net](https://logging.apache.org/log4net/index.html), you can use the `log4net.config` configuration file
+to configure a file appender that writes `Duende.IdentityServer.Diagnostics.Summary` log entries to a separate file.
+
+```xml title="log4net.config"
+<?xml version="1.0" encoding="utf-8"?>
+<log4net>
+  <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+    </layout>
+    <filter type="log4net.Filter.LoggerMatchFilter">
+      <loggerToMatch value="Duende.IdentityServer.Diagnostics.Summary" />
+      <acceptOnMatch value="false" />
+    </filter>
+  </appender>
+  <appender name="FileAppender" type="log4net.Appender.FileAppender">
+    <file value="./diagnostics/Host.Log4net.log" />
+    <appendToFile value="true" />
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+    </layout>
+    <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
+    <filter type="log4net.Filter.LoggerMatchFilter">
+      <loggerToMatch value="Duende.IdentityServer.Diagnostics.Summary" />
+    </filter>
+    <filter type="log4net.Filter.DenyAllFilter" />
+  </appender>
+  <root>
+    <level value="INFO"/>
+    <appender-ref ref="ConsoleAppender" />
+  </root>
+  <logger name="Duende.IdentityServer.Diagnostics.Summary">
+    <level value="INFO" />
+    <appender-ref ref="FileAppender" />
+  </logger>
+</log4net>
+```
+
+### NLog
+
+When using [NLog](https://nlog-project.org/) and the [`NLog.Extensions.Logging`](https://www.nuget.org/packages/NLog.Extensions.Logging) package,
+you can use the configuration pattern to configure a file logger that writes `Duende.IdentityServer.Diagnostics.Summary` log entries to a separate file.
+
+```json title="appsettings.json"
+{
+    "NLog": {
+        "ThrowConfigExceptions": true,
+        "Targets": {
+            "file": {
+                "type": "File",
+                "fileName": "${basedir}/diagnostics/${shortdate}.log",
+                "layout": "${longdate} ${level:uppercase=true} ${logger} ${message} ${exception:format=ToString}"
+            },
+            "console": {
+                "type": "ColoredConsole",
+                "layout": "${longdate} ${level:uppercase=true} ${logger} ${message} ${exception:format=ToString}"
+            }
+        },
+        "Rules": [
+            {
+                "logger": "Duende.IdentityServer.Diagnostics.Summary",
+                "writeTo": "file",
+                "final": true,
+                "maxLevel": "Info"
+            },
+            {
+                "logger": "*",
+                "minLevel": "Info",
+                "writeTo": "console"
+            }
+        ]
+    }
+}
+```
+
+## Diagnostics Data Format
+
+Diagnostics data is written to logs in one or more chunks containing data formatted as JSON.
+
+<details>
+    <summary>Example diagnostics data JSON</summary>
+
+    ```json
+    {
+      "AssemblyInfo":{
+        "DotnetVersion":".NET 9.0.6",
+        "IdentityServerVersion":"7.3",
+        "Assemblies":[
+          {
+            "Name":"Duende.IdentityModel",
+            "Version":"7.0.0.0"
+          },
+          {
+            "Name":"Duende.IdentityServer",
+            "Version":"7.0.0.0"
+          },
+          {
+            "Name":"Duende.IdentityServer.Storage",
+            "Version":"7.0.0.0"
+          },
+          {
+            "Name":"Microsoft.AspNetCore",
+            "Version":"9.0.0.0"
+          },
+          {
+            "Name":"Microsoft.AspNetCore.Authentication.Abstractions",
+            "Version":"9.0.0.0"
+          },
+          {
+            "Name":"Microsoft.AspNetCore.Authentication.Cookies",
+            "Version":"9.0.0.0"
+          },
+          {
+            "Name":"Microsoft.AspNetCore.Authentication.Core",
+            "Version":"9.0.0.0"
+          },
+          {
+            "Name":"Microsoft.AspNetCore.Authentication.Google",
+            "Version":"9.0.3.0"
+          },
+          {
+            "Name":"Microsoft.AspNetCore.Authentication.OAuth",
+            "Version":"9.0.0.0"
+          },
+          {
+            "Name":"Microsoft.AspNetCore.Authentication.OpenIdConnect",
+            "Version":"9.0.3.0"
+          },
+          {
+            "Name":"Microsoft.IdentityModel.Abstractions",
+            "Version":"8.0.1.0"
+          },
+          {
+            "Name":"Microsoft.IdentityModel.JsonWebTokens",
+            "Version":"8.0.1.0"
+          },
+          {
+            "Name":"Microsoft.IdentityModel.Logging",
+            "Version":"8.0.1.0"
+          },
+          {
+            "Name":"Microsoft.IdentityModel.Protocols",
+            "Version":"8.0.1.0"
+          },
+          {
+            "Name":"Microsoft.IdentityModel.Protocols.OpenIdConnect",
+            "Version":"8.0.1.0"
+          },
+          {
+            "Name":"Microsoft.IdentityModel.Tokens",
+            "Version":"8.0.1.0"
+          },
+          {
+            "Name":"System.IdentityModel.Tokens.Jwt",
+            "Version":"8.0.1.0"
+          }
+        ]
+      },
+      "AuthSchemeInfo":{
+        "Schemes":[
+          {
+            "idsrv":"Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler"
+          },
+          {
+            "idsrv.external":"Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler"
+          },
+          {
+            "Google":"Google.Apis.Auth.AspNetCore3.GoogleOpenIdConnectHandler"
+          }
+        ]
+      },
+      "RegisteredImplementations":{
+        "Root":[
+
+        ],
+        "Hosting":[
+
+        ],
+        "Infrastructure":[
+
+        ],
+        "ResponseHandling":[
+
+        ],
+        "Services":[
+          {
+            "ICorsPolicyService":[
+              {
+                "TypeName":"Duende.IdentityServer.Services.InMemoryCorsPolicyService",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IProfileService":[
+              {
+                "TypeName":"Duende.IdentityServer.Test.TestUserProfileService",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IRefreshTokenService":[
+              {
+                "TypeName":"Duende.IdentityServer.Services.ServerSideSessionRefreshTokenService",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "ISessionManagementService":[
+              {
+                "TypeName":"Duende.IdentityServer.Services.DefaultSessionManagementService",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          }
+        ],
+        "Stores":[
+          {
+            "IClientStore":[
+              {
+                "TypeName":"Duende.IdentityServer.Stores.ValidatingClientStore\u00601[[Duende.IdentityServer.Stores.InMemoryClientStore, Duende.IdentityServer, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IDeviceFlowStore":[
+              {
+                "TypeName":"Duende.IdentityServer.Stores.InMemoryDeviceFlowStore",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IIdentityProviderStore":[
+              {
+                "TypeName":"Duende.IdentityServer.Hosting.DynamicProviders.NonCachingIdentityProviderStore\u00601[[Duende.IdentityServer.Hosting.DynamicProviders.ValidatingIdentityProviderStore\u00601[[Duende.IdentityServer.Hosting.DynamicProviders.InMemoryIdentityProviderStore, Duende.IdentityServer, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null]], Duende.IdentityServer, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IResourceStore":[
+              {
+                "TypeName":"Duende.IdentityServer.Stores.InMemoryResourcesStore",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              },
+              {
+                "TypeName":"Duende.IdentityServer.Stores.InMemoryResourcesStore",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              },
+              {
+                "TypeName":"Duende.IdentityServer.Stores.InMemoryResourcesStore",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IServerSideSessionsMarker":[
+              {
+                "TypeName":"Duende.IdentityServer.Stores.NopIServerSideSessionsMarker",
+                "Assembly":"Duende.IdentityServer.Storage",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IServerSideSessionStore":[
+              {
+                "TypeName":"Duende.IdentityServer.Stores.InMemoryServerSideSessionStore",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IServerSideTicketStore":[
+              {
+                "TypeName":"Duende.IdentityServer.Stores.ServerSideTicketStore",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          }
+        ],
+        "Validation":[
+          {
+            "IBackchannelAuthenticationUserValidator":[
+              {
+                "TypeName":"Microsoft.Extensions.DependencyInjection.TestBackchannelLoginUserValidator",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "IResourceOwnerPasswordValidator":[
+              {
+                "TypeName":"Duende.IdentityServer.Test.TestUserResourceOwnerPasswordValidator",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "ISecretParser":[
+              {
+                "TypeName":"Duende.IdentityServer.Validation.JwtBearerClientAssertionSecretParser",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          },
+          {
+            "ISecretValidator":[
+              {
+                "TypeName":"Duende.IdentityServer.Validation.PrivateKeyJwtSecretValidator",
+                "Assembly":"Duende.IdentityServer",
+                "AssemblyVersion":"7.0.0.0"
+              }
+            ]
+          }
+        ]
+      },
+      "IdentityServerOptions":{
+        "IssuerUri":null,
+        "LowerCaseIssuerUri":true,
+        "AccessTokenJwtType":"at\u002Bjwt",
+        "LogoutTokenJwtType":"logout\u002Bjwt",
+        "EmitStaticAudienceClaim":true,
+        "EmitScopesAsSpaceDelimitedStringInJwt":false,
+        "EmitIssuerIdentificationResponseParameter":true,
+        "EmitStateHash":false,
+        "StrictJarValidation":false,
+        "ValidateTenantOnAuthorization":false,
+        "Endpoints":{
+          "EnableAuthorizeEndpoint":true,
+          "EnableJwtRequestUri":false,
+          "EnableTokenEndpoint":true,
+          "EnableUserInfoEndpoint":true,
+          "EnableDiscoveryEndpoint":true,
+          "EnableEndSessionEndpoint":true,
+          "EnableCheckSessionEndpoint":true,
+          "EnableTokenRevocationEndpoint":true,
+          "EnableIntrospectionEndpoint":true,
+          "EnableDeviceAuthorizationEndpoint":true,
+          "EnableBackchannelAuthenticationEndpoint":true,
+          "EnablePushedAuthorizationEndpoint":true
+        },
+        "Discovery":{
+          "ShowEndpoints":true,
+          "ShowKeySet":true,
+          "ShowIdentityScopes":true,
+          "ShowApiScopes":true,
+          "ShowClaims":true,
+          "ShowResponseTypes":true,
+          "ShowResponseModes":true,
+          "ShowGrantTypes":true,
+          "ShowExtensionGrantTypes":true,
+          "ShowTokenEndpointAuthenticationMethods":true,
+          "ExpandRelativePathsInCustomEntries":true,
+          "ResponseCacheInterval":null,
+          "CustomEntries":{
+
+          }
+        },
+        "Authentication":{
+          "CookieAuthenticationScheme":null,
+          "CookieLifetime":"10:00:00",
+          "CookieSlidingExpiration":false,
+          "CookieSameSiteMode":0,
+          "RequireAuthenticatedUserForSignOutMessage":false,
+          "CheckSessionCookieName":"idsrv.session",
+          "CheckSessionCookieDomain":null,
+          "CheckSessionCookieSameSiteMode":0,
+          "RequireCspFrameSrcForSignout":true,
+          "CoordinateClientLifetimesWithUserSession":false
+        },
+        "Events":{
+          "RaiseSuccessEvents":true,
+          "RaiseFailureEvents":true,
+          "RaiseInformationEvents":true,
+          "RaiseErrorEvents":true
+        },
+        "InputLengthRestrictions":{
+          "ClientId":100,
+          "ClientSecret":100,
+          "Scope":300,
+          "RedirectUri":400,
+          "Nonce":300,
+          "UiLocale":100,
+          "LoginHint":100,
+          "AcrValues":300,
+          "GrantType":100,
+          "UserName":100,
+          "Password":100,
+          "CspReport":2000,
+          "IdentityProvider":100,
+          "ExternalError":100,
+          "AuthorizationCode":100,
+          "DeviceCode":100,
+          "RefreshToken":100,
+          "TokenHandle":100,
+          "Jwt":51200,
+          "CodeChallengeMinLength":43,
+          "CodeChallengeMaxLength":128,
+          "CodeVerifierMinLength":43,
+          "CodeVerifierMaxLength":128,
+          "ResourceIndicatorMaxLength":512,
+          "BindingMessage":100,
+          "UserCode":100,
+          "IdTokenHint":4000,
+          "LoginHintToken":4000,
+          "AuthenticationRequestId":100,
+          "DPoPKeyThumbprint":100,
+          "DPoPProofToken":4000
+        },
+        "UserInteraction":{
+          "LoginUrl":"/Account/Login",
+          "LoginReturnUrlParameter":"ReturnUrl",
+          "LogoutUrl":"/Account/Logout",
+          "LogoutIdParameter":"logoutId",
+          "ConsentUrl":"/consent",
+          "ConsentReturnUrlParameter":"returnUrl",
+          "CreateAccountUrl":null,
+          "CreateAccountReturnUrlParameter":"returnUrl",
+          "ErrorUrl":"/home/error",
+          "ErrorIdParameter":"errorId",
+          "CustomRedirectReturnUrlParameter":"returnUrl",
+          "CookieMessageThreshold":2,
+          "DeviceVerificationUrl":"/device",
+          "DeviceVerificationUserCodeParameter":"userCode",
+          "AllowOriginInReturnUrl":false,
+          "PromptValuesSupported":[
+            "none",
+            "login",
+            "consent",
+            "select_account"
+          ]
+        },
+        "Caching":{
+          "ClientStoreExpiration":"00:15:00",
+          "ResourceStoreExpiration":"00:15:00",
+          "CorsExpiration":"00:15:00",
+          "IdentityProviderCacheDuration":"01:00:00",
+          "CacheLockTimeout":"00:01:00"
+        },
+        "Cors":{
+          "CorsPolicyName":"Duende.IdentityServer",
+          "PreflightCacheDuration":null,
+          "CorsPaths":[
+            {
+              "Value":"/.well-known/openid-configuration",
+              "HasValue":true
+            },
+            {
+              "Value":"/.well-known/openid-configuration/jwks",
+              "HasValue":true
+            },
+            {
+              "Value":"/connect/token",
+              "HasValue":true
+            },
+            {
+              "Value":"/connect/userinfo",
+              "HasValue":true
+            },
+            {
+              "Value":"/connect/revocation",
+              "HasValue":true
+            }
+          ]
+        },
+        "Csp":{
+          "Level":1,
+          "AddDeprecatedHeader":true
+        },
+        "Validation":{
+          "InvalidRedirectUriPrefixes":[
+            "javascript:",
+            "file:",
+            "data:",
+            "mailto:",
+            "ftp:",
+            "blob:",
+            "about:",
+            "ssh:",
+            "tel:",
+            "view-source:",
+            "ws:",
+            "wss:"
+          ]
+        },
+        "DeviceFlow":{
+          "DefaultUserCodeType":"Numeric",
+          "Interval":5
+        },
+        "Ciba":{
+          "DefaultLifetime":300,
+          "DefaultPollingInterval":5
+        },
+        "Logging":{
+          "BackchannelAuthenticationRequestSensitiveValuesFilter":[
+            "client_secret",
+            "client_assertion",
+            "id_token_hint",
+            "request"
+          ],
+          "TokenRequestSensitiveValuesFilter":[
+            "client_secret",
+            "password",
+            "client_assertion",
+            "refresh_token",
+            "device_code",
+            "code",
+            "subject_token"
+          ],
+          "AuthorizeRequestSensitiveValuesFilter":[
+            "id_token_hint",
+            "request"
+          ],
+          "PushedAuthorizationSensitiveValuesFilter":[
+            "client_secret",
+            "client_assertion",
+            "request"
+          ]
+        },
+        "MutualTls":{
+          "Enabled":false,
+          "ClientCertificateAuthenticationScheme":"Certificate",
+          "DomainName":null,
+          "AlwaysEmitConfirmationClaim":false
+        },
+        "KeyManagement":{
+          "Enabled":true,
+          "RsaKeySize":2048,
+          "SigningAlgorithms":[
+            {
+              "Name":"RS256",
+              "UseX509Certificate":false
+            }
+          ],
+          "InitializationDuration":"00:05:00",
+          "InitializationSynchronizationDelay":"00:00:05",
+          "InitializationKeyCacheDuration":"00:01:00",
+          "KeyCacheDuration":"1.00:00:00",
+          "PropagationTime":"14.00:00:00",
+          "RotationInterval":"90.00:00:00",
+          "RetentionDuration":"14.00:00:00",
+          "DeleteRetiredKeys":true,
+          "DataProtectKeys":true,
+          "KeyPath":"/Users/maartenba/Projects/AcmeCorp/AcmeCorp.IdentityServer/keys"
+        },
+        "PersistentGrants":{
+          "DataProtectData":true,
+          "DeleteOneTimeOnlyRefreshTokensOnUse":true
+        },
+        "DPoP":{
+          "ProofTokenValidityDuration":"00:01:00",
+          "ServerClockSkew":"00:00:00",
+          "SupportedDPoPSigningAlgorithms":[
+            "RS256",
+            "RS384",
+            "RS512",
+            "PS256",
+            "PS384",
+            "PS512",
+            "ES256",
+            "ES384",
+            "ES512"
+          ]
+        },
+        "DynamicProviders":{
+          "PathPrefix":{
+            "Value":"/federation",
+            "HasValue":true
+          },
+          "SignInScheme":"idsrv.external",
+          "SignOutScheme":"idsrv",
+          "SignOutSchemeSetExplicitly":false
+        },
+        "ServerSideSessions":{
+          "UserDisplayNameClaimType":"name",
+          "RemoveExpiredSessions":true,
+          "ExpiredSessionsTriggerBackchannelLogout":true,
+          "RemoveExpiredSessionsFrequency":"00:10:00",
+          "FuzzExpiredSessionRemovalStart":true,
+          "RemoveExpiredSessionsBatchSize":100
+        },
+        "PushedAuthorization":{
+          "Required":false,
+          "Lifetime":600,
+          "AllowUnregisteredPushedRedirectUris":true
+        },
+        "JwtValidationClockSkew":"00:05:00",
+        "SupportedRequestObjectSigningAlgorithms":[
+          "RS256",
+          "RS384",
+          "RS512",
+          "PS256",
+          "PS384",
+          "PS512",
+          "ES256",
+          "ES384",
+          "ES512",
+          "HS256",
+          "HS384",
+          "HS512"
+        ],
+        "SupportedClientAssertionSigningAlgorithms":[
+          "RS256",
+          "RS384",
+          "RS512",
+          "PS256",
+          "PS384",
+          "PS512",
+          "ES256",
+          "ES384",
+          "ES512",
+          "HS256",
+          "HS384",
+          "HS512"
+        ],
+        "Preview":{
+          "EnableDiscoveryDocumentCache":false,
+          "StrictClientAssertionAudienceValidation":false,
+          "DiscoveryDocumentCacheDuration":"00:01:00"
+        },
+        "Diagnostics":{
+          "LogFrequency":"00:10:00",
+          "ChunkSize":8160
+        }
+      },
+      "DataProtectionConfiguration":{
+        "ApplicationDiscriminator":"/Users/maartenba/Projects/AcmeCorp/AcmeCorp.IdentityServer/",
+        "XmlEncryptor":"Not Configured",
+        "XmlRepository":"Not Configured"
+      },
+      "TokenIssueCounts":{
+        "Jwt":1,
+        "Reference":0,
+        "JwtDPoP":0,
+        "ReferenceDPoP":0,
+        "JwtMTLS":0,
+        "ReferenceMTLS":0,
+        "Refresh":0,
+        "Id":1,
+        "implicit":0,
+        "hybrid":0,
+        "authorization_code":1,
+        "client_credentials":0,
+        "password":0,
+        "urn:ietf:params:oauth:grant-type:device_code":0,
+        "Other":0
+      },
+      "LicenseUsageSummary":{
+        "ClientsUsedCount":1,
+        "IssuersUsed":[
+          "https://localhost:5443"
+        ],
+        "FeaturesUsed":[
+          "KeyManagement",
+          "PAR",
+          "ServerSideSessions"
+        ],
+        "LicenseEdition":"None"
+      },
+      "BasicServerInfo":{
+        "HostName":"M4-MAARTEN"
+      },
+      "EndpointUsage":{
+        "/connect/authorize/callback":2,
+        "/connect/authorize":1,
+        "/connect/ciba":0,
+        "/connect/checksession":0,
+        "/connect/deviceauthorization":0,
+        "/.well-known/openid-configuration/jwks":3,
+        "/.well-known/openid-configuration":3,
+        "/connect/endsession/callback":1,
+        "/connect/endsession":1,
+        "/connect/introspect":0,
+        "/connect/par":1,
+        "/connect/revocation":0,
+        "/connect/token":1,
+        "/connect/userinfo":1,
+        "other":0
+      },
+      "Clients":[
+        {
+          "ClientId":"interactive",
+          "SecretTypes":[
+            "SharedSecret"
+          ],
+          "RequireConsent":true,
+          "AllowedGrantTypes":[
+            "authorization_code"
+          ],
+          "RedirectUris":[
+            "https://localhost:5444/signin-oidc"
+          ],
+          "PostLogoutRedirectUris":[
+            "https://localhost:5444/"
+          ],
+          "FrontChannelLogoutUri":"https://localhost:5444/signout-oidc",
+          "AllowOfflineAccess":true,
+          "AllowedScopes":[
+            "openid",
+            "profile",
+            "email",
+            "weatherapi.read"
+          ],
+          "CoordinateLifetimeWithUserSession":true,
+          "InitiateLoginUri":"https://localhost:5444/signin-idp"
+        }
+      ],
+      "Resources":{
+        "IdentityResource":[
+          "email",
+          "openid",
+          "profile"
+        ],
+        "ApiResource":[
+          {
+            "Name":"weatherapi",
+            "ResourceIndicatorRequired":false,
+            "SecretTypes":[
+              "SharedSecret"
+            ]
+          }
+        ],
+        "ApiScope":[
+          "weatherapi.read"
+        ]
+      }
+    }
+    ```
+</details>
+
+
+:::note[Diagnostics data format]
+The structure and format of the diagnostics data output should not be considered stable,
+and may change in future IdentityServer versions.
+:::

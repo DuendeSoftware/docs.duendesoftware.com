@@ -65,7 +65,7 @@ includes all claims and the `AuthenticationProperties.Items` collection. The `It
 data. The `AuthenticationProperties` is included in the call to `SignInAsync` that establishes the user session in the
 UI code.
 
-This data will be serialized and protected using ASP.NET Core's [data protection](/identityserver/deployment#data-protection-keys) feature to protect any user PII from being
+This data will be serialized and protected using ASP.NET Core's [data protection](/identityserver/deployment.md#data-protection-keys) feature to protect any user PII from being
 directly readable in the data store. To allow querying, values from the user's session are extracted and used as indices in the store.
 These values are the user's:
 
