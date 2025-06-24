@@ -190,6 +190,6 @@ builder.Services.ConfigureDPoPTokensForScheme(JwtBearerDefaults.AuthenticationSc
 
 You are now FAPI 2.0 compliant and ready to secure your high-value assets with Duende IdentityServer.
 
-## Private Key JWT vs. MTLS
+## Private Key JWT vs. mTLS
 
 While the FAPI 2.0 allows for choice in securing communication between the authorization server and clients, we recommend that developers implementing FAPI 2.0 start with private key JWTs before choosing mTLS. Both are supported with Duende IdentityServer, but [implementing mTLS](/identityserver/tokens/client-authentication.md#mutual-tls-client-certificates) is relatively challenging to maintain in a production environment. You are responsible for your deployment and production environments, so you are ultimately best suited to decide which option to move forward with.
