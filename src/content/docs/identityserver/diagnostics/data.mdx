@@ -31,6 +31,7 @@ The diagnostics data contains the following information:
 
 * Assembly information for [IdentityServer-related assemblies](https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Licensing/V2/Diagnostics/DiagnosticEntries/AssemblyInfoDiagnosticEntry.cs#L17)
   * .NET runtime version
+  * IdentityServer version
   * Assembly name and version
 * Registered authentication schemes (does not include [dynamic providers](/identityserver/ui/login/dynamicproviders.md))
   * Name of the scheme and authentication handler type
@@ -361,6 +362,7 @@ Diagnostics data is written to logs in one or more chunks containing data format
     {
       "AssemblyInfo":{
         "DotnetVersion":".NET 9.0.6",
+        "IdentityServerVersion":"7.3",
         "Assemblies":[
           {
             "Name":"Duende.IdentityModel",
