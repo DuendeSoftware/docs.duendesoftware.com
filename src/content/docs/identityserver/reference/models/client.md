@@ -161,7 +161,7 @@ public static IEnumerable<Client> Get()
   This means when the user logs out, any revokable tokens will be removed.
   If using server-side sessions, expired sessions will also remove any revokable tokens, and backchannel logout will be
   triggered.
-  This client's setting overrides the global `CoordinateTokensWithUserSession` configuration setting.
+  This client's setting overrides the global `CoordinateClientLifetimesWithUserSession` configuration setting.
 
 ## Token
 
