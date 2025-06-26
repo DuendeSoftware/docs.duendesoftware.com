@@ -1,15 +1,16 @@
 ---
 title: "Duende AccessTokenManagement v3.x to v4.0"
-description: Guide for upgrading Duende BFF Security Framework from version 3.x to version 4.0, including migration steps for custom implementations and breaking changes.
+description: Guide for upgrading Duende.AccessTokenManagement from version 3.x to version 4.0, including migration steps for custom implementations and breaking changes.
 sidebar:
   label: v3.x → v4.0
   order: 100
 ---
 
 ## Changes
-### Moving Towards HybridCache Implementation and Away from Distributed Cache
 
-Microsoft has recently released HybridCache. While this is only released as a .NET 9 DLL, these assemblies work fine in .NET 8. So, while we still support .NET 8 with ATM 4.0, we are moving towards using HybridCache.
+### Moving Towards HybridCache Implementation And Away from Distributed Cache
+
+Microsoft has recently released [HybridCache](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid). While this is only released as a .NET 9 assembly, these assemblies work fine in .NET 8. So, while we still support .NET 8 with ATM 4.0, we are moving towards using HybridCache.
 
 HybridCache brings significant improvements for us. Because of the two-layered cache, we've found it significantly improves performance.  
 If you currently use a distributed cache, this should still work seamlessly.
@@ -31,9 +32,11 @@ The library has undergone extensive internal changes—so much so that it can be
 
 All internal implementation details are now marked as internal, reducing accidental coupling and clarifying the intended extension points. In V3, all classes were public and most public methods were marked as virtual. This meant you could override any class by inheriting from it and overriding a single method.
 
-While this was very convenient for our consumers, it made it very difficult for us to introduce changes to the library without making breaking changes.
+While this was very convenient for our consumers, it made it challenging to introduce changes to the library without making breaking changes.
 
-We still want to ensure our users' extensibility needs are met, but via more controlled mechanisms. If you find that you have an extensibility need that is not covered by the new model, please raise a discussion in our discussion board. If this is a scenario we want to support, we'll do our best to accommodate it.
+We still want to ensure our users' extensibility needs are met, but via more controlled mechanisms.
+If you find that you have an extensibility need not covered by the new model, please raise a discussion [in our discussion board](https://duende.link/community).
+If this is a scenario we want to support, we'll do our best to accommodate it.
 
 ### Explicit Extension Model
 
@@ -55,15 +58,15 @@ For example:
 
 ```csharp
 var scheme = Scheme.Parse("oidc");
-
 ```
 
 ### Renamed classes
-Several classes have been renamed, either to make their usage clearer or to drop the 'service' suffix, which only adds noise:
 
-AccessTokenHandler => AccessTokenRequestHandler
-ClientCredentialsTokenManagementService => IClientIClientCredentialsTokenManager
-IClientCredentialsTokenEndpointService => IClientCredentialsTokenEndpoint
-IUserTokenManagementService => IUserTokenManager
-ITokenRequestSynchronization => IUserTokenRequestConcurrencyControl
-IUserTokenEndpointService => IUserTokenEndpoint
+Several classes have been renamed, either to clarify their usage or to drop the `service` suffix, which only adds noise:
+
+* `AccessTokenHandler` is now `AccessTokenRequestHandler`
+* `ClientCredentialsTokenManagementService` is now `IClientIClientCredentialsTokenManager`
+* `IClientCredentialsTokenEndpointService` is now `IClientCredentialsTokenEndpoint`
+* `IUserTokenManagementService` is now `IUserTokenManager`
+* `ITokenRequestSynchronization` is now `IUserTokenRequestConcurrencyControl`
+* `IUserTokenEndpointService` is now `IUserTokenEndpoint`

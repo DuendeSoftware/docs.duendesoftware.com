@@ -8,13 +8,14 @@ redirect_from:
   - /foss/accesstokenmanagement/advanced/dpop/
 ---
 
-[DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) specifies how to bind an asymmetric key stored within a JSON Web Key (JWK) to an access token. This will make the access token bound to the key such that if the access token were to leak, it cannot be used without also having access to the private key of the corresponding JWK.
+[DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) specifies how to bind an asymmetric key stored within a JSON Web Key (JWK) to an access token. 
+This will make the access token bound to the key such that if the access token were to leak, it cannot be used without also having access to the private key of the corresponding JWK.
 
-The "Duende.AccessTokenManagement" library supports DPoP.
+The Duende.AccessTokenManagement library supports DPoP.
 
 ## DPoP Key
 
-The main piece that your hosting application needs to concern itself with is how to obtain (and manage) the DPoP key. This key (and signing algorithm) will be either an "RS", "PS", or "ES" style key, and needs to be in the form of a JSON Web Key (or JWK). Consult the specification for more details.
+The main piece that your hosting application needs to concern itself with is how to get (and manage) the DPoP key. This key (and signing algorithm) will be either an "RS", "PS", or "ES" style key, and needs to be in the form of a JSON Web Key (or JWK). Consult the specification for more details.
 
 The creation and management of this DPoP key is up to the policy of the client. For example is can be dynamically created when the client starts up, and can be periodically rotated. The main constraint is that it must be stored for as long as the client uses any access tokens (and possibly refresh tokens) that they are bound to, which this library will manage for you.
 
@@ -73,11 +74,11 @@ When using DPoP and `AddOpenIdConnectAccessTokenManagement`, this library will a
 
 ## Proof Tokens At The API
 
-Once the library has obtained a DPoP bound access token for the client, then if your application is using any of the `HttpClient` client factory helpers (e.g. `AddClientCredentialsHttpClient` or `AddUserAccessTokenHttpClient`) then those outbound HTTP requests will automatically include a DPoP proof token for the associated DPoP access token.
+Once the library has gotten a DPoP bound access token for the client, then if your application is using any of the `HttpClient` client factory helpers (e.g. `AddClientCredentialsHttpClient` or `AddUserAccessTokenHttpClient`) then those outbound HTTP requests will automatically include a DPoP proof token for the associated DPoP access token.
 
 ## Considerations
 
 A point to keep in mind when using DPoP and `AddOpenIdConnectAccessTokenManagement` is that the DPoP proof key is created per user session. 
 This proof key must be store somewhere, and the `AuthenticationProperties` used by both the OIDC and cookie handlers is what is used to store this key.
 This implies that the OIDC `state` parameter will increase in size, as well the resultant cookie that represents the user's session.
-The storage of each of these can be customized with the properties on the options `StateDataFormat` and `SessionStore` respectively.
+The storage for each of these can be customized with the properties on the options `StateDataFormat` and `SessionStore` respectively.

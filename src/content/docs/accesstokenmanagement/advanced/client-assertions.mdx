@@ -9,13 +9,12 @@ redirect_from:
 ---
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-If your token client is using a client assertion instead of a shared secret, you can provide the assertion in two ways
+If your token client is using a client assertion instead of a shared secret, you can provide the assertion in two ways:
 
-* use the request parameter mechanism to pass a client assertion to the management
-* implement the `IClientAssertionService` interface to centralize client assertion creation
+* Use the request parameter mechanism to pass a client assertion to the management
+* Implement the `IClientAssertionService` interface to centralize client assertion creation
 
 Here's a sample client assertion service using the Microsoft JWT library:
-
 
 {/* prettier-ignore */}
 <Tabs syncKey="atm">
