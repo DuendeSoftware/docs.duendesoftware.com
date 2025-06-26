@@ -41,7 +41,7 @@ dotnet add package Duende.AccessTokenManagement
 You can add the necessary services to the ASP.NET Core service provider by calling `AddClientCredentialsTokenManagement()`. After that you can add one or more named client definitions by calling `AddClient`.
 
 {/* prettier-ignore */}
-<Tabs syncKey="atm-workers">
+<Tabs syncKey="atm">
   {/* prettier-ignore */}
   <TabItem label="V4">
 
@@ -106,7 +106,7 @@ You can register HTTP clients with the factory that will automatically use the a
 The following code registers an `HttpClient` called `invoices` which automatically uses the `invoice.client` definition:
 
 {/* prettier-ignore */}
-<Tabs syncKey="atm-workers">
+<Tabs syncKey="atm">
   {/* prettier-ignore */}
   <TabItem label="V4">
 
@@ -196,7 +196,7 @@ The clients in the HTTP client factory have a message handler attached to them t
 If you want to use access tokens in a different way or have more advanced needs which the automatic option doesn't cover, then you can also manually request access tokens. 
 
 {/* prettier-ignore */}
-<Tabs syncKey="atm-workers">
+<Tabs syncKey="atm">
   {/* prettier-ignore */}
   <TabItem label="V4">
 
