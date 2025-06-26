@@ -12,12 +12,6 @@ redirect_from:
 The `Duende.AccessTokenManagement.OpenIdConnect` library automates all the tasks around access token lifetime management for
 user-centric web applications.
 
-To use this library, start by adding the library to your .NET projects.
-
-```bash
-dotnet add package Duende.AccessTokenManagement.OpenIdConnect
-```
-
 While many of the details can be customized, by default the following is assumed:
 
 * ASP.NET Core web application
@@ -26,7 +20,22 @@ While many of the details can be customized, by default the following is assumed
   token service
 * the token service returns a refresh token
 
-## Setup
+## Usage
+First, you'll need to add `Duende.AccessTokenManagement.OpenIdConnect` to your solution. 
+
+Then, there  are two fundamental ways to interact with token management:
+1. **Automatic** <Badge text="recommended"/>: You request a http client from the IHTTPClientFactory. This http client automatically requests, optionally renews and attaches the access tokens on each request. 
+2. **Manually**  <Badge text="advanced"/>: You request an access token, which you can then use to (for example) authenticate with services. You are responsible for attaching the access token to requests. 
+
+
+## Adding Duende.AccessTokenManagement.OpenIdConnect
+
+
+To use this library, start by adding the library to your .NET projects.
+
+```bash
+dotnet add package Duende.AccessTokenManagement.OpenIdConnect
+```
 
 By default, the token management library will use the ASP.NET Core default authentication scheme for token storage (this
 is typically the cookie handler and its authentication session), and the default challenge scheme for deriving token
@@ -90,7 +99,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddOpenIdConnectAccessTokenManagement();
 ```
 
-### HTTP Client Factory
+### Automatic via HTTP Client Factory
 
 Similar to the worker service support, you can register HTTP clients that automatically send the access token of the
 current user when making API calls. The message handler plumbing associated with those HTTP clients will try to make
