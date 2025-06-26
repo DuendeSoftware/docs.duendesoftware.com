@@ -159,39 +159,39 @@ The following code registers an `HttpClient` called `invoices` which automatical
 </Tabs>
 
 
-    Once you have set up HTTP clients in the HTTP factory, then no token related code is needed at all, e.g.:
+Once you have set up HTTP clients in the HTTP factory, then no token related code is needed at all, e.g.:
 
-    ```csharp
-    // WorkerHttpClient.cs
-    public class WorkerHttpClient : BackgroundService
+```csharp
+// WorkerHttpClient.cs
+public class WorkerHttpClient : BackgroundService
+{
+    private readonly ILogger<WorkerHttpClient> _logger;
+    private readonly IHttpClientFactory _clientFactory;
+
+    public WorkerHttpClient(ILogger<WorkerHttpClient> logger, IHttpClientFactory factory)
     {
-        private readonly ILogger<WorkerHttpClient> _logger;
-        private readonly IHttpClientFactory _clientFactory;
+        _logger = logger;
+        _clientFactory = factory;
+    }
 
-        public WorkerHttpClient(ILogger<WorkerHttpClient> logger, IHttpClientFactory factory)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
         {
-            _logger = logger;
-            _clientFactory = factory;
-        }
+            var client = _clientFactory.CreateClient("invoices");
+            var response = await client.GetAsync("test", stoppingToken);
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                var client = _clientFactory.CreateClient("invoices");
-                var response = await client.GetAsync("test", stoppingToken);
-
-                // rest omitted
-            }
+            // rest omitted
         }
     }
-    ```
+}
+```
 
 :::note
 The clients in the HTTP client factory have a message handler attached to them that automatically retries the request in case of a `401` response code. The request get resent with a newly requested access token. If this still results in a `401`, the response is returned to the caller.
 :::
 
-### Manual
+### Manually request access tokens
 
 If you want to use access tokens in a different way or have more advanced needs which the automatic option doesn't cover, then you can also manually request access tokens. 
 
