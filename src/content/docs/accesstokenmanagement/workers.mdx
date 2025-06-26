@@ -17,17 +17,17 @@ The access tokens need to be requested and [cached](/accesstokenmanagement/advan
 
 The actual business code should not need to be aware of this.
 
-Have a look for the [Worker project in the samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for running code.
+Take a look at the [`Worker` project in the samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for example code.
 
-For more information, also please see the [advanced topic on client credentials](accesstokenmanagement/advanced/client-credentials/). 
+For more information, see the [advanced topic on client credentials](accesstokenmanagement/advanced/client-credentials/). 
 
 
 ## Usage
 
-First, you'll need to add `Duende.AccessTokenManagement` to your solution. 
+First, you'll need to add the `Duende.AccessTokenManagement` package to your solution. 
 
-There are two fundamental ways to interact with token management:
-1. **Automatic** <Badge text="recommended"/>: You request a http client from the IHTTPClientFactory. This http client automatically requests, optionally renews and attaches the access tokens on each request. 
+Next, there are two fundamental ways to interact with token management:
+1. **Automatic** <Badge text="recommended"/>: You request an `HttpClient` from the `IHttpClientFactory`. This HTTP client automatically requests, optionally renews and attaches the access tokens on each request. 
 2. **Manually**  <Badge text="advanced"/>: You request an access token, which you can then use to (for example) authenticate with services. You are responsible for attaching the access token to requests. 
 
 ### Adding Duende.AccessTokenManagement
@@ -39,10 +39,6 @@ dotnet add package Duende.AccessTokenManagement
 ```
 
 You can add the necessary services to the ASP.NET Core service provider by calling `AddClientCredentialsTokenManagement()`. After that you can add one or more named client definitions by calling `AddClient`.
-
-:::note
-    The way you interact with `Duende.AccessTokenManagement` has changed in version 4. 
-:::
 
 {/* prettier-ignore */}
 <Tabs syncKey="atm-workers">
@@ -107,7 +103,7 @@ You can add the necessary services to the ASP.NET Core service provider by calli
 
 You can register HTTP clients with the factory that will automatically use the above client definitions to request and use access tokens.
 
-The following code registers an HTTP client called `invoices` to automatically use the `invoice.client` definition:
+The following code registers an `HttpClient` called `invoices` which automatically uses the `invoice.client` definition:
 
 {/* prettier-ignore */}
 <Tabs syncKey="atm-workers">
@@ -191,7 +187,9 @@ The following code registers an HTTP client called `invoices` to automatically u
     }
     ```
 
-**remark** The clients in the factory have a message handler attached to them that automatically re-tries the request in case of a `401` response code. The request get re-sent with a newly requested access token. If this still results in a `401`, the response is returned to the caller.
+:::note
+The clients in the HTTP client factory have a message handler attached to them that automatically retries the request in case of a `401` response code. The request get resent with a newly requested access token. If this still results in a `401`, the response is returned to the caller.
+:::
 
 ### Manual
 
