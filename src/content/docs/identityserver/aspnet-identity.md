@@ -25,7 +25,7 @@ Next, configure ASP.NET Identity normally in your IdentityServer host with the s
 
 Then in your `Program.cs`, use the `AddAspNetIdentity` extension method after the call to `AddIdentityServer`:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

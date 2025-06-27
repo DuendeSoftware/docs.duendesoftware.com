@@ -48,7 +48,7 @@ POST /connect/token
 On .NET you can leverage the [Duende IdentityModel](/identitymodel/index.mdx) client library
 to [request](/identitymodel/endpoints/token.md) refresh tokens, e.g.:
 
-```cs
+```csharp
 using Duende.IdentityModel.Client;
 
 var client = new HttpClient();

@@ -166,7 +166,7 @@ authenticate with IdentityServer using a client secret.
 
 Add this client definition to `Config.cs`:
 
-```cs
+```csharp
 public static IEnumerable<Client> Clients =>
     new Client[]
     
@@ -379,7 +379,7 @@ way you only need to know the base address of IdentityServer - the actual
 endpoint addresses can be read from the metadata. Add the following to the
 client's Program.cs in the `src/Client/Program.cs` directory:
 
-```cs
+```csharp
 using Duende.IdentityModel.Client;
 
 // discovery endpoints from metadata
@@ -404,7 +404,7 @@ development certificate. This only needs to be done once.
 Next you can use the information from the discovery document to request a token
 from `IdentityServer` to access `api1`:
 
-```cs
+```csharp
 // request token
 var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
 {
@@ -434,7 +434,7 @@ inspect the raw token.
 To send the access token to the API you typically use the HTTP Authorization
 header. This is done using the `SetBearerToken` extension method:
 
-```cs
+```csharp
 // call api
 var apiClient = new HttpClient();
 apiClient.SetBearerToken(tokenResponse.AccessToken!); // AccessToken is always non-null when IsError is false
@@ -486,7 +486,7 @@ configured IdentityServer to allow this access by [including it in the
 allowedScopes property](#defining-the-client).
 Add the following to the `Program.cs` file of the API:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddAuthorization(options =>
 {

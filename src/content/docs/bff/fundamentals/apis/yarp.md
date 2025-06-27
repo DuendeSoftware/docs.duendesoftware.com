@@ -23,7 +23,7 @@ YARP.
 To enable Duende.BFF's YARP integration, add a reference to the *Duende.BFF.Yarp* NuGet package to your project and add
 YARP and the BFF's YARP extensions to DI:
 
-```cs
+```csharp
 builder.Services.AddBff();
 
 // adds YARP with BFF extensions
@@ -65,7 +65,7 @@ configuration schema.
 Another option is to configure YARP in code using the in-memory config provider included in the BFF extensions for YARP.
 The above configuration as code would look like this:
 
-```cs
+```csharp
 yarpBuilder.LoadFromMemory(
     new[]
     {
@@ -132,7 +132,7 @@ proxied request will not be sent, and the BFF will return an HTTP 401: Unauthori
 
 If you are using the code config method, call the *WithAccessToken* extension method to achieve the same thing:
 
-```cs
+```csharp
 yarpBuilder.LoadFromMemory(
     new[]
     {
@@ -185,7 +185,7 @@ the request anonymously when the user is not logged in. It is an error to set bo
 If you are using the code config method, call the *WithOptionalUserAccessToken* extension method to achieve the same
 thing:
 
-```cs
+```csharp
 yarpBuilder.LoadFromMemory(
     new[]
     {

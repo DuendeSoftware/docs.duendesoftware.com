@@ -84,7 +84,7 @@ When triggering challenge, it's common to pass some properties to indicate the c
 the external login results and any other state you need to maintain across the workflow (e.g. such as
 the [return URL passed to the login page](/identityserver/ui/login/redirect)):
 
-```cs
+```csharp
 var callbackUrl = Url.Action("MyCallback");
 
 var props = new AuthenticationProperties
@@ -119,7 +119,7 @@ ASP.NET Identity [quickstart](/identityserver/quickstarts/5-aspnetid/).
 One option on external authentication handlers is called `SignInScheme`.
 This specifies the cookie handler to manage the state:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddAuthentication()
     .AddOpenIdConnect("AAD", "Employee Login", options =>
@@ -136,7 +136,7 @@ The scheme is represented via the `IdentityServerConstants.ExternalCookieAuthent
 If you were to use our external cookie handler, then for the `SignInScheme` above, you'd assign the value to be the
 `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddAuthentication()
     .AddOpenIdConnect("AAD", "Employee Login", options =>
@@ -150,7 +150,7 @@ builder.Services.AddAuthentication()
 Alternatively, you can also register your own custom cookie handler instead.
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddAuthentication()
     .AddCookie("MyTempHandler")
@@ -217,7 +217,7 @@ To access the result of the external login, invoke the `AuthenticateAsync` metho
 This will read the external cookie to retrieve the claims issued by the external provider and any other state you
 previously stored when calling `ChallengeAsync`:
 
-```cs
+```csharp
 // read external identity from the temporary cookie
 var result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
 if (result?.Succeeded != true)
@@ -250,7 +250,7 @@ This value should be used to locate your local user record for the user.
 Once your callback page logic has identified the user based on the external identity provider,
 it will log the user in and complete the original login workflow:
 
-```cs
+```csharp
 var user = FindUserFromExternalProvider(scheme, userId);
 
 // issue authentication cookie for user
@@ -295,7 +295,7 @@ extension method on the `IServiceCollection` when configuring the service provid
 If no parameters are passed, then all OpenID Connect handlers configured will use the IdentityServer provided secure
 data format implementation:
 
-```cs
+```csharp
 // Program.cs
 // configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.
 builder.Services.AddOidcStateDataFormatterCache();
@@ -317,7 +317,7 @@ builder.Services.AddAuthentication()
 
 If only particular schemes are to be configured, then pass those schemes as parameters:
 
-```cs
+```csharp
 // configures the OpenIdConnect handlers to persist the state parameter into the server-side IDistributedCache.
 builder.Services.AddOidcStateDataFormatterCache("aad", "demoidsrv");
 ```
