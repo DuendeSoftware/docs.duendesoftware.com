@@ -39,7 +39,7 @@ configuration.
 
 Update the _Client_ in _src/IdentityServer/Config.cs_ as follows:
 
-```cs
+```csharp
 new Client
 {
     ClientId = "web",
@@ -68,7 +68,7 @@ To get the refresh token the _offline_access_ scope has to be requested by the c
 
 In _src/WebClient/Program.cs_ add the scope to the scope list:
 
-```cs
+```csharp
 options.Scope.Add("offline_access");
 ```
 
@@ -79,14 +79,14 @@ When running the solution the refresh token should now be visible under _Propert
 In the WebClient project add a reference to the NuGet package `Duende.AccessTokenManagement.OpenIdConnect` and in
 _Program.cs_ add the needed types to dependency injection:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddOpenIdConnectAccessTokenManagement();
 ```
 
 In _CallApi.cshtml.cs_ update the method body of `OnGet` as follows:
 
-```cs
+```csharp
 // CallApi.cshtml.cs
 public async Task OnGet()
 {
@@ -121,7 +121,7 @@ automatically retrieve the needed access token and refresh if needed.
 
 In the client in _Program.cs_ under the call to _AddOpenIdConnectAccessTokenManagement_ register the HttpClient:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
 {
@@ -131,7 +131,7 @@ builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: clie
 
 Now the _OnGet_ method in _CallApi.cshtml.cs_ can be even more straightforward:
 
-```cs
+```csharp
   public class CallApiModel(IHttpClientFactory httpClientFactory) : PageModel
   {
       public string Json = string.Empty;

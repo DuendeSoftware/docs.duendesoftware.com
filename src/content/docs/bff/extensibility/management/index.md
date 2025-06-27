@@ -29,7 +29,7 @@ You can add your own implementation by overriding the default after calling *Add
 
 The management endpoint services all inherit from the *IBffEndpointService*, which provides a general-purpose mechanism to add custom logic to the endpoints. 
 
-```cs
+```csharp
 public interface IBffEndpointService
 {
     Task ProcessRequestAsync(HttpContext context);

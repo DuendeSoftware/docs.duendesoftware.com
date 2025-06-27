@@ -27,7 +27,7 @@ thus also allows setting custom headers etc.
 The following code snippet creates a request for a client credentials
 grant type:
 
-```cs
+```csharp
 var request = new ClientCredentialsTokenRequest
 {
     Address = "https://demo.duendesoftware.com/connect/token",

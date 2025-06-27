@@ -119,7 +119,7 @@ To keep the same clients and API working as the prior quickstarts, we need to
 copy over the configuration data from the old IdentityServer project into this
 one. Do that now, and afterwards `Config.cs` should look like this:
 
-```cs
+```csharp
 public static class Config
 {
     public static IEnumerable<IdentityResource> IdentityResources =>

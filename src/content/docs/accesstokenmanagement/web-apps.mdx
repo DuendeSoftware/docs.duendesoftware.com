@@ -8,6 +8,9 @@ sidebar:
 redirect_from:
   - /foss/accesstokenmanagement/web_apps/
 ---
+import { Badge } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 The `Duende.AccessTokenManagement.OpenIdConnect` library automates all the tasks around access token lifetime management for
 user-centric web applications.
@@ -177,63 +180,66 @@ public async Task<IActionResult> CallApi([FromServices] InvoiceClient client)
 
 If you want to use access tokens differently or have more advanced needs which the automatic option doesn't cover, then you can also manually request user access tokens. 
 
-<Tabs syncKey="atm">
+<Tabs syncKey="atmVersion">
   <TabItem label="V4">
 
     You can get the current user access token manually by writing code against the `IUserTokenManager`.
 
-    ```csharp
-    public class HomeController : Controller
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`public class HomeController : Controller
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IUserTokenManager _userTokenManager;
+
+    public HomeController(IHttpClientFactory httpClientFactory, IUserTokenManager userTokenManager)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IUserTokenManager _userTokenManager;
-
-        public HomeController(IHttpClientFactory httpClientFactory, IUserTokenManager userTokenManager)
-        {
-            _httpClientFactory = httpClientFactory;
-            _userTokenManager = userTokenManager;
-        }
-
-        public async Task<IActionResult> CallApi(CancellationToken ct)
-        {
-            var token = await _userTokenManager.GetAccessTokenAsync(User, ct: ct);
-            var client = _httpClientFactory.CreateClient();
-            client.SetBearerToken(token.Value);
-                
-            var response = await client.GetAsync("https://api.company.com/invoices", ct);
-            
-            // rest omitted
-        }
+        _httpClientFactory = httpClientFactory;
+        _userTokenManager = userTokenManager;
     }
-    ```
+
+    public async Task<IActionResult> CallApi(CancellationToken ct)
+    {
+        var token = await _userTokenManager.GetAccessTokenAsync(User, ct: ct);
+        var client = _httpClientFactory.CreateClient();
+        client.SetBearerToken(token.Value);
+
+        var response = await client.GetAsync("https://api.company.com/invoices", ct);
+
+        // rest omitted
+    }
+}`}/>
   
   </TabItem>
   <TabItem label="V3">
     You can get the current user access token manually by writing code against the `IUserTokenManagementService`.
 
-    ```csharp
-    public class HomeController : Controller
+    <Code
+        lang="csharp"
+        title="Program.cs"
+        code={`public class HomeController : Controller
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IUserTokenManagementService _tokenManagementService;
+
+    public HomeController(IHttpClientFactory httpClientFactory, IUserTokenManagementService tokenManagementService)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IUserTokenManagementService _tokenManagementService;
+        _httpClientFactory = httpClientFactory;
+        _tokenManagementService = tokenManagementService;
+    }
 
-        public HomeController(IHttpClientFactory httpClientFactory, IUserTokenManagementService tokenManagementService)
-        {
-            _httpClientFactory = httpClientFactory;
-            _tokenManagementService = tokenManagementService;
-        }
+    public async Task<IActionResult> CallApi()
+    {
+        var token = await _tokenManagementService.GetAccessTokenAsync(User);
+        var client = _httpClientFactory.CreateClient();
+        client.SetBearerToken(token.Value);
 
-        public async Task<IActionResult> CallApi()
-        {
-            var token = await _tokenManagementService.GetAccessTokenAsync(User);
-            var client = _httpClientFactory.CreateClient();
-            client.SetBearerToken(token.Value);
-                
-            var response = await client.GetAsync("https://api.company.com/invoices");
-            
-            // rest omitted
-        }
-    }  
+        var response = await client.GetAsync("https://api.company.com/invoices");
+
+        // rest omitted
+    }
+}`}/>
   </TabItem>
 </Tabs>
 

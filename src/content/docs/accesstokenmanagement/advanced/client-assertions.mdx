@@ -7,6 +7,7 @@ sidebar:
 redirect_from:
   - /foss/accesstokenmanagement/advanced/client_assertions/
 ---
+import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 If your token client is using a client assertion instead of a shared secret, you can provide the assertion in two ways:
@@ -17,127 +18,127 @@ If your token client is using a client assertion instead of a shared secret, you
 Here's a sample client assertion service using the Microsoft JWT library:
 
 {/* prettier-ignore */}
-<Tabs syncKey="atm">
+<Tabs syncKey="atmVersion">
   {/* prettier-ignore */}
   <TabItem label="V4">
-    ```csharp
-    // ClientAssertionService.cs
-    using Duende.AccessTokenManagement;
-    using Duende.IdentityModel;
-    using Duende.IdentityModel.Client;
-    using Microsoft.Extensions.Options;
-    using Microsoft.IdentityModel.JsonWebTokens;
-    using Microsoft.IdentityModel.Tokens;
+      <Code
+          lang="csharp"
+          title="ClientAssertionService.cs"
+          code={`using Duende.AccessTokenManagement;
+using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
-    public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> options)
-        : IClientAssertionService
+public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> options)
+    : IClientAssertionService
+{
+    public Task<ClientAssertion?> GetClientAssertionAsync(
+    ClientCredentialsClientName? clientName = null, TokenRequestParameters? parameters = null)
     {
-        public Task<ClientAssertion?> GetClientAssertionAsync(
-        ClientCredentialsClientName? clientName = null, TokenRequestParameters? parameters = null)
+        if (clientName == "invoice")
         {
-            if (clientName == "invoice")
+            var options1 = options.Get(clientName);
+
+            var descriptor = new SecurityTokenDescriptor
             {
-                var options1 = options.Get(clientName);
+                Issuer = options1.ClientId,
+                Audience = options1.TokenEndpoint,
+                Expires = DateTime.UtcNow.AddMinutes(1),
+                SigningCredentials = GetSigningCredential(),
 
-                var descriptor = new SecurityTokenDescriptor
+                Claims = new Dictionary<string, object>
                 {
-                    Issuer = options1.ClientId,
-                    Audience = options1.TokenEndpoint,
-                    Expires = DateTime.UtcNow.AddMinutes(1),
-                    SigningCredentials = GetSigningCredential(),
+                    { JwtClaimTypes.JwtId, Guid.NewGuid().ToString() },
+                    { JwtClaimTypes.Subject, options1.ClientId! },
+                    { JwtClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime() }
+                },
 
-                    Claims = new Dictionary<string, object>
-                    {
-                        { JwtClaimTypes.JwtId, Guid.NewGuid().ToString() },
-                        { JwtClaimTypes.Subject, options1.ClientId! },
-                        { JwtClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime() }
-                    },
-
-                    AdditionalHeaderClaims = new Dictionary<string, object>
-                    {
-                        { JwtClaimTypes.TokenType, "client-authentication+jwt" }
-                    }
-                };
-
-                var handler = new JsonWebTokenHandler();
-                var jwt = handler.CreateToken(descriptor);
-
-                return Task.FromResult<ClientAssertion?>(new ClientAssertion
+                AdditionalHeaderClaims = new Dictionary<string, object>
                 {
-                    Type = OidcConstants.ClientAssertionTypes.JwtBearer,
-                    Value = jwt
-                });
-            }
+                    { JwtClaimTypes.TokenType, "client-authentication+jwt" }
+                }
+            };
 
-            return Task.FromResult<ClientAssertion?>(null);
+            var handler = new JsonWebTokenHandler();
+            var jwt = handler.CreateToken(descriptor);
+
+            return Task.FromResult<ClientAssertion?>(new ClientAssertion
+            {
+                Type = OidcConstants.ClientAssertionTypes.JwtBearer,
+                Value = jwt
+            });
         }
 
-        private SigningCredentials GetSigningCredential()
-        {
-            throw new NotImplementedException();
-        }
+        return Task.FromResult<ClientAssertion?>(null);
     }
-    ```  
+
+    private SigningCredentials GetSigningCredential()
+    {
+        throw new NotImplementedException();
+    }
+}`}/>
   </TabItem>
   <TabItem label="V3">
 
-    ```csharp
-    // ClientAssertionService.cs
-    using Duende.AccessTokenManagement;
-    using Duende.IdentityModel;
-    using Duende.IdentityModel.Client;
-    using Microsoft.Extensions.Options;
-    using Microsoft.IdentityModel.JsonWebTokens;
-    using Microsoft.IdentityModel.Tokens;
+    <Code
+        lang="csharp"
+        title="ClientAssertionService.cs"
+        code={`using Duende.AccessTokenManagement;
+using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
-    public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> options)
-        : IClientAssertionService
+public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> options)
+    : IClientAssertionService
+{
+    public Task<ClientAssertion?> GetClientAssertionAsync(
+    string? clientName = null, TokenRequestParameters? parameters = null)
     {
-        public Task<ClientAssertion?> GetClientAssertionAsync(
-        string? clientName = null, TokenRequestParameters? parameters = null)
+        if (clientName == "invoice")
         {
-            if (clientName == "invoice")
+            var options1 = options.Get(clientName);
+
+            var descriptor = new SecurityTokenDescriptor
             {
-                var options1 = options.Get(clientName);
+                Issuer = options1.ClientId,
+                Audience = options1.TokenEndpoint,
+                Expires = DateTime.UtcNow.AddMinutes(1),
+                SigningCredentials = GetSigningCredential(),
 
-                var descriptor = new SecurityTokenDescriptor
+                Claims = new Dictionary<string, object>
                 {
-                    Issuer = options1.ClientId,
-                    Audience = options1.TokenEndpoint,
-                    Expires = DateTime.UtcNow.AddMinutes(1),
-                    SigningCredentials = GetSigningCredential(),
+                    { JwtClaimTypes.JwtId, Guid.NewGuid().ToString() },
+                    { JwtClaimTypes.Subject, options1.ClientId! },
+                    { JwtClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime() }
+                },
 
-                    Claims = new Dictionary<string, object>
-                    {
-                        { JwtClaimTypes.JwtId, Guid.NewGuid().ToString() },
-                        { JwtClaimTypes.Subject, options1.ClientId! },
-                        { JwtClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime() }
-                    },
-
-                    AdditionalHeaderClaims = new Dictionary<string, object>
-                    {
-                        { JwtClaimTypes.TokenType, "client-authentication+jwt" }
-                    }
-                };
-
-                var handler = new JsonWebTokenHandler();
-                var jwt = handler.CreateToken(descriptor);
-
-                return Task.FromResult<ClientAssertion?>(new ClientAssertion
+                AdditionalHeaderClaims = new Dictionary<string, object>
                 {
-                    Type = OidcConstants.ClientAssertionTypes.JwtBearer,
-                    Value = jwt
-                });
-            }
+                    { JwtClaimTypes.TokenType, "client-authentication+jwt" }
+                }
+            };
 
-            return Task.FromResult<ClientAssertion?>(null);
+            var handler = new JsonWebTokenHandler();
+            var jwt = handler.CreateToken(descriptor);
+
+            return Task.FromResult<ClientAssertion?>(new ClientAssertion
+            {
+                Type = OidcConstants.ClientAssertionTypes.JwtBearer,
+                Value = jwt
+            });
         }
 
-        private SigningCredentials GetSigningCredential()
-        {
-            throw new NotImplementedException();
-        }
+        return Task.FromResult<ClientAssertion?>(null);
     }
-    ```
+
+    private SigningCredentials GetSigningCredential()
+    {
+        throw new NotImplementedException();
+    }
+}`}/>
     </TabItem>
 </Tabs>
