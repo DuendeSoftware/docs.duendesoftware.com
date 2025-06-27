@@ -177,9 +177,7 @@ public async Task<IActionResult> CallApi([FromServices] InvoiceClient client)
 
 If you want to use access tokens differently or have more advanced needs which the automatic option doesn't cover, then you can also manually request user access tokens. 
 
-{/* prettier-ignore */}
 <Tabs syncKey="atm">
-  {/* prettier-ignore */}
   <TabItem label="V4">
 
     You can get the current user access token manually by writing code against the `IUserTokenManager`.
@@ -238,7 +236,6 @@ If you want to use access tokens differently or have more advanced needs which t
     }  
   </TabItem>
 </Tabs>
-
 
 ### HTTP Context Extension Methods
 
