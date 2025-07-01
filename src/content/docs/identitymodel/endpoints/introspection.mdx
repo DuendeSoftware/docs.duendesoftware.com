@@ -31,10 +31,10 @@ The following code sends a reference token to an introspection endpoint:
     Address = Endpoint,
     ClientId = "client",
     ClientSecret = "secret",
-    ResponseFormat = ResponseFormat.Jwt,
+    ResponseFormat = ResponseFormat.Json,
 
     // Optional
-    JwtResponseValidator = new CustomIntrospectionJwtResponseValidator()
+    // JwtResponseValidator = new CustomIntrospectionJwtResponseValidator()
 };
 
 var httpClient = new HttpClient()
@@ -65,8 +65,8 @@ var introspectionResponse = await client.IntrospectTokenAsync(new TokenIntrospec
 
 ## Token Introspection Response
 
-The response is of type `TokenIntrospectionResponse`. Before using the response, you should always check the `IsError`
-property to make sure the request was successful:
+The response of a token introspection request is an object of type `TokenIntrospectionResponse`.
+Before using the response, you should always check the `IsError` property to make sure the request was successful:
 
 ```csharp
 if (introspectionResponse.IsError) throw new Exception(introspectionResponse.Error);
@@ -95,7 +95,8 @@ In addition, it provides access to the following standard response parameters:
 
 ## JWT Response Validation :badge[v7.1]
 
-By default, **no** validation is performed on the incoming JWT response, it is only checked for valid JWT formatting.
+Most applications will not benefit from additional checks at runtime. By default, no validation is performed on the
+incoming JWT response, it is only checked for valid JWT formatting.
 
 An extensibility point is available to provide your own implementation of `ITokenIntrospectionJwtResponseValidator` using the `TokenIntrospectionRequest.JwtResponseValidator` property or using `IntrospectionClientOptions`.
 
