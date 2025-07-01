@@ -1,0 +1,108 @@
+---
+title: Token Introspection Endpoint
+description: Learn how to use the OAuth 2.0 token introspection endpoint to validate and inspect access tokens using HttpClient extensions.
+sidebar:
+  order: 4
+  label: Token Introspection
+  badge:
+    text: v7.1
+    variant: tip
+redirect_from:
+  - /foss/identitymodel/endpoints/introspection/
+---
+
+import { Code } from "astro/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+The client library for [OAuth 2.0 token introspection (RFC 7662)](https://tools.ietf.org/html/rfc7662) is provided by the `IntrospectionClient` class,
+and as an extension method for `HttpClient`.
+
+## Token Introspection Request
+
+The following code sends a reference token to an introspection endpoint:
+
+{/* prettier-ignore */}
+<Tabs>
+    <TabItem label="Using IntrospectionClient">
+        <Code
+            lang="csharp"
+            code={`var clientOptions = new IntrospectionClientOptions
+{
+    Address = Endpoint,
+    ClientId = "client",
+    ClientSecret = "secret",
+    ResponseFormat = ResponseFormat.Jwt,
+
+    // Optional
+    JwtResponseValidator = new CustomIntrospectionJwtResponseValidator()
+};
+
+var httpClient = new HttpClient()
+{
+    BaseAddress = new Uri(Endpoint)
+};
+
+var introspectionClient = new IntrospectionClient(httpClient, clientOptions);
+var introspectionResponse = await introspectionClient.Introspect("token");`}
+        />
+    </TabItem>
+    <TabItem label="Using HttpClient extension">
+        <Code
+            lang="csharp"
+            code={`var client = new HttpClient();
+var introspectionResponse = await client.IntrospectTokenAsync(new TokenIntrospectionRequest
+{
+    Address = Endpoint,
+    Token = "token",
+    ResponseFormat = ResponseFormat.Jwt,
+
+    // Optional
+    JwtResponseValidator = new CustomIntrospectionJwtResponseValidator()
+});`}
+        />
+    </TabItem>
+</Tabs>
+
+## Token Introspection Response
+
+The response is of type `TokenIntrospectionResponse`. Before using the response, you should always check the `IsError`
+property to make sure the request was successful:
+
+```csharp
+if (introspectionResponse.IsError) throw new Exception(introspectionResponse.Error);
+
+var isActive = introspectionResponse.IsActive;
+var claims = introspectionResponse.Claims;
+```
+
+The `TokenIntrospectionResponse` class exposes the raw response through its `Raw` property,
+and to the parsed JSON document through its `Json` property.
+In addition, it provides access to the following standard response parameters:
+
+| Property     | Value                                                                                                                                                                               |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Scopes`     | The list of scopes associated to the token or an empty array if no `scope` claim is present.                                                                                        |
+| `ClientId`   | The client identifier for the OAuth 2.0 client that requested the token or `null` if the `client_id` claim is missing.                                                              |
+| `UserName`   | The human-readable identifier for the resource owner who authorized the token or `null` if the `username` claim is missing.                                                         |
+| `TokenType`  | The type of the token as defined in [section 5.1 of OAuth 2.0 (RFC6749)](https://datatracker.ietf.org/doc/html/rfc6749#section-5.1) or `null` if the `token_type` claim is missing. |
+| `Expiration` | The expiration time of the token or `null` if the `exp` claim is missing.                                                                                                           |
+| `IssuedAt`   | The issuance time of the token or `null` if the `iat` claim is missing.                                                                                                             |
+| `NotBefore`  | The validity start time of the token or `null` if the `nbf` claim is missing.                                                                                                       |
+| `Subject`    | The subject of the token or `null` if the `sub` claim is missing.                                                                                                                   |
+| `Audiences`  | The service-specific list of string identifiers representing the intended audience for the token or an empty array if no `aud` claim is present.                                    |
+| `Issuer`     | The string representing the issuer of the token or `null` if the `iss` claim is missing.                                                                                            |
+| `JwtId`      | The string identifier for the token or `null` if the `jti` claim is missing.                                                                                                        |
+
+## JWT Response Validation :badge[v7.1]
+
+By default, **no** validation is performed on the incoming JWT response, it is only checked for valid JWT formatting.
+
+An extensibility point is available to provide your own implementation of `ITokenIntrospectionJwtResponseValidator` using the `TokenIntrospectionRequest.JwtResponseValidator` property or using `IntrospectionClientOptions`.
+
+```csharp
+// ITokenIntrospectionJwtResponseValidator.cs
+public interface ITokenIntrospectionJwtResponseValidator
+{
+    void Validate(string rawJwtResponse);
+}
+```
