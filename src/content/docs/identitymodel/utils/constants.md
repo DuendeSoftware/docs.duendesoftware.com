@@ -562,7 +562,7 @@ OpenID Connect protocol values.
 
 ## JWT Claim Types
 
-The *JwtClaimTypes* class has all standard claim types found in the
+The `JwtClaimTypes` class has all standard claim types found in the
 OpenID Connect, JWT and OAuth 2.0 specs -many of them are also
 aggregated at [IANA](https://www.iana.org/assignments/jwt/jwt.xhtml).
 
