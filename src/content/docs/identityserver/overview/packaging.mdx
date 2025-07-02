@@ -63,7 +63,6 @@ Duende IdentityServer Quickstart UI (UI assets only)        duende-is-ui        
 Duende IdentityServer with ASP.NET Core Identity            duende-is-aspid       [C#]      Web/Duende/IdentityServer
 Duende IdentityServer with Entity Framework Stores          duende-is-ef          [C#]      Web/Duende/IdentityServer
 Duende IdentityServer with In-Memory Stores and Test Users  duende-is-inmem       [C#]      Web/Duende/IdentityServer
-Duende IdentityServer                                       duende-is             [C#]      Web/Duende/IdentityServer
 ```
 
 ## Template Descriptions
@@ -233,26 +232,6 @@ This template stores all operational and configuration data of the IdentityServe
 The template targets SQLite by default, but we have included scripts to easily swap out and regenerate migrations for your database.
 
 [Read more about the Entity Framework Core setup here.](/identityserver/data/ef)
-
-### Duende IdentityServer Quick Start
-
-The quick start template is our most feature-rich offering and a great starting point for developers who want a simple yet effective UI/UX experience.
-
-```bash
-dotnet new duende-is
-```
-
-The template is built on the Entity Framework Core template but provides an administrative UI for managing clients, scopes, and claims against a database storage engine. It also has a diagnostics dashboard showing system information, including the licensing tier and features currently used in your IdentityServer deployment.
-
-#### Third-party Dependencies
-
-This template includes several third-party dependencies:
-
-- [Serilog](https://serilog.net/)
-- [Bootstrap 5](https://getbootstrap.com)
-- [Bootstrap 5 tags](https://github.com/lekoala/bootstrap5-tags)
-- [JQuery](https://jquery.org)
-- [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 
 ### Duende IdentityServer with ASP.NET Core Identity
 
