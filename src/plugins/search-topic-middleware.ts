@@ -1,13 +1,13 @@
 import { defineRouteMiddleware } from "@astrojs/starlight/route-data";
 
 const topics = [
-  { key: "/bff/", value: "Backend For Frontend Security Library" },
+  { key: "/bff/", value: "BFF Security Framework" },
   { key: "/accesstokenmanagement/", value: "Access Token Management" },
   { key: "/general/", value: "General" },
-  { key: "/identitymodel/", value: "Identity Model" },
+  { key: "/identitymodel/", value: "IdentityModel" },
   {
     key: "/identitymodel-oidcclient/",
-    value: "Identity Model - OpenID Connect Client",
+    value: "IdentityModel.OidcClient",
   },
   { key: "/identityserver/", value: "IdentityServer" },
 ];
