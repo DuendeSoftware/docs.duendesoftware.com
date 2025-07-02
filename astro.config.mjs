@@ -37,6 +37,7 @@ export default defineConfig({
   integrations: [
     starlight({
       customCss: ["./src/styles/custom.css"],
+      routeMiddleware: ["./src/plugins/search-topic-middleware.ts"],
       plugins: [
         starlightLlmsTxt(),
         starlightHeadingBadges(),
