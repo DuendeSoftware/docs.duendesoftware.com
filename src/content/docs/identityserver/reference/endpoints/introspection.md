@@ -64,6 +64,48 @@ Unknown or expired tokens will be marked as inactive:
 
 An invalid request will return a 400, an unauthorized request 401.
 
+## JWT Response from Introspection Endpoint :badge[v7.3]
+
+IdentityServer supports [RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html) to return a JWT response from the
+introspection endpoint.
+
+To return a JWT response, set the `Accept` header in the HTTP request to `application/token-introspection+jwt`:
+
+```text
+POST /connect/introspect
+Accept: application/token-introspection+jwt
+Authorization: Basic xxxyyy
+
+token=<token>
+```
+
+A successful response will return a status code of 200 and has a `Content-Type: application/token-introspection+jwt` header,
+indicating that the response body contains a raw JWT instead. The base64 decoded JWT will have a `typ` claim in the header with 
+the value `token-introspection+jwt`. The token's payload contains a `token_introspection` JSON object similar to the default response type:  
+
+```json
+{
+  "alg": "RS256",
+  "kid": "BE9D78519A8BBCB28A65FADEECF49CBC",
+  "typ": "token-introspection+jwt"
+}.{
+  "iss": "https://localhost:5001",
+  "iat": 1729599599,
+  "aud": "api1",
+  "token_introspection": {
+    "iss": "https://localhost:5001",
+    "nbf": 1729599599,
+    "iat": 1729599599,
+    "exp": 1729603199,
+    "aud": [ "api1" ],
+    "client_id": "client",
+    "jti": "44FD2DE9E9F8E9F4DDD141CD7C244BE9",
+    "active": true,
+    "scope": "api1"
+  }
+}.[Signature]
+```
+
 ## .NET Client Library
 
 You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with

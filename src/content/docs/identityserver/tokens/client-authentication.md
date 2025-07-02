@@ -118,9 +118,9 @@ The following secret validators are part of Duende IdentityServer:
 
 ## Shared Secrets
 
-Shared secrets is by far the most common technique for authenticating clients.
+Using shared secrets is by far the most common technique for authenticating clients.
 
-From a security point of view they have some shortcomings
+From a security point of view, they have some shortcomings:
 
 * the shared secrets must be transmitted over the network during authentication
 * they should not be persisted in clear text to reduce the risk of leaking them
@@ -152,7 +152,7 @@ var compromisedSecret = new Secret("just for demos, not prod!".Sha256());
 
 ### Authentication Using A Shared Secret
 
-You can either send the client id/secret combination as part of the POST body::
+You can either send the client id/secret combination as part of the POST body:
 
 ```http request
 POST /connect/token
@@ -167,7 +167,7 @@ Content-type: application/x-www-form-urlencoded
     redirect_uri=https://myapp.com/callback
 ```
 
-...or as a basic authentication header::
+...or as a basic authentication header:
 
 ```http request
 POST /connect/token
@@ -209,7 +209,7 @@ The OpenID Connect specification recommends a client authentication method based
 instead of transmitting the shared secret over the network, the client creates a JWT and signs it with its private key.
 Your IdentityServer only needs to store the corresponding key to be able to validate the signature.
 
-The technique is described [here](https://openid.net/specs/openid-connect-core-1_0.html#clientauthentication) and is
+The technique is described [here](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) and is
 based on the OAuth JWT assertion specification [(RFC 7523)](https://tools.ietf.org/html/rfc7523).
 
 ### Setting Up A Private Key JWT Secret
@@ -230,7 +230,7 @@ var client = new Client
             Type = IdentityServerConstants.SecretTypes.X509CertificateBase64,
 
             Value = "MIID...xBXQ="
-        }
+        },
         new Secret
         {
             // JWK formatted RSA key
@@ -327,15 +327,14 @@ static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential
 }
 ```
 
-See [here](/identityserver/samples/basics#jwt-based-client-authentication) for a sample for using JWT-based
-authentication.
+See [here](/identityserver/samples/basics#jwt-based-client-authentication) for a sample for using JWT-based authentication.
 
 ### Using ASP.NET Core
 
 The OpenID Connect authentication handler in ASP.NET Core allows for replacing a static client secret with a dynamically
 created client assertion.
 
-This is accomplished by handling the various events on the handler. We recommend to encapsulate the event handler in a
+You can achieve this by handling the various events on the handler. We recommend encapsulating the event handler in a
 separate type. This makes it easier to consume services from DI:
 
 ```csharp
@@ -384,7 +383,7 @@ JWT-based authentication (and signed authorize requests) in ASP.NET Core.
 
 ## Strict Audience Validation
 
-Private key JWT have a theoretical vulnerability where a Relying Party trusting multiple
+Private key JWTs have a theoretical vulnerability where a Relying Party trusting multiple
 OpenID Providers could be attacked if one of the OpenID Providers is malicious or compromised.
 
 The attack relies on the OpenID Provider setting the audience value of the authentication JWT
