@@ -4,9 +4,6 @@ description: Learn how to use the OAuth 2.0 token introspection endpoint to vali
 sidebar:
   order: 4
   label: Token Introspection
-  badge:
-    text: v7.1
-    variant: tip
 redirect_from:
   - /foss/identitymodel/endpoints/introspection/
 ---
@@ -31,16 +28,10 @@ The following code sends a reference token to an introspection endpoint:
     Address = Endpoint,
     ClientId = "client",
     ClientSecret = "secret",
-    ResponseFormat = ResponseFormat.Json,
-
-    // Optional
-    // JwtResponseValidator = new CustomIntrospectionJwtResponseValidator()
+    ResponseFormat = ResponseFormat.Json
 };
 
-var httpClient = new HttpClient()
-{
-    BaseAddress = new Uri(Endpoint)
-};
+var httpClient = new HttpClient();
 
 var introspectionClient = new IntrospectionClient(httpClient, clientOptions);
 var introspectionResponse = await introspectionClient.Introspect("token");`}
@@ -54,10 +45,7 @@ var introspectionResponse = await client.IntrospectTokenAsync(new TokenIntrospec
 {
     Address = Endpoint,
     Token = "token",
-    ResponseFormat = ResponseFormat.Jwt,
-
-    // Optional
-    JwtResponseValidator = new CustomIntrospectionJwtResponseValidator()
+    ResponseFormat = ResponseFormat.Json
 });`}
         />
     </TabItem>
@@ -93,12 +81,39 @@ In addition, it provides access to the following standard response parameters:
 | `Issuer`     | The string representing the issuer of the token or `null` if the `iss` claim is missing.                                                                                            |
 | `JwtId`      | The string identifier for the token or `null` if the `jti` claim is missing.                                                                                                        |
 
-## JWT Response Validation :badge[v7.1]
+## JWT Response Format :badge[v7.1]
 
-Most applications will not benefit from additional checks at runtime. By default, no validation is performed on the
-incoming JWT response, it is only checked for valid JWT formatting.
+Introspection requests can optionally pass a parameter to indicate that a signed JWT rather than JSON payload is desired.
+Such a JWT response is most often useful for non-repudiation. For example, an API might rely on the claims from introspection
+to produce digitally signed documents or issue certificates, with the Authorization Server assuming legal liability for
+the introspected data. A JWT introspection response can be stored and its signature independently verified as part of an audit.
 
-An extensibility point is available to provide your own implementation of `ITokenIntrospectionJwtResponseValidator` using the `TokenIntrospectionRequest.JwtResponseValidator` property or using `IntrospectionClientOptions`.
+### Requesting JWT Response Format
+
+To request the JWT response format, set the `ResponseFormat` option to `ResponseFormat.Jwt`.
+
+```csharp
+var client = new HttpClient();
+var introspectionResponse = await client.IntrospectTokenAsync(
+    new TokenIntrospectionRequest
+    {
+        Address = Endpoint,
+        Token = "token",
+        ResponseFormat = ResponseFormat.Jwt
+    });
+```
+
+### Validating JWT Signature
+
+By default, when the introspection endpoint returns a JWT, the system performs only a basic format check on the response.
+Full cryptographic validation of the JWT's signature and claims is not performed.
+
+This approach is generally appropriate because the introspection request is made over a direct back-channel connection
+from the application to the introspection endpoint. This connection is secured by TLS, which guarantees the authenticity
+and integrity of the response in transit. The introspected claims can safely be used immediately without an additional
+cryptographic validation.
+
+An extensibility point is available to provide your own implementation of `ITokenIntrospectionJwtResponseValidator`.
 
 ```csharp
 // ITokenIntrospectionJwtResponseValidator.cs
@@ -106,4 +121,19 @@ public interface ITokenIntrospectionJwtResponseValidator
 {
     void Validate(string rawJwtResponse);
 }
+```
+
+A custom validator can be applied using the `TokenIntrospectionRequest.JwtResponseValidator` property or using `IntrospectionClientOptions`:
+
+
+```csharp
+var client = new HttpClient();
+var introspectionResponse = await client.IntrospectTokenAsync(
+    new TokenIntrospectionRequest
+    {
+        Address = Endpoint,
+        Token = "token",
+        ResponseFormat = ResponseFormat.Jwt,
+        JwtResponseValidator = new CustomIntrospectionJwtResponseValidator()
+    });
 ```
