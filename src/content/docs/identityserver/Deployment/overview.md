@@ -3,9 +3,10 @@ title: IdentityServer Deployment
 description: Comprehensive guide covering key aspects of deploying IdentityServer including proxy configuration, data protection, data stores, caching, and health monitoring.
 date: 2020-09-10T08:20:20+02:00
 sidebar:
-  label: Deployment
+  label: Overview
   order: 10
 redirect_from:
+   - /identityserver/deployment/
    - /dataprotection/
    - /identityserver/v5/deployment/
    - /identityserver/v6/deployment/
