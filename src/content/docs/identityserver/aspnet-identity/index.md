@@ -4,7 +4,6 @@ description: Guide to integrating ASP.NET Identity with IdentityServer for user 
 sidebar:
   label: Overview
 redirect_from:
-  - /identityserver/aspnet-identity/
   - /identityserver/v5/aspnet_identity/
   - /identityserver/v6/aspnet_identity/
   - /identityserver/v7/aspnet_identity/

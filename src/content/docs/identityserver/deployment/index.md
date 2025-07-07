@@ -6,7 +6,6 @@ sidebar:
   label: Overview
   order: 10
 redirect_from:
-   - /identityserver/deployment/
    - /dataprotection/
    - /identityserver/v5/deployment/
    - /identityserver/v6/deployment/

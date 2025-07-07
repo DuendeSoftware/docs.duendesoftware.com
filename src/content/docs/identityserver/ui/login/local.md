@@ -94,5 +94,5 @@ path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the
 browser at the "/Account/Login" path. 
 
 :::note
-While you can use any custom user database or identity management library for your users, we provide first class [integration support](/identityserver/aspnet-identity/) for ASP.NET Identity.
+While you can use any custom user database or identity management library for your users, we provide first class [integration support](/identityserver/aspnet-identity/index.md) for ASP.NET Identity.
 :::
