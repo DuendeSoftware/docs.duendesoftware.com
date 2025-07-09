@@ -59,7 +59,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 
 * Always prefer linking internally over linking externally. For example, when you talk about data protection, prefer an internal link over a link to external sites.
 * When linking to external content, consider writing one or two sentences about the context and what the reader will learn on the linked page.
-* When linking other pages, use a path that starts at the content root, like `/identityserver/troubleshooting.md`. Use the `.md(x)` file extension - Starlight will update the link to the correct format on build.
+* When linking other pages, use a path that starts at the content root, like `/identityserver/troubleshooting/index.md`. Use the `.md(x)` file extension - Starlight will update the link to the correct format on build.
 * When linking to external resources, use the full URL using HTTPS.
 * You can link to header anchors using the `#` symbol, for example `[multiple authentication methods](/identityserver/ui/federation.md#multiple-authentication-methods-for-users)`.
 * Link relevant text. Prefer `learn more about [improving the sign-in experience]` over `click [here] to learn more`.

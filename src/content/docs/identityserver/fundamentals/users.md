@@ -22,7 +22,7 @@ the security protocol (OpenID Connect and OAuth).
 
 :::note
 While you can use any custom user database or identity management library for your users, we
-provide [integration support](/identityserver/aspnet-identity/) for ASP.NET Identity.
+provide [integration support](/identityserver/aspnet-identity/index.md) for ASP.NET Identity.
 :::
 
 ## Authorization Endpoint And Login Page Workflow

@@ -123,7 +123,7 @@ example, if you implement the `ISigningKeyStore` to store your keys in Azure Key
 Vault, you could safely disabled `DataProtectKeys`, relying on Azure Key Vault
 to encrypt your signing keys at rest.
 
-See the [deployment](/identityserver/deployment) section for more information
+See the [deployment](/identityserver/deployment/index.md) section for more information
 about setting up data protection.
 
 ### Manage Multiple Keys
