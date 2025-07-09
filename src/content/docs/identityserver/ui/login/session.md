@@ -9,7 +9,7 @@ redirect_from:
   - /identityserver/v7/ui/login/session/
 ---
 
-#Regardless of how the user proves their identity on the login page, an authentication session must be established.
+Regardless of how the user proves their identity on the login page, an authentication session must be established.
 This authentication session is based on ASP.NET Core’s authentication system, and is tracked with a cookie managed by
 the [cookie authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie) handler.
 
