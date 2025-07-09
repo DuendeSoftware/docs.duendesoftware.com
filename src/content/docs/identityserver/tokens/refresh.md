@@ -48,7 +48,7 @@ POST /connect/token
 On .NET you can leverage the [Duende IdentityModel](/identitymodel/index.mdx) client library
 to [request](/identitymodel/endpoints/token.md) refresh tokens, e.g.:
 
-```cs
+```csharp
 using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
@@ -117,7 +117,7 @@ the flag is off, the token is marked as consumed instead. Prior to version 6.3, 
 marked as consumed.
 
 Rotating the tokens on every
-use [has limited security benefits](https://blog.duendesoftware.com/posts/20240405_refresh_token_reuse/) regardless of
+use [has limited security benefits](https://duendesoftware.com/blog/20240405-refresh-token-reuse) regardless of
 which type of client is used. And it comes with the cost of database pressure and reliability issues. Reusable refresh
 tokens are robust to network failures in a way that one time use tokens are not: if a one-time use refresh token is used
 to produce a new token, but the response containing the new refresh token is lost due to a network issue, the client

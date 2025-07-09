@@ -19,7 +19,7 @@ This means:
 
 Fortunately, `Duende.AccessTokenManagement` provides a straightforward solution to these problems. Also see the [*BlazorServer* sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/BlazorServer) for source code of a full example.
 
-## Token storage
+## Token Storage
 
 Since the tokens cannot be managed in the authentication session, you need to store them somewhere else. The options include an in-memory data structure, a distributed cache like redis, or a database. Duende.AccessTokenManagement describes this store for tokens with the *IUserTokenStore* interface. In non-blazor scenarios, the default implementation that stores the tokens in the session is used. In your Blazor server application, you'll need to decide where you want to store the tokens and implement the store interface.
 

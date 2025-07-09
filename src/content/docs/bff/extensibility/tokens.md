@@ -23,7 +23,7 @@ Both aspects can be customized.
 ### Token service communication
 The token management library uses a named HTTP client from the HTTP client factory for all token service communication. You can provide a customized HTTP client yourself using the well-known name after calling *AddBff*:
 
-```cs
+```csharp
 builder.Services.AddHttpClient(
         AccessTokenManagementDefaults.BackChannelHttpClientName,
         configureClient => {
@@ -47,7 +47,7 @@ This would involve two steps
 
 The interface is responsible to storing, retrieving and clearing tokens for the automatic token management:
 
-```cs
+```csharp
 public interface IUserTokenStore
 {
     /// <summary>
@@ -88,7 +88,7 @@ public interface IUserTokenStore
 The token store defines how tokens are retrieved globally. However, you can add custom logic that changes the way that access tokens are retrieved on a per-route basis. For example, you might need to exchange a token to perform delegation or impersonation for some API calls, depending on the remote API. The interface that describes this extension point is the *IAccessTokenRetriever*.
 
 
-```cs
+```csharp
 /// <summary>
 /// Retrieves access tokens
 /// </summary>
@@ -109,10 +109,10 @@ You can implement this interface yourself or extend the *DefaultAccessTokenRetri
 
 Implementations of the *IAccessTokenRetriever* can be added to endpoints when they are mapped using the *WithAccessTokenRetriever* extension method:
 
-```cs
+```csharp
 app.MapRemoteBffApiEndpoint(
         "/api/impersonation", 
-        "https://api.example.com/endpoint/requiring/impersonation"
+        new Uri("https://api.example.com/endpoint/requiring/impersonation")
     ).WithAccessToken(RequiredTokenType.User)
      .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```

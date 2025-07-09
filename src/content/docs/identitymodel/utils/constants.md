@@ -562,7 +562,7 @@ OpenID Connect protocol values.
 
 ## JWT Claim Types
 
-The *JwtClaimTypes* class has all standard claim types found in the
+The `JwtClaimTypes` class has all standard claim types found in the
 OpenID Connect, JWT and OAuth 2.0 specs -many of them are also
 aggregated at [IANA](https://www.iana.org/assignments/jwt/jwt.xhtml).
 
@@ -626,12 +626,13 @@ aggregated at [IANA](https://www.iana.org/assignments/jwt/jwt.xhtml).
 `JwtTypes` is a nested class that provides a set of constants for
 confirmation methods. It can be found under the `JwtConstants` class.
 
-| Type                     | Value                     | Description                        |
-|:-------------------------|:--------------------------|:-----------------------------------|
-| AccessToken              | `at+jwt`                  | OAuth 2.0 access token.            |
-| AuthorizationRequest     | `oauth-authz-req+jwt`     | JWT secured authorization request. |
-| DPoPProofToken           | `dpop+jwt`                | DPoP proof token.                  |
-| IntrospectionJwtResponse | `token-introspection+jwt` | Token introspection JWT response.  |
+| Type                     | Value                       | Description                                               |
+|:-------------------------|:----------------------------|:----------------------------------------------------------|
+| AccessToken              | `at+jwt`                    | OAuth 2.0 access token.                                   |
+| AuthorizationRequest     | `oauth-authz-req+jwt`       | JWT secured authorization request.                        |
+| DPoPProofToken           | `dpop+jwt`                  | DPoP proof token.                                         |
+| IntrospectionJwtResponse | `token-introspection+jwt`   | Token introspection JWT response.                         |
+| ClientAuthentication     | `client-authentication+jwt` | Client authentication JWT (for use with private_key_jwt). |
 
 ### ConfirmationMethods
 

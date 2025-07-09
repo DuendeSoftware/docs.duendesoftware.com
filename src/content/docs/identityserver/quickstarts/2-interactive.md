@@ -88,7 +88,7 @@ represent identity data like user id, name or email address rather than APIs.
 Add support for the standard `openid` (subject id) and `profile` (first name,
 last name, etc.) scopes by declaring them in `src/IdentityServer/Config.cs`:
 
-```cs
+```csharp
 public static IEnumerable<IdentityResource> IdentityResources =>
     new IdentityResource[]
     {
@@ -100,7 +100,7 @@ public static IEnumerable<IdentityResource> IdentityResources =>
 Then register the identity resources in
 `src/IdentityServer/HostingExtensions.cs`:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -119,7 +119,7 @@ Connect
 The sample UI also comes with an in-memory "user database". You can enable this
 by calling `AddTestUsers` in `src/IdentityServer/HostingExtensions.cs`:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -145,7 +145,7 @@ are always interactive, we need to add some redirect URLs to our configuration.
 
 The `Clients` list in `src/IdentityServer/Config.cs` should look like this:
 
-```cs
+```csharp
 public static IEnumerable<Client> Clients =>
     new List<Client>
     {
@@ -217,7 +217,7 @@ dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 Then add the authentication service and register the cookie and OpenIdConnect authentication providers in
 `src/WebClient/Program.cs`:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddAuthentication(options =>
     {
@@ -282,7 +282,7 @@ Now add `UseAuthentication` to the ASP.NET pipeline in
 `src/WebClient/Program.cs`. Also chain a call to `RequireAuthorization` onto
 `MapRazorPages` to disable anonymous access for the entire application.
 
-```cs
+```csharp
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -303,7 +303,7 @@ directory basis.
 Modify `src/WebClient/Pages/Index.cshtml` to display the claims of the user and
 the cookie properties:
 
-```cs
+```csharp
 @page
 @model IndexModel
 
@@ -397,7 +397,7 @@ dotnet new page -n Signout
 Update the new page's model (`src/WebClient/Pages/Signout.cshtml.cs`) with the
 following code:
 
-```cs
+```csharp
 public class SignoutModel : PageModel
 {
     public IActionResult OnGet()
@@ -444,7 +444,7 @@ userinfo endpoint by specifying scopes that the client application needs to
 access and setting the `GetClaimsFromUserInfoEndpoint` option. Add the following
 to `ConfigureServices` in `src/WebClient/Program.cs`:
 
-```cs
+```csharp
 // Program.cs
 .AddOpenIdConnect("oidc", options =>
 {
@@ -555,12 +555,7 @@ Register and configure the services for the OpenId Connect handler in`src/Identi
 
 ```cs
 // HostingExtensions.cs
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = "Cookies";
-        options.DefaultChallengeScheme = "oidc";
-    })
-    .AddCookie("Cookies")
+builder.Services.AddAuthentication()
     .AddOpenIdConnect("oidc", "Sign-in with demo.duendesoftware.com", options =>
     {
         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
@@ -622,7 +617,7 @@ IdentityServer specific option.
 Add the following to `ConfigureServices` in `src/IdentityServer/HostingExtensions.cs`:
 
 ```cs
-// Program.cs
+// HostingExtensions.cs
 builder.Services.AddAuthentication()
     .AddGoogleOpenIdConnect(
         authenticationScheme: GoogleOpenIdConnectDefaults.AuthenticationScheme,
@@ -631,8 +626,8 @@ builder.Services.AddAuthentication()
         {
             options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
   
-            options.ClientId = "" builder.Configuration["Authentication:Google:ClientId"];
-            options.ClientSecret = ""builder.Configuration["Authentication:Google:ClientSecret"];
+            options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+            options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
         });
 ```
 

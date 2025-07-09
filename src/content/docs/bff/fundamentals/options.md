@@ -16,7 +16,7 @@ The *Duende.BFF.BffOptions* allows to configure several aspects of the BFF frame
 
 You set the options at startup time:
 
-```cs
+```csharp
 builder.Services.AddBff(options =>
 {
     // configure options here...

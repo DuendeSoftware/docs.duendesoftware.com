@@ -4,6 +4,9 @@ description: Documentation for using the OpenID Connect discovery endpoint clien
 sidebar:
   order: 2
   label: Discovery
+  badge:
+    text: v7.1
+    variant: tip
 redirect_from:
   - /foss/identitymodel/endpoints/discovery/
 ---
@@ -11,14 +14,12 @@ redirect_from:
 The client library for the [OpenID Connect discovery
 endpoint](https://openid.net/specs/openid-connect-discovery-1_0.html) is
 provided as an extension method for `HttpClient`. The
-`GetDiscoveryDocumentAsync` method returns a `DiscoveryResponse` object
+`GetDiscoveryDocumentAsync` method returns a `DiscoveryDocumentResponse` object
 that has both strong and weak typed accessors for the various elements
 of the discovery document.
 
 You should always check the `IsError` and `Error` properties before
-accessing the contents of the document.
-
-Example:
+accessing the contents of the document:
 
 ```csharp
 var client = new HttpClient();
@@ -27,7 +28,7 @@ var disco = await client.GetDiscoveryDocumentAsync("https://demo.duendesoftware.
 if (disco.IsError) throw new Exception(disco.Error);
 ```
 
-Standard elements can be accessed by using properties:
+[Standard elements](#discoverydocumentresponse-properties-reference) can be accessed by using properties:
 
 ```csharp
 var tokenEndpoint = disco.TokenEndpoint;
@@ -61,7 +62,7 @@ By default, the discovery response is validated before it is returned to the cli
 -   enforce the existence of a keyset
 
 Policy violation errors will set the `ErrorType` property on the
-`DiscoveryResponse` to `PolicyViolation`.
+`DiscoveryDocumentResponse` to `PolicyViolation`.
 
 All the standard validation rules can be modified using the
 `DiscoveryPolicy` class, e.g. disabling the issuer name check:
@@ -148,3 +149,54 @@ services.AddSingleton<IDiscoveryCache>(r =>
     return new DiscoveryCache(Constants.Authority, () => factory.CreateClient());
 });
 ```
+
+### DiscoveryDocumentResponse Properties Reference
+
+The following table lists the standard properties on the `DiscoveryDocumentResponse` class:
+
+| Property                                              | Description                                                                                                                                     |
+|-------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| Policy                                                | Gets or sets the discovery policy used to configure how the discovery document is processed                                                     |
+| KeySet                                                | Gets or sets the JSON Web Key Set (JWKS) associated with the discovery document                                                                 |
+| MtlsEndpointAliases                                   | Gets the mutual TLS (mTLS) endpoint aliases                                                                                                     |
+| Issuer                                                | Gets the issuer identifier for the authorization server                                                                                         |
+| AuthorizeEndpoint                                     | Gets the authorization endpoint URL                                                                                                             |
+| TokenEndpoint                                         | Gets token endpoint URL                                                                                                                         |
+| UserInfoEndpoint                                      | Gets user info endpoint URL                                                                                                                     |
+| IntrospectionEndpoint                                 | Gets the introspection endpoint URL                                                                                                             |
+| RevocationEndpoint                                    | Gets the revocation endpoint URL                                                                                                                |
+| DeviceAuthorizationEndpoint                           | Gets the device authorization endpoint URL                                                                                                      |
+| BackchannelAuthenticationEndpoint                     | Gets the backchannel authentication endpoint URL                                                                                                |
+| JwksUri                                               | Gets the URI of the JSON Web Key Set (JWKS)                                                                                                     |
+| EndSessionEndpoint                                    | Gets the end session endpoint URL                                                                                                               |
+| CheckSessionIframe                                    | Gets the check session iframe URL                                                                                                               |
+| RegistrationEndpoint                                  | Gets the dynamic client registration (DCR) endpoint URL                                                                                         |
+| PushedAuthorizationRequestEndpoint                    | Gets the pushed authorization request (PAR) endpoint URL                                                                                        |
+| FrontChannelLogoutSupported                           | Gets a flag indicating whether front-channel logout is supported                                                                                |
+| FrontChannelLogoutSessionSupported                    | Gets a flag indicating whether a session ID (sid) parameter is supported at the front-channel logout endpoint                                   |
+| GrantTypesSupported                                   | Gets the supported grant types                                                                                                                  |
+| CodeChallengeMethodsSupported                         | Gets the supported code challenge methods                                                                                                       |
+| ScopesSupported                                       | Gets the supported scopes                                                                                                                       |
+| SubjectTypesSupported                                 | Gets the supported subject types                                                                                                                |
+| ResponseModesSupported                                | Gets the supported response modes                                                                                                               |
+| ResponseTypesSupported                                | Gets the supported response types                                                                                                               |
+| ClaimsSupported                                       | Gets the supported claims                                                                                                                       |
+| TokenEndpointAuthenticationMethodsSupported           | Gets the authentication methods supported by the token endpoint                                                                                 |
+| TokenEndpointAuthenticationSigningAlgorithmsSupported | Gets the signing algorithms supported by the token endpoint for client authentication                                                           |
+| BackchannelTokenDeliveryModesSupported                | Gets the supported backchannel token delivery modes                                                                                             |
+| BackchannelUserCodeParameterSupported                 | Gets a flag indicating whether the backchannel user code parameter is supported                                                                 |
+| RequirePushedAuthorizationRequests                    | Gets a flag indicating whether the use of pushed authorization requests (PAR) is required                                                       |
+| IntrospectionSigningAlgorithmsSupported               | Gets the signing algorithms supported for introspection responses                                                                               |
+| IntrospectionEncryptionAlgorithmsSupported            | Gets the encryption "alg" values supported for encrypted JWT introspection responses                                                            |
+| IntrospectionEncryptionEncValuesSupported             | Gets the encryption "enc" values supported for encrypted JWT introspection responses                                                            |
+| Scopes                                                | The list of scopes associated to the token or an empty array if no `scope` claim is present                                                     |
+| ClientId                                              | The client identifier for the OAuth 2.0 client that requested the token or `null` if the `client_id` claim is missing                           |
+| UserName                                              | The human-readable identifier for the resource owner who authorized the token or `null` if the `username` claim is missing                      |
+| TokenType                                             | The type of the token as defined in section 5.1 of OAuth 2.0 (RFC6749) or `null` if the `token_type` claim is missing                           |
+| Expiration                                            | The expiration time of the token or `null` if the `exp` claim is missing                                                                        |
+| IssuedAt                                              | The issuance time of the token or `null` if the `iat` claim is missing                                                                          |
+| NotBefore                                             | The validity start time of the token or `null` if the `nbf` claim is missing                                                                    |
+| Subject                                               | The subject of the token or `null` if the `sub` claim is missing                                                                                |
+| Audiences                                             | The service-specific list of string identifiers representing the intended audience for the token or an empty array if no `aud` claim is present |
+| Issuer                                                | The string representing the issuer of the token or `null` if the `iss` claim is missing                                                         |
+| JwtId                                                 | The string identifier for the token or `null` if the `jti` claim is missing                                                                     |

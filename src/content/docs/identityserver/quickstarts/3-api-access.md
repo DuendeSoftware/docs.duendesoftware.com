@@ -49,7 +49,7 @@ allowed scopes list so that the client will have permission to access it.
 
 Update the _Client_ in _src/IdentityServer/Config.cs_ as follows:
 
-```cs
+```csharp
 new Client
 {
     ClientId = "web",
@@ -79,7 +79,7 @@ Now configure the client to ask for access to api1 by
 requesting the _api1_ scope. This is done in the OpenID
 Connect handler configuration in _src/WebClient/Program.cs_:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddAuthentication(options =>
 {
@@ -136,7 +136,7 @@ dotnet new page -n CallApi
 
 Update _src/WebClient/Pages/CallApi.cshtml.cs_ as follows:
 
-```cs
+```csharp
 public class CallApiModel : PageModel
 {
     public string Json = string.Empty;

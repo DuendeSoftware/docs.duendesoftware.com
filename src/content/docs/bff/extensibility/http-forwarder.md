@@ -22,7 +22,7 @@ By default, Duende.BFF will create and cache an HTTP client per configured route
 
 This invoker is set up like this:
 
-```cs
+```csharp
 var client = new HttpMessageInvoker(new SocketsHttpHandler
 {
     UseProxy = false,

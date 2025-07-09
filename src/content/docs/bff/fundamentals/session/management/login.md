@@ -21,7 +21,7 @@ window.location = "/login";
 
 In Blazor, instead use the *NavigationManager* to navigate to the login endpoint:
 
-```cs
+```csharp
 Navigation.NavigateTo($"bff/login", forceLoad: true);
 ```
 

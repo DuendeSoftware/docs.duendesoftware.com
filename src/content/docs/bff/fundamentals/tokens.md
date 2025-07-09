@@ -17,20 +17,20 @@ For most scenarios, there is no additional configuration necessary. The token ma
 
 The easiest way to retrieve the current access token is to use an extension method on *HttpContext*:
 
-```cs
+```csharp
 var token = await HttpContext.GetUserAccessTokenAsync();
 ```
 
 You can then use the token to set it on an *HttpClient* instance:
 
-```cs
+```csharp
 var client = new HttpClient();
 client.SetBearerToken(token);
 ```
 
 We recommend to leverage the *HttpClientFactory* to fabricate HTTP clients that are already aware of the token management plumbing. For this you would register a named client in your application startup e.g. like this:
 
-```cs
+```csharp
 // Program.cs
 // registers HTTP client that uses the managed user access token
 builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
@@ -41,7 +41,7 @@ builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: clie
 
 And then retrieve a client instance like this:
 
-```cs
+```csharp
 [Route("myApi")]
 public class MyApiController : ControllerBase
 {
@@ -67,7 +67,7 @@ public class MyApiController : ControllerBase
 
 If you prefer to use typed clients, you can do that as well:
 
-```cs
+```csharp
 // registers a typed HTTP client with token management support
 services.AddHttpClient<MyTypedApiClient>(client =>
 {
@@ -77,7 +77,7 @@ services.AddHttpClient<MyTypedApiClient>(client =>
 
 And then use that client, for example like this on a controller's action method:
 
-```cs
+```csharp
 public async Task<IActionResult> CallApiAsUserTyped(
     [FromServices] MyTypedClient client)
 {
@@ -97,7 +97,7 @@ Duende.BFF revokes refresh tokens automatically at logout time. This behavior ca
 
 If you want to manually revoke the current refresh token, you can use the following code:
 
-```cs
+```csharp
 await HttpContext.RevokeUserRefreshTokenAsync();
 ```
 

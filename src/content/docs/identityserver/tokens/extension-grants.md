@@ -46,7 +46,7 @@ Some of the logic is boilerplate:
 
 Here's a simple implementation of the above steps:
 
-```cs
+```csharp
 public class TokenExchangeGrantValidator : IExtensionGrantValidator
 {
     private readonly ITokenValidator _validator;
@@ -108,14 +108,14 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
 
 You then register your grant validator with DI:
 
-```cs
+```csharp
 // Program.cs
 idsvrBuilder.AddExtensionGrantValidator<TokenExchangeGrantValidator>();
 ```
 
 And configure your client to be able to use it:
 
-```cs
+```csharp
 client.AllowedGrantTypes = { OidcConstants.GrantTypes.TokenExchange };
 ```
 
@@ -153,7 +153,7 @@ front end is doing a direct call. The token would look like this (simplified):
 
 Add the following code to the above validator to create an impersonation response:
 
-```cs
+```csharp
 // set token client_id to original id
 context.Request.ClientId = clientId;
 
@@ -186,7 +186,7 @@ learn about the traversed call chain.
 
 The following code adds the `act` claim to the response:
 
-```cs
+```csharp
 // set token client_id to original id
 context.Request.ClientId = clientId;
 
@@ -210,7 +210,7 @@ To emit the `act` claim into outgoing tokens,
 your [profile service](/identityserver/reference/services/profile-service/) must know about it. The following simple
 profile service emits the `act` claim if the token request is in the context of a token exchange operation:
 
-```cs
+```csharp
 public class ProfileService : IProfileService
 {
     public override async Task GetProfileDataAsync(ProfileDataRequestContext context)

@@ -232,7 +232,7 @@ dotnet add package Duende.BFF.Yarp
 ```
 
 {/* prettier-ignore */}
-<Tabs syncKey="bffVersion">
+<Tabs>
   {/* prettier-ignore */}
   <TabItem label="Direct forwarding">
 
@@ -243,7 +243,7 @@ dotnet add package Duende.BFF.Yarp
     // ...
 
     // Map any call (including child routes) from /api/remote to https://remote-api-address
-    app.MapRemoteBffApiEndpoint("/api/remote", "https://remote-api-address")
+    app.MapRemoteBffApiEndpoint("/api/remote", new Uri("https://remote-api-address"))
         .WithAccessToken(RequiredTokenType.Client);
     ```
 

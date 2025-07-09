@@ -37,6 +37,8 @@ Top-level settings. Available directly on the `IdentityServerOptions` object.
 
     It is not recommended to set this option. If it is not set (the default), the issuer is inferred from the URL used by clients. This better conforms to the OpenID Connect specification, which requires that issuer values be "identical to the Issuer URL that was directly used to retrieve the configuration information". It is also more convenient for clients to validate the issuer of tokens, because they will not need additional configuration or customization to know the expected issuer.
 
+    If you need to access IdentityServer on a different address from the expected issuer value, for example internally in a Kubernetes cluster, setting the issuer is a good practice. Note that when doing so, you will need to set the OpenID Connect metadata address manually in your client application to prevent the address derived from the authority from being used.
+
 * **`LowerCaseIssuerUri`**
 
     Controls the casing of inferred `IssuerUri`s. When set to `false`, the original casing of the IssuerUri in requests is preserved. When set to `true`, the `IssuerUri` is converted to lowercase. Defaults to `true`.

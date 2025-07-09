@@ -196,7 +196,7 @@ include:
 - Create certificates
   using [Azure KeyVault](https://learn.microsoft.com/en-us/azure/key-vault/certificates/certificate-scenarios)
 - Create certificates using your Public Key Infrastructure.
-- Create certificates using C# (see bellow)
+- Create certificates using C# (see below)
 
 ```csharp
 var name = "MySelfSignedCertificate";

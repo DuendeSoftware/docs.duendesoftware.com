@@ -33,7 +33,7 @@ For example, you may want to limit the options to only those that are relevant t
 A limited subset of the available options may be enough.
 
 :::tip[Duende IdentityServer AdminUI Templates]
-Creating custom, specialized admin UI functionality is demonstrated in the [EntityFramework-based template](https://github.com/DuendeSoftware/IdentityServer.Templates).
+Creating custom, specialized admin UI functionality is demonstrated in the [EntityFramework-based template](https://github.com/DuendeSoftware/products/tree/main/templates).
 You can use its UI to manage clients and scopes as a starting point.
 :::
 

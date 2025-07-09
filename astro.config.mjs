@@ -37,6 +37,7 @@ export default defineConfig({
   integrations: [
     starlight({
       customCss: ["./src/styles/custom.css"],
+      routeMiddleware: ["./src/plugins/search-topic-middleware.ts"],
       plugins: [
         starlightLlmsTxt(),
         starlightHeadingBadges(),
@@ -120,7 +121,7 @@ export default defineConfig({
         {
           icon: "rss",
           label: "Blog",
-          href: "https://blog.duendesoftware.com/",
+          href: "https://duendesoftware.com/blog",
         },
       ],
       components: {
