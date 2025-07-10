@@ -163,6 +163,12 @@ export default defineConfig({
           autogenerate: { directory: "identitymodel-oidcclient" },
           collapsed: true,
         },
+        {
+          label: "IdentityModel.AspNetCore.\r\nOAuth2Introspection",
+          badge: "oss",
+          autogenerate: { directory: "identitymodel-oauth2introspection" },
+          collapsed: true,
+        },
       ],
     }),
     redirectFrom({
