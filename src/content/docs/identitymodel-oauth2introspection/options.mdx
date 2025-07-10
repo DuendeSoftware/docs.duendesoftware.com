@@ -1,0 +1,153 @@
+---
+title: Configuring OAuth 2.0 token introspection
+description: Learn more about the various options when adding the ASP.NET Core authentication handler for OAuth 2.0 token introspection.
+sidebar:
+  label: Options
+  order: 2
+---
+
+#### OAuth2IntrospectionOptions
+
+`OAuth2IntrospectionOptions` is the options class to configure the ASP.NET Core authentication handler for OAuth 2.0 token introspection.
+
+You set the options when registering the authentication handler at startup time, using a lambda expression in the `AddOAuth2Introspection` method:
+
+```csharp
+// Program.cs
+builder.Services.AddAuthentication(OAuth2IntrospectionDefaults.AuthenticationScheme)
+    .AddOAuth2Introspection(options =>
+    {
+        // configure options here..
+    });
+```
+
+## Main
+
+Top-level settings. Available directly on the `OAuth2IntrospectionOptions` class.
+
+* **`Authority`**
+
+The URL of the token server. When configured, the handler will use this URI to discover the introspection endpoint.
+
+* **`IntrospectionEndpoint`**
+
+Sets the URL of the introspection endpoint. If this is set, the `Authority` will not be used to discover the introspection endpoint.
+
+* **`ClientId`**
+
+Specifies the ID of the introspection client. This setting is required.
+
+* **`ClientSecret`**
+
+Specifies the shared secret of the introspection client.
+
+* **`ClientCredentialStyle`**
+
+Specifies how the client credentials are sent to the introspection endpoint. The default is `ClientCredentialStyle.PostBody`, which sends the credentials in the body of the request.
+You can also set this to `ClientCredentialStyle.AuthorizationHeader` to send the credentials in the `Authorization` header as a Basic authentication scheme.
+
+* **`ClientCredentialStyle `**
+
+Specifies how the authorization header is formatted when used. The default is `BasicAuthenticationHeaderStyle.Rfc2617`, which formats the header according to the [original basic authentication spec](https://tools.ietf.org/html/rfc2617#section-2).
+You can also set this to `BasicAuthenticationHeaderStyle.Rfc6749`, which formats the header according to [RFC 6749](https://tools.ietf.org/html/rfc6749#section-2.3.1).
+
+* **`TokenTypeHint`**
+
+Specifies the token type hint of the introspection client. Defaults to `"access_token"`.
+
+* **`NameClaimType`**
+
+Specifies the claim type to use for the name claim. Defaults to `"name"`.
+
+* **`RoleClaimType`**
+
+Specifies the claim type to use for the role claim. Defaults to `"role"`.
+
+* **`AuthenticationType`**
+
+Specifies the authentication type to use for the authenticated identity. If not set, the authentication scheme name is used as the authentication type.
+Defaults to `null`.
+
+* **`DiscoveryPolicy`**
+
+Specifies the policy used for the discovery client.
+
+* **`SkipTokensWithDots`**
+
+Specifies whether to skip tokens that contain dots (`.`) in the introspection request. Defaults to `false`.
+
+* **`SaveToken`**
+
+Specifies whether the token should be stored in the context, so it is available for the duration of the HTTP request. Defaults to `true`.
+
+* **`EnableCaching`**
+
+Specifies whether the outcome of the token validation should be cached.
+
+This reduces the number of requests to the introspection endpoint, improving performance and reducing load on the authorization server.
+Defaults to `false`.
+
+* **`CacheDuration`**
+
+Specifies for how long the outcome of the token validation should be cached. Defaults to `TimeSpan.FromMinutes(5)`.
+
+* **`CacheKeyPrefix`**
+
+Specifies the prefix to use for the cache key. Defaults to `string.Empty`.
+
+* **`CacheKeyGenerator`**
+
+Specifies the method to use for generating the cache key.
+Defaults to `CacheUtils.CacheKeyFromToken`, which generates a cache key using the configured `CacheKeyPrefix` combined with the SHA-256 hash from the token.
+
+* **`TokenRetriever`**
+
+Specifies the method to use for retrieving the token from the HTTP request.
+
+Defaults to `TokenRetrieval.FromAuthorizationHeader`, which retrieves the token from the `Authorization` header.
+You can also set this to `TokenRetrieval.FromQueryString`, which retrieves the token from the query string, or use a custom method.
+
+* **`Events`**
+
+Gets or sets the `OAuth2IntrospectionEvents` instance used to handle authentication events.
+
+## Events
+
+The `OAuth2IntrospectionEvents` class allows you to handle various events during the authentication process.
+You can override methods to customize the behavior of the authentication handler, or set custom logic for specific events like `OnTokenValidated`, `OnAuthenticationFailed`, etc.
+
+* **`OnTokenValidated`**
+
+This event is triggered when the token has been successfully validated. You can use this to add additional claims or perform custom logic after the token validation.
+
+* **`OnAuthenticationFailed`**
+
+This event is triggered when exceptions are thrown during request processing. The exceptions will be re-thrown after this event unless suppressed.
+
+* **`OnTokenValidated`**
+
+This event is triggered after the security token has passed validation and a `ClaimsIdentity` has been generated.
+
+* **`OnUpdateClientAssertion`**
+
+This event is triggered when client assertion need to be updated.
+
+* **`OnSendingRequest`**
+
+This event is triggered when sending the token introspection request.
+
+* **`AuthenticationFailed`**
+
+Invoked if exceptions are thrown during request processing. The exceptions will be re-thrown after this event unless suppressed.
+
+* **`TokenValidated`**
+
+Invoked after the security token has passed validation and a ClaimsIdentity has been generated.
+
+* **`UpdateClientAssertion`**
+
+Invoked when client assertion need to be updated.
+
+* **`SendingRequest`**
+
+Invoked when sending the token introspection request.
