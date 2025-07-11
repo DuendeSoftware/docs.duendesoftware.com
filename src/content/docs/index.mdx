@@ -31,8 +31,6 @@ import {
   Badge,
 } from "@astrojs/starlight/components";
 import Newsletter from "~/components/Newsletter.astro";
-import TestimonialGrid from "~/components/testimonial-grid.astro";
-import Testimonial from "~/components/testimonial.astro";
 
 <CardGrid>
     <Card title="Install templates" icon="rocket">
@@ -89,9 +87,9 @@ import Testimonial from "~/components/testimonial.astro";
       Learn more
     </LinkButton>
   </Card>
-  <Card title="OAuth 2.0 Introspection" icon="github">
-    <Badge text={"OSS"} /> .NET library to use OAuth 2.0 introspection in ASP.NET Core.
-    <LinkButton href="/identitymodel-oauth2introspection/" variant="secondary">
+  <Card title="Introspection Authentication Handler" icon="github">
+    <Badge text={"OSS"} /> ASP.NET Core authentication handler for OAuth 2.0 token introspection.
+    <LinkButton href="/introspection-auth-handler/" variant="secondary">
       Learn more
     </LinkButton>
   </Card>
