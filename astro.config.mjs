@@ -164,9 +164,9 @@ export default defineConfig({
           collapsed: true,
         },
         {
-          label: "IdentityModel.AspNetCore.\r\nOAuth2Introspection",
+          label: "Introspection Auth Handler",
           badge: "oss",
-          autogenerate: { directory: "identitymodel-oauth2introspection" },
+          autogenerate: { directory: "introspection-auth-handler" },
           collapsed: true,
         },
       ],
