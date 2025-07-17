@@ -11,11 +11,12 @@ redirect_from:
   - /identityserver/v7/apis/aspnetcore/reference/
 ---
 
-If you are using [reference tokens](/identityserver/tokens/reference), you need an authentication handler that
+If you are using [reference tokens](/identityserver/tokens/reference.md), you need an authentication handler that
 implements the back-channel validation via the [OAuth 2.0 token introspection](https://tools.ietf.org/html/rfc7662)
-protocol, e.g. [this](https://github.com/IdentityModel/IdentityModel.AspNetCore.OAuth2Introspection) one:
+protocol, e.g. [Duende.AspNetCore.Authentication.OAuth2Introspection](/introspection-auth-handler/index.mdx):
 
-```cs
+```csharp
+// Program.cs
 builder.Services.AddAuthentication("token")
     .AddOAuth2Introspection("token", options =>
     {
@@ -32,7 +33,8 @@ builder.Services.AddAuthentication("token")
 It is not uncommon to use the same API with both JWTs and reference tokens. In this case you set up two authentication
 handlers, make one the default handler and provide some forwarding logic, e.g.:
 
-```cs
+```csharp
+// Program.cs
 builder.Services.AddAuthentication("token")
 
     // JWT tokens
@@ -59,7 +61,8 @@ builder.Services.AddAuthentication("token")
 
 The logic of the forward selector looks like this:
 
-```cs
+```csharp
+// IntrospectionUtilities.cs
 /// <summary>
 /// Provides a forwarding func for JWT vs reference tokens (based on existence of dot in token)
 /// </summary>

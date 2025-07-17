@@ -163,6 +163,12 @@ export default defineConfig({
           autogenerate: { directory: "identitymodel-oidcclient" },
           collapsed: true,
         },
+        {
+          label: "Introspection Auth Handler",
+          badge: "oss",
+          autogenerate: { directory: "introspection-auth-handler" },
+          collapsed: true,
+        },
       ],
     }),
     redirectFrom({
