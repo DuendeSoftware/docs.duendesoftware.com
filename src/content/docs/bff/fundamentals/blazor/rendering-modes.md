@@ -25,7 +25,7 @@ It's important to understand that, if you use a rendering mode that uses WebAsse
 
 If you have a component that's rendered both on the server AND on the client, then you effectively need to make sure that all the services it requires are available both on the server AND on the client. 
 
-## Fetching Data From Local APIs
+## Fetching Data From Embedded APIs
 
 If your BFF application can directly access data (for example from a database), then you have to decide where this information is rendered. 
 
@@ -35,11 +35,11 @@ For web assembly rendering, you'll need to make the data available via a web ser
 
 When using auto-rendering mode, you'll need to make sure that the component get's a different 'data access' component for server rendering vs client rendering. Consider the following diagram:
 
-![local APIs](../../images/bff_blazor_local_api.svg)
+![Embedded APIs](../../images/bff_blazor_local_api.svg)
 
 In this diagram, you'll see the example **IDataAccessor** that has two implementations. One that accesses the data via an HTTP client (for use in WASM) and one that directly accesses the data. 
 
-The data is also exposed (and secured by the BFF) via a local api. 
+The data is also exposed (and secured by the BFF) via an embedded api. 
 
 Below is an example of registering an abstraction 
 
@@ -68,7 +68,7 @@ internal class ServerWeatherClient() : IDataAccessor
 ```csharp
 // setup on the client
 
-// Register a http client that can access the data via a local api. 
+// Register a http client that can access the data via an embedded api. 
 builder.Services.AddLocalApiHttpClient<DataAccessHttpClient>();
 
 // Register an adapter that would abstract between the data accessor and the http client. 

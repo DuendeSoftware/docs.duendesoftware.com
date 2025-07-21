@@ -103,3 +103,7 @@ assets.
 
 The added complexity of this technique is justified when there is a requirement to host the front end on a different
 site (typically a CDN) from the BFF.
+
+:::note
+BFF V4 has built-in support for proxying the index.html from a CDN. 
+:::

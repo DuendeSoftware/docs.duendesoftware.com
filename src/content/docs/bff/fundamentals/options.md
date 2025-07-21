@@ -1,6 +1,7 @@
 ---
 title: Configuration Options
 sidebar:
+  order: 10
   label: Configuration Options
 description: "Comprehensive guide to configuring Duende BFF framework including general settings, paths, session management, and API options"
 date: 2020-09-10T08:22:12+02:00

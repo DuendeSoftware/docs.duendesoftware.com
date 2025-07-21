@@ -1,5 +1,5 @@
 ---
-title: "Remote APIs"
+title: "Proxying to Remote APIs"
 description: Learn how to configure and secure remote API access through BFF using HTTP forwarding and token management.
 sidebar:
   order: 20
@@ -10,18 +10,25 @@ redirect_from:
   - /identityserver/v6/bff/apis/remote/
   - /identityserver/v7/bff/apis/remote/
 ---
+import { Badge } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 A _Remote API_ is an API that is deployed separately from the BFF host. Remote APIs use access tokens to authenticate and authorize requests, but the frontend does not possess an access token to make requests to remote APIs directly. Instead, all access to remote APIs is proxied through the BFF, which authenticates the frontend using its authentication cookie, gets the appropriate access token, and forwards the request to the Remote API with the token attached.
 
 There are two different ways to set up Remote API proxying in Duende.BFF. This page describes the built-in simple HTTP forwarder. Alternatively, you can integrate Duende.BFF with Microsoft's [YARP](/bff/fundamentals/apis/yarp) reverse proxy, which allows for more complex reverse proxy features provided by YARP combined with the security and identity features of Duende.BFF.
 
-## Simple HTTP forwarder
+## Direct HTTP forwarding
 
-Duende.BFF's simple HTTP forwarder maps routes in the BFF to a remote API surface. It uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally, but is much simpler to configure than YARP. The intent is to provide a developer-centric and simplified way to proxy requests from the BFF to remote APIs when more complex reverse proxy features are not needed.
+Duende.BFF's direct HTTP forwarder maps routes in the BFF to a remote API surface. It uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally, but is much simpler to configure than YARP. The intent is to provide a developer-centric and simplified way to proxy requests from the BFF to remote APIs when more complex reverse proxy features are not needed.
 
 These routes receive automatic anti-forgery protection and integrate with automatic token management.
 
 To enable this feature, add a reference to the *Duende.BFF.Yarp* NuGet package, add the remote APIs service to the service provider, and then add the remote endpoint mappings.
+
+:::note
+The BFF multi-frontend feature has built-in support for direct forwarding. 
+:::
 
 #### Add Remote API Service to Service Provider
 
@@ -41,11 +48,24 @@ Use the `MapRemoteBffApiEndpoint` extension method to describe how to map reques
 
 The `MapRemoteBffApiEndpoint` extension method maps a path and all sub-paths below it. The intent is to allow easy mapping of groups of URLs. For example, you can set up mappings for the `/users`, `/users/{userId}`, `/users/{userId}/books`, and `/users/{userId}/books/{bookId}` endpoints without having to explicitly include all of them:
 
+{/* prettier-ignore */}
+<Tabs syncKey="bffVersion">
+  {/* prettier-ignore */}
+  <TabItem label="V4">
 ```csharp
 // Program.cs
 app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
     .WithAccessToken(RequiredTokenType.User);
 ```
+  </TabItem>
+  <TabItem label="V3">
+```csharp
+// Program.cs
+app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
+    .WithAccessToken(TokenType.User);
+```  
+  </TabItem>
+</Tabs>
 
 :::note
 This example opens up the complete */users* API namespace to the frontend, and thus, to the outside world. While it is convenient to register API paths this way, consider if you need to be more specific hen designing the forwarding paths to prevent accidentally exposing unintended endpoints.
