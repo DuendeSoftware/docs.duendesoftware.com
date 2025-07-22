@@ -66,7 +66,7 @@ Add the following snippet to your `Program.cs` above the call to `builder.Build(
     // Program.cs
     builder.Services
         .AddBff()
-        .WithDefaultOpenIdConnectOptions(options =>
+        .ConfigureOpenIdConnect(options =>
         {
             options.Authority = "https://demo.duendesoftware.com";
 
@@ -85,7 +85,7 @@ Add the following snippet to your `Program.cs` above the call to `builder.Build(
             options.GetClaimsFromUserInfoEndpoint = true;
             options.SaveTokens = true;
         }
-        .WithDefaultCookieOptions(options =>
+        .ConfigureCookies(options =>
         {
             options.Cookie.Name = "__Host-blazor";
             options.Cookie.SameSite = SameSiteMode.Strict;

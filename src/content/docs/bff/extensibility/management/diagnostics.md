@@ -12,7 +12,7 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/management/diagnostics/
 ---
 
-The BFF diagnostics endpoint can be customized by implementing the *IDiagnosticsService* or by extending *DefaultDiagnosticsService*, its default implementation.
+The BFF diagnostics endpoint can be customized by implementing the *IDiagnosticsEndpoint*.
 
 ## Request Processing
 *ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
@@ -20,10 +20,9 @@ The BFF diagnostics endpoint can be customized by implementing the *IDiagnostics
 For example, you could take whatever actions you need before normal processing of the request like this:
 
 ```csharp
-public override Task ProcessRequestAsync(HttpContext context)
+public Task ProcessRequestAsync(HttpContext context, CancellationToken ct)
 {
     // Custom logic here
 
-    return base.ProcessRequestAsync(context);
 }
 ```

@@ -50,7 +50,7 @@ Then you need to configure the application to use the BFF Blazor application. Ad
     ```csharp
     // BFF setup for blazor
     builder.Services.AddBff()
-        .WithDefaultOpenIdConnectOptions(options =>
+        .ConfigureOpenIdConnect(options =>
         {
             options.Authority = "https://demo.duendesoftware.com";
             options.ClientId = "interactive.confidential";
@@ -71,7 +71,7 @@ Then you need to configure the application to use the BFF Blazor application. Ad
             options.TokenValidationParameters.NameClaimType = "name";
             options.TokenValidationParameters.RoleClaimType = "role";
         })
-        .WithDefaultCookieOptions(options =>
+        .ConfigureCookies(options =>
         {
             // Because we use an identity server that's configured on a different site
             // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.

@@ -27,12 +27,12 @@ builder.Services.AddTransient<IDiagnosticsService, DefaultDiagnosticsService>();
 
 You can add your own implementation by overriding the default after calling *AddBff()*.
 
-The management endpoint services all inherit from the *IBffEndpointService*, which provides a general-purpose mechanism to add custom logic to the endpoints. 
+The management endpoint services all inherit from the *IBffEndpointEndpoint*, which provides a general-purpose mechanism to add custom logic to the endpoints. 
 
 ```csharp
 public interface IBffEndpointService
 {
-    Task ProcessRequestAsync(HttpContext context);
+    Task ProcessRequestAsync(HttpContext context, CancellationToken ct);
 }
 ```
 

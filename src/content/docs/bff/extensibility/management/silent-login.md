@@ -12,7 +12,7 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/management/silent-login/
 ---
 
-The BFF silent login endpoint can be customized by implementing the *ISilentLoginService* or by extending *DefaultSilentLoginService*, its default implementation.
+The BFF silent login endpoint can be customized by implementing the *ISilentLoginEndpoint*.
 
 ## Request Processing
 *ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
@@ -20,7 +20,7 @@ The BFF silent login endpoint can be customized by implementing the *ISilentLogi
 For example, you could take whatever actions you need before normal processing of the request like this:
 
 ```csharp
-public override Task ProcessRequestAsync(HttpContext context)
+public Task ProcessRequestAsync(HttpContext context, CancellationToken ct)
 {
     // Custom logic here
 

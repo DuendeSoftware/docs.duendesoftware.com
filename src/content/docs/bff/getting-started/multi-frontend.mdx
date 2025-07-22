@@ -43,7 +43,7 @@ Configure OpenID Connect authentication for your BFF host. This is similar to th
 
 ```csharp
     builder.Services.AddBff()
-        .WithDefaultOpenIdConnectOptions(options =>
+        .ConfigureOpenIdConnect(options =>
         {
             options.Authority = "https://demo.duendesoftware.com";
             options.ClientId = "interactive.confidential";
@@ -62,7 +62,7 @@ Configure OpenID Connect authentication for your BFF host. This is similar to th
             // Add this scope if you want to receive refresh tokens
             options.Scope.Add("offline_access");
         })
-        .WithDefaultCookieOptions(options =>
+        .ConfigureCookies(options =>
         {
             // Because we use an identity server that's configured on a different site
             // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.

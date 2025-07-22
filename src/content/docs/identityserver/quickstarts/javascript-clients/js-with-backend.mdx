@@ -114,7 +114,7 @@ Add the following to `src/JavaScriptClient/Program.cs`:
 
     builder.Services
         .AddBff()
-        .WithDefaultOpenIdConnectOptions(options =>
+        .ConfigureOpenIdConnect(options =>
         {
             options.Authority = "https://localhost:5001";
             options.ClientId = "bff";
@@ -126,7 +126,7 @@ Add the following to `src/JavaScriptClient/Program.cs`:
             options.GetClaimsFromUserInfoEndpoint = true;
             options.MapInboundClaims = false;
         }
-        .WithDefaultCookieOptions()
+        .ConfigureCookies()
         .AddRemoteApis();
 
     var app = builder.Build();

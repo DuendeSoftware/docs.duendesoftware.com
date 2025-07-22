@@ -48,7 +48,7 @@ Add the following to your `Program.cs`:
   <TabItem label="Duende BFF v4">
     ```csharp
     builder.Services.AddBff()
-        .WithDefaultOpenIdConnectOptions(options =>
+        .ConfigureOpenIdConnect(options =>
         {
             options.Authority = "https://demo.duendesoftware.com";
             options.ClientId = "interactive.confidential";
@@ -67,7 +67,7 @@ Add the following to your `Program.cs`:
             // Add this scope if you want to receive refresh tokens
             options.Scope.Add("offline_access");
         })
-        .WithDefaultCookieOptions(options =>
+        .ConfigureCookies(options =>
         {
             // Because we use an identity server that's configured on a different site
             // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.

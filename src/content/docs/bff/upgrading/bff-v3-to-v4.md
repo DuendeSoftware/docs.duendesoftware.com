@@ -60,14 +60,14 @@ The V3 style of wireup still works, but BFF V4 comes with a newer style of wireu
 
 ```csharp
 services.AddBff()
-    .WithDefaultOpenIdConnectOptions(options =>
+    .ConfigureOpenIdConnect(options =>
     {
         options.Authority = "your authority";
         options.ClientId = "your client id";
         options.ClientSecret = "secret";
         // ... other OpenID Connect options. 
     }
-    .WithDefaultCookieOptions(options => {
+    .ConfigureCookies(options => {
         // The cookie options are automatically configured with recommended practices.
         // However, you can change the config here. 
     });
