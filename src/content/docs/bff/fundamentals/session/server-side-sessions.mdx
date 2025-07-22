@@ -10,6 +10,9 @@ redirect_from:
   - /identityserver/v6/bff/session/server_side_sessions/
   - /identityserver/v7/bff/session/server_side_sessions/
 ---
+import { Badge } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 By default, ASP.NET Core's cookie handler will store all user session data in a protected cookie. This works very well unless cookie size or revocation becomes an issue.
 
@@ -47,34 +50,76 @@ builder.Services.AddBff()
 Most datastores that you might use with Entity Framework use a schema to define the structure of their data. *Duende.BFF.EntityFramework* doesn't make any assumptions about the underlying datastore, how (or indeed even if) it defines its schema, or how schema changes are managed by your organization. For these reasons, Duende does not directly support database creation, schema changes, or data migration by publishing database scripts. You are expected to manage your database in the way your organization sees fit. Using EF migrations is one possible approach to that, which Duende facilitates by publishing entity classes in each version of *Duende.BFF.EntityFramework*. An example project that uses those entities to create migrations is [here](https://github.com/DuendeSoftware/products/tree/main/bff/migrations/UserSessionDb).
 
 ## Session Store Cleanup
-
 Added in v1.2.0.
 
 Abandoned sessions will remain in the store unless something removes the stale entries.
-If you wish to have such sessions cleaned up periodically, then you can configure the *EnableSessionCleanup* and *SessionCleanupInterval* options:
 
-```csharp
-builder.Services.AddBff(options => {
-        options.EnableSessionCleanup = true;
-        options.SessionCleanupInterval = TimeSpan.FromMinutes(5);
-    })
-    .AddServerSideSessions();
-```
+{/* prettier-ignore */}
+<Tabs syncKey="bffVersion">
+  {/* prettier-ignore */}
+  <TabItem label="V4">
 
-This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
+    If you wish to have such sessions cleaned up periodically, then you can add the session cleanup host and configure the *SessionCleanupInterval* options:
 
-If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
-Just enable session cleanup:
+    ```csharp
+    builder.Services.AddBff(options => {
+            options.SessionCleanupInterval = TimeSpan.FromMinutes(5);
+        })
+        .AddServerSideSessions();
+    ```
 
-```csharp
-var cn = _configuration.GetConnectionString("db");
-        
-builder.Services.AddBff(options =>
-    {
-        options.EnableSessionCleanup = true;
-    })
-    .AddEntityFrameworkServerSideSessions(options => 
-    {
-        options.UseSqlServer(cn);        
-    });
-```
+    This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
+
+    If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
+    You can then add the `SessionCleanupBackgroundProcess`:
+
+    ```csharp
+    var cn = _configuration.GetConnectionString("db");
+            
+    builder.Services.AddBff()
+        .AddEntityFrameworkServerSideSessions(options => 
+        {
+            options.UseSqlServer(cn);        
+        })
+        .AddSessionCleanupBackgroundProcess();
+    ```
+    :::note
+    In V4, we changed how you enable session cleanup. We no longer automatically register the session cleanup hosted service. This has to be done manually.
+    In a loadbalanced environment, you can choose to run the cleanup job on all instances the BFF. However, you can also decide to 
+    spin up a separate host that's responsible for background jobs such as this cleanup job. 
+    :::
+
+  </TabItem>
+  <TabItem label="V3">
+  
+    If you wish to have such sessions cleaned up periodically, then you can configure the *EnableSessionCleanup* and *SessionCleanupInterval* options:
+
+    ```csharp
+    builder.Services.AddBff(options => {
+            options.EnableSessionCleanup = true;
+            options.SessionCleanupInterval = TimeSpan.FromMinutes(5);
+        })
+        .AddServerSideSessions();
+    ```
+
+    This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
+
+    If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
+    Just enable session cleanup:
+
+    ```csharp
+    var cn = _configuration.GetConnectionString("db");
+            
+    builder.Services.AddBff(options =>
+        {
+            options.EnableSessionCleanup = true;
+        })
+        .AddEntityFrameworkServerSideSessions(options => 
+        {
+            options.UseSqlServer(cn);        
+        });
+    ```
+
+  </TabItem>
+</Tabs>
+

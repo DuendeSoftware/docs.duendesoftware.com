@@ -62,4 +62,39 @@ After your application's logic is executed, there are two middlewares registered
     
 6. `ProxyIndexMiddleware` - If configured, this proxy the `index.html` to start the browser based app.  
 
+If you don't want this automatic mapping of BFF middleware, you can turn it off using `BffOptions.AutomaticallyRegisterBffMiddleware`. Please note then you're responsible for manually adding the middlewares:
+
+```csharp
+var app = builder.Build();
+
+app.UseBffFrontendSelection();
+app.UseBffPathMapping();
+app.UseBffOpenIdCallbacks();
+
+// Todo: your custom middleware goes here:
+app.UseRouting(); 
+app.UseBff();
+
+// Only add this if you want to proxy to remote api's. 
+app.UseBffRemoteRoutes();
+
+app.MapBffManagementEndpoints();
+app.UseBffIndexPages();
+
+app.Run();
+```
+
+## Authentication architecture
+
+When you use multiple frontends, you can't rely on [manual authentication configuration](../fundamentals/session/handlers.mdx#manually-configuring-authentication). This is because each frontend requires it's own scheme, and potentially it's own OpenID Connect and Cookie configuration. 
+
+The BFF registers a dynamic authentication scheme, which automatically configures the OpenID Connect and Cookie Scheme's on behalf of the frontends. It does this using a custom `AuthenticationSchemeProvider` called `BffAuthenticationSchemeProvider` to return appropriate authentication schemes for each frontend. 
+
+The BFF will register two schemes:
+* 'duende-bff-oidc'. 
+* 'duende-bff-cookie'. 
+
+Then, if there are no default authentication schemes registered, it will register 'duende_bff_cookie' schemes as the `AuthenticationOptions.DefaultScheme`, and 'duende_bff_oidc' as the `AuthenticationOptions.DefaultAuthenticateScheme` and `AuthenticationOptions.DefaultSignOutScheme`. This will ensure that calls to `Authenticate()` or `Signout()` will use the appropriate schemes. 
+
+If you're using multiple frontends, then the BFF will create dynamic schemes with the following signature: 'duende_bff_oidc_[frontendname]' and 'duende_bff_cookie_[frontendname]'. This ensures that every frontend can use it's own OpenID Connect and Cookie settings. 
 

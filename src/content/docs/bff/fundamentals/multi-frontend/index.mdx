@@ -25,6 +25,74 @@ To overcome this issue, a single BFF instance can support multiple frontends. Ea
 Adding additional frontends to the BFF has very little impact on the performance on the BFF itself, but keep in mind
 that the traffic for all the frontends is proxied through the bff. 
 
+## Authentication configuration
+
+
+When you use multiple frontends, you can't rely on [manual authentication configuration](../fundamentals/session/handlers.mdx#manually-configuring-authentication).
+This is because each frontend requires it's own scheme, and potentially it's own OpenID Connect and Cookie configuration. 
+
+Instead, you should rely on [automatic authentication configuration](../fundamentals/session/handlers.mdx#automatic-authentication-configuration).
+
+Below is an example on how to configure multiple frontends. 
+
+```csharp
+var bffBuilder = builder.Services
+    .AddBff();
+
+bffBuilder
+    .ConfigureOpenIdConnect(options =>
+    {
+        // These are the default values for all frontends.
+        options.Authority = "https://demo.duendesoftware.com";
+        options.ClientId = "interactive.confidential";
+        options.ClientSecret = "secret";
+        options.ResponseType = "code";
+        options.ResponseMode = "query";
+
+        options.GetClaimsFromUserInfoEndpoint = true;
+        options.SaveTokens = true;
+        options.MapInboundClaims = false;
+
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.Scope.Add("api");
+        options.Scope.Add("offline_access");
+
+        options.TokenValidationParameters.NameClaimType = "name";
+        options.TokenValidationParameters.RoleClaimType = "role";
+    });
+
+    .AddFrontends(
+
+        // This frontend will use the default authentication options
+        new BffFrontend(BffFrontendName.Parse("default-frontend")),
+
+        // This frontend uses most of the same authentication options,
+        new BffFrontend(BffFrontendName.Parse("with-path"))
+            .MappedToPath(LocalPath.Parse("/with-path")),
+            .WithOpenIdConnectOptions(opt =>
+            {
+               // but overrides the clientid and client secret.
+                opt.ClientId = "different-client-id";
+                opt.ClientSecret = "different secret";
+            })
+            .WithCookieOptions(opt => 
+            {
+               // and overrides the cookie options to use 'lax' cookies. 
+               opt.Cookie.SameSite = SameSiteMode.Lax;
+            });
+
+```
+
+The order in which configuration is applied is
+1. programmatic default options (if any)
+2. default options from configuration (if any)
+3. frontend specific options (if any)
+
+Each frontend can have custom OpenID Connect configuration and Cookie Configuration. This can both be configured programmatically 
+as via [Configuration](./configuration.mdx). 
+
 ## Frontend selection
 
 Each request to a frontend has to be uniquely defined by either it's path, it's origin or a combination of the two. 
