@@ -61,31 +61,34 @@ Abandoned sessions will remain in the store unless something removes the stale e
 
     If you wish to have such sessions cleaned up periodically, then you can add the session cleanup host and configure the *SessionCleanupInterval* options:
 
-    ```csharp
-    builder.Services.AddBff(options => {
-            options.SessionCleanupInterval = TimeSpan.FromMinutes(5);
-        })
-        .AddServerSideSessions();
-    ```
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`builder.Services.AddBff(options => {
+        options.SessionCleanupInterval = TimeSpan.FromMinutes(5);
+    })
+    .AddServerSideSessions();`}/>
 
     This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
 
     If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
     You can then add the `SessionCleanupBackgroundProcess`:
 
-    ```csharp
-    var cn = _configuration.GetConnectionString("db");
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`var cn = _configuration.GetConnectionString("db");
             
-    builder.Services.AddBff()
-        .AddEntityFrameworkServerSideSessions(options => 
-        {
-            options.UseSqlServer(cn);        
-        })
-        .AddSessionCleanupBackgroundProcess();
-    ```
+builder.Services.AddBff()
+    .AddEntityFrameworkServerSideSessions(options => 
+    {
+        options.UseSqlServer(cn);        
+    })
+    .AddSessionCleanupBackgroundProcess();`}/>
+        
     :::note
     In V4, we changed how you enable session cleanup. We no longer automatically register the session cleanup hosted service. This has to be done manually.
-    In a loadbalanced environment, you can choose to run the cleanup job on all instances the BFF. However, you can also decide to 
+    In a load-balanced environment, you can choose to run the cleanup job on all instances the BFF. However, you can also decide to
     spin up a separate host that's responsible for background jobs such as this cleanup job. 
     :::
 
@@ -94,31 +97,33 @@ Abandoned sessions will remain in the store unless something removes the stale e
   
     If you wish to have such sessions cleaned up periodically, then you can configure the *EnableSessionCleanup* and *SessionCleanupInterval* options:
 
-    ```csharp
-    builder.Services.AddBff(options => {
-            options.EnableSessionCleanup = true;
-            options.SessionCleanupInterval = TimeSpan.FromMinutes(5);
-        })
-        .AddServerSideSessions();
-    ```
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`builder.Services.AddBff(options => {
+        options.EnableSessionCleanup = true;
+        options.SessionCleanupInterval = TimeSpan.FromMinutes(5);
+    })
+    .AddServerSideSessions();`}/>
 
     This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
 
     If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
     Just enable session cleanup:
 
-    ```csharp
-    var cn = _configuration.GetConnectionString("db");
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`var cn = _configuration.GetConnectionString("db");
             
-    builder.Services.AddBff(options =>
-        {
-            options.EnableSessionCleanup = true;
-        })
-        .AddEntityFrameworkServerSideSessions(options => 
-        {
-            options.UseSqlServer(cn);        
-        });
-    ```
+builder.Services.AddBff(options =>
+    {
+        options.EnableSessionCleanup = true;
+    })
+    .AddEntityFrameworkServerSideSessions(options => 
+    {
+        options.UseSqlServer(cn);        
+    });`}/>
 
   </TabItem>
 </Tabs>

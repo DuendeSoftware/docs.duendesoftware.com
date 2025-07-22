@@ -12,10 +12,11 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/management/silent-login-callback/
 ---
 
-The BFF silent login callback endpoint can be customized by implementing the *ISilentLoginCallbackEndpoint*.
+The BFF silent login callback endpoint can be customized by implementing the `ISilentLoginCallbackEndpoint`.
 
 ## Request Processing
-*ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
+
+`ProcessRequestAsync` is the top-level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
 
 For example, you could take whatever actions you need before normal processing of the request like this:
 

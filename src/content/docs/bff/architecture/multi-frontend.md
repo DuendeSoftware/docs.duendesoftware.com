@@ -29,7 +29,7 @@ The Duende BFF V4 library doesn't ship with an abstraction to store or read fron
 
 ## A Typical Example
 
-Consider an enterprise that hosts multiple browser based applications. Each of these applications is developed by a separate team and as such, has it's own deployment schedule. 
+Consider an enterprise that hosts multiple browser based applications. Each of these applications is developed by a separate team and as such, has its own deployment schedule. 
 
 There are some internal-facing applications that are exclusively used by internal employees. These internal employees are all present in Microsoft Entra ID, so these internal-facing applications should directly authenticate against Microsoft Entra ID. These applications also use several internal APIs, that due to the sensitivity, should not be accessible by external users. However, they also use some of the more common APIs. These apps are only accessible via an internal DNS name, such as `https://app1.internal.example.com`. 
 
@@ -60,9 +60,9 @@ After your application's logic is executed, there are two middlewares registered
 
 5. `MapRemoteRoutesMiddleware` - This will handle any configured remote routes. Note, it will not handle plain YARP calls, only routes that are specifically added to a frontend.
     
-6. `ProxyIndexMiddleware` - If configured, this proxy the `index.html` to start the browser based app.  
+6. `ProxyIndexMiddleware` - If configured, this proxies the `index.html` to start the browser based app.  
 
-If you don't want this automatic mapping of BFF middleware, you can turn it off using `BffOptions.AutomaticallyRegisterBffMiddleware`. Please note then you're responsible for manually adding the middlewares:
+If you don't want this automatic mapping of BFF middleware, you can turn it off using `BffOptions.AutomaticallyRegisterBffMiddleware`. When doing so, you'll need to manually register and add the middlewares:
 
 ```csharp
 var app = builder.Build();
@@ -71,11 +71,11 @@ app.UseBffFrontendSelection();
 app.UseBffPathMapping();
 app.UseBffOpenIdCallbacks();
 
-// Todo: your custom middleware goes here:
+// TODO: your custom middleware goes here
 app.UseRouting(); 
 app.UseBff();
 
-// Only add this if you want to proxy to remote api's. 
+// NOTE: Only add this if you want to proxy remote APIs. 
 app.UseBffRemoteRoutes();
 
 app.MapBffManagementEndpoints();
@@ -84,17 +84,17 @@ app.UseBffIndexPages();
 app.Run();
 ```
 
-## Authentication architecture
+## Authentication Architecture
 
-When you use multiple frontends, you can't rely on [manual authentication configuration](../fundamentals/session/handlers.mdx#manually-configuring-authentication). This is because each frontend requires it's own scheme, and potentially it's own OpenID Connect and Cookie configuration. 
+When you use multiple frontends, you can't rely on [manual authentication configuration](../fundamentals/session/handlers.mdx#manually-configuring-authentication). This is because each frontend requires its own scheme, and potentially its own OpenID Connect and Cookie configuration. 
 
 The BFF registers a dynamic authentication scheme, which automatically configures the OpenID Connect and Cookie Scheme's on behalf of the frontends. It does this using a custom `AuthenticationSchemeProvider` called `BffAuthenticationSchemeProvider` to return appropriate authentication schemes for each frontend. 
 
 The BFF will register two schemes:
-* 'duende-bff-oidc'. 
-* 'duende-bff-cookie'. 
+* `duende-bff-oidc`
+* `duende-bff-cookie`
 
 Then, if there are no default authentication schemes registered, it will register 'duende_bff_cookie' schemes as the `AuthenticationOptions.DefaultScheme`, and 'duende_bff_oidc' as the `AuthenticationOptions.DefaultAuthenticateScheme` and `AuthenticationOptions.DefaultSignOutScheme`. This will ensure that calls to `Authenticate()` or `Signout()` will use the appropriate schemes. 
 
-If you're using multiple frontends, then the BFF will create dynamic schemes with the following signature: 'duende_bff_oidc_[frontendname]' and 'duende_bff_cookie_[frontendname]'. This ensures that every frontend can use it's own OpenID Connect and Cookie settings. 
+If you're using multiple frontends, then the BFF will create dynamic schemes with the following signature: `duende_bff_oidc_[frontendname]` and `duende_bff_cookie_[frontendname]`. This ensures that every frontend can use its own OpenID Connect and Cookie settings. 
 

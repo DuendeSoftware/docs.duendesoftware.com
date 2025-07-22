@@ -12,10 +12,11 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/management/user/
 ---
 
-The BFF user endpoint can be customized by implementing the *IUserEndpoint*. 
+The BFF user endpoint can be customized by implementing the `IUserEndpoint`. 
 
 ## Request Processing 
-*ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
+
+`ProcessRequestAsync` is the top-level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
 
 For example, you could take whatever actions you need before normal processing of the request like this:
 
@@ -26,11 +27,11 @@ public Task ProcessRequestAsync(HttpContext context, CancellationToken ct)
 }
 ```
 
-### Enriching the user claims 
+### Enriching User Claims 
 
 There are several ways how you can enrich the claims for a specific user. 
 
-The most robust way would be to implement a custom IClaimsTransformation. 
+The most robust way would be to implement a custom `IClaimsTransformation`. 
 
 ```csharp
 
@@ -52,5 +53,5 @@ public class CustomClaimsTransformer : IClaimsTransformation
 }
 ```
 
-See the [Claims Transformation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/claims?view=aspnetcore-9.0&utm_source=chatgpt.com#extend-or-add-custom-claims-using-iclaimstransformation) topic in the aspnet core documentation for more information. 
+See the [Claims Transformation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/claims?view=aspnetcore-9.0) topic in the ASP.NET Core documentation for more information. 
 

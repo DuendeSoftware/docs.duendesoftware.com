@@ -18,11 +18,11 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 To configure authentication in the BFF, you'll need to configure both the OpenID Connect 
 login flow and the cookie handlers. 
 
-## Automatic authentication configuration <Badge text="V4" />
+## Automatic Authentication Configuration <Badge text="V4" />
 
 In V4, a simplified mechanism for wiring up authentication has been introduced. The main purpose for the BFF
-is to handle the OpenID Connect login flow and to protect the api's using Cookies. In V3, you explicitly had 
-to configure the aspnet core authentication system to enable this, but in V4, this is now simplified.
+is to handle the OpenID Connect login flow and to protect the APIs using Cookies. In V3, you explicitly had 
+to configure the ASP.NET Core authentication system to enable this. In V4, this is now simplified.
 
 A call `BffBuilder.ConfigureOpenIdConnect()` will make sure that:
 1. The authentication pipeline is configured with the appropriate authentication schemes. 
@@ -58,10 +58,10 @@ services.AddBff()
 ```
 
 Each frontend can have custom OpenID Connect configuration and Cookie Configuration. This can both be configured programmatically 
-as via [Configuration](../multi-frontend/configuration.mdx). 
+via [Configuration](../multi-frontend/configuration.mdx). 
 
 
-## Manually configuring authentication
+## Manually Configuring Authentication
 
 
 You typically use the following two ASP.NET Core authentication handlers to implement remote authentication:

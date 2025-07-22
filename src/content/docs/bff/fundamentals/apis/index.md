@@ -15,13 +15,13 @@ redirect_from:
 
 A frontend application using the BFF pattern can call two types of APIs:
 
-#### Embedded (local) APIs
+#### Embedded (Local) APIs
 
 These APIs embedded inside the BFF and typically exist to support the BFF's frontend; they are not shared with other frontends or services. 
 
-See [Embedded apis](local.mdx) for more information. 
+See [Embedded APIs](local.mdx) for more information. 
 
-#### Proxying to Remote APIs
+#### Proxying Remote APIs
 
 These APIs are deployed on a different host than the BFF, which allows them to be shared between multiple frontends or (more generally speaking) multiple clients. These APIs can only be called via the BFF host acting as a proxy.
 

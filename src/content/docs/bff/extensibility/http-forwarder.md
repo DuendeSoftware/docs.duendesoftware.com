@@ -17,7 +17,8 @@ You can customize the HTTP forwarder behavior in two ways
 * provide a customized HTTP client for outgoing calls
 * provide custom request/response transformation
 
-## Custom HTTP clients
+## Custom HTTP Clients
+
 By default, Duende.BFF will create and cache an HTTP client per configured route or local path.
 
 This invoker is set up like this:
@@ -32,12 +33,12 @@ var client = new HttpMessageInvoker(new SocketsHttpHandler
 });
 ```
 
-If you want to customize the HTTP client you can either implement the *IForwarderHttpClientFactory* interface, e.g.:
+If you want to customize the HTTP client you can implement the `IForwarderHttpClientFactory` interface, e.g.:
 
 ```cs
 public class MyInvokerFactory : IForwarderHttpClientFactory
 {
-    public public HttpMessageInvoker CreateClient(ForwarderHttpClientContext context)
+    public HttpMessageInvoker CreateClient(ForwarderHttpClientContext context)
     {
         return Clients.GetOrAdd(localPath, (key) =>
         {
@@ -62,36 +63,34 @@ public class MyInvokerFactory : IForwarderHttpClientFactory
 services.AddSingleton<IForwarderHttpClientFactory, MyInvokerFactory>();
 ```
 
-## Custom transformations when using Direct Forwarding
+## Custom Transformations When Using Direct Forwarding
 
 The method MapRemoteBffApiEndpoint uses default transformations that:
 * removes the cookie header from the forwarded request
-* removes local path from from the forwarded request
+* removes local path from the forwarded request
 * Adds the access token to the original request
 
 If you wish to change or extend this behavior, you can do this for a single mapped endpoint
-or for all mapped api endpoints. 
+or for all mapped API endpoints. 
 
-### Changing the transformer for a single mapped endpoint
+### Changing The Transformer For A Single Mapped Endpoint
 
-This code block shows an example how you can extend the default transformers with an additional custom
+This code block shows an example how of you can extend the default transformers with an additional custom
 transform. 
 
 ```csharp
-
 app.MapRemoteBffApiEndpoint("/local", new Uri("https://target/"), context => {
 
     // If you want to extend the existing behavior, then you must call the default builder:
     DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken("/local", context);
 
-    //You can also add custom transformers, such as this one that adds an additional header
+    // You can also add custom transformers, such as this one that adds an additional header
     context.AddRequestHeader("custom", "with value");
 
 });
-
 ```
 
-The default transformbuilder performs these transforms:
+The default transform builder performs these transforms:
 
 ```csharp
 context.AddRequestHeaderRemove("Cookie");
@@ -99,9 +98,9 @@ context.AddPathRemovePrefix(localPath);
 context.AddBffAccessToken(localPath);
 ```
 
-For more information, also see the [yarp documentation on transforms](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/yarp/transforms?view=aspnetcore-9.0)
+For more information, also see the [YARP documentation on transforms](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/yarp/transforms?view=aspnetcore-9.0)
 
-### Changing the default transformer. 
+### Changing The Default Transformer
 
 You can change the default transformer builder delegate by registering one in the services collection:
 
@@ -111,7 +110,7 @@ BffYarpTransformBuilder builder = (localPath, context) => {
     // If you want to extend the existing behavior, then you must call the default builder:
     DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken(localpath, context);
 
-   //You can also add custom transformers, such as this one that adds an additional header
+    // You can also add custom transformers, such as this one that adds an additional header
     context.AddResponseHeader("added-by-custom-default-transform", "some-value");
 
 };
@@ -119,14 +118,13 @@ BffYarpTransformBuilder builder = (localPath, context) => {
 services.AddSingleton<BffYarpTransformBuilder>(builder);
 ```
 
-## Changing the Forwarder Request Config
+## Changing The Forwarder Request Configuration
 
-You an also modify the forwarder request config, either globally or per mapped path.
+You an also modify the forwarder request configuration, either globally or per mapped path.
 This can be useful if you want to tweak things like activity timeouts. 
 
 ```csharp
-
-// Register a forwarder config globally. 
+// Register a forwarder config globally: 
 services.AddSingleton(new ForwarderRequestConfig()
 {
     ActivityTimeout = TimeSpan.FromMilliseconds(100)
@@ -140,7 +138,6 @@ app.MapRemoteBffApiEndpoint("/local", new Uri("https://target/"),
         // but not too long that the test will take forever
         ActivityTimeout = TimeSpan.FromMilliseconds(100)
     });
-
 ```
 
 

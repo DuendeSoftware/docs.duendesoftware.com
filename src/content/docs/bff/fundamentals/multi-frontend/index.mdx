@@ -1,5 +1,5 @@
 ---
-title: "Multi-frontend"
+title: "Multi-Frontend"
 description: Documentation for multi-frontend support in BFF
 sidebar:
   order: 2
@@ -9,29 +9,28 @@ sidebar:
 
 The Backend For Frontend pattern basically states that there should 
 be a single backend for each frontend. While for some applications / architectures this
-makes a lot of sense, because there is a 1-to-1 mapping between the api surface
+makes a lot of sense, because there is a 1-to-1 mapping between the API surface
 and the browser based application, for some other architectures this may not be useful.
 
-Especially in micro-service based architectures, where there are many backend api's 
-and multiple frontends using these apis, having a dedicated backend service for each frontend
+Especially in micro-service based architectures, where there are many backend APIs 
+and multiple frontends using these APIs, having a dedicated backend service for each frontend
 introduces quite a lot of operational overhead. 
 
 To overcome this issue, a single BFF instance can support multiple frontends. Each frontend you configure can:
-* Define it's own OpenID Connect configuration
-* Define it's own Cookie settings
-* Define it's own api surface
+* Define its own OpenID Connect configuration
+* Define its own Cookie settings
+* Define its own API surface
 * Be identified either via path based routing and/or origin selection. 
 
 Adding additional frontends to the BFF has very little impact on the performance on the BFF itself, but keep in mind
-that the traffic for all the frontends is proxied through the bff. 
+that the traffic for all the frontends is proxied through the BFF. 
 
-## Authentication configuration
-
+## Authentication Configuration
 
 When you use multiple frontends, you can't rely on [manual authentication configuration](../fundamentals/session/handlers.mdx#manually-configuring-authentication).
-This is because each frontend requires it's own scheme, and potentially it's own OpenID Connect and Cookie configuration. 
+This is because each frontend requires its own scheme, and potentially its own OpenID Connect and Cookie configuration. 
 
-Instead, you should rely on [automatic authentication configuration](../fundamentals/session/handlers.mdx#automatic-authentication-configuration).
+Instead, you should rely on [automatic authentication configuration](/bff/fundamentals/session/handlers.mdx#automatic-authentication-configuration).
 
 Below is an example on how to configure multiple frontends. 
 
@@ -93,27 +92,27 @@ The order in which configuration is applied is
 Each frontend can have custom OpenID Connect configuration and Cookie Configuration. This can both be configured programmatically 
 as via [Configuration](./configuration.mdx). 
 
-## Frontend selection
+## Frontend Selection
 
-Each request to a frontend has to be uniquely defined by either it's path, it's origin or a combination of the two. 
+Each request to a frontend has to be uniquely defined by either its path, its origin or a combination of the two. 
 If you specify neither, then it's considered the default frontend. 
 
 Frontends are matched using the following algorithm:
 
-1. **Selection by both origin and path:** If there is a frontend that matches both the origin AND has the most specific match to a path, then it's selected. 
-2. **Selection by origin only:** Then if there is a frontend with only origins configured and it matches the path, then it's selected. 
-3. **Selection by path only:** Then if there is a frontend with a matching path specified, then it's selected. 
-4. **Default frontend:** Then if there is a default frontend configured, then it's selected.  
+1. **Selection by both origin and path:** If there is a frontend that matches both the origin AND has the most specific match to a path, it's selected. 
+2. **Selection by origin only:** Then, if there is a frontend with only origins configured and it matches the path, it's selected. 
+3. **Selection by path only:** Then, if there is a frontend with a matching path specified, it's selected. 
+4. **Default frontend:** Then, if there is a default frontend configured, it's selected.  
 
-Basically, the most specific match will be selected. 
+In summary, the most specific match will be selected. 
 
 :::note
-When using path based routing, then the frontend's path is added to the [PathBase](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httprequest.pathbase) 
-and removed from the [Path](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httprequest.path). This means that any routing
-that happens in the application is relative to the path of the frontend. This also includes the openid callback paths. 
+When using path based routing, then the frontend's path is added to the [`PathBase`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httprequest.pathbase) 
+and removed from the [`Path`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httprequest.path). This means that any routing
+that happens in the application is relative to the path of the frontend. This also includes the OpenID callback paths. 
 :::
 
-## Adding a frontend during startup
+## Adding A Frontend During Startup
 
 The simplest way to add frontends is during startup. 
 
@@ -122,11 +121,11 @@ services
     .AddBff()
     .WithFrontends(new BffFrontend(BffFrontendName.Parse("frontend1")));
 ```
-You can call WithFrontends with multiple frontends in one go, or call it multiple times. 
+You can call `WithFrontends` with multiple frontends in one go, or call it multiple times. 
 
-## Adding / updating a frontend dynamically at runtime
+## Adding / Updating A Frontend Dynamically At Runtime
 
-If you want to manipulate the frontends at runtime, you can do so via the IFrontendCollection interface. 
+If you want to manipulate the frontends at runtime, you can do so via the `IFrontendCollection` interface. 
 
 ```csharp
 var frontends = app.Services.GetRequiredService<IFrontendCollection>();
@@ -136,9 +135,9 @@ frontends.AddOrUpdate(new BffFrontend(name));
 frontends.Remove(name);
 ```
 
-## Defining the api surface
+## Defining The API Surface
 
-A frontend can define it's own api surface, by specifying remote api's. 
+A frontend can define its own API surface, by specifying remote APIs.
 
 ```csharp
 
@@ -157,10 +156,9 @@ var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
 
 See the topic on [Token Management](../tokens.md) for more information about the various token management options. 
 
-## Index HTML proxying
+## Index HTML Proxying
 
-When deploying a multi-frontend bff, it makes most sense to have the frontend's configured with an 
-Index.HTML file that's retrieved from a CDN. 
+When deploying a multi-frontend BFF, it makes most sense to have the frontend's configured with an `index.html` file that is retrieved from a Content Delivery Network (CDN). 
 
 ```csharp
 
@@ -168,7 +166,5 @@ var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
    .WithIndexHtml(new Uri("https://my_cdn/some_app/index.html"))
 ```
 
-When you do this, the BFF automatically wires up a catch-all route that serves the index.html for that specific frontend. 
+When you do this, the BFF automatically wires up a catch-all route that serves the `index.html` for that specific frontend. 
 See [Serve the index page from the BFF host](../../architecture/ui-hosting.md#serve-the-index-page-from-the-bff-host) for more information. 
-
-

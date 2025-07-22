@@ -12,12 +12,12 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/management/back-channel-logout/
 ---
 
-The back-channel logout endpoint has several extensibility points organized into two interfaces. The *IBackChannelLogoutEndpoint* is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic or to change how it validates incoming requests. When the back-channel logout endpoint receives a valid request, it revokes sessions using the *ISessionRevocationService*. 
+The back-channel logout endpoint has several extensibility points organized into two interfaces. The `IBackChannelLogoutEndpoint` is the top-level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic or to change how it validates incoming requests. When the back-channel logout endpoint receives a valid request, it revokes sessions using the `ISessionRevocationService`. 
 
 ## Request Processing
-You can add custom logic to the endpoint by implementing the *IBackChannelLogoutEndpoint* .
+You can add custom logic to the endpoint by implementing the `IBackChannelLogoutEndpoint` .
 
-*ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
+`ProcessRequestAsync` is the top-level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
 
 ```csharp
 public class CustomizedBackChannelLogoutService : IBackChannelLogoutEndpoint
@@ -31,4 +31,4 @@ public class CustomizedBackChannelLogoutService : IBackChannelLogoutEndpoint
 
 
 ## Session Revocation
-The back-channel logout service will call the registered session revocation service to revoke the user session when it receives a valid logout token. To customize the revocation process, implement the *ISessionRevocationService*. 
+The back-channel logout service will call the registered session revocation service to revoke the user session when it receives a valid logout token. To customize the revocation process, implement the `ISessionRevocationService`. 

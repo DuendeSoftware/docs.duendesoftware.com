@@ -22,22 +22,22 @@ functions:
 * Server-side Token Management
 * Blazor support with unified authentication state management across rendering modes.
 
-## Authentiation flow
+## Authentication Flow
 
-The following diagram shows how the BFF protects browser based applications.  
+The following diagram shows how the BFF protects browser-based applications:
 
 ![BFF Security Framework Architecture Overview](../images/bff_application_architecture.svg)
 
 
-* **Authentication flows**: The server handles the authentication flows. There are specific endpoints for login / logout. While the browser is involved with these authentication flows, because the user is redirected to and from the identity provider, the actual browser based application will never see the authentication tokens. These are exchanged for a code on the server only. 
-* **Cookies**: After successful authentication, a cookie is added. This cookie protects all subsequent calls to the apis. When using this type of authentication, **CSRF protection** is very important. 
-* **Access to apis**: The BFF can expose embedded apis (which are embedded in the BFF itself) or proxy calls to remote api's (which is more common in a microservice environment). While proxying, it will exchange the authentication cookie for an access token. 
-* **Session Management**: The BFF can manage the users session. This can either be cookie based session management or storage based session management. 
+* **Authentication flows**: The server handles the authentication flows. There are specific endpoints for login / logout. While the browser is involved with these authentication flows, because the user is redirected to and from the identity provider, the browser-based application will never see the authentication tokens. These are exchanged for a code on the server only. 
+* **Cookies**: After successful authentication, a cookie is added. This cookie protects all subsequent calls to the APIs. When using this type of authentication, **CSRF protection** is very important. 
+* **Access to APIs**: The BFF can expose embedded APIs (which are hosted by the BFF itself) or proxy calls to remote APIs (which is more common in a microservice environment). While proxying, it will exchange the authentication cookie for an access token. 
+* **Session Management**: The BFF can manage the users session. This can either be cookie-based session management or storage-based session management. 
 
 
 ## Internals
 Duende.BFF builds on widely used tools and frameworks, including ASP.NET Core's OpenID Connect and cookie authentication
-handlers, YARP, and Duende.AccessTokenManagement. Duende.BFF combines these tools and adds additional security and
+handlers, YARP, and [Duende.AccessTokenManagement](/accesstokenmanagement/index.mdx). Duende.BFF combines these tools and adds additional security and
 application features that are useful with a BFF architecture so that you can focus on providing application logic
 instead of security logic:
 
@@ -50,7 +50,7 @@ contributors to this library, we think it is a well implemented and flexible imp
 
 ### ASP.NET Cookie Handler
 
-Duende.BFF uses ASP.NET's Cookie handler for session management. The Cookie handler provides a claims-based identity to
+Duende.BFF uses ASP.NET's Cookie handler for session management. The cookie handler provides a claims-based identity to
 the application persisted in a digitally signed and encrypted cookie that is protected with modern cookie security
 features, including the Secure, HttpOnly and SameSite attributes. The handler also provides absolute and sliding session
 support, and has a flexible extensibility model, which Duende.BFF uses to

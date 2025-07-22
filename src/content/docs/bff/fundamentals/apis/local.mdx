@@ -1,6 +1,6 @@
 ---
-title: "Embedded (local) APIs"
-description: Documentation about Embedded (Embedded) APIs in BFF, including self-contained APIs and those using managed access tokens, along with securing endpoints and configuration details.
+title: "Embedded (Local) APIs"
+description: Documentation about Embedded (Local) APIs in BFF, including self-contained APIs and those using managed access tokens, along with securing endpoints and configuration details.
 sidebar:
   order: 10
 redirect_from:
@@ -13,7 +13,7 @@ redirect_from:
 
 import { Steps } from "@astrojs/starlight/components";
 
-An _Embedded API_ (or local api) is an API located within the BFF host. Embedded APIs are implemented with the familiar ASP.NET abstractions of API controllers or Minimal API endpoints.
+An _Embedded API_ (or local API) is an API located within the BFF host. Embedded APIs are implemented with the familiar ASP.NET abstractions of API controllers or Minimal API endpoints.
 
 There are two styles of Embedded APIs:
 
@@ -66,11 +66,11 @@ public class MyApiController : ControllerBase
 }
 ```
 
-The example above is simplified to demonstrate the way that you might obtain a token. Real Embedded endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Embedded endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](/bff/fundamentals/apis/remote/) or [YARP](/bff/fundamentals/apis/yarp/).
+The example above is simplified to demonstrate the way that you might obtain a token. Embedded endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Embedded endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](/bff/fundamentals/apis/remote/) or [YARP](/bff/fundamentals/apis/yarp/).
 
 ## Securing Embedded API Endpoints
 
-Regardless of the style of data access used by a Embedded API, it must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. To defend against such attacks and ensure that only the frontend can access these endpoints, we recommend implementing two layers of protection.
+Regardless of the style of data access used by an Embedded API, it must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. To defend against such attacks and ensure that only the frontend can access these endpoints, we recommend implementing two layers of protection.
 
 #### SameSite Cookies
 

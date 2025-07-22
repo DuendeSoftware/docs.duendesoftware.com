@@ -1,5 +1,5 @@
 ---
-title: "Proxying to Remote APIs"
+title: "Proxying Remote APIs"
 description: Learn how to configure and secure remote API access through BFF using HTTP forwarding and token management.
 sidebar:
   order: 20
@@ -18,7 +18,7 @@ A _Remote API_ is an API that is deployed separately from the BFF host. Remote A
 
 There are two different ways to set up Remote API proxying in Duende.BFF. This page describes the built-in simple HTTP forwarder. Alternatively, you can integrate Duende.BFF with Microsoft's [YARP](/bff/fundamentals/apis/yarp) reverse proxy, which allows for more complex reverse proxy features provided by YARP combined with the security and identity features of Duende.BFF.
 
-## Direct HTTP forwarding
+## Direct HTTP Forwarding
 
 Duende.BFF's direct HTTP forwarder maps routes in the BFF to a remote API surface. It uses [Microsoft YARP](https://github.com/microsoft/reverse-proxy) internally, but is much simpler to configure than YARP. The intent is to provide a developer-centric and simplified way to proxy requests from the BFF to remote APIs when more complex reverse proxy features are not needed.
 
@@ -52,18 +52,18 @@ The `MapRemoteBffApiEndpoint` extension method maps a path and all sub-paths bel
 <Tabs syncKey="bffVersion">
   {/* prettier-ignore */}
   <TabItem label="V4">
-```csharp
-// Program.cs
-app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
-    .WithAccessToken(RequiredTokenType.User);
-```
+    <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
+    .WithAccessToken(RequiredTokenType.User);`}/>
   </TabItem>
   <TabItem label="V3">
-```csharp
-// Program.cs
-app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
-    .WithAccessToken(TokenType.User);
-```  
+    <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
+    .WithAccessToken(TokenType.User);`}/>
   </TabItem>
 </Tabs>
 
