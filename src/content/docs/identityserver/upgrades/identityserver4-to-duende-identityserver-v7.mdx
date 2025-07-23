@@ -91,15 +91,23 @@ If you have not made customizations to the IdentityServer UI templates, consider
 
 A couple of compilation errors and required changes you may encounter:
 
-- The `IIdentityServerInteractionService.GetAllUserConsentsAsync` method was renamed to `IIdentityServerInteractionService.GetAllUserGrantsAsync`
-- `ConsentResponse.Denied` was removed. Use the `DenyAuthorizationAsync` instead:
+* When configuring scopes in memory, you need to register the scopes on startup.
+
+  ```diff lang="csharp" title="Program.cs"
+  builder.Services.AddIdentityServer()
+      .AddInMemory...
+  +    .AddInMemoryApiScopes(Config.ApiScopes)
+    ```
+
+* The `IIdentityServerInteractionService.GetAllUserConsentsAsync` method was renamed to `IIdentityServerInteractionService.GetAllUserGrantsAsync`
+* `ConsentResponse.Denied` was removed. Use the `DenyAuthorizationAsync` instead:
 
   ```diff lang="csharp" title="*.cs"
   - await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
   + await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
   ```
 
-- No overload method `SignInAsync` takes N arguments. The `HttpContext.SignInAsync` signature changed:
+* No overload method `SignInAsync` takes N arguments. The `HttpContext.SignInAsync` signature changed:
 
   ```diff lang="csharp" title="*.cs"
   // issue authentication cookie with subject ID and username
@@ -109,7 +117,7 @@ A couple of compilation errors and required changes you may encounter:
   +     DisplayName = user.Username
   + };
   +
-  + await HttpContext.SignInAsync(isuser);
+  + await HttpContext.SignInAsync(isuser, props);
   ```
 
 * `AuthorizationRequest` doesn't contain definition for `ClientId`:
