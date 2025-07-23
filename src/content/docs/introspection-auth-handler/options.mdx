@@ -1,5 +1,5 @@
 ---
-title: Configuring OAuth 2.0 token introspection
+title: Configuring OAuth 2.0 Token Introspection
 description: Learn more about the various options when adding the ASP.NET Core authentication handler for OAuth 2.0 token introspection.
 sidebar:
   label: Options
@@ -17,7 +17,7 @@ You set the options when registering the authentication handler at startup time,
 builder.Services.AddAuthentication(OAuth2IntrospectionDefaults.AuthenticationScheme)
     .AddOAuth2Introspection(options =>
     {
-        // configure options here..
+        // configure options here...
     });
 ```
 
