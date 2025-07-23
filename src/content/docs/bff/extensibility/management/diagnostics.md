@@ -23,6 +23,5 @@ For example, you could take whatever actions you need before normal processing o
 public Task ProcessRequestAsync(HttpContext context, CancellationToken ct)
 {
     // Custom logic here
-
 }
 ```

@@ -111,23 +111,23 @@ In Duende.BFF version 3, use the `MapRemoteBffApiEndpoint` method with the `Requ
 
 Remote APIs sometimes allow anonymous access, but usually require an access token, and the type of access token (user or client) will vary as well. You can specify access token requirements via the `WithAccessToken` extension method. Its `RequiredTokenType` parameter has three options:
 
-* `None`
+* **`None`**
 
     No token is required.
 
-* `User`
+* **`User`**
 
     A valid user access token is required and will be forwarded to the remote API. A user access token is an access token obtained during an OIDC flow (or subsequent refresh), and is associated with a particular user. User tokens are obtained when the user initially logs in, and will be automatically refreshed using a refresh token when they expire.
 
-* `Client`
+* **`Client`**
 
     A valid client access token is required and will be forwarded to the remote API. A client access token is an access token obtained through the client credentials flow, and is associated with the client application, not any particular user. Client tokens can be obtained even if the user is not logged in.
 
-* `UserOrClient`
+* **`UserOrClient`**
 
     Either a valid user access token or a valid client access token (as fallback) is required and will be forwarded to the remote API.
 
-* `UserOrNone`
+* **`UserOrNone`**
 
     A valid user access token will be forwarded to the remote API when logged in. No access token will be sent when not logged in, and no OIDC flow is challenged to get an access token.
 

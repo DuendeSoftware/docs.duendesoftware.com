@@ -177,23 +177,24 @@ It's important to mark up the APIs with .AsBffApiEndpoint(), because this adds C
   {/* prettier-ignore */}
   <TabItem label="Minimal Apis">
 
-```csharp
-
-// adds authorization for local and remote API endpoints
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`// Aadds authorization for local and remote API endpoints
 app.UseAuthorization();
 
 // Place your custom routes after the 'UseAuthorization()'
 app.MapGet("/hello-world", () => "hello-world")
-    .AsBffApiEndpoint(); // This statement adds CSRF protection to the controller endpoints
-
-```
+    .AsBffApiEndpoint(); // Aadds CSRF protection to the controller endpoints`}/>
 
   </TabItem>
   <TabItem label="Controllers">
 
-For program.cs
-```
-builder.Services.AddControllers();
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`builder.Services.AddControllers();
+
 // ...
 
 app.UseAuthorization();
@@ -201,12 +202,12 @@ app.UseAuthorization();
 // When mapping the api controllers, place this after // UseAuthorization()
 app.MapControllers()
     .RequireAuthorization()
-    .AsBffApiEndpoint(); // This statement adds CSRF protection to the controller endpoints
+    .AsBffApiEndpoint(); // This statement adds CSRF protection to the controller endpoints`}/>
 
-```
-
-```
-[Route("hello")]
+      <Code
+          lang="csharp"
+          title="LocalApiController.cs"
+          code={`[Route("hello")]
 public class LocalApiController : ControllerBase
 {
     [Route("world")]
@@ -215,8 +216,7 @@ public class LocalApiController : ControllerBase
     {
         return Ok("hello world");
     }
-}
-```
+}`}/>
 
   </TabItem>
 </Tabs>
@@ -227,7 +227,7 @@ If you also want to call remote api's from your browser based application, then 
 
 The BFF extends the capabilities of [Yarp](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/yarp/getting-started?view=aspnetcore-9.0) in order to achieve this. 
 
-```sh
+```bash title="Terminal"
 dotnet add package Duende.BFF.Yarp
 ```
 
@@ -236,58 +236,57 @@ dotnet add package Duende.BFF.Yarp
   {/* prettier-ignore */}
   <TabItem label="Direct forwarding">
 
-    ```csharp
-    builder.Services.AddBff()
-        .AddRemoteApis(); // This adds the capabilities needed to perform proxying to remote APIs. 
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`builder.Services.AddBff()
+    .AddRemoteApis(); // Adds the capabilities needed to perform proxying to remote APIs.
 
-    // ...
+// ...
 
-    // Map any call (including child routes) from /api/remote to https://remote-api-address
-    app.MapRemoteBffApiEndpoint("/api/remote", new Uri("https://remote-api-address"))
-        .WithAccessToken(RequiredTokenType.Client);
-    ```
+// Map any call (including child routes) from /api/remote to https://remote-api-address
+app.MapRemoteBffApiEndpoint("/api/remote", new Uri("https://remote-api-address"))
+    .WithAccessToken(RequiredTokenType.Client);`}/>
 
   </TabItem>
   {/* prettier-ignore */}
   <TabItem label="Yarp">
 
-    ```csharp
-    builder.Services.AddBff()
-        .AddRemoteApis() // This adds the capabilities needed to perform proxying to remote api's. 
-        .AddYarpConfig(new RouteConfig() // This statement configures yarp. 
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`builder.Services.AddBff()
+    .AddRemoteApis() // This adds the capabilities needed to perform proxying to remote api's.
+    .AddYarpConfig(new RouteConfig() // This statement configures yarp.
+    {
+        RouteId = "route_id",
+        ClusterId = "cluster_id",
+
+        Match = new RouteMatch
         {
-            RouteId = "route_id", 
-            ClusterId = "cluster_id",
+            Path = $"api/remote/{{**catch-all}}"
+        }
+    }, new ClusterConfig()
+    {
+        ClusterId = "cluster_id",
 
-            Match = new RouteMatch
-            {
-                Path = $"api/remote/{{**catch-all}}"
-            }
-        }, new ClusterConfig()
+        Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
         {
-            ClusterId = "cluster_id", 
-
-            Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "destination_1", new DestinationConfig { Address = "https://remote-api-address" } }
-            }
-        }); 
-
-
-    // ...
-
-    app.UseAuthorization();
-
-    // Add the Yarp middleware that will proxy the requests. 
-    app.MapReverseProxy(proxyApp => { 
-        proxyApp.UseAntiforgeryCheck(); 
+            { "destination_1", new DestinationConfig { Address = "https://remote-api-address" } }
+        }
     });
 
-    ```
 
-    You can also use an IConfiguration instead of programmatically configuring the proxy. 
+// ...
 
+app.UseAuthorization();
 
+// Add the Yarp middleware that will proxy the requests.
+app.MapReverseProxy(proxyApp => {
+    proxyApp.UseAntiforgeryCheck();
+});`}/>
+
+    You can also use an `IConfiguration` instead of programmatically configuring the proxy.
 
   </TabItem>
 </Tabs>
@@ -301,13 +300,13 @@ dotnet add package Duende.BFF.Yarp
 
   By default, Duende.BFF uses an in-memory session store. This is suitable for development and testing, but not recommended for production as sessions will be lost when the application restarts.
 
-  ```csharp
-  // In Program.cs
-  builder.Services.AddBff()
-      .AddServerSideSessions(); // Uses in-memory session store by default
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`builder.Services.AddBff()
+    .AddServerSideSessions(); // Uses in-memory session store by default
   
-  // ...existing code for authentication, authorization, etc.
-  ```
+// ...existing code for authentication, authorization, etc.`}/>
 
   </TabItem>
   {/* prettier-ignore */}
@@ -315,23 +314,25 @@ dotnet add package Duende.BFF.Yarp
 
   For production scenarios, you can use Entity Framework to persist sessions in a database. First, add the NuGet package:
 
-  ```sh
-  dotnet add package Duende.BFF.EntityFramework
-  ```
+    <Code
+        lang="bash"
+        title="Terminal"
+        meta="Terminal"
+        code={`dotnet add package Duende.BFF.EntityFramework`}/>
 
   Then configure the session store in your `Program.cs`:
 
-  ```csharp
-  // In Program.cs
-  builder.Services.AddBff()
-      .AddServerSideSessions()
-      .AddEntityFrameworkServerSideSessions(options =>
-      {
-          options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-      });
+    <Code
+        lang="csharp"
+        title="Program.cs"
+        code={`builder.Services.AddBff()
+    .AddServerSideSessions()
+    .AddEntityFrameworkServerSideSessions(options =>
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    });
   
-  // ...existing code for authentication, authorization, etc.
-  ```
+// ...existing code for authentication, authorization, etc.`}/>
 
   You will also need to run the Entity Framework migrations to create the necessary tables.
 

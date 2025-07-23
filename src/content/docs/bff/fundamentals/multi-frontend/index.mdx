@@ -140,7 +140,6 @@ frontends.Remove(name);
 A frontend can define its own API surface, by specifying remote APIs.
 
 ```csharp
-
 var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
    .WithRemoteApis(
       // map the local path /path to the remote api
@@ -161,7 +160,6 @@ See the topic on [Token Management](../tokens.md) for more information about the
 When deploying a multi-frontend BFF, it makes most sense to have the frontend's configured with an `index.html` file that is retrieved from a Content Delivery Network (CDN). 
 
 ```csharp
-
 var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
    .WithIndexHtml(new Uri("https://my_cdn/some_app/index.html"))
 ```

@@ -34,7 +34,6 @@ There are several ways how you can enrich the claims for a specific user.
 The most robust way would be to implement a custom `IClaimsTransformation`. 
 
 ```csharp
-
 services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
 
 public class CustomClaimsTransformer : IClaimsTransformation
