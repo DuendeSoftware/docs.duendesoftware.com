@@ -56,7 +56,8 @@ using Duende.AspNetCore.Authentication.OAuth2Introspection;
 builder.Services.AddAuthentication(OAuth2IntrospectionDefaults.AuthenticationScheme)
     .AddOAuth2Introspection(options =>
     {
-        options.Authority = "https://demo.duendesoftware.com"; // Replace with your authorization server's URL
+        // Replace with your authorization server's URL
+        options.Authority = "https://demo.duendesoftware.com";
 
         options.ClientId = "client_id_for_introspection_endpoint";
         options.ClientSecret = "client_secret_for_introspection_endpoint";
