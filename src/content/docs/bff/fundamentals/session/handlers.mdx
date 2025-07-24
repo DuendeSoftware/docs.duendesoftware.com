@@ -11,6 +11,57 @@ redirect_from:
   - /identityserver/v6/bff/session/handlers/
   - /identityserver/v7/bff/session/handlers/
 ---
+import { Badge } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+To configure authentication in the BFF, you'll need to configure both the OpenID Connect 
+login flow and the cookie handlers. 
+
+## Automatic Authentication Configuration <Badge text="V4" />
+
+In V4, a simplified mechanism for wiring up authentication has been introduced. The main purpose for the BFF
+is to handle the OpenID Connect login flow and to protect the APIs using Cookies. In V3, you explicitly had 
+to configure the ASP.NET Core authentication system to enable this. In V4, this is now simplified.
+
+A call `BffBuilder.ConfigureOpenIdConnect()` will make sure that:
+1. The authentication pipeline is configured with the appropriate authentication schemes. 
+2. The OpenID Connect pipeline is configured with default values. 
+3. The CookieHandler is configured using recommended practices. This can be tweaked by calling `BffBuilder.ConfigureCookies()`
+
+Below is an example on how to configure the BFF's authentication pipeline. 
+
+```csharp
+services.AddBff()
+    .ConfigureOpenIdConnect(options =>
+    {
+        options.Authority = "https://demo.duendesoftware.com";
+        options.ClientId = "interactive.confidential";
+        options.ClientSecret = "secret";
+        options.ResponseType = "code";
+        options.ResponseMode = "query";
+
+        options.GetClaimsFromUserInfoEndpoint = true;
+        options.SaveTokens = true;
+        options.MapInboundClaims = false;
+
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.Scope.Add("api");
+        options.Scope.Add("offline_access");
+
+        options.TokenValidationParameters.NameClaimType = "name";
+        options.TokenValidationParameters.RoleClaimType = "role";
+    });
+```
+
+Each frontend can have custom OpenID Connect configuration and Cookie Configuration. This can both be configured programmatically 
+via [Configuration](../multi-frontend/configuration.mdx). 
+
+
+## Manually Configuring Authentication
+
 
 You typically use the following two ASP.NET Core authentication handlers to implement remote authentication:
 
@@ -43,7 +94,7 @@ builder.Services.AddAuthentication(options =>
 
 Now let's look at some more details!
 
-## The OpenID Connect Authentication Handler
+### The OpenID Connect Authentication Handler
 
 The OpenID Connect (OIDC) handler connects the application to the authentication / access token system.
 
@@ -93,7 +144,7 @@ builder.Services.AddAuthentication().AddOpenIdConnect("oidc", options =>
 ```
 The OIDC handler will use the default sign-in handler (the cookie handler) to establish a session after successful validation of the OIDC response.
 
-## The Cookie Handler
+### The Cookie Handler
 
 The cookie handler is responsible for establishing the session and manage authentication session related data.
 

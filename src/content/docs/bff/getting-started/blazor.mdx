@@ -50,7 +50,7 @@ Then you need to configure the application to use the BFF Blazor application. Ad
     ```csharp
     // BFF setup for blazor
     builder.Services.AddBff()
-        .WithDefaultOpenIdConnectOptions(options =>
+        .ConfigureOpenIdConnect(options =>
         {
             options.Authority = "https://demo.duendesoftware.com";
             options.ClientId = "interactive.confidential";
@@ -71,7 +71,7 @@ Then you need to configure the application to use the BFF Blazor application. Ad
             options.TokenValidationParameters.NameClaimType = "name";
             options.TokenValidationParameters.RoleClaimType = "role";
         })
-        .WithDefaultCookieOptions(options =>
+        .ConfigureCookies(options =>
         {
             // Because we use an identity server that's configured on a different site
             // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
@@ -313,7 +313,7 @@ Now your application supports logging in / out.
 
 ## Exposing APIs
 
-Now we're going to expose a local api for weather forecasts to Blazor wasm and call it via a HttpClient.
+Now we're going to expose an embedded API for weather forecasts to Blazor WebAssembly (WASM) and call it via a HttpClient.
 
 > By default, the system will perform both pre-rendering on the server AND WASM based rendering on the client. For this reason, you'll need to register both a server and client version of a component that retrieves data.
 > See the [Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-9.0#client-side-services-fail-to-resolve-during-prerendering) for more information on this.

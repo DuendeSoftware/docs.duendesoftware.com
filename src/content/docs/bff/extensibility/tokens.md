@@ -25,7 +25,7 @@ The token management library uses a named HTTP client from the HTTP client facto
 
 ```csharp
 builder.Services.AddHttpClient(
-        AccessTokenManagementDefaults.BackChannelHttpClientName,
+        ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName,
         configureClient => {
             // ... 
         });
@@ -60,7 +60,8 @@ public interface IUserTokenStore
     Task StoreTokenAsync(
         ClaimsPrincipal user,
         UserToken token,
-        UserTokenRequestParameters? parameters = null);
+        UserTokenRequestParameters? parameters = null,
+        CancellationToken token = default);
 
     /// <summary>
     /// Retrieves tokens from store
@@ -70,7 +71,8 @@ public interface IUserTokenStore
     /// <returns>access and refresh token and access token expiration</returns>
     Task<UserToken> GetTokenAsync(
         ClaimsPrincipal user, 
-        UserTokenRequestParameters? parameters = null);
+        UserTokenRequestParameters? parameters = null,
+        CancellationToken token = default);
 
     /// <summary>
     /// Clears the stored tokens for a given user
@@ -80,7 +82,8 @@ public interface IUserTokenStore
     /// <returns></returns>
     Task ClearTokenAsync(
         ClaimsPrincipal user, 
-        UserTokenRequestParameters? parameters = null);
+        UserTokenRequestParameters? parameters = null,
+        CancellationToken token = default);
 }
 ```
 
@@ -101,7 +104,7 @@ public interface IAccessTokenRetriever
     /// <returns>A task that contains the access token result, which is an
     /// object model that can represent various types of tokens (bearer, dpop),
     /// the absence of an optional token, or an error. </returns>
-    Task<AccessTokenResult> GetAccessToken(AccessTokenRetrievalContext context);
+    Task<AccessTokenResult> GetAccessToken(AccessTokenRetrievalContext context, CancellationToken token);
 }
 ```
 

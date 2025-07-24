@@ -2,7 +2,7 @@
 title: "Token Management"
 description: "Learn how to manage and utilize access tokens in BFF applications for secure API communication"
 date: 2020-09-10T08:22:12+02:00
-order: 50
+order: 11
 redirect_from:
   - /bff/v2/tokens/
   - /bff/v3/fundamentals/tokens/

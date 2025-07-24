@@ -25,17 +25,17 @@ builder.Services.AddTransient<IBackchannelLogoutService, DefaultBackchannelLogou
 builder.Services.AddTransient<IDiagnosticsService, DefaultDiagnosticsService>();
 ```
 
-You can add your own implementation by overriding the default after calling *AddBff()*.
+You can add your own implementation by overriding the default after calling `AddBff()`.
 
-The management endpoint services all inherit from the *IBffEndpointService*, which provides a general-purpose mechanism to add custom logic to the endpoints. 
+The management endpoint services all inherit from the `IBffEndpointEndpoint`, which provides a general-purpose mechanism to add custom logic to the endpoints. 
 
 ```csharp
 public interface IBffEndpointService
 {
-    Task ProcessRequestAsync(HttpContext context);
+    Task ProcessRequestAsync(HttpContext context, CancellationToken ct);
 }
 ```
 
-None of the endpoint services contain additional members beyond *ProcessRequestAsync*.
+None of the endpoint services contain additional members beyond `ProcessRequestAsync`.
 
 You can customize the behavior of the endpoints either by implementing the appropriate interface or by extending the default implementation of that interface. In many cases, extending the default implementation is preferred, as this allows you to keep most of the default behavior by calling the base *ProcessRequestAsync* from your derived class. Several of the default endpoint service implementations also define virtual methods that can be overridden to customize their behavior with more granularity.

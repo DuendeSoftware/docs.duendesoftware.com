@@ -12,36 +12,45 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/management/user/
 ---
 
-The BFF user endpoint can be customized by implementing the *IUserService* or by extending *DefaultUserService*, its default implementation. In most cases, extending the default implementation is preferred, as it has several virtual methods that can be overridden to customize particular aspects of how the request is processed. The *DefaultUserService*'s virtual methods are *ProcessRequestAsync*, *GetUserClaims*, and *GetManagementClaims*.
+The BFF user endpoint can be customized by implementing the `IUserEndpoint`. 
 
 ## Request Processing 
-*ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
+
+`ProcessRequestAsync` is the top-level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
 
 For example, you could take whatever actions you need before normal processing of the request like this:
 
 ```csharp
-public override Task ProcessRequestAsync(HttpContext context)
+public Task ProcessRequestAsync(HttpContext context, CancellationToken ct)
 {
     // Custom logic here
-
-    return base.ProcessRequestAsync(context);
 }
 ```
 
-## User Claims
-*GetUserClaims* produces the collection of claims that describe the user. The default implementation returns all the claims in the user's session. Your override could add claims from some other source or manipulate the claims in arbitrary ways.
+### Enriching User Claims 
 
-For example, you could add additional claims to the user endpoint that would not be part of the session like this:
+There are several ways how you can enrich the claims for a specific user. 
+
+The most robust way would be to implement a custom `IClaimsTransformation`. 
 
 ```csharp
-protected override IEnumerable<ClaimRecord> GetUserClaims(AuthenticateResult authenticateResult)
+services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
+
+public class CustomClaimsTransformer : IClaimsTransformation
 {
-    var baseClaims = base.GetUserClaims(authenticateResult);
-    var sub = authenticateResult.Principal.FindFirstValue("sub");
-    var otherClaims = getAdditionalClaims(sub); // Retrieve claims from some data store
-    return baseClaims.Append(otherClaims);
+    public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
+    {
+        var identity = (ClaimsIdentity)principal.Identity;
+
+        if (!identity.HasClaim(c => c.Type == "custom_claim"))
+        {
+            identity.AddClaim(new Claim("custom_claim", "your_value"));
+        }
+
+        return Task.FromResult(principal);
+    }
 }
 ```
 
-## Management Claims
-*GetManagementClaims* is responsible for producing additional claims that are useful for user management. The default implementation creates *bff:session_expires_in*, *bff:session_state*, and *bff:logout_url* [claims](/bff/fundamentals/session/management/user#management-claims). Your implementation could change those claims or add additional custom claims. 
+See the [Claims Transformation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/claims?view=aspnetcore-9.0) topic in the ASP.NET Core documentation for more information. 
+

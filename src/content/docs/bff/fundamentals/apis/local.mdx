@@ -1,6 +1,6 @@
 ---
-title: "Local APIs"
-description: Documentation about Local APIs in BFF, including self-contained APIs and those using managed access tokens, along with securing endpoints and configuration details.
+title: "Embedded (Local) APIs"
+description: Documentation about Embedded (Local) APIs in BFF, including self-contained APIs and those using managed access tokens, along with securing endpoints and configuration details.
 sidebar:
   order: 10
 redirect_from:
@@ -13,28 +13,28 @@ redirect_from:
 
 import { Steps } from "@astrojs/starlight/components";
 
-A _Local API_ is an API located within the BFF host. Local APIs are implemented with the familiar ASP.NET abstractions of API controllers or Minimal API endpoints.
+An _Embedded API_ (or local API) is an API located within the BFF host. Embedded APIs are implemented with the familiar ASP.NET abstractions of API controllers or Minimal API endpoints.
 
-There are two styles of local APIs:
+There are two styles of Embedded APIs:
 
-- Self-contained Local APIs
-- Local APIs that Make Requests using Managed Access Tokens
+- Self-contained Embedded APIs
+- Embedded APIs that Make Requests using Managed Access Tokens
 
-#### Self-Contained Local APIs
+#### Self-Contained Embedded APIs
 
 These APIs reside within the BFF and don't make HTTP requests to other APIs. They access data controlled by the BFF itself, which can simplify the architecture of the system by reducing the number of APIs that must be deployed and managed. They are suitable for scenarios where the BFF is the sole consumer of the data. If you require data accessibility from other applications or services, this approach is probably not suitable.
 
-#### Local APIs That Make Requests Using Managed Access Tokens
+#### Embedded APIs That Make Requests Using Managed Access Tokens
 
-Alternatively, you can make the data available as a service and make HTTP requests to that service from your BFF's local endpoints. The benefits of this style of Local Endpoint include:
+Alternatively, you can make the data available as a service and make HTTP requests to that service from your BFF's Embedded endpoints. The benefits of this style of Embedded Endpoint include:
 
 - Your frontend's network access can be simplified into an aggregated call for the specific data that it needs, which reduces the amount of data that must be sent to the client.
 - Your BFF endpoint can expose a subset of your remote APIs so that they are called in a more controlled manner than if the BFF proxied all requests to the endpoint.
 - Your BFF endpoint can include business logic to call the appropriate endpoints, which simplifies your front end code.
 
-Your local endpoints can leverage services like the HTTP client factory and Duende.BFF [token management](/bff/fundamentals/tokens) to make the outgoing calls.
+Your Embedded endpoints can leverage services like the HTTP client factory and Duende.BFF [token management](/bff/fundamentals/tokens) to make the outgoing calls.
 
-The following is a simplified example showing how local endpoints can get managed access tokens and use them to make requests to remote APIs.
+The following is a simplified example showing how Embedded endpoints can get managed access tokens and use them to make requests to remote APIs.
 
 ```csharp
 // MyApiController.cs
@@ -66,11 +66,11 @@ public class MyApiController : ControllerBase
 }
 ```
 
-The example above is simplified to demonstrate the way that you might obtain a token. Real local endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Local endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](/bff/fundamentals/apis/remote/) or [YARP](/bff/fundamentals/apis/yarp/).
+The example above is simplified to demonstrate the way that you might obtain a token. Embedded endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Embedded endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](/bff/fundamentals/apis/remote/) or [YARP](/bff/fundamentals/apis/yarp/).
 
-## Securing Local API Endpoints
+## Securing Embedded API Endpoints
 
-Regardless of the style of data access used by a local API, it must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. To defend against such attacks and ensure that only the frontend can access these endpoints, we recommend implementing two layers of protection.
+Regardless of the style of data access used by an Embedded API, it must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. To defend against such attacks and ensure that only the frontend can access these endpoints, we recommend implementing two layers of protection.
 
 #### SameSite Cookies
 
@@ -221,3 +221,7 @@ MVC controllers and actions can use the `BffApiSkipAntiforgeryAttribute` (which 
 public class SampleApiController : ControllerBase
 { /* ... */ }
 ```
+
+:::note
+It's also possible to disable anti-forgery protection using _BffOptions.DisableAntiForgeryCheck()_
+:::

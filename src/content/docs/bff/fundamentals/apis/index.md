@@ -15,10 +15,14 @@ redirect_from:
 
 A frontend application using the BFF pattern can call two types of APIs:
 
-#### Remote APIs
+#### Embedded (Local) APIs
+
+These APIs embedded inside the BFF and typically exist to support the BFF's frontend; they are not shared with other frontends or services. 
+
+See [Embedded APIs](local.mdx) for more information. 
+
+#### Proxying Remote APIs
 
 These APIs are deployed on a different host than the BFF, which allows them to be shared between multiple frontends or (more generally speaking) multiple clients. These APIs can only be called via the BFF host acting as a proxy.
 
-#### Local APIs
-
-These APIs only exist to support the specific frontend; they are not shared with other frontends or services. They are located in the BFF host and can be called directly by the frontend.
+You can use [Direct Forwarding](./remote.md) for most scenarios. If you have more complex requirements, you can also directly interact with [YARP](./yarp.md)

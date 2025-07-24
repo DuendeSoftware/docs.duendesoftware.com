@@ -15,7 +15,7 @@ secret lifetimes.
 
 ## IdentityServerConfigurationOptions
 
-Top level options for IdentityServer.Configuration.
+Top-level options for IdentityServer.Configuration.
 
 ```csharp
 public class IdentityServerConfigurationOptions

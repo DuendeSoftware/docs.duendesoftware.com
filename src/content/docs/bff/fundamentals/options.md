@@ -1,6 +1,7 @@
 ---
 title: Configuration Options
 sidebar:
+  order: 10
   label: Configuration Options
 description: "Comprehensive guide to configuring Duende BFF framework including general settings, paths, session management, and API options"
 date: 2020-09-10T08:22:12+02:00
@@ -40,6 +41,18 @@ builder.Services.AddBff(options =>
 * ***DiagnosticsEnvironments***
  
     The ASP.NET environment names that enable the diagnostics endpoint. Defaults to "Development".
+
+* ***BackChannelHttpHandler*** 
+    A HTTP message handler that's used to configure backchannel communication. Typically used during testing. Configuring this will automatically configure the BackChannelHttpHandler property in _OpenIDConnectOptions_ and also set it as the primary http message handler for retrieving the index.html. 
+
+* ***AutomaticallyRegisterBffMiddleware*** (added in 4.0)
+    When applying BFF V4 multiple frontends, a lot of middlewares get automatically added to the pipeline. For example, the frontend selection middleware, the authentication handlers, etc. If you don't want this automatic behavior, then you can turn it off and register these middlewares manually. 
+
+* ***IndexHtmlClientName***
+    If BFF is configured to automatically retrieve the index.html, then it needs a http client to do so. With this name you can automatically configure http client in the http client factory. 
+
+* ***AllowedSilentLoginReferers*** 
+    For silent login to work, you normally need to have the BFF backend and the frontend on the same origin. If you have a split host scenario, meaning the backend on a different origin (but same site) as the frontend, then you can use the referer header to differentiate which browser window to post the silent login results to. This array must then contain the list of allowed referer header values. 
 
 ## Paths
 
@@ -94,11 +107,13 @@ builder.Services.AddBff(options =>
     If *true*, all sessions for the subject will be revoked. If false, just the specific session will be revoked.
     Defaults to *false*.
 
-* ***EnableSessionCleanup***
+* ***~~EnableSessionCleanup~~*** (removed in V4)
 
     Indicates if expired server side sessions should be cleaned up.
     This requires an implementation of IUserSessionStoreCleanup to be registered in the ASP.NET Core service provider.
     Defaults to *false*.
+
+    In V4, you need to opt into this value by calling **.AddSessionCleanupBackgroundProcess()**
 
 * ***SessionCleanupInterval***
 
@@ -127,6 +142,9 @@ builder.Services.AddBff(options =>
     Flag that specifies if a user session should be removed after an attempt to use a Refresh Token to acquire
     a new Access Token fails. This behavior is only triggered when proxying requests to remote
     APIs with TokenType.User or TokenType.UserOrClient. Defaults to True. 
+
+* ***DisableAntiForgeryCheck*** (added in V4)
+    A delegate that determines if the anti-forgery check should be disabled for a given request. The default is not to disable anti-forgery checks.
 
 
 # BFF Blazor Server Options

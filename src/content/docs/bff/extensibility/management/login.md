@@ -12,15 +12,16 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/management/login/
 ---
 
-The BFF login endpoint has extensibility points in two interfaces. The *ILoginService* is the top level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The *IReturnUrlValidator* ensures that the *returnUrl* parameter passed to the login endpoint is safe to use.
+The BFF login endpoint has extensibility points in two interfaces. The `ILoginEndpoint` is the top-level abstraction that processes requests to the endpoint. This service can be used to add custom request processing logic. The `IReturnUrlValidator` ensures that the `returnUrl` parameter passed to the login endpoint is safe to use.
 
 ## Request Processing
-*ProcessRequestAsync* is the top level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
+
+`ProcessRequestAsync` is the top-level function called in the endpoint service and can be used to add arbitrary logic to the endpoint.
 
 For example, you could take whatever actions you need before normal processing of the request like this:
 
 ```csharp
-public override Task ProcessRequestAsync(HttpContext context)
+public Task ProcessRequestAsync(HttpContext context, CancellationToken ct)
 {
     // Custom logic here
 
@@ -29,4 +30,5 @@ public override Task ProcessRequestAsync(HttpContext context)
 ```
 
 ## Return URL Validation
-To prevent open redirector attacks, the *returnUrl* parameter to the login endpoint must be validated. You can customize this validation by implementing the *IReturnUrlValidator* interface. The default implementation enforces that return urls are local.
+
+To prevent open redirector attacks, the `returnUrl` parameter to the login endpoint must be validated. You can customize this validation by implementing the `IReturnUrlValidator` interface. The default implementation enforces that return URLs are local.
