@@ -67,19 +67,13 @@ If you don't want this automatic mapping of BFF middleware, you can turn it off 
 ```csharp
 var app = builder.Build();
 
-app.UseBffFrontendSelection();
-app.UseBffPathMapping();
-app.UseBffOpenIdCallbacks();
+app.UseBffPreProcessing();
 
 // TODO: your custom middleware goes here
 app.UseRouting(); 
 app.UseBff();
 
-// NOTE: Only add this if you want to proxy remote APIs. 
-app.UseBffRemoteRoutes();
-
-app.MapBffManagementEndpoints();
-app.UseBffIndexPages();
+app.UseBffPostProcessing();
 
 app.Run();
 ```

@@ -200,3 +200,31 @@ The following options are available:
     BffClientAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
     ms.
 
+
+# XForward header configuration
+
+Added in V4
+
+Should BFF run behind another proxy, then you'll want to use X-Forwarded headers. 
+
+BFF automatically registers the XForward header middleware in the pipeline. However, 
+it doesn't do anything without configuration. Below is an example on how you can confiugre this.  
+
+```csharp
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    // Consider configuring the 'KnownProxies' and the 'AllowedHosts' to prevent IP spoofing attacks
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+```
+
+See [proxy-load-balancer](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-9.0) in the microsoft documentation 
+for more information. 
+
+:::note
+Be careful with XForward headers from untrusted sources. This can leave you vulnerable to IP Spoofing attacks. 
+See [Microsoft Security Advisory CVE-2018-0787](https://github.com/aspnet/Announcements/issues/295) for information 
+on an elevation-of-privileges vulnerability that affects systems where the proxy doesn't validate or restrict Host headers to known good values.
+
+:::
