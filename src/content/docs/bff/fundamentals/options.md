@@ -201,16 +201,14 @@ The following options are available:
     ms.
 
 
-# XForward header configuration
+# Proxy Servers and Load Balancers :badge[v4.0]
 
-Added in V4
+When your BFF is hosted behind another reverse proxy or load balancer, you'll want to use `X-Forwarded-*` headers. 
 
-Should BFF run behind another proxy, then you'll want to use X-Forwarded headers. 
-
-BFF automatically registers the XForward header middleware in the pipeline. However, 
-it doesn't do anything without configuration. Below is an example on how you can confiugre this.  
+BFF automatically registers the `ForwardedHeaders` middleware in the pipeline, without any additional configuration. You will need to configure which headers should be considered by the middleware, typically the `X-Forwarded-For` and `X-Forwarded-Proto` headers. Here's an example of how you can configure this.  
 
 ```csharp
+// Program.cs
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     // Consider configuring the 'KnownProxies' and the 'AllowedHosts' to prevent IP spoofing attacks
@@ -219,12 +217,11 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 ```
 
-See [proxy-load-balancer](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-9.0) in the microsoft documentation 
-for more information. 
+See [proxy servers and load balancers](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-9.0) in the Microsoft documentation for more information. 
 
 :::note
-Be careful with XForward headers from untrusted sources. This can leave you vulnerable to IP Spoofing attacks. 
-See [Microsoft Security Advisory CVE-2018-0787](https://github.com/aspnet/Announcements/issues/295) for information 
-on an elevation-of-privileges vulnerability that affects systems where the proxy doesn't validate or restrict Host headers to known good values.
+Be careful processing `X-Forwarded-*` headers from untrusted sources. Accepting these headers without validating the proxy IP address or network origin may leave you vulnerable to IP Spoofing attacks.
 
+See [Microsoft Security Advisory CVE-2018-0787](https://github.com/aspnet/Announcements/issues/295) for information 
+on an elevation-of-privileges vulnerability that affects systems where the proxy doesn't validate or restrict `Host` headers to known good values.
 :::
