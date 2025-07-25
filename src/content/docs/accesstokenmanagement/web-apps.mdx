@@ -176,6 +176,20 @@ public async Task<IActionResult> CallApi([FromServices] InvoiceClient client)
 }
 ```
 
+### gRPC Support
+If you are using gRPC, you can also use the `AddClientAccessTokenHandler` and `AddUserAccessTokenHandler` methods when
+registering typed gRPC clients:
+
+```csharp
+// Program.cs
+builder.Services.AddGrpcClient<Greeter.GreeterClient>(o =>
+{
+    o.Address = new Uri("https://localhost:5001");
+})
+    .AddUserAccessTokenHandler();
+// or .AddClientAccessTokenHandler(); when using client credentials
+```
+
 ## Manually Request Access Tokens
 
 If you want to use access tokens differently or have more advanced needs which the automatic option doesn't cover, then you can also manually request user access tokens. 
