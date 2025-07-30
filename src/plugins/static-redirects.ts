@@ -3,7 +3,21 @@ import type { AstroConfig, AstroIntegrationLogger } from "astro";
 import path from "node:path";
 import fs from "node:fs/promises";
 
-let configJson = { routes: [] };
+function createNginxRule(redirectFrom: string, redirectTo: string) {
+  if (redirectFrom.endsWith("/")) {
+    redirectFrom = redirectFrom.slice(0, -1);
+  }
+
+  return (
+    "rewrite ^" +
+    redirectFrom +
+    "(/?)$ $scheme://$http_host" +
+    redirectTo +
+    "/ permanent;\n"
+  );
+}
+
+let nginxRedirectRules = "";
 
 export async function configurePlugin(hookOptions: any) {
   const buildOutput: string = hookOptions.buildOutput;
@@ -12,7 +26,7 @@ export async function configurePlugin(hookOptions: any) {
 
   if (buildOutput !== "static") {
     logger.warn(
-      `Skip generating static redirects file: not compatible with '${buildOutput}' builds, only 'static' is supported.`,
+      `Skip generating static redirects: not compatible with '${buildOutput}' builds, only 'static' is supported.`,
     );
     return;
   }
@@ -20,30 +34,8 @@ export async function configurePlugin(hookOptions: any) {
   // Find redirects
   const redirects = config.redirects;
   if (!Object.keys(redirects).length) {
-    logger.warn("Skip generating static redirects file: no redirects found.");
+    logger.warn("Skip generating static redirects: no redirects found.");
     return;
-  }
-
-  // Load existing staticwebapp.config.json
-  const configSourcePath = path.join(
-    url.fileURLToPath(config.srcDir),
-    "staticwebapp.config.json",
-  );
-
-  try {
-    configJson = JSON.parse(
-      await fs.readFile(configSourcePath, {
-        encoding: "utf-8",
-      }),
-    );
-
-    if (!configJson.routes) {
-      configJson.routes = [];
-    }
-  } catch {
-    logger.debug(
-      `Skip load existing config file: '${configSourcePath}' not found.`,
-    );
   }
 
   // Add redirects
@@ -52,21 +44,9 @@ export async function configurePlugin(hookOptions: any) {
     const redirect = redirects[from];
 
     if (typeof redirect === "string") {
-      // @ts-ignore
-      configJson.routes.push({
-        route: from,
-        methods: ["GET"],
-        redirect: redirect,
-        statusCode: 301,
-      });
+      nginxRedirectRules += createNginxRule(from, redirect);
     } else {
-      // @ts-ignore
-      configJson.routes.push({
-        route: from,
-        methods: ["GET"],
-        redirect: redirect.destination,
-        statusCode: redirect.status,
-      });
+      nginxRedirectRules += createNginxRule(from, redirect.destination);
     }
   });
 }
@@ -75,25 +55,20 @@ export async function writeToOutput(hookOptions: any) {
   const outDir: string = hookOptions.dir;
   const logger: AstroIntegrationLogger = hookOptions.logger;
 
-  if (!configJson || !configJson.routes.length) {
+  if (!nginxRedirectRules || !nginxRedirectRules.length) {
     logger.warn(
       `Skip generating static redirects file: no redirects were generated.`,
     );
     return;
   }
 
-  // Write staticwebapp.config.json
+  // Write redirect.conf
   const configDestinationPath = path.join(
     url.fileURLToPath(outDir),
-    "staticwebapp.config.json",
+    "redirect.conf",
   );
-  await fs.writeFile(
-    configDestinationPath,
-    JSON.stringify(configJson, null, 2),
-  );
-  logger.info(
-    `Generated static redirects file: ${configDestinationPath} (${configJson.routes.length} redirects)`,
-  );
+  await fs.writeFile(configDestinationPath, nginxRedirectRules);
+  logger.info(`Generated static redirects file: ${configDestinationPath}`);
 }
 
 export default function staticRedirects() {
