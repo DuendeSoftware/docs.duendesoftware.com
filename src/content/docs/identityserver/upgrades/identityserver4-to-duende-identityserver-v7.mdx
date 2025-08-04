@@ -33,7 +33,7 @@ You can determine the version of IdentityServer4 by running the `dotnet list` co
   </TabItem>
 </Tabs>
 
-This command will print a list of packages you are using in your solution, along with their version.
+This command will print a list of packages you’re using in your solution, along with their version.
 
 ```bash title="Output"
    > IdentityServer4                            3.1.4       3.1.4
@@ -44,6 +44,26 @@ Depending on the package version shown, your next steps will be different:
 
 - If you are on IdentityServer v3.x, we recommend first [upgrading to IdentityServer4 v4.x](#identityserver4-v3x-to-identityserver-v4x), and then to [Duende IdentityServer](#identityserver4-v4x-to-duende-identityserver). The configuration object model changed between the two major versions of IdentityServer4, and we recommend upgrading step-by-step.
 - If you are on IdentityServer v4.x, you can immediately [upgrade to Duende IdentityServer](#identityserver4-v4x-to-duende-identityserver).
+
+## IdentityServer4 UI Templates
+
+:::note
+Check your current host project's UI elements against the latest templates in **`Duende.Templates`** to ensure
+you’re using the latest recommendations and best practices.
+:::
+
+IdentityServer has always been a framework that championed customization and making the implementation your own,
+and we treat templates as a starting point in your journey to implementing an OIDC and OAuth server.
+
+During the development of IdentityServer4, the UI templates saw several changes between the years of **2018** to **2021**.
+
+We recommend two approaches to upgrading your UI elements of your IdentityServer host project:
+
+- Start with the latest templates and port your customizations to the new templates.
+- Use a code comparison tool to identify the changes you need to make to your templates.
+
+The first approach is the easiest, but it requires you to make changes to your project.
+The second approach is more involved, but it allows you to make changes to your project in a more controlled manner.
 
 ## IdentityServer4 v3.x to IdentityServer v4.x
 
@@ -141,7 +161,7 @@ A couple of compilation errors and required changes you may encounter:
   + if (context.IsNativeClient())
   ```
 
-* The name `ProcessLoginCallbackForOidc` does not exist in the current context:
+* The name `ProcessLoginCallbackForOidc`doesn’t exist in the current context:
 
   ```diff lang="csharp" title="*.cs"
   - ProcessLoginCallbackForOidc(result, additionalLocalClaims, localSignInProps);
@@ -387,7 +407,7 @@ Replace all `IdentityModel` namespace usages with `Duende.IdentityModel`:
 + using Duende.IdentityModel;
 ```
 
-If you are using fully-qualified names in your code, those will need to be updated as well.
+If you’re using fully-qualified names in your code, those will need to be updated as well.
 
 ### Step 4: Remove AddDeveloperSigningCredential :badge[Optional]
 
@@ -415,8 +435,8 @@ In this section, we'll look at updating the database schema based on the stores 
 
   - `InitiateLoginUri` is a nullable string used for Third Party Initiated Login.
   - `RequireDPoP` is a non-nullable boolean flag that controls if a client is required to use [DPoP](../../tokens/pop).
-  - `DPoPValidationMode` is a non-nullable column that controls the DPoP validation mechanism. Existing clients that are not using DPoP can set its value to `0`.
-  - `DPoPClockSkew` is a non-nullable timespan that controls how much clock skew is allowed for a particular DPoP client. Existing clients that are not using DPoP can set its value to a timespan of length ``0.
+  - `DPoPValidationMode` is a non-nullable column that controls the DPoP validation mechanism. Existing clients that aren’t using DPoP can set its value to `0`.
+  - `DPoPClockSkew` is a non-nullable timespan that controls how much clock skew is allowed for a particular DPoP client. Existing clients that aren’t using DPoP can set its value to a timespan of length ``0.
 
 - Two new properties have been added to the `Client` model:
   - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](../../tokens/par). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
@@ -495,7 +515,7 @@ Between different .NET versions, this default setting has changed:
 | .NET 6   | Content root path (normalized with directory separator suffix) |
 | .NET 7+  | Content root path without directory separator suffix           |
 
-Your application name might change (and existing data protection keys may become invalid) if you are currently targeting .NET 6 and do not have the application name set explicitly.
+Your application name might change (and existing data protection keys may become invalid) if you’re currently targeting .NET 6 and don’t have the application name set explicitly.
 
 To prevent this from happening, you can explicitly set the application name to the content root path without the directory separator character, as [documented on Microsoft Learn](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-6.0#setapplicationname).
 
