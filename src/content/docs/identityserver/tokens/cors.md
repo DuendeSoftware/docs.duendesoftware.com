@@ -20,7 +20,7 @@ configured.
 ## Client-based CORS Configuration
 
 One approach to configuring CORS is to use the `AllowedCorsOrigins` collection on
-the [client configuration](/identityserver/reference/models/client#authentication--session-management).
+the [client configuration](/identityserver/reference/models/client.md#authentication--session-management).
 Add the origin of the client to the collection and the default configuration in IdentityServer will consult these
 values to allow cross-origin calls from the origins.
 

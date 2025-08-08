@@ -14,7 +14,7 @@ Welcome to Quickstart 2 for Duende IdentityServer!
 
 In this quickstart, you will add support for interactive user authentication via
 the OpenID Connect protocol to the IdentityServer you built in [Quickstart
-1](/identityserver/quickstarts/1-client-credentials/). Once that is in place, you will create
+1](/identityserver/quickstarts/1-client-credentials.md). Once that is in place, you will create
 an ASP.NET Razor Pages application that will use IdentityServer for
 authentication.
 
@@ -24,7 +24,7 @@ from a copy of
 the [reference implementation of Quickstart 1](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview/#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview.md#preparation).
 :::
 
 ## Video
@@ -140,7 +140,7 @@ code for this client in the next section. For now, you will register
 its configuration.
 
 OpenID Connect-based clients are very similar to the OAuth clients we added in
-[Quickstart 1](/identityserver/quickstarts/1-client-credentials/). But since the flows in OIDC
+[Quickstart 1](/identityserver/quickstarts/1-client-credentials.md). But since the flows in OIDC
 are always interactive, we need to add some redirect URLs to our configuration.
 
 The `Clients` list in `src/IdentityServer/Config.cs` should look like this:
@@ -198,7 +198,7 @@ dotnet sln add ./src/WebClient
 This version of the quickstarts uses [Razor
 Pages](https://docs.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-8.0&tabs=visual-studio)
 for the web client. If you prefer MVC, the conversion is straightforward. See
-the [quickstart for IdentityServer](/identityserver/quickstarts/2-interactive/)
+the [quickstart for IdentityServer](/identityserver/quickstarts/2-interactive.md)
 that uses it.
 :::
 
@@ -272,7 +272,7 @@ cookie (as they will be needed later).
 
 :::note
 This uses the *authorization code* flow with PKCE to connect to the OpenID
-Connect provider. See [here](/identityserver/fundamentals/clients/) for more
+Connect provider. See [here](/identityserver/fundamentals/clients.md) for more
 information on protocol flows.
 :::
 
@@ -359,14 +359,14 @@ Now everything should be in place to log in to `WebClient` using OIDC. Run
 by navigating to the protected home page. You should see a redirect to the login
 page in `IdentityServer`.
 
-![login screen for IdentityServer](./images/2_login.png)
+![login screen for IdentityServer](images/2_login.png)
 
 After you log in, `IdentityServer` will redirect back to `WebClient`, where the
 OpenID Connect authentication handler will process the response and sign-in the
 user locally by setting a cookie. Finally, the `WebClient`'s page will show the
 contents of the cookie.
 
-![ASP.NET Core application showing ClaimsPrincipal's claims](./images/2_claims.png)
+![ASP.NET Core application showing ClaimsPrincipal's claims](images/2_claims.png)
 
 As you can see, the cookie has two parts: the claims of the user and some
 metadata in the properties. This metadata also contains the original
@@ -460,7 +460,7 @@ to `ConfigureServices` in `src/WebClient/Program.cs`:
 After restarting the client app and logging back in, you should see additional user claims
 associated with the `profile` identity scope displayed on the page.
 
-![ASP.NET Core page showing additional claims](./images/2_additional_claims.png)
+![ASP.NET Core page showing additional claims](images/2_additional_claims.png)
 
 ## Further Experiments
 
@@ -646,14 +646,14 @@ automatically created by IdentityServer that is intended for external logins.
 Now run `IdentityServer` and `WebClient` and try to authenticate (you may need to log out and log back in)
 You will see a *Google* button on the login page.
 
-![IdentityServer login page showing Google as an external login option](./images/2_google_login.png)
+![IdentityServer login page showing Google as an external login option](images/2_google_login.png)
 
 Click on *Google* and authenticate with a Google account. You should land back on
 the `WebClient` home page, showing that the user is now coming from Google with
 claims sourced from Google's data.
 
 :::note
-The Google button is rendered by the login page automatically when there are external providers registered as
+The login page renders the Google button automatically when there are external providers registered as
 authentication schemes. See the `BuildModelAsync` method in `src/IdentityServer/Pages/Account/Login/Index.cshtml.cs` and
 the corresponding Razor template for more details.
 :::

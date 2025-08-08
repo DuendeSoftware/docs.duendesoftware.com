@@ -44,9 +44,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 Simply making sure that the token is coming from a trusted issuer is not good enough for most cases.
 In more complex systems, you will have multiple resources and multiple clients. Not every client might be authorized to access every resource.
 
-In OAuth there are two complementary mechanisms to embed more information about the "functionality" that the token is for - `audience` and `scope` (see [defining resources](/identityserver/fundamentals/resources/api-resources/) for more information).
+In OAuth there are two complementary mechanisms to embed more information about the "functionality" that the token is for - `audience` and `scope` (see [defining resources](/identityserver/fundamentals/resources/api-resources.md) for more information).
 
-If you designed your APIs around the concept of [API resources](/identityserver/fundamentals/resources/api-resources/), your IdentityServer will emit the `aud` claim by default (`api1` in this example):
+If you designed your APIs around the concept of [API resources](/identityserver/fundamentals/resources/api-resources.md), your IdentityServer will emit the `aud` claim by default (`api1` in this example):
 
 ```text
 {

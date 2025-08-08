@@ -17,4 +17,4 @@ An IdentityServer implementation can include MFA in its login page using anythin
 
 ## MFA And External Authentication
 
-When using IdentityServer as a [federation gateway](/identityserver/ui/federation), interactive users authenticate at the upstream provider. Typically, the upstream provider will perform the entire user authentication process, including any MFA required. There's no special configuration or implementation needed in IdentityServer in this case, as the upstream provider handles everything.
+When using IdentityServer as a [federation gateway](/identityserver/ui/federation.md), interactive users authenticate at the upstream provider. Typically, the upstream provider will perform the entire user authentication process, including any MFA required. There's no special configuration or implementation needed in IdentityServer in this case, as the upstream provider handles everything.

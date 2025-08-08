@@ -71,7 +71,7 @@ The Configuration API uses the `IClientConfigurationStore` abstraction to
 persist new clients to the configuration store. Your Configuration API host
 needs an implementation of this interface. You can either use the built-in
 Entity Framework based implementation, or implement the interface yourself. See
-[the IClientConfigurationStore reference](/identityserver/reference/stores/) for
+[the IClientConfigurationStore reference](/identityserver/reference/stores/index.md) for
 more details. If you wish to use the built-in implementation, install its NuGet
 package and add it to the ASP.NET Core service provider.
 
@@ -101,7 +101,7 @@ app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 
 `MapDynamicClientRegistration` registers the DCR endpoints and returns an
 `IEndpointConventionBuilder` which you can use to define authorization
-requirements for your DCR endpoint. See [Authorization](/identityserver/apis/aspnetcore/authorization/) for more details.
+requirements for your DCR endpoint. See [Authorization](/identityserver/apis/aspnetcore/authorization.md) for more details.
 
 ## Shared Host For Configuration API and IdentityServer
 
@@ -126,7 +126,7 @@ The Configuration API uses the `IClientConfigurationStore` abstraction to
 persist new clients to the configuration store. Your Configuration API host
 needs an implementation of this interface. You can either use the built-in
 Entity Framework-based implementation, or implement the interface yourself. See
-[the IClientConfigurationStore reference](/identityserver/reference/stores/client-store/) for
+[the IClientConfigurationStore reference](/identityserver/reference/stores/client-store.md) for
 more details. If you wish to use the built-in implementation, install its NuGet
 package and add it to the ASP.NET Core service provider.
 
@@ -156,7 +156,7 @@ app.MapDynamicClientRegistration().RequireAuthorization("DCR");
 
 `MapDynamicClientRegistration` registers the DCR endpoints and returns an
 `IEndpointConventionBuilder` which you can use to define authorization
-requirements for your DCR endpoint. See [Authorization](/identityserver/apis/aspnetcore/authorization/) for more details.
+requirements for your DCR endpoint. See [Authorization](/identityserver/apis/aspnetcore/authorization.md) for more details.
 
 ## Authorization
 
@@ -188,7 +188,7 @@ authentication scheme and an authorization policy that requires a particular
 scope to be present in the JWTs. You could choose any name for the scope that
 gives access to the Configuration APIs. Let's use the name
 "IdentityServer.Configuration" for this example. You would then define the
-"IdentityServer.Configuration" scope as an [ApiScope](/identityserver/reference/models/api-scope/) in your
+"IdentityServer.Configuration" scope as an [ApiScope](/identityserver/reference/models/api-scope.md) in your
 IdentityServer and allow the
 appropriate clients to access it. An automated process running in a CI pipeline
 could be configured as an OAuth client that uses the client credentials flow and
@@ -224,7 +224,7 @@ containing metadata describing the desired client as described in [RFC 7591](htt
 and [OpenID Connect Dynamic Client Registration 1.0](https://openid.net/specs/openid-connect-registration-1_0.html).
 
 The supported metadata properties are listed in the reference section on the [
-`DynamicClientRegistrationRequest` model](/identityserver/reference/dcr/models/#dynamicclientregistrationrequest). A mixture of standardized
+`DynamicClientRegistrationRequest` model](/identityserver/reference/dcr/models.md#dynamicclientregistrationrequest). A mixture of standardized
 and IdentityServer-specific properties are supported. Most standardized properties that are applicable to the client
 credentials or code flow grants (the two grants we support) are supported. Where IdentityServer's configuration model
 includes important properties that are not standardized, we have included those properties as extensions. For example,
@@ -268,7 +268,7 @@ original request, the claims principal that made the request, and a dictionary o
 pass state between customized steps. Each step should update the client in the context and return an `IStepResult` to
 indicate success or failure.
 
-For more details, see the [reference section on validation](/identityserver/reference/dcr/validation/)
+For more details, see the [reference section on validation](/identityserver/reference/dcr/validation.md)
 
 ### Processing
 
@@ -277,11 +277,11 @@ In a similar way, the request processor can be customized by implementing an
 `DynamicClientRegistrationRequestProcessor`. Again, the default request processor contains virtual methods that allow
 you to override a part of its functionality.
 
-For more details, see the [reference section on request processing](/identityserver/reference/dcr/processing/)
+For more details, see the [reference section on request processing](/identityserver/reference/dcr/processing.md)
 
 ### Response Generation
 
 Finally, to customize the HTTP responses of the Configuration API, you can implement the
 `IDynamicClientRegistrationResponseGenerator` or extend from the default `DynamicClientRegistrationResponseGenerator`.
 
-For more details, see the [reference section on response generation](/identityserver/reference/dcr/response/)
+For more details, see the [reference section on response generation](/identityserver/reference/dcr/response.md)

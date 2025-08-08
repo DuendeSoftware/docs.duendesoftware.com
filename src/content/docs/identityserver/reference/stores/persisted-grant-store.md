@@ -117,7 +117,7 @@ querying the grants and/or for informational purposes and should be treated as
 read-only.
 
 By default, the `Data` property is encrypted at rest using the ASP.NET Data
-Protection API. The [`DataProtectData` option](/identityserver/reference/options#persistentgrants) can be used to
+Protection API. The [`DataProtectData` option](/identityserver/reference/options.md#persistentgrants) can be used to
 disable this
 encryption.
 
@@ -129,13 +129,13 @@ Grants that expire set their `Expiration` when they are created as well. Consent
 records only expire if the `ConsentLifetime` property of the `Client` is set. By
 default, `ConsentLifetime` is not set and consent lasts until it is revoked.
 Authorization code records always include an `Expiration`. They expire after the
-[`AuthorizationCodeLifetime`](/identityserver/reference/models/client#token) has
+[`AuthorizationCodeLifetime`](/identityserver/reference/models/client.md#token) has
 elapsed, so they are initialized with their `Expiration` set that far into the
 future. Reference token records expire in the same way, with their `Expiration`
-controlled by the [`AccessTokenLifetime`](/identityserver/reference/models/client#token). Refresh token records also
+controlled by the [`AccessTokenLifetime`](/identityserver/reference/models/client.md#token). Refresh token records also
 always include
 `Expiration`, controlled by the `AbsoluteRefreshTokenLifetime` and
-`SlidingRefreshTokenLifetime` [client settings](/identityserver/tokens/refresh#sliding-expiration). Custom grant
+`SlidingRefreshTokenLifetime` [client settings](/identityserver/tokens/refresh.md#sliding-expiration). Custom grant
 records should set the
 `Expiration` to indicate that they are only usable for a length of time, or not
 set it to indicate that they can be used indefinitely.
@@ -143,7 +143,7 @@ set it to indicate that they can be used indefinitely.
 Some grants can set a `ConsumedTime` when they are used. This applies to grants
 that are intended to be used once and that need to be retained after their use
 for some purpose (for example, replay detection or to allow certain kinds of
-limited reuse). Refresh tokens can be [configured](/identityserver/tokens/refresh#sliding-expiration) to have one-time use
+limited reuse). Refresh tokens can be [configured](/identityserver/tokens/refresh.md#sliding-expiration) to have one-time use
 semantics. Refresh tokens
 that are configured this way can be further configured to set a `ConsumedTime` when they are used.
 Authorization codes do not set a `ConsumedTime`. They are instead always removed

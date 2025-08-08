@@ -23,17 +23,17 @@ involving the user's browser. This design avoids problems with 3rd party cookies
 
 The back-channel logout endpoint is invoked by the remote identity provider when it determines that sessions should be
 ended. IdentityServer will send back-channel logout requests if
-you [configure](/identityserver/reference/models/client#authentication--session-management) your client's
+you [configure](/identityserver/reference/models/client.md#authentication--session-management) your client's
 *BackChannelLogoutUri*. When a session ends at IdentityServer, any client that was participating in that session that
 has a back-channel logout URI configured will be sent a back-channel logout request. This typically happens when another
-application signs out. [Expiration](/identityserver/ui/server-side-sessions/session-expiration/)
-of [IdentityServer server side sessions](/identityserver/ui/server-side-sessions/) can also be configured to send
+application signs out. [Expiration](/identityserver/ui/server-side-sessions/session-expiration.mdx)
+of [IdentityServer server side sessions](/identityserver/ui/server-side-sessions/index.md) can also be configured to send
 back-channel logout requests, though this is disabled by default.
 
 ## Dependencies
 
 The back-channel logout endpoint depends
-on [server-side sessions in the BFF](/bff/fundamentals/session/server-side-sessions/), which must be enabled to use this
+on [server-side sessions in the BFF](/bff/fundamentals/session/server-side-sessions.mdx), which must be enabled to use this
 endpoint. Note that such server-side sessions are distinct from server-side sessions in IdentityServer.
 
 ## Revoke All Sessions
@@ -41,4 +41,4 @@ endpoint. Note that such server-side sessions are distinct from server-side sess
 Back-channel logout tokens include a sub (subject ID) and sid (session ID) claim to describe which session should be
 revoked. By default, the back-channel logout endpoint will only revoke the specific session for the given subject ID and
 session ID. Alternatively, you can configure the endpoint to revoke every session that belongs to the given subject ID
-by setting the *BackchannelLogoutAllUserSessions* [option](/bff/fundamentals/options#session-management) to true.
+by setting the *BackchannelLogoutAllUserSessions* [option](/bff/fundamentals/options.md#session-management) to true.

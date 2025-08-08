@@ -12,7 +12,7 @@ redirect_from:
 
 Welcome to this Quickstart for Duende IdentityServer!
 
-The previous quickstart introduced [API access](/identityserver/quickstarts/3-api-access/) with interactive applications, but by far the most complex
+The previous quickstart introduced [API access](/identityserver/quickstarts/3-api-access.md) with interactive applications, but by far the most complex
 task for a typical client is to manage the access token.
 
 In addition to the written steps below a YouTube video is available:

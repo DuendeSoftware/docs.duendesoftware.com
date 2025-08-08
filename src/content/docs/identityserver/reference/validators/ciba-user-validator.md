@@ -13,7 +13,7 @@ redirect_from:
 #### Duende.IdentityServer.Validation.IBackchannelAuthenticationUserValidator
 
 The `IBackchannelAuthenticationUserValidator` interface is used to validate request hints and identify the user for whom
-the [CIBA](/identityserver/ui/ciba) request is intended.
+the [CIBA](/identityserver/ui/ciba.md) request is intended.
 To use CIBA, you are expected to implement this interface and register it in the ASP.NET Core service provider.
 
 ## IBackchannelAuthenticationUserValidator APIs

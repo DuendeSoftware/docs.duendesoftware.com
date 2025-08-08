@@ -24,7 +24,7 @@ The most important detail is that there is a single host for many different conc
 * Duende IdentityServer (middleware for OIDC/OAuth protocol endpoints)
 * The API
 
-![A diagram showing the elements of a single-page application solution](./images/template_architecture.png)
+![A diagram showing the elements of a single-page application solution](images/template_architecture.png)
 
 In terms of workflow for ultimately securing calls to the API, the logical steps taken are:
 
@@ -38,7 +38,7 @@ In terms of workflow for ultimately securing calls to the API, the logical steps
 
 The picture below shows these logical steps.
 
-![a diagram showing the sequencing of elements in a single-page application](./images/template_workflow.png)
+![a diagram showing the sequencing of elements in a single-page application](images/template_workflow.png)
 
 ## Architecture with Separate Hosts
 
@@ -52,7 +52,7 @@ Co-hosting the token server with the client application (and API) is counter to 
 Thus, the recommended approach is to host Duende IdentityServer (and then also the ASP.NET Identity Pages) in its own host separate from the app and API.
 Doing so would produce an architectural picture as such:
 
-![a diagram showing how to separate a token server from the single page application host](./images/token_server_separate_host.png)
+![a diagram showing how to separate a token server from the single page application host](images/token_server_separate_host.png)
 
 The steps in the logical workflow would remain the same, but now the token server is independent from any one app or API.
 Also, each host now only has one credential type to be concerned with, which simplifies the security model.
@@ -79,7 +79,7 @@ And then if there is a "remote" API (e.g. a shared API) hosted elsewhere that ac
 
 The picture below illustrates:
 
-![a diagram showing the placement of a remote API into the existing single-page application architecture](./images/remote_api_host.png)
+![a diagram showing the placement of a remote API into the existing single-page application architecture](images/remote_api_host.png)
 
 **Step 3:** This step from the prior diagrams now results in an authentication session cookie in the SPA application, and an optional access token (depending if a remote API needs to be invoked). This access token is associated with the user's session and would only ever be available on the server-side of the SPA host (i.e. the backend, or BFF).
 
@@ -99,12 +99,12 @@ The various extension methods that are provided for the template that sets up Du
 While this might be convenient when co-hosting, when you split the hosts into the recommended architecture then the configuration must be more explicit.
 
 Unfortunately what this means is that is it non-trivial to migrate a project from the template to the recommended architecture.
-Rather, it makes more sense to follow the [quickstart guides](/identityserver/quickstarts/0-overview/) to setup a properly designed architecture.
+Rather, it makes more sense to follow the [quickstart guides](/identityserver/quickstarts/0-overview.md) to setup a properly designed architecture.
 Once that's in place, then it will be more obvious how to take any existing application created with the template and preserve the relevant application assets to use the token server you have setup in its own host.
 
-It is recommended you start with the [first quickstart](/identityserver/quickstarts/0-overview/) (if you haven't already), and follow through the progression.
+It is recommended you start with the [first quickstart](/identityserver/quickstarts/0-overview.md) (if you haven't already), and follow through the progression.
 This will allow you to understand the configuration needed when using OIDC/OAuth.
-If you're already familiar with hosting and configuring IdentityServer, then you can jump right to the [JavaScript quickstart](/identityserver/quickstarts/javascript-clients/js-with-backend/) or the [Blazor quickstart](/identityserver/quickstarts/7-blazor/).
+If you're already familiar with hosting and configuring IdentityServer, then you can jump right to the [JavaScript quickstart](/identityserver/quickstarts/javascript-clients/js-with-backend.mdx) or the [Blazor quickstart](/identityserver/quickstarts/7-blazor.mdx).
 
 :::note
 It is worth noting why the template is designed the way it is.

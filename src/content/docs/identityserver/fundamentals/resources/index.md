@@ -18,7 +18,7 @@ The ultimate job of Duende IdentityServer is to control access to resources.
 In Duende IdentityServer, the *ApiResource* class allows for some additional organization and grouping and
 isolation of scopes and providing some common settings.
 
-[Read More](/identityserver/fundamentals/resources/api-resources/)
+[Read More](/identityserver/fundamentals/resources/api-resources.md)
 
 ## Identity Resources
 
@@ -28,7 +28,7 @@ The OpenID Connect specification [suggests](https://openid.net/specs/openid-conn
 of standard
 scope name to claim type mappings that might be useful to you for inspiration, but you can freely design them yourself.
 
-[Read More](/identityserver/fundamentals/resources/identity)
+[Read More](/identityserver/fundamentals/resources/identity.md)
 
 ## API Scopes
 
@@ -44,7 +44,7 @@ In more complex systems, often the notion of a *resource* is introduced. This mi
 In turn each API can potentially have scopes as well. Some scopes might be exclusive to that resource, and some scopes
 might be shared.
 
-[Read More](/identityserver/fundamentals/resources/api-scopes/)
+[Read More](/identityserver/fundamentals/resources/api-scopes.md)
 
 ## Resources Isolation
 
@@ -64,4 +64,4 @@ To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds anoth
 authorize and token endpoint called *resource*. This allows requesting a token for a specific resource (in other words -
 making sure the audience claim has a single value only, and all scopes belong to that single resource).
 
-[Read More](/identityserver/fundamentals/resources/isolation)
+[Read More](/identityserver/fundamentals/resources/isolation.md)

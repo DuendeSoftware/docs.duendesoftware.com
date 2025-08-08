@@ -138,10 +138,10 @@ round-tripped through the browser from being tampered with.
 
 #### IdentityServer Signing Key
 
-Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/fundamentals/key-management), to
+Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/fundamentals/key-management.md), to
 sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client
 applications and APIs to validate token signatures using the public keys, which are published by IdentityServer
-through [discovery](/identityserver/reference/endpoints/discovery). The private key component of the signing keys are
+through [discovery](/identityserver/reference/endpoints/discovery.md). The private key component of the signing keys are
 also critical secrets for IdentityServer because a valid signature provides integrity and non-repudiation guarantees
 that allow client applications and APIs to trust those tokens.
 
@@ -185,13 +185,13 @@ There are several ways that data protection problems can occur:
 Duende IdentityServer's features that rely on data protection include
 
 * protecting signing keys at rest (
-  if [automatic key management](/identityserver/fundamentals/key-management/#automatic-key-management) is used and enabled)
-* protecting [persisted grants](/identityserver/data/operational#persisted-grant-service) at rest (if enabled)
-* protecting [server-side session](/identityserver/ui/server-side-sessions/) data at rest (if enabled)
-* protecting [the state parameter](/identityserver/ui/login/external/#state-url-length-and-isecuredataformat) for
+  if [automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management) is used and enabled)
+* protecting [persisted grants](/identityserver/data/operational.md#persisted-grant-service) at rest (if enabled)
+* protecting [server-side session](/identityserver/ui/server-side-sessions/index.md) data at rest (if enabled)
+* protecting [the state parameter](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat) for
   external OIDC providers (if enabled)
 * protecting message payloads sent between pages in the UI (
-  e.g. [logout context](/identityserver/ui/logout/logout-context/) and [error context](/identityserver/ui/error)).
+  e.g. [logout context](/identityserver/ui/logout/logout-context.md) and [error context](/identityserver/ui/error.md)).
 * session management (because the ASP.NET Core cookie authentication handler requires it)
 
 ## IdentityServer Data Stores
@@ -224,9 +224,9 @@ Duende IdentityServer includes storage implementations for above data using Enti
 
 Some optional features rely on ASP.NET Core distributed caching:
 
-* [State data formatter for OpenID Connect](/identityserver/ui/login/external#state-url-length-and-isecuredataformat)
-* Replay cache (e.g. for [JWT client credentials](/identityserver/tokens/client-authentication#setting-up-a-private-key-jwt-secret))
-* [Device flow](/identityserver/reference/stores/device-flow-store) throttling service
+* [State data formatter for OpenID Connect](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat)
+* Replay cache (e.g. for [JWT client credentials](/identityserver/tokens/client-authentication.md#setting-up-a-private-key-jwt-secret))
+* [Device flow](/identityserver/reference/stores/device-flow-store.md) throttling service
 * Authorization parameter store
 
 In order to work in a multi-server environment, this needs to be set up correctly. Please consult the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed) for more details.

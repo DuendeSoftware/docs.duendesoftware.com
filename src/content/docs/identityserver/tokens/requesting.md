@@ -56,8 +56,8 @@ Pragma: no-cache
 
 ### .NET Client Library
 
-In .NET you can use the [Duende IdentityModel](../../../identitymodel) client library
-to [request](../../../identitymodel/endpoints/token) tokens.
+In .NET you can use the [Duende IdentityModel](/identitymodel/index.mdx) client library
+to [request](/identitymodel/endpoints/token.md) tokens.
 
 The above token request would look like this in C#:
 

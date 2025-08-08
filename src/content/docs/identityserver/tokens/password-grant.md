@@ -67,7 +67,7 @@ var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
 
 Since this flow is not generally recommended, no standard implementation for validating the token request and user
 credentials is included.
-To add support for it, you need to implement and [register](/identityserver/reference/di#additional-services) an
+To add support for it, you need to implement and [register](/identityserver/reference/di.md#additional-services) an
 implementation of the `IResourceOwnerPasswordValidator` interface:
 
 ```csharp

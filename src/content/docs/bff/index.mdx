@@ -46,9 +46,9 @@ The source code for the BFF framework can be found on GitHub. Builds are distrib
 Currently, the most recent version is 4 (preview 2). If you're upgrading from a previous version, please check our [upgrade guides](/bff/upgrading). 
 
 If you're starting a new BFF project, consider the following startup guides:
-* [Single frontend BFF](/bff/getting-started/single-frontend)
-* [Multi-frontend BFF](/bff/getting-started/multi-frontend)
-* [Blazor](/bff/getting-started/blazor)
+* [Single frontend BFF](/bff/getting-started/single-frontend.mdx)
+* [Multi-frontend BFF](/bff/getting-started/multi-frontend.mdx)
+* [Blazor](/bff/getting-started/blazor.mdx)
 
 ## Background
 
@@ -97,7 +97,7 @@ It offers the following functionality:
 
 The following diagram illustrates how the Duende BFF Security Framework fits into a typical application architecture.
 
-![Backend For Frontend application architecture diagram](./images/bff_application_architecture.svg)
+![Backend For Frontend application architecture diagram](images/bff_application_architecture.svg)
 
 The browser based application runs inside the browser’s secure sandbox. It can be built using any type of front-end technology, such as via Vanilla-JS, React, Vue, WebComponents, Blazor, etc.
 
@@ -145,7 +145,7 @@ sequenceDiagram
     end
 ```
 
-The separation allows each service to manage its session to its specific needs. While it can depend on your requirements, we find most developers want to coordinate the physical session lifetimes, creating a more predictable logical session. If that is your case, we recommend you first start by turning each physical session into a more powerful [server-side session](/bff/fundamentals/session/server-side-sessions/).
+The separation allows each service to manage its session to its specific needs. While it can depend on your requirements, we find most developers want to coordinate the physical session lifetimes, creating a more predictable logical session. If that is your case, we recommend you first start by turning each physical session into a more powerful [server-side session](/bff/fundamentals/session/server-side-sessions.mdx).
 
 Server-side sessions are instances that are persisted to data storage and allow for visibility into currently active sessions and better management techniques. Let's take a look at the advantages of server-side sessions. Server-side sessions at each component allows for:
 

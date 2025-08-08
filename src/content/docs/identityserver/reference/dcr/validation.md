@@ -41,7 +41,7 @@ public Task<IDynamicClientRegistrationValidationResult> ValidateAsync(
 ### Return Value
 
 A task that returns an [
-`IDynamicClientRegistrationValidationResult`](/identityserver/reference/dcr/models/#idynamicclientregistrationvalidationresult), indicating success or
+`IDynamicClientRegistrationValidationResult`](/identityserver/reference/dcr/models.md#idynamicclientregistrationvalidationresult), indicating success or
 failure.
 
 ## DynamicClientRegistrationValidator
@@ -58,8 +58,8 @@ class and override the appropriate methods.
 ## Validation Steps
 
 Each of these methods represents one step in the validation process.
-Each step is passed a [`DynamicClientRegistrationContext`](/identityserver/reference/dcr/models/#dynamicclientregistrationcontext) and returns a task
-that returns an [`IStepResult`](/identityserver/reference/dcr/models/#istepresult). The `DynamicClientRegistrationContext` includes the client model
+Each step is passed a [`DynamicClientRegistrationContext`](/identityserver/reference/dcr/models.md#dynamicclientregistrationcontext) and returns a task
+that returns an [`IStepResult`](/identityserver/reference/dcr/models.md#istepresult). The `DynamicClientRegistrationContext` includes the client model
 that will
 have its properties set, the DCR request, and other contextual information. The
 `IStepResult` either represents that the step succeeded or failed.

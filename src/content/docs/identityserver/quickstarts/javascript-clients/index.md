@@ -19,7 +19,7 @@ recommended style. This style uses the ["Backend For Frontend"
 pattern](https://duendesoftware.com/blog/20210326-bff), or "BFF" for
 short, which relies on the backend host to implement all the security
 protocol interactions with the token server. The `Duende.BFF` library is used in
-[this quickstart](/identityserver/quickstarts/javascript-clients/js-with-backend/) to easily support the BFF pattern.
+[this quickstart](/identityserver/quickstarts/javascript-clients/js-with-backend.mdx) to easily support the BFF pattern.
 
 Browser-based applications **without a backend** need to do all the security
 protocol interactions on the client-side, including driving user authentication
@@ -36,5 +36,5 @@ says:
 
 Additionally, modern browsers have recently added or are planning to add privacy
 features that can break some front-channel protocol interactions. See 
-[here](/bff/#3rd-party-cookies) 
+[here](/bff/index.mdx#3rd-party-cookies) 
 for more details.

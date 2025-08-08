@@ -13,8 +13,8 @@ redirect_from:
 ## Duende.IdentityServer.Validation.GrantValidationResult
 
 The `GrantValidationResult` class models the outcome of grant validation
-for [extensions grants](/identityserver/tokens/extension-grants/)
-and  [resource owner password grants](/identityserver/tokens/password-grant/).
+for [extensions grants](/identityserver/tokens/extension-grants.md)
+and  [resource owner password grants](/identityserver/tokens/password-grant.md).
 
 It models either a successful validation result with claims (e.g. subject ID) or an invalid result with an error code
 and message, e.g.:

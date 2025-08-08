@@ -35,7 +35,7 @@ There are some internal-facing applications that are exclusively used by interna
 
 There are also several public facing applications, that are used directly by customers. These users should be able to log in using their own identity, via providers like Google, Twitter, or others. This authentication process is handled by Duende IdentityServer. There is constant development ongoing on these applications and it's not uncommon for new applications to be introduced. There should be single sign-on across all these public facing applications. They are all available on the same domain name, but use path based routing to distinguish themselves, such as `https://app.example.com/app1`
 
-There is also a partner portal. This partner portal can only be accessed by employees of the partners. Each partner should be able to bring their own identity provider. This is implemented using the [Dynamic Providers](/identityserver/ui/login/dynamicproviders/) feature of Duende IdentityServer. 
+There is also a partner portal. This partner portal can only be accessed by employees of the partners. Each partner should be able to bring their own identity provider. This is implemented using the [Dynamic Providers](/identityserver/ui/login/dynamicproviders.md) feature of Duende IdentityServer. 
 
 This setup, with multiple frontends, each having different authentication requirements and different API surfaces, is now supported by the BFF. 
 
@@ -80,7 +80,7 @@ app.Run();
 
 ## Authentication Architecture
 
-When you use multiple frontends, you can't rely on [manual authentication configuration](../fundamentals/session/handlers.mdx#manually-configuring-authentication). This is because each frontend requires its own scheme, and potentially its own OpenID Connect and Cookie configuration. 
+When you use multiple frontends, you can't rely on [manual authentication configuration](/bff/fundamentals/session/handlers.mdx#manually-configuring-authentication). This is because each frontend requires its own scheme, and potentially its own OpenID Connect and Cookie configuration. 
 
 The BFF registers a dynamic authentication scheme, which automatically configures the OpenID Connect and Cookie Scheme's on behalf of the frontends. It does this using a custom `AuthenticationSchemeProvider` called `BffAuthenticationSchemeProvider` to return appropriate authentication schemes for each frontend. 
 

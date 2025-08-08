@@ -18,7 +18,7 @@ to perform such validation, depending on which mechanism was used to produce a P
 
 ### Validating mTLS
 
-If you are using a [mutual TLS connection](/identityserver/tokens/pop#mutual-tls) to establish proof-of-possession, the
+If you are using a [mutual TLS connection](/identityserver/tokens/pop.md#mutual-tls) to establish proof-of-possession, the
 resulting access token will contain a `cnf` claim containing the client's certificate thumbprint. APIs validate such
 tokens by comparing this thumbprint to the thumbprint of the client certificate in the mTLS connection. This validation
 should be performed early in the pipeline, ideally immediately after the standard validation of the access token.
@@ -118,7 +118,7 @@ public class ConfirmationValidationMiddlewareOptions
 
 ### Validating DPoP
 
-When using [DPoP](/identityserver/tokens/pop#enabling-dpop-in-identityserver) for proof-of-possession, validating the `cnf` claim requires several
+When using [DPoP](/identityserver/tokens/pop.md#enabling-dpop-in-identityserver) for proof-of-possession, validating the `cnf` claim requires several
 steps:
 
 1. Validating the access token as normal

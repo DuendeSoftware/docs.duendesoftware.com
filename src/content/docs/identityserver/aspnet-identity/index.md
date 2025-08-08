@@ -42,8 +42,8 @@ one passed to `AddIdentity` to configure ASP.NET Identity).
 This configures IdentityServer to use the ASP.NET Identity implementations
 of [IUserClaimsPrincipalFactory](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.iuserclaimsprincipalfactory-1)
 to convert the user data into claims, `IResourceOwnerPasswordValidator` to support
-the [password grant type](/identityserver/tokens/password-grant/), and `IProfileService`, which uses the
-`IUserClaimsPrincipalFactory` to add [claims](/identityserver/fundamentals/claims) to tokens.
+the [password grant type](/identityserver/tokens/password-grant.md), and `IProfileService`, which uses the
+`IUserClaimsPrincipalFactory` to add [claims](/identityserver/fundamentals/claims.md) to tokens.
 It also configures some of ASP.NET Identity's options for use with IdentityServer (such as claim types to use and
 authentication cookie settings).
 
@@ -62,6 +62,6 @@ our `ProfileService<TUser>` and override `IsUserActiveAsync(TUser user)` to chec
 
 ## Template
 
-Alternatively, you can use the `isaspid` [template](/identityserver/overview/packaging#templates) to create a starter
+Alternatively, you can use the `isaspid` [template](/identityserver/overview/packaging.mdx#templates) to create a starter
 IdentityServer host project configured to use ASP.NET Identity. See
-the [Quickstart Documentation](/identityserver/quickstarts/5-aspnetid/) for a detailed walkthrough.
+the [Quickstart Documentation](/identityserver/quickstarts/5-aspnetid.md) for a detailed walkthrough.

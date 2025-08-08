@@ -36,9 +36,9 @@ from a secondary data source, such as a profile service, database, or third-part
 when other approaches are not an option.
 
 Note that there are better places within IdentityServer's infrastructure to add
-additional claims, such as `IClaimService`, `ITokenService`, and [
-`IProfileService`](/identityserver/reference/services/profile-service/). We recommend investigating
-whether overriding those interfaces would be enough before implementing `ITokenCreationService`.
+additional claims, such as `IClaimService`, `ITokenService`, and [`IProfileService`](/identityserver/reference/services/profile-service.md).
+We recommend investigating whether overriding those interfaces would be enough
+before implementing `ITokenCreationService`.
 
 You can think of each of the services as providing the following functionality:
 
