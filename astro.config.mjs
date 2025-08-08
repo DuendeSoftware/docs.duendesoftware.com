@@ -39,7 +39,52 @@ export default defineConfig({
       customCss: ["./src/styles/custom.css"],
       routeMiddleware: ["./src/plugins/search-topic-middleware.ts"],
       plugins: [
-        starlightLlmsTxt(),
+        starlightLlmsTxt({
+          pageSeparator: "\n-----\n",
+          customSets: [
+            {
+              label: "General Information",
+              description:
+                "General Information about Duende products, including license information, support options, security best practices and a glossary.",
+              paths: ["general/**"],
+            },
+            {
+              label: "IdentityServer",
+              description: "Documentation for Duende IdentityServer",
+              paths: ["identityserver/**"],
+            },
+            {
+              label: "IdentityServer Quickstarts",
+              description:
+                "Step-by-step tutorials to get started with Duende IdentityServer",
+              paths: ["identityserver/quickstarts/**"],
+            },
+            {
+              label: "BFF Security Framework",
+              description:
+                "Documentation for Duende's Backend for Frontend (BFF) framework, used to secure browser-based frontends (e.g. SPAs with React, Vue, Angular, or Blazor applications) with ASP.NET Core backends",
+              paths: ["bff/**"],
+            },
+            {
+              label: "Access Token Management",
+              description:
+                "Documentation for Duende's open-source Access Token Management library which provides automatic access token management features for .NET worker and ASP.NET Core web applications",
+              paths: ["accesstokenmanagement/**"],
+            },
+            {
+              label: "IdentityModel",
+              description:
+                "Documentation for Duende's open-source IdentityModel library which provides an object model to interact with the endpoints defined in the various OAuth and OpenId Connect specifications",
+              paths: ["accesstokenmanagement/**"],
+            },
+            {
+              label: "IdentityModel.OidcClient",
+              description:
+                "Documentation for Duende's open-source IdentityModel.OidcClient library which can be used to build OIDC native clients with a variety of .NET UI tools",
+              paths: ["identitymodel-oidcclient/**"],
+            },
+          ],
+        }),
         starlightHeadingBadges(),
         starlightAutoSidebar(),
         starlightGiscus({
