@@ -40,10 +40,10 @@ Traces shows individual requests and dependencies. The output is very useful for
 flow and finding performance bottlenecks.
 
 This is an example of distributed traces from a web application calling an API (displayed using our
-[Aspire sample](/identityserver/samples/diagnostics)). The web application uses a refresh token to call
+[Aspire sample](/identityserver/samples/diagnostics.md)). The web application uses a refresh token to call
 IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks
 url and then gets the keys from jwks endpoint.
-![.NET Aspire dashboard showing Duende IdentityServer traces](./images/aspire_traces.png)
+![.NET Aspire dashboard showing Duende IdentityServer traces](images/aspire_traces.png)
 
 ## Setup
 
@@ -280,7 +280,7 @@ multiple actual tokens (id_token, access token, refresh token).
 
 ### Metrics In The UI
 
-The [UI in your IdentityServer host](/identityserver/ui/) can instrument these events to
+The [UI in your IdentityServer host](/identityserver/ui/index.md) can instrument these events to
 measure activities that occur during interactive flows, such as user login and logout.
 These events are not instrumented by the IdentityServer middleware or services because
 they are the responsibility of the UI. Our templated UI does instrument these events, and
@@ -341,7 +341,7 @@ Added in Duende IdentityServer v6.1
 
 Here's e.g. the output for a request to the discovery endpoint:
 
-![Honeycomb UI showing traces for discovery document endpoint](./images/otel_disco.png)
+![Honeycomb UI showing traces for discovery document endpoint](images/otel_disco.png)
 
 When multiple applications send their traces to the same OTel server, this becomes super useful for following e.g.
 authentication flows over service boundaries.

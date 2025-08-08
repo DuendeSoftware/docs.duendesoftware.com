@@ -44,7 +44,7 @@ public static IEnumerable<IdentityResource> GetIdentityResources()
 }
 ```
 :::note
-See the [reference](/identityserver/reference/models/identity-resource/) section for more information on `IdentityResource`.
+See the [reference](/identityserver/reference/models/identity-resource.md) section for more information on `IdentityResource`.
 :::
 
 The following example shows a custom identity resource called `profile` that represents the display name, email address and website claim:
@@ -74,7 +74,7 @@ var client = new Client
 ```
 
 :::note
-See the [reference](/identityserver/reference/models/client) section for more information on the `Client` class.
+See the [reference](/identityserver/reference/models/client.md) section for more information on the `Client` class.
 :::
 
 The client can then request the resource using the scope parameter (other parameters omitted):
@@ -82,4 +82,4 @@ The client can then request the resource using the scope parameter (other parame
     https://demo.duendesoftware.com/connect/authorize?client_id=client&scope=openid profile
 
 IdentityServer will then use the scope names to create a list of requested claim types, 
-and present that to your implementation of the [profile service](/identityserver/reference/services/profile-service/).
+and present that to your implementation of the [profile service](/identityserver/reference/services/profile-service.md).

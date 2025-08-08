@@ -14,10 +14,10 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 A common scenario in worker applications or background tasks (or really any daemon-style applications) is to call APIs using an OAuth token obtained via the client credentials flow.
 
-The access tokens need to be requested and [cached](/accesstokenmanagement/advanced/client-credentials/#token-caching) (either locally or shared between multiple instances) and made available to the code calling the APIs. In case of expiration (or other token invalidation reasons), a new access token needs to be requested.
+The access tokens need to be requested and [cached](/accesstokenmanagement/advanced/client-credentials.mdx#token-caching) (either locally or shared between multiple instances) and made available to the code calling the APIs. In case of expiration (or other token invalidation reasons), a new access token needs to be requested.
 The actual business code should not need to be aware of this.
 
-For more information, see the [advanced topic on client credentials](/accesstokenmanagement/advanced/client-credentials/).
+For more information, see the [advanced topic on client credentials](/accesstokenmanagement/advanced/client-credentials.mdx).
 
 :::note[Sample code]
 Take a look at the [`Worker` project in the samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for example code.

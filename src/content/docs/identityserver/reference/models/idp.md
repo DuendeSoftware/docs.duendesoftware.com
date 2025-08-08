@@ -13,7 +13,7 @@ redirect_from:
 ## Duende.IdentityServer.Models.OidcProvider
 
 The `OidcProvider` models an external OpenID Connect provider for use in
-the [dynamic providers](/identityserver/ui/login/dynamicproviders) feature.
+the [dynamic providers](/identityserver/ui/login/dynamicproviders.md) feature.
 Its properties map to the Open ID Connect options class from ASP.NET Core, and those properties include:
 
 * **`Enabled`**

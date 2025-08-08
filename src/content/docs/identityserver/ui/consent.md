@@ -14,7 +14,7 @@ During an authorization request, if user consent is required the browser will be
 
 :::note
 You can configure the consent requirement per client. By default, no consent is required, but this setting can be
-changed via the `RequireConsent` [setting](/identityserver/reference/models/client#consent-screen).
+changed via the `RequireConsent` [setting](/identityserver/reference/models/client.md#consent-screen).
 :::
 
 Consent is used to allow an end user to grant a client access to [resources](/identityserver/fundamentals/resources).
@@ -51,14 +51,14 @@ browser must be redirected back to the authorization endpoint.
 Your IdentityServer will pass a `returnUrl` parameter to the consent page which contains the parameters of the
 authorization request.
 These parameters provide the context for the consent page, and can be read with help from
-the [interaction service](/identityserver/reference/services/interaction-service/).
+the [interaction service](/identityserver/reference/services/interaction-service.md).
 
 The `GetAuthorizationContextAsync` API will return an instance of `AuthorizationRequest`. Additional details about the
 client or resources can be obtained using the `IClientStore` and `IResourceStore` interfaces.
 
 ## Informing IdentityServer Of The Consent Result
 
-The `GrantConsentAsync` API on the [interaction service](/identityserver/reference/services/interaction-service/) allows
+The `GrantConsentAsync` API on the [interaction service](/identityserver/reference/services/interaction-service.md) allows
 the consent page to inform your IdentityServer of the outcome of consent (which might also be to deny the client
 access).
 
@@ -75,7 +75,7 @@ implement `IConsentMessageStore` and register the implementation with the servic
 Once the consent page has informed IdentityServer of the outcome, the user can be redirected back to the `returnUrl`.
 Your consent page should protect against open redirects by verifying that the `returnUrl` is valid.
 This can be done by calling `IsValidReturnUrl` on
-the [interaction service](/identityserver/reference/services/interaction-service/).
+the [interaction service](/identityserver/reference/services/interaction-service.md).
 
 Also, if `GetAuthorizationContextAsync` returns a non-null result, then you can also trust that the `returnUrl` is
 valid.

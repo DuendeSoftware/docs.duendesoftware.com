@@ -51,19 +51,19 @@ This means you will need a page to prompt the user to logout.
 If a `logoutId` is passed to the logout page and the returned `LogoutRequest`'s `ShowSignoutPrompt` is `false` then it
 is safe to skip the prompt.
 This would occur when the logout page is requested due to a validated client initiated logout via
-the [end session endpoint](/identityserver/reference/endpoints/end-session/).
+the [end session endpoint](/identityserver/reference/endpoints/end-session.md).
 Your logout page process can continue as if the user submitted the post back to log out, in essence calling
 `SignOutAsync`.
 
 ### External Logins
 
 If your user has signed in with an external login, then it's likely that they should perform
-an [external logout](/identityserver/ui/logout/external/) of the external provider as well.
+an [external logout](/identityserver/ui/logout/external.md) of the external provider as well.
 
 ### Revoking Client Tokens At Logout
 
 During a user's session, long-lived tokens (e.g. refresh tokens) might have been created for client applications.
 If at logout time you would like to have those tokens revoked, then this can be done automatically by setting the
 `CoordinateLifetimeWithUserSession` property on
-the [client configuration](/identityserver/reference/models/client#authentication--session-management), or globally
-on the [IdentityServer Authentication Options](/identityserver/reference/options#authentication).
+the [client configuration](/identityserver/reference/models/client.md#authentication--session-management), or globally
+on the [IdentityServer Authentication Options](/identityserver/reference/options.md#authentication).

@@ -12,7 +12,7 @@ redirect_from:
 ## Duende.IdentityServer.EntityFramework.Options.OperationalStoreOptions
 
 These options are configurable when using the Entity Framework Core for
-the [operational store](/identityserver/data/operational):
+the [operational store](/identityserver/data/operational.md):
 
 You set the options at startup time in your `AddOperationalStore` method:
 

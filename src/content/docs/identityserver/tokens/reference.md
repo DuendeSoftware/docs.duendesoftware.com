@@ -12,13 +12,13 @@ redirect_from:
 ---
 
 When using reference tokens, Duende IdentityServer stores the contents of the token in
-the [persisted grant](/identityserver/data/operational#grants) store and issues a unique identifier for this token
+the [persisted grant](/identityserver/data/operational.md#grants) store and issues a unique identifier for this token
 back to the client.
 
-The consumer of the token must use the [introspection](/identityserver/reference/endpoints/introspection) endpoint to
+The consumer of the token must use the [introspection](/identityserver/reference/endpoints/introspection.md) endpoint to
 validate the token.
 
-![reference tokens diagram](./images/reference_tokens.png)
+![reference tokens diagram](images/reference_tokens.png)
 
 You can set the client's token type using the following client setting:
 

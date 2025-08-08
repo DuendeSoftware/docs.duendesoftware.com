@@ -32,7 +32,7 @@ Alternatively, you can make the data available as a service and make HTTP reques
 - Your BFF endpoint can expose a subset of your remote APIs so that they are called in a more controlled manner than if the BFF proxied all requests to the endpoint.
 - Your BFF endpoint can include business logic to call the appropriate endpoints, which simplifies your front end code.
 
-Your Embedded endpoints can leverage services like the HTTP client factory and Duende.BFF [token management](/bff/fundamentals/tokens) to make the outgoing calls.
+Your Embedded endpoints can leverage services like the HTTP client factory and Duende.BFF [token management](/bff/fundamentals/tokens.md) to make the outgoing calls.
 
 The following is a simplified example showing how Embedded endpoints can get managed access tokens and use them to make requests to remote APIs.
 
@@ -66,7 +66,7 @@ public class MyApiController : ControllerBase
 }
 ```
 
-The example above is simplified to demonstrate the way that you might obtain a token. Embedded endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Embedded endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](/bff/fundamentals/apis/remote/) or [YARP](/bff/fundamentals/apis/yarp/).
+The example above is simplified to demonstrate the way that you might obtain a token. Embedded endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Embedded endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](/bff/fundamentals/apis/remote.mdx) or [YARP](/bff/fundamentals/apis/yarp.md).
 
 ## Securing Embedded API Endpoints
 

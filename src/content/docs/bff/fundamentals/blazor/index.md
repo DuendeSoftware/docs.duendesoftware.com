@@ -35,7 +35,7 @@ Blazor is very flexible in how it renders applications (and even individual comp
 
 These rendering modes are very powerful, but also add additional complexity when it comes to authentication and authorization. Any code that executes on the server can directly access local resources, such has a database, but code that executes on the client needs to through a local http endpoint (that requires authentication). Accessing external APIs is also different between server and client, where the client needs to go through a proxy which performs a token exchange. 
 
-For more information on this, see [rendering-modes](/bff/fundamentals/blazor/rendering-modes)
+For more information on this, see [rendering-modes](/bff/fundamentals/blazor/rendering-modes.md)
 
 ### Authentication State
 The `AuthenticationState` contains information about the currently logged-in user. This is partly populated from information from the user, but is also enriched with several management claims, such as the Logout URL. 
@@ -54,7 +54,7 @@ This means:
 
 The **ServerSideTokenStore**, together with the Blazor Server functionality in Duende.AccessTokenManagement is automatically registered when you register Blazor Server. 
 
-For more information on this, see [Blazor Server](/accesstokenmanagement/blazor-server/)
+For more information on this, see [Blazor Server](/accesstokenmanagement/blazor-server.md)
 
 ## Adding BFF To A Blazor Application
 

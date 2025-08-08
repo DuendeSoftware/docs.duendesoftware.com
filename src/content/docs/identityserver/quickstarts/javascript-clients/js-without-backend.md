@@ -16,7 +16,7 @@ from a copy of
 the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview/#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview.md#preparation).
 :::
 
 This quickstart will show how to build a browser-based JavaScript client
@@ -27,7 +27,7 @@ the browser. Also, invoking the API will be performed directly from the
 JavaScript in the browser.
 
 This design adds complexity (and thus security concerns) to your application, so
-consider if the ["BFF" pattern](/identityserver/quickstarts/javascript-clients/js-with-backend/) might be a better
+consider if the ["BFF" pattern](/identityserver/quickstarts/javascript-clients/js-with-backend.mdx) might be a better
 choice.
 
 In this quickstart the user will log in to IdentityServer, invoke an API with an
@@ -97,7 +97,7 @@ now.
 
 ### Reference oidc-client
 
-In the prior [web application quickstart](/identityserver/quickstarts/3-api-access/), we used
+In the prior [web application quickstart](/identityserver/quickstarts/3-api-access.md), we used
 a .NET library to handle the OpenID Connect protocol. In this quickstart, we
 need a similar library in the `JavaScriptClient` project, except one that works
 in JavaScript and is designed to run in the browser. The [oidc-client library](https://github.com/IdentityModel/oidc-client-js)
@@ -266,7 +266,7 @@ function logout() {
 ```
 
 :::note
-See the [client credentials quickstart](/identityserver/quickstarts/1-client-credentials/) for information on how to
+See the [client credentials quickstart](/identityserver/quickstarts/1-client-credentials.md) for information on how to
 create the
 remote API used in the code above.
 :::

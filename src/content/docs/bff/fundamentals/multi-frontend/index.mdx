@@ -27,7 +27,7 @@ that the traffic for all the frontends is proxied through the BFF.
 
 ## Authentication Configuration
 
-When you use multiple frontends, you can't rely on [manual authentication configuration](../fundamentals/session/handlers.mdx#manually-configuring-authentication).
+When you use multiple frontends, you can't rely on [manual authentication configuration](/bff/fundamentals/session/handlers.mdx#manually-configuring-authentication).
 This is because each frontend requires its own scheme, and potentially its own OpenID Connect and Cookie configuration. 
 
 Instead, you should rely on [automatic authentication configuration](/bff/fundamentals/session/handlers.mdx#automatic-authentication-configuration).
@@ -90,7 +90,7 @@ The order in which configuration is applied is
 3. frontend specific options (if any)
 
 Each frontend can have custom OpenID Connect configuration and Cookie Configuration. This can both be configured programmatically 
-as via [Configuration](./configuration.mdx). 
+as via [Configuration](configuration.mdx). 
 
 ## Frontend Selection
 
@@ -153,7 +153,7 @@ var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
         .WithUserAccessTokenParameters(new BffUserAccessTokenParameters { Resource = Resource.Parse("urn:isolated-api") }));
 ```
 
-See the topic on [Token Management](../tokens.md) for more information about the various token management options. 
+See the topic on [Token Management](/bff/fundamentals/tokens.md) for more information about the various token management options. 
 
 ## Index HTML Proxying
 
@@ -165,4 +165,4 @@ var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
 ```
 
 When you do this, the BFF automatically wires up a catch-all route that serves the `index.html` for that specific frontend. 
-See [Serve the index page from the BFF host](../../architecture/ui-hosting.md#serve-the-index-page-from-the-bff-host) for more information. 
+See [Serve the index page from the BFF host](/bff/architecture/ui-hosting.md#serve-the-index-page-from-the-bff-host) for more information. 

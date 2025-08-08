@@ -54,8 +54,8 @@ Duende.BFF uses ASP.NET's Cookie handler for session management. The cookie hand
 the application persisted in a digitally signed and encrypted cookie that is protected with modern cookie security
 features, including the Secure, HttpOnly and SameSite attributes. The handler also provides absolute and sliding session
 support, and has a flexible extensibility model, which Duende.BFF uses to
-implement [server-side session management](/bff/fundamentals/session/server-side-sessions/)
-and [back-channel logout support](/bff/fundamentals/session/management/back-channel-logout/).
+implement [server-side session management](/bff/fundamentals/session/server-side-sessions.mdx)
+and [back-channel logout support](/bff/fundamentals/session/management/back-channel-logout.md).
 
 ### Duende.AccessTokenManagement
 
@@ -67,8 +67,8 @@ actions can also be programmatically invoked through an imperative API.
 ### API Endpoints
 
 In the BFF architecture, the frontend makes API calls to backend services via the BFF host exclusively. Typically, the
-BFF acts as a reverse proxy to [remote APIs](/bff/fundamentals/apis/remote), providing session and token management.
-Implementing local APIs within the BFF host is also [possible](/bff/fundamentals/apis/local). Regardless, requests to
+BFF acts as a reverse proxy to [remote APIs](/bff/fundamentals/apis/remote.mdx), providing session and token management.
+Implementing local APIs within the BFF host is also [possible](/bff/fundamentals/apis/local.mdx). Regardless, requests to
 APIs are authenticated with the session cookie and need to be secured with an anti-forgery protection header.
 
 ### YARP
@@ -76,7 +76,7 @@ APIs are authenticated with the session cookie and need to be secured with an an
 Duende.BFF proxies requests to remote APIs using Microsoft's YARP (Yet Another Reverse Proxy). You can set up YARP using
 a simplified developer-centric configuration API provided by Duende.BFF, or if you have more complex requirements, you
 can use the full YARP configuration system directly. If you are using YARP directly, Duende.BFF
-provides [YARP integration](/bff/fundamentals/apis/yarp) to add BFF security and identity features.
+provides [YARP integration](/bff/fundamentals/apis/yarp.md) to add BFF security and identity features.
 
 ### UI Assets
 
@@ -84,10 +84,10 @@ The BFF host typically serves at least some of the UI assets of the frontend, wh
 server-rendered content. Serving the UI assets, or at least the index page of the UI from the same origin as the backend
 simplifies requests from the frontend to the backend. Doing so makes the two components same-origin, so that browsers
 will allow requests with no need to use CORS and automatically include cookies (including the crucial authentication
-cookie). This also avoids issues where [third-party cookie blocking](/bff/architecture/third-party-cookies) or the
+cookie). This also avoids issues where [third-party cookie blocking](/bff/architecture/third-party-cookies.md) or the
 SameSite cookie attribute prevents the frontend from sending the authentication cookie to the backend.
 
-It is also possible to separate the BFF and UI and host them separately. See [here](/bff/architecture/ui-hosting) for
+It is also possible to separate the BFF and UI and host them separately. See [here](/bff/architecture/ui-hosting.md) for
 more discussion of UI hosting architecture.
 
 ### Blazor Support

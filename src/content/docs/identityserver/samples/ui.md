@@ -16,7 +16,7 @@ These samples illustrate customization of the [interactive pages](/identityserve
 
 ### Custom Profile Service
 
-This sample shows how to create a [custom profile service](/identityserver/fundamentals/claims) to control what
+This sample shows how to create a [custom profile service](/identityserver/fundamentals/claims.md) to control what
 claims are issued from your IdentityServer. The majority of the sample is captured in `CustomProfileService.cs` in the
 `IdentityServer` project.
 
@@ -72,7 +72,7 @@ Key takeaways:
 
 ### Dynamic Providers
 
-The [dynamic providers](/identityserver/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity
+The [dynamic providers](/identityserver/ui/login/dynamicproviders.md) feature allows for loading OpenID Connect identity
 provider configuration dynamically from a store. This sample sets up a simple database with one dynamic OIDC provider.
 
 Some key points about the `IdentityServer` project in the sample:
@@ -86,7 +86,7 @@ Some key points about the `IdentityServer` project in the sample:
 
 ### Adding Other Protocol Types To Dynamic Providers
 
-The [dynamic providers](/identityserver/ui/login/dynamicproviders) feature allows for loading OpenID Connect identity
+The [dynamic providers](/identityserver/ui/login/dynamicproviders.md) feature allows for loading OpenID Connect identity
 provider configuration dynamically from a store. This sample shows how to extend the dynamic providers feature to
 support additional protocol types, and specifically WS-Federation.
 
@@ -111,7 +111,7 @@ the complete set of Saml2 config options.
 
 ### Client Initiated Backchannel Login (CIBA)
 
-This sample shows how a client can make [CIBA](/identityserver/ui/ciba) login requests using Duende IdentityServer.
+This sample shows how a client can make [CIBA](/identityserver/ui/ciba.md) login requests using Duende IdentityServer.
 To run the sample, the IdentityServer and API hosts should be started first.
 Next run the ConsoleCibaClient which will initiate the backchannel login request.
 The URL the user would receive to log in and approve the request is being written out to the IdentityServer log (visible

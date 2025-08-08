@@ -106,7 +106,7 @@ It's likely some code changes will be required, especially when using the Identi
 [Visual Studio](https://visualstudio.microsoft.com/) and [JetBrains Rider](https://www.jetbrains.com/rider/) provide great code completion that can be of help here.
 
 :::tip[Use the new Razor Pages templates]
-If you have not made customizations to the IdentityServer UI templates, consider replacing them with the new Razor Pages-based templates as shown in [the quickstart tutorials](../../quickstarts/0-overview).
+If you have not made customizations to the IdentityServer UI templates, consider replacing them with the new Razor Pages-based templates as shown in [the quickstart tutorials](/identityserver/quickstarts/0-overview.md).
 :::
 
 A couple of compilation errors and required changes you may encounter:
@@ -183,7 +183,7 @@ A couple of compilation errors and required changes you may encounter:
 
 ### Step 3: Update Database Schema
 
-If you are using the `IdentityServer4.EntityFramework` package to store configuration and operational data in a [database](../../data),
+If you are using the `IdentityServer4.EntityFramework` package to store configuration and operational data in a [database](/identityserver/data/index.md),
 you'll need to create two database migrations that update the database schema.
 Note that you may want to change the database migration paths in the examples below to reflect your project structure.
 
@@ -413,11 +413,11 @@ If you’re using fully-qualified names in your code, those will need to be upda
 
 In your application startup code, typically found in the `ConfigureServices` method in `Startup.cs`, consider removing `AddDeveloperSigningCredential`.
 
-You can use Duende IdentityServer's built-in [manual or automatic key management](../../fundamentals/key-management) instead.
+You can use Duende IdentityServer's built-in [manual or automatic key management](/identityserver/fundamentals/key-management.md) instead.
 
 ### Step 5: Update Database Schema
 
-Whether you are using a [database](../../data) or a [custom store implementation](../..//reference/stores) for your configuration and operational data, you'll need to make some changes.
+Whether you are using a [database](/identityserver/data/index.md) or a [custom store implementation](/identityserver/reference/stores/index.md) for your configuration and operational data, you'll need to make some changes.
 The exact steps involved in updating your data store will depend on your implementation details.
 
 In this section, we'll look at updating the database schema based on the stores provided in the `Duende.IdentityServer.EntityFramework` package:
@@ -431,15 +431,15 @@ In this section, we'll look at updating the database schema based on the stores 
 - The server-side sessions feature requires a new table ([more details](https://github.com/DuendeSoftware/products/pull/743)).
 - The session coordination feature adds a column to the `Clients` table ([more details](https://github.com/DuendeSoftware/products/pull/820)).
 - Improve primary keys on the persisted grants table ([more details](https://github.com/DuendeSoftware/products/pull/793)).
-- Add new properties to the [`Duende.IdentityServer.Models.Client` model](/identityserver/reference/models/client):
+- Add new properties to the [`Duende.IdentityServer.Models.Client` model](/identityserver/reference/models/client.md):
 
   - `InitiateLoginUri` is a nullable string used for Third Party Initiated Login.
-  - `RequireDPoP` is a non-nullable boolean flag that controls if a client is required to use [DPoP](../../tokens/pop).
+  - `RequireDPoP` is a non-nullable boolean flag that controls if a client is required to use [DPoP](/identityserver/tokens/pop.md).
   - `DPoPValidationMode` is a non-nullable column that controls the DPoP validation mechanism. Existing clients that aren’t using DPoP can set its value to `0`.
   - `DPoPClockSkew` is a non-nullable timespan that controls how much clock skew is allowed for a particular DPoP client. Existing clients that aren’t using DPoP can set its value to a timespan of length ``0.
 
 - Two new properties have been added to the `Client` model:
-  - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](../../tokens/par). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
+  - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](/identityserver/tokens/par.md). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
   - `Client.PushedAuthorizationLifetime` is a new nullable integer property that controls the lifetime of pushed
     authorization requests (in seconds) for a client. It is safe to initialize this column to `null` for existing clients, which means the global value is used.
 - A new `PushedAuthorizationRequest` table has been added to store pushed authorization requests.
@@ -474,7 +474,7 @@ Note that you may want to change the database migration paths in the examples be
 
 ### Step 6: Migrate Signing Keys :badge[Optional]
 
-If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](../../fundamentals/key-management) which is included in the Business license.
+If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](/identityserver/fundamentals/key-management.md) which is included in the Business license.
 
 :::tip[Determine if you are using a custom signing key]
 In `Startup.cs`, look for a call to `AddSigningCredential()` that uses key material such as an `X509Certificate2`.
@@ -484,7 +484,7 @@ Client apps and APIs typically cache the key material published from IdentitySer
 When upgrading, consider how those applications will handle an upgraded token server with a new and different signing key.
 
 - If you can restart all client apps and APIs that depend on your current signing key, you can remove the old signing key and start to use automatic key management. A restart reloads the discovery document and the new signing key.
-- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](../../fundamentals/key-management#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
+- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](/identityserver/fundamentals/key-management.md#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
 
 ### Step 7: Verify Data Protection Configuration :badge[Optional]
 

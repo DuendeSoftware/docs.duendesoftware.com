@@ -66,7 +66,7 @@ the authentication cookie as normal.
 
 Effectively, this turns your front-end and BFF Host into two separately deployable units. You'll need to ensure that the
 two components are hosted on subdomains of the same domain so
-that [third party cookie blocking](/bff/architecture/third-party-cookies) doesn't prevent the frontend from including
+that [third party cookie blocking](/bff/architecture/third-party-cookies.md) doesn't prevent the frontend from including
 cookies in its requests to the BFF host.
 
 In order for this architecture to work, the following things are needed:

@@ -12,13 +12,13 @@ redirect_from:
 
 Duende IdentityServer is backed by two kinds of data:
 
-* [Configuration Data](/identityserver/data/configuration/)
-* [Operational Data](/identityserver/data/operational/)
+* [Configuration Data](/identityserver/data/configuration.md)
+* [Operational Data](/identityserver/data/operational.md)
 
 Data access is abstracted by store interfaces that are registered in the ASP.NET Core service provider.
 These store interfaces allow IdentityServer to access the data it needs at runtime when processing requests.
 You can implement these interfaces yourself and thus can use any database you wish.
-If you prefer a relational database for this data, then we provide [EntityFramework Core](/identityserver/data/ef/) implementations.
+If you prefer a relational database for this data, then we provide [EntityFramework Core](/identityserver/data/ef.md) implementations.
 
 :::note
 Given that data stores abstract the details of the data stored, strictly speaking, IdentityServer does not know or

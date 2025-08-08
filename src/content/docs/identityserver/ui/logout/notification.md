@@ -29,7 +29,7 @@ current user session and provides helpers and automated ways of invoking the not
 :::note
 Both the front-channel and JS-based notifications make use of cookies in iframes. If your architecture spans multiple
 sites, this will not work reliably. We recommend using back-channel notifications in this case. See the
-supported [specifications](/identityserver/overview/specs/) page for links to the relevant documents.
+supported [specifications](/identityserver/overview/specs.md) page for links to the relevant documents.
 :::
 
 ### Front-channel Server-side Clients
@@ -40,7 +40,7 @@ client.
 
 Clients that wish to be notified must have the `FrontChannelLogoutUri` configuration value set.
 IdentityServer tracks which clients the user has signed in to, and provides an API called `GetLogoutContextAsync` on
-the [IIdentityServerInteractionService](/identityserver/reference/services/interaction-service/#iidentityserverinteractionservice-apis).
+the [IIdentityServerInteractionService](/identityserver/reference/services/interaction-service.md#iidentityserverinteractionservice-apis).
 This API returns a `LogoutRequest` object with a `SignOutIFrameUrl` property that your logged out page must render into
 an `<iframe>`.
 
@@ -55,7 +55,7 @@ IdentityServer will automatically use this service when your logout page removes
 call to `HttpContext.SignOutAsync`.
 
 Clients that wish to be notified must have
-the [BackChannelLogoutUri](/identityserver/reference/models/client#authentication--session-management) configuration
+the [BackChannelLogoutUri](/identityserver/reference/models/client.md#authentication--session-management) configuration
 value set.
 
 #### Implementing Back-channel Logout In .NET Applications
@@ -63,12 +63,12 @@ value set.
 .NET does not have native support for back-channel logout notification.
 We do [provide a sample](/identityserver/samples), though.
 Alternatively, if you are using our BFF framework, back-channel logout
-is [already implemented](/bff/fundamentals/session/management/back-channel-logout) for you.
+is [already implemented](/bff/fundamentals/session/management/back-channel-logout.md) for you.
 
 Back-channel logout notifications are logout tokens as specified
 by [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html#logouttoken).
 Beginning in v6.3, IdentityServer sets the `typ` header of the logout token to `logout+jwt` to comply with the final
-version of the specification. The [`LogoutTokenJwtType` option](/identityserver/reference/options#main) can override
+version of the specification. The [`LogoutTokenJwtType` option](/identityserver/reference/options.md#main) can override
 this behavior.
 
 ### Browser-based JavaScript Clients

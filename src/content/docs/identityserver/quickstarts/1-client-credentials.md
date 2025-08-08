@@ -11,7 +11,7 @@ redirect_from:
 ---
 
 Welcome to the first quickstart for IdentityServer! To see the full list of
-quickstarts, please see [Quickstarts Overview](/identityserver/quickstarts/0-overview/).
+quickstarts, please see [Quickstarts Overview](/identityserver/quickstarts/0-overview.md).
 
 This first quickstart provides step-by-step instructions to set up
 IdentityServer in the most basic scenario: protecting APIs for server-to-server
@@ -88,8 +88,8 @@ This will create the following files within a new `src/IdentityServer` directory
 
 - `Properties/launchSettings.json` file - launch profile
 - `appsettings.json` - run time settings
-- `Config.cs` - definitions for [resources](/identityserver/overview/terminology/#resources) and
-  [clients](/identityserver/overview/terminology/#client) used by IdentityServer
+- `Config.cs` - definitions for [resources](/identityserver/overview/terminology.md#resources) and
+  [clients](/identityserver/overview/terminology.md#client) used by IdentityServer
 - `HostingExtensions.cs` - configuration for ASP.NET pipeline and services
   Notably, the IdentityServer services are configured here and the
   IdentityServer middleware is added to the pipeline here.
@@ -226,14 +226,14 @@ public static WebApplication ConfigureServices(this WebApplicationBuilder builde
 
 That's it - your IdentityServer is now configured. If you run the project and
 then navigate to `https://localhost:5001/.well-known/openid-configuration` in
-your browser, you should see the [discovery document](/identityserver/reference/endpoints/discovery/).
+your browser, you should see the [discovery document](/identityserver/reference/endpoints/discovery.md).
 The discovery document is a standard endpoint in
 [OpenID Connect](https://openid.net/specs/openid-connect-discovery-1_0.html) and
 [OAuth](https://datatracker.ietf.org/doc/html/rfc8414). It is
 used by your clients and APIs to retrieve configuration data needed to request
 and validate tokens, login and logout, etc.
 
-![Browser showing discovery endpoint JSON](./images/1_discovery.png)
+![Browser showing discovery endpoint JSON](images/1_discovery.png)
 
 :::note
 On first startup, IdentityServer will use its automatic key management feature
@@ -305,7 +305,7 @@ builder.Services.AddAuthorization();
 Audience validation is disabled here because access to the api is modeled with
 `ApiScopes` only. By default, no audience will be emitted unless the api is
 modeled with `ApiResources` instead. See
-[here](/identityserver/apis/aspnetcore/jwt#adding-audience-validation) for a
+[here](/identityserver/apis/aspnetcore/jwt.md#adding-audience-validation) for a
 more in-depth discussion.
 :::
 
@@ -459,7 +459,7 @@ running, run the Client project.
 
 The output should look like this:
 
-![Windows console showing claims for a bearer token](./images/1_client_screenshot.png)
+![Windows console showing claims for a bearer token](images/1_client_screenshot.png)
 
 If you're using Visual Studio, here's how to start everything up:
 

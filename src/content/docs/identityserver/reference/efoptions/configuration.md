@@ -12,7 +12,7 @@ redirect_from:
 ## Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions
 
 These options are configurable when using the Entity Framework Core for
-the [configuration store](/identityserver/data/configuration):
+the [configuration store](/identityserver/data/configuration.md):
 
 You set the options at startup time in your `AddConfigurationStore` method:
 

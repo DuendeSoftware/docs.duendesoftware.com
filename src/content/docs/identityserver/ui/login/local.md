@@ -19,7 +19,7 @@ The code below shows a sample Razor Page that could act as a login page. This
 sample hard codes the logic for the credentials. In production code, use your custom user database or identity management library here. 
 
 If you are using ASP.NET Identity for user management, our Identity Server
-ASP.NET Identity (`isaspid`) [template](/identityserver/overview/packaging#templates) includes a login page that shows how you
+ASP.NET Identity (`isaspid`) [template](/identityserver/overview/packaging.mdx#templates) includes a login page that shows how you
 might use the abstractions of that library on your login page. Notably, it uses
 the `SignInManager` to start the session, rather than `HttpContext.SignInAsync`.
 

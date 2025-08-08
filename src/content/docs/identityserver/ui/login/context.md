@@ -19,9 +19,9 @@ controlling what credentials the client application expects (e.g. perhaps MFA is
 ## Authorization Request Context
 
 In order to read the original authorize request parameter values, you can use
-the [interaction service](/identityserver/reference/services/interaction-service/#iidentityserverinteractionservice-apis).
+the [interaction service](/identityserver/reference/services/interaction-service.md#iidentityserverinteractionservice-apis).
 It provides a `GetAuthorizationContextAsync` API that will extract that information from the `returnUrl` and return
-an [AuthorizationRequest](/identityserver/reference/services/interaction-service/#authorizationrequest) object which
+an [AuthorizationRequest](/identityserver/reference/services/interaction-service.md#authorizationrequest) object which
 contains these values.
 
 :::note

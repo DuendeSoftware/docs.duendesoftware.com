@@ -25,4 +25,4 @@ See [Embedded APIs](local.mdx) for more information.
 
 These APIs are deployed on a different host than the BFF, which allows them to be shared between multiple frontends or (more generally speaking) multiple clients. These APIs can only be called via the BFF host acting as a proxy.
 
-You can use [Direct Forwarding](./remote.md) for most scenarios. If you have more complex requirements, you can also directly interact with [YARP](./yarp.md)
+You can use [Direct Forwarding](remote.mdx) for most scenarios. If you have more complex requirements, you can also directly interact with [YARP](yarp.md)
