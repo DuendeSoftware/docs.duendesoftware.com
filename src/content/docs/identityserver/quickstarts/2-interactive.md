@@ -53,7 +53,7 @@ the .NET CLI to add the quickstart UI to a project. Run the following command
 from the `src/IdentityServer` directory:
 
 ```console
-dotnet new isui
+dotnet new duende-is-ui
 ```
 
 ### Enable The UI

@@ -58,7 +58,7 @@ Start by creating a new IdentityServer project that will use ASP.NET Core
 Identity. Run the following commands from the `src` directory:
 
 ```console
-dotnet new isaspid -n IdentityServerAspNetIdentity
+dotnet new duende-is-aspid -n IdentityServerAspNetIdentity
 cd ..
 dotnet sln add ./src/IdentityServerAspNetIdentity
 ```

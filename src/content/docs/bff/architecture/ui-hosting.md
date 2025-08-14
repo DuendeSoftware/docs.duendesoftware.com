@@ -35,11 +35,11 @@ what that would look like:
 If you create a BFF host using our templates, the UI will be hosted in this way:
 
 ```bash title="Terminal"
-dotnet new bffremoteapi
+dotnet new duende-bff-remoteapi
 
 # or
 
-dotnet new bfflocalapi
+dotnet new duende-bff-localapi
 ```
 
 Many frontend applications require a build process, which complicates the use of the static file middleware at
