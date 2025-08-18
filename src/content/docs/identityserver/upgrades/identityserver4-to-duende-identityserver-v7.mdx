@@ -571,3 +571,5 @@ As part of your upgrade from IdentityServer4 to Duende IdentityServer, we recomm
 - [Changes in AppAuth URL validator for logout](https://github.com/DuendeSoftware/IdentityServer/pull/619)
 - [Use of EmailClaimType option in ASP.NET Identity integration](https://github.com/DuendeSoftware/IdentityServer/pull/625)
 - `ClientConfigurationStore` now uses `IConfigurationDbContext` to allow for customization. If you have a customized Entity Framework Core-based store, you may need to update your constructors.
+- [The `SendLogoutNotificationAsync` method has been removed from the `DefaultBackChannelLogoutService` class](/identityserver/upgrades/v7_2-to-v7_3.md#the-sendlogoutnotificationasync-method-has-been-removed-from-the-defaultbackchannellogoutservice-class)
+- [Client `Secret` is now required for Clients with `ClientCredentials` grant](/identityserver/upgrades/v7_2-to-v7_3.md#client-secret-is-now-required-for-clients-with-clientcredentials-grant)
