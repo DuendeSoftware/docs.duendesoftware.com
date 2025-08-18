@@ -333,6 +333,27 @@ will typically be lower than the number of logins.
 |-----|------------------------------------------------|
 | idp | The idp (ASP.NET scheme name) logging out from |
 
+### .NET Authentication And Authorization Metrics
+
+:::tip
+Added in .NET 10
+:::
+
+Starting with .NET 10, metrics are available for certain authentication and authorization events in ASP.NET Core.
+You can get metrics for the following events:
+
+* [Authentication](https://learn.microsoft.com/en-us/aspnet/core/log-mon/metrics/built-in?view=aspnetcore-10.0#microsoftaspnetcoreauthentication)
+  * Authenticated request duration (`aspnetcore.authentication.authenticate.duration`)
+  * Challenge count (`aspnetcore.authentication.challenges`)
+  * Forbid count (`aspnetcore.authentication.forbids`)
+  * Sign in count (`aspnetcore.authentication.sign_ins`)
+  * Sign out count (`aspnetcore.authentication.sign_outs`)
+* [Authorization](https://learn.microsoft.com/en-us/aspnet/core/log-mon/metrics/built-in?view=aspnetcore-10.0#microsoftaspnetcoreauthorization)
+  * Count of requests requiring authorization (`aspnetcore.authorization.attempts`)
+
+Refer to the [ASP.NET Core documentation](https://learn.microsoft.com/en-us/aspnet/core/log-mon/metrics/built-in?view=aspnetcore-10.0)
+for more information about ASP.NET Core built-in metrics.
+
 ## Traces
 
 :::tip
@@ -359,8 +380,7 @@ The following screenshot shows the ASP.NET Core OpenID Connect authentication ha
 ### Tracing Sources
 
 IdentityServer can emit very fine-grained traces which is useful for performance troubleshooting and general exploration
-of the
-control flow.
+of the control flow.
 
 This might be too detailed in production.
 
