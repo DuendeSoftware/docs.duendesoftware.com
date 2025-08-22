@@ -4,7 +4,7 @@ Welcome to the documentation of all [Duende Software](https://duendesoftware.com
 
 ## Getting Started
 
-You will need Node 22+ installed on your operating system and in the PATH.
+You will need Node 22+ installed on your operating system and available in the PATH.
 
 * Run `npm install` to restore all dependencies.
 * Use `npm run dev` to run the documentation site locally.
