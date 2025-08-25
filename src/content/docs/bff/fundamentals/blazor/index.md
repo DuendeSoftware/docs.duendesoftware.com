@@ -74,10 +74,6 @@ app.UseBff();
 app.UseAuthorization();
 app.UseAntiforgery();
 
-// Add the BFF management endpoints, such as login, logout, etc.
-// This has to be added after 'UseAuthorization()'
-app.MapBffManagementEndpoints();
-
 // ... <snip> ...
 ```
 
