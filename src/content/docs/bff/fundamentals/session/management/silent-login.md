@@ -14,7 +14,7 @@ redirect_from:
 ---
 
 :::note
-Deprecated. See [OIDC Prompt support](../oidc-prompts.md) instead.
+Deprecated. See [OIDC Prompt support](/bff/fundamentals/session/oidc-prompts.md) instead.
 :::
 
 **Added in v1.2.0.**
