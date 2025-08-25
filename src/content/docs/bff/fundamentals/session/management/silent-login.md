@@ -13,6 +13,10 @@ redirect_from:
   - /identityserver/v7/bff/session/management/silent-login/
 ---
 
+:::note
+Deprecated. See [OIDC Prompt support](../oidc-prompts.md) instead.
+:::
+
 **Added in v1.2.0.**
 
 The */bff/silent-login* endpoint triggers authentication similarly to the login endpoint, but in a non-interactive way. 
