@@ -28,7 +28,7 @@ The [OpenID Connect specification](https://openid.net/specs/openid-connect-core-
 These values can be passed to the BFF by adding them to the `prompt` query parameter to the login request URL. For example, the following request would prompt the user to reauthenticate:
 
 ```http
-/bff/login?prompt=<prompt value>
+/bff/login?prompt=login
 ```
 
 The inclusion of the `prompt` parameter in the login request URL will cause the BFF to forward it to the backing identity provider at which point the identity provider will determine the appropriate user experience based on the value of the `prompt` parameter. For example, if the `prompt` parameter is set to `login`, the identity provider will prompt the user to reauthenticate.
