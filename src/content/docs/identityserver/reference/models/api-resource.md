@@ -8,6 +8,9 @@ redirect_from:
   - /identityserver/v5/reference/models/api_resource/
   - /identityserver/v6/reference/models/api_resource/
   - /identityserver/v7/reference/models/api_resource/
+  - /identityserver/v5/reference/models/
+  - /identityserver/v6/reference/models/
+  - /identityserver/v7/reference/models/
 ---
 
 ## Duende.IdentityServer.Models.ApiResource

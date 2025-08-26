@@ -9,6 +9,9 @@ redirect_from:
   - /identityserver/v5/reference/endpoints/authorize/
   - /identityserver/v6/reference/endpoints/authorize/
   - /identityserver/v7/reference/endpoints/authorize/
+  - /identityserver/v5/reference/endpoints/
+  - /identityserver/v6/reference/endpoints/
+  - /identityserver/v7/reference/endpoints/
 ---
 
 The authorize endpoint can be used to request tokens or authorization codes via the browser.
