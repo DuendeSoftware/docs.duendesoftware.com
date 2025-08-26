@@ -10,7 +10,7 @@ sidebar:
     variant: tip
 ---
 
-The OpenID Connect protocol supports a `prompt` parameter that can be used to control the user experience as it relates to the current authentication session. Duende BFF v4 supports this parameter by forwarding it to the backing identity provider to allow for more fine-grained control during unique client interactions.
+OpenID Connect supports a `prompt` parameter that can be used to control the user experience as it relates to the current authentication session. Duende BFF v4 supports this parameter by forwarding it to the backing identity provider to allow for more fine-grained control during unique client interactions.
 
 This documentation outlines the `prompt` parameter support and what values you might use to achieve different outcomes.
 
