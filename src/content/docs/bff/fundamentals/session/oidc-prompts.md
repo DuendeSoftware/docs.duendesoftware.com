@@ -34,7 +34,7 @@ These values can be passed to the BFF by adding them to the `prompt` query param
 The inclusion of the `prompt` parameter in the login request URL will cause the BFF to forward it to the backing identity provider at which point the identity provider will determine the appropriate user experience based on the value of the `prompt` parameter. For example, if the `prompt` parameter is set to `login`, the identity provider will prompt the user to reauthenticate.
 
 :::note
- Be aware that the exact behavior of the `prompt` parameter is not defined by the OpenID Connect specification and may vary between identity providers. Consult the documentation for your identity provider for more information.
+Be aware that the exact behavior of the `prompt` parameter is not defined by the OpenID Connect specification and may vary between identity providers. Consult the documentation for your identity provider for more information.
 :::
 
 ## Scenarios and Situations
