@@ -56,3 +56,31 @@ In the client application:
   title="ASP.NET Identity Sample"
   target="_blank"
 />
+
+# ASP.NET Identity Passkey :badge[.NET 10]
+
+This sample shows how to port passkey support from a .NET 10 Blazor App project template into Duende IdentityServer.
+
+:::note[.NET 10 preview 7]
+This sample was written using the functionality available in .NET 10 preview 7.
+The final .NET 10 release may provide a different API surface.
+:::
+
+It is based on the [_Duende IdentityServer with ASP.NET Core Identity_](/identityserver/overview/packaging.mdx#duende-identityserver-with-aspnet-core-identity) project template,
+and adds the necessary changes to support passkey authentication:
+
+* In `HostingExtensions.cs`, the ASP.NET Identity schema is set to `IdentitySchemaVersions.Version3`.
+* An Entity Framework Core migration is added to generate the `AspNetUserPasskeys` table in the database.
+* The `Passkeys/PasskeyEndpointRouteBuilderExtensions.cs` file registers required minimal API endpoints for passkey creation and passkey request options. The extension method is called in `HostingExtensions.cs`.
+* The `Passkeys/PasskeyOperation.cs`, `Passkeys/PasskeySubmitTagHelper.cs` and `wwwroot/js/passkey-submit.js`files define a tag helper and web component to handle passkey creation and authentication.
+* `Pages/_ViewImports.cshtml` is updated to load the tag helper.
+* The `Models/PasskeyInputModel.cs` file is added and used in the `/Login/InputModel.cs` model.
+* The `Login/Index.cshtml` and `Login/Index.cshtml.cs` file include the necessary logic to handle passkey authentication.
+* The `Pages/Account/Passkeys.cshtml`, `Pages/Account/Passkeys.cshtml.cs`,`Pages/Account/RenamePasskey.cshtml`, and `Pages/Account/RenamePasskey.cshtml.cs` files add functionality to register a passkey credential and rename a passkey.
+
+<LinkCard
+  description="GitHub Repository for the ASP.NET Identity Passkey Sample"
+  href="https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v7/AspNetIdentityPasskeys"
+  title="ASP.NET Identity Passkey Sample"
+  target="_blank"
+/>
