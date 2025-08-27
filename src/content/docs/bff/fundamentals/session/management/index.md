@@ -60,5 +60,5 @@ app.UseBffOpenIdCallbacks();~
 The following pages describe the default behavior of the management endpoints. See the [extensibility](/bff/extensibility) section for information about how to customize the behavior of the endpoints.
 
 :::note
-In V3 and below, only the method *MapBffManagementEndpoints* exists. 
+In V3 and below, only the method `MapBffManagementEndpoints` exists. 
 :::
