@@ -33,8 +33,12 @@ For example, you may want to limit the options to only those that are relevant t
 A limited subset of the available options may be enough.
 
 :::tip[Duende IdentityServer AdminUI Templates]
-Creating custom, specialized admin UI functionality is demonstrated in the [EntityFramework-based template](https://github.com/DuendeSoftware/products/tree/main/templates).
-You can use its UI to manage clients and scopes as a starting point.
+Creating custom, specialized admin UI functionality is demonstrated in the [Duende IdentityServer (`duende-is`) template](/identityserver/overview/packaging.mdx#duende-identityserver).
+
+The template is built on the Entity Framework Core template and includes an administrative UI for managing clients, scopes, and claims.
+There's also a diagnostics dashboard showing system information about your IdentityServer deployment.
+
+You can use its UI as a starting point for creating your own admin UI.
 :::
 
 ## Third-Party IdentityServer Admin UI
