@@ -60,6 +60,11 @@ export default defineConfig({
               paths: ["identityserver/quickstarts/**"],
             },
             {
+              label: "IdentityServer Sample Code",
+              description: "Sample projects for Duende IdentityServer",
+              paths: ["identityserver/samples/**"],
+            },
+            {
               label: "BFF Security Framework",
               description:
                 "Documentation for Duende's Backend for Frontend (BFF) framework, used to secure browser-based frontends (e.g. SPAs with React, Vue, Angular, or Blazor applications) with ASP.NET Core backends",
