@@ -25,4 +25,4 @@ and [special offers](https://duendesoftware.com/specialoffers) apply.
 
 The Configuration API source code is available [on GitHub](https://github.com/DuendeSoftware/products/tree/main/identity-server/src/Configuration).
 
-Samples of the Configuration API are available [here](/identityserver/samples/configuration.md).
+Samples of the Configuration API are available [here](/identityserver/samples/configuration.mdx).

@@ -9,18 +9,30 @@ redirect_from:
   - /identityserver/v7/samples/clients/
 ---
 
-This section contains a collection of various client technologies connecting to IdentityServer.
+import { LinkCard } from "@astrojs/starlight/components";
+
+This section contains a collection of samples demonstrating various client technologies connecting to Duende IdentityServer.
 
 ### .NET 4.8 Clients
 
 This sample shows how to add OpenID Connect code flow with PKCE to a .NET 4.8 WebForms client and a .NET 4.8 MVC Client.
 Each client can log in, logout, make API requests to a .NET 4.8 WebApi using OAuth, and refresh access tokens.
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/clients/Owin)
+<LinkCard
+  description="GitHub Repository for the .NET 4.8 Clients Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/various/clients/Owin"
+  title=".NET 4.8 Clients Sample"
+  target="_blank"
+/>
 
-### .NET MAUI client
+### .NET MAUI Client
 
 This sample shows how to use the [IdentityModel.OidcClient](https://github.com/IdentityModel/IdentityModel.OidcClient)
-FOSS library to connect a .NET MAUI app to IdentityServer
+open source library to connect a .NET MAUI app to IdentityServer
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/clients/Maui)
+<LinkCard
+  description="GitHub Repository for the .NET MAUI Client Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/various/clients/Maui"
+  title=".NET MAUI Client Sample"
+  target="_blank"
+/>

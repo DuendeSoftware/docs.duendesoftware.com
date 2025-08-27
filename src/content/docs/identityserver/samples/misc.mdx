@@ -9,39 +9,63 @@ redirect_from:
   - /identityserver/v7/samples/misc/
 ---
 
+import { LinkCard } from "@astrojs/starlight/components";
+
+This section contains a collection of miscellaneous samples demonstrating Duende IdentityServer.
+
 ### Securing Azure Functions
 
 This sample shows how to parse and validate a JWT token issued by IdentityServer inside an Azure Function.
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/various/JwtSecuredAzureFunction)
+<LinkCard
+  description="GitHub Repository for the Securing Azure Functions Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/various/JwtSecuredAzureFunction"
+  title="Securing Azure Functions Sample"
+ target="_blank"
+/>
 
 ### Mutual TLS Using Kestrel
 
 This sample shows how to use Kestrel using MTLS
 for [client authentication](/identityserver/tokens/client-authentication.md)
 and [proof of possession](/identityserver/tokens/pop.md) API access.
+
 Using Kestrel will not likely be how MTLS is configured in a production environment, but it is convenient for local
 testing.
+
 This approach requires DNS entries for `mtls.localhost` and `api.localhost` to resolve to `127.0.0.1`, and is easily
 configured by modifying your local `hosts` file.
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/MTLS)
+<LinkCard
+  description="GitHub Repository for the Mutual TLS Using Kestrel Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/MTLS"
+  title="Mutual TLS Using Kestrel Sample"
+  target="_blank"
+/>
 
 ### DPoP
 
 This sample shows how to access APIs using DPoP for [proof of possession](/identityserver/tokens/pop.md#proof-of-possession-styles).
-It contains two different clients; one that uses client credentials and DPoP tokens, and another that is an interactive
-ASP.NET Core app using code flow to obtain the DPoP bound tokens. Both clients demonstrate the use of the
-`Duende.AccessTokenManagement` library with DPoP.
+
+It contains two different clients:
+* one that uses client credentials and DPoP tokens
+* another that is an interactive ASP.NET Core app using code flow to obtain the DPoP bound tokens
+
+Both clients demonstrate the use of the `Duende.AccessTokenManagement` library with DPoP.
+
 The sample also contains an API using the `Duende.AspNetCore.Authentication.JwtBearer` library to accept and validate
 DPoP bound access tokens.
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/DPoP)
+<LinkCard
+  description="GitHub Repository for the DPoP Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/DPoP"
+  title="DPoP Sample"
+  target="_blank"
+/>
 
 ### Session Management
 
-This sample shows how to enable [server-side sessions](/identityserver/ui/server-side-sessions/index.md) and configure the
-basic settings.
+This sample shows how to enable [server-side sessions](/identityserver/ui/server-side-sessions/index.md) and configure the basic settings.
 The sample requires all three projects to be run at once.
 
 Things of note:
@@ -59,7 +83,12 @@ Things of note:
 * As the client app refreshes its access token, you should see the user's session expiration being extended.
 * When you revoke the user's session, the user should be logged out of the client app.
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/SessionManagement)
+<LinkCard
+  description="GitHub Repository for the Session Management Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/SessionManagement"
+  title="Session Management Sample"
+  target="_blank"
+/>
 
 ### Session Migration
 
@@ -69,4 +98,9 @@ and the users are forced to log in again. If the application has sessions with l
 problem to have all users log in again the sessions can be migrated. Instructions for running the
 sample are in the HostingExtensions.cs file.
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/SessionMigration)
+<LinkCard
+  description="GitHub Repository for the Session Migration Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/SessionMigration"
+  title="Session Migration Sample"
+  target="_blank"
+/>

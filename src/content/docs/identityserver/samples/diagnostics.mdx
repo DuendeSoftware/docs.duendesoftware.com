@@ -1,0 +1,46 @@
+---
+title: "Diagnostics"
+description: "Samples demonstrating IdentityServer's diagnostic capabilities with OpenTelemetry integration, including metrics, traces, and logs visualization with .NET Aspire and console tracing."
+sidebar:
+  order: 50
+redirect_from:
+  - /identityserver/v5/samples/diagnostics/
+  - /identityserver/v6/samples/diagnostics/
+  - /identityserver/v7/samples/diagnostics/
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+This section contains a collection of samples demonstrating various diagnostics options in Duende IdentityServer.
+
+### OpenTelemetry With .NET Aspire
+
+Duende IdentityServer emits [OpenTelemetry metrics, traces and logs](/identityserver/diagnostics/otel.md).
+This sample uses .NET Aspire to display OpenTelemetry data. The solution contains an IdentityServer host, an API and a web client.
+The access token lifetime is set to a tiny value to force frequent refresh token flows.
+
+Running the sample requires the dotnet aspire workload to be installed with `dotnet workload install aspire`. Run the
+`Aspire.AppHost` project, it will automatically launch the other projects.
+
+This sample is not intended to be a full Aspire sample, it simply uses Aspire as a local standalone tool for displaying
+traces, logs and metrics.
+
+<LinkCard
+  description="GitHub Repository for the OpenTelemetry With .NET Aspire Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Diagnostics/Aspire"
+  title="OpenTelemetry With .NET Aspire Sample"
+  target="_blank"
+/>
+
+### OpenTelemetry Tracing
+
+Duende IdentityServer emits [OpenTelemetry traces for input validators, stores and response generators](/identityserver/diagnostics/otel.md).
+
+The sample shows how to set up OpenTelemetry for console tracing.
+
+<LinkCard
+  description="GitHub Repository for the OpenTelemetry Tracing Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Diagnostics/Otel"
+  title="OpenTelemetry Tracing Sample"
+  target="_blank"
+/>

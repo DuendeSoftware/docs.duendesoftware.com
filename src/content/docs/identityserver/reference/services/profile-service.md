@@ -17,7 +17,7 @@ redirect_from:
 #### Duende.IdentityServer.Services.IProfileService
 
 Encapsulates retrieval of user claims from a data source of your choice.
-See [here](/identityserver/samples/ui.md#custom-profile-service) for a sample.
+See [here](/identityserver/samples/ui.mdx#custom-profile-service) for a sample.
 
 ```cs
 /// <summary>
