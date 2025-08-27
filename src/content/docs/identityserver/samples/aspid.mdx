@@ -9,14 +9,19 @@ redirect_from:
   - /identityserver/v7/samples/aspid/
 ---
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/AspNetIdentity)
+import { LinkCard } from "@astrojs/starlight/components";
+
+This section contains a collection of samples when building a Duende IdentityServer solution that uses [ASP.NET Identity](/identityserver/aspnet-identity/index.md)
+for managing the identity database for users of IdentityServer.
+
+### ASP.NET Identity
 
 This sample shows using ASP.NET Identity with Duende IdentityServer.
 The intent was to show the least amount of code needed to get a working sample that used Microsoft's ASP.NET Identity
 user management library.
 
 The first step in creating the sample was to create a new project that used the ASP.NET Identity templates from Visual
-Studio ("Individual Accounts" for the authentication type). This provides all the "out of the box" features from
+Studio (_"Individual Accounts"_ for the authentication type). This provides all the out-of-the-box features from
 ASP.NET Identity for user management with only minor modifications, which are described below.
 
 Then Duende IdentityServer was added to add OIDC/OAuth 2.0 capabilities to the application. Only the minimal configuration
@@ -44,3 +49,10 @@ In the client application:
   page.
 * The index page (`Index.cshtml`) was modified to allow a POST to trigger OIDC logout.
 * A logout button was added to trigger the POST.
+
+<LinkCard
+  description="GitHub Repository for the ASP.NET Identity Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/AspNetIdentity"
+  title="ASP.NET Identity Sample"
+  target="_blank"
+/>

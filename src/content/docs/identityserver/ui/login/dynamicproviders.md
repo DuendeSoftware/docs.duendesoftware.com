@@ -307,8 +307,8 @@ Dynamic identity providers in Duende IdentityServer come with an implementation 
 In your solution, it may be necessary to support other authentication providers, such as a SAML-based authentication provider.
 
 We have two samples that show how to use non-OIDC authentication handlers with dynamic identity providers:
-* Adding the [WS-Federation protocol type](/identityserver/samples/ui.md#adding-other-protocol-types-to-dynamic-providers)
-* Adding the [Saml2 protocol type](/identityserver/samples/ui.md#using-sustainsyssaml2-with-dynamic-providers), using the [Sustainsys.Saml2](https://saml2.sustainsys.com/) open source library
+* Adding the [WS-Federation protocol type](/identityserver/samples/ui.mdx#adding-other-protocol-types-to-dynamic-providers)
+* Adding the [Saml2 protocol type](/identityserver/samples/ui.mdx#using-sustainsyssaml2-with-dynamic-providers), using the [Sustainsys.Saml2](https://saml2.sustainsys.com/) open source library
 
 In this section, we'll look at a minimal example of how to add other authentication handlers, such as the `GoogleHandler`, to dynamic identity providers, 
 

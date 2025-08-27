@@ -15,7 +15,7 @@ Instead of providing the parameters for an authorize request as individual query
 This makes the parameters tamperproof and you can authenticate the client already on the front-channel.
 
 :::note
-See [here](/identityserver/samples/basics.md#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
+See [here](/identityserver/samples/basics.mdx#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
 :::
 
 You can either transmit them by value or by reference to the authorize endpoint - see the [spec](https://openid.net/specs/openid-connect-core-1_0.html#jwtrequests) for more details.

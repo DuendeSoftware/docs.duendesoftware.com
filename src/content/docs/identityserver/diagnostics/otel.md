@@ -40,7 +40,7 @@ Traces shows individual requests and dependencies. The output is very useful for
 flow and finding performance bottlenecks.
 
 This is an example of distributed traces from a web application calling an API (displayed using our
-[Aspire sample](/identityserver/samples/diagnostics.md)). The web application uses a refresh token to call
+[Aspire sample](/identityserver/samples/diagnostics.mdx)). The web application uses a refresh token to call
 IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks
 url and then gets the keys from jwks endpoint.
 ![.NET Aspire dashboard showing Duende IdentityServer traces](images/aspire_traces.png)

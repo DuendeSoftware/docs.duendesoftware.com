@@ -10,7 +10,9 @@ redirect_from:
   - /identityserver/v7/samples/basics/
 ---
 
-This solution contains a collection of common scenarios.
+import { LinkCard } from "@astrojs/starlight/components";
+
+This section contains a collection of common scenarios when building a Duende IdentityServer solution.
 
 ### Client Credentials
 
@@ -23,7 +25,12 @@ Key takeaways:
 * how to use a shared secret
 * how to use an access token
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/ClientCredentials)
+<LinkCard
+  description="GitHub Repository for the Client Credentials Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/ClientCredentials"
+  title="Client Credentials Sample"
+  target="_blank"
+/>
 
 ### JWT-based Client Authentication
 
@@ -36,7 +43,12 @@ Key takeaways:
 * use a JWT as a client secret replacement
 * configure IdentityServer to accept a JWT as a client secret
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/JwtBasedClientAuthentication)
+<LinkCard
+  description="GitHub Repository for the JWT-based Client Authentication Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/ClientCredentials"
+  title="JWT-based Client Authentication Sample"
+  target="_blank"
+/>
 
 ### Introspection & Reference Tokens
 
@@ -56,9 +68,14 @@ Key takeaways:
 * set up an API resource with an API secret
 * configure an API to accept and validate reference tokens
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/Introspection)
+<LinkCard
+  description="GitHub Repository for the Introspection & Reference Tokens Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/Introspection"
+  title="Introspection & Reference Tokens Sample"
+  target="_blank"
+/>
 
-### MVC Client Sample
+### MVC Client
 
 This sample shows how to use the `authorization_code` grant type. This is typically used for interactive applications
 like web applications.
@@ -70,12 +87,16 @@ Key takeaways:
 * call an API
 * manually refresh tokens
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcBasic)
+<LinkCard
+  description="GitHub Repository for the MVC Client Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcBasic"
+  title="MVC Client Sample"
+  target="_blank"
+/>
 
 ### MVC Client with automatic Access Token Management
 
-This sample shows how to
-use [Duende.AccessTokenManagement](/accesstokenmanagement) to automatically
+This sample shows how to use [Duende.AccessTokenManagement](/accesstokenmanagement) to automatically
 manage access tokens.
 
 The sample uses a special client in the sample IdentityServer with a short token lifetime (75 seconds). When repeating
@@ -85,9 +106,14 @@ You can also turn on debug tracing to get more insights in the token management 
 
 Key takeaways:
 
-* use Duende.AccessTokenManagement to automate refreshing tokens
+* use [Duende.AccessTokenManagement](/accesstokenmanagement) to automate refreshing tokens
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcTokenManagement)
+<LinkCard
+  description="GitHub Repository for the MVC Client with automatic Access Token Management Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcTokenManagement"
+  title="MVC Client with automatic Access Token Management Sample"
+  target="_blank"
+/>
 
 ### MVC Client with JAR and JWT-based Authentication
 
@@ -100,7 +126,12 @@ Key takeaways:
 * use JWT-based authentication for automatic token management
 * configure a client in IdentityServer to share key material for both front- and back-channel
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcJarJwt)
+<LinkCard
+  description="GitHub Repository for the MVC Client with JAR and JWT-based Authentication Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcJarJwt"
+  title="MVC Client with JAR and JWT-based Authentication Sample"
+  target="_blank"
+/>
 
 ### MVC Client with Back-Channel Logout Notifications
 
@@ -111,7 +142,12 @@ Key takeaways:
 * how to implement the back-channel notification endpoint
 * how to leverage events on the cookie handler to invalidate the user session
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcBackChannelLogout)
+<LinkCard
+  description="GitHub Repository for the MVC Client with Back-Channel Logout Notifications Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcBackChannelLogout"
+  title="MVC Client with Back-Channel Logout Notifications Sample"
+  target="_blank"
+/>
 
 ### MVC Client with Pushed Authorization Requests
 
@@ -128,10 +164,14 @@ Key takeaways:
 :::note
 This sample is only relevant if you're using .NET 8 or lower.
 
-[.NET 9 has support for PAR built-in][ms-learn-par], and the ASP.NET Core OIDC authentication handler will automatically use 
-PAR when the authority supports it, based on the discovery metadata.  
+[.NET 9 has support for PAR built-in](https://learn.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-9.0?view=aspnetcore-9.0#openidconnecthandler-adds-support-for-pushed-authorization-requests-par),
+and the ASP.NET Core OIDC authentication handler will automatically use PAR when the authority supports it,
+based on the discovery metadata.  
 :::
 
-[link to source code](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcPar)
-
-[ms-learn-par]: https://learn.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-9.0?view=aspnetcore-9.0#openidconnecthandler-adds-support-for-pushed-authorization-requests-par
+<LinkCard
+  description="GitHub Repository for the MVC Client with Pushed Authorization Requests Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Basics/MvcPar"
+  title="MVC Client with Pushed Authorization Requests Sample"
+  target="_blank"
+/>
