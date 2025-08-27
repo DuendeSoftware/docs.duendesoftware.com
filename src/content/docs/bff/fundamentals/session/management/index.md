@@ -28,7 +28,7 @@ builder.Services.AddBff(options =>
 };
 ```
 
-Starting in version 4, the BFF automatically wires up the management endpoints. However, if you turn off this behavior (using **AutomaticallyRegisterBffMiddleware**) then this is how you can map the management endpoints. 
+Starting with BFF v4, the BFF automatically wires up the management endpoints. If you disable this behavior (using `AutomaticallyRegisterBffMiddleware`, this is how you can map the management endpoints:
 
 ```csharp
 // Program.cs
