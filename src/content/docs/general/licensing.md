@@ -211,7 +211,7 @@ The v3 license, however, does not grant access to the v4 multi-frontend feature.
 #### BFF Trial Mode
 
 Using BFF without a license is considered Trial Mode. In Trial Mode, BFF will be limited to a maximum of
-five (5) sessions per host. Any sessions exceeding this limit will result in error logging.
+five (5) sessions per host. Sessions exceeding the limit will cause the host to log an error.
 This session limit is not distributed or shared across multiple nodes.
 
 :::note
