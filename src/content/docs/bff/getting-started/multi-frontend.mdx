@@ -97,18 +97,18 @@ app.Run();
 
       Register multiple frontends directly in code using `AddFrontends`:
 
-      <Code
-          lang="csharp"
-          title="Program.cs"
-          code={`builder.Services.AddBff()
-    .AddFrontends(
-        new BffFrontend(BffFrontendName.Parse("default-frontend"))
-            .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
-        new BffFrontend(BffFrontendName.Parse("admin-frontend"))
-            .WithIndexHtmlUrl(new Uri("https://localhost:5005/admin/index.html"))
-    );
+      ```csharp
+      // Program.cs
+      builder.Services.AddBff()
+        .AddFrontends(
+            new BffFrontend(BffFrontendName.Parse("default-frontend"))
+                .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
+            new BffFrontend(BffFrontendName.Parse("admin-frontend"))
+                .WithIndexHtmlUrl(new Uri("https://localhost:5005/admin/index.html"))
+        );
 
-// ...existing code for authentication, authorization, etc.`}/>
+      // ...existing code for authentication, authorization, etc.`
+      ```
 
   </TabItem>
   {/* prettier-ignore */}
@@ -117,42 +117,42 @@ app.Run();
 
     Example `bffconfig.json`:
 
-    <Code
-        lang="json"
-        code={`{
-    "defaultOidcSettings": null,
-    "defaultCookieSettings": null,
-    "frontends": {
-      "from_config": {
-        "indexHtmlUrl": "https://localhost:5005/static/index.html",
-        "matchingPath": "/from-config",
-        "oidc": {
-          "clientId": "bff.multi-frontend.config"
-        },
-        "remoteApis": [
-          {
-            "localPath": "/api/client-token",
-            "targetUri": "https://localhost:5010",
-            "tokenRequirement": "Client"
-          }
-        ]
+    ```json
+    {
+      "defaultOidcSettings": null,
+      "defaultCookieSettings": null,
+      "frontends": {
+        "from_config": {
+          "indexHtmlUrl": "https://localhost:5005/static/index.html",
+          "matchingPath": "/from-config",
+          "oidc": {
+            "clientId": "bff.multi-frontend.config"
+          },
+          "remoteApis": [
+            {
+              "localPath": "/api/client-token",
+              "targetUri": "https://localhost:5010",
+              "tokenRequirement": "Client"
+            }
+          ]
+        }
       }
     }
-  }`}/>
+    ```
 
   Load and use the configuration in `Program.cs`:
 
-    <Code
-    lang="csharp"
-    title="Program.cs"
-    code={`var bffConfig = new ConfigurationBuilder()
-    .AddJsonFile("bffconfig.json")
-    .Build();
+      ```csharp
+      // Program.cs
+      var bffConfig = new ConfigurationBuilder()
+        .AddJsonFile("bffconfig.json")
+        .Build();
 
-builder.Services.AddBff()
-    .LoadConfiguration(bffConfig);
-  
-// ...existing code for authentication, authorization, etc.`}/>
+      builder.Services.AddBff()
+        .LoadConfiguration(bffConfig);
+
+      // ...existing code for authentication, authorization, etc.
+      ```
 
   </TabItem>
 </Tabs>
@@ -168,16 +168,16 @@ You can configure remote API proxying in two ways:
 - **Direct proxying per frontend:**
   You can configure remote APIs for each frontend individually:
 
-  ```csharp
-  // Program.cs
-  builder.Services.AddBff()
-      .AddFrontends(
-          new BffFrontend(BffFrontendName.Parse("default-frontend"))
-              .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
-              .WithRemoteApis(
-                  new RemoteApi(LocalPath.Parse("/api/user-token"), new Uri("https://localhost:5010"))
-              )
-      );
+```csharp
+// Program.cs
+builder.Services.AddBff()
+  .AddFrontends(
+      new BffFrontend(BffFrontendName.Parse("default-frontend"))
+          .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
+          .WithRemoteApis(
+              new RemoteApi(LocalPath.Parse("/api/user-token"), new Uri("https://localhost:5010"))
+          )
+  );
   ```
 
 This allows each frontend to have its own set of proxied remote APIs.
