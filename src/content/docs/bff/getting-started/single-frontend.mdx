@@ -180,12 +180,12 @@ It's important to mark up the APIs with .AsBffApiEndpoint(), because this adds C
       <Code
           lang="csharp"
           title="Program.cs"
-          code={`// Aadds authorization for local and remote API endpoints
+          code={`// Adds authorization for local and remote API endpoints
 app.UseAuthorization();
 
 // Place your custom routes after the 'UseAuthorization()'
 app.MapGet("/hello-world", () => "hello-world")
-    .AsBffApiEndpoint(); // Aadds CSRF protection to the controller endpoints`}/>
+    .AsBffApiEndpoint(); // Adds CSRF protection to the controller endpoints`}/>
 
   </TabItem>
   <TabItem label="Controllers">
