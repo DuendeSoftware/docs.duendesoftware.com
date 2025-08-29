@@ -52,5 +52,5 @@ The [IBackchannelAuthenticationInteractionService](/identityserver/reference/ser
 * **Step 6**: Finally, the client, after polling for the result, will finally be issued the tokens it's requested (or a suitable error if the user has denied the request, or it has timed out).
 
 :::note
-We provide [a sample](/identityserver/samples/misc.mdx) for the interactive pages a user might be presented with for the CIBA workflow.
+We provide [a sample](/identityserver/samples/ui.mdx#client-initiated-backchannel-login-ciba) for the interactive pages a user might be presented with for the CIBA workflow.
 :::
