@@ -5,7 +5,7 @@ sidebar:
   order: 10
   label: "Single Frontend"
 ---
-import { Code } from "astro/components";
+import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 Duende.BFF (Backend for Frontend) is a library that helps you build secure, modern web applications by acting as a security gateway between your frontend and backend APIs. This guide will walk you through setting up a simple BFF application with a single frontend.
@@ -180,12 +180,12 @@ It's important to mark up the APIs with .AsBffApiEndpoint(), because this adds C
       <Code
           lang="csharp"
           title="Program.cs"
-          code={`// Aadds authorization for local and remote API endpoints
+          code={`// Adds authorization for local and remote API endpoints
 app.UseAuthorization();
 
 // Place your custom routes after the 'UseAuthorization()'
 app.MapGet("/hello-world", () => "hello-world")
-    .AsBffApiEndpoint(); // Aadds CSRF protection to the controller endpoints`}/>
+    .AsBffApiEndpoint(); // Adds CSRF protection to the controller endpoints`}/>
 
   </TabItem>
   <TabItem label="Controllers">
