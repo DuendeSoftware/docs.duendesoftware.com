@@ -25,7 +25,7 @@ Also, all the prior tables associated with the `ApiResources` were prefixed with
 Then any new tables associated with the new top-level ApiScopes have the "ApiScope" prefix to indicate that association.
 
 To properly update the database, the easiest approach is to first update to the latest of IdentityServer4 v4. 
-Once that's complete, then it's straightforward to move to Duende IdentityServer v5.
+Once that's complete, then it's straightforward to move to Duende IdentityServer v6.
 
 There is a sample project for this migration exercise. It is located [here](https://github.com/DuendeSoftware/UpgradeSample-IdentityServer4-v3).
 
