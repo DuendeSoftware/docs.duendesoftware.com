@@ -51,6 +51,92 @@ In production, logging might produce too much data. It is recommended you either
 instrumentation.
 :::
 
+### Setup for Microsoft.Extensions.Logging
+
+.NET provides a logging abstraction interface found in the
+[Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging) package and is the default logging provider for ASP.NET Core.
+
+If you prefer to use Microsoft's logging option,
+you can remove references to Serilog and fall back to the default logging implementation.
+Duende IdentityServer already uses the `ILogger` interface,
+and will use any implementation registered with the services collection. 
+
+Below you will find a modified version of the in-memory Duende IdentityServer sample.
+You can use it as a guide to adapt your own instance of Duende IdentityServer to use Microsoft's logging implementation..
+
+```csharp
+using System.Globalization;
+using System.Text;
+using Duende.IdentityServer.Licensing;
+
+// App1 contains WebApplicationBuilder extension methods
+// update according to your application's namespace
+using App1; 
+
+var builder = WebApplication.CreateBuilder(args);
+
+var app = builder
+    // WebApplicationBuilder extension methods
+    .ConfigureServices()
+    .ConfigurePipeline();
+
+try
+{
+    app.Logger.LogInformation("Starting up");
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.Lifetime.ApplicationStopping.Register(() =>
+        {
+            var usage = app.Services.GetRequiredService<LicenseUsageSummary>();
+            
+            app.Logger.LogInformation(Summary(usage));
+        });
+    }
+
+    app.Run();
+}
+catch (Exception ex) when (ex is not HostAbortedException)
+{
+    app.Logger.LogCritical(ex, "Host terminated unexpectedly");
+}
+finally
+{
+    app.Logger.LogInformation("Shut down complete");
+}
+
+static string Summary(LicenseUsageSummary usage)
+{
+    var sb = new StringBuilder();
+    sb.AppendLine("IdentityServer Usage Summary:");
+    sb.AppendLine(CultureInfo.InvariantCulture, $"  License: {usage.LicenseEdition}");
+    var features = usage.FeaturesUsed.Count > 0 ? string.Join(", ", usage.FeaturesUsed) : "None";
+    sb.AppendLine(CultureInfo.InvariantCulture, $"  Business and Enterprise Edition Features Used: {features}");
+    sb.AppendLine(CultureInfo.InvariantCulture, $"  {usage.ClientsUsed.Count} Client Id(s) Used");
+    sb.AppendLine(CultureInfo.InvariantCulture, $"  {usage.IssuersUsed.Count} Issuer(s) Used");
+
+    return sb.ToString();
+}
+```
+
+You will also need to modify the `appSettings.json` file to include the `Logging` section:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information",
+      "Duende.IdentityServer": "Information"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+
+Learn more about configuring logging in .NET applications by reading the [Microsoft documentation on logging fundamentals](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-9.0#configure-logging). As you'll see in the Microsoft documentation, configuring logging can be very involved and target different log levels, which can be useful for troubleshooting.
+
 ### Setup For Serilog
 
 We personally like [Serilog](https://serilog.net) and
