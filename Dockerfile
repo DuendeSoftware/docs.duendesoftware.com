@@ -1,5 +1,5 @@
 FROM node:22-alpine AS builder
-EXPOSE 80
+EXPOSE 8080
 
 WORKDIR /app
 COPY package.json package-lock.json ./
