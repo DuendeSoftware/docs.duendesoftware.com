@@ -69,7 +69,7 @@ The `MapRemoteBffApiEndpoint` extension method maps a path and all sub-paths bel
 </Tabs>
 
 :::note
-This example opens up the complete */users* API namespace to the frontend, and thus, to the outside world. While it is convenient to register API paths this way, consider if you need to be more specific hen designing the forwarding paths to prevent accidentally exposing unintended endpoints.
+This example opens up the complete */users* API namespace to the frontend, and thus, to the outside world. While it is convenient to register API paths this way, consider if you need to be more specific when designing the forwarding paths to prevent accidentally exposing unintended endpoints.
 :::
 
 The `WithAccessToken` method can be added to [specify token requirements](#access-token-requirements) for the remote API. The BFF will automatically forward the correct access token to the remote API, which will be scoped to the client application, the user, or either.
