@@ -75,7 +75,7 @@ or for all mapped API endpoints.
 
 ### Changing The Transformer For A Single Mapped Endpoint
 
-This code block shows an example how of you can extend the default transformers with an additional custom
+This code block shows an example of how you can extend the default transformers with an additional custom
 transform. 
 
 ```csharp
