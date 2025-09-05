@@ -15,6 +15,10 @@ import { Badge } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
+:::note
+You will need to have the [`Duende.Bff.Yarp`](https://www.nuget.org/packages/Duende.BFF.Yarp) NuGet package installed to use these features.
+:::
+
 A _Remote API_ is an API that is deployed separately from the BFF host. Remote APIs use access tokens to authenticate and authorize requests, but the frontend does not possess an access token to make requests to remote APIs directly. Instead, all access to remote APIs is proxied through the BFF, which authenticates the frontend using its authentication cookie, gets the appropriate access token, and forwards the request to the Remote API with the token attached.
 
 There are two different ways to set up Remote API proxying in Duende.BFF. This page describes the built-in simple HTTP forwarder. Alternatively, you can integrate Duende.BFF with Microsoft's [YARP](/bff/fundamentals/apis/yarp.md) reverse proxy, which allows for more complex reverse proxy features provided by YARP combined with the security and identity features of Duende.BFF.
@@ -25,7 +29,7 @@ Duende.BFF's direct HTTP forwarder maps routes in the BFF to a remote API surfac
 
 These routes receive automatic anti-forgery protection and integrate with automatic token management.
 
-To enable this feature, add a reference to the *Duende.BFF.Yarp* NuGet package, add the remote APIs service to the service provider, and then add the remote endpoint mappings.
+To enable this feature, add a reference to the [`Duende.BFF.Yarp` NuGet package](https://www.nuget.org/packages/Duende.BFF.Yarp), add the remote APIs service to the service provider, and then add the remote endpoint mappings.
 
 :::note
 The BFF multi-frontend feature has built-in support for direct forwarding. 
@@ -78,7 +82,7 @@ The `WithAccessToken` method can be added to [specify token requirements](#acces
 
 Remote APIs typically require access control and must be protected against threats such as [CSRF (Cross-Site Request Forgery)](https://developer.mozilla.org/en-US/docs/Glossary/CSRF) attacks. 
 
-To provide access control, you can specify authorization policies on the mapped routes, and configure them with access token requirements.
+To provide access control, you can specify authorization policies on the mapped routes and configure them with access token requirements.
 
 To defend against CSRF attacks, you should use SameSite cookies to authenticate calls from the frontend to the BFF. As an additional layer of defense, APIs mapped with *MapRemoteBffApiEndpoint* are automatically protected with an anti-forgery header. 
 
@@ -86,7 +90,7 @@ To defend against CSRF attacks, you should use SameSite cookies to authenticate 
 
 [The SameSite cookie attribute](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value) is a feature of modern browsers that restricts cookies so that they are only sent to pages originating from the [site](https://developer.mozilla.org/en-US/docs/Glossary/Site) where the cookie was originally issued. This prevents CSRF attacks, because cross site requests will no longer implicitly include the user's credentials.
 
-This is a good first layer of defense, but makes the assumption that you can trust all subdomains of your site. All subdomains within a registrable domain are considered the same site for purposes of SameSite cookies. Thus, if another application hosted on a subdomain within your site is infected with malware, it can make CSRF attacks against your application.
+This is a good first layer of defense but makes the assumption that you can trust all subdomains of your site. All subdomains within a registrable domain are considered the same site for purposes of SameSite cookies. Thus, if another application hosted on a subdomain within your site is infected with malware, it can make CSRF attacks against your application.
 
 #### Anti-forgery header
 
@@ -110,7 +114,7 @@ In Duende.BFF version 3, use the `MapRemoteBffApiEndpoint` method with the `Requ
 
 #### Access token requirements
 
-Remote APIs sometimes allow anonymous access, but usually require an access token, and the type of access token (user or client) will vary as well. You can specify access token requirements via the `WithAccessToken` extension method. Its `RequiredTokenType` parameter has three options:
+Remote APIs sometimes allow anonymous access but usually require an access token, and the type of access token (user or client) will vary as well. You can specify access token requirements via the `WithAccessToken` extension method. Its `RequiredTokenType` parameter has three options:
 
 * **`None`**
 
