@@ -139,8 +139,14 @@ Learn more about configuring logging in .NET applications by reading the [Micros
 
 ### Setup For Serilog
 
-We personally like [Serilog](https://serilog.net) and
-the [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) package a lot. Give it a try:
+[Serilog](https://serilog.net) is a trusted and popular logging library for .NET applications.
+It is highly configurable,
+and at Duende, we think it is a **great alternative** to the default logging
+implementation,
+especially for .NET developers looking for more control over their logging configuration.
+Additionally,
+ASP.NET Core developers can use the [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) for
+better integration with ASP.NET Core applications.
 
 ```csharp
 // Program.cs
