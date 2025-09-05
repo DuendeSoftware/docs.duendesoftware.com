@@ -28,13 +28,37 @@ builder.Services.AddBff(options =>
 };
 ```
 
-The management endpoints need to be mapped:
+Starting with BFF v4, the BFF automatically wires up the management endpoints. If you disable this behavior (using `AutomaticallyRegisterBffMiddleware`, this is how you can map the management endpoints:
 
 ```csharp
 // Program.cs
-app.MapBffManagementEndpoints();
+var app = builder.Build();
+
+// Preprocessing pipeline, which would have been automatically added to start of the request the pipeline. 
+app.UseBffPreProcessing();
+
+// Your logic, such as:
+app.UseRouting(); 
+app.UseBff();
+
+// post processing pipeline that would have been automatically added to the end of the request pipeline. 
+app.UseBffPostProcessing();
+
+app.Run();
 ```
 
-*MapBffManagementEndpoints* adds all BFF management endpoints. You can also map each endpoint individually by calling the various *MapBffManagementXxxEndpoint* methods, for example *endpoints.MapBffManagementLoginEndpoint()*.
+The *UsePreprocessing* method adds all handling for multiple frontend support. Alternatively, you can call these methods direct:
+``` csharp
+app.UseBffFrontendSelection();
+app.UseBffPathMapping();
+app.UseBffOpenIdCallbacks();~
+```
+
+
+`UseBffPostProcessing` adds all BFF management endpoints and handlers for proxying `index.html`. You can also map each endpoint individually by calling the various `MapBffManagementXxxEndpoint` methods, for example `endpoints.MapBffManagementLoginEndpoint()`.
 
 The following pages describe the default behavior of the management endpoints. See the [extensibility](/bff/extensibility) section for information about how to customize the behavior of the endpoints.
+
+:::note
+In V3 and below, only the method `MapBffManagementEndpoints` exists. 
+:::
