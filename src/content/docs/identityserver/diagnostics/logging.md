@@ -54,7 +54,7 @@ instrumentation.
 ### Setup for Microsoft.Extensions.Logging
 
 .NET provides a logging abstraction interface found in the
-[Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging) package and is the default logging provider for ASP.NET Core.
+[`Microsoft.Extensions.Logging`](https://www.nuget.org/packages/Microsoft.Extensions.Logging) package and is the default logging provider for ASP.NET Core.
 
 If you prefer to use Microsoft's logging option,
 you can remove references to Serilog and fall back to the default logging implementation.
