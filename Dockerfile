@@ -5,6 +5,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install --no-cache
 COPY . .
+RUN chmod +x build.sh
 RUN ./build.sh
 
 
