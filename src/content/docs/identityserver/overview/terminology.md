@@ -12,12 +12,12 @@ redirect_from:
 
 The specs, documentation and object model use a certain terminology that you should be aware of.
 
-![a basic diagrams showing the relationship between users, clients, identityserver, and resources](./images/terminology.svg)
+![a basic diagrams showing the relationship between users, clients, identityserver, and resources](images/terminology.svg)
 
 ## Duende IdentityServer
 
 Duende IdentityServer is an OpenID Connect & OAuth engine - it implements the OpenID Connect and OAuth 2.0 family
-of [protocols](/identityserver/overview/specs/).
+of [protocols](/identityserver/overview/specs.md).
 
 Different literature uses different terms for the same role - you probably also find the terms security token service,
 identity provider, authorization server, IP-STS and more.
@@ -38,7 +38,7 @@ A user is a human that is using a registered client to access resources.
 
 ## Client
 
-A [client](/identityserver/fundamentals/clients) is a piece of software that requests tokens from your
+A [client](/identityserver/fundamentals/clients.md) is a piece of software that requests tokens from your
 IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting
 an access token). A client must be first registered with your IdentityServer before it can request tokens.
 
@@ -51,8 +51,8 @@ In this scenario two machines talk to each other (e.g. background processes, bat
 no interactive user present. To authorize this communication, your IdentityServer issues a token to the caller.
 
 In protocol terms, this scenario is called *Client Credentials Flow* and you can learn more about it in the issuing
-tokens [section](/identityserver/tokens/requesting#machine-to-machine-communication) and in
-our [Quickstart](/identityserver/quickstarts/1-client-credentials/).
+tokens [section](/identityserver/tokens/requesting.md#machine-to-machine-communication) and in
+our [Quickstart](/identityserver/quickstarts/1-client-credentials.md).
 
 ### Interactive Applications
 
@@ -60,8 +60,8 @@ This is the most common type of client scenario: web applications, SPAs or nativ
 This scenario typically involves a browser for user interaction (e.g. for authentication or consent).
 
 In protocol terms, this scenario is called *Authorization Code Flow* and you can learn more about it in the issuing
-tokens [section](/identityserver/tokens/requesting#interactive-applications) and in
-our [Quickstart](/identityserver/quickstarts/2-interactive/).
+tokens [section](/identityserver/tokens/requesting.md#interactive-applications) and in
+our [Quickstart](/identityserver/quickstarts/2-interactive.md).
 
 :::note
 A client application can potentially have many instances - e.g. your web application might be physically deployed on

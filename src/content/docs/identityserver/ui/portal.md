@@ -23,7 +23,7 @@ an external application only to have that application immediately redirect back 
 they will get a single sign on experience as they navigate to the various applications in the portal.
 
 :::tip
-The [Entity Framework Core project template](/identityserver/overview/packaging/#templates) comes with an example
+The [Entity Framework Core project template](/identityserver/overview/packaging.mdx#templates) comes with an example
 `~/Portal.cshtml` Razor Page that implements this functionality.
 :::
 

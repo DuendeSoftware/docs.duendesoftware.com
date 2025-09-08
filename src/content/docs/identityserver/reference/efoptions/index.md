@@ -10,4 +10,4 @@ redirect_from:
   - /identityserver/v7/reference/efoptions/
 ---
 
-If using the [Entity Framework Core store implementation](/identityserver/data/ef), you might need to configure those specific options.
+If using the [Entity Framework Core store implementation](/identityserver/data/ef.md), you might need to configure those specific options.

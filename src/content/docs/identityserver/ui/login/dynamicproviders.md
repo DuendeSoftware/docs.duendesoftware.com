@@ -10,7 +10,7 @@ redirect_from:
 ---
 
 Dynamic Identity Providers are a scalable solution for managing authentication with lots of external providers, without
-incurring performance penalties or requiring application recompilation. This feature, included in the [Enterprise Edition](/general/licensing/#enterprise-edition)
+incurring performance penalties or requiring application recompilation. This feature, included in the [Enterprise Edition](/general/licensing.md#enterprise-edition)
 of Duende IdentityServer, enables providers to be configured dynamically from a store at runtime.
 
 ## Dynamic Identity Providers
@@ -31,27 +31,27 @@ Support for Dynamic Identity Providers is included in the [Duende IdentityServer
 
 ## Store And Configuration Data
 
-Dynamic identity providers are configured in IdentityServer and require a store for the configuration data of [dynamic OIDC providers](../../../reference/models/idp/).
+Dynamic identity providers are configured in IdentityServer and require a store for the configuration data of [dynamic OIDC providers](/identityserver/reference/models/idp.md).
 
 There are two store implementations provided by Duende IdentityServer:
 
 * An in-memory store
-* A store backed by a database (using [Entity Framework Core](../../../data/ef/))
+* A store backed by a database (using [Entity Framework Core](/identityserver/data/ef.md))
 
-You could also implement your own store based on the [`IIdentityProviderStore` interface](../../../reference/stores/idp-store/).
+You could also implement your own store based on the [`IIdentityProviderStore` interface](/identityserver/reference/stores/idp-store.md).
 
 The configuration data for the OIDC provider is used to assign the configuration on the ASP.NET
 Core [OpenID Connect Options](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions) class,
 much like you would if you were to statically configure the options when using `AddOpenIdConnect()`.
 
-The [identity provider model documentation](../../../reference/models/idp) provides details for the model
+The [identity provider model documentation](/identityserver/reference/models/idp.md) provides details for the model
 properties and how they are mapped to the options.
 
 :::tip[Consider caching dynamic identity providers]
 Like other configuration data in IdentityServer, by default the dynamic provider configuration is loaded from the store
 on every request unless caching is enabled.
-If you use a custom store, there is an [extension method to enable caching](../../../data/configuration#caching-configuration-data).
-If you use the EF stores, there is a general helper [to enable caching for all configuration data](../../../data/ef#enabling-caching-for-configuration-store).
+If you use a custom store, there is an [extension method to enable caching](/identityserver/data/configuration.md#caching-configuration-data).
+If you use the EF stores, there is a general helper [to enable caching for all configuration data](/identityserver/data/ef.md#enabling-caching-for-configuration-store).
 :::
 
 Here's an example of adding a dynamic provider to an IdentityServer instance using the in-memory store:
@@ -112,7 +112,7 @@ You can use the `ConfigurationDbContext` database context to add dynamic identit
 ## Listing Dynamic Providers On The Login Page
 
 When working with dynamic providers, you'll typically want to display a list of the available providers on the login
-page. The [identity provider store (`IIdentityProviderStore`)](../../../reference/stores/idp-store/) can be used to query the database
+page. The [identity provider store (`IIdentityProviderStore`)](/identityserver/reference/stores/idp-store.md) can be used to query the database
 containing the dynamic providers.
 
 ```cs title="IIdentityProviderStore" {9}
@@ -286,7 +286,7 @@ builder.Services.ConfigureOptions<CustomOidcConfigureOptions>();
 ### DynamicProviderOptions
 
 The `DynamicProviderOptions` is an options class in the IdentityServer options object model, and provides
-[shared configuration options](../../../reference/options#dynamic-providers) for the dynamic identity providers
+[shared configuration options](/identityserver/reference/options.md#dynamic-providers) for the dynamic identity providers
 feature. For example, you can customize the path prefix for the dynamic providers callback path:
 
 ```csharp title="Program.cs"
@@ -307,8 +307,8 @@ Dynamic identity providers in Duende IdentityServer come with an implementation 
 In your solution, it may be necessary to support other authentication providers, such as a SAML-based authentication provider.
 
 We have two samples that show how to use non-OIDC authentication handlers with dynamic identity providers:
-* Adding the [WS-Federation protocol type](../../../identityserver/samples/ui/#adding-other-protocol-types-to-dynamic-providers)
-* Adding the [Saml2 protocol type](../../../identityserver/samples/ui/#using-sustainsyssaml2-with-dynamic-providers), using the [Sustainsys.Saml2](https://saml2.sustainsys.com/) open source library
+* Adding the [WS-Federation protocol type](/identityserver/samples/ui.mdx#adding-other-protocol-types-to-dynamic-providers)
+* Adding the [Saml2 protocol type](/identityserver/samples/ui.mdx#using-sustainsyssaml2-with-dynamic-providers), using the [Sustainsys.Saml2](https://saml2.sustainsys.com/) open source library
 
 In this section, we'll look at a minimal example of how to add other authentication handlers, such as the `GoogleHandler`, to dynamic identity providers, 
 
@@ -318,7 +318,7 @@ where `T` is the authentication handler type, `TOptions` is the options type for
 The authentication handler type and options type will typically be provided by the authentication provider itself.
 For example, the `GoogleHandler` and `GoogleOptions` types are provided by the `Google.AspNetCore.Authentication.OAuth` NuGet package.
 `TIdentityProvider` will typically be a model class that maps to the identity provider data in the database
-and can either be IdentityServer's [`IdentityProvider`](../../../reference/models/idp) class, or a custom type provided and implemented by you.
+and can either be IdentityServer's [`IdentityProvider`](/identityserver/reference/models/idp.md) class, or a custom type provided and implemented by you.
 
 Let's add Google authentication support to dynamic identity providers in IdentityServer!
 
@@ -326,11 +326,11 @@ We'll assume you have already added the `Microsoft.AspNetCore.Authentication.Goo
 
 ### 1. Implement A Custom IdentityProvider Type
 
-While IdentityServer's [`IdentityProvider`](../../../reference/models/idp) class has a `Properties` bag that can be used
+While IdentityServer's [`IdentityProvider`](/identityserver/reference/models/idp.md) class has a `Properties` bag that can be used
 to store dynamic identity provider configuration data, it's recommended to use a custom type that is specific to the dynamic
 identity provider.
 
-The `GoogleIdentityProvider` class can extend IdentityServer's [`IdentityProvider`](../../../reference/models/idp) class,
+The `GoogleIdentityProvider` class can extend IdentityServer's [`IdentityProvider`](/identityserver/reference/models/idp.md) class,
 and expose additional properties that are specific to the Google identity provider.  For a minimal Google implementation,
 that would be the `ClientId` and `ClientSecret`:
 

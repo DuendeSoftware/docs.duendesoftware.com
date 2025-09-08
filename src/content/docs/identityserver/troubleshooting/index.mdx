@@ -11,7 +11,7 @@ redirect_from:
   - /identityserver/v7/troubleshooting/wilson/
 ---
 
-import { Code } from "astro/components";
+import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 When troubleshooting an IdentityServer setup we have some tips and tricks to share. These are both ways to get more
@@ -279,6 +279,64 @@ When dealing with external authentication, you may want to set `MapInboundClaims
 
 When dealing with external authentication, you may want to implement `OnTicketReceived` to reduce the size of the cookie. This is a callback that is invoked after the external authentication process is complete. You can use this callback to remove any claims that are not needed by your solution.
 
+### Use Server-side Sessions
+
+If you have a Business Edition or higher license for IdentityServer, then you can use [server-side sessions][2] to store the
+user's session data in a data store instead of in the cookie. This will greatly reduce the size of the cookie while allowing you to store more data in the session.
+
+### Implement a Custom `ITicketStore` to Reduce Cookie Size
+
+When configuring the cookie authentication handler, you can provide a custom `ITicketStore` implementation to store the
+authentication ticket data server-side instead of in the cookie.
+
+```csharp
+// Program.cs
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        // Use your custom ITicketStore implementation:
+        options.SessionStore = new CustomTicketStore();
+    });
+
+```
+
+And then implement the `ITicketStore` interface to store the ticket data in a database or other storage mechanism.
+
+```csharp
+// CustomTicketStore.cs
+public class CustomTicketStore : ITicketStore
+{
+    public Task<string> StoreAsync(AuthenticationTicket ticket)
+    {
+        // Implement your logic to store the ticket data
+        // Return a unique identifier for the stored ticket
+    }
+
+    public Task<AuthenticationTicket> RetrieveAsync(string key)
+    {
+        // Implement your logic to retrieve the ticket data by key
+    }
+
+    public Task RemoveAsync(string key)
+    {
+        // Implement your logic to remove the ticket data by key
+    }
+
+    public Task RenewAsync(string key, AuthenticationTicket ticket)
+    {
+        // Implement your logic to renew the ticket data by key
+    }
+}
+```
+
+:::caution[ITicketStore and Dependency Injection]
+When using the `AddCookie` method to configure the cookie authentication handler, you cannot use dependency injection
+to resolve a service and its dependencies for `ITicketStore`.
+
+To work around this limitation, you can create a custom `IPostConfigureOptions<CookieAuthenticationOptions>` implementation
+like we did for [Server-Side Sessions][2], which uses [a shim][3] to inject an `IHttpContextAccessor` into the actual `ITicketStore` service.
+:::
+
 ## URL and Query String Size Limits and Management
 
 While most browsers currently support URLs longer than 2000 characters, web servers may still return an error status code
@@ -304,7 +362,7 @@ The combination of this `state` parameter with other data being added by the ext
 You can drastically reduce the size of the `state` parameter by storing the state in IdentityServer, rather than passing it along
 in the request URL.
 
-See [External Providers - State, URL length, And ISecureDataFormat](/identityserver/ui/login/external/#state-url-length-and-isecuredataformat)
+See [External Providers - State, URL length, And ISecureDataFormat](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat)
 for more information about this workaround.
 
 ### Increase the Maximum Size of URL or Query String data
@@ -419,3 +477,5 @@ When an application runs without an active user profile, any private key materia
 Even loading a certificate can fail, since the load operation could attempt to store the private key material in the user profile.
 
 [1]: https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags
+[2]: /identityserver/ui/server-side-sessions
+[3]: https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Configuration/DependencyInjection/PostConfigureApplicationCookieTicketStore.cs

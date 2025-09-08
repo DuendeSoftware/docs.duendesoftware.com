@@ -16,11 +16,11 @@ This URL is, in essence, the same authorization endpoint to which the client mad
 
 In the request to your login page where it logs the user in with a call to `SignInAsync`, it would then use the `returnUrl` to redirect the response back.
 This will cause the browser to re-issue the original authorize request from the client allowing your IdentityServer to complete the protocol work.
-An example of this redirect can be seen in the [local login](/identityserver/ui/login/local/) topic.
+An example of this redirect can be seen in the [local login](/identityserver/ui/login/local.md) topic.
 
 :::note
 Beware [open-redirect attacks](https://en.wikipedia.org/wiki/URL_redirection#security_issues) via the `returnUrl` parameter. You should validate that the `returnUrl` refers to a well-known location.
-Either use the `Url.IsLocalUrl` helper from ASP.NET Core, or use the [interaction service](/identityserver/reference/services/interaction-service/#iidentityserverinteractionservice-apis) from Duende IdentityServer for APIs to validate the `returnUrl` parameter.
+Either use the `Url.IsLocalUrl` helper from ASP.NET Core, or use the [interaction service](/identityserver/reference/services/interaction-service.md#iidentityserverinteractionservice-apis) from Duende IdentityServer for APIs to validate the `returnUrl` parameter.
 :::
 
 Keep in mind that this `returnUrl` is state that needs to be maintained during the user's login workflow.

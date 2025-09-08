@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 The most common way
-to use [access token management is for interactive web applications](/accesstokenmanagement/web-apps.md) -
+to use [access token management is for interactive web applications](/accesstokenmanagement/web-apps.mdx) -
 however, you may want to customize certain aspects of it. Here's what you can do.
 
 ## General Options

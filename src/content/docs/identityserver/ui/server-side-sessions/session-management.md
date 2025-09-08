@@ -18,7 +18,7 @@ These features are all provided via the `ISessionManagementService` service.
 
 ## ISessionManagementService
 
-The [session management service](/identityserver/reference/services/session-management-service/) provides administrative operations for querying and revoking the server-side sessions.
+The [session management service](/identityserver/reference/services/session-management-service.md) provides administrative operations for querying and revoking the server-side sessions.
 
 ### Quickstart UI
 
@@ -30,7 +30,7 @@ The Quickstart session administrative page requires a logged-in user to manage s
 
 The session management page looks like this by default, but of course you are free to customize or change it as needed:
 
-![A table showing the active user sessions in IdentityServer](./images/session_query.png)
+![A table showing the active user sessions in IdentityServer](images/session_query.png)
 
 
 ### Querying Sessions
@@ -82,7 +82,7 @@ userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQue
 To terminate session(s) for a user, use the `RemoveSessionsAsync` API.
 This accepts a `RemoveSessionsContext` which can filter on the subject and/or the session identifier to terminate.
 It then also has flags for what to terminate or revoke.
-This allows deleting a user's session record in the store, any associated tokens or consents in the [operational database](/identityserver/data/operational#grants), and/or notifying any clients via [back-channel logout](/identityserver/ui/logout/notification#back-channel-server-side-clients) that the user's session has ended.
+This allows deleting a user's session record in the store, any associated tokens or consents in the [operational database](/identityserver/data/operational.md#grants), and/or notifying any clients via [back-channel logout](/identityserver/ui/logout/notification.md#back-channel-server-side-clients) that the user's session has ended.
 There is also a list of client identifiers to control which clients are affected.
 
 An example to revoke everything for current sessions for subject id `12345` might be:

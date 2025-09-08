@@ -45,7 +45,7 @@ Edition or higher.
 ### Configuration
 
 Automatic Key Management is configured by the options in the `KeyManagement`
-property on the [`IdentityServerOptions`](/identityserver/reference/options#key-management).
+property on the [`IdentityServerOptions`](/identityserver/reference/options.md#key-management).
 
 ### Managed Key Lifecycle
 
@@ -84,13 +84,13 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 ### Key Storage
 
 Automatic Key Management stores keys through the abstraction of the
-[ISigningKeyStore](/identityserver/data/operational#keys). You can implement this
+[ISigningKeyStore](/identityserver/data/operational.md#keys). You can implement this
 extensibility point to customize the storage of your keys (perhaps using a key
 vault of some kind), or use one of the two implementations of the
 `ISigningKeyStore` that we provide:
 
 - the default `FileSystemKeyStore`, which writes keys to the file system.
-- the [EntityFramework operational store](/identityserver/data/ef#operational-store) which writes keys to a database
+- the [EntityFramework operational store](/identityserver/data/ef.md#operational-store) which writes keys to a database
   using
   EntityFramework.
 
@@ -174,7 +174,7 @@ loading and rotation of keys.
 
 The automatic key management feature can be disabled by setting the `Enabled`
 flag to `false` on the `KeyManagement` property of
-[`IdentityServerOptions`](/identityserver/reference/options#key-management):
+[`IdentityServerOptions`](/identityserver/reference/options.md#key-management):
 
 ```cs
 // Program.cs
@@ -233,7 +233,7 @@ Console.WriteLine($"Certificate saved to {name}.pfx");
 
 ## Adding Keys
 
-Signing keys are added with the [`AddSigningCredential`](/identityserver/reference/di#signing-keys) configuration
+Signing keys are added with the [`AddSigningCredential`](/identityserver/reference/di.md#signing-keys) configuration
 method:
 
 ```cs

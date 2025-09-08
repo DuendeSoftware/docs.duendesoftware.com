@@ -13,8 +13,8 @@ redirect_from:
 Welcome to Quickstart 3 for Duende IdentityServer!
 
 The previous quickstarts introduced
-[API access](/identityserver/quickstarts/1-client-credentials/) and
-[user authentication](/identityserver/quickstarts/2-interactive/). This quickstart will bring
+[API access](/identityserver/quickstarts/1-client-credentials.md) and
+[user authentication](/identityserver/quickstarts/2-interactive.md). This quickstart will bring
 the two together.
 
 In addition to the written steps below a YouTube video is available:
@@ -39,7 +39,7 @@ from a copy of
 the [reference implementation of Quickstart 2](https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v7/Quickstarts/2_InteractiveAspNetCore).
 Throughout this quickstart, paths are written relative to the base `_quickstart`
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview/#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview.md#preparation).
 :::
 
 ## Modifying The Client Configuration

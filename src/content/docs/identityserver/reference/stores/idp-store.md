@@ -12,7 +12,7 @@ redirect_from:
 
 #### Duende.IdentityServer.Stores.IIdentityProviderStore
 
-Used to dynamically load [identity provider configuration](/identityserver/reference/models/idp).
+Used to dynamically load [identity provider configuration](/identityserver/reference/models/idp.md).
 
 ```cs
 /// <summary>

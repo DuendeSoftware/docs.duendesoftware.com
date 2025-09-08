@@ -79,7 +79,7 @@ builder.Services
     });
 ```
 .NET 8 does not have built-in support for PAR. If you're using .NET 8, we have a sample of how to implement this flow
-available [here](/identityserver/samples/basics#mvc-client-with-pushed-authorization-requests).
+available [here](/identityserver/samples/basics.mdx#mvc-client-with-pushed-authorization-requests).
 
 ## Data Store
 

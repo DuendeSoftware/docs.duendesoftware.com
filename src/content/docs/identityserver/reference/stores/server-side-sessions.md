@@ -13,7 +13,7 @@ redirect_from:
 #### Duende.IdentityServer.Stores.IServerSideSessionStore
 
 Used to persist users' authentication session data when using
-the [server-side sessions feature](/identityserver/ui/server-side-sessions/).
+the [server-side sessions feature](/identityserver/ui/server-side-sessions/index.md).
 
 ```cs
 /// <summary>

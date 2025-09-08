@@ -65,8 +65,8 @@ be reflected in its output. You can customize the contents of the session via th
 handler's [ClaimAction](https://docs.microsoft.com/en-us/dotnet/API/microsoft.aspnetcore.authentication.claimactioncollectionmapextensions?view=aspnetcore-7.0)
 infrastructure, or by
 using [claims transformation](https://docs.microsoft.com/en-us/dotnet/API/microsoft.aspnetcore.authentication.iclaimstransformation?view=aspnetcore-7.0).
-For example, if you add a [claim](/identityserver/fundamentals/claims) to
-the [userinfo endpoint](/identityserver/reference/endpoints/userinfo) at IdentityServer that you would like to include
+For example, if you add a [claim](/identityserver/fundamentals/claims.md) to
+the [userinfo endpoint](/identityserver/reference/endpoints/userinfo.md) at IdentityServer that you would like to include
 in the */bff/user* endpoint, you need to add a corresponding ClaimAction in the BFF's OpenID Connect Handler to include
 the claim in the BFF's session.
 
@@ -87,7 +87,7 @@ mechanism (if provided).
 
 This is the URL to trigger logout. If the upstream provider includes a *sid* claim, the BFF logout endpoint requires
 this value as a query string parameter for CSRF protection. This behavior can be configured with the
-*RequireLogoutSessionId* in the [options](/bff/fundamentals/options).
+*RequireLogoutSessionId* in the [options](/bff/fundamentals/options.md).
 
 ## Typical Usage
 
@@ -114,7 +114,7 @@ if (resp.ok) {
 
 To protect against cross-site request forgery, you need to add
 a [static header](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers)
-to the GET request. The header's name and required value can be configured in the [options](/bff/fundamentals/options).
+to the GET request. The header's name and required value can be configured in the [options](/bff/fundamentals/options.md).
 
 ## Anonymous Session Response Option
 

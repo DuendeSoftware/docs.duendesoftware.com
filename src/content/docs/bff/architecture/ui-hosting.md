@@ -35,11 +35,11 @@ what that would look like:
 If you create a BFF host using our templates, the UI will be hosted in this way:
 
 ```bash title="Terminal"
-dotnet new bffremoteapi
+dotnet new duende-bff-remoteapi
 
 # or
 
-dotnet new bfflocalapi
+dotnet new duende-bff-localapi
 ```
 
 Many frontend applications require a build process, which complicates the use of the static file middleware at
@@ -66,7 +66,7 @@ the authentication cookie as normal.
 
 Effectively, this turns your front-end and BFF Host into two separately deployable units. You'll need to ensure that the
 two components are hosted on subdomains of the same domain so
-that [third party cookie blocking](/bff/architecture/third-party-cookies) doesn't prevent the frontend from including
+that [third party cookie blocking](/bff/architecture/third-party-cookies.md) doesn't prevent the frontend from including
 cookies in its requests to the BFF host.
 
 In order for this architecture to work, the following things are needed:

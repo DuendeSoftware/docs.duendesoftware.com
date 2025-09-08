@@ -1,15 +1,15 @@
 ---
-title: "IdentityServer4 to Duende IdentityServer v7.2"
+title: "IdentityServer4 to Duende IdentityServer v7.3"
 sidebar:
   order: 138
-  label: IdentityServer4 → v7.2
+  label: IdentityServer4 → v7.3
 ---
 
-import { Code } from "astro/components";
+import { Code } from "@astrojs/starlight/components";
 import { Steps } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-This upgrade guide covers upgrading from IdentityServer4 to Duende IdentityServer v7.2.
+This upgrade guide covers upgrading from IdentityServer4 to Duende IdentityServer v7.3.
 IdentityServer4 reached its end of life (EOL) on December 13, 2022. It is strongly advised to migrate to Duende IdentityServer.
 
 Depending on your current version of IdentityServer4, different steps may be required.
@@ -33,7 +33,7 @@ You can determine the version of IdentityServer4 by running the `dotnet list` co
   </TabItem>
 </Tabs>
 
-This command will print a list of packages you are using in your solution, along with their version.
+This command will print a list of packages you’re using in your solution, along with their version.
 
 ```bash title="Output"
    > IdentityServer4                            3.1.4       3.1.4
@@ -44,6 +44,26 @@ Depending on the package version shown, your next steps will be different:
 
 - If you are on IdentityServer v3.x, we recommend first [upgrading to IdentityServer4 v4.x](#identityserver4-v3x-to-identityserver-v4x), and then to [Duende IdentityServer](#identityserver4-v4x-to-duende-identityserver). The configuration object model changed between the two major versions of IdentityServer4, and we recommend upgrading step-by-step.
 - If you are on IdentityServer v4.x, you can immediately [upgrade to Duende IdentityServer](#identityserver4-v4x-to-duende-identityserver).
+
+## IdentityServer4 UI Templates
+
+:::note
+Check your current host project's UI elements against the latest templates in **[`Duende.Templates`](/identityserver/overview/packaging.mdx)** to ensure
+you’re using the latest recommendations and best practices.
+:::
+
+IdentityServer has always been a framework that championed customization and making the implementation your own,
+and we treat templates as a starting point in your journey to implementing an OIDC and OAuth server.
+
+During the development of IdentityServer4, the UI templates saw several changes between the years of **2018** to **2021**.
+
+We recommend two approaches to upgrading your UI elements of your IdentityServer host project:
+
+- Start with the latest templates and port your customizations to the new templates.
+- Use a code comparison tool to identify the changes you need to make to your templates.
+
+The first approach is the easiest, but it requires you to make changes to your project.
+The second approach is more involved, but it allows you to make changes to your project in a more controlled manner.
 
 ## IdentityServer4 v3.x to IdentityServer v4.x
 
@@ -86,7 +106,7 @@ It's likely some code changes will be required, especially when using the Identi
 [Visual Studio](https://visualstudio.microsoft.com/) and [JetBrains Rider](https://www.jetbrains.com/rider/) provide great code completion that can be of help here.
 
 :::tip[Use the new Razor Pages templates]
-If you have not made customizations to the IdentityServer UI templates, consider replacing them with the new Razor Pages-based templates as shown in [the quickstart tutorials](../../quickstarts/0-overview).
+If you have not made customizations to the IdentityServer UI templates, consider replacing them with the new Razor Pages-based templates as shown in [the quickstart tutorials](/identityserver/quickstarts/0-overview.md).
 :::
 
 A couple of compilation errors and required changes you may encounter:
@@ -141,7 +161,7 @@ A couple of compilation errors and required changes you may encounter:
   + if (context.IsNativeClient())
   ```
 
-* The name `ProcessLoginCallbackForOidc` does not exist in the current context:
+* The name `ProcessLoginCallbackForOidc` doesn’t exist in the current context:
 
   ```diff lang="csharp" title="*.cs"
   - ProcessLoginCallbackForOidc(result, additionalLocalClaims, localSignInProps);
@@ -163,7 +183,7 @@ A couple of compilation errors and required changes you may encounter:
 
 ### Step 3: Update Database Schema
 
-If you are using the `IdentityServer4.EntityFramework` package to store configuration and operational data in a [database](../../data),
+If you are using the `IdentityServer4.EntityFramework` package to store configuration and operational data in a [database](/identityserver/data/index.md),
 you'll need to create two database migrations that update the database schema.
 Note that you may want to change the database migration paths in the examples below to reflect your project structure.
 
@@ -352,14 +372,14 @@ Update the IdentityServer4 dependencies in your IdentityServer host project to D
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="IdentityServer4" Version="4.1.2" />
-+ <PackageReference Include="Duende.IdentityServer" Version="7.2.0" />
++ <PackageReference Include="Duende.IdentityServer" Version="7.3.0" />
 ```
 
 You'll need to make a similar change for all IdentityServer4 packages, including `IdentityServer4.EntityFramework` and `IdentityServer4.AspNetIdentity`. For example:
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
-+ <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.2.0" />
++ <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.3.0" />
 ```
 
 The IdentityModel package was renamed to Duende IdentityModel and needs updating if you reference it directly:
@@ -387,17 +407,17 @@ Replace all `IdentityModel` namespace usages with `Duende.IdentityModel`:
 + using Duende.IdentityModel;
 ```
 
-If you are using fully-qualified names in your code, those will need to be updated as well.
+If you’re using fully-qualified names in your code, those will need to be updated as well.
 
 ### Step 4: Remove AddDeveloperSigningCredential :badge[Optional]
 
 In your application startup code, typically found in the `ConfigureServices` method in `Startup.cs`, consider removing `AddDeveloperSigningCredential`.
 
-You can use Duende IdentityServer's built-in [manual or automatic key management](../../fundamentals/key-management) instead.
+You can use Duende IdentityServer's built-in [manual or automatic key management](/identityserver/fundamentals/key-management.md) instead.
 
 ### Step 5: Update Database Schema
 
-Whether you are using a [database](../../data) or a [custom store implementation](../..//reference/stores) for your configuration and operational data, you'll need to make some changes.
+Whether you are using a [database](/identityserver/data/index.md) or a [custom store implementation](/identityserver/reference/stores/index.md) for your configuration and operational data, you'll need to make some changes.
 The exact steps involved in updating your data store will depend on your implementation details.
 
 In this section, we'll look at updating the database schema based on the stores provided in the `Duende.IdentityServer.EntityFramework` package:
@@ -411,15 +431,15 @@ In this section, we'll look at updating the database schema based on the stores 
 - The server-side sessions feature requires a new table ([more details](https://github.com/DuendeSoftware/products/pull/743)).
 - The session coordination feature adds a column to the `Clients` table ([more details](https://github.com/DuendeSoftware/products/pull/820)).
 - Improve primary keys on the persisted grants table ([more details](https://github.com/DuendeSoftware/products/pull/793)).
-- Add new properties to the [`Duende.IdentityServer.Models.Client` model](/identityserver/reference/models/client):
+- Add new properties to the [`Duende.IdentityServer.Models.Client` model](/identityserver/reference/models/client.md):
 
   - `InitiateLoginUri` is a nullable string used for Third Party Initiated Login.
-  - `RequireDPoP` is a non-nullable boolean flag that controls if a client is required to use [DPoP](../../tokens/pop).
-  - `DPoPValidationMode` is a non-nullable column that controls the DPoP validation mechanism. Existing clients that are not using DPoP can set its value to `0`.
-  - `DPoPClockSkew` is a non-nullable timespan that controls how much clock skew is allowed for a particular DPoP client. Existing clients that are not using DPoP can set its value to a timespan of length ``0.
+  - `RequireDPoP` is a non-nullable boolean flag that controls if a client is required to use [DPoP](/identityserver/tokens/pop.md).
+  - `DPoPValidationMode` is a non-nullable column that controls the DPoP validation mechanism. Existing clients that aren’t using DPoP can set its value to `0`.
+  - `DPoPClockSkew` is a non-nullable timespan that controls how much clock skew is allowed for a particular DPoP client. Existing clients that aren’t using DPoP can set its value to a timespan of length ``0.
 
 - Two new properties have been added to the `Client` model:
-  - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](../../tokens/par). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
+  - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](/identityserver/tokens/par.md). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
   - `Client.PushedAuthorizationLifetime` is a new nullable integer property that controls the lifetime of pushed
     authorization requests (in seconds) for a client. It is safe to initialize this column to `null` for existing clients, which means the global value is used.
 - A new `PushedAuthorizationRequest` table has been added to store pushed authorization requests.
@@ -454,7 +474,7 @@ Note that you may want to change the database migration paths in the examples be
 
 ### Step 6: Migrate Signing Keys :badge[Optional]
 
-If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](../../fundamentals/key-management) which is included in the Business license.
+If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](/identityserver/fundamentals/key-management.md) which is included in the Business license.
 
 :::tip[Determine if you are using a custom signing key]
 In `Startup.cs`, look for a call to `AddSigningCredential()` that uses key material such as an `X509Certificate2`.
@@ -464,7 +484,7 @@ Client apps and APIs typically cache the key material published from IdentitySer
 When upgrading, consider how those applications will handle an upgraded token server with a new and different signing key.
 
 - If you can restart all client apps and APIs that depend on your current signing key, you can remove the old signing key and start to use automatic key management. A restart reloads the discovery document and the new signing key.
-- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](../../fundamentals/key-management#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
+- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](/identityserver/fundamentals/key-management.md#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
 
 ### Step 7: Verify Data Protection Configuration :badge[Optional]
 
@@ -489,13 +509,13 @@ As a consequence, if your content root path changes, the default settings for da
 Between different .NET versions, this default setting has changed:
 
 | Version  | Default                                                        |
-| -------- | -------------------------------------------------------------- |
+|----------|----------------------------------------------------------------|
 | .NET 3.1 | Content root path without directory separator suffix           |
 | .NET 5   | Content root path without directory separator suffix           |
 | .NET 6   | Content root path (normalized with directory separator suffix) |
 | .NET 7+  | Content root path without directory separator suffix           |
 
-Your application name might change (and existing data protection keys may become invalid) if you are currently targeting .NET 6 and do not have the application name set explicitly.
+Your application name might change (and existing data protection keys may become invalid) if you’re currently targeting .NET 6 and don’t have the application name set explicitly.
 
 To prevent this from happening, you can explicitly set the application name to the content root path without the directory separator character, as [documented on Microsoft Learn](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview?view=aspnetcore-6.0#setapplicationname).
 
@@ -551,3 +571,5 @@ As part of your upgrade from IdentityServer4 to Duende IdentityServer, we recomm
 - [Changes in AppAuth URL validator for logout](https://github.com/DuendeSoftware/IdentityServer/pull/619)
 - [Use of EmailClaimType option in ASP.NET Identity integration](https://github.com/DuendeSoftware/IdentityServer/pull/625)
 - `ClientConfigurationStore` now uses `IConfigurationDbContext` to allow for customization. If you have a customized Entity Framework Core-based store, you may need to update your constructors.
+- [The `SendLogoutNotificationAsync` method has been removed from the `DefaultBackChannelLogoutService` class](/identityserver/upgrades/v7_2-to-v7_3.md#the-sendlogoutnotificationasync-method-has-been-removed-from-the-defaultbackchannellogoutservice-class)
+- [Client `Secret` is now required for Clients with `ClientCredentials` grant](/identityserver/upgrades/v7_2-to-v7_3.md#client-secret-is-now-required-for-clients-with-clientcredentials-grant)

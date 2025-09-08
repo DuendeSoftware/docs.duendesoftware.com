@@ -8,6 +8,9 @@ redirect_from:
   - /identityserver/v5/reference/models/api_resource/
   - /identityserver/v6/reference/models/api_resource/
   - /identityserver/v7/reference/models/api_resource/
+  - /identityserver/v5/reference/models/
+  - /identityserver/v6/reference/models/
+  - /identityserver/v7/reference/models/
 ---
 
 ## Duende.IdentityServer.Models.ApiResource
@@ -51,7 +54,7 @@ This class models an API.
 
 * **`Scopes`**
 
-  List of API scope names. You need to create those using [ApiScope](/identityserver/reference/models/api-scope/).
+  List of API scope names. You need to create those using [ApiScope](/identityserver/reference/models/api-scope.md).
 
 ## Defining API resources In appsettings.json
 

@@ -10,7 +10,7 @@ redirect_from:
 ---
 
 
-Configuration data models the information for [Clients](/identityserver/fundamentals/clients)
+Configuration data models the information for [Clients](/identityserver/fundamentals/clients.md)
 and [Resources](/identityserver/fundamentals/resources).
 
 ## Stores
@@ -18,18 +18,18 @@ and [Resources](/identityserver/fundamentals/resources).
 Store interfaces are designed to abstract accessing the configuration data.
 The stores used in Duende IdentityServer are:
 
-* [Client store](/identityserver/reference/stores/client-store) for `Client` data.
-* [CORS policy service](/identityserver/reference/stores/cors-policy-service/)
-  for [CORS support](/identityserver/tokens/cors/). Given that this is so closely tied to the `Client` configuration
+* [Client store](/identityserver/reference/stores/client-store.md) for `Client` data.
+* [CORS policy service](/identityserver/reference/stores/cors-policy-service.md)
+  for [CORS support](/identityserver/tokens/cors.md). Given that this is so closely tied to the `Client` configuration
   data, the CORS policy service is considered one of the configuration stores.
-* [Resource store](/identityserver/reference/stores/resource-store/) for `IdentityResource`, `ApiResource`, and
+* [Resource store](/identityserver/reference/stores/resource-store.md) for `IdentityResource`, `ApiResource`, and
   `ApiScope` data.
-* [Identity Provider store](/identityserver/reference/stores/idp-store/) for `IdentityProvider` data.
+* [Identity Provider store](/identityserver/reference/stores/idp-store.md) for `IdentityProvider` data.
 
 ## Registering Custom Stores
 
 Custom implementations of the stores must be registered in the ASP.NET Core service provider.
-There are [convenience methods](/identityserver/reference/di/#configuration-stores) for registering these.
+There are [convenience methods](/identityserver/reference/di.md#configuration-stores) for registering these.
 For example:
 
 ```cs
@@ -47,7 +47,7 @@ Configuration data is used frequently during request processing.
 If this data is loaded from a database or other external store, then it might be expensive to frequently re-load the
 same data.
 
-Duende IdentityServer provides [convenience methods](/identityserver/reference/di#caching-configuration-data) to
+Duende IdentityServer provides [convenience methods](/identityserver/reference/di.md#caching-configuration-data) to
 enable caching data from the various stores.
 The caching implementation relies upon an `ICache<T>` service and must also be added to the ASP.NET Core service provider.
 For example:
@@ -66,7 +66,7 @@ builder.Services.AddIdentityServer()
 ```
 
 The duration of the data in the default cache is configurable on
-the [IdentityServerOptions](/identityserver/reference/options#caching).
+the [IdentityServerOptions](/identityserver/reference/options.md#caching).
 For example:
 
 ```cs
@@ -95,7 +95,7 @@ Further customization of the cache is possible:
 
 ## In-Memory Stores
 
-The various [in-memory configuration APIs](/identityserver/reference/di#configuration-stores) allow for configuring
+The various [in-memory configuration APIs](/identityserver/reference/di.md#configuration-stores) allow for configuring
 IdentityServer from an in-memory list of the various configuration objects.
 These in-memory collections can be hard-coded in the hosting application, or could be loaded dynamically from a
 configuration file or a database.

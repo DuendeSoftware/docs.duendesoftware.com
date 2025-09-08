@@ -8,7 +8,7 @@ sidebar:
     text: v4
     variant: tip
 ---
-import { Code } from "astro/components";
+import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 Duende.BFF (Backend for Frontend) supports multiple frontends in a single BFF host. This is useful for scenarios where you want to serve several SPAs or frontend apps from the same backend, each with their own authentication and API proxying configuration.
@@ -163,7 +163,7 @@ builder.Services.AddBff()
 You can configure remote API proxying in two ways:
 
 - **Single YARP proxy for all frontends:**
-  You can set up a single YARP proxy for all frontends, as shown in the [Single Frontend Guide](/bff/getting-started/single-frontend#5-adding-remote-apis).
+  You can set up a single YARP proxy for all frontends, as shown in the [Single Frontend Guide](/bff/getting-started/single-frontend.mdx#5-adding-remote-apis).
 
 - **Direct proxying per frontend:**
   You can configure remote APIs for each frontend individually:
@@ -184,4 +184,4 @@ This allows each frontend to have its own set of proxied remote APIs.
 
 ### 6. Server Side Sessions
 
-Server side session configuration is the same as in the single frontend scenario. See the [Single Frontend Guide](/bff/getting-started/single-frontend#6-adding-server-side-sessions) for details.
+Server side session configuration is the same as in the single frontend scenario. See the [Single Frontend Guide](/bff/getting-started/single-frontend.mdx#6-adding-server-side-sessions) for details.

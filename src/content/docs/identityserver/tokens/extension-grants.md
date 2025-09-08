@@ -25,7 +25,7 @@ Extension grants allow adding support for non-standard token issuance scenarios,
 * federation
 * encapsulating custom input parameters
 
-You can add support for additional grant types by implementing the [IExtensionGrantValidator](/identityserver/reference/validators/extension-grant-validator/) interface.
+You can add support for additional grant types by implementing the [IExtensionGrantValidator](/identityserver/reference/validators/extension-grant-validator.md) interface.
 
 ## Token Exchange
 
@@ -125,7 +125,7 @@ default.
 Any sensitive values you use as input to your extension grant validator that you do not want included in the logs should
 be filtered.
 This can be done by adding those parameter names on the `Logging.TokenRequestSensitiveValuesFilter` collection on
-the [IdentityServerOptions](/identityserver/reference/options#logging).
+the [IdentityServerOptions](/identityserver/reference/options.md#logging).
 :::
 
 ## Token Exchange For Impersonation And Delegation
@@ -134,7 +134,7 @@ One of the primary use cases of the token exchange specification is creating tok
 impersonation scenarios. In these scenarios you want to forward certain token and identity information over multiple
 hops in a call chain.
 
-![A digrams showing how token exchange works](./images/token_exchange.png)
+![A digrams showing how token exchange works](images/token_exchange.png)
 
 ## Impersonation
 
@@ -207,7 +207,7 @@ context.Result = new GrantValidationResult(
 ```
 
 To emit the `act` claim into outgoing tokens,
-your [profile service](/identityserver/reference/services/profile-service/) must know about it. The following simple
+your [profile service](/identityserver/reference/services/profile-service.md) must know about it. The following simple
 profile service emits the `act` claim if the token request is in the context of a token exchange operation:
 
 ```csharp
@@ -232,4 +232,4 @@ public class ProfileService : IProfileService
 }
 ```
 
-See [here](/identityserver/samples/tokens) for the full source code.
+See [here](/identityserver/samples/tokens.mdx) for the full source code.

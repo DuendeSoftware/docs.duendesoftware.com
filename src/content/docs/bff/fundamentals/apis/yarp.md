@@ -6,6 +6,7 @@ sidebar:
 redirect_from:
   - /bff/v2/apis/yarp/
   - /bff/v3/fundamentals/apis/yarp/
+  - /bff/fundamentals/yarp
   - /identityserver/v5/bff/apis/yarp/
   - /identityserver/v6/bff/apis/yarp/
   - /identityserver/v7/bff/apis/yarp/
@@ -123,7 +124,7 @@ configuration:
 }
 ```
 
-Similarly to the [simple HTTP forwarder](/bff/fundamentals/apis/remote#access-token-requirements), the allowed values
+Similarly to the [simple HTTP forwarder](/bff/fundamentals/apis/remote.mdx#access-token-requirements), the allowed values
 for the token type are *User*, *Client*, *UserOrClient*.
 
 Routes that set the *Duende.Bff.Yarp.TokenType* metadata **require** the given type of access token. If it is

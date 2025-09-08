@@ -19,7 +19,7 @@ from a copy of
 the [reference implementation of Quickstart 4](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/4_EntityFramework).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview/#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview.md#preparation).
 :::
 
 IdentityServer's flexible design allows you to use any database you want to
@@ -58,7 +58,7 @@ Start by creating a new IdentityServer project that will use ASP.NET Core
 Identity. Run the following commands from the `src` directory:
 
 ```console
-dotnet new isaspid -n IdentityServerAspNetIdentity
+dotnet new duende-is-aspid -n IdentityServerAspNetIdentity
 cd ..
 dotnet sln add ./src/IdentityServerAspNetIdentity
 ```
@@ -232,11 +232,11 @@ IdentityServer to log in. Login with one of the users created by the seed
 process (e.g., alice/Pass123$), and after that you will be redirected back to
 the Web client application where your user's claims should be listed.
 
-![ASP.NET Core application showing properties and claims on a ClaimsPrincipal](./images/aspid_claims.png)
+![ASP.NET Core application showing properties and claims on a ClaimsPrincipal](images/aspid_claims.png)
 
 You should also be able to go to the call api page at `https://localhost:5002/callapi` to invoke the API on behalf of the user:
 
-![Showing claims retrieved from an API in an ASP.NET Core application](./images/aspid_api_claims.png)
+![Showing claims retrieved from an API in an ASP.NET Core application](images/aspid_api_claims.png)
 
 Congratulations, you're using users from ASP.NET Core Identity in IdentityServer!
 
@@ -296,9 +296,8 @@ IdentityServer contains an extensibility point called the `IProfileService` that
 is responsible for retrieval of user claims. The ASP.NET Identity Integration
 includes an implementation of `IProfileService` that retrieves claims from
 ASP.NET Identity. You can extend that implementation to use the custom profile
-data as a source of claims data. [See here](/identityserver/reference/services/profile-service/) for more details on
-the profile
-service.
+data as a source of claims data. [See here](/identityserver/reference/services/profile-service.md) for more details on
+the profile service.
 
 Create a new file called `src/IdentityServerAspNetIdentity/CustomProfileService.cs` and add the
 following code to it:

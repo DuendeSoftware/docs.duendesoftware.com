@@ -9,7 +9,7 @@ redirect_from:
   - /identityserver/v7/ui/server_side_sessions/session_expiration/
 ---
 
-import { Code } from "astro/components";
+import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 If the user session ends when the session cookie expires without explicitly triggering logout, there is most likely a
@@ -22,7 +22,7 @@ logout.
 ## Expiration Configuration
 
 The expiration configuration features can be configured with
-the [server-side session options](/identityserver/reference/options#server-side-sessions).
+the [server-side session options](/identityserver/reference/options.md#server-side-sessions).
 It is enabled by default, but if you wish to disable it or change how often IdentityServer will check for expired
 sessions, you can.
 
@@ -49,9 +49,9 @@ builder.Services.AddIdentityServer(options => {
 ### Back-channel Logout
 
 When the session cleanup job removes expired records, it will by default also
-trigger [back-channel logout notifications](/identityserver/ui/logout/notification#back-channel-server-side-clients)
+trigger [back-channel logout notifications](/identityserver/ui/logout/notification.md#back-channel-server-side-clients)
 to client applications participating in the session. You can use this mechanism to create
-an [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeout/) that applies across all your client applications.
+an [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeout.md) that applies across all your client applications.
 
 The `ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout` flag enables this behavior, and it is on by default.
 
@@ -62,7 +62,7 @@ you're using ASP.NET Core Identity or not.
 
 <Tabs>
     <TabItem label="Default behavior">
-        The default session lifetime of 10 hours is inherited from the [`IdentityServerOptions.Authentication.CookieLifetime`](/identityserver/reference/options/#authentication) property.
+        The default session lifetime of 10 hours is inherited from the [`IdentityServerOptions.Authentication.CookieLifetime`](/identityserver/reference/options.md#authentication) property.
         When configuring IdentityServer, you can override this default:
 
         <Code

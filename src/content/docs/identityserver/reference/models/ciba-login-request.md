@@ -11,7 +11,7 @@ redirect_from:
 
 ## Duende.IdentityServer.Models.BackchannelUserLoginRequest
 
-Models the information to initiate a user login request for [CIBA](/identityserver/ui/ciba).
+Models the information to initiate a user login request for [CIBA](/identityserver/ui/ciba.md).
 
 * **`InternalId`**
 

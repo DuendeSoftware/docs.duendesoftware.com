@@ -127,7 +127,7 @@ var customerResource = new ApiResource("customer", "Customer API")
     }
 ```
 
-If a client now requested a scope belonging to the `customer` resource, the access token would contain the additional claims (if provided by your [profile service](/identityserver/reference/services/profile-service/)).
+If a client now requested a scope belonging to the `customer` resource, the access token would contain the additional claims (if provided by your [profile service](/identityserver/reference/services/profile-service.md)).
 
 ```json
     {
@@ -162,5 +162,5 @@ var invoiceApi = new ApiResource("invoice", "Invoice API")
 ```
 
 :::note
-Make sure that you have configured your IdentityServer for the required signing algorithm. See [here](/identityserver/fundamentals/key-management/) for more details.
+Make sure that you have configured your IdentityServer for the required signing algorithm. See [here](/identityserver/fundamentals/key-management.md) for more details.
 :::

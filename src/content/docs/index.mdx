@@ -22,6 +22,8 @@ hero:
       link: https://github.com/DuendeSoftware/community
       icon: external
       variant: minimal
+redirect_from:
+  - /foss/
 ---
 
 import {
@@ -39,6 +41,8 @@ import Newsletter from "~/components/Newsletter.astro";
 
         ```bash title="Terminal"
         dotnet new install Duende.Templates
+        dotnet new duende-is -o DuendeIdentityServer
+        dotnet run --project DuendeIdentityServer
         ```
     </Card>
     <Card title="Demo Server" icon="setting" href="https://demo.duendesoftware.com">

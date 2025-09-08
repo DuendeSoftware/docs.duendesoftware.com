@@ -9,6 +9,9 @@ redirect_from:
   - /identityserver/v5/reference/endpoints/authorize/
   - /identityserver/v6/reference/endpoints/authorize/
   - /identityserver/v7/reference/endpoints/authorize/
+  - /identityserver/v5/reference/endpoints/
+  - /identityserver/v6/reference/endpoints/
+  - /identityserver/v7/reference/endpoints/
 ---
 
 The authorize endpoint can be used to request tokens or authorization codes via the browser.
@@ -148,7 +151,7 @@ GET /connect/authorize?
 
 ## .NET Client Library
 
-You can use the [Duende IdentityModel](../../../identitymodel) client library to programmatically create
+You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically create
 authorize request URLs from .NET code.
 
 ```cs

@@ -11,7 +11,7 @@ redirect_from:
   - /identityserver/v7/tokens/dynamic_validation/
 ---
 
-You can hook into the token request pipeline by implementing the [ICustomTokenRequestValidator](/identityserver/reference/validators/custom-token-request-validator/) interface.
+You can hook into the token request pipeline by implementing the [ICustomTokenRequestValidator](/identityserver/reference/validators/custom-token-request-validator.md) interface.
 
 This allows you to
 

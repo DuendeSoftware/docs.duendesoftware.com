@@ -24,7 +24,7 @@ from a copy of
 the [reference implementation of Quickstart 3](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/3_AspNetCoreAndApis).
 Throughout this quickstart, paths are written relative to the base `quickstart`
 directory created in part 1, which is the root directory of the reference
-implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview/#preparation).
+implementation. You will also need to [install the IdentityServer templates](/identityserver/quickstarts/0-overview.md#preparation).
 :::
 
 In the previous quickstarts, you configured clients and scopes with code.
@@ -40,7 +40,7 @@ multiple IdentityServer instances, you will use the
 :::note
 This quickstart shows how to add Entity Framework support to IdentityServer
 manually. There is also a template that will create a new IdentityServer project
-with the EntityFramework integration already added: `dotnet new isef`.
+with the EntityFramework integration already added: `dotnet new duende-is-ef`.
 :::
 
 ## Configure IdentityServer
@@ -249,7 +249,7 @@ Now if you run the IdentityServer project, the database should be created and
 seeded with the quickstart configuration data. You should be able to use a tool
 like SQL Lite Studio to connect and inspect the data.
 
-![SQLiteStudio showing the contents of an IdentityServer database](./images/ef_database.png)
+![SQLiteStudio showing the contents of an IdentityServer database](images/ef_database.png)
 
 :::note
 The `InitializeDatabase` method is convenient way to seed the database, but this
