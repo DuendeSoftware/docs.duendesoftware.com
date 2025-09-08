@@ -217,7 +217,7 @@ export default defineConfig({
         {
           label: "Introspection for ASP.NET Core",
           badge: "oss",
-          autogenerate: { directory: "introspection-auth-handler" },
+          autogenerate: { directory: "introspection" },
           collapsed: true,
         },
       ],

@@ -13,7 +13,7 @@ redirect_from:
 
 If you are using [reference tokens](/identityserver/tokens/reference.md), you need an authentication handler that
 implements the back-channel validation via the [OAuth 2.0 token introspection](https://tools.ietf.org/html/rfc7662)
-protocol, e.g. [Duende.AspNetCore.Authentication.OAuth2Introspection](/introspection-auth-handler/index.mdx):
+protocol, e.g. [Duende.AspNetCore.Authentication.OAuth2Introspection](/introspection/index.mdx):
 
 ```csharp
 // Program.cs
