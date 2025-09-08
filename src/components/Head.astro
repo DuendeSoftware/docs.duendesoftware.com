@@ -5,8 +5,10 @@ import Default from "@astrojs/starlight/components/Head.astro";
 
 const { url, site } = Astro;
 const openGraphImageUrl = getImagePath({ url, site });
+const canonicalUrl = url?.href?.endsWith('/') ? url.href.slice(0, -1) : url?.href;
 ---
 
 <Default />
 {openGraphImageUrl && <meta property="og:image" content={openGraphImageUrl} />}
 <Font cssVariable="--font-roboto" />
+{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
