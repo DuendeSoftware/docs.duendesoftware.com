@@ -58,7 +58,7 @@ Note that both the frontend and backend are within a single project within the B
 
 Let's get into Blazor rending modes and whether the modes are suitable with the BFF pattern.
 
-## Blazor Rending Modes
+## Blazor Rendering Modes
 
 Blazor
 supports [several rendering](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-9.0#render-modes)
