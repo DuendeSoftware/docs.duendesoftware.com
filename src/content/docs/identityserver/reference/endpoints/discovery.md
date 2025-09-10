@@ -16,7 +16,65 @@ about your IdentityServer - it returns information like the issuer name, key mat
 
 The discovery endpoint is available via `/.well-known/openid-configuration` relative to the base address, e.g.:
 
-    https://demo.duendesoftware.com/.well-known/openid-configuration
+```text
+https://demo.duendesoftware.com/.well-known/openid-configuration
+```
+
+## Issuer Name and Path Base
+
+When your IdentityServer is hosted in an application that uses [ASP.NET Core's `PathBaseMiddleware`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.extensions.usepathbasemiddleware), the base path will be
+included in the issuer name and discovery document URLs. For example, if your application is configured with a path base
+of `/identity`, your configuration will look like this:
+
+```csharp title="Program.cs"
+var builder = WebApplication.CreateBuilder(args);
+
+// 👨‍💻 configure Application Host
+
+var app = builder.Build();
+app.UseSerilogRequestLogging();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+// 👋 Configuring the path base
+app.UsePathBase("/identity");
+
+app.UseStaticFiles();
+app.UseRouting();
+
+app.UseIdentityServer();
+app.UseAuthorization();
+
+app.MapRazorPages()
+    .RequireAuthorization();
+
+return app;
+```
+
+And the discovery document will look like this:
+
+```json title=".well-known/openid-configuration"
+{
+  "issuer": "https://localhost:5001/identity",
+  "jwks_uri": "https://localhost:5001/identity/.well-known/openid-configuration/jwks",
+  "authorization_endpoint": "https://localhost:5001/identity/connect/authorize",
+  "token_endpoint": "https://localhost:5001/identity/connect/token",
+  "userinfo_endpoint": "https://localhost:5001/identity/connect/userinfo",
+  "end_session_endpoint": "https://localhost:5001/identity/connect/endsession",
+  "check_session_iframe": "https://localhost:5001/identity/connect/checksession",
+  "revocation_endpoint": "https://localhost:5001/identity/connect/revocation",
+  "introspection_endpoint": "https://localhost:5001/identity/connect/introspect",
+  "device_authorization_endpoint": "https://localhost:5001/identity/connect/deviceauthorization",
+  "backchannel_authentication_endpoint": "https://localhost:5001/identity/connect/ciba",
+  "pushed_authorization_request_endpoint": "https://localhost:5001/identity/connect/par"
+}
+```
+
+This can be helpful when configuring IdentityServer in a multi-tenant scenario where the base path is used to
+identify the tenant.
 
 ## .NET Client Library
 
