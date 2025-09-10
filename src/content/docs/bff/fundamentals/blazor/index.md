@@ -104,7 +104,7 @@ The Interactive Server mode allows developers to render pages built with Blazor 
 
 The BFF pattern is not typically applicable to this mode, as most interactivity is handled on the server by the Blazor Server framework with state changes being pushed to the client via WebSockets.
 
-You may still want to explore `AuthenticationStateProvider` for managing authentication state, see the section below for more information.
+You may still want to explore `AuthenticationStateProvider` for managing authentication state, see the section below for more information. You may also want to explore the [Session Management](/bff/fundamentals/session/index.md) section for more information on how to configure the BFF to use sessions.
 
 ### Interactive WebAssembly
 
@@ -131,7 +131,8 @@ You will also need to modify the `Program.cs` file in the `Server` project to co
 ```csharp
 // Server/Program.cs
 builder.Services.AddBff()
-    .AddServerSideSessions() // Add in-memory implementation of server side sessions
+    // Add in-memory implementation
+    .AddServerSideSessions() 
     .AddBlazorServer();
 ```
 
@@ -139,7 +140,7 @@ The `AddBlazorServer` method will configure the BFF to use services on the host 
 
 You will also need to modify the ASP.NET Core pipeline to use the BFF:
 
-```csharp
+```csharp {25-26, 31-32}
 // Server/Program.cs
 var app = builder.Build();
 
@@ -191,7 +192,7 @@ dotnet add package Duende.BFF.Blazor.Client
 
 You will also need to modify the `Program.cs` file in the `Client` project to configure the BFF in the services collection:
 
-```csharp
+```csharp {11-14}
 // Client/Program.cs
 using BlazorWasm.Client;
 using Duende.Bff.Blazor.Client;
