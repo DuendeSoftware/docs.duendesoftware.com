@@ -366,18 +366,20 @@ It's also possible to track login attempts, sign-ins, sign-outs, and two-factor 
 
 The `Microsoft.AspNetCore.Identity` meter provides the following metrics:
 
-* `aspnetcore.identity.user.create.duration`
-* `aspnetcore.identity.user.update.duration`
-* `aspnetcore.identity.user.delete.duration`
-* `aspnetcore.identity.user.check_password_attempts`
-* `aspnetcore.identity.user.generated_tokens`
-* `aspnetcore.identity.user.verify_token_attempts`
-* `aspnetcore.identity.sign_in.authenticate.duration`
-* `aspnetcore.identity.sign_in.check_password_attempts`
-* `aspnetcore.identity.sign_in.sign_ins`
-* `aspnetcore.identity.sign_in.sign_outs`
-* `aspnetcore.identity.sign_in.two_factor_clients_remembered`
-* `aspnetcore.identity.sign_in.two_factor_clients_forgotten`
+* User management metrics
+  * Duration of user creation operations (`aspnetcore.identity.user.create.duration`)
+  * Duration of user update operations (`aspnetcore.identity.user.update.duration`)
+  * Duration of user deletion operations (`aspnetcore.identity.user.delete.duration`)
+  * Number of password verification attempts (`aspnetcore.identity.user.check_password_attempts`)
+  * Number of tokens generated for users, such as password reset tokens (`aspnetcore.identity.user.generated_tokens`)
+  * Number of token verification attempts (`aspnetcore.identity.user.verify_token_attempts`)
+* Authentication metrics
+  * Duration of authentication operations (`aspnetcore.identity.sign_in.authenticate.duration`)
+  * Number of password check attempts at sign-in (`aspnetcore.identity.sign_in.check_password_attempts`)
+  * Number of successful sign-ins (`aspnetcore.identity.sign_in.sign_ins`)
+  * Number of sign-outs (`aspnetcore.identity.sign_in.sign_outs`)
+  * Number of remembered two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_remembered`)
+  * Number of forgottem two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_forgotten`)
 
 ## Traces
 
