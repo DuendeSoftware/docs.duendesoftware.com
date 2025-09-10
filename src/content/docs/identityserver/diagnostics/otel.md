@@ -379,7 +379,7 @@ The `Microsoft.AspNetCore.Identity` meter provides the following metrics:
   * Number of successful sign-ins (`aspnetcore.identity.sign_in.sign_ins`)
   * Number of sign-outs (`aspnetcore.identity.sign_in.sign_outs`)
   * Number of remembered two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_remembered`)
-  * Number of forgottem two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_forgotten`)
+  * Number of forgotten two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_forgotten`)
 
 ## Traces
 
