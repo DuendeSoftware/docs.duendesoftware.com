@@ -47,6 +47,7 @@ builder.Services.AddBff(options =>
 
 * ***AutomaticallyRegisterBffMiddleware*** (added in 4.0)
     When applying BFF V4 multiple frontends, a lot of middlewares get automatically added to the pipeline. For example, the frontend selection middleware, the authentication handlers, etc. If you don't want this automatic behavior, then you can turn it off and register these middlewares manually. 
+    
 
 * ***IndexHtmlClientName***
     If BFF is configured to automatically retrieve the index.html, then it needs a http client to do so. With this name you can automatically configure http client in the http client factory. 
