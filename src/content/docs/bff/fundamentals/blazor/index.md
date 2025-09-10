@@ -20,7 +20,7 @@ interactive web applications, it also has some challenges when it comes to secur
 
 With the Duende BFF Security Framework, we aim to address these challenges or at the very least give guidance on how to
 deal with them given your Blazor's solution choices. You will notice that the BFF security pattern is not applicable to
-all Blazor implementations but rather to specific rendering scenarios. The goal of the BFF is to keep tokens out of the client and only use them in the secure context of the server.
+all Blazor implementations but rather to specific rendering modes. The goal of the BFF is to keep tokens out of the client and only use them in the secure context of the server.
 
 ## Architecture
 
