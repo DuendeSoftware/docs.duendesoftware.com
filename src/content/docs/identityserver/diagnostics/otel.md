@@ -23,7 +23,7 @@ Added in Duende IdentityServer v6.1 and expanded in v7.0
 telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior,
 especially in highly distributed systems.
 
-.NET 8 comes with first class support for Open Telemetry. IdentityServer emits traces, metrics and logs.
+.NET 8 comes with first class support for Open Telemetry. IdentityServer emits traces, metrics, and logs.
 
 ### Metrics
 
@@ -353,6 +353,31 @@ You can get metrics for the following events:
 
 Refer to the [ASP.NET Core documentation](https://learn.microsoft.com/en-us/aspnet/core/log-mon/metrics/built-in?view=aspnetcore-10.0)
 for more information about ASP.NET Core built-in metrics.
+
+### ASP.NET Core Identity metrics
+
+:::tip
+Added in .NET 10
+:::
+
+When using ASP.NET Identity, metrics are available for key user and sign-in operation metrics.
+These let you monitor user management activities like creating users, changing passwords, etc.
+It's also possible to track login attempts, sign-ins, sign-outs, and two-factor authentication usage.
+
+The `Microsoft.AspNetCore.Identity` meter provides the following metrics:
+
+* `aspnetcore.identity.user.create.duration`
+* `aspnetcore.identity.user.update.duration`
+* `aspnetcore.identity.user.delete.duration`
+* `aspnetcore.identity.user.check_password_attempts`
+* `aspnetcore.identity.user.generated_tokens`
+* `aspnetcore.identity.user.verify_token_attempts`
+* `aspnetcore.identity.sign_in.authenticate.duration`
+* `aspnetcore.identity.sign_in.check_password_attempts`
+* `aspnetcore.identity.sign_in.sign_ins`
+* `aspnetcore.identity.sign_in.sign_outs`
+* `aspnetcore.identity.sign_in.two_factor_clients_remembered`
+* `aspnetcore.identity.sign_in.two_factor_clients_forgotten`
 
 ## Traces
 
