@@ -32,7 +32,7 @@ jobs:
           await github.rest.repos.createDispatchEvent({
             owner: '${{ github.repository_owner }}',
             repo: '${{ secrets.OPS_REPOSITORY_NAME }}',
-            event_type: 'trigger-workflow',
+            event_type: 'deploy-docs',
             client_payload: {
               "source_repo": "${{ github.repository }}",
               "ref": "${{ github.ref }}",
