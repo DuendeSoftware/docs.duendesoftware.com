@@ -1,4 +1,4 @@
-name: Azure Static Web Apps CI/CD
+name: ci
 
 on:
   push:
@@ -10,56 +10,12 @@ on:
       - main
 
 jobs:
-  build_and_deploy_job:
-    env: 
-      AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F }}
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Run build
+      - name: build
         run: |
-          echo $PWD
-          ./build.sh
-      - name: Build And Deploy
-        if: (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && env.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F != ''
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-          action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match you app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/root" # App source code path
-          api_location: "api" # Api source code path - optional
-          app_artifact_location: "" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
-
-  close_pull_request_job:
-    env: 
-      AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-      issues: write
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        if: (github.event_name == 'pull_request' && github.event.action == 'closed') && env.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F != ''
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          app_location: "/root" # App source code path
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_OCEAN_048B8E60F }}
-          action: "close"
+          docker build .
