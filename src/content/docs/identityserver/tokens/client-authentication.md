@@ -7,6 +7,7 @@ sidebar:
   order: 140
 redirect_from:
   - /identityserver/v5/tokens/client_authentication/
+  - /identityserver/v5/tokens/authentication/
   - /identityserver/v5/tokens/authentication/overview/
   - /identityserver/v5/tokens/authentication/shared_secret/
   - /identityserver/v5/tokens/authentication/jwt/
