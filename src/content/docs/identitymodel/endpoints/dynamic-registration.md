@@ -29,18 +29,18 @@ var response = await client.RegisterClientAsync(new DynamicClientRegistrationReq
 ```
 
 :::note
-The *DynamicClientRegistrationDocument* class has strongly typed
+The `DynamicClientRegistrationDocument` class has strongly typed
 properties for all standard registration parameters as defines by the
 specification. If you want to add custom parameters, it is recommended
 to derive from this class and add your own properties.
 :::
 
-The response is of type *RegistrationResponse* and has properties for
+The response is of type `RegistrationResponse` and has properties for
 the standard response parameters. You also have access to the raw
-response and to a parsed JSON document (via the *Raw* and *Json*
+response and to a parsed JSON document (via the `Raw` and `Json`
 properties).
 
-Before using the response, you should always check the *IsError*
+Before using the response, you should always check the `IsError`
 property to make sure the request was successful:
 
 ```csharp
