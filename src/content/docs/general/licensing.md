@@ -162,6 +162,14 @@ Again, the absence of a license is permitted for development and testing, and th
 does not disable any of these features. Similarly, using an expired license that includes
 those features does not cause those features to be disabled.
 
+:::tip
+When rolling over to a renewed license, you can configure the new license before the old
+license expires. While the expiration timestamp of a license is used to validate a license
+is active, the start date is an administrative data point IdentityServer does not take
+into account for license validation. In other words, you can safely configure the new
+license before the old one lapses.
+:::
+
 ### Trial Mode
 
 Using IdentityServer without a license is considered Trial Mode. In Trial Mode, all
