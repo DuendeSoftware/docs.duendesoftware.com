@@ -149,13 +149,11 @@ var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
    .WithProxiedStaticAssets(new Uri("https://localhost:3000")); // https://localhost:3000 would be the URL of your development web server.
 ```
 
-While this can also be done in production, it will proxy all static assets through the BFF. This will increase the bandwidth consumed by the BFF 
-and reduce the overall performance of your application. 
+While this can also be done in production, it will proxy all static assets through the BFF. This will increase the bandwidth consumed by the BFF and reduce the overall performance of your application. 
 
+### Proxying Assets Based On Environment
 
-### Proxying assets based on environment
-
-If you're using a local development server during development, but a CDN in production, you can also configure this as follows:
+If you're using a local development server during development and a CDN in production, you can configure this as follows:
 
 ``` csharp
 
