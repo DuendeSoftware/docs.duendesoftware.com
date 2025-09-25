@@ -130,3 +130,29 @@ You can configure the location of your `index.html` by specifying:
 ```csharp
 .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
 ```
+
+### Server Side Sessions Database Migrations
+
+When using the server side sessions feature backed by the `Duende.BFF.EntityFramework` package, you will need to script [Entity Framework database migrations](/bff/fundamentals/session/server-side-sessions.mdx#entity-framework-migrations) and apply these changes to your database.
+
+```shell
+dotnet ef migrations add BFFUserSessionsV4 -o Migrations -c SessionDbContext
+```
+
+In the `UserSessions` table, a number of changes were introduced:
+* The `ApplicationName` column was renamed to `PartitionKey`.
+* Related indexes were updated.
+
+```sqlite
+// serversidesessions.sql
+ALTER TABLE "UserSessions" RENAME COLUMN "ApplicationName" TO "PartitionKey";
+
+DROP INDEX "IX_UserSessions_ApplicationName_SubjectId_SessionId";
+CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_SubjectId_SessionId" ON "UserSessions" ("PartitionKey", "SubjectId", "SessionId");
+
+DROP INDEX "IX_UserSessions_ApplicationName_SessionId";
+CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_SessionId" ON "UserSessions" ("PartitionKey", "SessionId");
+
+DROP INDEX "IX_UserSessions_ApplicationName_Key";
+CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_Key" ON "UserSessions" ("PartitionKey", "Key");
+```
