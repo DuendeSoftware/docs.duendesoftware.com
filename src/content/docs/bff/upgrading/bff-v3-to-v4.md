@@ -140,7 +140,7 @@ dotnet ef migrations add BFFUserSessionsV4 -o Migrations -c SessionDbContext
 ```
 
 In the `UserSessions` table, a number of changes were introduced:
-* The `ApplicationName` column was renamed to `PartitionKey`.
+* The `ApplicationName` column was renamed to `PartitionKey`. This column will contain the BFF frontend name.
 * Related indexes were updated.
 
 ```sqlite
