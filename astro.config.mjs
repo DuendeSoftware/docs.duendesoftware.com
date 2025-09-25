@@ -16,6 +16,7 @@ import * as fs from "node:fs";
 // https://github.com/withastro/astro/issues/9782
 import { duendeOpenGraphImage } from "./src/plugins/duende-og-image.js";
 import removeMarkdownExtensions from "./src/plugins/remove-markdown-extensions.js";
+import staticRedirects from "./src/plugins/static-redirects.js";
 
 // https://astro.build/config
 export default defineConfig({
@@ -58,6 +59,11 @@ export default defineConfig({
               description:
                 "Step-by-step tutorials to get started with Duende IdentityServer",
               paths: ["identityserver/quickstarts/**"],
+            },
+            {
+              label: "IdentityServer Sample Code",
+              description: "Sample projects for Duende IdentityServer",
+              paths: ["identityserver/samples/**"],
             },
             {
               label: "BFF Security Framework",
@@ -208,11 +214,18 @@ export default defineConfig({
           autogenerate: { directory: "identitymodel-oidcclient" },
           collapsed: true,
         },
+        {
+          label: "Introspection for ASP.NET Core",
+          badge: "oss",
+          autogenerate: { directory: "introspection" },
+          collapsed: true,
+        },
       ],
     }),
     redirectFrom({
       contentDir: "./src/content/docs",
     }),
+    staticRedirects(),
     opengraphImages({
       options: {
         fonts: [

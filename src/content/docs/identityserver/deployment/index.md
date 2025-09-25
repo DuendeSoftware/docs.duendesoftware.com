@@ -77,7 +77,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
                                 ForwardedHeaders.XForwardedProto;
     
     // exact Addresses of known proxies to accept forwarded headers from.
-    options.KnownProxies.Add(IPAddress.Parse("203.0.113.42"); // <-- change this value to the IP Address of the proxy
+    options.KnownProxies.Add(IPAddress.Parse("203.0.113.42")); // <-- change this value to the IP Address of the proxy
 
     // if the proxies could use any address from a block, that can be configured too:
     // var network = new IPNetwork(IPAddress.Parse("198.51.100.0"), 24);

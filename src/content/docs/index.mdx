@@ -31,8 +31,6 @@ import {
   Badge,
 } from "@astrojs/starlight/components";
 import Newsletter from "~/components/Newsletter.astro";
-import TestimonialGrid from "~/components/testimonial-grid.astro";
-import Testimonial from "~/components/testimonial.astro";
 
 <CardGrid>
     <Card title="Install templates" icon="rocket">
@@ -88,6 +86,12 @@ import Testimonial from "~/components/testimonial.astro";
     <Badge text={"OSS"} /> .NET identity libraries for OpenID Connect related
     protocol operations.
     <LinkButton href="/identitymodel-oidcclient/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="Introspection for ASP.NET Core" icon="github">
+    <Badge text={"OSS"} /> ASP.NET Core authentication handler for OAuth 2.0 token introspection.
+    <LinkButton href="/introspection/" variant="secondary">
       Learn more
     </LinkButton>
   </Card>

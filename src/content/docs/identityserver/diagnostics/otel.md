@@ -1,5 +1,5 @@
 ---
-title: "Open Telemetry"
+title: "OpenTelemetry"
 description: Documentation for OpenTelemetry integration in IdentityServer, covering metrics, traces and logs collection for monitoring and diagnostics
 date: 2020-09-10T08:22:12+02:00
 sidebar:
@@ -23,7 +23,7 @@ Added in Duende IdentityServer v6.1 and expanded in v7.0
 telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior,
 especially in highly distributed systems.
 
-.NET 8 comes with first class support for Open Telemetry. IdentityServer emits traces, metrics and logs.
+.NET 8 comes with first class support for Open Telemetry. IdentityServer emits traces, metrics, and logs.
 
 ### Metrics
 
@@ -40,7 +40,7 @@ Traces shows individual requests and dependencies. The output is very useful for
 flow and finding performance bottlenecks.
 
 This is an example of distributed traces from a web application calling an API (displayed using our
-[Aspire sample](/identityserver/samples/diagnostics.md)). The web application uses a refresh token to call
+[Aspire sample](/identityserver/samples/diagnostics.mdx)). The web application uses a refresh token to call
 IdentityServer to get a new access token and then calls the API. The API reads the discovery endpoint, finds the jwks
 url and then gets the keys from jwks endpoint.
 ![.NET Aspire dashboard showing Duende IdentityServer traces](images/aspire_traces.png)
@@ -353,6 +353,33 @@ You can get metrics for the following events:
 
 Refer to the [ASP.NET Core documentation](https://learn.microsoft.com/en-us/aspnet/core/log-mon/metrics/built-in?view=aspnetcore-10.0)
 for more information about ASP.NET Core built-in metrics.
+
+### ASP.NET Core Identity metrics
+
+:::tip
+Added in .NET 10
+:::
+
+When using ASP.NET Identity, metrics are available for key user and sign-in operation metrics.
+These let you monitor user management activities like creating users, changing passwords, etc.
+It's also possible to track login attempts, sign-ins, sign-outs, and two-factor authentication usage.
+
+The `Microsoft.AspNetCore.Identity` meter provides the following metrics:
+
+* User management metrics
+  * Duration of user creation operations (`aspnetcore.identity.user.create.duration`)
+  * Duration of user update operations (`aspnetcore.identity.user.update.duration`)
+  * Duration of user deletion operations (`aspnetcore.identity.user.delete.duration`)
+  * Number of password verification attempts (`aspnetcore.identity.user.check_password_attempts`)
+  * Number of tokens generated for users, such as password reset tokens (`aspnetcore.identity.user.generated_tokens`)
+  * Number of token verification attempts (`aspnetcore.identity.user.verify_token_attempts`)
+* Authentication metrics
+  * Duration of authentication operations (`aspnetcore.identity.sign_in.authenticate.duration`)
+  * Number of password check attempts at sign-in (`aspnetcore.identity.sign_in.check_password_attempts`)
+  * Number of successful sign-ins (`aspnetcore.identity.sign_in.sign_ins`)
+  * Number of sign-outs (`aspnetcore.identity.sign_in.sign_outs`)
+  * Number of remembered two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_remembered`)
+  * Number of forgotten two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_forgotten`)
 
 ## Traces
 

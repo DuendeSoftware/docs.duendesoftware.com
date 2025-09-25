@@ -232,4 +232,4 @@ public class ProfileService : IProfileService
 }
 ```
 
-See [here](/identityserver/samples/tokens.md) for the full source code.
+See [here](/identityserver/samples/tokens.mdx) for the full source code.
