@@ -209,6 +209,5 @@ new BffFrontend(BffFrontendName.Parse("default-frontend"))
 ```
 
 :::note
-This function is evaluated immediately when calling the method `.WithBffStaticAssets` is called. If you call this method during startup,
-then the condition is only evaluated at startup time. It's not evaluated at runtime for every request. 
+This function is evaluated immediately when calling the method `.WithBffStaticAssets()`. If you call this method during startup, the condition is only evaluated at startup time. It's not evaluated at runtime for every request. 
 :::
