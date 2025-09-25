@@ -192,9 +192,9 @@ var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
 
 While this can also be done in production, it will proxy all static assets through BFF. This will increase the bandwidth consumed by the BFF and reduce the overall performance of your application. 
 
-### Proxying assets based on environment
+### Proxying Assets Based On Environment
 
-If you're using a local development server during development, but a CDN in production, you can also configure this as follows:
+If you're using a local development server during development and a CDN in production, you can configure asset proxying as follows:
 
 ``` csharp
 
