@@ -39,14 +39,14 @@ The configuration supports dynamic reloading (so any new frontend added / remove
 ### BffFrontendConfiguration JSON Properties
 
 - `cdnIndexHtmlUrl`
-  The Index HTML that should be used for this frontend (usually on a CDN). When using 
-  this property, a fallback route will be created that only proxies the index.html. other
-  static assets are supposed to be retrieved directly from the CDN by the Browser. 
+  The `index.html` that should be used for this frontend (usually on a CDN). When using 
+  this property, a fallback route will be created that only proxies the `index.html`. Other
+  static assets are supposed to be retrieved directly from the CDN by the browser. 
   Example: `"https://cdn.yourapp.com/some_app/index.html"`
 
 - `staticAssetsUrl`
-  The url where all static assets can be found. This registers a fallback route that will
-  proxy all static assets from this url. This is usually used during development, when you're
+  The URL where all static assets can be found. This registers a fallback route that will
+  proxy all static assets from this URL. This is usually used during development, when you're
   using a development web server such as Vite. 
   Example: `"https://localhost:3000/"`
 
