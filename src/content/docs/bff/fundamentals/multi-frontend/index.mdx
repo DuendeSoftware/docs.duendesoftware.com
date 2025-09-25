@@ -112,6 +112,14 @@ and removed from the [`Path`](https://learn.microsoft.com/en-us/dotnet/api/micro
 that happens in the application is relative to the path of the frontend. This also includes the OpenID callback paths. 
 :::
 
+### Implicit frontend disabled
+
+When you don't add any frontends, then the BFF creates an 'implicit' default frontend. This allows the BFF to function correctly in 'single frontend' mode.
+As soon as you add a frontend, then this 'implicit' frontend is disabled. 
+
+This means that, if you want to use both explicitly matching frontends (on host headers or paths) and a default (fallback) frontend, that you should explicitly add
+this default frontend. 
+
 ## Adding A Frontend During Startup
 
 The simplest way to add frontends is during startup. 
