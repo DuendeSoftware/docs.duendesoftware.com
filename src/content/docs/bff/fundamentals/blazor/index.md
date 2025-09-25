@@ -171,9 +171,6 @@ app.UseBff();
 app.UseAuthorization();
 app.UseAntiforgery();
 
-// 👋 Add BFF User Session Management endpoints 
-app.MapBffManagementEndpoints();
-
 app.MapRazorPages();
 
 app.MapControllers()
