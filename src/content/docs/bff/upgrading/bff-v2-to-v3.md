@@ -118,7 +118,7 @@ a custom `IAccessTokenRetriever`, then you should adjust their usage accordingly
 /// <summary>
 /// The locally requested path.
 /// </summary>
-public required PathString LocalPath { get; set; }
+public required PathString PathMatch { get; set; }
 
 /// <summary>
 /// The remote address of the API.

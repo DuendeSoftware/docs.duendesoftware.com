@@ -69,7 +69,7 @@ bffBuilder
 
         // This frontend uses most of the same authentication options,
         new BffFrontend(BffFrontendName.Parse("with-path"))
-            .MappedToPath(LocalPath.Parse("/with-path")),
+            .MapToPath("/with-path"),
             .WithOpenIdConnectOptions(opt =>
             {
                // but overrides the clientid and client secret.
@@ -143,11 +143,11 @@ A frontend can define its own API surface, by specifying remote APIs.
 var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
    .WithRemoteApis(
       // map the local path /path to the remote api
-      new RemoteApi(LocalPath.Parse("/some_path"), new Uri("https://remote-api")))
+      new RemoteApi("/some_path", new Uri("https://remote-api")))
 
       // You can also configure various options, such as the type of token,
       // retrieval parameters, etc.. 
-      new RemoteApi(LocalPath.Parse("/with_options"), new Uri("https://remote-api")))
+      new RemoteApi("/with_options", new Uri("https://remote-api")))
         .WithAccessToken(RequiredTokenType.UserOrClient),
         .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>(),
         .WithUserAccessTokenParameters(new BffUserAccessTokenParameters { Resource = Resource.Parse("urn:isolated-api") }));
@@ -161,7 +161,7 @@ When deploying a multi-frontend BFF, it makes most sense to have the frontend's 
 
 ```csharp
 var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
-   .WithIndexHtml(new Uri("https://my_cdn/some_app/index.html"))
+   .WithCdnIndexHtml(new Uri("https://my_cdn/some_app/index.html"))
 ```
 
 When you do this, the BFF automatically wires up a catch-all route that serves the `index.html` for that specific frontend. 

@@ -81,7 +81,7 @@ You can statically add a list of frontends by calling the `AddFrontends` method.
 ```csharp
 .AddFrontends(
     new BffFrontend(BffFrontendName.Parse("default-frontend"))
-        .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
+        .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
 
     new BffFrontend(BffFrontendName.Parse("with-path"))
         .WithOpenIdConnectOptions(opt =>
@@ -89,8 +89,8 @@ You can statically add a list of frontends by calling the `AddFrontends` method.
             opt.ClientId = "bff.multi-frontend.with-path";
             opt.ClientSecret = "secret";
         })
-        .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
-        .MappedToPath(LocalPath.Parse("/with-path")),
+        .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
+        .MapToPath("/with-path"),
 
     new BffFrontend(BffFrontendName.Parse("with-domain"))
         .WithOpenIdConnectOptions(opt =>
@@ -98,11 +98,11 @@ You can statically add a list of frontends by calling the `AddFrontends` method.
             opt.ClientId = "bff.multi-frontend.with-domain";
             opt.ClientSecret = "secret";
         })
-        .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
-        .MappedToOrigin(Origin.Parse("https://app1.localhost:5005"))
+        .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
+        .MapToHost(HostHeaderValue.Parse("https://app1.localhost:5005"))
         .WithRemoteApis(
-            new RemoteApi(LocalPath.Parse("/api/user-token"), new Uri("https://localhost:5010")),
-            new RemoteApi(LocalPath.Parse("/api/client-token"), new Uri("https://localhost:5010"))
+            new RemoteApi("/api/user-token", new Uri("https://localhost:5010")),
+            new RemoteApi("/api/client-token", new Uri("https://localhost:5010"))
 )
 ```
 
