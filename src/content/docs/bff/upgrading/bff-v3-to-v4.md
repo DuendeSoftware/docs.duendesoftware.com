@@ -158,6 +158,6 @@ CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_Key" ON "UserSessions" ("Parti
 ```
 
 :::note
-This is a breaking database schema change. If you have multiple BFF V3 appliations that share the same database table,
-then you either need to update all BFF Applications to V4 at the same time or use a new database for the upgraded BFF V4 application.
+This is a breaking database schema change. If you have multiple BFF V3 applications that share the same database table,
+you either need to update all BFF applications to V4 at the same time or use a new database for the upgraded BFF V4 application.
 :::
