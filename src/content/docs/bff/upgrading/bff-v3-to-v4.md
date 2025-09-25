@@ -122,12 +122,11 @@ See the type `BffConfiguration` to see what settings can be configured.
 
 The BFF can be configured to handle the static file assets that are typically used when developing SPA based apps. 
 
-### Proxying the Index.HTML only
+### Proxying Only `index.html`
 
-When deploying a multi-frontend BFF, it makes most sense to have the frontend's configured with an `index.html` file that is retrieved from a Content Delivery Network (CDN). 
+When deploying a multi-frontend BFF, it makes most sense to have the frontends configured with an `index.html` file that is retrieved from a Content Delivery Network (CDN). 
 
-This can be done in various ways. For example, if you use Vite, you can publish static assets with a 'base' configured. This will make sure that any static asset,
-(such as images, scripts, etc) are retrieved directly from the CDN. This gives the best performance. 
+This can be done in various ways. For example, if you use Vite, you can publish static assets with a base URL configured. This will make sure that any static asset, (such as images, scripts, etc.) are retrieved directly from the CDN for best performance. 
 
 ```csharp
 var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
