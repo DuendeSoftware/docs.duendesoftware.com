@@ -133,7 +133,7 @@ You can configure the location of your `index.html` by specifying:
 
 ### Server Side Sessions Database Migrations
 
-When using the server side sessions feature backed by the `Duende.BFF.EntityFramework` package, you will need to script [Entity Framework database migrations](/bff/fundamentals/session/server-side-sessions.mdx#entity-framework-migrations) and apply these changes to your database.
+When using the server side sessions feature backed by the `Duende.BFF.EntityFramework` package, you will need to script [Entity Framework database migrations](/bff/fundamentals/session/server-side-sessions.mdx#entity-framework-migrations) and apply these changes to your database. 
 
 ```shell
 dotnet ef migrations add BFFUserSessionsV4 -o Migrations -c SessionDbContext
@@ -156,3 +156,8 @@ CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_SessionId" ON "UserSessions" (
 DROP INDEX "IX_UserSessions_ApplicationName_Key";
 CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_Key" ON "UserSessions" ("PartitionKey", "Key");
 ```
+
+:::note
+This is a breaking database schema change. If you have multiple BFF V3 appliations that share the same database table,
+then you either need to update all BFF Applications to V4 at the same time or use a new database for the upgraded BFF V4 application.
+:::
