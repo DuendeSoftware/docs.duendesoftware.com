@@ -50,7 +50,7 @@ builder.Services.AddBff(options =>
     
 
 * ***StaticAssetsClientName***
-    If BFF is configured to automatically retrieve the index.html, or to proxy the static assets, then it needs a http client to do so. With this name you can automatically configure http client in the http client factory. 
+    If BFF is configured to automatically retrieve the `index.html`, or to proxy the static assets, it needs an HTTP client to do so. With this name, you can automatically configure this HTTP client in the `HttpClientFactory`. 
 
 * ***AllowedSilentLoginReferers*** 
     For silent login to work, you normally need to have the BFF backend and the frontend on the same origin. If you have a split host scenario, meaning the backend on a different origin (but same site) as the frontend, then you can use the referer header to differentiate which browser window to post the silent login results to. This array must then contain the list of allowed referer header values. 
