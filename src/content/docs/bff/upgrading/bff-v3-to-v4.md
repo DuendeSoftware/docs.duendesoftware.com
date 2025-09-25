@@ -133,13 +133,13 @@ var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
    .WithCdnIndexHtml(new Uri("https://my_cdn/some_app/index.html"))
 ```
 
-When you do this, the BFF automatically wires up a catch-all route that serves the `index.html` for that specific frontend. 
+The BFF automatically wires up a catch-all route that serves`index.html` for that specific frontend. 
+
 See [Serve the index page from the BFF host](/bff/architecture/ui-hosting.md#serve-the-index-page-from-the-bff-host) for more information. 
 
-### Proxying all static assets 
+### Proxying All Static Assets 
 
-When developing a SPA based application, it's very common to use a development webserver such as Vite. While vite can publish static assets with a 'base',
-this doesn't work well during development.
+When developing a Single-Page Application (SPA), it's very common to use a development webserver such as Vite. While Vite can publish static assets with a base URL, this doesn't work well during development.
 
 The best development experience can be achieved by configuring the BFF to proxy all static assets from the development server:
 
