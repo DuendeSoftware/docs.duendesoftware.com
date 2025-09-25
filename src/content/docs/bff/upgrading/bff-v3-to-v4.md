@@ -118,7 +118,7 @@ This enables you to configure your OpenID Connect options, including secrets, an
 
 See the type `BffConfiguration` to see what settings can be configured.
 
-## Handling SPA static assets
+## Handling SPA Static Assets
 
 The BFF can be configured to handle the static file assets that are typically used when developing SPA based apps. 
 
