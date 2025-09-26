@@ -32,7 +32,7 @@ You can pass in some global options when registering token management in the ASP
 // Program.cs
 builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
 {
-    options.ChallengeScheme = "schmeName";
+    options.ChallengeScheme = "schemeName";
     options.UseChallengeSchemeScopedTokens = false;
     
     options.ClientCredentialsScope = "api1 api2";
