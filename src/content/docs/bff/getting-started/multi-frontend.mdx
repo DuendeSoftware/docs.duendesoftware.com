@@ -103,9 +103,9 @@ app.Run();
           code={`builder.Services.AddBff()
     .AddFrontends(
         new BffFrontend(BffFrontendName.Parse("default-frontend"))
-            .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
+            .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
         new BffFrontend(BffFrontendName.Parse("admin-frontend"))
-            .WithIndexHtmlUrl(new Uri("https://localhost:5005/admin/index.html"))
+            .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/admin/index.html"))
     );
 
 // ...existing code for authentication, authorization, etc.`}/>
@@ -124,14 +124,14 @@ app.Run();
     "defaultCookieSettings": null,
     "frontends": {
       "from_config": {
-        "indexHtmlUrl": "https://localhost:5005/static/index.html",
+        "cdnIndexHtmlUrl": "https://localhost:5005/static/index.html",
         "matchingPath": "/from-config",
         "oidc": {
           "clientId": "bff.multi-frontend.config"
         },
         "remoteApis": [
           {
-            "localPath": "/api/client-token",
+            "matchingPath": "/api/client-token",
             "targetUri": "https://localhost:5010",
             "tokenRequirement": "Client"
           }
@@ -173,9 +173,9 @@ You can configure remote API proxying in two ways:
   builder.Services.AddBff()
       .AddFrontends(
           new BffFrontend(BffFrontendName.Parse("default-frontend"))
-              .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
+              .WithCdnIndexUrl(new Uri("https://localhost:5005/static/index.html"))
               .WithRemoteApis(
-                  new RemoteApi(LocalPath.Parse("/api/user-token"), new Uri("https://localhost:5010"))
+                  new RemoteApi("/api/user-token", new Uri("https://localhost:5010"))
               )
       );
   ```
