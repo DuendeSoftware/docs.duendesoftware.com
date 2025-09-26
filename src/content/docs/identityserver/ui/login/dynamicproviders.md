@@ -316,7 +316,7 @@ To register other authentication handlers, you can use the `AddProviderType<T, T
 where `T` is the authentication handler type, `TOptions` is the options type for that particular handler, and `TIdentityProvider` is the identity provider type that models the dynamic provider.
 
 The authentication handler type and options type will typically be provided by the authentication provider itself.
-For example, the `GoogleHandler` and `GoogleOptions` types are provided by the `Google.AspNetCore.Authentication.OAuth` NuGet package.
+For example, the `GoogleHandler` and `GoogleOptions` types are provided by the `Microsoft.AspNetCore.Authentication.Google` NuGet package.
 `TIdentityProvider` will typically be a model class that maps to the identity provider data in the database
 and can either be IdentityServer's [`IdentityProvider`](/identityserver/reference/models/idp.md) class, or a custom type provided and implemented by you.
 
