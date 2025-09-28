@@ -43,16 +43,16 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
 
             var descriptor = new SecurityTokenDescriptor
             {
-                Issuer = options1.ClientId,
-                Audience = options1.TokenEndpoint,
+                Issuer = options1.ClientId!.ToString(),
+                Audience = options1.TokenEndpoint!.ToString(),
                 Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = GetSigningCredential(),
 
                 Claims = new Dictionary<string, object>
                 {
                     { JwtClaimTypes.JwtId, Guid.NewGuid().ToString() },
-                    { JwtClaimTypes.Subject, options1.ClientId! },
-                    { JwtClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime() }
+                    { JwtClaimTypes.Subject, options.ClientId.ToString()! },
+                    { JwtClaimTypes.IssuedAt, DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
                 },
 
                 AdditionalHeaderClaims = new Dictionary<string, object>
