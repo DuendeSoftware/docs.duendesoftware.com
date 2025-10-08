@@ -46,7 +46,7 @@ Instead of relying on implicit behaviors or inheritance, V4 introduces clearly d
 
 The `AccessTokenHandler` has been restructured to use composition rather than inheritance, simplifying the customization of token handling and increasing testability.
 
-If you wish to implement a custom access token handling process, for example to implement token exchange, you can now implement your own `AccessTokenRequestHandler.ITokenRetriever`.
+If you wish to implement a custom access token handling process, for example to implement token exchange, you can now [implement your own `AccessTokenRequestHandler.ITokenRetriever`](/accesstokenmanagement/advanced/extensibility.md#token-retrieval).
 
 ### Strongly Typed Configuration
 
