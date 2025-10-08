@@ -4,6 +4,9 @@ description: Learn how to extend and customize Duende.AccessTokenManagement, inc
 sidebar:
   label: Extensibility
   order: 50
+  badge:
+    text: v4.0
+    variant: tip
 ---
 
 There are several extension points where you can customize the behavior of Duende.AccessTokenManagement.
