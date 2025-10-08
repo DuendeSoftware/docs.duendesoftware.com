@@ -75,7 +75,7 @@ public class CustomTokenRetriever(
 }
 ```
 
-A custom token handler can be linked to your `HttpClient` by creating an AccessTokenRequestHandler and adding it to the request pipeline. 
+A custom token handler can be linked to your `HttpClient` by creating an `AccessTokenRequestHandler` and adding it to the request pipeline:
 
 ``` csharp
 services.AddHttpClient<YourTypedHttpClient>()
