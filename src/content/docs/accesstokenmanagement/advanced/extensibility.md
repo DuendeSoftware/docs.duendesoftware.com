@@ -14,8 +14,7 @@ The extension model is designed to favor composition over inheritance, making it
 Token retrieval can be customized by implementing the `AccessTokenRequestHandler.ITokenRetriever` interface.
 This interface defines a single method, `GetTokenAsync`, which is called by the `AccessTokenRequestHandler` to retrieve an access token.
 
-A common scenario for this would be if you wanted to implement a different token retrieval flow, that's currently not implemented, such as Impersonation or Delegation grants (RFC 8693).
-Actually implementing such a flow is outside the scope of this document. 
+A common scenario for this would be if you wanted to implement a different token retrieval flow, that's currently not implemented, such as [Impersonation or Delegation grants (RFC 8693)](https://datatracker.ietf.org/doc/html/rfc8693). Implementing this particular flow is outside the scope of this document.
 
 The following snippet demonstrates how to implement fictive scenario where a custom token retriever dynamically determines which credential flow to use. 
 
