@@ -19,6 +19,7 @@ A common scenario for this would be if you wanted to implement a different token
 The following snippet demonstrates how to implement fictive scenario where a custom token retriever dynamically determines which credential flow to use. 
 
 ```csharp
+// CustomTokenRetriever.cs
 public class CustomTokenRetriever(
     UserTokenRequestParameters parameters,
     IClientCredentialsTokenManager clientCredentialsTokenManager,
