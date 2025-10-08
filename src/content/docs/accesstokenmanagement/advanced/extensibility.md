@@ -14,7 +14,10 @@ The extension model is designed to favor composition over inheritance, making it
 Token retrieval can be customized by implementing the `AccessTokenRequestHandler.ITokenRetriever` interface.
 This interface defines a single method, `GetTokenAsync`, which is called by the `AccessTokenRequestHandler` to retrieve an access token.
 
-The following snippet demonstrates how to implement a custom token retriever that dynamically determines which credential flow to use. It can be linked to your `HttpClient`.
+A common scenario for this would be if you wanted to implement a different token retrieval flow, that's currently not implemented, such as Impersonation or Delegation grants (RFC 8693).
+Actually implementing such a flow is outside the scope of this document. 
+
+The following snippet demonstrates how to implement fictive scenario where a custom token retriever dynamically determines which credential flow to use. 
 
 ```csharp
 public class CustomTokenRetriever(
@@ -71,4 +74,24 @@ public class CustomTokenRetriever(
         return TokenResult.Success(token);
     }
 }
+```
+
+A custom token handler can be linked to your `HttpClient` by creating an AccessTokenRequestHandler and adding it to the request pipeline. 
+
+``` csharp
+services.AddHttpClient<YourTypedHttpClient>()
+    .AddDefaultAccessTokenResiliency()
+    .AddHttpMessageHandler(provider =>
+    {
+        var yourCustomTokenRetriever = new CustomTokenRetriever();
+
+        var logger = provider.GetRequiredService<ILogger<AccessTokenRequestHandler>>();
+        var dPoPProofService = provider.GetRequiredService<IDPoPProofService>();
+        var dPoPNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
+        var accessTokenHandler = new AccessTokenRequestHandler(
+            tokenRetriever: yourCustomTokenRetriever,
+            dPoPNonceStore: dPoPNonceStore,
+            dPoPProofService: dPoPProofService,
+            logger: logger);
+    });
 ```
