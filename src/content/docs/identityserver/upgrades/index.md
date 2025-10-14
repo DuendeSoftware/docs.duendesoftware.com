@@ -16,6 +16,10 @@ changes. Some updates contain changes to the stores used by IdentityServer that 
 schema updates. If you are using our Entity Framework based stores we recommend using Entity Framework
 Migrations.
 
+## Upgrading from version 7.3 to 7.4
+
+See [IdentityServer v7.3 to v7.4](/identityserver/upgrades/v7_3-to-v7_4.md).
+
 ## Upgrading from version 7.2 to 7.3
 
 See [IdentityServer v7.2 to v7.3](/identityserver/upgrades/v7_2-to-v7_3.md).
