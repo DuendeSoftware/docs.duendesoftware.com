@@ -110,7 +110,8 @@ A typical IdentityServer implementation should include data protection configura
 builder.Services.AddDataProtection()
   // Choose an extension method for key persistence, such as 
   // PersistKeysToFileSystem, PersistKeysToDbContext, 
-  // PersistKeysToAzureBlobStorage, or PersistKeysToAWSSystemsManager
+  // PersistKeysToAzureBlobStorage, PersistKeysToAWSSystemsManager, or
+  // PersistKeysToStackExchangeRedis
   .PersistKeysToFoo()
   // Choose an extension method for key protection, such as 
   // ProtectKeysWithCertificate, ProtectKeysWithAzureKeyVault
@@ -119,6 +120,12 @@ builder.Services.AddDataProtection()
   // key isolation. 
   .SetApplicationName("IdentityServer");
 ```
+
+:::danger[Ensure Redis data is persisted]
+If you are using Redis to store data protection keys using `PersistKeysToStackExchangeRedis`, ensure that your Redis
+service is configured to persist data to a database backup or append-only file. Otherwise, when your Redis instance reboots,
+you will lose all data protection keys, causing all data protected with those keys to no longer be readable.
+:::
 
 ### Data Protection Keys and IdentityServer's Signing Keys
 
@@ -195,7 +202,6 @@ Duende IdentityServer's features that rely on data protection include
 * session management (because the ASP.NET Core cookie authentication handler requires it)
 
 ## IdentityServer Data Stores
-
 
 IdentityServer itself is stateless and does not require server affinity - but there is data that needs to be shared between in multi-instance deployments.
 
