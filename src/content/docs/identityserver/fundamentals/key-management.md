@@ -72,34 +72,27 @@ config:
 ---
 gantt
     title 90 Day Key Rotation Schedule per Signing Algorithm
+    todayMarker off
         
     section RS256
-        Announce  :rsa_a, 2025-01-01, 14d
-        Signing   :active, rsa_s, after rsa_a, 62d
+        Signing   :active, rsa_s, 2025-01-01, 76d
         Retire    :rsa_r, after rsa_s, 14d
-        Delete    :crit, :rsa_d, after rsa_r, 1d
+        Delete    :crit, rsa_d, after rsa_r, 1d
         
-        %%{space}%%
-
         Announce  :rsa_na,  2025-03-03, 14d
         Signing   :active, rsa_ns, after rsa_na, 62d
         Retire    :rsa_nr, after rsa_ns, 14d
-        Delete    :crit,:rsa_nd, after rsa_nr, 1d
-
-    %%{space}%%
+        Delete    :crit, rsa_nd, after rsa_nr, 1d
 
     section ES256
-        Announce  :es_a, 2025-01-01, 14d
-        Signing   :active, es_s, after es_a, 62d
+        Signing   :active, es_s, 2025-01-01, 76d
         Retire    :es_r, after es_s, 14d
         Delete    :crit, :es_d, after es_r, 1d
-        
-        %%{space}%%
-        
+
         Announce  :es_na, 2025-03-03, 14d
         Signing   :active, es_ns, after es_na, 62d
         Retire    :es_nr, after es_ns, 14d
-        Delete    :crit, :es_nd, after es_nr, 1d
+        Delete    :crit, es_nd, after es_nr, 1d
 ```
 
 All of these options are configurable in the `KeyManagement` options. For example:
