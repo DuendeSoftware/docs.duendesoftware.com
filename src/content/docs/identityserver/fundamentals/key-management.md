@@ -60,8 +60,49 @@ has passed, keys are removed from discovery, and optionally deleted.
 
 The default is to rotate keys every 90 days, announce new keys with 14 days of
 propagation time, retain old keys for a duration of 14 days, and to delete keys
-when they are retired. All of these options are configurable in the
-`KeyManagement` options. For example:
+when they are retired. 
+
+```mermaid
+---
+config:
+  theme: default
+  gantt:
+    useWidth: 800
+    useMaxWidth: false
+---
+gantt
+    title 90 Day Key Rotation Schedule per Signing Algorithm
+        
+    section RS256
+        Announce  :rsa_a, 2025-01-01, 14d
+        Signing   :active, rsa_s, after rsa_a, 62d
+        Retire    :rsa_r, after rsa_s, 14d
+        Delete    :crit, :rsa_d, after rsa_r, 1d
+        
+        %%{space}%%
+
+        Announce  :rsa_na,  2025-03-03, 14d
+        Signing   :active, rsa_ns, after rsa_na, 62d
+        Retire    :rsa_nr, after rsa_ns, 14d
+        Delete    :crit,:rsa_nd, after rsa_nr, 1d
+
+    %%{space}%%
+
+    section ES256
+        Announce  :es_a, 2025-01-01, 14d
+        Signing   :active, es_s, after es_a, 62d
+        Retire    :es_r, after es_s, 14d
+        Delete    :crit, :es_d, after es_r, 1d
+        
+        %%{space}%%
+        
+        Announce  :es_na, 2025-03-03, 14d
+        Signing   :active, es_ns, after es_na, 62d
+        Retire    :es_nr, after es_ns, 14d
+        Delete    :crit, :es_nd, after es_nr, 1d
+```
+
+All of these options are configurable in the `KeyManagement` options. For example:
 
 ```cs
 // Program.cs
