@@ -11,72 +11,78 @@ redirect_from:
 ---
 
 Federation means that your IdentityServer offers authentication methods that use external authentication providers.
-
-If you offer a number of these external authentication methods, often the term *Federation Gateway* is used to describe
+When you offer a number of these external authentication methods, often the term *Federation Gateway* is used to describe
 this architectural approach.
 
 ![Diagram showing the benefits of using a federation gateway](images/federation.svg)
 
-Generally, this architecture allows shielding your client applications from the complexities of your authentication
+## Benefits Of A Federation Gateway
+
+A federation gateway architecture shields your client applications from the complexities of your authentication
 workflows and business requirements that go along with them.
 
 Your clients only need to trust the gateway, and the gateway coordinates all the communication and trust relationships
 with the external providers. This might involve switching between different protocols, token types, claim types etc.
+
+You may federate with other enterprise identity systems like Active Directory, Azure AD, or with
+commercial providers like Google, GitHub, or LinkedIn. Federation can bridge protocols, and use OpenID Connect (OIDC),
+OAuth 2, SAML, WS-Federation, or any other protocol.
+
 Also, the gateway can make sure that all claims and identities that ultimately arrive at the client applications are
 trustworthy and in a format that the client expects.
 
-There are a number of scenarios where this approach is commonly used.
-
 ## Multiple Authentication Methods For Users
 
-Maybe your users should have multiple options how they can sign-in/up, e.g.
+With a federation gateway, you can offer your users flexible sign-in options based on their context or preference:
 
-* username/password or a commercial provider like Google or Microsoft Account
-* username/password or a commercial provider for customers, and Active Directory or Azure AD for employees
+* **Consumer applications**: Username/password or commercial providers like Google or Microsoft Account
+* **Hybrid applications**: Username/password or commercial providers for customers, and Active Directory or Azure AD for employees
 
 ## Integration Of On-premise Products With Customer Identity Systems
 
-If you are building on-premise products, you have to integrate with a multitude of customer authentication systems.
+When building on-premise products, you have to integrate with a multitude of customer authentication systems.
 Maintaining variations of your business software for each product you have to integrate with, makes your software hard
 to maintain.
 
 With a federation gateway, you only need to adapt to these external systems at the gateway level, all of your business
 applications are shielded from the technical details.
 
-## Software-as-a-Service
+## Software-as-a-Service (SaaS)
 
-It's very common to offer federation with your customers' authentication systems in SaaS scenarios. This way your
-customers get single-sign-on to your applications without having to explicitly create accounts in your identity system.
+Federation is a common requirement in SaaS scenarios. It allows your customers' users to access your applications with
+single sign-on, using their existing corporate credentials without explicitly creating new accounts in your identity system.
 
 ## Support For External Authentication Methods
 
 IdentityServer leverages the ASP.NET Core authentication infrastructure for communicating with external providers. This
-means that every authentication system that is supported by ASP.NET Core, can also be used in the context of
-IdentityServer. This includes support for commercial providers like Google, GitHub or LinkedIn (
-and [many more](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers)) and any OpenID Connect,
-SAML2p or WS-Federation based systems.
+means any authentication system supported by ASP.NET Core can be used with IdentityServer, including:
+
+* Commercial providers like Google, GitHub, and LinkedIn ([and many more](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers))
+* OpenID Connect providers
+* SAML 2.0 systems
+* WS-Federation systems
 
 See the [Integrating with External Providers](/identityserver/ui/login/external.md) section for more details.
 
 ## Home Realm Discovery
 
-The process of selecting the "best" authentication workflow for a user (especially when you have multiple authentication
-methods) is called Home Realm Discovery (or HRD for short).
+Home Realm Discovery (HRD) is the process of selecting the most appropriate authentication workflow for a user,
+especially when multiple authentication methods are available.
 
-Since users are typically anonymous when they arrive at the gateway, you need some sort of hint to optimize the login
-workflow, e.g.
+Since users are typically anonymous when they arrive at the federation gateway, you need some sort of hint to optimize
+the login workflow. Such hint can come in many forms:
 
-* you present a list of available authentication methods to the user. This might work for simpler scenarios, but
-  probably not if you have a lot of choices or if this would reveal your customers' authentication systems
-* you ask the user for an identifier (e.g. email address) and have a way to infer the right external authentication
-  method from that id. This is a common technique for SaaS systems.
-* the client application can give a hint to the gateway via a custom protocol parameter of IdentityServer's built-in
-  support for the `idp` parameter on `acr_values`. In some case the client already knows the right authentication
-  method, e.g. when your customers access your software via a customer-specific URL  (
-  see [here](/identityserver/reference/endpoints/authorize.md#optional-parameters)).
-* you restrict the available authentication methods per client in the client configuration using the
-  `IdentityProviderRestrictions` property (
-  see [here](/identityserver/reference/models/client.md#authentication--session-management))
+* You present a list of available authentication methods to the user. This works for simpler scenarios, but
+  probably not if you have a lot of choices or if this would reveal your customers' authentication systems.
+* You ask the user for an identifier, such as their email address. Based on that, you infer the external authentication
+  method . This is a common technique for SaaS systems.
+* The client application can give a hint to the gateway via a custom protocol parameter of IdentityServer's built-in
+  support for the `idp` parameter on `acr_values`. In some cases, the client already knows the appropriate authentication
+  method. For example, when your customers access your software via a customer-specific URL
+  (see [here](/identityserver/reference/endpoints/authorize.md#optional-parameters)), you can present a subset of
+  available authentication methods to the user, or even redirect to a single option.
+* You restrict the available authentication methods per client in the client configuration using the
+  `IdentityProviderRestrictions` property (see [here](/identityserver/reference/models/client.md#authentication--session-management)).
 
-Every system is slightly different. Always start with the desired user experience, and then choose from the above
-options (or combinations) to implement the required flow.
+Every system has unique requirements. Always start by designing the desired user experience, then select and combine
+the appropriate HRD strategies to implement your required flow.

@@ -38,15 +38,24 @@ The configuration supports dynamic reloading (so any new frontend added / remove
 
 ### BffFrontendConfiguration JSON Properties
 
-- `indexHtmlUrl`
-  The URL to the main HTML file for this frontend.  
-  Example: `"https://localhost:5005/static/index.html"`
+- `cdnIndexHtmlUrl`
+  The `index.html` that should be used for this frontend (usually on a CDN). When using 
+  this property, a fallback route will be created that only proxies the `index.html`. Other
+  static assets are supposed to be retrieved directly from the CDN by the browser. 
+  Example: `"https://cdn.yourapp.com/some_app/index.html"`
+
+- `staticAssetsUrl`
+  The URL where all static assets can be found. This registers a fallback route that will
+  proxy all static assets from this URL. This is usually used during development, when you're
+  using a development web server such as Vite. 
+  Example: `"https://localhost:3000/"`
+
 
 - `matchingPath`
   The path prefix for requests routed to this frontend.  
   Example: `"/from-config"`
 
-- `matchingOrigin`
+- `matchingHostHeader`
   The origin to match for this frontend.  
   Example: `"https://localhost:5005"`
 
@@ -63,7 +72,7 @@ The configuration supports dynamic reloading (so any new frontend added / remove
 
 ### RemoteApiConfiguration JSON Properties
 
-- `localPath`
+- `matchingPath`
   String. The local path that will be used to access the remote API.  
   Example: `"/api/user-token"`
 
@@ -181,7 +190,7 @@ The configuration supports dynamic reloading (so any new frontend added / remove
   "defaultCookieSettings": null,
   "frontends": {
     "some_frontend": {
-      "indexHtmlUrl": "https://localhost:5005/static/index.html",
+      "cdnIndexHtmlUrl": "https://localhost:5005/static/index.html",
       "matchingPath": "/from-config",
       "oidc": {
         "clientId": "frontend1-client",

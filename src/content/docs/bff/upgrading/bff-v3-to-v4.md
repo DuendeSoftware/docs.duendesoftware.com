@@ -16,8 +16,7 @@ Duende BFF Security Framework v4.0 is a significant release that includes:
 The extensibility approach has been drastically changed, and many `virtual` methods containing implementation logic are now internal instead.
 
 :::caution[Duende BFF Security Framework v4 is still in preview]
-The Duende BFF Security Framework v4 is still in preview (currently [preview 2](https://github.com/DuendeSoftware/products/releases/tag/bff-4.0.0-preview2)).
-This version (and associated documentation) is still evolving.
+The Duende BFF Security Framework v4 is still in preview. This version (and associated documentation) is still evolving.
 :::
 
 ## Upgrading
@@ -82,7 +81,7 @@ You can statically add a list of frontends by calling the `AddFrontends` method.
 ```csharp
 .AddFrontends(
     new BffFrontend(BffFrontendName.Parse("default-frontend"))
-        .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
+        .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html")),
 
     new BffFrontend(BffFrontendName.Parse("with-path"))
         .WithOpenIdConnectOptions(opt =>
@@ -90,8 +89,8 @@ You can statically add a list of frontends by calling the `AddFrontends` method.
             opt.ClientId = "bff.multi-frontend.with-path";
             opt.ClientSecret = "secret";
         })
-        .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
-        .MappedToPath(LocalPath.Parse("/with-path")),
+        .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
+        .MapToPath("/with-path"),
 
     new BffFrontend(BffFrontendName.Parse("with-domain"))
         .WithOpenIdConnectOptions(opt =>
@@ -99,11 +98,11 @@ You can statically add a list of frontends by calling the `AddFrontends` method.
             opt.ClientId = "bff.multi-frontend.with-domain";
             opt.ClientSecret = "secret";
         })
-        .WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
-        .MappedToOrigin(Origin.Parse("https://app1.localhost:5005"))
+        .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
+        .MapToHost(HostHeaderValue.Parse("https://app1.localhost:5005"))
         .WithRemoteApis(
-            new RemoteApi(LocalPath.Parse("/api/user-token"), new Uri("https://localhost:5010")),
-            new RemoteApi(LocalPath.Parse("/api/client-token"), new Uri("https://localhost:5010"))
+            new RemoteApi("/api/user-token", new Uri("https://localhost:5010")),
+            new RemoteApi("/api/client-token", new Uri("https://localhost:5010"))
 )
 ```
 
@@ -119,14 +118,88 @@ This enables you to configure your OpenID Connect options, including secrets, an
 
 See the type `BffConfiguration` to see what settings can be configured.
 
-#### Index HTML Retrieval
+## Handling SPA Static Assets
 
-It's fairly common to deploy your application in such a way to have the BFF be the first entrypoint for your application. It should serve an index.html that will bootstrap your frontend. However, your static content should be loaded from a CDN.
+The BFF can be configured to handle the static file assets that are typically used when developing SPA based apps. 
 
-If you publish your frontend code to a cdn with absolute paths (for example by specifying a base path in your vite config), then all static content is loaded directly from the CDN.
+### Proxying Only `index.html`
 
-You can configure the location of your `index.html` by specifying:
+When deploying a multi-frontend BFF, it makes most sense to have the frontends configured with an `index.html` file that is retrieved from a Content Delivery Network (CDN). 
+
+This can be done in various ways. For example, if you use Vite, you can publish static assets with a base URL configured. This will make sure that any static asset, (such as images, scripts, etc.) are retrieved directly from the CDN for best performance. 
 
 ```csharp
-.WithIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
+var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
+   .WithCdnIndexHtml(new Uri("https://my_cdn/some_app/index.html"))
 ```
+
+The BFF automatically wires up a catch-all route that serves`index.html` for that specific frontend. 
+
+See [Serve the index page from the BFF host](/bff/architecture/ui-hosting.md#serve-the-index-page-from-the-bff-host) for more information. 
+
+### Proxying All Static Assets 
+
+When developing a Single-Page Application (SPA), it's very common to use a development webserver such as Vite. While Vite can publish static assets with a base URL, this doesn't work well during development.
+
+The best development experience can be achieved by configuring the BFF to proxy all static assets from the development server:
+
+
+```csharp
+var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
+   .WithProxiedStaticAssets(new Uri("https://localhost:3000")); // https://localhost:3000 would be the URL of your development web server.
+```
+
+While this can also be done in production, it will proxy all static assets through the BFF. This will increase the bandwidth consumed by the BFF and reduce the overall performance of your application. 
+
+### Proxying Assets Based On Environment
+
+If you're using a local development server during development and a CDN in production, you can configure this as follows:
+
+``` csharp
+
+// In this example, the environment name from the application builder is used to determine
+// if we're running in production or not. 
+var runningInProduction = () => builder.Environment.EnvironmentName == Environments.Production;
+
+// Then, when configuring the frontend, you can switch when the static assets will be proxied. 
+new BffFrontend(BffFrontendName.Parse("default-frontend"))
+    .WithBffStaticAssets(new Uri("https://localhost:5010/static"), useCdnWhen: runningInProduction);
+
+```
+
+:::note
+This function is evaluated immediately when calling the`.WithBffStaticAssets()` extension method. When you call this method during startup, the condition is only evaluated at startup time. It's not evaluated at runtime for every request. 
+:::
+
+
+
+### Server Side Sessions Database Migrations
+
+When using the server side sessions feature backed by the `Duende.BFF.EntityFramework` package, you will need to script [Entity Framework database migrations](/bff/fundamentals/session/server-side-sessions.mdx#entity-framework-migrations) and apply these changes to your database. 
+
+```shell
+dotnet ef migrations add BFFUserSessionsV4 -o Migrations -c SessionDbContext
+```
+
+In the `UserSessions` table, a number of changes were introduced:
+* The `ApplicationName` column was renamed to `PartitionKey`. This column will contain the BFF frontend name.
+* Related indexes were updated.
+
+```sqlite
+// serversidesessions.sql
+ALTER TABLE "UserSessions" RENAME COLUMN "ApplicationName" TO "PartitionKey";
+
+DROP INDEX "IX_UserSessions_ApplicationName_SubjectId_SessionId";
+CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_SubjectId_SessionId" ON "UserSessions" ("PartitionKey", "SubjectId", "SessionId");
+
+DROP INDEX "IX_UserSessions_ApplicationName_SessionId";
+CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_SessionId" ON "UserSessions" ("PartitionKey", "SessionId");
+
+DROP INDEX "IX_UserSessions_ApplicationName_Key";
+CREATE UNIQUE INDEX "IX_UserSessions_PartitionKey_Key" ON "UserSessions" ("PartitionKey", "Key");
+```
+
+:::note
+This is a breaking database schema change. If you have multiple BFF V3 applications that share the same database table,
+you either need to update all BFF applications to V4 at the same time or use a new database for the upgraded BFF V4 application.
+:::

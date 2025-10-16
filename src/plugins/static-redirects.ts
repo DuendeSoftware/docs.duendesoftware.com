@@ -11,8 +11,7 @@ function createNginxRule(redirectFrom: string, redirectTo: string) {
   return (
     "rewrite ^" +
     redirectFrom +
-    //"(/?)$ $scheme://$http_host" +
-    "(/?)$ https://docs.duendesoftware.com" + // use the production domain
+    "(/?)$ $scheme://$http_host" +
     redirectTo +
     "/ permanent;\n"
   );

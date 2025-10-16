@@ -118,7 +118,7 @@ a custom `IAccessTokenRetriever`, then you should adjust their usage accordingly
 /// <summary>
 /// The locally requested path.
 /// </summary>
-public required PathString LocalPath { get; set; }
+public required PathString PathMatch { get; set; }
 
 /// <summary>
 /// The remote address of the API.
@@ -137,4 +137,31 @@ If you used `BffBlazorOptions.StateProviderPollingInterval` or `BffBlazorOptions
 different polling settings, you should now consider if this same setting applies to either Server, WASM or both. Set the
 appropriate properties accordingly.
 
+### Server Side Sessions Database Migrations
 
+No [Entity Framework database migrations](/bff/fundamentals/session/server-side-sessions.mdx#entity-framework-migrations) are required for the server side sessions feature when using the `Duende.BFF.EntityFramework` package.
+
+The database structure remains the same:
+
+```sqlite
+// serversidesessions.sql
+CREATE TABLE "UserSessions" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_UserSessions" PRIMARY KEY AUTOINCREMENT,
+    "ApplicationName" TEXT NULL,
+    "SubjectId" TEXT NOT NULL,
+    "SessionId" TEXT NULL,
+    "Created" TEXT NOT NULL,
+    "Renewed" TEXT NOT NULL,
+    "Expires" TEXT NULL,
+    "Ticket" TEXT NOT NULL,
+    "Key" TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX "IX_UserSessions_ApplicationName_Key" ON "UserSessions" ("ApplicationName", "Key");
+
+CREATE UNIQUE INDEX "IX_UserSessions_ApplicationName_SessionId" ON "UserSessions" ("ApplicationName", "SessionId");
+
+CREATE UNIQUE INDEX "IX_UserSessions_ApplicationName_SubjectId_SessionId" ON "UserSessions" ("ApplicationName", "SubjectId", "SessionId");
+
+CREATE INDEX "IX_UserSessions_Expires" ON "UserSessions" ("Expires");
+```
