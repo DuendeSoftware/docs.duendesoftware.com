@@ -121,10 +121,17 @@ builder.Services.AddDataProtection()
   .SetApplicationName("IdentityServer");
 ```
 
-:::danger[Ensure Redis data is persisted]
-If you are using Redis to store data protection keys using `PersistKeysToStackExchangeRedis`, ensure that your Redis
-service is configured to persist data to a database backup or append-only file. Otherwise, when your Redis instance reboots,
-you will lose all data protection keys, causing all data protected with those keys to no longer be readable.
+:::danger[Ensure data protection keys are persisted]
+Always make sure data protection is configured to persist data protection keys to storage, using `.PersistKeys...()`
+for your storage mechanism.
+
+In addition, make sure the storage mechanism itself is durable. For example, if you are using the default file system
+based key store, make sure that the configured path is not stored on ephemeral storage. If you are using Redis to store
+data protection keys using `PersistKeysToStackExchangeRedis`, ensure that your Redis service is configured to persist
+data to a database backup or append-only file. Otherwise, when your Redis instance reboots, you will lose all data
+protection keys.
+
+If you lose your data protection keys, all data protected with those keys to no longer be readable.
 :::
 
 ### Data Protection Keys and IdentityServer's Signing Keys
