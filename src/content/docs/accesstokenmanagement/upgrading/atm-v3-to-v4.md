@@ -65,7 +65,7 @@ var scheme = Scheme.Parse("oidc");
 Several classes have been renamed, either to clarify their usage or to drop the `service` suffix, which only adds noise:
 
 * `AccessTokenHandler` is now `AccessTokenRequestHandler`
-* `ClientCredentialsTokenManagementService` is now `IClientIClientCredentialsTokenManager`
+* `IClientCredentialsTokenManagementService` is now `IClientCredentialsTokenManager`
 * `IClientCredentialsTokenEndpointService` is now `IClientCredentialsTokenEndpoint`
 * `IUserTokenManagementService` is now `IUserTokenManager`
 * `ITokenRequestSynchronization` is now `IUserTokenRequestConcurrencyControl`
