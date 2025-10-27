@@ -69,4 +69,4 @@ Several classes have been renamed, either to clarify their usage or to drop the 
 * `IClientCredentialsTokenEndpointService` is now `IClientCredentialsTokenEndpoint`
 * `IUserTokenManagementService` is now `IUserTokenManager`
 * `ITokenRequestSynchronization` is now `IUserTokenRequestConcurrencyControl`
-* `IUserTokenEndpointService` is now `IUserTokenEndpoint`
+* `IUserTokenEndpointService` is now `IOpenIdConnectUserTokenEndpoint`
