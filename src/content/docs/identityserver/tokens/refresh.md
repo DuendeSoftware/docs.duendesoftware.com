@@ -36,6 +36,7 @@ refresh token depending on the client configuration (see [rotation](#rotation)).
 
 ```
 POST /connect/token
+CONTENT-TYPE application/x-www-form-urlencoded
 
     client_id=client&
     client_secret=secret&
