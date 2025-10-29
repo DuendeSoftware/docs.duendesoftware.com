@@ -113,7 +113,7 @@ In multi-tenant applications, different tenants often require different paramete
 - A unique API resource or audience identifier
 - Tenant-specific scopes
 
-The `ITokenRequestCustomizer` provides a clean way to handle these variations without needing separate HttpClient configurations for each tenant.
+The `ITokenRequestCustomizer` provides a clean way to handle these variations without needing separate `HttpClient` configurations for each tenant.
 
 The following example demonstrates a multi-tenant scenario where the customizer extracts the tenant identifier from the HTTP request and applies tenant-specific token parameters:
 
