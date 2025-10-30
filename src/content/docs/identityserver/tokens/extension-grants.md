@@ -134,7 +134,7 @@ One of the primary use cases of the token exchange specification is creating tok
 impersonation scenarios. In these scenarios you want to forward certain token and identity information over multiple
 hops in a call chain.
 
-![A digrams showing how token exchange works](images/token_exchange.png)
+![A digrams showing how token exchange works](images/token_exchange.svg)
 
 ## Impersonation
 
