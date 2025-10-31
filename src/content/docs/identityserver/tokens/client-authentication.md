@@ -459,6 +459,57 @@ new Client
 }
 ```
 
+#### Configuring IdentityServer to Accept Client Certificates
+
+When configuring MTLS in IdentityServer, you can specify to only expose the MTLS endpoints on a specific domain or subdomain:
+
+```csharp {7}
+// Program.cs
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
+{
+    options.MutualTls.Enabled = true;
+    
+    // Only exposes the MTLS endpoints on the mtls subdomain of your IdentityServer host.
+    options.DomainName = "mtls"; 
+});
+```
+
+Specifying this domain name however triggers an additional authentication step in the [MutualTlsEndpointMiddleware][1], 
+calling `httpContext.AuthenticateAsync()` with the configured client certificate authentication scheme name.
+By default, this scheme name is `"Certificate"`, but you can override this when configuring the MTLS options:
+
+```csharp {6}
+// Program.cs
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
+{
+    options.MutualTls.Enabled = true;
+    options.DomainName = "mtls";
+    options.ClientCertificateAuthenticationScheme = "Certificate";
+});
+```
+
+In addition, you need to also configure client certificate authentication in ASP.NET Core:
+
+```csharp {9-16}
+// Program.cs
+var idsvrBuilder = builder.Services.AddIdentityServer(options =>
+{
+    options.MutualTls.Enabled = true;
+    options.DomainName = "mtls";
+    options.ClientCertificateAuthenticationScheme = "Certificate";
+});
+
+builder.Services.AddAuthentication()
+    .AddCertificate("Certificate", options => 
+    {
+        // Specify which types of certificates to allow: SelfSigned, Chained, or All
+        options.AllowedCertificateTypes = CertificateTypes.SelfSigned;
+        options.ValidateCertificateUse = true; 
+    });
+```
+
+Further documentation on how to configure client certificate authentication in ASP.NET Core is available on [Microsoft Learn][2]
+
 ### .NET Client Library
 
 When writing a client to connect to IdentityServer, the `SocketsHttpHandler` (or `HttpClientHandler` depending on your
@@ -496,3 +547,6 @@ static async Task<TokenResponse> RequestTokenAsync()
     return response;
 }
 ```
+
+[1]: https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Hosting/MutualTlsEndpointMiddleware.cs#L155-L170
+[2]: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-9.0
