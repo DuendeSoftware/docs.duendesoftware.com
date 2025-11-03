@@ -461,7 +461,7 @@ new Client
 
 #### Configuring IdentityServer to Accept Client Certificates
 
-When configuring MTLS in IdentityServer, you can specify to only expose the MTLS endpoints on a specific domain or subdomain:
+When configuring mTLS in IdentityServer, you can specify to only expose the mTLS endpoints on a specific domain or subdomain:
 
 ```csharp {7}
 // Program.cs
