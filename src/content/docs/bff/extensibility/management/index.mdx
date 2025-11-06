@@ -47,6 +47,21 @@ builder.Services.AddTransient<IDiagnosticsEndpoint, DefaultDiagnosticsEndpoint>(
 
       You can customize the behavior of the endpoints either by implementing the appropriate interface.
       The [default implementations](https://github.com/DuendeSoftware/products/tree/releases/bff/4.0.0/bff/src/Bff/Endpoints/Internal) can serve as a starting point for your own implementation.
+
+      If you want to extend the default behavior of a management endpoint, you can add a custom endpoint and call the original endpoint implementation:
+
+      <Code
+          lang="csharp"
+          title="Program.cs"
+          code={`var bffOptions = app.Services.GetRequiredService<IOptions<BffOptions>>().Value;
+
+app.MapGet(bffOptions.LoginPath, async (HttpContext context, CancellationToken ct) =>
+{
+    // Custom logic before calling the original endpoint implementation
+    var endpointProcessor = context.RequestServices.GetRequiredService<ILoginEndpoint>();
+    await endpointProcessor.ProcessRequestAsync(context, ct);
+    // Custom logic after calling the original endpoint implementation
+});`} />
   </TabItem>
   <TabItem label="V3">
       <Code
