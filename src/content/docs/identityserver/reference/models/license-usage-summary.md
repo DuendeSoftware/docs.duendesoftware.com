@@ -38,10 +38,20 @@ purposes.
 
   A `string` collection of features has been used since the IdentityServer instance ran.
 
+## Register LicenseUsageSummary Services
+
+To make the `LicenseUsageSummary` class available in your application, you'll need to make sure it is registered in the service collection at startup.
+You can do this by calling the `AddLicenseSummary()` extension method when registering IdentityServer:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer()
+    .AddLicenseSummary();
+```
+
 ## Using LicenseUsageSummary with .NET Lifetime Events
 
-In .NET, an [
-`IHost`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime)
+In .NET, an [`IHost`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime)
 implementation allows developers to subscribe to application
 lifetime events, including **Application Started**, **Application Stopped**,
 and **Application Stopping**. IdentityServer tracks usage metrics internally

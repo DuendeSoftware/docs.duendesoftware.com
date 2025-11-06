@@ -46,7 +46,12 @@ Instead of relying on implicit behaviors or inheritance, V4 introduces clearly d
 
 The `AccessTokenHandler` has been restructured to use composition rather than inheritance, simplifying the customization of token handling and increasing testability.
 
-If you wish to implement a custom access token handling process, for example to implement token exchange, you can now implement your own `AccessTokenRequestHandler.ITokenRetriever`.
+As part of these changes, the retry logic that was part of the `AccessTokenHandler`'s functionality in V3 has moved to
+a resiliency policy. If you're not using `AddClientCredentialsHttpClient` to configure an HTTP client, and you depend on the 
+retry policy to be there, you should use `AddDefaultAccessTokenResiliency` to add our implementation or provide your own retry policy.
+See [Service Workers](/accesstokenmanagement/workers.mdx) for more details. 
+
+If you wish to implement a custom access token handling process, for example to implement token exchange, you can now [implement your own `AccessTokenRequestHandler.ITokenRetriever`](/accesstokenmanagement/advanced/extensibility.md#token-retrieval).
 
 ### Strongly Typed Configuration
 
@@ -65,8 +70,8 @@ var scheme = Scheme.Parse("oidc");
 Several classes have been renamed, either to clarify their usage or to drop the `service` suffix, which only adds noise:
 
 * `AccessTokenHandler` is now `AccessTokenRequestHandler`
-* `ClientCredentialsTokenManagementService` is now `IClientIClientCredentialsTokenManager`
+* `IClientCredentialsTokenManagementService` is now `IClientCredentialsTokenManager`
 * `IClientCredentialsTokenEndpointService` is now `IClientCredentialsTokenEndpoint`
 * `IUserTokenManagementService` is now `IUserTokenManager`
 * `ITokenRequestSynchronization` is now `IUserTokenRequestConcurrencyControl`
-* `IUserTokenEndpointService` is now `IUserTokenEndpoint`
+* `IUserTokenEndpointService` is now `IOpenIdConnectUserTokenEndpoint`

@@ -77,7 +77,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
                                 ForwardedHeaders.XForwardedProto;
     
     // exact Addresses of known proxies to accept forwarded headers from.
-    options.KnownProxies.Add(IPAddress.Parse("203.0.113.42"); // <-- change this value to the IP Address of the proxy
+    options.KnownProxies.Add(IPAddress.Parse("203.0.113.42")); // <-- change this value to the IP Address of the proxy
 
     // if the proxies could use any address from a block, that can be configured too:
     // var network = new IPNetwork(IPAddress.Parse("198.51.100.0"), 24);
@@ -110,7 +110,8 @@ A typical IdentityServer implementation should include data protection configura
 builder.Services.AddDataProtection()
   // Choose an extension method for key persistence, such as 
   // PersistKeysToFileSystem, PersistKeysToDbContext, 
-  // PersistKeysToAzureBlobStorage, or PersistKeysToAWSSystemsManager
+  // PersistKeysToAzureBlobStorage, PersistKeysToAWSSystemsManager, or
+  // PersistKeysToStackExchangeRedis
   .PersistKeysToFoo()
   // Choose an extension method for key protection, such as 
   // ProtectKeysWithCertificate, ProtectKeysWithAzureKeyVault
@@ -119,6 +120,19 @@ builder.Services.AddDataProtection()
   // key isolation. 
   .SetApplicationName("IdentityServer");
 ```
+
+:::danger[Ensure data protection keys are persisted]
+Always make sure data protection is configured to persist data protection keys to storage, using `.PersistKeys...()`
+for your storage mechanism.
+
+In addition, make sure the storage mechanism itself is durable. For example, if you are using the default file system
+based key store, make sure that the configured path is not stored on ephemeral storage. If you are using Redis to store
+data protection keys using `PersistKeysToStackExchangeRedis`, ensure that your Redis service is configured to persist
+data to a database backup or append-only file. Otherwise, when your Redis instance reboots, you will lose all data
+protection keys.
+
+If you lose your data protection keys, all data protected with those keys to no longer be readable.
+:::
 
 ### Data Protection Keys and IdentityServer's Signing Keys
 
@@ -195,7 +209,6 @@ Duende IdentityServer's features that rely on data protection include
 * session management (because the ASP.NET Core cookie authentication handler requires it)
 
 ## IdentityServer Data Stores
-
 
 IdentityServer itself is stateless and does not require server affinity - but there is data that needs to be shared between in multi-instance deployments.
 

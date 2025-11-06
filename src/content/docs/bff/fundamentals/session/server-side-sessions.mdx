@@ -1,5 +1,5 @@
 ---
-title: "Server-side Sessions"
+title: "Server-Side Sessions"
 description: "Learn how to implement and configure server-side sessions in BFF to manage user session data storage and enable session revocation capabilities"
 sidebar:
   order: 40
@@ -21,7 +21,7 @@ Duende.BFF includes all the plumbing to store your sessions server-side. The coo
 * the cookie size will be very small and constant - regardless how much data (e.g. token or claims) is stored in the authentication session
 * the session can be also revoked outside the context of a browser interaction, for example when receiving a back-channel logout notification from the upstream OpenID Connect provider
 
-## Configuring Server-side Sessions
+## Configuring Server-Side Sessions
 
 Server-side sessions can be enabled in the application's startup:
 
@@ -32,9 +32,9 @@ builder.Services.AddBff()
 
 The default implementation stores the session in-memory. This is useful for testing, but for production you typically want a more robust storage mechanism. We provide an implementation of the session store built with EntityFramework (EF) that can be used with any database with an EF provider (e.g. Microsoft SQL Server). You can also use a custom store. See [extensibility](/bff/extensibility/sessions.md#user-session-store) for more information.
 
-## Using Entity Framework for the Server-side Session Store
+## Using Entity Framework for the Server-Side Session Store
 
-To use the EF session store, install the *Duende.BFF.EntityFramework* NuGet package and register it by calling *AddEntityFrameworkServerSideSessions*, like this:
+To use the EF session store, install the `Duende.BFF.EntityFramework` NuGet package and register it by calling `AddEntityFrameworkServerSideSessions`, like this:
 
 ```csharp
 var cn = _configuration.GetConnectionString("db");
@@ -67,14 +67,14 @@ Note, you'll still need to let the server side session store know about the `Ses
 
 ### Entity Framework Migrations
 
-Most data stores that you might use with Entity Framework use a schema to define the structure of their data. *Duende.BFF.EntityFramework* doesn't make any assumptions about the underlying datastore, how (or indeed even if) it defines its schema, or how schema changes are managed by your organization. For these reasons, Duende does not directly support database creation, schema changes, or data migration by publishing database scripts.
+Most data stores that you might use with Entity Framework use a schema to define the structure of their data. `Duende.BFF.EntityFramework` doesn't make any assumptions about the underlying datastore, how (or indeed even if) it defines its schema, or how schema changes are managed by your organization. For these reasons, Duende does not directly support database creation, schema changes, or data migration by publishing database scripts.
 
-You are expected to manage your database in the way your organization sees fit. Using EF migrations is one possible approach to that, which Duende facilitates by publishing entity classes in each version of *Duende.BFF.EntityFramework*. An example project that uses those entities to create migrations is [here](https://github.com/DuendeSoftware/products/tree/main/bff/migrations/UserSessionDb).
+You are expected to manage your database in the way your organization sees fit. Using EF migrations is one possible approach to that, which Duende facilitates by publishing entity classes in each version of `Duende.BFF.EntityFramework`. An example project that uses those entities to create migrations is [here](https://github.com/DuendeSoftware/products/tree/main/bff/migrations/UserSessionDb).
 
 To quickly create Entity Framework migrations, run the following command in the project directory that has access to Entity Framework Core's tools:
 
 ```bash
-dotnet ef migrations add UserSessions -o Migrations
+dotnet ef migrations add UserSessions -o Migrations -c SessionDbContext
 ```
 
 The project must also reference the `Duende.BFF.EntityFramework` NuGet package and the `Microsoft.EntityFrameworkCore.Design` NuGet package, along with a specific database provider and its corresponding configuration, including the connection string.
@@ -89,7 +89,7 @@ Abandoned sessions will remain in the store unless something removes the stale e
   {/* prettier-ignore */}
   <TabItem label="V4">
 
-    If you wish to have such sessions cleaned up periodically, then you can add the session cleanup host and configure the *SessionCleanupInterval* options:
+    If you wish to have such sessions cleaned up periodically, then you can add the session cleanup host and configure the `SessionCleanupInterval` options:
 
       <Code
           lang="csharp"
@@ -99,9 +99,9 @@ Abandoned sessions will remain in the store unless something removes the stale e
     })
     .AddServerSideSessions();`}/>
 
-    This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
+    This requires an implementation of [`IUserSessionStoreCleanup`](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
 
-    If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
+    If using Entity Framework Core, then the `IUserSessionStoreCleanup` implementation is provided for you when you use `AddEntityFrameworkServerSideSessions`.
     You can then add the `SessionCleanupBackgroundProcess`:
 
       <Code
@@ -125,7 +125,7 @@ builder.Services.AddBff()
   </TabItem>
   <TabItem label="V3">
 
-    If you wish to have such sessions cleaned up periodically, then you can configure the *EnableSessionCleanup* and *SessionCleanupInterval* options:
+    If you wish to have such sessions cleaned up periodically, then you can configure the `EnableSessionCleanup` and `SessionCleanupInterval` options:
 
       <Code
           lang="csharp"
@@ -136,9 +136,9 @@ builder.Services.AddBff()
     })
     .AddServerSideSessions();`}/>
 
-    This requires an implementation of [*IUserSessionStoreCleanup*](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
+    This requires an implementation of [`IUserSessionStoreCleanup`](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
 
-    If using Entity Framework Core, then the *IUserSessionStoreCleanup* implementation is provided for you when you use *AddEntityFrameworkServerSideSessions*.
+    If using Entity Framework Core, then the `IUserSessionStoreCleanup` implementation is provided for you when you use `AddEntityFrameworkServerSideSessions`.
     Just enable session cleanup:
 
       <Code

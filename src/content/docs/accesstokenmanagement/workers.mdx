@@ -8,8 +8,8 @@ sidebar:
 redirect_from:
   - /foss/accesstokenmanagement/workers/
 ---
-import { Badge } from "@astrojs/starlight/components";
-import { Code } from "@astrojs/starlight/components";
+
+import { Badge, Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 A common scenario in worker applications or background tasks (or really any daemon-style applications) is to call APIs using an OAuth token obtained via the client credentials flow.
@@ -23,7 +23,7 @@ For more information, see the [advanced topic on client credentials](/accesstoke
 Take a look at the [`Worker` project in the samples folder](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/) for example code.
 :::
 
-To get started, you will need need to add the `Duende.AccessTokenManagement` package to your solution.
+To get started, you will need to add the `Duende.AccessTokenManagement` package to your solution.
 
 Next, there are two fundamental ways to interact with token management:
 1. **Automatic** <Badge text="recommended"/>: You request an `HttpClient` from the `IHttpClientFactory`. This HTTP client automatically requests, optionally renews and attaches the access tokens on each request. 
@@ -185,9 +185,27 @@ public class WorkerHttpClient : BackgroundService
 }
 ```
 
-:::note
-The clients in the HTTP client factory have a message handler attached to them that automatically retries the request in case of a `401` response code.
-The request gets sent again with a newly requested access token. If this still results in a `401`, the response is returned to the caller.
+:::note[Default resiliency handler in BFF v4]
+When you use `AddClientCredentialsHttpClient`, the configured HTTP client will include a resiliency message handler which
+automatically retries the HTTP request in case of a `401 Unauthorized` response.
+
+This retry helps in two scenarios:
+* The access token has expired. A new token is requested to retry the original HTTP request.
+* You're using [DPoP](/accesstokenmanagement/advanced/dpop.md). The DPoP request may need to be retried with a nonce value present in the HTTP response.
+
+The retry only happens once: if it still results in `401 Unauthorized`, the response is returned to the caller.
+
+This functionality is **not** included when you use `AddClientCredentialsTokenHandler` when registering your own HTTP clients.
+You can however add the resiliency message handler manually:
+
+```csharp
+services.AddHttpClient<CatalogClient>(client =>
+{
+    client.BaseAddress = new Uri("https://apis.company.com/catalog/");
+})
+.AddDefaultAccessTokenResiliency()
+.AddClientCredentialsTokenHandler("catalog.client");
+```
 :::
 
 ## Manually Request Access Tokens

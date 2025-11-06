@@ -62,6 +62,6 @@ our `ProfileService<TUser>` and override `IsUserActiveAsync(TUser user)` to chec
 
 ## Template
 
-Alternatively, you can use the `isaspid` [template](/identityserver/overview/packaging.mdx#templates) to create a starter
+Alternatively, you can use the `duende-is-aspid` [template](/identityserver/overview/packaging.mdx#templates) to create a starter
 IdentityServer host project configured to use ASP.NET Identity. See
 the [Quickstart Documentation](/identityserver/quickstarts/5-aspnetid.md) for a detailed walkthrough.
