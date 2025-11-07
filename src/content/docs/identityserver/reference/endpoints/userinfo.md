@@ -4,7 +4,7 @@ description: "Reference documentation for the UserInfo endpoint, which allows re
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: UserInfo
-  order: 4
+  order: 5
 redirect_from:
   - /identityserver/v5/reference/endpoints/userinfo/
   - /identityserver/v6/reference/endpoints/userinfo/

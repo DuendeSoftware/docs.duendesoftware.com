@@ -4,7 +4,7 @@ description: "Documentation for the RFC 7662 compliant introspection endpoint us
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Introspection
-  order: 5
+  order: 6
 redirect_from:
   - /identityserver/v5/reference/endpoints/introspection/
   - /identityserver/v6/reference/endpoints/introspection/
