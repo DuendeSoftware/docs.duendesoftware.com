@@ -35,6 +35,13 @@ const removeMarkdownExtensions: Plugin = function ({
         );
 
         node.url = node.url.replace(match, "$2");
+
+        // Add trailing slash
+        if (!node.url.endsWith("/") && !node.url.includes("#")) {
+          node.url += "/";
+        } else if (node.url.includes("#") && !node.url.includes("/#")) {
+          node.url = node.url.replace("#", "/#");
+        }
       }
     });
   };
