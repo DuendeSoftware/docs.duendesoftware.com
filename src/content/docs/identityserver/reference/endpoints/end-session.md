@@ -4,7 +4,7 @@ description: "The end session endpoint enables single sign-out functionality in 
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: End Session
-  order: 7
+  order: 8
 redirect_from:
   - /identityserver/v5/reference/endpoints/end_session/
   - /identityserver/v6/reference/endpoints/end_session/

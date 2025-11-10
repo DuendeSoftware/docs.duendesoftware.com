@@ -4,7 +4,7 @@ description: "Documentation for the token endpoint that enables programmatic tok
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Token
-  order: 3
+  order: 4
 redirect_from:
   - /identityserver/v5/reference/endpoints/token/
   - /identityserver/v6/reference/endpoints/token/
