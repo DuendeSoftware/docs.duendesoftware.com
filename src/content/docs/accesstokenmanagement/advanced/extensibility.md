@@ -146,14 +146,23 @@ public class MultiTenantTokenRequestCustomizer(
 }
 ```
 
-Register the customizer in your application startup:
+Register the customizer as part of the call to the `Add*Handler` methods.
 
 ```csharp
 // Program.cs
-services.AddSingleton<ITokenRequestCustomizer, MultiTenantTokenRequestCustomizer>();
-```
+// Client Credentials Token Handler
+services.AddHttpClient("client-credentials-token-http-client")
+        .AddClientCredentialsTokenHandler(customizer,
+            ClientCredentialsClientName.Parse("pure-client-credentials"));
 
-The customizer is automatically used by the access token management pipeline when configured. Both user token management and client credentials token management will invoke the customizer before retrieving tokens.
+// User Access Token Handler
+services.AddHttpClient("user-access-token-http-client")
+        .AddUserAccessTokenHandler(customizer);
+
+// Client Access Token Handler
+services.AddHttpClient("client-access-token-http-client")
+        .AddClientAccessTokenHandler(customizer);
+```
 
 :::tip[When to use ITokenRequestCustomizer vs ITokenRetriever]
 - Use **ITokenRequestCustomizer** when you need to modify token request parameters (scopes, resources, audiences) based on request context
