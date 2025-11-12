@@ -149,12 +149,13 @@ public class MultiTenantTokenRequestCustomizer(
 Register the customizer as part of the call to the `Add*Handler` methods.
 
 ```csharp
-//Client Credentials Token Handler
+// Program.cs
+// Client Credentials Token Handler
 services.AddHttpClient("client-credentials-token-http-client")
         .AddClientCredentialsTokenHandler(customizer,
             ClientCredentialsClientName.Parse("pure-client-credentials"));
 
-//User Access Token Handler
+// User Access Token Handler
 services.AddHttpClient("user-access-token-http-client")
         .AddUserAccessTokenHandler(customizer);
 
