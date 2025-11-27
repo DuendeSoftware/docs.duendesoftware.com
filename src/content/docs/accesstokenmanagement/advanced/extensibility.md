@@ -146,10 +146,12 @@ public class MultiTenantTokenRequestCustomizer(
 }
 ```
 
-Register the customizer as part of the call to the `Add*Handler` methods.
+An instance of the `ITokenRequestCustomizer` implementation can be registered as part of the call to the `Add*Handler` methods:
 
 ```csharp
 // Program.cs
+var customizer = new MultiTenantTokenRequestCustomizer(tenantResolver, tenantConfigStore);
+
 // Client Credentials Token Handler
 services.AddHttpClient("client-credentials-token-http-client")
         .AddClientCredentialsTokenHandler(customizer,
@@ -164,9 +166,32 @@ services.AddHttpClient("client-access-token-http-client")
         .AddClientAccessTokenHandler(customizer);
 ```
 
+If you require access to services from the service provider, you can use the `Add*Handler` method overloads that accept a factory delegate:
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<MultiTenantTokenRequestCustomizer>();
+
+// Client Credentials Token Handler
+services.AddHttpClient("client-credentials-token-http-client")
+        .AddClientCredentialsTokenHandler(
+            serviceProvider => serviceProvider.GetRequiredService<MultiTenantTokenRequestCustomizer>(),
+            ClientCredentialsClientName.Parse("pure-client-credentials"));
+
+// User Access Token Handler
+services.AddHttpClient("user-access-token-http-client")
+        .AddUserAccessTokenHandler(
+            serviceProvider => serviceProvider.GetRequiredService<MultiTenantTokenRequestCustomizer>());
+
+// Client Access Token Handler
+services.AddHttpClient("client-access-token-http-client")
+        .AddClientAccessTokenHandler(
+            serviceProvider => serviceProvider.GetRequiredService<MultiTenantTokenRequestCustomizer>());
+```
+
 :::tip[When to use ITokenRequestCustomizer vs ITokenRetriever]
-- Use **ITokenRequestCustomizer** when you need to modify token request parameters (scopes, resources, audiences) based on request context
-- Use **ITokenRetriever** when you need to replace the entire token acquisition logic with a custom flow
+- Use `ITokenRequestCustomizer` when you need to modify token request parameters (scopes, resources, audiences) based on request context
+- Use `ITokenRetriever` when you need to replace the entire token acquisition logic with a custom flow
 :::
 
 ### Additional Use Cases
