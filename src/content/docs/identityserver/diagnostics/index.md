@@ -19,9 +19,9 @@ to the UI/client are very brief - the logs always have all the details of what w
 
 [Read More](/identityserver/diagnostics/logging.md)
 
-## Open Telemetry
+## OpenTelemetry
 
-Open Telemetry is the new standard way of emitting diagnostics information from a process and
+OpenTelemetry is a standard way of emitting diagnostics information from a process and
 IdentityServer supports Traces (.NET Activities), Metrics and Logs.
 
 [Read More](/identityserver/diagnostics/otel.md)
@@ -30,7 +30,7 @@ IdentityServer supports Traces (.NET Activities), Metrics and Logs.
 
 The eventing system was created as an extension point to integrate with application monitoring
 systems (APM). They used to have their own different APIs so IdentityServer only provided events
-that could be used to call the APM's APIs. Thanks to Open Telemetry there is now a standardized
+that could be used to call the APM's APIs. Thanks to OpenTelemetry there is now a standardized
 way to emit diagnostic information from a process. The events may eventually be deprecated and removed.
 
 [Read More](/identityserver/diagnostics/events.md)

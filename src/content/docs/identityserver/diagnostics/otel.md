@@ -23,7 +23,7 @@ Added in Duende IdentityServer v6.1 and expanded in v7.0
 telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior,
 especially in highly distributed systems.
 
-.NET 8 comes with first class support for Open Telemetry. IdentityServer emits traces, metrics, and logs.
+.NET 8 comes with first class support for OpenTelemetry. IdentityServer emits traces, metrics, and logs.
 
 ### Metrics
 
@@ -47,15 +47,15 @@ url and then gets the keys from jwks endpoint.
 
 ## Setup
 
-To start emitting Otel tracing and metrics information you need
+To start emitting OpenTelemetry tracing and metrics information you need to:
 
-* add the Otel libraries to your IdentityServer and client applications
+* add the OpenTelemetry libraries to your IdentityServer and client applications
 * start collecting traces and Metrics from the various IdentityServer sources (and other sources e.g. ASP.NET Core)
 
 For development a simple option is to export the tracing information to the console and use the Prometheus
 exporter to create a human-readable `/metrics` endpoint for the metrics.
 
-Add the Open Telemetry configuration to your service setup.
+Add the OpenTelemetry configuration to your service setup.
 
 ```cs
 // Program.cs
@@ -83,7 +83,7 @@ Add the Prometheus exporter to the pipeline
 
 ```cs
 // Program.cs
-// Map /metrics that displays Otel data in human-readable form.
+// Map /metrics that displays OpenTelemetry data in human-readable form.
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
 ```
 
@@ -97,7 +97,7 @@ Added in Duende IdentityServer v7.0
 
 OpenTelemetry metrics are run-time measurements that are intended to provide an indication
 of overall health and are typically used to show graphs on a dashboard or to set up monitoring rules.
-When that monitoring reveals issues, traces and logs are used to investigate further. Open Telemetry monitoring
+When that monitoring reveals issues, traces and logs are used to investigate further. OpenTelemetry monitoring
 tools often provide features to find the traces and logs corresponding to certain metrics.
 
 IdentityServer emits metrics from the IdentityServer middleware and services. Our quick start for the UI also
@@ -391,7 +391,7 @@ Here's e.g. the output for a request to the discovery endpoint:
 
 ![Honeycomb UI showing traces for discovery document endpoint](images/otel_disco.png)
 
-When multiple applications send their traces to the same OTel server, this becomes super useful for following e.g.
+When multiple applications send their traces to the same OpenTelemetry server, this becomes super useful for following e.g.
 authentication flows over service boundaries.
 
 The following screenshot shows the ASP.NET Core OpenID Connect authentication handler redeeming the authorization code:

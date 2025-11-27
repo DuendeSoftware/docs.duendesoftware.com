@@ -33,7 +33,7 @@ economical option that is a good fit for organizations with basic needs. It's al
 choice if you have an aging IdentityServer4 implementation that needs to be updated and
 licensed. The Starter edition includes all the features that were part of
 IdentityServer4, along with support for the latest .NET releases, improved observability
-through OTEL support, and years of bug fixes and enhancements.
+through OpenTelemetry support, and years of bug fixes and enhancements.
 
 ### Business Edition
 
