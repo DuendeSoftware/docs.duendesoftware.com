@@ -211,9 +211,27 @@ and not fall back to trial mode.
 
 #### BFF Trial Mode
 
-Using BFF without a license is considered Trial Mode. In Trial Mode, BFF will be limited to a maximum of
-five (5) sessions per host. Sessions exceeding the limit will cause the host to log an error.
-This session limit is not distributed or shared across multiple nodes.
+Using BFF without a license is considered Trial Mode. Whenrunning in Trial Mode, you will see the following
+error logged on startup:
+
+```text
+You do not have a valid license key for the Duende software.
+BFF will run in trial mode. This is allowed for development and testing scenarios.
+
+If you are running in production you are required to have a licensed version.
+Please start a conversation with us: https://duende.link/l/bff/contact
+```
+
+In Trial Mode, BFF will be limited to a maximum of five (5) sessions per host. Sessions exceeding the limit
+will cause the host to log an error for every consecutive authenticated session:
+
+```text
+BFF is running in trial mode. The maximum number of allowed authenticated sessions (5) has been exceeded.
+
+See https://duende.link/l/bff/trial for more information. 
+````
+
+The trial mode session limit is not distributed or shared across multiple nodes.
 
 :::note
 When operating non-production environments, such as development, test, or QA, without a valid license key,
