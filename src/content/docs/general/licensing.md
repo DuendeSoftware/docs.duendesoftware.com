@@ -204,6 +204,8 @@ BFF v4 requires a valid license in production environments. When no license is p
 [trial mode](#bff-trial-mode) with a limitation of maximum of five sessions per host (not technically enforced)
 with any excess resulting in error logging.
 
+Trial mode is also enabled when the license could not be validated, for example when the signature validation fails.
+
 When an expired license is used, the system will continue to function with only a warning written to the logs,
 and not fall back to trial mode.
 
