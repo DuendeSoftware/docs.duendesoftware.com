@@ -327,13 +327,13 @@ Upgrading from IdentityServer4 v4.x to Duende IdentityServer consists of several
 
 ### Step 1: Update the .NET Version
 
-In this guide, we'll update to .NET 8 LTS. If your application targets a newer .NET version, you can use that newer version for the IdentityServer host as well.
+In this guide, we'll update to .NET 10 LTS.
 
 Update the IdentityServer target framework:
 
 ```diff lang="xml" title=".csproj"
 - <TargetFramework>netcoreapp3.1</TargetFramework>
-+ <TargetFramework>net8.0</TargetFramework>
++ <TargetFramework>net10.0</TargetFramework>
 ```
 
 Some of your project dependencies may need updating as part of changing the target framework.
@@ -352,6 +352,7 @@ Make sure to consult the ASP.NET Core migration guides provided by Microsoft.
     * [Breaking changes in .NET 7](https://learn.microsoft.com/en-us/dotnet/core/compatibility/7.0)
     * [Breaking changes in .NET 8](https://learn.microsoft.com/en-us/dotnet/core/compatibility/8.0)
     * [Breaking changes in .NET 9](https://learn.microsoft.com/en-us/dotnet/core/compatibility/9.0)
+    * [Breaking changes in .NET 10](https://learn.microsoft.com/en-us/dotnet/core/compatibility/10.0)
 
 </details>
 
@@ -362,6 +363,7 @@ Make sure to consult the ASP.NET Core migration guides provided by Microsoft.
     * [Migrate from ASP.NET Core 6.0 to 7.0](https://learn.microsoft.com/en-us/aspnet/core/migration/60-70)
     * [Migrate from ASP.NET Core 7.0 to 8.0](https://learn.microsoft.com/en-us/aspnet/core/migration/70-80)
     * [Migrate from ASP.NET Core 8.0 to 9.0](https://learn.microsoft.com/en-us/aspnet/core/migration/80-90)
+    * [Migrate from ASP.NET Core 9.0 to 10.0](https://learn.microsoft.com/en-us/aspnet/core/migration/90-to-100)
 
 </details>
 :::
@@ -386,7 +388,7 @@ The IdentityModel package was renamed to Duende IdentityModel and needs updating
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="IdentityModel" Version="x.y.z" />
-+ <PackageReference Include="Duende.IdentityModel" Version="7.1.0" />
++ <PackageReference Include="Duende.IdentityModel" Version="8.0.0" />
 ```
 
 ### Step 3: Update Namespaces
