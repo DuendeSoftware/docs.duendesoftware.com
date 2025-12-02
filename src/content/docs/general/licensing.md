@@ -1,8 +1,11 @@
 ---
 title: "Licensing"
-description: "Details about Duende IdentityServer licensing requirements, editions, configuration options, and trial mode functionality"
+description: "Details about Duende IdentityServer and BFF licensing requirements, editions, configuration options, and trial mode functionality."
 sidebar:
   order: 1
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 4
 redirect_from:
   - /licensekey/
   - /licenseKey/
@@ -12,37 +15,45 @@ redirect_from:
   - /identityserver/v7/fundamentals/license_key/  
 ---
 
-Duende IdentityServer requires a license for production use, with three editions available (Starter, Business, and
-Enterprise) that offer various features based on organizational needs. Licenses can be configured via a file system,
-programmatic startup, or external configuration services like Azure Key Vault, with trial mode available for development
-and testing. Learn more about each in the following sections.
+Duende products, except for our [open source tools](https://duendesoftware.com/products/opensource),
+require a license for production use. The [Duende Software website](https://duendesoftware.com/) provides an overview of
+different products and license editions. 
 
-:::note
+Licenses can be configured via a file system, programmatic startup, or external configuration services like Azure Key Vault,
+with trial mode available for development and testing.
+
+## IdentityServer
+
+Duende IdentityServer requires a license for production use, with three editions available (Starter, Business, and
+Enterprise) that offer various features based on organizational needs. A [community edition](https://duendesoftware.com/products/communityedition/)
+is available as well.
+
+:::note[Free for development]
 IdentityServer is [free](#trial-mode) for development, testing and personal projects, but production use
 requires a [license](https://duendesoftware.com/products/identityserver).
 :::
 
-## Editions
+### Editions
 
 There are three license editions which include different [features](https://duendesoftware.com/products/features).
 
-### Starter Edition
+#### Starter Edition
 
 The Starter edition includes the core OIDC and OAuth protocol implementation. This is an
 economical option that is a good fit for organizations with basic needs. It's also a great
-choice if you have an aging IdentityServer4 implementation that needs to be updated and
-licensed. The Starter edition includes all the features that were part of
+choice if you have an aging [IdentityServer4 implementation that needs to be updated](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx)
+and licensed. The Starter edition includes all the features that were part of
 IdentityServer4, along with support for the latest .NET releases, improved observability
-through OpenTelemetry support, and years of bug fixes and enhancements.
+through [OpenTelemetry support](/identityserver/diagnostics/otel.md), and years of bug fixes and enhancements.
 
-### Business Edition
+#### Business Edition
 
 The Business edition adds additional features that go beyond the core protocol support
 included in the Starter edition. This is a popular license because it adds the most
 commonly needed tools and features outside a basic protocol implementation. Feature
 highlights include support for server side sessions and automatic signing key management.
 
-### Enterprise Edition
+#### Enterprise Edition
 
 Finally, the Enterprise edition includes everything in the Business edition and adds
 support for features that are typically used by enterprises with particularly complex
@@ -50,91 +61,18 @@ architectures or that handle particularly sensitive data. Highlights include res
 isolation, the OpenId Connect CIBA flow, and dynamic federation. This is the best option
 when you have a specific threat model or architectural need for these features.
 
-## License Key
+### Redistribution
 
-The license key can be configured in one of two ways:
-
-* Via a well-known file on the file system
-* Programmatically in your startup code
-
-You can also use other configuration sources such as Azure Key Vault, by using the
-programmatic approach.
-
-:::note
-If you want to redistribute Duende IdentityServer as part of a product to your customers,
+If you want to redistribute Duende IdentityServer to your customers as part of a product,
 you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).
-To include the license key with your product, we recommend loading it at startup
-from an embedded resource.
-:::
 
-### File System
-
-IdentityServer looks for a file named `Duende_License.key` in the
-[ContentRootPath](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostenvironment.contentrootpath?view=dotnet-plat-ext-8.0#microsoft-extensions-hosting-ihostenvironment-contentrootpath).
-If present, the content of the file will be used as the license key.
-
-We consider the license key to be private to your organization, but not necessarily a secret.
-If you're using private source control that is scoped to your organization,
-storing your license key within it is acceptable.
-
-### Startup
-
-If you prefer to load the license key programmatically, you can do so in your startup
-code. This allows you to use the ASP.NET configuration system to load the license key from
-any [configuration provider](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-7.0#cp),
-including environment variables, appsettings.json, an external configuration service such
-as Azure App Configuration, etc.
-
-The `AddIdentityServer` method accepts a lambda expression to configure various options in
-your IdentityServer, including the `LicenseKey`. Set the value of this property to the
-content of the license key file.
-
-```csharp
-builder.Services.AddIdentityServer(options =>
-{
-    // the content of the license key file
-    options.LicenseKey = "eyJhbG..."; 
-});
-```
-
-### Azure Key Vault
-
-When deploying IdentityServer to Microsoft Azure, you can make use of
-[Azure Key Vault](https://azure.microsoft.com/products/key-vault/) to load the IdentityServer
-license key at startup.
-
-Similarly to setting the license key programmatically, you can use the `AddIdentityServer` method
-and use the overload that accepts a lambda expression to configure the `LicenseKey` property for
-your IdentityServer.
-
-```csharp
-var keyVaultUrl = new Uri("https://<YourKeyVaultName>.vault.azure.net/"); 
-
-var secretClient = new Azure.Security.KeyVault.Secrets.SecretClient(
-    keyVaultUrl, 
-    new Azure.Identity.DefaultAzureCredential()
-);
-
-KeyVaultSecret licenseKeySecret = secretClient.GetSecret("<YourSecretName>");
-var licenseKey = licenseKeySecret.Value;
-
-// Inject the secret (license key) into the IdentityServer configuration
-builder.Services.AddIdentityServer(options =>
-{
-    options.LicenseKey = licenseKey;
-});
-```
-
-If you are using [Azure App Configuration](https://azure.microsoft.com/products/app-configuration/),
-you can use a similar approach to load the license key into your IdentityServer host.
-
-## License Validation and Logging
+### License Validation and Logging
 
 The license is validated at startup and during runtime. All license validation is
-self-contained and does not leave the host. There are no outbound calls related to license
-validation.
+self-contained and does not leave the host. There are no outbound network calls related
+to license validation.
 
-### Startup Validation
+#### Startup Validation
 
 At startup, IdentityServer first checks for a license. If there is no license configured,
 IdentityServer logs a warning indicating that a license is required in a production
@@ -144,19 +82,19 @@ Next, assuming a license is configured, IdentityServer compares its configuratio
 license. If there are discrepancies between the license and the configuration,
 IdentityServer will write log messages indicating the nature of the problem.
 
-### Runtime Validation
+#### Runtime Validation
 
 Most common licensing issues, such as expiration of the license or configuring more
-clients than is included in the license do not prevent IdentityServer from functioning. We
+clients than are included in the license do not prevent IdentityServer from functioning. We
 trust our customers, and we don't want a simple oversight to cause an outage. However, some
 features will be disabled at runtime if your license does not include them, including:
 
-- Server Side Sessions
-- DPoP
-- Resource Isolation
-- PAR
-- Dynamic Identity Providers
-- CIBA
+- [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
+- [Demonstrating Proof-of-Possession (DPoP)](/identityserver/tokens/pop.md)
+- [Resource Isolation](/identityserver/fundamentals/resources/isolation.md)
+- [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md)
+- [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.md)
+- [Client Initiated Backchannel Authentication (CIBA)](/identityserver/ui/ciba.md)
 
 Again, the absence of a license is permitted for development and testing, and therefore
 does not disable any of these features. Similarly, using an expired license that includes
@@ -170,7 +108,7 @@ into account for license validation. In other words, you can safely configure th
 license before the old one lapses.
 :::
 
-### Trial Mode
+#### Trial Mode
 
 Using IdentityServer without a license is considered Trial Mode. In Trial Mode, all
 enterprise features are enabled. Trial Mode is limited to 500 protocol requests. This
@@ -199,18 +137,20 @@ If you have feedback on trial mode, or specific use cases where you'd prefer oth
 please [open a community discussion](https://github.com/DuendeSoftware/community/discussions).
 :::
 
-## Redistribution
+#### Redistribution
 
 We understand that when IdentityServer is redistributed, log messages from the licensing
 system are not likely to be very useful to your redistribution customers. For that reason,
 in a redistribution the severity of log messages from the license system is turned all the
-way down to the trace level. We also appreciate that it might be cumbersome to deploy
-updated licenses in this scenario, especially if the deployment of your software does not
-coincide with the duration of the IdentityServer license. In that situation, we ask that you
-update the license key at the next deployment of your software to your redistribution customers.
-Of course, you are always responsible for ensuring that your license is renewed.
+way down to the trace level.
 
-## Log Severity
+We also appreciate that it might be cumbersome to deploy updated licenses in this scenario,
+especially if the deployment of your software does not coincide with the duration of the
+IdentityServer license. In that situation, we ask that you update the license key at the next
+deployment of your software to your redistribution customers. Of course, you are always responsible
+for ensuring that your license is renewed.
+
+#### Log Severity
 
 The severity of the log messages described above depend on the nature of the message and the type of
 license.
@@ -224,3 +164,170 @@ license.
 | Runtime, violations           | Error            | Error                                 | Trace                                |
 
 \* as determined by `IHostEnvironment.IsDevelopment()`
+
+## BFF Security Framework
+
+The Duende BFF Security Framework requires a license for production use, with two editions available (Starter and
+Enterprise) that offer various features based on organizational needs.
+
+:::note[Trial mode]
+Duende BFF has a [limited trial mode](#bff-trial-mode) for development and testing. For small organizations or personal
+projects, consider the [community edition](https://duendesoftware.com/products/communityedition/). For production use,
+a [license](https://duendesoftware.com/products/bff) is required.
+:::
+
+### Editions
+
+BFF is a library designed to enhance the security of browser-based applications by moving authentication flows
+to the server side. The Duende BFF Security Framework requires a license for production use, and is available in
+two editions that [include different functionality](https://duendesoftware.com/products/bff) based on organizational
+needs.
+
+### Redistribution
+
+If you want to redistribute Duende BFF to your customers as part of a product,
+please [reach out to sales](https://duendesoftware.com/contact/sales).
+
+### License Validation and Logging
+
+The BFF license is validated during runtime. All license validation is self-contained and does not leave the host.
+There are no outbound network calls related to license validation.
+
+#### BFF v3.1+ Runtime Validation
+
+BFF v3.1 does not technically enforce the presence of a license key.
+At runtime, if no license is present, an error message will be logged.
+
+#### BFF v4 Runtime Validation
+
+BFF v4 requires a valid license in production environments. When no license is present, the system operates in
+[trial mode](#bff-trial-mode) with a limitation of maximum of five sessions per host (not technically enforced)
+with any excess resulting in error logging.
+
+Trial mode is also enabled when the license could not be validated, for example when the signature validation fails.
+
+When an expired license is used, the system will continue to function with only a warning written to the logs,
+and not fall back to trial mode.
+
+#### BFF Trial Mode
+
+Using BFF without a license is considered Trial Mode. Whenrunning in Trial Mode, you will see the following
+error logged on startup:
+
+```text
+You do not have a valid license key for the Duende software.
+BFF will run in trial mode. This is allowed for development and testing scenarios.
+
+If you are running in production you are required to have a licensed version.
+Please start a conversation with us: https://duende.link/l/bff/contact
+```
+
+In Trial Mode, BFF will be limited to a maximum of five (5) sessions per host. Sessions exceeding the limit
+will cause the host to log an error for every consecutive authenticated session:
+
+```text
+BFF is running in trial mode. The maximum number of allowed authenticated sessions (5) has been exceeded.
+
+See https://duende.link/l/bff/trial for more information. 
+````
+
+The trial mode session limit is not distributed or shared across multiple nodes.
+
+:::note
+When operating non-production environments, such as development, test, or QA, without a valid license key,
+you may run into this trial mode limitation.
+
+If you require a larger number of sessions, we support using your production license in these environments
+when trial mode is not enough.
+:::
+
+## License Key
+
+The license key can be configured in one of two ways:
+
+* Via a well-known file on the file system
+* Programmatically in your startup code
+
+You can also use other configuration sources such as Azure Key Vault, by using the
+programmatic approach.
+
+:::note[Redistributable license]
+If you use our [redistributable license](https://duendesoftware.com/products/identityserverredist),
+we recommend loading the license at startup from an embedded resource.
+:::
+
+We consider the license key to be private to your organization, but not necessarily a secret. If you're using private
+source control that is scoped to your organization, storing your license key within it is acceptable.
+
+### File System
+
+Duende products like IdentityServer and the BFF Security Framework look for a file named `Duende_License.key` in the
+[ContentRootPath](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostenvironment.contentrootpath?#microsoft-extensions-hosting-ihostenvironment-contentrootpath)
+of your application. If present, the content of the file will be used as the license key.
+
+### Startup
+
+If you prefer to load the license key programmatically, you can do so in your startup
+code. This allows you to use the ASP.NET configuration system to load the license key from
+any [configuration provider](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-7.0#cp), including environment variables, `appsettings.json`, 
+external configuration services such as Azure App Configuration, Azure Key Vault, etc.
+
+#### IdentityServer
+
+The `AddIdentityServer` method accepts a lambda expression to configure various options in
+your IdentityServer, including the `LicenseKey`. Set the value of this property to the
+content of the license key file.
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer(options =>
+{
+    // the content of the license key file
+    options.LicenseKey = "eyJhbG...";
+});
+```
+
+#### BFF Security Framework
+
+The `AddBff` method accepts a lambda expression to configure various options in
+your BFF host, including the `LicenseKey`. Set the value of this property to the
+content of the license key file.
+
+```csharp
+// Program.cs
+builder.Services.AddBff(options =>
+{
+    // the content of the license key file
+    options.LicenseKey = "eyJhbG...";
+});
+```
+
+### Azure Key Vault
+
+When deploying your application to Microsoft Azure, you can make use of
+[Azure Key Vault](https://azure.microsoft.com/products/key-vault/) to load the Duende license key at startup.
+
+Similarly to setting the license key programmatically, you can use the `AddIdentityServer`
+or `AddBff` method, and use the overload that accepts a lambda expression to configure the `LicenseKey` property.
+
+```csharp
+// Program.cs
+var keyVaultUrl = new Uri("https://<YourKeyVaultName>.vault.azure.net/"); 
+
+var secretClient = new Azure.Security.KeyVault.Secrets.SecretClient(
+    keyVaultUrl, 
+    new Azure.Identity.DefaultAzureCredential()
+);
+
+KeyVaultSecret licenseKeySecret = secretClient.GetSecret("<YourSecretName>");
+var licenseKey = licenseKeySecret.Value;
+
+// Inject the secret (license key) into the IdentityServer configuration
+builder.Services.AddIdentityServer(options =>
+{
+    options.LicenseKey = licenseKey;
+});
+```
+
+If you are using [Azure App Configuration](https://azure.microsoft.com/products/app-configuration/),
+you can use a similar approach to load the license key into your application host.
