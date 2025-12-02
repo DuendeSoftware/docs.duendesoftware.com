@@ -15,10 +15,6 @@ Duende BFF Security Framework v4.0 is a significant release that includes:
 
 The extensibility approach has been drastically changed, and many `virtual` methods containing implementation logic are now internal instead.
 
-:::caution[Duende BFF Security Framework v4 is still in preview]
-The Duende BFF Security Framework v4 is still in preview. This version (and associated documentation) is still evolving.
-:::
-
 ## Upgrading
 
 This release introduces many breaking changes. This upgrade guide covers cases where a breaking change was introduced.
