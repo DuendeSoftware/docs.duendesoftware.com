@@ -4,7 +4,7 @@ description: "Documentation for the authorize endpoint which handles browser-bas
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Authorize
-  order: 2
+  order: 3
 redirect_from:
   - /identityserver/v5/reference/endpoints/authorize/
   - /identityserver/v6/reference/endpoints/authorize/

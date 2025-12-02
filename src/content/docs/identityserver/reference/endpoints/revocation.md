@@ -4,7 +4,7 @@ description: "Learn about the revocation endpoint that allows invalidating acces
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Revocation
-  order: 6
+  order: 7
 redirect_from:
   - /identityserver/v5/reference/endpoints/revocation/
   - /identityserver/v6/reference/endpoints/revocation/
