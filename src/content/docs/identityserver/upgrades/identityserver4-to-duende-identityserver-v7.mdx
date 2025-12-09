@@ -374,14 +374,14 @@ Update the IdentityServer4 dependencies in your IdentityServer host project to D
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="IdentityServer4" Version="4.1.2" />
-+ <PackageReference Include="Duende.IdentityServer" Version="7.4.2" />
++ <PackageReference Include="Duende.IdentityServer" Version="7.4.3" />
 ```
 
 You'll need to make a similar change for all IdentityServer4 packages, including `IdentityServer4.EntityFramework` and `IdentityServer4.AspNetIdentity`. For example:
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
-+ <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.4.2" />
++ <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.4.3" />
 ```
 
 The IdentityModel package was renamed to Duende IdentityModel and needs updating if you reference it directly:
