@@ -1,8 +1,8 @@
 ---
-title: "IdentityServer4 v3.1 to Duende IdentityServer v6"
+title: "IdentityServer4 v3.1 to IdentityServer4 v4.1"
 sidebar:
   order: 140
-  label: IdentityServer4 v3.1 → v6.0
+  label: IdentityServer4 v3.1 → v4.1
 redirect_from:
   - /identityserver/v5/upgrades/is4_v3_to_dis_v5/
   - /identityserver/v5/upgrades/is4_v3_to_dis_v6/
@@ -12,8 +12,10 @@ redirect_from:
   - /identityserver/v7/upgrades/is4_v3_to_dis_v6/
 ---
 
-This upgrade guide covers upgrading from IdentityServer4 v3.1.x to Duende IdentityServer v6.
-This upgrade is more complex because the configuration object model had some non-trivial changes from IdentityServer4 v3 to IdentityServer4 v4.
+This upgrade guide covers upgrading from IdentityServer4 v3.1.x to IdentityServer4 v4.1.x.
+
+If you are on IdentityServer4 v3 this upgrade is necessary before moving on to Duende IdentityServer versions. 
+The upgrade is relatively complex because the configuration object model had some non-trivial changes from IdentityServer4 v3 to IdentityServer4 v4.
 
 In short, in IdentityServer4 v3 there was a parent-child relationship between the ApiResources and the ApiScopes.
 Then in IdentityServer4 v4 the ApiScopes was promoted to be its own top-level configuration. 
