@@ -44,7 +44,10 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
             var descriptor = new SecurityTokenDescriptor
             {
                 Issuer = options1.ClientId!.ToString(),
-                Audience = options1.TokenEndpoint!.ToString(),
+
+                // Set the audience to the url of identity server. Do not use the tokenurl to build the autority. 
+                Audience = "https://--url-to-authority-here--",
+
                 Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = GetSigningCredential(),
 
@@ -105,7 +108,9 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
             var descriptor = new SecurityTokenDescriptor
             {
                 Issuer = options1.ClientId,
-                Audience = options1.TokenEndpoint,
+
+                // Set the audience to the url of identity server. Do not use the tokenurl to build the autority. 
+                Audience = "https://--url-to-authority-here--",
                 Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = GetSigningCredential(),
 
@@ -142,3 +147,12 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
 }`}/>
     </TabItem>
 </Tabs>
+
+
+:::note
+You need to explicitly set the `Audience` to the authorization server's issuer url (usually the url of identity server). 
+
+Don't set the audience to the 'TokenUrl'. Setting the `Audience` value to the token endpoint leaves 
+you vulnerable to these vulnerabilities: (CVE-2025-27370/CVE-2025-27371).
+
+:::
