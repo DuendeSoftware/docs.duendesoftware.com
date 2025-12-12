@@ -150,9 +150,8 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
 
 
 :::note
-You need to explicitly set the `Audience` to the authorization server's issuer url (usually the url of identity server). 
+You need to explicitly set the `Audience` to the authorization server's issuer URL (usually the URL of identity server). 
 
-Don't set the audience to the 'TokenUrl'. Setting the `Audience` value to the token endpoint leaves 
+Don't set the audience to the `TokenUrl`. Setting the `Audience` value to the token endpoint leaves 
 you vulnerable to these vulnerabilities: (CVE-2025-27370/CVE-2025-27371).
-
 :::
