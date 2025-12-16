@@ -1,0 +1,95 @@
+---
+title: "BFF User Endpoint Extensibility"
+date: 2022-12-30 10:55:24
+sidebar:
+  label: "User"
+  order: 50
+redirect_from:
+  - /bff/v2/extensibility/management/user/
+  - /bff/v3/extensibility/management/user/
+  - /identityserver/v5/bff/extensibility/management/user/
+  - /identityserver/v6/bff/extensibility/management/user/
+  - /identityserver/v7/bff/extensibility/management/user/
+---
+
+import { Aside, Code } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+The BFF user endpoint can be customized by implementing the `IUserEndpoint`. 
+
+<Aside type="caution">
+    In BFF V3, the `IUserEndpoint` interface is called `IUserService` instead.
+</Aside>
+
+## Request Processing 
+
+<Tabs syncKey="bffVersion">
+    <TabItem label="V4">
+        You can customize the behavior of the user endpoint by implementing the `ProcessRequestAsync` method of the
+        `IUserEndpoint` interface. The [default implementation][1] can serve as a starting point for your own implementation.
+
+        If you want to extend the default behavior of the user endpoint, you can instead add a custom endpoint and
+        call the original endpoint implementation:
+
+        <Code
+            lang="csharp"
+            title="Program.cs"
+            code={`
+var bffOptions = app.Services.GetRequiredService<IOptions<BffOptions>>().Value;
+
+app.MapGet(bffOptions.UserPath, async (HttpContext context, CancellationToken ct) =>
+{
+    // Custom logic before calling the original endpoint implementation
+    var endpointProcessor = context.RequestServices.GetRequiredService<IUserEndpoint>();
+    await endpointProcessor.ProcessRequestAsync(context, ct);
+    // Custom logic after calling the original endpoint implementation
+});
+`} />
+    </TabItem>
+    <TabItem label="V3">
+        `ProcessRequestAsync` is the top-level function called in the endpoint service `DefaultUserService`,
+        and can be used to add arbitrary logic to the endpoint.
+
+        For example, you could take whatever actions you need before normal processing of the request like this:
+
+        <Code
+            lang="csharp"
+            code={`
+public override Task ProcessRequestAsync(HttpContext context, CancellationToken ct)
+{
+    // Custom logic here
+
+    return base.ProcessRequestAsync(context);
+}
+`}/>
+    </TabItem>
+</Tabs>
+
+### Enriching User Claims 
+
+There are several ways how you can enrich the claims for a specific user. 
+
+The most robust way would be to implement a custom `IClaimsTransformation`. 
+
+```csharp
+services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
+
+public class CustomClaimsTransformer : IClaimsTransformation
+{
+    public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
+    {
+        var identity = (ClaimsIdentity)principal.Identity;
+
+        if (!identity.HasClaim(c => c.Type == "custom_claim"))
+        {
+            identity.AddClaim(new Claim("custom_claim", "your_value"));
+        }
+
+        return Task.FromResult(principal);
+    }
+}
+```
+
+See the [Claims Transformation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/claims?view=aspnetcore-9.0) topic in the ASP.NET Core documentation for more information. 
+
+[1]: https://github.com/DuendeSoftware/products/tree/releases/bff/4.0.x/bff/src/Bff/Endpoints/Internal/DefaultUserEndpoint.cs
