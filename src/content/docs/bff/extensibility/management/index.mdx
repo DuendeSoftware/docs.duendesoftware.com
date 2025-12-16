@@ -45,8 +45,8 @@ builder.Services.AddTransient<IDiagnosticsEndpoint, DefaultDiagnosticsEndpoint>(
     Task ProcessRequestAsync(HttpContext context, CancellationToken ct);
 }`}/>
 
-      You can customize the behavior of the endpoints either by implementing the appropriate interface.
-      The [default implementations](https://github.com/DuendeSoftware/products/tree/releases/bff/4.0.0/bff/src/Bff/Endpoints/Internal) can serve as a starting point for your own implementation.
+      You can customize the behavior of the endpoints by implementing the appropriate interface.
+      The [default implementations][1] can serve as a starting point for your own implementation.
 
       If you want to extend the default behavior of a management endpoint, you can add a custom endpoint and call the original endpoint implementation:
 
@@ -91,3 +91,5 @@ builder.Services.AddTransient<IDiagnosticsService, DefaultDiagnosticsService>();
       Several of the default endpoint service implementations also define virtual methods that can be overridden to customize their behavior with more granularity.
   </TabItem>
 </Tabs>
+
+[1]: https://github.com/DuendeSoftware/products/tree/releases/bff/4.0.x/bff/src/Bff/Endpoints/Internal
