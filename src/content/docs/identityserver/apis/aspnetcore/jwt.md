@@ -74,3 +74,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
     });
 ```
+
+:::tip[Dynamic Proof-of-Possession (DPoP) validation]
+You can make use of the [JwtBearer Extensions](/identityserver/apis/aspnetcore/confirmation.md#validating-dpop) to validate Dynamic Proof-of-Possession (DPoP) access tokens in ASP.NET Core.
+:::
