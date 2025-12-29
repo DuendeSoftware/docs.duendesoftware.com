@@ -20,7 +20,7 @@ To overcome this issue, a single BFF instance can support multiple frontends. Ea
 * Define its own OpenID Connect configuration
 * Define its own Cookie settings
 * Define its own API surface
-* Be identified either via path based routing and/or origin selection. 
+* Be identified either via path based routing and/or host selection.
 
 Adding additional frontends to the BFF has very little impact on the performance on the BFF itself, but keep in mind
 that the traffic for all the frontends is proxied through the BFF. 
@@ -94,13 +94,18 @@ as via [Configuration](configuration.mdx).
 
 ## Frontend Selection
 
-Each request to a frontend has to be uniquely defined by either its path, its origin or a combination of the two. 
-If you specify neither, then it's considered the default frontend. 
+Each request to a frontend has to be uniquely defined by either its path, its host or a combination of the two.
+If you specify neither, then it's considered the default frontend.
+
+:::note
+With "host", we mean the combination of the schema (http/https), the domain (app1.example.com) and the port. The BFF
+frontend selection middleware uses the HTTP Host header to select a matching frontend.
+:::
 
 Frontends are matched using the following algorithm:
 
-1. **Selection by both origin and path:** If there is a frontend that matches both the origin AND has the most specific match to a path, it's selected. 
-2. **Selection by origin only:** Then, if there is a frontend with only origins configured and it matches the path, it's selected. 
+1. **Selection by both host and path:** If there is a frontend that matches both the host AND has the most specific match to a path, it's selected.
+2. **Selection by host only:** Then, if there is a frontend with only hosts configured and it matches the path, it's selected.
 3. **Selection by path only:** Then, if there is a frontend with a matching path specified, it's selected. 
 4. **Default frontend:** Then, if there is a default frontend configured, it's selected.  
 
