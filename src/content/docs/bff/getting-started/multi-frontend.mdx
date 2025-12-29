@@ -11,10 +11,13 @@ sidebar:
 import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-Duende.BFF (Backend for Frontend) supports multiple frontends in a single BFF host. This is useful for scenarios where you want to serve several SPAs or frontend apps from the same backend, each with their own authentication and API proxying configuration.
+Duende.BFF (Backend for Frontend) supports multiple frontends in a single BFF host. This is useful for scenarios where
+you want to serve several SPAs or frontend apps from the same backend, each with their own authentication and API
+proxying configuration.
 
 :::note
-Multi-frontend support is available in Duende.BFF v4 and later. The v3-style of wiring up BFF is not supported for this scenario.
+Multi-frontend support is available in Duende.BFF v4 and later. The v3-style of wiring up BFF is not supported for
+this scenario.
 :::
 
 ## Prerequisites
@@ -39,7 +42,8 @@ dotnet add package Duende.BFF
 
 ### 3. OpenID Connect Configuration
 
-Configure OpenID Connect authentication for your BFF host. This is similar to the single frontend setup, but applies to all frontends unless overridden per frontend.
+Configure OpenID Connect authentication for your BFF host. This is similar to the single frontend setup, but applies
+to all frontends unless overridden per frontend.
 
 ```csharp
 // Program.cs
