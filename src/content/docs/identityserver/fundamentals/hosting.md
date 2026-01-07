@@ -84,4 +84,6 @@ app.MapDefaultControllerRoute();
 
 
 However, IdentityServer does not include a call to `UseAuthorization`. You will need to add `UseAuthorization` (after `UseIdentityServer`/`UseAuthentication`) to include the authorization middleware into your pipeline. This will enable you to use various authorization features in your application.
+
+If you use the Duende UI template and its various pages, the use of `UseAuthorization` is required.
 :::
