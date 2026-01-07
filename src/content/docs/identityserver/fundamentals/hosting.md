@@ -82,5 +82,6 @@ app.MapDefaultControllerRoute();
 :::note
 `UseIdentityServer` includes a call to `UseAuthentication`, so it’s not necessary to have both.
 
-When using `UseAuthorization`, make sure to always add it after `UseIdentityServer`/`UseAuthentication`.
+
+However, IdentityServer does not include a call to `UseAuthorization`. You will need to add `UseAuthorization` (after `UseIdentityServer`/`UseAuthentication`) to include the authorization middleware into your pipeline. This will enable you to use various authorization features in your application.
 :::
