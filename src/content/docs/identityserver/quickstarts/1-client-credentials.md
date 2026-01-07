@@ -49,8 +49,13 @@ dotnet new install Duende.Templates
 ```
 
 :::note
-You may have a previous version of Duende templates (`Duende.IdentityServer.Templates`) installed on your machine.
-Please uninstall the template package and install the latest version.
+You may have a previous version of Duende templates (`Duende.Templates`) installed on your machine.
+To uninstall the previous template package, and install the latest version, use the following command:
+
+```bash title=Terminal
+dotnet new uninstall Duende.Templates
+dotnet new install Duende.Templates
+```
 :::
 
 ## Create The Solution And IdentityServer Project
