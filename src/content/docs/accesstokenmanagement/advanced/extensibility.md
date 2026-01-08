@@ -87,12 +87,13 @@ services.AddHttpClient<YourTypedHttpClient>()
     .AddDefaultAccessTokenResiliency()
     .AddHttpMessageHandler(provider =>
     {
-        var yourCustomTokenRetriever = new CustomTokenRetriever();
+        var yourCustomTokenRetriever = new CustomTokenRetriever(...);
 
         var logger = provider.GetRequiredService<ILogger<AccessTokenRequestHandler>>();
         var dPoPProofService = provider.GetRequiredService<IDPoPProofService>();
         var dPoPNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
-        var accessTokenHandler = new AccessTokenRequestHandler(
+
+        return new AccessTokenRequestHandler(
             tokenRetriever: yourCustomTokenRetriever,
             dPoPNonceStore: dPoPNonceStore,
             dPoPProofService: dPoPProofService,
