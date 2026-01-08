@@ -25,11 +25,6 @@ The licensed and supported libraries can be accessed via NuGet:
 
 Contains Duende templates for the `dotnet` CLI to help jump-start your Duende-powered solutions.
 
-:::note
-You may have a previous version of Duende templates (`Duende.IdentityServer.Templates`) installed on your machine.
-Please uninstall the template package and install the latest version.
-:::
-
 You can install the templates using the following command:
 
 ```bash title=Terminal
@@ -65,6 +60,16 @@ Duende IdentityServer with Entity Framework Stores          duende-is-ef        
 Duende IdentityServer with In-Memory Stores and Test Users  duende-is-inmem       [C#]      Web/Duende/IdentityServer
 Duende IdentityServer                                       duende-is             [C#]      Web/Duende/IdentityServer
 ```
+
+:::note
+You may have a previous version of Duende templates (`Duende.Templates`) installed on your machine.
+To uninstall the previous template package, and install the latest version, use the following command:
+
+```bash title=Terminal
+dotnet new uninstall Duende.Templates
+dotnet new install Duende.Templates
+```
+:::
 
 ## Template Descriptions
 
