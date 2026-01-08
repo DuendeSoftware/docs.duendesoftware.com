@@ -173,13 +173,13 @@ To do so, you first need to tell Serilog to read its configuration from the `ICo
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, lc) => lc
+builder.Services.AddSerilog(lc => lc
     .WriteTo.Console(
         outputTemplate:
         "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
         formatProvider: CultureInfo.InvariantCulture)
     .Enrich.FromLogContext()
-    .ReadFrom.Configuration(ctx.Configuration));
+    .ReadFrom.Configuration(builder.Configuration));
 ```
 
 Then, in your `appsettings.json` file, you can set the default minimum log level and log level overrides like so:
