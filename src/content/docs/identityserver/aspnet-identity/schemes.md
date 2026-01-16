@@ -13,7 +13,7 @@ When a user logs in, their identity is established and persisted across requests
 
 ### Standalone IdentityServer
 
-When using IdentityServer without ASP.NET Identity, the default cookie scheme is named `"idsrv"`.
+When using IdentityServer without ASP.NET Identity, the default cookie scheme is named `"idsrv"` (though we recommend using the constant `IdentityServerConstants.DefaultCookieAuthenticationScheme` in your code).
 
 This is configured by default in `AddIdentityServer()`, which sets up the cookie authentication handler with this scheme name. This cookie is essential for:
 
@@ -25,7 +25,7 @@ This is configured by default in `AddIdentityServer()`, which sets up the cookie
 
 When you integrate ASP.NET Identity using `AddAspNetIdentity<TUser>()`, the configuration changes to align with ASP.NET Identity's defaults.
 
-In this scenario, the main authentication cookie scheme is not `"idsrv"`. Instead, it uses the ASP.NET Identity default scheme name: `"Identity.Application"`
+In this scenario, the main authentication cookie scheme is not `"idsrv"`. Instead, it uses the ASP.NET Identity default scheme name: `"Identity.Application"` (or the `IdentityConstants.ApplicationScheme` constant).
 
 This is a common point of confusion. ASP.NET Identity registers its own cookie handlers, and `AddAspNetIdentity` configures IdentityServer to use them. This means:
 
@@ -50,23 +50,23 @@ Besides the main application cookie, IdentityServer uses other schemes for speci
 
 When a user signs in with an external provider (like Google or another OIDC provider), the result of that remote authentication is temporarily stored in an "external" cookie. This allows your login logic to read the claims from the external provider before fully signing the user into your main local session.
 
-- **Standalone Default:** `"idsrv.external"`
-- **With ASP.NET Identity:** `"Identity.External"`
+- **Standalone Default:** `"idsrv.external"` (Constant: `IdentityServerConstants.ExternalCookieAuthenticationScheme`)
+- **With ASP.NET Identity:** `"Identity.External"` (Constant: `IdentityConstants.ExternalScheme`)
 
 ### Check Session Cookie
 
 IdentityServer session management requires a separate cookie to monitor the session state without sending the large authentication cookie.
 The [User Session Service](/identityserver/reference/services/user-session-service.md) manages this cookie.
 
-- **Default Name:** `"idsrv.session"` (This often remains consistent, but verify your specific configuration).
+- **Default Name:** `"idsrv.session"` (Constant: `IdentityServerConstants.DefaultCheckSessionCookieName`). This often remains consistent, but verify your specific configuration.
 
 ## Summary Table
 
-| Feature                  | Standalone IdentityServer               | With ASP.NET Identity            |
-|:-------------------------|:----------------------------------------|:---------------------------------|
-| **Main Auth Cookie**     | `"idsrv"`                               | `"Identity.Application"`         |
-| **External Auth Cookie** | `"idsrv.external"`                      | `"Identity.External"`            |
-| **Typical Usage**        | `HttpContext.SignInAsync("idsrv", ...)` | `SignInManager.SignInAsync(...)` |
+| Feature                  | Standalone IdentityServer                                                                 | With ASP.NET Identity                                                |
+| :----------------------- | :---------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
+| **Main Auth Cookie**     | `"idsrv"`<br/>(`IdentityServerConstants.DefaultCookieAuthenticationScheme`)               | `"Identity.Application"`<br/>(`IdentityConstants.ApplicationScheme`) |
+| **External Auth Cookie** | `"idsrv.external"`<br/>(`IdentityServerConstants.ExternalCookieAuthenticationScheme`)     | `"Identity.External"`<br/>(`IdentityConstants.ExternalScheme`)       |
+| **Typical Usage**        | `HttpContext.SignInAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme, ...)` | `SignInManager.SignInAsync(...)`                                     |
 
 ## Common Pitfalls
 
