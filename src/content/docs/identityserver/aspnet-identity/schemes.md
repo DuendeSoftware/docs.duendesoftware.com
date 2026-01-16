@@ -33,7 +33,7 @@ This is a common point of confusion. ASP.NET Identity registers its own cookie h
 2.  **Configuration:** If you need to configure cookie options (like expiration or sliding expiration), you must configure the options for `"Identity.Application"`, not `"idsrv"`.
 
 ```csharp
-// Example: Configuring the cookie lifetime when using ASP.NET Identity
+// Program.cs
 services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "Identity.Application"; // The default
