@@ -10,7 +10,7 @@ redirect_from:
   - /identityserver/v7/fundamentals/resources/api_resources/
 ---
 
-When the API/resource surface gets larger, a flat list of scopes might become hard to  manage.
+When the API/resource surface gets larger, a flat list of scopes might become hard to manage.
 
 In Duende IdentityServer, the `ApiResource` class allows for some additional organization and grouping and isolation of scopes and providing some common settings.
 
@@ -40,14 +40,14 @@ With `ApiResource` you can now create two logical APIs and their corresponding s
 
 ```cs
 public static readonly IEnumerable<ApiResource> GetApiResources()
-{ 
+{
     return new List<ApiResource>
     {
         new ApiResource("invoice", "Invoice API")
         {
             Scopes = { "invoice.read", "invoice.pay", "manage", "enumerate" }
         },
-        
+
         new ApiResource("customer", "Customer API")
         {
             Scopes = { "customer.read", "customer.contact", "manage", "enumerate" }
@@ -111,13 +111,14 @@ Client requests: *`manage`*:
 ```
 
 ### Adding User Claims
-You can specify that an access token for an API resource (regardless of which scope is requested) should contain additional user claims. 
+
+You can specify that an access token for an API resource (regardless of which scope is requested) should contain additional user claims.
 
 ```cs
 var customerResource = new ApiResource("customer", "Customer API")
     {
         Scopes = { "customer.read", "customer.contact", "manage", "enumerate" },
-        
+
         // additional claims to put into access token
         UserClaims =
         {
@@ -164,3 +165,7 @@ var invoiceApi = new ApiResource("invoice", "Invoice API")
 :::note
 Make sure that you have configured your IdentityServer for the required signing algorithm. See [here](/identityserver/fundamentals/key-management.md) for more details.
 :::
+
+### Resource Isolation
+
+See [Resource Isolation](/identityserver/fundamentals/resources/isolation.md) for more details on how to use the `resource` parameter to request a token with scopes for a specific resource.
