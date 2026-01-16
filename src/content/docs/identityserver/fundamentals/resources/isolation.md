@@ -14,19 +14,34 @@ redirect_from:
 This is an Enterprise Edition feature.
 :::
 
-OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view. 
+OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view.
 This means that all the requested scope and audience combination get merged into a single access token.
+
 This has a couple of downsides:
 
-* tokens can become very powerful (and big)
-    * if such a token leaks, it allows access to multiple resources
-* resources within that single token might have conflicting settings, e.g.
-    * user claims of all resources share the same token
-    * resource specific processing like signing or encryption algorithms conflict
-* without sender-constraints, a resource could potentially re-use (or abuse) a token to call another contained resource directly
+* Tokens can become very powerful (and large)
+  * If such a token leaks, it allows access to multiple resources
+* Resources within that single token might have conflicting settings, e.g.
+  * User claims of all resources share the same token
+  * Resource-specific processing like signing or encryption algorithms conflict
+* Without sender-constraints, a resource could potentially re-use (or abuse) a token to call another contained resource directly
 
-To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds another request parameter for the authorize and token endpoint called `resource`. 
-This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single 
+### Audience Ambiguity
+
+In a system with multiple APIs (e.g., Shipping, Invoicing and Inventory APIs), a single token often lists all of them as valid audiences.
+
+```json
+{
+  "iss": "https://demo.duendesoftware.com",
+  "aud": ["invoice_api", "shipping_api", "inventory_api"],
+  "scope": ["invoice.read", "shipping.write", "inventory.read"]
+}
+```
+
+This violates the Principle of Least Privilege. If this token is leaked from the Inventory API, it can be used to call the Invoice API.
+
+To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds another request parameter for the authorize and token endpoint called `resource`.
+This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single
 value only, and all scopes belong to that single resource).
 
 ## Using The Resource Parameter
@@ -52,7 +67,8 @@ If the client would request a token for the `read` scope, the resulting access t
 the invoice and the products API and thus be accepted at both APIs.
 
 ### Machine to Machine Scenarios
-If the client in addition passes the `resource` parameter specifying the name of the resource where it wants to use 
+
+If the client in addition passes the `resource` parameter specifying the name of the resource where it wants to use
 the access token, the token engine can `down-scope` the resulting access token to the single resource, e.g.:
 
 ```text
@@ -70,13 +86,14 @@ Thus resulting in an access token like this (some details omitted):
 
 ```json
 {
-    "aud": [ "urn:invoice" ],
-    "scope": "read",
-    "client_id": "client"
+  "aud": ["urn:invoice"],
+  "scope": "read",
+  "client_id": "client"
 }
 ```
 
 ### Interactive Applications
+
 The authorize endpoint supports the `resource` parameter as well, e.g.:
 
 ```text
@@ -98,6 +115,7 @@ resource=urn:invoices
 ```
 
 ### Requesting Access To Multiple Resources
+
 It is also possible to request access to multiple resources. This will result in multiple access tokens - one for each request resource.
 
 ```text
@@ -135,7 +153,8 @@ resource=urn:products
 The end-result will be that the client has two access tokens - one for each resource and can manage their lifetime via the refresh token.
 
 ## Enforcing Resource Isolation
-All examples so far used the `resource` parameter optionally. If you have API resources, where you want to make sure 
+
+All examples so far used the `resource` parameter optionally. If you have API resources, where you want to make sure
 they are not sharing access tokens with other resources, you can enforce the resource indicator, e.g.:
 
 ```csharp title="ApiResources.cs" {6,12}
@@ -156,17 +175,77 @@ var resources = new[]
 ```
 
 The `RequireResourceIndicator` property **does not** mean that clients are forced to send the `resource` parameter when
-they request scopes associated with the API resource. You can still request those scopes without setting the `resource` 
-parameter (or including the resource), and IdentityServer will issue a token as long as the client is allowed to request 
+they request scopes associated with the API resource. You can still request those scopes without setting the `resource`
+parameter (or including the resource), and IdentityServer will issue a token as long as the client is allowed to request
 the scopes.
 
-Instead, `RequireResourceIndicator` controls **when** the resource's URI is included in the **audience claim** (`aud`) 
+Instead, `RequireResourceIndicator` controls **when** the resource's URI is included in the **audience claim** (`aud`)
 of the issued access token.
 
 * When `RequireResourceIndicator` is `false` (the default):
   IdentityServer **automatically includes** the API's resource URI in the token's audience if any of the resource's scopes
   are requested, even if the `resource` parameter was not sent in the request or didn't contain the resource URI.
 * When `RequireResourceIndicator` is `true`:
-  The API's resource URI will **only** be included in the audience **if the client explicitly includes the resource URI** 
+  The API's resource URI will **only** be included in the audience **if the client explicitly includes the resource URI**
   via the `resource` parameter when requesting the token.
 
+## .NET Client Implementation
+
+While the examples above show the underlying HTTP protocol, .NET clients can use the Duende libraries to handle resource indicators easily.
+
+### Machine-to-Machine (Worker)
+
+When using `Duende.IdentityModel` for client credentials, you can pass the `resource` parameter using the `Parameters` dictionary:
+
+```csharp
+using Duende.IdentityModel.Client;
+
+var client = new HttpClient();
+
+var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+{
+    Address = "https://demo.duendesoftware.com/connect/token",
+    ClientId = "invoice_worker",
+    ClientSecret = "secret",
+
+    // The scope defines the permission
+    Scope = "invoice.read",
+
+    // The parameter defines the target (RFC 8707)
+    Parameters = { { "resource", "urn:invoices" } }
+});
+```
+
+### ASP.NET Core
+
+For interactive applications using the standard OpenID Connect handler, use the `Resource` property on `OpenIdConnectOptions`:
+
+```csharp
+.AddOpenIdConnect(options =>
+{
+    options.Authority = "https://demo.duendesoftware.com";
+    options.ClientId = "interactive_app";
+
+    options.Scope.Add("invoice.read");
+
+    // Explicitly set the target resource here
+    options.Resource = "urn:invoices";
+
+    options.ResponseType = "code";
+    options.SaveTokens = true;
+});
+```
+
+For dynamic scenarios (e.g. multi-tenant), you can set the resource parameter in the `OnRedirectToIdentityProvider` event:
+
+```csharp
+options.Events.OnRedirectToIdentityProvider = context =>
+{
+    var tenantSpecificResource = DetermineResource(context);
+
+    // Overwrite or set the 'resource' parameter
+    context.ProtocolMessage.SetParameter("resource", tenantSpecificResource);
+
+    return Task.CompletedTask;
+};
+```
