@@ -236,6 +236,8 @@ For interactive applications using the standard OpenID Connect handler, use the 
 });
 ```
 
+Note that while the RFC allows multiple `resource` parameters, the Microsoft OpenID Connect handler only supports a single resource value here.
+
 For dynamic scenarios (e.g. multi-tenant), you can set the resource parameter in the `OnRedirectToIdentityProvider` event:
 
 ```csharp
