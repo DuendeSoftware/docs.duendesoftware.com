@@ -45,7 +45,7 @@ var scopes = new List<ApiScope>
 new Client
 {
     // rest omitted
-    AllowedScopes = { IdentityServerConstants.LocalApi.ScopeName },   
+    AllowedScopes = { IdentityServerConstants.LocalApi.ScopeName },
 }
 ```
 
@@ -58,6 +58,15 @@ To enable token validation for local APIs, add the following to your IdentitySer
 ```cs
 // Program.cs
 builder.Services.AddLocalApiAuthentication();
+```
+
+To protect an API endpoint, call `RequireAuthorization` with the `LocalApi.PolicyName` policy:
+
+```cs
+app.MapGet("/localApi", () =>
+{
+    // omitted
+}).RequireAuthorization(LocalApi.PolicyName);
 ```
 
 To protect an API controller, decorate it with an `Authorize` attribute using the `LocalApi.PolicyName` policy:
@@ -77,6 +86,7 @@ public class LocalApiController : ControllerBase
 Authorized clients can then request a token for the `IdentityServerApi` scope and use it to call the API.
 
 ## Discovery
+
 You can also add your endpoints to the discovery document if you want, e.g.like this::
 
 ```cs
@@ -88,7 +98,8 @@ builder.Services.AddIdentityServer(options =>
 ```
 
 ## Advanced
-Under the covers, the `AddLocalApiAuthentication` helper does a couple of things:
+
+Under the hood, the `AddLocalApiAuthentication` helper does a couple of things:
 
 * adds an authentication handler that validates incoming tokens using IdentityServer's built-in token validation engine (the name of this handler is `IdentityServerAccessToken` or `IdentityServerConstants.LocalApi.AuthenticationScheme`
 * configures the authentication handler to require a scope claim inside the access token of value `IdentityServerApi`
@@ -96,8 +107,8 @@ Under the covers, the `AddLocalApiAuthentication` helper does a couple of things
 
 This covers the most common scenarios. You can customize this behavior in the following ways:
 
-* Add the authentication handler yourself by calling `services.AddAuthentication().AddLocalApi(...)`
-    * this way you can specify the required scope name yourself, or (by specifying no scope at all) accept any token from the current IdentityServer instance
+* Add the authentication handler yourself by calling `services.AddAuthentication().AddLocalApi(...)`.
+  This way you can specify the required scope name yourself, or (by specifying no scope at all) accept any token from the current IdentityServer instance
 * Do your own scope validation/authorization in your controllers using custom policies or code, e.g.:
 
 
@@ -115,6 +126,7 @@ builder.Services.AddAuthorization(options =>
 ```
 
 ## Claims Transformation
+
 You can provide a callback to transform the claims of the incoming token after validation.
 Either use the helper method, e.g.:
 
@@ -129,5 +141,3 @@ builder.Services.AddLocalApiAuthentication(principal =>
 ```
 
 ...or implement the event on the options if you add the authentication handler manually.
-
-

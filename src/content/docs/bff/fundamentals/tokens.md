@@ -15,20 +15,20 @@ Duende.BFF includes an automatic token management feature. This uses the access 
 
 For most scenarios, there is no additional configuration necessary. The token management will infer the configuration and token endpoint URL from the metadata of the OpenID Connect provider.
 
-The easiest way to retrieve the current access token is to use an extension method on *HttpContext*:
+The easiest way to retrieve the current access token is to use an extension method on `HttpContext`:
 
 ```csharp
 var token = await HttpContext.GetUserAccessTokenAsync();
 ```
 
-You can then use the token to set it on an *HttpClient* instance:
+You can then use the token to set it on an `HttpClient`instance:
 
 ```csharp
 var client = new HttpClient();
 client.SetBearerToken(token);
 ```
 
-We recommend to leverage the *HttpClientFactory* to fabricate HTTP clients that are already aware of the token management plumbing. For this you would register a named client in your application startup e.g. like this:
+We recommend to use the `HttpClientFactory` to create HTTP clients that are already aware of the token management plumbing. For this you would register a named client in your application startup e.g. like this:
 
 ```csharp
 // Program.cs
@@ -42,27 +42,16 @@ builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: clie
 And then retrieve a client instance like this:
 
 ```csharp
-[Route("myApi")]
-public class MyApiController : ControllerBase
+app.MapGet("/myApi", async (IHttpClientFactory httpClientFactory, HttpContext context) =>
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    // create HTTP client with automatic token management
+    var client = httpClientFactory.CreateClient("apiClient");
 
-    public MyController(IHttpClientFactory httpClientFactory)
-    {
-        _httpClientFactory = httpClientFactory;
-    }
-    
-    public async Task<IActionResult> Get(string id)
-    {
-        // create HTTP client with automatic token management
-        var client = _httpClientFactory.CreateClient("apiClient");
-        
-        // call remote API
-        var response = await client.GetAsync("remoteApi");
+    // call remote API
+    var response = await client.GetAsync("remoteApi");
 
-        // rest omitted
-    }
-}
+    // rest omitted
+});
 ```
 
 If you prefer to use typed clients, you can do that as well:
@@ -75,25 +64,26 @@ services.AddHttpClient<MyTypedApiClient>(client =>
 }).AddUserAccessTokenHandler();
 ```
 
-And then use that client, for example like this on a controller's action method:
+And then use that client, for example like this on an endpoint:
 
 ```csharp
-public async Task<IActionResult> CallApiAsUserTyped(
-    [FromServices] MyTypedClient client)
+app.MapGet("/myApi", async (MyTypedClient client) =>
 {
     var response = await client.GetData();
-    
+
     // rest omitted
-}
+});
 ```
 
-The client will internally always try to use a current and valid access token. If for any reason this is not possible, the 401 status code will be returned to the caller. 
+The client will internally always try to use a current and valid access token. If for any reason this is not possible, the 401 status code will be returned to the caller.
 
 ### Reuse of Refresh Tokens
-We recommend that you configure IdentityServer to issue reusable refresh tokens to BFF clients. Because the BFF is a confidential client, it does not need one-time use refresh tokens. Reusable refresh tokens are desirable because they avoid  performance and user experience problems associated with one time use tokens. See the discussion on [rotating refresh tokens](/identityserver/tokens/refresh.md) and the [OAuth 2.0 Security Best Current Practice](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-2.2.2) for more details.
+
+We recommend that you configure IdentityServer to issue reusable refresh tokens to BFF clients. Because the BFF is a confidential client, it does not need one-time use refresh tokens. Reusable refresh tokens are desirable because they avoid performance and user experience problems associated with one time use tokens. See the discussion on [rotating refresh tokens](/identityserver/tokens/refresh.md) and the [OAuth 2.0 Security Best Current Practice](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-2.2.2) for more details.
 
 ### Manually revoking refresh tokens
-Duende.BFF revokes refresh tokens automatically at logout time. This behavior can be disabled with the *RevokeRefreshTokenOnLogout* option.
+
+Duende.BFF revokes refresh tokens automatically at logout time. This behavior can be disabled with the _RevokeRefreshTokenOnLogout_ option.
 
 If you want to manually revoke the current refresh token, you can use the following code:
 

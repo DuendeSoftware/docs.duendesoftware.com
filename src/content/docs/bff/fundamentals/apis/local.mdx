@@ -37,33 +37,24 @@ Your Embedded endpoints can leverage services like the HTTP client factory and D
 The following is a simplified example showing how Embedded endpoints can get managed access tokens and use them to make requests to remote APIs.
 
 ```csharp
-// MyApiController.cs
-[Route("myApi")]
-public class MyApiController : ControllerBase
+// Program.cs
+app.MapGet("/myApi", async (IHttpClientFactory httpClientFactory, HttpContext context) =>
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    var id = context.Request.Query["id"];
 
-    public MyApiController(IHttpClientFactory httpClientFactory)
-    {
-        _httpClientFactory = httpClientFactory;
-    }
+    // create HTTP client
+    var client = httpClientFactory.CreateClient();
 
-    public async Task<IActionResult> Get(string id)
-    {
-        // create HTTP client
-        var client = _httpClientFactory.CreateClient();
+    // get current user access token and set it on HttpClient
+    var token = await context.GetUserAccessTokenAsync();
+    client.SetBearerToken(token);
 
-        // get current user access token and set it on HttpClient
-        var token = await HttpContext.GetUserAccessTokenAsync();
-        client.SetBearerToken(token);
+    // call remote API
+    var response = await client.GetAsync($"https://remoteServer/remoteApi?id={id}");
 
-        // call remote API
-        var response = await client.GetAsync($"https://remoteServer/remoteApi?id={id}");
-
-        // maybe process response and return to frontend
-        return new JsonResult(await response.Content.ReadAsStringAsync());
-    }
-}
+    // maybe process response and return to frontend
+    return Results.Text(await response.Content.ReadAsStringAsync());
+});
 ```
 
 The example above is simplified to demonstrate the way that you might obtain a token. Embedded endpoints will typically enforce constraints on the way the API is called, aggregate multiple calls, or perform other business logic. Embedded endpoints that merely forward requests from the frontend to the remote API may not be needed at all. Instead, you could proxy the requests through the BFF using either the [simple http forwarder](/bff/fundamentals/apis/remote.mdx) or [YARP](/bff/fundamentals/apis/yarp.md).

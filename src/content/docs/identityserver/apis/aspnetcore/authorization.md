@@ -42,40 +42,29 @@ builder.Services.AddAuthorization(options =>
 app.MapControllers().RequireAuthorization("read_access");
 ```
 
-...or imperatively inside the controller:
+...or imperatively inside the endpoint handler:
 
 ```cs
-public class DataController : ControllerBase
+app.MapGet("/", async (IAuthorizationService authz, ClaimsPrincipal user) =>
 {
-    IAuthorizationService _authz;
+    var allowed = await authz.AuthorizeAsync(user, "read_access");
 
-    public DataController(IAuthorizationService authz)
+    if (!allowed.Succeeded)
     {
-        _authz = authz;
+        return Results.Forbid();
     }
 
-    public async Task<IActionResult> Get()
-    {
-        var allowed = _authz.CheckAccess(User, "read_access");
-
-        // rest omitted
-    }
-}
+    // rest omitted
+});
 ```
 
 ... or declaratively:
 
 ```cs
-public class DataController : ControllerBase
+app.MapGet("/", () =>
 {
-    [Authorize("read_access")]
-    public async Task<IActionResult> Get()
-    {
-        var allowed = authz.CheckAccess(User, "read_access");
-
-        // rest omitted
-    }
-}
+    // rest omitted
+}).RequireAuthorization("read_access");
 ```
 
 #### Scope Claim Format
