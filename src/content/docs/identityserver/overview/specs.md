@@ -13,6 +13,10 @@ redirect_from:
 
 Duende IdentityServer implements the following specifications:
 
+:::note
+Some specifications are only available in the [Duende IdentityServer Business or Enterprise Edition](https://duendesoftware.com/products/identityserver).
+:::
+
 ## OpenID Connect
 
 * OpenID Connect Core 1.0 ([spec](https://openid.net/specs/openid-connect-core-1_0.html))

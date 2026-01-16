@@ -39,8 +39,9 @@ material, including
 * announcement of upcoming new keys
 * maintenance of retired keys
 
-Automatic Key Management is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business
-Edition or higher.
+:::note
+This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
+:::
 
 ### Configuration
 
@@ -60,7 +61,7 @@ has passed, keys are removed from discovery, and optionally deleted.
 
 The default is to rotate keys every 90 days, announce new keys with 14 days of
 propagation time, retain old keys for a duration of 14 days, and to delete keys
-when they are retired. 
+when they are retired.
 
 ```mermaid
 ---
@@ -73,12 +74,12 @@ config:
 gantt
     title 90 Day Key Rotation Schedule per Signing Algorithm
     todayMarker off
-        
+
     section RS256
         Signing   :active, rsa_s, 2025-01-01, 76d
         Retire    :rsa_r, after rsa_s, 14d
         Delete    :crit, rsa_d, after rsa_r, 1d
-        
+
         Announce  :rsa_na,  2025-03-03, 14d
         Signing   :active, rsa_ns, after rsa_na, 62d
         Retire    :rsa_nr, after rsa_ns, 14d
@@ -100,13 +101,13 @@ All of these options are configurable in the `KeyManagement` options. For exampl
 ```cs
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
-{   
+{
     // new key every 30 days
     options.KeyManagement.RotationInterval = TimeSpan.FromDays(30);
-    
+
     // announce new key 2 days in advance in discovery
     options.KeyManagement.PropagationTime = TimeSpan.FromDays(2);
-    
+
     // keep old key for 7 days in discovery for validation of tokens
     options.KeyManagement.RetentionDuration = TimeSpan.FromDays(7);
 
@@ -139,7 +140,7 @@ access to the `KeyPath`.
 ```cs
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
-{   
+{
     // set path to store keys
     options.KeyManagement.KeyPath = "/home/shared/keys";
 });
@@ -169,7 +170,7 @@ an X.509 certificate. Automatic key management will create and rotate keys for
 each signing algorithm you specify.
 
 :::note
-*X.509 certificates* have an expiration date, but IdentityServer does
+_X.509 certificates_ have an expiration date, but IdentityServer does
 not use this data to validate the certificate and throw an exception. If a certificate has expired then you
 must decide whether to continue using it or replace it with a new certificate.
 :::
@@ -179,10 +180,10 @@ options.KeyManagement.SigningAlgorithms = new[]
 {
     // RS256 for older clients (with additional X.509 wrapping)
     new SigningAlgorithmOptions(SecurityAlgorithms.RsaSha256) { UseX509Certificate = true },
-    
+
     // PS256
     new SigningAlgorithmOptions(SecurityAlgorithms.RsaSsaPssSha256),
-    
+
     // ES256
     new SigningAlgorithmOptions(SecurityAlgorithms.EcdsaSha256)
 };
@@ -200,7 +201,7 @@ resource and client basis.
 Instead of using [Automatic Key Management](#automatic-key-management), IdentityServer's signing keys can be set
 manually. Automatic Key Management is generally recommended, but if you want to
 explicitly control your keys statically, or you have a license that does not
-include the feature (e.g. the Starter Edition), you will need to manually manage
+include the feature, you will need to manually manage
 your keys. With static configuration you are responsible for secure storage,
 loading and rotation of keys.
 
@@ -378,7 +379,7 @@ key as a validation key.
 ```cs
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
-{  
+{
     options.KeyManagement.Enabled = false;
 });
 
@@ -406,7 +407,7 @@ the signing credential and validation key.
 ```cs
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
-{  
+{
     options.KeyManagement.Enabled = false;
 });
 
@@ -428,7 +429,7 @@ old key, it is safe to completely remove the old key.
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
-{  
+{
     options.KeyManagement.Enabled = false;
 });
 
@@ -473,7 +474,7 @@ key. IdentityServer will continue to sign keys with your old static key.
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
-{  
+{
     options.KeyManagement.Enabled = true;
 });
 
@@ -491,7 +492,7 @@ keep the old key for validation purposes.
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
-{  
+{
     options.KeyManagement.Enabled = true;
 });
 
@@ -508,7 +509,7 @@ Now the static key configuration can be removed entirely.
 
 ```cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
-{  
+{
     options.KeyManagement.Enabled = true;
 });
 ```

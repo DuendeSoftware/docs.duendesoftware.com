@@ -11,12 +11,10 @@ redirect_from:
 ---
 
 Duende IdentityServer supports the [Client-Initiated Backchannel Authentication Flow](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) (also known as CIBA).
-CIBA is one of the requirements to support the [Financial-grade API](https://openid.net/wg/fapi/) compliance. 
-
-CIBA is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition.
+CIBA is one of the requirements to support the [Financial-grade API](https://openid.net/wg/fapi/) compliance.
 
 :::note
-Duende IdentityServer supports the [`poll`](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#rfc.section.5) mode to allow a client to obtain the results of a backchannel login request.
+This feature is part of the [Duende IdentityServer Enterprise Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 Normally when using OpenID Connect, a user accesses a client application on the same device they use to login to the OpenID Connect provider.
@@ -33,6 +31,9 @@ Below is a diagram that shows the high level steps involved with the CIBA workfl
 
 ![Showing how CIBA works in diagram form](images/ciba.svg)
 
+:::note
+Duende IdentityServer supports the [`poll`](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#rfc.section.5) mode to allow a client to obtain the results of a backchannel login request.
+:::
 
 * **Step 1**: IdentityServer exposes a [backchannel authentication request endpoint](/identityserver/reference/endpoints/ciba.md) that the client uses to initiate the CIBA workflow.
 
@@ -43,11 +44,11 @@ The `ValidateRequestAsync` method will validate the request parameters and retur
 * **Step 3**: Once a user has successfully been identified, then a record representing the pending login request is created in the [Backchannel Authentication Request Store](/identityserver/reference/stores/backchannel-auth-request-store.md).
 
 * **Step 4**: Next, the user needs to be notified of the login request. This is done by using the [IBackchannelAuthenticationUserNotificationService](/identityserver/reference/services/ciba-user-notification.md) service in DI, **which you are required to implement and register in the ASP.NET Core service provider**.
-The `SendLoginRequestAsync` method should contact the user with whatever mechanism is appropriate (e.g. email, text message, push notification, etc.), and presumably provide the user with instructions (perhaps via a link, but other approaches are conceivable) to start the login and consent process. 
-This method is passed a [BackchannelUserLoginRequest](/identityserver/reference/models/ciba-login-request.md) which will contain all the contextual information needed to send to the user (the `InternalId` being the identifier for this login request which is needed when completing the request -- see below).
+  The `SendLoginRequestAsync` method should contact the user with whatever mechanism is appropriate (e.g. email, text message, push notification, etc.), and presumably provide the user with instructions (perhaps via a link, but other approaches are conceivable) to start the login and consent process. 
+  This method is passed a [BackchannelUserLoginRequest](/identityserver/reference/models/ciba-login-request.md) which will contain all the contextual information needed to send to the user (the `InternalId` being the identifier for this login request which is needed when completing the request -- see below).
 
 * **Step 5**: Next, the user should be presented with the information for the login request (e.g. via a web page at IdentityServer, or via any other means appropriate).
-The [IBackchannelAuthenticationInteractionService](/identityserver/reference/services/ciba-interaction-service.md) can be used to access an indivdual [BackchannelUserLoginRequest](/identityserver/reference/models/ciba-login-request.md) by its `InternalId`. Once the user has consented and allows the login, then the `CompleteLoginRequestAsync` method should be used to record the result (including which scopes the user has granted).
+  The [IBackchannelAuthenticationInteractionService](/identityserver/reference/services/ciba-interaction-service.md) can be used to access an indivdual [BackchannelUserLoginRequest](/identityserver/reference/models/ciba-login-request.md) by its `InternalId`. Once the user has consented and allows the login, then the `CompleteLoginRequestAsync` method should be used to record the result (including which scopes the user has granted).
 
 * **Step 6**: Finally, the client, after polling for the result, will finally be issued the tokens it's requested (or a suitable error if the user has denied the request, or it has timed out).
 

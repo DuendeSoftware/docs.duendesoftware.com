@@ -34,8 +34,11 @@ care, and in other industries with high security requirements.
 
 ## Licensing
 
-Duende.IdentityServer includes support for PAR in the Business Edition or higher license. In the starter edition, PAR
-requests will not be processed and instead log errors. If you have a starter edition license, you should disable the
+:::note
+This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
+:::
+
+In the Starter edition, PAR requests will not be processed and instead log errors. If you have a starter edition license, you should disable the
 `EnablePushedAuthorizationEndpoint` flag so that discovery indicates that your IdentityServer does not support PAR:
 
 ```cs
@@ -72,12 +75,13 @@ builder.Services
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, oidcOptions =>
     {
         // Your authority, client ID, ... configuration goes here.
-        
-        // By default, PushedAuthorizationBehavior is set to PushedAuthorizationBehavior.UseIfAvailable. 
+
+        // By default, PushedAuthorizationBehavior is set to PushedAuthorizationBehavior.UseIfAvailable.
         // You can also require using PAR:
         oidcOptions.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Require;
     });
 ```
+
 .NET 8 does not have built-in support for PAR. If you're using .NET 8, we have a sample of how to implement this flow
 available [here](/identityserver/samples/basics.mdx#mvc-client-with-pushed-authorization-requests).
 

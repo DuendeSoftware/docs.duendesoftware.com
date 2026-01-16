@@ -11,10 +11,10 @@ redirect_from:
 ---
 
 :::note
-This is an Enterprise Edition feature.
+This feature is part of the [Duende IdentityServer Enterprise Edition](https://duendesoftware.com/products/identityserver).
 :::
 
-OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view. 
+OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view.
 This means that all the requested scope and audience combination get merged into a single access token.
 This has a couple of downsides:
 
@@ -25,8 +25,8 @@ This has a couple of downsides:
     * resource specific processing like signing or encryption algorithms conflict
 * without sender-constraints, a resource could potentially re-use (or abuse) a token to call another contained resource directly
 
-To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds another request parameter for the authorize and token endpoint called `resource`. 
-This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single 
+To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds another request parameter for the authorize and token endpoint called `resource`.
+This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single
 value only, and all scopes belong to that single resource).
 
 ## Using The Resource Parameter
@@ -52,7 +52,8 @@ If the client would request a token for the `read` scope, the resulting access t
 the invoice and the products API and thus be accepted at both APIs.
 
 ### Machine to Machine Scenarios
-If the client in addition passes the `resource` parameter specifying the name of the resource where it wants to use 
+
+If the client in addition passes the `resource` parameter specifying the name of the resource where it wants to use
 the access token, the token engine can `down-scope` the resulting access token to the single resource, e.g.:
 
 ```text
@@ -70,13 +71,14 @@ Thus resulting in an access token like this (some details omitted):
 
 ```json
 {
-    "aud": [ "urn:invoice" ],
-    "scope": "read",
-    "client_id": "client"
+  "aud": ["urn:invoice"],
+  "scope": "read",
+  "client_id": "client"
 }
 ```
 
 ### Interactive Applications
+
 The authorize endpoint supports the `resource` parameter as well, e.g.:
 
 ```text
@@ -98,6 +100,7 @@ resource=urn:invoices
 ```
 
 ### Requesting Access To Multiple Resources
+
 It is also possible to request access to multiple resources. This will result in multiple access tokens - one for each request resource.
 
 ```text
@@ -135,7 +138,8 @@ resource=urn:products
 The end-result will be that the client has two access tokens - one for each resource and can manage their lifetime via the refresh token.
 
 ## Enforcing Resource Isolation
-All examples so far used the `resource` parameter optionally. If you have API resources, where you want to make sure 
+
+All examples so far used the `resource` parameter optionally. If you have API resources, where you want to make sure
 they are not sharing access tokens with other resources, you can enforce the resource indicator, e.g.:
 
 ```csharp title="ApiResources.cs" {6,12}
@@ -156,11 +160,11 @@ var resources = new[]
 ```
 
 The `RequireResourceIndicator` property **does not** mean that clients are forced to send the `resource` parameter when
-they request scopes associated with the API resource. You can still request those scopes without setting the `resource` 
-parameter (or including the resource), and IdentityServer will issue a token as long as the client is allowed to request 
+they request scopes associated with the API resource. You can still request those scopes without setting the `resource`
+parameter (or including the resource), and IdentityServer will issue a token as long as the client is allowed to request
 the scopes.
 
-Instead, `RequireResourceIndicator` controls **when** the resource's URI is included in the **audience claim** (`aud`) 
+Instead, `RequireResourceIndicator` controls **when** the resource's URI is included in the **audience claim** (`aud`)
 of the issued access token.
 
 * When `RequireResourceIndicator` is `false` (the default):
@@ -169,4 +173,3 @@ of the issued access token.
 * When `RequireResourceIndicator` is `true`:
   The API's resource URI will **only** be included in the audience **if the client explicitly includes the resource URI** 
   via the `resource` parameter when requesting the token.
-

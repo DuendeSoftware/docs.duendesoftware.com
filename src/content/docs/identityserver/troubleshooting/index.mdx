@@ -304,8 +304,12 @@ When dealing with external authentication, you may want to implement `OnTicketRe
 
 ### Use Server-side Sessions
 
-If you have a Business Edition or higher license for IdentityServer, then you can use [server-side sessions][2] to store the
+You can use [server-side sessions][2] to store the
 user's session data in a data store instead of in the cookie. This will greatly reduce the size of the cookie while allowing you to store more data in the session.
+
+:::note
+This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
+:::
 
 ### Implement a Custom `ITicketStore` to Reduce Cookie Size
 
