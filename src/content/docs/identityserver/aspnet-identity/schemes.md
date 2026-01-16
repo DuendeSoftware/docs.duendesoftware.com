@@ -14,7 +14,7 @@ When a user logs in, their identity is established and persisted across requests
 
 ### Standalone IdentityServer
 
-When using IdentityServer without ASP.NET Identity, the default cookie scheme is named `"idsrv"` (though we recommend using the constant `IdentityServerConstants.DefaultCookieAuthenticationScheme` in your code if you ever need it).
+When using IdentityServer without ASP.NET Identity, the default cookie scheme is named `"idsrv"`, though we recommend using the constant `IdentityServerConstants.DefaultCookieAuthenticationScheme` in your code if you ever need it.
 
 This is configured by default in `AddIdentityServer()`, which sets up the cookie authentication handler with this scheme name. This cookie is essential for:
 
