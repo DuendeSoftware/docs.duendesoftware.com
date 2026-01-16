@@ -52,10 +52,10 @@ Besides the main application cookie, IdentityServer uses other schemes for speci
 
 ### External Authentication (e.g., Google, OIDC)
 
-When a user signs in with an external provider (like Google or another OIDC provider), the result of that remote authentication is temporarily stored in an "external" cookie. This allows your login logic to read the claims from the external provider before fully signing the user into your main local session.
+When a user signs in with an external provider (like Google or another OIDC provider), the result of that remote authentication is temporarily stored in an "external" cookie.
+This allows your login logic to read the claims from the external provider before fully signing the user into your main local session.
 
-- **Standalone Default:** `"idsrv.external"` (Constant: `IdentityServerConstants.ExternalCookieAuthenticationScheme`)
-- **With ASP.NET Identity:** `"Identity.External"` (Constant: `IdentityConstants.ExternalScheme`)
+IdentityServer always uses the `"idsrv.external"` scheme here, available in the `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant.
 
 ### Check Session Cookie
 
@@ -64,13 +64,7 @@ The [User Session Service](/identityserver/reference/services/user-session-servi
 
 - **Default Name:** `"idsrv.session"` (Constant: `IdentityServerConstants.DefaultCheckSessionCookieName`). This often remains consistent, but verify your specific configuration.
 
-## Summary Table
-
-| Feature                  | Standalone IdentityServer                                                                 | With ASP.NET Identity                                                |
-| :----------------------- | :---------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
-| **Main Auth Cookie**     | `"idsrv"`<br/>(`IdentityServerConstants.DefaultCookieAuthenticationScheme`)               | `"Identity.Application"`<br/>(`IdentityConstants.ApplicationScheme`) |
-| **External Auth Cookie** | `"idsrv.external"`<br/>(`IdentityServerConstants.ExternalCookieAuthenticationScheme`)     | `"Identity.External"`<br/>(`IdentityConstants.ExternalScheme`)       |
-| **Typical Usage**        | `HttpContext.SignInAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme, ...)` | `SignInManager.SignInAsync(...)`                                     |
+Note this cookie is not marked as `HttpOnly`, so it can be accessed in client-side code. The JavaScript code that is required to check user sessions in the background also requires access to this cookie, and needs it to be `HttpOnly`.
 
 ## Common Pitfalls
 
