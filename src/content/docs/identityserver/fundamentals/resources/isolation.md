@@ -16,14 +16,29 @@ This feature is part of the [Duende IdentityServer Enterprise Edition](https://d
 
 OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view.
 This means that all the requested scope and audience combination get merged into a single access token.
+
 This has a couple of downsides:
 
-* tokens can become very powerful (and big)
-    * if such a token leaks, it allows access to multiple resources
-* resources within that single token might have conflicting settings, e.g.
-    * user claims of all resources share the same token
-    * resource specific processing like signing or encryption algorithms conflict
-* without sender-constraints, a resource could potentially re-use (or abuse) a token to call another contained resource directly
+* Tokens can become very powerful (and large)
+  * If such a token leaks, it allows access to multiple resources
+* Resources within that single token might have conflicting settings, e.g.
+  * User claims of all resources share the same token
+  * Resource-specific processing like signing or encryption algorithms conflict
+* Without sender-constraints, a resource could potentially re-use (or abuse) a token to call another contained resource directly
+
+### Audience Ambiguity
+
+In a system with multiple APIs (e.g., Shipping, Invoicing and Inventory APIs), a single token often lists all of them as valid audiences.
+
+```json
+{
+  "iss": "https://demo.duendesoftware.com",
+  "aud": ["invoice_api", "shipping_api", "inventory_api"],
+  "scope": ["invoice.read", "shipping.write", "inventory.read"]
+}
+```
+
+This violates the Principle of Least Privilege. If this token is leaked from the Inventory API, it can be used to call the Invoice API.
 
 To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds another request parameter for the authorize and token endpoint called `resource`.
 This allows requesting a token for a specific resource (in other words - making sure the audience claim has a single
@@ -171,5 +186,68 @@ of the issued access token.
   IdentityServer **automatically includes** the API's resource URI in the token's audience if any of the resource's scopes
   are requested, even if the `resource` parameter was not sent in the request or didn't contain the resource URI.
 * When `RequireResourceIndicator` is `true`:
-  The API's resource URI will **only** be included in the audience **if the client explicitly includes the resource URI** 
+  The API's resource URI will **only** be included in the audience **if the client explicitly includes the resource URI**
   via the `resource` parameter when requesting the token.
+
+## .NET Client Implementation
+
+While the examples above show the underlying HTTP protocol, .NET clients can use the Duende libraries to handle resource indicators easily.
+
+### Machine-to-Machine (Worker)
+
+When using `Duende.IdentityModel` for client credentials, you can pass the `resource` parameter using the `Parameters` dictionary:
+
+```csharp
+using Duende.IdentityModel.Client;
+
+var client = new HttpClient();
+
+var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+{
+    Address = "https://demo.duendesoftware.com/connect/token",
+    ClientId = "invoice_worker",
+    ClientSecret = "secret",
+
+    // The scope defines the permission
+    Scope = "invoice.read",
+
+    // The parameter defines the target (RFC 8707)
+    Parameters = { { "resource", "urn:invoices" } }
+});
+```
+
+### ASP.NET Core
+
+For interactive applications using the standard OpenID Connect handler, use the `Resource` property on `OpenIdConnectOptions`:
+
+```csharp
+.AddOpenIdConnect(options =>
+{
+    options.Authority = "https://demo.duendesoftware.com";
+    options.ClientId = "interactive_app";
+
+    options.Scope.Add("invoice.read");
+
+    // Explicitly set the target resource here
+    options.Resource = "urn:invoices";
+
+    options.ResponseType = "code";
+    options.SaveTokens = true;
+});
+```
+
+Note that while the RFC allows multiple `resource` parameters, the Microsoft OpenID Connect handler only supports a single resource value here.
+
+For dynamic scenarios (e.g. multi-tenant), you can set the resource parameter in the `OnRedirectToIdentityProvider` event:
+
+```csharp
+options.Events.OnRedirectToIdentityProvider = context =>
+{
+    var tenantSpecificResource = DetermineResource(context);
+
+    // Overwrite or set the 'resource' parameter
+    context.ProtocolMessage.SetParameter("resource", tenantSpecificResource);
+
+    return Task.CompletedTask;
+};
+```

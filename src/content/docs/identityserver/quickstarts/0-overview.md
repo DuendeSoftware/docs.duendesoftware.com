@@ -40,8 +40,13 @@ dotnet new install Duende.Templates
 They will be used as a starting point for the various tutorials.
 
 :::note
-You may have a previous version of Duende templates (`Duende.IdentityServer.Templates`) installed on your machine.
-Please uninstall the template package and install the latest version.
+You may have a previous version of Duende templates (`Duende.Templates`) installed on your machine.
+To uninstall the previous template package, and install the latest version, use the following command:
+
+```bash title=Terminal
+dotnet new uninstall Duende.Templates
+dotnet new install Duende.Templates
+```
 :::
 
 <iframe width="853" height="505" src="https://www.youtube.com/embed/cxYmODQHErM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

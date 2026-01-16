@@ -148,7 +148,7 @@ When using [Serilog](https://serilog.net/), you can configure a separate file lo
 {/* prettier-ignore */}
 <Tabs>
     <TabItem label="In code">
-        In the `UseSerilog()` extension method's configuration builder, you can add a file logger that
+        In the `AddSerilog()` extension method's configuration builder, you can add a file logger that
         filters log messages and only emits those from the `Duende.IdentityServer.Diagnostics.Summary` category.
 
         The console logger (or another default logger you are using) can be configured to exclude this category.
@@ -157,10 +157,10 @@ When using [Serilog](https://serilog.net/), you can configure a separate file lo
             lang="csharp"
             title="Program.cs"
             code={`// ...
-builder.Host.UseSerilog((context, services, configuration) =>
+builder.Services.AddSerilog((services, configuration) =>
 {
     configuration
-        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Configuration(builder.Configuration)
         .ReadFrom.Services(services)
         .Enrich.FromLogContext()
         .MinimumLevel.Debug()
