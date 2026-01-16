@@ -31,7 +31,7 @@ You could achieve the same by using either Microsoft's `JwtBearer` handler. But 
 
 Start by registering your API as an `ApiScope`, (or resource) e.g.:
 
-```cs
+```csharp
 var scopes = new List<ApiScope>
 {
     // local API
@@ -41,7 +41,7 @@ var scopes = new List<ApiScope>
 
 ...and give your clients access to this API, e.g.:
 
-```cs
+```csharp
 new Client
 {
     // rest omitted
@@ -55,14 +55,14 @@ The value of `IdentityServerConstants.LocalApi.ScopeName` is `IdentityServerApi`
 
 To enable token validation for local APIs, add the following to your IdentityServer startup:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddLocalApiAuthentication();
 ```
 
 To protect an API endpoint, call `RequireAuthorization` with the `LocalApi.PolicyName` policy:
 
-```cs
+```csharp
 app.MapGet("/localApi", () =>
 {
     // omitted
@@ -71,7 +71,7 @@ app.MapGet("/localApi", () =>
 
 To protect an API controller, decorate it with an `Authorize` attribute using the `LocalApi.PolicyName` policy:
 
-```cs
+```csharp
 [Route("localApi")]
 [Authorize(LocalApi.PolicyName)]
 public class LocalApiController : ControllerBase
@@ -89,7 +89,7 @@ Authorized clients can then request a token for the `IdentityServerApi` scope an
 
 You can also add your endpoints to the discovery document if you want, e.g.like this::
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options =>
 {
@@ -112,7 +112,7 @@ This covers the most common scenarios. You can customize this behavior in the fo
 * Do your own scope validation/authorization in your controllers using custom policies or code, e.g.:
 
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddAuthorization(options =>
 {
@@ -130,7 +130,7 @@ builder.Services.AddAuthorization(options =>
 You can provide a callback to transform the claims of the incoming token after validation.
 Either use the helper method, e.g.:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddLocalApiAuthentication(principal =>
 {

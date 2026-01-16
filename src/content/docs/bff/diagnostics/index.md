@@ -35,7 +35,7 @@ To start emitting OpenTelemetry data in Duende Backend for Frontend (BFF), you n
 
 The following configuration adds the OpenTelemetry configuration to your service setup, and exports data to an [OTLP exporter](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel):
 
-```cs
+```csharp
 // Program.cs
 var openTelemetry = builder.Services.AddOpenTelemetry();
 

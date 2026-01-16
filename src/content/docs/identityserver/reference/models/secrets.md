@@ -14,7 +14,7 @@ redirect_from:
 
 Parses a secret from the raw HTTP request.
 
-```cs
+```csharp
 public interface ISecretParser
 {
     /// <summary>
@@ -45,7 +45,7 @@ public interface ISecretParser
 
 Represents a parsed secret.
 
-```cs
+```csharp
 /// <summary>
 /// Represents a secret extracted from the HttpContext
 /// </summary>
@@ -93,7 +93,7 @@ how to cast the `Credential` object into a format that is understood.
 
 Validates a parsed secret.
 
-```cs
+```csharp
 public interface ISecretValidator
 {
     /// <summary>Validates a secret</summary>

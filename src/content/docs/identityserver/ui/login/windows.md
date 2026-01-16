@@ -27,7 +27,7 @@ be invoked via the authentication service. Typically, in your IdentityServer it 
 
 This is done in `ConfigureServices` (details vary depending on in-proc vs out-of-proc hosting)::
 
-```cs
+```csharp
 // configures IIS out-of-proc settings (see https://github.com/aspnet/AspNetCore/issues/14882)
 builder.Services.Configure<IISOptions>(iis =>
 {
@@ -52,7 +52,7 @@ is of type `WindowsPrincipal`.
 The principal will have information like user and group SID and the Windows account name. The following snippet shows how to
 trigger authentication, and if successful convert the information into a standard `ClaimsPrincipal` for the temp-Cookie approach::
 
-```cs
+```csharp
 private async Task<IActionResult> ChallengeWindowsAsync(string returnUrl)
 {
     // see if windows auth has already been requested and succeeded

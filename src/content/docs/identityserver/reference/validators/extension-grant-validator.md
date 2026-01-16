@@ -14,7 +14,7 @@ redirect_from:
 
 Use an implementation of this interface to handle [extension grants](/identityserver/tokens/extension-grants.md).
 
-```cs
+```csharp
 public interface IExtensionGrantValidator
 {
     /// <summary>
@@ -45,7 +45,7 @@ public interface IExtensionGrantValidator
 
 The instance of the extension grant validator gets registered with:
 
-```cs
+```csharp
 // Program.cs
 builder.AddExtensionGrantValidator<MyValidator>();
 ```

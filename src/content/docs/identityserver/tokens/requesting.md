@@ -219,7 +219,7 @@ This library handles the complete front- and back-channel interaction and coordi
 
 You only need to configure it in your startup code:
 
-```cs
+```csharp
 // Program.cs
 using Microsoft.IdentityModel.Tokens;
 

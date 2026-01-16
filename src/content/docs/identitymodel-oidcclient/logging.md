@@ -11,7 +11,7 @@ redirect_from:
 `OidcClient` logs errors, warnings, and diagnostic information using
 `Microsoft.Extensions.Logging.ILogger`, the standard .NET logging library.
 
-```cs
+```csharp
 using Duende.IdentityModel;
 using Duende.IdentityModel.OidcClient;
 

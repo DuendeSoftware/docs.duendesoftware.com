@@ -14,7 +14,7 @@ redirect_from:
 
 This class models an identity resource.
 
-```cs
+```csharp
 public static readonly IEnumerable<IdentityResource> IdentityResources =
     new[]
     {

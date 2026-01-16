@@ -14,7 +14,7 @@ redirect_from:
 
 Used to dynamically load resource configuration.
 
-```cs
+```csharp
 /// <summary>
 /// Resource retrieval
 /// </summary>

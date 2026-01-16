@@ -14,7 +14,7 @@ redirect_from:
 
 Provides access to a user's grants.
 
-```cs
+```csharp
     /// <summary>
     /// Implements persisted grant logic
     /// </summary>
@@ -40,7 +40,7 @@ Provides access to a user's grants.
 
 ### Grant
 
-```cs
+```csharp
     /// <summary>
     /// Models a grant the user has given.
     /// </summary>

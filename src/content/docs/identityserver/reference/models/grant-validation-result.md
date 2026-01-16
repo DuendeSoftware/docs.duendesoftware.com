@@ -19,7 +19,7 @@ and  [resource owner password grants](/identityserver/tokens/password-grant.md).
 It models either a successful validation result with claims (e.g. subject ID) or an invalid result with an error code
 and message, e.g.:
 
-```cs
+```csharp
 public class ExtensionGrantValidator : IExtensionGrantValidator
 {
     public Task ValidateAsync(ExtensionGrantValidationContext context)
@@ -48,7 +48,7 @@ public class ExtensionGrantValidator : IExtensionGrantValidator
 
 It also allows passing additional custom values that will be included in the token response, e.g.:
 
-```cs
+```csharp
 context.Result = new GrantValidationResult(
     subject: "818727",
     authenticationMethod: "custom",

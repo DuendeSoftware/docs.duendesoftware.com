@@ -14,7 +14,7 @@ redirect_from:
 
 Used to dynamically load client configuration.
 
-```cs
+```csharp
 /// <summary>
 /// Retrieval of client configuration
 /// </summary>

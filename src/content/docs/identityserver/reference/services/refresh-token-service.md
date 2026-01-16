@@ -15,7 +15,7 @@ redirect_from:
 All refresh token handling is implemented in the `DefaultRefreshTokenService` (which is the default implementation of
 the `IRefreshTokenService` interface):
 
-```cs
+```csharp
 public interface IRefreshTokenService
 {
     /// <summary>

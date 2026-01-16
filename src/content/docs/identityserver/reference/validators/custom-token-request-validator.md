@@ -14,7 +14,7 @@ redirect_from:
 
 Allows running custom code as part of the token issuance pipeline at the token endpoint.
 
-```cs
+```csharp
 /// <summary>
 /// Allows inserting custom validation logic into token requests
 /// </summary>

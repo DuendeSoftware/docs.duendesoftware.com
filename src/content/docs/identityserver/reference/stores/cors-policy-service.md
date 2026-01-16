@@ -14,7 +14,7 @@ redirect_from:
 
 Used to determine if CORS requests are allowed to certain protocol endpoints.
 
-```cs
+```csharp
 /// <summary>
 /// Service that determines if CORS is allowed.
 /// </summary>

@@ -98,7 +98,7 @@ gantt
 
 All of these options are configurable in the `KeyManagement` options. For example:
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
@@ -137,7 +137,7 @@ If you are deploying in a load balanced environment and wish to use the
 `FileSystemKeyStore`, all instances of IdentityServer will need read/write
 access to the `KeyPath`.
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
@@ -175,7 +175,7 @@ not use this data to validate the certificate and throw an exception. If a certi
 must decide whether to continue using it or replace it with a new certificate.
 :::
 
-```cs
+```csharp
 options.KeyManagement.SigningAlgorithms = new[]
 {
     // RS256 for older clients (with additional X.509 wrapping)
@@ -211,7 +211,7 @@ The automatic key management feature can be disabled by setting the `Enabled`
 flag to `false` on the `KeyManagement` property of
 [`IdentityServerOptions`](/identityserver/reference/options.md#key-management):
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
@@ -271,7 +271,7 @@ Console.WriteLine($"Certificate saved to {name}.pfx");
 Signing keys are added with the [`AddSigningCredential`](/identityserver/reference/di.md#signing-keys) configuration
 method:
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer();
 var key = LoadKeyFromVault(); // (Your code here)
@@ -376,7 +376,7 @@ all the applications and APIs to update their caches without any interruption in
 service. Configure IdentityServer for phase 1 by registering the new
 key as a validation key.
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
@@ -404,7 +404,7 @@ key of the old key so that tokens that were signed with that key can continue to
 be validated. The IdentityServer configuration change needed is to swap
 the signing credential and validation key.
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
@@ -427,7 +427,7 @@ defaults to 1 hour, though it is configurable.
 Once enough time has passed that there are no unexpired tokens signed with the
 old key, it is safe to completely remove the old key.
 
-```cs
+```csharp
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.KeyManagement.Enabled = false;
@@ -472,7 +472,7 @@ as the signing credential. In this phase, the new automatically managed key will
 announced so that as client apps and APIs update their caches, they get the new
 key. IdentityServer will continue to sign keys with your old static key.
 
-```cs
+```csharp
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.KeyManagement.Enabled = true;
@@ -490,7 +490,7 @@ then proceed to phase 2.
 Next, switch to using the new automatically managed keys for signing, but still
 keep the old key for validation purposes.
 
-```cs
+```csharp
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.KeyManagement.Enabled = true;
@@ -507,7 +507,7 @@ expired, and then proceed to phase 3.
 
 Now the static key configuration can be removed entirely.
 
-```cs
+```csharp
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.KeyManagement.Enabled = true;

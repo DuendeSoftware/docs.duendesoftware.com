@@ -17,7 +17,7 @@ redirect_from:
 
 Allows running custom code as part of the authorization issuance pipeline at the authorization endpoint.
 
-```cs
+```csharp
 /// <summary>
 /// Allows inserting custom validation logic into authorize requests
 /// </summary>

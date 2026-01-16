@@ -111,7 +111,7 @@ Cache-Control: no-store
 You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
-```cs
+```csharp
 using Duende.IdentityModel.Client;
 
 var client = new HttpClient();
@@ -128,7 +128,7 @@ var cibaResponse = await client.RequestBackchannelAuthenticationAsync(new Backch
 
 And with a successful response, it can be used to poll the token endpoint:
 
-```cs
+```csharp
 while (true)
 {
     var response = await client.RequestBackchannelAuthenticationTokenAsync(new BackchannelAuthenticationTokenRequest

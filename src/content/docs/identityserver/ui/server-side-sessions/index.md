@@ -44,7 +44,7 @@ With the addition and use of server-side sessions, more interesting architectura
 To enable server-side sessions, use the `AddServerSideSessions` extension method after adding IdentityServer to the DI
 system:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddServerSideSessions();
@@ -81,7 +81,7 @@ This claim must be included in the claims when the user's [authentication sessio
 
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options => {
     options.ServerSideSessions.UserDisplayNameClaimType = "name"; // or "email" perhaps

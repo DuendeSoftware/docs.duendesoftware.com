@@ -553,7 +553,7 @@ A cloud-hosted [demo instance of Duende IdentityServer](https://demo.duendesoftw
 
 Register and configure the services for the OpenId Connect handler in`src/IdentityServer/HostingExtensions.cs`:
 
-```cs
+```csharp
 // HostingExtensions.cs
 builder.Services.AddAuthentication()
     .AddOpenIdConnect("oidc", "Sign-in with demo.duendesoftware.com", options =>
@@ -616,7 +616,7 @@ IdentityServer specific option.
 
 Add the following to `ConfigureServices` in `src/IdentityServer/HostingExtensions.cs`:
 
-```cs
+```csharp
 // HostingExtensions.cs
 builder.Services.AddAuthentication()
     .AddGoogleOpenIdConnect(

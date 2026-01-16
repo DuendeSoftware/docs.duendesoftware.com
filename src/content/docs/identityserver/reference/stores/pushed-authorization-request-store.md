@@ -15,7 +15,7 @@ consuming pushed authorization requests.
 
 #### Duende.IdentityServer.Stores.IPushedAuthorizationRequestStore
 
-```cs
+```csharp
 /// <summary>
 /// The interface for a service that stores pushed authorization requests.
 /// </summary>
@@ -56,7 +56,7 @@ public interface IPushedAuthorizationRequestStore
 
 #### Duende.IdentityServer.Models.PushedAuthorizationRequest
 
-```cs
+```csharp
 /// <summary>
 /// Represents a persisted Pushed Authorization Request.
 /// </summary>

@@ -32,7 +32,7 @@ Custom implementations of the stores must be registered in the ASP.NET Core serv
 There are [convenience methods](/identityserver/reference/di.md#configuration-stores) for registering these.
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddClientStore<YourCustomClientStore>()
@@ -52,7 +52,7 @@ enable caching data from the various stores.
 The caching implementation relies upon an `ICache<T>` service and must also be added to the ASP.NET Core service provider.
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddClientStore<YourCustomClientStore>()
@@ -69,7 +69,7 @@ The duration of the data in the default cache is configurable on
 the [IdentityServerOptions](/identityserver/reference/options.md#caching).
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options => {
     options.Caching.ClientStoreExpiration = TimeSpan.FromMinutes(5);

@@ -14,7 +14,7 @@ redirect_from:
 
 Used to dynamically load client configuration.
 
-```cs
+```csharp
 /// <summary>
 /// Interface to model storage of serialized keys.
 /// </summary>
@@ -44,7 +44,7 @@ public interface ISigningKeyStore
 
 #### SerializedKey
 
-```cs
+```csharp
 /// <summary>
 /// Serialized key.
 /// </summary>

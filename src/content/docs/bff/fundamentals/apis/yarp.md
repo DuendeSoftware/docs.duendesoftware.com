@@ -222,7 +222,7 @@ providing a robust security guarantee.
 
 You can add the anti-forgery protection to all YARP routes by calling the *AsBffApiEndpoint* extension method:
 
-```cs
+```csharp
 app.MapReverseProxy()
     .AsBffApiEndpoint();
 
@@ -253,7 +253,7 @@ the route configuration by adding the *Duende.Bff.Yarp.AntiforgeryCheck* metadat
 
 This is also possible in code:
 
-```cs
+```csharp
 yarpBuilder.LoadFromMemory(
     new[]
     {
@@ -278,7 +278,7 @@ You can combine the token management feature with the anti-forgery check.
 
 To enforce the presence of the anti-forgery headers, you need to add a middleware to the YARP pipeline:
 
-```cs
+```csharp
 // Program.cs
 app.MapReverseProxy(proxyApp =>
 {

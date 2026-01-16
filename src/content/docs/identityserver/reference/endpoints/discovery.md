@@ -81,7 +81,7 @@ identify the tenant.
 You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
-```cs
+```csharp
 var client = new HttpClient();
 
 var disco = await client.GetDiscoveryDocumentAsync("https://demo.duendesoftware.com");

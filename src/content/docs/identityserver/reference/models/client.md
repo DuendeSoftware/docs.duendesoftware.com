@@ -15,7 +15,7 @@ redirect_from:
 The `Client` class models an OpenID Connect or OAuth 2.0 client -
 e.g. a native application, a web application or a JS-based application.
 
-```cs
+```csharp
 public static IEnumerable<Client> Get()
 {
     return new List<Client>

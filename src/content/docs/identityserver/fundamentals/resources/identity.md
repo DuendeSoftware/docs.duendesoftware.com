@@ -19,7 +19,7 @@ One of them is actually mandatory, the `openid` scope, which tells the provider 
 
 This is how you could define the openid scope in code:
 
-```cs
+```csharp
 public static IEnumerable<IdentityResource> GetIdentityResources()
 {
     return new List<IdentityResource>
@@ -34,7 +34,7 @@ public static IEnumerable<IdentityResource> GetIdentityResources()
 
 But since this is one of the standard scopes from the spec you can shorten that to:
 
-```cs
+```csharp
 public static IEnumerable<IdentityResource> GetIdentityResources()
 {
     return new List<IdentityResource>
@@ -49,7 +49,7 @@ See the [reference](/identityserver/reference/models/identity-resource.md) secti
 
 The following example shows a custom identity resource called `profile` that represents the display name, email address and website claim:
 
-```cs
+```csharp
 public static IEnumerable<IdentityResource> GetIdentityResources()
 {
     return new List<IdentityResource>
@@ -64,7 +64,7 @@ public static IEnumerable<IdentityResource> GetIdentityResources()
 
 Once the resource is defined, you can give access to it to a client via the `AllowedScopes` option (other properties omitted):
 
-```cs
+```csharp
 var client = new Client
 {
     ClientId = "client",

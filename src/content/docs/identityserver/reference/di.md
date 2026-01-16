@@ -14,7 +14,7 @@ redirect_from:
 `AddIdentityServer` return a builder object that provides many extension methods to add IdentityServer specific services
 to the ASP.NET Core service provider. Here's a list grouped by feature areas.
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer();
 ```

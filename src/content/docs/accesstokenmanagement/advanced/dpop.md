@@ -44,7 +44,7 @@ Once you have a JWK you wish to use, then it must be configured or made availabl
 
 Here's a sample configuring the key in an application using `AddOpenIdConnectAccessTokenManagement` in the startup code:
 
-```cs
+```csharp
 // Program.cs
 services.AddOpenIdConnectAccessTokenManagement(options =>
 {
@@ -54,7 +54,7 @@ services.AddOpenIdConnectAccessTokenManagement(options =>
 
 Similarly, for an application using `AddClientCredentialsTokenManagement`, it would look like this:
 
-```cs
+```csharp
 // Program.cs
 services.AddClientCredentialsTokenManagement()
    .AddClient("client_name", options =>

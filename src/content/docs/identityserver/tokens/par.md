@@ -41,7 +41,7 @@ This feature is part of the [Duende IdentityServer Business and Enterprise Editi
 In the Starter edition, PAR requests will not be processed and instead log errors. If you have a starter edition license, you should disable the
 `EnablePushedAuthorizationEndpoint` flag so that discovery indicates that your IdentityServer does not support PAR:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options =>
 {

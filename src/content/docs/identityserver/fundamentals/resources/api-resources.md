@@ -16,7 +16,7 @@ In Duende IdentityServer, the `ApiResource` class allows for some additional org
 
 Let's use the following scope definition as an example:
 
-```cs
+```csharp
 public static IEnumerable<ApiScope> GetApiScopes()
 {
     return new List<ApiScope>
@@ -38,7 +38,7 @@ public static IEnumerable<ApiScope> GetApiScopes()
 
 With `ApiResource` you can now create two logical APIs and their corresponding scopes:
 
-```cs
+```csharp
 public static readonly IEnumerable<ApiResource> GetApiResources()
 {
     return new List<ApiResource>
@@ -114,7 +114,7 @@ Client requests: *`manage`*:
 
 You can specify that an access token for an API resource (regardless of which scope is requested) should contain additional user claims.
 
-```cs
+```csharp
 var customerResource = new ApiResource("customer", "Customer API")
     {
         Scopes = { "customer.read", "customer.contact", "manage", "enumerate" },
@@ -153,7 +153,7 @@ An example could be regulatory requirements, or that you are starting to migrate
 
 The following sample sets `PS256` as the required signing algorithm for the `invoices` API:
 
-```cs
+```csharp
 var invoiceApi = new ApiResource("invoice", "Invoice API")
     {
         Scopes = { "invoice.read", "invoice.pay", "manage", "enumerate" },

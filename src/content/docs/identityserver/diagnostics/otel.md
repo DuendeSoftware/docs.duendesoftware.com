@@ -57,7 +57,7 @@ exporter to create a human-readable `/metrics` endpoint for the metrics.
 
 Add the OpenTelemetry configuration to your service setup.
 
-```cs
+```csharp
 // Program.cs
 var openTelemetry = builder.Services.AddOpenTelemetry();
 
@@ -81,7 +81,7 @@ openTelemetry.WithTracing(t => t
 
 Add the Prometheus exporter to the pipeline
 
-```cs
+```csharp
 // Program.cs
 // Map /metrics that displays OpenTelemetry data in human-readable form.
 app.UseOpenTelemetryPrometheusScrapingEndpoint();

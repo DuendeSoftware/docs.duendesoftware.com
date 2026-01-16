@@ -65,7 +65,7 @@ The claims are:
 While you can create the `ClaimsPrincipal` yourself, you can alternatively use IdentityServer extension methods and the
 `IdentityServerUser` class to make this easier:
 
-```cs
+```csharp
 var user = new IdentityServerUser("unique_id_for_your_user")
 {
     DisplayName = user.Username

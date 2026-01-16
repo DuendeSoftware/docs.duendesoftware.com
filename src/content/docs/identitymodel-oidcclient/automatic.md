@@ -84,7 +84,7 @@ For a simple example, the following code shows how to use the
 to invoke a browser on the host desktop platform. The `SystemBrowser` is a naive implementation that uses the
 [System.Diagnostics.Process](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process) class to start the system default browser.
 
-```cs
+```csharp
 var options = new OidcClientOptions
 {
     Authority = "https://demo.duendesoftware.com",
@@ -99,7 +99,7 @@ var client = new OidcClient(options);
 
 Once the `IBrowser` is configured, the `LoginAsync` method can be invoked to start the authentication flow.
 
-```cs
+```csharp
 var result = await client.LoginAsync();
 ```
 
