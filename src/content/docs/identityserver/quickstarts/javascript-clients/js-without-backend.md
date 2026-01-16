@@ -81,7 +81,7 @@ application. The static file middleware is designed to do this.
 Register the static file middleware in `src/JavaScriptClient/Program.cs`. The
 entire file should look like this:
 
-```cs
+```csharp
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
@@ -309,7 +309,7 @@ In the IdentityServer project locate the client configuration in
 `src/IdentityServer/Config.cs`. Add a new `Client` to the list for your new
 JavaScript application. It should have the configuration listed below:
 
-```cs
+```csharp
 // JavaScript Client
 new Client
 {
@@ -341,7 +341,7 @@ One last bit of configuration that is necessary is to configure CORS in the
 
 Add the CORS service to the dependency injection system in `src/Api/Program.cs`:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddCors(options =>
 {
@@ -357,7 +357,7 @@ builder.Services.AddCors(options =>
 
 Then add the CORS middleware to the pipeline in `src/Api/Program.cs`.
 
-```cs
+```csharp
 // Program.cs
 app.UseHttpsRedirection();
 app.UseCors("default");

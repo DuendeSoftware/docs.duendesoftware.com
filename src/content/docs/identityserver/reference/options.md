@@ -19,7 +19,7 @@ The `IdentityServerOptions` is the central place to configure fundamental settin
 
 You set the options when registering IdentityServer at startup time, using a lambda expression in the AddIdentityServer method:
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
@@ -252,7 +252,7 @@ If you want to take full control over the rendering of the discovery and jwks do
 * **`CustomEntries`**
 Adds custom elements to the discovery document. For example:
 
-```cs
+```csharp
 // Program.cs
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
@@ -269,7 +269,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 * **`ExpandRelativePathsInCustomEntries`**
 Expands paths in custom entries that begin with "~/" into absolute paths below the IdentityServer base address. Defaults to true. In the following example, if IdentityServer's base address is `https://localhost:5001`, then `my_custom_endpoint`'s value will be expanded to `https://localhost:5001/custom`.
 
-```cs
+```csharp
 options.Discovery.CustomEntries.Add("my_custom_endpoint", "~/custom");
 ```
 
@@ -615,7 +615,7 @@ OAuth device flow settings. Available on the `DeviceFlow` property of the `Ident
 
 [Mutual TLS](/identityserver/tokens/client-authentication.md) settings. Available on the `MutualTls` property of the `IdentityServerOptions` object.
 
-```cs
+```csharp
 // Program.cs
 var builder = services.AddIdentityServer(options =>
 {

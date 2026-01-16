@@ -62,7 +62,7 @@ Add the following snippet to your `Program.cs` above the call to `builder.Build(
 {/* prettier-ignore */}
 <Tabs syncKey="bffVersion">
   <TabItem label="Duende BFF v4">
-    ```cs
+    ```csharp
     // Program.cs
     builder.Services
         .AddBff()
@@ -95,7 +95,7 @@ Add the following snippet to your `Program.cs` above the call to `builder.Build(
   </TabItem>
   {/* prettier-ignore */}
   <TabItem label="Duende BFF v3">
-  ```cs
+  ```csharp
   // Program.cs
   builder.Services.AddBff();
 
@@ -139,7 +139,7 @@ Add the following snippet to your `Program.cs` above the call to `builder.Build(
 The last step is to add the required middleware for authentication, authorization and BFF session management. Add the
 following snippet after the call to `UseRouting`:
 
-```cs
+```csharp
 // Program.cs
 app.UseAuthentication();
 app.UseBff();
@@ -170,7 +170,7 @@ _`a)`_ Add the authentication/authorization related package to the client projec
 
 _`b)`_ Add a using statement to `_Imports.razor` to bring the above package in scope:
 
-```cs
+```csharp
 @using Microsoft.AspNetCore.Components.Authorization
 ```
 
@@ -247,7 +247,7 @@ will internally use this endpoint.
 
 Add a file with the following content:
 
-```cs
+```csharp
 using System.Net;
 using System.Net.Http.Json;
 using System.Security.Claims;
@@ -336,7 +336,7 @@ public class BffAuthenticationStateProvider
 
 ...and register it in the client's `Program.cs`:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, BffAuthenticationStateProvider>();
@@ -356,7 +356,7 @@ See [here](/bff/fundamentals/apis/local.mdx) for more background information.
 This can be easily accomplished by a delegating handler that can be plugged into the default HTTP client used by the
 Blazor frontend. Let's first add the handler:
 
-```cs
+```csharp
 public class AntiforgeryHandler : DelegatingHandler
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -370,7 +370,7 @@ public class AntiforgeryHandler : DelegatingHandler
 ...and register it in the client's `Program.cs` (overriding the standard HTTP client configuration; requires package
 Microsoft.Extensions.Http):
 
-```cs
+```csharp
 // Program.cs
 // HTTP client configuration
 builder.Services.AddTransient<AntiforgeryHandler>();
@@ -418,7 +418,7 @@ authenticated users can call the API.
 The standard way in ASP.NET Core would be to add an authorization requirement to the endpoint, either on the
 controller/action or via the endpoint routing, e.g.:
 
-```cs
+```csharp
 app.MapControllers()
         .RequireAuthorization();
 ```
@@ -435,7 +435,7 @@ for authentication. What we really want in that case is an API friendly status c
 This is one of the features of the BFF middleware, but you need to mark the endpoint as a BFF API endpoint for that to
 take effect:
 
-```cs
+```csharp
 app.MapControllers()
         .RequireAuthorization()
         .AsBffApiEndpoint();
@@ -464,7 +464,7 @@ In essence a BFF client is "just" a normal authorization code flow client:
 
 Below is a typical code snippet for the client definition:
 
-```cs
+```csharp
 var bffClient = new Client
 {
     ClientId = "bff",

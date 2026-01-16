@@ -182,7 +182,7 @@ Similarly, the middleware pipeline for this application will resemble the
 WebClient, with the addition of the BFF middleware and the BFF endpoints.
 Continue by adding the following to `src/JavaScriptClient/Program.cs`:
 
-```cs
+```csharp
 // Program.cs
 var app = builder.Build();
 
@@ -352,7 +352,7 @@ configuration will be very similar to the Web client. In addition, requesting
 the offline_access scope should be allowed for this client. It should have the
 configuration listed below:
 
-```cs
+```csharp
 // JavaScript BFF client
 new Client
 {
@@ -431,7 +431,7 @@ directly in `Program.cs`, but you can organize your Local APIs however you like.
 
 Add a handler to `src/JavaScriptClient/Program.cs` for the local API:
 
-```cs
+```csharp
 [Authorize]
 static IResult LocalIdentityHandler(ClaimsPrincipal user)
 {
@@ -453,7 +453,7 @@ HttpContext.GetUserAccessTokenAsync();_
 Next, you need to register both the local API and the BFF proxy for the remote
 API in the ASP.NET Core routing system. Add the code below to the endpoint configuration code in `src/JavaScriptClient/Program.cs`.
 
-```cs
+```csharp
   app.MapBffManagementEndpoints();
 
   // Uncomment this for Controller support

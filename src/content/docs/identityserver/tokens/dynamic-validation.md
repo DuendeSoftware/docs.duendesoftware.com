@@ -26,7 +26,7 @@ This allows you to
 
 The following example emits additional claims and changes the token lifetime on-the-fly based on a granted scope.
 
-```cs
+```csharp
 public class TransactionScopeTokenRequestValidator : ICustomTokenRequestValidator
 {
     public Task ValidateAsync(CustomTokenRequestValidationContext context)
@@ -55,7 +55,7 @@ public class TransactionScopeTokenRequestValidator : ICustomTokenRequestValidato
 
 You can register your implementation like this:
 
-```cs
+```csharp
 // Program.cs
 idsvrBuilder.AddCustomTokenRequestValidator<TransactionScopeTokenRequestValidator>();
 ```

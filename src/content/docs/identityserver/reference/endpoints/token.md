@@ -103,7 +103,7 @@ CONTENT-TYPE application/x-www-form-urlencoded
 You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with
 the protocol endpoint from .NET code.
 
-```cs
+```csharp
 using Duende.IdentityModel.Client;
 
 var client = new HttpClient();

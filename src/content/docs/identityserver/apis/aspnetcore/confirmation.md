@@ -25,7 +25,7 @@ should be performed early in the pipeline, ideally immediately after the standar
 
 You can do so with custom middleware like this:
 
-```cs
+```csharp
 // normal token validation happens here
 app.UseAuthentication();
 
@@ -38,7 +38,7 @@ app.UseAuthorization();
 Here, `UseConfirmationValidation` is an extension method that registers the middleware that performs the necessary
 validation:
 
-```cs
+```csharp
 public static class ConfirmationValidationExtensions
 {
     public static IApplicationBuilder UseConfirmationValidation(this IApplicationBuilder app, ConfirmationValidationMiddlewareOptions options = default)
@@ -50,7 +50,7 @@ public static class ConfirmationValidationExtensions
 
 And this is the actual middleware that validates the `cnf` claim:
 
-```cs
+```csharp
 // this middleware validates the cnf claim (if present) against the thumbprint of the X.509 client certificate for the current client
 public class ConfirmationValidationMiddleware
 {
@@ -143,7 +143,7 @@ dotnet add package Duende.AspnetCore.Authentication.JwtBearer
 
 With this package, the configuration necessary in your startup can be as simple as this:
 
-```cs
+```csharp
 // adds the normal JWT bearer validation
 builder.Services.AddAuthentication("token")
     .AddJwtBearer("token", options =>

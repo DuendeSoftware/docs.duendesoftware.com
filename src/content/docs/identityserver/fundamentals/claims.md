@@ -59,7 +59,7 @@ If your profile service extends the `DefaultProfileService`, you can use its `Ad
 requested and approved claims. The intent is that your profile service can retrieve claim data and then filter that
 claim data based on what was requested by the client. For example:
 
-```cs
+```csharp
 public class SampleProfileService : DefaultProfileService
 {
     public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -85,7 +85,7 @@ have claims that don't need to follow such rules, such as claims that are an int
 that are needed in most scenarios, they can be added by directly updating the `context.IssuedClaims` collection. For
 example:
 
-```cs
+```csharp
 public class SampleProfileService : DefaultProfileService
 {
     public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -125,7 +125,7 @@ Client claims are a set of pre-defined claims that are emitted in access tokens.
 meaning that each client can have its own unique set of client claims. The following shows an example of a client that
 is associated with a certain customer in your system:
 
-```cs
+```csharp
 var client = new Client
 {
     ClientId = "client",

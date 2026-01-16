@@ -30,7 +30,7 @@ Let's model something very simple - a system that has three logical operations `
 
 You can define them using the `ApiScope` class:
 
-```cs
+```csharp
 public static IEnumerable<ApiScope> GetApiScopes()
 {
     return new List<ApiScope>
@@ -44,7 +44,7 @@ public static IEnumerable<ApiScope> GetApiScopes()
 
 You can then assign the scopes to various clients, e.g.:
 
-```cs
+```csharp
 var webViewer = new Client
 {
     ClientId = "web_viewer",
@@ -101,7 +101,7 @@ The additional claims added are based on the scope requested.
 The following scope definition tells the configuration system that when a `write` scope gets granted the `user_level`
 claim should be added to the access token:
 
-```cs
+```csharp
 var writeScope = new ApiScope(
     name: "write",
     displayName: "Write your data.",
@@ -126,7 +126,7 @@ In this case you would create a scope without the parameter part and assign that
 provide some logic to parse the structure
 of the scope at runtime using the `IScopeParser` interface or by deriving from our default implementation, e.g.:
 
-```cs
+```csharp
 public class ParameterizedScopeParser : DefaultScopeParser
 {
     public ParameterizedScopeParser(ILogger<DefaultScopeParser> logger) : base(logger)
@@ -170,7 +170,7 @@ public class ParameterizedScopeParser : DefaultScopeParser
 
 You then have access to the parsed value throughout the pipeline, e.g. in the profile service:
 
-```cs
+```csharp
 public class HostProfileService : IProfileService
 {
     public override async Task GetProfileDataAsync(ProfileDataRequestContext context)

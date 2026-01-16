@@ -47,7 +47,7 @@ implementation that parses the status codes and response content. The
 following code snippet would parse the raw HTTP response from a token
 endpoint and turn it into a `TokenResponse` object:
 
-```cs
+```csharp
 var tokenResponse = await ProtocolResponse
     .FromHttpResponseAsync<TokenResponse>(httpResponse);
 ```
@@ -65,7 +65,7 @@ object.
 It is your responsibility to set up and manage the lifetime of the
 `HttpClient`, e.g. manually:
 
-```cs
+```csharp
 var client = new HttpClient();
 
 var response = await client.RequestClientCredentialsTokenAsync(
@@ -80,7 +80,7 @@ var response = await client.RequestClientCredentialsTokenAsync(
 You might want to use other techniques to obtain an `HttpClient`, e.g.
 via the HTTP client factory:
 
-```cs
+```csharp
 var client = HttpClientFactory.CreateClient("my_named_token_client");
 
 var response = await client.RequestClientCredentialsTokenAsync(
@@ -112,7 +112,7 @@ Any request type implementing `ProtocolRequest` has the ability to configure
 the client credential style, which specifies how the client will transmit the client ID and secret.
 `ClientCredentialStyle` options include `PostBody` and the default value of `AuthorizationHeader`.
 
-```cs
+```csharp
 var client = HttpClientFactory.CreateClient("my_named_token_client");
 
 var response = await client.RequestClientCredentialsTokenAsync(

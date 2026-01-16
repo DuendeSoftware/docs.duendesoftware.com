@@ -15,7 +15,7 @@ The access token will include additional claims that can be used for authorizati
 
 In ASP.NET core, the contents of the JWT payload get transformed into claims and packaged up in a `ClaimsPrincipal`. So you can always write custom validation or authorization logic in C#:
 
-```cs
+```csharp
 public IActionResult Get()
 {
     var isAllowed = User.HasClaim("scope", "read");
@@ -28,7 +28,7 @@ For better encapsulation and re-use, consider using the ASP.NET Core [authorizat
 
 With this approach, you would first turn the claim requirement(s) into a named policy:
 
-```cs
+```csharp
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("read_access", policy =>
@@ -38,13 +38,13 @@ builder.Services.AddAuthorization(options =>
 
 ...and then enforce it, e.g. using the routing table:
 
-```cs
+```csharp
 app.MapControllers().RequireAuthorization("read_access");
 ```
 
 ...or imperatively inside the endpoint handler:
 
-```cs
+```csharp
 app.MapGet("/", async (IAuthorizationService authz, ClaimsPrincipal user) =>
 {
     var allowed = await authz.AuthorizeAsync(user, "read_access");
@@ -60,7 +60,7 @@ app.MapGet("/", async (IAuthorizationService authz, ClaimsPrincipal user) =>
 
 ... or declaratively:
 
-```cs
+```csharp
 app.MapGet("/", () =>
 {
     // rest omitted
@@ -73,7 +73,7 @@ Historically, Duende IdentityServer emitted the `scope` claims as an array in th
 
 The newer *JWT Profile for OAuth* [spec](/identityserver/overview/specs.md) mandates that the scope claim is a single space delimited string. You can switch the format by setting the `EmitScopesAsSpaceDelimitedStringInJwt` on the [options](/identityserver/reference/options.md). But this means that the code consuming access tokens might need to be adjusted. The following code can do a conversion to the *multiple claims* format that .NET prefers:
 
-```cs
+```csharp
 namespace IdentityModel.AspNetCore.AccessTokenValidation;
 
 /// <summary>

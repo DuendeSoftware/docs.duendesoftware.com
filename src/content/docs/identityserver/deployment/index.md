@@ -105,7 +105,7 @@ describing how to configure storage and protection of data protection keys.
 
 A typical IdentityServer implementation should include data protection configuration code, like this:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddDataProtection()
   // Choose an extension method for key persistence, such as 

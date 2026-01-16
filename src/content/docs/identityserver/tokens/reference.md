@@ -22,7 +22,7 @@ validate the token.
 
 You can set the client's token type using the following client setting:
 
-```cs
+```csharp
 client.AccessTokenType = AccessTokenType.Reference;
 ```
 
@@ -31,7 +31,7 @@ client.AccessTokenType = AccessTokenType.Reference;
 The introspection endpoint requires authentication - since the client of an introspection endpoint is typically an API,
 you configure the secret on the `ApiResource`:
 
-```cs
+```csharp
     var api = new ApiResource("api1")
     {
         ApiSecrets = { new Secret("secret".Sha256()) }

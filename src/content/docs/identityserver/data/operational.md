@@ -41,7 +41,7 @@ The persistence for grants is abstracted behind two interfaces:
 Custom implementations of `IPersistedGrantStore`, and/or `IDeviceFlowStore` must be registered in the ASP.NET Core service provider.
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer();
 
@@ -80,7 +80,7 @@ The [ISigningKeyStore](/identityserver/reference/stores/signing-key-store.md) is
 To register a custom signing key store in the ASP.NET Core service provider, there is a `AddSigningKeyStore` helper on the `IIdentityServerBuilder`.
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddSigningKeyStore<YourCustomStore>();
@@ -118,7 +118,7 @@ To register a custom server-side session store in the ASP.NET Core service provi
 It is still necessary to call `AddServerSideSessions` to enable the server-side session feature.
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddServerSideSessions()
@@ -128,7 +128,7 @@ builder.Services.AddIdentityServer()
 There is also an overloaded version of a `AddServerSideSessions` that will perform both registration steps in one call.
 For example:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddServerSideSessions<YourCustomStore>();
@@ -142,7 +142,7 @@ When using the EntityFramework Core operational store, it will be necessary to i
 For example:
 
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddServerSideSessions()

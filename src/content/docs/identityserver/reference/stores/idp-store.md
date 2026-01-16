@@ -14,7 +14,7 @@ redirect_from:
 
 Used to dynamically load [identity provider configuration](/identityserver/reference/models/idp.md).
 
-```cs
+```csharp
 /// <summary>
 /// Interface to model storage of identity providers.
 /// </summary>

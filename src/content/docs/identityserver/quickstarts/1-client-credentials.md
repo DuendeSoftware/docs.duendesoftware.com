@@ -511,7 +511,7 @@ You can now enforce this policy at various levels, e.g.:
 
 Add the policy to the identity endpoint in `src/Api/Program.cs`:
 
-```cs
+```csharp
 app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
     .RequireAuthorization("ApiScope");
 ```

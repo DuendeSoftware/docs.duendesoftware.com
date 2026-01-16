@@ -154,7 +154,7 @@ GET /connect/authorize?
 You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically create
 authorize request URLs from .NET code.
 
-```cs
+```csharp
 var ru = new RequestUrl("https://demo.duendesoftware.com/connect/authorize");
 
 var url = ru.CreateAuthorizeUrl(

@@ -35,7 +35,7 @@ var client = new HttpMessageInvoker(new SocketsHttpHandler
 
 If you want to customize the HTTP client you can implement the `IForwarderHttpClientFactory` interface, e.g.:
 
-```cs
+```csharp
 public class MyInvokerFactory : IForwarderHttpClientFactory
 {
     public HttpMessageInvoker CreateClient(ForwarderHttpClientContext context)
@@ -59,7 +59,7 @@ public class MyInvokerFactory : IForwarderHttpClientFactory
 
 ...and override our registration:
 
-```cs
+```csharp
 services.AddSingleton<IForwarderHttpClientFactory, MyInvokerFactory>();
 ```
 

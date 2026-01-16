@@ -15,7 +15,7 @@ redirect_from:
 Used to persist users' authentication session data when using
 the [server-side sessions feature](/identityserver/ui/server-side-sessions/index.md).
 
-```cs
+```csharp
 /// <summary>
 /// User session store
 /// </summary>
@@ -62,7 +62,7 @@ public interface IServerSideSessionStore
 
 #### ServerSideSession
 
-```cs
+```csharp
 /// <summary>
 /// A user session
 /// </summary>
@@ -122,7 +122,7 @@ thus most of the other property values are considered informational and read-onl
 
 #### SessionFilter
 
-```cs
+```csharp
 /// <summary>
 /// Filter to query user sessions
 /// </summary>
@@ -142,7 +142,7 @@ public class SessionFilter
 
 #### SessionQuery
 
-```cs
+```csharp
 /// <summary>
 /// Filter to query all user sessions
 /// </summary>
@@ -182,7 +182,7 @@ public class SessionQuery
 
 #### QueryResult
 
-```cs
+```csharp
 /// <summary>
 /// Query result for paged data
 /// </summary>

@@ -16,7 +16,7 @@ the [operational store](/identityserver/data/operational.md):
 
 You set the options at startup time in your `AddOperationalStore` method:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddOperationalStore(options =>

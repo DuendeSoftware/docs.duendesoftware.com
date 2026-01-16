@@ -14,7 +14,7 @@ redirect_from:
 
 Models storage of grants for the device flow.
 
-```cs
+```csharp
 /// <summary>
 /// Interface for the device flow store
 /// </summary>
@@ -59,7 +59,7 @@ public interface IDeviceFlowStore
 
 #### DeviceCode
 
-```cs
+```csharp
 /// <summary>
 /// Represents data needed for device flow.
 /// </summary>

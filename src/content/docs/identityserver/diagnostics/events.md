@@ -23,7 +23,7 @@ or [Splunk](https://www.splunk.com/).
 
 Events are not turned on by default - but can be globally configured when `AddIdentityServer` is called, e.g.:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options =>
 {
@@ -35,7 +35,7 @@ builder.Services.AddIdentityServer(options =>
 
 To emit an event use the `IEventService` from the ASP.NET Core service provider and call the `RaiseAsync` method, e.g.:
 
-```cs
+```csharp
 public async Task<IActionResult> Login(LoginInputModel model)
 {
     if (_users.ValidateCredentials(model.Username, model.Password))
@@ -58,7 +58,7 @@ If you want to connect to a custom event store, implement the `IEventSink` inter
 
 The following example uses [Seq](https://getseq.net) to emit events:
 
-```cs
+```csharp
 public class SeqEventSink : IEventSink
 {
     private readonly Logger _log;
@@ -147,7 +147,7 @@ You can create your own events and emit them via our infrastructure.
 You need to derive from our base `Event` class which injects contextual information like activity ID, timestamp, etc.
 Your derived class can then add arbitrary data fields specific to the event context::
 
-```cs
+```csharp
 public class UserLoginFailureEvent : Event
 {
     public UserLoginFailureEvent(string username, string error)

@@ -15,7 +15,7 @@ HTTP headers in a response from a protocol endpoint.
 
 #### Duende.IdentityServer.Hosting.IHttpResponseWriter
 
-```cs
+```csharp
 /// <summary>
 /// Contract for a service that writes appropriate http responses for <see
 /// cref="IEndpointResult"/> objects.
@@ -32,7 +32,7 @@ public interface IHttpResponseWriter<in T>
 
 #### Duende.IdentityServer.Hosting.IEndpointResult
 
-```cs
+```csharp
 /// <summary>
 /// An <see cref="IEndpointResult"/> is the object model that describes the
 /// results that will returned by one of the protocol endpoints provided by

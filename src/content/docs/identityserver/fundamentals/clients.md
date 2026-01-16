@@ -26,7 +26,7 @@ The details vary, but you typically define the following common settings for a c
 In this scenario no interactive user is present - a service (i.e. the client) wants to communicate with an API (i.e. the
 resource that supports the scope):
 
-```cs
+```csharp
 public class Clients
 {
     public static IEnumerable<Client> Get()
@@ -52,7 +52,7 @@ Interactive applications (e.g. web applications or native desktop/mobile applica
 This flow gives you the best security because the access tokens are transmitted via back-channel calls only (and gives
 you access to refresh tokens):
 
-```cs
+```csharp
 var interactiveClient = new Client
 {
     ClientId = "interactive",
@@ -108,7 +108,7 @@ allows you to define static clients directly from the appsettings.json file:
 
 Then pass the configuration section to the `AddInMemoryClients` method:
 
-```cs
+```csharp
 // Program.cs
 AddInMemoryClients(configuration.GetSection("IdentityServer:Clients"))
 ```

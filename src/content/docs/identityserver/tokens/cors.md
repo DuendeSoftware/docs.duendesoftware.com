@@ -53,7 +53,7 @@ This would be configured as a singleton in DI, and hard-coded with its `AllowedO
 
 For example, in `ConfigureServices`:
 
-```cs
+```csharp
 // Program.cs
 builder.Services.AddSingleton<ICorsPolicyService>((container) =>
 {

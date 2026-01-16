@@ -22,7 +22,7 @@ You can either transmit them by value or by reference to the authorize endpoint 
 
 Duende IdentityServer requires the request JWTs to be signed. We support X509 certificates and JSON web keys, e.g.:
 
-```cs
+```csharp
 var client = new Client
 {
     ClientId = "foo",
@@ -53,7 +53,7 @@ If the `request_uri` parameter is used, IdentityServer will make an outgoing HTT
 
 You can customize the HTTP client used for this outgoing connection, e.g. to add caching or retry logic (e.g. via the Polly library):
 
-```cs
+```csharp
 // Program.cs
 idsvrBuilder.AddJwtRequestUriHttpClient(client =>
 {
