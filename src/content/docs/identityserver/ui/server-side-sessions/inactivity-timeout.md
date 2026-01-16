@@ -37,12 +37,11 @@ These invocations can be used as the signal to the server-side session managemen
 In addition to refresh tokens, any client activity using an access token that originated from the user's session could also be used to extend the user's server-side session at IdentityServer.
 This would only work if IdentityServer were aware of this activity, but userinfo and introspection endpoint requests are examples of those types of activity.
 
-Internally IdentityServer provides a `ISessionCoordinationService` which is invoked from the endpoints describes above. 
-Its purpose is to then extend the lifetime of the server-side session. 
+Internally IdentityServer provides a `ISessionCoordinationService` which is invoked from the endpoints describes above.
+Its purpose is to then extend the lifetime of the server-side session.
 Below is a picture of the various types of requests to do this:
 
 ![diagram demonstrating how to extend a session using IdentityServer](images/extending_session.svg)
-
 
 ### User Inactivity Detection and Session Termination
 
@@ -58,7 +57,6 @@ The obvious signal would be if the refresh token request failed, then that would
 
 Given this understanding, client applications can participate in this convention and IdentityServer can coordinate to achieve this system-wide "inactivity timeout" requirement.
 
-
 ## Configuration
 
 Configuration is needed in both IdentityServer and client applications.
@@ -71,7 +69,6 @@ To prepare IdentityServer, these features need to be enabled:
 2. Either the global [`CoordinateClientLifetimesWithUserSession` option](/identityserver/reference/options.md#authentication) should be enabled, or the client-specific [`CoordinateLifetimeWithUserSession` option](/identityserver/reference/models/client.md#authentication--session-management) should be enabled.
 3. Enable back-channel logout for [session expiration](/identityserver/ui/server-side-sessions/session-expiration.mdx) with the [`ExpiredSessionsTriggerBackchannelLogout` option](/identityserver/reference/options.md#server-side-sessions).
 
-
 ### Client Applications
 
 Depending on what protocol features the client is using, different approaches will need to be taken.
@@ -83,6 +80,7 @@ As the client uses the refresh token at IdentityServer, the user's session expir
 Be sure to configure the access token lifetime to be less than the server-side session lifetime at IdentityServer.
 
 To detect inactivity:
+
 * Either handle refresh token request failure, and consider the session ended.
 * Or implement back-channel logout.
 
@@ -91,7 +89,8 @@ To detect inactivity:
 It's possible a client is using a [reference access token](/identityserver/tokens/reference.md) and no refresh token.
 The API would then use introspection to validate the token, which would then extend the associated user's session at IdentityServer.
 
-To detect inactivity: 
+To detect inactivity:
+
 * Either handle 401 errors from the API, and then consider the session ended.
 * Or implement back-channel logout.
 

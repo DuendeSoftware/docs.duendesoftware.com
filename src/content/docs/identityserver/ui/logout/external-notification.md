@@ -20,7 +20,7 @@ clients that the user has signed out.
 This notification usually comes in the form of a request in an `<iframe>` from the external identity provider's "logged
 out" page.
 IdentityServer must then notify all of its clients (as discussed [here](/identityserver/ui/logout)), also typically in the form of a
-request in an `<iframe>` from within the external identity provider's `<iframe>`.
+request in an `<iframe>` (i.e. via Front-Channel Logout) from within the external identity provider's `<iframe>`.
 
 :::note
 To configure federated sign-out from an external identity provider, please refer to the documentation for your specific
