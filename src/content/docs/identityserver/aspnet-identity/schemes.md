@@ -55,14 +55,15 @@ When a user signs in with an external provider (like Google or another OIDC prov
 
 ### Check Session Cookie
 
-The OpenID Connect session management specification requires a separate cookie to monitor the session state without sending the large authentication cookie.
+IdentityServer session management requires a separate cookie to monitor the session state without sending the large authentication cookie.
+The [User Session Service](/identityserver/reference/services/user-session-service.md) manages this cookie.
 
 - **Default Name:** `"idsrv.session"` (This often remains consistent, but verify your specific configuration).
 
 ## Summary Table
 
 | Feature                  | Standalone IdentityServer               | With ASP.NET Identity            |
-| :----------------------- | :-------------------------------------- | :------------------------------- |
+|:-------------------------|:----------------------------------------|:---------------------------------|
 | **Main Auth Cookie**     | `"idsrv"`                               | `"Identity.Application"`         |
 | **External Auth Cookie** | `"idsrv.external"`                      | `"Identity.External"`            |
 | **Typical Usage**        | `HttpContext.SignInAsync("idsrv", ...)` | `SignInManager.SignInAsync(...)` |
