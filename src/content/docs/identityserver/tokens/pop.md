@@ -20,7 +20,7 @@ redirect_from:
 
 By default, OAuth access tokens are so-called `bearer` tokens. This means they are not bound to a client and anybody who possesses the token can use it. The security concern here is that a leaked token could be used by a (malicious) third party to impersonate the client and/or user.
 
-On the other hand, `Proof-of-Possession` (PoP) tokens are bound to the client that requested the token. This is also often called sender constraining. This is done by using cryptography to prove that the sender of the token knows an additional secret only known to the client. 
+On the other hand, `Proof-of-Possession` (PoP) tokens are bound to the client that requested the token. This is also often called sender constraining. This is done by using cryptography to prove that the sender of the token knows an additional secret only known to the client.
 
 This proof is called the *confirmation method* and is expressed via the standard [`cnf` claim](https://tools.ietf.org/html/rfc7800),e.g.:
 
@@ -45,13 +45,14 @@ When using reference tokens, the cnf claim will be returned from the introspecti
 IdentityServer supports two styles of proof of possession tokens: **Mutual TLS** and **DPoP**.
 
 ## Mutual TLS
+
 [RFC 8705](https://tools.ietf.org/html/rfc8705) specifies how to bind a TLS client certificate to an access token. With this method your IdentityServer will embed the SHA-256 thumbprint of the X.509 client certificate into the access token via the cnf claim, e.g.:
 
 ```json
 {
   // rest omitted
-  
-  "cnf": { "x5t#S256": "bwcK0esc3ACC3DB2Y5_lESsXE8o9ltc05O89jdN-dg2" } 
+
+  "cnf": { "x5t#S256": "bwcK0esc3ACC3DB2Y5_lESsXE8o9ltc05O89jdN-dg2" }
 }
 ```
 
@@ -68,6 +69,7 @@ It is not mandatory to authenticate your clients with a client certificate to ge
 In this scenario, the client would create an X.509 certificate on the fly, and use that to establish the TLS channel to your IdentityServer. As long as the certificate is accepted by your web server, your IdentityServer can embed the `cnf` claim, and your APIs can validate it.
 
 #### .NET Client
+
 In .NET it is straight-forward to create an X.509 certificate on the fly and use it to open a TLS connection.
 
 ```csharp
@@ -81,19 +83,19 @@ static X509Certificate2 CreateClientCertificate(string name)
 
         request.CertificateExtensions.Add(
             new X509KeyUsageExtension(
-                X509KeyUsageFlags.DataEncipherment | 
-                X509KeyUsageFlags.KeyEncipherment | 
+                X509KeyUsageFlags.DataEncipherment |
+                X509KeyUsageFlags.KeyEncipherment |
                 X509KeyUsageFlags.DigitalSignature , false));
 
         request.CertificateExtensions.Add(
             new X509EnhancedKeyUsageExtension(
-                new OidCollection 
-                { 
-                    new Oid("1.3.6.1.5.5.7.3.2") 
+                new OidCollection
+                {
+                    new Oid("1.3.6.1.5.5.7.3.2")
                 }, false));
 
         return request.CreateSelfSigned(
-            new DateTimeOffset(DateTime.UtcNow.AddDays(-1)), 
+            new DateTimeOffset(DateTime.UtcNow.AddDays(-1)),
             new DateTimeOffset(DateTime.UtcNow.AddDays(10)));
     }
 }
@@ -112,10 +114,10 @@ static async Task<TokenResponse> RequestTokenAsync()
     var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
     {
         Address = disco.MtlsEndpointAliases.TokenEndpoint,
-        
+
         // The default ClientCredentialStyle value is ClientCredentialStyle.AuthorizationHeader, which does not work in a Mutual TLS scenario
         ClientCredentialStyle = ClientCredentialStyle.PostBody,
-        
+
         ClientId = "client",
         Scope = "api1"
     });
@@ -134,6 +136,7 @@ static SocketsHttpHandler GetHandler(X509Certificate2 certificate)
 ```
 
 #### Enabling Support In IdentityServer
+
 The last step is to enable that feature in the options:
 
 ```csharp
@@ -141,7 +144,7 @@ The last step is to enable that feature in the options:
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     // other settings
-    
+
     options.MutualTls.AlwaysEmitConfirmationClaim = true;
 });
 ```
@@ -151,8 +154,13 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 **Version:** <span data-shb-badge data-shb-badge-variant="default">&gt;=6.3</span>
 
 [DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) is a security measure that addresses token replay
-attacks by making it difficult for attackers to use stolen tokens. Support for DPoP is included
-in [IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition. DPoP specifies how to bind
+attacks by making it difficult for attackers to use stolen tokens.
+
+:::note
+This feature is part of the [Duende IdentityServer Enterprise Edition](https://duendesoftware.com/products/identityserver).
+:::
+
+DPoP specifies how to bind
 an asymmetric key stored within a JSON Web Key (JWK) to an access token. With this enabled your IdentityServer will
 embed the thumbprint of the public key JWK into the access token via the cnf claim, e.g.:
 
@@ -229,7 +237,7 @@ builder.Services.AddAuthentication(...)
     .AddCookie("cookie", ...)
     .AddOpenIdConnect("oidc", ...);
 
-builder.Services.AddOpenIdConnectAccessTokenManagement(options => 
+builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
 {
     options.DPoPJsonWebKey = "...";
 });

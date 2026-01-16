@@ -10,8 +10,11 @@ redirect_from:
 ---
 
 Dynamic Identity Providers are a scalable solution for managing authentication with lots of external providers, without
-incurring performance penalties or requiring application recompilation. This feature, included in the [Enterprise Edition](/general/licensing.md#enterprise-edition)
-of Duende IdentityServer, enables providers to be configured dynamically from a store at runtime.
+incurring performance penalties or requiring application recompilation. This feature enables providers to be configured dynamically from a store at runtime.
+
+:::note
+This feature is part of the [Duende IdentityServer Enterprise Edition](https://duendesoftware.com/products/identityserver).
+:::
 
 ## Dynamic Identity Providers
 
@@ -26,8 +29,6 @@ performance penalty for having too many of them.
 
 Duende IdentityServer provides support for dynamic configuration of authentication handlers loaded from a store.
 Dynamic configuration addresses the performance concern and allows changes to the configuration to a running server.
-
-Support for Dynamic Identity Providers is included in the [Duende IdentityServer](https://duendesoftware.com/products/identityserver) Enterprise Edition.
 
 ## Store And Configuration Data
 
@@ -86,7 +87,7 @@ private static async Task SeedDynamicProviders(ConfigurationDbContext context)
     if (!context.IdentityProviders.Any())
     {
         Console.WriteLine("IdentityProviders being populated...");
-        
+
         context.IdentityProviders.Add(new OidcProvider
         {
             Scheme = "demoidsrv",
@@ -95,9 +96,9 @@ private static async Task SeedDynamicProviders(ConfigurationDbContext context)
             ClientId = "login",
             // ... more properties
         }.ToEntity());
-        
+
         await context.SaveChangesAsync();
-        
+
         Console.WriteLine("IdentityProviders populated.");
     }
     else
@@ -294,23 +295,24 @@ builder.Services
     .AddIdentityServer(options =>
     {
         // ...
-        
+
         options.DynamicProviders.PathPrefix = "/fed";
-        
+
         // ...
     })
 ```
 
-## Using Non-OIDC Authentication Handlers 
+## Using Non-OIDC Authentication Handlers
 
 Dynamic identity providers in Duende IdentityServer come with an implementation that supports OpenId Connect providers to be registered.
 In your solution, it may be necessary to support other authentication providers, such as a SAML-based authentication provider.
 
 We have two samples that show how to use non-OIDC authentication handlers with dynamic identity providers:
+
 * Adding the [WS-Federation protocol type](/identityserver/samples/ui.mdx#adding-other-protocol-types-to-dynamic-providers)
 * Adding the [Saml2 protocol type](/identityserver/samples/ui.mdx#using-sustainsyssaml2-with-dynamic-providers), using the [Sustainsys.Saml2](https://saml2.sustainsys.com/) open source library
 
-In this section, we'll look at a minimal example of how to add other authentication handlers, such as the `GoogleHandler`, to dynamic identity providers, 
+In this section, we'll look at a minimal example of how to add other authentication handlers, such as the `GoogleHandler`, to dynamic identity providers,
 
 To register other authentication handlers, you can use the `AddProviderType<T, TOptions, TIdentityProvider>(string scheme)` method on the `DynamicProviderOptions` object,
 where `T` is the authentication handler type, `TOptions` is the options type for that particular handler, and `TIdentityProvider` is the identity provider type that models the dynamic provider.
@@ -331,26 +333,26 @@ to store dynamic identity provider configuration data, it's recommended to use a
 identity provider.
 
 The `GoogleIdentityProvider` class can extend IdentityServer's [`IdentityProvider`](/identityserver/reference/models/idp.md) class,
-and expose additional properties that are specific to the Google identity provider.  For a minimal Google implementation,
+and expose additional properties that are specific to the Google identity provider. For a minimal Google implementation,
 that would be the `ClientId` and `ClientSecret`:
 
 ```csharp title="GoogleIdentityProvider.cs"
 public class GoogleIdentityProvider : IdentityProvider
 {
     public const string ProviderType = "google";
-    
-    public GoogleIdentityProvider() 
+
+    public GoogleIdentityProvider()
         : base(ProviderType)
     {
     }
-    
-    public string? ClientId 
+
+    public string? ClientId
     {
         get => this["ClientId"];
         set => this["ClientId"] = value;
     }
-    
-    public string? ClientSecret 
+
+    public string? ClientSecret
     {
         get => this["ClientSecret"];
         set => this["ClientSecret"] = value;
@@ -369,7 +371,7 @@ builder.Services
     .AddIdentityServer(options =>
     {
         // ...
-        
+
         options.DynamicProviders
             .AddProviderType<GoogleHandler, GoogleOptions, GoogleIdentityProvider>(
                 GoogleIdentityProvider.ProviderType);
@@ -384,7 +386,7 @@ an instance of the ASP.NET Core authentication handler options can be created ba
 To do so, you can use the `ConfigureAuthenticationOptions<TOptions, TIdentityProvider>` base class. In our Google example:
 
 ```csharp title="GoogleDynamicConfigureOptions.cs"
-class GoogleDynamicConfigureOptions 
+class GoogleDynamicConfigureOptions
     : ConfigureAuthenticationOptions<GoogleOptions, GoogleIdentityProvider>
 {
     public GoogleDynamicConfigureOptions(IHttpContextAccessor httpContextAccessor,
@@ -394,14 +396,14 @@ class GoogleDynamicConfigureOptions
 
     protected override void Configure(
         ConfigureAuthenticationContext<GoogleOptions, GoogleIdentityProvider> context)
-    {        
+    {
         var googleProvider = context.IdentityProvider;
         var googleOptions = context.AuthenticationOptions;
 
         googleOptions.ClientId = googleProvider.ClientId;
         googleOptions.ClientSecret = googleProvider.ClientSecret;
         googleOptions.ClaimActions.MapAll();
-        
+
         googleOptions.SignInScheme = context.DynamicProviderOptions.SignInScheme;
         googleOptions.CallbackPath = context.PathPrefix + "/signin";
     }
@@ -432,7 +434,7 @@ builder.Services
     .AddIdentityServer(options =>
     {
         // ...
-        
+
         options.DynamicProviders
             .AddProviderType<GoogleHandler, GoogleOptions, GoogleIdentityProvider>(
                 GoogleIdentityProvider.ProviderType);

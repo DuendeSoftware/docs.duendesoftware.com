@@ -27,7 +27,9 @@ This implementation is specifically designed for IdentityServer to allow for mor
 querying for active sessions based on subject id or session id, and revoking artifacts from protocol workflows as part
 of that session.
 
-Support for Server Side Sessions is included in [IdentityServer](https://duendesoftware.com/products/identityserver) Business Edition or higher.
+:::note
+This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
+:::
 
 ## Session Management
 
@@ -69,9 +71,9 @@ This data will be serialized and protected using ASP.NET Core's [data protection
 directly readable in the data store. To allow querying, values from the user's session are extracted and used as indices in the store.
 These values are the user's:
 
-* subject identifier (the `sub` claim value)
-* session identifier (the `sid` claim value)
-* display name (an optional and configurable claim value)
+- subject identifier (the `sub` claim value)
+- session identifier (the `sid` claim value)
+- display name (an optional and configurable claim value)
 
 If you would like to query this data based on a user's display name, then the claim type used is configurable with the
 `ServerSideSessions.UserDisplayNameClaimType` property on the [`IdentityServerOptions`](/identityserver/reference/options.md#authentication).
