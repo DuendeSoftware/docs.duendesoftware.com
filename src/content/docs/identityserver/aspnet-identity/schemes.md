@@ -2,7 +2,7 @@
 title: "Authentication Schemes and Cookies"
 description: "Understanding the authentication schemes and cookies used by Duende IdentityServer, especially when integrated with ASP.NET Identity."
 sidebar:
-  order: 2
+  order: 5
 ---
 
 Authentication in ASP.NET Core is organized into [authentication schemes](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/#authentication-scheme). A scheme is a name that corresponds to an authentication handler and its configuration options. IdentityServer relies on several specific schemes for different purposes, and understanding them is crucial, especially when integrating with ASP.NET Identity.
