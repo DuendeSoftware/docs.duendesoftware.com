@@ -28,7 +28,7 @@ JavaScript in the browser.
 
 **This design has security concerns. It is no longer recommended.** See [overview](index.md) 
 for details.
-The current best practice uses the ["BFF" pattern](js-with-backend.mdx).
+The current best practice uses the [BFF pattern](js-with-backend.mdx).
 
 In this quickstart the user will log in to IdentityServer, invoke an API with an
 access token issued by IdentityServer, and logout of IdentityServer. All of this
