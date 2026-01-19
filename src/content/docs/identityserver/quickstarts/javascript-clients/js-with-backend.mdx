@@ -126,7 +126,7 @@ Add the following to `src/JavaScriptClient/Program.cs`:
             options.GetClaimsFromUserInfoEndpoint = true;
             options.MapInboundClaims = false;
         }
-        .ConfigureCookies()
+        .ConfigureCookies(options => options.Cookie.SameSite = SameSiteMode.Strict)
         .AddRemoteApis();
 
     var app = builder.Build();
@@ -464,7 +464,7 @@ API in the ASP.NET Core routing system. Add the code below to the endpoint confi
       .AsBffApiEndpoint();
 
   app.MapRemoteBffApiEndpoint("/remote", new Uri("https://localhost:6001"))
-      .WithAccessToken(Duende.Bff.AccessTokenManagement.RequiredTokenType.User);
+      .WithAccessToken(RequiredTokenType.User);
 ```
 
 The call to the `AsBffApiEndpoint()` fluent helper method adds BFF support to
