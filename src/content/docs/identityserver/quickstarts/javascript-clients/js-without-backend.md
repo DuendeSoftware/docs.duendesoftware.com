@@ -26,9 +26,9 @@ Connect/OAuth protocol interactions occur from the JavaScript code running in
 the browser. Also, invoking the API will be performed directly from the
 JavaScript in the browser.
 
-This design adds complexity (and thus security concerns) to your application, so
-consider if the ["BFF" pattern](/identityserver/quickstarts/javascript-clients/js-with-backend.mdx) might be a better
-choice.
+**This design has security concerns. It is no longer recommended.** See [overview](index.md) 
+for details.
+The current best practice uses the ["BFF" pattern](js-with-backend.mdx).
 
 In this quickstart the user will log in to IdentityServer, invoke an API with an
 access token issued by IdentityServer, and logout of IdentityServer. All of this
@@ -37,7 +37,7 @@ will be driven from the JavaScript running in the browser.
 ## New Project For The JavaScript Client
 
 Create a new project for the JavaScript application. Beyond being able to serve
-your application's html and javascript, there are no requirements on the
+your application's HTML and javascript, there are no requirements on the
 backend. You could use anything from an empty ASP.NET Core application to a
 Node.js application. This quickstart will use an ASP.NET Core application.
 

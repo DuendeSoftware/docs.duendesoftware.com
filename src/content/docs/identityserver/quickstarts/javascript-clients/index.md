@@ -26,8 +26,8 @@ protocol interactions on the client-side, including driving user authentication
 and token requests, session and token management, and token storage. This leads
 to more complex JavaScript, cross-browser incompatibilities, and a considerably
 higher attack surface. Since this style inherently needs to store security
-sensitive artifacts (like tokens) in JavaScript reachable locations, this style
-is not recommended. **Consequently, we don't offer a quickstart for this style**.
+sensitive artifacts (like tokens) in JavaScript reachable locations, **this style
+is not recommended**. 
 
 As the ["OAuth 2.0 for Browser-Based Apps" IETF/OAuth working group BCP
 document](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps)
