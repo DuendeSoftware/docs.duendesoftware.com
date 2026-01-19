@@ -11,7 +11,11 @@ redirect_from:
 `OidcClient` logs errors, warnings, and diagnostic information using
 `Microsoft.Extensions.Logging.ILogger`, the standard .NET logging library.
 
-```csharp
+You can use any logging provider to store your logs however you like,
+by setting the `LoggerFactory` property on `OidcClientOptions`:
+
+```csharp {9,17}
+// Program.cs
 using Duende.IdentityModel;
 using Duende.IdentityModel.OidcClient;
 
@@ -36,20 +40,9 @@ var app = builder.Build();
 var client = app.Services.GetService<OidcClient>();
 ```
 
-You can use any logging provider to store your logs however you like, by setting the `LoggerFactory` property on `OidcClientOptions`.
+Using this approach, you can use other logging frameworks, like [Serilog](https://github.com/serilog/serilog-extensions-hosting) for example.
 
-For example, you could configure
-[Serilog](https://github.com/serilog/serilog-extensions-hosting) like this:
-
-```csharp
-var serilog = new LoggerConfiguration()
-    .MinimumLevel.Verbose()
-    .Enrich.FromLogContext()
-    .WriteTo.LiterateConsole(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message}{NewLine}{Exception}{NewLine}")
-    .CreateLogger();
-
-options.LoggerFactory.AddSerilog(serilog);
-```
+For general information on how to configure logging in .NET applications, see our [Logging Fundamentals](/general/logging.md) guide.
 
 ## Log Levels
 
@@ -63,6 +56,7 @@ The `OidcClient` logs at the following levels:
 You can set the log level in your `appsettings.json` by modifying the following snippet.
 
 ```json
+// appsettings.json
 {
   "Logging": {
     "LogLevel": {

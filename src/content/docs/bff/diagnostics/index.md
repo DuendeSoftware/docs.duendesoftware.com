@@ -14,9 +14,27 @@ provided by ASP.NET Core, so you don't need to do any extra configuration to ben
 including support for multiple logging providers. See the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging) for a good introduction on logging.
 
 BFF follows the standard logging levels defined by the .NET logging framework, and uses the Microsoft guidelines for
-when certain log levels are used, similar to [how Duende IdentityServer uses log levels](/identityserver/diagnostics/logging.md).
+when certain log levels are used.
+
+For general information on how to configure logging in Duende products, see our [Logging Fundamentals](/general/logging.md) guide.
+
+### Configuration
 
 Logs are typically written under the `Duende.Bff` category, with more concrete categories for specific components.
+
+To get detailed logs from the BFF middleware with the `Microsoft.Extensions.Logging` framework, you can configure your `appsettings.json` to enable `Debug` level logs for the `Duende.Bff` namespace:
+
+```json
+// appsettings.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Duende.Bff": "Debug"
+    }
+  }
+}
+```
 
 :::note[Multiple frontends]
 When using [multiple frontends and the `FrontendSelectionMiddleware`](/bff/architecture/multi-frontend.md),
