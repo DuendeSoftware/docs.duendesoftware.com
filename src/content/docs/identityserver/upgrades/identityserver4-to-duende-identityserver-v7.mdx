@@ -534,12 +534,20 @@ In your current (pre-upgraded) IdentityServer version, you can query the applica
 var app = builder.Build();
 
 // ...
-var applicationName = app.Services
-    .GetRequiredService<IOptions<DataProtectionOptions>>()
-    .Value.ApplicationDiscriminator;
-
+var applicationName = "";
+var applicationDiscriminatorService = app.Services.GetService<IApplicationDiscriminator>();
+if (applicationDiscriminatorService != null)
+{
+    applicationName = applicationDiscriminatorService.Discriminator;
+}
+var dataProtectionOptions = app.Services.GetService<IOptions<DataProtectionOptions>>();
+if (dataProtectionOptions != null && dataProtectionOptions.Value.ApplicationDiscriminator != null)
+{
+    dataProtectionApplicationDiscriminator = dataProtectionOptions.Value.ApplicationDiscriminator;
+}
+            
 // applicationName is now the (auto-generated?) application name
-// - you can use it in your upgraded IdentityServer version
+// - you can use its value in your upgraded IdentityServer version
 ```
 
 :::
