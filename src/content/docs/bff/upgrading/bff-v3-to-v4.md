@@ -29,14 +29,14 @@ The syntax for configuring remote APIs has changed slightly:
 -    .RequireAccessToken(TokenType.Client);
 
 + app.MapRemoteBffApiEndpoint("/api/client-token", new Uri("https://localhost:5010"))
-+    .WithAccessToken(RequiredTokenType.Client);      
++    .WithAccessToken(RequiredTokenType.Client);
 
 // Use the client token only if the user is logged in
 - app.MapRemoteBffApiEndpoint("/api/optional-user-token", "https://localhost:5010")
 -    .WithOptionalUserAccessToken();
 
 + app.MapRemoteBffApiEndpoint("/api/optional-user-token", new Uri("https://localhost:5010"))
-+    .WithAccessToken(RequiredTokenType.UserOrNone);            
++    .WithAccessToken(RequiredTokenType.UserOrNone);
 ```
 
 * The enum `TokenType` has been renamed to `RequiredTokenType`, and moved from the `Duende.Bff` to `Duende.Bff.AccessTokenManagement` namespace.
@@ -49,6 +49,74 @@ The required token type configuration in YARP has also changed slightly. It uses
 
 ### Extending The BFF
 
+#### Service To Endpoint Updates
+
+Service interfaces and their default implementations have been renamed and have changed, resulting in an updated extensibility model:
+
+* Generally, the interfaces have been renamed, e.g. from `IUserService` to `IUserEndpoint`.
+* Default implementation is now internal, but can be used when overriding the endpoint:
+    
+    ```diff lang="csharp"
+    - public class MyUserService : DefaultUserService
+    - {
+    -     public override Task ProcessRequestAsync(HttpContext context, CancellationToken ct)
+    -     {
+    -         // Custom logic here
+    - 
+    -         return base.ProcessRequestAsync(context);
+    -     }
+    - }
+    
+    + var bffOptions = app.Services.GetRequiredService<IOptions<BffOptions>>().Value;
+    + 
+    + app.MapGet(bffOptions.UserPath, async (HttpContext context, CancellationToken ct) =>
+    + {
+    +     // ... custom logic before calling the endpoint implementation ...
+    +
+    +     var endpointProcessor = context.RequestServices.GetRequiredService<IUserEndpoint>();
+    +     await endpointProcessor.ProcessRequestAsync(context, ct);
+    +
+    +     // ... custom logic after calling the  endpoint implementation ...
+    + });
+    ```
+
+For more information, see the [endpoints documentation](/bff/extensibility/management/index.mdx).
+
+#### Custom Session Store
+
+If you have a custom implementation of `IUserSessionStore`, the interface has changed to support multiple frontends.
+
+In all methods, the `string key` has been replaced with a strongly typed `UserSessionKey` struct, which contains the `PartitionKey` and `SessionId`:
+
+* `PartitionKey` - Corresponds to the frontend name (or `ApplicationName` in V3).
+* `SessionId`: The user's session identifier.
+
+```diff lang="csharp"
+public class MySessionStore : IUserSessionStore
+{
+-    public Task<UserSession> GetUserSessionAsync(string key, CancellationToken cancellationToken)
++    public Task<UserSession> GetUserSessionAsync(UserSessionKey key, CancellationToken cancellationToken)
+    {
+        // ...
+    }
+
+    // ...
+}
+```
+
+Also see [related database changes and migrations](#server-side-sessions-database-migrations).
+
+#### Access Token Retrieval
+
+The `HttpContext.GetUserAccessTokenAsync` extension method has been removed from the `Duende.Bff` namespace. You should now use the extension method from the `Duende.AccessTokenManagement.OpenIdConnect` namespace.
+
+```csharp
+using Duende.AccessTokenManagement.OpenIdConnect;
+
+// ...
+var token = await HttpContext.GetUserAccessTokenAsync();
+```
+
 #### Simplified Wireup Without Explicit Authentication Setup
 
 The V3 style of wireup still works, but BFF V4 comes with a newer style of wireup:
@@ -60,11 +128,12 @@ services.AddBff()
         options.Authority = "your authority";
         options.ClientId = "your client id";
         options.ClientSecret = "secret";
-        // ... other OpenID Connect options. 
+
+        // ... other OpenID Connect options.
     }
     .ConfigureCookies(options => {
         // The cookie options are automatically configured with recommended practices.
-        // However, you can change the config here. 
+        // However, you can change the config here.
     });
 ```
 
@@ -116,68 +185,64 @@ See the type `BffConfiguration` to see what settings can be configured.
 
 ## Handling SPA Static Assets
 
-The BFF can be configured to handle the static file assets that are typically used when developing SPA based apps. 
+The BFF can be configured to handle the static file assets that are typically used when developing SPA based apps.
 
 ### Proxying Only `index.html`
 
-When deploying a multi-frontend BFF, it makes most sense to have the frontends configured with an `index.html` file that is retrieved from a Content Delivery Network (CDN). 
+When deploying a multi-frontend BFF, it makes most sense to have the frontends configured with an `index.html` file that is retrieved from a Content Delivery Network (CDN).
 
-This can be done in various ways. For example, if you use Vite, you can publish static assets with a base URL configured. This will make sure that any static asset, (such as images, scripts, etc.) are retrieved directly from the CDN for best performance. 
+This can be done in various ways. For example, if you use Vite, you can publish static assets with a base URL configured. This will make sure that any static asset, (such as images, scripts, etc.) are retrieved directly from the CDN for best performance.
 
 ```csharp
 var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
    .WithCdnIndexHtml(new Uri("https://my_cdn/some_app/index.html"))
 ```
 
-The BFF automatically wires up a catch-all route that serves`index.html` for that specific frontend. 
+The BFF automatically wires up a catch-all route that serves`index.html` for that specific frontend.
 
-See [Serve the index page from the BFF host](/bff/architecture/ui-hosting.md#serve-the-index-page-from-the-bff-host) for more information. 
+See [Serve the index page from the BFF host](/bff/architecture/ui-hosting.md#serve-the-index-page-from-the-bff-host) for more information.
 
-### Proxying All Static Assets 
+### Proxying All Static Assets
 
 When developing a Single-Page Application (SPA), it's very common to use a development webserver such as Vite. While Vite can publish static assets with a base URL, this doesn't work well during development.
 
 The best development experience can be achieved by configuring the BFF to proxy all static assets from the development server:
-
 
 ```csharp
 var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
    .WithProxiedStaticAssets(new Uri("https://localhost:3000")); // https://localhost:3000 would be the URL of your development web server.
 ```
 
-While this can also be done in production, it will proxy all static assets through the BFF. This will increase the bandwidth consumed by the BFF and reduce the overall performance of your application. 
+While this can also be done in production, it will proxy all static assets through the BFF. This will increase the bandwidth consumed by the BFF and reduce the overall performance of your application.
 
 ### Proxying Assets Based On Environment
 
 If you're using a local development server during development and a CDN in production, you can configure this as follows:
 
-``` csharp
-
+```csharp
 // In this example, the environment name from the application builder is used to determine
-// if we're running in production or not. 
+// if we're running in production or not.
 var runningInProduction = () => builder.Environment.EnvironmentName == Environments.Production;
 
-// Then, when configuring the frontend, you can switch when the static assets will be proxied. 
+// Then, when configuring the frontend, you can switch when the static assets will be proxied.
 new BffFrontend(BffFrontendName.Parse("default-frontend"))
     .WithBffStaticAssets(new Uri("https://localhost:5010/static"), useCdnWhen: runningInProduction);
-
 ```
 
 :::note
-This function is evaluated immediately when calling the`.WithBffStaticAssets()` extension method. When you call this method during startup, the condition is only evaluated at startup time. It's not evaluated at runtime for every request. 
+This function is evaluated immediately when calling the`.WithBffStaticAssets()` extension method. When you call this method during startup, the condition is only evaluated at startup time. It's not evaluated at runtime for every request.
 :::
-
-
 
 ### Server Side Sessions Database Migrations
 
-When using the server side sessions feature backed by the `Duende.BFF.EntityFramework` package, you will need to script [Entity Framework database migrations](/bff/fundamentals/session/server-side-sessions.mdx#entity-framework-migrations) and apply these changes to your database. 
+When using the server side sessions feature backed by the `Duende.BFF.EntityFramework` package, you will need to script [Entity Framework database migrations](/bff/fundamentals/session/server-side-sessions.mdx#entity-framework-migrations) and apply these changes to your database.
 
 ```shell
 dotnet ef migrations add BFFUserSessionsV4 -o Migrations -c SessionDbContext
 ```
 
 In the `UserSessions` table, a number of changes were introduced:
+
 * The `ApplicationName` column was renamed to `PartitionKey`. This column will contain the BFF frontend name.
 * Related indexes were updated.
 
