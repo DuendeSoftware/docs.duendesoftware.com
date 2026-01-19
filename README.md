@@ -69,7 +69,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 ### Markdown Style
 
 * Use `*` for lists. Do not use `-`.
-* Use `[link title(https://example.com)` for links, avoid reference-style links.
+* Use `[link title](https://example.com)` for links, avoid reference-style links.
 * For internal links, always include the extension (e.g. `.md` or `.mdx`)
 * Prefer `csharp` over `cs` to set the language for C# code blocks.
 
