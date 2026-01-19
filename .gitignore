@@ -23,5 +23,7 @@ pnpm-debug.log*
 .vscode/settings.json
 *.iml
 
+# Agents and assistants
 .opencode/
 opencode.json
+.idea/**/copilot.data.migration.*.xml

@@ -62,7 +62,7 @@ IdentityServer always uses the `"idsrv.external"` scheme here, available in the 
 IdentityServer session management requires a separate cookie to monitor the session state without sending the large authentication cookie.
 The [User Session Service](/identityserver/reference/services/user-session-service.md) manages this cookie.
 
-- **Default Name:** `"idsrv.session"` (Constant: `IdentityServerConstants.DefaultCheckSessionCookieName`). This often remains consistent, but verify your specific configuration.
+- **Default Name:** `"idsrv.session"` (Constant: `IdentityServerConstants.DefaultCheckSessionCookieName`).
 
 Note this cookie is not marked as `HttpOnly`, so it can be accessed in client-side code. The JavaScript code that is required to check user sessions in the background also requires access to this cookie, and needs it to be `HttpOnly`.
 
