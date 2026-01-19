@@ -66,6 +66,13 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Run `npm run linkchecker` to validate all links (note this will ignore links to GitHub because of rate limits in place).
 * When a markdown link is long (75+ characters) or a link is repeated multiple times on a page, prefer moving the link to the bottom of the file and using markdown anchor syntax `[test.cs][repo-test-file]`
 
+### Markdown Style
+
+* Use `*` for lists. Do not use `-`.
+* Use `[link title](https://example.com)` for links, avoid reference-style links unless you need to repeat the same link multiple times.
+* For internal links, always include the extension (e.g. `.md` or `.mdx`)
+* Prefer `csharp` over `cs` to set the language for C# code blocks.
+
 ### Code Block Style
 
 * Use triple backticks to enclose code blocks.
