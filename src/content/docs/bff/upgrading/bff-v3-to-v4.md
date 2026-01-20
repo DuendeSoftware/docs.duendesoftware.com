@@ -89,7 +89,7 @@ If you have a custom implementation of `IUserSessionStore`, the interface has ch
 In all methods, the `string key` has been replaced with a strongly typed `UserSessionKey` struct, which contains the `PartitionKey` and `SessionId`:
 
 * `PartitionKey` - Corresponds to the frontend name (or `ApplicationName` in V3).
-* `SessionId`: The user's session identifier.
+* `SessionId` - The user's session identifier.
 
 ```diff lang="csharp"
 public class MySessionStore : IUserSessionStore
