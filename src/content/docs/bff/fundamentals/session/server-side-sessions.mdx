@@ -67,7 +67,7 @@ builder.Services.AddDbContextPool<SessionDbContext>(opt =>
 });
 
 builder.Services.AddBff()
-    .AddEntityFrameworkServerSideSessionsServices<SessionDbContext>()
+    .AddEntityFrameworkServerSideSessionsServices<SessionDbContext, IBffServicesBuilder>()
 ```
 
 Note, you'll still need to let the server side session store know about the `SessionDbContext` by calling `AddEntityFrameworkServerSideSessions` with the `SessionDbContext` implementation as a generic argument.
