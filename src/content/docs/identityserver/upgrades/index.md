@@ -75,3 +75,7 @@ Then continue with "Upgrading from version 6.3" below.
 #### Upgrading from version 6.3
 
 Follow the [upgrade guide version 6.3 - 7.0](/identityserver/upgrades/v6_3-to-v7_0.md)
+
+## Upgrading from IdentityServer4 to Duende IdentityServer
+
+See [IdentityServer4 to Duende IdentityServer](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx).

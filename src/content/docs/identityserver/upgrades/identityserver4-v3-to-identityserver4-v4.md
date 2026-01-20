@@ -1,7 +1,7 @@
 ---
 title: "IdentityServer4 v3.1 to IdentityServer4 v4.1"
 sidebar:
-  order: 140
+  order: 151
   label: IdentityServer4 v3.1 → v4.1
 redirect_from:
   - /identityserver/v5/upgrades/is4_v3_to_dis_v5/
