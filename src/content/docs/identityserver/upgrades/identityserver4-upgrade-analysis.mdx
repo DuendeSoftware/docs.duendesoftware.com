@@ -34,7 +34,7 @@ The controller is designed to inspect client configurations from:
 If your implementation uses a custom store for client configuration, you will need to modify the controller code (specifically in the constructor) to manually wire up the retrieval of your client data so it can be included in the analysis.
 
 :::danger[Security warning]
-To make use of the tool, you must update the authorization logic in the `Index()` method. This exists to make sure only a specific user or a user with necessary claims can access the report for your environment.
+To make use of the tool, you must update the authorization logic in the `Index()` method. Authorization is in place to ensure that only a user with the necessary claims can access the report for your environment.
 This is extremely important when deploying the migration analysis tool to your production environment.
 
 The default implementation contains a placeholder check that verifies if your username is `"scott"`:
