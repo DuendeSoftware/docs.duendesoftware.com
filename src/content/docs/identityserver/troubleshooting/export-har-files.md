@@ -21,7 +21,7 @@ Before sharing any HAR files that contain sensitive values for diagnosing, you c
 * Generate HAR files with sensitive data
   * It is helpful to know that certain fields are have been set, but not necessarily the actual value. Some browsers will exclude sensitive data in HAR file exports by default. The below steps include instructions to enable sensitive data in HAR file exports for browsers that do not include it by default.
 
-## Generating a HAR file
+## Generating A HAR File
 
 Generating a HAR file involves steps using your web browser and its associated developer tools. The browser-specific steps outlined below are all similar to each other. Other browsers will have similar steps.
 
@@ -55,7 +55,7 @@ Generating a HAR file involves steps using your web browser and its associated d
 1. In the browser, visit the page(s) and perform the steps that trigger the issue.
 1. In the Network tab of the dev tools, click the down arrow and select the "Export HAR (with sensitive data)..." option to export the HAR file and save it locally.
 
-## Sanitize a HAR file
+## Sanitize A HAR File
 
 Before sharing your HAR file with anyone, you should remove any sensitive data. You can do this manually by opening the HAR file with any JSON text editor and removing the sensitive data. We recommend replacing the data with a placeholder rather than deleting the entry. When diagnosing issues, it's helpful to know whether a field was set.
 
