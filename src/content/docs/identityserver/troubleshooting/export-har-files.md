@@ -13,17 +13,17 @@ sidebar:
 Before sharing any HAR files that contain sensitive values for diagnosing, you can sanitize that data by following the [steps below](#sanitize-a-har-file).
 :::
 
-## Generating a HAR file
-
-Generating a HAR file involves steps using your web browser and its associated developer tools. The browser-specific steps outlined below are all similar to each other. Other browsers will have similar steps.
-
-### HAR File Considerations
+## HAR File Considerations
 
 * Consider using an **incognito window** of your browser. If you do, close all browser incognito instances you may have open and then open a new one before creating the HAR file to ensure the cache is cleared.
 * Preserve the log across page navigations
   * If you are navigating to different pages (ex: logging in to a site with OAuth redirects), then any network calls made before the last redirect will be lost. Preserving the logs across page navigations aids in diagnosing issues. The below steps include instructions to preserve network logs while navigating across multiple pages.
 * Generate HAR files with sensitive data
   * It is helpful to know that certain fields are have been set, but not necessarily the actual value. Some browsers will exclude sensitive data in HAR file exports by default. The below steps include instructions to enable sensitive data in HAR file exports for browsers that do not include it by default.
+
+## Generating a HAR file
+
+Generating a HAR file involves steps using your web browser and its associated developer tools. The browser-specific steps outlined below are all similar to each other. Other browsers will have similar steps.
 
 ### Google Chrome
 
@@ -55,11 +55,11 @@ Generating a HAR file involves steps using your web browser and its associated d
 1. In the browser, visit the page(s) and perform the steps that trigger the issue.
 1. In the Network tab of the dev tools, click the down arrow and select the "Export HAR (with sensitive data)..." option to export the HAR file and save it locally.
 
-### Sanitize a HAR file
+## Sanitize a HAR file
 
 Before sharing your HAR file with anyone, you should remove any sensitive data. You can do this manually by opening the HAR file with any JSON text editor and removing the sensitive data. We recommend replacing the data with a placeholder rather than deleting the entry. When diagnosing issues, it's helpful to know whether a field was set.
 
-### Practice
+## Practice
 
 If you would like to practice with a small sample, you can login to the Duende Demo Server and generate a HAR file from those interactions.
 
