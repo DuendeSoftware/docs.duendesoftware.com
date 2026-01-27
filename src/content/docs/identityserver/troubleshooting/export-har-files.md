@@ -57,7 +57,7 @@ Generating a HAR file involves steps using your web browser and its associated d
 
 ### Sanitize a HAR file
 
-Before sharing your HAR file with anyone you should remove any sensitive data. You can do this manually by opening the HAR file with any JSON text editor and removing the sensitive data. We recommend replacing data with a placeholder instead of deleting the entry. When diagnosing issues, it's helpful to know if a field was set or not.
+Before sharing your HAR file with anyone, you should remove any sensitive data. You can do this manually by opening the HAR file with any JSON text editor and removing the sensitive data. We recommend replacing the data with a placeholder rather than deleting the entry. When diagnosing issues, it's helpful to know whether a field was set.
 
 ### Practice
 
