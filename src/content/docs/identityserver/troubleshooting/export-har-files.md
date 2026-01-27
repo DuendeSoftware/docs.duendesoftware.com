@@ -1,6 +1,6 @@
 ---
-title: "Export HAR Files for Analysis"
-description: Documentation for creating HAR files and why they are used for diagnostics
+title: "Export HAR Files for Analyzing Client-Side Interactions"
+description: Documentation for creating HAR files, and how they can be used for client-side diagnostics.
 date: 2026-01-28T08:03:00+02:00
 sidebar:
   label: "Export HAR Files"
