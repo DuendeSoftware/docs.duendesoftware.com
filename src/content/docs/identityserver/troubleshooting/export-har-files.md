@@ -7,7 +7,7 @@ sidebar:
   order: 16
 ---
 
-[HTTP Archive (HAR)](<https://en.wikipedia.org/wiki/HAR_(file_format)>) files are logs of network interactions made by a web browser. They contain headers, request bodies, response payloads, and even sentitive information like cookie values sent and received for each interaction.
+[HTTP Archive (HAR)](<https://en.wikipedia.org/wiki/HAR_(file_format)>) files are logs of network interactions made by a web browser. They contain headers, request bodies, response payloads, and even sensitive information like cookie values sent and received for each interaction.
 
 :::caution[Do not share sensitive information]
 Before sharing any HAR files that contain sensitive values for diagnosing, you can sanitize that data by following the [steps below](#sanitize-a-har-file).
