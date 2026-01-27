@@ -1,6 +1,6 @@
 ---
 title: "Export HAR Files for Analysis"
-description: Documentation for creating HAR files and why they are used for disgnostics
+description: Documentation for creating HAR files and why they are used for diagnostics
 date: 2026-01-28T08:03:00+02:00
 sidebar:
   label: "Export HAR Files"
