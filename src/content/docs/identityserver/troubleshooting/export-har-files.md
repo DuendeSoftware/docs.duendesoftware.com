@@ -19,7 +19,7 @@ Generating a HAR file involves steps using your web browser and its associated d
 
 ### HAR File Considerations
 
-* Consider using an incognito window of your browser. If you do, close all browser incognito instances you may have open and open a new one before creating the HAR file to ensure the cache is cleared.
+* Consider using an **incognito window** of your browser. If you do, close all browser incognito instances you may have open and then open a new one before creating the HAR file to ensure the cache is cleared.
 * Preserve the log across page navigations
   * If you are navigating to different pages (ex: logging in to a site with OAuth redirects), then any network calls made before the last redirect will be lost. Preserving the logs across page navigations aids in diagnosing issues. The below steps include instructions to preserve network logs while navigating across multiple pages.
 * Generate HAR files with sensitive data
