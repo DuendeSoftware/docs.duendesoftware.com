@@ -28,7 +28,7 @@ Encoding can be done using the `EncodeToString` method:
 ```csharp
 using System.Buffers.Text;
 
-var bytes = Encoding.UTF8.GetBytes("some string);
+var bytes = Encoding.UTF8.GetBytes("some string");
 var encodedString = Base64Url.EncodeToString(bytes);
 ```
 
