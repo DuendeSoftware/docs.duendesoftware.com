@@ -114,3 +114,7 @@ var isBuilder = builder.Services.AddIdentityServer(options =>
 ```
 
 Returning `true` means the exception will be logged, while returning `false` indicates the exception should not be logged.
+
+## OpenTelemetry
+
+Logs written to the standard `ILogger` system in .NET 8+ can be exported to OpenTelemetry traces at runtime. This helps visualize when the log statement occurred in relation to the entire request. The logs are augmented with trace ids and correlated with traces. Have a look at [logs in OpenTelemetry](/identityserver/diagnostics/otel.md#logs) for setup details.

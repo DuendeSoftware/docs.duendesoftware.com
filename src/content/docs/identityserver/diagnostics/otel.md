@@ -19,20 +19,20 @@ redirect_from:
 Added in Duende IdentityServer v6.1 and expanded in v7.0
 :::
 
-[OpenTelemetry](https://opentelemetry.io) is a collection of tools, APIs, and SDKs for generating and collecting
+[OpenTelemetry](https://opentelemetry.io) (OTel) is a collection of tools, APIs, and SDKs for generating and collecting
 telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior,
 especially in highly distributed systems.
 
-.NET 8 comes with first class support for OpenTelemetry. IdentityServer emits traces, metrics, and logs.
+
+## OpenTelemetry Signals
+
+OpenTelemetry signals are the information collected and processed to describe the internal activity of the system. The most common signals are traces, metrics, and logs.
+
+.NET 8+ comes with first class support for OpenTelemetry. IdentityServer emits traces, metrics, and logs you can collect.
 
 ### Metrics
 
 Metrics are high level statistic counters. They provide an aggregated overview and can be used to set monitoring rules.
-
-### Logs
-
-OpenTelemetry in .NET 8 exports the logs written to the standard ILogger system. The logs are augmented with
-trace ids to be able to correlate log entries with traces.
 
 ### Traces
 
@@ -45,20 +45,46 @@ IdentityServer to get a new access token and then calls the API. The API reads t
 url and then gets the keys from jwks endpoint.
 ![.NET Aspire dashboard showing Duende IdentityServer traces](images/aspire_traces.png)
 
+### Logs
+
+OpenTelemetry in .NET 8+ can export logs written to the standard `ILogger` system. The logs are augmented with
+trace ids and correlated with traces.
+
+This is an example of a structured log message from a web application calling an API (also displayed using our
+[Aspire sample](/identityserver/samples/diagnostics.mdx)).
+
+![.NET Aspire dashboard showing Duende IdentityServer Structured Logs](images/aspire_structured_logs.png)
+
+Here is an example of that same log message appearing in the trace. Aspire displays the log entry details as dots on the trace timeline.
+
+![.NET Aspire dashboard showing Duende IdentityServer a trace with a log entry](images/aspire_structured_logs_in_trace.png)
+
 ## Setup
 
 To start emitting OpenTelemetry tracing and metrics information you need to:
 
 * add the OpenTelemetry libraries to your IdentityServer and client applications
-* start collecting traces and Metrics from the various IdentityServer sources (and other sources e.g. ASP.NET Core)
+* start collecting traces and metrics from the various IdentityServer sources (and other sources e.g. ASP.NET Core)
+* add the OpenTelemetry configuration to your service setup
 
 For development a simple option is to export the tracing information to the console and use the Prometheus
 exporter to create a human-readable `/metrics` endpoint for the metrics.
 
-Add the OpenTelemetry configuration to your service setup.
+```bash
+dotnet add package OpenTelemetry
+dotnet add package OpenTelemetry.Extensions.Hosting
+dotnet add package OpenTelemetry.Instrumentation.AspNetCore
+dotnet add package OpenTelemetry.Exporter.OpenTelemetryProtocol
+```
 
 ```csharp
 // Program.cs
+using OpenTelemetry.Resources;
+
+//Correlate logs with traces
+builder.Logging.AddOpenTelemetry();
+
+//Enable OpenTelemetry
 var openTelemetry = builder.Services.AddOpenTelemetry();
 
 openTelemetry.ConfigureResource(r => r
