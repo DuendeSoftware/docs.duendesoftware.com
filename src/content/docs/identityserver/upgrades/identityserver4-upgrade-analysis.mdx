@@ -1,0 +1,76 @@
+---
+title: "IdentityServer4 to Duende IdentityServer - Migration Analysis Tool"
+sidebar:
+  order: 139
+  label: IdentityServer4 Migration Analysis
+---
+
+import { Code } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+To help assist in planning the [migration of an IdentityServer4 implementation to Duende IdentityServer](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx),
+we provide a utility that [analyzes the current configuration of your current IdentityServer4](https://raw.githubusercontent.com/DuendeSoftware/docs.duendesoftware.com/refs/heads/main/src/content/docs/identityserver/upgrades/code/MigrationAnalysisController.cs).
+It inspects the running instance to provide specific recommendations and highlights potential compatibility issues during the upgrade and migration process.
+
+Note that the data provided is informative and should not be considered a complete migration plan.
+
+:::note
+We also offer a [free IdentityServer4 upgrade assessment](https://duendesoftware.com/upgrade-identityserver4) to walk you through your upgrade path.
+:::
+
+## Installation
+
+This Migration Analysis tool is provided as a single file, [`MigrationAnalysisController.cs`](https://raw.githubusercontent.com/DuendeSoftware/docs.duendesoftware.com/refs/heads/main/src/content/docs/identityserver/upgrades/code/MigrationAnalysisController.cs), which can be [downloaded](https://raw.githubusercontent.com/DuendeSoftware/docs.duendesoftware.com/refs/heads/main/src/content/docs/identityserver/upgrades/code/MigrationAnalysisController.cs)
+and added directly to any existing IdentityServer4 project. It does not require a separate library or complex installation process.
+
+The tool's code was deliberately kept rudimentary and compatible with earlier C# versions to ensure maximum compatibility with older projects.
+
+The controller is designed to inspect client configurations from:
+1.  **In-Memory Clients**
+2.  **Entity Framework Core** (standard `IdentityServer4.EntityFramework` stores)
+
+If your implementation uses a custom store for client configuration, you will need to modify the controller code (specifically in the constructor) to manually wire up the retrieval of your client data so it can be included in the analysis.
+
+:::danger[Security warning]
+To make use of the tool, you must update the authorization logic in the `Index()` method. Authorization is in place to ensure that only a user with the necessary claims can access the report for your environment.
+This is extremely important when deploying the migration analysis tool to your production environment.
+
+The default implementation contains a placeholder check that verifies if your username is `"scott"`:
+```csharp {3}
+// MigrationAnalysisController.cs
+// Verify user is allowed to access this page
+if (User.Identity == null || User.Identity.Name != "scott")
+{
+    return Unauthorized();
+}
+```
+
+You must replace this with checks for specific user characteristics (e.g., role, claim, or username) to ensure that only authorized users can access this sensitive information.
+:::
+
+## Usage
+
+To use the tool:
+1.  Ensure the IdentityServer4 host is running.
+2.  Navigate to the `/MigrationAnalysis` endpoint of your IdentityServer4 host in your browser (e.g., `https://localhost:5001/MigrationAnalysis`).
+3.  Ensure you are logged in with a user that meets the security criteria defined in the `Index()` method.
+
+## Analysis Report
+
+The Analysis page provides a table with the following data points and recommendations:
+
+*   **.NET Version:** Checks the runtime version and recommends upgrading to the latest LTS if needed.
+*   **IdentityServer4 Version:** Verifies the current version. Migration to Duende IdentityServer typically requires being on IdentityServer4 v4.x first.
+*   **Clients:** Provides information about interactive and non-interactive clients. This information is important for [determining the appropriate license edition for Duende IdentityServer](https://duendesoftware.com/products/identityserver/).
+*   **Issuer URI:** Reports the current issuer URI, if configured.
+*   **Signing Credential Store:** Identifies the type of store used for signing credentials and checks for compatibility.
+*   **Signing Key:** Displays the current Key ID and links to documentation on migrating signing keys.
+*   **Data Protection:**
+    *   **Application Name:** Checks if the Application Discriminator is set, which is crucial for key isolation.
+    *   **Repository Type:** Verifies where keys are stored (e.g., XML repository) to ensure they are persisted correctly in production.
+*   **Authentication Schemes:** Lists all registered authentication handlers and highlights those that might not be compatible with newer ASP.NET Core versions.
+
+![IdentityServer4 to Duende IdentityServer migration analysis](images/migration-analysis.png)
+
+With this information, you can [start your IdentityServer4 to Duende IdentityServer migration](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx) more informed.
