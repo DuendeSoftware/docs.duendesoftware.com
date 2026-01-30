@@ -27,3 +27,6 @@ pnpm-debug.log*
 .opencode/
 opencode.json
 .idea/**/copilot.data.migration.*.xml
+
+# ides
+.vs/
