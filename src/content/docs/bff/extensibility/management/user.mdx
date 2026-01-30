@@ -1,6 +1,6 @@
 ---
 title: "BFF User Endpoint Extensibility"
-date: 2022-12-30 10:55:24
+date: 2026-01-20
 sidebar:
   label: "User"
   order: 50
@@ -67,9 +67,12 @@ public override Task ProcessRequestAsync(HttpContext context, CancellationToken 
 
 ### Enriching User Claims 
 
-There are several ways how you can enrich the claims for a specific user. 
+There are several ways how you can enrich the claims for a specific user, depending on where the required data comes from.
 
-The most robust way would be to implement a custom `IClaimsTransformation`. 
+#### Claims Transformations
+
+To enrich claims for a user, you can implement a custom `IClaimsTransformation`.
+Claims transformation executes as part of the authentication process.
 
 ```csharp
 services.AddScoped<IClaimsTransformation, CustomClaimsTransformer>();
@@ -91,5 +94,59 @@ public class CustomClaimsTransformer : IClaimsTransformation
 ```
 
 See the [Claims Transformation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/claims?view=aspnetcore-9.0) topic in the ASP.NET Core documentation for more information. 
+
+#### User Endpoint Claims Enricher :badge[v4.0]
+
+User claims can be enriched by implementing the `IUserEndpointClaimsEnricher` interface.
+This interface is specific to the user endpoint and runs after authentication.
+
+Because this runs within the user endpoint request, you can access the current HTTP context to retrieve the user's access token.
+We recommend using the [`GetUserAccessTokenAsync`](/accesstokenmanagement/web-apps.mdx#http-context-extension-methods) extension method from `Duende.AccessTokenManagement.OpenIdConnect`, as it will automatically handle refreshing the token if it has expired.
+
+```csharp
+// Program.cs
+builder.Services.AddTransient<IUserEndpointClaimsEnricher, CustomUserEndpointClaimsEnricher>();
+```
+
+```csharp
+// CustomUserEndpointClaimsEnricher.cs
+using Duende.Bff;
+using Duende.Bff.Endpoints;
+using Duende.AccessTokenManagement.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication;
+
+public class CustomUserEndpointClaimsEnricher : IUserEndpointClaimsEnricher
+{
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public CustomUserEndpointClaimsEnricher(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task<IReadOnlyList<ClaimRecord>> EnrichClaimsAsync(
+        AuthenticateResult authenticateResult, 
+        IReadOnlyList<ClaimRecord> claims, 
+        CancellationToken ct = default)
+    {
+        var newClaims = claims.ToList();
+        
+        // Get the access token using the extension method
+        // This will automatically handle token refreshing if needed
+        var token = await _httpContextAccessor.HttpContext.GetUserAccessTokenAsync(cancellationToken: ct);
+        
+        if (!string.IsNullOrEmpty(token.AccessToken))
+        {
+             // Call external API using the access token
+             // ...
+        }
+
+        // Add custom claims
+        newClaims.Add(new ClaimRecord("custom_data", "some value"));
+        
+        return newClaims;
+    }
+}
+```
 
 [1]: https://github.com/DuendeSoftware/products/tree/releases/bff/4.0.x/bff/src/Bff/Endpoints/Internal/DefaultUserEndpoint.cs
