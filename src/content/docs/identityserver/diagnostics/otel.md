@@ -458,3 +458,27 @@ You can select which information you are interested in by selectively listening 
 * *`IdentityServerConstants.Tracing.Validation`*
 
   More detailed tracing related to validation
+
+## OpenTelemetry From 3rd Party Logging Frameworks
+
+If you're unable to use the `ILogger` system in .NET, your choice of logging framework may be able to push log messages to traces. You can view their documentation to set that up.
+
+### OpenTelemetry with Serilog
+
+If you are logging with Serilog and want to use that framework's native API to push log messages to traces, you need to:
+
+* Add the Serilog OpenTelemetry sink library
+* Instruct the Serilog logger object to write to the OpenTelemetry sink
+
+Note: See the Serilog [OpenTelemetry sink](https://github.com/serilog/serilog-sinks-opentelemetry) documentation for the most up to date information.
+
+```bash
+dotnet add package Serilog.Sinks.OpenTelemetry
+```
+
+```csharp
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.OpenTelemetry()
+    .CreateLogger();
+```
+
