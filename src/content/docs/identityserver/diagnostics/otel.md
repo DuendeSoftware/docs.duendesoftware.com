@@ -81,10 +81,11 @@ dotnet add package OpenTelemetry.Exporter.OpenTelemetryProtocol
 // Program.cs
 using OpenTelemetry.Resources;
 
-//Correlate logs with traces
+// Add OpenTelemetry logging infrastructure
+// to correlate logs with traces
 builder.Logging.AddOpenTelemetry();
 
-//Enable OpenTelemetry
+// Enable OpenTelemetry
 var openTelemetry = builder.Services.AddOpenTelemetry();
 
 openTelemetry.ConfigureResource(r => r
