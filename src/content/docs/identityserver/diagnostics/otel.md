@@ -477,7 +477,7 @@ Note: See the Serilog [OpenTelemetry sink](https://github.com/serilog/serilog-si
 dotnet add package Serilog.Sinks.OpenTelemetry
 ```
 
-```csharp
+```csharp {2}
 Log.Logger = new LoggerConfiguration()
     .WriteTo.OpenTelemetry()
     .CreateLogger();
