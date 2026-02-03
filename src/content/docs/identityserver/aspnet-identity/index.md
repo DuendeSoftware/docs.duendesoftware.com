@@ -3,6 +3,7 @@ title: ASP.NET Identity Integration
 description: Guide to integrating ASP.NET Identity with IdentityServer for user management, including setup instructions and configuration options
 sidebar:
   label: Overview
+  order: 1
 redirect_from:
   - /identityserver/v5/aspnet_identity/
   - /identityserver/v6/aspnet_identity/
