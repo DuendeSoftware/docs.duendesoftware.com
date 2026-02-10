@@ -212,7 +212,7 @@ var response = await client.RequestClientCredentialsTokenAsync(new ClientCredent
     Scope = "invoice.read",
 
     // The parameter defines the target (RFC 8707)
-    Parameters = { { "resource", "urn:invoices" } }
+    Resource = [ "urn:invoices" ]
 });
 ```
 
