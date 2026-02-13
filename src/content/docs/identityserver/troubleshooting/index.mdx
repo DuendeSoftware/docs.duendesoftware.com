@@ -93,8 +93,8 @@ Log.Logger = new LoggerConfiguration()
 
 ## WAF Rules
 
-Data protected data can contain '--' (two dashes) and some firewalls disallow that because it looks like a sql
-comment/injection. This is not an IdentityServer issue but something that should be fixed on the firewall.
+Data protected data can contain `--` (two dashes), which some firewalls disallow that because it looks like a SQL
+comment/injection. This is not an IdentityServer issue but something that should be fixed on the web application firewall.
 
 ## IdentityServerOptions.EmitStaticAudienceClaim and Token Validation
 
@@ -124,8 +124,7 @@ Microsoft.IdentityModel set of libraries. These libraries provide token and conf
 
 The `Microsoft.IdentityModel.*` libraries used by Duende IdentityServer all have to be of exactly the same version
 However, this is not enforced by NuGet so it is common to end up with an application that brings in different versions
-of
-`Microsoft.IdentityModel.*` through transitive dependencies.
+of `Microsoft.IdentityModel.*` through transitive dependencies.
 
 Version conflicts can cause unexpected issues reading configuration data and tokens, i.e. **IDX10500: Signature
 validation
