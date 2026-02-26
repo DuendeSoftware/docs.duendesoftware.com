@@ -16,9 +16,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          submodules: true
-      - name: build
-        run: |
-          docker build .
+          dotnet-version: '10.0.x'
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          
+      - name: Build container
+        run: dotnet build.cs container
+        
+      - name: Run tests
+        run: dotnet build.cs dotnet-test
