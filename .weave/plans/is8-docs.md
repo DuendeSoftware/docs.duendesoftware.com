@@ -1,5 +1,8 @@
 # IdentityServer 8.0 Documentation Updates
 
+- **Tracking Issue**: https://github.com/DuendeSoftware/issues/issues/1398
+- **Pull Request**: https://github.com/DuendeSoftware/docs.duendesoftware.com/pull/1012
+
 ## TL;DR
 
 > **Summary**: Comprehensive docs update for IdentityServer 8.0 — new upgrade guide (v7.4→v8.0), SAML 2.0 IdP section, conformance report docs, and reference page updates for all breaking changes (IClock→TimeProvider, CancellationToken on interfaces, DPoP changes, cookie name changes, HTTP 303 unconditional).
