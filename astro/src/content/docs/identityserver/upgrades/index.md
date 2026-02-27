@@ -10,11 +10,14 @@ redirect_from:
   - /identityserver/v7/upgrades/
 ---
 
-
 Upgrading to a new IdentityServer version is done by updating the NuGet package and handling any breaking
 changes. Some updates contain changes to the stores used by IdentityServer that requires database
 schema updates. If you are using our Entity Framework based stores we recommend using Entity Framework
 Migrations.
+
+## Upgrading from version 7.4 to 8.0
+
+See [IdentityServer v7.4 to v8.0](/identityserver/upgrades/v7_4-to-v8_0/).
 
 ## Upgrading from version 7.3 to 7.4
 
@@ -34,7 +37,7 @@ IdentityServer v7.1 includes support for **.NET 9** and many other smaller fixes
 enhancements. There are no schema changes needed for IdentityServer 7.1. There are two changes that may require small
 code changes for a minority of users:
 
-- *`IdentityModel`* package renamed to *`Duende.IdentityModel`* which may require code updates to referenced namespaces
+- _`IdentityModel`_ package renamed to _`Duende.IdentityModel`_ which may require code updates to referenced namespaces
   and types.
 - `ClientConfigurationStore` now uses `IConfigurationDbContext`.
 
