@@ -14,7 +14,6 @@ redirect_from:
 
 Duende.BFF can be extended in the following areas
 
-- custom logic at the session management endpoints
-- custom logic and configuration for HTTP forwarding
-- custom data storage for server-side sessions and access/refresh tokens
-- [enriching claims returned from the user endpoint](/bff/extensibility/user-endpoint-claims/) using `IUserEndpointClaimsEnricher` (added in v8.0)
+* custom logic at the session management endpoints
+* custom logic and configuration for HTTP forwarding
+* custom data storage for server-side sessions and access/refresh tokens

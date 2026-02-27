@@ -24,8 +24,7 @@ public interface ICorsPolicyService
     /// Determines whether origin is allowed.
     /// </summary>
     /// <param name="origin">The origin.</param>
-    /// <param name="ct">The cancellation token.</param>
     /// <returns></returns>
-    Task<bool> IsOriginAllowedAsync(string origin, CancellationToken ct);
+    Task<bool> IsOriginAllowedAsync(string origin);
 }
 ```

@@ -23,18 +23,17 @@ public interface IIdentityProviderStore
     /// <summary>
     /// Gets all identity providers name.
     /// </summary>
-    Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync(CancellationToken ct);
+    Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
 
     /// <summary>
     /// Gets the identity provider by scheme name.
     /// </summary>
     /// <param name="scheme"></param>
-    /// <param name="ct">The cancellation token.</param>
     /// <returns></returns>
-    Task<IdentityProvider?> GetBySchemeAsync(string scheme, CancellationToken ct);
+    Task<IdentityProvider> GetBySchemeAsync(string scheme);
 }
 ```
 
 The `IdentityProvider` is intended to be a base class to model arbitrary identity providers.
-The default implementation included in _Duende IdentityServer_ will return a derived class for OpenID Connect providers,
+The default implementation included in *Duende IdentityServer* will return a derived class for OpenID Connect providers,
 via the `OidcProvider` class.

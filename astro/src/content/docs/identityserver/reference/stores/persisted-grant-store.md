@@ -39,20 +39,20 @@ data access for your environment and usage.
 
 #### Members
 
-| name                                                                                              | description                                                   |
-| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| Task StoreAsync(PersistedGrant grant, CancellationToken ct);                                      | Stores a grant.                                               |
-| Task<PersistedGrant?> GetAsync(string key, CancellationToken ct);                                 | Retrieves a grant by its key.                                 |
-| Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter, CancellationToken ct); | Retrieves all grants that fulfill the conditions of a filter. |
-| Task RemoveAsync(string key, CancellationToken ct);                                               | Removes a grant by key.                                       |
-| Task RemoveAllAsync(PersistedGrantFilter filter, CancellationToken ct);                           | Removes all grants that fulfill the conditions of a filter.   |
+| name                                                                        | description                                                   |
+|-----------------------------------------------------------------------------|---------------------------------------------------------------|
+| Task StoreAsync(PersistedGrant grant);                                      | Stores a grant.                                               |
+| Task<PersistedGrant> GetAsync(string key);                                  | Retrieves a grant by its key.                                 |
+| Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter); | Retrieves all grants that fulfill the conditions of a filter. |
+| Task RemoveAsync(string key);                                               | Removes a grant by key.                                       |
+| Task RemoveAllAsync(PersistedGrantFilter filter);                           | Removes all grants that fulfill the conditions of a filter.   |
 
 ### Duende.IdentityServer.Models.PersistedGrant
 
 #### Members
 
 | name                   | description                                                                                                                  |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------|
 | string Key             | A string that uniquely identifies the grant.                                                                                 |
 | string Type            | A string that specifies the type of grant. The possible values are constants in the `PersistedGrantTypes` class (see below). |
 | string SubjectId       | The identifier of the subject that granted authorization.                                                                    |
@@ -155,7 +155,7 @@ one-time use semantics are appropriate for the grant.
 
 ```csharp
 /// <summary>
-/// Represents a filter used when accessing the persisted grants store.
+/// Represents a filter used when accessing the persisted grants store. 
 /// Setting multiple properties is interpreted as a logical 'AND' to further filter the query.
 /// At least one value must be supplied.
 /// </summary>

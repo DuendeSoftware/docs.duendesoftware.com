@@ -34,10 +34,3 @@ that could be used to call the APM's APIs. Thanks to OpenTelemetry there is now 
 way to emit diagnostic information from a process. The events may eventually be deprecated and removed.
 
 [Read More](/identityserver/diagnostics/events.md)
-
-## Conformance Report
-
-IdentityServer can generate a conformance report that assesses your configuration against OAuth 2.1
-and FAPI 2.0 specifications.
-
-[Read More](/identityserver/diagnostics/conformance-report/)

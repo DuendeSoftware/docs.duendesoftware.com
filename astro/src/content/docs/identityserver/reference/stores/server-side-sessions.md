@@ -24,42 +24,39 @@ public interface IServerSideSessionStore
     /// <summary>
     /// Retrieves a session
     /// </summary>
-    Task<ServerSideSession?> GetSessionAsync(string key, CancellationToken ct);
+    Task<ServerSideSession> GetSessionAsync(string key, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates a session
     /// </summary>
-    Task CreateSessionAsync(ServerSideSession session, CancellationToken ct);
+    Task CreateSessionAsync(ServerSideSession session, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates a session
     /// </summary>
-    Task UpdateSessionAsync(ServerSideSession session, CancellationToken ct);
+    Task UpdateSessionAsync(ServerSideSession session, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes a session
     /// </summary>
-    Task DeleteSessionAsync(string key, CancellationToken ct);
+    Task DeleteSessionAsync(string key, CancellationToken cancellationToken = default);
+
 
     /// <summary>
     /// Gets sessions for a specific subject id and/or session id
     /// </summary>
-    Task<IReadOnlyCollection<ServerSideSession>> GetSessionsAsync(SessionFilter filter, CancellationToken ct);
+    Task<IReadOnlyCollection<ServerSideSession>> GetSessionsAsync(SessionFilter filter, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes sessions for a specific subject id and/or session id
     /// </summary>
-    Task DeleteSessionsAsync(SessionFilter filter, CancellationToken ct);
+    Task DeleteSessionsAsync(SessionFilter filter, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Removes and returns expired sessions
-    /// </summary>
-    Task<IReadOnlyCollection<ServerSideSession>> GetAndRemoveExpiredSessionsAsync(int count, CancellationToken ct);
 
     /// <summary>
     /// Queries sessions based on filter
     /// </summary>
-    Task<QueryResult<ServerSideSession>> QuerySessionsAsync(CancellationToken ct, SessionQuery? filter = null);
+    Task<QueryResult<ServerSideSession>> QuerySessionsAsync(SessionQuery filter = null, CancellationToken cancellationToken = default);
 }
 ```
 
@@ -216,7 +213,7 @@ public class QueryResult<T>
     /// The total pages (if available).
     /// </summary>
     public int? TotalPages { get; init; }
-
+    
     /// <summary>
     /// The current (if available).
     /// </summary>
@@ -228,3 +225,4 @@ public class QueryResult<T>
     public IReadOnlyCollection<T> Results { get; init; } = default!;
 }
 ```
+
