@@ -3,7 +3,21 @@ import type { AstroConfig, AstroIntegrationLogger } from "astro";
 import path from "node:path";
 import fs from "node:fs/promises";
 
-const redirectMap: Record<string, string> = {};
+function createNginxRule(redirectFrom: string, redirectTo: string) {
+  if (redirectFrom.endsWith("/")) {
+    redirectFrom = redirectFrom.slice(0, -1);
+  }
+
+  return (
+    "rewrite ^" +
+    redirectFrom +
+    "(/?)$ $scheme://$http_host" +
+    redirectTo +
+    "/ permanent;\n"
+  );
+}
+
+let nginxRedirectRules = "";
 
 export async function configurePlugin(hookOptions: any) {
   const buildOutput: string = hookOptions.buildOutput;
@@ -24,21 +38,16 @@ export async function configurePlugin(hookOptions: any) {
     return;
   }
 
-  // Build redirect map
+  // Add redirects
   logger.info("Generating static redirects file...");
   Object.keys(redirects).forEach((from) => {
     const redirect = redirects[from];
-    const destination =
-      typeof redirect === "string" ? redirect : redirect.destination;
 
-    // Normalize: strip trailing slash from source for consistent matching
-    const normalizedFrom = from.endsWith("/") ? from.slice(0, -1) : from;
-    // Ensure destination has trailing slash
-    const normalizedTo = destination.endsWith("/")
-      ? destination
-      : destination + "/";
-
-    redirectMap[normalizedFrom] = normalizedTo;
+    if (typeof redirect === "string") {
+      nginxRedirectRules += createNginxRule(from, redirect);
+    } else {
+      nginxRedirectRules += createNginxRule(from, redirect.destination);
+    }
   });
 }
 
@@ -46,22 +55,20 @@ export async function writeToOutput(hookOptions: any) {
   const outDir: string = hookOptions.dir;
   const logger: AstroIntegrationLogger = hookOptions.logger;
 
-  if (!Object.keys(redirectMap).length) {
+  if (!nginxRedirectRules || !nginxRedirectRules.length) {
     logger.warn(
       `Skip generating static redirects file: no redirects were generated.`,
     );
     return;
   }
 
-  // Write redirects.json
-  const jsonDestinationPath = path.join(
+  // Write redirect.conf
+  const configDestinationPath = path.join(
     url.fileURLToPath(outDir),
-    "redirects.json",
+    "redirect.conf",
   );
-  await fs.writeFile(jsonDestinationPath, JSON.stringify(redirectMap, null, 2));
-  logger.info(
-    `Generated ${Object.keys(redirectMap).length} redirects: ${jsonDestinationPath}`,
-  );
+  await fs.writeFile(configDestinationPath, nginxRedirectRules);
+  logger.info(`Generated static redirects file: ${configDestinationPath}`);
 }
 
 export default function staticRedirects() {

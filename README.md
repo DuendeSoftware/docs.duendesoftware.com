@@ -4,98 +4,35 @@ Welcome to the documentation of all [Duende Software](https://duendesoftware.com
 
 ## Getting Started
 
-You will need the following installed:
-* [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-* Node.js 22+
+You will need Node 22+ installed on your operating system and available in the PATH.
 
-### Quick Start (Astro only)
-
-```bash
-cd astro
-npm install
-npm run dev
-```
-
-### Development with .NET Aspire
-
-For local development with the full stack (Astro dev server + ASP.NET Core):
-
-```bash
-dotnet build.cs aspire
-```
-
-This starts:
-* **Astro dev server** at http://localhost:4321 (with hot reload)
-* **ASP.NET Core server** (for production-like static file serving)
-* **Aspire Dashboard** at https://localhost:17001 (for traces, logs, metrics)
+* Run `npm install` to restore all dependencies.
+* Use `npm run dev` to run the documentation site locally.
 
 Alternatively in VS Code, GitHub Codespaces, or WebStorm, you can use the devcontainer to get a development environment set up.
 
-## Build Commands
-
-All commands use the `build.cs` file-based build script and can be run from any directory in the repository:
-
-| Command | Action |
-| :------ | :----- |
-| `dotnet build.cs` | Build everything (Astro + .NET) |
-| `dotnet build.cs astro-build` | Build Astro to wwwroot |
-| `dotnet build.cs dotnet-build` | Build .NET solution |
-| `dotnet build.cs container` | Build container image |
-| `dotnet build.cs aspire` | Start Aspire dev environment |
-| `dotnet build.cs clean` | Clean all build outputs |
-| `dotnet build.cs verify-formatting` | Check .NET code formatting |
-| `dotnet build.cs --list-targets` | List all available targets |
-
-## Container
-
-The container is built using `dotnet publish /t:PublishContainer` (no Dockerfile required).
-
-### Building the container
-
-```bash
-dotnet build.cs container
-```
-
-### Running the container
-
-```bash
-docker run -p 8080:8080 docs
-```
-
-The site will be available at http://localhost:8080.
-
 ## Project Structure
 
-This project uses Astro + Starlight for the documentation site, served by ASP.NET Core in production.
+This project uses Astro + Starlight. You'll see the following folders and files:
 
 ```
 .
-├── build.cs                  # File-based build script
-├── astro/                    # Astro documentation site
-│   ├── public/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── content/
-│   │   │   └── docs/
-│   │   └── content.config.ts
-│   ├── astro.config.mjs
-│   ├── package.json
-│   └── tsconfig.json
-└── server/                   # ASP.NET Core server
-    ├── src/
-    │   ├── Docs.Web/             # Static file server
-    │   │   └── wwwroot/          # Astro build output (gitignored)
-    │   ├── Docs.AppHost/         # .NET Aspire orchestrator
-    │   └── Docs.ServiceDefaults/ # Shared configuration
-    └── tests/
-        └── Docs.Web.Tests/       # Integration tests
+├── public/
+├── src/
+│   ├── assets/
+│   ├── content/
+│   │   ├── docs/
+│   └── content.config.ts
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `astro/src/content/docs/` directory. Each file is exposed as a route based on its file name.
+Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
 
-Images can be added to `astro/src/assets/` and embedded in Markdown with a relative link.
+Images can be added to `src/assets/` and embedded in Markdown with a relative link.
 
-Static assets, like favicons, can be placed in the `astro/public/` directory.
+Static assets, like favicons, can be placed in the `public/` directory.
 
 ## ✍️ Authoring
 
@@ -126,7 +63,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * When linking to external resources, use the full URL using HTTPS.
 * You can link to header anchors using the `#` symbol, for example `[multiple authentication methods](/identityserver/ui/federation.md#multiple-authentication-methods-for-users)`.
 * Link relevant text. Prefer `learn more about [improving the sign-in experience]` over `click [here] to learn more`.
-* Run `dotnet build.cs link-check` to build Astro for link validation (actual lychee check runs in CI).
+* Run `npm run linkchecker` to validate all links (note this will ignore links to GitHub because of rate limits in place).
 * When a markdown link is long (75+ characters) or a link is repeated multiple times on a page, prefer moving the link to the bottom of the file and using markdown anchor syntax `[test.cs][repo-test-file]`
 
 ### Markdown Style
@@ -147,7 +84,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Make sure examples are runnable and complete. The goal is "Copy-paste from docs". Include namespaces, a result, and other prerequisites that are not obvious to someone new to the code.
 * Inline comments can be used to explain essential parts of the code. Expressive code can highlight line numbers, show diffs, and more.
 * Mention NuGet packages as a `bash` code block showing how to install it (`dotnet add package ...`). Link to the NuGet Gallery.
-* When referencing a property, field, class, or other symbol in text, use the `test` format instead of _test_.
+* When referencing a property, field, class, or other symbol in text, use the `test` format instead of *test*.
 * Values should also be back-ticked, especially HTTP Status codes like `404` or `401`.
 * Make sure code blocks start at the very first character space and don't have excessive starting padding.
 
@@ -158,29 +95,30 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Always have a `date` property to set the creation/significant update date for a page. Use the `YYYY-MM-DD` format.
 * Add the `sidebar` property and must include the `label` and `order`. The `label` is used in the menu, and should typically be shorter than the more descriptive `title`. For example:
 
-  ```yaml
-  title: "Using IdentityServer As A Federation Gateway"
-  sidebar:
-    label: "Federation"
-    order: 1
-  ```
+    ```yaml
+    title: "Using IdentityServer As A Federation Gateway"
+    sidebar:
+      label: "Federation"
+      order: 1
+    ```
 
 ## 🧞 Commands
 
-Astro commands are run from the `astro/` directory:
+All commands are run from the root of the project, from a terminal:
 
-| Command | Action |
-| :------ | :----- |
-| `npm install` | Installs dependencies |
-| `npm run dev` | Starts local dev server at `localhost:4321` |
-| `npm run build` | Build production site (use `dotnet build.cs astro-build` instead) |
-| `npm run preview` | Preview your build locally |
-| `npm run astro ...` | Run CLI commands like `astro add`, `astro check` |
+| Command                   | Action                                           |
+|:--------------------------|:-------------------------------------------------|
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm run linkchecker`     | Run lychee link checker                          |
 
 ## 🔀 Redirects
 
 There are two ways to restructure content:
-
 * Internal (move content around in the current structure)
 * External (move content outside the current structure)
 
@@ -195,6 +133,7 @@ title: Page title
 redirect_from:
   - /old-path-to/content
 ---
+
 Page content goes here
 ```
 
@@ -203,7 +142,7 @@ This will generate the page at the new location, and put a redirect to it at the
 ### External Restructuring
 
 When moving a page outside the structure, or you need a redirect to another location altogether,
-edit the `astro/astro.config.mjs` file and append a key/value pair to the `redirects` property:
+edit the `astro.config.mjs` file and append a key/vaklue pair to the `redirects` property:
 
 ```json
 redirects: {

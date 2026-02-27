@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 10 * * 0"
+  #push:
+  #  branches:
+  #    - main
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -18,25 +21,21 @@ jobs:
       issues: write
     name: Link Checker Job
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v2
         with:
-          dotnet-version: '10.0.x'
-          
-      - name: Setup Node.js
+          submodules: true
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          
-      - name: Build Astro
-        run: dotnet build.cs astro-build
-        
+          node-version: 22
+      - name: Run build
+        run: |
+          echo $PWD
+          ./build.sh
       - name: Link Checker
         uses: lycheeverse/lychee-action@v2
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          args: '--header ''x-origin-verify: ${{ secrets.ORIGIN_VERIFICATION_HEADER_VALUE }}'' --no-progress --max-concurrency 8 --skip-missing --accept 200,429 --exclude-path server/src/Docs.Web/wwwroot/_llms-txt --exclude-path server/src/Docs.Web/wwwroot/llms.txt --exclude-path server/src/Docs.Web/wwwroot/llms-full.txt --exclude-path server/src/Docs.Web/wwwroot/llms-small.txt --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude "docs.duendesoftware.com/404" --exclude sitemap --exclude "https://github.com/DuendeArchive/IdentityModel.AspNetCore/" --root-dir "$PWD/server/src/Docs.Web/wwwroot" server/src/Docs.Web/wwwroot/**'
+          args: "--header 'x-origin-verify: ${{ secrets.ORIGIN_VERIFICATION_HEADER_VALUE }}' --no-progress --max-concurrency 8 --skip-missing --accept 200,429 --exclude-path root/_llms-txt --exclude-path root/llms.txt --exclude-path root/llms-full.txt --exclude-path root/llms-small.txt --exclude-loopback --require-https --exclude sample.duendesoftware.com --exclude \"docs.duendesoftware.com/404\" --exclude sitemap --exclude \"https://github.com/DuendeArchive/IdentityModel.AspNetCore/\" --root-dir \"$PWD/root\" root/**"
           fail: true

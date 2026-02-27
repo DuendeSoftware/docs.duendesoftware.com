@@ -1,10 +1,8 @@
-# Astro build output
-astro/dist/
-astro/root/
-server/src/Docs.Web/wwwroot/
-
+# build output
+dist/
+root/
 # generated types
-astro/.astro/
+.astro/
 
 # dependencies
 node_modules/
@@ -30,41 +28,5 @@ pnpm-debug.log*
 opencode.json
 .idea/**/copilot.data.migration.*.xml
 
-# .NET
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
+# ides
 .vs/
-*.nupkg
-*.snupkg
-project.lock.json
-project.fragment.lock.json
-artifacts/
-
-# Rider
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
-
-# User-specific files
-*.rsuser
-
-# JetBrains Rider
-*.sln.iml
-
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
-
-# Windows
-Thumbs.db
-ehthumbs.db
-
-# Azure Functions
-local.settings.json
