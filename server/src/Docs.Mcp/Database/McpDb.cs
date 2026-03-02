@@ -1,7 +1,9 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Docs.Mcp.Database;
 
@@ -61,6 +63,15 @@ public sealed class McpDb(DbContextOptions<McpDb> options) : DbContext(options)
         // but we still need to configure the entities for querying
         modelBuilder.Entity<FTSDocsArticle>().HasNoKey();
         modelBuilder.Entity<FTSBlogArticle>().HasNoKey();
-        modelBuilder.Entity<FTSSampleProject>().HasNoKey();
+        modelBuilder.Entity<FTSSampleProject>(entity =>
+        {
+            entity.HasNoKey();
+
+            // FTS5 stores Files as a JSON text column — convert to/from List<string>
+            entity.Property(e => e.Files).HasConversion(
+                new ValueConverter<List<string>, string>(
+                    v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                    v => JsonSerializer.Deserialize<List<string>>(v, JsonSerializerOptions.Default) ?? new List<string>()));
+        });
     }
 }

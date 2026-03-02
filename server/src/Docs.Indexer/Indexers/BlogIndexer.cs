@@ -50,8 +50,7 @@ public sealed class BlogIndexer(McpDb db, HttpClient httpClient)
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"  Error indexing {item.Title}: {ex.Message}");
-                throw;
+                Console.WriteLine($"  Warning: Failed to index '{item.Title}': {ex.Message}");
             }
         }
 
