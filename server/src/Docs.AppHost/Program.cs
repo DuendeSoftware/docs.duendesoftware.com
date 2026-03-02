@@ -1,7 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Astro dev server (for local development only)
-_ = builder.AddJavaScriptApp("astro", "../../astro")
+_ = builder.AddJavaScriptApp("astro", "../../../astro")
     .WithHttpEndpoint(port: 4321, env: "PORT")
     .WithExternalHttpEndpoints();
 
