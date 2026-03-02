@@ -87,6 +87,8 @@ if (!string.IsNullOrEmpty(applicationVersion))
 app.UseDefaultFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
+    ServeUnknownFileTypes = true,
+    
     OnPrepareResponse = ctx =>
     {
         var path = ctx.File.Name;
