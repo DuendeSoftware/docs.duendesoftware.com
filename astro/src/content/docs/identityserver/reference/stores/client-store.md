@@ -24,7 +24,17 @@ public interface IClientStore
     /// Finds a client by id
     /// </summary>
     /// <param name="clientId">The client id</param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns>The client</returns>
-    Task<Client> FindClientByIdAsync(string clientId);
+    Task<Client?> FindClientByIdAsync(string clientId, CancellationToken ct);
+
+    /// <summary>
+    /// Returns all clients for enumeration purposes (e.g., conformance assessment).
+    /// </summary>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>An async enumerable of all clients.</returns>
+    IAsyncEnumerable<Client> GetAllClientsAsync(CancellationToken ct);
 }
 ```
+
+`GetAllClientsAsync` returns all configured clients as an async enumerable. Added in v8.0. Used by the [conformance report](/identityserver/diagnostics/conformance-report/) and configuration validation features. Custom `IClientStore` implementations must implement this method — see the [upgrade guide](/identityserver/upgrades/v7_4-to-v8_0/#iclientstoregettallclientsasync-now-required) for details.

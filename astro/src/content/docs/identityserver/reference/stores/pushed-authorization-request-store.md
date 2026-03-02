@@ -25,8 +25,9 @@ public interface IPushedAuthorizationRequestStore
     /// Stores the pushed authorization request.
     /// </summary>
     /// <param name="pushedAuthorizationRequest">The request.</param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns></returns>
-    Task StoreAsync(PushedAuthorizationRequest pushedAuthorizationRequest);
+    Task StoreAsync(PushedAuthorizationRequest pushedAuthorizationRequest, CancellationToken ct);
 
     /// <summary>
     /// Consumes the pushed authorization request, indicating that it should not
@@ -38,8 +39,9 @@ public interface IPushedAuthorizationRequestStore
     /// <param name="referenceValueHash">The hash of the reference value of the
     /// pushed authorization request. The reference value is the identifier
     /// within the request_uri parameter.</param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns></returns>
-    Task ConsumeByHashAsync(string referenceValueHash);
+    Task ConsumeByHashAsync(string referenceValueHash, CancellationToken ct);
 
     /// <summary>
     /// Gets the pushed authorization request.
@@ -47,10 +49,11 @@ public interface IPushedAuthorizationRequestStore
     /// <param name="referenceValueHash">The hash of the reference value of the
     /// pushed authorization request. The reference value is the identifier
     /// within the request_uri parameter.</param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns>The pushed authorization request, or null if the request does
     /// not exist or was previously consumed.
     /// </returns>
-    Task<PushedAuthorizationRequest?> GetByHashAsync(string referenceValueHash);
+    Task<PushedAuthorizationRequest?> GetByHashAsync(string referenceValueHash, CancellationToken ct);
 }
 ```
 
@@ -65,7 +68,7 @@ public class PushedAuthorizationRequest
     /// <summary>
     /// The hash of the identifier within this pushed request's request_uri
     /// value. Request URIs that IdentityServer produces take the form
-    /// urn:ietf:params:oauth:request_uri:{ReferenceValue}. 
+    /// urn:ietf:params:oauth:request_uri:{ReferenceValue}.
     /// </summary>
     public string ReferenceValueHash { get; set; }
 
@@ -76,13 +79,13 @@ public class PushedAuthorizationRequest
     /// subsequently after user interaction, such as login and/or consent occur.
     /// If the expiration time is exceeded before a response to the client can
     /// be produced, IdentityServer will raise an error, and the user will be
-    /// redirected to the IdentityServer error page. 
+    /// redirected to the IdentityServer error page.
     /// </summary>
 
     public DateTime ExpiresAtUtc { get; set; }
 
     /// <summary>
-    /// The data protected content of the pushed authorization request.  
+    /// The data protected content of the pushed authorization request.
     /// </summary>
     public string Parameters { get; set; }
 }

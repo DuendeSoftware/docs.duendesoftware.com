@@ -23,22 +23,25 @@ public interface ISigningKeyStore
     /// <summary>
     /// Returns all the keys in storage.
     /// </summary>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns></returns>
-    Task<IEnumerable<SerializedKey>> LoadKeysAsync();
+    Task<IEnumerable<SerializedKey>> LoadKeysAsync(CancellationToken ct);
 
     /// <summary>
     /// Persists new key in storage.
     /// </summary>
     /// <param name="key"></param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns></returns>
-    Task StoreKeyAsync(SerializedKey key);
+    Task StoreKeyAsync(SerializedKey key, CancellationToken ct);
 
     /// <summary>
     /// Deletes key from storage.
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns></returns>
-    Task DeleteKeyAsync(string id);
+    Task DeleteKeyAsync(string id, CancellationToken ct);
 }
 ```
 

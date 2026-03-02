@@ -23,32 +23,32 @@ public interface IBackChannelAuthenticationRequestStore
     /// <summary>
     /// Creates the request.
     /// </summary>
-    Task<string> CreateRequestAsync(BackChannelAuthenticationRequest request);
+    Task<string> CreateRequestAsync(BackChannelAuthenticationRequest request, CancellationToken ct);
 
     /// <summary>
     /// Gets the requests.
     /// </summary>
-    Task<IEnumerable<BackChannelAuthenticationRequest>> GetLoginsForUserAsync(string subjectId, string clientId = null);
+    Task<IEnumerable<BackChannelAuthenticationRequest>> GetLoginsForUserAsync(string subjectId, CancellationToken ct, string? clientId = null);
 
     /// <summary>
     /// Gets the request.
     /// </summary>
-    Task<BackChannelAuthenticationRequest> GetByAuthenticationRequestIdAsync(string requestId);
+    Task<BackChannelAuthenticationRequest?> GetByAuthenticationRequestIdAsync(string requestId, CancellationToken ct);
 
     /// <summary>
     /// Gets the request.
     /// </summary>
-    Task<BackChannelAuthenticationRequest> GetByInternalIdAsync(string id);
+    Task<BackChannelAuthenticationRequest?> GetByInternalIdAsync(string id, CancellationToken ct);
 
     /// <summary>
     /// Removes the request.
     /// </summary>
-    Task RemoveByInternalIdAsync(string id);
+    Task RemoveByInternalIdAsync(string id, CancellationToken ct);
 
     /// <summary>
     /// Updates the request.
     /// </summary>
-    Task UpdateByInternalIdAsync(string id, BackChannelAuthenticationRequest request);
+    Task UpdateByInternalIdAsync(string id, BackChannelAuthenticationRequest request, CancellationToken ct);
 }
 ```
 

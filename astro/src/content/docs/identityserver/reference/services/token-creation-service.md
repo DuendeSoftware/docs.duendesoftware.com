@@ -23,8 +23,9 @@ public interface ITokenCreationService
     /// Creates a token.
     /// </summary>
     /// <param name="token">The token description.</param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns>A protected and serialized security token</returns>
-    Task<string> CreateTokenAsync(Token token);
+    Task<string> CreateTokenAsync(Token token, CancellationToken ct);
 }
 ```
 
@@ -58,11 +59,11 @@ performance.
 ```csharp
 public class CustomTokenCreationService : DefaultTokenCreationService
 {
-    public CustomTokenCreationService(IClock clock, 
+    public CustomTokenCreationService(TimeProvider timeProvider,
         IKeyMaterialService keys,
         IdentityServerOptions options,
-        ILogger<DefaultTokenCreationService> logger) 
-        : base(clock, keys, options, logger)
+        ILogger<DefaultTokenCreationService> logger)
+        : base(timeProvider, keys, options, logger)
     {
     }
 

@@ -28,40 +28,40 @@ Many of the fundamental configuration settings can be set on the options. See th
 
 Several convenience methods are provided for registering custom stores:
 
-* **`AddClientStore<T>`**
+- **`AddClientStore<T>`**
 
   Registers a custom `IClientStore` implementation.
 
-* **`AddCorsPolicyService<T>`**
+- **`AddCorsPolicyService<T>`**
 
   Registers a custom `ICorsPolicyService` implementation.
 
-* **`AddResourceStore<T>`**
+- **`AddResourceStore<T>`**
 
   Registers a custom `IResourceStore` implementation.
 
-* **`AddIdentityProviderStore<T>`**
+- **`AddIdentityProviderStore<T>`**
 
   Registers a custom `IIdentityProviderStore` implementation.
 
 The [in-memory configuration stores](/identityserver/data/configuration.md#in-memory-stores) can be registered in DI
 with the following extension methods.
 
-* **`AddInMemoryClients`**
+- **`AddInMemoryClients`**
 
   Registers `IClientStore` and `ICorsPolicyService` implementations based on the in-memory collection of `Client`
   configuration objects.
 
-* **`AddInMemoryIdentityResources`**
+- **`AddInMemoryIdentityResources`**
 
   Registers `IResourceStore` implementation based on the in-memory collection of `IdentityResource` configuration
   objects.
 
-* **`AddInMemoryApiScopes`**
+- **`AddInMemoryApiScopes`**
 
   Registers `IResourceStore` implementation based on the in-memory collection of `ApiScope` configuration objects.
 
-* **`AddInMemoryApiResources`**
+- **`AddInMemoryApiResources`**
 
   Registers `IResourceStore` implementation based on the in-memory collection of `ApiResource` configuration objects.
 
@@ -70,29 +70,29 @@ with the following extension methods.
 Extension methods to
 enable [caching for configuration data](/identityserver/data/configuration.md#caching-configuration-data):
 
-* **`AddInMemoryCaching<T>`**
+- **`AddInMemoryCaching<T>`**
 
   To use any of the caches described below, an implementation of `ICache<T>` must be registered in the ASP.NET Core service provider.
   This API registers a default in-memory implementation of `ICache<T>` that's based on ASP.NET Core's `MemoryCache`.
 
-* **`AddClientStoreCache<T>`**
+- **`AddClientStoreCache<T>`**
   Registers a `IClientStore` decorator implementation which will maintain an in-memory cache of `Client` configuration
   objects.
   The cache duration is configurable on the `Caching` configuration options on the `IdentityServerOptions`.
 
-* **`AddResourceStoreCache<T>`**
+- **`AddResourceStoreCache<T>`**
 
   Registers a `IResourceStore` decorator implementation which will maintain an in-memory cache of `IdentityResource` and
   `ApiResource` configuration objects.
   The cache duration is configurable on the `Caching` configuration options on the `IdentityServerOptions`.
 
-* **`AddCorsPolicyCache<T>`**
+- **`AddCorsPolicyCache<T>`**
 
   Registers a `ICorsPolicyService` decorator implementation which will maintain an in-memory cache of the results of the
   CORS policy service evaluation.
   The cache duration is configurable on the `Caching` configuration options on the `IdentityServerOptions`.
 
-* **`AddIdentityProviderStoreCache<T>`**
+- **`AddIdentityProviderStoreCache<T>`**
 
   Registers a `IIdentityProviderStore` decorator implementation which will maintain an in-memory cache of
   `IdentityProvider` configuration objects.
@@ -106,7 +106,7 @@ Use of `TestUser` is similar to the use of the "in-memory" stores in that it is 
 developing, and/or testing.
 The use of `TestUser` is not recommended in production.
 
-* **`AddTestUsers`**
+- **`AddTestUsers`**
 
   Registers `TestUserStore` based on a collection of `TestUser` objects.
   `TestUserStore` is e.g. used by the default quickstart UI.
@@ -136,16 +136,16 @@ e.g. RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384 or ES512.
 
 You can configure the key material with the following methods:
 
-* **`AddSigningCredential`**
+- **`AddSigningCredential`**
 
   Adds a signing key that provides the specified key material to the various token creation/validation services.
 
-* **`AddDeveloperSigningCredential`**
+- **`AddDeveloperSigningCredential`**
 
   Creates temporary key material at startup time. This is for dev scenarios. The generated key will be persisted in the
   local directory by default (or just kept in memory).
 
-* **`AddValidationKey`**
+- **`AddValidationKey`**
 
   Adds a key for validating tokens. They will be used by the internal token validator and will show up in the discovery
   document.
@@ -154,73 +154,96 @@ You can configure the key material with the following methods:
 
 The following are convenient to add additional features to your IdentityServer.
 
-* **`AddExtensionGrantValidator`**
+- **`AddExtensionGrantValidator`**
 
   Adds an `IExtensionGrantValidator` implementation for use with extension grants.
 
-* **`AddSecretParser`**
+- **`AddSecretParser`**
 
   Adds an `ISecretParser` implementation for parsing client or API resource credentials.
 
-* **`AddSecretValidator`**
+- **`AddSecretValidator`**
 
   Adds an `ISecretValidator` implementation for validating client or API resource credentials against a credential
   store.
 
-* **`AddResourceOwnerValidator`**
+- **`AddResourceOwnerValidator`**
 
   Adds an `IResourceOwnerPasswordValidator` implementation for validating user credentials for the resource owner
   password credentials grant type.
 
-* **`AddProfileService`**
+- **`AddProfileService`**
 
   Adds an`IProfileService`
   implementation.
   The default implementation (found in `DefaultProfileService`) relies upon the authentication cookie as the only source
   of claims for issuing in tokens.
 
-* **`AddAuthorizeInteractionResponseGenerator`**
+- **`AddAuthorizeInteractionResponseGenerator`**
 
   Adds an `IAuthorizeInteractionResponseGenerator` implementation to customize logic at authorization endpoint for when
   a user must be shown a UI for error, login, consent, or any other custom page.
   The default implementation can be found in the `AuthorizeInteractionResponseGenerator` class, so consider deriving
   from this existing class if you need to augment the existing behavior.
 
-* **`AddCustomAuthorizeRequestValidator`**
+- **`AddCustomAuthorizeRequestValidator`**
 
   Adds an `ICustomAuthorizeRequestValidator` implementation to customize request parameter validation at the
   authorization endpoint.
 
-* **`AddCustomTokenRequestValidator`**
+- **`AddCustomTokenRequestValidator`**
 
   Adds an `ICustomTokenRequestValidator` implementation to customize request parameter validation at the token endpoint.
 
-* **`AddRedirectUriValidator`**
+- **`AddRedirectUriValidator`**
 
   Adds an `IRedirectUriValidator` implementation to customize redirect URI validation.
 
-* **`AddAppAuthRedirectUriValidator`**
+- **`AddAppAuthRedirectUriValidator`**
 
   Adds an "AppAuth" (OAuth 2.0 for Native Apps) compliant redirect URI validator (does strict validation but also
   allows `http://127.0.0.1` with random port).
 
-* **`AddJwtBearerClientAuthentication`**
+- **`AddJwtBearerClientAuthentication`**
 
   Adds support for client authentication using JWT bearer assertions.
 
-* **`AddMutualTlsSecretValidators`**
+- **`AddMutualTlsSecretValidators`**
 
   Adds the X509 secret validators for mutual TLS.
 
-* **`AddIdentityProviderConfigurationValidator`**
+- **`AddIdentityProviderConfigurationValidator`**
 
   Adds an IdentityProvider configuration validator.
 
-* **`AddBackchannelAuthenticationUserValidator`**
+- **`AddBackchannelAuthenticationUserValidator`**
 
   Adds the backchannel login user validator.
 
-* **`AddBackchannelAuthenticationUserNotificationService`**
+- **`AddBackchannelAuthenticationUserNotificationService`**
 
   Adds the backchannel login user validator.
 
+## SAML 2.0 :badge[v8.0]
+
+Extension methods for configuring [SAML 2.0 Identity Provider](/identityserver/saml/) support. Added in `v8.0`.
+
+- **`AddSaml`**
+
+  Adds SAML 2.0 Identity Provider services to IdentityServer and enables all SAML endpoints except IdP-initiated SSO.
+
+- **`AddSamlServiceProviderStore<T>`**
+
+  Registers a custom `ISamlServiceProviderStore` implementation.
+
+- **`AddInMemorySamlServiceProviders`**
+
+  Registers an `ISamlServiceProviderStore` backed by an in-memory collection of `SamlServiceProvider` configuration objects. Useful for development and testing.
+
+## Conformance Report :badge[v8.0]
+
+Added in `v8.0`.
+
+- **`AddConformanceReport`**
+
+  Adds the [conformance report](/identityserver/diagnostics/conformance-report/) service that assesses server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. Requires the `Duende.IdentityServer.ConformanceReport` NuGet package.
