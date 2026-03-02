@@ -8,7 +8,6 @@ tableOfContents:
   maxHeadingLevel: 4
 redirect_from:
   - /licensekey/
-  - /licenseKey/
   - /trial-mode/
   - /identityserver/v5/fundamentals/license_key/
   - /identityserver/v6/fundamentals/license_key/
