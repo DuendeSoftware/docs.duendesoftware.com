@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Docs.ServiceDefaults\Docs.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\dummy.txt" />
+  </ItemGroup>
+
 </Project>
