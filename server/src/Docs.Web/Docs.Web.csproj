@@ -20,7 +20,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.3.0-preview.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Docs.ServiceDefaults\Docs.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Docs.Mcp\Docs.Mcp.csproj" />
+  </ItemGroup>
+
+  <!-- Include MCP database in publish output -->
+  <ItemGroup>
+    <Content Include="data\**" CopyToOutputDirectory="PreserveNewest" Condition="Exists('data')" />
   </ItemGroup>
 
   <ItemGroup>

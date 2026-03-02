@@ -3,6 +3,8 @@
     <Project Path="src/Docs.ServiceDefaults/Docs.ServiceDefaults.csproj"/>
     <Project Path="src/Docs.Web/Docs.Web.csproj"/>
     <Project Path="src/Docs.AppHost/Docs.AppHost.csproj"/>
+    <Project Path="src/Docs.Mcp/Docs.Mcp.csproj"/>
+    <Project Path="src/Docs.Indexer/Docs.Indexer.csproj"/>
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Docs.Web.Tests/Docs.Web.Tests.csproj"/>
