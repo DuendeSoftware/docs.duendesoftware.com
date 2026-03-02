@@ -99,6 +99,8 @@ Static assets, like favicons, can be placed in the `astro/public/` directory.
 
 ## ✍️ Authoring
 
+The `astro/` folder has been configured as a VS Code and WebStorm project, which you can open from that location to work on content.
+
 Content can be authored in Markdown, in a `.md` or `.mdx` file. The Starlight documentation has some guidance on Markdown syntax, components, and more:
 
 * [Authoring Content in Markdown](https://starlight.astro.build/guides/authoring-content/)
