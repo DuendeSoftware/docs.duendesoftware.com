@@ -68,3 +68,6 @@ ehthumbs.db
 
 # Azure Functions
 local.settings.json
+
+# Duende
+mcp.db
