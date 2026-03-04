@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Docs.Indexer\Docs.Indexer.csproj" />
     <ProjectReference Include="..\Docs.Web\Docs.Web.csproj" />
   </ItemGroup>
 

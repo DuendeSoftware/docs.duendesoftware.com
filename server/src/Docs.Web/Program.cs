@@ -76,7 +76,12 @@ app.MapDefaultEndpoints();
 // Map MCP endpoint (only when MCP services are registered)
 if (mcpEnabled)
 {
+    app.Logger.LogInformation($"MCP endpoint enabled, for database at {mcpDatabasePath}");
     app.MapMcp("/mcp");
+}
+else 
+{
+    app.Logger.LogWarning("MCP endpoint disabled");
 }
 
 // Load redirect map from Astro-generated redirects.json

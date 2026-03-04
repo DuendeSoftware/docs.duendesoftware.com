@@ -33,8 +33,4 @@
     <Content Include="data\**" CopyToOutputDirectory="PreserveNewest" Condition="Exists('data')" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\dummy.txt" />
-  </ItemGroup>
-
 </Project>
