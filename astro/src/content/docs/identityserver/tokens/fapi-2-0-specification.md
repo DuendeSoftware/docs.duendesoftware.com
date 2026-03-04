@@ -158,7 +158,7 @@ Let's review the four elements that turn a client into a FAPI 2.0-compliant clie
 
 That's it. You now have a FAPI 2.0-compliant client.
 
-Now that our authorization server's client configuration is FAPI 2.0 compliant, we'll need our clients to comply with the requirements.
+Now that our authorization server's client configuration is FAPI 2.0 compliant, we'll need our APIs to comply with the requirements.
 
 ```csharp
 builder.Services.AddAuthentication()
