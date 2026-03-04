@@ -26,8 +26,12 @@ dotnet build.cs aspire
 
 This starts:
 * **Astro dev server** at http://localhost:4321 (with hot reload)
-* **ASP.NET Core server** (for production-like static file serving)
 * **Aspire Dashboard** at https://localhost:17001 (for traces, logs, metrics)
+
+In addition, you can start:
+* **Astro build** (build static files to wwwroot)
+* **MCP indexer** (for MCP server, indexes static files from wwwroot)
+* **ASP.NET Core server** (for production-like static file serving + MCP server when indexing has completed)
 
 Alternatively in VS Code, GitHub Codespaces, or WebStorm, you can use the devcontainer to get a development environment set up.
 
@@ -35,16 +39,17 @@ Alternatively in VS Code, GitHub Codespaces, or WebStorm, you can use the devcon
 
 All commands use the `build.cs` file-based build script and can be run from any directory in the repository:
 
-| Command | Action |
-| :------ | :----- |
-| `dotnet build.cs` | Build everything (Astro + .NET) |
-| `dotnet build.cs astro-build` | Build Astro to wwwroot |
-| `dotnet build.cs dotnet-build` | Build .NET solution |
-| `dotnet build.cs container` | Build container image |
-| `dotnet build.cs aspire` | Start Aspire dev environment |
-| `dotnet build.cs clean` | Clean all build outputs |
-| `dotnet build.cs verify-formatting` | Check .NET code formatting |
-| `dotnet build.cs --list-targets` | List all available targets |
+| Command                             | Action                          |
+|:------------------------------------|:--------------------------------|
+| `dotnet build.cs`                   | Build everything (Astro + .NET) |
+| `dotnet build.cs astro-build`       | Build Astro to wwwroot          |
+| `dotnet build.cs dotnet-build`      | Build .NET solution             |
+| `dotnet build.cs container`         | Build container image           |
+| `dotnet build.cs mcp-index`         | Build MCP index                 |
+| `dotnet build.cs aspire`            | Start Aspire dev environment    |
+| `dotnet build.cs clean`             | Clean all build outputs         |
+| `dotnet build.cs verify-formatting` | Check .NET code formatting      |
+| `dotnet build.cs --list-targets`    | List all available targets      |
 
 ## Container
 

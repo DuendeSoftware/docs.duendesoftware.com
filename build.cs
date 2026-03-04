@@ -14,6 +14,7 @@ while (!Directory.Exists(Path.Combine(repoRoot, ".git")))
 }
 
 var serverDir = Path.Combine(repoRoot, "server");
+var mcpdataDir = Path.Combine(serverDir, "src", "Docs.Web", "data");
 var wwwrootDir = Path.Combine(serverDir, "src", "Docs.Web", "wwwroot");
 
 // Target names
@@ -22,6 +23,7 @@ const string AstroBuild = "astro-build";
 const string DotnetBuild = "dotnet-build";
 const string DotnetTest = "dotnet-test";
 const string DotnetPublish = "dotnet-publish";
+const string McpIndex = "mcp-index";
 const string Build = "build";
 const string Container = "container";
 const string Aspire = "aspire";
@@ -68,12 +70,16 @@ Target(DotnetPublish, dependsOn: [Restore], () =>
     RunAsync("dotnet", "publish src/Docs.Web/Docs.Web.csproj -c Release --no-restore",
         workingDirectory: serverDir));
 
-Target(Build, dependsOn: [AstroBuild, DotnetBuild]);
+Target(McpIndex, dependsOn: [AstroBuild, Restore], () =>
+    RunAsync("dotnet", $"run --project src/Docs.Indexer/Docs.Indexer.csproj --no-restore -- --wwwroot \"{wwwrootDir}\" --output \"{mcpdataDir}/mcp.db\"",
+        workingDirectory: serverDir));
+
+Target(Build, dependsOn: [AstroBuild, McpIndex, DotnetBuild]);
 
 Target(Default, dependsOn: [Build, DotnetTest]);
 
 // Container (no Dockerfile needed!)
-Target(Container, dependsOn: [AstroBuild], () =>
+Target(Container, dependsOn: [AstroBuild, McpIndex], () =>
     RunAsync("dotnet", "publish src/Docs.Web/Docs.Web.csproj -c Release /t:PublishContainer",
         workingDirectory: serverDir));
 
