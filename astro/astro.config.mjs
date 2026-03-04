@@ -126,10 +126,19 @@ export default defineConfig({
           tag: "script",
           attrs: {
             id: "hs-script-loader",
-            src: "//js.hs-scripts.com/47428297.js",
+            src: "https://js.hs-scripts.com/47428297.js",
             "is:inline": true,
             defer: true,
             async: true,
+          },
+        },
+        // llms.txt
+        {
+          tag: "link",
+          attrs: {
+            rel: "alternate",
+            type: "text/markdown",
+            href: "/llms.txt"
           },
         },
       ],
