@@ -43,16 +43,20 @@ builder.Services.AddBff(options =>
     The ASP.NET environment names that enable the diagnostics endpoint. Defaults to "Development".
 
 * ***BackChannelHttpHandler*** 
+
     A HTTP message handler that's used to configure backchannel communication. Typically used during testing. Configuring this will automatically configure the BackChannelHttpHandler property in _OpenIDConnectOptions_ and also set it as the primary http message handler for retrieving the index.html. 
 
 * ***AutomaticallyRegisterBffMiddleware*** (added in 4.0)
+
     When applying BFF V4 multiple frontends, a lot of middlewares get automatically added to the pipeline. For example, the frontend selection middleware, the authentication handlers, etc. If you don't want this automatic behavior, then you can turn it off and register these middlewares manually. 
     
 
 * ***StaticAssetsClientName***
+
     If BFF is configured to automatically retrieve the `index.html`, or to proxy the static assets, it needs an HTTP client to do so. With this name, you can automatically configure this HTTP client in the `HttpClientFactory`. 
 
 * ***AllowedSilentLoginReferers*** 
+
     For silent login to work, you normally need to have the BFF backend and the frontend on the same origin. If you have a split host scenario, meaning the backend on a different origin (but same site) as the frontend, then you can use the referer header to differentiate which browser window to post the silent login results to. This array must then contain the list of allowed referer header values. 
 
 ## Paths
@@ -162,6 +166,7 @@ builder.Services.AddBlazorServer(opt =>
 The following options are available:
 
 * ***ServerStateProviderPollingInterval*** 
+
     The delay, in milliseconds, between polling requests by the
     BffServerAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
     ms.
@@ -180,13 +185,16 @@ builder.Services.AddBffBlazorClient(opt =>
 The following options are available:
 
 * ***RemoteApiPath*** 
+
     The base path to use for remote APIs.
 
 * ***RemoteApiBaseAddress*** 
+
     The base address to use for remote APIs. If unset (the default), the
     blazor hosting environment's base address is used.
  
 * ***StateProviderBaseAddress*** 
+
     The base address to use for the state provider's calls to the /bff/user
     endpoint. If unset (the default), the blazor hosting environment's base
     address is used.
@@ -197,6 +205,7 @@ The following options are available:
     start polling the /bff/user endpoint. Defaults to 1000 ms.
 
 * ***WebAssemblyStateProviderPollingInterval*** 
+
     The delay, in milliseconds, between polling requests by the
     BffClientAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
     ms.
