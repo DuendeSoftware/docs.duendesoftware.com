@@ -7,6 +7,8 @@ sidebar:
   order: 20
 ---
 
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+
 IdentityServer needs to know which SAML 2.0 Service Providers (SPs) are allowed to request
 authentication. This is managed through the `ISamlServiceProviderStore` interface.
 

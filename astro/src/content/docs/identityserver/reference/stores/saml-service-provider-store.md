@@ -10,6 +10,8 @@ sidebar:
     variant: tip
 ---
 
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+
 The `ISamlServiceProviderStore` interface is the contract for a service that retrieves
 [SAML 2.0 Service Provider](/identityserver/saml/service-providers/) configuration by entity identifier.
 It is part of the SAML 2.0 Identity Provider feature added in v8.0 (Enterprise Edition).

@@ -7,6 +7,8 @@ sidebar:
   order: 30
 ---
 
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+
 When SAML 2.0 support is enabled via `AddSaml()`, IdentityServer registers the following SAML
 protocol endpoints under the `/saml` path prefix.
 

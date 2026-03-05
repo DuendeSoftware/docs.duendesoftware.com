@@ -7,6 +7,8 @@ sidebar:
   order: 40
 ---
 
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+
 IdentityServer's SAML 2.0 Identity Provider feature exposes several extensibility interfaces that
 you can implement to customize SAML behavior. All interfaces are registered in the DI container
 and can be replaced with custom implementations.

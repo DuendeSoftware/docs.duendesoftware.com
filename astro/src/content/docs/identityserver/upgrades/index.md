@@ -17,6 +17,10 @@ Migrations.
 
 ## Upgrading from version 7.4 to 8.0
 
+:::note[Prerelease version]
+IdentityServer v8.0 is currently a prerelease version.
+:::
+
 See [IdentityServer v7.4 to v8.0](/identityserver/upgrades/v7_4-to-v8_0/).
 
 ## Upgrading from version 7.3 to 7.4

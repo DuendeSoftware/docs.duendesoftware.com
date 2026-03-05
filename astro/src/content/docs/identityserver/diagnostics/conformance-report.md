@@ -4,11 +4,13 @@ description: How to install, configure, and use the IdentityServer conformance r
 date: 2026-03-02
 sidebar:
   label: Conformance Report
-  order: 50
+  order: 60
   badge:
     text: v8.0
     variant: tip
 ---
+
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
 
 The conformance report assesses your IdentityServer deployment against
 [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1) and
@@ -20,7 +22,7 @@ generating an HTML report accessible via a protected endpoint.
 Install the NuGet package:
 
 ```bash title="Terminal"
-dotnet add package Duende.IdentityServer.ConformanceReport
+dotnet add package Duende.IdentityServer.ConformanceReport --prerelease
 ```
 
 ## Setup
