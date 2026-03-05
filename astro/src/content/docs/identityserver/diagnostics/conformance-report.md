@@ -137,7 +137,7 @@ The HTML report displays:
 
 The conformance report uses `IClientStore.GetAllClientsAsync` to enumerate all clients for
 assessment. Custom `IClientStore` implementations must implement this method (added in v8.0).
-See the [upgrade guide](/identityserver/upgrades/v7_4-to-v8_0/#iclientstoregettallclientsasync-now-required)
+See the [upgrade guide](/identityserver/upgrades/v7_4-to-v8_0.md#iclientstoregetallclientsasync-now-required)
 for details.
 
 ## Full Example
