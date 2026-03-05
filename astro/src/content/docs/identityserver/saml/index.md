@@ -90,10 +90,3 @@ SAML 2.0 endpoints are registered under the `/saml` path prefix:
 | Logout Callback   | `/saml/logout_callback` |
 
 See [SAML Endpoints](/identityserver/saml/endpoints/) for full details.
-
-## Further Reading
-
-* [SAML Configuration](/identityserver/saml/configuration/) — `SamlOptions`, `SamlServiceProvider` model, and enums
-* [Service Provider Store](/identityserver/saml/service-providers/) — how to register and manage SPs
-* [SAML Endpoints](/identityserver/saml/endpoints/) — protocol endpoint details
-* [SAML Extensibility](/identityserver/saml/extensibility/) — overridable services and interfaces
