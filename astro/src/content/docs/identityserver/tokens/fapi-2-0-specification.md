@@ -1,6 +1,6 @@
 ---
 title: FAPI 2.0
-description: Overview of the FAPI 2.0 implementation in Duende IdentityServer 7.3+ 
+description: Overview of the FAPI 2.0 implementation in Duende IdentityServer 7.3+
 sidebar:
   label: FAPI 2.0
   badge:
@@ -16,7 +16,7 @@ Duende IdentityServer implements the FAPI 2.0 BCP features so you can build, dep
 
 ## FAPI 2.0 Required Features
 
-To be considered a FAPI 2.0 compliant implementation, your implementation must enable features that provide a heightened security level for your applications. The list of requirements can be found in the specification, but are listed here as well: 
+To be considered a FAPI 2.0 compliant implementation, your implementation must enable features that provide a heightened security level for your applications. The list of requirements can be found in the specification, but are listed here as well:
 
 ### Authorization Servers
 
@@ -27,14 +27,14 @@ When customizing IdentityServer for FAPI 2.0 compliance, follow the rules listed
 3. Only support confidential clients.
 4. Only issue sender-constrained access tokens.
 5. Use one of the following methods for sender-constrained access tokens: mTLS and DPoP.
-6. Authenticate clients using one of the methods of mTLS or `private_key_jwt`. 
+6. Authenticate clients using one of the methods of mTLS or `private_key_jwt`.
 7. Shall not expose open redirectors.
 8. Only accept the issuer identifier value as a string in the `aud` claim received in client authentication assertions.
 9. Do not use refresh token rotation except in extraordinary circumstances.
 10. If using DPoP, use the server-provided nonce mechanism.
 11. Issue authorization codes with a maximum lifetime of 60 seconds.
 12. If using DPoP, shall support "Authorization Code Binding to DPoP Key".
-13. To accommodate clock offsets, shall accept JWTs with an `iat` or `nbf` timestamp between 0 and 10 seconds in the future, but reject JWTs with an `iat` or `nbf` timestamp greater than 60 seconds in the future. 
+13. To accommodate clock offsets, shall accept JWTs with an `iat` or `nbf` timestamp between 0 and 10 seconds in the future, but reject JWTs with an `iat` or `nbf` timestamp greater than 60 seconds in the future.
 14. Restrict the privileges associated with an access token to the minimum required for the particular application or use case.
 
 Luckily, many of these rules are enabled by default and do not require any code changes. Let's look at setting up your instance of IdentityServer for FAPI 2.0 compliance.
@@ -170,7 +170,7 @@ builder.Services.AddAuthentication()
 
         options.TokenValidationParameters.ValidTypes = ["at+jwt"];
     });
-    
+
 builder.Services.ConfigureDPoPTokensForScheme(JwtBearerDefaults.AuthenticationScheme,
     dpopOptions =>
     {
@@ -189,6 +189,18 @@ builder.Services.ConfigureDPoPTokensForScheme(JwtBearerDefaults.AuthenticationSc
 ```
 
 You are now FAPI 2.0 compliant and ready to secure your high-value assets with Duende IdentityServer.
+
+## HTTP 303 Redirects :badge[v8.0]
+
+FAPI 2.0 Section 5.3.2.2 requires that POST endpoints use HTTP 303 (See Other) redirects rather than HTTP 302. IdentityServer has supported this behavior via the `UseHttp303Redirects` option since v7.3.
+
+:::note
+As of v8.0, IdentityServer unconditionally uses HTTP 303 (See Other) redirects from POST endpoints, in compliance with FAPI 2.0 Section 5.3.2.2. The `UseHttp303Redirects` option has been removed — this behavior is always active.
+:::
+
+## Conformance Report :badge[v8.0]
+
+Starting in v8.0, IdentityServer includes a [conformance report](/identityserver/diagnostics/conformance-report/) that automatically assesses your server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. The report identifies configuration gaps and provides actionable recommendations.
 
 ## Private Key JWT vs. mTLS
 
