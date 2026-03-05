@@ -283,6 +283,7 @@ Login/logout related settings. Available on the `Authentication` property of the
 
 - **`CookieAuthenticationScheme`**
   Sets the cookie authentication scheme configured by the host used for interactive users. If not set, the scheme will be inferred from the host's default authentication scheme. This setting is typically used when AddPolicyScheme is used in the host as the default scheme.
+
 - **`CookieLifetime`**
 
   The authentication cookie lifetime (only effective if the IdentityServer-provided cookie handler is used). Defaults to 10 hours.
@@ -294,14 +295,6 @@ Login/logout related settings. Available on the `Authentication` property of the
 - **`CookieSameSiteMode`**
 
   Specifies the SameSite mode for the internal cookies. Defaults to None.
-
-- **`CookieName`** (added in `v8.0`)
-
-  Sets the name of the primary IdentityServer authentication cookie. Defaults to `"__Host-idsrv"`. The `__Host-` prefix enforces that the cookie is only sent over HTTPS, with `Path=/` and no `Domain` attribute. Set to `"idsrv"` to use the legacy cookie name when upgrading from a previous version.
-
-- **`ExternalCookieName`** (added in `v8.0`)
-
-  Sets the name of the external/temporary authentication cookie. Defaults to `"__Host-idsrv.external"`. The `__Host-` prefix enforces that the cookie is only sent over HTTPS, with `Path=/` and no `Domain` attribute. Set to `"idsrv.external"` to use the legacy cookie name when upgrading from a previous version.
 
 - **`RequireAuthenticatedUserForSignOutMessage`**
 

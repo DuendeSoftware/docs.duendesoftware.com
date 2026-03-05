@@ -16,8 +16,6 @@ When a user logs in, their identity is established and persisted across requests
 
 When using IdentityServer without ASP.NET Identity, the default cookie scheme is named `"idsrv"`, though we recommend using the constant `IdentityServerConstants.DefaultCookieAuthenticationScheme` in your code if you ever need it.
 
-Starting in **v8.0**, the default cookie name (not the scheme name) has changed to `"__Host-idsrv"` to improve security. The scheme name remains `"idsrv"`. See [Cookie Name Migration (v8.0)](#cookie-name-migration) below for upgrade instructions.
-
 The default cookie scheme is configured by default in `AddIdentityServer()`, which sets up the cookie authentication handler with this scheme name. This cookie is essential for:
 
 - maintaining the user's authenticated session
@@ -59,8 +57,6 @@ This allows your login logic to read the claims from the external provider befor
 
 IdentityServer always uses the `"idsrv.external"` scheme here, available in the `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant.
 
-Starting in **v8.0**, the default cookie _name_ for this scheme has changed to `"__Host-idsrv.external"` (previously `"idsrv.external"`). See [Cookie Name Migration (v8.0)](#cookie-name-migration) below for upgrade instructions.
-
 ### Check Session Cookie
 
 IdentityServer session management requires a separate cookie to monitor the session state without sending the large authentication cookie.
@@ -69,24 +65,6 @@ The [User Session Service](/identityserver/reference/services/user-session-servi
 - **Default Name:** `"idsrv.session"` (Constant: `IdentityServerConstants.DefaultCheckSessionCookieName`).
 
 Note this cookie is not marked as `HttpOnly`, so it can be accessed in client-side code. The JavaScript code that is required to check user sessions in the background also requires access to this cookie, and needs it to be `HttpOnly`.
-
-## Cookie Name Migration :badge[v8.0]
-
-In IdentityServer v8.0, the default cookie **names** changed to use the `__Host-` prefix for
-improved security. The `__Host-` prefix restricts cookies to HTTPS-only, `Path=/`, and no `Domain`
-attribute — providing defense-in-depth against cookie theft and session fixation attacks.
-
-| Cookie               | Old name (v7.x)  | New name (v8.0)         |
-| -------------------- | ---------------- | ----------------------- |
-| Primary auth cookie  | `idsrv`          | `__Host-idsrv`          |
-| External auth cookie | `idsrv.external` | `__Host-idsrv.external` |
-
-The authentication **scheme names** (`"idsrv"` and `"idsrv.external"`) are unchanged.
-
-A migration middleware is available to transparently re-issue old cookies under the new names,
-and the cookie names can be overridden via `AuthenticationOptions`. See the
-[upgrade guide](/identityserver/upgrades/v7_4-to-v8_0.md#cookie-names-changed-to-__host--prefix)
-for full migration instructions.
 
 ## Common Pitfalls
 
