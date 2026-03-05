@@ -16,7 +16,7 @@ When a user logs in, their identity is established and persisted across requests
 
 When using IdentityServer without ASP.NET Identity, the default cookie scheme is named `"idsrv"`, though we recommend using the constant `IdentityServerConstants.DefaultCookieAuthenticationScheme` in your code if you ever need it.
 
-Starting in **v8.0**, the default cookie name (not the scheme name) has changed to `"__Host-idsrv"` to improve security. The scheme name remains `"idsrv"`. See [Cookie Name Migration (v8.0)](#cookie-name-migration-v80) below for upgrade instructions.
+Starting in **v8.0**, the default cookie name (not the scheme name) has changed to `"__Host-idsrv"` to improve security. The scheme name remains `"idsrv"`. See [Cookie Name Migration (v8.0)](#cookie-name-migration) below for upgrade instructions.
 
 The default cookie scheme is configured by default in `AddIdentityServer()`, which sets up the cookie authentication handler with this scheme name. This cookie is essential for:
 
@@ -59,7 +59,7 @@ This allows your login logic to read the claims from the external provider befor
 
 IdentityServer always uses the `"idsrv.external"` scheme here, available in the `IdentityServerConstants.ExternalCookieAuthenticationScheme` constant.
 
-Starting in **v8.0**, the default cookie _name_ for this scheme has changed to `"__Host-idsrv.external"` (previously `"idsrv.external"`). See [Cookie Name Migration (v8.0)](#cookie-name-migration-v80) below for upgrade instructions.
+Starting in **v8.0**, the default cookie _name_ for this scheme has changed to `"__Host-idsrv.external"` (previously `"idsrv.external"`). See [Cookie Name Migration (v8.0)](#cookie-name-migration) below for upgrade instructions.
 
 ### Check Session Cookie
 
