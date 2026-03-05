@@ -59,16 +59,29 @@ The endpoint requires an authenticated user by default (see [Authorization](#aut
 
 `ConformanceReportOptions` controls the conformance report feature:
 
-| Property                        | Type                                  | Default                     | Description                                                      |
-| ------------------------------- | ------------------------------------- | --------------------------- | ---------------------------------------------------------------- |
-| `Enabled`                       | `bool`                                | `false`                     | Enable or disable the conformance report endpoint.               |
-| `EnableOAuth21Assessment`       | `bool`                                | `true`                      | Include OAuth 2.1 profile assessment in the report.              |
-| `EnableFapi2SecurityAssessment` | `bool`                                | `true`                      | Include FAPI 2.0 Security Profile assessment in the report.      |
-| `PathPrefix`                    | `string`                              | `"_duende"`                 | URL path prefix for the conformance endpoint (no leading slash). |
-| `ConfigureAuthorization`        | `Action<AuthorizationPolicyBuilder>?` | Requires authenticated user | Authorization policy for the HTML report endpoint.               |
-| `AuthorizationPolicyName`       | `string`                              | `"ConformanceReport"`       | ASP.NET Core authorization policy name used internally.          |
-| `HostCompanyName`               | `string?`                             | `null`                      | Optional company name shown in the report header.                |
-| `HostCompanyLogoUrl`            | `Uri?`                                | `null`                      | Optional company logo URL shown in the report header.            |
+* **`Enabled`**
+  Enable or disable the conformance report endpoint. Defaults to `false`.
+
+* **`EnableOAuth21Assessment`**
+  Include OAuth 2.1 profile assessment in the report. Defaults to `true`.
+
+* **`EnableFapi2SecurityAssessment`**
+  Include FAPI 2.0 Security Profile assessment in the report. Defaults to `true`.
+
+* **`PathPrefix`**
+  URL path prefix for the conformance endpoint (no leading slash). Defaults to `"_duende"`.
+
+* **`ConfigureAuthorization`**
+  Authorization policy for the HTML report endpoint. Defaults to require an authenticated user.
+
+* **`AuthorizationPolicyName`**
+  ASP.NET Core authorization policy name used internally. Defaults to `"ConformanceReport"`.
+
+* **`HostCompanyName`**
+  Optional company name shown in the report header. Defaults to `null`.
+
+* **`HostCompanyLogoUrl`**
+  Optional company logo URL shown in the report header. Defaults to `null`.
 
 ## Authorization
 

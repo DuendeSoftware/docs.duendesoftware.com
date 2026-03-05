@@ -40,19 +40,40 @@ builder.Services.AddIdentityServer(options =>
 });
 ```
 
-| Property                                   | Type                                 | Default                                   | Description                                                          |
-| ------------------------------------------ | ------------------------------------ | ----------------------------------------- | -------------------------------------------------------------------- |
-| `MetadataValidityDuration`                 | `TimeSpan?`                          | 7 days                                    | If set, the metadata document includes a `validUntil` attribute.     |
-| `WantAuthnRequestsSigned`                  | `bool`                               | `false`                                   | When `true`, the IdP requires all AuthnRequests to be signed.        |
-| `DefaultAttributeNameFormat`               | `string`                             | `uri`                                     | Default SAML attribute name format URI for attributes in assertions. |
-| `DefaultPersistentNameIdentifierClaimType` | `string`                             | `ClaimTypes.NameIdentifier`               | Claim type used to resolve a persistent NameID value.                |
-| `DefaultClaimMappings`                     | `ReadOnlyDictionary<string, string>` | (see below)                               | Maps OIDC claim types to SAML attribute names.                       |
-| `SupportedNameIdFormats`                   | `Collection<string>`                 | Email, Persistent, Transient, Unspecified | NameID formats advertised in metadata.                               |
-| `DefaultClockSkew`                         | `TimeSpan`                           | 5 minutes                                 | Clock skew tolerance for validating SAML message timestamps.         |
-| `DefaultRequestMaxAge`                     | `TimeSpan`                           | 5 minutes                                 | Maximum age for SAML AuthnRequests.                                  |
-| `DefaultSigningBehavior`                   | `SamlSigningBehavior`                | `SignAssertion`                           | Default signing behavior for SAML responses.                         |
-| `MaxRelayStateLength`                      | `int`                                | 80                                        | Maximum length (in UTF-8 bytes) of the RelayState parameter.         |
-| `UserInteraction`                          | `SamlUserInteractionOptions`         | (see below)                               | Configures SAML endpoint paths.                                      |
+Available options:
+
+* **`MetadataValidityDuration`**
+  If set, the metadata document includes a `validUntil` attribute. Defaults to 7 days.
+
+* **`WantAuthnRequestsSigned`**
+  When `true`, the IdP requires all AuthnRequests to be signed. Defaults to `false`.
+
+* **`DefaultAttributeNameFormat`**
+  Default SAML attribute name format URI for attributes in assertions. Defaults to `uri`.
+
+* **`DefaultPersistentNameIdentifierClaimType`**
+  Claim type used to resolve a persistent NameID value. Defaults to `ClaimTypes.NameIdentifier`.
+
+* **`DefaultClaimMappings`**
+  Maps OIDC claim types to SAML attribute names. See below.
+
+* **`SupportedNameIdFormats`**
+  Supported NameID formats for the IdP. Defaults to `[ Email, Persistent, Transient, Unspecified ]`.
+
+* **`DefaultClockSkew`**
+  Clock skew tolerance for validating SAML message timestamps. Defaults to 5 minutes.
+
+* **`DefaultRequestMaxAge`**
+  Maximum age for SAML AuthnRequests. Defaults to 5 minutes.
+
+* **`DefaultSigningBehavior`**
+  Default signing behavior for SAML responses. Defaults to `SignAssertion`.
+
+* **`MaxRelayStateLength`**
+  Maximum length (in UTF-8 bytes) of the RelayState parameter. Defaults to 80.
+
+* **`UserInteraction`**
+  Configures SAML endpoint paths. See below.
 
 ### Default Claim Mappings
 
@@ -74,15 +95,26 @@ via `SamlOptions.DefaultClaimMappings` or per Service Provider via
 `SamlUserInteractionOptions` configures the URL paths for all SAML endpoints. All paths are
 relative to the application root.
 
-| Property                   | Default            | Description                                        |
-| -------------------------- | ------------------ | -------------------------------------------------- |
-| `Route`                    | `/saml`            | Base route prefix for all SAML endpoints.          |
-| `Metadata`                 | `/metadata`        | Path suffix for the metadata endpoint.             |
-| `SignInPath`               | `/signin`          | Path suffix for the SP-initiated sign-in endpoint. |
-| `SignInCallbackPath`       | `/signin_callback` | Path suffix for the sign-in callback endpoint.     |
-| `IdpInitiatedPath`         | `/idp-initiated`   | Path suffix for the IdP-initiated SSO endpoint.    |
-| `SingleLogoutPath`         | `/logout`          | Path suffix for the single logout endpoint.        |
-| `SingleLogoutCallbackPath` | `/logout_callback` | Path suffix for the logout callback endpoint.      |
+* **`Route`**
+  Base route prefix for all SAML endpoints. Defaults to `/saml`.
+
+* **`Metadata`**
+  Path suffix for the metadata endpoint. Defaults to `/metadata`.
+
+* **`SignInPath`**
+  Path suffix for the SP-initiated sign-in endpoint. Defaults to `/signin`.
+
+* **`SignInCallbackPath`**
+  Path suffix for the sign-in callback endpoint. Defaults to `/signin_callback`.
+
+* **`IdpInitiatedPath`**
+  Path suffix for the IdP-initiated SSO endpoint. Defaults to `/idp-initiated`.
+
+* **`SingleLogoutPath`**
+  Path suffix for the single logout endpoint. Defaults to `/logout`.
+
+* **`SingleLogoutCallbackPath`**
+  Path suffix for the logout callback endpoint. Defaults to `/logout_callback`.
 
 The full URL for each endpoint is formed by combining the base URL of the IdentityServer host with
 the `Route` prefix and the individual path suffix. For example, the metadata endpoint is available
@@ -92,27 +124,64 @@ at `https://your-idp.example.com/saml/metadata` by default.
 
 `SamlServiceProvider` represents a registered SAML 2.0 Service Provider configuration.
 
-| Property                                   | Type                             | Default              | Description                                                                          |
-| ------------------------------------------ | -------------------------------- | -------------------- | ------------------------------------------------------------------------------------ |
-| `EntityId`                                 | `string`                         | (required)           | The SP's entity identifier URI, as declared in its SAML metadata.                    |
-| `DisplayName`                              | `string`                         | (required)           | Human-readable name shown in logs and consent screens.                               |
-| `Description`                              | `string?`                        | `null`               | Optional description.                                                                |
-| `Enabled`                                  | `bool`                           | `true`               | When `false`, all SAML requests from this SP are rejected.                           |
-| `ClockSkew`                                | `TimeSpan?`                      | `null`               | Per-SP clock skew override. Uses `SamlOptions.DefaultClockSkew` when `null`.         |
-| `RequestMaxAge`                            | `TimeSpan?`                      | `null`               | Per-SP request maximum age. Uses `SamlOptions.DefaultRequestMaxAge` when `null`.     |
-| `AssertionConsumerServiceUrls`             | `ICollection<Uri>`               | (required)           | ACS URLs where SAML responses will be delivered. At least one is required.           |
-| `AssertionConsumerServiceBinding`          | `SamlBinding`                    | —                    | SAML binding for the ACS (`HttpPost` or `HttpRedirect`).                             |
-| `SingleLogoutServiceUrl`                   | `SamlEndpointType?`              | `null`               | SP's Single Logout Service endpoint. Required for SLO support.                       |
-| `RequireSignedAuthnRequests`               | `bool`                           | `false`              | When `true`, unsigned AuthnRequests from this SP are rejected.                       |
-| `SigningCertificates`                      | `ICollection<X509Certificate2>?` | `null`               | Certificates used to verify SP-signed messages.                                      |
-| `EncryptionCertificates`                   | `ICollection<X509Certificate2>?` | `null`               | Certificates used to encrypt assertions for this SP.                                 |
-| `EncryptAssertions`                        | `bool`                           | `false`              | When `true`, assertions are encrypted using `EncryptionCertificates`.                |
-| `RequireConsent`                           | `bool`                           | `false`              | When `true`, the user is always shown a consent screen.                              |
-| `AllowIdpInitiated`                        | `bool`                           | `false`              | When `true`, IdP-initiated SSO is allowed for this SP.                               |
-| `ClaimMappings`                            | `IDictionary<string, string>`    | `{}`                 | Per-SP claim-to-attribute mappings that override `SamlOptions.DefaultClaimMappings`. |
-| `DefaultNameIdFormat`                      | `string?`                        | `urn:...unspecified` | Default NameID format to use when the SP does not specify one.                       |
-| `DefaultPersistentNameIdentifierClaimType` | `string?`                        | `null`               | Per-SP override for the claim type used to resolve a persistent NameID.              |
-| `SigningBehavior`                          | `SamlSigningBehavior?`           | `null`               | Per-SP signing behavior. Uses `SamlOptions.DefaultSigningBehavior` when `null`.      |
+Available options:
+
+* **`EntityId`**
+  The SP's entity identifier URI, as declared in its SAML metadata. Required.
+
+* **`DisplayName`**
+  Human-readable name shown in logs and consent screens. Required.
+
+* **`Description`**
+  Optional description. Defaults to `null`.
+
+* **`Enabled`**
+  When `false`, all SAML requests from this SP are rejected. Defaults to `true`.
+
+* **`ClockSkew`**
+  Per-SP clock skew override. Uses `SamlOptions.DefaultClockSkew` when `null`. Defaults to `null`.
+
+* **`RequestMaxAge`**
+  Per-SP request maximum age. Uses `SamlOptions.DefaultRequestMaxAge` when `null`. Defaults to `null`.
+
+* **`AssertionConsumerServiceUrls`**
+  ACS URLs where SAML responses will be delivered. At least one is required.
+
+* **`AssertionConsumerServiceBinding`**
+  SAML binding for the ACS (`HttpPost` or `HttpRedirect`).
+
+* **`SingleLogoutServiceUrl`**
+  SP's Single Logout Service endpoint. Required for SLO support. Defaults to `null`.
+
+* **`RequireSignedAuthnRequests`**
+  When `true`, unsigned AuthnRequests from this SP are rejected. Defaults to `false`.
+
+* **`SigningCertificates`**
+  Certificates used to verify SP-signed messages. Defaults to `null`.
+
+* **`EncryptionCertificates`**
+  Certificates used to encrypt assertions for this SP. Defaults to `null`.
+
+* **`EncryptAssertions`**
+  When `true`, assertions are encrypted using `EncryptionCertificates`. Defaults to `false`.
+
+* **`RequireConsent`**
+  When `true`, the user is always shown a consent screen. Defaults to `false`.
+
+* **`AllowIdpInitiated`**
+  When `true`, IdP-initiated SSO is allowed for this SP. Defaults to `false`.
+
+* **`ClaimMappings`**
+  Per-SP claim-to-attribute mappings that override `SamlOptions.DefaultClaimMappings`. Defaults to `{}`.
+
+* **`DefaultNameIdFormat`**
+  Default NameID format to use when the SP does not specify one. Defaults to `urn:...unspecified`.
+
+* **`DefaultPersistentNameIdentifierClaimType`**
+  Per-SP override for the claim type used to resolve a persistent NameID. Defaults to `null`.
+
+* **`SigningBehavior`**
+  Per-SP signing behavior. Uses `SamlOptions.DefaultSigningBehavior` when `null`. Defaults to `null`.
 
 ## Enums
 

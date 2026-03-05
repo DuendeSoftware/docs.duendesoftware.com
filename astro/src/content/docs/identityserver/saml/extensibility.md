@@ -5,6 +5,9 @@ date: 2026-03-02
 sidebar:
   label: Extensibility
   order: 40
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 2
 ---
 
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
@@ -77,7 +80,8 @@ flows.
 ```csharp
 public interface ISamlInteractionService
 {
-    Task<SamlAuthenticationRequest?> GetAuthenticationRequestContextAsync(CancellationToken ct = default);
+    Task<SamlAuthenticationRequest?> GetAuthenticationRequestContextAsync(
+        CancellationToken ct = default);
 
     Task StoreRequestedAuthnContextResultAsync(
         bool requestedAuthnContextRequirementsWereMet,
