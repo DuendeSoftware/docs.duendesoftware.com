@@ -192,11 +192,9 @@ You are now FAPI 2.0 compliant and ready to secure your high-value assets with D
 
 ## HTTP 303 Redirects :badge[v8.0]
 
-FAPI 2.0 Section 5.3.2.2 requires that POST endpoints use HTTP 303 (See Other) redirects rather than HTTP 302. IdentityServer has supported this behavior via the `UseHttp303Redirects` option since v7.3.
+FAPI 2.0 Section 5.3.2.2 requires that POST endpoints use HTTP 303 (See Other) redirects rather than HTTP 302.
 
-:::note
-As of v8.0, IdentityServer unconditionally uses HTTP 303 (See Other) redirects from POST endpoints, in compliance with FAPI 2.0 Section 5.3.2.2. The `UseHttp303Redirects` option has been removed — this behavior is always active.
-:::
+As of v8.0, IdentityServer unconditionally uses HTTP 303 (See Other) redirects from POST endpoints, in compliance with FAPI 2.0 Section 5.3.2.2.
 
 ## Conformance Report :badge[v8.0]
 
