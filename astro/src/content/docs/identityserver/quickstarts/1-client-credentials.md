@@ -430,7 +430,7 @@ Console.WriteLine(tokenResponse.AccessToken);
 ```
 
 :::note
-Copy and paste the access token from the console to [jwt.ms](https://jwt.ms) to
+Copy and paste the access token from the console to [jwt.me](https://jwt.me) to
 inspect the raw token.
 :::
 

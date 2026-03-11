@@ -371,7 +371,7 @@ contents of the cookie.
 As you can see, the cookie has two parts: the claims of the user and some
 metadata in the properties. This metadata also contains the original
 access and id tokens issued by `IdentityServer`. Feel free to copy these tokens
-to [jwt.ms](https://jwt.ms) to inspect their content.
+to [jwt.me](https://jwt.me) to inspect their contents.
 
 ## Adding Sign-out
 
