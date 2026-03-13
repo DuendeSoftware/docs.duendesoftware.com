@@ -7,7 +7,7 @@ sidebar:
 ---
 
 It's possible to configure frontends for the BFF via `IConfiguration`. This enables dynamic loading / changing of frontends, 
-including their OpenID Connect configuration and BFF Configuration. 
+including their OpenID Connect configuration, BFF Configuration, and Remote APIs. 
 
 ```csharp {5}
 var bffConfig = new ConfigurationBuilder()
@@ -24,15 +24,15 @@ The configuration supports dynamic reloading (so any new frontend added / remove
 
 - `defaultOidcSettings`
   OIDC settings applied globally to all frontends unless overridden.  
-  Type: OidcConfiguration object (see below for properties).
+  Type: OidcConfiguration object ([see below](#oidcconfiguration-json-properties)).
 
 - `defaultCookieSettings`
   Cookie settings applied globally to all frontends unless overridden.  
-  Type: CookieConfiguration object (properties depend on your implementation).
+  Type: CookieConfiguration object ([see below](#cookieconfiguration-json-properties)).
 
 - `frontends`
   Dictionary of frontend configurations.  
-  Each key is a frontend name, and the value is a BffFrontendConfiguration object (see below).
+  Each key is a frontend name, and the value is a BffFrontendConfiguration object ([see below](#bfffrontendconfiguration-json-properties)).
 
 ---
 
@@ -61,14 +61,15 @@ The configuration supports dynamic reloading (so any new frontend added / remove
 
 - `oidc`
   OIDC settings specific to this frontend.  
-  Type: OidcConfiguration object (see below).
+  Type: OidcConfiguration object ([see below](#oidcconfiguration-json-properties)).
 
 - `cookies`
   Cookie settings specific to this frontend.  
-  Type: CookieConfiguration object (see below)
+  Type: CookieConfiguration object ([see below](#cookieconfiguration-json-properties)).
 
 - `remoteApis`
-  Remote APIs for this frontend. (see below)
+  Remote APIs for this frontend.
+  Type: RemoteApiConfiguration object. ([see below](#remoteapiconfiguration-json-properties)).
 
 ### RemoteApiConfiguration JSON Properties
 
@@ -89,7 +90,7 @@ The configuration supports dynamic reloading (so any new frontend added / remove
   String. The type name of the access token retriever to use for this remote API.
 
 - `userAccessTokenParameters`
-  Object. Parameters for retrieving a user access token (see below).
+  Object. Parameters for retrieving a user access token ([see below](#useraccesstokenparameters-json-properties)).
 
 - `activityTimeout`
   String. How long a request is allowed to remain idle between operations before being canceled.  
@@ -157,7 +158,7 @@ The configuration supports dynamic reloading (so any new frontend added / remove
   Boolean. Indicates whether the cookie is inaccessible by client-side script. Defaults to true. 
 
 - `sameSite`
-  String. The SameSite attribute of the cookie.  Defaults to strictg.  
+  String. The SameSite attribute of the cookie.  Defaults to `"Strict"`.  
   Possible values: `"None"`, `"Lax"`, `"Strict"`
 
 - `securePolicy`
@@ -195,7 +196,14 @@ The configuration supports dynamic reloading (so any new frontend added / remove
       "oidc": {
         "clientId": "frontend1-client",
         "scope": ["openid", "profile", "email"]
-      }
+      },
+      "remoteApis": [
+        {
+          "pathMatch": "/todos",
+          "targetUri": "https://localhost:5020/todos/",
+          "requiredTokenType": "User"
+        }
+      ]
     }
   }
 }
