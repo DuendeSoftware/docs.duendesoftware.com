@@ -51,7 +51,7 @@ both are combined with a `ClientId`.
 
 ## ClientAssertionFactory
 
-*Added in IdentityModel 7.2.0*
+*Added in `Duende.IdentityModel` 7.2.0*
 
 The `ClientAssertionFactory` property accepts a `Func<Task<ClientAssertion>>`
 — a factory function that creates a **fresh** `ClientAssertion` on demand. This
