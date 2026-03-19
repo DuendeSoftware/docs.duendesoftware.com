@@ -97,7 +97,7 @@ takes precedence during request preparation.
 
 Both the `ClientAssertion` and `ClientAssertionFactory` properties exist on
 `ProtocolRequest` to support
-[Duende.IdentityModel.OidcClient](/identitymodel-oidcclient/). The OidcClient
+[`Duende.IdentityModel.OidcClient`](/identitymodel-oidcclient/). The OidcClient
 library builds on IdentityModel's protocol requests internally, and when
 configured with client assertion-based authentication, it sets these properties
 on the underlying requests it creates.
