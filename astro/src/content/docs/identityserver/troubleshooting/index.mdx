@@ -304,25 +304,25 @@ When dealing with external authentication, you may want to implement `OnTicketRe
 ```csharp
 // Program.cs
 services.AddAuthentication()
-.AddOpenIdConnect("oidc", options =>
-{
-  ...
-
-  options.Events = new OpenIdConnectEvents()
+  .AddOpenIdConnect("oidc", options =>
   {
-      OnTicketReceived = context =>
-      {
-          var identities = context.Principal?.Identities ?? Enumerable.Empty<ClaimsIdentity>();
-          foreach (var identity in identities)
-          {
-              var removedClaim = identity.FindFirst("unused-custom-claim");
-              _ = identity.TryRemoveClaim(removedClaim);
-          }
-
-          return Task.CompletedTask;
-      }
-  };
-});
+    // ...
+  
+    options.Events = new OpenIdConnectEvents()
+    {
+        OnTicketReceived = context =>
+        {
+            var identities = context.Principal?.Identities ?? Enumerable.Empty<ClaimsIdentity>();
+            foreach (var identity in identities)
+            {
+                var removedClaim = identity.FindFirst("unused-custom-claim");
+                _ = identity.TryRemoveClaim(removedClaim);
+            }
+  
+            return Task.CompletedTask;
+        }
+    };
+  });
 ```
 
 ### Use Server-side Sessions
