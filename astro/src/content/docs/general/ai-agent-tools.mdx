@@ -1,0 +1,268 @@
+---
+title: "AI Agent Skills and MCP Server"
+description: "Enhance your AI coding assistant with Duende-specific knowledge using Agent Skills for domain expertise and an MCP server for documentation and samples retrieval."
+date: 2026-03-23
+sidebar:
+  label: "AI Agent Tools"
+  order: 5
+---
+
+import { LinkCard, CardGrid, TabItem, Tabs } from "@astrojs/starlight/components";
+
+When you use AI coding assistants with Duende products, you may find that general-purpose models lack deep expertise on Duende-specific configuration patterns, protocol nuances, and production best practices. Generic responses can miss critical details, like how to configure refresh token rotation, set up a federation gateway, or wire IdentityServer into .NET Aspire.
+
+To address this, Duende provides two complementary tools that give your AI coding assistant specialized knowledge: **Duende Agent Skills** and the **Duende Documentation MCP Server**. You can use either or both, depending on your workflow.
+
+Agent Skills and the MCP server address different aspects of the same problem and work well together:
+
+* **Agent Skills** provide *knowledge*: structured, curated guidance on *what* to look up, *when*, and *how* to apply it. They are static files that run locally in your development environment. When your AI assistant encounters an identity-related task, skills give it the judgment to produce accurate, Duende-specific answers.
+* **MCP Server** provides *tools*: search, fetch, and sample retrieval against the full Duende documentation, blog, and sample code. It runs as a local server process and gives the AI assistant direct access to the latest published content.
+
+Think of skills as the expertise and the MCP server as the reference library. Skills help the AI *know what to do*; the MCP server helps it *look things up*. Together, they give your AI assistant both deep domain knowledge and access to up-to-date authoritative content.
+
+## Which Tool Should You Use?
+
+Choose the approach that fits your workflow:
+
+* **Want domain expertise baked into every response?** Install Agent Skills. Your AI assistant will automatically use the relevant skill when it encounters identity-related tasks.
+* **Want to search and fetch the latest docs and samples?** Register the MCP Server. Your AI assistant gains tools to look up current documentation on demand.
+* **Want both?** Install both. They are independent and complementary: skills provide structured knowledge while the MCP server provides live content retrieval.
+
+<CardGrid>
+  <LinkCard
+    description="Installation instructions, skill catalog, and benchmarks"
+    href="https://github.com/DuendeSoftware/duende-skills"
+    title="Get Started with Agent Skills"
+    target="_blank"
+  />
+  <LinkCard
+    description="Setup instructions for VS Code, Rider, and Claude Code"
+    href="https://github.com/DuendeSoftware/products/blob/main/docs-mcp/README.md"
+    title="Get Started with the MCP Server"
+    target="_blank"
+  />
+</CardGrid>
+
+## Agent Skills
+
+Duende IdentityServer Agent Skills are a set of `SKILL.md` files following the open [Agent Skills format](https://agentskills.io/). Each skill is a structured knowledge module covering a specific area of identity and access management.
+
+### What They Cover
+
+The skills library includes a number of skills and specialized agents across these areas:
+
+* **IdentityServer configuration and hosting**: setup, middleware pipeline, clients, resources, scopes, signing credentials, server-side sessions, Dynamic Client Registration (DCR)
+* **Token management**: token types, refresh token rotation, token exchange, DPoP, mTLS, Pushed Authorization Requests (PAR), FAPI 2.0 compliance
+* **API protection**: JWT bearer authentication, reference token introspection, scope-based authorization, proof-of-possession
+* **UI flows**: login, logout, consent, error pages, federation gateways, external providers, Home Realm Discovery
+* **ASP.NET Core authentication and authorization**: OIDC, JWT Bearer, cookies, policies, claims-based authorization
+* **Duende BFF**: Backend-for-Frontend security for SPAs, session management, API proxying
+* **Deployment and operations**: reverse proxy configuration, data protection, health checks, OpenTelemetry, key management, SAML 2.0
+* **Testing**: integration testing with `WebApplicationFactory`, mock token issuance, protocol validation
+* **Specialized agents**: an IdentityServer specialist and an OAuth/OIDC specialist for complex troubleshooting
+
+:::note
+Agent Skills focus on **identity and security**. For general .NET development skills (C# coding standards, EF Core, dependency injection, concurrency patterns, .NET Aspire, and more), consider exploring [dotnet-skills](https://github.com/Aaronontheweb/dotnet-skills) alongside Duende skills. The two sets are complementary with no overlap.
+:::
+
+### Setup
+
+Clone the [Duende Agent Skills](https://github.com/DuendeSoftware/duende-skills) repository and copy the skill folders into the skills directory for your AI coding assistant.
+
+Each skill is a folder containing a `SKILL.md` file. Copy the individual skill folders into the path your AI assistant expects:
+
+| AI Coding Assistant | Skills Path                  |
+|:--------------------|:-----------------------------|
+| GitHub Copilot      | `.github/skills/`            |
+| Claude Code         | `.claude/skills/`            |
+| OpenCode            | `~/.config/opencode/skills/` |
+| Cursor              | `.cursor/skills/`            |
+| Gemini CLI          | `.gemini/skills/`            |
+| Codex CLI           | `.codex/skills/`             |
+
+For example, to set up skills for GitHub Copilot:
+
+<Tabs>
+  <TabItem label="Windows (PowerShell)">
+    ```powershell title="PowerShell"
+    git clone https://github.com/DuendeSoftware/duende-skills.git
+    New-Item -ItemType Directory -Force -Path .github\skills
+    Copy-Item -Recurse duende-skills\skills\* .github\skills\
+    ```
+  </TabItem>
+  <TabItem label="macOS / Linux">
+    ```bash title="Terminal"
+    git clone https://github.com/DuendeSoftware/duende-skills.git
+    mkdir -p .github/skills
+    cp -r duende-skills/skills/* .github/skills/
+    ```
+  </TabItem>
+</Tabs>
+
+Adjust the target path for your AI coding assistant (see the table above). For example, replace `.github/skills/` with `.claude/skills/` for Claude Code, or `~/.config/opencode/skills/` for OpenCode.
+
+Once the skill folders are in place, your AI assistant discovers and loads them automatically. No further configuration is needed. When your assistant encounters an identity-related task like configuring token lifetimes or setting up an external provider, it loads the relevant skill without any explicit prompting from you.
+
+### Verify It Works
+
+Ask your AI assistant an identity-specific question, for example: `How do I configure refresh token rotation in IdentityServer?`. If the skills are loaded correctly, the response references Duende-specific configuration and mentions IdentityServer options like `RefreshTokenUsage`.
+
+### Measured Impact
+
+Every skill is evaluated using realistic prompts with concrete assertions. In benchmarks, AI responses with skills loaded significantly outperform baseline responses, with the biggest gains in deeply Duende-specific areas like UI flows, API protection, and SAML configuration.
+
+See the repository for the latest benchmark results, or run them against your model of choice.
+
+<LinkCard
+  description="Installation instructions, full skill catalog, and benchmark results"
+  href="https://github.com/DuendeSoftware/duende-skills"
+  title="Duende Agent Skills"
+  target="_blank"
+/>
+
+## MCP Server
+
+The Duende Documentation MCP Server implements the open [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) to give AI coding assistants direct access to Duende documentation, blog posts, and sample code. It runs locally and uses SQLite full-text search to index content from multiple sources.
+
+### What It Can Do
+
+The MCP server provides several tools to your AI assistant:
+
+* **Free-text search** across documentation, blog posts, or samples
+* **Fetch a specific page** from the documentation site
+* **Get all content for a sample**: retrieve the full code of a Duende sample project
+* **Get a specific file from a sample**: retrieve individual files from sample code
+
+The server indexes content from three sources, keeping its local database up to date with background indexing:
+
+* **Documentation**: parsed from the Duende documentation site's [`llms.txt`](https://docs.duendesoftware.com/llms.txt)
+* **Blog**: indexed from the RSS feed at [duendesoftware.com/blog](https://duendesoftware.com/blog/)
+* **Samples**: downloaded from GitHub, including all `.cs`, `.cshtml`, and relevant `.js` files
+
+### Requirements
+
+* **.NET 10 SDK**: the MCP server is distributed via the `dnx` tool included in the SDK
+* **Network access**: the server indexes content from remote sources (documentation site, RSS feed, GitHub)
+* **A compatible AI coding assistant**: any IDE or CLI tool that supports the MCP protocol
+
+No Duende license is required to use the MCP server.
+
+### Setup
+
+To run the Duende Documentation MCP Server, you need the `dnx` tool (included in the .NET 10 SDK) in your system's `PATH`. The `dnx` tool can download and run applications packaged and distributed through NuGet.
+
+Here are some examples of how to register the MCP server in your IDE:
+
+<Tabs>
+  <TabItem label="VS Code">
+    You can register the MCP server [in your user settings](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server-to-your-user-settings) to make it available in any workspace, or add a `.vscode/mcp.json` file to your workspace:
+
+    ```json
+    // .vscode/mcp.json
+    {
+      "servers": {
+        "duende-mcp": {
+          "type": "stdio",
+          "command": "dnx",
+          "args": [
+            "Duende.Documentation.Mcp",
+            "--yes",
+            "--",
+            "--database", "/path/to/database.db"
+          ],
+          "env": {}
+        }
+      }
+    }
+    ```
+
+    Replace `/path/to/database.db` with the location where the MCP server should store its SQLite index.
+  </TabItem>
+  <TabItem label="JetBrains Rider">
+    In Rider settings, navigate to **Tools | AI Assistant | Model Context Protocol (MCP)**. Add a new MCP server, select **As JSON**, and enter:
+
+    ```json
+    {
+      "mcpServers": {
+        "duende-mcp": {
+          "command": "dnx",
+          "args": [
+            "Duende.Documentation.Mcp",
+            "--yes",
+            "--",
+            "--database", "/path/to/database.db"
+          ]
+        }
+      }
+    }
+    ```
+
+    Replace `/path/to/database.db` with the location where the MCP server should store its SQLite index.
+  </TabItem>
+  <TabItem label="Claude Code">
+    Run the following command:
+
+    ```powershell title="PowerShell"
+    # Windows (PowerShell)
+    claude mcp add --transport stdio duende-mcp `
+      -- dnx Duende.Documentation.Mcp --yes `
+      -- --database C:\path\to\database.db
+    ```
+
+    ```bash title="Terminal"
+    # macOS / Linux
+    claude mcp add --transport stdio duende-mcp \
+      -- dnx Duende.Documentation.Mcp --yes \
+      -- --database /path/to/database.db
+    ```
+
+    Replace the database path with the location where the MCP server should store its SQLite index.
+  </TabItem>
+</Tabs>
+
+The MCP server creates its SQLite database at the path you specify in the `--database` parameter. On first run, it indexes documentation, blog posts, and samples in the background. Subsequent starts reuse the existing index and refresh it incrementally.
+
+### Verify It Works
+
+Ask your AI assistant a Duende-specific question, for example: `What is automatic key management?`. If the MCP server is working, the response draws on the indexed documentation and references Duende-specific content. Adding `use Duende` to a prompt can help direct the AI assistant to query the MCP server when the topic could match multiple sources.
+
+### Example Prompts
+
+Once the MCP server is registered, you can ask your AI assistant questions like:
+
+* `What is a client in OpenID Connect?`
+* `How can I validate a JWT token in ASP.NET Core?`
+* `What is automatic key management?`
+* `Can I add passkeys to Razor Pages? Use Duende.`
+
+<LinkCard
+  description="Setup instructions for VS Code, Rider, and Claude Code"
+  href="https://github.com/DuendeSoftware/products/blob/main/docs-mcp/README.md"
+  title="Duende Documentation MCP Server"
+  target="_blank"
+/>
+
+:::note[Securing MCP endpoints]
+If you are building your own MCP server and want to secure it with OpenID Connect and OAuth 2.0, see the [MCP Client sample](/identityserver/samples/clients.mdx#model-context-protocol-mcp-client) for a working example.
+:::
+
+## Support and Feedback
+
+For questions, feedback, or to report issues with either the Agent Skills or the MCP server, visit the [Duende community](https://github.com/DuendeSoftware/community/discussions).
+
+<LinkCard
+  description="Ask questions and discuss with the Duende developer community"
+  href="https://github.com/DuendeSoftware/community/discussions"
+  title="Duende Community Forum"
+  target="_blank"
+/>
+
+## Disclaimer
+
+Duende's AI developer tools (including the Duende Documentation MCP Server and Duende Agent Skills) are designed
+to provide Large Language Models (LLMs) with verified, structured context from Duende's documentation and product knowledge.
+These tools improve the quality and relevance of AI-assisted development with Duende products, including IdentityServer,
+BFF and our Open Source offerings, but they do not guarantee the correctness, security, or completeness
+of AI-generated output. All code, configuration, and architectural decisions produced with the assistance of these tools
+must be reviewed and validated by qualified developers before deployment to any environment.
+Duende Software is not responsible for AI-generated output that results from the use of these tools.
