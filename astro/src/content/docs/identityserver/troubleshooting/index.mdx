@@ -301,6 +301,30 @@ services.AddAuthentication()
 
 When dealing with external authentication, you may want to implement `OnTicketReceived` to reduce the size of the cookie. This is a callback that is invoked after the external authentication process is complete. You can use this callback to remove any claims that are not needed by your solution.
 
+```csharp
+// Program.cs
+services.AddAuthentication()
+  .AddOpenIdConnect("oidc", options =>
+  {
+    // ...
+  
+    options.Events = new OpenIdConnectEvents()
+    {
+        OnTicketReceived = context =>
+        {
+            var identities = context.Principal?.Identities ?? Enumerable.Empty<ClaimsIdentity>();
+            foreach (var identity in identities)
+            {
+                var removedClaim = identity.FindFirst("unused-custom-claim");
+                _ = identity.TryRemoveClaim(removedClaim);
+            }
+  
+            return Task.CompletedTask;
+        }
+    };
+  });
+```
+
 ### Use Server-side Sessions
 
 You can use [server-side sessions][2] to store the
