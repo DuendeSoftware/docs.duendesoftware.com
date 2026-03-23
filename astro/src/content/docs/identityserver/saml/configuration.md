@@ -60,6 +60,8 @@ Available options:
 * **`SupportedNameIdFormats`**
   Supported NameID formats for the IdP. Defaults to `[ Email, Persistent, Transient, Unspecified ]`.
 
+  The NameID format determines how the user is identified to the SP. **Persistent** identifiers are stable and opaque — suitable when the SP needs to correlate the same user across sessions (for example, account linking). **Transient** identifiers are session-scoped and change with each login — best for privacy-sensitive scenarios where the SP does not need a stable identity. **emailAddress** is human-readable but exposes PII and is coupled to a value that can change. Mismatched format expectations are a common source of SSO failures. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
+
 * **`DefaultClockSkew`**
   Clock skew tolerance for validating SAML message timestamps. Defaults to 5 minutes.
 
@@ -71,6 +73,8 @@ Available options:
 
 * **`MaxRelayStateLength`**
   Maximum length (in UTF-8 bytes) of the RelayState parameter. Defaults to 80.
+
+  RelayState is an opaque string that an SP includes in its `AuthnRequest` to preserve application state — typically the URL the user originally requested — across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can redirect the user to the right page after authentication. The SAML specification recommends keeping RelayState short; this limit enforces that guidance. See [RelayState](/identityserver/saml/concepts.md#relaystate) for more context.
 
 * **`UserInteraction`**
   Configures SAML endpoint paths. See below.
@@ -187,6 +191,8 @@ Available options:
 
 ### SamlBinding
 
+SAML bindings define how messages travel over HTTP. HTTP-Redirect encodes the message into the URL query string, which works well for small messages such as `AuthnRequest` but is limited by URL length constraints. HTTP-POST encodes the message in a hidden HTML form field and submits it automatically, making it the right choice for larger payloads (such as assertions with many attributes) and for keeping message content out of server access logs. See [Bindings](/identityserver/saml/concepts.md#bindings) for a deeper explanation.
+
 Defines the SAML protocol binding used for message transport:
 
 | Value          | Description                                                                           |
@@ -195,6 +201,8 @@ Defines the SAML protocol binding used for message transport:
 | `HttpPost`     | HTTP-POST binding. The SAML message is Base64-encoded and sent in an HTML form.       |
 
 ### SamlSigningBehavior
+
+SAML assertions and responses are typically signed with the IdP's private key to prove their authenticity and prevent tampering. The signing behavior controls which XML elements carry a digital signature. `SignAssertion` is the recommended choice for most deployments: it signs the assertion element independently of the response envelope, which lets the SP verify the assertion regardless of how it was transported. See [Assertions](/identityserver/saml/concepts.md#assertions) for background on why signing matters.
 
 Controls what elements are signed in SAML responses:
 

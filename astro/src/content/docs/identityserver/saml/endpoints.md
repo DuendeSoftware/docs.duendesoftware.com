@@ -32,6 +32,8 @@ Returns the IdentityServer SAML 2.0 Identity Provider metadata document (an XML 
 Providers use this document to discover the IdP's signing certificates, supported NameID formats,
 and endpoint locations.
 
+SAML metadata enables automated federation setup. Instead of manually exchanging certificates and endpoint URLs out-of-band, Service Providers import the IdP's metadata document to configure trust automatically. This is the standard mechanism for onboarding new Service Providers into a federation. See [Metadata](/identityserver/saml/concepts.md#metadata) for more background.
+
 Share this URL with Service Providers during SP configuration so they can automatically import
 IdP settings.
 
@@ -97,6 +99,10 @@ SPs.
 
 Processes SAML `LogoutResponse` messages returned by Service Providers after they have processed a
 logout notification from IdentityServer. This endpoint completes the SAML SLO round-trip.
+
+:::note
+SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common — an SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout) for more background.
+:::
 
 ## Customizing Endpoint Paths
 
