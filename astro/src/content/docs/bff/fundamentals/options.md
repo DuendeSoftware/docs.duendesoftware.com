@@ -32,7 +32,7 @@ builder.Services.AddBff(options =>
 
 * ***LicenseKey***
 
-    This sets the license key for Duende.BFF. A business edition or higher license key is required for production deployments. The same license key is used in IdentityServer and the BFF. Just as in the [IdentityServer host](/general/licensing.md), you can either set the license key using this option in code or include *Duende_License.key* in the same directory as your BFF host.
+    This sets the license key for Duende.BFF. A license key is required for production deployments. See [licensing](/general/licensing.md) for details about how to configure the license key.
 
 * ***AnonymousSessionResponse*** (added in 2.0)
 
