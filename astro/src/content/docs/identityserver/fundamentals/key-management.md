@@ -40,7 +40,7 @@ material, including
 * maintenance of retired keys
 
 :::note
-This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Business, Enterprise, Standard (add-on), Advanced Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 ### Configuration

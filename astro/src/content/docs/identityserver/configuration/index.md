@@ -21,7 +21,7 @@ distributed through the separate [Duende.IdentityServer.Configuration NuGet pack
 Currently, the Configuration API supports the [Dynamic Client Registration](/identityserver/configuration/dcr.mdx) protocol.
 
 :::note
-This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Business, Enterprise, Standard, Advanced Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 The Configuration API source code is available [on GitHub](https://github.com/DuendeSoftware/products/tree/main/identity-server/src/Configuration).

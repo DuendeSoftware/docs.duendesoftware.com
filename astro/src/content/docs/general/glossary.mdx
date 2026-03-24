@@ -31,7 +31,7 @@ processes, etc.
 
 ## Automatic Key Management
 
-**License: <Badge text="Business" />**
+**License: <Badge text="Business" />, <Badge text="Enterprise" />, <Badge text="Standard (add-on)" />, <Badge text="Advanced" />**
 
 The automatic key management feature creates and manages key material for signing tokens and follows best practices for
 handling this key material, including storage and rotation.
@@ -52,7 +52,7 @@ handling this key material, including storage and rotation.
 
 ## Server-side Session Management
 
-**License: <Badge text="Business" />**
+**License: <Badge text="Business" />, <Badge text="Enterprise" />, <Badge text="Standard" />, <Badge text="Advanced" />**
 
 The server-side session management feature extends the ASP.NET Core cookie authentication handler to maintain a user's
 authentication session state in a server-side store, rather than putting it all into a self-contained cookie. Using
@@ -78,6 +78,8 @@ server-side sessions enables more architectural features in your IdentityServer,
 
 ## BFF Security Framework
 
+**License: <Badge text="Starter" />, <Badge text="Standard" />, <Badge text="Advanced" />**
+
 The Duende Backend For Frontend (BFF) security framework packages up guidance and the necessary components to secure
 browser-based frontends (e.g. SPAs or Blazor WASM applications) with ASP.NET Core backends.
 
@@ -97,7 +99,7 @@ browser-based frontends (e.g. SPAs or Blazor WASM applications) with ASP.NET Cor
 
 ## Dynamic Client Registration
 
-**License: <Badge text="Business" />**
+**License: <Badge text="Business" />, <Badge text="Enterprise" />, <Badge text="Standard" />, <Badge text="Advanced" />**
 
 Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register
 clients and their configuration.
@@ -110,7 +112,7 @@ clients and their configuration.
 
 ## Pushed Authorization Requests
 
-**License: <Badge text="Business" />**
+**License: <Badge text="Business" />, <Badge text="Starter" />, <Badge text="Standard" />, <Badge text="Advanced" />**
 
 Implementation of [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html). Provides a more secure way to start a
 browser-based token/authentication request.
@@ -123,7 +125,7 @@ browser-based token/authentication request.
 
 ## Dynamic Authentication Providers
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise" />, <Badge text="Advanced" />**
 
 The dynamic configuration feature allows dynamic loading of configuration for OpenID Connect providers from a store.
 This is designed to address the performance concern and allowing changes to the configuration to a running server.
@@ -144,7 +146,7 @@ This is designed to address the performance concern and allowing changes to the 
 
 ## Resource Isolation
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise" />, <Badge text="Standard" />, <Badge text="Advanced" />**
 
 The resource isolation feature allows a client to request access tokens for an individual resource server.
 This allows API-specific features such as access token encryption and isolation of APIs that are not in the same trust
@@ -153,7 +155,7 @@ boundary.
 <CardGrid>
   <LinkCard
     description="Resource Isolation post"
-    href="https://duendesoftware.com/blog/20201230-resource-isolation"
+    href="https://duendesoftware.com/blog/20260210-implementing-zero-trust-with-resource-isolation"
     title="More Details"
     target="_blank"
   />
@@ -166,7 +168,7 @@ boundary.
 
 ## Client-Initiated Backchannel Authentication (CIBA)
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise" />, <Badge text="Standard" />, <Badge text="Advanced" />**
 
 Duende IdentityServer supports the Client-Initiated Backchannel Authentication Flow (also known as CIBA).
 This allows a user to log in with a higher security device (e.g. their mobile phone) than the device on which they are
@@ -189,16 +191,52 @@ CIBA is one of the requirements to support the Financal-grade API compliance.
 
 ## Proof-of-Possession At The Application Layer / DPoP
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise" />, <Badge text="Starter" />, <Badge text="Standard" />, <Badge text="Advanced" />**
 
 A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This
 mechanism allows for the detection of replay attacks with access and refresh tokens.
 
 <LinkCard
   description="Learn more about Proof-of-Possession"
-  href="/identityserver/tokens/pop"
+  href="/identityserver/tokens/pop/"
   title="Documentation"
 />
+
+## SAML 2.0 Identity Provider
+
+**License: <Badge text="Standard (add-on)" />, <Badge text="Advanced" />**
+
+IdentityServer can act as a SAML 2.0 Identity Provider (IdP), issuing SAML assertions to Service Providers (SPs) that
+use the SAML 2.0 protocol rather than OAuth 2.0 / OpenID Connect. This is useful for integrating with enterprise SaaS
+applications (e.g. Salesforce, ServiceNow) or legacy SSO systems that require SAML-based federation.
+
+<LinkCard
+  description="Learn more about SAML 2.0 Identity Provider support"
+  href="/identityserver/saml/"
+  title="Documentation"
+/>
+
+## Financial-Grade Security and Conformance (FAPI 2.0)
+
+**License: <Badge text="Standard (add-on)" />, <Badge text="Advanced (add-on)" />**
+
+The [Financial-grade API (FAPI) 2.0 Security Profile](https://openid.net/specs/fapi-security-profile-2_0-final.html) is
+an API security profile based on OAuth 2.0 designed to protect APIs in high-value scenarios such as e-health and
+e-government. Duende IdentityServer implements the FAPI 2.0 best current practice features and includes a built-in
+conformance report that assesses your server and client configuration against OAuth 2.1 and FAPI 2.0 specifications.
+
+<CardGrid>
+  <LinkCard
+    description="Learn more about FAPI 2.0 compliance"
+    href="/identityserver/tokens/fapi-2-0-specification/"
+    title="Documentation"
+  />
+  <LinkCard
+    description="Assess your configuration against FAPI 2.0"
+    href="/identityserver/diagnostics/conformance-report/"
+    title="Conformance Report"
+  />
+</CardGrid>
 
 ## Single Deployment
 
@@ -238,7 +276,7 @@ issues and bugs.
 
 ## Priority Developer Support
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise" />, <Badge text="Standard" />, <Badge text="Advanced" />**
 
 Helpdesk system with guaranteed response time for Duende Software product issues and bugs.
 

@@ -12,7 +12,7 @@ redirect_from:
 ---
 
 :::note
-This feature is part of the [Duende IdentityServer Enterprise Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Enterprise, Standard, Advanced Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view.

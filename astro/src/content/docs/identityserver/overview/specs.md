@@ -49,10 +49,10 @@ Some specifications are only available in the [Duende IdentityServer Business or
 * OAuth 2.0 Authorization Server Issuer Identifier in Authorization
   Response ([RFC 9207](https://datatracker.ietf.org/doc/html/rfc9207))
 * OAuth 2.0 Step-up Authentication Challenge Protocol ([RFC 9470](https://datatracker.ietf.org/doc/html/rfc9470))
-* Business Edition: OAuth 2.0 Dynamic Client Registration Protocol ([RFC 7591](https://www.rfc-editor.org/rfc/rfc7591))
-* Business Edition: OAuth 2.0 Pushed Authorization Requests ([RFC 9126](https://www.rfc-editor.org/rfc/rfc9126))
-* Enterprise Edition: Resource Indicators for OAuth 2.0 ([RFC 8707](https://tools.ietf.org/html/rfc8707))
-* Enterprise Edition: OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer /
+* Business, Enterprise, Standard, Advanced Edition: OAuth 2.0 Dynamic Client Registration Protocol ([RFC 7591](https://www.rfc-editor.org/rfc/rfc7591))
+* Business, Enterprise, Starter, Standard, Advanced Edition: OAuth 2.0 Pushed Authorization Requests ([RFC 9126](https://www.rfc-editor.org/rfc/rfc9126))
+* Enterprise, Standard, Advanced Edition: Resource Indicators for OAuth 2.0 ([RFC 8707](https://tools.ietf.org/html/rfc8707))
+* Enterprise, Starter, Standard, Advanced Edition: OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer /
   DPoP ([RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449))
 * JSON Web Token (JWT) Response for OAuth Token Introspection ([RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html))
 * OAuth 2.0 Authorization Server Metadata ([RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414))

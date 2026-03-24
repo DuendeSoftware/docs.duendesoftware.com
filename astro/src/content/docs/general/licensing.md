@@ -45,20 +45,34 @@ and licensed. The Starter edition includes all the features that were part of
 IdentityServer4, along with support for the latest .NET releases, improved observability
 through [OpenTelemetry support](/identityserver/diagnostics/otel.md), and years of bug fixes and enhancements.
 
-#### Business Edition
+#### Standard Edition
 
-The Business edition adds additional features that go beyond the core protocol support
+The Standard edition adds additional features that go beyond the core protocol support
 included in the Starter edition. This is a popular license because it adds the most
 commonly needed tools and features outside a basic protocol implementation. Feature
-highlights include support for server side sessions and automatic signing key management.
+highlights include resource isolation, the OpenId Connect CIBA flow support,
+and server side sessions.
 
-#### Enterprise Edition
+#### Advanced Edition
 
-Finally, the Enterprise edition includes everything in the Business edition and adds
+Finally, the Advanced edition includes everything in the Standard edition and adds
 support for features that are typically used by enterprises with particularly complex
-architectures or that handle particularly sensitive data. Highlights include resource
-isolation, the OpenId Connect CIBA flow, and dynamic federation. This is the best option
-when you have a specific threat model or architectural need for these features.
+architectures or that handle particularly sensitive data. Highlights include
+automatic key management, SAML, and priority developer support.
+
+This is the best option when you have a specific threat model or architectural
+need for these features.
+
+#### Business Edition (legacy)
+
+The (legacy) Business edition adds additional features that go beyond the core protocol support
+included in the Starter edition. Feature highlights include support for server side sessions and
+automatic signing key management.
+
+#### Enterprise Edition (legacy)
+
+The (legacy) Enterprise edition includes everything in the Business edition and adds
+resource isolation, the OpenId Connect CIBA flow, and dynamic federation.
 
 ### Redistribution
 

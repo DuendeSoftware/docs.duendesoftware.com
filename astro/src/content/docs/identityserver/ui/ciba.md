@@ -14,7 +14,7 @@ Duende IdentityServer supports the [Client-Initiated Backchannel Authentication 
 CIBA is one of the requirements to support the [Financial-grade API](https://openid.net/wg/fapi/) compliance.
 
 :::note
-This feature is part of the [Duende IdentityServer Enterprise Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Enterprise, Standard, Advanced Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 Normally when using OpenID Connect, a user accesses a client application on the same device they use to login to the OpenID Connect provider.
