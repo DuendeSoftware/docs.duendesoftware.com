@@ -72,6 +72,9 @@ Available options:
 * **`MaxRelayStateLength`**
   Maximum length (in UTF-8 bytes) of the RelayState parameter. Defaults to 80.
 
+* **`SigninStateCookieName`**
+  Name of the cookie used to store the SAML sign-in state identifier. Defaults to `__IdsSvr_SamlSigninState`.
+
 * **`UserInteraction`**
   Configures SAML endpoint paths. See below.
 
