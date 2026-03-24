@@ -12,8 +12,8 @@ sidebar:
 
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
 
-The conformance report assesses your IdentityServer deployment against
-[OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1) and
+Part of Financial-Grade Security and Conformance, the conformance report assesses your IdentityServer
+deployment against [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1) and
 [FAPI 2.0 Security Profile](https://openid.net/specs/fapi-2_0-security-profile.html) specifications,
 generating an HTML report accessible via a protected endpoint.
 
