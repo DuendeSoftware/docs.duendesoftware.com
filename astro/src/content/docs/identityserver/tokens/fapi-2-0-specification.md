@@ -198,7 +198,7 @@ As of v8.0, IdentityServer unconditionally uses HTTP 303 (See Other) redirects f
 
 ## Conformance Report :badge[v8.0]
 
-Starting in v8.0, IdentityServer includes a [conformance report](/identityserver/diagnostics/conformance-report/) that automatically assesses your server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. The report identifies configuration gaps and provides actionable recommendations.
+Starting in v8.0, IdentityServer includes a [conformance report](/identityserver/diagnostics/conformance-report.md) that automatically assesses your server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. The report identifies configuration gaps and provides actionable recommendations.
 
 ## Private Key JWT vs. mTLS
 
