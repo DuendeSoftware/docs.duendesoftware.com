@@ -13,7 +13,9 @@ SAML 2.0 is an XML-based federation protocol widely used in enterprise, governme
 
 ## Assertions
 
-An assertion is the central data structure in SAML. It is a digitally signed XML document that carries claims about a user from the Identity Provider to the Service Provider. Think of it as the SAML equivalent of a JWT in OpenID Connect — everything else in the protocol exists to produce, transport, and validate assertions.
+An assertion is the central data structure in SAML. It is an XML document that carries claims about a user from the Identity Provider to the Service Provider. The assertion, the response, or both, can be digitally signed but aren't always.
+
+Think of it as the SAML equivalent of an ID token in OpenID Connect.
 
 An assertion contains three key parts:
 
