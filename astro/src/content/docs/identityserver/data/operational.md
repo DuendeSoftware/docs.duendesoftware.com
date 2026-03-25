@@ -108,7 +108,7 @@ The [server-side sessions](/identityserver/ui/server-side-sessions/index.md) fea
 ### Server-Side Session Store
 
 The [IServerSideSessionStore](/identityserver/reference/stores/server-side-sessions.md) abstracts storing the server-side session data.
-[ServerSideSession](/identityserver/reference/stores/server-side-sessions.md#serversidesession) objects act as the storage entity, and provide several properties used as metadata for the session. The `Ticket` property contains the actual serialized data used by the ASP.NET Cookie Authentication handler. By default, this serialized data is stored in an encrypted state.
+[ServerSideSession](/identityserver/reference/stores/server-side-sessions.md#serversidesession) objects act as the storage entity, and provide several properties used as metadata for the session. The `Ticket` property contains the actual serialized data used by the ASP.NET Cookie Authentication handler. By default, this serialized data is stored in an encrypted state using ASP.NET Core Data Protection.
 
 The methods on the [IServerSideSessionStore](/identityserver/reference/stores/server-side-sessions.md) are used to orchestrate the various management functions needed by the [server-side sessions](/identityserver/ui/server-side-sessions/index.md#session-management) feature.
 
