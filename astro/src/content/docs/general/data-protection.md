@@ -3,7 +3,8 @@ title: Data Protection
 description: Comprehensive guide covering key aspects of add data protection.
 date: 2026-03-26T08:20:20+02:00
 sidebar:
-  order: 20
+  label: Data Protection
+  order: 9
 redirect_from:
    - /dataprotection/
 ---
