@@ -114,7 +114,7 @@ There are several ways that data protection problems can occur:
    always to specify an explicit application name, and if you have old keys that were generated without an explicit
    application name, you need to set your application name to match the default behavior that produced the keys you want
    to be able to read.
-4. If your IdentityServer is hosted by IIS, special configuration is needed for data protection. In most default
+4. If you host on IIS, special configuration is needed for data protection. In most default
    deployments, IIS lacks the permissions required to persist data protection keys, and falls back to using an ephemeral
    key generated every time the site starts up. Microsoft's docs on this issue
    are [here](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/advanced?view=aspnetcore-7.0#data-protection).
