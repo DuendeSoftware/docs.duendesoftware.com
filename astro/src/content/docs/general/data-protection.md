@@ -1,6 +1,6 @@
 ---
-title: Data Protection
-description: Comprehensive guide covering key aspects of add data protection.
+title: ASP.NET Core Data Protection
+description: Comprehensive guide covering key aspects of ASP.NET Core Data Protection.
 date: 2026-03-26T08:20:20+02:00
 sidebar:
   label: Data Protection
