@@ -107,7 +107,7 @@ Duende IdentityServer's features that rely on data protection include
 * protecting [server-side session](/identityserver/ui/server-side-sessions/index.md) data at rest (if enabled)
 * protecting [the state parameter](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat) for
   external OIDC providers (if enabled)
-* protecting message payloads sent between pages in the UI (e.g. [logout context](/identityserver/ui/logout/logout-context.md) and [error context](/identityserver/ui/error.md)).
+* protecting message payloads sent between pages in the UI (e.g. [logout context](/identityserver/ui/logout/logout-context.md) and [error context](/identityserver/ui/error.md))
 * session management (because the ASP.NET Core cookie authentication handler requires it)
 
 ## IdentityServer Data Stores
