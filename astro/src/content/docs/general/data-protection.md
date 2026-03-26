@@ -87,8 +87,8 @@ that allow client applications and APIs to trust those tokens.
 ## Common Problems
 
 Common data protection problems occur when data is protected with a key that is not available when the data is later
-read. A common symptom is `CryptographicException`s in the application logs. For example, when automatic key
-management fails to read its signing keys due to a data protection failure, IdentityServer will log an error message
+read. A common symptom is `CryptographicException`s in the application logs. For example, when IdentityServer's automatic key
+management fails to read its signing keys due to a data protection failure, it will log an error message
 such as "Error unprotecting key with kid {Signing Key ID}.", and log the underlying
 `System.Security.Cryptography.CryptographicException`, with a message like "The key {Data Protection Key ID} was not
 found in the key ring."
