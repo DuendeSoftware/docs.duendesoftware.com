@@ -95,7 +95,7 @@ Duende IdentityServer makes extensive use of
 ASP.NET's [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/) feature. It is
 crucial that you configure data protection correctly before you start using your IdentityServer in production.
 
-The recommended practices for setting up and using Data Protection in Duende IdentityServer are the same as other server-side products, like BFF, and are enumerated in the [general Data Protection page](/general/data-protection).
+The recommended practices for setting up and using ASP.NET Core Data Protection for Duende IdentityServer are the same as for other server-side products, like BFF. See the [general ASP.NET Core Data Protection page](/general/data-protection).
 
 
 ### Identity Server's Usage of Data Protection
