@@ -13,7 +13,7 @@ Any Duende server-side application, like IdentityServer or BFF, is developed and
 
 It is important to correctly configure ASP.NET Core Data Protection i your application.
 
-:::note
+:::tip
 Some of our most common support requests are related to [Data Protection Keys](#data-protection-keys), so we strongly encourage you to review the rest of this page before deploying to production.
 :::
 
