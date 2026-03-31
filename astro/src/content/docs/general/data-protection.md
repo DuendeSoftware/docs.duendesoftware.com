@@ -24,8 +24,8 @@ Data Protection in any Duende server-side application makes extensive use of ASP
 In local development, ASP.NET automatically creates data protection keys, but in a deployed environment, you will need
 to ensure that your data protection keys are stored in a persistent way and shared across all load balanced instances of
 your implementation. This means you'll need to choose where to store and how to protect the data
-protection keys, as appropriate for your environment. Microsoft has extensive
-documentation [here](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview)
+protection keys, as appropriate for your environment. Microsoft has [extensive
+documentation](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview)
 describing how to configure storage and protection of data protection keys.
 
 A typical implementation should include data protection configuration code, like this:
@@ -48,41 +48,17 @@ builder.Services.AddDataProtection()
 
 :::danger[Ensure data protection keys are persisted]
 Always make sure data protection is configured to persist data protection keys to storage, using `.PersistKeys...()`
-for your storage mechanism.
+for your storage mechanism. If you lose your data protection keys, all data protected with those keys is no longer be readable.
 
-In addition, make sure the storage mechanism itself is durable. For example, if you are using the default file system
+Additionally ensure the storage mechanism itself is durable. For example, if you are using the default file system
 based key store, make sure that the configured path is not stored on ephemeral storage. If you are using Redis to store
-data protection keys using `PersistKeysToStackExchangeRedis`, ensure that your Redis service is configured to persist
-data to a database backup or append-only file. Otherwise, when your Redis instance reboots, you will lose all data
-protection keys.
+data protection keys using `PersistKeysToStackExchangeRedis()`, ensure that your Redis service is configured to persist
+data to a database backup or append-only file. Otherwise you will lose all data
+protection keys when your Redis instance reboots.
 
-If you lose your data protection keys, all data protected with those keys is no longer be readable.
+For a more advanced setup, you can create a [key escrow sink](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/extensibility/key-management?view=aspnetcore-10.0#xmlkeymanager), allowing you to store new data protection keys into a secure storage (e.g., Azure Key Vault) before the new keys are encrypted. This enables you to restore existing data protection keys in case they become corrupted or lost.
 :::
 
-## ASP.NET Data Protection Keys and IdentityServer Signing Keys
-
-ASP.NET's data protection keys are sometimes confused with IdentityServer's signing keys, but the two are completely
-separate keys with different purposes. IdentityServer implementations need both to function correctly.
-
-### ASP.NET Data Protection Keys
-
-Data protection is a cryptographic library that is part of ASP.NET Core. Data protection uses private key
-cryptography to encrypt and sign sensitive data to ensure that it is only written and read by the application. The
-framework uses data protection to secure data that is commonly used by IdentityServer implementations, such as
-authentication cookies and anti-forgery tokens. In addition, IdentityServer itself uses data protection to protect
-sensitive data at rest, such as persisted grants, and sensitive data passed through the browser, such as the
-context objects passed to pages in the UI. The data protection keys are critical secrets for an IdentityServer
-implementation because they encrypt a great deal of sensitive data at rest and prevent sensitive data that is
-round-tripped through the browser from being tampered with.
-
-### The IdentityServer Signing Key
-
-Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/fundamentals/key-management.md), to
-sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client
-applications and APIs to validate token signatures using the public keys, which are published by IdentityServer
-through [discovery](/identityserver/reference/endpoints/discovery.md). The private key component of the signing keys are
-also critical secrets for IdentityServer because a valid signature provides integrity and non-repudiation guarantees
-that allow client applications and APIs to trust those tokens.
 
 ## Common Problems
 
@@ -119,15 +95,3 @@ There are several ways that data protection problems can occur:
    key generated every time the site starts up. Microsoft's docs on this issue
    are [here](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/advanced?view=aspnetcore-7.0#data-protection).
 
-### Identity Server's Usage of Data Protection
-
-Duende IdentityServer's features that rely on data protection include
-
-* protecting signing keys at rest (if [automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management) is used and enabled)
-* protecting [persisted grants](/identityserver/data/operational.md#persisted-grant-service) at rest (if enabled)
-* protecting [server-side session](/identityserver/ui/server-side-sessions/index.md) data at rest (if enabled)
-* protecting [the state parameter](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat) for
-  external OIDC providers (if enabled)
-* protecting message payloads sent between pages in the UI (
-  e.g. [logout context](/identityserver/ui/logout/logout-context.md) and [error context](/identityserver/ui/error.md)).
-* session management (because the ASP.NET Core cookie authentication handler requires it)

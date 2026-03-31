@@ -97,20 +97,32 @@ crucial that you configure data protection correctly before you start using your
 
 The recommended practices for setting up and using ASP.NET Core Data Protection for Duende IdentityServer are the same as for other server-side products, like BFF. See the [general ASP.NET Core Data Protection page](/general/data-protection).
 
+### ASP.NET Data Protection Keys and IdentityServer Signing Keys
 
-### Identity Server's Usage of Data Protection
+ASP.NET's data protection keys are sometimes confused with IdentityServer's signing keys, but the two are completely
+separate keys with different purposes. IdentityServer implementations need both to function correctly.
 
-Duende IdentityServer's features that rely on data protection include
+#### ASP.NET Data Protection Keys
 
-* protecting signing keys at rest (if [automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management) is used and enabled)
-* protecting [persisted grants](/identityserver/data/operational.md#persisted-grant-service) at rest (if enabled)
-* protecting [server-side session](/identityserver/ui/server-side-sessions/index.md) data at rest (if enabled)
-* protecting [the state parameter](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat) for
-  external OIDC providers (if enabled)
-* protecting message payloads sent between pages in the UI (e.g. [logout context](/identityserver/ui/logout/logout-context.md) and [error context](/identityserver/ui/error.md))
-* session management (because the ASP.NET Core cookie authentication handler requires it)
+Data protection is a cryptographic library that is part of ASP.NET Core. Data protection uses private key
+cryptography to encrypt and sign sensitive data to ensure that it is only written and read by the application. The
+framework uses data protection to secure data that is commonly used by IdentityServer implementations, such as
+authentication cookies and anti-forgery tokens. In addition, IdentityServer itself uses data protection to protect
+sensitive data at rest, such as persisted grants, and sensitive data passed through the browser, such as the
+context objects passed to pages in the UI. The data protection keys are critical secrets for an IdentityServer
+implementation because they encrypt a great deal of sensitive data at rest and prevent sensitive data that is
+round-tripped through the browser from being tampered with.
 
-## IdentityServer Data Stores
+#### The IdentityServer Signing Key
+
+Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/fundamentals/key-management.md), to
+sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client
+applications and APIs to validate token signatures using the public keys, which are published by IdentityServer
+through [discovery](/identityserver/reference/endpoints/discovery.md). The private key component of the signing keys are
+also critical secrets for IdentityServer because a valid signature provides integrity and non-repudiation guarantees
+that allow client applications and APIs to trust those tokens.
+
+### IdentityServer Data Stores
 
 IdentityServer itself is stateless and does not require server affinity - but there is data that needs to be shared between in multi-instance deployments.
 
@@ -134,6 +146,18 @@ For certain operations, IdentityServer needs a persistence store to keep state, 
 You can either use a traditional database for storing operational data, or use a cache with persistence features like Redis.
 
 Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](/identityserver/data) section for more information.
+
+### IdentityServer Features Using Data Protection
+
+Duende IdentityServer's features that rely on data protection include:
+
+* protecting signing keys at rest (if [automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management) is used and enabled)
+* protecting [persisted grants](/identityserver/data/operational.md#persisted-grant-service) at rest (if enabled)
+* protecting [server-side session](/identityserver/ui/server-side-sessions/index.md) data at rest (if enabled)
+* protecting [the state parameter](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat) for
+  external OIDC providers (if enabled)
+* protecting message payloads sent between pages in the UI (e.g. [logout context](/identityserver/ui/logout/logout-context.md) and [error context](/identityserver/ui/error.md)).
+* session management (because the ASP.NET Core cookie authentication handler requires it)
 
 ## Distributed Caching
 
