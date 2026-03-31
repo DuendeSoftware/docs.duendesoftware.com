@@ -11,7 +11,7 @@ redirect_from:
 
 Any Duende server-side application, like IdentityServer or BFF, is developed and deployed as an ASP.NET Core application. While there are a lot of decisions to make, this also means that your implementation can be built, deployed, hosted, and managed with the same technology you're using for any other ASP.NET applications you have. 
 
-It is important to correctly configure ASP.NET Core Data Protection i your application.
+It is important to correctly configure ASP.NET Core Data Protection in your application.
 
 :::tip
 Some of our most common support requests are related to [Data Protection Keys](#data-protection-keys), so we strongly encourage you to review the rest of this page before deploying to production.
