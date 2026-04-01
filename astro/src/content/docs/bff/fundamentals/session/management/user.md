@@ -95,7 +95,7 @@ To use the endpoint, make an HTTP GET request to it from your frontend javascrip
 could use the fetch API to make requests to the user endpoint like this:
 
 ```js title="session.js"
-var req = new Request("/user", {
+var req = new Request("/bff/user", {
     headers: new Headers({
         "X-CSRF": "1",
     }),
@@ -135,7 +135,7 @@ activity. To prevent the call to the user endpoint from sliding the cookie, add 
 request.
 
 ```js title="site.js"
-var req = new Request("/user?slide=false", {
+var req = new Request("/bff/user?slide=false", {
     headers: new Headers({
         "X-CSRF": "1",
     }),
