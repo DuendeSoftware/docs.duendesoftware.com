@@ -38,7 +38,7 @@ While this is a lot of decisions to make, this also means that your IdentityServ
 Microsoft publishes extensive [advice and documentation](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/) about deploying ASP.NET Core applications, and it is applicable to IdentityServer implementations. We're not attempting to replace that documentation - or the documentation for other tools that you might be using in your environment. Rather, this section of our documentation focuses on IdentityServer-specific deployment and hosting considerations. 
 
 :::note
-Our experience has been that these topics are very important. Some of our most common support requests are related to [Data Protection](#data-protection-keys) and [Load Balancing](#proxy-servers-and-load-balancers), so we strongly encourage you to review those pages, along with the rest of this chapter before deploying IdentityServer to production.
+Our experience has been that these topics are very important. Some of our most common support requests are related to [Data Protection](/general/data-protection.md#data-protection-keys) and [Load Balancing](#proxy-servers-and-load-balancers), so we strongly encourage you to review those pages, along with the rest of this chapter before deploying IdentityServer to production.
 :::
 
 ## Proxy Servers and Load Balancers
