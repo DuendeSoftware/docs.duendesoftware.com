@@ -14,18 +14,18 @@ Any Duende server-side application, like IdentityServer or BFF, is developed and
 It is important to correctly configure ASP.NET Core Data Protection in your application.
 
 :::tip
-Some of our most common support requests are related to [Data Protection Keys](#data-protection-keys), so we strongly encourage you to review the rest of this page before deploying to production.
+Some of our most common support requests are related to [Data Protection Keys](#data-protection-keys). We strongly encourage you to review the rest of this page before deploying to production.
 :::
 
-## ASP.NET Core Data Protection
+## About ASP.NET Core Data Protection
 
-Data Protection in any Duende server-side application makes extensive use of ASP.NET's [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/) feature. It is crucial that you configure data protection correctly before you start using your application in production.
+Duende's SDKs, like IdentityServer and BFF, make extensive use of ASP.NET's [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/) feature. It is crucial that you configure data protection correctly when deploying your application in production.
 
 In local development, ASP.NET automatically creates data protection keys, but in a deployed environment, you will need
 to ensure that your data protection keys are stored in a persistent way and shared across all load balanced instances of
 your implementation. This means you'll need to choose where to store and how to protect the data
 protection keys, as appropriate for your environment. Microsoft has [extensive
-documentation](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview)
+documentation on data protection](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview)
 describing how to configure storage and protection of data protection keys.
 
 A typical implementation should include data protection configuration code, like this:
