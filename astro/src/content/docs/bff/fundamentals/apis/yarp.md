@@ -125,13 +125,13 @@ configuration:
 ```
 
 Similarly to the [simple HTTP forwarder](/bff/fundamentals/apis/remote.mdx#access-token-requirements), the allowed values
-for the token type are *None*, *User*, *Client*, *UserOrClient*, and *UserOrNone*.
+for the token type are `None`, `User`, `Client`, `UserOrClient`, and `UserOrNone`.
 
-Routes that set the *Duende.Bff.Yarp.TokenType* metadata **require** the given type of access token. If it is
-unavailable (for example, if the *User* token type is specified but the request to the BFF is anonymous), then the
+Routes that set the `Duende.Bff.Yarp.TokenType` metadata **require** the given type of access token. If it is
+unavailable (for example, if the `User` token type is specified but the request to the BFF is anonymous), then the
 proxied request will not be sent, and the BFF will return an HTTP 401: Unauthorized response.
 
-If you are using the code config method, call the *WithAccessToken* extension method to achieve the same thing:
+If you are using the code config method, call the `WithAccessToken` extension method to achieve the same thing:
 
 ```csharp
 yarpBuilder.LoadFromMemory(
@@ -152,16 +152,16 @@ yarpBuilder.LoadFromMemory(
 );
 ```
 
-Again, the *WithAccessToken* method causes the route to require the given type of access token. If it is unavailable,
+Again, the `WithAccessToken` method causes the route to require the given type of access token. If it is unavailable,
 the proxied request will not be made and the BFF will return an HTTP 401: Unauthorized response.
 
 ## Optional User Access Tokens
 
-You can attach user access tokens optionally using the *UserOrNone* token type. This causes the user's access token to
+You can attach user access tokens optionally using the `UserOrNone` token type. This causes the user's access token to
 be sent with the proxied request when the user is logged in, but makes the request anonymously when the user is not
 logged in.
 
-In configuration, set the *Duende.Bff.Yarp.TokenType* metadata to *UserOrNone*:
+In configuration, set the `Duende.Bff.Yarp.TokenType` metadata to `UserOrNone`:
 
 ```json
 {
@@ -181,7 +181,7 @@ In configuration, set the *Duende.Bff.Yarp.TokenType* metadata to *UserOrNone*:
 }
 ```
 
-If you are using the code config method, call the *WithAccessToken* extension method with *RequiredTokenType.UserOrNone*:
+If you are using the code config method, call the `WithAccessToken` extension method with `RequiredTokenType.UserOrNone`:
 
 ```csharp
 yarpBuilder.LoadFromMemory(
@@ -217,7 +217,7 @@ The value of the header is not important, but its presence, combined with the co
 preflight request for cross-origin calls. This effectively isolates the caller to the same origin as the backend,
 providing a robust security guarantee.
 
-You can add the anti-forgery protection to all YARP routes by calling the *AsBffApiEndpoint* extension method:
+You can add the anti-forgery protection to all YARP routes by calling the `AsBffApiEndpoint` extension method:
 
 ```csharp
 app.MapReverseProxy()
@@ -228,7 +228,7 @@ app.MapBffReverseProxy();
 ```
 
 If you need more fine-grained control over which routes should enforce the anti-forgery header, you can also annotate
-the route configuration by adding the *Duende.Bff.Yarp.AntiforgeryCheck* metadata to the route config:
+the route configuration by adding the `Duende.Bff.Yarp.AntiforgeryCheck` metadata to the route config:
 
 ```json
 {

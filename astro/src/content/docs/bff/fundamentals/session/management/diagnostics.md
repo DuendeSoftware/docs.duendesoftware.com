@@ -14,7 +14,7 @@ redirect_from:
 ---
 
 :::note
-This endpoint is only enabled in *Development* mode.
+This endpoint is only enabled in `Development` mode.
 :::
 
 The `/bff/diagnostics` endpoint returns the current user and client access token for testing purposes. The endpoint tries to retrieve and show current tokens. It may invoke both a refresh token flow for the user access token and a client credential flow for the client access token.

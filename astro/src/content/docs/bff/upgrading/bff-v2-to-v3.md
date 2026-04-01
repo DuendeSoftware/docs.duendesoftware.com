@@ -49,9 +49,9 @@ services.AddSingleton<IForwarderHttpClientFactory>(
 
 The `IHttpTransformerFactory` was a way to globally configure the YARP tranform pipeline. In V3, the way that
 the default `endpoints.MapRemoteBffApiEndpoint()` method builds up the YARP transform has been simplified
-significantly. Most of the logic has been pushed down to the *AccessTokenRequestTransform*.
+significantly. Most of the logic has been pushed down to the `AccessTokenRequestTransform`.
 
-Here are common scenario's for implementing your own *IHttpTransformerFactory* and how to upgrade:
+Here are common scenario's for implementing your own `IHttpTransformerFactory` and how to upgrade:
 
 #### Replacing Defaults
 

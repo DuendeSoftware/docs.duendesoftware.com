@@ -227,8 +227,8 @@ information from the user, but is also enriched with several management claims, 
 
 Blazor uses AuthenticationStateProviders to make authentication state available to components. On the server, the
 authentication state is already mostly managed by the authentication framework. However, the BFF will add the Logout url
-to the claims using the **AddServerManagementClaimsTransform**. On the client, there are some other claims that might be
-useful. The **BffClientAuthenticationStateProvider** will poll the server to update the client on the latest
+to the claims using the `AddServerManagementClaimsTransform`. On the client, there are some other claims that might be
+useful. The `BffClientAuthenticationStateProvider` will poll the server to update the client on the latest
 authentication state, such as the user's claims. This also notifies the front-end if the session is terminated on the
 server.
 
@@ -236,16 +236,16 @@ server.
 
 Blazor Server applications have the same token management requirements as a regular ASP.NET Core web application.
 Because Blazor Server streams content to the application over a websocket, there often is no HTTP request or response to
-interact with during the execution of a Blazor Server application. You therefore cannot use *HttpContext* in a Blazor
+interact with during the execution of a Blazor Server application. You therefore cannot use `HttpContext` in a Blazor
 Server application as you would in a traditional ASP.NET Core web application.
 
 This means:
 
-* you cannot use *HttpContext* extension methods
+* you cannot use `HttpContext` extension methods
 * you can’t use the ASP.NET authentication session to store tokens
 * the normal mechanism used to automatically attach tokens to Http Clients making API calls won't work
 
-The **ServerSideTokenStore**, together with the Blazor Server functionality in Duende.AccessTokenManagement is
+The `ServerSideTokenStore`, together with the Blazor Server functionality in Duende.AccessTokenManagement is
 automatically registered when you register Blazor Server.
 
 For more information on this, see [Blazor Server](/accesstokenmanagement/blazor-server.md)
