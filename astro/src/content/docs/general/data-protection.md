@@ -47,27 +47,27 @@ builder.Services.AddDataProtection()
 ```
 
 :::danger[Ensure data protection keys are persisted]
-Always make sure data protection is configured to persist data protection keys to storage, using `.PersistKeys...()`
+Always make sure data protection is configured to persist data protection keys to storage, using `.PersistKeysTo...()`
 for your storage mechanism. If you lose your data protection keys, all data protected with those keys is no longer be readable.
 
-Additionally ensure the storage mechanism itself is durable. For example, if you are using the default file system
+Additionally, ensure the storage mechanism itself is durable. For example, if you are using the default file system
 based key store, make sure that the configured path is not stored on ephemeral storage. If you are using Redis to store
 data protection keys using `PersistKeysToStackExchangeRedis()`, ensure that your Redis service is configured to persist
-data to a database backup or append-only file. Otherwise you will lose all data
-protection keys when your Redis instance reboots.
+data to a database backup or append-only file. Otherwise, you will lose all data protection keys when your Redis instance reboots.
 
-For a more advanced setup, you can create a [key escrow sink](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/extensibility/key-management?view=aspnetcore-10.0#xmlkeymanager), allowing you to store new data protection keys into a secure storage (e.g., Azure Key Vault) before the new keys are encrypted. This enables you to restore existing data protection keys in case they become corrupted or lost.
+For a more advanced setup, you can create a [key escrow sink](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/extensibility/key-management?view=aspnetcore-10.0#xmlkeymanager), allowing you to store new data protection keys into 
+a secure storage (e.g., Azure Key Vault) before the new keys are encrypted.
+This enables you to restore existing data protection keys in case they become corrupted or lost.
 :::
-
 
 ## Common Problems
 
 Common data protection problems occur when data is protected with a key that is not available when the data is later
 read. A common symptom is `CryptographicException`s in the application logs. For example, when IdentityServer's automatic key
 management fails to read its signing keys due to a data protection failure, it will log an error message
-such as "Error unprotecting key with kid {Signing Key ID}.", and log the underlying
-`System.Security.Cryptography.CryptographicException`, with a message like "The key {Data Protection Key ID} was not
-found in the key ring."
+such as `"Error unprotecting key with kid {Signing Key ID}."`, and log the underlying
+`System.Security.Cryptography.CryptographicException`, with a message like `"The key {Data Protection Key ID} was not
+found in the key ring."`
 
 Failures to read automatic signing keys are often the first place where a data protection problem manifests, but any of
 many places where ASP.NET uses data protection might also throw `CryptographicException`s.
@@ -82,16 +82,14 @@ There are several ways that data protection problems can occur:
    directory from source control and make sure keys are not included in your builds. Note that if you are using our
    Entity Framework based implementation of the operational data stores, then the keys will instead be stored in the
    database.
-3. Data protection creates keys isolated by application name. If you don't specify a name, the content root path of the
-   application will be used. But, beginning in .NET 6.0 Microsoft changed how they handle the path, which can cause data
-   protection keys to break. Their docs on the problem
-   are [here](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview#setapplicationname),
-   including a work-around where you de-normalize the path. Then, in .NET 7.0, this change was reverted. The solution is
-   always to specify an explicit application name, and if you have old keys that were generated without an explicit
-   application name, you need to set your application name to match the default behavior that produced the keys you want
-   to be able to read.
-4. If you host on IIS, special configuration is needed for data protection. In most default
-   deployments, IIS lacks the permissions required to persist data protection keys, and falls back to using an ephemeral
-   key generated every time the site starts up. Microsoft's docs on this issue
-   are [here](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/advanced?view=aspnetcore-7.0#data-protection).
+3. Data protection derives keys isolated per application name from the generated key material. If you don't specify a name, 
+   the content root path of the application will be used. In .NET 6.0, Microsoft introduced a breaking change: they changed
+   how ASP.NET Core sets the content root path, which can cause Data Protection issues. This change was reverted in .NET 7.0, 
+   and Microsoft has [documented a workaround in case your application has to restore the correct application name](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/configuration/overview#set-the-application-name-setapplicationname). 
+   A better solution is to always specify an explicit application name, but know that changing the application name will 
+   cause all existing data protected with the previous application name to become unreadable.
+4. When hosting your web application on Microsoft IIS, [special configuration may be required for data protection](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/advanced#data-protection).
+   In most default deployments, IIS falls back to using an ephemeral storage for data protection keys, which means that 
+   new keys are generated every time the application pool restarts. We recommend storing data protection keys in a shared location, 
+   such as a protected file share or database, and configuring IIS to use that location for data protection.
 
