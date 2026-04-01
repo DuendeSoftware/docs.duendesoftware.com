@@ -19,7 +19,7 @@ The */bff/login* endpoint begins the authentication process. To use it, typicall
 window.location = "/login";
 ```
 
-In Blazor, instead use the *NavigationManager* to navigate to the login endpoint:
+In Blazor, instead use the `NavigationManager` to navigate to the login endpoint:
 
 ```csharp
 Navigation.NavigateTo($"bff/login", forceLoad: true);

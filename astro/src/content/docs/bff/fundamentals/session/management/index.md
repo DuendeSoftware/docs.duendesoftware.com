@@ -47,7 +47,7 @@ app.UseBffPostProcessing();
 app.Run();
 ```
 
-The *UsePreprocessing* method adds all handling for multiple frontend support. Alternatively, you can call these methods direct:
+The `UsePreprocessing` method adds all handling for multiple frontend support. Alternatively, you can call these methods direct:
 ``` csharp
 app.UseBffFrontendSelection();
 app.UseBffPathMapping();

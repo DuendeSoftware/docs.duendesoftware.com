@@ -21,7 +21,7 @@ The token management library does essentially two things:
 Both aspects can be customized.
 
 ### Token service communication
-The token management library uses a named HTTP client from the HTTP client factory for all token service communication. You can provide a customized HTTP client yourself using the well-known name after calling *AddBff*:
+The token management library uses a named HTTP client from the HTTP client factory for all token service communication. You can provide a customized HTTP client yourself using the well-known name after calling `AddBff`:
 
 ```csharp
 builder.Services.AddHttpClient(
@@ -42,8 +42,8 @@ If you do not use server-side sessions, then the access and refresh token will b
 
 This would involve two steps
 
-* turn off the *SaveTokens* flag on the OpenID Connect handler and handle the relevant events manually to store the tokens in your custom store
-* implement and register the *Duende.AccessTokenManagement.IUserTokenStore* interface
+* turn off the `SaveTokens` flag on the OpenID Connect handler and handle the relevant events manually to store the tokens in your custom store
+* implement and register the `Duende.AccessTokenManagement.IUserTokenStore` interface
 
 The interface is responsible to storing, retrieving and clearing tokens for the automatic token management:
 
@@ -88,7 +88,7 @@ public interface IUserTokenStore
 ```
 
 ### Per-route Customized Token Retrieval
-The token store defines how tokens are retrieved globally. However, you can add custom logic that changes the way that access tokens are retrieved on a per-route basis. For example, you might need to exchange a token to perform delegation or impersonation for some API calls, depending on the remote API. The interface that describes this extension point is the *IAccessTokenRetriever*.
+The token store defines how tokens are retrieved globally. However, you can add custom logic that changes the way that access tokens are retrieved on a per-route basis. For example, you might need to exchange a token to perform delegation or impersonation for some API calls, depending on the remote API. The interface that describes this extension point is the `IAccessTokenRetriever`.
 
 
 ```csharp
@@ -108,15 +108,15 @@ public interface IAccessTokenRetriever
 }
 ```
 
-You can implement this interface yourself or extend the *DefaultAccessTokenRetriever*. 
+You can implement this interface yourself or extend the `DefaultAccessTokenRetriever`. 
 
 :::note
-In Duende BFF v4, *DefaultAccessTokenRetriever* was made `internal`. If you need to customize token retrieval in v4, implement the *IAccessTokenRetriever* interface directly.
+In Duende BFF v4, `DefaultAccessTokenRetriever` was made `internal`. If you need to customize token retrieval in v4, implement the `IAccessTokenRetriever` interface directly.
 :::
 
-The *AccessTokenResult* class represents the result of this operation. It is an abstract class with concrete implementations that represent successfully retrieving a bearer token (*BearerTokenResult*), successfully retrieving a DPoP token (*DPoPTokenResult*), failing to find an optional token (*NoAccessTokenResult*), which is not an error, and failure to retrieve a token (*AccessTokenRetrievalError*). Your implementation of GetAccessTokenAsync should return one of those types.
+The `AccessTokenResult` class represents the result of this operation. It is an abstract class with concrete implementations that represent successfully retrieving a bearer token (`BearerTokenResult`), successfully retrieving a DPoP token (`DPoPTokenResult`), failing to find an optional token (`NoAccessTokenResult`), which is not an error, and failure to retrieve a token (`AccessTokenRetrievalError`). Your implementation of GetAccessTokenAsync should return one of those types.
 
-Implementations of the *IAccessTokenRetriever* can be added to endpoints when they are mapped using the *WithAccessTokenRetriever* extension method:
+Implementations of the `IAccessTokenRetriever` can be added to endpoints when they are mapped using the `WithAccessTokenRetriever` extension method:
 
 ```csharp
 app.MapRemoteBffApiEndpoint(
@@ -126,4 +126,4 @@ app.MapRemoteBffApiEndpoint(
      .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```
 
-The *GetAccessTokenAsync* method will be invoked on every call to APIs that use the access token retriever. If retrieving the token is an expensive operation, you may need to cache it. It is up to your retriever code to perform caching.
+The `GetAccessTokenAsync` method will be invoked on every call to APIs that use the access token retriever. If retrieving the token is an expensive operation, you may need to cache it. It is up to your retriever code to perform caching.

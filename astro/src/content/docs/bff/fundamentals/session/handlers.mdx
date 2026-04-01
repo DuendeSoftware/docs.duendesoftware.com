@@ -105,11 +105,11 @@ It can be configured to use any OpenID Connect provider: [Duende IdentityServer]
 The exact settings to use depend on the OIDC provider and its configuration settings. We recommend to:
 
 * use authorization code flow with PKCE
-* use a *response_mode* of *query* since this plays nicer with *SameSite* cookies
+* use a `response_mode` of `query` since this plays nicer with `SameSite` cookies
 * use a strong client secret. Since the BFF can be a confidential client, it is possible to use strong client authentication like JWT assertions, JAR, or mTLS. Shared secrets work as well.
 * turn off inbound claims mapping
 * save the tokens into the authentication session so they can be automatically managed
-* request a refresh token using the *offline_access* scope
+* request a refresh token using the `offline_access` scope
 
 ```csharp
 builder.Services.AddAuthentication().AddOpenIdConnect("oidc", options =>
@@ -152,7 +152,7 @@ Things to consider:
 
 * determine the session lifetime and if the session lifetime should be sliding or absolute
 * it is recommended to use a cookie name [prefix](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-4.1.3) if compatible with your application
-* use the highest available *SameSite* mode that is compatible with your application, e.g. *strict*, but at least *lax*
+* use the highest available `SameSite` mode that is compatible with your application, e.g. `strict`, but at least `lax`
 
 ```csharp
 builder.Services.AddAuthentication().AddCookie("cookie", options =>
