@@ -104,11 +104,17 @@ public interface IAccessTokenRetriever
     /// <returns>A task that contains the access token result, which is an
     /// object model that can represent various types of tokens (bearer, dpop),
     /// the absence of an optional token, or an error. </returns>
-    Task<AccessTokenResult> GetAccessToken(AccessTokenRetrievalContext context, CancellationToken token);
+    Task<AccessTokenResult> GetAccessTokenAsync(AccessTokenRetrievalContext context, CancellationToken ct = default);
 }
 ```
 
-You can implement this interface yourself or extend the *DefaultAccessTokenRetriever*. The *AccessTokenResult* class represents the result of this operation. It is an abstract class with concrete implementations that represent successfully retrieving a bearer token (*BearerTokenResult*), successfully retrieving a DPoP token (*DPoPTokenResult*), failing to find an optional token (*NoAccessTokenResult*), which is not an error, and failure to retrieve a token (*AccessTokenRetrievalError*). Your implementation of GetAccessToken should return one of those types.
+You can implement this interface yourself or extend the *DefaultAccessTokenRetriever*. 
+
+:::note
+In Duende BFF v4, *DefaultAccessTokenRetriever* was made `internal`. If you need to customize token retrieval in v4, implement the *IAccessTokenRetriever* interface directly.
+:::
+
+The *AccessTokenResult* class represents the result of this operation. It is an abstract class with concrete implementations that represent successfully retrieving a bearer token (*BearerTokenResult*), successfully retrieving a DPoP token (*DPoPTokenResult*), failing to find an optional token (*NoAccessTokenResult*), which is not an error, and failure to retrieve a token (*AccessTokenRetrievalError*). Your implementation of GetAccessTokenAsync should return one of those types.
 
 Implementations of the *IAccessTokenRetriever* can be added to endpoints when they are mapped using the *WithAccessTokenRetriever* extension method:
 
@@ -120,4 +126,4 @@ app.MapRemoteBffApiEndpoint(
      .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```
 
-The *GetAccessToken* method will be invoked on every call to APIs that use the access token retriever. If retrieving the token is an expensive operation, you may need to cache it. It is up to your retriever code to perform caching.
+The *GetAccessTokenAsync* method will be invoked on every call to APIs that use the access token retriever. If retrieving the token is an expensive operation, you may need to cache it. It is up to your retriever code to perform caching.

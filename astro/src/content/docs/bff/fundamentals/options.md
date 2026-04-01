@@ -48,7 +48,41 @@ builder.Services.AddBff(options =>
 
 * ***AutomaticallyRegisterBffMiddleware*** (added in 4.0)
 
-    When applying BFF V4 multiple frontends, a lot of middlewares get automatically added to the pipeline. For example, the frontend selection middleware, the authentication handlers, etc. If you don't want this automatic behavior, then you can turn it off and register these middlewares manually. 
+    When using BFF V4 with multiple frontends, several middlewares are automatically added to the pipeline (frontend
+    selection, path mapping, OpenID Connect callbacks, management endpoints, and static file proxying). If you need
+    full control over the middleware pipeline, set this to `false` and register the middleware manually:
+
+    ```csharp
+    builder.Services.AddBff(options =>
+    {
+        options.AutomaticallyRegisterBffMiddleware = false;
+    });
+    ```
+
+    When disabled, you must call `UseBffPreProcessing()` early in the pipeline (before authentication) and
+    `UseBffPostProcessing()` at the end:
+
+    ```csharp
+    app.UseForwardedHeaders();
+    app.UseBffPreProcessing();  // Frontend selection, path mapping, OpenID callbacks
+
+    app.UseAuthentication();
+    app.UseRouting();
+    app.UseBff();               // Anti-forgery checks
+    app.UseAuthorization();
+
+    // map your endpoints here...
+
+    app.UseBffPostProcessing();  // Management endpoints, remote API handling, static file proxying
+    ```
+
+    You can also use the individual middleware methods for even more granular control:
+
+    * `UseBffFrontendSelection()` — Selects the current frontend based on host/path matching
+    * `UseBffPathMapping()` — Adjusts `PathBase` and `Path` for the selected frontend
+    * `UseBffOpenIdCallbacks()` — Handles OpenID Connect callback requests
+    * `UseBffAntiForgery()` — Validates anti-forgery headers (same as `UseBff()`)
+    * `UseBffStaticFileProxying()` — Proxies static file requests to CDN or development server
     
 
 * ***StaticAssetsClientName***
@@ -150,6 +184,21 @@ builder.Services.AddBff(options =>
 
 * ***DisableAntiForgeryCheck*** (added in V4)
     A delegate that determines if the anti-forgery check should be disabled for a given request. The default is not to disable anti-forgery checks.
+
+## CDN / Static Assets
+
+* ***IndexHtmlDefaultCacheDuration*** (added in V4)
+
+    If you use CDN Index HTML proxying (via `BffFrontend.CdnIndexHtmlUrl`), this controls how long the fetched `index.html` is cached. Defaults to *5 minutes*.
+
+## Diagnostics
+
+* ***Diagnostics*** (added in V4)
+
+    Options that control the way that diagnostic data is logged. This is a nested options object with the following properties:
+
+    * ***LogFrequency*** — Frequency at which diagnostic summaries are logged. Defaults to *1 hour*.
+    * ***ChunkSize*** — Max size of diagnostic data log message chunks in bytes. Defaults to *8160 bytes* (8 KB minus 32 bytes for log message formatting overhead).
 
 
 # BFF Blazor Server Options
