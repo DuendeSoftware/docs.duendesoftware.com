@@ -21,6 +21,8 @@ Some of our most common support requests are related to [Data Protection Keys](#
 
 Duende's SDKs, like IdentityServer and BFF, make extensive use of ASP.NET's [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/) feature. It is crucial that you configure data protection correctly when deploying your application in production.
 
+## Data Protection Keys
+
 In local development, ASP.NET automatically creates data protection keys, but in a deployed environment, you will need
 to ensure that your data protection keys are stored in a persistent way and shared across all load balanced instances of
 your implementation. This means you'll need to choose where to store and how to protect the data
