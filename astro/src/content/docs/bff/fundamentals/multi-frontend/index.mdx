@@ -69,7 +69,7 @@ bffBuilder
 
         // This frontend uses most of the same authentication options,
         new BffFrontend(BffFrontendName.Parse("with-path"))
-            .MapToPath("/with-path"),
+            .MapToPath("/with-path")
             .WithOpenIdConnectOptions(opt =>
             {
                // but overrides the clientid and client secret.
@@ -80,7 +80,7 @@ bffBuilder
             {
                // and overrides the cookie options to use 'lax' cookies. 
                opt.Cookie.SameSite = SameSiteMode.Lax;
-            });
+            }));
 
 ```
 
@@ -130,9 +130,9 @@ The simplest way to add frontends is during startup.
 ```csharp {3}
 services
     .AddBff()
-    .WithFrontends(new BffFrontend(BffFrontendName.Parse("frontend1")));
+    .AddFrontends(new BffFrontend(BffFrontendName.Parse("frontend1")));
 ```
-You can call `WithFrontends` with multiple frontends in one go, or call it multiple times. 
+You can call `AddFrontends` with multiple frontends in one go, or call it multiple times. 
 
 ## Adding / Updating A Frontend Dynamically At Runtime
 
@@ -178,7 +178,7 @@ This can be done in various ways. For example, if you use Vite, you can publish 
 
 ```csharp
 var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
-   .WithCdnIndexHtml(new Uri("https://my_cdn/some_app/index.html"))
+   .WithCdnIndexHtmlUrl(new Uri("https://my_cdn/some_app/index.html"))
 ```
 
 When you do this, the BFF automatically wires up a catch-all route that serves the `index.html` for that specific frontend. 

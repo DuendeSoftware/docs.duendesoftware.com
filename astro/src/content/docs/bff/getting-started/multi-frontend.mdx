@@ -135,9 +135,9 @@ app.Run();
         },
         "remoteApis": [
           {
-            "matchingPath": "/api/client-token",
+            "pathMatch": "/api/client-token",
             "targetUri": "https://localhost:5010",
-            "tokenRequirement": "Client"
+            "requiredTokenType": "Client"
           }
         ]
       }
@@ -177,7 +177,7 @@ You can configure remote API proxying in two ways:
   builder.Services.AddBff()
       .AddFrontends(
           new BffFrontend(BffFrontendName.Parse("default-frontend"))
-              .WithCdnIndexUrl(new Uri("https://localhost:5005/static/index.html"))
+              .WithCdnIndexHtmlUrl(new Uri("https://localhost:5005/static/index.html"))
               .WithRemoteApis(
                   new RemoteApi("/api/user-token", new Uri("https://localhost:5010"))
               )

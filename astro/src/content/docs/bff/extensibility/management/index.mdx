@@ -42,7 +42,7 @@ builder.Services.AddTransient<IDiagnosticsEndpoint, DefaultDiagnosticsEndpoint>(
           title="IBffEndpoint.cs"
           code={`public interface IBffEndpoint
 {
-    Task ProcessRequestAsync(HttpContext context, CancellationToken ct);
+    Task ProcessRequestAsync(HttpContext context, CancellationToken ct = default);
 }`}/>
 
       You can customize the behavior of the endpoints by implementing the appropriate interface.
