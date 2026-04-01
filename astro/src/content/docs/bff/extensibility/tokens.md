@@ -108,7 +108,13 @@ public interface IAccessTokenRetriever
 }
 ```
 
-You can implement this interface yourself or extend the *DefaultAccessTokenRetriever*. The *AccessTokenResult* class represents the result of this operation. It is an abstract class with concrete implementations that represent successfully retrieving a bearer token (*BearerTokenResult*), successfully retrieving a DPoP token (*DPoPTokenResult*), failing to find an optional token (*NoAccessTokenResult*), which is not an error, and failure to retrieve a token (*AccessTokenRetrievalError*). Your implementation of GetAccessTokenAsync should return one of those types.
+You can implement this interface yourself or extend the *DefaultAccessTokenRetriever*. 
+
+:::note
+In Duende BFF v4, *DefaultAccessTokenRetriever* was made `internal`. If you need to customize token retrieval in v4, implement the *IAccessTokenRetriever* interface directly. The default implementation simply calls `context.HttpContext.GetManagedAccessToken()` with the configured token type, so replicating its behavior is straightforward.
+:::
+
+The *AccessTokenResult* class represents the result of this operation. It is an abstract class with concrete implementations that represent successfully retrieving a bearer token (*BearerTokenResult*), successfully retrieving a DPoP token (*DPoPTokenResult*), failing to find an optional token (*NoAccessTokenResult*), which is not an error, and failure to retrieve a token (*AccessTokenRetrievalError*). Your implementation of GetAccessTokenAsync should return one of those types.
 
 Implementations of the *IAccessTokenRetriever* can be added to endpoints when they are mapped using the *WithAccessTokenRetriever* extension method:
 

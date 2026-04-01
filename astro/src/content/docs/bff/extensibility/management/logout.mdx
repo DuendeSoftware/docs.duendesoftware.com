@@ -28,7 +28,7 @@ The `IReturnUrlValidator` ensures that the `returnUrl` parameter passed to the l
 <Tabs syncKey="bffVersion">
     <TabItem label="V4">
         You can customize the behavior of the logout endpoint by implementing the `ProcessRequestAsync` method of the
-        `ILogoutEndpoint` interface. The [default implementation][1]
+        `ILogoutEndpoint` interface. The [default implementation](https://github.com/DuendeSoftware/products/tree/releases/bff/4.0.x/bff/src/Bff/Endpoints/Internal/DefaultLogoutEndpoint.cs)
         can serve as a starting point for your own implementation.
 
         If you want to extend the default behavior of the logout endpoint, you can instead add a custom endpoint and
@@ -50,7 +50,7 @@ app.MapGet(bffOptions.LogoutPath, async (HttpContext context, CancellationToken 
 `} />
     </TabItem>
     <TabItem label="V3">
-        `ProcessRequestAsync` is the top-level function called in the endpoint service `DefaultSilentLoginCallbackService`,
+        `ProcessRequestAsync` is the top-level function called in the endpoint service `DefaultLogoutService`,
         and can be used to add arbitrary logic to the endpoint.
 
         For example, you could take whatever actions you need before normal processing of the request like this:
@@ -73,5 +73,3 @@ public override Task ProcessRequestAsync(HttpContext context, CancellationToken 
 To prevent open redirector attacks, the `returnUrl` parameter to the logout endpoint must be validated. You can
 customize this validation by implementing the `IReturnUrlValidator` interface. The default implementation enforces
 that return URLs are local.
-
-[1]: https://github.com/DuendeSoftware/products/tree/releases/bff/4.0.x/bff/src/Bff/Endpoints/Internal/DefaultLogoutEndpoint.cs
