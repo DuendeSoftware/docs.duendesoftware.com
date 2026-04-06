@@ -15,7 +15,7 @@ This feature is part of the [Duende IdentityServer Enterprise Edition](https://d
 :::
 
 OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view.
-This means that all the requested scope and audience combination get merged into a single access token.
+This means that all the requested scope and audience combinations get merged into a single access token.
 
 This has a couple of downsides:
 
@@ -250,4 +250,281 @@ options.Events.OnRedirectToIdentityProvider = context =>
 
     return Task.CompletedTask;
 };
+```
+
+## More Examples
+
+Image a set of services that separate an Orders API and an Inventory API. Each has their own distinct set of API scopes, plus a set of scopes shared between the APIs, and there's a global scope used sometimes by legacy systems that haven't changed yet to use Resource Isolation.
+
+| urn:orders   | urn:inventory   | Not Shared with any Api Resource |
+|--------------|-----------------|----------------------------------|
+| orders.read  | inventory.read  | global.audit                     |
+| orders.write | inventory.write |                                  |
+| shared.read  | shared.read     |                                  |
+
+The below code sample shows an IdentityServer creating Scopes, ApiResources, and a Client for the above scopes. Notice that all scopes are created in one collection, `Scopes`, then the `Resources` collection groups the scopes per Api Resource. Finally, the single `Client` includes all scopes in its `AllowedScopes` property because the client will be requesting any combination of those scopes from Duende IdentityServer.
+
+```csharp
+//All scopes used by all API Resources and Clients
+public static readonly IEnumerable<ApiScope> Scopes = [
+    // resource specific scopes
+    new ApiScope("orders.read"), new ApiScope("orders.write"),
+    new ApiScope("inventory.read"), new ApiScope("inventory.write"),
+    
+    // a scope shared by multiple resources
+    new ApiScope("shared.read"),
+    
+    // scopes without resource association
+    new ApiScope("global.audit"),
+];
+
+// API resources with the scopes they use
+public static readonly IEnumerable<ApiResource> Resources = [
+    new ApiResource("urn:orders", "Orders API") 
+        { Scopes = { "orders.read", "orders.write", "shared.read" } },
+    new ApiResource("urn:inventory", "Inventory API") {
+        Scopes = { "inventory.read", "inventory.write", "shared.read" },
+        RequireResourceIndicator = true
+    }, ];
+
+public static readonly IEnumerable<Client> Clients = [
+    new Client {
+        ClientId = "resource.isolation.demo.client",
+        ClientSecrets = { new Secret("my-secret".Sha256()) },
+        ClientClaimsPrefix = "",
+        AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+        //Client is allowed to access all scopes for all ApiResources
+        AllowedScopes =
+        {
+            "orders.read", "orders.write",
+            "inventory.read", "inventory.write",
+            "shared.read",
+            "global.audit",
+        }
+    }
+];
+```
+
+| Scopes                   | Resource Api  | Result `aud`  |
+|--------------------------|---------------|---------------|
+| orders.read              | null          | urn:orders    |
+| inventory.read           | null          | NOT SET       |
+| inventory.read           | urn:inventory | urn:inventory |
+| orders.read global.audit | null          | urn:orders    |
+| shared.read              | null          | urn:orders    |
+| orders.read shared.read  | null          | urn:orders    |
+
+
+```csharp {30, 43, 51}
+//IdentityServer.cs
+#:sdk Microsoft.Net.Sdk.Web
+#:property PublishAot=false
+#:package Duende.IdentityServer@8.0.0-alpha.1
+
+using Duende.IdentityServer.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("https://localhost:5001");
+
+_ = builder.Services.AddIdentityServer(options =>
+{
+    // emits static audience if required
+    options.EmitStaticAudienceClaim = false;
+
+    // control format of scope claim
+    options.EmitScopesAsSpaceDelimitedStringInJwt = true;
+})
+.AddInMemoryApiScopes(InMemoryConfig.Scopes)
+.AddInMemoryApiResources(InMemoryConfig.Resources)
+.AddInMemoryClients(InMemoryConfig.Clients);
+
+var app = builder.Build();
+app.UseIdentityServer();
+app.Run();
+
+public static class InMemoryConfig
+{
+    //All scopes used by all API Resources and Clients
+    public static readonly IEnumerable<ApiScope> Scopes = [
+        // resource specific scopes
+        new ApiScope("orders.read"), new ApiScope("orders.write"),
+        new ApiScope("inventory.read"), new ApiScope("inventory.write"),
+        
+        // a scope shared by multiple resources
+        new ApiScope("shared.read"),
+        
+        // scopes without resource association
+        new ApiScope("global.audit"),
+    ];
+
+    // API resources with the scopes they use
+    public static readonly IEnumerable<ApiResource> Resources = [
+        new ApiResource("urn:orders", "Orders API") 
+            { Scopes = { "orders.read", "orders.write", "shared.read" } },
+        new ApiResource("urn:inventory", "Inventory API") {
+            Scopes = { "inventory.read", "inventory.write", "shared.read" },
+            RequireResourceIndicator = true
+        }, ];
+
+    public static readonly IEnumerable<Client> Clients = [
+        new Client {
+            ClientId = "resource.isolation.demo.client",
+            ClientSecrets = { new Secret("my-secret".Sha256()) },
+            ClientClaimsPrefix = "",
+            AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+            //Client is allowed to access all scopes for all ApiResources
+            AllowedScopes =
+            {
+                "orders.read", "orders.write",
+                "inventory.read", "inventory.write",
+                "shared.read",
+                "global.audit",
+            }
+        }
+    ];
+}
+```
+
+```csharp
+//ResourceIsolationClient.cs
+#:property PublishAot=false
+
+//Choose your access package library
+// #:package Duende.IdentityModel@8.1.0
+#:package Duende.AccessTokenManagement@4.2.0
+
+using System.Buffers.Text;
+using System.Text;
+using System.Text.Json;
+using Duende.IdentityModel.Client;
+
+var cache = new DiscoveryCache("https://localhost:5001");
+
+Console.WriteLine();
+
+Console.WriteLine("1. Access Token for scope `orders.read`");
+Console.WriteLine("  - `aud` field is `urn:orders` because only scopes from that API Resource were requested");
+await RequestToken(cache, scope: "orders.read", resource: null);
+
+Console.WriteLine();
+Console.WriteLine("2. Access Token for scope `inventory.read`");
+Console.WriteLine("  - `aud` field is not set because `ApiResource.RequireResourceIndicator = true` in IdentityServer Client and the resource is null");
+await RequestToken(cache, scope: "inventory.read", resource: null);
+
+Console.WriteLine();
+Console.WriteLine("3. Access Token for scope `inventory.read`");
+Console.WriteLine("  - `aud` field is `urn:inventory` because `ApiResource.RequireResourceIndicator = true` in IdentityServer Client, and the api resource is requested");
+await RequestToken(cache, scope: "inventory.read", resource: "urn:inventory");
+
+Console.WriteLine();
+Console.WriteLine("4. Access Token for scopes `orders.read global.audit`");
+Console.WriteLine("  - `aud` field is `urn:orders` because `orders.read` is tied to ApiResource `urn:orders` and `global.audit` is not tied to any");
+await RequestToken(cache, scope: "orders.read global.audit", resource: null);
+
+Console.WriteLine();
+Console.WriteLine("5. Access Token for scope `shared.read`");
+Console.WriteLine("  - `aud` field is urn:orders because ");
+await RequestToken(cache, scope: "shared.read", resource: null);
+
+Console.WriteLine();
+Console.WriteLine("6. Access Token for scopes `orders.read and shared.read`");
+Console.WriteLine("  - `aud` field is urn:orders because ");
+await RequestToken(cache, scope: "orders.read shared.read", resource: null);
+
+static async Task RequestToken(DiscoveryCache cache, string scope, string? resource)
+{
+    var client = new HttpClient();
+    var disco = await cache.GetAsync();
+
+    var request = new ClientCredentialsTokenRequest
+    {
+        Address = disco.TokenEndpoint,
+        ClientId = "resource.isolation.demo.client",
+        ClientSecret = "my-secret",
+
+        Scope = scope,
+    };
+
+    if (!string.IsNullOrEmpty(resource))
+    {
+        request.Resource.Add(resource);
+    }
+
+    var response = await client.RequestClientCredentialsTokenAsync(request);
+    Show(response);
+}
+
+static void Show(TokenResponse response)
+{
+    if (!response.IsError)
+    {
+        if (response.AccessToken?.Contains('.') is true)
+        {
+            var parts = response.AccessToken.Split('.');
+            var claims = parts[1];
+            Console.WriteLine(PrettyPrintJson(Encoding.UTF8.GetString(Base64Url.DecodeFromChars(claims))));
+        }
+        else
+        {
+            Console.WriteLine($"Token response: {response.Json}");
+        }
+    }
+    else if (response.ErrorType == ResponseErrorType.Http)
+    {
+        Console.WriteLine($"HTTP error: {response.Error}");
+        Console.WriteLine($"HTTP status code: {response.HttpStatusCode}");
+    }
+    else
+    {
+        Console.WriteLine($"Protocol error response: {response.Raw}");
+    }
+}
+
+static string PrettyPrintJson(string raw)
+{
+    var doc = JsonDocument.Parse(raw).RootElement;
+    return JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true });
+}
+```
+
+
+```mermaid
+%%{ init: { 'theme': 'neutral' } }%%
+requirementDiagram
+
+    element Client {
+    }
+
+    element ApiResource {
+    }
+
+    element Scopes {
+    }
+
+    Client - contains -> Scopes
+    ApiResource - contains -> Scopes
+```
+
+
+```mermaid
+%%{ init: { 'theme': 'neutral' } }%%
+mindmap
+  root((IdentityServer))
+    Clients
+      resource.isolation.demo.client
+    Scopes
+      ApiResources
+        urn:resource1
+          resource1.scope1
+          resource1.scope2
+          shared.scope
+        urn:resource2
+          resource2.scope1
+          resource2.scope2
+          shared.scope
+      Non-Parented Scopes
+        scope2
+        scope3
 ```
