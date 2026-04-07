@@ -28,7 +28,7 @@ builder.Services.AddBff(options =>
 };
 ```
 
-Starting with BFF v4, the BFF automatically wires up the management endpoints. If you disable this behavior (using `AutomaticallyRegisterBffMiddleware`, this is how you can map the management endpoints:
+Starting with BFF v4, the BFF automatically wires up the management endpoints. If you disable this behavior (using `AutomaticallyRegisterBffMiddleware`), this is how you can map the management endpoints:
 
 ```csharp
 // Program.cs
@@ -51,9 +51,8 @@ The `UsePreprocessing` method adds all handling for multiple frontend support. A
 ``` csharp
 app.UseBffFrontendSelection();
 app.UseBffPathMapping();
-app.UseBffOpenIdCallbacks();~
+app.UseBffOpenIdCallbacks();
 ```
-
 
 `UseBffPostProcessing` adds all BFF management endpoints and handlers for proxying `index.html`. You can also map each endpoint individually by calling the various `MapBffManagementXxxEndpoint` methods, for example `endpoints.MapBffManagementLoginEndpoint()`.
 
