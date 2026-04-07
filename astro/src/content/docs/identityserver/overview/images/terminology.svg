@@ -233,18 +233,18 @@
     </g>
     <g id="authenticate-users">
         <g transform="matrix(1,0,0,1,612.285,461)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">authenticate</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">authenticate</text>
         </g>
         <g transform="matrix(1,0,0,1,668.449,498.8)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">users</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">users</text>
         </g>
     </g>
     <g id="request-resource-access">
         <g transform="matrix(1,0,0,1,947.055,461)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">r<tspan x="11.865px " y="0px ">e</tspan>quest</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">r<tspan x="11.865px " y="0px ">e</tspan>quest</text>
         </g>
         <g transform="matrix(1,0,0,1,876.281,498.8)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">r<tspan x="11.865px " y="0px ">e</tspan>sour<tspan x="101.777px " y="0px ">c</tspan>e access</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">r<tspan x="11.865px " y="0px ">e</tspan>sour<tspan x="101.777px " y="0px ">c</tspan>e access</text>
         </g>
     </g>
     <g transform="matrix(1.91874,0,0,1.91874,149.192,599.105)">
