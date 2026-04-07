@@ -6,7 +6,7 @@ Welcome to the documentation of all [Duende Software](https://duendesoftware.com
 
 You will need the following installed:
 * [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-* Node.js 22+
+* Node.js 24+
 
 ### Quick Start (Astro only)
 
