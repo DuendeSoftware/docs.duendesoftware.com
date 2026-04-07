@@ -50,7 +50,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
     "@types/jsdom": "^28.0.1",
-    "@types/node": "^22.19.17",
+    "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "node-fetch": "^3.3.2",
     "prettier": "3.8.1",
@@ -58,6 +58,6 @@
     "typescript": "^5.9.3"
   },
   "volta": {
-    "node": "22.15.0"
+    "node": "24.0.0"
   }
 }
