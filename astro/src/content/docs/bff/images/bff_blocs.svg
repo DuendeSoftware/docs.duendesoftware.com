@@ -69,7 +69,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     Duende BFF Security Framework
                                 </xhtml:div>
               </xhtml:div>
@@ -79,7 +79,7 @@
              x="12"
              y="214"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -117,7 +117,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     ASP.Net OpenID Connect Handler
                                 </xhtml:div>
               </xhtml:div>
@@ -127,7 +127,7 @@
              x="225"
              y="44"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -167,7 +167,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     ASP.NET Cookie Handler
                                 </xhtml:div>
               </xhtml:div>
@@ -177,7 +177,7 @@
              x="42"
              y="114"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              font-weight="bold"
              id="text10">ASP.NET Cookie Handler</text>
@@ -214,7 +214,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     Server-side sessions
                                     <xhtml:div>
                                         Login / Logout / User Endpoints
@@ -230,7 +230,7 @@
              x="252"
              y="113"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="10px"
              id="text13">Server-side sessions...</text>
         </switch>
@@ -278,7 +278,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                   <xhtml:b>
                                         Duende.AccessTokenManagement
                                     </xhtml:b>
@@ -290,7 +290,7 @@
              x="42"
              y="173"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              id="text18">Duende.AccessTokenManagement</text>
         </switch>
@@ -326,7 +326,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     Server-side sessions
                                     <xhtml:div>
                                         Login / Logout / User Endpoints
@@ -342,7 +342,7 @@
              x="252"
              y="173"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="10px"
              id="text21">Server-side sessions...</text>
         </switch>
@@ -390,7 +390,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     Local API
                                     <xhtml:div>
                                         Endpoints
@@ -403,7 +403,7 @@
              x="42"
              y="244"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              font-weight="bold"
              id="text26">Local API...</text>
@@ -450,7 +450,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     Anti-forgery protection
                                 </xhtml:div>
               </xhtml:div>
@@ -460,7 +460,7 @@
              x="132"
              y="243"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="10px"
              id="text30">Anti-forgery prote...</text>
         </switch>
@@ -498,7 +498,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     YARP
                                 </xhtml:div>
               </xhtml:div>
@@ -508,7 +508,7 @@
              x="232"
              y="244"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              font-weight="bold"
              id="text34">YARP</text>
@@ -555,7 +555,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     Dev-centric API
                                     <xhtml:div>
                                         Token Management
@@ -571,7 +571,7 @@
              x="312"
              y="243"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="10px"
              id="text38">Dev-centric API...</text>
         </switch>
@@ -607,7 +607,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     Static Files Middleware
                                 </xhtml:div>
               </xhtml:div>
@@ -617,7 +617,7 @@
              x="225"
              y="314"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -657,7 +657,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                   <xhtml:b>
                                         Blazor Support
                                     </xhtml:b>
@@ -669,7 +669,7 @@
              x="42"
              y="378"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              id="text45">Blazor Support</text>
         </switch>
@@ -705,7 +705,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 10px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     Unified authentication state
                                     <xhtml:div>
                                         Automatic session refresh
@@ -721,7 +721,7 @@
              x="252"
              y="378"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="10px"
              id="text48">Unified authentication state...</text>
         </switch>

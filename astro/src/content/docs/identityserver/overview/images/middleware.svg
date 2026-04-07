@@ -113,7 +113,7 @@
                 <g transform="matrix(1,0,0,1,483.101,499.66)">
                     <g transform="matrix(64,0,0,64,342.438,0)">
                     </g>
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:64px;">Y<tspan x="37.531px " y="0px ">O</tspan>UR CODE</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:64px;">Y<tspan x="37.531px " y="0px ">O</tspan>UR CODE</text>
                 </g>
                 <g transform="matrix(1.50914,0,0,1.50914,547.979,257.299)">
                     <path d="M73.82,36.41C73.79,34.42 73.61,32.4 73.24,30.38C72.88,28.35 72.35,26.4 71.68,24.52L62.84,24.13C61.87,22.15 60.69,20.31 59.33,18.64L62.65,10.46C59.74,7.64 56.39,5.31 52.73,3.57L46.22,9.53C44.18,8.83 42.04,8.38 39.85,8.15L36.4,-0C34.41,0.03 32.39,0.21 30.37,0.58C28.35,0.95 26.39,1.47 24.51,2.14L24.12,10.98C22.14,11.95 20.3,13.13 18.63,14.49L10.45,11.17C7.63,14.08 5.3,17.43 3.56,21.09L9.52,27.6C8.82,29.64 8.37,31.78 8.14,33.97L-0.01,37.42C0.02,39.41 0.2,41.43 0.57,43.45C0.93,45.48 1.46,47.43 2.13,49.31L10.97,49.7C11.94,51.68 13.12,53.52 14.48,55.19L11.16,63.37C14.07,66.19 17.42,68.52 21.08,70.26L27.59,64.3C29.63,65 31.77,65.45 33.96,65.68L37.41,73.83C39.4,73.8 41.42,73.62 43.44,73.25C45.47,72.89 47.42,72.36 49.3,71.69L49.69,62.85C51.67,61.88 53.51,60.7 55.18,59.34L63.36,62.66C66.18,59.75 68.51,56.4 70.25,52.74L64.29,46.23C64.99,44.19 65.44,42.05 65.67,39.86L73.82,36.41ZM40.93,49.52C32.61,52.13 24.16,46.25 23.7,37.54C23.39,31.61 27.23,26.08 32.9,24.3C41.22,21.69 49.67,27.57 50.13,36.28C50.44,42.21 46.6,47.74 40.93,49.52Z" style="fill:url(#_Linear2);fill-rule:nonzero;"/>
@@ -129,10 +129,10 @@
     <g id="IdentityServer-Middleware">
         <g>
             <g transform="matrix(1,0,0,1,450.057,911)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:64px;">IdentitySer<tspan x="304.688px 335.281px " y="0px 0px ">ve</tspan>r</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:64px;">IdentitySer<tspan x="304.688px 335.281px " y="0px 0px ">ve</tspan>r</text>
             </g>
             <g transform="matrix(1,0,0,1,480.901,978.5)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:64px;">Middlewar<tspan x="297.125px " y="0px ">e</tspan></text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:64px;">Middlewar<tspan x="297.125px " y="0px ">e</tspan></text>
             </g>
         </g>
     </g>
@@ -164,28 +164,28 @@
     <g id="g6">
         <g transform="matrix(1,0,0,1,97,251)">
             <g id="login">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">login</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">login</text>
             </g>
         </g>
         <g id="logout" transform="matrix(1,0,0,1,96,353)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">logout</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">logout</text>
         </g>
         <g id="text1" transform="matrix(1,0,0,1,97,455)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">...</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">...</text>
         </g>
         <g transform="matrix(1,0,0,1,97,710)">
             <g id="authorize">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">authoriz<tspan x="130.096px " y="0px ">e</tspan></text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">authoriz<tspan x="130.096px " y="0px ">e</tspan></text>
             </g>
         </g>
         <g transform="matrix(1,0,0,1,97,811)">
             <g id="token">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">t<tspan x="11.426px 31.957px 49.852px " y="0px 0px 0px ">oke</tspan>n</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">t<tspan x="11.426px 31.957px 49.852px " y="0px 0px 0px ">oke</tspan>n</text>
             </g>
         </g>
         <g transform="matrix(1,0,0,1,97,912)">
             <g id="discovery">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:36px;">disco<tspan x="86.748px 103.957px 123.047px 135.563px " y="0px 0px 0px 0px ">very</tspan></text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:36px;">disco<tspan x="86.748px 103.957px 123.047px 135.563px " y="0px 0px 0px 0px ">very</tspan></text>
             </g>
         </g>
     </g>

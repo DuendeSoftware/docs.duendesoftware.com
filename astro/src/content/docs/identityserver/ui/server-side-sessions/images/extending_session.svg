@@ -53,10 +53,10 @@
         </g>
         <path id="Rounded-Rectangle-copy-3" d="M185.359,747.243C185.359,764.782 199.577,779 217.116,779L926.886,779C944.425,779 958.643,764.782 958.643,747.243L958.643,684.523C958.643,666.984 944.425,652.766 926.886,652.766L217.116,652.766C199.577,652.766 185.359,666.984 185.359,684.523L185.359,747.243Z" style="fill:none;fill-rule:nonzero;stroke:rgb(145,107,219);stroke-width:7.94px;"/>
         <g id="introspection" transform="matrix(1,0,0,1,501,210)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:19.054px;">intr<tspan x="27.66px " y="0px ">o</tspan>spection</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:19.054px;">intr<tspan x="27.66px " y="0px ">o</tspan>spection</text>
         </g>
         <g id="token" transform="matrix(1,0,0,1,534,364)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:19.054px;">t<tspan x="6.047px 16.914px 26.386px " y="0px 0px 0px ">oke</tspan>n</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:19.054px;">t<tspan x="6.047px 16.914px 26.386px " y="0px 0px 0px ">oke</tspan>n</text>
         </g>
         <g id="g2">
             <path id="path21" d="M641.867,392.358L565.53,393.033" style="fill:none;fill-rule:nonzero;stroke:rgb(145,107,219);stroke-width:8.92px;"/>
@@ -69,13 +69,13 @@
         <g id="g3">
             <g id="access-sub-123-sid">
                 <g transform="matrix(1,0,0,1,226,293)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">access</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">access</text>
                 </g>
                 <g transform="matrix(1,0,0,1,226,307.4)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">sub: 123</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">sub: 123</text>
                 </g>
                 <g transform="matrix(1,0,0,1,226,321.8)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">sid: 456</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">sid: 456</text>
                 </g>
             </g>
             <g transform="matrix(0.22002,0,0,0.22002,147.599,283.214)">
@@ -86,20 +86,20 @@
                 <path d="M280.67,107.04L280.67,137.49C280.67,137.7 280.35,137.87 279.95,137.87C279.55,137.87 279.23,137.7 279.23,137.49L279.23,107.04C279.23,106.83 279.55,106.66 279.95,106.66C280.35,106.66 280.67,106.83 280.67,107.04Z" style="fill:url(#_Linear16);fill-rule:nonzero;"/>
                 <path d="M254.62,63.318L254.62,132.792C254.62,141.572 247.492,148.7 238.712,148.7L38.008,148.7C29.228,148.7 22.1,141.572 22.1,132.792L22.1,63.318C22.1,54.538 29.228,47.41 38.008,47.41L238.712,47.41C247.492,47.41 254.62,54.538 254.62,63.318Z" style="fill:url(#_Linear17);"/>
                 <g transform="matrix(1,0,0,1,47.2,133.65)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:100px;fill:rgb(210,195,224);">XYZ</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:100px;fill:rgb(210,195,224);">XYZ</text>
                 </g>
             </g>
         </g>
         <g id="g31" serif:id="g3" transform="matrix(1,0,0,1,298.513,-185.103)">
             <g id="access-sub-123-sid1" serif:id="access-sub-123-sid">
                 <g transform="matrix(1,0,0,1,226,293)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">access</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">access</text>
                 </g>
                 <g transform="matrix(1,0,0,1,226,307.4)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">sub: 123</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">sub: 123</text>
                 </g>
                 <g transform="matrix(1,0,0,1,226,321.8)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">sid: 456</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">sid: 456</text>
                 </g>
             </g>
             <g transform="matrix(0.22002,0,0,0.22002,147.599,283.214)">
@@ -110,7 +110,7 @@
                 <path d="M280.67,107.04L280.67,137.49C280.67,137.7 280.35,137.87 279.95,137.87C279.55,137.87 279.23,137.7 279.23,137.49L279.23,107.04C279.23,106.83 279.55,106.66 279.95,106.66C280.35,106.66 280.67,106.83 280.67,107.04Z" style="fill:url(#_Linear22);fill-rule:nonzero;"/>
                 <path d="M254.62,63.318L254.62,132.792C254.62,141.572 247.492,148.7 238.712,148.7L38.008,148.7C29.228,148.7 22.1,141.572 22.1,132.792L22.1,63.318C22.1,54.538 29.228,47.41 38.008,47.41L238.712,47.41C247.492,47.41 254.62,54.538 254.62,63.318Z" style="fill:url(#_Linear23);"/>
                 <g transform="matrix(1,0,0,1,47.2,133.65)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:100px;fill:rgb(210,195,224);">XYZ</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:100px;fill:rgb(210,195,224);">XYZ</text>
                 </g>
             </g>
         </g>
@@ -119,13 +119,13 @@
                 <g transform="matrix(1,0,0,1,226,293)">
                     <g transform="matrix(14.2907,0,0,14.2907,44.7909,0)">
                     </g>
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">r<tspan x="4.71px " y="0px ">e</tspan>fr<tspan x="21.966px " y="0px ">e</tspan>sh</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">r<tspan x="4.71px " y="0px ">e</tspan>fr<tspan x="21.966px " y="0px ">e</tspan>sh</text>
                 </g>
                 <g transform="matrix(1,0,0,1,226,307.4)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">sub: 123</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">sub: 123</text>
                 </g>
                 <g transform="matrix(1,0,0,1,226,321.8)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">sid: 456</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">sid: 456</text>
                 </g>
             </g>
             <g transform="matrix(0.22002,0,0,0.22002,147.599,283.214)">
@@ -136,54 +136,54 @@
                 <path d="M280.67,107.04L280.67,137.49C280.67,137.7 280.35,137.87 279.95,137.87C279.55,137.87 279.23,137.7 279.23,137.49L279.23,107.04C279.23,106.83 279.55,106.66 279.95,106.66C280.35,106.66 280.67,106.83 280.67,107.04Z" style="fill:url(#_Linear28);fill-rule:nonzero;"/>
                 <path d="M254.62,63.318L254.62,132.792C254.62,141.572 247.492,148.7 238.712,148.7L38.008,148.7C29.228,148.7 22.1,141.572 22.1,132.792L22.1,63.318C22.1,54.538 29.228,47.41 38.008,47.41L238.712,47.41C247.492,47.41 254.62,54.538 254.62,63.318Z" style="fill:url(#_Linear29);"/>
                 <g transform="matrix(1,0,0,1,47.2,133.65)">
-                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:100px;fill:rgb(210,195,224);">XYZ</text>
+                    <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:100px;fill:rgb(210,195,224);">XYZ</text>
                 </g>
             </g>
         </g>
         <g id="key-111" transform="matrix(1,0,0,1,745,633)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:14.291px;">k<tspan x="7.103px " y="0px ">e</tspan>y: 111</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:14.291px;">k<tspan x="7.103px " y="0px ">e</tspan>y: 111</text>
         </g>
         <g id="key-111-sub-123">
             <g transform="matrix(1,0,0,1,1138,403)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:23.818px;">k<tspan x="11.839px 24.318px " y="0px 0px ">ey</tspan>: 111</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:23.818px;">k<tspan x="11.839px 24.318px " y="0px 0px ">ey</tspan>: 111</text>
             </g>
             <g transform="matrix(1,0,0,1,1138,431)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:23.818px;">sub: 123</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:23.818px;">sub: 123</text>
             </g>
             <g transform="matrix(1,0,0,1,1138,459)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:23.818px;">sid: 456</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:23.818px;">sid: 456</text>
             </g>
             <g transform="matrix(1,0,0,1,1138,487)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:23.818px;">expir<tspan x="51.462px " y="0px ">e</tspan>s: 10</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:23.818px;">expir<tspan x="51.462px " y="0px ">e</tspan>s: 10</text>
             </g>
         </g>
         <g id="API" transform="matrix(1,0,0,1,263,160)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:38.108px;">API</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:38.108px;">API</text>
         </g>
         <g id="Browser" transform="matrix(1,0,0,1,499,730)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:38.108px;">Br<tspan x="36.285px " y="0px ">o</tspan>wser</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:38.108px;">Br<tspan x="36.285px " y="0px ">o</tspan>wser</text>
         </g>
         <g id="Coordiation-Service" transform="matrix(1,0,0,1,-5.9718,-1.22779)">
             <g transform="matrix(1,0,0,1,786.233,279)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:28.581px;">Coor<tspan x="60.624px " y="0px ">d</tspan>ination</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:28.581px;">Coor<tspan x="60.624px " y="0px ">d</tspan>ination</text>
             </g>
             <g transform="matrix(1,0,0,1,821.276,309.6)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:28.581px;">Ser<tspan x="42.063px " y="0px ">v</tspan>ice</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:28.581px;">Ser<tspan x="42.063px " y="0px ">v</tspan>ice</text>
             </g>
         </g>
         <g id="Cookie-Handler">
             <g transform="matrix(1,0,0,1,815.874,418)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:28.581px;">Cookie</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:28.581px;">Cookie</text>
             </g>
             <g transform="matrix(1,0,0,1,809.971,448.6)">
-                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:28.581px;">Handler</text>
+                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:28.581px;">Handler</text>
             </g>
         </g>
         <g id="Client" transform="matrix(1,0,0,1,236,463)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:38.108px;">Client</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:38.108px;">Client</text>
         </g>
         <g id="IdentityServer" transform="matrix(1,0,0,1,739,186)">
-            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto';font-size:38.108px;">IdentitySer<tspan x="181.425px 199.641px " y="0px 0px ">ve</tspan>r</text>
+            <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:38.108px;">IdentitySer<tspan x="181.425px 199.641px " y="0px 0px ">ve</tspan>r</text>
         </g>
         <g id="Group-copy-3">
             <path id="Path" d="M787.946,125.477C784.557,123.436 783.453,118.994 785.493,115.605L802.715,86.998C804.755,83.609 809.197,82.505 812.586,84.545C815.975,86.585 817.079,91.027 815.039,94.416L797.817,123.024C795.777,126.413 791.335,127.517 787.946,125.477Z" style="fill:rgb(99,62,158);fill-rule:nonzero;"/>

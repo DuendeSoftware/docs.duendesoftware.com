@@ -93,7 +93,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     Blazor.App.Client
                                 </xhtml:div>
               </xhtml:div>
@@ -103,7 +103,7 @@
              x="440"
              y="95"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -170,7 +170,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                   <xhtml:div>
                     <xhtml:b>
                       <xhtml:span
@@ -194,7 +194,7 @@
              x="560"
              y="165"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text10">RenderMode.Auto...</text>
@@ -232,7 +232,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                   <xhtml:b>
                                         RenderMode.Auto
                                     </xhtml:b>
@@ -247,7 +247,7 @@
              x="560"
              y="590"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text13">RenderMode.Auto...</text>
@@ -284,7 +284,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                   <xhtml:b>
                                         RenderMode.Server
                                     </xhtml:b>
@@ -299,7 +299,7 @@
              x="700"
              y="590"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text16">RenderMode.Server...</text>
@@ -353,7 +353,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                   <xhtml:b>
                                         WASM component
                                     </xhtml:b>
@@ -368,7 +368,7 @@
              x="420"
              y="165"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text20">WASM component...</text>
@@ -405,7 +405,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     HttpClient
                                 </xhtml:div>
               </xhtml:div>
@@ -415,7 +415,7 @@
              x="370"
              y="264"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -465,7 +465,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     Blazor.App.Server
                                 </xhtml:div>
               </xhtml:div>
@@ -475,7 +475,7 @@
              x="445"
              y="525"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -524,7 +524,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     Remote
                                     <xhtml:br />
 
@@ -541,7 +541,7 @@
              x="355"
              y="590"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -590,7 +590,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     Secured with Auth cookie
                                 </xhtml:div>
               </xhtml:div>
@@ -600,7 +600,7 @@
              x="300"
              y="359"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text35">Secured wi...</text>
@@ -649,7 +649,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     BFF Security Framework - Blazor remote Api's
                                 </xhtml:div>
               </xhtml:div>
@@ -659,7 +659,7 @@
              x="11"
              y="439"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -697,7 +697,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     HttpClient
                                 </xhtml:div>
               </xhtml:div>
@@ -707,7 +707,7 @@
              x="355"
              y="684"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -785,7 +785,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
                                     &lt;&lt;WebSockets&gt;&gt;
                                 </xhtml:div>
               </xhtml:div>
@@ -795,7 +795,7 @@
              x="560"
              y="377"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text48">&lt;&lt;WebSockets&gt;&gt;</text>
@@ -849,7 +849,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     Remote API
                                 </xhtml:div>
               </xhtml:div>
@@ -859,7 +859,7 @@
              x="620"
              y="800"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -970,7 +970,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     Secured with access key
                                 </xhtml:div>
               </xhtml:div>
@@ -980,7 +980,7 @@
              x="455"
              y="787"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text62">Secured wit...</text>

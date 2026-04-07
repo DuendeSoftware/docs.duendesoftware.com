@@ -53,7 +53,7 @@
                         <path d="M92.972,53.312L92.972,60.392C92.972,61.049 92.439,61.582 91.782,61.582L91.762,61.582C91.105,61.582 90.572,61.049 90.572,60.392L90.572,53.312C90.572,52.655 91.105,52.122 91.762,52.122L91.782,52.122C92.439,52.122 92.972,52.655 92.972,53.312Z" style="fill:url(#_Linear21);"/>
                         <g transform="matrix(1,0,0,1,17.35,42.217)">
                             <g>
-                                <text x="0px" y="0px" style="font-family:'Heebo-Regular', 'Heebo';font-size:30px;fill:rgb(209,194,223);">XYZ</text>
+                                <text x="0px" y="0px" style="font-family:'Roboto-Regular', 'Roboto', 'Arial', sans-serif;font-size:30px;fill:rgb(209,194,223);">XYZ</text>
                             </g>
                         </g>
                     </g>
