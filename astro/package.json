@@ -12,7 +12,8 @@
     "url": "https://github.com/DuendeSoftware/docs.duendesoftware.com.git"
   },
   "notes": {
-    "Astro SVG validation issue": "https://github.com/withastro/astro/issues/13006"
+    "Astro SVG validation issue": "https://github.com/withastro/astro/issues/13006",
+    "Astro EXDEV rename issue": "fs.rename fails across Docker mount boundaries (cross-device); patched to fall back to copy+unlink"
   },
   "scripts": {
     "dev": "astro dev",
