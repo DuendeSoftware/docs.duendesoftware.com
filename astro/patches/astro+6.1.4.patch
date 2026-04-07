@@ -11,25 +11,3 @@ index 0f22881..41cd9ef 100644
    calculate(input) {
      const root = extractorRegExps.root.exec(toUTF8String(input));
      if (root) {
-diff --git a/node_modules/astro/dist/core/build/static-build.js b/node_modules/astro/dist/core/build/static-build.js
-index 79f476a..afb77e9 100644
---- a/node_modules/astro/dist/core/build/static-build.js
-+++ b/node_modules/astro/dist/core/build/static-build.js
-@@ -384,7 +384,7 @@ async function ssrMoveAssets(opts, internals, prerenderOutputDir) {
-         if (!fs.existsSync(currentUrl)) return;
-         const dir = new URL(path.parse(clientUrl.href).dir);
-         if (!fs.existsSync(dir)) await fs.promises.mkdir(dir, { recursive: true });
--        return fs.promises.rename(currentUrl, clientUrl);
-+        try { return await fs.promises.rename(currentUrl, clientUrl); } catch (e) { if (e.code === 'EXDEV') { await fs.promises.copyFile(currentUrl, clientUrl); await fs.promises.unlink(currentUrl); } else { throw e; } }
-       })
-     );
-   }
-@@ -400,7 +400,7 @@ async function ssrMoveAssets(opts, internals, prerenderOutputDir) {
-         if (!fs.existsSync(currentUrl)) return;
-         const dir = new URL(path.parse(clientUrl.href).dir);
-         if (!fs.existsSync(dir)) await fs.promises.mkdir(dir, { recursive: true });
--        return fs.promises.rename(currentUrl, clientUrl);
-+        try { return await fs.promises.rename(currentUrl, clientUrl); } catch (e) { if (e.code === 'EXDEV') { await fs.promises.copyFile(currentUrl, clientUrl); await fs.promises.unlink(currentUrl); } else { throw e; } }
-       })
-     );
-     removeEmptyDirs(fileURLToPath(serverRoot));
