@@ -94,6 +94,13 @@ app.UseStaticFiles(new StaticFileOptions
         var path = ctx.File.Name;
         var requestPath = ctx.Context.Request.Path.Value ?? "";
 
+        // Pagefind assets (pagefind folder) - cache for 1 hour
+        if (requestPath.Contains("/pagefind/"))
+        {
+            ctx.Context.Response.Headers.CacheControl = "public, max-age=3600";
+            return;
+        }
+
         // Astro assets (_astro folder) - cache for 1 year
         if (requestPath.Contains("/_astro/"))
         {
