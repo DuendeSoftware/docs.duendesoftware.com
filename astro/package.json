@@ -27,7 +27,7 @@
     "@astrojs/markdown-remark": "^7.1.0",
     "@astrojs/starlight": "^0.38.2",
     "@astrojs/ts-plugin": "^1.10.6",
-    "@fontsource/roboto": "^5.2.10",
+    "@fontsource/funnel-sans": "^5.2.8",
     "@pasqal-io/starlight-client-mermaid": "^0.1.0",
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^6.1.0",
@@ -50,7 +50,8 @@
     "starlight-heading-badges": "^0.7.0",
     "starlight-links-validator": "^0.21.0",
     "starlight-llms-txt": "^0.8.0",
-    "tw-to-css": "^0.0.12"
+    "tw-to-css": "^0.0.12",
+    "wawoff2": "^2.0.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",

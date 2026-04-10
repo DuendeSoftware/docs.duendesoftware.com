@@ -10,6 +10,7 @@ import starlightLlmsTxt from "starlight-llms-txt";
 import rehypeAstroRelativeMarkdownLinks from "astro-rehype-relative-markdown-links";
 import opengraphImages from "astro-opengraph-images";
 import rehypeExternalLinks from "rehype-external-links";
+import wawoff from "wawoff2"
 import * as fs from "node:fs";
 
 // don't convert to path aliases, it doesn't work here
@@ -30,11 +31,26 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Roboto",
-      cssVariable: "--font-roboto",
-      weights: ["100 900", "bold"],
+      name: "Funnel Sans",
+      cssVariable: "--font-funnel-sans",
+      weights: ["300 800", "bold"],
       styles: ["normal", "italic"],
       display: "swap",
+    },
+    {
+      provider: fontProviders.local(),
+      name: "GT Canon",
+      cssVariable: "--font-gt-canon",
+      display: "swap",
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/GT-Canon-M-Standard-Semibold.woff2"],
+            weights: ["400", "500", "600", "700"],
+            styles: ["normal"],
+          },
+        ],
+      },
     },
   ],
   integrations: [
@@ -109,6 +125,10 @@ export default defineConfig({
           reactions: true,
           inputPosition: "top",
           lazy: true,
+          theme: {
+            light: "noborder_light",
+            dark: "noborder_gray",
+          },
         }),
         starlightClientMermaid({
           /* options */
@@ -121,7 +141,17 @@ export default defineConfig({
         }),
       ],
       title: "Duende Software Docs",
+      favicon: "/favicon.png",
       head: [
+        // Favicon ICO fallback for older browsers
+        {
+          tag: "link",
+          attrs: {
+            rel: "icon",
+            href: "/favicon.ico",
+            sizes: "32x32",
+          },
+        },
         // Google Tag Manager
         {
           tag: "script",
@@ -247,11 +277,21 @@ export default defineConfig({
       options: {
         fonts: [
           {
-            name: "Roboto",
+            name: "Funnel Sans",
             weight: 400,
             style: "normal",
             data: fs.readFileSync(
-              "node_modules/@fontsource/roboto/files/roboto-latin-400-normal.woff",
+              "node_modules/@fontsource/funnel-sans/files/funnel-sans-latin-400-normal.woff",
+            ),
+          },
+          {
+            name: "GT Canon",
+            weight: 700,
+            style: "normal",
+            data: await wawoff.decompress(
+              fs.readFileSync(
+                "src/assets/fonts/GT-Canon-M-Standard-Semibold.woff2"
+              ),
             ),
           },
         ],
