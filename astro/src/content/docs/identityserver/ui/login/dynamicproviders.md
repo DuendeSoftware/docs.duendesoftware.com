@@ -13,7 +13,7 @@ Dynamic Identity Providers are a scalable solution for managing authentication w
 incurring performance penalties or requiring application recompilation. This feature enables providers to be configured dynamically from a store at runtime.
 
 :::note
-This feature is part of the [Duende IdentityServer Enterprise, Advanced Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 ## Dynamic Identity Providers

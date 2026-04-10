@@ -28,7 +28,7 @@ querying for active sessions based on subject id or session id, and revoking art
 of that session.
 
 :::note
-This feature is part of the [Duende IdentityServer Business, Enterprise, Standard, Advanced Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Business (legacy), Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 ## Session Management
