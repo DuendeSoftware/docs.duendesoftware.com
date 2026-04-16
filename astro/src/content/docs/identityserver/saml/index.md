@@ -9,11 +9,9 @@ sidebar:
 
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
 
-<!--
 :::note
-SAML 2.0 Identity Provider support requires a **Duende IdentityServer Enterprise Edition** license.
+This feature is part of the [Duende IdentityServer Standard (add-on), Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
--->
 
 IdentityServer can act as a **SAML 2.0 Identity Provider (IdP)**, issuing SAML assertions to
 Service Providers (SPs). This enables integration with enterprise applications and legacy systems
