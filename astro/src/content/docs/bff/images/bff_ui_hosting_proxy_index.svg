@@ -64,7 +64,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     BFF Application
                                 </xhtml:div>
               </xhtml:div>
@@ -74,7 +74,7 @@
              x="12"
              y="324"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -112,7 +112,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     BFF endpoints
                                 </xhtml:div>
               </xhtml:div>
@@ -122,7 +122,7 @@
              x="110"
              y="319"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text6">BFF endpoints</text>
@@ -159,7 +159,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     local / remote API endpoints
                                 </xhtml:div>
               </xhtml:div>
@@ -169,7 +169,7 @@
              x="260"
              y="319"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text9">local / remote API e...</text>
@@ -206,7 +206,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     proxy
                                 </xhtml:div>
               </xhtml:div>
@@ -216,7 +216,7 @@
              x="395"
              y="319"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text12">proxy</text>
@@ -265,7 +265,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     Browser: https://application.url
                                 </xhtml:div>
               </xhtml:div>
@@ -275,7 +275,7 @@
              x="215"
              y="15"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -313,7 +313,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     app
                                 </xhtml:div>
               </xhtml:div>
@@ -323,7 +323,7 @@
              x="210"
              y="69"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text19">app</text>
@@ -365,7 +365,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
                                     1. get index.html
                                 </xhtml:div>
               </xhtml:div>
@@ -375,7 +375,7 @@
              x="395"
              y="113"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text22">1. get index.html</text>
@@ -417,7 +417,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
                                     2. Login
                                 </xhtml:div>
               </xhtml:div>
@@ -427,7 +427,7 @@
              x="145"
              y="191"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text25">2. Login</text>
@@ -469,7 +469,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
                                     3. Access API's
                                 </xhtml:div>
               </xhtml:div>
@@ -479,7 +479,7 @@
              x="250"
              y="191"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text28">3. Access API's</text>
@@ -528,7 +528,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">
                                     CDN
                                 </xhtml:div>
               </xhtml:div>
@@ -538,7 +538,7 @@
              x="632"
              y="378"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -576,7 +576,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     index.html
                                 </xhtml:div>
               </xhtml:div>
@@ -586,7 +586,7 @@
              x="730"
              y="318"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text35">index.html</text>
@@ -623,7 +623,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     script_assets.js
                                 </xhtml:div>
               </xhtml:div>
@@ -633,7 +633,7 @@
              x="730"
              y="388"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text38">script_assets.js</text>
@@ -670,7 +670,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     images
                                 </xhtml:div>
               </xhtml:div>
@@ -680,7 +680,7 @@
              x="730"
              y="468"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text41">images</text>
@@ -717,7 +717,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
                                     https://the.cdn
                                 </xhtml:div>
               </xhtml:div>
@@ -727,7 +727,7 @@
              x="737"
              y="258"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text44">https://the.cdn</text>
@@ -769,7 +769,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
                                     proxy calls
                                     <xhtml:div>
                                         to index.html
@@ -782,7 +782,7 @@
              x="565"
              y="317"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text47">proxy calls...</text>
@@ -824,7 +824,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
                                     1.1. Get static assets
                                 </xhtml:div>
               </xhtml:div>
@@ -834,7 +834,7 @@
              x="601"
              y="53"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text50">1.1. Get static assets</text>

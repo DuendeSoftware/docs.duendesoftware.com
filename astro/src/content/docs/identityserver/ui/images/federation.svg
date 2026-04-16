@@ -31,10 +31,10 @@
                 </g>
                 <g id="Federation-Gateway" transform="matrix(1,0,0,1,0.0241111,61.2019)">
                     <g transform="matrix(1,0,0,1,585.016,707)">
-                        <text x="0px" y="0px" style="font-family:'Helvetica';font-size:64px;">Federation</text>
+                        <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:64px;">Federation</text>
                     </g>
                     <g transform="matrix(1,0,0,1,611.719,776.3)">
-                        <text x="0px" y="0px" style="font-family:'Helvetica';font-size:64px;">Gateway</text>
+                        <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:64px;">Gateway</text>
                     </g>
                 </g>
             </g>
@@ -72,7 +72,7 @@
                 </g>
             </g>
             <g id="Clients" transform="matrix(0.594187,0,0,0.594187,-653.434,62.5956)">
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:64px;">Clients</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:64px;">Clients</text>
             </g>
             <g transform="matrix(1.48757,0,0,1.48757,-676.447,-173.339)">
                 <g transform="matrix(0.993572,-0.113203,0.113203,0.993572,-4.33,6.46)">

@@ -23,18 +23,16 @@ export default defineConfig({
   site: "https://docs.duendesoftware.com",
   trailingSlash: "ignore",
   redirects: {},
-  experimental: {
-    fonts: [
-      {
-        provider: fontProviders.google(),
-        name: "Roboto",
-        cssVariable: "--font-roboto",
-        weights: ["100 900", "bold"],
-        styles: ["normal", "italic"],
-        display: "swap",
-      },
-    ],
-  },
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: "Roboto",
+      cssVariable: "--font-roboto",
+      weights: ["100 900", "bold"],
+      styles: ["normal", "italic"],
+      display: "swap",
+    },
+  ],
   integrations: [
     starlight({
       customCss: ["./src/styles/custom.css"],

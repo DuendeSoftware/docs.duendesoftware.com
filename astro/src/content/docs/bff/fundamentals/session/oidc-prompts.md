@@ -47,10 +47,16 @@ The `prompt` parameter can be used in situations where additional security is re
 
 ## Silent Login Deprecation (v3 to v4)
 
-When migrating from Duende BFF v3 to v4, you may notice deprecation warnings regarding the [silent login](/bff/fundamentals/session/management/silent-login.md) feature found at the user endpoint of `/silent-login`. You should discontinue use of the silent login feature and instead use the `prompt=none` parameter to achieve the same result.
+When migrating from Duende BFF v3 to v4, you may notice deprecation warnings regarding the [silent login](/bff/fundamentals/session/management/silent-login.md) 
+feature located at the management endpoint `/silent-login`. 
 
+To resolve the warning, update the silent login URL in your frontend applications to point to the login endpoint instead, including the `prompt=none`
+query parameter:
 
+```diff
+-const silentLoginPath = '/bff/silent-login';
++const silentLoginPath = '/bff/login?prompt=none';
+```
 
-
-
-
+By default, BFF v4 [automatically registers the management endpoints](/bff/fundamentals/session/management/index.md). In case you opted out of the automatic registration feature, 
+you may still need to explicitly call `app.MapBffManagementSilentLoginEndpoints()` if you are manually mapping the management endpoints.
