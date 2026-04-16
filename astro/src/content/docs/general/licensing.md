@@ -264,6 +264,23 @@ Duende products like IdentityServer and the BFF Security Framework look for a fi
 [ContentRootPath](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostenvironment.contentrootpath?#microsoft-extensions-hosting-ihostenvironment-contentrootpath)
 of your application. If present, the content of the file will be used as the license key.
 
+By default, `ContentRootPath` is the directory that contains the application's `.csproj`
+file during development, and the application's base directory in published deployments.
+Place the license key file there:
+
+```text
+MyIdentityServer/
+├── Duende_License.key   ← place license here
+├── MyIdentityServer.csproj
+├── Program.cs
+├── appsettings.json
+└── ...
+```
+
+:::tip
+To verify your `ContentRootPath` at runtime, inspect `builder.Environment.ContentRootPath`.
+:::
+
 ### Startup
 
 If you prefer to load the license key programmatically, you can do so in your startup
