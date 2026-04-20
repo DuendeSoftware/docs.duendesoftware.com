@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Docs.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,9 @@ builder.AddServiceDefaults();
 
 // Add response compression
 builder.Services.AddResponseCompression();
+
+// Content negotiation middleware
+builder.Services.AddTransient<ContentNegotiationMiddleware>();
 
 var app = builder.Build();
 
@@ -52,35 +56,7 @@ app.Use(async (context, next) =>
 app.UseResponseCompression();
 
 // Content negotiation: serve .md file when Accept: text/markdown
-app.Use(async (context, next) =>
-{
-    var accept = context.Request.Headers.Accept.ToString();
-    if (accept.Contains("text/markdown", StringComparison.OrdinalIgnoreCase))
-    {
-        var webHostEnvironment = context.RequestServices.GetRequiredService<IWebHostEnvironment>();
-        var requestPath = context.Request.Path.Value?.TrimEnd('/') ?? "";
-
-        // Try the exact path with .md extension, then index.md inside the directory
-        var candidates = new[]
-        {
-            Path.Combine(webHostEnvironment.WebRootPath, requestPath.TrimStart('/') + ".md"),
-            Path.Combine(webHostEnvironment.WebRootPath, requestPath.TrimStart('/'), "index.md")
-        };
-
-        foreach (var mdPath in candidates)
-        {
-            if (File.Exists(mdPath))
-            {
-                context.Response.ContentType = "text/markdown; charset=utf-8";
-                context.Response.Headers["content-signal"] = "ai-train=yes, search=yes, ai-input=yes";
-                await context.Response.SendFileAsync(mdPath);
-                return;
-            }
-        }
-    }
-
-    await next();
-});
+app.UseMiddleware<ContentNegotiationMiddleware>();
 
 // Add trailing slash redirect middleware (replicate nginx behavior)
 app.Use(async (context, next) =>
