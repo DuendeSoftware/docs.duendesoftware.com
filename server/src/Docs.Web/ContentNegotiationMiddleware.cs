@@ -3,15 +3,8 @@ namespace Docs.Web;
 /// <summary>
 /// Middleware that serves .md files when the client sends Accept: text/markdown.
 /// </summary>
-public class ContentNegotiationMiddleware : IMiddleware
+public class ContentNegotiationMiddleware(IWebHostEnvironment environment) : IMiddleware
 {
-    private readonly IWebHostEnvironment _environment;
-
-    public ContentNegotiationMiddleware(IWebHostEnvironment environment)
-    {
-        _environment = environment;
-    }
-
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var accept = context.Request.Headers.Accept.ToString();
@@ -22,8 +15,8 @@ public class ContentNegotiationMiddleware : IMiddleware
             // Try the exact path with .md extension, then index.md inside the directory
             var candidates = new[]
             {
-                Path.Combine(_environment.WebRootPath, requestPath.TrimStart('/') + ".md"),
-                Path.Combine(_environment.WebRootPath, requestPath.TrimStart('/'), "index.md")
+                Path.Combine(environment.WebRootPath, requestPath.TrimStart('/') + ".md"),
+                Path.Combine(environment.WebRootPath, requestPath.TrimStart('/'), "index.md")
             };
 
             foreach (var mdPath in candidates)
