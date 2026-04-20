@@ -125,6 +125,17 @@ export default function markdownOutput() {
               const main = doc.querySelector("main");
               if (!main) return;
 
+              // Restore mermaid diagrams as code fences
+              main.querySelectorAll("div.mermaid").forEach((el) => {
+                const content = el.getAttribute("data-content");
+                if (content) {
+                  const pre = doc.createElement("pre");
+                  pre.setAttribute("data-language", "mermaid");
+                  pre.textContent = content;
+                  el.replaceWith(pre);
+                }
+              });
+
               // Remove banner
               main.querySelectorAll(".sl-banner").forEach((el) => el.remove());
 
