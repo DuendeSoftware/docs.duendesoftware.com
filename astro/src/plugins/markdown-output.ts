@@ -18,9 +18,14 @@ import { toText } from "hast-util-to-text";
  * components, etc. are already resolved.
  */
 export default function markdownOutput() {
+  let siteUrl = "";
+
   return {
     name: "markdown-output",
     hooks: {
+      "astro:config:done": ({ config }: { config: { site?: string } }) => {
+        siteUrl = config.site ? new URL(config.site).origin : "";
+      },
       "astro:build:done": async ({
         dir,
         pages,
@@ -147,6 +152,23 @@ export default function markdownOutput() {
               // Remove "Edit page" link and "Last updated" meta section
               main.querySelectorAll("footer .meta").forEach((el) => el.remove());
 
+              // Resolve image paths: /_astro/... URLs are build artifacts;
+              // rewrite them to absolute URLs so they resolve outside the build output.
+              main.querySelectorAll("img").forEach((img) => {
+                const src = img.getAttribute("src");
+                if (src && src.startsWith("/")) {
+                  img.setAttribute("src", `${siteUrl}${src}`);
+                }
+              });
+
+              // Resolve link hrefs to absolute URLs
+              main.querySelectorAll("a").forEach((a) => {
+                const href = a.getAttribute("href");
+                if (href && href.startsWith("/")) {
+                  a.setAttribute("href", `${siteUrl}${href}`);
+                }
+              });
+
               // Remove giscus comments
               main.querySelectorAll("giscus-comments").forEach((el) => el.remove());
 
@@ -169,9 +191,10 @@ export default function markdownOutput() {
               const content = main.innerHTML;
               const result = await processor.process(content);
 
-              // Add page title as YAML frontmatter
+              // Add page title and source URL as YAML frontmatter
               const pageTitle = doc.querySelector("title")?.textContent?.trim() || "";
-              const frontmatter = `---\ntitle: ${pageTitle}\n---\n\n`;
+              const pageSource = siteUrl ? `${siteUrl}/${pathname}` : `/${pathname}`;
+              const frontmatter = `---\ntitle: ${pageTitle}\nsource: ${pageSource}\n---\n\n`;
 
               await fs.writeFile(mdPath, frontmatter + String(result));
               count++;
