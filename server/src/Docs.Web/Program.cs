@@ -1,4 +1,6 @@
 using System.Text.Json;
+using Docs.Web;
+using Docs.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,13 +9,14 @@ builder.AddServiceDefaults();
 // Add response compression
 builder.Services.AddResponseCompression();
 
-var app = builder.Build();
-
-app.MapDefaultEndpoints();
+// Custom middlewares
+builder.Services.AddTransient<MarkdownContentNegotationMiddleware>();
+builder.Services.AddTransient<TrailingSlashMiddleware>();
+builder.Services.AddTransient<NotFoundMiddleware>();
 
 // Load redirect map from Astro-generated redirects.json
 var redirectMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-var redirectsPath = Path.Combine(app.Environment.WebRootPath, "redirects.json");
+var redirectsPath = Path.Combine(builder.Environment.WebRootPath, "redirects.json");
 if (File.Exists(redirectsPath))
 {
     var json = File.ReadAllText(redirectsPath);
@@ -25,52 +28,34 @@ if (File.Exists(redirectsPath))
             redirectMap[key] = value;
         }
     }
+}
+builder.Services.AddSingleton<IReadOnlyDictionary<string, string>>(redirectMap);
+builder.Services.AddTransient<RedirectMiddleware>();
+
+var app = builder.Build();
+
+if (redirectMap.Count > 0)
+{
     app.Logger.LogInformation("Loaded {Count} redirects from redirects.json", redirectMap.Count);
 }
 else
 {
-    app.Logger.LogWarning("redirects.json not found at {Path}, no redirects will be applied", redirectsPath);
+    app.Logger.LogWarning("No redirects loaded (redirects.json missing or empty at {Path})", redirectsPath);
 }
 
+app.MapDefaultEndpoints();
+
 // Redirect middleware — match old URLs to new destinations (301 permanent)
-app.Use(async (context, next) =>
-{
-    var path = context.Request.Path.Value?.TrimEnd('/') ?? "";
-
-    if (redirectMap.TryGetValue(path, out var destination))
-    {
-        var queryString = context.Request.QueryString.HasValue ? context.Request.QueryString.Value : "";
-        context.Response.StatusCode = 301;
-        context.Response.Headers.Location = $"{destination}{queryString}";
-        return;
-    }
-
-    await next();
-});
+app.UseMiddleware<RedirectMiddleware>();
 
 // Enable response compression
 app.UseResponseCompression();
 
+// Serve .md file when Accept: text/markdown
+app.UseMiddleware<MarkdownContentNegotationMiddleware>();
+
 // Add trailing slash redirect middleware (replicate nginx behavior)
-app.Use(async (context, next) =>
-{
-    var path = context.Request.Path.Value;
-
-    // If path doesn't end with slash and doesn't have a file extension, redirect with trailing slash
-    if (!string.IsNullOrEmpty(path) &&
-        !path.EndsWith("/") &&
-        !Path.HasExtension(path) &&
-        !path.StartsWith("/health") &&
-        !path.StartsWith("/alive"))
-    {
-        var queryString = context.Request.QueryString.HasValue ? context.Request.QueryString.Value : "";
-        context.Response.StatusCode = 301;
-        context.Response.Headers.Location = $"{path}/{queryString}";
-        return;
-    }
-
-    await next();
-});
+app.UseMiddleware<TrailingSlashMiddleware>();
 
 // Add version header if APPLICATION_VERSION is set
 var applicationVersion = Environment.GetEnvironmentVariable("APPLICATION_VERSION");
@@ -157,22 +142,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 // Handle 404 with custom page
-app.Use(async (context, next) =>
-{
-    await next();
-
-    if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
-    {
-        var webHostEnvironment = context.RequestServices.GetRequiredService<IWebHostEnvironment>();
-        var notFoundPath = Path.Combine(webHostEnvironment.WebRootPath, "404.html");
-
-        if (File.Exists(notFoundPath))
-        {
-            context.Response.ContentType = "text/html";
-            await context.Response.SendFileAsync(notFoundPath);
-        }
-    }
-});
+app.UseMiddleware<NotFoundMiddleware>();
 
 // Fallback to index.html for directory requests
 app.MapFallback(async context =>

@@ -17,6 +17,7 @@ import * as fs from "node:fs";
 import { duendeOpenGraphImage } from "./src/plugins/duende-og-image.js";
 import removeMarkdownExtensions from "./src/plugins/remove-markdown-extensions.js";
 import staticRedirects from "./src/plugins/static-redirects.js";
+import markdownOutput from "./src/plugins/markdown-output.js";
 
 // https://astro.build/config
 export default defineConfig({
@@ -233,6 +234,7 @@ export default defineConfig({
       contentDir: "./src/content/docs",
     }),
     staticRedirects(),
+    markdownOutput(),
     opengraphImages({
       options: {
         fonts: [
