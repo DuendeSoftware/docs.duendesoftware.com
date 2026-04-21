@@ -1,9 +1,9 @@
-namespace Docs.Web;
+namespace Docs.Web.Middleware;
 
 /// <summary>
 /// Middleware that serves .md files when the client sends Accept: text/markdown.
 /// </summary>
-public class ContentNegotiationMiddleware(IWebHostEnvironment environment) : IMiddleware
+public class MarkdownContentNegotationMiddleware(IWebHostEnvironment environment) : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
