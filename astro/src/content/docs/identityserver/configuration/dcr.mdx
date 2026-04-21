@@ -16,7 +16,36 @@ redirect_from:
   - /identityserver/v7/configuration/dcr/installation/
 ---
 
-import { Steps } from "@astrojs/starlight/components";
+import { Code, Steps } from "@astrojs/starlight/components";
+
+export const addMainPackageSnippet = `
+cd Configuration
+dotnet add package Duende.IdentityServer.Configuration
+`;
+
+export const addStoragePackageSnippet = `dotnet add package Duende.IdentityServer.Configuration.EntityFramework`;
+
+export const licenseSnippet = `
+builder.Services.AddIdentityServerConfiguration(opt =>
+    opt.LicenseKey = "<license>";
+);
+`;
+
+export const dbConfigurationSnippet = `
+builder.Services.AddIdentityServerConfiguration(opt =>
+    opt.LicenseKey = "<license>"
+).AddClientConfigurationStore();` + '\r\n' + `
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
+{
+    options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
+});
+`;
+
+export const mapDcrEndpointSnippet = `
+app.MapDynamicClientRegistration()
+    .RequireAuthorization("DCR");
+`;
 
 Dynamic Client Registration (DCR) is the process of registering OAuth clients
 dynamically. It allows OAuth client applications to programmatically register
@@ -53,6 +82,7 @@ To host the Configuration API separately from IdentityServer, you will need to
 create a new ASP.NET Core Web application which will host the Configuration API.
 
 <Steps>
+
 1. **Create a new project of type "Empty Web Application"**
     
     ```bash title=Terminal
@@ -60,24 +90,16 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     ```
 
 2. **Add the `Duende.IdentityServer.Configuration` package**
-    
-    ```bash title=Terminal
-    cd Configuration
-    dotnet add package Duende.IdentityServer.Configuration
-    ```
-   
+
+    <Code code={addMainPackageSnippet} lang="bash" title="Terminal" />
+
 3. **Configure services to include the Configuration API**
-    
-    ```csharp
-    // Program.cs
-    builder.Services.AddIdentityServerConfiguration(opt =>
-        opt.LicenseKey = "<license>";
-    );
-    ```
+
+    <Code code={licenseSnippet} lang="csharp" title="Program.cs" />
 
     :::note
     This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
-    Configure the same license key for IdentityServer and the Configuration API.
+    You don't need to acquire an additional license, use the same license key for Duende IdentityServer and the DCR Configuration API.
     :::
 
 4. **Add and configure the client configuration store**
@@ -90,43 +112,27 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     the interface yourself. See [the IClientConfigurationStore reference](/identityserver/reference/stores/index.md)
     for more details. If you wish to use the built-in implementation, install its NuGet
     package and add it to the ASP.NET Core service provider.
-    
-    ```bash title=Terminal
-    dotnet add package Duende.IdentityServer.Configuration.EntityFramework
-    ```
+
+    <Code code={addStoragePackageSnippet} lang="bash" title="Terminal" />
 
     The `AddClientConfigurationStore()` extension method registers the built-in
     implementation of the `IClientConfigurationStore` interface with the service
     provider. Make sure to also configure the connection string to the
     [configuration store](/identityserver/data/ef.md#configuration-store-support):
 
-    ```csharp {4}
-    // Program.cs
-    builder.Services.AddIdentityServerConfiguration(opt =>
-        opt.LicenseKey = "<license>"
-    ).AddClientConfigurationStore();
-    
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
-    {
-        options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
-    });
-    ```
-   
+    <Code code={dbConfigurationSnippet} lang="csharp" title="Program.cs" mark={[3]} />
+
 5. **Map the Configuration API endpoints**
-    
-    ```csharp
-    // Program.cs
-    app.MapDynamicClientRegistration()
-       .RequireAuthorization("DCR");
-    ```
-    
+
+    <Code code={mapDcrEndpointSnippet} lang="csharp" title="Program.cs" />
+
     The `MapDynamicClientRegistration` extension method registers the DCR endpoints
     and returns an `IEndpointConventionBuilder` which you can use to define authorization
     requirements for your DCR endpoint.
 
     See [Authorization](#authorization) for more details about implementing authorization for
     the DCR endpoint.
+
 </Steps>
 
 ### Shared Host For Configuration API and IdentityServer
@@ -136,26 +142,18 @@ You'll need to add the Configuration API's services to the service collection,
 and configure the store implementation.
 
 <Steps>
+
 1. **Add the `Duende.IdentityServer.Configuration` package**
 
-    ```bash title=Terminal
-    cd Configuration
-    dotnet add package Duende.IdentityServer.Configuration
-    ```
+    <Code code={addMainPackageSnippet} lang="bash" title="Terminal" />
 
 2. **Configure services to include the Configuration API**
 
-    ```csharp
-    // Program.cs
-    builder.Services.AddIdentityServerConfiguration(opt =>
-        opt.LicenseKey = "<license>";
-    );
-    ```
+    <Code code={licenseSnippet} lang="csharp" title="Program.cs" />
 
     :::note
-    The Configuration API feature is included in the Duende IdentityServer Business
-    edition license and higher. Use the same license key for IdentityServer and the
-    Configuration API.
+    This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
+    You don't need to acquire an additional license, use the same license key for Duende IdentityServer and the DCR Configuration API.
     :::
 
 3. **Add and configure the client configuration store**
@@ -169,9 +167,7 @@ and configure the store implementation.
     for more details. If you wish to use the built-in implementation, install its NuGet
     package and add it to the ASP.NET Core service provider.
 
-    ```bash title=Terminal
-    dotnet add package Duende.IdentityServer.Configuration.EntityFramework
-    ```
+    <Code code={addStoragePackageSnippet} lang="bash" title="Terminal" />
 
     The `AddClientConfigurationStore()` extension method registers the built-in
     implementation of the `IClientConfigurationStore` interface with the service
@@ -179,26 +175,11 @@ and configure the store implementation.
     [configuration store](/identityserver/data/ef.md#configuration-store-support) if
     you haven't already as part of your IdentityServer host:
 
-    ```csharp {4}
-    // Program.cs
-    builder.Services.AddIdentityServerConfiguration(opt =>
-        opt.LicenseKey = "<license>"
-    ).AddClientConfigurationStore();
-    
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
-    {
-        options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
-    });
-    ```
+    <Code code={dbConfigurationSnippet} lang="csharp" title="Program.cs" mark={[3]} />
 
 4. **Map the Configuration API endpoints**
 
-    ```csharp
-    // Program.cs
-    app.MapDynamicClientRegistration()
-       .RequireAuthorization("DCR");
-    ```
+    <Code code={mapDcrEndpointSnippet} lang="csharp" title="Program.cs" />
 
     The `MapDynamicClientRegistration` extension method registers the DCR endpoints
     and returns an `IEndpointConventionBuilder` which you can use to define authorization
@@ -206,7 +187,48 @@ and configure the store implementation.
 
     See [Authorization](#authorization) for more details about implementing authorization for
     the DCR endpoint.
+
 </Steps>
+
+### Adding the Registration Endpoint to the Discovery Document
+
+By default, the Dynamic Client Registration (DCR) endpoint is not included in the [discovery document](/identityserver/reference/endpoints/discovery.md) of Duende IdentityServer.
+
+To include it, change the Discovery Document options when registering IdentityServer in the service collection:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer(options =>
+{
+    // Either use a static URL for the registration endpoint, when hosted outside of IdentityServer:
+    options.Discovery.DynamicClientRegistration.RegistrationEndpointMode =
+        RegistrationEndpointMode.Static;
+
+    options.Discovery.DynamicClientRegistration.StaticRegistrationEndpoint =
+        new Uri("https://my-configuration-api/connect/dcr");
+
+    // Or use inferred when the registration endpoint is hosted within IdentityServer:
+    options.Discovery.DynamicClientRegistration.RegistrationEndpointMode =
+        RegistrationEndpointMode.Inferred;
+});
+```
+
+:::note
+DCR support was added to Duende IdentityServer v7.4. If you cannot upgrade your IdentityServer solution yet,
+you'll have to add custom entries to the Discovery Document instead:
+
+```csharp
+// Program.cs
+using Duende.IdentityModel;
+
+builder.Services.AddIdentityServer(options =>
+{
+    options.Discovery.CustomEntries.Add
+        OidcConstants.Discovery.RegistrationEndpoint,
+        "https://my-configuration-api/connect/dcr");
+});
+```
+:::
 
 ## Authorization
 
@@ -339,4 +361,4 @@ For more details, see the [reference section on DCR request processing](/identit
 To customize the HTTP responses of the Configuration API, you can implement the `IDynamicClientRegistrationResponseGenerator`
 interface, or extend the default `DynamicClientRegistrationResponseGenerator`.
 
-For more details, see the [reference section on rDCR esponse generation](/identityserver/reference/dcr/response.md).
+For more details, see the [reference section on DCR response generation](/identityserver/reference/dcr/response.md).
