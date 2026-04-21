@@ -18,6 +18,13 @@ redirect_from:
 
 import { Code, Steps } from "@astrojs/starlight/components";
 
+export const addMainPackageSnippet = `
+cd Configuration
+dotnet add package Duende.IdentityServer.Configuration
+`;
+
+export const addStoragePackageSnippet = `dotnet add package Duende.IdentityServer.Configuration.EntityFramework`;
+
 export const licenseSnippet = `
 builder.Services.AddIdentityServerConfiguration(opt =>
     opt.LicenseKey = "<license>";
@@ -33,6 +40,11 @@ builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
 {
     options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
 });
+`;
+
+export const mapDcrEndpointSnippet = `
+app.MapDynamicClientRegistration()
+    .RequireAuthorization("DCR");
 `;
 
 Dynamic Client Registration (DCR) is the process of registering OAuth clients
@@ -78,12 +90,9 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     ```
 
 2. **Add the `Duende.IdentityServer.Configuration` package**
-    
-    ```bash title=Terminal
-    cd Configuration
-    dotnet add package Duende.IdentityServer.Configuration
-    ```
-   
+
+    <Code code={addMainPackageSnippet} lang="bash" title="Terminal" />
+
 3. **Configure services to include the Configuration API**
 
     <Code code={licenseSnippet} lang="csharp" title="Program.cs" />
@@ -103,10 +112,8 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     the interface yourself. See [the IClientConfigurationStore reference](/identityserver/reference/stores/index.md)
     for more details. If you wish to use the built-in implementation, install its NuGet
     package and add it to the ASP.NET Core service provider.
-    
-    ```bash title=Terminal
-    dotnet add package Duende.IdentityServer.Configuration.EntityFramework
-    ```
+
+    <Code code={addStoragePackageSnippet} lang="bash" title="Terminal" />
 
     The `AddClientConfigurationStore()` extension method registers the built-in
     implementation of the `IClientConfigurationStore` interface with the service
@@ -116,13 +123,9 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     <Code code={dbConfigurationSnippet} lang="csharp" title="Program.cs" mark={[3]} />
 
 5. **Map the Configuration API endpoints**
-    
-    ```csharp
-    // Program.cs
-    app.MapDynamicClientRegistration()
-       .RequireAuthorization("DCR");
-    ```
-    
+
+    <Code code={mapDcrEndpointSnippet} lang="csharp" title="Program.cs" />
+
     The `MapDynamicClientRegistration` extension method registers the DCR endpoints
     and returns an `IEndpointConventionBuilder` which you can use to define authorization
     requirements for your DCR endpoint.
@@ -139,12 +142,10 @@ You'll need to add the Configuration API's services to the service collection,
 and configure the store implementation.
 
 <Steps>
+
 1. **Add the `Duende.IdentityServer.Configuration` package**
 
-    ```bash title=Terminal
-    cd Configuration
-    dotnet add package Duende.IdentityServer.Configuration
-    ```
+    <Code code={addMainPackageSnippet} lang="bash" title="Terminal" />
 
 2. **Configure services to include the Configuration API**
 
@@ -166,9 +167,7 @@ and configure the store implementation.
     for more details. If you wish to use the built-in implementation, install its NuGet
     package and add it to the ASP.NET Core service provider.
 
-    ```bash title=Terminal
-    dotnet add package Duende.IdentityServer.Configuration.EntityFramework
-    ```
+    <Code code={addStoragePackageSnippet} lang="bash" title="Terminal" />
 
     The `AddClientConfigurationStore()` extension method registers the built-in
     implementation of the `IClientConfigurationStore` interface with the service
@@ -180,11 +179,7 @@ and configure the store implementation.
 
 4. **Map the Configuration API endpoints**
 
-    ```csharp
-    // Program.cs
-    app.MapDynamicClientRegistration()
-       .RequireAuthorization("DCR");
-    ```
+    <Code code={mapDcrEndpointSnippet} lang="csharp" title="Program.cs" />
 
     The `MapDynamicClientRegistration` extension method registers the DCR endpoints
     and returns an `IEndpointConventionBuilder` which you can use to define authorization
@@ -192,6 +187,7 @@ and configure the store implementation.
 
     See [Authorization](#authorization) for more details about implementing authorization for
     the DCR endpoint.
+
 </Steps>
 
 ## Authorization
