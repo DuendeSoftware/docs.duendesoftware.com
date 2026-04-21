@@ -190,6 +190,46 @@ and configure the store implementation.
 
 </Steps>
 
+### Adding the Registration Endpoint to the Discovery Document
+
+By default, the Dynamic Client Registration (DCR) endpoint is not included in the [discovery document](/identityserver/reference/endpoints/discovery.md) of Duende IdentityServer.
+
+To include it, change the Discovery Document options when registering IdentityServer in the service collection:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer(options =>
+{
+    // Either use a static URL for the registration endpoint, when hosted outside of IdentityServer:
+    options.Discovery.DynamicClientRegistration.RegistrationEndpointMode =
+        RegistrationEndpointMode.Static;
+
+    options.Discovery.DynamicClientRegistration.StaticRegistrationEndpoint =
+        new Uri("https://my-configuration-api/connect/dcr");
+
+    // Or use inferred when the registration endpoint is hosted within IdentityServer:
+    options.Discovery.DynamicClientRegistration.RegistrationEndpointMode =
+        RegistrationEndpointMode.Inferred;
+});
+```
+
+:::note
+DCR support was added to Duende IdentityServer v7.4. If you cannot upgrade your IdentityServer solution yet,
+you'll have to add custom entries to the Discovery Document instead:
+
+```csharp
+// Program.cs
+using Duende.IdentityModel;
+
+builder.Services.AddIdentityServer(options =>
+{
+    options.Discovery.CustomEntries.Add
+        OidcConstants.Discovery.RegistrationEndpoint,
+        "https://my-configuration-api/connect/dcr");
+});
+```
+:::
+
 ## Authorization
 
 When implementing Dynamic Client Registration (DCR), it is important to consider
