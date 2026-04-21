@@ -16,7 +16,24 @@ redirect_from:
   - /identityserver/v7/configuration/dcr/installation/
 ---
 
-import { Steps } from "@astrojs/starlight/components";
+import { Code, Steps } from "@astrojs/starlight/components";
+
+export const licenseSnippet = `
+builder.Services.AddIdentityServerConfiguration(opt =>
+    opt.LicenseKey = "<license>";
+);
+`;
+
+export const dbConfigurationSnippet = `
+builder.Services.AddIdentityServerConfiguration(opt =>
+    opt.LicenseKey = "<license>"
+).AddClientConfigurationStore();` + '\r\n' + `
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
+{
+    options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
+});
+`;
 
 Dynamic Client Registration (DCR) is the process of registering OAuth clients
 dynamically. It allows OAuth client applications to programmatically register
@@ -53,6 +70,7 @@ To host the Configuration API separately from IdentityServer, you will need to
 create a new ASP.NET Core Web application which will host the Configuration API.
 
 <Steps>
+
 1. **Create a new project of type "Empty Web Application"**
     
     ```bash title=Terminal
@@ -67,13 +85,8 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     ```
    
 3. **Configure services to include the Configuration API**
-    
-    ```csharp
-    // Program.cs
-    builder.Services.AddIdentityServerConfiguration(opt =>
-        opt.LicenseKey = "<license>";
-    );
-    ```
+
+    <Code code={licenseSnippet} lang="csharp" title="Program.cs" />
 
     :::note
     This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
@@ -100,19 +113,8 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     provider. Make sure to also configure the connection string to the
     [configuration store](/identityserver/data/ef.md#configuration-store-support):
 
-    ```csharp {4}
-    // Program.cs
-    builder.Services.AddIdentityServerConfiguration(opt =>
-        opt.LicenseKey = "<license>"
-    ).AddClientConfigurationStore();
-    
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
-    {
-        options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
-    });
-    ```
-   
+    <Code code={dbConfigurationSnippet} lang="csharp" title="Program.cs" mark={[3]} />
+
 5. **Map the Configuration API endpoints**
     
     ```csharp
@@ -127,6 +129,7 @@ create a new ASP.NET Core Web application which will host the Configuration API.
 
     See [Authorization](#authorization) for more details about implementing authorization for
     the DCR endpoint.
+
 </Steps>
 
 ### Shared Host For Configuration API and IdentityServer
@@ -145,12 +148,7 @@ and configure the store implementation.
 
 2. **Configure services to include the Configuration API**
 
-    ```csharp
-    // Program.cs
-    builder.Services.AddIdentityServerConfiguration(opt =>
-        opt.LicenseKey = "<license>";
-    );
-    ```
+    <Code code={licenseSnippet} lang="csharp" title="Program.cs" />
 
     :::note
     The Configuration API feature is included in the Duende IdentityServer Business
@@ -179,18 +177,7 @@ and configure the store implementation.
     [configuration store](/identityserver/data/ef.md#configuration-store-support) if
     you haven't already as part of your IdentityServer host:
 
-    ```csharp {4}
-    // Program.cs
-    builder.Services.AddIdentityServerConfiguration(opt =>
-        opt.LicenseKey = "<license>"
-    ).AddClientConfigurationStore();
-    
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    builder.Services.AddConfigurationDbContext<ConfigurationDbContext>(options =>
-    {
-        options.ConfigureDbContext = builder => builder.UseSqlite(connectionString);
-    });
-    ```
+    <Code code={dbConfigurationSnippet} lang="csharp" title="Program.cs" mark={[3]} />
 
 4. **Map the Configuration API endpoints**
 
