@@ -31,6 +31,8 @@ SAML 2.0 support is useful when:
 For new integrations, OpenID Connect is recommended. SAML 2.0 support is provided for
 interoperability with existing SAML-based systems.
 
+If you are new to SAML 2.0 or want a refresher on the protocol's core building blocks, see [SAML 2.0 Concepts](/identityserver/saml/concepts.md) for an overview of assertions, bindings, metadata, Name Identifiers, and other key concepts before diving into configuration.
+
 ## Quick Setup
 
 ### 1. Register SAML Services

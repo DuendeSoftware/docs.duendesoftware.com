@@ -40,6 +40,16 @@ And then in JavaScript:
 document.querySelector('#bff-silent-login').src = '/bff/silent-login';
 ```
 
+:::tip
+In BFF v4, set the iframe's src attribute to the login endpoint instead using the query parameter `prompt=none`:
+
+```javascript
+document.querySelector('#bff-silent-login').src = '/bff/login?prompt=none';
+```
+
+See [OIDC Prompt support](/bff/fundamentals/session/oidc-prompts.md) for additional information.
+:::
+
 To receive the result, the application should handle the *message* event in the browser and look for the *data.isLoggedIn* property on the event object:
 
 ```javascript

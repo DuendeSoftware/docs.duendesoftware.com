@@ -17,24 +17,23 @@ import * as fs from "node:fs";
 import { duendeOpenGraphImage } from "./src/plugins/duende-og-image.js";
 import removeMarkdownExtensions from "./src/plugins/remove-markdown-extensions.js";
 import staticRedirects from "./src/plugins/static-redirects.js";
+import markdownOutput from "./src/plugins/markdown-output.js";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://docs.duendesoftware.com",
   trailingSlash: "ignore",
   redirects: {},
-  experimental: {
-    fonts: [
-      {
-        provider: fontProviders.google(),
-        name: "Roboto",
-        cssVariable: "--font-roboto",
-        weights: ["100 900", "bold"],
-        styles: ["normal", "italic"],
-        display: "swap",
-      },
-    ],
-  },
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: "Roboto",
+      cssVariable: "--font-roboto",
+      weights: ["100 900", "bold"],
+      styles: ["normal", "italic"],
+      display: "swap",
+    },
+  ],
   integrations: [
     starlight({
       customCss: ["./src/styles/custom.css"],
@@ -235,6 +234,7 @@ export default defineConfig({
       contentDir: "./src/content/docs",
     }),
     staticRedirects(),
+    markdownOutput(),
     opengraphImages({
       options: {
         fonts: [

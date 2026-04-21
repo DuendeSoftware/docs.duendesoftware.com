@@ -246,4 +246,4 @@ Added in `v8.0`.
 
 - **`AddConformanceReport`**
 
-  Adds the [conformance report](/identityserver/diagnostics/conformance-report/) service that assesses server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. Requires the `Duende.IdentityServer.ConformanceReport` NuGet package.
+  Adds the [conformance report](/identityserver/diagnostics/conformance-report.md) service that assesses server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. Requires the `Duende.IdentityServer.ConformanceReport` NuGet package.

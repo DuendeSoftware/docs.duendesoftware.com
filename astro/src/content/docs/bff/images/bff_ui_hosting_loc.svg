@@ -63,7 +63,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">BFF Application</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">BFF Application</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -71,7 +71,7 @@
              x="12"
              y="364"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -109,7 +109,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">BFF endpoints</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">BFF endpoints</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -117,7 +117,7 @@
              x="110"
              y="269"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text6">BFF endpoints</text>
@@ -154,7 +154,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">local / remote API endpoints</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">local / remote API endpoints</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -162,7 +162,7 @@
              x="260"
              y="269"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text9">local / remote API e...</text>
@@ -199,7 +199,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">static files middleware</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">static files middleware</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -207,7 +207,7 @@
              x="395"
              y="269"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text12">static files middlewa...</text>
@@ -256,7 +256,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #333333; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">Browser: https://application.url</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#333333, #c1c1c1); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">Browser: https://application.url</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -264,7 +264,7 @@
              x="215"
              y="15"
              fill="#333333"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"
@@ -302,7 +302,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">app</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">app</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -310,7 +310,7 @@
              x="210"
              y="69"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text19">app</text>
@@ -352,7 +352,7 @@
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">1. Get index &amp; <xhtml:br />
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">1. Get index &amp; <xhtml:br />
 
 
 static files</xhtml:div>
@@ -363,7 +363,7 @@ static files</xhtml:div>
              x="395"
              y="88"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text22">1. Get index &amp;...</text>
@@ -400,7 +400,7 @@ static files</xhtml:div>
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">index.html</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">index.html</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -408,7 +408,7 @@ static files</xhtml:div>
              x="380"
              y="434"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text25">index.html</text>
@@ -445,7 +445,7 @@ static files</xhtml:div>
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">script_assets.js</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">script_assets.js</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -453,7 +453,7 @@ static files</xhtml:div>
              x="510"
              y="434"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text28">script_assets.js</text>
@@ -490,7 +490,7 @@ static files</xhtml:div>
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">images</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">images</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -498,7 +498,7 @@ static files</xhtml:div>
              x="640"
              y="434"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              id="text31">images</text>
@@ -591,7 +591,7 @@ static files</xhtml:div>
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">2. Login</xhtml:div>
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">2. Login</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -599,7 +599,7 @@ static files</xhtml:div>
              x="145"
              y="166"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text40">2. Login</text>
@@ -641,7 +641,7 @@ static files</xhtml:div>
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">3. Access API's</xhtml:div>
+                   style="display: inline-block; font-size: 11px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">3. Access API's</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -649,7 +649,7 @@ static files</xhtml:div>
              x="251"
              y="166"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="11px"
              text-anchor="middle"
              id="text43">3. Access API's</text>
@@ -698,7 +698,7 @@ static files</xhtml:div>
               <xhtml:div
                  style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; ">
                 <xhtml:div
-                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">Local Filesystem</xhtml:div>
+                   style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: normal; word-wrap: normal; ">Local Filesystem</xhtml:div>
               </xhtml:div>
             </xhtml:div>
           </foreignObject>
@@ -706,7 +706,7 @@ static files</xhtml:div>
              x="292"
              y="424"
              fill="light-dark(#000000, #ffffff)"
-             font-family="Helvetica"
+             font-family="'Helvetica', 'Arial', sans-serif"
              font-size="12px"
              text-anchor="middle"
              font-weight="bold"

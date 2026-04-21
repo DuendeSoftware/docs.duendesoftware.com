@@ -216,3 +216,31 @@ public class SampleApiController : ControllerBase
 :::note
 It's also possible to disable anti-forgery protection using _BffOptions.DisableAntiForgeryCheck()_
 :::
+
+### Skipping Response Handling
+
+By default, when BFF pre/post-processing is enabled on an endpoint (via `.AsBffApiEndpoint()`), the BFF framework
+intercepts authentication challenge and forbid responses. Instead of returning a 302 redirect to the identity provider
+(which is not useful for API calls), it converts them to API-friendly status codes:
+
+- **Challenge** (unauthenticated) → returns **401** (instead of 302 redirect)
+- **Forbid** (unauthorized) → returns **403** (instead of 302 redirect)
+
+If you want to opt out of this behavior and let the default authentication response handling occur (e.g., if your
+endpoint needs to trigger a redirect), you can use the `SkipResponseHandling()` extension method:
+
+```csharp
+app.MapGet("/my-endpoint", context => { /* ... */ })
+    .AsBffApiEndpoint()
+    .SkipResponseHandling();
+```
+
+For MVC controllers, you can use the `[BffApiSkipResponseHandling]` attribute:
+
+```csharp
+[Route("my-endpoint")]
+[BffApi]
+[BffApiSkipResponseHandling]
+public class MyController : ControllerBase
+{ /* ... */ }
+```

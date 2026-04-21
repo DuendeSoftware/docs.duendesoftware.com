@@ -78,7 +78,7 @@ depending on your needs)
 and add the IdentityServer middleware to that application. The middleware adds the necessary protocol heads to the
 application so that clients can talk to it using those standard protocols.
 
-![IdentityServer middleware diagram and its relatinship in the ASP.NET Core pipeline](images/middleware.svg)
+![IdentityServer middleware diagram and its relationship in the ASP.NET Core pipeline](images/middleware.svg)
 
 The hosting application can be as complex as you want, but we typically recommend to keep the attack surface as small as
 possible by including

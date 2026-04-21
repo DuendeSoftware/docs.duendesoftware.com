@@ -309,7 +309,7 @@
                 <path id="path34" d="M630,204L673.5,204C684.27,204 693,195.27 693,184.5C693,173.73 684.27,165 673.5,165L541.5,165C530.73,165 522,173.73 522,184.5C522,195.27 530.73,204 541.5,204L618,204L624,240L630,204Z" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:2px;stroke-linecap:butt;"/>
             </g>
             <g id="text6" transform="matrix(1,0,0,1,540,190)">
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:18px;">OpenID Connect</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:18px;">OpenID Connect</text>
             </g>
         </g>
         <g transform="matrix(1,0,0,1,-456.501,-85.3751)">
@@ -317,7 +317,7 @@
                 <path id="path341" serif:id="path34" d="M630,204L673.5,204C684.27,204 693,195.27 693,184.5C693,173.73 684.27,165 673.5,165L541.5,165C530.73,165 522,173.73 522,184.5C522,195.27 530.73,204 541.5,204L618,204L624,240L630,204Z" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:2px;stroke-linecap:butt;"/>
             </g>
             <g id="text61" serif:id="text6" transform="matrix(1,0,0,1,540,190)">
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:18px;">OpenID Connect</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:18px;">OpenID Connect</text>
             </g>
         </g>
         <g transform="matrix(1,0,0,1,-451.786,271.901)">
@@ -325,7 +325,7 @@
                 <path id="path342" serif:id="path34" d="M630,204L673.5,204C684.27,204 693,195.27 693,184.5C693,173.73 684.27,165 673.5,165L541.5,165C530.73,165 522,173.73 522,184.5C522,195.27 530.73,204 541.5,204L618,204L624,240L630,204Z" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:2px;stroke-linecap:butt;"/>
             </g>
             <g id="text62" serif:id="text6" transform="matrix(1,0,0,1,540,190)">
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:18px;">OpenID Connect</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:18px;">OpenID Connect</text>
             </g>
         </g>
         <g transform="matrix(1,0,0,1,443.047,54.1103)">
@@ -335,7 +335,7 @@
             <g id="text63" serif:id="text6" transform="matrix(1,0,0,1,561.019,190)">
                 <g transform="matrix(18,0,0,18,93.0234,0)">
                 </g>
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:18px;">OAUTH 2.0</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:18px;">OAUTH 2.0</text>
             </g>
         </g>
         <g transform="matrix(1,0,0,1,452.266,438.208)">
@@ -345,7 +345,7 @@
             <g id="text64" serif:id="text6" transform="matrix(1,0,0,1,561.019,190)">
                 <g transform="matrix(18,0,0,18,93.0234,0)">
                 </g>
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:18px;">OAUTH 2.0</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:18px;">OAUTH 2.0</text>
             </g>
         </g>
         <g transform="matrix(0.935484,-0.35337,0.35337,0.935484,-104.271,782.71)">
@@ -355,7 +355,7 @@
             <g id="text65" serif:id="text6" transform="matrix(1,0,0,1,561.019,190)">
                 <g transform="matrix(18,0,0,18,93.0234,0)">
                 </g>
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:18px;">OAUTH 2.0</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:18px;">OAUTH 2.0</text>
             </g>
         </g>
         <g transform="matrix(0.653591,0.756848,-0.756848,0.653591,385.502,-206.149)">
@@ -365,7 +365,7 @@
             <g id="text66" serif:id="text6" transform="matrix(1,0,0,1,561.019,190)">
                 <g transform="matrix(18,0,0,18,93.0234,0)">
                 </g>
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:18px;">OAUTH 2.0</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:18px;">OAUTH 2.0</text>
             </g>
         </g>
         <g transform="matrix(0.935387,0.353625,-0.353625,0.935387,61.8614,138.07)">
@@ -375,7 +375,7 @@
             <g id="text67" serif:id="text6" transform="matrix(1,0,0,1,561.019,190)">
                 <g transform="matrix(18,0,0,18,93.0234,0)">
                 </g>
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:18px;">OAUTH 2.0</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:18px;">OAUTH 2.0</text>
             </g>
         </g>
     </g>

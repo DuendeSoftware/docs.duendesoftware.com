@@ -6,7 +6,7 @@ Welcome to the documentation of all [Duende Software](https://duendesoftware.com
 
 You will need the following installed:
 * [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-* Node.js 22+
+* Node.js 24+
 
 ### Quick Start (Astro only)
 
@@ -215,6 +215,25 @@ redirects: {
 
 This will remove the old page from the navigation structure, but keeps the URL around
 with a redirect to the new location.
+
+## 🤖 AI-Friendly Documentation
+
+We make our docs consumable by AI agents and LLMs, not just humans.
+
+### What we do
+
+* **[`llms.txt`](https://docs.duendesoftware.com/llms.txt) and [`llms-full.txt`](https://docs.duendesoftware.com/llms-full.txt)** — Machine-readable site index and full content dump following the [llms.txt proposal](https://llmstxt.org/), so AI tools can discover and ingest our docs.
+* **Content negotiation** — The server supports `Accept: text/markdown` to return raw Markdown for any docs page, giving AI agents clean content without HTML noise.
+* **`robots.txt` signals** — We don't block AI crawlers. The robots.txt includes references to `llms.txt` so crawlers can find structured content.
+
+Beyond this repo, Duende also provides tools that give AI coding assistants specialized knowledge (see [AI Agent Tools](https://docs.duendesoftware.com/general/ai-agent-tools/)):
+
+* **[Agent Skills](https://github.com/DuendeSoftware/duende-skills)** — Structured `SKILL.md` files following the [Agent Skills format](https://agentskills.io/) that give AI assistants domain expertise on IdentityServer, BFF, token management, and more. Loaded automatically by compatible IDEs.
+* **[MCP Server](https://github.com/DuendeSoftware/products/blob/main/docs-mcp/README.md)** — A local [Model Context Protocol](https://modelcontextprotocol.io/) server that gives AI assistants search and fetch access to the full Duende docs, blog, and sample code via SQLite full-text search.
+
+### Why
+
+Developers increasingly use AI assistants to find answers. If our docs aren't AI-friendly, those assistants hallucinate or point elsewhere. Making content machine-readable means Duende products get accurate representation in AI-generated answers.
 
 ## ⚖️ License
 

@@ -85,9 +85,9 @@ mechanism (if provided).
 
 **bff:logout_url**
 
-This is the URL to trigger logout. If the upstream provider includes a *sid* claim, the BFF logout endpoint requires
+This is the URL to trigger logout. If the upstream provider includes a `sid` claim, the BFF logout endpoint requires
 this value as a query string parameter for CSRF protection. This behavior can be configured with the
-*RequireLogoutSessionId* in the [options](/bff/fundamentals/options.md).
+`RequireLogoutSessionId` in the [options](/bff/fundamentals/options.md).
 
 ## Typical Usage
 
@@ -95,7 +95,7 @@ To use the endpoint, make an HTTP GET request to it from your frontend javascrip
 could use the fetch API to make requests to the user endpoint like this:
 
 ```js title="session.js"
-var req = new Request("/user", {
+var req = new Request("/bff/user", {
     headers: new Headers({
         "X-CSRF": "1",
     }),
@@ -118,9 +118,9 @@ to the GET request. The header's name and required value can be configured in th
 
 ## Anonymous Session Response Option
 
-The *AnonymousSessionResponse* option allows you to change the behavior of the user endpoint to return 200 instead of
-401 when the user is anonymous. If *AnonymousSessionResponse* is set to *AnonymousSessionResponse.Response200*, then the
-endpoint's response will set its status code to 200 and its payload will contain the literal *null* (the response body
+The `AnonymousSessionResponse` option allows you to change the behavior of the user endpoint to return 200 instead of
+401 when the user is anonymous. If `AnonymousSessionResponse` is set to `AnonymousSessionResponse.Response200`, then the
+endpoint's response will set its status code to 200 and its payload will contain the literal `null` (the response body
 will be the characters 'n', 'u', 'l', 'l' without quotes).
 
 ## Cookie Sliding
@@ -135,7 +135,7 @@ activity. To prevent the call to the user endpoint from sliding the cookie, add 
 request.
 
 ```js title="site.js"
-var req = new Request("/user?slide=false", {
+var req = new Request("/bff/user?slide=false", {
     headers: new Headers({
         "X-CSRF": "1",
     }),

@@ -5,7 +5,7 @@
         <use xlink:href="#_Image1" x="0" y="0" width="1080px" height="1920px"/>
     </g>
     <g id="ASPNET-Core-Application" transform="matrix(1,0,0,1,259.097,98.3667)">
-        <text x="0px" y="0px" style="font-family:'Helvetica-Bold', 'Helvetica';font-weight:700;font-size:64px;">ASP<tspan x="123.344px 141.125px " y="0px 0px ">.N</tspan>ET Core <tspan x="448.156px 494.375px " y="0px 0px ">Ap</tspan>plication</text>
+        <text x="0px" y="0px" style="font-family:'Helvetica-Bold', 'Helvetica', 'Arial', sans-serif;font-weight:700;font-size:64px;">ASP<tspan x="123.344px 141.125px " y="0px 0px ">.N</tspan>ET Core <tspan x="448.156px 494.375px " y="0px 0px ">Ap</tspan>plication</text>
     </g>
     <g id="Rounded-Rectangle">
         <path id="path1" d="M300,1038C300,1060.09 317.909,1078 340,1078L962,1078C984.091,1078 1002,1060.09 1002,1038L1002,175C1002,152.909 984.091,135 962,135L340,135C317.909,135 300,152.909 300,175L300,1038Z" style="fill:none;fill-rule:nonzero;stroke:rgb(145,107,219);stroke-width:15px;"/>
@@ -40,7 +40,7 @@
     </g>
     <g transform="matrix(1,0,0,1,506.863,460.817)">
         <g id="Your-Code">
-            <text x="0px" y="0px" style="font-family:'Helvetica';font-size:64px;">Y<tspan x="36.813px 72.406px " y="0px 0px ">ou</tspan>r Code</text>
+            <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:64px;">Y<tspan x="36.813px 72.406px " y="0px 0px ">ou</tspan>r Code</text>
         </g>
     </g>
     <g id="duende-icon-api-transfer.svg" transform="matrix(1.39081,0,0,1.39081,558.965,252.887)">
@@ -53,10 +53,10 @@
     </g>
     <g id="IdentityServer-Middleware">
         <g transform="matrix(1,0,0,1,450.057,881)">
-            <text x="0px" y="0px" style="font-family:'Helvetica';font-size:64px;">IdentityServer</text>
+            <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:64px;">IdentityServer</text>
         </g>
         <g transform="matrix(1,0,0,1,482.849,948.5)">
-            <text x="0px" y="0px" style="font-family:'Helvetica';font-size:64px;">Middleware</text>
+            <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:64px;">Middleware</text>
         </g>
     </g>
     <g id="Group-copy-2">
@@ -83,28 +83,28 @@
     <g id="g6">
         <g transform="matrix(1,0,0,1,97,251)">
             <g id="login">
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:36px;">login</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:36px;">login</text>
             </g>
         </g>
         <g id="logout" transform="matrix(1,0,0,1,96,353)">
-            <text x="0px" y="0px" style="font-family:'Helvetica';font-size:36px;">logout</text>
+            <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:36px;">logout</text>
         </g>
         <g id="text1" transform="matrix(1,0,0,1,97,455)">
-            <text x="0px" y="0px" style="font-family:'Helvetica';font-size:36px;">...</text>
+            <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:36px;">...</text>
         </g>
         <g transform="matrix(1,0,0,1,97,710)">
             <g id="authorize">
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:36px;">authorize</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:36px;">authorize</text>
             </g>
         </g>
         <g transform="matrix(1,0,0,1,97,811)">
             <g id="token">
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:36px;">token</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:36px;">token</text>
             </g>
         </g>
         <g transform="matrix(1,0,0,1,97,912)">
             <g id="discovery">
-                <text x="0px" y="0px" style="font-family:'Helvetica';font-size:36px;">discovery</text>
+                <text x="0px" y="0px" style="font-family:'Helvetica', 'Arial', sans-serif;font-size:36px;">discovery</text>
             </g>
         </g>
     </g>
