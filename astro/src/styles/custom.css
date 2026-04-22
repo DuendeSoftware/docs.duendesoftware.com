@@ -103,8 +103,8 @@
 
 :root:not([data-theme='light']) .mermaid .cluster text,
 :root:not([data-theme='light']) .mermaid .cluster span {
-    fill: #1a1a1a !important;
-    color: #1a1a1a !important;
+    fill: #ffffff !important;
+    color: #ffffff !important;
 }
 
 /* Styled subgraphs — preserve semantic colors in dark mode */
