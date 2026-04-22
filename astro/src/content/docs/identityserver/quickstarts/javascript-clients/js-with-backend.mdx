@@ -125,7 +125,7 @@ Add the following to `src/JavaScriptClient/Program.cs`:
             options.SaveTokens = true;
             options.GetClaimsFromUserInfoEndpoint = true;
             options.MapInboundClaims = false;
-        }
+        })
         .ConfigureCookies(options => options.Cookie.SameSite = SameSiteMode.Strict)
         .AddRemoteApis();
 
