@@ -153,7 +153,7 @@ flowchart TD
     ExternalAPIs["External APIs"]
 
     SPA -->|"login / logout"| AuthEndpoints
-    SPA -->|"Set cookie"| CookieJar
+    AuthEndpoints -->|"Set-Cookie"| CookieJar
     CookieJar -->|"Auth cookie"| CookieAuth
     AuthEndpoints <-->|"redirect"| IdP
     AuthEndpoints --> SessionMgmt
@@ -184,11 +184,11 @@ When implemented correctly, a user will think of their time interacting with a s
 %%{ init: { 'theme': 'neutral' } }%%
 sequenceDiagram
     actor Alice
-    Alice->>App: /login
-    App->>Alice: /account
     box logical session
         participant App
     end
+    Alice->>App: /login
+    App->>Alice: /account
 ```
 
 So while the user will only see (and care about) a single session, it's entirely possible that there will be multiple physical sessions active. For most distributed applications, including those implemented with BFF, **sessions are managed independently by each component of an application architecture.** This means that there are **N+1** physical sessions possible, where **N** is the number of sessions for each service in your solution, and the **+1** being the session managed on the BFF host. Since we are focusing on ASP.NET Core, those sessions typically are stored using the Cookie Authentication handler features of .NET.
@@ -197,10 +197,6 @@ So while the user will only see (and care about) a single session, it's entirely
 %%{ init: { 'theme': 'neutral' } }%%
 sequenceDiagram
     actor Alice
-    Alice->>App: /login
-    App->>Alice: /account
-    App->>Service 1: request
-    App-->>Service N...: N... request
     box App session
         participant App
     end
@@ -210,6 +206,10 @@ sequenceDiagram
     box Service N... session
         participant Service N...
     end
+    Alice->>App: /login
+    App->>Alice: /account
+    App->>Service 1: request
+    App->>Service N...: N... request
 ```
 
 The separation allows each service to manage its session to its specific needs. While it can depend on your requirements, we find most developers want to coordinate the physical session lifetimes, creating a more predictable logical session. If that is your case, we recommend you first start by turning each physical session into a more powerful [server-side session](/bff/fundamentals/session/server-side-sessions.mdx).

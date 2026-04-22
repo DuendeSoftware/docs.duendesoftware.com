@@ -15,10 +15,10 @@ Depending on your Blazor rendering mode, you need different strategies for acces
 ```mermaid
 %%{ init: { 'theme': 'neutral' } }%%
 flowchart LR
-    WASM["Blazor WASM Component\n(browser)"]
-    Server["BFF Host\n(server)"]
-    Remote["Remote API\n(external)"]
-    DB["Database\n(server-side)"]
+    WASM["Blazor WASM Component<br/>(browser)"]
+    Server["BFF Host<br/>(server)"]
+    Remote["Remote API<br/>(external)"]
+    DB["Database<br/>(server-side)"]
 
     WASM -- "cookie + X-CSRF header" --> Server
     Server -- "access token" --> Remote

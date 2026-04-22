@@ -45,10 +45,8 @@
     display: block;
 }
 
-/* Mermaid diagrams — always rendered in light theme via patched plugin */
+/* Mermaid diagrams — shared base styles */
 .mermaid {
-    background: #1a1525;
-    border: 1px solid #6e45af;
     border-radius: 0.5rem;
     padding: 1.5rem 1rem;
     margin: 1rem 0;
@@ -61,87 +59,199 @@
     height: auto;
 }
 
-/* Dark mode — restyle Mermaid's light-theme SVG elements with vibrant purple palette */
-.mermaid .node rect,
-.mermaid .node circle,
-.mermaid .node ellipse,
-.mermaid .node polygon,
-.mermaid .node path {
+/* Dark mode — vibrant purple palette */
+:root:not([data-theme='light']) .mermaid {
+    background: #1a1525;
+    border: 1px solid #6e45af;
+}
+
+:root:not([data-theme='light']) .mermaid .node rect,
+:root:not([data-theme='light']) .mermaid .node circle,
+:root:not([data-theme='light']) .mermaid .node ellipse,
+:root:not([data-theme='light']) .mermaid .node polygon,
+:root:not([data-theme='light']) .mermaid .node path {
     fill: #2d1f5e !important;
     stroke: #916bdb !important;
     stroke-width: 1.5px;
 }
 
-.mermaid .node .label,
-.mermaid .nodeLabel,
-.mermaid .label text,
-.mermaid text {
-    fill: #e8e0f5 !important;
-    color: #e8e0f5 !important;
+:root:not([data-theme='light']) .mermaid .node .label,
+:root:not([data-theme='light']) .mermaid .nodeLabel,
+:root:not([data-theme='light']) .mermaid .label text,
+:root:not([data-theme='light']) .mermaid text {
+    fill: #ffffff !important;
+    color: #ffffff !important;
 }
 
-.mermaid .edgePath .path,
-.mermaid .flowchart-link {
+:root:not([data-theme='light']) .mermaid .edgePath .path,
+:root:not([data-theme='light']) .mermaid .flowchart-link {
     stroke: #916bdb !important;
     stroke-width: 1.5px;
 }
 
-.mermaid .arrowheadPath,
-.mermaid marker path {
+:root:not([data-theme='light']) .mermaid .arrowheadPath,
+:root:not([data-theme='light']) .mermaid marker path {
     fill: #916bdb !important;
     stroke: #916bdb !important;
 }
 
-.mermaid .cluster rect {
+:root:not([data-theme='light']) .mermaid .cluster rect {
     fill: #241b3a !important;
     stroke: #6e45af !important;
     stroke-width: 1.5px;
 }
 
-.mermaid .cluster text,
-.mermaid .cluster span {
-    fill: #c4aef0 !important;
-    color: #c4aef0 !important;
+:root:not([data-theme='light']) .mermaid .cluster text,
+:root:not([data-theme='light']) .mermaid .cluster span {
+    fill: #1a1a1a !important;
+    color: #1a1a1a !important;
 }
 
-/* Decision diamonds — accent pop */
-.mermaid .node.decision rect,
-.mermaid .node.default.decision polygon,
-.mermaid .node polygon[style] {
+/* Styled subgraphs — preserve semantic colors in dark mode */
+:root:not([data-theme='light']) .mermaid .cluster rect[style*="d9ead3"],
+:root:not([data-theme='light']) .mermaid .cluster rect[style*="6aa84f"] {
+    fill: #1a2e1a !important;
+    stroke: #4a8c4a !important;
+}
+
+:root:not([data-theme='light']) .mermaid .cluster rect[style*="f4cccc"],
+:root:not([data-theme='light']) .mermaid .cluster rect[style*="cc0000"] {
+    fill: #2e1a1a !important;
+    stroke: #cc4444 !important;
+}
+
+/* Decision diamonds — accent pop (dark only) */
+:root:not([data-theme='light']) .mermaid .node.decision rect,
+:root:not([data-theme='light']) .mermaid .node.default.decision polygon,
+:root:not([data-theme='light']) .mermaid .node polygon[style] {
     fill: #43257c !important;
     stroke: #b794f6 !important;
 }
 
-/* In light mode, reset everything to default Mermaid rendering */
-:root[data-theme='light'] .mermaid {
-    background: #f5f6f8;
-    border-color: #dcdfe4;
+/* Styled nodes — preserve semantic green in dark mode (must follow generic polygon[style]) */
+:root:not([data-theme='light']) .mermaid .node rect[style*="d5e8d4"],
+:root:not([data-theme='light']) .mermaid .node polygon[style*="d5e8d4"] {
+    fill: #1a2e1a !important;
+    stroke: #4a8c4a !important;
 }
 
-:root[data-theme='light'] .mermaid .node rect,
-:root[data-theme='light'] .mermaid .node circle,
-:root[data-theme='light'] .mermaid .node ellipse,
-:root[data-theme='light'] .mermaid .node polygon,
-:root[data-theme='light'] .mermaid .node path,
-:root[data-theme='light'] .mermaid .node .label,
-:root[data-theme='light'] .mermaid .nodeLabel,
-:root[data-theme='light'] .mermaid .label text,
-:root[data-theme='light'] .mermaid text,
-:root[data-theme='light'] .mermaid .edgePath .path,
-:root[data-theme='light'] .mermaid .flowchart-link,
-:root[data-theme='light'] .mermaid .arrowheadPath,
-:root[data-theme='light'] .mermaid marker path,
-:root[data-theme='light'] .mermaid .edgeLabel,
-:root[data-theme='light'] .mermaid .edgeLabel rect,
-:root[data-theme='light'] .mermaid .edgeLabel span,
-:root[data-theme='light'] .mermaid .edgeLabel text,
-:root[data-theme='light'] .mermaid .cluster rect,
-:root[data-theme='light'] .mermaid .cluster text,
-:root[data-theme='light'] .mermaid .cluster span {
-    fill: revert-layer;
-    stroke: revert-layer;
-    color: revert-layer;
-    background-color: revert-layer;
+/* Light mode — clean light appearance, let Mermaid defaults show through */
+:root[data-theme='light'] .mermaid {
+    background: #f5f6f8;
+    border: 1px solid #dcdfe4;
+}
+
+/* Sequence diagrams — dark mode */
+
+/* Kill SVG drop-shadow filter definitions and any filter references */
+:root:not([data-theme='light']) .mermaid svg filter {
+    display: none !important;
+}
+
+:root:not([data-theme='light']) .mermaid svg feDropShadow,
+:root:not([data-theme='light']) .mermaid svg feGaussianBlur {
+    stdDeviation: 0 !important;
+}
+
+:root:not([data-theme='light']) .mermaid [filter],
+:root:not([data-theme='light']) .mermaid [style*="filter"] {
+    filter: none !important;
+}
+
+:root:not([data-theme='light']) .mermaid .actor {
+    fill: #2d1f5e !important;
+    stroke: #916bdb !important;
+    stroke-width: 1.5px;
+}
+
+:root:not([data-theme='light']) .mermaid g.actor {
+    filter: none !important;
+}
+
+:root:not([data-theme='light']) .mermaid .actor-man circle,
+:root:not([data-theme='light']) .mermaid .actor-man line {
+    fill: #916bdb !important;
+    stroke: #916bdb !important;
+}
+
+:root:not([data-theme='light']) .mermaid text.actor,
+:root:not([data-theme='light']) .mermaid .actor tspan,
+:root:not([data-theme='light']) .mermaid .actor-box .actor,
+:root:not([data-theme='light']) .mermaid g.actor text,
+:root:not([data-theme='light']) .mermaid g.actor tspan {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+:root:not([data-theme='light']) .mermaid .messageLine0,
+:root:not([data-theme='light']) .mermaid .messageLine1 {
+    stroke: #916bdb !important;
+    stroke-width: 1.5px;
+}
+
+:root:not([data-theme='light']) .mermaid .messageText {
+    fill: #ffffff !important;
+}
+
+:root:not([data-theme='light']) .mermaid .sequenceNumber {
+    fill: #ffffff !important;
+}
+
+:root:not([data-theme='light']) .mermaid #arrowhead path,
+:root:not([data-theme='light']) .mermaid #crosshead path,
+:root:not([data-theme='light']) .mermaid .arrowMarkerPath {
+    fill: #916bdb !important;
+    stroke: #916bdb !important;
+}
+
+:root:not([data-theme='light']) .mermaid .activation0,
+:root:not([data-theme='light']) .mermaid .activation1,
+:root:not([data-theme='light']) .mermaid .activation2 {
+    fill: #43257c !important;
+    stroke: #916bdb !important;
+}
+
+:root:not([data-theme='light']) .mermaid .loopLine {
+    stroke: #6e45af !important;
+    stroke-width: 1.5px;
+}
+
+:root:not([data-theme='light']) .mermaid .loopText,
+:root:not([data-theme='light']) .mermaid .loopText tspan {
+    fill: #c4aef0 !important;
+}
+
+:root:not([data-theme='light']) .mermaid .labelBox {
+    fill: #241b3a !important;
+    stroke: #6e45af !important;
+}
+
+:root:not([data-theme='light']) .mermaid .labelText,
+:root:not([data-theme='light']) .mermaid .labelText tspan {
+    fill: #ffffff !important;
+}
+
+:root:not([data-theme='light']) .mermaid .note {
+    fill: #43257c !important;
+    stroke: #916bdb !important;
+}
+
+:root:not([data-theme='light']) .mermaid .noteText,
+:root:not([data-theme='light']) .mermaid .noteText tspan {
+    fill: #ffffff !important;
+}
+
+.mermaid rect.rect {
+    filter: none !important;
+}
+
+:root:not([data-theme='light']) .mermaid rect.rect {
+    fill: #241b3a !important;
+    stroke: #6e45af !important;
+}
+
+:root:not([data-theme='light']) .mermaid .sequenceDiagram line[class="200"] {
+    stroke: #6e45af !important;
 }
 
 iframe {

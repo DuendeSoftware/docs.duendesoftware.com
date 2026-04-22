@@ -47,7 +47,7 @@ flowchart TD
     ExternalAPIs["External APIs"]
 
     SPA -->|"login / logout"| AuthEndpoints
-    SPA -->|"Set cookie"| CookieJar
+    AuthEndpoints -->|"Set-Cookie"| CookieJar
     CookieJar -->|"Auth cookie"| CookieAuth
     AuthEndpoints <-->|"redirect"| IdP
     AuthEndpoints --> SessionMgmt
@@ -131,6 +131,7 @@ Both are supported, but have different integration patterns:
 ## Trust Boundaries
 
 ```mermaid
+%%{ init: { 'theme': 'default' } }%%
 flowchart TD
     subgraph Browser["Browser (untrusted)"]
         B1["Holds session cookie only<br/>(HttpOnly, Secure, SameSite)"]

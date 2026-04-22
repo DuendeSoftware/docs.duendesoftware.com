@@ -20,12 +20,12 @@ A frontend application using the BFF pattern can call two types of APIs:
 ```mermaid
 %%{ init: { 'theme': 'neutral' } }%%
 flowchart TD
-    Q1{Is the API only used\nby this frontend?}
-    Q2{Do you need load balancing,\nservice discovery, or\ncomplex routing/transforms?}
+    Q1{"Is the API only used<br/>by this frontend?"}
+    Q2{"Do you need load balancing,<br/>service discovery, or<br/>complex routing/transforms?"}
 
-    Local["✅ Embedded (Local) API\nHost the API inside the BFF itself"]
-    Remote["✅ Remote API — Direct Forwarding\nMapRemoteBffApiEndpoint()"]
-    Yarp["✅ YARP Integration\nFull YARP configuration with BFF extensions"]
+    Local["✅ Embedded (Local) API<br/>Host the API inside the BFF itself"]
+    Remote["✅ Remote API — Direct Forwarding<br/>MapRemoteBffApiEndpoint()"]
+    Yarp["✅ YARP Integration<br/>Full YARP configuration with BFF extensions"]
 
     Q1 -->|Yes| Local
     Q1 -->|No| Q2

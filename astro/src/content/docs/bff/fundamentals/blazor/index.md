@@ -22,6 +22,7 @@ The Duende BFF Security Framework addresses these challenges by keeping access t
 A BFF-backed Blazor app has three elements: the **backend** (server-side logic and APIs), the **frontend** (the Blazor application), and the **client** (the browser). The BFF host acts as the combined backend and frontend host:
 
 ```mermaid
+%%{ init: { 'theme': 'default' } }%%
 flowchart LR
     Client[Client / Browser]
     subgraph BFF Host
