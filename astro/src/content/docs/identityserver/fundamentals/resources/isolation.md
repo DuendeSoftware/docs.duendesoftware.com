@@ -252,17 +252,17 @@ options.Events.OnRedirectToIdentityProvider = context =>
 };
 ```
 
-## More Examples
+## More Examples to Understand Resource Isolation
 
-Image a set of services that separate an Orders API and an Inventory API. Each has their own distinct set of API scopes, plus a set of scopes shared between the APIs, and there's a global scope used sometimes by legacy systems that haven't changed yet to use Resource Isolation.
+Imagine a set of services with separate APIs for handling orders and tracking inventory, an Orders API and Inventory API. Each has their own distinct set of API scopes, plus a set of scopes shared between the APIs. In addition, there's a global scope used by legacy systems that haven't been updated yet to use Resource Isolation. The set of scopes used by each application are:
 
-| urn:orders   | urn:inventory   | Not Shared with any Api Resource |
+| urn:orders   | urn:inventory   | Not Shared with any API Resource |
 |--------------|-----------------|----------------------------------|
 | orders.read  | inventory.read  | global.audit                     |
 | orders.write | inventory.write |                                  |
 | shared.read  | shared.read     |                                  |
 
-The below code sample shows an IdentityServer creating Scopes, ApiResources, and a Client for the above scopes. Notice that all scopes are created in one collection, `Scopes`, then the `Resources` collection groups the scopes per Api Resource. Finally, the single `Client` includes all scopes in its `AllowedScopes` property because the client will be requesting any combination of those scopes from Duende IdentityServer.
+The below code creates in-memory scopes, API resources, and a single client (which knows about the aforementioned resources) inside a Duende IdentityServer application. Notice that all scopes are created in a single `Scopes` collection, then the `Resources` collection groups the scopes per `ApiResource`. Finally, the `Client` includes all scopes in its `AllowedScopes` property because the client will be requesting any combination of those scopes from Duende IdentityServer. The only grouping happening is when the `ApiResource` objects link an API resource to a scope.
 
 ```csharp
 //All scopes used by all API Resources and Clients
@@ -285,7 +285,7 @@ public static readonly IEnumerable<ApiResource> Resources = [
     new ApiResource("urn:inventory", "Inventory API") {
         Scopes = { "inventory.read", "inventory.write", "shared.read" },
         RequireResourceIndicator = true
-    }, ];
+    } ];
 
 public static readonly IEnumerable<Client> Clients = [
     new Client {
@@ -306,7 +306,11 @@ public static readonly IEnumerable<Client> Clients = [
 ];
 ```
 
-| Scopes                   | Resource Api  | Result `aud`  |
+When requesting an `ApiResource`, IdentityServer will create a token with scopes filtered to what is supported by that `ApiResource`. Scopes are not owned by any individual `ApiResource`, and are global across your applications because internally they're an arbitrary string. An `ApiResource` doesn't 'own' scopes, it is allowed access to those scopes.
+
+The table below shows the resulting **audience claim** (`aud`) when making requests for a token with a specific scope/resource combination.
+
+| Scopes                   | Resource Api  | Result **audience claim** (`aud`)  |
 |--------------------------|---------------|---------------|
 | orders.read              | null          | urn:orders    |
 | inventory.read           | null          | NOT SET       |
@@ -315,6 +319,9 @@ public static readonly IEnumerable<Client> Clients = [
 | shared.read              | null          | urn:orders    |
 | orders.read shared.read  | null          | urn:orders    |
 
+### Experimenting with Resource Isolation
+
+The below code is 2 C# File Based Apps. The first is a Duende IdentityServer with the Scopes, Resources, and Clients described above. The second app is a console client that makes requests to Duende IdentityServer with different combinations of scopes and resources. To help understand how resource isolation works, feel free to run the two apps locally. Make modifications as you see fit to experiment.
 
 ```csharp {30, 43, 51}
 //IdentityServer.cs
@@ -402,35 +409,27 @@ using Duende.IdentityModel.Client;
 
 var cache = new DiscoveryCache("https://localhost:5001");
 
-Console.WriteLine();
-
-Console.WriteLine("1. Access Token for scope `orders.read`");
-Console.WriteLine("  - `aud` field is `urn:orders` because only scopes from that API Resource were requested");
+Console.WriteLine("Access Token for scope `orders.read`");
 await RequestToken(cache, scope: "orders.read", resource: null);
 
 Console.WriteLine();
-Console.WriteLine("2. Access Token for scope `inventory.read`");
-Console.WriteLine("  - `aud` field is not set because `ApiResource.RequireResourceIndicator = true` in IdentityServer Client and the resource is null");
+Console.WriteLine("Access Token for scope `inventory.read`");
 await RequestToken(cache, scope: "inventory.read", resource: null);
 
 Console.WriteLine();
-Console.WriteLine("3. Access Token for scope `inventory.read`");
-Console.WriteLine("  - `aud` field is `urn:inventory` because `ApiResource.RequireResourceIndicator = true` in IdentityServer Client, and the api resource is requested");
+Console.WriteLine("Access Token for scope `inventory.read`");
 await RequestToken(cache, scope: "inventory.read", resource: "urn:inventory");
 
 Console.WriteLine();
-Console.WriteLine("4. Access Token for scopes `orders.read global.audit`");
-Console.WriteLine("  - `aud` field is `urn:orders` because `orders.read` is tied to ApiResource `urn:orders` and `global.audit` is not tied to any");
+Console.WriteLine("Access Token for scopes `orders.read global.audit`");
 await RequestToken(cache, scope: "orders.read global.audit", resource: null);
 
 Console.WriteLine();
-Console.WriteLine("5. Access Token for scope `shared.read`");
-Console.WriteLine("  - `aud` field is urn:orders because ");
+Console.WriteLine("Access Token for scope `shared.read`");
 await RequestToken(cache, scope: "shared.read", resource: null);
 
 Console.WriteLine();
-Console.WriteLine("6. Access Token for scopes `orders.read and shared.read`");
-Console.WriteLine("  - `aud` field is urn:orders because ");
+Console.WriteLine("Access Token for scopes `orders.read and shared.read`");
 await RequestToken(cache, scope: "orders.read shared.read", resource: null);
 
 static async Task RequestToken(DiscoveryCache cache, string scope, string? resource)
@@ -443,7 +442,6 @@ static async Task RequestToken(DiscoveryCache cache, string scope, string? resou
         Address = disco.TokenEndpoint,
         ClientId = "resource.isolation.demo.client",
         ClientSecret = "my-secret",
-
         Scope = scope,
     };
 
@@ -464,7 +462,10 @@ static void Show(TokenResponse response)
         {
             var parts = response.AccessToken.Split('.');
             var claims = parts[1];
-            Console.WriteLine(PrettyPrintJson(Encoding.UTF8.GetString(Base64Url.DecodeFromChars(claims))));
+            var raw = Encoding.UTF8.GetString(Base64Url.DecodeFromChars(claims));
+            var doc = JsonDocument.Parse(raw).RootElement;
+            var json = JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true });
+            Console.WriteLine(json);
         }
         else
         {
@@ -473,58 +474,11 @@ static void Show(TokenResponse response)
     }
     else if (response.ErrorType == ResponseErrorType.Http)
     {
-        Console.WriteLine($"HTTP error: {response.Error}");
-        Console.WriteLine($"HTTP status code: {response.HttpStatusCode}");
+        Console.WriteLine($"HTTP error: {response.Error} with HTTP status code: {response.HttpStatusCode}");
     }
     else
     {
         Console.WriteLine($"Protocol error response: {response.Raw}");
     }
 }
-
-static string PrettyPrintJson(string raw)
-{
-    var doc = JsonDocument.Parse(raw).RootElement;
-    return JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true });
-}
-```
-
-
-```mermaid
-%%{ init: { 'theme': 'neutral' } }%%
-requirementDiagram
-
-    element Client {
-    }
-
-    element ApiResource {
-    }
-
-    element Scopes {
-    }
-
-    Client - contains -> Scopes
-    ApiResource - contains -> Scopes
-```
-
-
-```mermaid
-%%{ init: { 'theme': 'neutral' } }%%
-mindmap
-  root((IdentityServer))
-    Clients
-      resource.isolation.demo.client
-    Scopes
-      ApiResources
-        urn:resource1
-          resource1.scope1
-          resource1.scope2
-          shared.scope
-        urn:resource2
-          resource2.scope1
-          resource2.scope2
-          shared.scope
-      Non-Parented Scopes
-        scope2
-        scope3
 ```
