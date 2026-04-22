@@ -143,16 +143,7 @@
 
 /* Sequence diagrams — dark mode */
 
-/* Kill SVG drop-shadow filter definitions and any filter references */
-:root:not([data-theme='light']) .mermaid svg filter {
-    display: none !important;
-}
-
-:root:not([data-theme='light']) .mermaid svg feDropShadow,
-:root:not([data-theme='light']) .mermaid svg feGaussianBlur {
-    stdDeviation: 0 !important;
-}
-
+/* Kill SVG drop-shadow filter references */
 :root:not([data-theme='light']) .mermaid [filter],
 :root:not([data-theme='light']) .mermaid [style*="filter"] {
     filter: none !important;
@@ -344,7 +335,7 @@ summary {
 }
 
 .hs-error-msg {
-    text-decoration:var(--sl-color-accent-high) ;
+    text-decoration-color: var(--sl-color-accent-high);
     color: var(--sl-color-accent-high);
     font-size: 0.875rem;
 }
