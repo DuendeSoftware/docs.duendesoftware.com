@@ -24,6 +24,93 @@ builder.Services.AddBff(options =>
 })
 ```
 
+## Common Configurations
+
+The sections below show complete, annotated options blocks for the most common deployment scenarios. The full reference for every option follows after.
+
+### Production Deployment
+
+```csharp
+builder.Services.AddBff(options =>
+{
+    // Required for production — obtain from the Duende licensing portal
+    options.LicenseKey = builder.Configuration["Duende:LicenseKey"];
+
+    // Revoke refresh tokens on logout (default: true — keep enabled)
+    options.RevokeRefreshTokenOnLogout = true;
+
+    // Log out all sessions for a user when back-channel logout is received
+    // Set to true if you want global logout across devices
+    options.BackchannelLogoutAllUserSessions = false;
+
+    // Session cleanup (v4+): call .AddSessionCleanupBackgroundProcess() instead
+    options.SessionCleanupInterval = TimeSpan.FromMinutes(10);
+})
+// Use Entity Framework for production-grade session storage
+.AddServerSideSessions()
+.AddEntityFrameworkServerSideSessions(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+```
+
+### Development with a Separate Frontend (Split Host)
+
+When your SPA is served by a separate dev server (e.g., Vite on `localhost:3000`) and the BFF is on a different port:
+
+```csharp
+builder.Services.AddBff(options =>
+{
+    // Allow the separate frontend origin to use silent login
+    options.AllowedSilentLoginReferers = ["https://localhost:3000"];
+})
+.ConfigureCookies(options =>
+{
+    // Lax is required when the IDP is on a different site than the BFF
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
+// Allow CORS requests from the dev server
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevSpa", policy =>
+        policy.WithOrigins("https://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
+```
+
+### Multi-Frontend with Per-Frontend OIDC
+
+```csharp
+builder.Services.AddBff()
+    // Global OIDC defaults (overridden per-frontend where needed)
+    .ConfigureOpenIdConnect(options =>
+    {
+        options.Authority = "https://login.example.com";
+        options.ClientId = "shared-client";
+        options.ClientSecret = "secret";
+        options.SaveTokens = true;
+        options.Scope.Add("offline_access");
+    })
+    // Register named frontends
+    .AddFrontends(
+        new BffFrontend(BffFrontendName.Parse("main-app"))
+            .WithCdnIndexHtmlUrl(new Uri("https://cdn.example.com/app/index.html")),
+
+        new BffFrontend(BffFrontendName.Parse("admin-app"))
+            .MapToPath("/admin")
+            .WithOpenIdConnectOptions(opt =>
+            {
+                // Admin frontend uses a different client ID
+                opt.ClientId = "admin-client";
+                opt.ClientSecret = "admin-secret";
+            })
+            .WithCdnIndexHtmlUrl(new Uri("https://cdn.example.com/admin/index.html"))
+    );
+```
+
 ## General
 
 * **`EnforceBffMiddleware`**

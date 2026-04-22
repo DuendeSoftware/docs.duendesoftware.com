@@ -19,6 +19,10 @@ The BFF logout endpoint has extensibility points in two interfaces. The `ILogout
 that processes requests to the endpoint. This service can be used to add custom request processing logic.
 The `IReturnUrlValidator` ensures that the `returnUrl` parameter passed to the logout endpoint is safe to use.
 
+:::note[How this endpoint works]
+See [Logout Endpoint](/bff/fundamentals/session/management/logout/) for an explanation of what this endpoint does and how to use it from your frontend.
+:::
+
 <Aside type="caution">
     In BFF V3, the `ILogoutEndpoint` interface is called `ILogoutService` instead.
 </Aside>

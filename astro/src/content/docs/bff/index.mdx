@@ -41,6 +41,40 @@ The source code for the BFF framework can be found on GitHub. Builds are distrib
   />
 </CardGrid>
 
+## Do I Need BFF?
+
+If you're building a browser-based application (SPA or Blazor WASM) that needs to call authenticated APIs, BFF is the recommended security architecture. This section helps you decide.
+
+### BFF Pattern vs. Token-in-Browser
+
+| Concern                       | BFF Pattern                                       | Token-in-Browser                                                 |
+|-------------------------------|---------------------------------------------------|------------------------------------------------------------------|
+| **Token storage**             | Server-side only — browser never sees tokens      | Tokens in `localStorage` or `sessionStorage`                     |
+| **XSS token theft**           | Not possible — no tokens in browser memory        | High risk — any injected script can steal tokens                 |
+| **Third-party cookie issues** | Not affected — uses first-party session cookies   | Silent renewal via `prompt=none` breaks in Safari/Firefox/Chrome |
+| **CSRF exposure**             | Mitigated with `X-CSRF` header + SameSite cookies | Not applicable (tokens sent as `Authorization` header)           |
+| **Session revocation**        | Server can forcibly end sessions                  | No server-side control; wait for token expiry                    |
+| **Complexity**                | Slightly more infrastructure (BFF host required)  | Simpler initial setup, but security is harder to get right       |
+| **IETF recommendation**       | ✅ Recommended (OAuth 2.0 for Browser-Based Apps)  | ❌ Implicit grant deprecated; token-in-browser discouraged        |
+
+:::caution[Security implications of NOT using BFF]
+Storing access tokens in the browser (e.g., `localStorage`, `sessionStorage`, or JavaScript memory) exposes them to theft via XSS attacks and supply-chain attacks through compromised npm packages. Once stolen, an attacker can use the token independently of the user's browser — there is no way to detect or stop this.
+
+Additionally, OIDC silent login (`prompt=none`) relies on third-party cookies, which are blocked by Safari, Firefox, and increasingly Chrome. This means session management in token-in-browser apps will silently break for a growing proportion of users.
+
+See [Threats Against Browser-based Applications](#threats-against-browser-based-applications) below for the full threat model.
+:::
+
+:::tip[When BFF is the right choice]
+Use BFF if any of the following are true:
+- Your frontend calls APIs that require user authentication
+- You need reliable session management across browsers
+- You want protection against XSS token theft
+- You're building a new application and want to follow current IETF best practices
+
+See the [architecture](/bff/architecture/) pages for a deeper discussion of the threat model.
+:::
+
 ## Getting Started
 
 If you're upgrading from a previous version, please check our [upgrade guides](/bff/upgrading).
@@ -97,7 +131,40 @@ It offers the following functionality:
 
 The following diagram illustrates how the Duende BFF Security Framework fits into a typical application architecture.
 
-![Backend For Frontend application architecture diagram](images/bff_application_architecture.svg)
+```mermaid
+%%{ init: { 'theme': 'default' } }%%
+flowchart TD
+    subgraph Browser
+        SPA["Browser-Based Application"]
+        CookieJar["🍪 Cookie Jar"]
+    end
+
+    subgraph BFF["BFF Host"]
+        AuthEndpoints["Authentication<br/>Endpoints"]
+        SessionMgmt["Session<br/>Management"]
+        CookieAuth["Cookie Authorization"]
+        CSRF["CSRF Protection"]
+        Proxy["Proxy to<br/>External APIs"]
+        LocalAPIs["Local APIs"]
+        SessionStore[("Server-Side<br/>Session Storage")]
+    end
+
+    IdP["Identity Provider"]
+    ExternalAPIs["External APIs"]
+
+    SPA -->|"login / logout"| AuthEndpoints
+    SPA -->|"Set cookie"| CookieJar
+    CookieJar -->|"Auth cookie"| CookieAuth
+    AuthEndpoints <-->|"redirect"| IdP
+    AuthEndpoints --> SessionMgmt
+    SessionMgmt --> SessionStore
+    CookieAuth --> CSRF
+    CSRF --> Proxy
+    CSRF --> LocalAPIs
+    Proxy -->|"Bearer token"| ExternalAPIs
+    SessionMgmt -->|"Acquire tokens"| IdP
+    ExternalAPIs -->|"Validate tokens"| IdP
+```
 
 The browser based application runs inside the browser’s secure sandbox. It can be built using any type of front-end technology, such as via Vanilla-JS, React, Vue, WebComponents, Blazor, etc.
 
@@ -273,3 +340,9 @@ Before HTTPS was widespread, session hijacking was a common occurrence, especial
 Even if SSL is not compromised, there are other ways for malicious actors to hijack the session. For example, if the user’s computer is compromised then browser security can still be bypassed. There have also been occurrences of session hijacking where (malicious) helpdesk employees asked for ‘har’ files (which are effectively complete request traces, including the authentication cookies), which were then used to hijack sessions.
 
 Right now, it’s very difficult to completely protect against this type of attack. However, there are interesting new standards being discussed, such as Device Bound Session Credentials. This standard aims to make sure that a session is cryptographically bound to a single device. Even if stolen, it can’t be used by a different device.
+
+## See Also
+
+- [Duende IdentityServer](/identityserver/) — The authorization server BFF authenticates against for OpenID Connect flows
+- [Access Token Management](/accesstokenmanagement/) — Token lifecycle library used by BFF for automatic token refresh and caching
+- [Decision Guide: BFF vs Direct API Access](/general/guides/bff-vs-direct) — When to use the BFF pattern versus letting the browser hold tokens directly

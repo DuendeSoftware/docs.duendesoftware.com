@@ -6,6 +6,28 @@ sidebar:
   order: 20
 ---
 
+## Migration Checklist
+
+Use this checklist to track your upgrade. Each item links to the detailed section below.
+
+- [ ] Update `Duende.BFF` NuGet package to v4.x
+- [ ] [Replace `TokenType` enum with `RequiredTokenType`](#remote-apis) — move `using` to `Duende.Bff.AccessTokenManagement`
+- [ ] [Replace `.RequireAccessToken()` with `.WithAccessToken()`](#remote-apis) on all remote API registrations
+- [ ] [Replace `.WithOptionalUserAccessToken()` with `.WithAccessToken(RequiredTokenType.UserOrNone)`](#remote-apis)
+- [ ] [Update YARP token type config](#configuring-token-types-in-yarp) to use `RequiredTokenType` enum values
+- [ ] [Rename custom service classes](#service-to-endpoint-updates) (`IUserService` → `IUserEndpoint`, etc.) and update to new extensibility pattern
+- [ ] [Update `IUserSessionStore` implementations](#custom-session-store) — replace `string key` with `UserSessionKey` struct
+- [ ] [Update `GetUserAccessTokenAsync` namespace](#access-token-retrieval) — use `Duende.AccessTokenManagement.OpenIdConnect`
+- [ ] [Optionally migrate to new simplified wireup](#simplified-wireup-without-explicit-authentication-setup) (`.ConfigureOpenIdConnect()` + `.ConfigureCookies()`)
+- [ ] [Run EF Core database migration](#server-side-sessions-database-migrations) if using server-side sessions (`ApplicationName` → `PartitionKey`)
+- [ ] Verify YARP-based API proxying still works end-to-end
+
+:::caution[Database schema breaking change]
+The `UserSessions.ApplicationName` column is renamed to `PartitionKey`. If multiple BFF v3 apps share the same session database, upgrade all of them simultaneously or provision a new database for the v4 instance.
+:::
+
+---
+
 Duende BFF Security Framework v4.0 is a significant release that includes:
 
 * Multi-frontend support

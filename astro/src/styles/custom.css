@@ -45,19 +45,108 @@
     display: block;
 }
 
-:root[data-theme='light'] {
-    .mermaid {
-        background: var(--sl-color-gray-7);
-    }
+/* Mermaid diagrams — always rendered in light theme via patched plugin */
+.mermaid {
+    background: #1a1525;
+    border: 1px solid #6e45af;
+    border-radius: 0.5rem;
+    padding: 1.5rem 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    text-align: center;
+}
+
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Dark mode — restyle Mermaid's light-theme SVG elements with vibrant purple palette */
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node ellipse,
+.mermaid .node polygon,
+.mermaid .node path {
+    fill: #2d1f5e !important;
+    stroke: #916bdb !important;
+    stroke-width: 1.5px;
+}
+
+.mermaid .node .label,
+.mermaid .nodeLabel,
+.mermaid .label text,
+.mermaid text {
+    fill: #e8e0f5 !important;
+    color: #e8e0f5 !important;
+}
+
+.mermaid .edgePath .path,
+.mermaid .flowchart-link {
+    stroke: #916bdb !important;
+    stroke-width: 1.5px;
+}
+
+.mermaid .arrowheadPath,
+.mermaid marker path {
+    fill: #916bdb !important;
+    stroke: #916bdb !important;
+}
+
+.mermaid .cluster rect {
+    fill: #241b3a !important;
+    stroke: #6e45af !important;
+    stroke-width: 1.5px;
+}
+
+.mermaid .cluster text,
+.mermaid .cluster span {
+    fill: #c4aef0 !important;
+    color: #c4aef0 !important;
+}
+
+/* Decision diamonds — accent pop */
+.mermaid .node.decision rect,
+.mermaid .node.default.decision polygon,
+.mermaid .node polygon[style] {
+    fill: #43257c !important;
+    stroke: #b794f6 !important;
+}
+
+/* In light mode, reset everything to default Mermaid rendering */
+:root[data-theme='light'] .mermaid {
+    background: #f5f6f8;
+    border-color: #dcdfe4;
+}
+
+:root[data-theme='light'] .mermaid .node rect,
+:root[data-theme='light'] .mermaid .node circle,
+:root[data-theme='light'] .mermaid .node ellipse,
+:root[data-theme='light'] .mermaid .node polygon,
+:root[data-theme='light'] .mermaid .node path,
+:root[data-theme='light'] .mermaid .node .label,
+:root[data-theme='light'] .mermaid .nodeLabel,
+:root[data-theme='light'] .mermaid .label text,
+:root[data-theme='light'] .mermaid text,
+:root[data-theme='light'] .mermaid .edgePath .path,
+:root[data-theme='light'] .mermaid .flowchart-link,
+:root[data-theme='light'] .mermaid .arrowheadPath,
+:root[data-theme='light'] .mermaid marker path,
+:root[data-theme='light'] .mermaid .edgeLabel,
+:root[data-theme='light'] .mermaid .edgeLabel rect,
+:root[data-theme='light'] .mermaid .edgeLabel span,
+:root[data-theme='light'] .mermaid .edgeLabel text,
+:root[data-theme='light'] .mermaid .cluster rect,
+:root[data-theme='light'] .mermaid .cluster text,
+:root[data-theme='light'] .mermaid .cluster span {
+    fill: revert-layer;
+    stroke: revert-layer;
+    color: revert-layer;
+    background-color: revert-layer;
 }
 
 iframe {
     aspect-ratio: 16/9;
     width: 100%;
-}
-
-.mermaid {
-    background: var(--sl-color-gray-1);
 }
 
 .hero > img {

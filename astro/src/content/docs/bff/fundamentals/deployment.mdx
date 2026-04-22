@@ -1,0 +1,175 @@
+---
+title: Production Deployment
+description: Guide for deploying Duende BFF to production, covering load balancing, data protection, health checks, cookie domain configuration, and monitoring.
+sidebar:
+  order: 90
+  label: Deployment
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+This page covers the production-specific concerns you need to address before deploying a BFF host. For middleware pipeline order, see [Middleware Pipeline](/bff/fundamentals/middleware-pipeline/).
+
+## Load Balancing and Sticky Sessions
+
+The BFF uses ASP.NET Core's Data Protection to encrypt and sign session cookies. In a multi-instance (load-balanced) deployment, **all instances must share the same Data Protection key ring** — otherwise cookies issued by one instance cannot be decrypted by another, causing random logout on failover.
+
+### Shared Key Storage
+
+Configure Data Protection to store keys in a shared location accessible to all instances:
+
+```csharp
+// Using Azure Blob Storage + Azure Key Vault
+builder.Services.AddDataProtection()
+    .PersistKeysToAzureBlobStorage(connectionString, "data-protection", "keys.xml")
+    .ProtectKeysWithAzureKeyVault(keyIdentifier, credential);
+
+// Using a network file share or a database
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(@"\\server\share\dp-keys"))
+    .ProtectKeysWithCertificate(certificate);
+```
+
+:::caution[Do not use in-memory keys in production]
+The default in-memory key ring is regenerated on every restart. Any existing sessions are invalidated when the process restarts or when traffic is routed to a new instance.
+:::
+
+### Server-Side Sessions (Recommended for Multi-Instance)
+
+With cookie-only sessions, every instance must share Data Protection keys. With **server-side sessions**, the cookie only holds an opaque session ID — the session payload is stored in a shared database. This is simpler to operate because:
+
+- Key ring only needs to be consistent (not necessarily shared) — the cookie just holds an ID
+- Sessions can be inspected and revoked server-side
+- Cookie size is minimized
+
+<LinkCard
+  href="/bff/fundamentals/session/server-side-sessions/"
+  title="Server-Side Sessions"
+  description="Setup guide for database-backed session storage"
+/>
+
+### Sticky Sessions
+
+If you cannot use server-side sessions and cannot share a Data Protection key ring, configure your load balancer to route each user consistently to the same instance ("sticky sessions" / session affinity). This is a last resort — prefer shared key storage.
+
+## Health Check Endpoints
+
+Expose a health check endpoint so your load balancer and orchestrator (Kubernetes, etc.) can detect unhealthy instances:
+
+```csharp
+builder.Services.AddHealthChecks();
+
+// In your pipeline (after UseRouting):
+app.MapHealthChecks("/health");
+```
+
+For a more complete health check that validates downstream dependencies (database, token endpoint reachability):
+
+```csharp
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<SessionDbContext>()                   // EF Core session store
+    .AddUrlGroup(new Uri("https://idp.example.com/.well-known/openid-configuration"), 
+                 name: "identity-provider");
+
+app.MapHealthChecks("/health/live",  new HealthCheckOptions { Predicate = _ => false });
+app.MapHealthChecks("/health/ready", new HealthCheckOptions());
+```
+
+- `/health/live` — liveness: is the process running? (no dependency checks)
+- `/health/ready` — readiness: are all dependencies reachable? (fail this to take the instance out of rotation)
+
+## Cookie Domain Configuration
+
+By default, the BFF session cookie is scoped to the exact host. If you need the cookie to work across subdomains (e.g. `app.example.com` and `api.example.com`):
+
+```csharp
+builder.Services.AddAuthentication()
+    .AddCookie(options =>
+    {
+        options.Cookie.Domain = ".example.com"; // Note leading dot
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+```
+
+:::caution[Scope cookies as narrowly as possible]
+Setting a broad cookie domain (`.example.com`) means the cookie is sent to all subdomains, including any you don't control. Only use this when architecturally required, and ensure all subdomains are trusted.
+:::
+
+For split-host deployments (frontend on `app.example.com`, BFF on `bff.example.com`), you will need to set the cookie domain AND configure CORS. See [Separate Host for UI](/bff/architecture/ui-hosting/) and the [SplitHosts sample](/bff/samples/).
+
+## Reverse Proxy Configuration
+
+The BFF is typically deployed behind a reverse proxy (NGINX, Azure Application Gateway, AWS ALB, etc.). Configure ASP.NET Core to trust forwarded headers:
+
+```csharp
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    // Restrict to your proxy's IP to prevent header spoofing:
+    options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
+});
+
+// Must be the FIRST middleware:
+app.UseForwardedHeaders();
+```
+
+Without this, `HttpContext.Request.Scheme` will be `http` even when the client uses HTTPS, which causes:
+- The OIDC redirect URI to be `http://...` (rejected by the identity provider)
+- The session cookie's `Secure` flag to have no effect
+- `HttpContext.Request.Host` to reflect the internal host, breaking the OIDC redirect
+
+## Monitoring and Alerting
+
+BFF emits OpenTelemetry metrics and traces. See [Diagnostics](/bff/diagnostics/) for the full list of metric names and activity sources.
+
+### Key Metrics to Alert On
+
+| Metric | Alert Condition | Likely Cause |
+|---|---|---|
+| `session.started` | Sudden drop to 0 | Data Protection key mismatch, pod restart without shared keys |
+| `session.ended` | Unexpected spike | Back-channel logout sweep, session store purge, Data Protection key rotation |
+| `session.ended` / `session.started` ratio | Sustained ratio > 1 | Sessions ending faster than starting — investigate IdP or store issues |
+| HTTP 5xx on `/bff/*` endpoints | Any sustained spike | BFF host error — check logs |
+
+### Recommended Alerts
+
+```
+# Prometheus-style alert examples
+# Metric names are converted from dot notation to underscores by Prometheus.
+
+# No new sessions — potential Data Protection key mismatch
+alert: BffNoNewSessions
+expr: rate(session_started_total[5m]) == 0
+for: 5m
+
+# Abnormal session churn
+alert: BffSessionChurn
+expr: rate(session_ended_total[5m]) / rate(session_started_total[5m]) > 2
+for: 5m
+```
+
+## See Also
+
+<CardGrid>
+  <LinkCard
+    href="/bff/fundamentals/middleware-pipeline/"
+    title="Middleware Pipeline"
+    description="Correct middleware ordering for production"
+  />
+  <LinkCard
+    href="/bff/fundamentals/session/server-side-sessions/"
+    title="Server-Side Sessions"
+    description="Recommended for multi-instance deployments"
+  />
+  <LinkCard
+    href="/bff/diagnostics/"
+    title="Diagnostics"
+    description="Metrics and distributed tracing reference"
+  />
+  <LinkCard
+    href="/bff/architecture/ui-hosting/"
+    title="Separate Host for UI"
+    description="Split-host deployment patterns"
+  />
+</CardGrid>

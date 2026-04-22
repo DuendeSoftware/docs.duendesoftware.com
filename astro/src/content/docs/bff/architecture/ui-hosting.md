@@ -30,7 +30,28 @@ automatically include the authentication cookie and not require CORS
 headers. This makes the BFF and the front-end application a single deployable unit. Below shows a graphical overview of
 what that would look like:
 
-![Hosting BFF UI from the UI](../images/bff_ui_hosting_loc.svg)
+```mermaid
+%%{ init: { 'theme': 'default' } }%%
+flowchart LR
+    subgraph Browser["Browser: https://application.url"]
+        app["app"]
+    end
+
+    subgraph BFF["BFF Application"]
+        endpoints["BFF endpoints<br/>local / remote API endpoints"]
+        static["Static files middleware"]
+    end
+
+    subgraph FS["Local Filesystem"]
+        index["index.html"]
+        scripts["script_assets.js"]
+        images["images"]
+    end
+
+    app -->|"cookie"| endpoints
+    app --> static
+    static --> FS
+```
 
 If you create a BFF host using our templates, the UI will be hosted in this way:
 
@@ -58,7 +79,26 @@ outside of Visual Studio (e.g., using the node cli). You might also want to have
 and the BFF, and you might want your static UI assets hosted on a CDN. Below is a schematic overview of what that would
 look like:
 
-![Hosting BFF UI on CDN](../images/bff_ui_hosting_cdn.svg)
+```mermaid
+%%{ init: { 'theme': 'default' } }%%
+flowchart LR
+    subgraph Browser["Browser: https://application.url"]
+        app["app"]
+    end
+
+    subgraph BFF["BFF Application (https://bff.url)"]
+        endpoints["BFF endpoints<br/>local / remote API endpoints"]
+    end
+
+    subgraph CDN["CDN"]
+        index["index.html"]
+        scripts["script_assets.js"]
+        images["images"]
+    end
+
+    app -->|"cookie + CORS"| endpoints
+    app -->|"load assets"| CDN
+```
 
 The browser accesses the application via the BFF. The BFF proxies the calls to index.html to the CDN. The browser can
 then download all static assets from the CDN, but then use the BFF (and it’s API’s and user management API’s) secured by
@@ -90,7 +130,29 @@ another host (presumably a CDN). This technique makes the UI and BFF have exactl
 cookie will be sent from the frontend to the BFF automatically, and third party cookie blocking and the SameSite cookie
 attribute won't present any problems. The following diagram shows how that would work:
 
-![BFF Proxies the Index html from CDN](../images/bff_ui_hosting_proxy_index.svg)
+```mermaid
+%%{ init: { 'theme': 'default' } }%%
+flowchart LR
+    subgraph Browser["Browser: https://application.url"]
+        app["app"]
+    end
+
+    subgraph BFF["BFF Application"]
+        endpoints["BFF endpoints<br/>local / remote API endpoints"]
+        proxy["proxy"]
+    end
+
+    subgraph CDN["CDN (https://the.cdn)"]
+        index["index.html"]
+        scripts["script_assets.js"]
+        images["images"]
+    end
+
+    app -->|"cookie"| endpoints
+    app -->|"initial request"| proxy
+    proxy -->|"proxy index.html"| CDN
+    app -->|"load assets"| CDN
+```
 
 Setting this up for local development takes a bit of effort, however. As you make changes to the frontend, the UI's build
 process might generate a change to the index page. If it does, you'll need to arrange for the index page being served by

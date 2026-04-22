@@ -21,4 +21,6 @@ The `/bff/diagnostics` endpoint returns the current user and client access token
 
 To use the diagnostics endpoint, make a `GET` request to `/bff/diagnostics`. Typically, this is done in a browser to diagnose a problem during development.
 
+## Customize This Endpoint
 
+To add custom logic to the diagnostics endpoint, see [Diagnostics Endpoint Extensibility](/bff/extensibility/management/diagnostics/).

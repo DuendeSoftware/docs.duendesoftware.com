@@ -1,0 +1,106 @@
+---
+title: Blazor Rendering Modes & BFF
+description: Learn which Blazor rendering modes are compatible with the BFF security pattern and why.
+sidebar:
+  label: Rendering Modes
+  order: 2
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Blazor supports [several rendering modes](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-9.0#render-modes). The BFF pattern is only applicable to modes where code runs in the browser (client context), because that is where the risk of token exposure exists.
+
+## Rendering Mode Compatibility
+
+| Mode | Description | Renders In | Interactive | Use BFF? |
+|------|-------------|------------|-------------|----------|
+| **Static Server** | Static server-side rendering (SSR) | Server | ❌ | ❌ |
+| **Interactive Server** | Interactive SSR using Blazor Server and WebSockets | Server | ✅ | ❌ |
+| **Interactive WebAssembly** | Client-side rendering (CSR) using Blazor WASM | Browser | ✅ | ✅ |
+| **Interactive Auto** | Starts as Interactive Server, switches to WASM after download | Server → Browser | ✅ | ✅ |
+
+## Static Server
+
+:::caution
+BFF is not necessary for Static Server rendering. Standard ASP.NET Core authentication patterns apply.
+:::
+
+Static Server renders Blazor components as plain HTML with no client-side interactivity. Because all rendering happens on the server, tokens never reach the browser. Use standard ASP.NET Core cookie authentication instead of BFF.
+
+You may still want to use the `AuthenticationStateProvider` for accessing user claims in components.
+
+## Interactive Server
+
+:::caution
+BFF is not typically necessary for Interactive Server rendering. All component interactivity is managed server-side via WebSockets (SignalR).
+:::
+
+In Interactive Server mode, Blazor components run on the server and push UI updates to the browser over a WebSocket connection. Because no application code runs in the browser, tokens remain server-side naturally.
+
+You can still use [Session Management](/bff/fundamentals/session/index.md) features of BFF if you want server-side session control, but the BFF security pattern itself is not required.
+
+## Interactive WebAssembly
+
+:::note
+**BFF is recommended for Interactive WebAssembly.** Your Blazor components execute inside the browser and can be subject to XSS and token theft attacks.
+:::
+
+In Interactive WebAssembly mode, the Blazor runtime and your application code are downloaded to and executed in the browser. This means:
+
+- Your components run in the same JavaScript sandbox as the rest of the page
+- Any access token stored in the WASM memory is potentially accessible to injected scripts
+- You must never expose access tokens to WASM components
+
+The BFF pattern solves this by keeping tokens on the server. WASM components call BFF-hosted API endpoints (using the authentication cookie), and the BFF attaches the access token server-side before forwarding to remote APIs.
+
+See the [Getting Started: Blazor guide](/bff/getting-started/blazor/) for setup instructions.
+
+## Interactive Auto
+
+:::note
+**BFF is recommended for Interactive Auto.** This mode starts as Interactive Server but transitions to WebAssembly, creating an unpredictable execution context.
+:::
+
+Interactive Auto combines Interactive Server and Interactive WebAssembly: rendering starts on the server but switches to client-side WASM on subsequent visits after the Blazor bundle is downloaded.
+
+Because your application may be running in the browser at any time, you cannot rely on server-side-only token handling. The BFF pattern ensures tokens remain server-side regardless of which rendering mode is active.
+
+## Authentication State
+
+The `AuthenticationState` contains information about the currently logged-in user, including management claims like the logout URL.
+
+Blazor uses `AuthenticationStateProvider` implementations to make authentication state available to components:
+
+- **On the server**: The BFF's `AddServerManagementClaimsTransform` enriches the claims with the logout URL.
+- **On the client (WASM)**: The `BffClientAuthenticationStateProvider` polls `/bff/user` to keep the client in sync with the server session. This also notifies the frontend if the session is terminated server-side (e.g., back-channel logout).
+
+## Server-Side Token Store
+
+Blazor Server applications stream content over a WebSocket, so there is often no `HttpContext` available during component execution. This means:
+
+- You cannot use `HttpContext` extension methods in Blazor Server components
+- The normal mechanism to attach tokens to `HttpClient` calls does not work without special setup
+
+When you register `AddBlazorServer()`, BFF automatically registers the `ServerSideTokenStore` and Duende.AccessTokenManagement integration so that token management works correctly in Blazor Server.
+
+For more details, see [Blazor Server token management](/accesstokenmanagement/blazor-server.md).
+
+## See Also
+
+<CardGrid>
+  <LinkCard
+    href="/bff/fundamentals/blazor/data-access/"
+    title="Data Access Patterns"
+    description="How to call APIs from Blazor components"
+  />
+  <LinkCard
+    href="/bff/getting-started/blazor/"
+    title="Getting Started: Blazor"
+    description="Full walkthrough setup guide"
+  />
+  <LinkCard
+    href="/bff/troubleshooting/"
+    title="Troubleshooting"
+    description="Common Blazor BFF issues"
+  />
+</CardGrid>

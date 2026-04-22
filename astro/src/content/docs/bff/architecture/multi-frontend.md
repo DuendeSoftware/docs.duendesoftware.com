@@ -72,7 +72,17 @@ BFF V4 still allows you to manually configure the ASP.NET Core authentication op
 
 To achieve this, the BFF automatically configures the ASP.NET Core pipeline:
 
-![BFF Multi-Frontend Pipeline](../images/bff_multi_frontend_pipeline.svg)
+```mermaid
+%%{ init: { 'theme': 'default' } }%%
+flowchart TD
+    A["1. FrontendSelectionMiddleware"] --> B["2. PathMappingMiddleware"]
+    B --> C["3. OpenIdCallbackMiddleware"]
+    C --> D["4. Your application's ASP.NET Core pipeline"]:::app
+    D --> E["5. MapRemoteRoutesMiddleware"]
+    E --> F["6. ProxyIndexMiddleware"]
+
+    classDef app fill:#d5e8d4,stroke:#82b366
+```
 
 1. `FrontendSelectionMiddleware` - This middleware performs the frontend selection by seeing which frontend's selection criteria best matches the incoming request route. It's possible to mix both path based routing and host based routing, so the most specific will be selected. 
 2. `PathMappingMiddleware` - If you use path mapping, in the selected frontend, then it will automatically map the frontend's path so none of the subsequent middlewares know (or need to care) about this fact. 

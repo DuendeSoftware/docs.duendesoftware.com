@@ -14,449 +14,513 @@ redirect_from:
   - /identityserver/v7/bff/samples/bff-blazor/
 ---
 
-import { Code } from "@astrojs/starlight/components";
+import { Code, Steps } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-This quickstart walks you through how to create a BFF Blazor application. The sourcecode for this quickstart is available on [GitHub](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v3/Quickstarts/BlazorBffApp)
+This quickstart walks you through how to create a BFF Blazor application. The source code for this quickstart is available on [GitHub](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/BlazorAutoRendering).
+
+:::note[Version]
+This guide targets **Duende BFF v4**. If you are still on v3, expand the v3 tabs in each step below. See the [v3 → v4 upgrade guide](/bff/upgrading/bff-v3-to-v4/) when you are ready to migrate.
+:::
+
+## What You'll Build
+
+By the end of this guide you will have a Blazor application (Server + WASM) that authenticates users via OpenID Connect, stores session state server-side through the BFF, and calls a weather API using a BFF-managed HTTP client — with no access tokens exposed to the browser.
+
+:::note[Prerequisites]
+- .NET 8.0 SDK or later
+- Familiarity with Blazor's hosting models (Server vs. WASM)
+- An OpenID Connect-compatible identity provider (e.g., [Duende IdentityServer](/identityserver/), Auth0, Azure AD)
+:::
 
 ## Creating the project structure
 
-The first step is to create a Blazor app. You can do so using the command line:
+<Steps>
 
-```shell
-mkdir BlazorBffApp
-cd BlazorBffApp
+1. **Create a Blazor App**
 
-dotnet new blazor --interactivity auto --all-interactive
-```
+   ```shell
+   mkdir BlazorBffApp
+   cd BlazorBffApp
 
-This creates a blazor application with a Server project and a client project.
+   dotnet new blazor --interactivity auto --all-interactive
+   ```
 
-## Configuring the BffApp server project
+   This creates a Blazor application with a Server project and a client project.
 
-To configure the server, the first step is to add the BFF Blazor package.
+2. **Configure the BffApp Server Project**
 
-```shell
-cd BlazorBffApp
-dotnet add package Duende.BFF.Blazor
-```
+   To configure the server, the first step is to add the BFF Blazor package.
 
-Then you need to configure the application to use the BFF Blazor application. Add this to your services:
+   ```shell
+   cd BlazorBffApp
+   dotnet add package Duende.BFF.Blazor
+   ```
 
-{/* prettier-ignore */}
-<Tabs syncKey="bffVersion">
-  {/* prettier-ignore */}
-  <TabItem label="Duende BFF v4">
-    ```csharp
-    // BFF setup for blazor
-    builder.Services.AddBff()
-        .ConfigureOpenIdConnect(options =>
-        {
-            options.Authority = "https://demo.duendesoftware.com";
-            options.ClientId = "interactive.confidential";
-            options.ClientSecret = "secret";
-            options.ResponseType = "code";
-            options.ResponseMode = "query";
+   Then configure the application to use BFF. Add this to your services:
 
-            options.GetClaimsFromUserInfoEndpoint = true;
-            options.SaveTokens = true;
-            options.MapInboundClaims = false;
+   {/* prettier-ignore */}
+   <Tabs syncKey="bffVersion">
+     {/* prettier-ignore */}
+     <TabItem label="Duende BFF v4">
+       ```csharp
+       // BFF setup for Blazor
+       builder.Services.AddBff()
+           .ConfigureOpenIdConnect(options =>
+           {
+               options.Authority = "https://demo.duendesoftware.com";
+               options.ClientId = "interactive.confidential";
+               options.ClientSecret = "secret";
+               options.ResponseType = "code";
+               options.ResponseMode = "query";
 
-            options.Scope.Clear();
-            options.Scope.Add("openid");
-            options.Scope.Add("profile");
-            options.Scope.Add("api");
-            options.Scope.Add("offline_access");
+               options.GetClaimsFromUserInfoEndpoint = true;
+               options.SaveTokens = true;
+               options.MapInboundClaims = false;
 
-            options.TokenValidationParameters.NameClaimType = "name";
-            options.TokenValidationParameters.RoleClaimType = "role";
-        })
-        .ConfigureCookies(options =>
-        {
-            // Because we use an identity server that's configured on a different site
-            // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
-            // Setting it to Strict would cause the authentication cookie not to be sent after loggin in.
-            // The user would have to refresh the page to get the cookie.
-            // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
-            options.Cookie.SameSite = SameSiteMode.Lax;
-        })
-        .AddServerSideSessions() // Add in-memory implementation of server side sessions
-        .AddBlazorServer();
+               options.Scope.Clear();
+               options.Scope.Add("openid");
+               options.Scope.Add("profile");
+               options.Scope.Add("api");
+               options.Scope.Add("offline_access");
 
-    // Make sure authentication state is available to all components.
-    builder.Services.AddCascadingAuthenticationState();
+               options.TokenValidationParameters.NameClaimType = "name";
+               options.TokenValidationParameters.RoleClaimType = "role";
+           })
+           .ConfigureCookies(options =>
+           {
+               // Because we use an identity server that's configured on a different site
+               // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+               // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
+               // The user would have to refresh the page to get the cookie.
+               // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+               options.Cookie.SameSite = SameSiteMode.Lax;
+           })
+           .AddServerSideSessions() // Add in-memory implementation of server-side sessions
+           .AddBlazorServer();
 
-    builder.Services.AddAuthorization();
-    ```
+       // Make sure authentication state is available to all components.
+       builder.Services.AddCascadingAuthenticationState();
 
-  </TabItem>
-  {/* prettier-ignore */}
-  <TabItem label="Duende BFF v3">
-    ```csharp
-    // BFF setup for blazor
-    builder.Services.AddBff()
-        .AddServerSideSessions() // Add in-memory implementation of server side sessions
-        .AddBlazorServer();
+       builder.Services.AddAuthorization();
+       ```
 
-    // Configure the authentication
-    builder.Services
-        .AddAuthentication(options =>
-        {
-            options.DefaultScheme = "cookie";
-            options.DefaultChallengeScheme = "oidc";
-            options.DefaultSignOutScheme = "oidc";
-        })
-        .AddCookie("cookie", options =>
-        {
-            // Configure the cookie with __Host prefix for maximum security
-            options.Cookie.Name = "__Host-blazor";
+     </TabItem>
+     {/* prettier-ignore */}
+     <TabItem label="Duende BFF v3">
+       ```csharp
+       // BFF setup for Blazor (v3)
+       builder.Services.AddBff()
+           .AddServerSideSessions() // Add in-memory implementation of server-side sessions
+           .AddBlazorServer();
 
-            // Because we use an identity server that's configured on a different site
-            // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
-            // Setting it to Strict would cause the authentication cookie not to be sent after loggin in.
-            // The user would have to refresh the page to get the cookie.
-            // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
-            options.Cookie.SameSite = SameSiteMode.Lax;
-        })
-        .AddOpenIdConnect("oidc", options =>
-        {
-            options.Authority = "https://demo.duendesoftware.com";
-            options.ClientId = "interactive.confidential";
-            options.ClientSecret = "secret";
-            options.ResponseType = "code";
-            options.ResponseMode = "query";
+       // Configure the authentication
+       builder.Services
+           .AddAuthentication(options =>
+           {
+               options.DefaultScheme = "cookie";
+               options.DefaultChallengeScheme = "oidc";
+               options.DefaultSignOutScheme = "oidc";
+           })
+           .AddCookie("cookie", options =>
+           {
+               // Configure the cookie with __Host prefix for maximum security
+               options.Cookie.Name = "__Host-blazor";
 
-            options.GetClaimsFromUserInfoEndpoint = true;
-            options.SaveTokens = true;
-            options.MapInboundClaims = false;
+               // Because we use an identity server that's configured on a different site
+               // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+               // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
+               // The user would have to refresh the page to get the cookie.
+               // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+               options.Cookie.SameSite = SameSiteMode.Lax;
+           })
+           .AddOpenIdConnect("oidc", options =>
+           {
+               options.Authority = "https://demo.duendesoftware.com";
+               options.ClientId = "interactive.confidential";
+               options.ClientSecret = "secret";
+               options.ResponseType = "code";
+               options.ResponseMode = "query";
 
-            options.Scope.Clear();
-            options.Scope.Add("openid");
-            options.Scope.Add("profile");
-            options.Scope.Add("api");
-            options.Scope.Add("offline_access");
+               options.GetClaimsFromUserInfoEndpoint = true;
+               options.SaveTokens = true;
+               options.MapInboundClaims = false;
 
-            options.TokenValidationParameters.NameClaimType = "name";
-            options.TokenValidationParameters.RoleClaimType = "role";
-        });
+               options.Scope.Clear();
+               options.Scope.Add("openid");
+               options.Scope.Add("profile");
+               options.Scope.Add("api");
+               options.Scope.Add("offline_access");
 
-      // Make sure authentication state is available to all components.
-      builder.Services.AddCascadingAuthenticationState();
+               options.TokenValidationParameters.NameClaimType = "name";
+               options.TokenValidationParameters.RoleClaimType = "role";
+           });
 
-    builder.Services.AddAuthorization();
+       // Make sure authentication state is available to all components.
+       builder.Services.AddCascadingAuthenticationState();
 
-    ```
-  </TabItem>
-</Tabs>
+       builder.Services.AddAuthorization();
+       ```
+     </TabItem>
+   </Tabs>
 
-To configure the web app pipeline. Replace the app.UseAntiforgery() with the code below:
+   To configure the web app pipeline, add the following after `builder.Build()`:
 
-```csharp
-app.UseRouting();
-app.UseAuthentication();
+   {/* prettier-ignore */}
+   <Tabs syncKey="bffVersion">
+     {/* prettier-ignore */}
+     <TabItem label="Duende BFF v4">
+       ```csharp
+       app.UseRouting();
+       app.UseAuthentication();
 
-// Add the BFF middleware which performs anti forgery protection
-app.UseBff();
-app.UseAuthorization();
-app.UseAntiforgery();
+       // Add the BFF middleware which performs anti-forgery protection
+       app.UseBff();
+       app.UseAuthorization();
+       app.UseAntiforgery();
 
-// Add the BFF management endpoints, such as login, logout, etc.
-app.MapBffManagementEndpoints();
-```
+       // In v4, management endpoints (/bff/login, /bff/logout, etc.) are
+       // registered automatically — no call to MapBffManagementEndpoints() needed.
+       ```
+     </TabItem>
+     {/* prettier-ignore */}
+     <TabItem label="Duende BFF v3">
+       ```csharp
+       app.UseRouting();
+       app.UseAuthentication();
+
+       // Add the BFF middleware which performs anti-forgery protection
+       app.UseBff();
+       app.UseAuthorization();
+       app.UseAntiforgery();
+
+       // In v3, management endpoints must be registered explicitly
+       app.MapBffManagementEndpoints();
+       ```
+     </TabItem>
+   </Tabs>
+
+</Steps>
 
 ## Configuring the BffApp.Client project
 
-To add the BFF to the client project, add the following:
+<Steps>
 
-```shell
-cd ..
-cd BlazorBffApp.Client
-dotnet add package Duende.BFF.Blazor.Client
-```
+1. **Configure the Client Project**
 
-Then add the following to your program.cs:
+   To add the BFF to the client project, add the following:
 
-```csharp
-builder.Services
-    .AddBffBlazorClient(); // Provides auth state provider that polls the /bff/user endpoint
+   ```shell
+   cd ..
+   cd BlazorBffApp.Client
+   dotnet add package Duende.BFF.Blazor.Client
+   ```
 
-builder.Services
-    .AddCascadingAuthenticationState();
-```
+   Then add the following to your `Program.cs`:
 
-Your application is ready to use BFF now.
+   ```csharp
+   builder.Services
+       .AddBffBlazorClient(); // Provides auth state provider that polls the /bff/user endpoint
 
-## Configuring your application to use bff's features
+   builder.Services
+       .AddCascadingAuthenticationState();
+   ```
 
-Add the following components to your BlazorBffApp.Client's Component folder:
+   Your application is ready to use BFF now.
 
-### LoginDisplay.razor
+</Steps>
 
-The following code shows a login / logout button depending on your state. Note, you'll need to use the
-logout link from the LogoutUrl claim, because this contains both the correct route and the session id.
-Add it to the BffBlazorApp.Client/Components folder
+## Configuring your application to use BFF's features
 
-```csharp
-@using Duende.Bff.Blazor.Client
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.Extensions.Options
+Add the following components to your `BlazorBffApp.Client/Components` folder:
 
-@rendermode InteractiveAuto
+<Steps>
 
-@inject IOptions<BffBlazorClientOptions> Options
+1. **LoginDisplay.razor**
 
-<AuthorizeView>
-  <Authorized>
-    <strong>Hello, @context.User.Identity?.Name</strong>
-    <a class="nav-link btn btn-link" href="@BffLogoutUrl(context)">Log Out</a>
-  </Authorized>
-  <Authorizing>
-    <a class="nav-link btn btn-link disabled">Log in</a>
-  </Authorizing>
-  <NotAuthorized>
-    <a class="nav-link btn btn-link" href="bff/login">Log in</a>
-  </NotAuthorized>
-</AuthorizeView>
+   The following code shows a login / logout button depending on your authentication state. Note: use the
+   logout link from the `LogoutUrl` claim, because it contains both the correct route and the session id.
+
+   ```razor title="BlazorBffApp.Client/Components/LoginDisplay.razor"
+   @using Duende.Bff.Blazor.Client
+   @using Microsoft.AspNetCore.Components.Authorization
+   @using Microsoft.Extensions.Options
+
+   @rendermode InteractiveAuto
+
+   @inject IOptions<BffBlazorClientOptions> Options
+
+   <AuthorizeView>
+     <Authorized>
+       <strong>Hello, @context.User.Identity?.Name</strong>
+       <a class="nav-link btn btn-link" href="@BffLogoutUrl(context)">Log Out</a>
+     </Authorized>
+     <Authorizing>
+       <a class="nav-link btn btn-link disabled">Log in</a>
+     </Authorizing>
+     <NotAuthorized>
+       <a class="nav-link btn btn-link" href="bff/login">Log in</a>
+     </NotAuthorized>
+   </AuthorizeView>
 
 
-@code {
-  string BffLogoutUrl(AuthenticationState context)
-  {
-    var logoutUrl = context.User.FindFirst(Constants.ClaimTypes.LogoutUrl);
-    return $"{Options.Value.StateProviderBaseAddress}{logoutUrl?.Value}";
-  }
-}
-```
+   @code {
+     string BffLogoutUrl(AuthenticationState context)
+     {
+       var logoutUrl = context.User.FindFirst(Constants.ClaimTypes.LogoutUrl);
+       return $"{Options.Value.StateProviderBaseAddress}{logoutUrl?.Value}";
+     }
+   }
+   ```
 
-### RedirectToLogin.razor
+2. **RedirectToLogin.razor**
 
-The following code will redirect users to Identity Server for authentication. Once authentication is complete,
-the users will be redirected back to where they came from. Add it to the BffBlazorApp.Client/Components folder
+   The following code will redirect users to the identity provider for authentication. Once authentication is complete,
+   users will be redirected back to where they came from.
 
-```csharp
-@inject NavigationManager Navigation
+   ```razor title="BlazorBffApp.Client/Components/RedirectToLogin.razor"
+   @inject NavigationManager Navigation
 
-@rendermode InteractiveAuto
+   @rendermode InteractiveAuto
 
-@code {
-    protected override void OnInitialized()
-    {
-        var returnUrl = Uri.EscapeDataString("/" + Navigation.ToBaseRelativePath(Navigation.Uri));
-        Navigation.NavigateTo($"bff/login?returnUrl={returnUrl}", forceLoad: true);
-    }
-}
-```
+   @code {
+       protected override void OnInitialized()
+       {
+           var returnUrl = Uri.EscapeDataString("/" + Navigation.ToBaseRelativePath(Navigation.Uri));
+           Navigation.NavigateTo($"bff/login?returnUrl={returnUrl}", forceLoad: true);
+       }
+   }
+   ```
 
-### Modifications to Routes.razor
+3. **Modifications to Routes.razor**
 
-Replace the contents of routes.razor so it matches below:
+   Replace the contents of `Routes.razor` so it matches below:
 
-```csharp
-@using Microsoft.AspNetCore.Components.Authorization
-@using BlazorBffApp.Client.Components
+   ```razor title="BlazorBffApp.Client/Routes.razor"
+   @using Microsoft.AspNetCore.Components.Authorization
+   @using BlazorBffApp.Client.Components
 
-<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
-    <Found Context="routeData">
-        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
-            <NotAuthorized>
-                @if (context.User.Identity?.IsAuthenticated != true)
-                {
-                    <RedirectToLogin />
-                }
-                else
-                {
-                    <p role="alert">You (@context.User.Identity?.Name) are not authorized to access this resource.</p>
-                }
-            </NotAuthorized>
-        </AuthorizeRouteView>
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-</Router>
-```
+   <Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
+       <Found Context="routeData">
+           <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+               <NotAuthorized>
+                   @if (context.User.Identity?.IsAuthenticated != true)
+                   {
+                       <RedirectToLogin />
+                   }
+                   else
+                   {
+                       <p role="alert">You (@context.User.Identity?.Name) are not authorized to access this resource.</p>
+                   }
+               </NotAuthorized>
+           </AuthorizeRouteView>
+           <FocusOnNavigate RouteData="routeData" Selector="h1" />
+       </Found>
+   </Router>
+   ```
 
-This makes sure that, if you're accessing a page that requires authorization, that you are automatically redirected to Identity Server for authentication.
+   This ensures that accessing a page that requires authorization automatically redirects the user to the identity provider for authentication.
 
-### Modifications to MainLayout.razor
+4. **Modifications to MainLayout.razor**
 
-Modify your MainLayout so it matches below:
+   Modify your `MainLayout.razor` to include the `LoginDisplay`:
 
-```csharp
-@inherits LayoutComponentBase
-@using BlazorBffApp.Client.Components
+   ```razor title="BlazorBffApp.Client/Layout/MainLayout.razor"
+   @inherits LayoutComponentBase
+   @using BlazorBffApp.Client.Components
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+   <div class="page">
+       <div class="sidebar">
+           <NavMenu />
+       </div>
 
-    <main>
-        <div class="top-row px-4">
-            <LoginDisplay />
-        </div>
+       <main>
+           <div class="top-row px-4">
+               <LoginDisplay />
+           </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+           <article class="content px-4">
+               @Body
+           </article>
+       </main>
+   </div>
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
-```
+   <div id="blazor-error-ui" data-nosnippet>
+       An unhandled error has occurred.
+       <a href="." class="reload">Reload</a>
+       <span class="dismiss">🗙</span>
+   </div>
+   ```
 
-This adds the LoginDisplay to the header.
+   Now your application supports logging in and out.
 
-Now your application supports logging in / out.
+</Steps>
 
 ## Exposing APIs
 
-Now we're going to expose an embedded API for weather forecasts to Blazor WebAssembly (WASM) and call it via a HttpClient.
+Now we're going to expose an embedded API for weather forecasts to Blazor WebAssembly (WASM) and call it via an `HttpClient`.
 
-> By default, the system will perform both pre-rendering on the server AND WASM based rendering on the client. For this reason, you'll need to register both a server and client version of a component that retrieves data.
-> See the [Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-9.0#client-side-services-fail-to-resolve-during-prerendering) for more information on this.
+:::note
+By default, the system will perform both pre-rendering on the server AND WASM-based rendering on the client. For this reason, you'll need to register both a server and client version of a component that retrieves data.
+See the [Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-9.0#client-side-services-fail-to-resolve-during-prerendering) for more information.
+:::
 
-### Configuring the Client app
+<Steps>
 
-Add a class called WeatherClient to the BffBlazorApp.Client project:
+1. **Configuring the Client app**
 
-```csharp
-public class WeatherHttpClient(HttpClient client) : IWeatherClient
-{
-    public async Task<WeatherForecast[]> GetWeatherForecasts() => await client.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast")
-                                                                  ?? throw new JsonException("Failed to deserialize");
-}
+   Add a class called `WeatherHttpClient` to the `BlazorBffApp.Client` project:
 
-public class WeatherForecast
-{
-    public DateOnly Date { get; set; }
-    public int TemperatureC { get; set; }
-    public string? Summary { get; set; }
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+   ```csharp title="BlazorBffApp.Client/WeatherHttpClient.cs"
+   public class WeatherHttpClient(HttpClient client) : IWeatherClient
+   {
+       public async Task<WeatherForecast[]> GetWeatherForecasts() =>
+           await client.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast")
+           ?? throw new JsonException("Failed to deserialize");
+   }
 
-// The IWeatherClient interface will form an abstraction between 'server' logic and client logic.
-public interface IWeatherClient
-{
-    Task<WeatherForecast[]> GetWeatherForecasts();
-}
-```
+   public class WeatherForecast
+   {
+       public DateOnly Date { get; set; }
+       public int TemperatureC { get; set; }
+       public string? Summary { get; set; }
+       public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+   }
 
-Then register this as a component in program.cs.
+   // The IWeatherClient interface abstracts between server and client implementations.
+   public interface IWeatherClient
+   {
+       Task<WeatherForecast[]> GetWeatherForecasts();
+   }
+   ```
 
-```csharp
-builder.Services
-    .AddBffBlazorClient()// Provides auth state provider that polls the /bff/user endpoint
+   Then register this in `Program.cs`:
 
-    // Register a HTTP Client that's configured to fetch data from the server.
-    .AddLocalApiHttpClient<WeatherHttpClient>() ;
+   ```csharp title="BlazorBffApp.Client/Program.cs"
+   builder.Services
+       .AddBffBlazorClient() // Provides auth state provider that polls the /bff/user endpoint
 
-// Register the concrete implementation with the abstraction
-builder.Services.AddSingleton<IWeatherClient, WeatherHttpClient>();
-```
+       // Register an HTTP client configured to fetch data from the BFF host.
+       .AddLocalApiHttpClient<WeatherHttpClient>();
 
-### Configuring the server
+   // Register the concrete implementation with the abstraction
+   builder.Services.AddSingleton<IWeatherClient, WeatherHttpClient>();
+   ```
 
-Add a class called ServerWeatherClient to your BlazorBffApp server project:
+2. **Configuring the server**
 
-```csharp
-public class ServerWeatherClient : IWeatherClient
-{
-    public Task<WeatherForecast[]> GetWeatherForecasts()
-    {
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
+   Add a class called `ServerWeatherClient` to your `BlazorBffApp` server project:
 
-        string[] summaries = [
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        ];
+   ```csharp title="BlazorBffApp/ServerWeatherClient.cs"
+   public class ServerWeatherClient : IWeatherClient
+   {
+       public Task<WeatherForecast[]> GetWeatherForecasts()
+       {
+           var startDate = DateOnly.FromDateTime(DateTime.Now);
 
+           string[] summaries = [
+               "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+           ];
 
-        return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray());
-    }
-}
-```
+           return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
+           {
+               Date = startDate.AddDays(index),
+               TemperatureC = Random.Shared.Next(-20, 55),
+               Summary = summaries[Random.Shared.Next(summaries.Length)]
+           }).ToArray());
+       }
+   }
+   ```
 
-Then add an endpoint to your HTTP pipeline:
+   Then add an endpoint to your HTTP pipeline and register the server implementation:
 
-```csharp
-app.MapGet("/WeatherForecast", (IWeatherClient weatherClient) => weatherClient.GetWeatherForecasts());
-```
+   ```csharp title="BlazorBffApp/Program.cs"
+   // Register the server-side implementation
+   builder.Services.AddSingleton<IWeatherClient, ServerWeatherClient>();
 
-Also register the client abstraction:
+   // ...
 
-```csharp
-builder.Services.AddSingleton<IWeatherClient, ServerWeatherClient>();
-```
+   app.MapGet("/WeatherForecast", (IWeatherClient weatherClient) => weatherClient.GetWeatherForecasts())
+       .RequireAuthorization()
+       .AsBffApiEndpoint();
+   ```
 
-### Displaying Weather Information From The API
+3. **Displaying Weather Information From The API**
 
-By default, the blazor template ships with a weather page.
+   By default, the Blazor template ships with a weather page. Change the content of `Weather.razor` to this:
 
-Change the content of the **Weather.razor** like this:
+   ```razor title="BlazorBffApp.Client/Pages/Weather.razor"
+   @page "/weather"
+   @using BlazorBffApp.Client.Components
+   @using Microsoft.AspNetCore.Authorization
 
-```csharp
-@page "/weather"
-@using BlazorBffApp.Client.Components
-@using Microsoft.AspNetCore.Authorization
+   @rendermode InteractiveWebAssembly
+   @attribute [Authorize]
 
-@rendermode InteractiveWebAssembly
-@attribute [Authorize]
+   <PageTitle>Weather</PageTitle>
 
-<PageTitle>Weather</PageTitle>
+   <WeatherComponent @rendermode="new InteractiveWebAssemblyRenderMode()" />
+   ```
 
-<WeatherComponent @rendermode="new InteractiveWebAssemblyRenderMode()" />
-```
+   Now add a `WeatherComponent.razor`:
 
-Now add a component called WeatherComponent
+   ```razor title="BlazorBffApp.Client/Components/WeatherComponent.razor"
+   @inject IWeatherClient WeatherClient
+   <h1>Weather</h1>
 
-```csharp
-@inject IWeatherClient WeatherClient
-<h1>Weather</h1>
+   <p>This component demonstrates showing data.</p>
 
-<p>This component demonstrates showing data.</p>
+   @if (forecasts == null)
+   {
+       <p><em>Loading...</em></p>
+   }
+   else
+   {
+       <table class="table">
+           <thead>
+               <tr>
+                   <th>Date</th>
+                   <th aria-label="Temperature in Celsius">Temp. (C)</th>
+                   <th aria-label="Temperature in Fahrenheit">Temp. (F)</th>
+                   <th>Summary</th>
+               </tr>
+           </thead>
+           <tbody>
+               @foreach (var forecast in forecasts)
+               {
+                   <tr>
+                       <td>@forecast.Date.ToShortDateString()</td>
+                       <td>@forecast.TemperatureC</td>
+                       <td>@forecast.TemperatureF</td>
+                       <td>@forecast.Summary</td>
+                   </tr>
+               }
+           </tbody>
+       </table>
+   }
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th aria-label="Temperature in Celsius">Temp. (C)</th>
-                <th aria-label="Temperature in Farenheit">Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+   @code {
+       private WeatherForecast[]? forecasts;
 
-@code {
-    private WeatherForecast[]? forecasts;
+       protected override async Task OnInitializedAsync()
+       {
+           forecasts = await WeatherClient.GetWeatherForecasts();
+       }
+   }
+   ```
 
-    protected override async Task OnInitializedAsync()
-    {
-        forecasts = await WeatherClient.GetWeatherForecasts();
-    }
-}
-```
+</Steps>
+
+:::caution[Token availability in Blazor components]
+Access tokens are managed server-side by the BFF host and are never available in Blazor WASM components directly. Always use `AddLocalApiHttpClient<T>()` to create HTTP clients that route through the BFF host — never try to retrieve or pass tokens to client-side components. See the [Troubleshooting guide](/bff/troubleshooting/) if tokens appear unavailable.
+:::
+
+## See Also
+
+- [Single Frontend Getting Started](/bff/getting-started/single-frontend/) — Simpler setup for a single SPA
+- [Blazor Fundamentals](/bff/fundamentals/blazor/) — Rendering modes, data access patterns, and auth state
+- [Local APIs](/bff/fundamentals/apis/local/) — Embedding API endpoints in the BFF host
+- [Token Management](/bff/fundamentals/tokens/) — How BFF handles access token refresh automatically
+- [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) — Persisting sessions with Entity Framework
+- [Access Token Management](/accesstokenmanagement/) — The underlying token lifecycle library
+- [Troubleshooting](/bff/troubleshooting/) — Common Blazor BFF issues and fixes
