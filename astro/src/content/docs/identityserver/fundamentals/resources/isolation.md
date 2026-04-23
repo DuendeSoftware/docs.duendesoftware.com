@@ -399,7 +399,7 @@ public static class InMemoryConfig
 // ResourceIsolationClient.cs
 #:property PublishAot=false
 
-//Choose your access package library
+// Choose your access package library
 // #:package Duende.IdentityModel@8.1.0
 #:package Duende.AccessTokenManagement@4.2.0
 
