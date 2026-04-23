@@ -353,7 +353,7 @@ app.Run();
 
 public static class InMemoryConfig
 {
-    //All scopes used by all API Resources and Clients
+    // All scopes used by all API Resources and Clients
     public static readonly IEnumerable<ApiScope> Scopes = [
         // resource specific scopes
         new ApiScope("orders.read"), new ApiScope("orders.write"),
