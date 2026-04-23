@@ -33,7 +33,7 @@ The sections below show complete, annotated options blocks for the most common d
 ```csharp
 builder.Services.AddBff(options =>
 {
-    // Required for production — obtain from the Duende licensing portal
+    // Required for production
     options.LicenseKey = builder.Configuration["Duende:LicenseKey"];
 
     // Revoke refresh tokens on logout (default: true — keep enabled)
