@@ -52,7 +52,7 @@ Target(AstroBuild, async () =>
         $"-v \"{astroPath}:/app\" " +
         $"-v \"{outputPath}:/output\" " +
         "-w /app " +
-        "-e NODE_OPTIONS=\"--max-old-space-size=4096\" " +
+        "-e NODE_OPTIONS=\"--max-old-space-size=8192\" " +
         "node:24-slim " +
         "sh -c \"npm ci && npm run build && cp -r dist/. /output/\"",
         configureEnvironment: env => env.Add("MSYS_NO_PATHCONV", "1"));

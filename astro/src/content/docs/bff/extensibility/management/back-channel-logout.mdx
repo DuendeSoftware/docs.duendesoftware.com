@@ -20,6 +20,10 @@ The `IBackchannelLogoutEndpoint` is the top-level abstraction that processes req
 This service can be used to add custom request processing logic or to change how it validates incoming requests.
 When the back-channel logout endpoint receives a valid request, it revokes sessions using the `ISessionRevocationService`.
 
+:::note[How this endpoint works]
+See [Back-Channel Logout Endpoint](/bff/fundamentals/session/management/back-channel-logout/) for an explanation of how server-to-server logout works and how to configure it.
+:::
+
 <Aside type="caution">
     In BFF V3, the `IBackchannelLogoutEndpoint` interface is called `IBackchannelLogoutService` instead.
 </Aside>

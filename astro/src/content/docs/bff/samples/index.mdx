@@ -18,10 +18,10 @@ This section contains a collection of clients using our BFF security framework.
 
 ## JavaScript Frontend
 
-This sample shows how to use the BFF framework with a JavaScript-based frontend (e.g. SPA).
+This sample demonstrates a vanilla JavaScript SPA secured by the BFF. You will learn how to call `/bff/user` to retrieve session claims, wire up login/logout links, and make CSRF-protected API calls using `X-CSRF: 1` — without any JS framework dependencies.
 
 <LinkCard
-  description="GitHub Repository for the BFF framework with JavaScript-based frontend"
+  description="Vanilla JS SPA with BFF: session claims, login/logout, and CSRF-protected API calls"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/JsBffSample"
   title="JavaScript Frontend Sample"
   target="_blank"
@@ -29,10 +29,10 @@ This sample shows how to use the BFF framework with a JavaScript-based frontend 
 
 ## ReactJs Frontend
 
-This sample shows how to use the BFF framework with React.
+This sample shows how to integrate React with the BFF framework. You will learn how to manage login state via `/bff/user`, protect routes based on session claims, and proxy API requests through the BFF with automatic token forwarding.
 
 <LinkCard
-  description="GitHub Repository for the BFF framework with React"
+  description="React SPA with BFF: session-driven auth state, protected routes, and token-forwarded API calls"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/React"
   title="ReactJS Frontend Sample"
   target="_blank"
@@ -40,10 +40,10 @@ This sample shows how to use the BFF framework with React.
 
 ## Angular Frontend
 
-This sample shows how to use the BFF framework with Angular.
+This sample shows how to integrate Angular with the BFF framework. You will learn how to build an Angular auth service backed by `/bff/user`, add an HTTP interceptor for the CSRF header, and handle 401 redirects gracefully.
 
 <LinkCard
-  description="GitHub Repository for the BFF framework with Angular"
+  description="Angular SPA with BFF: auth service, CSRF interceptor, and 401 redirect handling"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/Angular"
   title="Angular Frontend Sample"
   target="_blank"
@@ -51,10 +51,10 @@ This sample shows how to use the BFF framework with Angular.
 
 ## Vue Frontend :badge[Community]
 
-This sample shows how to use the BFF framework with Vue. (contributed by [@Marco Cabrera](https://github.com/mck231))
+This sample (contributed by [@Marco Cabrera](https://github.com/mck231)) shows how to integrate Vue 3 with the BFF framework. You will learn how to expose session state from `/bff/user` in a Vue composable and make authenticated API calls with CSRF protection.
 
 <LinkCard
-  description="GitHub Repository for the BFF framework with Vue"
+  description="Vue 3 SPA with BFF: session composable, CSRF-protected API calls"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/Vue"
   title="Vue Frontend Sample (Community)"
   target="_blank"
@@ -62,10 +62,10 @@ This sample shows how to use the BFF framework with Vue. (contributed by [@Marco
 
 ## Blazor WASM
 
-This sample shows how to use the BFF framework with Blazor WASM.
+This sample shows how to use Blazor WebAssembly as the frontend with the BFF host. You will learn how to configure `AuthorizationMessageHandler` to forward tokens from the BFF session and call backend APIs securely from client-side Blazor code.
 
 <LinkCard
-  description="GitHub Repository for the BFF framework with Blazor WASM"
+  description="Blazor WASM with BFF: AuthorizationMessageHandler and secure API calls from the browser"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/BlazorWasm"
   title="Blazor WASM Sample"
   target="_blank"
@@ -73,10 +73,10 @@ This sample shows how to use the BFF framework with Blazor WASM.
 
 ## Blazor Auto Rendering
 
-This sample shows how to use Authentication in combination with Blazor's AutoRendering feature.
+This sample demonstrates Blazor Auto rendering mode (server-side prerender + WASM hydration) combined with BFF authentication. You will learn how to share auth state across render modes and avoid common pitfalls with interactive components that call protected APIs.
 
 <LinkCard
-  description="GitHub Repository for the BFF framework using Blazor Auto Rendering"
+  description="Blazor Auto mode with BFF: shared auth state across server-side and WASM render modes"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/BlazorAutoRendering"
   title="Blazor Auto Rendering Sample"
   target="_blank"
@@ -84,10 +84,10 @@ This sample shows how to use Authentication in combination with Blazor's AutoRen
 
 ## YARP Integration
 
-This sample shows how to use the BFF extensions for Microsoft YARP.
+This sample shows how to use the Duende BFF extensions for [Microsoft YARP](https://microsoft.github.io/reverse-proxy/) to proxy API requests. You will learn how to configure YARP routes with BFF token forwarding, eliminating the need for manual `AddRemoteApis` registration.
 
 <LinkCard
-  description="GitHub Repository for the BFF framework integration with YARP"
+  description="BFF with YARP: token-forwarding reverse proxy routes for remote APIs"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/JsBffYarpSample"
   title="YARP Integration Sample"
   target="_blank"
@@ -95,10 +95,10 @@ This sample shows how to use the BFF extensions for Microsoft YARP.
 
 ## OpenAPI
 
-This sample shows how to use OpenAPI in combination with BFF.
+This sample shows how to expose and consume an OpenAPI (Swagger) spec from a BFF-protected API. You will learn how to configure Swagger UI to authenticate via the BFF session and make test requests without needing a separate bearer token.
 
 <LinkCard
-  description="GitHub Repository for the BFF framework integration with OpenAPI"
+  description="BFF with OpenAPI: Swagger UI authenticated via BFF session cookies"
   href="https://github.com/DuendeSoftware/samples/tree/main/BFF/v4/OpenApi"
   title="OpenAPI Sample"
   target="_blank"
@@ -106,10 +106,10 @@ This sample shows how to use OpenAPI in combination with BFF.
 
 ## Separate Host for UI
 
-This sample shows how to have separate projects from the frontend and backend, using CORS to allow cross-site requests from the frontend to the backend.
+This sample shows how to run the frontend (e.g. a dev Vite server) on a different origin from the BFF host and use CORS to allow cross-site session and API requests. You will learn how to configure `AllowedOrigins`, CORS policy, and cookie `SameSite` settings for split-host development and production deployments.
 
 <LinkCard
-  description="GitHub Repository for separate projects using CORS"
+  description="Split-host BFF: CORS configuration for frontend and backend on different origins"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/SplitHosts"
   title="Separate Host for UI Sample"
   target="_blank"
@@ -117,10 +117,10 @@ This sample shows how to have separate projects from the frontend and backend, u
 
 ## Docker Hosting :badge[Community]
 
-This sample shows how to host the BFF framework and IdentityServer with Docker. (contributed by [@Marco Cabrera](https://github.com/mck231))
+This sample (contributed by [@Marco Cabrera](https://github.com/mck231)) shows how to run the BFF host and IdentityServer together using Docker Compose. You will learn how to configure networking between containers, set authority URLs, and handle Data Protection key persistence in a containerized environment.
 
 <LinkCard
-  description="GitHub Repository for hosting BFF and IdentityServer in with Docker containers."
+  description="BFF + IdentityServer in Docker Compose: container networking and Data Protection key persistence"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/docker"
   title="Docker Sample (Community)"
   target="_blank"
@@ -128,10 +128,10 @@ This sample shows how to host the BFF framework and IdentityServer with Docker. 
 
 ## DPoP
 
-This sample shows how to configure the BFF for [DPoP](/identityserver/tokens/pop.md) so that it uses sender-constrained tokens.
+This sample shows how to configure the BFF for [DPoP (Demonstrating Proof of Possession)](/identityserver/tokens/pop.md) so that all tokens are sender-constrained. You will learn how to enable DPoP on both the BFF and the downstream API, preventing token replay attacks even if tokens are intercepted.
 
 <LinkCard
-  description="GitHub Repository for configuring DPoP with BFF"
+  description="BFF with DPoP: sender-constrained tokens to prevent token replay attacks"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/DPoP"
   title="DPoP Sample"
   target="_blank"
@@ -139,10 +139,10 @@ This sample shows how to configure the BFF for [DPoP](/identityserver/tokens/pop
 
 ## Token Exchange using the IAccessTokenRetriever
 
-This sample shows how to extend the BFF with an _IAccessTokenRetriever_. This example of an IAccessTokenRetriever performs token exchange for impersonation. If you are logged in as alice you will get a token for bob, and vice versa.
+This sample shows how to implement a custom `IAccessTokenRetriever` that performs RFC 8693 token exchange for impersonation. When logged in as Alice you receive a token scoped to Bob, and vice versa — demonstrating how to swap or enrich tokens before they are forwarded to downstream APIs.
 
 <LinkCard
-  description="GitHub Repository for token exchange using the IAccessTokenRetriever"
+  description="Custom IAccessTokenRetriever with RFC 8693 token exchange for user impersonation"
   href="https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/TokenExchange"
   title="Token Exchange Sample"
   target="_blank"
@@ -150,15 +150,13 @@ This sample shows how to extend the BFF with an _IAccessTokenRetriever_. This ex
 
 ## New User Onboarding with Blazor Auto Rendering :badge[Community]
 
-This sample shows how to extend the BFF in a scenario where a new user needs to onboard to the application and the
-additional information does not need to be provided/stored with the identity provider. Instead, the onboarding flow
-stores additional data in the application database.
+This sample (contributed by [@hugh-maaskant](https://github.com/hugh-maaskant)) shows how to handle a new-user onboarding flow where additional profile data is collected by the application — not the identity provider. You will learn how to intercept post-login redirects, store onboarding data in the application database, and resume the original request after onboarding completes.
 
 <LinkCard
-description="GitHub Repository for New User Onboarding with Blazor Auto Rendering"
-href="https://github.com/hugh-maaskant/BlazorBffOnboarding"
-title="New User Onboarding Sample (Community)"
-target="_blank"
+  description="New user onboarding with Blazor Auto: intercept post-login, collect profile data in app DB"
+  href="https://github.com/hugh-maaskant/BlazorBffOnboarding"
+  title="New User Onboarding Sample (Community)"
+  target="_blank"
 />
 
 ## Feedback

@@ -32,3 +32,7 @@ After authentication is complete, the login endpoint will redirect back to your 
 ```js
 window.location = "/login?returnUrl=/logged-in";
 ```
+
+## Customize This Endpoint
+
+To add custom logic before or after the login endpoint processes a request, see [Login Endpoint Extensibility](/bff/extensibility/management/login/).
