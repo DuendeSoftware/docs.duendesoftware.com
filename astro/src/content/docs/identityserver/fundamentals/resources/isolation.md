@@ -295,7 +295,7 @@ public static readonly IEnumerable<Client> Clients = [
         ClientClaimsPrefix = "",
         AllowedGrantTypes = GrantTypes.ClientCredentials,
 
-        //Client is allowed to access all scopes for all ApiResources
+        // Client is allowed to access all scopes for all ApiResources
         AllowedScopes =
         {
             "orders.read", "orders.write",
