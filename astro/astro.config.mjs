@@ -18,6 +18,8 @@ import { duendeOpenGraphImage } from "./src/plugins/duende-og-image.js";
 import removeMarkdownExtensions from "./src/plugins/remove-markdown-extensions.js";
 import staticRedirects from "./src/plugins/static-redirects.js";
 import markdownOutput from "./src/plugins/markdown-output.js";
+import remarkDirective from "remark-directive";
+import remarkNugetApi from "./src/plugins/nuget-api/remark-nuget-api.js";
 
 // https://astro.build/config
 export default defineConfig({
@@ -252,7 +254,11 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [[removeMarkdownExtensions, { ignoreRelativeLinks: true }]],
+    remarkPlugins: [
+      [removeMarkdownExtensions, { ignoreRelativeLinks: true }],
+      remarkDirective,
+      remarkNugetApi,
+    ],
     rehypePlugins: [
       [
         rehypeAstroRelativeMarkdownLinks,

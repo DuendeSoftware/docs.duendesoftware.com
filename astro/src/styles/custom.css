@@ -350,3 +350,99 @@ summary {
 }
 /* end hubspot forms */
 
+/* NuGet API docs directive */
+.nuget-api-docs {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    background: var(--sl-color-gray-6);
+}
+
+.nuget-api-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.nuget-api-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.nuget-api-badge a {
+    font-size: 0.8rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+    text-decoration: none;
+}
+
+.nuget-api-badge a:hover {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+}
+
+.nuget-api-summary {
+    margin: 0.25rem 0 0.75rem;
+}
+
+.nuget-api-remarks {
+    color: var(--sl-color-gray-2);
+    margin: 0 0 0.75rem;
+}
+
+.nuget-api-section {
+    margin: 0.75rem 0;
+}
+
+.nuget-api-section summary {
+    cursor: pointer;
+    padding: 0.25rem 0;
+}
+
+.nuget-api-count {
+    color: var(--sl-color-gray-3);
+    font-weight: normal;
+    font-size: 0.85rem;
+}
+
+.nuget-api-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.nuget-api-table th {
+    text-align: left;
+    border-bottom: 2px solid var(--sl-color-gray-5);
+    padding: 0.4rem 0.6rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.nuget-api-table td {
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    padding: 0.5rem 0.6rem;
+    vertical-align: top;
+}
+
+.nuget-api-table tr:last-child td {
+    border-bottom: none;
+}
+
+.nuget-api-error {
+    border: 1px solid #c53030;
+    background: rgba(197, 48, 48, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+}
+
+

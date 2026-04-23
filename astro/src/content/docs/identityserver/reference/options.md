@@ -31,6 +31,8 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 
 Top-level settings. Available directly on the `IdentityServerOptions` object.
 
+::nuget-api{package="Duende.IdentityServer" type="IdentityServerOptions"}
+
 - **`IssuerUri`**
 
   The name of the token server, used in the discovery document as the `issuer` claim and in JWT tokens and introspection responses as the `iss` claim.
