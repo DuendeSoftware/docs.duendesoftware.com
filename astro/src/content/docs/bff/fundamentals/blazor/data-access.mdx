@@ -13,7 +13,6 @@ Depending on your Blazor rendering mode, you need different strategies for acces
 ## Overview
 
 ```mermaid
-%%{ init: { 'theme': 'neutral' } }%%
 flowchart LR
     WASM["Blazor WASM Component<br/>(browser)"]
     Server["BFF Host<br/>(server)"]
@@ -132,7 +131,6 @@ builder.Services.AddTransient(sp =>
 The diagram below shows the full flow:
 
 ```mermaid
-%%{ init: { 'theme': 'neutral' } }%%
 sequenceDiagram
     participant WASM as Blazor WASM
     participant BFF as BFF Host

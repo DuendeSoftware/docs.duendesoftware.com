@@ -18,7 +18,6 @@ A frontend application using the BFF pattern can call two types of APIs: embedde
 ## Choosing an API Approach
 
 ```mermaid
-%%{ init: { 'theme': 'neutral' } }%%
 flowchart TD
     Q1{"Is the API only used<br/>by this frontend?"}
     Q2{"Do you need load balancing,<br/>service discovery, or<br/>complex routing/transforms?"}

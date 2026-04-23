@@ -26,7 +26,6 @@ If you haven't yet decided whether to use BFF, start with the [overview](/bff/) 
 The following diagram shows how the BFF protects browser-based applications:
 
 ```mermaid
-%%{ init: { 'theme': 'default' } }%%
 flowchart TD
     subgraph Browser
         SPA["Browser-Based Application"]
@@ -131,7 +130,6 @@ Both are supported, but have different integration patterns:
 ## Trust Boundaries
 
 ```mermaid
-%%{ init: { 'theme': 'default' } }%%
 flowchart TD
     subgraph Browser["Browser (untrusted)"]
         B1["Holds session cookie only<br/>(HttpOnly, Secure, SameSite)"]

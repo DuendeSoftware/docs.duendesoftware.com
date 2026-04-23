@@ -32,6 +32,8 @@ builder.Services.AddDataProtection()
 
 :::caution[Do not use in-memory keys in production]
 The default in-memory key ring is regenerated on every restart. Any existing sessions are invalidated when the process restarts or when traffic is routed to a new instance.
+
+See also: [Data Protection](/general/data-protection/)
 :::
 
 ### Server-Side Sessions (Recommended for Multi-Instance)

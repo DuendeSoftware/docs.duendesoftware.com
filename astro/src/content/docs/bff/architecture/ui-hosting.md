@@ -31,7 +31,6 @@ headers. This makes the BFF and the front-end application a single deployable un
 what that would look like:
 
 ```mermaid
-%%{ init: { 'theme': 'default' } }%%
 flowchart LR
     subgraph Browser["Browser: https://application.url"]
         app["app"]
@@ -80,7 +79,6 @@ and the BFF, and you might want your static UI assets hosted on a CDN. Below is 
 look like:
 
 ```mermaid
-%%{ init: { 'theme': 'default' } }%%
 flowchart LR
     subgraph Browser["Browser: https://application.url"]
         app["app"]
@@ -131,7 +129,6 @@ cookie will be sent from the frontend to the BFF automatically, and third party 
 attribute won't present any problems. The following diagram shows how that would work:
 
 ```mermaid
-%%{ init: { 'theme': 'default' } }%%
 flowchart LR
     subgraph Browser["Browser: https://application.url"]
         app["app"]
