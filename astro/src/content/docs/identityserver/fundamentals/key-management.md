@@ -119,7 +119,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 ### Key Storage
 
 Automatic Key Management stores keys through the abstraction of the
-[ISigningKeyStore](/identityserver/data/operational.md#keys). You can implement this
+[`ISigningKeyStore`](/identityserver/data/operational.md#keys). You can implement this
 extensibility point to customize the storage of your keys (perhaps using a key
 vault of some kind), or use one of the two implementations of the
 `ISigningKeyStore` that we provide:
@@ -229,7 +229,7 @@ include:
   [New-SelfSignedCertificate](https://learn.microsoft.com/en-us/powershell/module/pki/new-selfsignedcertificate?view=windowsserver2022-ps)
   to self-sign your own certificate
 - Create certificates
-  using [Azure KeyVault](https://learn.microsoft.com/en-us/azure/key-vault/certificates/certificate-scenarios)
+  using [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/certificates/certificate-scenarios)
 - Create certificates using your Public Key Infrastructure.
 - Create certificates using C# (see below)
 
