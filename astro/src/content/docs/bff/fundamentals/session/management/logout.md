@@ -30,3 +30,7 @@ window.location = `${logoutUrl}&returnUrl=/logged-out`;
 ## Revocation Of Refresh Tokens
 If the user has a refresh token, the logout endpoint can revoke it. This is enabled by default because revoking refresh tokens that will not be used anymore is generally good practice. Normally any refresh tokens associated with the current session won't be used after logout, as the session where they are stored is deleted as part of logout. However, you can disable this revocation with the `RevokeRefreshTokenOnLogout` option.
 
+## Customize This Endpoint
+
+To add custom logic before or after the logout endpoint processes a request, see [Logout Endpoint Extensibility](/bff/extensibility/management/logout/).
+

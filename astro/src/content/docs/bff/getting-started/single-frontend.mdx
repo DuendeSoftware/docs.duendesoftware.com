@@ -5,341 +5,466 @@ sidebar:
   order: 10
   label: "Single Frontend"
 ---
-import { Code } from "@astrojs/starlight/components";
+import { Code, Steps } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 Duende.BFF (Backend for Frontend) is a library that helps you build secure, modern web applications by acting as a security gateway between your frontend and backend APIs. This guide will walk you through setting up a simple BFF application with a single frontend.
 
-:::note
+## What You'll Build
+
+By the end of this guide you will have an ASP.NET Core host that:
+- Authenticates users via OpenID Connect and stores the session server-side
+- Exposes secure local API endpoints with CSRF protection
+- Optionally proxies remote API calls with automatic token attachment
+
+:::note[Prerequisites]
+- .NET 8.0 SDK or later
+- A frontend application (e.g., React, Angular, Vue, or plain JavaScript)
+- An OpenID Connect-compatible identity provider (e.g., [Duende IdentityServer](/identityserver/), Auth0, Azure AD)
+:::
+
+:::note[BFF v4 default frontend]
 Duende.BFF V4 introduced a new way of configuring the BFF, which automatically configures the BFF using recommended practices. If you're upgrading from V3, please refer to the [upgrade guide](/bff/upgrading/bff-v3-to-v4.md).
 
-When in single frontend mode, an implicit default frontend is automatically registered. This ensures all the management routes and OpenID Connect-handling routes are available for your frontend. 
+When in single frontend mode, an implicit default frontend is automatically registered. This ensures all the management routes and OpenID Connect-handling routes are available for your frontend.
 
 When you call `.AddFrontend()` to add a new frontend, the system switches to multi-frontend mode. If you wish to have a default frontend in multi-frontend mode, you'll need to explicitly add it. See [multi-frontend support](/bff/fundamentals/multi-frontend/) for more information on this topic.
 :::
 
-## Prerequisites
-
-- .NET 8.0 or later
-- A frontend application (e.g., React, Angular, Vue, or plain JavaScript)
-
 ## Setting Up A BFF project
 
-### 1. Create A New ASP.NET Core Project
+<Steps>
 
-Create a new ASP.NET Core Web Application:
+1. **Create A New ASP.NET Core Project**
 
-```sh
-dotnet new web -n MyBffApp
-cd MyBffApp
-```
+   Create a new ASP.NET Core Web Application:
 
-### 2. Add The Duende.BFF NuGet Package
+   ```sh
+   dotnet new web -n MyBffApp
+   cd MyBffApp
+   ```
 
-Install the Duende.BFF package:
+2. **Add The Duende.BFF NuGet Package**
 
-```sh
-dotnet add package Duende.BFF
-```
+   Install the Duende.BFF package:
 
-### 3. Configure BFF In `Program.cs`
+   ```sh
+   dotnet add package Duende.BFF
+   ```
 
-Add the following to your `Program.cs`:
+3. **Configure BFF In `Program.cs`**
 
-{/* prettier-ignore */}
-<Tabs syncKey="bffVersion">
-  {/* prettier-ignore */}
-  <TabItem label="Duende BFF v4">
-    ```csharp
-    builder.Services.AddBff()
-        .ConfigureOpenIdConnect(options =>
-        {
-            options.Authority = "https://demo.duendesoftware.com";
-            options.ClientId = "interactive.confidential";
-            options.ClientSecret = "secret";
-            options.ResponseType = "code";
-            options.ResponseMode = "query";
+   Add the following to your `Program.cs`:
 
-            options.GetClaimsFromUserInfoEndpoint = true;
-            options.SaveTokens = true;
-            options.MapInboundClaims = false;
+   {/* prettier-ignore */}
+   <Tabs syncKey="bffVersion">
+     {/* prettier-ignore */}
+     <TabItem label="Duende BFF v4">
+       ```csharp
+       builder.Services.AddBff()
+           .ConfigureOpenIdConnect(options =>
+           {
+               options.Authority = "https://demo.duendesoftware.com";
+               options.ClientId = "interactive.confidential";
+               options.ClientSecret = "secret";
+               options.ResponseType = "code";
+               options.ResponseMode = "query";
 
-            options.Scope.Clear();
-            options.Scope.Add("openid");
-            options.Scope.Add("profile");
+               options.GetClaimsFromUserInfoEndpoint = true;
+               options.SaveTokens = true;
+               options.MapInboundClaims = false;
 
-            // Add this scope if you want to receive refresh tokens
-            options.Scope.Add("offline_access");
-        })
-        .ConfigureCookies(options =>
-        {
-            // Because we use an identity server that's configured on a different site
-            // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
-            // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
-            // The user would have to refresh the page to get the cookie.
-            // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
-            options.Cookie.SameSite = SameSiteMode.Lax;
-        });
+               options.Scope.Clear();
+               options.Scope.Add("openid");
+               options.Scope.Add("profile");
 
-    builder.Services.AddAuthorization();
+               // Add this scope if you want to receive refresh tokens
+               options.Scope.Add("offline_access");
+           })
+           .ConfigureCookies(options =>
+           {
+               // Because we use an identity server that's configured on a different site
+               // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+               // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
+               // The user would have to refresh the page to get the cookie.
+               // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+               options.Cookie.SameSite = SameSiteMode.Lax;
+           });
 
-    var app = builder.Build();
+       builder.Services.AddAuthorization();
 
-    app.UseAuthentication();
-    app.UseRouting();
+       var app = builder.Build();
 
-    // adds antiforgery protection for local APIs
-    app.UseBff();
+       app.UseAuthentication();
+       app.UseRouting();
 
-    // adds authorization for local and remote API endpoints
-    app.UseAuthorization();
+       // adds antiforgery protection for local APIs
+       app.UseBff();
 
-    app.Run();
+       // adds authorization for local and remote API endpoints
+       app.UseAuthorization();
 
-
-    ```
-
-  </TabItem>
-  {/* prettier-ignore */}
-  <TabItem label="Duende BFF v3">
-    ```csharp
-    builder.Services.AddBff();
-
-    // Configure the authentication
-    builder.Services
-        .AddAuthentication(options =>
-        {
-            options.DefaultScheme = "cookie";
-            options.DefaultChallengeScheme = "oidc";
-            options.DefaultSignOutScheme = "oidc";
-        })
-        .AddCookie("cookie", options =>
-        {
-            // Configure the cookie with __Host prefix for maximum security
-            options.Cookie.Name = "__Host-blazor";
-
-            // Because we use an identity server that's configured on a different site
-            // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
-            // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
-            // The user would have to refresh the page to get the cookie.
-            // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
-            options.Cookie.SameSite = SameSiteMode.Lax;
-        })
-        .AddOpenIdConnect("oidc", options =>
-        {
-            options.Authority = "https://demo.duendesoftware.com";
-            options.ClientId = "interactive.confidential";
-            options.ClientSecret = "secret";
-            options.ResponseType = "code";
-            options.ResponseMode = "query";
-
-            options.GetClaimsFromUserInfoEndpoint = true;
-            options.SaveTokens = true;
-            options.MapInboundClaims = false;
-
-            options.Scope.Clear();
-            options.Scope.Add("openid");
-            options.Scope.Add("profile");
-
-            // Add this scope if you want to receive refresh tokens
-            options.Scope.Add("offline_access");
-        });
-
-    builder.Services.AddAuthorization();
+       app.Run();
 
 
-    var app = builder.Build();
+       ```
 
-    app.UseAuthentication();
-    app.UseRouting();
+     </TabItem>
+     {/* prettier-ignore */}
+     <TabItem label="Duende BFF v3">
+       ```csharp
+       builder.Services.AddBff();
 
-    // adds antiforgery protection for local APIs
-    app.UseBff();
+       // Configure the authentication
+       builder.Services
+           .AddAuthentication(options =>
+           {
+               options.DefaultScheme = "cookie";
+               options.DefaultChallengeScheme = "oidc";
+               options.DefaultSignOutScheme = "oidc";
+           })
+           .AddCookie("cookie", options =>
+           {
+               // Configure the cookie with __Host prefix for maximum security
+               options.Cookie.Name = "__Host-blazor";
 
-    // adds authorization for local and remote API endpoints
-    app.UseAuthorization();
+               // Because we use an identity server that's configured on a different site
+               // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+               // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
+               // The user would have to refresh the page to get the cookie.
+               // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+               options.Cookie.SameSite = SameSiteMode.Lax;
+           })
+           .AddOpenIdConnect("oidc", options =>
+           {
+               options.Authority = "https://demo.duendesoftware.com";
+               options.ClientId = "interactive.confidential";
+               options.ClientSecret = "secret";
+               options.ResponseType = "code";
+               options.ResponseMode = "query";
 
-    // login, logout, user, backchannel logout...
-    app.MapBffManagementEndpoints();
+               options.GetClaimsFromUserInfoEndpoint = true;
+               options.SaveTokens = true;
+               options.MapInboundClaims = false;
 
-    app.Run();
+               options.Scope.Clear();
+               options.Scope.Add("openid");
+               options.Scope.Add("profile");
 
-    ```
-  </TabItem>
-</Tabs>
+               // Add this scope if you want to receive refresh tokens
+               options.Scope.Add("offline_access");
+           });
 
-Make sure to replace the Authority, ClientID and ClientSecret with values from your identity provider. Also consider if the scopes are correct. 
+       builder.Services.AddAuthorization();
 
-### 4. Adding Local APIs
 
-If your browser-based application uses local APIs, you can add those directly to your BFF app. The BFF supports both controllers and minimal APIs to create local API endpoints.
+       var app = builder.Build();
 
-It's important to mark up the APIs with .AsBffApiEndpoint(), because this adds CSRF protection. 
+       app.UseAuthentication();
+       app.UseRouting();
 
-{/* prettier-ignore */}
-<Tabs syncKey="bffVersion">
-  {/* prettier-ignore */}
-  <TabItem label="Minimal Apis">
+       // adds antiforgery protection for local APIs
+       app.UseBff();
 
-      <Code
-          lang="csharp"
-          title="Program.cs"
-          code={`// Adds authorization for local and remote API endpoints
-app.UseAuthorization();
+       // adds authorization for local and remote API endpoints
+       app.UseAuthorization();
 
-// Place your custom routes after the 'UseAuthorization()'
-app.MapGet("/hello-world", () => "hello-world")
-    .AsBffApiEndpoint(); // Adds CSRF protection to the controller endpoints`}/>
+       // login, logout, user, backchannel logout...
+       app.MapBffManagementEndpoints();
 
-  </TabItem>
-  <TabItem label="Controllers">
+       app.Run();
 
-      <Code
-          lang="csharp"
-          title="Program.cs"
-          code={`builder.Services.AddControllers();
+       ```
+     </TabItem>
+   </Tabs>
 
-// ...
+   Make sure to replace the Authority, ClientID and ClientSecret with values from your identity provider. Also consider if the scopes are correct. 
 
-app.UseAuthorization();
+4. **Adding Local APIs**
 
-// When mapping the api controllers, place this after // UseAuthorization()
-app.MapControllers()
-    .RequireAuthorization()
-    .AsBffApiEndpoint(); // This statement adds CSRF protection to the controller endpoints`}/>
+   If your browser-based application uses local APIs, you can add those directly to your BFF app. The BFF supports both controllers and minimal APIs to create local API endpoints.
 
-      <Code
-          lang="csharp"
-          title="LocalApiController.cs"
-          code={`[Route("hello")]
-public class LocalApiController : ControllerBase
-{
-    [Route("world")]
-    [HttpGet]
-    public IActionResult SelfContained()
-    {
-        return Ok("hello world");
+   It's important to mark up the APIs with .AsBffApiEndpoint(), because this adds CSRF protection. 
+
+   :::tip
+   Always call `.AsBffApiEndpoint()` on your local API routes. Without it, the `X-CSRF` header is not enforced and your endpoints are vulnerable to CSRF attacks. See [Local APIs](/bff/fundamentals/apis/local/) for details.
+   :::
+
+   {/* prettier-ignore */}
+   <Tabs syncKey="bffVersion">
+     {/* prettier-ignore */}
+     <TabItem label="Minimal Apis">
+
+         <Code
+             lang="csharp"
+             title="Program.cs"
+             code={`// Adds authorization for local and remote API endpoints
+   app.UseAuthorization();
+
+   // Place your custom routes after the 'UseAuthorization()'
+   app.MapGet("/hello-world", () => "hello-world")
+       .AsBffApiEndpoint(); // Adds CSRF protection to the controller endpoints`}/>
+
+     </TabItem>
+     <TabItem label="Controllers">
+
+         <Code
+             lang="csharp"
+             title="Program.cs"
+             code={`builder.Services.AddControllers();
+
+   // ...
+
+   app.UseAuthorization();
+
+   // When mapping the api controllers, place this after // UseAuthorization()
+   app.MapControllers()
+       .RequireAuthorization()
+       .AsBffApiEndpoint(); // This statement adds CSRF protection to the controller endpoints`}/>
+
+         <Code
+             lang="csharp"
+             title="LocalApiController.cs"
+             code={`[Route("hello")]
+   public class LocalApiController : ControllerBase
+   {
+       [Route("world")]
+       [HttpGet]
+       public IActionResult SelfContained()
+       {
+           return Ok("hello world");
+       }
+   }`}/>
+
+     </TabItem>
+   </Tabs>
+
+5. **Adding Remote APIs**
+
+   If you also want to call remote api's from your browser based application, then you should proxy the calls through the BFF. 
+
+   The BFF extends the capabilities of [Yarp](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/yarp/getting-started?view=aspnetcore-9.0) in order to achieve this. 
+
+   :::tip
+   For a comparison of local vs. remote vs. YARP-based APIs, see the [API Overview](/bff/fundamentals/apis/).
+   :::
+
+   ```bash title="Terminal"
+   dotnet add package Duende.BFF.Yarp
+   ```
+
+   {/* prettier-ignore */}
+   <Tabs>
+     {/* prettier-ignore */}
+     <TabItem label="Direct forwarding">
+
+         <Code
+             lang="csharp"
+             title="Program.cs"
+             code={`builder.Services.AddBff()
+       .AddRemoteApis(); // Adds the capabilities needed to perform proxying to remote APIs.
+
+   // ...
+
+   // Map any call (including child routes) from /api/remote to https://remote-api-address
+   app.MapRemoteBffApiEndpoint("/api/remote", new Uri("https://remote-api-address"))
+       .WithAccessToken(RequiredTokenType.Client);`}/>
+
+     </TabItem>
+     {/* prettier-ignore */}
+     <TabItem label="Yarp">
+
+         <Code
+             lang="csharp"
+             title="Program.cs"
+             code={`builder.Services.AddBff()
+       .AddRemoteApis() // This adds the capabilities needed to perform proxying to remote api's.
+       .AddYarpConfig(new RouteConfig() // This statement configures yarp.
+       {
+           RouteId = "route_id",
+           ClusterId = "cluster_id",
+
+           Match = new RouteMatch
+           {
+               Path = $"api/remote/{{**catch-all}}"
+           }
+       }, new ClusterConfig()
+       {
+           ClusterId = "cluster_id",
+
+           Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
+           {
+               { "destination_1", new DestinationConfig { Address = "https://remote-api-address" } }
+           }
+       });
+
+
+   // ...
+
+   app.UseAuthorization();
+
+   // Add the Yarp middleware that will proxy the requests.
+   app.MapReverseProxy(proxyApp => {
+       proxyApp.UseAntiforgeryCheck();
+   });`}/>
+
+       You can also use an `IConfiguration` instead of programmatically configuring the proxy.
+
+     </TabItem>
+   </Tabs>
+
+6. **Adding Server-Side Sessions**
+
+   {/* prettier-ignore */}
+   <Tabs syncKey="bffSessionStore">
+     {/* prettier-ignore */}
+     <TabItem label="In-Memory">
+
+     By default, Duende.BFF uses an in-memory session store. This is suitable for development and testing, but not recommended for production as sessions will be lost when the application restarts.
+
+         <Code
+             lang="csharp"
+             title="Program.cs"
+             code={`builder.Services.AddBff()
+       .AddServerSideSessions(); // Uses in-memory session store by default
+     
+   // ...existing code for authentication, authorization, etc.`}/>
+
+     </TabItem>
+     {/* prettier-ignore */}
+     <TabItem label="Entity Framework">
+
+     For production scenarios, you can use Entity Framework to persist sessions in a database. First, add the NuGet package:
+
+       <Code
+           lang="bash"
+           title="Terminal"
+           meta="Terminal"
+           code={`dotnet add package Duende.BFF.EntityFramework`}/>
+
+     Then configure the session store in your `Program.cs`:
+
+       <Code
+           lang="csharp"
+           title="Program.cs"
+           code={`builder.Services.AddBff()
+       .AddServerSideSessions()
+       .AddEntityFrameworkServerSideSessions(options =>
+       {
+           options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+       });
+     
+   // ...existing code for authentication, authorization, etc.`}/>
+
+     You will also need to run the Entity Framework migrations to create the necessary tables.
+
+     </TabItem>
+   </Tabs>
+
+</Steps>
+
+:::caution[In-memory sessions are not production-ready]
+The default in-memory session store loses all sessions on application restart and cannot be shared across multiple instances. Always use Entity Framework-backed sessions in production.
+:::
+
+## Frontend Integration
+
+With the BFF host running, your frontend (JavaScript SPA, React, Angular, etc.) needs to call a few BFF endpoints for authentication and to make API calls. Below is a minimal vanilla JavaScript pattern you can adapt.
+
+### Check the current user session
+
+On load, call `/bff/user` to check whether the user is logged in. This endpoint returns the user's claims as JSON when authenticated, or a `401`/empty response when anonymous.
+
+```javascript
+// Fetch the current user from the BFF session
+async function getUser() {
+    const response = await fetch('/bff/user', {
+        headers: { 'X-CSRF': '1' }
+    });
+
+    if (response.ok) {
+        return await response.json(); // Array of { type, value } claim objects
     }
-}`}/>
 
-  </TabItem>
-</Tabs>
-
-### 5. Adding Remote APIs
-
-If you also want to call remote api's from your browser based application, then you should proxy the calls through the BFF. 
-
-The BFF extends the capabilities of [Yarp](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/yarp/getting-started?view=aspnetcore-9.0) in order to achieve this. 
-
-```bash title="Terminal"
-dotnet add package Duende.BFF.Yarp
+    return null; // Not authenticated
+}
 ```
 
-{/* prettier-ignore */}
-<Tabs>
-  {/* prettier-ignore */}
-  <TabItem label="Direct forwarding">
+### Login and logout links
 
-      <Code
-          lang="csharp"
-          title="Program.cs"
-          code={`builder.Services.AddBff()
-    .AddRemoteApis(); // Adds the capabilities needed to perform proxying to remote APIs.
+Use plain anchor tags pointing to the BFF management endpoints. Do **not** use `fetch` for these — they must trigger a full browser redirect.
 
-// ...
+```html
+<!-- Login: redirects to the identity provider -->
+<a href="/bff/login">Log in</a>
 
-// Map any call (including child routes) from /api/remote to https://remote-api-address
-app.MapRemoteBffApiEndpoint("/api/remote", new Uri("https://remote-api-address"))
-    .WithAccessToken(RequiredTokenType.Client);`}/>
+<!-- Logout: the href must include the session ID from the logout_url claim -->
+<!-- Read this from the /bff/user response, not hardcoded -->
+<a id="logout-link">Log out</a>
+```
 
-  </TabItem>
-  {/* prettier-ignore */}
-  <TabItem label="Yarp">
+```javascript
+// Wire up logout link with the session-bound URL from /bff/user
+const user = await getUser();
+if (user) {
+    const logoutUrlClaim = user.find(c => c.type === 'bff:logout_url');
+    document.getElementById('logout-link').href = logoutUrlClaim?.value ?? '/bff/logout';
+}
+```
 
-      <Code
-          lang="csharp"
-          title="Program.cs"
-          code={`builder.Services.AddBff()
-    .AddRemoteApis() // This adds the capabilities needed to perform proxying to remote api's.
-    .AddYarpConfig(new RouteConfig() // This statement configures yarp.
-    {
-        RouteId = "route_id",
-        ClusterId = "cluster_id",
+### Calling BFF API endpoints
 
-        Match = new RouteMatch
-        {
-            Path = $"api/remote/{{**catch-all}}"
-        }
-    }, new ClusterConfig()
-    {
-        ClusterId = "cluster_id",
+Every request to a BFF API endpoint **must** include the `X-CSRF: 1` header. Without it, the BFF will reject the request with `401 Unauthorized`.
 
-        Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
-        {
-            { "destination_1", new DestinationConfig { Address = "https://remote-api-address" } }
-        }
+```javascript
+// Centralized fetch wrapper — always add the X-CSRF header
+async function bffFetch(url, options = {}) {
+    const response = await fetch(url, {
+        ...options,
+        headers: {
+            'X-CSRF': '1',
+            ...options.headers,
+        },
     });
 
+    // Redirect to login if the session has expired
+    if (response.status === 401) {
+        window.location.href = `/bff/login?returnUrl=${encodeURIComponent(window.location.pathname)}`;
+        return;
+    }
 
-// ...
+    return response;
+}
 
-app.UseAuthorization();
+// Example usage
+const data = await bffFetch('/api/weather');
+const json = await data.json();
+```
 
-// Add the Yarp middleware that will proxy the requests.
-app.MapReverseProxy(proxyApp => {
-    proxyApp.UseAntiforgeryCheck();
-});`}/>
+:::tip
+Use `bffFetch` (or an equivalent interceptor in your framework) consistently throughout your frontend. This ensures every authenticated request includes the CSRF header and gracefully handles session expiry.
+:::
 
-    You can also use an `IConfiguration` instead of programmatically configuring the proxy.
+### Proactive session polling (optional)
 
-  </TabItem>
-</Tabs>
+To detect server-initiated session termination (e.g., back-channel logout), poll `/bff/user` periodically:
 
-### 6. Adding Server-Side Sessions
+```javascript
+// Poll every 60 seconds; redirect to login if session ends
+setInterval(async () => {
+    const user = await getUser();
+    if (!user) {
+        window.location.href = '/bff/login';
+    }
+}, 60_000);
+```
 
-{/* prettier-ignore */}
-<Tabs syncKey="bffSessionStore">
-  {/* prettier-ignore */}
-  <TabItem label="In-Memory">
+## See Also
 
-  By default, Duende.BFF uses an in-memory session store. This is suitable for development and testing, but not recommended for production as sessions will be lost when the application restarts.
-
-      <Code
-          lang="csharp"
-          title="Program.cs"
-          code={`builder.Services.AddBff()
-    .AddServerSideSessions(); // Uses in-memory session store by default
-  
-// ...existing code for authentication, authorization, etc.`}/>
-
-  </TabItem>
-  {/* prettier-ignore */}
-  <TabItem label="Entity Framework">
-
-  For production scenarios, you can use Entity Framework to persist sessions in a database. First, add the NuGet package:
-
-    <Code
-        lang="bash"
-        title="Terminal"
-        meta="Terminal"
-        code={`dotnet add package Duende.BFF.EntityFramework`}/>
-
-  Then configure the session store in your `Program.cs`:
-
-    <Code
-        lang="csharp"
-        title="Program.cs"
-        code={`builder.Services.AddBff()
-    .AddServerSideSessions()
-    .AddEntityFrameworkServerSideSessions(options =>
-    {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    });
-  
-// ...existing code for authentication, authorization, etc.`}/>
-
-  You will also need to run the Entity Framework migrations to create the necessary tables.
-
-  </TabItem>
-</Tabs>
-
+- [Multiple Frontends](/bff/getting-started/multi-frontend/) — Serve several SPAs from the same BFF host
+- [Blazor Applications](/bff/getting-started/blazor/) — BFF setup for Blazor Server and WASM
+- [Local APIs](/bff/fundamentals/apis/local/) — Full reference for embedded API endpoints and CSRF protection
+- [Remote APIs](/bff/fundamentals/apis/remote/) — Direct forwarding to upstream services
+- [Token Management](/bff/fundamentals/tokens/) — How BFF handles access token refresh automatically
+- [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) — Persistent session configuration
+- [Access Token Management](/accesstokenmanagement/) — The underlying token lifecycle library used by BFF

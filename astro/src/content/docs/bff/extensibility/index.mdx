@@ -1,0 +1,106 @@
+---
+title: BFF Extensibility
+description: Overview of all extensibility points in Duende.BFF for customizing session management, management endpoints, HTTP forwarding, and token storage.
+sidebar:
+  label: Overview
+  order: 1
+redirect_from:
+  - /bff/v2/extensibility/
+  - /bff/v3/extensibility/
+  - /identityserver/v5/bff/extensibility/
+  - /identityserver/v6/bff/extensibility/
+  - /identityserver/v7/bff/extensibility/
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Duende.BFF is designed to be extended at multiple layers. Most production applications will use the defaults, but each area has well-defined extension points for when you need to go beyond the defaults.
+
+## Extensibility Points
+
+| Area | What You Can Customize | Detail Page |
+|------|------------------------|-------------|
+| **Management Endpoints** | Login, logout, user info, back-channel logout, diagnostics, silent login processing | [Management Endpoints](#management-endpoints) |
+| **Session Store** | Where server-side session data is persisted (custom database, cache, etc.) | [Session Management](/bff/extensibility/sessions/) |
+| **HTTP Forwarder** | Custom HTTP clients, request/response transformations for proxied calls | [HTTP Forwarder](/bff/extensibility/http-forwarder/) |
+| **Token Management** | Token storage backend, per-route token retrieval (delegation, impersonation) | [Token Management](/bff/extensibility/tokens/) |
+
+## Management Endpoints
+
+Each BFF management endpoint has a corresponding interface that you can implement to customize its behavior. In v4, the pattern is to map a custom route at the same path and call the default endpoint implementation, allowing you to add logic before and after default processing.
+
+| Endpoint | Default Path | Interface (v4) | Interface (v3) | Detail |
+|----------|-------------|----------------|----------------|--------|
+| Login | `/bff/login` | `ILoginEndpoint` | `ILoginService` | [Login Extensibility](/bff/extensibility/management/login/) |
+| Logout | `/bff/logout` | `ILogoutEndpoint` | `ILogoutService` | [Logout Extensibility](/bff/extensibility/management/logout/) |
+| User | `/bff/user` | `IUserEndpoint` | `IUserService` | [User Extensibility](/bff/extensibility/management/user/) |
+| Silent Login | `/bff/silent-login` | `ISilentLoginEndpoint` | `ISilentLoginService` | [Silent Login Extensibility](/bff/extensibility/management/silent-login/) |
+| Back-Channel Logout | `/bff/backchannel` | `IBackchannelLogoutEndpoint` | `IBackchannelLogoutService` | [Back-Channel Logout Extensibility](/bff/extensibility/management/back-channel-logout/) |
+| Diagnostics | `/bff/diagnostics` | `IDiagnosticsEndpoint` | `IDiagnosticsService` | [Diagnostics Extensibility](/bff/extensibility/management/diagnostics/) |
+
+### General Pattern (v4)
+
+All management endpoint customizations in v4 follow the same pattern:
+
+```csharp
+// Program.cs
+var bffOptions = app.Services.GetRequiredService<IOptions<BffOptions>>().Value;
+
+app.MapGet(bffOptions.LoginPath, async (HttpContext context, CancellationToken ct) =>
+{
+    // Custom logic before the default processing
+    var endpoint = context.RequestServices.GetRequiredService<ILoginEndpoint>();
+    await endpoint.ProcessRequestAsync(context, ct);
+    // Custom logic after the default processing
+});
+```
+
+## Session Store
+
+By default, BFF uses either an in-memory store or Entity Framework Core for server-side sessions. To use a different storage backend (Redis, custom database, etc.), implement `IUserSessionStore`:
+
+```csharp
+builder.Services.AddBff()
+    .AddServerSideSessions<MyCustomSessionStore>();
+```
+
+See [Session Management Extensibility](/bff/extensibility/sessions/) for the full interface and implementation guidance.
+
+## HTTP Forwarder
+
+When using `MapRemoteBffApiEndpoint`, BFF uses a default HTTP client and a default set of request/response transformations. You can customize:
+
+- **The HTTP client** — implement `IForwarderHttpClientFactory` to use a proxy, custom certificates, etc.
+- **Request/response transformations** — add custom headers, modify paths, or replace the default transformer entirely.
+
+See [HTTP Forwarder Extensibility](/bff/extensibility/http-forwarder/) for details.
+
+## Token Management
+
+BFF's token management (powered by `Duende.AccessTokenManagement`) can be extended in two ways:
+
+- **Custom token store** — implement `IUserTokenStore` to store tokens outside of the session cookie or server-side session.
+- **Per-route token retrieval** — implement `IAccessTokenRetriever` for scenarios like token exchange or impersonation, where different API routes need different tokens.
+
+```csharp
+app.MapRemoteBffApiEndpoint("/api/delegated", new Uri("https://api.example.com"))
+    .WithAccessToken(RequiredTokenType.User)
+    .WithAccessTokenRetriever<DelegationTokenRetriever>();
+```
+
+See [Token Management Extensibility](/bff/extensibility/tokens/) for details.
+
+## See Also
+
+<CardGrid>
+  <LinkCard
+    href="/bff/fundamentals/options/"
+    title="Configuration Options"
+    description="Settings that control BFF behavior without custom code"
+  />
+  <LinkCard
+    href="/bff/troubleshooting/"
+    title="Troubleshooting"
+    description="Common issues and their solutions"
+  />
+</CardGrid>

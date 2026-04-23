@@ -42,3 +42,7 @@ Back-channel logout tokens include a sub (subject ID) and sid (session ID) claim
 revoked. By default, the back-channel logout endpoint will only revoke the specific session for the given subject ID and
 session ID. Alternatively, you can configure the endpoint to revoke every session that belongs to the given subject ID
 by setting the `BackchannelLogoutAllUserSessions` [option](/bff/fundamentals/options.md#session-management) to true.
+
+## Customize This Endpoint
+
+To add custom request processing logic or customize session revocation behavior, see [Back-Channel Logout Endpoint Extensibility](/bff/extensibility/management/back-channel-logout/).

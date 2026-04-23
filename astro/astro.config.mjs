@@ -80,7 +80,7 @@ export default defineConfig({
               label: "IdentityModel",
               description:
                 "Documentation for Duende's open-source IdentityModel library which provides an object model to interact with the endpoints defined in the various OAuth and OpenId Connect specifications",
-              paths: ["accesstokenmanagement/**"],
+              paths: ["identitymodel/**"],
             },
             {
               label: "IdentityModel.OidcClient",
