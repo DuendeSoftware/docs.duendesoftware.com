@@ -396,7 +396,7 @@ public static class InMemoryConfig
 ```
 
 ```csharp
-//ResourceIsolationClient.cs
+// ResourceIsolationClient.cs
 #:property PublishAot=false
 
 //Choose your access package library
