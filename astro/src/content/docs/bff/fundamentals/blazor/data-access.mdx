@@ -72,7 +72,7 @@ app.MapGet("/some_data", async (IDataAccessor dataAccessor) => await dataAccesso
     .AsBffApiEndpoint();
 ```
 
-### Client (WASM) implementation
+### Client (WASM) Implementation
 
 On the client, use an `HttpClient` that routes through the BFF host:
 
@@ -104,7 +104,7 @@ When using `AddLocalApiHttpClient<T>()`, the `HttpClient` is pre-configured to i
 
 If your BFF needs to proxy requests to a remote API (one that requires a bearer token), configure a remote endpoint on the server and access it from the client via the BFF proxy.
 
-### Server-side proxy setup
+### Server-side Proxy Setup
 
 ```csharp
 // Server/Program.cs
