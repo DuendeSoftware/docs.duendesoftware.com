@@ -13,7 +13,7 @@ redirect_from:
   - /identityserver/v7/bff/apis/
 ---
 
-A frontend application using the BFF pattern can call two types of APIs:
+A frontend application using the BFF pattern can call two types of APIs: embedded (local) APIs, and proxied remote APIs.
 
 ## Choosing an API Approach
 
