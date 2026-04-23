@@ -307,7 +307,7 @@ public static readonly IEnumerable<Client> Clients = [
 ];
 ```
 
-When requesting an `ApiResource`, IdentityServer will create a token with scopes filtered to what is supported by that `ApiResource`. Scopes are not owned by any individual `ApiResource`, and are global across your applications because internally they're an arbitrary string. An `ApiResource` doesn't 'own' scopes, it is allowed access to those scopes.
+When requesting an `ApiResource`, IdentityServer will create a token with scopes filtered to what is supported by that `ApiResource`. Scopes are not owned by any individual `ApiResource`, and are global across your applications because internally they're an arbitrary string. An `ApiResource` doesn't "own" scopes, it is allowed access to those scopes.
 
 The table below shows the resulting **audience claim** (`aud`) when making requests for a token with a specific scope/resource combination.
 
