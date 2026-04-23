@@ -265,7 +265,8 @@ Imagine a set of services with separate APIs for handling orders and tracking in
 The below code creates in-memory scopes, API resources, and a single client (which knows about the aforementioned resources) inside a Duende IdentityServer application. Notice that all scopes are created in a single `Scopes` collection, then the `Resources` collection groups the scopes per `ApiResource`. Finally, the `Client` includes all scopes in its `AllowedScopes` property because the client will be requesting any combination of those scopes from Duende IdentityServer. The only grouping happening is when the `ApiResource` objects link an API resource to a scope.
 
 ```csharp
-//All scopes used by all API Resources and Clients
+// Config.cs
+// All scopes used by all API Resources and Clients
 public static readonly IEnumerable<ApiScope> Scopes = [
     // resource specific scopes
     new ApiScope("orders.read"), new ApiScope("orders.write"),
