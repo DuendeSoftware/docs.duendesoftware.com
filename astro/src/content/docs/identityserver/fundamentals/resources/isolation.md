@@ -325,7 +325,7 @@ The table below shows the resulting **audience claim** (`aud`) when making reque
 The below code is 2 C# File Based Apps. The first is a Duende IdentityServer with the Scopes, Resources, and Clients described above. The second app is a console client that makes requests to Duende IdentityServer with different combinations of scopes and resources. To help understand how resource isolation works, feel free to run the two apps locally. Make modifications as you see fit to experiment.
 
 ```csharp {30, 43, 51}
-//IdentityServer.cs
+// IdentityServer.cs
 #:sdk Microsoft.Net.Sdk.Web
 #:property PublishAot=false
 #:package Duende.IdentityServer@8.0.0-alpha.1
