@@ -16,6 +16,9 @@ yarn-error.log*
 pnpm-debug.log*
 
 
+# generated build data
+astro/src/data/contributors.json
+
 # environment variables
 .env
 .env.production

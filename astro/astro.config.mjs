@@ -18,6 +18,7 @@ import { duendeOpenGraphImage } from "./src/plugins/duende-og-image.js";
 import removeMarkdownExtensions from "./src/plugins/remove-markdown-extensions.js";
 import staticRedirects from "./src/plugins/static-redirects.js";
 import markdownOutput from "./src/plugins/markdown-output.js";
+import contributorMapping from "./src/plugins/contributor-mapping.js";
 
 // https://astro.build/config
 export default defineConfig({
@@ -35,6 +36,10 @@ export default defineConfig({
     },
   ],
   integrations: [
+    contributorMapping({
+      include: ["src/content/docs/**"],
+      repo: "DuendeSoftware/docs.duendesoftware.com",
+    }),
     starlight({
       customCss: ["./src/styles/custom.css"],
       routeMiddleware: ["./src/plugins/search-topic-middleware.ts"],
@@ -188,6 +193,7 @@ export default defineConfig({
         Banner: "./src/components/Banner.astro",
         Head: "./src/components/Head.astro",
         Pagination: "./src/components/Pagination.astro",
+        PageSidebar: "./src/components/PageSidebar.astro",
       },
       sidebar: [
         {

@@ -41,20 +41,25 @@ Target(AstroBuild, async () =>
     Directory.CreateDirectory(wwwrootDir);
     
     // Convert Windows paths to Docker-compatible format (forward slashes)
-    var astroPath = Path.Combine(repoRoot, "astro").Replace('\\', '/');
+    var repoRootPath = repoRoot.Replace('\\', '/');
     var outputPath = wwwrootDir.Replace('\\', '/');
+    
+    // Pass GITHUB_TOKEN into the container if set
+    var githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN") ?? "";
     
     // Use Docker to build Astro - consistent across all platforms
     // Use Debian-based image (not Alpine) for better compatibility with native modules
     // Increase Node.js memory limit to handle large builds
+    // Mount repo root so .git is available for git log
     await RunAsync("docker", 
         "run --rm " +
-        $"-v \"{astroPath}:/app\" " +
+        $"-v \"{repoRootPath}:/app\" " +
         $"-v \"{outputPath}:/output\" " +
-        "-w /app " +
+        "-w /app/astro " +
         "-e NODE_OPTIONS=\"--max-old-space-size=8192\" " +
+        $"-e GITHUB_TOKEN=\"{githubToken}\" " +
         "node:24-slim " +
-        "sh -c \"npm ci && npm run build && cp -r dist/. /output/\"",
+        "sh -c \"apt-get update && apt-get install -y git && git config --global --add safe.directory /app && npm ci && npm run build && cp -r dist/. /output/\"",
         configureEnvironment: env => env.Add("MSYS_NO_PATHCONV", "1"));
 });
 

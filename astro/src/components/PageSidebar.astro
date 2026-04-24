@@ -1,0 +1,144 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import MobileTableOfContents from 'virtual:starlight/components/MobileTableOfContents';
+import TableOfContents from 'virtual:starlight/components/TableOfContents';
+import contributorsData from '../data/contributors.json';
+
+const { editUrl, toc } = Astro.locals.starlightRoute;
+const filePath = Astro.locals.starlightRoute.entry.filePath;
+
+// Look up contributors for this page's source file
+const contributors = filePath ? (contributorsData as Record<string, { username: string; avatarUrl: string; profileUrl: string }[]>)[filePath] ?? [] : [];
+---
+
+{toc && (
+  <>
+    <div class="lg:sl-hidden">
+      <MobileTableOfContents />
+    </div>
+    <div class="right-sidebar-panel sl-hidden lg:sl-block">
+      <div class="sl-container">
+        <TableOfContents />
+
+        <div class="sidebar-meta">
+          {contributors.length > 0 && (
+            <div class="meta-section">
+              <h2>Page Contributors</h2>
+              <div class="contributor-avatars">
+                {contributors.map((c) => (
+                    <a href={c.profileUrl} title={c.username} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src={c.avatarUrl}
+                        alt={c.username}
+                        width="24"
+                        height="24"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {editUrl && (
+            <div class="meta-section">
+              <a href={editUrl} class="edit-link sl-flex print:hidden" target="_blank" rel="noopener noreferrer">
+                <Icon name="pencil" size="1.2em" />
+                {Astro.locals.t('page.editLink')}
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </>
+)}
+
+<style>
+  @layer starlight.core {
+    .right-sidebar-panel {
+      padding: 1rem var(--sl-sidebar-pad-x);
+    }
+    .sl-container {
+      width: calc(var(--sl-sidebar-width) - 2 * var(--sl-sidebar-pad-x));
+    }
+    .right-sidebar-panel :global(h2) {
+      color: var(--sl-color-white);
+      font-size: var(--sl-text-h5);
+      font-weight: 600;
+      line-height: var(--sl-line-height-headings);
+      margin-bottom: 0.5rem;
+    }
+    .right-sidebar-panel :global(:where(a)) {
+      display: block;
+      font-size: var(--sl-text-xs);
+      text-decoration: none;
+      color: var(--sl-color-gray-3);
+      overflow-wrap: anywhere;
+    }
+    .right-sidebar-panel :global(:where(a):hover) {
+      color: var(--sl-color-white);
+    }
+    @media (min-width: 72rem) {
+      .sl-container {
+        max-width: calc(
+          (
+            (
+                100vw - var(--sl-sidebar-width) - 2 * var(--sl-content-pad-x) - 2 *
+                  var(--sl-sidebar-pad-x)
+              ) * 0.25
+          )
+        );
+      }
+    }
+  }
+
+  .sidebar-meta {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--sl-color-gray-6);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .meta-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .meta-section h2 {
+    margin-bottom: 0.25rem !important;
+  }
+
+  .contributor-avatars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  .contributor-avatars a {
+    display: inline-flex;
+    line-height: 0;
+  }
+
+  .contributor-avatars img {
+    border-radius: 50%;
+  }
+
+  .edit-link {
+    gap: 0.5rem;
+    align-items: center;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+    text-decoration: none;
+  }
+
+  .edit-link:hover {
+    color: var(--sl-color-white);
+  }
+</style>
