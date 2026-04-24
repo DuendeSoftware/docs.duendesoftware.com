@@ -115,6 +115,7 @@ export default defineConfig({
           errorOnInconsistentLocale: true,
           errorOnRelativeLinks: false,
           errorOnLocalLinks: false,
+          exclude: ["/identityserver/reference/**"],
         }),
       ],
       title: "Duende Software Docs",
