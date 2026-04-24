@@ -48,7 +48,7 @@ client list in the authentication properties.
 | Task<IReadOnlyCollection<SamlSpSessionData>> GetSamlSessionListAsync(CancellationToken ct)                              | Gets the list of SAML SP sessions for the user's session. <span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span> |
 | Task RemoveSamlSessionAsync(string entityId, CancellationToken ct)                                                      | Removes a SAML SP session by EntityId. <span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>                    |
 
-The three SAML session methods (`AddSamlSessionAsync`, `GetSamlSessionListAsync`, `RemoveSamlSessionAsync`) are used by the [SAML 2.0 Identity Provider](/docs/identityserver-v8/saml/) feature. If you have a custom `IUserSession` implementation but are not using SAML, these methods can return `Task.CompletedTask` or an empty collection as appropriate.
+The three SAML session methods (`AddSamlSessionAsync`, `GetSamlSessionListAsync`, `RemoveSamlSessionAsync`) are used by the [SAML 2.0 Identity Provider](/identityserver/saml/) feature. If you have a custom `IUserSession` implementation but are not using SAML, these methods can return `Task.CompletedTask` or an empty collection as appropriate.
 
 #### GetUserAsync
 
