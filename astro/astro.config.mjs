@@ -1,7 +1,7 @@
 import { defineConfig, fontProviders } from "astro/config";
+import mermaid from "astro-mermaid";
 import starlight from "@astrojs/starlight";
 import starlightLinksValidator from "starlight-links-validator";
-import starlightClientMermaid from "@pasqal-io/starlight-client-mermaid";
 import starlightAutoSidebar from "starlight-auto-sidebar";
 import starlightGiscus from "starlight-giscus";
 import redirectFrom from "astro-redirect-from";
@@ -54,6 +54,12 @@ export default defineConfig({
     },
   ],
   integrations: [
+    mermaid({
+      // Default theme: 'default', 'dark', 'forest', 'neutral', 'base'
+      theme: "forest",
+      autoTheme: true,
+      enableLog: false
+    }),
     contributorMapping({
       include: ["src/content/docs/**"],
       repo: "DuendeSoftware/docs.duendesoftware.com",
@@ -129,9 +135,6 @@ export default defineConfig({
             light: "noborder_light",
             dark: "noborder_gray",
           },
-        }),
-        starlightClientMermaid({
-          /* options */
         }),
         starlightLinksValidator({
           errorOnFallbackPages: false,
