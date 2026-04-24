@@ -93,3 +93,7 @@ Fortunately, the IdentityServer implementation is designed to use the decorator 
 `ICorsPolicyProvider` that is already registered in the service provider.
 What this means is that you can also implement the `ICorsPolicyProvider`, but it needs to be registered prior to
 IdentityServer in the service provider (e.g. in `ConfigureServices`).
+
+:::note
+IdentityServer requires a `ICorsPolicyService` implementation to control CORS for the endpoints it hosts, like the [OIDC Token](/identitymodel/endpoints/token.md) and [OIDC UserInfo](/identitymodel/endpoints/userinfo.md) endpoints. If you prefer to use ASP.NET Core's CORS Policy programming model, you will also need to add a `ICorsPolicyService` implementation for any CORS settings on the IdentityServer endpoints.
+:::
