@@ -68,11 +68,11 @@ idsvrBuilder.AddJwtRequestUriHttpClient(client =>
 ```
 
 :::note
-Request URI processing is disabled by default. Enable on the [Endpoints](/identityserver/reference/options.md#endpoints) on the `IdentityServerOptions`. Also see the security considerations from the JAR [specification](https://tools.ietf.org/html/draft-ietf-oauth-jwsreq-23#section-10.4).
+Request URI processing is disabled by default. Enable on the [Endpoints](/identityserver/reference/v8/options.md#endpoints) on the `IdentityServerOptions`. Also see the security considerations from the JAR [specification](https://tools.ietf.org/html/draft-ietf-oauth-jwsreq-23#section-10.4).
 :::
 
 ## Accessing The Request Object Data
 You can access the validated data from the request object in two ways:
 
 * Wherever you have access to the `ValidatedAuthorizeRequest`, the `RequestObjectValues` dictionary holds the values.
-* In the UI code you can call `IIdentityServerInteractionService.GetAuthorizationContextAsync`, the resulting [AuthorizationRequest](/identityserver/reference/services/interaction-service.md#authorizationrequest) object contains the `RequestObjectValues` dictionary as well.
+* In the UI code you can call `IIdentityServerInteractionService.GetAuthorizationContextAsync`, the resulting [AuthorizationRequest](/identityserver/reference/v8/services/interaction-service.md#authorizationrequest) object contains the `RequestObjectValues` dictionary as well.

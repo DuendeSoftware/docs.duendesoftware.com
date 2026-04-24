@@ -118,7 +118,7 @@ round-tripped through the browser from being tampered with.
 Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/fundamentals/key-management.md), to
 sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client
 applications and APIs to validate token signatures using the public keys, which are published by IdentityServer
-through [discovery](/identityserver/reference/endpoints/discovery.md). The private key component of the signing keys are
+through [discovery](/identityserver/reference/v8/endpoints/discovery.md). The private key component of the signing keys are
 also critical secrets for IdentityServer because a valid signature provides integrity and non-repudiation guarantees
 that allow client applications and APIs to trust those tokens.
 
@@ -165,7 +165,7 @@ Some optional features rely on ASP.NET Core distributed caching:
 
 * [State data formatter for OpenID Connect](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat)
 * Replay cache (e.g. for [JWT client credentials](/identityserver/tokens/client-authentication.md#setting-up-a-private-key-jwt-secret))
-* [Device flow](/identityserver/reference/stores/device-flow-store.md) throttling service
+* [Device flow](/identityserver/reference/v8/stores/device-flow-store.md) throttling service
 * Authorization parameter store
 
 In order to work in a multi-server environment, this needs to be set up correctly. Please consult the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed) for more details.

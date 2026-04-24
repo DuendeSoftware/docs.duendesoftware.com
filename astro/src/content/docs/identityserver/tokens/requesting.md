@@ -23,7 +23,7 @@ Prerequisites are:
 
 * define a [client](/identityserver/fundamentals/clients.md) for the *client credentials* grant type
 * define an [API scope](/identityserver/fundamentals/resources/api-scopes.md) (and optionally a resource)
-* grant the client access to the scope via the [`AllowedScopes`](/identityserver/reference/models/client.md#basics)
+* grant the client access to the scope via the [`AllowedScopes`](/identityserver/reference/v8/models/client.md#basics)
   property
 
 According to the OAuth [specification](https://tools.ietf.org/html/rfc6749#section-4.4), you request a token by posting
@@ -151,7 +151,7 @@ Prerequisites are:
 * define a [client](/identityserver/fundamentals/clients.md) for the *authorization code* grant type
 * define an [identity](/identityserver/fundamentals/resources/identity.md) resource, e.g. `openid`
 * define an [API scope](/identityserver/fundamentals/resources/api-scopes.md) (and optionally a resource)
-* grant the client access to both scopes via the [`AllowedScopes`](/identityserver/reference/models/client.md#basics)
+* grant the client access to both scopes via the [`AllowedScopes`](/identityserver/reference/v8/models/client.md#basics)
   property
 
 ### Front-channel

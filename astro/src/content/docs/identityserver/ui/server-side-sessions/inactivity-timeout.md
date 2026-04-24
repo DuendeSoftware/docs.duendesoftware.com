@@ -66,8 +66,8 @@ Configuration is needed in both IdentityServer and client applications.
 To prepare IdentityServer, these features need to be enabled:
 
 1. Server-side sessions need to be [enabled](/identityserver/ui/server-side-sessions#enabling-server-side-sessions).
-2. Either the global [`CoordinateClientLifetimesWithUserSession` option](/identityserver/reference/options.md#authentication) should be enabled, or the client-specific [`CoordinateLifetimeWithUserSession` option](/identityserver/reference/models/client.md#authentication--session-management) should be enabled.
-3. Enable back-channel logout for [session expiration](/identityserver/ui/server-side-sessions/session-expiration.mdx) with the [`ExpiredSessionsTriggerBackchannelLogout` option](/identityserver/reference/options.md#server-side-sessions).
+2. Either the global [`CoordinateClientLifetimesWithUserSession` option](/identityserver/reference/v8/options.md#authentication) should be enabled, or the client-specific [`CoordinateLifetimeWithUserSession` option](/identityserver/reference/v8/models/client.md#authentication--session-management) should be enabled.
+3. Enable back-channel logout for [session expiration](/identityserver/ui/server-side-sessions/session-expiration.mdx) with the [`ExpiredSessionsTriggerBackchannelLogout` option](/identityserver/reference/v8/options.md#server-side-sessions).
 
 ### Client Applications
 

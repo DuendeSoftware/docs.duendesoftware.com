@@ -117,7 +117,7 @@ export default defineConfig({
           errorOnFallbackPages: false,
           errorOnInconsistentLocale: true,
           errorOnRelativeLinks: false,
-          errorOnLocalLinks: false,
+          errorOnLocalLinks: false
         }),
       ],
       title: "Duende Software Docs",
