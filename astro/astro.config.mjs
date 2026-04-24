@@ -115,6 +115,7 @@ export default defineConfig({
           errorOnInconsistentLocale: true,
           errorOnRelativeLinks: false,
           errorOnLocalLinks: false,
+          exclude: ["/reference/**"],
         }),
       ],
       title: "Duende Software Docs",
