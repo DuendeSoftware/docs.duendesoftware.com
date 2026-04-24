@@ -136,13 +136,12 @@ export default defineConfig({
             async: true,
           },
         },
-        // llms.txt
+        // Markdown content negotiation
         {
           tag: "link",
           attrs: {
             rel: "alternate",
-            type: "text/markdown",
-            href: "/llms.txt"
+            type: "text/markdown"
           },
         },
       ],
