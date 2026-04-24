@@ -1,9 +1,10 @@
 ---
-title: "Resource Isolation"
+title: Overview
 description: Learn about isolating OAuth resources and using the resource parameter to control access token scope and audience
-date: 2020-09-10T08:22:12+02:00
+date: 2026-04-23T08:22:12+02:00
 sidebar:
-  order: 40
+  order: 1
+  label: Overview
 redirect_from:
   - /identityserver/v5/fundamentals/resources/isolation/
   - /identityserver/v6/fundamentals/resources/isolation/
@@ -15,7 +16,7 @@ This feature is part of the [Duende IdentityServer Enterprise Edition](https://d
 :::
 
 OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view.
-This means that all the requested scope and audience combination get merged into a single access token.
+This means that all the requested scope and audience combinations get merged into a single access token.
 
 This has a couple of downsides:
 
