@@ -38,7 +38,7 @@ builder.Services.AddIdentityServer()
     .AddClientStore<YourCustomClientStore>()
     .AddCorsPolicyService<YourCustomCorsPolicyService>()
     .AddResourceStore<YourCustomResourceStore>()
-    .AddIdentityProviderStore<YourCustomAddIdentityProviderStore>();
+    .AddIdentityProviderStore<YourCustomIdentityProviderStore>();
 ```
 
 ## Caching Configuration Data
@@ -47,7 +47,61 @@ Configuration data is used frequently during request processing.
 If this data is loaded from a database or other external store, then it might be expensive to frequently re-load the
 same data.
 
-Duende IdentityServer provides [convenience methods](/identityserver/reference/di.md#caching-configuration-data) to
+### IdentityServer v8+
+
+Duende IdentityServer provides [convenience methods](/identityserver/reference/v8/di#caching-configuration-data) to
+enable caching data from the various stores.
+The caching implementation is built on Microsoft's [`HybridCache`](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid) from the `Microsoft.Extensions.Caching.Hybrid` package, registered as a [keyed service](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection#keyed-services) under `ServiceProviderKeys.ConfigurationStoreCache`. For example:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer()
+    .AddClientStore<YourCustomClientStore>()
+    .AddCorsPolicyService<YourCustomCorsPolicyService>()
+    .AddResourceStore<YourCustomResourceStore>()
+    .AddInMemoryCaching()
+    .AddClientStoreCache<YourCustomClientStore>()
+    .AddCorsPolicyCache<YourCustomCorsPolicyService>()
+    .AddResourceStoreCache<YourCustomResourceStore>()
+    .AddIdentityProviderStoreCache<YourCustomIdentityProviderStore>();
+```
+
+For Entity Framework users, there is a convenience method `AddConfigurationStoreCache()` that enables caching for all configuration stores at once:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer()
+    .AddConfigurationStore(...)
+    .AddConfigurationStoreCache();
+```
+
+The duration of the data in the default cache is configurable on
+the [IdentityServerOptions](/identityserver/reference/v8/options#caching).
+For example:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer(options => {
+    options.Caching.ClientStoreExpiration = TimeSpan.FromMinutes(5);
+    options.Caching.ResourceStoreExpiration = TimeSpan.FromMinutes(5);
+})
+    .AddClientStore<YourCustomClientStore>()
+    .AddCorsPolicyService<YourCustomCorsPolicyService>()
+    .AddResourceStore<YourCustomResourceStore>()
+    .AddInMemoryCaching()
+    .AddClientStoreCache<YourCustomClientStore>()
+    .AddCorsPolicyCache<YourCustomCorsPolicyService>()
+    .AddResourceStoreCache<YourCustomResourceStore>();
+```
+
+Further customization of the cache is possible:
+
+* The caching stores use a keyed `HybridCache` instance registered under `ServiceProviderKeys.ConfigurationStoreCache`. You can customize the `HybridCache` behavior by configuring the keyed service registration (e.g., adding a distributed cache backend via `IDistributedCache`).
+* By default, only the L1 (in-memory) cache tier is used. To enable L2 (distributed) caching, register an `IDistributedCache` implementation (e.g., Redis via `AddStackExchangeRedisCache`) — `HybridCache` will automatically use it as the L2 tier.
+
+### IdentityServer v7
+
+Duende IdentityServer provides [convenience methods](/identityserver/reference/v7/di#caching-configuration-data) to
 enable caching data from the various stores.
 The caching implementation relies upon an `ICache<T>` service and must also be added to the ASP.NET Core service provider.
 For example:
@@ -62,11 +116,11 @@ builder.Services.AddIdentityServer()
     .AddClientStoreCache<YourCustomClientStore>()
     .AddCorsPolicyCache<YourCustomCorsPolicyService>()
     .AddResourceStoreCache<YourCustomResourceStore>()
-    .AddIdentityProviderStoreCache<YourCustomAddIdentityProviderStore>();
+    .AddIdentityProviderStoreCache<YourCustomIdentityProviderStore>();
 ```
 
 The duration of the data in the default cache is configurable on
-the [IdentityServerOptions](/identityserver/reference/options.md#caching).
+the [IdentityServerOptions](/identityserver/reference/v7/options#caching).
 For example:
 
 ```csharp
