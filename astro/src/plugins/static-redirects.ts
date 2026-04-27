@@ -43,16 +43,24 @@ export async function configurePlugin(hookOptions: any) {
     redirectMap.set(normalizedFrom, normalizedTo);
   }
 
+  const contentDir = path.join(
+    url.fileURLToPath(config.srcDir),
+    "content",
+    "docs",
+  );
+
   // Detect duplicate redirect_from entries across content files.
   // We cannot detect duplicates from config.redirects alone: astro-redirect-from
   // builds a plain JS object from frontmatter, so when two files declare the same
   // redirect_from path, the second silently overwrites the first before our hook
   // ever runs. Scanning frontmatter directly is the only way to catch these.
-  await detectDuplicateRedirects(logger);
+  await detectDuplicateRedirects(logger, contentDir);
 }
 
-async function detectDuplicateRedirects(logger: AstroIntegrationLogger) {
-  const contentDir = path.join(process.cwd(), "src/content/docs");
+async function detectDuplicateRedirects(
+  logger: AstroIntegrationLogger,
+  contentDir: string,
+) {
   const files = await globby("./**/*.{md,mdx}", {
     cwd: contentDir,
     gitignore: true,
