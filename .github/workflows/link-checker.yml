@@ -3,11 +3,7 @@ name: Link checker
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 10 * * 0"
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+    - cron: "0 11 * * *"
 
 jobs:
   link_checker_job:
