@@ -144,8 +144,18 @@ async function detectDuplicateRedirects(
       ? frontmatter.redirect_from
       : [frontmatter.redirect_from];
 
+    const normalizeRedirectSource = (source: string) => {
+      const trimmed = source.trim();
+      if (trimmed !== source) {
+        logger.warn(
+          `Trimmed whitespace from redirect_from entry in ${file}: ${JSON.stringify(source)} -> ${JSON.stringify(trimmed)}`,
+        );
+      }
+      return trimmed.endsWith("/") ? trimmed.slice(0, -1) : trimmed;
+    };
+
     for (const source of redirectFrom) {
-      const normalized = source.endsWith("/") ? source.slice(0, -1) : source;
+      const normalized = normalizeRedirectSource(source);
       const existing = sourceToFiles.get(normalized);
       if (existing) {
         existing.push(file);
