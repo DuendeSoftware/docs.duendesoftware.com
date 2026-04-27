@@ -96,4 +96,33 @@ IdentityServer in the service provider (e.g. in `ConfigureServices`).
 
 :::note
 IdentityServer requires a `ICorsPolicyService` implementation to control CORS for the endpoints it hosts, like the [OIDC Token](/identitymodel/endpoints/token.md) and [OIDC UserInfo](/identitymodel/endpoints/userinfo.md) endpoints. If you prefer to use ASP.NET Core's CORS Policy programming model, you will also need to add a `ICorsPolicyService` implementation for any CORS settings on the IdentityServer endpoints.
-:::
+## Mixing IdentityServer's CORS Policy With ASP.NET Core's CORS Policies
+
+Duende IdentityServer builds upon the standard ASP.NET Core CORS middleware. If your application needs to support CORS for both IdentityServer endpoints and your own custom API endpoints, they can coexist by following these integration rules.
+
+### Middleware Registration Order
+
+For both systems to function correctly, the order of registration in your middleware pipeline is important. Always place the standard CORS middleware *after* the IdentityServer middleware:
+
+```csharp
+app.UseIdentityServer();
+app.UseCors("MyCustomPolicy"); // Must come after IdentityServer
+```
+
+### Custom CORS Policies
+
+You should continue to use ASP.NET Core CORS features exactly as documented by Microsoft. Your existing configurations will not interfere with IdentityServer:
+
+* **Named Policies:** Policies defined in `AddCors` and referenced via `[EnableCors]` attributes or middleware will work as expected.
+* **Inline Policies:** Defining a policy directly within `app.UseCors(builder => ...)` is fully supported.
+
+### Advanced Customization: `ICorsPolicyProvider`
+
+The only potential conflict occurs if you implement a custom [`ICorsPolicyProvider`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.cors.infrastructure.icorspolicyprovider).
+
+IdentityServer registers its own `ICorsPolicyProvider` to handle its internal endpoints, such as the [token](/identitymodel/endpoints/token.md) and [user info](/identitymodel/endpoints/userinfo.md) endpoints. To ensure both your custom logic and IdentityServer's logic run:
+
+1.  **Register your `ICorsPolicyProvider` first:** Register your custom provider in `ConfigureServices` *before* calling `AddIdentityServer`.
+2.  **The Decorator Pattern:** IdentityServer automatically detects your provider and wraps it. It will consult your provider first; if your provider doesn't handle the request, IdentityServer will then apply its own logic.
+
+Note that while ASP.NET Core manages the middleware, IdentityServer uses an internal service called [`ICorsPolicyService`](/identityserver/reference/stores/cors-policy-service.md) to decide which origins are allowed to access its specific endpoints. If you prefer to use the ASP.NET Core CORS Policy programming model for everything, you will need to provide a custom `ICorsPolicyService` implementation that bridges your ASP.NET Core settings to IdentityServer's endpoints.
