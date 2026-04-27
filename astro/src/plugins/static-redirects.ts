@@ -28,8 +28,7 @@ export async function configurePlugin(hookOptions: any) {
 
   // Build redirect map
   logger.info("Generating static redirects file...");
-  for (const from in redirects) {
-    const redirect = redirects[from];
+  for (const [from, redirect] of Object.entries(redirects)) {
     const destination =
       typeof redirect === "string" ? redirect : redirect.destination;
 
