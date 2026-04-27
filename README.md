@@ -140,12 +140,11 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Use `*` for lists. Do not use `-`.
 * Use `[link title](https://example.com)` for links, avoid reference-style links unless you need to repeat the same link multiple times.
 * For internal links, always include the extension (e.g. `.md` or `.mdx`)
-* Prefer `csharp` over `cs` to set the language for C# code blocks.
 
 ### Code Block Style
 
-* Use triple backticks to enclose code blocks.
-* Use a language identifier to specify the language (e.g. `csharp`, `bash`, `json`, `html`, `javascript`, `typescript`, `css`, `json`)
+* Use triple backticks with an appropriate language identifier. Common identifiers used in this repo include `csharp`, `bash`, `powershell`, `shell`, `sh`, `json`, `html`, `javascript`, `typescript`, `css`, `razor`, `xml`, `sql`, `sqlite`, `txt`, `diff`, and `mermaid`.
+* Prefer `csharp` over `cs` to set the language for C# code blocks.
 * Add a title to the code block. You can do this adding the title as a comment in the first line of the code block (e.g. `// Program.cs`).
 * Use [expressive code features](https://starlight.astro.build/guides/authoring-content/#expressive-code-features).
 * Readers should not need to scroll horizontally to read a code example. Simplify and condense the code as much as possible.
@@ -155,7 +154,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Mention NuGet packages as a `bash` code block showing how to install it (`dotnet add package ...`). Link to the NuGet Gallery.
 * When referencing a property, field, class, or other symbol in text, use the `test` format instead of _test_.
 * Values should also be back-ticked, especially HTTP Status codes like `404` or `401`.
-* Make sure code blocks start at the very first character space and don't have excessive starting padding.
+* Avoid excessive indentation in code blocks; use column 0 unless indentation is needed to nest under lists or MDX components.
 
 ### Frontmatter Rules
 
