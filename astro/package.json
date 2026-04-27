@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "NODE_OPTIONS=--max_old_space_size=8192 astro build",
     "preview": "astro preview",
     "astro": "astro",
     "linkchecker": "npm run build && lychee --skip-missing --no-progress --max-concurrency 16 --require-https --exclude-path dist/_llms-txt --exclude-path dist/llms.txt --exclude-path dist/llms-full.txt --exclude-path dist/llms-small.txt --exclude sample.duendesoftware.com --exclude docs.duendesoftware.com --exclude sitemap --exclude github --root-dir \"$PWD/dist\" dist/**",
