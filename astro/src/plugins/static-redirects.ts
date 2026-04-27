@@ -196,24 +196,15 @@ export async function writeToOutput(hookOptions: any) {
     return;
   }
 
-  // Write redirects.json by streaming to avoid a full in-memory JSON string
   const jsonDestinationPath = path.join(
     url.fileURLToPath(outDir),
     "redirects.json",
   );
-  const handle = await fs.open(jsonDestinationPath, "w");
-  try {
-    let first = true;
-    await handle.write("{\n");
-    for (const [key, value] of redirectMap) {
-      if (!first) await handle.write(",\n");
-      await handle.write(`  ${JSON.stringify(key)}: ${JSON.stringify(value)}`);
-      first = false;
-    }
-    await handle.write("\n}\n");
-  } finally {
-    await handle.close();
-  }
+  await fs.writeFile(
+    jsonDestinationPath,
+    JSON.stringify(Object.fromEntries(redirectMap), null, 2),
+    "utf-8",
+  );
 
   logger.info(
     `Generated ${redirectMap.size} redirects: ${jsonDestinationPath}`,
