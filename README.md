@@ -111,14 +111,18 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 
 ### Writing Style
 
+* General style: "big brother sitting next to you helping with your homework." Friendly, educational, patient. You're a senior engineer who has seen this before and wants to help the reader understand, not just find a quick fix.
 * Use the active voice. For example, use "Enable" instead of "Enabled" or "Enabling".
 * Use the second person ("you" not "I" or "we"). "You" is the reader of the documentation. "We" is Duende Software.
 * Use sentence case in text. Titles use Title Case.
 * Use the Oxford comma.
 * Avoid words like "very", "simple", "easy", ...
 * "As well as" can be written as "and".
-* Avoid flowery language.
+* Use plain words: "use" not "utilize", "set up" not "facilitate", "help" not "assist", "about" not "regarding", ... (unless technically precise).
+* Avoid flowery language. Keep it concise. Answer thoroughly, but don't pad. Longer isn't better.
+* Educational, not pedantic: Explain *why* something works, not just *what* to change. Don't over-explain things that are likely already known. When in doubt, include some basic info and reference relevant other sources with more background.
 * When using acronyms, use the full form with parentheses the first time you use it. For example, use "Multi-Factor Authentication (MFA)" instead of "MFA".
+* Read it out loud. If it sounds like a robot wrote it, rewrite it.
 
 ### Linking Rules
 
@@ -136,12 +140,11 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Use `*` for lists. Do not use `-`.
 * Use `[link title](https://example.com)` for links, avoid reference-style links unless you need to repeat the same link multiple times.
 * For internal links, always include the extension (e.g. `.md` or `.mdx`)
-* Prefer `csharp` over `cs` to set the language for C# code blocks.
 
 ### Code Block Style
 
-* Use triple backticks to enclose code blocks.
-* Use a language identifier to specify the language (e.g. `csharp`, `bash`, `json`, `html`, `javascript`, `typescript`, `css`, `json`)
+* Use triple backticks with an appropriate language identifier. Common identifiers used in this repo include `csharp`, `bash`, `powershell`, `shell`, `sh`, `json`, `html`, `javascript`, `typescript`, `css`, `razor`, `xml`, `sql`, `sqlite`, `txt`, `diff`, and `mermaid`.
+* Prefer `csharp` over `cs` to set the language for C# code blocks.
 * Add a title to the code block. You can do this adding the title as a comment in the first line of the code block (e.g. `// Program.cs`).
 * Use [expressive code features](https://starlight.astro.build/guides/authoring-content/#expressive-code-features).
 * Readers should not need to scroll horizontally to read a code example. Simplify and condense the code as much as possible.
@@ -151,7 +154,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Mention NuGet packages as a `bash` code block showing how to install it (`dotnet add package ...`). Link to the NuGet Gallery.
 * When referencing a property, field, class, or other symbol in text, use the `test` format instead of _test_.
 * Values should also be back-ticked, especially HTTP Status codes like `404` or `401`.
-* Make sure code blocks start at the very first character space and don't have excessive starting padding.
+* Avoid excessive indentation in code blocks; use column 0 unless indentation is needed to nest under lists or MDX components.
 
 ### Frontmatter Rules
 
