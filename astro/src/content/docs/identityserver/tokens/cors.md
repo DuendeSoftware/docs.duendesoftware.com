@@ -72,32 +72,6 @@ Use `AllowAll` with caution.
 
 ## Mixing IdentityServer's CORS Policy With ASP.NET Core's CORS Policies
 
-IdentityServer uses the CORS middleware from ASP.NET Core to provide its CORS implementation.
-It is possible that your application that hosts IdentityServer might also require CORS for its own custom endpoints.
-In general, both should work together in the same application, providing the call to `app.UseCors("mypolicy");` is
-called after the call to `app.UseIdentityServer();`.
-
-Your code should use the documented CORS features from ASP.NET Core without regard to IdentityServer.
-This means you should define policies and register the middleware as normal.
-If your application defines policies in `ConfigureServices`, then those should continue to work in the same places you
-are using them (either where you configure the CORS middleware or where you use the MVC `EnableCors` attributes in your
-controller code).
-If instead you define an inline policy in the use of the CORS middleware (via the policy builder callback), then that
-too should continue to work normally.
-
-The one scenario where there might be a conflict between your use of the ASP.NET Core CORS services and IdentityServer
-is if you decide to create a custom `ICorsPolicyProvider`.
-Given the design of the ASP.NET Core's CORS services and middleware, IdentityServer implements its own custom
-`ICorsPolicyProvider` and registers it in the ASP.NET Core service provider.
-Fortunately, the IdentityServer implementation is designed to use the decorator pattern to wrap any existing
-`ICorsPolicyProvider` that is already registered in the service provider.
-What this means is that you can also implement the `ICorsPolicyProvider`, but it needs to be registered prior to
-IdentityServer in the service provider (e.g. in `ConfigureServices`).
-
-:::note
-IdentityServer requires a `ICorsPolicyService` implementation to control CORS for the endpoints it hosts, like the [OIDC Token](/identitymodel/endpoints/token.md) and [OIDC UserInfo](/identitymodel/endpoints/userinfo.md) endpoints. If you prefer to use ASP.NET Core's CORS Policy programming model, you will also need to add a `ICorsPolicyService` implementation for any CORS settings on the IdentityServer endpoints.
-## Mixing IdentityServer's CORS Policy With ASP.NET Core's CORS Policies
-
 Duende IdentityServer builds upon the standard ASP.NET Core CORS middleware. If your application needs to support CORS for both IdentityServer endpoints and your own custom API endpoints, they can coexist by following these integration rules.
 
 ### Middleware Registration Order
