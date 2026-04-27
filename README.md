@@ -111,14 +111,18 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 
 ### Writing Style
 
+* General style: "big brother sitting next to you helping with your homework." Friendly, educational, patient. You're a senior engineer who has seen this before and wants to help the reader understand, not just find a quick fix.
 * Use the active voice. For example, use "Enable" instead of "Enabled" or "Enabling".
 * Use the second person ("you" not "I" or "we"). "You" is the reader of the documentation. "We" is Duende Software.
 * Use sentence case in text. Titles use Title Case.
 * Use the Oxford comma.
 * Avoid words like "very", "simple", "easy", ...
 * "As well as" can be written as "and".
-* Avoid flowery language.
+* Use plain words: "use" not "utilize", "set up" not "facilitate", "help" not "assist", "about" not "regarding", ... (unless technically precise).
+* Avoid flowery language. Keep it concise. Answer thoroughly, but don't pad. Longer isn't better.
+* Educational, not pedantic: Explain *why* something works, not just *what* to change. Don't over-explain things that are likely already known. When in doubt, include some basic info and reference relevant other sources with more background.
 * When using acronyms, use the full form with parentheses the first time you use it. For example, use "Multi-Factor Authentication (MFA)" instead of "MFA".
+* Read it out loud. If it sounds like a robot wrote it, rewrite it.
 
 ### Linking Rules
 
