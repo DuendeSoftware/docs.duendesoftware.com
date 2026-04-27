@@ -33,6 +33,8 @@
     "astro": "^6.1.0",
     "astro-opengraph-images": "^1.14.3",
     "astro-redirect-from": "^1.3.5",
+    "globby": "^16.1.1",
+    "gray-matter": "^4.0.3",
     "astro-rehype-relative-markdown-links": "^0.19.0",
     "hast-util-to-text": "^4.0.2",
     "jsdom": "^29.0.2",
