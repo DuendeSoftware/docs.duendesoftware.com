@@ -57,6 +57,65 @@ export async function configurePlugin(hookOptions: any) {
   await detectDuplicateRedirects(logger, contentDir);
 }
 
+/**
+ * Reads a file in chunks until the closing `---` of the YAML frontmatter block
+ * is found, then returns only those bytes. This avoids loading the full file
+ * body while also being immune to the 8 KB truncation bug: the loop keeps
+ * reading until the delimiter is seen or EOF is reached.
+ */
+async function extractFrontmatterBlock(filePath: string): Promise<string> {
+  const CHUNK_SIZE = 4096;
+  const handle = await fs.open(filePath, "r");
+  try {
+    let accumulated = "";
+    let offset = 0;
+    let firstChunk = true;
+    // searchFrom tracks how far we've already scanned for the closing delimiter
+    // so each chunk addition only rescans the newly added bytes.
+    let searchFrom = 0;
+
+    while (true) {
+      const buf = Buffer.alloc(CHUNK_SIZE);
+      const { bytesRead } = await handle.read(buf, 0, CHUNK_SIZE, offset);
+      if (bytesRead === 0) break;
+
+      const chunk = buf.toString("utf-8", 0, bytesRead);
+      accumulated += chunk;
+      offset += bytesRead;
+
+      // After reading the first chunk, bail out early for files without frontmatter
+      if (firstChunk) {
+        firstChunk = false;
+        if (!accumulated.startsWith("---")) return "";
+        // Skip past the opening --- line before searching for the closing one
+        searchFrom = accumulated.indexOf("\n") + 1;
+      }
+
+      // Search for the closing --- delimiter starting where we left off
+      const closingIdx = accumulated.indexOf("\n---", searchFrom);
+      if (closingIdx !== -1) {
+        // Include the closing delimiter line in the returned block
+        const endIdx = accumulated.indexOf("\n", closingIdx + 1);
+        return endIdx === -1
+          ? accumulated.slice(0, closingIdx + 4)
+          : accumulated.slice(0, endIdx + 1);
+      }
+
+      // Advance searchFrom so the next iteration only scans the new chunk,
+      // minus a small overlap to avoid splitting a \n--- across chunk boundaries.
+      searchFrom = Math.max(searchFrom, accumulated.length - 4);
+
+      if (bytesRead < CHUNK_SIZE) break; // reached EOF before closing delimiter
+    }
+
+    // No closing --- found. gray-matter returns empty data for malformed
+    // frontmatter, so the caller's redirect_from check will safely skip this file.
+    return accumulated;
+  } finally {
+    await handle.close();
+  }
+}
+
 async function detectDuplicateRedirects(
   logger: AstroIntegrationLogger,
   contentDir: string,
@@ -72,39 +131,28 @@ async function detectDuplicateRedirects(
   for (const file of files) {
     const filePath = path.join(contentDir, file);
 
-    // Read only enough to extract frontmatter — avoid loading full file bodies
-    const handle = await fs.open(filePath, "r");
-    try {
-      const buf = Buffer.alloc(8192);
-      const { bytesRead } = await handle.read(buf, 0, 8192, 0);
-      const head = buf.toString("utf-8", 0, bytesRead);
+    // Read only the frontmatter block, scanning until the closing --- delimiter
+    // regardless of how large the frontmatter may be.
+    const frontmatterBlock = await extractFrontmatterBlock(filePath);
 
-      // Quick check: skip files without redirect_from in the frontmatter region
-      if (!head.includes("redirect_from")) continue;
+    if (!frontmatterBlock.includes("redirect_from")) continue;
 
-      // Only now read the full file for proper YAML parsing
-      const content = bytesRead < 8192
-        ? head
-        : await fs.readFile(filePath, { encoding: "utf-8" });
-      const { data: frontmatter } = matter(content);
+    const { data: frontmatter } = matter(frontmatterBlock);
 
-      if (!frontmatter?.redirect_from) continue;
+    if (!frontmatter?.redirect_from) continue;
 
-      const redirectFrom: string[] = Array.isArray(frontmatter.redirect_from)
-        ? frontmatter.redirect_from
-        : [frontmatter.redirect_from];
+    const redirectFrom: string[] = Array.isArray(frontmatter.redirect_from)
+      ? frontmatter.redirect_from
+      : [frontmatter.redirect_from];
 
-      for (const source of redirectFrom) {
-        const normalized = source.endsWith("/") ? source.slice(0, -1) : source;
-        const existing = sourceToFiles.get(normalized);
-        if (existing) {
-          existing.push(file);
-        } else {
-          sourceToFiles.set(normalized, [file]);
-        }
+    for (const source of redirectFrom) {
+      const normalized = source.endsWith("/") ? source.slice(0, -1) : source;
+      const existing = sourceToFiles.get(normalized);
+      if (existing) {
+        existing.push(file);
+      } else {
+        sourceToFiles.set(normalized, [file]);
       }
-    } finally {
-      await handle.close();
     }
   }
 
