@@ -33,7 +33,7 @@ Review documentation for Duende Software products (IdentityServer, BFF, etc.). F
 * Internal links must start at the content root (e.g. `/identityserver/troubleshooting/index.md`) and include the `.md` or `.mdx` extension.
 * External links must use HTTPS.
 * Link relevant text: prefer `learn more about [improving sign-in]` over `click [here]`.
-* Long links (75+ chars) or repeated links should use markdown anchor syntax at the bottom of the file.
+* Long links (75+ chars) or repeated links should use reference-style links/link definitions at the bottom of the file (for example, `[label]: https://example.com`).
 * When linking externally, include a sentence about what the reader will find.
 
 ## Markdown Style
