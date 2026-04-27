@@ -60,8 +60,7 @@ export async function configurePlugin(hookOptions: any) {
 /**
  * Reads a file in chunks until the closing `---` of the YAML frontmatter block
  * is found, then returns only those bytes. This avoids loading the full file
- * body while also being immune to the 8 KB truncation bug: the loop keeps
- * reading until the delimiter is seen or EOF is reached.
+ * body. The loop keeps reading until the delimiter is seen or EOF is reached.
  */
 async function extractFrontmatterBlock(filePath: string): Promise<string> {
   const CHUNK_SIZE = 4096;
