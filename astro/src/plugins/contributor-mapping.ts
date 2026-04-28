@@ -25,7 +25,7 @@ export interface ContributorMappingOptions {
    * regenerated. If the file exists and is younger than this, the plugin
    * short-circuits and skips the expensive git + API work.
    * Set to 0 to always regenerate.
-   * @default 10
+   * @default 0
    */
   maxAgeDays?: number;
 }
@@ -45,7 +45,7 @@ export interface ContributorMappingOptions {
 export default function contributorMapping(
   options: ContributorMappingOptions
 ): AstroIntegration {
-  const { include, repo, maxAgeDays = 10 } = options;
+  const { include, repo, maxAgeDays = 0 } = options;
 
   return {
     name: "contributor-mapping",
