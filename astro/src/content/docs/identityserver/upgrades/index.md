@@ -15,43 +15,40 @@ changes. Some updates contain changes to the stores used by IdentityServer that 
 schema updates. If you are using our Entity Framework based stores we recommend using Entity Framework
 Migrations.
 
-## Upgrading from version 7.4 to 8.0
+## Upgrading to v8.0
 
 :::note[Prerelease version]
 IdentityServer v8.0 is currently a prerelease version.
 :::
 
-See [IdentityServer v7.4 to v8.0](/identityserver/upgrades/v7_4-to-v8_0/).
+* [**IdentityServer v7.4 to v8.0**](/identityserver/upgrades/v7_4-to-v8_0.md)
+* [**IdentityServer4 to Duende IdentityServer v8**](/identityserver/upgrades/identityserver4-to-duende-identityserver-v8.mdx)
 
-## Upgrading from version 7.3 to 7.4
+## Upgrading to v7.0
 
-See [IdentityServer v7.3 to v7.4](/identityserver/upgrades/v7_3-to-v7_4.md).
+* [**IdentityServer v7.1 to v7.2**](/identityserver/upgrades/v7_3-to-v7_4.md)
+* [**IdentityServer v7.2 to v7.3**](/identityserver/upgrades/v7_2-to-v7_3.md)
+* [**IdentityServer v7.1 to v7.2**](/identityserver/upgrades/v7_1-to-v7_2.md)
+* **IdentityServer v7.0 to v7.1**:
+  
+  IdentityServer v7.1 includes support for **.NET 9** and many other smaller fixes and
+  enhancements. There are no schema changes needed for IdentityServer 7.1. There are two changes that may require small
+  code changes for a minority of users:
+  
+  - _`IdentityModel`_ package renamed to _`Duende.IdentityModel`_ which may require code updates to referenced namespaces
+    and types.
+  - `ClientConfigurationStore` now uses `IConfigurationDbContext`.
 
-## Upgrading from version 7.2 to 7.3
+* [**IdentityServer4 to Duende IdentityServer v7**](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx)
 
-See [IdentityServer v7.2 to v7.3](/identityserver/upgrades/v7_2-to-v7_3.md).
 
-## Upgrading from version 7.1 to 7.2
-
-See [IdentityServer v7.1 to v7.2](/identityserver/upgrades/v7_1-to-v7_2.md).
-
-## Upgrading from version 7.0 to 7.1
-
-IdentityServer v7.1 includes support for **.NET 9** and many other smaller fixes and
-enhancements. There are no schema changes needed for IdentityServer 7.1. There are two changes that may require small
-code changes for a minority of users:
-
-- _`IdentityModel`_ package renamed to _`Duende.IdentityModel`_ which may require code updates to referenced namespaces
-  and types.
-- `ClientConfigurationStore` now uses `IConfigurationDbContext`.
-
-## Upgrading from version 6 to version 7
+### Upgrading from version 6 to version 7
 
 We recommend upgrading incrementally through each minor version of the 6.x release before upgrading from
 6.3 to 7.0. At each step, update the NuGet package, apply database schema changes (if any), and check for
 breaking changes that affect your implementation.
 
-#### Upgrading from version 6.0
+##### Upgrading from version 6.0
 
 There are changes to the stores which requires database schema updates. If you use the Entity Framework
 based stores you need to apply the upgrade and database migrations
@@ -59,12 +56,12 @@ from [6.0 - 6.1](/identityserver/upgrades/v6_0-to-v6_1.md). Then
 continue with the [Upgrading from version 6.2](#upgrading-from-version-62) guide. If you are experienced with the Entity Framework
 Migrations Tooling you may also create a single migration from 6.0 to 7.0.
 
-#### Upgrading from version 6.1
+##### Upgrading from version 6.1
 
 There no schema changes or other breaking changes between 6.1 and 6.2.
 Follow the [Upgrading from version 6.2](#upgrading-from-version-62) guide.
 
-#### Upgrading from version 6.2
+##### Upgrading from version 6.2
 
 There are changes to the stores which requires database schema updates. If you use the Entity Framework
 based stores you need to apply the upgrade and database migrations
@@ -79,10 +76,6 @@ if any of them affect your implementation.
 
 Then continue with "Upgrading from version 6.3" below.
 
-#### Upgrading from version 6.3
+##### Upgrading from version 6.3
 
 Follow the [upgrade guide version 6.3 - 7.0](/identityserver/upgrades/v6_3-to-v7_0.md)
-
-## Upgrading from IdentityServer4 to Duende IdentityServer
-
-See [IdentityServer4 to Duende IdentityServer](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx).
