@@ -16,7 +16,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 To make troubleshooting easier, newer versions of IdentityServer can collect important configuration and operational
 diagnostics data from your IdentityServer host.
 
-Diagnostics data is [written to logs periodically](/identityserver/reference/options.md#diagnostics), and can be used by
+Diagnostics data is [written to logs periodically](/identityserver/reference/v8/options.md#diagnostics), and can be used by
 your operations team to help analyze your IdentityServer configuration.
 
 Diagnostics information is never automatically shared with Duende. In support scenarios, you can choose to manually share
@@ -37,12 +37,12 @@ The diagnostics data contains the following information:
   * Name of the scheme and authentication handler type
 * Registered non-default implementations of Duende IdentityServer extension points
   * Extension point type, implementation type, assembly name and version
-* [`IdentityServerOptions`](/identityserver/reference/options.md) configuration
+* [`IdentityServerOptions`](/identityserver/reference/v8/options.md) configuration
 * [Data Protection](/identityserver/deployment/index.md#aspnet-core-data-protection) configuration
   * `ApplicationDiscriminator`, `XmlEncryptor` and `XmlRepository`
 * Basic server information
   * Host name
-* [License Usage Summary](/identityserver/reference/models/license-usage-summary.md) data
+* [License Usage Summary](/identityserver/reference/v8/models/license-usage-summary.md) data
 * Token issue counts (for various token types)
 * Endpoint usage (only for IdentityServer endpoints)
 * Clients configuration (limited to first 100 clients, excluding sensitive information/secrets)
@@ -55,7 +55,7 @@ Diagnostics data [is formatted as JSON](#diagnostics-data-format).
 
 ## Capturing Diagnostics Data
 
-The IdentityServer diagnostics data is [written to logs periodically](/identityserver/reference/options.md#diagnostics).
+The IdentityServer diagnostics data is [written to logs periodically](/identityserver/reference/v8/options.md#diagnostics).
 By default, you will see log entries similar to the following in your IdentityServer logs
 
 ```log
@@ -65,7 +65,7 @@ info: Duende.IdentityServer.Diagnostics.Summary[7000]
 Diagnostic data (2 of 2): ... }
 ```
 
-Diagnostics data [may be chunked](/identityserver/reference/options.md#diagnostics), and you will need to concatenate chunks
+Diagnostics data [may be chunked](/identityserver/reference/v8/options.md#diagnostics), and you will need to concatenate chunks
 to collect the full diagnostics JSON data.
 
 To capture diagnostics data from your IdentityServer instance, you can log entries written to the

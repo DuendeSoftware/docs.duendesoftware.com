@@ -29,7 +29,7 @@ Confidential and credentialed clients need to authenticate with your IdentitySer
 Duende IdentityServer has built-in support for various client credential types and authentication methods, and an extensible infrastructure to customize the authentication system.
 
 :::note
-All information in this section also applies to [API secrets](/identityserver/reference/models/api-resource.md) for introspection.
+All information in this section also applies to [API secrets](/identityserver/reference/v8/models/api-resource.md) for introspection.
 :::
 
 **We recommend using asymmetric client credentials like the [*private key JWT*](#private-key-jwts) or [*Mutual TLS (mTLS)*](#mutual-tls-client-certificates) authentication method over shared secrets.**
@@ -61,7 +61,7 @@ client.ClientSecrets = new[] { primary, secondary };
 ### Secret Parsing
 During request processing, the secret must be somehow extracted from the incoming request. The various specs describe a couple of options, e.g. as part of the authorization header or the body payload.
 
-It is the job of implementations of the [`ISecretParser`](/identityserver/reference/models/secrets.md#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the `AddSecretParser()` service provider extension method.
+It is the job of implementations of the [`ISecretParser`](/identityserver/reference/v8/models/secrets.md#duendeidentityservervalidationisecretparser) interface to accomplish this. You can add secret parsers by calling the `AddSecretParser()` service provider extension method.
 
 The following secret parsers are part of Duende IdentityServer:
 
@@ -87,7 +87,7 @@ The following secret parsers are part of Duende IdentityServer:
 
 
 ### Secret Validation
-It is the job of implementations of the [`ISecretValidator`](/identityserver/reference/models/secrets.md#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
+It is the job of implementations of the [`ISecretValidator`](/identityserver/reference/v8/models/secrets.md#duendeidentityservermodelparsedsecret) interface to validate the extracted credentials.
 
 You can add secret validators by calling the `AddSecretValidator()` service provider extension method.
 
@@ -397,7 +397,7 @@ The OpenID Foundation proposed a two-part fix: strictly validate the audience an
 explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
 
 You can enable strict audience validation using the [
-*`StrictClientAssertionAudienceValidation`*](/identityserver/reference/options.md#strict-audience-validation)
+*`StrictClientAssertionAudienceValidation`*](/identityserver/reference/v8/options.md#strict-audience-validation)
 flag, which always strictly validates that the audience is equal to the issuer and validates the token's
 `typ` header, as specified in [RFC 7523 bis](https://datatracker.ietf.org/doc/draft-ietf-oauth-rfc7523bis/).
 
@@ -423,7 +423,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 })
 ```
 
-Use the [ASP.NET Core service provider extensions methods](/identityserver/reference/di.md) to add the services to the
+Use the [ASP.NET Core service provider extensions methods](/identityserver/reference/v8/di.md) to add the services to the
 ASP.NET Core service provider. A default implementation is available to do that either thumbprint or common-name based:
 
 ```csharp

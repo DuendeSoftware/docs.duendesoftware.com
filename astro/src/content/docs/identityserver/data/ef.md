@@ -142,7 +142,7 @@ This options class contains properties to control the operational store and `Per
 
 
 :::note
-The token cleanup feature does `not` remove persisted grants that are `consumed` (see [persisted grants](/identityserver/reference/stores/persisted-grant-store.md)). It only removes persisted grants that are beyond their `Expiration`.
+The token cleanup feature does `not` remove persisted grants that are `consumed` (see [persisted grants](/identityserver/reference/v8/stores/persisted-grant-store.md)). It only removes persisted grants that are beyond their `Expiration`.
 :::
 
 ## Database Creation And Schema Changes Across Different IdentityServer Versions

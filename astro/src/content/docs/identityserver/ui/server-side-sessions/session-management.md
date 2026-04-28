@@ -18,7 +18,7 @@ These features are all provided via the `ISessionManagementService` service.
 
 ## ISessionManagementService
 
-The [session management service](/identityserver/reference/services/session-management-service.md) provides administrative operations for querying and revoking the server-side sessions.
+The [session management service](/identityserver/reference/v8/services/session-management-service.md) provides administrative operations for querying and revoking the server-side sessions.
 
 ### Quickstart UI
 
