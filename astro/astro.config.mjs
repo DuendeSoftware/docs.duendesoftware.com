@@ -21,6 +21,8 @@ import markdownOutput from "./src/plugins/markdown-output.js";
 import contributorMapping from "./src/plugins/contributor-mapping.js";
 
 // https://astro.build/config
+const isDev = import.meta.env.DEV;
+
 export default defineConfig({
   site: "https://docs.duendesoftware.com",
   trailingSlash: "ignore",
@@ -39,6 +41,7 @@ export default defineConfig({
     contributorMapping({
       include: ["src/content/docs/**"],
       repo: "DuendeSoftware/docs.duendesoftware.com",
+      maxAgeDays: isDev ? 10 : 0,
     }),
     starlight({
       customCss: ["./src/styles/custom.css"],

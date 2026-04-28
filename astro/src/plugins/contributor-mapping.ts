@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process";
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, statSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import picomatch from "picomatch";
@@ -19,6 +19,15 @@ export interface ContributorMappingOptions {
    * @example "DuendeSoftware/docs.duendesoftware.com"
    */
   repo: string;
+
+  /**
+   * Maximum age (in days) of an existing contributors.json before it is
+   * regenerated. If the file exists and is younger than this, the plugin
+   * short-circuits and skips the expensive git + API work.
+   * Set to 0 to always regenerate.
+   * @default 0
+   */
+  maxAgeDays?: number;
 }
 
 /**
@@ -36,13 +45,13 @@ export interface ContributorMappingOptions {
 export default function contributorMapping(
   options: ContributorMappingOptions
 ): AstroIntegration {
-  const { include, repo } = options;
+  const { include, repo, maxAgeDays = 0 } = options;
 
   return {
     name: "contributor-mapping",
     hooks: {
       "astro:config:setup": async ({ logger }) => {
-        await generateContributors(include, repo, logger);
+        await generateContributors(include, repo, maxAgeDays, logger);
       },
     },
   };
@@ -384,8 +393,26 @@ function buildPerFileContributors(
 async function generateContributors(
   include: string[],
   repo: string,
+  maxAgeDays: number,
   logger: Logger
 ) {
+  // Short-circuit if the mapping file is fresh enough
+  if (maxAgeDays > 0) {
+    try {
+      const stat = statSync(outPath);
+      const ageDays =
+        (Date.now() - stat.mtimeMs) / (1000 * 60 * 60 * 24);
+      if (ageDays < maxAgeDays) {
+        logger.info(
+          `contributors.json is ${ageDays.toFixed(1)} days old (< ${maxAgeDays}) — skipping regeneration`
+        );
+        return;
+      }
+    } catch {
+      // File doesn't exist yet — continue to generate
+    }
+  }
+
   const gitPrefix = getGitPrefix();
   const isMatch = picomatch(include);
 
