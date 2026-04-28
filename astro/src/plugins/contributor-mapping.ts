@@ -403,7 +403,7 @@ async function generateContributors(
       const ageDays =
         (Date.now() - stat.mtimeMs) / (1000 * 60 * 60 * 24);
       if (ageDays < maxAgeDays) {
-        logger.warn(
+        logger.info(
           `contributors.json is ${ageDays.toFixed(1)} days old (< ${maxAgeDays}) — skipping regeneration`
         );
         return;
