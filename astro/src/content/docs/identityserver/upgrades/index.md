@@ -22,6 +22,7 @@ IdentityServer v8.0 is currently a prerelease version.
 :::
 
 * [**IdentityServer v7.4 to v8.0**](/identityserver/upgrades/v7_4-to-v8_0.md)
+* [**IdentityServer4 to Duende IdentityServer v8**](/identityserver/upgrades/identityserver4-to-duende-identityserver-v8.mdx)
 
 ## Upgrading to v7.0
 
