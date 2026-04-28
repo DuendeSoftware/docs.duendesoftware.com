@@ -71,7 +71,7 @@ app.MapGet("/", () =>
 
 Historically, Duende IdentityServer emitted the `scope` claims as an array in the JWT. This works very well with the .NET deserialization logic, which turns every array item into a separate claim of type `scope`.
 
-The newer *JWT Profile for OAuth* [spec](/identityserver/overview/specs.md) mandates that the scope claim is a single space delimited string. You can switch the format by setting the `EmitScopesAsSpaceDelimitedStringInJwt` on the [options](/identityserver/reference/options.md). But this means that the code consuming access tokens might need to be adjusted. The following code can do a conversion to the *multiple claims* format that .NET prefers:
+The newer *JWT Profile for OAuth* [spec](/identityserver/overview/specs.md) mandates that the scope claim is a single space delimited string. You can switch the format by setting the `EmitScopesAsSpaceDelimitedStringInJwt` on the [options](/identityserver/reference/v8/options.md). But this means that the code consuming access tokens might need to be adjusted. The following code can do a conversion to the *multiple claims* format that .NET prefers:
 
 ```csharp
 namespace IdentityModel.AspNetCore.AccessTokenValidation;

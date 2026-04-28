@@ -23,7 +23,7 @@ involving the user's browser. This design avoids problems with 3rd party cookies
 
 The back-channel logout endpoint is invoked by the remote identity provider when it determines that sessions should be
 ended. IdentityServer will send back-channel logout requests if
-you [configure](/identityserver/reference/models/client.md#authentication--session-management) your client's
+you [configure](/identityserver/reference/v8/models/client.md#authentication--session-management) your client's
 `BackChannelLogoutUri`. When a session ends at IdentityServer, any client that was participating in that session that
 has a back-channel logout URI configured will be sent a back-channel logout request. This typically happens when another
 application signs out. [Expiration](/identityserver/ui/server-side-sessions/session-expiration.mdx)

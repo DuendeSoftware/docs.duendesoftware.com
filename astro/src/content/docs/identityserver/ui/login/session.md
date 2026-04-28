@@ -39,7 +39,7 @@ Additional claims can be added to the cookie if desired or needed at other UI pa
 For example, it's common to also issue a `name` claim which represents the user's display name.
 
 The claims issued in the cookie are passed as the `Subject` on
-the [ProfileDataRequestContext](/identityserver/reference/services/profile-service.md#duendeidentityservermodelsprofiledatarequestcontext)
+the [ProfileDataRequestContext](/identityserver/reference/v8/services/profile-service.md#duendeidentityservermodelsprofiledatarequestcontext)
 in the [profile service](/identityserver/fundamentals/claims.md).
 
 ## Well Known Claims Issued From the Login Page
@@ -55,11 +55,11 @@ The claims are:
 * **`auth_time`**: Time in epoch format the user entered their credentials (defaults to the current time).
 * **`idp`**: Authentication scheme name of the external identity provider used for login. When not specified then the
   value defaults to `local` indicating that it was a local login. This is used to determine if a user must
-  re-authenticate when clients make [authorization requests](/identityserver/reference/endpoints/authorize.md) using the
+  re-authenticate when clients make [authorization requests](/identityserver/reference/v8/endpoints/authorize.md) using the
   acr_values with an idp value, or the client has `IdentityProviderRestrictions`. If the user’s idp does not match the
   request, then they should re-authenticate.
 * **`tenant`**: Tenant identifier the user is associated with (if needed). This is used to determine if a user must
-  re-authenticate when clients make [authorization requests](/identityserver/reference/endpoints/authorize.md) using the
+  re-authenticate when clients make [authorization requests](/identityserver/reference/v8/endpoints/authorize.md) using the
   `acr_values` with a `tenant` value. If the user's tenant does not match the request, then they should re-authenticate.
 
 While you can create the `ClaimsPrincipal` yourself, you can alternatively use IdentityServer extension methods and the
@@ -80,7 +80,7 @@ Duende IdentityServer registers a cookie authentication handler by default for t
 The scheme that the handler in the authentication system is identified by is from the constant
 `IdentityServerConstants.DefaultCookieAuthenticationScheme`.
 
-When configuring IdentityServer, the [AuthenticationOptions](/identityserver/reference/options.md#authentication) expose
+When configuring IdentityServer, the [AuthenticationOptions](/identityserver/reference/v8/options.md#authentication) expose
 some settings to control the cookie (e.g. expiration and sliding). For example:
 
 ```csharp
@@ -101,7 +101,7 @@ It is kept in sync with the authentication cookie, and is removed when the user 
 
 If you require more control over the cookie authentication handler you can register your own cookie handler.
 You can then configure IdentityServer to use your cookie handler by setting the `CookieAuthenticationScheme` on
-the [AuthenticationOptions](/identityserver/reference/options.md#authentication). For example:
+the [AuthenticationOptions](/identityserver/reference/v8/options.md#authentication). For example:
 
 ```csharp
 // Program.cs

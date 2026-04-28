@@ -32,20 +32,20 @@ Dynamic configuration addresses the performance concern and allows changes to th
 
 ## Store And Configuration Data
 
-Dynamic identity providers are configured in IdentityServer and require a store for the configuration data of [dynamic OIDC providers](/identityserver/reference/models/idp.md).
+Dynamic identity providers are configured in IdentityServer and require a store for the configuration data of [dynamic OIDC providers](/identityserver/reference/v8/models/idp.md).
 
 There are two store implementations provided by Duende IdentityServer:
 
 * An in-memory store
 * A store backed by a database (using [Entity Framework Core](/identityserver/data/ef.md))
 
-You could also implement your own store based on the [`IIdentityProviderStore` interface](/identityserver/reference/stores/idp-store.md).
+You could also implement your own store based on the [`IIdentityProviderStore` interface](/identityserver/reference/v8/stores/idp-store.md).
 
 The configuration data for the OIDC provider is used to assign the configuration on the ASP.NET
 Core [OpenID Connect Options](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions) class,
 much like you would if you were to statically configure the options when using `AddOpenIdConnect()`.
 
-The [identity provider model documentation](/identityserver/reference/models/idp.md) provides details for the model
+The [identity provider model documentation](/identityserver/reference/v8/models/idp.md) provides details for the model
 properties and how they are mapped to the options.
 
 :::tip[Consider caching dynamic identity providers]
@@ -113,7 +113,7 @@ You can use the `ConfigurationDbContext` database context to add dynamic identit
 ## Listing Dynamic Providers On The Login Page
 
 When working with dynamic providers, you'll typically want to display a list of the available providers on the login
-page. The [identity provider store (`IIdentityProviderStore`)](/identityserver/reference/stores/idp-store.md) can be used to query the database
+page. The [identity provider store (`IIdentityProviderStore`)](/identityserver/reference/v8/stores/idp-store.md) can be used to query the database
 containing the dynamic providers.
 
 ```cs title="IIdentityProviderStore" {9}
@@ -287,7 +287,7 @@ builder.Services.ConfigureOptions<CustomOidcConfigureOptions>();
 ### DynamicProviderOptions
 
 The `DynamicProviderOptions` is an options class in the IdentityServer options object model, and provides
-[shared configuration options](/identityserver/reference/options.md#dynamic-providers) for the dynamic identity providers
+[shared configuration options](/identityserver/reference/v8/options.md#dynamic-providers) for the dynamic identity providers
 feature. For example, you can customize the path prefix for the dynamic providers callback path:
 
 ```csharp title="Program.cs"
@@ -320,7 +320,7 @@ where `T` is the authentication handler type, `TOptions` is the options type for
 The authentication handler type and options type will typically be provided by the authentication provider itself.
 For example, the `GoogleHandler` and `GoogleOptions` types are provided by the `Microsoft.AspNetCore.Authentication.Google` NuGet package.
 `TIdentityProvider` will typically be a model class that maps to the identity provider data in the database
-and can either be IdentityServer's [`IdentityProvider`](/identityserver/reference/models/idp.md) class, or a custom type provided and implemented by you.
+and can either be IdentityServer's [`IdentityProvider`](/identityserver/reference/v8/models/idp.md) class, or a custom type provided and implemented by you.
 
 Let's add Google authentication support to dynamic identity providers in IdentityServer!
 
@@ -328,11 +328,11 @@ We'll assume you have already added the `Microsoft.AspNetCore.Authentication.Goo
 
 ### 1. Implement A Custom IdentityProvider Type
 
-While IdentityServer's [`IdentityProvider`](/identityserver/reference/models/idp.md) class has a `Properties` bag that can be used
+While IdentityServer's [`IdentityProvider`](/identityserver/reference/v8/models/idp.md) class has a `Properties` bag that can be used
 to store dynamic identity provider configuration data, it's recommended to use a custom type that is specific to the dynamic
 identity provider.
 
-The `GoogleIdentityProvider` class can extend IdentityServer's [`IdentityProvider`](/identityserver/reference/models/idp.md) class,
+The `GoogleIdentityProvider` class can extend IdentityServer's [`IdentityProvider`](/identityserver/reference/v8/models/idp.md) class,
 and expose additional properties that are specific to the Google identity provider. For a minimal Google implementation,
 that would be the `ClientId` and `ClientSecret`:
 

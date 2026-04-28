@@ -52,7 +52,7 @@ builder.Services.AddIdentityServer()
 
 By default, the store for the server-side sessions will just be kept in-memory.
 For production scenarios you will want to configure a durable store either by using our [EntityFramework Core implementation](/identityserver/data/ef.md#operational-store),
-or you can [implement the store yourself](/identityserver/reference/stores/server-side-sessions.md).
+or you can [implement the store yourself](/identityserver/reference/v8/stores/server-side-sessions.md).
 
 :::note
 Order is important in the ASP.NET Core service provider.
@@ -76,7 +76,7 @@ These values are the user's:
 - display name (an optional and configurable claim value)
 
 If you would like to query this data based on a user's display name, then the claim type used is configurable with the
-`ServerSideSessions.UserDisplayNameClaimType` property on the [`IdentityServerOptions`](/identityserver/reference/options.md#authentication).
+`ServerSideSessions.UserDisplayNameClaimType` property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.md#authentication).
 This claim must be included in the claims when the user's [authentication session is established](/identityserver/ui/login/session.md).
 
 For example:
@@ -90,10 +90,10 @@ builder.Services.AddIdentityServer(options => {
 
 ### IServerSideSessionStore
 
-The [`IServerSideSessionStore`](/identityserver/reference/stores/server-side-sessions.md) is the abstraction for storing the server-side session.
+The [`IServerSideSessionStore`](/identityserver/reference/v8/stores/server-side-sessions.md) is the abstraction for storing the server-side session.
 
 An EntityFramework Core implementation is already provided as part of our [operational store](/identityserver/data/ef.md#operational-store), but you can implement
-the [interface](/identityserver/reference/stores/server-side-sessions.md) yourself for other backing implementations.
+the [interface](/identityserver/reference/v8/stores/server-side-sessions.md) yourself for other backing implementations.
 
 :::caution[Prefer `GetSessionsAsync` over `QuerySessionsAsync`]
 When listing sessions, prefer `GetSessionsAsync` over `QuerySessionsAsync`.

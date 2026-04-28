@@ -426,7 +426,7 @@ You can use Duende IdentityServer's built-in [manual or automatic key management
 
 ### Step 5: Update Database Schema
 
-Whether you are using a [database](/identityserver/data/index.md) or a [custom store implementation](/identityserver/reference/stores/index.md) for your configuration and operational data, you'll need to make some changes.
+Whether you are using a [database](/identityserver/data/index.md) or a [custom store implementation](/identityserver/reference/v8/stores/index.md) for your configuration and operational data, you'll need to make some changes.
 The exact steps involved in updating your data store will depend on your implementation details.
 
 In this section, we'll look at updating the database schema based on the stores provided in the `Duende.IdentityServer.EntityFramework` package:
@@ -440,7 +440,7 @@ In this section, we'll look at updating the database schema based on the stores 
 - The server-side sessions feature requires a new table ([more details](https://github.com/DuendeSoftware/products/pull/743)).
 - The session coordination feature adds a column to the `Clients` table ([more details](https://github.com/DuendeSoftware/products/pull/820)).
 - Improve primary keys on the persisted grants table ([more details](https://github.com/DuendeSoftware/products/pull/793)).
-- Add new properties to the [`Duende.IdentityServer.Models.Client` model](/identityserver/reference/models/client.md):
+- Add new properties to the [`Duende.IdentityServer.Models.Client` model](/identityserver/reference/v8/models/client.md):
 
   - `InitiateLoginUri` is a nullable string used for Third Party Initiated Login.
   - `RequireDPoP` is a non-nullable boolean flag that controls if a client is required to use [DPoP](/identityserver/tokens/pop.md).
