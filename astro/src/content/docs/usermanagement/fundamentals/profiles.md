@@ -1,0 +1,552 @@
+---
+title: User Profiles and Attributes
+description: How to store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfService, IUserProfileAdmin, and IUserProfileSchemaAdmin.
+date: 2026-04-29
+sidebar:
+  label: User Profiles and Attributes
+  order: 1
+---
+
+User Management provides a flexible, schema-driven profile system that lets you attach typed attributes to every user. Attributes are defined in a schema and then stored against individual user profiles. The system exposes three interfaces covering different access levels: self-service operations performed by the authenticated user, administrative operations performed by back-end code, and schema management for defining which attributes exist.
+
+## Registration
+
+Call `AddUserProfiles()` on the platform builder to register all profile services:
+
+```csharp title="Program.cs"
+builder.Services
+    .AddDuendePlatform()
+    .AddUserProfiles();
+```
+
+This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin` available for injection.
+
+## Schema Management
+
+Before storing attributes you must define them in the schema. The schema is a dictionary of `AttributeName` to `AttributeDefinition` pairs that describes every attribute the system accepts, its data type, and optional uniqueness constraints.
+
+### `IUserProfileSchemaAdmin`
+
+`IUserProfileSchemaAdmin` is the interface for managing attribute definitions at runtime.
+
+```csharp
+public interface IUserProfileSchemaAdmin
+{
+    Task<IReadOnlyDictionary<AttributeName, AttributeDefinition>> GetAllAttributeDefinitionsAsync(Ct ct);
+
+    Task<bool> TryAddAttributeDefinitionAsync(AttributeDefinition definition, Ct ct);
+
+    Task<bool> TryRemoveAttributeDefinitionAsync(AttributeName name, Ct ct);
+}
+```
+
+* `GetAllAttributeDefinitionsAsync`: Returns all currently registered attribute definitions keyed by name. Returns an empty dictionary when no schema has been configured yet.
+* `TryAddAttributeDefinitionAsync`: Adds a new attribute definition to the schema. Returns `true` on success and `false` if the definition could not be added (for example, a definition with the same name already exists).
+* `TryRemoveAttributeDefinitionAsync`: Removes an attribute definition by name. Returns `true` whether or not the definition existed.
+
+### `AttributeDefinition`
+
+An `AttributeDefinition` describes a single attribute in the schema.
+
+```csharp
+public sealed record AttributeDefinition
+{
+    public AttributeName Name { get; }
+    public AttributeType AttributeType { get; }
+    public ScalarDataType DataType { get; }   // convenience; throws for non-scalar types
+    public AttributeDescription Description { get; }
+    public bool IsUnique { get; }
+    public IReadOnlyCollection<string> Tags { get; }
+}
+```
+
+* `Name`: The attribute's identifier. Must be lowercase alphanumeric with underscores, not starting or ending with an underscore.
+* `AttributeType`: The full type descriptor. Use `ScalarAttributeType`, `ComplexAttributeType`, or `ListAttributeType`.
+* `DataType`: Convenience accessor for scalar types. Throws `InvalidOperationException` for complex or list types.
+* `Description`: Human-readable description of the attribute.
+* `IsUnique`: When `true`, the system enforces that no two profiles share the same value for this attribute. Not supported for complex or list types.
+* `Tags`: Optional string tags for grouping or filtering definitions.
+
+### Attribute Types
+
+Three attribute type descriptors are available:
+
+* **`ScalarAttributeType`**: A single primitive value. Wraps a `ScalarDataType` value.
+* **`ComplexAttributeType`**: A nested object with named sub-properties, each with its own `AttributeType`. All sub-properties are optional at write time; unknown sub-properties are rejected.
+* **`ListAttributeType`**: An ordered list of elements, each sharing the same `AttributeType`. Lists cannot be nested inside other lists.
+
+### `ScalarDataType`
+
+The `ScalarDataType` enum defines the supported primitive types:
+
+```csharp
+public enum ScalarDataType
+{
+    Boolean,
+    Date,
+    DateTime,
+    Decimal,
+    Integer,
+    String,
+}
+```
+
+### Defining Custom Attributes
+
+The following example adds a custom `department` string attribute and a unique `employee_id` integer attribute to the schema:
+
+```csharp
+using Duende.Platform.EntityAttributeValue;
+using Duende.Platform.Users.Profiles;
+
+public class ProfileSchemaInitializer(IUserProfileSchemaAdmin schemaAdmin)
+{
+    public async Task InitializeAsync(CancellationToken ct)
+    {
+        var department = new AttributeDefinition(
+            AttributeName.Parse("department"),
+            ScalarDataType.String,
+            AttributeDescription.Parse("The department the user belongs to."));
+
+        var employeeId = new AttributeDefinition(
+            AttributeName.Parse("employee_id"),
+            ScalarDataType.Integer,
+            AttributeDescription.Parse("The unique employee identifier."),
+            isUnique: true);
+
+        await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct);
+        await schemaAdmin.TryAddAttributeDefinitionAsync(employeeId, ct);
+    }
+}
+```
+
+### Defining Complex Attributes
+
+Use `ComplexAttributeType` to model structured values such as an address:
+
+```csharp
+var addressType = new ComplexAttributeType(
+    new Dictionary<string, AttributeType>
+    {
+        ["street"]  = new ScalarAttributeType(ScalarDataType.String),
+        ["city"]    = new ScalarAttributeType(ScalarDataType.String),
+        ["country"] = new ScalarAttributeType(ScalarDataType.String),
+    });
+
+var address = new AttributeDefinition(
+    AttributeName.Parse("address"),
+    addressType,
+    AttributeDescription.Parse("The user's postal address."));
+
+await schemaAdmin.TryAddAttributeDefinitionAsync(address, ct);
+```
+
+### Defining List Attributes
+
+Use `ListAttributeType` to model multi-value attributes such as a list of phone numbers:
+
+```csharp
+var phoneNumbers = new AttributeDefinition(
+    AttributeName.Parse("phone_numbers"),
+    new ListAttributeType(new ScalarAttributeType(ScalarDataType.String)),
+    AttributeDescription.Parse("Additional phone numbers for the user."));
+
+await schemaAdmin.TryAddAttributeDefinitionAsync(phoneNumbers, ct);
+```
+
+### Removing an Attribute Definition
+
+```csharp
+await schemaAdmin.TryRemoveAttributeDefinitionAsync(
+    AttributeName.Parse("department"), ct);
+```
+
+### Inspecting the Schema
+
+```csharp
+var definitions = await schemaAdmin.GetAllAttributeDefinitionsAsync(ct);
+
+foreach (var (name, definition) in definitions)
+{
+    Console.WriteLine($"{name}: {definition.Description}");
+}
+```
+
+## OIDC Standard Attributes
+
+`OidcStandardAttributes` is a static class that provides pre-built `AttributeDefinition` instances for the standard OpenID Connect profile claims. Use these to add well-known claims to the schema without constructing definitions by hand.
+
+```csharp
+public static class OidcStandardAttributes
+{
+    public static readonly AttributeDefinition Name;
+    public static readonly AttributeDefinition GivenName;
+    public static readonly AttributeDefinition FamilyName;
+    public static readonly AttributeDefinition MiddleName;
+    public static readonly AttributeDefinition Nickname;
+    public static readonly AttributeDefinition PreferredUserName;
+    public static readonly AttributeDefinition Profile;
+    public static readonly AttributeDefinition Picture;
+    public static readonly AttributeDefinition Website;
+    public static readonly AttributeDefinition Email;
+    public static readonly AttributeDefinition EmailVerified;
+    public static readonly AttributeDefinition Gender;
+    public static readonly AttributeDefinition Birthdate;
+    public static readonly AttributeDefinition Zoneinfo;
+    public static readonly AttributeDefinition Locale;
+    public static readonly AttributeDefinition PhoneNumber;
+    public static readonly AttributeDefinition PhoneNumberVerified;
+    public static readonly AttributeDefinition Address;
+}
+```
+
+Each member maps to the corresponding OpenID Connect (OIDC) claim name (for example `given_name`, `family_name`, `email_verified`) and carries the description from the OpenID Connect Core specification.
+
+### Adding OIDC Standard Attributes to the Schema
+
+```csharp
+await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.GivenName, ct);
+await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.FamilyName, ct);
+await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.Email, ct);
+await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVerified, ct);
+```
+
+## Data Types
+
+### `UserProfile`
+
+`UserProfile` is the primary read model returned by all profile lookup and mutation operations.
+
+```csharp
+public sealed record UserProfile
+{
+    public UserSubjectId SubjectId { get; }
+    public UserName? UserName { get; }
+    public IReadOnlyDictionary<AttributeName, AttributeValue> Attributes { get; }
+
+    public UserProfileUpdate ToUpdate();
+}
+```
+
+* `SubjectId`: The unique subject identifier for the user.
+* `UserName`: The user's login name, if one has been set.
+* `Attributes`: All stored attribute values keyed by `AttributeName`.
+* `ToUpdate()`: Creates a `UserProfileUpdate` pre-populated with the profile's current attribute values, ready for modification and submission.
+
+### `UserProfileUpdate`
+
+`UserProfileUpdate` is the write model passed to update operations. It holds an `AttributeValueCollection` that replaces the profile's attributes in full.
+
+```csharp
+public sealed record UserProfileUpdate
+{
+    public AttributeValueCollection Attributes { get; }
+}
+```
+
+Obtain an instance by calling `UserProfile.ToUpdate()` on an existing profile, then modify the collection before passing it back to `TryUpdateAsync`.
+
+### `UserProfileListItem`
+
+`UserProfileListItem` is a lightweight projection used in list query results. It carries the subject identifier, optional user name, and all schema attribute values as a plain string-keyed dictionary.
+
+```csharp
+public sealed record UserProfileListItem
+{
+    public UserSubjectId SubjectId { get; }
+    public UserName? UserName { get; }
+    public IReadOnlyDictionary<string, object> Attributes { get; }
+}
+```
+
+### `AttributeValueCollection`
+
+`AttributeValueCollection` is a mutable, name-keyed collection of `AttributeValue` instances used when creating or updating profiles.
+
+```csharp
+public sealed class AttributeValueCollection : IEnumerable<AttributeValue>
+{
+    public int Count { get; }
+
+    public void Set(AttributeValue attribute);
+    public bool Remove(AttributeName name);
+    public bool Contains(AttributeName name);
+    public bool TryGet(AttributeName name, out AttributeValue attribute);
+    public AttributeValue this[AttributeName name] { get; }
+}
+```
+
+Build an `AttributeValueCollection` from the schema so that attribute values are validated against their declared types:
+
+```csharp
+var schema = await selfService.GetSchemaAsync(ct);
+var attributes = new AttributeValueCollection();
+
+attributes.Set(schema.CreateAttribute(AttributeName.Parse("given_name"), "Jane"));
+attributes.Set(schema.CreateAttribute(AttributeName.Parse("family_name"), "Smith"));
+attributes.Set(schema.CreateAttribute(AttributeName.Parse("email_verified"), true));
+```
+
+## Self-Service Profile Operations
+
+`IUserProfileSelfService` exposes the operations that an authenticated user performs on their own profile.
+
+### `IUserProfileSelfService`
+
+```csharp
+public interface IUserProfileSelfService
+{
+    Task<IReadOnlyAttributeSchema> GetSchemaAsync(Ct ct);
+
+    Task<UserProfile?> TryRegisterAsync(UserSubjectId subjectId, AttributeValueCollection attributes, Ct ct);
+
+    Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
+
+    Task<UserProfile?> TryUpdateAsync(UserSubjectId subjectId, UserProfileUpdate update, Ct ct);
+}
+```
+
+* `GetSchemaAsync`: Returns the current attribute schema. Use the returned `IReadOnlyAttributeSchema` to create typed `AttributeValue` instances that are validated against the schema before storage.
+* `TryRegisterAsync`: Creates a new profile for the given subject with the supplied attributes. Returns the created `UserProfile` on success, or `null` if a profile already exists for that subject.
+* `TryGetAsync`: Retrieves the profile for the given subject. Returns `null` when no profile exists.
+* `TryUpdateAsync`: Replaces the attributes of an existing profile with those in the `UserProfileUpdate`. Returns the updated `UserProfile` on success, or `null` when the profile does not exist or a concurrent update conflict occurs.
+
+### Registering a Profile
+
+```csharp
+using Duende.Platform.EntityAttributeValue;
+using Duende.Platform.Users;
+using Duende.Platform.Users.Profiles;
+
+public class RegistrationService(IUserProfileSelfService profileService)
+{
+    public async Task<UserProfile?> RegisterAsync(
+        string subjectId,
+        string givenName,
+        string familyName,
+        string email,
+        CancellationToken ct)
+    {
+        var schema = await profileService.GetSchemaAsync(ct);
+        var attributes = new AttributeValueCollection();
+
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("given_name"), givenName));
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("family_name"), familyName));
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("email"), email));
+
+        return await profileService.TryRegisterAsync(
+            UserSubjectId.Parse(subjectId), attributes, ct);
+    }
+}
+```
+
+### Retrieving a Profile
+
+```csharp
+var profile = await profileService.TryGetAsync(UserSubjectId.Parse(subjectId), ct);
+
+if (profile is null)
+{
+    // No profile exists for this subject.
+    return;
+}
+
+if (profile.Attributes.TryGetValue(AttributeName.Parse("given_name"), out var givenName))
+{
+    Console.WriteLine($"Hello, {givenName}");
+}
+```
+
+### Updating a Profile
+
+Call `ToUpdate()` on the existing profile to get a pre-populated `UserProfileUpdate`, modify the attributes, then submit the update:
+
+```csharp
+var profile = await profileService.TryGetAsync(UserSubjectId.Parse(subjectId), ct);
+
+if (profile is null)
+{
+    return;
+}
+
+var schema = await profileService.GetSchemaAsync(ct);
+var update = profile.ToUpdate();
+
+update.Attributes.Set(schema.CreateAttribute(AttributeName.Parse("given_name"), "Janet"));
+
+var updated = await profileService.TryUpdateAsync(
+    UserSubjectId.Parse(subjectId), update, ct);
+```
+
+## Administrative Profile Operations
+
+`IUserProfileAdmin` provides the same read and create operations as the self-service interface, intended for back-end administrative code that manages profiles on behalf of users.
+
+### `IUserProfileAdmin`
+
+```csharp
+public interface IUserProfileAdmin
+{
+    Task<IReadOnlyAttributeSchema> GetSchemaAsync(Ct ct);
+
+    Task<UserProfile?> TryAddAsync(UserSubjectId subjectId, AttributeValueCollection attributes, Ct ct);
+
+    Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
+
+    Task<UserProfile?> TryGetAsync(AttributeName attributeName, object value, Ct ct);
+}
+```
+
+* `GetSchemaAsync`: Returns the current attribute schema, identical to the self-service variant.
+* `TryAddAsync`: Creates a new profile for the given subject. Returns the created `UserProfile` on success, or `null` if a profile already exists.
+* `TryGetAsync(UserSubjectId, Ct)`: Retrieves a profile by subject identifier.
+* `TryGetAsync(AttributeName, object, Ct)`: Retrieves a profile by matching an attribute value. This overload is useful for looking up a user by a unique attribute such as `employee_id` or `email`. Returns `null` when no matching profile is found.
+
+### Creating a Profile (Admin)
+
+```csharp
+using Duende.Platform.EntityAttributeValue;
+using Duende.Platform.Users;
+using Duende.Platform.Users.Profiles;
+
+public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
+{
+    public async Task<UserProfile?> ProvisionAsync(
+        string subjectId,
+        string email,
+        int employeeId,
+        CancellationToken ct)
+    {
+        var schema = await profileAdmin.GetSchemaAsync(ct);
+        var attributes = new AttributeValueCollection();
+
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("email"), email));
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("employee_id"), employeeId));
+
+        return await profileAdmin.TryAddAsync(
+            UserSubjectId.Parse(subjectId), attributes, ct);
+    }
+}
+```
+
+### Looking Up a Profile by Attribute Value
+
+```csharp
+var profile = await profileAdmin.TryGetAsync(
+    AttributeName.Parse("employee_id"),
+    42,
+    ct);
+
+if (profile is not null)
+{
+    Console.WriteLine($"Found profile for subject {profile.SubjectId}");
+}
+```
+
+## Schema Interface
+
+`IReadOnlyAttributeSchema` is returned by `GetSchemaAsync` on both `IUserProfileSelfService` and `IUserProfileAdmin`. It provides factory methods for creating schema-validated `AttributeValue` instances and exposes the full set of attribute definitions.
+
+```csharp
+public interface IReadOnlyAttributeSchema
+{
+    IReadOnlyDictionary<AttributeName, AttributeDefinition> AttributeDefinitions { get; }
+
+    AttributeValue<bool>                              CreateAttribute(AttributeName name, bool value);
+    AttributeValue<DateOnly>                          CreateAttribute(AttributeName name, DateOnly value);
+    AttributeValue<DateTimeOffset>                    CreateAttribute(AttributeName name, DateTimeOffset value);
+    AttributeValue<decimal>                           CreateAttribute(AttributeName name, decimal value);
+    AttributeValue<int>                               CreateAttribute(AttributeName name, int value);
+    AttributeValue<string>                            CreateAttribute(AttributeName name, string value);
+    AttributeValue<IReadOnlyDictionary<string,object>> CreateAttribute(AttributeName name, IReadOnlyDictionary<string, object> complexValue);
+    AttributeValue<IReadOnlyList<object>>             CreateAttribute(AttributeName name, IReadOnlyList<object> listValue);
+
+    bool TryCreateAttribute(AttributeName name, bool value, out AttributeValue<bool>? attribute);
+    bool TryCreateAttribute(AttributeName name, DateOnly value, out AttributeValue<DateOnly>? attribute);
+    bool TryCreateAttribute(AttributeName name, DateTimeOffset value, out AttributeValue<DateTimeOffset>? attribute);
+    bool TryCreateAttribute(AttributeName name, decimal value, out AttributeValue<decimal>? attribute);
+    bool TryCreateAttribute(AttributeName name, int value, out AttributeValue<int>? attribute);
+    bool TryCreateAttribute(AttributeName name, string value, out AttributeValue<string>? attribute);
+    bool TryCreateAttribute(AttributeName name, IReadOnlyDictionary<string, object> complexValue, out AttributeValue<IReadOnlyDictionary<string, object>>? attribute);
+    bool TryCreateAttribute(AttributeName name, IReadOnlyList<object> listValue, out AttributeValue<IReadOnlyList<object>>? attribute);
+
+    AttributeValueCollection CreateAttributes(IEnumerable<AttributeValue> attributes);
+}
+```
+
+* `AttributeDefinitions`: The full schema as a read-only dictionary.
+* `CreateAttribute` overloads: Create a typed `AttributeValue` and validate that the name exists in the schema and the value matches the declared type. Throws when validation fails.
+* `TryCreateAttribute` overloads: Non-throwing variants that return `false` when the attribute name is not in the schema or the value type does not match.
+* `CreateAttributes`: Wraps an enumerable of `AttributeValue` instances into an `AttributeValueCollection`, validating for duplicate names.
+
+## End-To-End Example
+
+The following example shows a complete flow: initialising the schema on startup, registering a user profile, and then reading it back.
+
+```csharp
+using Duende.Platform.EntityAttributeValue;
+using Duende.Platform.Users;
+using Duende.Platform.Users.Profiles;
+
+// 1. Add OIDC standard attributes and a custom attribute to the schema.
+public class SchemaSetup(IUserProfileSchemaAdmin schemaAdmin)
+{
+    public async Task RunAsync(CancellationToken ct)
+    {
+        await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.GivenName, ct);
+        await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.FamilyName, ct);
+        await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.Email, ct);
+        await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVerified, ct);
+
+        var department = new AttributeDefinition(
+            AttributeName.Parse("department"),
+            ScalarDataType.String,
+            AttributeDescription.Parse("The department the user belongs to."));
+
+        await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct);
+    }
+}
+
+// 2. Register a new user profile (self-service, called after authentication).
+public class OnboardingHandler(IUserProfileSelfService profileService)
+{
+    public async Task<UserProfile?> OnboardAsync(
+        string subjectId,
+        string givenName,
+        string familyName,
+        string email,
+        CancellationToken ct)
+    {
+        var schema = await profileService.GetSchemaAsync(ct);
+        var attributes = new AttributeValueCollection();
+
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("given_name"), givenName));
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("family_name"), familyName));
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("email"), email));
+        attributes.Set(schema.CreateAttribute(AttributeName.Parse("email_verified"), false));
+
+        return await profileService.TryRegisterAsync(
+            UserSubjectId.Parse(subjectId), attributes, ct);
+    }
+}
+
+// 3. Read the profile back and surface claims.
+public class ProfileReader(IUserProfileSelfService profileService)
+{
+    public async Task PrintAsync(string subjectId, CancellationToken ct)
+    {
+        var profile = await profileService.TryGetAsync(UserSubjectId.Parse(subjectId), ct);
+
+        if (profile is null)
+        {
+            Console.WriteLine("No profile found.");
+            return;
+        }
+
+        foreach (var (name, value) in profile.Attributes)
+        {
+            Console.WriteLine($"{name} = {value}");
+        }
+    }
+}
+```

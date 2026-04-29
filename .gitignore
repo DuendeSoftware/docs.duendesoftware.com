@@ -71,3 +71,6 @@ ehthumbs.db
 
 # Azure Functions
 local.settings.json
+
+# Weave
+.weave

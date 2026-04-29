@@ -1,0 +1,389 @@
+---
+title: OTP Authentication Flow
+description: How to implement one-time password (OTP) authentication in Duende User Management, including code generation, delivery, verification, auto-registration, and OTP address management.
+date: 2026-04-29
+sidebar:
+  label: OTP Authentication
+  order: 2
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+OTP (One-Time Password) authentication is a passwordless flow where users receive a temporary verification code via email or SMS. No passwords to manage, and the code itself proves ownership of the delivery address.
+
+## When to Use OTP Authentication
+
+**Good for:**
+
+* Consumer applications where users prefer passwordless options.
+* Infrequent logins where users are unlikely to remember a password.
+* Quick onboarding flows that require no registration form.
+* Email or phone ownership verification.
+* Low-to-moderate security requirements.
+
+**Not ideal for:**
+
+* High-security applications where channel interception is a concern.
+* Offline scenarios that require no network connectivity.
+* High-frequency logins where the context switch to email or SMS creates too much friction.
+* Regulated industries where OTP may not satisfy compliance requirements.
+
+## Comparison with Other Authentication Flows
+
+| Aspect | OTP | Password | External Auth |
+|---|---|---|---|
+| **User Memory** | Nothing to remember | Must remember password | Nothing to remember |
+| **Offline Support** | No | Yes | No |
+| **Security** | Channel-dependent | Strength-dependent | Provider-dependent |
+| **User Friction** | Check email or SMS | Type password | Click button |
+| **Infrastructure** | Email or SMS provider | Password hashing | External identity provider |
+
+## How It Works
+
+The OTP authentication flow has two main steps.
+
+### Step 1: Code Generation and Delivery
+
+<Steps>
+1. **User enters identifier** - The user provides their email address or phone number.
+
+2. **Code generation** - User Management generates a cryptographically secure random code (8 characters, alphanumeric base32 by default).
+
+3. **Code delivery** - The code is sent to the user via the configured channel (email or SMS).
+
+4. **Token creation** - User Management creates an `OtpToken` that links the code to the authentication attempt.
+
+5. **Token storage** - The application stores the token (typically in an encrypted cookie) for use during verification.
+</Steps>
+
+### Step 2: Code Verification
+
+<Steps>
+1. **User enters code** - The user retrieves the code from their email or SMS and enters it.
+
+2. **Code validation** - User Management verifies the code matches the stored token and has not expired.
+
+3. **User lookup or creation** - If the user exists, they are retrieved; otherwise, they can be auto-registered.
+
+4. **Session establishment** - A local authentication session is created.
+</Steps>
+
+The One-Time Password (OTP) login flow sends a code to the user's email or phone, then verifies it:
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant App
+    participant UserManagement as User Management
+    participant Channel as Email / SMS
+
+    User->>App: Enter email or phone number
+    App->>UserManagement: TryAuthenticateAsync(otpAddress)
+    UserManagement->>Channel: Send OTP code
+    UserManagement-->>App: Challenge issued
+    App-->>User: "Check your email/phone"
+    User->>App: Enter OTP code
+    App->>UserManagement: TryAuthenticateAsync(otpAddress, code)
+    UserManagement-->>App: Authenticated (subject ID)
+    App-->>User: Signed in
+```
+
+## Key Components
+
+### IOtpAuthenticator Interface
+
+`IOtpAuthenticator` is the primary interface for OTP send and verify operations:
+
+```csharp
+public interface IOtpAuthenticator
+{
+    // Generate and send an OTP code to the given address
+    Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, Ct ct);
+
+    // Verify an OTP code; returns the OtpAddress on success, null on failure
+    Task<OtpAddress?> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, Ct ct);
+}
+```
+
+`TrySendOtpAsync` returns a `SendOtpResult` that carries the token and expiry information when the code was sent, or rate-limit information when sending was blocked. `TryAuthenticateAsync` returns the `OtpAddress` on success, or `null` if the code was invalid or expired.
+
+### Supporting Types
+
+`OtpAddress` - Combines a channel and a subject identifier (e.g., an email address):
+
+```csharp
+public sealed record OtpAddress(OtpChannel Channel, SubjectId SubjectId);
+```
+
+`OtpChannel` - The delivery mechanism:
+
+```csharp
+public readonly record struct OtpChannel
+{
+    public static OtpChannel Email { get; }  // Deliver via email
+    public static OtpChannel Sms { get; }    // Deliver via SMS
+}
+```
+
+`OtpToken` - Opaque token linking a code to an authentication attempt:
+
+```csharp
+public readonly record struct OtpToken
+{
+    public static OtpToken Parse(string input);
+    public override string ToString();
+}
+```
+
+`PlainTextOtp` - The verification code entered by the user:
+
+```csharp
+public readonly record struct PlainTextOtp
+{
+    public static PlainTextOtp Parse(string value);
+    public static bool TryParse(string input, out PlainTextOtp? result);
+}
+```
+
+`SendOtpResult` - The result of a send attempt:
+
+```csharp
+public sealed record SendOtpResult
+{
+    public bool Sent { get; }                        // True when the code was sent
+    public OtpToken? Token { get; }                  // Set when Sent is true
+    public TimeSpan? ExpiresAfter { get; }           // Set when Sent is true
+    public DateTimeOffset? ExpiresAtUtc { get; }     // Set when Sent is true
+    public TimeSpan SendingBlockedFor { get; }       // How long until sending is allowed again
+    public DateTimeOffset SendingBlockedUntilUtc { get; }
+}
+```
+
+### IUserAuthenticatorsSelfService Interface
+
+`IUserAuthenticatorsSelfService` handles user lookup, registration, and OTP address management:
+
+```csharp
+public interface IUserAuthenticatorsSelfService
+{
+    // Register a new user with an OTP address
+    Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
+
+    // Look up a user by their OTP address
+    Task<UserAuthenticators?> TryGetAsync(OtpAddress address, Ct ct);
+
+    // Look up a user by their subject ID
+    Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, Ct ct);
+
+    // OTP address management
+    Task<bool> TryAddOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
+    Task<bool> TryReplaceOtpAddressAsync(UserSubjectId subjectId, OtpAddress oldAddress, OtpAddress newAddress, Ct ct);
+    Task<bool> TryRemoveOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
+}
+```
+
+## Configuration
+
+### Registering the SMTP OTP Sender
+
+OTP delivery requires configuring a sender. Use `UseSmtpOtpSender` on the `IUserAuthenticationBuilder` to configure the built-in SMTP sender:
+
+```csharp title="Program.cs"
+builder.Services
+    .AddDuendePlatform()
+    .AddUserAuthentication(auth =>
+    {
+        auth.UseSmtpOtpSender(options =>
+        {
+            options.Host = "smtp.example.com";
+            options.Port = 587;
+            options.EnableSsl = true;
+            options.FromEmail = "noreply@example.com";
+            options.FromName = "My Application";
+            options.Domain = "example.com";
+        });
+    });
+```
+
+### Custom OTP Sender
+
+Implement `IOtpSender` to deliver codes via a custom channel (e.g., an SMS gateway or a transactional email service):
+
+```csharp
+public interface IOtpSender
+{
+    bool CanSend(OtpAddress address);
+
+    Task SendAsync(OtpAddress address, PlainTextOtp otp, TimeSpan expiresAfter, Ct ct);
+}
+```
+
+Register the custom sender using `UseOtpSender<T>`:
+
+```csharp title="Program.cs"
+builder.Services
+    .AddDuendePlatform()
+    .AddUserAuthentication(auth =>
+    {
+        auth.UseOtpSender<MyCustomOtpSender>();
+    });
+```
+
+## Implementation Patterns
+
+### Basic OTP Login
+
+The following example shows a two-step OTP login using Razor Pages. Inject `IOtpAuthenticator` and `IUserAuthenticatorsSelfService` into your page model.
+
+**Step 1 - Send the OTP:**
+
+```csharp
+public async Task<IActionResult> OnPostSendOtpAsync(string email)
+{
+    if (!EmailAddress.TryParse(email, out var emailAddress))
+        return Error("Invalid email address");
+
+    var address = new OtpAddress(OtpChannel.Email, emailAddress);
+
+    var result = await otpAuthenticator.TrySendOtpAsync(
+        address,
+        HttpContext.RequestAborted);
+
+    if (result == null || !result.Sent)
+        return Error("Failed to send verification code. Please try again later.");
+
+    // Store the token and address in an encrypted cookie for the verify step
+    StoreCookie("otp_token", result.Token!.Value.ToString());
+    StoreCookie("otp_email", email);
+
+    return RedirectToPage("/Verify");
+}
+```
+
+**Step 2 - Verify the OTP:**
+
+```csharp
+public async Task<IActionResult> OnPostVerifyAsync(string code)
+{
+    var tokenValue = GetCookie("otp_token");
+    var email = GetCookie("otp_email");
+
+    if (!PlainTextOtp.TryParse(code, out var otp))
+        return Error("Invalid code format");
+
+    var address = await otpAuthenticator.TryAuthenticateAsync(
+        otp.Value,
+        OtpToken.Parse(tokenValue),
+        HttpContext.RequestAborted);
+
+    if (address == null)
+        return Error("Invalid or expired code");
+
+    // Look up or auto-register the user
+    var user = await userAuthenticatorsSelfService.TryGetAsync(address, HttpContext.RequestAborted);
+
+    if (user == null)
+    {
+        var newSubjectId = UserSubjectId.New();
+        user = await userAuthenticatorsSelfService.TryRegisterAsync(
+            newSubjectId,
+            address,
+            HttpContext.RequestAborted);
+    }
+
+    if (user == null)
+        return Error("Unable to retrieve or create user account");
+
+    await SignIn(user);
+    ClearCookies();
+
+    return RedirectToPage("/Index");
+}
+```
+
+### Auto-Registration
+
+OTP authentication naturally supports auto-registration. After a successful code verification, check whether the user already exists and register them if not:
+
+```csharp
+var address = new OtpAddress(OtpChannel.Email, EmailAddress.Parse(email));
+
+var user = await userAuthenticatorsSelfService.TryGetAsync(
+    address,
+    HttpContext.RequestAborted);
+
+if (user == null)
+{
+    var newSubjectId = UserSubjectId.New();
+    user = await userAuthenticatorsSelfService.TryRegisterAsync(
+        newSubjectId,
+        address,
+        HttpContext.RequestAborted);
+}
+```
+
+### Managing OTP Addresses
+
+Users can have multiple OTP addresses (e.g., both an email and a phone number). Use the address management methods on `IUserAuthenticatorsSelfService` to add, replace, or remove addresses:
+
+```csharp
+// Add a second OTP address (e.g., a phone number) to an existing user
+var phoneAddress = new OtpAddress(OtpChannel.Sms, PhoneNumber.Parse("+15551234567"));
+await userAuthenticatorsSelfService.TryAddOtpAddressAsync(
+    subjectId,
+    phoneAddress,
+    HttpContext.RequestAborted);
+
+// Replace an existing OTP address (e.g., after an email change)
+var oldAddress = new OtpAddress(OtpChannel.Email, EmailAddress.Parse("old@example.com"));
+var newAddress = new OtpAddress(OtpChannel.Email, EmailAddress.Parse("new@example.com"));
+await userAuthenticatorsSelfService.TryReplaceOtpAddressAsync(
+    subjectId,
+    oldAddress,
+    newAddress,
+    HttpContext.RequestAborted);
+
+// Remove an OTP address
+await userAuthenticatorsSelfService.TryRemoveOtpAddressAsync(
+    subjectId,
+    phoneAddress,
+    HttpContext.RequestAborted);
+```
+
+### Handling Rate Limiting
+
+User Management enforces a minimum interval between OTP sends. When sending is blocked, `SendOtpResult.Sent` is `false` and `SendingBlockedUntilUtc` indicates when the user may request a new code:
+
+```csharp
+var result = await otpAuthenticator.TrySendOtpAsync(address, HttpContext.RequestAborted);
+
+if (result == null)
+    return Error("OTP send failed unexpectedly");
+
+if (!result.Sent)
+{
+    var retryAt = result.SendingBlockedUntilUtc.ToLocalTime();
+    return Error($"Please wait until {retryAt:t} before requesting a new code.");
+}
+
+// result.Sent == true; proceed with storing the token
+StoreCookie("otp_token", result.Token!.Value.ToString());
+```
+
+## Security
+
+OTP is a good default for consumer applications — simple, passwordless, and requires no app install. The trade-off is that its security depends entirely on the delivery channel. If someone can read your email or intercept your SMS, they can log in as you.
+
+### What User Management Does for You
+
+The OTP workflow enforces limits that are not configurable but are deliberately conservative: a maximum of 5 verification attempts per token (a 6-digit code has a million possible values, so 5 guesses is not a meaningful attack surface), a minimum of 1 minute between sends to prevent flooding, and a 5-minute code expiry to limit the window during which an intercepted code is useful. Codes are stored as PBKDF2 hashes, so a stolen database row is useless to an attacker. Verification uses constant-time comparison to prevent timing-based enumeration.
+
+### What You Need to Think About
+
+The delivery channel is outside User Management's control. Email is generally more secure than SMS — SIM-swapping attacks, where an attacker convinces a carrier to transfer a phone number to a new SIM, are a real and documented threat. For sensitive applications, prefer email and consider adding a warning in your OTP email template asking users not to forward it. Users who auto-forward all email to a secondary account are effectively sharing their OTP codes with whoever controls that account.
+
+OTP is a single factor. For high-value accounts, pair it with TOTP or a passkey. A user who can receive an OTP email is authenticated — but that is a lower bar than you might want for a financial application.
+
+Reflect the built-in rate limits in your UI: show a countdown timer for code expiry, disable the "Resend" button during the cooldown period, and display the number of remaining verification attempts.
+
+For cross-cutting security topics (data protection key persistence, throttling configuration, and password hashing) see [Security Considerations](/usermanagement/fundamentals/security.md).

@@ -1,0 +1,322 @@
+---
+title: Password Authentication Flow
+description: How to implement password-based authentication in Duende User Management, including the IPasswordAuth interface, password lifecycle management, configuration options, and custom validation extensibility.
+date: 2026-04-29
+sidebar:
+  label: Passwords
+  order: 4
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Security Warning">
+Password-only authentication carries significant risks including phishing attacks, credential stuffing, and password reuse. Passkey-based authentication is strongly recommended for the strongest security posture. If you must use passwords, extend them with an additional factor such as [OTP](/usermanagement/authentication/otp.mdx) or [TOTP](/usermanagement/authentication/totp.mdx).
+</Aside>
+
+Password authentication is the traditional credential-based flow where users create and manage a password tied to their account. Duende User Management supports passwords as one of several authentication flows, with built-in PBKDF2 hashing, timing-attack protection, configurable complexity rules, and extensible validation.
+
+## Account Recovery Considerations
+
+A fundamental challenge with standalone password authentication is self-service account recovery: there is no way to deliver a password reset token without first verifying that the user controls the delivery channel (email or SMS).
+
+User Management addresses this by design. Creating a user without first verifying a One-Time Password (OTP) channel is not possible via the `IUserSelfService` interface. By default, a user verifies ownership of their email address via OTP, then creates a password. Whether to allow password-only login or to always require an additional OTP factor during login is a decision left to your application.
+
+## Key Interfaces
+
+### IPasswordAuth
+
+`IPasswordAuth` is the primary interface for verifying a user's password during login. Inject it into your login page or controller to authenticate a user by username and password. Its single method returns the user's subject ID on success or `null` on failure:
+
+```csharp
+public interface IPasswordAuth
+{
+    Task<UserSubjectId?> TryAuthenticateAsync(
+        UserName userName,
+        PlainTextPassword password,
+        Ct ct);
+}
+```
+
+`TryAuthenticateAsync` returns the user's `UserSubjectId` on success, or `null` if the credentials are invalid. The comparison runs in constant time to prevent account enumeration via timing attacks.
+
+### IPlainTextPasswordFactory
+
+`PlainTextPassword` is a validated value type that cannot be constructed directly. Use `IPlainTextPasswordFactory` to create instances; it validates the password string against the configured `PasswordOptions` before returning a value. Two creation methods are available: one that throws on invalid input, and one that returns a boolean:
+
+```csharp
+public interface IPlainTextPasswordFactory
+{
+    // Throws FormatException if the password does not meet requirements.
+    PlainTextPassword Create(string passwordString);
+
+    // Returns false instead of throwing if the password does not meet requirements.
+    bool TryCreate(string passwordString, out PlainTextPassword? result);
+}
+```
+
+Use `TryCreate` in user-facing flows where you want to return a validation error rather than catch an exception.
+
+### UserName
+
+`UserName` is a strongly-typed value representing the user's login identifier (email address, username, or other unique identifier). Use `Parse` when you expect valid input, or `TryParse` in user-facing flows where you want to handle invalid input gracefully:
+
+```csharp
+public readonly record struct UserName
+{
+    public static UserName Parse(string value);
+    public static bool TryParse(string input, out UserName? result);
+}
+```
+
+## Password Lifecycle Methods
+
+Password lifecycle operations (setting, changing, and resetting passwords) are available on `IUserAuthenticatorsSelfService`. These methods manage the stored credential rather than verifying it.
+
+```csharp
+public interface IUserAuthenticatorsSelfService
+{
+    // Sets a password for a user who does not yet have one.
+    Task<bool> TrySetPasswordAsync(
+        UserSubjectId subjectId,
+        PlainTextPassword password,
+        Ct ct);
+
+    // Changes a password by verifying the current password first.
+    Task<bool> TryChangePasswordAsync(
+        UserSubjectId subjectId,
+        PlainTextPassword oldPassword,
+        PlainTextPassword newPassword,
+        Ct ct);
+
+    // Resets a password without requiring the current password.
+    // Use only after verifying the user's identity via another channel (e.g., OTP).
+    Task<bool> TryResetPasswordAsync(
+        UserSubjectId subjectId,
+        PlainTextPassword password,
+        Ct ct);
+
+    // ... other authenticator management methods
+}
+```
+
+* `TrySetPasswordAsync` - Use during initial account setup when the user does not yet have a password.
+* `TryChangePasswordAsync` - Use for authenticated password changes; requires the current password to be provided and verified.
+* `TryResetPasswordAsync` - Use for password reset flows after the user's identity has been verified via a separate channel such as OTP. Does not require the current password.
+
+All three methods return `true` on success and `false` if the operation could not be completed (for example, `TryChangePasswordAsync` returns `false` if the current password is incorrect).
+
+## Configuration
+
+### PasswordOptions
+
+Password complexity requirements are configured via `PasswordOptions`, accessible through the top-level options object when registering User Management services.
+
+```csharp title="Program.cs"
+builder.Services.AddDuendePlatform()
+    .AddUserAuthentication(auth =>
+    {
+        auth.Configure(options =>
+        {
+            options.Passwords.MinLength = 12;
+            // other PasswordOptions...
+        });
+    });
+```
+
+| Property | Default | Description |
+|---|---|---|
+| `MinLength` | `8` | Minimum password length in characters |
+| `MaxLength` | `64` | Maximum password length; capped at 64 to avoid PBKDF2 pre-hashing vulnerabilities with SHA-512 |
+| `MinLower` | `2` | Minimum number of lowercase letters required |
+| `MinUpper` | `2` | Minimum number of uppercase letters required |
+| `MinDigits` | `2` | Minimum number of numeric digit characters required |
+| `MinSymbols` | `2` | Minimum number of symbol (non-alphanumeric) characters required |
+
+The `MaxLength` default of 64 comes from the PBKDF2/SHA-512 security limit. Passwords longer than 128 bytes (64 UTF-16 characters) can trigger pre-hashing behaviour in PBKDF2 that weakens the key derivation. See the [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2-pre-hashing) for background.
+
+## Custom Password Validation
+
+Beyond the built-in complexity rules, you can implement `IPasswordValidator` to add custom policy checks such as blocklist enforcement, breach database lookups (e.g., Have I Been Pwned), or dictionary word rejection.
+
+```csharp
+public interface IPasswordValidator
+{
+    Task<PasswordValidationResult> ValidateAsync(string password, Ct ct);
+}
+```
+
+`PasswordValidationResult` is a discriminated union with two cases:
+
+```csharp
+public abstract record PasswordValidationResult
+{
+    // The password passed validation.
+    public sealed record Accepted : PasswordValidationResult;
+
+    // The password failed validation.
+    // Reason is a human-readable explanation suitable for display to the user.
+    public sealed record Rejected(string Reason) : PasswordValidationResult;
+}
+```
+
+### Implementing a Custom Validator
+
+Implement `IPasswordValidator` and register it with the DI container. The following example rejects passwords found on a common-password blocklist:
+
+```csharp
+public class BlocklistPasswordValidator : IPasswordValidator
+{
+    private static readonly HashSet<string> CommonPasswords =
+    [
+        "Password1!", "Welcome1!", "Summer2024!"
+    ];
+
+    public Task<PasswordValidationResult> ValidateAsync(string password, Ct ct)
+    {
+        if (CommonPasswords.Contains(password))
+        {
+            return Task.FromResult<PasswordValidationResult>(
+                new PasswordValidationResult.Rejected(
+                    "This password is too common. Please choose a more unique password."));
+        }
+
+        return Task.FromResult<PasswordValidationResult>(
+            new PasswordValidationResult.Accepted());
+    }
+}
+```
+
+Register the validator with the DI container:
+
+```csharp
+services.AddSingleton<IPasswordValidator, BlocklistPasswordValidator>();
+```
+
+Multiple `IPasswordValidator` implementations can be registered. They run in registration order, and the first rejection stops further evaluation.
+
+## Security
+
+Passwords are the most attacked credential type on the internet — reused, guessed, phished, and leaked constantly. User Management supports them because some applications need them, but the defaults are designed to make the worst outcomes less likely.
+
+### What User Management Does for You
+
+Passwords are hashed with PBKDF2-HMAC-SHA-512 at 210,000 iterations, following the [OWASP recommendation](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2). Each password gets a unique salt, so two users with the same password have different hashes and rainbow table attacks are useless. The `MaxLength` is capped at 64 characters to avoid a PBKDF2 pre-hashing vulnerability that appears when passwords exceed the HMAC-SHA-512 block size. `TryAuthenticateAsync` uses constant-time comparison throughout, so an attacker cannot determine whether a username exists by measuring response times. `PlainTextPassword` intentionally returns the type name from `ToString()` to prevent accidental logging.
+
+### What You Need to Think About
+
+The default minimum password length of 8 characters is a floor, not a recommendation. For new applications, 12–16 characters is a more defensible baseline. Consider plugging in an `IPasswordValidator` that checks submitted passwords against the [Have I Been Pwned](https://haveibeenpwned.com/API/v3#searchingPwnedPasswordsByRange) k-anonymity API — rejecting passwords that appear in known breach datasets is one of the highest-value things you can do to reduce credential stuffing risk.
+
+Never use passwords as the only factor. They are phishable, reused across services, and leaked regularly. Pair them with TOTP at minimum, or push users toward passkeys for sensitive operations.
+
+One thing that catches people out: `TryResetPasswordAsync` does not require the current password. That is intentional — it is for password reset flows where the user has already proved their identity via OTP. But it means your application is responsible for that identity verification step. Calling `TryResetPasswordAsync` without first confirming who the user is would be a serious security hole.
+
+For cross-cutting security topics (data protection key persistence, throttling configuration, and password hashing parameters) see [Security Considerations](/usermanagement/fundamentals/security.md).
+
+## Authentication Flow
+
+The password authentication flow is straightforward: the user submits credentials and the system verifies them in constant time:
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant App
+    participant UserManagement as User Management
+
+    User->>App: Submit username + password
+    App->>UserManagement: TryAuthenticateAsync(username, password)
+    Note over UserManagement: Constant-time comparison
+    UserManagement-->>App: Authenticated (subject ID) or failure
+    App-->>User: Signed in or error
+```
+
+### Login
+
+Inject `IPasswordAuth` and `IPlainTextPasswordFactory` into your login handler. After a successful password check, optionally redirect to a second-factor page if the user has TOTP configured:
+
+```csharp
+public async Task<IActionResult> OnPostLogin(string username, string password)
+{
+    var userId = await passwordAuth.TryAuthenticateAsync(
+        UserName.Parse(username),
+        passwordFactory.Create(password),
+        ct);
+
+    if (userId == null)
+        return Error("Invalid username or password");
+
+    var user = await userSelfService.TryGetUserAsync(userId, ct);
+
+    // Optionally check for a second factor before completing sign-in.
+    if (user.TotpAuthenticatorNames.Count > 0)
+    {
+        StoreAuthState(userId);
+        return RedirectToPage("/LoginWith2FA");
+    }
+
+    await SignIn(user);
+    return RedirectToPage("/Index");
+}
+```
+
+### Password Change (Authenticated User)
+
+Use `TryChangePasswordAsync` when the user is already signed in and wants to update their password. Always validate the new password through the factory before passing it to the method:
+
+```csharp
+public async Task<IActionResult> OnPostChangePassword(
+    string currentPassword,
+    string newPassword,
+    string confirmNewPassword)
+{
+    if (newPassword != confirmNewPassword)
+        return Error("New passwords do not match");
+
+    if (!passwordFactory.TryCreate(newPassword, out var validatedNewPassword))
+        return Error("New password does not meet requirements");
+
+    var success = await authenticatorsSelfService.TryChangePasswordAsync(
+        GetCurrentUserId(),
+        passwordFactory.Create(currentPassword),
+        validatedNewPassword,
+        ct);
+
+    if (!success)
+        return Error("Current password is incorrect");
+
+    return Success("Password changed successfully");
+}
+```
+
+### Password Reset (After OTP Verification)
+
+Use `TryResetPasswordAsync` at the end of a forgot-password flow, after the user's identity has been confirmed via OTP. This method does not require the current password:
+
+```csharp
+// Step 1: Verify user identity via OTP (see OTP flow documentation).
+// Step 2: Once identity is confirmed, reset the password directly.
+public async Task<IActionResult> OnPostCompleteReset(string newPassword)
+{
+    if (!passwordFactory.TryCreate(newPassword, out var validatedPassword))
+        return Error("Password does not meet requirements");
+
+    var success = await authenticatorsSelfService.TryResetPasswordAsync(
+        GetVerifiedUserId(),
+        validatedPassword,
+        ct);
+
+    if (!success)
+        return Error("Password reset failed");
+
+    return RedirectToPage("/Login");
+}
+```
+
+## Combining Passwords with a Second Factor
+
+The recommended pattern when using passwords is to combine them with Time-Based One-Time Password (TOTP) for two-factor authentication:
+
+* **First Factor** - Password (something you know)
+* **Second Factor** - TOTP code (something you have)
+* **Backup** - Recovery codes (something you saved)
+
+See [TOTP Authentication Flow](/usermanagement/authentication/totp.mdx) for the second-factor implementation, and [Recovery Codes](/usermanagement/authentication/recovery-codes.mdx) for backup access.

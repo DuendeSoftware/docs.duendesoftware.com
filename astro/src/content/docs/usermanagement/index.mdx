@@ -1,0 +1,42 @@
+---
+title: Duende User Management
+description: Overview of Duende User Management, a passwordless-first identity solution supporting OTP, TOTP, passkeys, external authentication, user profiles, roles, groups, and multi-tenancy.
+date: 2026-04-29
+sidebar:
+  label: Overview
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Duende User Management is a ready-to-use identity solution built on top of Duende IdentityServer and ASP.NET Core. It gives you a complete, extensible user store with a passwordless-first approach — OTP, TOTP, passkeys, external providers, user profiles, roles, groups, and multi-tenancy — without building identity infrastructure from scratch.
+
+<CardGrid>
+  <LinkCard
+    href="https://github.com/DuendeSoftware/products"
+    title="GitHub Repository"
+    description="View the source code for this library on GitHub."
+  />
+  <LinkCard
+    href="https://www.nuget.org/packages/Duende.UserManagement"
+    title="NuGet Package"
+    description="View the package on NuGet.org."
+  />
+</CardGrid>
+
+## Licensing
+
+A Duende license is required to use User Management. See the [licensing documentation](/general/licensing.md) for details.
+
+* **Development and Testing**: You are free to use and explore the code for development, testing, or personal projects without a license.
+* **Production**: A license is required for production environments.
+
+## Learn More
+
+<CardGrid>
+  <LinkCard title="Introduction" href="/usermanagement/introduction.md" description="Why User Management, when to use it, and how it relates to Duende IdentityServer." />
+  <LinkCard title="Getting Started" href="/usermanagement/getting-started.mdx" description="Add User Management to an ASP.NET Core app with a working OTP login flow." />
+  <LinkCard title="Architecture" href="/usermanagement/architecture.md" description="The modular service layer, key interfaces, and DI registration model." />
+  <LinkCard title="Authentication Flows" href="/usermanagement/authentication/overview.mdx" description="Compare OTP, TOTP, passkeys, passwords, external providers, and recovery codes." />
+</CardGrid>
+

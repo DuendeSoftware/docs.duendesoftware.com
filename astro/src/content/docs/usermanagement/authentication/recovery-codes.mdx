@@ -1,0 +1,341 @@
+---
+title: Recovery Code Authentication
+description: How to implement recovery code authentication as a backup two-factor authentication method using Duende User Management, including code generation, authentication, and regeneration.
+date: 2026-04-29
+sidebar:
+  label: Recovery Codes
+  order: 7
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+Recovery codes are a backup authentication method for when the primary two-factor mechanism (typically Time-Based One-Time Password (TOTP)) is unavailable. Each code is single-use, so a user who loses their device or breaks their authenticator app can still get back in.
+
+## Comparison With Other Authentication Methods
+
+| Aspect | Recovery Codes | TOTP | Password Reset |
+|---|---|---|---|
+| **Use Case** | Emergency backup | Primary 2FA | Lost password |
+| **Frequency** | Rare | Every login | Occasional |
+| **Device Required** | None | Authenticator app | Email access |
+| **Security Model** | Single-use | Time-based | Email dependent |
+| **User Burden** | Must save codes | Install app | Email access |
+
+## How It Works
+
+### Generation Flow
+
+<Steps>
+1. **Two-Factor Authentication (2FA) activation** - User enables TOTP authentication
+
+2. **Code generation** - The system generates a set of recovery codes (typically 10)
+
+3. **Secure display** - Codes are shown to the user once
+
+4. **User storage** - The user saves codes securely (print, password manager, etc.)
+
+5. **Hashed storage** - Codes are hashed and stored in the database
+
+6. **Availability** - Codes remain available until used or regenerated
+</Steps>
+
+When a user enables Two-Factor Authentication (2FA), the system generates a set of recovery codes and shows them once. Here's how that works:
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant App
+    participant UserManagement as User Management
+
+    User->>App: Enable TOTP authenticator
+    App->>UserManagement: TryAddTotpAuthenticatorAsync()
+    UserManagement-->>App: Success
+    App->>UserManagement: TryCreateRecoveryCodesAsync()
+    UserManagement-->>App: Plain-text codes (shown once)
+    App-->>User: Display codes (save these securely)
+    Note over UserManagement: Codes stored as hashes only
+```
+
+### Authentication Flow
+
+<Steps>
+1. **2FA required** - User completes primary authentication and needs 2FA
+
+2. **Primary method unavailable** - User cannot access their TOTP authenticator
+
+3. **Recovery option** - User selects "Use recovery code instead"
+
+4. **Code entry** - User enters one of their saved recovery codes
+
+5. **Verification** - System verifies the code against stored hashes
+
+6. **Code consumption** - If valid, the code is marked as used (single-use)
+
+7. **Session establishment** - User is authenticated with a Multi-Factor Authentication (MFA) claim
+
+8. **Warning** - User is notified of remaining codes
+</Steps>
+
+When a user can't access their authenticator app, they can sign in with a recovery code instead. The code is verified and immediately consumed:
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant App
+    participant UserManagement as User Management
+
+    User->>App: Complete primary authentication
+    App-->>User: 2FA required
+    User->>App: Select "Use recovery code"
+    User->>App: Enter recovery code
+    App->>UserManagement: TryAuthenticateAsync(subjectId, code)
+    UserManagement-->>App: Valid (code consumed)
+    App-->>User: Signed in + warning if codes running low
+```
+
+## Key Interfaces
+
+### IRecoveryCodeAuth
+
+`IRecoveryCodeAuth` is the primary interface for verifying and consuming recovery codes during authentication:
+
+```csharp
+public interface IRecoveryCodeAuth
+{
+    Task<bool> TryAuthenticateAsync(
+        UserSubjectId subjectId,
+        PlainTextRecoveryCode recoveryCode,
+        Ct ct);
+}
+```
+
+The method verifies the supplied code against stored hashes and, if valid, marks it as consumed so it cannot be reused.
+
+### IUserAuthenticatorsSelfService
+
+`IUserAuthenticatorsSelfService` exposes recovery code management for authenticated users:
+
+```csharp
+// Generate new recovery codes — invalidates all existing codes
+Task<IReadOnlyCollection<PlainTextRecoveryCode>?> TryCreateRecoveryCodesAsync(
+    UserSubjectId subjectId,
+    Ct ct);
+```
+
+Returns `null` if code generation fails (for example, when 2FA is not enabled for the user).
+
+### PlainTextRecoveryCode
+
+`PlainTextRecoveryCode` represents a recovery code value and provides parsing and display helpers:
+
+```csharp
+public readonly record struct PlainTextRecoveryCode
+{
+    // Parse a user-supplied string into a recovery code
+    public static bool TryParse(string input, out PlainTextRecoveryCode? result);
+
+    // Parse or throw on invalid input
+    public static PlainTextRecoveryCode Parse(string input);
+
+    // Format into groups for display, e.g. ["7e8a", "9b2c", "4d1f"]
+    public IReadOnlyCollection<string> ToTextGroups();
+}
+```
+
+### User Properties
+
+The `User` object exposes the count of remaining unused recovery codes:
+
+```csharp
+var user = await userSelfService.TryGetUserAsync(subjectId, ct);
+
+// Number of unused recovery codes remaining
+int remaining = user.RecoveryCodeCount;
+```
+
+## Implementation Patterns
+
+### Generating Recovery Codes
+
+Recovery codes are typically generated when the user enables TOTP. Call `TryCreateRecoveryCodesAsync` after successfully activating the authenticator:
+
+```csharp
+public async Task<IActionResult> OnPostEnableTotpAsync(string verificationCode)
+{
+    var subjectId = GetCurrentUserId();
+
+    var success = await userAuthenticatorsSelfService.TryAddTotpAuthenticatorAsync(
+        subjectId,
+        TotpAuthenticatorName.Default,
+        totpKey,
+        PlainTextTotp.Parse(verificationCode),
+        ct);
+
+    if (!success)
+    {
+        return Error("Invalid verification code");
+    }
+
+    // Generate recovery codes after enabling TOTP
+    var recoveryCodes = await userAuthenticatorsSelfService.TryCreateRecoveryCodesAsync(
+        subjectId, ct);
+
+    if (recoveryCodes == null)
+    {
+        return Error("Failed to generate recovery codes");
+    }
+
+    // Format codes for display
+    var formattedCodes = recoveryCodes
+        .Select(code => string.Join("-", code.ToTextGroups()))
+        .ToArray();
+
+    TempData["RecoveryCodes"] = formattedCodes;
+
+    return RedirectToPage("/ShowRecoveryCodes");
+}
+```
+
+### Authenticating With a Recovery Code
+
+After the user completes primary authentication and selects the recovery code option, verify and consume the code:
+
+```csharp
+public async Task<IActionResult> OnPostLoginWithRecoveryCodeAsync(string recoveryCode)
+{
+    var authState = GetAuthState();
+    if (authState == null)
+    {
+        return RedirectToPage("/Login");
+    }
+
+    // Strip spaces and dashes — accept flexible input formats
+    var cleanCode = recoveryCode
+        .Replace(" ", string.Empty)
+        .Replace("-", string.Empty);
+
+    if (!PlainTextRecoveryCode.TryParse(cleanCode, out var code))
+    {
+        return Error("Invalid recovery code format");
+    }
+
+    // Verify and consume the recovery code
+    var success = await recoveryCodeAuth.TryAuthenticateAsync(
+        authState.UserId, code.Value, ct);
+
+    if (!success)
+    {
+        return Error("Invalid recovery code");
+    }
+
+    ClearAuthState();
+
+    var user = await userSelfService.TryGetUserAsync(authState.UserId, ct);
+    await SignInWithMfaAsync(user, authState.RememberMe);
+
+    // Warn the user if they are running low on codes
+    if (user.RecoveryCodeCount < 3)
+    {
+        TempData["Warning"] =
+            $"You have {user.RecoveryCodeCount} recovery codes remaining. " +
+            "Consider generating new ones.";
+    }
+
+    return RedirectToPage("/Index");
+}
+```
+
+### Regenerating Recovery Codes
+
+Users can regenerate codes at any time from their account settings. Regeneration invalidates all existing codes:
+
+```csharp
+public async Task<IActionResult> OnPostRegenerateCodesAsync()
+{
+    var subjectId = GetCurrentUserId();
+    var user = await userSelfService.TryGetUserAsync(subjectId, ct);
+
+    // Verify 2FA is enabled before generating codes
+    if (user.TotpAuthenticatorNames.Count == 0)
+    {
+        return Error("Two-factor authentication is not enabled");
+    }
+
+    // Generate new codes — all old codes are immediately invalidated
+    var recoveryCodes = await userAuthenticatorsSelfService.TryCreateRecoveryCodesAsync(
+        subjectId, ct);
+
+    if (recoveryCodes == null)
+    {
+        return Error("Failed to generate recovery codes");
+    }
+
+    var formattedCodes = recoveryCodes
+        .Select(code => string.Join("-", code.ToTextGroups()))
+        .ToArray();
+
+    TempData["RecoveryCodes"] = formattedCodes;
+    TempData["Message"] = "New recovery codes generated. Old codes are no longer valid.";
+
+    return RedirectToPage("/ShowRecoveryCodes");
+}
+```
+
+### Displaying Recovery Code Status
+
+Show the user how many codes they have remaining and prompt them to regenerate when running low:
+
+```csharp
+public async Task<IActionResult> OnGetAsync()
+{
+    var subjectId = GetCurrentUserId();
+    var user = await userSelfService.TryGetUserAsync(subjectId, ct);
+
+    if (user.TotpAuthenticatorNames.Count == 0)
+    {
+        return RedirectToPage("/EnableAuthenticator");
+    }
+
+    ViewData["RecoveryCodesRemaining"] = user.RecoveryCodeCount;
+
+    return Page();
+}
+```
+
+## Security
+
+Recovery codes are the safety net for two-factor authentication — they exist for the moment when a user loses their phone, breaks their authenticator app, or otherwise cannot use their primary second factor. That makes them valuable, and it makes them a target.
+
+### What User Management Does for You
+
+Codes are hashed with PBKDF2 before storage, so a stolen database row cannot be used to recover the plaintext. Each code is single-use and invalidated immediately on successful verification. Codes are generated with a cryptographically secure random number generator using Base32 Crockford encoding for readability and case-insensitivity.
+
+### What You Need to Think About
+
+The security of recovery codes depends almost entirely on what users do with them after generation. A code stored in a plain text file on the desktop, or in an unencrypted notes app, is effectively public. Your UI should tell users clearly where to store them — a password manager or printed and kept somewhere physically secure are the standard recommendations.
+
+Show a warning when a user is running low. A user who uses their last recovery code and does not generate new ones has no fallback if they lose their second factor. Prompt regeneration when fewer than 2–3 codes remain.
+
+Treat the code display screen as a sensitive operation. Never show recovery codes without first confirming the user's session is authenticated. And make it easy to regenerate — a user who has used a code should be encouraged to generate a fresh set immediately, so the old set is fully invalidated.
+
+For cross-cutting security topics (data protection key persistence and throttling configuration) see [Security Considerations](/usermanagement/fundamentals/security.md).
+
+## Post-Recovery Guidance
+
+After a user authenticates with a recovery code, guide them to restore their normal 2FA setup:
+
+```csharp
+if (usedRecoveryCode)
+{
+    TempData["PostRecoveryMessage"] =
+        "You signed in with a recovery code. " +
+        "Set up your authenticator app and generate new recovery codes " +
+        "to keep your account secure.";
+}
+```
+
+## Related Topics
+
+* [TOTP Authentication](/usermanagement/authentication/totp.mdx) - Primary 2FA method that recovery codes back up
+* [OTP Authentication](/usermanagement/authentication/otp.mdx) - One-time password authentication
+* [Password Authentication](/usermanagement/authentication/passwords.md) - Password-based authentication
