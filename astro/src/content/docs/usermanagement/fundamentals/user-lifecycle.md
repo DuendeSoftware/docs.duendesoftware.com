@@ -143,10 +143,10 @@ Guid guid = subjectId.ToGuid();
 A validated username string. Whitespace is trimmed automatically. Maximum length is 320 characters (to accommodate email addresses used as usernames).
 
 ```csharp
-// Parse — throws FormatException on invalid input
+// Parse: throws FormatException on invalid input
 var userName = UserName.Parse("jane.doe");
 
-// TryParse — returns false on invalid input
+// TryParse: returns false on invalid input
 if (UserName.TryParse("jane.doe", out var result))
 {
     // result is non-null here
@@ -171,10 +171,10 @@ var otpPhone = new OtpAddress(OtpChannel.Sms, phoneNumber);
 A validated email address. Whitespace is trimmed automatically. Minimum length is 3 characters; maximum length is 320 characters.
 
 ```csharp
-// Parse — throws FormatException on invalid input
+// Parse: throws FormatException on invalid input
 var email = EmailAddress.Parse("jane@example.com");
 
-// TryParse — returns false on invalid input
+// TryParse: returns false on invalid input
 if (EmailAddress.TryParse("jane@example.com", out var result))
 {
     // result is non-null here
@@ -186,10 +186,10 @@ if (EmailAddress.TryParse("jane@example.com", out var result))
 A validated phone number. Leading `+` and `0` characters are stripped, whitespace is removed, and only digit characters are accepted. Maximum length is 15 digits (per ITU-T E.164).
 
 ```csharp
-// Parse — throws FormatException on invalid input
+// Parse: throws FormatException on invalid input
 var phone = PhoneNumber.Parse("+12025550100");
 
-// TryParse — returns false on invalid input
+// TryParse: returns false on invalid input
 if (PhoneNumber.TryParse("+12025550100", out var result))
 {
     // result is non-null here
@@ -201,10 +201,10 @@ if (PhoneNumber.TryParse("+12025550100", out var result))
 The name of an external identity provider (for example, `"Google"` or `"GitHub"`). Whitespace is trimmed automatically. Maximum length is 255 characters.
 
 ```csharp
-// Parse — throws FormatException on invalid input
+// Parse: throws FormatException on invalid input
 var name = ExternalAuthenticatorName.Parse("Google");
 
-// TryParse — returns false on invalid input
+// TryParse: returns false on invalid input
 if (ExternalAuthenticatorName.TryParse("Google", out var result))
 {
     // result is non-null here
@@ -216,10 +216,10 @@ if (ExternalAuthenticatorName.TryParse("Google", out var result))
 An opaque string identifier, used as the subject ID issued by an external identity provider. Whitespace is trimmed automatically. Maximum length is 255 characters.
 
 ```csharp
-// Parse — throws FormatException on invalid input
+// Parse: throws FormatException on invalid input
 var id = OpaqueSubjectId.Parse("1234567890");
 
-// TryParse — returns false on invalid input
+// TryParse: returns false on invalid input
 if (OpaqueSubjectId.TryParse("1234567890", out var result))
 {
     // result is non-null here
@@ -227,6 +227,45 @@ if (OpaqueSubjectId.TryParse("1234567890", out var result))
 ```
 
 `UserSubjectId` is a sealed subtype of `OpaqueSubjectId`. Use `UserSubjectId` when referring to users within User Management, and `OpaqueSubjectId` when working with external provider subject IDs.
+
+## Extensibility and Maintenance Boundaries
+
+Understanding what Duende maintains internally versus what you can customize helps you build integrations correctly and avoid reimplementing functionality that is already provided.
+
+### Maintained by Duende (internal)
+
+The following are implemented and maintained by Duende and updated with each release. You call these interfaces but do not implement them:
+
+- **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TrySetUserNameAsync`, `TryRemoveUserNameAsync`, `TryDeregisterAsync`)
+- **`IUserAdmin`**: administrative lifecycle operations (`TrySetUserNameAsync`, `TryRemoveUserNameAsync`, `TryRemoveAsync`)
+- **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes)
+- **Core storage**: the underlying user store, credential storage, and session state are internal to Duende and not designed for replacement or override
+- **Authentication logic and lifecycle state machine**: the rules governing registration, login, MFA enrollment, and deregistration are managed internally and are not extensible
+
+You do not need to implement any of these; inject them where needed and call their methods.
+
+### Extensible by developers
+
+The following extension points are designed for you to implement or configure:
+
+| Extension point | Interface | Purpose |
+|---|---|---|
+| OTP delivery | `IOtpSender` | Implement to send one-time password codes via your preferred channel (email, SMS, push notification, etc.) |
+| Password validation | `IPasswordValidator` | Implement custom password strength or policy rules beyond the built-in defaults |
+| SCIM schema mapping | `IScimSchemaMapper` | Customize which attributes and schemas are exposed via the SCIM endpoint |
+| Custom profile attributes | `IUserProfileSchemaAdmin` | Add application-specific attributes to the user profile schema |
+
+These interfaces are registered in the DI container. Provide your own implementation during application startup to override the default behavior.
+
+### Not extensible
+
+The following are internal to Duende and are not designed for override or extension:
+
+- Core user storage and the database schema backing it
+- The authentication and credential verification logic
+- The lifecycle state machine (registration flow, deregistration cascade, authenticator enrollment rules)
+
+Attempting to replace these by intercepting internal services is unsupported and may break across releases.
 
 ## Type Hierarchy
 

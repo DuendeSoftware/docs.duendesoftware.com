@@ -11,6 +11,10 @@ import { Steps } from "@astrojs/starlight/components";
 
 External authentication delegates sign-in to trusted third-party identity providers using OAuth 2.0 and OpenID Connect. Users authenticate with a provider they already trust (Google, Microsoft, a corporate IdP), and your application receives a verified identity without ever handling a password.
 
+:::note[Code examples]
+The code examples on this page use ASP.NET Core Razor Pages (`PageModel`, `IActionResult`, `OnPost*` handler methods). The same patterns apply equally to **MVC controllers** (use action methods returning `IActionResult`) or **minimal API endpoints** (use route handler delegates). The Duende User Management interfaces are framework-agnostic.
+:::
+
 ## When to Use External Authentication
 
 **Strongly recommended for:**
@@ -162,7 +166,11 @@ public sealed record UserAuthenticators
 
 ### Adding An OpenID Connect Provider
 
-Register an external provider using ASP.NET Core's `AddOpenIdConnect` extension. Hook into `OnTicketReceived` to run your user provisioning logic after a successful authentication:
+Register an external provider using ASP.NET Core's `AddOpenIdConnect` extension. Hook into `OnTicketReceived` to run your user provisioning logic after a successful authentication.
+
+Install the required NuGet package:
+- [`Microsoft.AspNetCore.Authentication.OpenIdConnect`](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OpenIdConnect) for OpenID Connect providers (Google, Microsoft, Okta, etc.)
+- [`Microsoft.AspNetCore.Authentication.OAuth`](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OAuth) for generic OAuth 2.0 providers (GitHub, etc.)
 
 ```csharp title="Program.cs"
 builder.Services.AddAuthentication()
@@ -196,7 +204,19 @@ builder.Services.AddAuthentication()
 
 ### Provider-Specific Configurations
 
-**Google** - Force account selection on every login:
+Each provider has its own developer console where you register your application and obtain credentials. Refer to the official documentation for setup instructions:
+
+- **Google**: [Google Identity: OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect)
+- **Microsoft / Azure AD**: [Microsoft Entra identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/)
+- **GitHub**: [Authorizing OAuth Apps](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
+
+:::note
+These are just a few examples. Any OAuth 2.0 or OpenID Connect provider can be used with User Management. For a broader list of third-party authentication providers and configuration guidance, see the [IdentityServer login documentation](/identityserver/ui/login.md).
+:::
+
+#### Google
+
+Force account selection on every login:
 
 ```csharp
 .AddOpenIdConnect("Google", options =>
@@ -212,7 +232,7 @@ builder.Services.AddAuthentication()
 });
 ```
 
-**Microsoft (Azure AD):**
+#### Microsoft (Azure AD)
 
 ```csharp
 .AddOpenIdConnect("Microsoft", options =>
@@ -410,10 +430,10 @@ ASP.NET Core's OAuth middleware handles the protocol-level protections: a crypto
 
 ### What You Need to Think About
 
-The most common mistake is using the email address from the external provider as the stable user identifier. Email addresses can be reassigned — a provider can give the same email to a different user after an account is deleted. Use the `sub` claim (subject identifier) instead; it is stable and unique per provider.
+The most common mistake is using the email address from the external provider as the stable user identifier. Email addresses can be reassigned; a provider can give the same email to a different user after an account is deleted. Use the `sub` claim (subject identifier) instead; it is stable and unique per provider.
 
 Be careful with account linking flows. If a user can link a new external provider to their account without being authenticated first, an attacker can pre-link their own identity to an account they do not yet control, then wait for the victim to trigger the link. Require authentication before linking.
 
-Every external provider you add is a new trust boundary. If Google's OAuth is compromised, every user who logs in with Google is affected. Be deliberate about which providers you integrate, and monitor for unexpected changes to a user's linked authenticators — a sudden change can be a sign of account takeover.
+Every external provider you add is a new trust boundary. If Google's OAuth is compromised, every user who logs in with Google is affected. Be deliberate about which providers you integrate, and monitor for unexpected changes to a user's linked authenticators. A sudden change can be a sign of account takeover.
 
 For cross-cutting security topics (data protection key persistence and throttling configuration) see [Security Considerations](/usermanagement/fundamentals/security.md).

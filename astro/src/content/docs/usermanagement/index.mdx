@@ -9,7 +9,11 @@ sidebar:
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
-Duende User Management is a ready-to-use identity solution built on top of Duende IdentityServer and ASP.NET Core. It gives you a complete, extensible user store with a passwordless-first approach — OTP, TOTP, passkeys, external providers, user profiles, roles, groups, and multi-tenancy — without building identity infrastructure from scratch.
+Most .NET applications start authentication the same way: wire up ASP.NET Identity, add a login page, and ship. That works until requirements grow. MFA gets bolted on later, passkey support requires a separate library, and multi-tenancy means reworking the user store from scratch. Greenfield projects face the same trap. Rolling custom auth feels faster at first, but compliance requirements, account recovery flows, and external provider integration accumulate quickly.
+
+The pain points are predictable: no passkey support without significant custom work, MFA that lives outside the core auth flow, migration headaches when the user model needs to evolve, and gaps that surface during security reviews or compliance audits. Each of these is solvable in isolation, but solving them together, consistently and correctly, is where most teams lose time.
+
+Duende User Management is a first-party, embeddable .NET SDK that integrates with Duende IdentityServer and ASP.NET Core. It provides native user storage, a passwordless-first authentication layer (OTP, TOTP, passkeys, external providers, recovery codes), and full lifecycle management (profiles, roles, groups, multi-tenancy) as a cohesive unit. You register it in your DI container, configure what you need, and get a production-ready identity foundation without assembling it from parts.
 
 <CardGrid>
   <LinkCard
@@ -33,10 +37,12 @@ A Duende license is required to use User Management. See the [licensing document
 
 ## Learn More
 
+See the [glossary](/general/glossary.mdx) for definitions of terms used throughout this documentation.
+
 <CardGrid>
-  <LinkCard title="Introduction" href="/usermanagement/introduction.md" description="Why User Management, when to use it, and how it relates to Duende IdentityServer." />
-  <LinkCard title="Getting Started" href="/usermanagement/getting-started.mdx" description="Add User Management to an ASP.NET Core app with a working OTP login flow." />
-  <LinkCard title="Architecture" href="/usermanagement/architecture.md" description="The modular service layer, key interfaces, and DI registration model." />
-  <LinkCard title="Authentication Flows" href="/usermanagement/authentication/overview.mdx" description="Compare OTP, TOTP, passkeys, passwords, external providers, and recovery codes." />
+  <LinkCard title="Introduction" href="/usermanagement/introduction" description="Why User Management, when to use it, and how it relates to Duende IdentityServer." />
+  <LinkCard title="Getting Started" href="/usermanagement/getting-started" description="Add User Management to an ASP.NET Core app with a working OTP login flow." />
+  <LinkCard title="Architecture" href="/usermanagement/architecture" description="The modular service layer, key interfaces, and DI registration model." />
+  <LinkCard title="Authentication Flows" href="/usermanagement/authentication/overview" description="Compare OTP, TOTP, passkeys, passwords, external providers, and recovery codes." />
 </CardGrid>
 

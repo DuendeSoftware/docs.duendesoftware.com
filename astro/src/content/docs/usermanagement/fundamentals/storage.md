@@ -20,11 +20,40 @@ The storage engine uses a document-oriented approach within a relational databas
 
 ## Available Storage Adapters
 
-* **In-Memory**: An in-memory (optionally file-backed) implementation for local development and testing.
-* **PostgreSQL**: Production-ready storage using PostgreSQL's native JSONB format (recommended).
-* **SQL Server**: Production-ready storage using SQL Server's JSON support.
+* **[In-Memory](#in-memory-storage)**: An in-memory (optionally file-backed) implementation for local development and testing.
+* **[PostgreSQL](#postgresql-storage)**: Production-ready storage using PostgreSQL's native JSONB format (recommended).
+* **[SQL Server](#sql-server-storage)**: Production-ready storage using SQL Server's JSON support.
 
 The adapter pattern means you can switch databases without changing your application code.
+
+## Storage Options Comparison
+
+| Feature | In-Memory | PostgreSQL | SQL Server |
+|---|---|---|---|
+| **Setup** | Zero setup required | Requires PostgreSQL infrastructure | Requires SQL Server infrastructure |
+| **Best for** | Tests and local development | Production workloads (recommended) | Production workloads in .NET/Windows environments |
+| **Data persistence** | Lost on restart | Durable | Durable |
+| **JSON support** | N/A | Native JSONB with excellent query performance | JSON support (less native than PostgreSQL JSONB) |
+| **Enterprise support** | None | Community + commercial options | Full Microsoft enterprise support |
+| **Production use** | ❌ Not recommended | ✅ Recommended | ✅ Supported |
+
+:::tip
+PostgreSQL is the recommended production adapter due to its native JSONB support and excellent JSON query performance. SQL Server is a strong choice for teams already invested in the Microsoft/Windows ecosystem.
+:::
+
+## In-Memory Storage
+
+The in-memory adapter stores data in process memory and is intended exclusively for local development and automated testing. No installation or infrastructure is required; it is included with the core `Duende.UserManagement` package.
+
+```csharp title="Program.cs"
+builder.Services
+    .AddDuendePlatform()
+    .AddStorage(s => s.InMemory());
+```
+
+:::danger[Not for production]
+The in-memory adapter loses all data when the application restarts. Do not use it in production environments.
+:::
 
 ## PostgreSQL Storage
 
@@ -65,6 +94,10 @@ using (var scope = app.Services.CreateScope())
 
 app.Run();
 ```
+
+:::caution[Development convenience only]
+Calling `CreateIfNotExistsAsync()` at application startup is convenient for development but not recommended for production. In production, run schema initialization as a separate migration step in your CI/CD pipeline or deployment process.
+:::
 
 ### Connection String
 
@@ -190,6 +223,10 @@ using (var scope = app.Services.CreateScope())
 app.Run();
 ```
 
+:::caution[Development convenience only]
+Calling `CreateIfNotExistsAsync()` at application startup is convenient for development but not recommended for production. In production, run schema initialization as a separate migration step in your CI/CD pipeline or deployment process.
+:::
+
 ### Connection String
 
 Configure your connection string in `appsettings.json`:
@@ -288,6 +325,57 @@ The SQL Server storage adapter is compatible with:
 * SQL Server 2017 (requires compatibility level 140 or higher).
 * Azure SQL Database (all tiers).
 * Azure SQL Managed Instance.
+
+## Deployment Best Practices
+
+### Run Schema Initialization as a Separate Step
+
+Avoid calling `CreateIfNotExistsAsync()` at application startup in production. Instead, run schema initialization as a dedicated step in your CI/CD pipeline or deployment process before the application starts:
+
+```bash
+# Example: run schema init as a pre-deployment job
+dotnet run --project tools/SchemaInit -- --connection-string "$DB_CONNECTION_STRING"
+```
+
+This approach ensures:
+- Schema changes are applied before new application instances start.
+- Rollback is possible if schema initialization fails.
+- Multiple application instances starting simultaneously do not race to initialize the schema.
+
+### Manage Connection String Secrets
+
+Never store production credentials in `appsettings.json` or source control. Use a secrets management solution appropriate for your environment:
+
+* **Environment variables**: Set `ConnectionStrings__pgsql` or `ConnectionStrings__mssql` as environment variables at the OS or container level.
+* **Azure Key Vault**: Use `builder.Configuration.AddAzureKeyVault(...)` to pull secrets at startup.
+* **AWS Secrets Manager / HashiCorp Vault**: Integrate via the appropriate .NET configuration provider.
+* **.NET User Secrets**: Use `dotnet user-secrets` for local development to keep credentials out of source control.
+
+### Configure Connection Pooling
+
+Both the Npgsql (PostgreSQL) and Microsoft.Data.SqlClient (SQL Server) drivers maintain connection pools automatically. Tune pool size to match your expected concurrency:
+
+```json title="appsettings.Production.json"
+{
+  "ConnectionStrings": {
+    "pgsql": "Host=db.example.com;Database=usermanagement_prod;Username=app_user;Password=...;Minimum Pool Size=5;Maximum Pool Size=100",
+    "mssql": "Server=db.example.com;Database=usermanagement_prod;User Id=app_user;Password=...;Min Pool Size=5;Max Pool Size=100"
+  }
+}
+```
+
+General guidelines:
+- Set minimum pool size to avoid cold-start latency under burst traffic.
+- Set maximum pool size to prevent overwhelming the database server.
+- Monitor pool exhaustion (timeout errors) and adjust accordingly.
+
+### Use Read Replicas for Query-Heavy Workloads
+
+If your workload is read-heavy, consider routing read operations to a read replica:
+
+* **PostgreSQL**: Configure a secondary connection string pointing to a read replica and use it for query-only operations.
+* **SQL Server**: Use the `ApplicationIntent=ReadOnly` connection string parameter to route reads to an Always On availability group secondary.
+* **Azure SQL / Azure Database for PostgreSQL**: Enable read replicas in the Azure portal and configure a separate connection string for read traffic.
 
 ## See Also
 

@@ -9,6 +9,52 @@ sidebar:
 
 Roles and groups provide a flexible authorization model. A role represents a named permission or capability. A group is a named collection of users. Roles can be assigned to users directly, or transitively by assigning a role to a group and then adding users to that group.
 
+## End-to-End Example
+
+The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive):
+
+```csharp
+using Duende.Platform.Users.Profiles.RolesAndGroups;
+
+// 1. Create a role.
+var roleResult = await roleAdmin.CreateAsync(
+    new RoleDto { Name = RoleName.Parse("content-editor") },
+    ct);
+var roleId = roleResult.Value;
+
+// 2. Create a group.
+var groupResult = await groupAdmin.CreateAsync(
+    new GroupDto { Name = GroupName.Parse("editors") },
+    ct);
+var groupId = groupResult.Value;
+
+// 3. Assign the role to the group (transitive path).
+await roleMembershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
+
+// 4. Add the user to the group.
+await groupMembershipAdmin.AddUserProfileToGroupAsync(groupId, subjectId, ct);
+
+// 5. Query effective roles (direct + transitive, merged in application code).
+var directRoles = await roleMembershipAdmin.GetDirectRolesForUserProfileAsync(subjectId, page: null, ct);
+var transitiveRoles = await roleMembershipAdmin.GetTransitiveRolesForUserProfileAsync(subjectId, page: null, ct);
+
+var effectiveRoles = directRoles.Items
+    .Concat(transitiveRoles.Items)
+    .DistinctBy(r => r.Id)
+    .ToList();
+
+// effectiveRoles now contains "content-editor" via the group.
+```
+
+### Where this code typically lives
+
+This kind of programmatic role and group management is used in several common scenarios:
+
+- **Admin application**: A back-office UI where administrators create and manage roles and groups, assign users to groups, and review effective permissions. The admin app calls these APIs in response to user actions.
+- **Automation or background service**: A service that synchronises roles or group membership from an external system (for example, an HR directory or an identity provider). The service runs on a schedule or reacts to events, calling these APIs to keep the local state in sync.
+- **Seed script**: A startup routine that ensures required roles and groups exist before the application accepts traffic. Typically runs once on first deployment or after a database reset.
+- **Integration tests**: Test setup code that creates known roles, groups, and memberships so that tests run against a predictable, isolated state.
+
 ## Data Model
 
 The core types in the `Duende.Platform.Users.Profiles.RolesAndGroups` namespace are:
@@ -346,41 +392,4 @@ foreach (var group in groups.Items)
 {
     Console.WriteLine($"{group.Id}: {group.Name}");
 }
-```
-
-## End-to-End Example
-
-The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive):
-
-```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
-
-// 1. Create a role.
-var roleResult = await roleAdmin.CreateAsync(
-    new RoleDto { Name = RoleName.Parse("content-editor") },
-    ct);
-var roleId = roleResult.Value;
-
-// 2. Create a group.
-var groupResult = await groupAdmin.CreateAsync(
-    new GroupDto { Name = GroupName.Parse("editors") },
-    ct);
-var groupId = groupResult.Value;
-
-// 3. Assign the role to the group (transitive path).
-await roleMembershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
-
-// 4. Add the user to the group.
-await groupMembershipAdmin.AddUserProfileToGroupAsync(groupId, subjectId, ct);
-
-// 5. Query effective roles (direct + transitive, merged in application code).
-var directRoles = await roleMembershipAdmin.GetDirectRolesForUserProfileAsync(subjectId, page: null, ct);
-var transitiveRoles = await roleMembershipAdmin.GetTransitiveRolesForUserProfileAsync(subjectId, page: null, ct);
-
-var effectiveRoles = directRoles.Items
-    .Concat(transitiveRoles.Items)
-    .DistinctBy(r => r.Id)
-    .ToList();
-
-// effectiveRoles now contains "content-editor" via the group.
 ```

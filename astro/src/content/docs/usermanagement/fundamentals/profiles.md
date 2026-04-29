@@ -7,7 +7,31 @@ sidebar:
   order: 1
 ---
 
-User Management provides a flexible, schema-driven profile system that lets you attach typed attributes to every user. Attributes are defined in a schema and then stored against individual user profiles. The system exposes three interfaces covering different access levels: self-service operations performed by the authenticated user, administrative operations performed by back-end code, and schema management for defining which attributes exist.
+User Management provides a flexible, schema-driven profile system that lets you attach typed attributes to every user. The design follows an **Entity-Attribute-Value (EAV)** model: instead of extending a base class or adding columns to a table, you define attributes in a schema at runtime and store values against individual user profiles.
+
+`UserProfile` is a **sealed record** that cannot be subclassed. There is exactly one `UserProfile` type in the system:
+
+```csharp
+public sealed record UserProfile
+{
+    public UserSubjectId SubjectId { get; }
+    public UserName? UserName { get; }
+    public IReadOnlyDictionary<AttributeName, AttributeValue> Attributes { get; }
+}
+```
+
+All extensibility happens through the `Attributes` dictionary. You define which attributes exist by registering `AttributeDefinition` entries in the schema; the system then validates values against those definitions at write time.
+
+The system exposes three interfaces covering different access levels: self-service operations performed by the authenticated user, administrative operations performed by back-end code, and schema management for defining which attributes exist.
+
+### Where to use these interfaces
+
+All three interfaces are registered with the DI container by `AddUserProfiles()` and can be injected anywhere in your application:
+
+- **Razor Pages**: inject into page models to read or update the current user's profile.
+- **MVC controllers**: inject into controllers for profile endpoints.
+- **Backend services / hosted services**: inject into `IHostedService` implementations for background provisioning or migration tasks.
+- **Seed scripts / startup code**: inject `IUserProfileSchemaAdmin` into an `IHostedService` or a startup filter to initialize the schema before the application starts serving requests.
 
 ## Registration
 

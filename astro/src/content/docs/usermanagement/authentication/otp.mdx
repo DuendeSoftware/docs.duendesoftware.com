@@ -28,15 +28,7 @@ OTP (One-Time Password) authentication is a passwordless flow where users receiv
 * High-frequency logins where the context switch to email or SMS creates too much friction.
 * Regulated industries where OTP may not satisfy compliance requirements.
 
-## Comparison with Other Authentication Flows
-
-| Aspect | OTP | Password | External Auth |
-|---|---|---|---|
-| **User Memory** | Nothing to remember | Must remember password | Nothing to remember |
-| **Offline Support** | No | Yes | No |
-| **Security** | Channel-dependent | Strength-dependent | Provider-dependent |
-| **User Friction** | Check email or SMS | Type password | Click button |
-| **Infrastructure** | Email or SMS provider | Password hashing | External identity provider |
+For a comparison of all authentication methods, see [Choosing an Authentication Method](/usermanagement/authentication/overview#choosing-an-authentication-method).
 
 ## How It Works
 
@@ -372,7 +364,7 @@ StoreCookie("otp_token", result.Token!.Value.ToString());
 
 ## Security
 
-OTP is a good default for consumer applications — simple, passwordless, and requires no app install. The trade-off is that its security depends entirely on the delivery channel. If someone can read your email or intercept your SMS, they can log in as you.
+OTP is a good default for consumer applications: simple, passwordless, and requires no app install. The trade-off is that its security depends entirely on the delivery channel. If someone can read your email or intercept your SMS, they can log in as you.
 
 ### What User Management Does for You
 
@@ -380,9 +372,9 @@ The OTP workflow enforces limits that are not configurable but are deliberately 
 
 ### What You Need to Think About
 
-The delivery channel is outside User Management's control. Email is generally more secure than SMS — SIM-swapping attacks, where an attacker convinces a carrier to transfer a phone number to a new SIM, are a real and documented threat. For sensitive applications, prefer email and consider adding a warning in your OTP email template asking users not to forward it. Users who auto-forward all email to a secondary account are effectively sharing their OTP codes with whoever controls that account.
+The delivery channel is outside User Management's control. Email is generally more secure than SMS. SIM-swapping attacks, where an attacker convinces a carrier to transfer a phone number to a new SIM, are a real and documented threat. For sensitive applications, prefer email and consider adding a warning in your OTP email template asking users not to forward it. Users who auto-forward all email to a secondary account are effectively sharing their OTP codes with whoever controls that account.
 
-OTP is a single factor. For high-value accounts, pair it with TOTP or a passkey. A user who can receive an OTP email is authenticated — but that is a lower bar than you might want for a financial application.
+OTP is a single factor. For high-value accounts, pair it with TOTP or a passkey. A user who can receive an OTP email is authenticated, but that is a lower bar than you might want for a financial application.
 
 Reflect the built-in rate limits in your UI: show a countdown timer for code expiry, disable the "Resend" button during the cooldown period, and display the number of remaining verification attempts.
 

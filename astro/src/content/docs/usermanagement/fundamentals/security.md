@@ -156,7 +156,7 @@ Passkeys (WebAuthn/FIDO2) provide the strongest authentication guarantees availa
 
 ### `PasskeyOptions`
 
-Passkey behaviour is controlled by `PasskeyOptions`, accessible via `UserAuthenticationOptions.Passkeys`. The following defaults are verified from source:
+Passkey behavior is controlled by `PasskeyOptions`, accessible via `UserAuthenticationOptions.Passkeys`. The following defaults are verified from source:
 
 | Property | Default | Description |
 |---|---|---|
@@ -209,11 +209,16 @@ builder.Services
 | `"direct"` | Attestation statement provided directly by the authenticator |
 | `"enterprise"` | Enterprise attestation for managed authenticators |
 
+## Encryption Algorithms
+
+Detailed coverage of the encryption algorithms used for password hashing, recovery code storage, and data protection keys, including their strengths and configuration options, is planned for a future update.
+
 ## Recovery Code Security
 
 * Codes are **hashed** (not encrypted) in storage using PBKDF2. They cannot be retrieved, only verified.
 * Each code is **single-use**, consumed on successful verification.
 * **Generate new codes** to invalidate all previous codes.
+<!-- REVIEW: Should recovery code invalidation be configurable? See PR #14 comment #19 -->
 * Warn users when the remaining code count drops below a safe threshold.
 
 ## Recommendations

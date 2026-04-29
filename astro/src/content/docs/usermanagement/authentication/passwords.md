@@ -21,6 +21,10 @@ A fundamental challenge with standalone password authentication is self-service 
 
 User Management addresses this by design. Creating a user without first verifying a One-Time Password (OTP) channel is not possible via the `IUserSelfService` interface. By default, a user verifies ownership of their email address via OTP, then creates a password. Whether to allow password-only login or to always require an additional OTP factor during login is a decision left to your application.
 
+<Aside type="tip" title="Password Policy Configuration">
+Password policies (minimum/maximum length, complexity requirements) are configured via `PasswordOptions` in the DI registration. See the [configuration reference](/usermanagement/reference/configuration) for all available options.
+</Aside>
+
 ## Key Interfaces
 
 ### IPasswordAuth
@@ -132,7 +136,7 @@ builder.Services.AddDuendePlatform()
 | `MinDigits` | `2` | Minimum number of numeric digit characters required |
 | `MinSymbols` | `2` | Minimum number of symbol (non-alphanumeric) characters required |
 
-The `MaxLength` default of 64 comes from the PBKDF2/SHA-512 security limit. Passwords longer than 128 bytes (64 UTF-16 characters) can trigger pre-hashing behaviour in PBKDF2 that weakens the key derivation. See the [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2-pre-hashing) for background.
+The `MaxLength` default of 64 comes from the PBKDF2/SHA-512 security limit. Passwords longer than 128 bytes (64 UTF-16 characters) can trigger pre-hashing behavior in PBKDF2 that weakens the key derivation. See the [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2-pre-hashing) for background.
 
 ## Custom Password Validation
 
@@ -196,7 +200,7 @@ Multiple `IPasswordValidator` implementations can be registered. They run in reg
 
 ## Security
 
-Passwords are the most attacked credential type on the internet — reused, guessed, phished, and leaked constantly. User Management supports them because some applications need them, but the defaults are designed to make the worst outcomes less likely.
+Passwords are the most attacked credential type on the internet: reused, guessed, phished, and leaked constantly. User Management supports them because some applications need them, but the defaults are designed to make the worst outcomes less likely.
 
 ### What User Management Does for You
 
@@ -204,17 +208,21 @@ Passwords are hashed with PBKDF2-HMAC-SHA-512 at 210,000 iterations, following t
 
 ### What You Need to Think About
 
-The default minimum password length of 8 characters is a floor, not a recommendation. For new applications, 12–16 characters is a more defensible baseline. Consider plugging in an `IPasswordValidator` that checks submitted passwords against the [Have I Been Pwned](https://haveibeenpwned.com/API/v3#searchingPwnedPasswordsByRange) k-anonymity API — rejecting passwords that appear in known breach datasets is one of the highest-value things you can do to reduce credential stuffing risk.
+The default minimum password length of 8 characters is a floor, not a recommendation. For new applications, 12-16 characters is a more defensible baseline. Consider plugging in an `IPasswordValidator` that checks submitted passwords against the [Have I Been Pwned](https://haveibeenpwned.com/API/v3#searchingPwnedPasswordsByRange) k-anonymity API. Rejecting passwords that appear in known breach datasets is one of the highest-value things you can do to reduce credential stuffing risk.
 
 Never use passwords as the only factor. They are phishable, reused across services, and leaked regularly. Pair them with TOTP at minimum, or push users toward passkeys for sensitive operations.
 
-One thing that catches people out: `TryResetPasswordAsync` does not require the current password. That is intentional — it is for password reset flows where the user has already proved their identity via OTP. But it means your application is responsible for that identity verification step. Calling `TryResetPasswordAsync` without first confirming who the user is would be a serious security hole.
+One thing that catches people out: `TryResetPasswordAsync` does not require the current password. That is intentional; it is for password reset flows where the user has already proved their identity via OTP. But it means your application is responsible for that identity verification step. Calling `TryResetPasswordAsync` without first confirming who the user is would be a serious security hole.
 
 For cross-cutting security topics (data protection key persistence, throttling configuration, and password hashing parameters) see [Security Considerations](/usermanagement/fundamentals/security.md).
 
 ## Authentication Flow
 
-The password authentication flow is straightforward: the user submits credentials and the system verifies them in constant time:
+The password authentication flow has two paths: a success path where valid credentials produce a subject ID, and a failure path where invalid credentials, throttling, or lockout prevent access.
+
+### Success Path
+
+The user submits valid credentials and is authenticated in constant time:
 
 ```mermaid
 sequenceDiagram
@@ -224,9 +232,27 @@ sequenceDiagram
 
     User->>App: Submit username + password
     App->>UserManagement: TryAuthenticateAsync(username, password)
-    Note over UserManagement: Constant-time comparison
-    UserManagement-->>App: Authenticated (subject ID) or failure
-    App-->>User: Signed in or error
+    Note over UserManagement: Constant-time PBKDF2 comparison
+    UserManagement-->>App: UserSubjectId (authenticated)
+    App-->>User: Signed in ✓
+```
+
+### Failure Path
+
+When credentials are wrong, the system returns `null` without revealing whether the username exists. Repeated failures may trigger throttling or account lockout depending on your security configuration:
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant App
+    participant UserManagement as User Management
+
+    User->>App: Submit username + password
+    App->>UserManagement: TryAuthenticateAsync(username, password)
+    Note over UserManagement: Constant-time comparison (prevents timing enumeration)
+    UserManagement-->>App: null (invalid credentials, throttled, or locked out)
+    App-->>User: Generic error message ✗
+    Note over App: Do not reveal whether username exists
 ```
 
 ### Login

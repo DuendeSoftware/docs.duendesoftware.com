@@ -31,16 +31,7 @@ TOTP (Time-Based One-Time Password) adds a second factor using time-synchronized
 * Low-risk applications with non-sensitive data
 * High-frequency access scenarios where the additional step creates significant friction
 
-## TOTP vs Other Second Factors
-
-| Aspect | TOTP | SMS |
-|--------|------|-----|
-| **Security** | High | Medium |
-| **Offline** | Yes | No |
-| **Phishing resistance** | High | Low |
-| **SIM swapping** | Not vulnerable | Vulnerable |
-| **Cost** | Free | SMS costs |
-| **Setup** | Requires authenticator app | Works with any phone |
+For a comparison of all authentication methods, see [Choosing an Authentication Method](/usermanagement/authentication/overview#choosing-an-authentication-method).
 
 ## How It Works
 
@@ -288,7 +279,7 @@ public async Task<IActionResult> OnPostVerify(string code, CancellationToken ct)
         return Error("Invalid code format.");
     }
 
-    // Register the TOTP authenticator — this also verifies the code
+    // Register the TOTP authenticator (this also verifies the code)
     var success = await userAuthenticatorsSelfService.TryAddTotpAuthenticatorAsync(
         userId,
         TotpAuthenticatorName.Default,
@@ -346,7 +337,7 @@ public async Task<IActionResult> OnPostLogin(string username, string password, C
         return RedirectToPage("/LoginWith2FA");
     }
 
-    // No 2FA required — complete sign-in
+    // No 2FA required. Complete sign-in
     await CompleteSignIn(authenticators, rememberMe);
     return Redirect(returnUrl ?? "/");
 }
@@ -418,7 +409,7 @@ public async Task<IActionResult> OnPostRegenerateRecoveryCodes(CancellationToken
 {
     var userId = GetCurrentUserId();
 
-    // Generate new recovery codes — this invalidates any existing codes
+    // Generate new recovery codes (this invalidates any existing codes)
     var recoveryCodes = await userAuthenticatorsSelfService.TryCreateRecoveryCodesAsync(userId, ct);
 
     if (recoveryCodes == null)
@@ -498,7 +489,7 @@ Any RFC 6238-compliant authenticator app works with TOTP. Common options include
 
 ## Security
 
-TOTP is the right choice when you want a second factor that works offline and does not depend on a delivery channel. The authenticator app generates codes locally from a shared secret, so there is no email or SMS to intercept. The catch is that the shared secret lives on both the server and the device — if either is compromised, an attacker can generate valid codes.
+TOTP is the right choice when you want a second factor that works offline and does not depend on a delivery channel. The authenticator app generates codes locally from a shared secret, so there is no email or SMS to intercept. The catch is that the shared secret lives on both the server and the device. If either is compromised, an attacker can generate valid codes.
 
 ### What User Management Does for You
 
@@ -506,7 +497,7 @@ TOTP secrets are generated with a cryptographically secure random number generat
 
 ### What You Need to Think About
 
-The single most common production mistake with TOTP is not configuring Data Protection key persistence. Without it, TOTP secrets become unreadable after an application restart, and every user with TOTP enrolled is locked out. Configure key persistence before you go to production — this is not optional.
+The single most common production mistake with TOTP is not configuring Data Protection key persistence. Without it, TOTP secrets become unreadable after an application restart, and every user with TOTP enrolled is locked out. Configure key persistence before you go to production. This is not optional.
 
 TOTP does not protect against real-time phishing. A phishing proxy can sit between the user and your site, relay the TOTP code in real time, and complete the login before the 30-second window expires. If phishing resistance is a hard requirement, passkeys are the answer.
 

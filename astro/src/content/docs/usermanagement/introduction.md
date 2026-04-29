@@ -7,13 +7,19 @@ sidebar:
   order: 2
 ---
 
-Duende User Management is an opinionated, enterprise-grade identity solution built on top of Duende IdentityServer and ASP.NET Core. It gives you a complete, extensible user store with a passwordless-first approach, supporting one-time passwords (OTP), time-based one-time passwords (TOTP), passkeys, external authentication providers, and traditional username/password authentication. Recovery codes, user profiles, roles and groups, and multi-tenancy are all included, so you can ship secure, modern authentication without assembling identity primitives yourself.
+Duende User Management is a first-party, embeddable .NET SDK that provides native user storage, authentication, and lifecycle management. It delivers a modern, extensible, enterprise-grade user store with a passwordless-first approach, supporting one-time passwords (OTP), time-based one-time passwords (TOTP), passkeys, external authentication providers, and traditional username/password authentication. Recovery codes, user profiles, roles and groups, and multi-tenancy are all included, so you can ship secure, modern authentication without assembling identity primitives yourself.
 
 ## Why User Management?
 
 Traditional authentication libraries were built when username and password was the norm. Today's security landscape demands more. Phishing-resistant passkeys, one-time passwords, and TOTP are now expected by users and required by compliance frameworks.
 
-User Management meets these requirements while integrating directly with Duende IdentityServer. Rather than assembling authentication primitives yourself, you get a complete, opinionated implementation with sensible defaults that guide you toward secure outcomes.
+User Management meets these requirements out of the box. Rather than assembling authentication primitives yourself, you get a complete, opinionated implementation with sensible defaults that guide you toward secure outcomes.
+
+## Relationship to Duende IdentityServer
+
+User Management is a standalone SDK that integrates with Duende IdentityServer. IdentityServer handles the OpenID Connect, OAuth 2.0 and SAML protocol layer, issuing tokens, managing clients and scopes, and enforcing authorization policies. User Management provides the user store and authentication UI that integrates with that protocol layer.
+
+You can use User Management as the identity layer for a new IdentityServer deployment, or integrate it into an existing one. The two components are independently versioned and can be adopted incrementally.
 
 ## Authentication Methods
 
@@ -32,7 +38,7 @@ User Management supports the authentication methods that modern applications nee
 * **User Profiles**: An extensible user profile model for storing and surfacing custom claims and attributes alongside standard identity information.
 * **Roles and Groups**: Built-in support for role-based access control and group membership management, making it straightforward to model organizational structures and permission boundaries.
 * **Multi-Tenancy**: First-class multi-tenant support for SaaS scenarios, isolating users and configuration per tenant.
-* **IdentityServer Integration**: User Management acts as the user store for Duende IdentityServer, enabling standards-based OpenID Connect and OAuth 2.0 token issuance backed by its full feature set.
+* **IdentityServer Integration**: User Management integrates with Duende IdentityServer as the user store, enabling standards-based OpenID Connect and OAuth 2.0 token issuance backed by its full feature set.
 * **Opinionated Defaults**: Sensible, security-oriented defaults that reduce the surface area for misconfiguration without sacrificing extensibility.
 
 ## When to Use User Management
@@ -44,10 +50,3 @@ User Management is a good fit when you need:
 * Enterprise-grade features such as multi-tenancy, roles, groups, and extensible user profiles.
 * Recovery code support so users are never permanently locked out of their accounts.
 * A passwordless-first approach that still accommodates password-based authentication where required.
-
-## Relationship to Duende IdentityServer
-
-User Management is designed to work alongside Duende IdentityServer. IdentityServer handles the OpenID Connect and OAuth 2.0 protocol layer, issuing tokens, managing clients and scopes, and enforcing authorization policies. User Management provides the user store and authentication UI layer on top of that foundation.
-
-You can use User Management as the identity layer for a new IdentityServer deployment, or integrate it into an existing one. The two components are independently versioned and can be adopted incrementally.
-

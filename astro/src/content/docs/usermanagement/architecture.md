@@ -11,17 +11,25 @@ Duende User Management is built on a layered architecture that separates concern
 
 ## Architectural Layers
 
-### Public API Layer
+```mermaid
+flowchart TD
+    A[Your Application Code] --> B[Developer Surface\nPublic API Interfaces]
+    B --> C[Business Logic\nDomain Services]
+    C --> D[Persistence\nStorage Engine]
+    D --> E[(PostgreSQL / SQL Server)]
+```
+
+### Developer Surface (Public API)
 
 The top layer exposes scenario-based interfaces that represent distinct use cases. Application code interacts exclusively with these interfaces; the internal implementation details are hidden behind them.
 
 Interfaces are grouped into three categories: self-service (user-facing operations), admin (back-office and management operations), and authentication (verifying credentials).
 
-### Domain Layer
+### Business Logic (Domain)
 
 The middle layer contains the business logic and domain models. It enforces invariants, coordinates between domain concepts, and applies security rules such as throttling, hashing, and code expiry. This layer is internal and not directly accessible from application code.
 
-### Storage Layer
+### Persistence (Storage Engine)
 
 The bottom layer persists data through the Duende Storage Engine, a document-based storage abstraction built around the `IStore` interface. It supports PostgreSQL, SQL Server, and in-memory backends. Schema is managed automatically; no Entity Framework migrations are required.
 

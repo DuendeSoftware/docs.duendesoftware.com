@@ -7,9 +7,9 @@ sidebar:
   order: 3
 ---
 
-import { Steps, CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { Steps, CardGrid, LinkCard, Aside } from "@astrojs/starlight/components";
 
-This guide walks you through adding Duende User Management to an ASP.NET Core application. By the end you will have a working one-time password (OTP) login flow backed by a PostgreSQL database and delivered via email.
+This guide walks you through adding Duende User Management to an ASP.NET Core application. By the end you will have a working one-time password (OTP) login flow backed by a SQL Server database and delivered via email.
 
 When a user authenticates with an OTP, the system:
 
@@ -22,30 +22,36 @@ After successful OTP authentication your application uses normal ASP.NET Core co
 ## Prerequisites
 
 * .NET 10 or later
-* A PostgreSQL database
+* A SQL Server database (or PostgreSQL; see the alternative below)
 * An SMTP server for email-based OTP delivery
+
+:::tip[Development: no SMTP server needed]
+For a quick proof-of-concept you can skip the SMTP server entirely and log OTP codes to the console instead. See the **Dev option A: Console OTP sender** section in step 2 below.
+
+If you prefer an SMTP experience locally, [Mailpit](https://github.com/axllent/mailpit) is a lightweight local SMTP server that captures outgoing email in a web UI. No external mail account required.
+:::
 
 <Steps>
 
 1. **Install the NuGet packages**
 
-   Add the User Management package and the PostgreSQL storage provider to your project:
+   Add the User Management package and the SQL Server storage provider to your project:
 
    ```bash title="Terminal"
    dotnet add package Duende.UserManagement
-   dotnet add package Duende.UserManagement.Storage.PostgreSQL
+   dotnet add package Duende.UserManagement.Storage.SqlServer
    ```
 
    Or add the package references directly to your `.csproj`:
 
    ```xml title="YourApp.csproj"
    <PackageReference Include="Duende.UserManagement" Version="*" />
-   <PackageReference Include="Duende.UserManagement.Storage.PostgreSQL" Version="*" />
+   <PackageReference Include="Duende.UserManagement.Storage.SqlServer" Version="*" />
    ```
 
 2. **Register services in `Program.cs`**
 
-   Call `AddDuendePlatform()` on the service collection, then chain `AddUserAuthentication()` and `AddUserProfiles()` to enable the features you need. Configure the SMTP OTP sender inside `AddUserAuthentication()`:
+   Call `AddDuendePlatform()` on the service collection, then chain `AddUserAuthentication()` and `AddUserProfiles()` to [enable the features you need](/usermanagement/architecture#di-registration). Configure the SMTP OTP sender inside `AddUserAuthentication()`:
 
    ```csharp title="Program.cs"
    using Duende.Platform.Builder;
@@ -111,12 +117,53 @@ After successful OTP authentication your application uses normal ASP.NET Core co
     For production environments, configure [ASP.NET Core Data Protection](/general/data-protection.md) to persist encryption keys across restarts, for example using Azure Key Vault, Redis, or a shared file system.
     :::
 
+   #### Dev option A: Console OTP sender
+
+   For the simplest possible proof-of-concept (no SMTP server, no external dependencies) implement `IOtpSender` to write codes to the console:
+
+   ```csharp title="ConsoleOtpSender.cs"
+   using Duende.Platform.Users.Authentication.Otp;
+
+   public class ConsoleOtpSender : IOtpSender
+   {
+    public Task SendAsync(OtpAddress address, PlainTextOtp otp, TimeSpan expiresAfter, CancellationToken ct)
+        {
+            Console.WriteLine($"OTP for {address}: {otp.Value}");
+            return Task.CompletedTask;
+        }
+   }
+   ```
+
+   Register it in place of the SMTP sender:
+
+   ```csharp title="Program.cs"
+   builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
+   ```
+
+   #### Dev option B: Mailpit local SMTP server
+
+   [Mailpit](https://github.com/axllent/mailpit) is a lightweight local SMTP server that captures outgoing email in a browser-based web UI. It requires no mail account and works with the standard SMTP sender. Point `Smtp:Host` at `localhost` and `Smtp:Port` at `1025` (Mailpit's default).
+
 3. **Configure storage**
 
-   Call `AddStorage()` and select the PostgreSQL provider. Pass the connection string from your configuration:
+   Call `AddStorage()` and select the SQL Server provider. Pass the connection string from your configuration:
 
    ```csharp title="Program.cs"
    using Duende.Platform.Storage;
+   using Duende.Platform.Storage.SqlServer;
+
+   builder.Services
+       .AddDuendePlatform()
+       .AddUserAuthentication(/* ... */)
+       .AddUserProfiles()
+       .AddStorage(storage => storage
+           .SqlServer(builder.Configuration.GetConnectionString("DefaultConnection")!));
+   ```
+
+   :::note[PostgreSQL alternative]
+   If you prefer PostgreSQL, install `Duende.UserManagement.Storage.PostgreSQL` instead and replace the storage call with `.PostgreSql(connectionString)`:
+
+   ```csharp title="Program.cs"
    using Duende.Platform.Storage.PostgreSql;
 
    builder.Services
@@ -126,21 +173,22 @@ After successful OTP authentication your application uses normal ASP.NET Core co
        .AddStorage(storage => storage
            .PostgreSql(builder.Configuration.GetConnectionString("DefaultConnection")!));
    ```
+   :::
 
    For details on storage options, including how to configure separate stores for different data categories, see the [Storage](/usermanagement/fundamentals/storage.md) documentation.
 
 4. **Initialize the database**
 
-   Before the application starts handling requests, create the database schema. Resolve `IPostgreSqlStore` from the service provider and call `CreateIfNotExistsAsync()`:
+   Before the application starts handling requests, create the database schema. Resolve `IMsSqlStore` from the service provider and call `CreateIfNotExistsAsync()`:
 
    ```csharp title="Program.cs"
-   using Duende.Platform.Storage.PostgreSql;
+   using Duende.Platform.Storage.MsSql;
 
    var app = builder.Build();
 
    await using (var scope = app.Services.CreateAsyncScope())
    {
-       var store = scope.ServiceProvider.GetRequiredService<IPostgreSqlStore>();
+       var store = scope.ServiceProvider.GetRequiredService<IMsSqlStore>();
        await store.CreateIfNotExistsAsync(CancellationToken.None);
    }
    ```
@@ -155,7 +203,11 @@ After successful OTP authentication your application uses normal ASP.NET Core co
 
    Accept the user's email address, build an `OtpAddress`, and call `TrySendOtpAsync()`. Store the returned `OtpToken` (for example in a hidden form field or a short-lived cookie) so it can be passed back during verification.
 
-   ```csharp title="LoginRequest.cshtml.cs"
+    :::note[Razor Pages examples]
+    The code samples below use **ASP.NET Core Razor Pages** (`PageModel`, `OnPostAsync`, `IActionResult`). The same services (`IOtpAuthenticator`, `IUserAuthenticatorsSelfService`, and others) can be injected into **MVC controllers** or **minimal API endpoints** just as easily. The pattern is identical regardless of which UI framework you choose.
+    :::
+
+    ```csharp title="LoginRequest.cshtml.cs"
    using Duende.Platform.Users;
    using Duende.Platform.Users.Authentication.Otp;
 
@@ -180,7 +232,7 @@ After successful OTP authentication your application uses normal ASP.NET Core co
 
            if (result is null)
            {
-               // Concurrent request conflict — ask the user to try again.
+               // Concurrent request conflict. Ask the user to try again.
                return Page();
            }
 
@@ -226,7 +278,7 @@ After successful OTP authentication your application uses normal ASP.NET Core co
 
            if (!OtpToken.TryParse(Token, out var token))
            {
-               // Token is missing or malformed — restart the login flow.
+               // Token is missing or malformed. Restart the login flow.
                return RedirectToPage("/login");
            }
 
@@ -267,7 +319,7 @@ Add the following sections to `appsettings.json` to supply the connection string
 ```json title="appsettings.json"
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=usermanagement;Username=your_user;Password=your_password"
+    "DefaultConnection": "Server=localhost;Database=usermanagement;User Id=your_user;Password=your_password;TrustServerCertificate=True"
   },
   "Smtp": {
     "Host": "smtp.example.com",
@@ -281,8 +333,8 @@ Add the following sections to `appsettings.json` to supply the connection string
 ## Next Steps
 
 <CardGrid>
-  <LinkCard title="Storage" href="/usermanagement/fundamentals/storage.md" description="Configure separate stores for users, operational data, and audit logs." />
-  <LinkCard title="OTP Options" href="/usermanagement/reference/smtp-otp-sender.md" description="Customise email templates, expiry windows, and rate-limiting behaviour." />
-  <LinkCard title="User Profiles" href="/usermanagement/fundamentals/profiles.md" description="Store and surface custom claims and attributes using the profile APIs." />
-  <LinkCard title="Additional Authenticators" href="/usermanagement/authentication/overview.mdx" description="Add TOTP, passkeys, or external identity providers alongside OTP." />
+  <LinkCard title="Storage" href="/usermanagement/fundamentals/storage" description="Configure separate stores for users, operational data, and audit logs." />
+  <LinkCard title="OTP Options" href="/usermanagement/reference/smtp-otp-sender" description="Customize email templates, expiry windows, and rate-limiting behavior." />
+  <LinkCard title="User Profiles" href="/usermanagement/fundamentals/profiles" description="Store and surface custom claims and attributes using the profile APIs." />
+  <LinkCard title="Additional Authenticators" href="/usermanagement/authentication/overview" description="Add TOTP, passkeys, or external identity providers alongside OTP." />
 </CardGrid>

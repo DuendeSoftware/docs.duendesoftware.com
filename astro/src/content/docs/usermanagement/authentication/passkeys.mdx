@@ -9,7 +9,9 @@ sidebar:
 
 
 
-Passkeys provide phishing-resistant, passwordless authentication using the WebAuthn/FIDO2 standardint, face recognition), a device PIN, or a hardware security key. Credentials are cryptographically bound to the origin, so they cannot be used on a different site.
+Passkeys provide phishing-resistant, passwordless authentication using the WebAuthn/FIDO2 standard. Authentication can use biometrics (fingerprint, face recognition), a device PIN, or a hardware security key. Credentials are cryptographically bound to the origin, so they cannot be used on a different site.
+
+**Learn more:** [passkeys.dev](https://passkeys.dev/) (FIDO Alliance resource site) · [WebAuthn specification](https://www.w3.org/TR/webauthn-3/) (W3C) · [FIDO Alliance](https://fidoalliance.org/) (standards body)
 
 ## When to Use Passkeys
 
@@ -18,6 +20,10 @@ Passkeys provide phishing-resistant, passwordless authentication using the WebAu
 * High-security applications (financial services, healthcare, government)
 * Any application where phishing resistance is a priority
 * Applications targeting modern devices and browsers
+
+:::tip[FAPI Conformance]
+For applications requiring FAPI (Financial-grade API) compliance, Duende offers [FAPI 2.0 support](/identityserver/tokens/fapi-2-0-specification) for IdentityServer, which extends security with additional requirements aligned to financial-grade standards. See also the [conformance report](/identityserver/diagnostics/conformance-report.md).
+:::
 
 **Good for:**
 
@@ -77,7 +83,7 @@ Passkeys are the strongest authentication option in User Management, and the one
 
 ### What User Management Does for You
 
-Credentials are cryptographically bound to the relying party ID and origin — a passkey registered at `auth.example.com` cannot be used at `evil.example.com`, even if an attacker controls a subdomain. The server stores only the public key, so a database breach gives an attacker nothing useful. Challenges are 32 bytes (256 bits) of random data, expire after 5 minutes, and are single-use. There is no shared secret to steal, no code to intercept, and no password to guess.
+Credentials are cryptographically bound to the relying party ID and origin. A passkey registered at `auth.example.com` cannot be used at `evil.example.com`, even if an attacker controls a subdomain. The server stores only the public key, so a database breach gives an attacker nothing useful. Challenges are 32 bytes (256 bits) of random data, expire after 5 minutes, and are single-use. There is no shared secret to steal, no code to intercept, and no password to guess.
 
 ### What You Need to Think About
 
@@ -87,7 +93,7 @@ Most passkey security issues come from misconfiguration rather than protocol wea
 
 If you want a passkey registered at `auth.example.com` to work at `app.example.com`, set `ServerDomain` to `"example.com"`. Without it, each subdomain is treated as a separate relying party and the passkey will not work across them.
 
-The default `UserVerificationRequirement` is `"preferred"`, which means authentication can succeed without a PIN or biometric if the authenticator does not support user verification. For high-assurance scenarios — financial applications, admin interfaces, anything sensitive — set it to `"required"`.
+The default `UserVerificationRequirement` is `"preferred"`, which means authentication can succeed without a PIN or biometric if the authenticator does not support user verification. For high-assurance scenarios (financial applications, admin interfaces, anything sensitive) set it to `"required"`.
 
 For regulated environments where you need to know exactly what kind of authenticator your users are using, set `AttestationConveyancePreference` to `"direct"` and verify the attestation statement. This lets you enforce an allowlist of approved authenticator models.
 

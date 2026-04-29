@@ -85,7 +85,7 @@ Example (relaxed password policy):
 
 ## `PasskeyOptions`
 
-Controls WebAuthn/passkey registration and authentication behaviour. Accessed via `UserAuthenticationOptions.Passkeys`.
+Controls WebAuthn/passkey registration and authentication behavior. Accessed via `UserAuthenticationOptions.Passkeys`.
 
 | Property | Type | Default | Description |
 |---|---|---|---|
@@ -161,7 +161,7 @@ Controls TOTP authenticator app configuration. Accessed via `UserAuthenticationO
 
 ### `StorageOptions`
 
-Nested within `TotpOptions`. Controls TOTP secret storage behaviour.
+Nested within `TotpOptions`. Controls TOTP secret storage behavior.
 
 | Property | Type | Default | Description |
 |---|---|---|---|

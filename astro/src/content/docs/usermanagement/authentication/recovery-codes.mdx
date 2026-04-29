@@ -7,8 +7,6 @@ sidebar:
   order: 7
 ---
 
-import { Steps } from "@astrojs/starlight/components";
-
 Recovery codes are a backup authentication method for when the primary two-factor mechanism (typically Time-Based One-Time Password (TOTP)) is unavailable. Each code is single-use, so a user who loses their device or breaks their authenticator app can still get back in.
 
 ## Comparison With Other Authentication Methods
@@ -25,21 +23,7 @@ Recovery codes are a backup authentication method for when the primary two-facto
 
 ### Generation Flow
 
-<Steps>
-1. **Two-Factor Authentication (2FA) activation** - User enables TOTP authentication
-
-2. **Code generation** - The system generates a set of recovery codes (typically 10)
-
-3. **Secure display** - Codes are shown to the user once
-
-4. **User storage** - The user saves codes securely (print, password manager, etc.)
-
-5. **Hashed storage** - Codes are hashed and stored in the database
-
-6. **Availability** - Codes remain available until used or regenerated
-</Steps>
-
-When a user enables Two-Factor Authentication (2FA), the system generates a set of recovery codes and shows them once. Here's how that works:
+When a user enables 2FA, the system generates a set of recovery codes (typically 10), displays them once for the user to save securely, and stores only their hashes. Codes remain valid until used or regenerated.
 
 ```mermaid
 sequenceDiagram
@@ -58,25 +42,7 @@ sequenceDiagram
 
 ### Authentication Flow
 
-<Steps>
-1. **2FA required** - User completes primary authentication and needs 2FA
-
-2. **Primary method unavailable** - User cannot access their TOTP authenticator
-
-3. **Recovery option** - User selects "Use recovery code instead"
-
-4. **Code entry** - User enters one of their saved recovery codes
-
-5. **Verification** - System verifies the code against stored hashes
-
-6. **Code consumption** - If valid, the code is marked as used (single-use)
-
-7. **Session establishment** - User is authenticated with a Multi-Factor Authentication (MFA) claim
-
-8. **Warning** - User is notified of remaining codes
-</Steps>
-
-When a user can't access their authenticator app, they can sign in with a recovery code instead. The code is verified and immediately consumed:
+When a user can't access their authenticator app, they enter a saved recovery code instead. The system verifies it against stored hashes, consumes it immediately (single-use), and issues an MFA claim. The user is warned if their remaining code count is low.
 
 ```mermaid
 sequenceDiagram
@@ -116,7 +82,7 @@ The method verifies the supplied code against stored hashes and, if valid, marks
 `IUserAuthenticatorsSelfService` exposes recovery code management for authenticated users:
 
 ```csharp
-// Generate new recovery codes — invalidates all existing codes
+// Generate new recovery codes. Invalidates all existing codes
 Task<IReadOnlyCollection<PlainTextRecoveryCode>?> TryCreateRecoveryCodesAsync(
     UserSubjectId subjectId,
     Ct ct);
@@ -209,7 +175,7 @@ public async Task<IActionResult> OnPostLoginWithRecoveryCodeAsync(string recover
         return RedirectToPage("/Login");
     }
 
-    // Strip spaces and dashes — accept flexible input formats
+    // Strip spaces and dashes. Accept flexible input formats
     var cleanCode = recoveryCode
         .Replace(" ", string.Empty)
         .Replace("-", string.Empty);
@@ -261,7 +227,7 @@ public async Task<IActionResult> OnPostRegenerateCodesAsync()
         return Error("Two-factor authentication is not enabled");
     }
 
-    // Generate new codes — all old codes are immediately invalidated
+    // Generate new codes. All old codes are immediately invalidated
     var recoveryCodes = await userAuthenticatorsSelfService.TryCreateRecoveryCodesAsync(
         subjectId, ct);
 
@@ -304,7 +270,7 @@ public async Task<IActionResult> OnGetAsync()
 
 ## Security
 
-Recovery codes are the safety net for two-factor authentication — they exist for the moment when a user loses their phone, breaks their authenticator app, or otherwise cannot use their primary second factor. That makes them valuable, and it makes them a target.
+Recovery codes are the safety net for two-factor authentication. They exist for the moment when a user loses their phone, breaks their authenticator app, or otherwise cannot use their primary second factor. That makes them valuable, and it makes them a target.
 
 ### What User Management Does for You
 
@@ -312,11 +278,11 @@ Codes are hashed with PBKDF2 before storage, so a stolen database row cannot be 
 
 ### What You Need to Think About
 
-The security of recovery codes depends almost entirely on what users do with them after generation. A code stored in a plain text file on the desktop, or in an unencrypted notes app, is effectively public. Your UI should tell users clearly where to store them — a password manager or printed and kept somewhere physically secure are the standard recommendations.
+The security of recovery codes depends almost entirely on what users do with them after generation. A code stored in a plain text file on the desktop, or in an unencrypted notes app, is effectively public. Your UI should tell users clearly where to store them. A password manager or printed and kept somewhere physically secure are the standard recommendations.
 
 Show a warning when a user is running low. A user who uses their last recovery code and does not generate new ones has no fallback if they lose their second factor. Prompt regeneration when fewer than 2–3 codes remain.
 
-Treat the code display screen as a sensitive operation. Never show recovery codes without first confirming the user's session is authenticated. And make it easy to regenerate — a user who has used a code should be encouraged to generate a fresh set immediately, so the old set is fully invalidated.
+Treat the code display screen as a sensitive operation. Never show recovery codes without first confirming the user's session is authenticated. And make it easy to regenerate. A user who has used a code should be encouraged to generate a fresh set immediately, so the old set is fully invalidated.
 
 For cross-cutting security topics (data protection key persistence and throttling configuration) see [Security Considerations](/usermanagement/fundamentals/security.md).
 
