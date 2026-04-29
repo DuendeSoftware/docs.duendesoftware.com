@@ -32,6 +32,7 @@ astro/src/data/contributors.json
 .opencode/
 opencode.json
 .idea/**/copilot.data.migration.*.xml
+.idea/
 
 # .NET
 *.user
