@@ -1,13 +1,13 @@
 ---
 title: Introduction to User Management
-description: An overview of Duende User Management, an opinionated enterprise-grade identity solution supporting OTP, TOTP, passkeys, external authentication, passwords, recovery codes, user profiles, roles, groups, and multi-tenancy.
+description: An overview of Duende User Management, an opinionated enterprise-grade identity solution supporting OTP, TOTP, passkeys, external authentication, passwords, recovery codes, user profiles, roles, and groups.
 date: 2026-04-29
 sidebar:
   label: Introduction
   order: 2
 ---
 
-Duende User Management is a first-party, embeddable .NET SDK that provides native user storage, authentication, and lifecycle management. It delivers a modern, extensible, enterprise-grade user store with a passwordless-first approach, supporting one-time passwords (OTP), time-based one-time passwords (TOTP), passkeys, external authentication providers, and traditional username/password authentication. Recovery codes, user profiles, roles and groups, and multi-tenancy are all included, so you can ship secure, modern authentication without assembling identity primitives yourself.
+Duende User Management is a first-party, embeddable .NET SDK that provides native user storage, authentication, and lifecycle management. It delivers a modern, extensible, enterprise-grade user store with a passwordless-first approach, supporting one-time passwords (OTP), time-based one-time passwords (TOTP), passkeys, external authentication providers, and traditional username/password authentication. Recovery codes, user profiles, roles and groups are all included, so you can ship secure, modern authentication without assembling identity primitives yourself.
 
 ## Why User Management?
 
@@ -37,7 +37,6 @@ User Management supports the authentication methods that modern applications nee
 * **Passwordless-First Design**: Built from the ground up to support modern, password-free authentication flows, with passwords as an opt-in rather than the default.
 * **User Profiles**: An extensible user profile model for storing and surfacing custom claims and attributes alongside standard identity information.
 * **Roles and Groups**: Built-in support for role-based access control and group membership management, making it straightforward to model organizational structures and permission boundaries.
-* **Multi-Tenancy**: First-class multi-tenant support for SaaS scenarios, isolating users and configuration per tenant.
 * **IdentityServer Integration**: User Management integrates with Duende IdentityServer as the user store, enabling standards-based OpenID Connect and OAuth 2.0 token issuance backed by its full feature set.
 * **Opinionated Defaults**: Sensible, security-oriented defaults that reduce the surface area for misconfiguration without sacrificing extensibility.
 
@@ -47,6 +46,6 @@ User Management is a good fit when you need:
 
 * Modern authentication methods beyond username and password, including passkeys, OTP, and TOTP.
 * A complete user store that integrates with Duende IdentityServer without requiring you to wire up identity primitives manually.
-* Enterprise-grade features such as multi-tenancy, roles, groups, and extensible user profiles.
+* Enterprise-grade features such as roles, groups, and extensible user profiles.
 * Recovery code support so users are never permanently locked out of their accounts.
 * A passwordless-first approach that still accommodates password-based authentication where required.

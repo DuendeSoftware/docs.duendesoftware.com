@@ -16,7 +16,6 @@ The storage engine uses a document-oriented approach within a relational databas
 * **No Database Migrations**: Add or remove properties without schema changes.
 * **In-Place Schema Upgrades**: Documents evolve automatically with your application.
 * **Transaction Support**: Full ACID compliance for data integrity.
-* **Multi-Tenancy Support**: Built-in space isolation for tenant separation.
 
 ## Available Storage Adapters
 
@@ -377,7 +376,4 @@ If your workload is read-heavy, consider routing read operations to a read repli
 * **SQL Server**: Use the `ApplicationIntent=ReadOnly` connection string parameter to route reads to an Always On availability group secondary.
 * **Azure SQL / Azure Database for PostgreSQL**: Enable read replicas in the Azure portal and configure a separate connection string for read traffic.
 
-## See Also
 
-* [Introduction to User Management](/usermanagement/introduction.md): Overview of User Management features and capabilities.
-* [Multi-Tenancy](/usermanagement/fundamentals/multi-tenancy.md): How to configure isolated tenant storage.
