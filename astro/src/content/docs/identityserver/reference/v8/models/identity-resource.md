@@ -64,3 +64,7 @@ public static readonly IEnumerable<IdentityResource> IdentityResources =
 * **`UserClaims`**
 
   List of associated user claim types that should be included in the identity token.
+
+* **`Properties`**
+
+  Dictionary to hold any custom resource-specific values as needed.

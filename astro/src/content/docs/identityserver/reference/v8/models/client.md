@@ -66,6 +66,10 @@ public static IEnumerable<Client> Get()
 
   Unique ID of the client
 
+* **`ProtocolType`**
+
+  Specifies the protocol type of the client. Defaults to `oidc` (OpenID Connect).
+
 * **`ClientSecrets`**
 
   List of client secrets - credentials to access the token endpoint.
@@ -204,12 +208,12 @@ public static IEnumerable<Client> Get()
 
 * **`ClientClaimsPrefix`**
 
-  If set, the prefix client claim types will be prefixed with. Defaults to `client`_. The intent is to make sure they
+  If set, the prefix client claim types will be prefixed with. Defaults to `client_`. The intent is to make sure they
   don't accidentally collide with user claims.
 
 * **`PairWiseSubjectSalt`**
+
   Salt value used in pair-wise subjectId generation for users of this client.
-  Currently not implemented.
 
 ## Refresh Token
 
@@ -272,6 +276,10 @@ Consent screen specific settings.
 * **`ClientName`**
 
   Client display name (used for logging and consent screen).
+
+* **`Description`**
+
+  Description of the client.
 
 * **`ClientUri`**
 
