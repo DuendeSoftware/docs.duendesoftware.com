@@ -41,7 +41,7 @@ dotnet add package Duende.UserManagement
 
 ## Configure Services
 
-Open `Program.cs` and replace its contents step by step as described below.
+Open `Program.cs` and modify its contents step by step as described below.
 
 <Steps>
 
@@ -100,9 +100,14 @@ Open `Program.cs` and replace its contents step by step as described below.
 
        public class ConsoleOtpSender : IOtpSender
        {
+            public bool CanSend(OtpAddress address)
+            {
+                return true;
+            }
+
             public Task SendAsync(OtpAddress address, PlainTextOtp otp, TimeSpan expiresAfter, CancellationToken ct)
             {
-                Console.WriteLine($"OTP for {address}: {otp.Value}");
+                Console.WriteLine($"OTP for {address}: {otp.Text}");
                 return Task.CompletedTask;
             }
        }
@@ -133,7 +138,8 @@ Open `Program.cs` and replace its contents step by step as described below.
          "Smtp": {
            "Host": "localhost",
            "Port": 1025,
-           "From": "noreply@example.com"
+           "FromEmail": "noreply@example.com",
+           "FromName": "noreply"
          }
        }
        ```
@@ -173,65 +179,133 @@ Open `Program.cs` and replace its contents step by step as described below.
 The application configuration is now complete. Next, we'll add the pages and models that will be used to handle the login, OTP verification, and logout flows.
 
 <details>
-    <summary>Complete `Program.cs`, using the SMTP-based OTP sender</summary>
-   
-   ```csharp title="Program.cs"
-   using Duende.Platform.Builder;
-   using Duende.Platform.Users.Authentication;
-   using Microsoft.AspNetCore.Authentication.Cookies;
-   
-   var builder = WebApplication.CreateBuilder(args);
-   
-   builder.Services.AddRazorPages();
-   
-   builder.Services
-       .AddAuthentication(options =>
-       {
-           options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-           options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-           options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-           options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-       })
-       .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-       {
-           options.Cookie.Name = "__Host-AuthSession";
-           options.Cookie.HttpOnly = true;
-           options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-           options.Cookie.SameSite = SameSiteMode.Lax;
-           options.Cookie.IsEssential = true;
-           options.ExpireTimeSpan = TimeSpan.FromHours(8);
-           options.SlidingExpiration = true;
-           options.LoginPath = "/Login";
-           options.LogoutPath = "/Logout";
-       });
-   
-   builder.Services.AddAuthorization();
-   builder.Services.AddDataProtection();
-   
-   builder.Services
-       .AddDuendePlatform()
-       .AddUserAuthentication(authentication => authentication
-           .UseSmtpOtpSender(options =>
-               builder.Configuration.GetSection("Smtp").Bind(options)))
-       .AddStorage(s => s.InMemory());
-   
-   var app = builder.Build();
-   
-   if (!app.Environment.IsDevelopment())
-   {
-       app.UseExceptionHandler("/Error");
-       app.UseHsts();
-   }
-   
-   app.UseHttpsRedirection();
-   app.UseRouting();
-   app.UseAuthentication();
-   app.UseAuthorization();
-   app.MapStaticAssets();
-   app.MapRazorPages().WithStaticAssets();
-   
-   app.Run();
-   ```
+    <summary>Complete `Program.cs`</summary>
+      <Tabs syncKey="umgsOtpSender">
+         <TabItem label="Console sender (development)">
+            ```csharp title="Program.cs"
+            using Duende.Platform.Builder;
+            using Duende.Platform.Storage;
+            using Duende.Platform.Users.Authentication;
+            using Duende.Platform.Users.Authentication.Otp;
+
+            using Microsoft.AspNetCore.Authentication.Cookies;
+
+            using OtpUserManagement;
+
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddRazorPages();
+
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.Cookie.Name = "__Host-AuthSession";
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.Cookie.IsEssential = true;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                    options.SlidingExpiration = true;
+                    options.LoginPath = "/Login";
+                    options.LogoutPath = "/Logout";
+                });
+
+            builder.Services
+                .AddDuendePlatform()
+                .AddUserAuthentication()
+                .AddStorage(s => s.InMemory());
+
+            builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddDataProtection();
+
+            var app = builder.Build();
+
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapStaticAssets();
+            app.MapRazorPages().WithStaticAssets();
+
+            app.Run();
+
+            ```
+        </TabItem>
+        <TabItem label="SMTP sender">
+            ```csharp title="Program.cs"
+            using Duende.Platform.Builder;
+            using Duende.Platform.Users.Authentication;
+            using Microsoft.AspNetCore.Authentication.Cookies;
+
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddRazorPages();
+
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.Cookie.Name = "__Host-AuthSession";
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.Cookie.IsEssential = true;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                    options.SlidingExpiration = true;
+                    options.LoginPath = "/Login";
+                    options.LogoutPath = "/Logout";
+                });
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddDataProtection();
+
+            builder.Services
+                .AddDuendePlatform()
+                .AddUserAuthentication(authentication => authentication
+                    .UseSmtpOtpSender(options =>
+                        builder.Configuration.GetSection("Smtp").Bind(options)))
+                .AddStorage(s => s.InMemory());
+
+            var app = builder.Build();
+
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapStaticAssets();
+            app.MapRazorPages().WithStaticAssets();
+
+            app.Run();
+            ```
+        </TabItem>
+    </Tabs>
 </details>
 
 ## Add a Login Page
@@ -241,7 +315,7 @@ The application configuration is now complete. Next, we'll add the pages and mod
    
    ```html title="Pages/Login.cshtml"
    @page
-   @model LoginModel
+   @model OtpUserManagement.Pages.LoginModel
    @{
        ViewData["Title"] = "Log in";
    }
@@ -314,7 +388,7 @@ The application configuration is now complete. Next, we'll add the pages and mod
                return Page();
            }
    
-           TempData["OtpToken"] = result.Token!.Value.ToString();
+           TempData["OtpToken"] = result.Token.Value.ToString();
            return RedirectToPage("/EnterOtp");
        }
    }
@@ -391,7 +465,7 @@ You can configure OTP expiry, code length, and rate-limiting behaviour through t
    
        public IActionResult OnGet()
        {
-           var token = TempData["OtpToken"] as string;
+           var token = TempData["OtpToken"]?.ToString();
            if (token is null)
            {
                return RedirectToPage("/Login");
@@ -474,26 +548,26 @@ Once a user record is confirmed (or created), a `ClaimsPrincipal` is built from 
    
    ```html title="Pages/Logout.cshtml"
    @page
-   @model LogoutModel
+   @model OtpUserManagement.Pages.LogoutModel
    ```
    
 2. Create `Pages/Logout.cshtml.cs`:
    
    ```csharp title="Pages/Logout.cshtml.cs"
-   using Microsoft.AspNetCore.Authentication;
-   using Microsoft.AspNetCore.Mvc;
-   using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+
+    namespace OtpUserManagement.Pages;
    
-   namespace OtpUserManagement.Pages;
-   
-   public class LogoutModel : PageModel
-   {
-       public async Task<IActionResult> OnPostAsync()
-       {
-           await HttpContext.SignOutAsync();
-           return RedirectToPage("/Login");
-       }
-   }
+    public class LogoutModel : PageModel
+    {
+        public async Task<IActionResult> OnPostAsync()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToPage("/Login");
+        }
+    }
    ```
 </Steps>
 
@@ -523,7 +597,7 @@ Once a user record is confirmed (or created), a `ClaimsPrincipal` is built from 
    
    ```html title="Pages/Index.cshtml"
    @page
-   @model IndexModel
+   @model OtpUserManagement.Pages.IndexModel
    @{
        ViewData["Title"] = "Home";
    }
