@@ -5,11 +5,11 @@ head:
     content: Duende Software Docs
   - tag: meta
     attrs: { "property": "og:title", "content": "Duende Software Docs" }
-description: Get started building your .NET applications with IdentityServer, Backend-for-Frontend (BFF) and our open-source tools.
+description: Get started building your .NET applications with IdentityServer, User Management, Backend-for-Frontend (BFF) and our open-source tools.
 template: splash
 giscus: false
 hero:
-  tagline: Get started building your .NET applications with IdentityServer, Backend-for-Frontend (BFF) and our open-source tools.
+  tagline: Get started building your .NET applications with IdentityServer, User Management, Backend-for-Frontend (BFF) and our open-source tools.
   image:
     dark: ../../assets/duende-logo-dark.svg
     light: ../../assets/duende-logo.svg
@@ -48,17 +48,25 @@ import Newsletter from "~/components/Newsletter.astro";
       client configurations, and see how security tokens work in practice.
 
       <LinkButton href="https://demo.duendesoftware.com" variant="secondary">
-            Try it out
-        </LinkButton>
+          Try it out
+      </LinkButton>
     </Card>
 
 </CardGrid>
+
+# Products
 
 <CardGrid>
   <Card title="IdentityServer" icon="open-book">
     The most flexible and standards-compliant OpenID Connect and OAuth 2.0
     framework for ASP.NET Core.
     <LinkButton href="/identityserver/" variant="secondary">
+      Learn more
+    </LinkButton>
+  </Card>
+  <Card title="User Management" icon="seti:c-sharp">
+    Native user storage, passwordless-first authentication, and full lifecycle management (profiles, roles, groups, multi-tenancy).
+    <LinkButton href="/usermanagement/" variant="secondary">
       Learn more
     </LinkButton>
   </Card>
@@ -69,6 +77,11 @@ import Newsletter from "~/components/Newsletter.astro";
       Learn more
     </LinkButton>
   </Card>
+</CardGrid>
+
+# Libraries and Tools
+
+<CardGrid>
   <Card title="Access Token Management" icon="github">
     <Badge text={"OSS"} /> .NET identity library for access token management.
     <LinkButton href="/accesstokenmanagement/" variant="secondary">
