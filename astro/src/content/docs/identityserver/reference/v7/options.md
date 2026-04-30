@@ -634,7 +634,7 @@ var builder = services.AddIdentityServer(options =>
 
   Specifies either the name of the subdomain or full domain for running the MTLS endpoints. MTLS will use path-based endpoints if not set (the default).
   Use a simple string (e.g. "mtls") to set a subdomain, use a full domain name (e.g. "identityserver-mtls.io") to set a full domain name.
-  When a full domain name is used, you also need to set the `IssuerName` to a fixed value.
+  When a full domain name is used, you also need to set the `IssuerUri` to a fixed value.
 
 - **`AlwaysEmitConfirmationClaim`**
 
@@ -704,7 +704,7 @@ Settings for [server-side sessions](/identityserver/ui/server-side-sessions/inde
 - **`ExpiredSessionsTriggerBackchannelLogout`**
 
   If enabled, when server-side sessions are removed due to expiration, back-channel logout notifications will be sent.
-  This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer. Defaults to true.
+  This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer. Defaults to false.
 
 - **`FuzzExpiredSessionRemovalStart`**
 

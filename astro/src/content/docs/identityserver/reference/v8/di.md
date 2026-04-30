@@ -44,6 +44,28 @@ Several convenience methods are provided for registering custom stores:
 
   Registers a custom `IIdentityProviderStore` implementation.
 
+- **`AddPersistedGrantStore<T>`**
+
+  Registers a custom `IPersistedGrantStore` implementation for persisting grants such as authorization codes, refresh
+  tokens, reference tokens, and user consent records. Replace the default in-memory store with a durable implementation
+  for production use.
+
+- **`AddDeviceFlowStore<T>`**
+
+  Registers a custom `IDeviceFlowStore` implementation for persisting device flow authorization codes and user codes
+  during the OAuth 2.0 Device Authorization Grant flow.
+
+- **`AddSigningKeyStore<T>`**
+
+  Registers a custom `ISigningKeyStore` implementation for persisting automatically managed signing keys. Replace the
+  default file-system store with a durable implementation (e.g. database or key vault) for production deployments with
+  multiple server instances.
+
+- **`AddPushedAuthorizationRequestStore<T>`**
+
+  Registers a custom `IPushedAuthorizationRequestStore` implementation for persisting Pushed Authorization Requests
+  (PAR). Replace the default in-memory store with a durable implementation for production use.
+
 The [in-memory configuration stores](/identityserver/data/configuration.md#in-memory-stores) can be registered in DI
 with the following extension methods.
 
@@ -166,6 +188,16 @@ The following are convenient to add additional features to your IdentityServer.
   Adds an `ISecretValidator` implementation for validating client or API resource credentials against a credential
   store.
 
+- **`AddResourceValidator`**
+
+  Adds an `IResourceValidator` implementation for validating whether the requested scopes and resources are valid for a
+  given client.
+
+- **`AddScopeParser`**
+
+  Adds an `IScopeParser` implementation for parsing the raw scope string from authorization and token requests into
+  individual parsed scope values.
+
 - **`AddResourceOwnerValidator`**
 
   Adds an `IResourceOwnerPasswordValidator` implementation for validating user credentials for the resource owner
@@ -215,13 +247,34 @@ The following are convenient to add additional features to your IdentityServer.
 
   Adds an IdentityProvider configuration validator.
 
+- **`AddClientConfigurationValidator`**
+
+  Adds an `IClientConfigurationValidator` implementation that validates client configuration when clients are loaded
+  from the store, allowing enforcement of organization-specific client configuration rules.
+
+- **`AddCustomBackchannelAuthenticationRequestValidator`**
+
+  Adds an `ICustomBackchannelAuthenticationValidator` implementation for adding additional validation logic to CIBA
+  (Client-Initiated Backchannel Authentication) requests.
+
+- **`AddBackChannelLogoutService`**
+
+  Adds an `IBackChannelLogoutService` implementation that handles sending back-channel logout notifications to clients
+  when a user's session ends.
+
+- **`AddUserSession`**
+
+  Adds an `IUserSession` implementation that manages the user's authentication session, including reading and writing
+  the session cookie and tracking session identifiers. The service is registered as scoped.
+
 - **`AddBackchannelAuthenticationUserValidator`**
 
   Adds the backchannel login user validator.
 
 - **`AddBackchannelAuthenticationUserNotificationService`**
 
-  Adds the backchannel login user validator.
+  Adds an `IBackchannelAuthenticationUserNotificationService` implementation responsible for notifying the end user of a
+  pending CIBA authentication request (e.g. by sending a push notification or SMS).
 
 ## SAML 2.0 :badge[v8.0]
 

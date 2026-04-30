@@ -74,6 +74,18 @@ Top-level settings. Available directly on the `IdentityServerOptions` object.
 - **`ValidateTenantOnAuthorization`**
   Specifies if a user's `tenant` claim is compared to the tenant `acr_values` parameter value to determine if the login page is displayed. Defaults to `false`.
 
+- **`JwtValidationClockSkew`**
+
+  The allowed clock skew applied when validating JWT lifetimes throughout IdentityServer. Defaults to 5 minutes. This setting applies to JWT access tokens validated at the UserInfo, introspection, and local API endpoints; `private_key_jwt` client authentication assertions; JAR request objects; and custom uses of `TokenValidator`. It does not apply to DPoP proof tokens, which use `DPoP.ServerClockSkew`.
+
+- **`SupportedRequestObjectSigningAlgorithms`**
+
+  The allowed signature algorithms for JWT-secured authorization requests (JAR). The `alg` header of JAR request objects is validated against this collection, and the `request_object_signing_alg_values_supported` discovery property is populated with these values. Defaults to `[RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384, ES512]`. If set to an empty collection, all algorithms are allowed but `request_object_signing_alg_values_supported` will not be set.
+
+- **`SupportedClientAssertionSigningAlgorithms`**
+
+  The allowed signature algorithms for client authentication using client assertions (`private_key_jwt`). The `alg` header of client assertions is validated against this collection, and the `token_endpoint_auth_signing_alg_values_supported` discovery property is populated with these values. Defaults to `[RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384, ES512]`. If set to an empty collection, all algorithms are allowed but `token_endpoint_auth_signing_alg_values_supported` will not be set.
+
 ## Key management
 
 Automatic key management settings. Available on the `KeyManagement` property of the `IdentityServerOptions` object.
@@ -203,6 +215,10 @@ Endpoint settings, including flags to disable individual endpoints and support f
 - **`EnablePushedAuthorizationEndpoint`**
 
   Enables the pushed authorization endpoint. Defaults to true.
+
+- **`EnableOAuth2MetadataEndpoint`**
+
+  Enables the OAuth 2.0 authorization server metadata endpoint (`/.well-known/oauth-authorization-server`). Defaults to true.
 
 - **`EnableJwtRequestUri`**
   Enables the `request_uri` parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the request_uri parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).
@@ -638,7 +654,7 @@ var builder = services.AddIdentityServer(options =>
 
   Specifies either the name of the subdomain or full domain for running the MTLS endpoints. MTLS will use path-based endpoints if not set (the default).
   Use a simple string (e.g. "mtls") to set a subdomain, use a full domain name (e.g. "identityserver-mtls.io") to set a full domain name.
-  When a full domain name is used, you also need to set the `IssuerName` to a fixed value.
+  When a full domain name is used, you also need to set the `IssuerUri` to a fixed value.
 
 - **`AlwaysEmitConfirmationClaim`**
 
@@ -708,7 +724,7 @@ Settings for [server-side sessions](/identityserver/ui/server-side-sessions/inde
 - **`ExpiredSessionsTriggerBackchannelLogout`**
 
   If enabled, when server-side sessions are removed due to expiration, back-channel logout notifications will be sent.
-  This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer. Defaults to true.
+  This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer. Defaults to false.
 
 - **`FuzzExpiredSessionRemovalStart`**
 
@@ -739,6 +755,10 @@ Demonstration of Proof-of-Possession settings. Available on the `DPoP` property 
 - **`ServerClockSkew`**
   Clock skew used in validating DPoP proof token expiration using a server-generated nonce value. Defaults to `0`.
 
+- **`SupportedDPoPSigningAlgorithms`**
+
+  The allowed signature algorithms for DPoP proof tokens. The `alg` headers of proofs are validated against this collection, and the `dpop_signing_alg_values_supported` discovery property is populated with these values. Defaults to `[RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384, ES512]`. If set to an empty collection, all algorithms (including symmetric algorithms) are allowed and `dpop_signing_alg_values_supported` will not be set. Explicitly listing the expected values is recommended.
+
 ## Pushed Authorization Requests
 
 [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md) settings. Added in `v7.0`. Available on the `PushedAuthorization` property of the `IdentityServerOptions` object.
@@ -750,6 +770,10 @@ Demonstration of Proof-of-Possession settings. Available on the `DPoP` property 
 - **`Lifetime`**
 
   Controls the lifetime of pushed authorization requests. The pushed authorization request's lifetime begins when the request to the PAR endpoint is received, and is validated until the authorize endpoint returns a response to the client application. Note that user interaction, such as entering credentials or granting consent, may need to occur before the authorize endpoint can do so. Setting the lifetime too low will likely cause login failures for interactive users, if pushed authorization requests expire before those users complete authentication. Some security profiles, such as the FAPI 2.0 Security Profile recommend an expiration within 10 minutes to prevent attackers from pre-generating requests. To balance these constraints, this lifetime defaults to 10 minutes.
+
+- **`AllowUnregisteredPushedRedirectUris`**
+
+  Controls whether clients may use redirect URIs in pushed authorization requests that were not previously registered. Defaults to `false`. Enable with caution; allowing unregistered redirect URIs reduces the protection that pre-registration provides against open redirect attacks.
 
 ## Diagnostics
 
