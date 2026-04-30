@@ -1,94 +1,55 @@
 ---
-title: Getting Started
-description: Step-by-step guide to adding Duende User Management to an ASP.NET Core application, covering installation, service registration, storage configuration, database initialization, and a minimal OTP login flow.
+title: Getting Started with User Management
+description: Build a complete OTP (one-time password) login flow from scratch using Duende User Management in an ASP.NET Core Razor Pages app.
 date: 2026-04-29
 sidebar:
   label: Getting Started
   order: 3
 ---
 
-import { Steps, CardGrid, LinkCard, Aside } from "@astrojs/starlight/components";
+import { CardGrid, LinkCard, Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
 
-This guide walks you through adding Duende User Management to an ASP.NET Core application. By the end you will have a working one-time password (OTP) login flow backed by a SQL Server database and delivered via email.
+In this tutorial, you'll build a complete OTP (one-time password) login flow from scratch using Duende User Management. By the end, you'll have a working ASP.NET Core Razor Pages app where users log in with their email address and a one-time code.
 
-When a user authenticates with an OTP, the system:
-
-* Sends a one-time code to the user's registered contact method (email or SMS).
-* Validates the code when the user submits it.
-* Establishes a standard ASP.NET Core cookie-based authentication session.
-
-After successful OTP authentication your application uses normal ASP.NET Core cookie authentication for subsequent requests.
+<Aside type="caution">
+  This guide uses in-memory storage. All data is lost when the app restarts, so it is intended for local development only.
+  For production, switch to a persistent storage engine such as PostgreSQL or SQL Server. See the [Storage documentation](/usermanagement/fundamentals/storage.md) for details.
+</Aside>
 
 ## Prerequisites
 
-* .NET 10 or later
-* A SQL Server database (or PostgreSQL; see the alternative below)
-* An SMTP server for email-based OTP delivery
+* .NET 10 SDK or later
+* A code editor (e.g. Visual Studio, VS Code, JetBrains Rider)
 
-:::tip[Development: no SMTP server needed]
-For a quick proof-of-concept you can skip the SMTP server entirely and log OTP codes to the console instead. See the **Dev option A: Console OTP sender** section in step 2 below.
+## Create the Project
 
-If you prefer an SMTP experience locally, [Mailpit](https://github.com/axllent/mailpit) is a lightweight local SMTP server that captures outgoing email in a web UI. No external mail account required.
-:::
+Run the following commands to scaffold a new ASP.NET Core web app and move into its directory:
+
+```bash title="Terminal"
+dotnet new webapp -o OtpUserManagement && cd OtpUserManagement
+```
+
+The `webapp` template gives you a Razor Pages project with a `Program.cs` entry point, a `Pages/` folder with a sample `Index` page, and the standard `appsettings.json` configuration files: everything you need to start building.
+
+## Add NuGet Packages
+
+Add the Duende User Management package:
+
+```bash title="Terminal"
+dotnet add package Duende.UserManagement
+```
+
+## Configure Services
+
+Open `Program.cs` and replace its contents step by step as described below.
 
 <Steps>
 
-1. **Install the NuGet packages**
+1. **Register cookie authentication**
 
-   Add the User Management package and the SQL Server storage provider to your project:
-
-   ```bash title="Terminal"
-   dotnet add package Duende.UserManagement
-   dotnet add package Duende.UserManagement.Storage.SqlServer
-   ```
-
-   Or add the package references directly to your `.csproj`:
-
-   ```xml title="YourApp.csproj"
-   <PackageReference Include="Duende.UserManagement" Version="*" />
-   <PackageReference Include="Duende.UserManagement.Storage.SqlServer" Version="*" />
-   ```
-
-2. **Register services in `Program.cs`**
-
-   Call `AddDuendePlatform()` on the service collection, then chain `AddUserAuthentication()` and `AddUserProfiles()` to [enable the features you need](/usermanagement/architecture#di-registration). Configure the SMTP OTP sender inside `AddUserAuthentication()`:
+   Register cookie authentication as the default scheme and configure the session cookie with secure defaults:
 
    ```csharp title="Program.cs"
-   using Duende.Platform.Builder;
-   using Duende.Platform.Users.Authentication;
-   using Duende.Platform.Users.Authentication.Otp;
-   using Duende.Platform.Users.Profiles;
-
-   builder.Services
-       .AddDuendePlatform()
-       .AddUserAuthentication(auth => auth
-           .UseSmtpOtpSender(options =>
-           {
-               options.Host = builder.Configuration["Smtp:Host"]!;
-               options.Port = int.Parse(builder.Configuration["Smtp:Port"]!);
-               options.EnableSsl = true;
-               options.FromEmail = builder.Configuration["Smtp:FromEmail"]!;
-               options.FromName = builder.Configuration["Smtp:FromName"]!;
-           }))
-       .AddUserProfiles();
-   ```
-
-   You can also bind the SMTP options directly from configuration:
-
-   ```csharp title="Program.cs"
-   builder.Services
-       .AddDuendePlatform()
-       .AddUserAuthentication(auth => auth
-           .UseSmtpOtpSender(options =>
-               builder.Configuration.GetSection("Smtp").Bind(options)))
-       .AddUserProfiles();
-   ```
-
-   Add cookie authentication so that User Management can establish a session after a successful OTP verification:
-
-   ```csharp title="Program.cs"
-   using Microsoft.AspNetCore.Authentication.Cookies;
-
    builder.Services
        .AddAuthentication(options =>
        {
@@ -106,235 +67,535 @@ If you prefer an SMTP experience locally, [Mailpit](https://github.com/axllent/m
            options.Cookie.IsEssential = true;
            options.ExpireTimeSpan = TimeSpan.FromHours(8);
            options.SlidingExpiration = true;
-           options.LoginPath = "/login";
-           options.LogoutPath = "/logout";
+           options.LoginPath = "/Login";
+           options.LogoutPath = "/Logout";
        });
-
-   builder.Services.AddAuthorization();
    ```
 
-    :::tip
-    For production environments, configure [ASP.NET Core Data Protection](/general/data-protection.md) to persist encryption keys across restarts, for example using Azure Key Vault, Redis, or a shared file system.
-    :::
+2. **Register Duende User Management services**
 
-   #### Dev option A: Console OTP sender
+   Register the Duende User Management services, including the delivery mechanism for One-Time Passwords (OTP).
 
-   For the simplest possible proof-of-concept (no SMTP server, no external dependencies) implement `IOtpSender` to write codes to the console:
+   For the application you are building, an OTP code will be required to log in. 
+   These codes will need to be sent to your user so they can authenticate to your application.
 
-   ```csharp title="ConsoleOtpSender.cs"
-   using Duende.Platform.Users.Authentication.Otp;
+   User Management contains an SMTP-based OTP sender, but you may choose other delivery mechanisms for your application.
+   In this guide, we'll offer a (custom) console-based OTP sender, and demonstrate how to use the SMTP sender.
 
-   public class ConsoleOtpSender : IOtpSender
-   {
-    public Task SendAsync(OtpAddress address, PlainTextOtp otp, TimeSpan expiresAfter, CancellationToken ct)
-        {
-            Console.WriteLine($"OTP for {address}: {otp.Value}");
-            return Task.CompletedTask;
-        }
-   }
-   ```
+   <Tabs syncKey="umgsOtpSender">
+     <TabItem label="Console sender (development)">
+       The console sender prints OTP codes to the terminal, useful during local development without any mail infrastructure.
 
-   Register it in place of the SMTP sender:
+       ```csharp title="Program.cs"
+       builder.Services
+           .AddDuendePlatform()
+           .AddUserAuthentication()
+           .AddStorage(s => s.InMemory());
+       ```
+
+       User Management does not contain a console-based OTP sender. Implement `IOtpSender` to write codes to the console:
+   
+       ```csharp title="ConsoleOtpSender.cs"
+       using Duende.Platform.Users.Authentication.Otp;
+
+       public class ConsoleOtpSender : IOtpSender
+       {
+            public Task SendAsync(OtpAddress address, PlainTextOtp otp, TimeSpan expiresAfter, CancellationToken ct)
+            {
+                Console.WriteLine($"OTP for {address}: {otp.Value}");
+                return Task.CompletedTask;
+            }
+       }
+       ```
+   
+       Register it as the default `IOtpSender` service, so User Management can use it:
+   
+       ```csharp title="Program.cs"
+       builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
+       ```
+     </TabItem>
+     <TabItem label="SMTP sender">
+       The SMTP sender delivers OTP codes by email. Bind the `Smtp` configuration section to the sender options:
+
+       ```csharp title="Program.cs"
+       builder.Services
+           .AddDuendePlatform()
+           .AddUserAuthentication(authentication => authentication
+               .UseSmtpOtpSender(options =>
+                   builder.Configuration.GetSection("Smtp").Bind(options)))
+           .AddStorage(s => s.InMemory());
+       ```
+
+       Add the corresponding section to `appsettings.json`:
+
+       ```json title="appsettings.json"
+       {
+         "Smtp": {
+           "Host": "localhost",
+           "Port": 1025,
+           "From": "noreply@example.com"
+         }
+       }
+       ```
+
+       :::tip[Development SMTP server]
+       If you prefer an SMTP experience locally, [Mailpit](https://github.com/axllent/mailpit) is a lightweight local SMTP server that captures outgoing email in a web UI. No external mail account required.
+       :::
+     </TabItem>
+   </Tabs>
+
+3. **Register Data Protection**
+
+   Register ASP.NET Core Data Protection so that cookies and tokens are encrypted at rest:
 
    ```csharp title="Program.cs"
-   builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
+   builder.Services.AddDataProtection();
    ```
-
-   #### Dev option B: Mailpit local SMTP server
-
-   [Mailpit](https://github.com/axllent/mailpit) is a lightweight local SMTP server that captures outgoing email in a browser-based web UI. It requires no mail account and works with the standard SMTP sender. Point `Smtp:Host` at `localhost` and `Smtp:Port` at `1025` (Mailpit's default).
-
-3. **Configure storage**
-
-   Call `AddStorage()` and select the SQL Server provider. Pass the connection string from your configuration:
-
-   ```csharp title="Program.cs"
-   using Duende.Platform.Storage;
-   using Duende.Platform.Storage.SqlServer;
-
-   builder.Services
-       .AddDuendePlatform()
-       .AddUserAuthentication(/* ... */)
-       .AddUserProfiles()
-       .AddStorage(storage => storage
-           .SqlServer(builder.Configuration.GetConnectionString("DefaultConnection")!));
-   ```
-
-   :::note[PostgreSQL alternative]
-   If you prefer PostgreSQL, install `Duende.UserManagement.Storage.PostgreSQL` instead and replace the storage call with `.PostgreSql(connectionString)`:
-
-   ```csharp title="Program.cs"
-   using Duende.Platform.Storage.PostgreSql;
-
-   builder.Services
-       .AddDuendePlatform()
-       .AddUserAuthentication(/* ... */)
-       .AddUserProfiles()
-       .AddStorage(storage => storage
-           .PostgreSql(builder.Configuration.GetConnectionString("DefaultConnection")!));
-   ```
+   
+   :::tip
+   For production environments, configure [ASP.NET Core Data Protection](/general/data-protection.md) to persist encryption keys across restarts, for example using Azure Key Vault, Redis, or a shared file system.
    :::
 
-   For details on storage options, including how to configure separate stores for different data categories, see the [Storage](/usermanagement/fundamentals/storage.md) documentation.
+4. **Add authentication middleware**
 
-4. **Initialize the database**
-
-   Before the application starts handling requests, create the database schema. Resolve `IMsSqlStore` from the service provider and call `CreateIfNotExistsAsync()`:
+   Add the authentication and authorization middleware in the correct order:
 
    ```csharp title="Program.cs"
-   using Duende.Platform.Storage.MsSql;
-
+   // ...
+   
    var app = builder.Build();
-
-   await using (var scope = app.Services.CreateAsyncScope())
-   {
-       var store = scope.ServiceProvider.GetRequiredService<IMsSqlStore>();
-       await store.CreateIfNotExistsAsync(CancellationToken.None);
-   }
-   ```
-
-   This is safe to call on every startup. It is a no-op when the schema already exists.
-
-5. **Implement a minimal OTP login flow**
-
-   The OTP flow has two steps: requesting a code and verifying it. Inject `IOtpAuthenticator` into your endpoints or page models.
-
-   **Step 5a: Request an OTP**
-
-   Accept the user's email address, build an `OtpAddress`, and call `TrySendOtpAsync()`. Store the returned `OtpToken` (for example in a hidden form field or a short-lived cookie) so it can be passed back during verification.
-
-    :::note[Razor Pages examples]
-    The code samples below use **ASP.NET Core Razor Pages** (`PageModel`, `OnPostAsync`, `IActionResult`). The same services (`IOtpAuthenticator`, `IUserAuthenticatorsSelfService`, and others) can be injected into **MVC controllers** or **minimal API endpoints** just as easily. The pattern is identical regardless of which UI framework you choose.
-    :::
-
-    ```csharp title="LoginRequest.cshtml.cs"
-   using Duende.Platform.Users;
-   using Duende.Platform.Users.Authentication.Otp;
-
-   public class LoginRequestModel(IOtpAuthenticator otpAuthenticator) : PageModel
-   {
-       [BindProperty]
-       public string Email { get; set; } = string.Empty;
-
-       public string? OtpToken { get; set; }
-       public bool RateLimited { get; set; }
-
-       public async Task<IActionResult> OnPostAsync(CancellationToken ct)
-       {
-           if (!EmailAddress.TryParse(Email, out var emailAddress))
-           {
-               ModelState.AddModelError(nameof(Email), "Enter a valid email address.");
-               return Page();
-           }
-
-           var address = new OtpAddress(OtpChannel.Email, emailAddress);
-           var result = await otpAuthenticator.TrySendOtpAsync(address, ct);
-
-           if (result is null)
-           {
-               // Concurrent request conflict. Ask the user to try again.
-               return Page();
-           }
-
-           if (!result.Sent)
-           {
-               // Rate-limited: inform the user how long to wait.
-               RateLimited = true;
-               return Page();
-           }
-
-           // Pass the opaque token to the verification step.
-           OtpToken = result.Token.ToString();
-           return Page();
-       }
-   }
-   ```
-
-   **Step 5b: Verify the OTP and sign in**
-
-   Accept the code entered by the user together with the `OtpToken` from the previous step. Call `TryAuthenticateAsync()`. On success, sign the user in using ASP.NET Core cookie authentication.
-
-   ```csharp title="LoginVerify.cshtml.cs"
-   using System.Security.Claims;
-   using Duende.Platform.Users.Authentication.Otp;
-   using Microsoft.AspNetCore.Authentication;
-   using Microsoft.AspNetCore.Authentication.Cookies;
-
-   public class LoginVerifyModel(IOtpAuthenticator otpAuthenticator) : PageModel
-   {
-       [BindProperty]
-       public string Code { get; set; } = string.Empty;
-
-       [BindProperty]
-       public string Token { get; set; } = string.Empty;
-
-       public async Task<IActionResult> OnPostAsync(CancellationToken ct)
-       {
-           if (!PlainTextOtp.TryParse(Code, out var otp))
-           {
-               ModelState.AddModelError(nameof(Code), "Enter the code exactly as received.");
-               return Page();
-           }
-
-           if (!OtpToken.TryParse(Token, out var token))
-           {
-               // Token is missing or malformed. Restart the login flow.
-               return RedirectToPage("/login");
-           }
-
-           var address = await otpAuthenticator.TryAuthenticateAsync(otp.Value, token.Value, ct);
-
-           if (address is null)
-           {
-               ModelState.AddModelError(nameof(Code), "The code is invalid or has expired.");
-               return Page();
-           }
-
-           // Build a claims identity from the verified address.
-           var claims = new[]
-           {
-               new Claim(ClaimTypes.NameIdentifier, address.SubjectId.ToString()!),
-               new Claim(ClaimTypes.Email, address.SubjectId.ToString()),
-           };
-
-           var identity = new ClaimsIdentity(
-               claims,
-               CookieAuthenticationDefaults.AuthenticationScheme);
-
-           await HttpContext.SignInAsync(
-               CookieAuthenticationDefaults.AuthenticationScheme,
-               new ClaimsPrincipal(identity));
-
-           return LocalRedirect("/");
-       }
-   }
+   app.UseAuthentication();
+   app.UseAuthorization();
    ```
 
 </Steps>
 
-## Configuration Reference
+The application configuration is now complete. Next, we'll add the pages and models that will be used to handle the login, OTP verification, and logout flows.
 
-Add the following sections to `appsettings.json` to supply the connection string and SMTP settings used in the examples above:
+<details>
+    <summary>Complete `Program.cs`, using the SMTP-based OTP sender</summary>
+   
+   ```csharp title="Program.cs"
+   using Duende.Platform.Builder;
+   using Duende.Platform.Users.Authentication;
+   using Microsoft.AspNetCore.Authentication.Cookies;
+   
+   var builder = WebApplication.CreateBuilder(args);
+   
+   builder.Services.AddRazorPages();
+   
+   builder.Services
+       .AddAuthentication(options =>
+       {
+           options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+           options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+           options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+           options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+       })
+       .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+       {
+           options.Cookie.Name = "__Host-AuthSession";
+           options.Cookie.HttpOnly = true;
+           options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+           options.Cookie.SameSite = SameSiteMode.Lax;
+           options.Cookie.IsEssential = true;
+           options.ExpireTimeSpan = TimeSpan.FromHours(8);
+           options.SlidingExpiration = true;
+           options.LoginPath = "/Login";
+           options.LogoutPath = "/Logout";
+       });
+   
+   builder.Services.AddAuthorization();
+   builder.Services.AddDataProtection();
+   
+   builder.Services
+       .AddDuendePlatform()
+       .AddUserAuthentication(authentication => authentication
+           .UseSmtpOtpSender(options =>
+               builder.Configuration.GetSection("Smtp").Bind(options)))
+       .AddStorage(s => s.InMemory());
+   
+   var app = builder.Build();
+   
+   if (!app.Environment.IsDevelopment())
+   {
+       app.UseExceptionHandler("/Error");
+       app.UseHsts();
+   }
+   
+   app.UseHttpsRedirection();
+   app.UseRouting();
+   app.UseAuthentication();
+   app.UseAuthorization();
+   app.MapStaticAssets();
+   app.MapRazorPages().WithStaticAssets();
+   
+   app.Run();
+   ```
+</details>
 
-```json title="appsettings.json"
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=usermanagement;User Id=your_user;Password=your_password;TrustServerCertificate=True"
-  },
-  "Smtp": {
-    "Host": "smtp.example.com",
-    "Port": 587,
-    "FromEmail": "noreply@example.com",
-    "FromName": "My Application"
-  }
-}
-```
+## Add a Login Page
+
+<Steps>
+1. Create `Pages/Login.cshtml` with an email input form:
+   
+   ```html title="Pages/Login.cshtml"
+   @page
+   @model LoginModel
+   @{
+       ViewData["Title"] = "Log in";
+   }
+   
+   <h2>Log in</h2>
+   
+   <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+   
+   <form method="post">
+       <div>
+           <label asp-for="Input.Email">Email address</label>
+           <input asp-for="Input.Email" type="email" required autofocus autocomplete="email" />
+           <span asp-validation-for="Input.Email"></span>
+       </div>
+       <button type="submit">Send one-time password</button>
+   </form>
+   ```
+   
+2. Then create the page model in `Pages/Login.cshtml.cs`:
+   
+   ```csharp title="Pages/Login.cshtml.cs"
+   using System.ComponentModel.DataAnnotations;
+   using Duende.Platform.Users;
+   using Duende.Platform.Users.Authentication.Otp;
+   using Microsoft.AspNetCore.Mvc;
+   using Microsoft.AspNetCore.Mvc.RazorPages;
+   
+   namespace OtpUserManagement.Pages;
+   
+   public class LoginModel(IOtpAuthenticator otpAuthenticator) : PageModel
+   {
+       [BindProperty]
+       public InputModel Input { get; set; } = new();
+   
+       public class InputModel
+       {
+           [Required]
+           [EmailAddress]
+           public string Email { get; set; } = string.Empty;
+       }
+   
+       public void OnGet() { }
+   
+       public async Task<IActionResult> OnPostAsync()
+       {
+           if (!ModelState.IsValid)
+           {
+               return Page();
+           }
+   
+           if (!EmailAddress.TryParse(Input.Email, out var email))
+           {
+               ModelState.AddModelError(nameof(Input.Email), "Invalid email format.");
+               return Page();
+           }
+   
+           var result = await otpAuthenticator.TrySendOtpAsync(
+               new OtpAddress(OtpChannel.Email, email),
+               HttpContext.RequestAborted);
+   
+           if (result is null || !result.Sent)
+           {
+               var message = "Failed to send one-time password.";
+               if (result?.SendingBlockedUntilUtc is DateTimeOffset blockedUntil && blockedUntil > DateTimeOffset.UtcNow)
+               {
+                   var blockedFor = blockedUntil - DateTimeOffset.UtcNow;
+                   message = $"Too many attempts. Try again in {Math.Ceiling(blockedFor.TotalSeconds)} second(s).";
+               }
+               ModelState.AddModelError(string.Empty, message);
+               return Page();
+           }
+   
+           TempData["OtpToken"] = result.Token!.Value.ToString();
+           return RedirectToPage("/EnterOtp");
+       }
+   }
+   ```
+</Steps>
+
+When the form is submitted, `IOtpAuthenticator.TrySendOtpAsync` sends a one-time password to the provided email address and returns a result containing the OTP token.
+If sending succeeds, the token is stored in `TempData` so the next page can verify the code the user enters. If sending is blocked due to rate limiting, a descriptive error is shown instead.
+
+:::note
+You can configure OTP expiry, code length, and rate-limiting behaviour through the `OtpAuthenticatorOptions`. See the [OTP authentication docs](/usermanagement/authentication/otp.mdx) for all available options.
+:::
+
+## Add an OTP Verification Page
+
+<Steps>
+1. Create `Pages/EnterOtp.cshtml`, the page where the user enters the one-time password they received by email:
+   
+   ```html title="Pages/EnterOtp.cshtml"
+   @page
+   @model OtpUserManagement.Pages.EnterOtpModel
+   
+   <h2>Enter one-time password</h2>
+   
+   @if (!ViewData.ModelState.IsValid)
+   {
+       <ul>
+           @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+           {
+               <li>@error.ErrorMessage</li>
+           }
+       </ul>
+   }
+   
+   <form method="post">
+       <input type="hidden" asp-for="Input.Token" />
+       <label asp-for="Input.Code">One-time password</label>
+       <input asp-for="Input.Code" type="text" autocomplete="one-time-code" autofocus />
+       <button type="submit">Sign in</button>
+   </form>
+   ```
+   
+2. Now create `Pages/EnterOtp.cshtml.cs`:
+   
+   ```csharp title="Pages/EnterOtp.cshtml.cs"
+   using System.ComponentModel.DataAnnotations;
+   using System.Security.Claims;
+   using Duende.Platform.Users;
+   using Duende.Platform.Users.Authentication;
+   using Duende.Platform.Users.Authentication.Otp;
+   using Microsoft.AspNetCore.Authentication;
+   using Microsoft.AspNetCore.Authentication.Cookies;
+   using Microsoft.AspNetCore.Mvc;
+   using Microsoft.AspNetCore.Mvc.RazorPages;
+   
+   namespace OtpUserManagement.Pages;
+   
+   public class EnterOtpModel(
+       IOtpAuthenticator otpAuthenticator,
+       IUserAuthenticatorsSelfService authenticatorsSelfService)
+       : PageModel
+   {
+       [BindProperty]
+       public InputModel Input { get; set; } = new();
+   
+       public class InputModel
+       {
+           [Required]
+           public string Token { get; set; } = string.Empty;
+   
+           [Required]
+           public string Code { get; set; } = string.Empty;
+       }
+   
+       public IActionResult OnGet()
+       {
+           var token = TempData["OtpToken"] as string;
+           if (token is null)
+           {
+               return RedirectToPage("/Login");
+           }
+   
+           Input.Token = token;
+           return Page();
+       }
+   
+       public async Task<IActionResult> OnPostAsync()
+       {
+           if (!ModelState.IsValid)
+           {
+               return Page();
+           }
+   
+           if (string.IsNullOrWhiteSpace(Input.Code) || string.IsNullOrWhiteSpace(Input.Token))
+           {
+               ModelState.AddModelError(string.Empty, "Invalid input.");
+               return Page();
+           }
+   
+           var otp = PlainTextOtp.Parse(Input.Code);
+           var token = OtpToken.Parse(Input.Token);
+   
+           var address = await otpAuthenticator.TryAuthenticateAsync(
+               otp, token, HttpContext.RequestAborted);
+   
+           if (address is null)
+           {
+               ModelState.AddModelError(string.Empty, "Invalid or expired code. Please try again.");
+               return Page();
+           }
+   
+           // Get the existing user record, or register a new one on first sign-in.
+           var authenticators =
+               await authenticatorsSelfService.TryGetAsync(address, HttpContext.RequestAborted) ??
+               await authenticatorsSelfService.TryRegisterAsync(
+                   UserSubjectId.New(), address, HttpContext.RequestAborted);
+   
+           if (authenticators is null)
+           {
+               ModelState.AddModelError(string.Empty, "Failed to sign in. Please try again.");
+               return Page();
+           }
+   
+           var claims = new List<Claim>
+           {
+               new(ClaimTypes.NameIdentifier, authenticators.SubjectId.ToGuid().ToString()),
+               new(ClaimTypes.Name, address.SubjectId.ToString()),
+           };
+   
+           var identity = new ClaimsIdentity(
+               claims, CookieAuthenticationDefaults.AuthenticationScheme);
+   
+           await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+   
+           return LocalRedirect(Url.Content("~/"));
+       }
+   }
+   ```
+</Steps>
+
+The code for this page handles both `GET` and `POST` requests, mapped to Razor Pages methods:
+
+**`OnGet`** reads the OTP token that the Login page stored in `TempData["OtpToken"]` and copies it into the hidden form field. If the token is missing (e.g. the user navigated here directly), the page redirects back to `/Login`.
+
+**`OnPostAsync`** parses the submitted token and code into their strongly-typed counterparts (`OtpToken` and `PlainTextOtp`), then calls `IOtpAuthenticator.TryAuthenticateAsync`. If the code is correct and not expired, the method returns the `OtpAddress` that was authenticated. A `null` return value means the code was wrong or has expired.
+
+:::note[Automatic User Registration]
+After a successful OTP verification, the page calls `IUserAuthenticatorsSelfService.TryGetAsync` to look up an existing user by their OTP address. If no record is found (which happens the very first time a given email address signs in), `TryRegisterAsync` is called instead to create a new user automatically. This "get-or-register" pattern means you do not need a separate sign-up flow: every new email address that successfully verifies an OTP becomes a registered user on the spot.
+
+Once a user record is confirmed (or created), a `ClaimsPrincipal` is built from the subject ID and email address and passed to `HttpContext.SignInAsync`, which issues the authentication cookie and completes the sign-in.
+:::
+
+## Add a Logout Page
+
+<Steps>
+1. Create `Pages/Logout.cshtml`:
+   
+   ```html title="Pages/Logout.cshtml"
+   @page
+   @model LogoutModel
+   ```
+   
+2. Create `Pages/Logout.cshtml.cs`:
+   
+   ```csharp title="Pages/Logout.cshtml.cs"
+   using Microsoft.AspNetCore.Authentication;
+   using Microsoft.AspNetCore.Mvc;
+   using Microsoft.AspNetCore.Mvc.RazorPages;
+   
+   namespace OtpUserManagement.Pages;
+   
+   public class LogoutModel : PageModel
+   {
+       public async Task<IActionResult> OnPostAsync()
+       {
+           await HttpContext.SignOutAsync();
+           return RedirectToPage("/Login");
+       }
+   }
+   ```
+</Steps>
+
+`OnPostAsync` calls `HttpContext.SignOutAsync()` to clear the authentication cookie, then redirects the user back to `/Login`. Using POST (rather than GET) prevents cross-site request forgery attacks that could silently sign a user out by embedding a link.
+
+## Protect the Home Page
+
+<Steps>
+1. Update `Pages/Index.cshtml.cs` to require an authenticated user by adding the `[Authorize]` attribute:
+   
+   ```csharp title="Pages/Index.cshtml.cs" {6}
+   using Microsoft.AspNetCore.Authorization;
+   using Microsoft.AspNetCore.Mvc.RazorPages;
+   
+   namespace OtpUserManagement.Pages;
+   
+   [Authorize]
+   public class IndexModel : PageModel
+   {
+       public void OnGet()
+       {
+       }
+   }
+   ```
+   
+2. Update `Pages/Index.cshtml` to greet the signed-in user and provide a sign-out button:
+   
+   ```html title="Pages/Index.cshtml"
+   @page
+   @model IndexModel
+   @{
+       ViewData["Title"] = "Home";
+   }
+   
+   <h2>Welcome, @User.Identity!.Name!</h2>
+   
+   <form method="post" asp-page="/Logout">
+       <button type="submit">Sign out</button>
+   </form>
+   ```
+</Steps>
+
+`User.Identity!.Name` contains the email address that was set as `ClaimTypes.Name` during OTP verification.
+
+Because `LoginPath = "/Login"` was configured on the cookie authentication options in `Program.cs`, any unauthenticated request to `/` is automatically redirected to the login page, with no extra middleware or filters required.
+
+## Run and Test
+
+<Steps>
+
+1. Start the application:
+
+   ```bash title="Terminal"
+   dotnet run
+   ```
+
+2. Open your browser and navigate to `https://localhost:5001` (or the URL shown in the terminal).
+
+3. You are redirected to `/Login`. Enter your email address and click **Send one-time password**.
+
+4. Retrieve the OTP code:
+
+   <Tabs syncKey="umgsOtpSender">
+     <TabItem label="Console sender">
+       The OTP code is printed directly to the terminal. Copy it from there.
+     </TabItem>
+     <TabItem label="SMTP sender">
+       Check your inbox for the email containing the OTP code. If you are using Mailpit locally, open `http://localhost:8025` to find the message.
+     </TabItem>
+   </Tabs>
+
+5. Enter the code on the `/EnterOtp` page and click **Sign in**.
+
+6. You land on the home page showing a welcome message with the email address of the user.
+
+7. Click **Sign out** to return to the login page.
+
+</Steps>
+
+**Congratulations!** You now have a working ASP.NET Core application with OTP-based authentication powered by Duende User Management. Users can sign in with their email address, verify a one-time code, and access protected pages. New users are automatically registered on their first successful login.
 
 ## Next Steps
 
 <CardGrid>
-  <LinkCard title="Storage" href="/usermanagement/fundamentals/storage" description="Configure separate stores for users, operational data, and audit logs." />
-  <LinkCard title="OTP Options" href="/usermanagement/reference/smtp-otp-sender" description="Customize email templates, expiry windows, and rate-limiting behavior." />
-  <LinkCard title="User Profiles" href="/usermanagement/fundamentals/profiles" description="Store and surface custom claims and attributes using the profile APIs." />
-  <LinkCard title="Additional Authenticators" href="/usermanagement/authentication/overview" description="Add TOTP, passkeys, or external identity providers alongside OTP." />
+  <LinkCard
+    title="Storage options"
+    href="/usermanagement/fundamentals/storage"
+    description="Switch to PostgreSQL or SQL Server, or configure separate stores for different data categories."
+  />
+  <LinkCard
+    title="OTP customization"
+    href="/usermanagement/authentication/otp"
+    description="Configure code length, expiry, rate limiting, and custom OTP senders."
+  />
+  <LinkCard
+    title="User profiles"
+    href="/usermanagement/fundamentals/profiles"
+    description="Store and retrieve custom attributes for your users."
+  />
+  <LinkCard
+    title="More authenticators"
+    href="/usermanagement/authentication/overview"
+    description="Add TOTP, passkeys, or external identity providers alongside OTP."
+  />
 </CardGrid>
