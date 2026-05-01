@@ -50,57 +50,57 @@ Self-service interfaces are intended for user-facing operations: actions a user 
 #### IUserSelfService
 
 ```csharp
-Task<bool> TrySetUserNameAsync(UserSubjectId subjectId, UserName userName, Ct ct);
-Task<bool> TryRemoveUserNameAsync(UserSubjectId subjectId, Ct ct);
-Task<bool> TryDeregisterAsync(UserSubjectId subjectId, Ct ct);
+Task<bool> TrySetUserNameAsync(UserSubjectId subjectId, UserName userName, CancellationToken ct);
+Task<bool> TryRemoveUserNameAsync(UserSubjectId subjectId, CancellationToken ct);
+Task<bool> TryDeregisterAsync(UserSubjectId subjectId, CancellationToken ct);
 ```
 
 #### IUserAuthenticatorsSelfService
 
 ```csharp
 // Register a new user by OTP address or external authenticator
-Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
-Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, ExternalAuthenticator authenticator, Ct ct);
+Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, OtpAddress address, CancellationToken ct);
+Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, ExternalAuthenticator authenticator, CancellationToken ct);
 
 // Look up authenticators
-Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, Ct ct);
-Task<UserAuthenticators?> TryGetAsync(OtpAddress address, Ct ct);
-Task<UserAuthenticators?> TryGetAsync(ExternalAuthenticator authenticator, Ct ct);
-Task<UserAuthenticators?> TryGetAsync(UserName userName, Ct ct);
+Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, CancellationToken ct);
+Task<UserAuthenticators?> TryGetAsync(OtpAddress address, CancellationToken ct);
+Task<UserAuthenticators?> TryGetAsync(ExternalAuthenticator authenticator, CancellationToken ct);
+Task<UserAuthenticators?> TryGetAsync(UserName userName, CancellationToken ct);
 
 // OTP address management
-Task<bool> TryAddOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
-Task<bool> TryReplaceOtpAddressAsync(UserSubjectId subjectId, OtpAddress oldAddress, OtpAddress newAddress, Ct ct);
-Task<bool> TryRemoveOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
+Task<bool> TryAddOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, CancellationToken ct);
+Task<bool> TryReplaceOtpAddressAsync(UserSubjectId subjectId, OtpAddress oldAddress, OtpAddress newAddress, CancellationToken ct);
+Task<bool> TryRemoveOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, CancellationToken ct);
 
 // External authenticator management
-Task<bool> TryAddExternalAuthenticatorAsync(UserSubjectId subjectId, ExternalAuthenticator authenticator, Ct ct);
-Task<bool> TryRemoveExternalAuthenticatorAsync(UserSubjectId subjectId, ExternalAuthenticator authenticator, Ct ct);
+Task<bool> TryAddExternalAuthenticatorAsync(UserSubjectId subjectId, ExternalAuthenticator authenticator, CancellationToken ct);
+Task<bool> TryRemoveExternalAuthenticatorAsync(UserSubjectId subjectId, ExternalAuthenticator authenticator, CancellationToken ct);
 
 // TOTP authenticator management
-Task<bool> TryAddTotpAuthenticatorAsync(UserSubjectId subjectId, TotpAuthenticatorName authenticatorName, PlainBytesTotpKey key, PlainTextTotp totp, Ct ct);
-Task<bool> TryRemoveTotpAuthenticatorAsync(UserSubjectId subjectId, TotpAuthenticatorName authenticatorName, Ct ct);
+Task<bool> TryAddTotpAuthenticatorAsync(UserSubjectId subjectId, TotpAuthenticatorName authenticatorName, PlainBytesTotpKey key, PlainTextTotp totp, CancellationToken ct);
+Task<bool> TryRemoveTotpAuthenticatorAsync(UserSubjectId subjectId, TotpAuthenticatorName authenticatorName, CancellationToken ct);
 
 // Passkey management
-Task<bool> TryAddPasskeyAsync(UserSubjectId subjectId, PasskeyCredentialData credential, Ct ct);
-Task<bool> TryRemovePasskeyAsync(UserSubjectId subjectId, PasskeyCredentialId credentialId, Ct ct);
+Task<bool> TryAddPasskeyAsync(UserSubjectId subjectId, PasskeyCredentialData credential, CancellationToken ct);
+Task<bool> TryRemovePasskeyAsync(UserSubjectId subjectId, PasskeyCredentialId credentialId, CancellationToken ct);
 
 // Recovery codes
-Task<IReadOnlyCollection<PlainTextRecoveryCode>?> TryCreateRecoveryCodesAsync(UserSubjectId subjectId, Ct ct);
+Task<IReadOnlyCollection<PlainTextRecoveryCode>?> TryCreateRecoveryCodesAsync(UserSubjectId subjectId, CancellationToken ct);
 
 // Password management
-Task<bool> TrySetPasswordAsync(UserSubjectId subjectId, PlainTextPassword password, Ct ct);
-Task<bool> TryChangePasswordAsync(UserSubjectId subjectId, PlainTextPassword oldPassword, PlainTextPassword newPassword, Ct ct);
-Task<bool> TryResetPasswordAsync(UserSubjectId subjectId, PlainTextPassword password, Ct ct);
+Task<bool> TrySetPasswordAsync(UserSubjectId subjectId, PlainTextPassword password, CancellationToken ct);
+Task<bool> TryChangePasswordAsync(UserSubjectId subjectId, PlainTextPassword oldPassword, PlainTextPassword newPassword, CancellationToken ct);
+Task<bool> TryResetPasswordAsync(UserSubjectId subjectId, PlainTextPassword password, CancellationToken ct);
 ```
 
 #### IUserProfileSelfService
 
 ```csharp
-Task<IReadOnlyAttributeSchema> GetSchemaAsync(Ct ct);
-Task<UserProfile?> TryRegisterAsync(UserSubjectId subjectId, AttributeValueCollection attributes, Ct ct);
-Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
-Task<UserProfile?> TryUpdateAsync(UserSubjectId subjectId, UserProfileUpdate update, Ct ct);
+Task<IReadOnlyAttributeSchema> GetSchemaAsync(CancellationToken);
+Task<UserProfile?> TryRegisterAsync(UserSubjectId subjectId, AttributeValueCollection attributes, CancellationToken ct);
+Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, CancellationToken ct);
+Task<UserProfile?> TryUpdateAsync(UserSubjectId subjectId, UserProfileUpdate update, CancellationToken ct);
 ```
 
 ### Admin Interfaces
@@ -121,9 +121,9 @@ Admin interfaces are intended for back-office and management operations: actions
 #### IUserAdmin
 
 ```csharp
-Task<bool> TrySetUserNameAsync(UserSubjectId subjectId, UserName userName, Ct ct);
-Task<bool> TryRemoveUserNameAsync(UserSubjectId subjectId, Ct ct);
-Task<bool> TryRemoveAsync(UserSubjectId subjectId, Ct ct);
+Task<bool> TrySetUserNameAsync(UserSubjectId subjectId, UserName userName, CancellationToken ct);
+Task<bool> TryRemoveUserNameAsync(UserSubjectId subjectId, CancellationToken ct);
+Task<bool> TryRemoveAsync(UserSubjectId subjectId, CancellationToken ct);
 ```
 
 #### IUserAuthenticatorsAdmin
@@ -134,99 +134,99 @@ Task<UserAuthenticators?> TryAddAsync(
     UserSubjectId subjectId,
     IEnumerable<OtpAddress> otpAddresses,
     IEnumerable<ExternalAuthenticator> externalAuthenticators,
-    Ct ct);
+    CancellationToken ct);
 
 // Look up authenticators
-Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, Ct ct);
-Task<UserAuthenticators?> TryGetAsync(UserName userName, Ct ct);
+Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, CancellationToken ct);
+Task<UserAuthenticators?> TryGetAsync(UserName userName, CancellationToken ct);
 
 // Bulk OTP address management
-Task<bool> TryAddOtpAddressesAsync(UserSubjectId subjectId, IEnumerable<OtpAddress> addresses, Ct ct);
-Task<bool> TryRemoveOtpAddressesAsync(UserSubjectId subjectId, IEnumerable<OtpAddress> addresses, Ct ct);
+Task<bool> TryAddOtpAddressesAsync(UserSubjectId subjectId, IEnumerable<OtpAddress> addresses, CancellationToken ct);
+Task<bool> TryRemoveOtpAddressesAsync(UserSubjectId subjectId, IEnumerable<OtpAddress> addresses, CancellationToken ct);
 
 // Bulk external authenticator management
-Task<bool> TryAddExternalAuthenticatorsAsync(UserSubjectId subjectId, IEnumerable<ExternalAuthenticator> authenticators, Ct ct);
-Task<bool> TryRemoveExternalAuthenticatorsAsync(UserSubjectId subjectId, IEnumerable<ExternalAuthenticator> authenticators, Ct ct);
+Task<bool> TryAddExternalAuthenticatorsAsync(UserSubjectId subjectId, IEnumerable<ExternalAuthenticator> authenticators, CancellationToken ct);
+Task<bool> TryRemoveExternalAuthenticatorsAsync(UserSubjectId subjectId, IEnumerable<ExternalAuthenticator> authenticators, CancellationToken ct);
 ```
 
 #### IUserProfileAdmin
 
 ```csharp
-Task<IReadOnlyAttributeSchema> GetSchemaAsync(Ct ct);
-Task<UserProfile?> TryAddAsync(UserSubjectId subjectId, AttributeValueCollection attributes, Ct ct);
-Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
-Task<UserProfile?> TryGetAsync(AttributeName attributeName, object value, Ct ct);
+Task<IReadOnlyAttributeSchema> GetSchemaAsync(CancellationToken ct);
+Task<UserProfile?> TryAddAsync(UserSubjectId subjectId, AttributeValueCollection attributes, CancellationToken ct);
+Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, CancellationToken ct);
+Task<UserProfile?> TryGetAsync(AttributeName attributeName, object value, CancellationToken ct);
 ```
 
 #### IUserProfileSchemaAdmin
 
 ```csharp
-Task<IReadOnlyDictionary<AttributeName, AttributeDefinition>> GetAllAttributeDefinitionsAsync(Ct ct);
-Task<bool> TryAddAttributeDefinitionAsync(AttributeDefinition definition, Ct ct);
-Task<bool> TryRemoveAttributeDefinitionAsync(AttributeName name, Ct ct);
+Task<IReadOnlyDictionary<AttributeName, AttributeDefinition>> GetAllAttributeDefinitionsAsync(CancellationToken ct);
+Task<bool> TryAddAttributeDefinitionAsync(AttributeDefinition definition, CancellationToken ct);
+Task<bool> TryRemoveAttributeDefinitionAsync(AttributeName name, CancellationToken ct);
 ```
 
 #### IRoleAdmin
 
 ```csharp
-Task<SaveResult<RoleId>> CreateAsync(RoleDto role, Ct ct);
-Task<GetResult<RoleDto>> GetAsync(RoleId id, Ct ct);
-Task<SaveResult<RoleId>> UpdateAsync(RoleId id, RoleDto role, Version expectedVersion, Ct ct);
-Task<SaveResult<RoleId>> DeleteAsync(RoleId id, Ct ct);
-Task<ListResult<RoleListDto>> QueryAsync(
+Task<SaveResult<RoleId>> CreateAsync(RoleDto role, CancellationToken ct);
+Task<GetResult<RoleDto>> GetAsync(RoleId id, CancellationToken ct);
+Task<SaveResult<RoleId>> UpdateAsync(RoleId id, RoleDto role, Version expectedVersion, CancellationToken ct);
+Task<SaveResult<RoleId>> DeleteAsync(RoleId id, CancellationToken ct);
+Task<QueryResult<RoleListDto>> QueryAsync(
     RoleFilter? filter,
-    (RoleSortField Field, SortDirection Direction)? sort,
-    Page? page,
-    Ct ct);
+    SortBy.SortByField<RoleSortField>? sort,
+    DataRange? range,
+    CancellationToken ct);
 ```
 
 #### IGroupAdmin
 
 ```csharp
-Task<SaveResult<GroupId>> CreateAsync(GroupDto group, Ct ct);
-Task<GetResult<GroupDto>> GetAsync(GroupId id, Ct ct);
-Task<SaveResult<GroupId>> UpdateAsync(GroupId id, GroupDto group, Version expectedVersion, Ct ct);
-Task<SaveResult<GroupId>> DeleteAsync(GroupId id, Ct ct);
-Task<ListResult<GroupListDto>> QueryAsync(
+Task<SaveResult<GroupId>> CreateAsync(GroupDto group, CancellationToken ct);
+Task<GetResult<GroupDto>> GetAsync(GroupId id, CancellationToken ct);
+Task<SaveResult<GroupId>> UpdateAsync(GroupId id, GroupDto group, Version expectedVersion, CancellationToken ct);
+Task<SaveResult<GroupId>> DeleteAsync(GroupId id, CancellationToken ct);
+Task<QueryResult<GroupListDto>> QueryAsync(
     GroupFilter? filter,
-    (GroupSortField Field, SortDirection Direction)? sort,
-    Page? page,
-    Ct ct);
+    SortBy.SortByField<GroupSortField>? sort,
+    DataRange? range,
+    CancellationToken ct);
 ```
 
 #### IRoleMembershipAdmin
 
 ```csharp
 // Assign and remove roles for users and groups
-Task<SaveResult<RoleId>> AssignRoleToUserProfileAsync(RoleId roleId, UserSubjectId subjectId, Ct ct);
-Task<SaveResult<RoleId>> RemoveRoleFromUserProfileAsync(RoleId roleId, UserSubjectId subjectId, Ct ct);
-Task<SaveResult<RoleId>> AssignRoleToGroupAsync(RoleId roleId, GroupId groupId, Ct ct);
-Task<SaveResult<RoleId>> RemoveRoleFromGroupAsync(RoleId roleId, GroupId groupId, Ct ct);
+Task<SaveResult<RoleId>> AssignRoleToUserProfileAsync(RoleId roleId, UserSubjectId subjectId, CancellationToken ct);
+Task<SaveResult<RoleId>> RemoveRoleFromUserProfileAsync(RoleId roleId, UserSubjectId subjectId, CancellationToken ct);
+Task<SaveResult<RoleId>> AssignRoleToGroupAsync(RoleId roleId, GroupId groupId, CancellationToken ct);
+Task<SaveResult<RoleId>> RemoveRoleFromGroupAsync(RoleId roleId, GroupId groupId, CancellationToken ct);
 
 // Query role membership
-Task<ListResult<UserProfileRoleMemberListDto>> GetUserProfilesInRoleAsync(RoleId roleId, Page? page, Ct ct);
-Task<ListResult<GroupRoleMemberListDto>> GetGroupsInRoleAsync(RoleId roleId, Page? page, Ct ct);
-Task<ListResult<RoleListDto>> GetDirectRolesForUserProfileAsync(UserSubjectId subjectId, Page? page, Ct ct);
-Task<ListResult<RoleListDto>> GetTransitiveRolesForUserProfileAsync(UserSubjectId subjectId, Page? page, Ct ct);
-Task<ListResult<RoleListDto>> GetRolesForGroupAsync(GroupId groupId, Page? page, Ct ct);
+Task<QueryResult<UserProfileRoleMemberListDto>> GetUserProfilesInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
+Task<QueryResult<GroupRoleMemberListDto>> GetGroupsInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
+Task<QueryResult<RoleListDto>> GetDirectRolesForUserProfileAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+Task<QueryResult<RoleListDto>> GetTransitiveRolesForUserProfileAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+Task<QueryResult<RoleListDto>> GetRolesForGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
 ```
 
 #### IGroupMembershipAdmin
 
 ```csharp
 // Add and remove users from groups
-Task<SaveResult<GroupId>> AddUserProfileToGroupAsync(GroupId groupId, UserSubjectId subjectId, Ct ct);
-Task<SaveResult<GroupId>> RemoveUserProfileFromGroupAsync(GroupId groupId, UserSubjectId subjectId, Ct ct);
+Task<SaveResult<GroupId>> AddUserProfileToGroupAsync(GroupId groupId, UserSubjectId subjectId, CancellationToken ct);
+Task<SaveResult<GroupId>> RemoveUserProfileFromGroupAsync(GroupId groupId, UserSubjectId subjectId, CancellationToken ct);
 
 // Query group membership (offset-based pagination)
-Task<ListResult<UserProfileGroupMemberListDto>> GetUserProfilesInGroupAsync(GroupId groupId, Page? page, Ct ct);
+Task<QueryResult<UserProfileGroupMemberListDto>> GetUserProfilesInGroupAsync(GroupId groupId, Page? page, CancellationToken ct);
 
 // Query group membership (cursor-based pagination)
-Task<CursorListResult<UserProfileGroupMemberListDto>> GetUserProfilesInGroupAsync(
-    GroupId groupId, string? continuationToken, int pageSize, Ct ct);
+Task<QueryResult<UserProfileGroupMemberListDto>> GetUserProfilesInGroupAsync(
+    GroupId groupId, DataRange? range, CancellationToken ct);
 
 // Query groups for a user
-Task<ListResult<GroupListDto>> GetGroupsForUserProfileAsync(UserSubjectId subjectId, Page? page, Ct ct);
+Task<QueryResult<GroupListDto>> GetGroupsForUserProfileAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
 ```
 
 ### Authentication Interfaces
@@ -243,26 +243,26 @@ Authentication interfaces verify credentials during sign-in flows.
 #### IPasswordAuth
 
 ```csharp
-Task<UserSubjectId?> TryAuthenticateAsync(UserName userName, PlainTextPassword password, Ct ct);
+Task<UserSubjectId?> TryAuthenticateAsync(UserName userName, PlainTextPassword password, CancellationToken ct);
 ```
 
 #### IOtpAuthenticator
 
 ```csharp
-Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, Ct ct);
-Task<OtpAddress?> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, Ct ct);
+Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, CancellationToken ct);
+Task<OtpAddress?> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, CancellationToken ct);
 ```
 
 #### ITotpAuth
 
 ```csharp
-Task<bool> TryAuthenticateAsync(UserSubjectId subjectId, TotpAuthenticatorName authenticatorName, PlainTextTotp totp, Ct ct);
+Task<bool> TryAuthenticateAsync(UserSubjectId subjectId, TotpAuthenticatorName authenticatorName, PlainTextTotp totp, CancellationToken ct);
 ```
 
 #### IRecoveryCodeAuth
 
 ```csharp
-Task<bool> TryAuthenticateAsync(UserSubjectId subjectId, PlainTextRecoveryCode recoveryCode, Ct ct);
+Task<bool> TryAuthenticateAsync(UserSubjectId subjectId, PlainTextRecoveryCode recoveryCode, CancellationToken ct);
 ```
 
 ## DI Registration
