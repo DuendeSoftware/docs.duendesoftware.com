@@ -245,7 +245,7 @@ public async Task<IActionResult> OnPostSendOtpAsync(string email)
         return Error("Failed to send verification code. Please try again later.");
 
     // Store the token and address in an encrypted cookie for the verify step
-    StoreCookie("otp_token", result.Token!.Value.ToString());
+    StoreCookie("otp_token", result.Token.Value.ToString());
     StoreCookie("otp_email", email);
 
     return RedirectToPage("/Verify");
@@ -359,7 +359,7 @@ if (!result.Sent)
 }
 
 // result.Sent == true; proceed with storing the token
-StoreCookie("otp_token", result.Token!.Value.ToString());
+StoreCookie("otp_token", result.Token.Value.ToString());
 ```
 
 ## Security
