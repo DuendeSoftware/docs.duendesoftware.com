@@ -250,3 +250,26 @@ auth.ConfigureEndpoints(endpoints =>
 ```
 
 This changes all passkey endpoints to use `/auth/webauthn` as the base, so registration begins at `/auth/webauthn/register/begin`, and so on.
+
+## Membership Module
+
+The membership module provides administrative services for managing users, roles, and groups within your application. It is an optional add-on to the core User Management stack; register it when your application needs to programmatically create or modify users, assign roles, or manage group membership from server-side code (for example, in admin UIs or API endpoints).
+
+The module is registered by calling `AddMembership()` on the `IDuendePlatformBuilder` returned by `AddDuendePlatform()`:
+
+```csharp title="Program.cs"
+builder.Services
+    .AddDuendePlatform()
+    .AddUserAuthentication()
+    .AddMembership();
+```
+
+Calling `AddMembership()` registers the following services into the DI container:
+
+| Service | Description |
+|---|---|
+| `IMembershipAdmin` | Provides administrative operations for user accounts: creating, updating, deleting, and querying users. |
+| `IRoleAdmin` | Provides administrative operations for roles: creating, updating, deleting, and assigning roles to users. |
+| `IGroupAdmin` | Provides administrative operations for groups: creating, updating, deleting, and managing group membership. |
+
+All three services are registered with scoped lifetime and can be injected wherever you need to perform administrative operations on the user store.

@@ -115,8 +115,7 @@ Admin interfaces are intended for back-office and management operations: actions
 | `IUserProfileSchemaAdmin` | Manage attribute definitions: get all definitions; add a definition; remove a definition |
 | `IRoleAdmin` | Role CRUD: create, get, update, delete, and query roles with filtering, sorting, and pagination |
 | `IGroupAdmin` | Group CRUD: create, get, update, delete, and query groups with filtering, sorting, and pagination |
-| `IRoleMembershipAdmin` | Assign roles to users and groups; query direct and transitive role assignments |
-| `IGroupMembershipAdmin` | Add and remove users from groups; query group membership with offset-based and cursor-based pagination |
+| `IMembershipAdmin` | Membership lifecycle, role and group assignment, and query operations for users and groups |
 
 #### IUserAdmin
 
@@ -194,39 +193,34 @@ Task<QueryResult<GroupListDto>> QueryAsync(
     CancellationToken ct);
 ```
 
-#### IRoleMembershipAdmin
+#### IMembershipAdmin
 
 ```csharp
-// Assign and remove roles for users and groups
-Task<SaveResult<RoleId>> AssignRoleToUserProfileAsync(RoleId roleId, UserSubjectId subjectId, CancellationToken ct);
-Task<SaveResult<RoleId>> RemoveRoleFromUserProfileAsync(RoleId roleId, UserSubjectId subjectId, CancellationToken ct);
+// Membership lifecycle
+Task<MembershipDto> EnsureMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
+Task<MembershipDto?> GetMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
+Task DeleteMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
+
+// Direct role assignment
+Task<SaveResult<RoleId>> AssignRoleAsync(UserSubjectId subjectId, RoleId roleId, CancellationToken ct);
+Task<SaveResult<RoleId>> RemoveRoleAsync(UserSubjectId subjectId, RoleId roleId, CancellationToken ct);
+
+// Group role assignment
 Task<SaveResult<RoleId>> AssignRoleToGroupAsync(RoleId roleId, GroupId groupId, CancellationToken ct);
 Task<SaveResult<RoleId>> RemoveRoleFromGroupAsync(RoleId roleId, GroupId groupId, CancellationToken ct);
 
-// Query role membership
-Task<QueryResult<UserProfileRoleMemberListDto>> GetUserProfilesInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
-Task<QueryResult<GroupRoleMemberListDto>> GetGroupsInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
-Task<QueryResult<RoleListDto>> GetDirectRolesForUserProfileAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
-Task<QueryResult<RoleListDto>> GetTransitiveRolesForUserProfileAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+// Group membership
+Task<SaveResult<GroupId>> AssignGroupAsync(UserSubjectId subjectId, GroupId groupId, CancellationToken ct);
+Task<SaveResult<GroupId>> RemoveGroupAsync(UserSubjectId subjectId, GroupId groupId, CancellationToken ct);
+
+// Query operations
+Task<QueryResult<RoleListDto>> GetDirectRolesAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+Task<QueryResult<RoleListDto>> GetTransitiveRolesAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
 Task<QueryResult<RoleListDto>> GetRolesForGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
-```
-
-#### IGroupMembershipAdmin
-
-```csharp
-// Add and remove users from groups
-Task<SaveResult<GroupId>> AddUserProfileToGroupAsync(GroupId groupId, UserSubjectId subjectId, CancellationToken ct);
-Task<SaveResult<GroupId>> RemoveUserProfileFromGroupAsync(GroupId groupId, UserSubjectId subjectId, CancellationToken ct);
-
-// Query group membership (offset-based pagination)
-Task<QueryResult<UserProfileGroupMemberListDto>> GetUserProfilesInGroupAsync(GroupId groupId, Page? page, CancellationToken ct);
-
-// Query group membership (cursor-based pagination)
-Task<QueryResult<UserProfileGroupMemberListDto>> GetUserProfilesInGroupAsync(
-    GroupId groupId, DataRange? range, CancellationToken ct);
-
-// Query groups for a user
-Task<QueryResult<GroupListDto>> GetGroupsForUserProfileAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+Task<QueryResult<GroupListDto>> GetGroupsAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+Task<QueryResult<MembershipRoleMemberListDto>> GetMembersInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
+Task<QueryResult<GroupRoleMemberListDto>> GetGroupsInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
+Task<QueryResult<MembershipGroupMemberListDto>> GetMembersInGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
 ```
 
 ### Authentication Interfaces
@@ -267,7 +261,7 @@ Task<bool> TryAuthenticateAsync(UserSubjectId subjectId, PlainTextRecoveryCode r
 
 ## DI Registration
 
-User Management is registered as a set of modules on the `IDuendePlatformBuilder`. The two primary modules are `AddUserAuthentication()` and `AddUserProfiles()`.
+User Management is registered as a set of modules on the `IDuendePlatformBuilder`. The three primary modules are `AddUserAuthentication()`, `AddUserProfiles()`, and `AddMembership()`.
 
 ### Registering Authentication
 
@@ -306,7 +300,7 @@ builder.Services
 
 ### Registering Profiles, Roles, and Groups
 
-`AddUserProfiles()` registers all profile-related services, including `IUserProfileSelfService`, `IUserProfileAdmin`, `IUserProfileSchemaAdmin`, `IRoleAdmin`, `IGroupAdmin`, `IRoleMembershipAdmin`, and `IGroupMembershipAdmin`.
+`AddUserProfiles()` registers all profile-related services, including `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin`.
 
 ```csharp title="Program.cs"
 builder.Services
@@ -314,15 +308,32 @@ builder.Services
     .AddUserProfiles();
 ```
 
-### Registering Both Modules
+### Registering Membership (Roles and Groups)
 
-Most applications register both modules together:
+The Membership module is the part of Duende User Management that manages how users are organized into roles and groups, and how those relationships evolve over time. It is registered by calling `AddMembership()` on the `IDuendePlatformBuilder` and lives in the `Duende.Platform.Users.Membership` namespace. Use this module whenever your application needs to assign roles to users, organize users into groups, or query transitive role assignments, for example to drive authorization decisions or to build an admin UI for managing access.
+
+`AddMembership()` registers the three membership admin interfaces: `IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`.
+
+- **`IRoleAdmin`**: Create, read, update, delete, and query roles with filtering, sorting, and pagination.
+- **`IGroupAdmin`**: Create, read, update, delete, and query groups with filtering, sorting, and pagination.
+- **`IMembershipAdmin`**: Membership lifecycle (ensure, get, delete), role and group assignment, and query operations for direct roles, transitive roles, group membership, and role membership.
+
+```csharp title="Program.cs"
+builder.Services
+    .AddDuendePlatform()
+    .AddMembership();
+```
+
+### Registering All Modules
+
+Most applications register all three modules together:
 
 ```csharp title="Program.cs"
 builder.Services
     .AddDuendePlatform()
     .AddUserAuthentication()
-    .AddUserProfiles();
+    .AddUserProfiles()
+    .AddMembership();
 ```
 
 `IUserSelfService` and `IUserAdmin` are registered as part of the core platform and do not require a separate module call.
@@ -331,6 +342,5 @@ builder.Services
 
 * **Scenario-Based Interfaces**: Each interface represents a distinct use case (self-service, admin, authentication) rather than a generic CRUD surface. This makes it clear which interface to inject for a given scenario and limits the blast radius of changes.
 * **Try-Pattern Returns**: Methods return `null` or `false` on expected failures (user not found, wrong password) rather than throwing exceptions. Exceptions are reserved for unexpected infrastructure failures.
-* **Idempotent Mutations**: Membership operations (`AssignRoleToUserProfileAsync`, `AddUserProfileToGroupAsync`, etc.) are idempotent: calling them when the relationship already exists succeeds without error.
+* **Idempotent Mutations**: Membership operations (`AssignRoleAsync`, `AssignGroupAsync`, etc.) are idempotent: calling them when the relationship already exists succeeds without error.
 * **Optimistic Concurrency**: Update operations on roles and groups accept an `expectedVersion` parameter to detect and reject conflicting concurrent writes.
-* **Cursor-Based Pagination**: `IGroupMembershipAdmin` supports both offset-based and cursor-based pagination. Cursor-based pagination is preferred for large groups where offset queries become expensive.

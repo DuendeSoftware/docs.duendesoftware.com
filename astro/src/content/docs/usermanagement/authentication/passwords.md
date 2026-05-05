@@ -22,7 +22,7 @@ A fundamental challenge with standalone password authentication is self-service 
 User Management addresses this by design. Creating a user without first verifying a One-Time Password (OTP) channel is not possible via the `IUserSelfService` interface. By default, a user verifies ownership of their email address via OTP, then creates a password. Whether to allow password-only login or to always require an additional OTP factor during login is a decision left to your application.
 
 <Aside type="tip" title="Password Policy Configuration">
-Password policies (minimum/maximum length, complexity requirements) are configured via `PasswordOptions` in the DI registration. See the [configuration reference](/usermanagement/reference/configuration) for all available options.
+Password policies (minimum/maximum length, complexity requirements) are configured via `PasswordOptions` in the DI registration. See the [configuration reference](/usermanagement/reference/configuration.md) for all available options.
 </Aside>
 
 ## Key Interfaces
@@ -37,7 +37,7 @@ public interface IPasswordAuth
     Task<UserSubjectId?> TryAuthenticateAsync(
         UserName userName,
         PlainTextPassword password,
-        Ct ct);
+        CancellationToken ct);
 }
 ```
 
@@ -83,21 +83,21 @@ public interface IUserAuthenticatorsSelfService
     Task<bool> TrySetPasswordAsync(
         UserSubjectId subjectId,
         PlainTextPassword password,
-        Ct ct);
+        CancellationToken ct);
 
     // Changes a password by verifying the current password first.
     Task<bool> TryChangePasswordAsync(
         UserSubjectId subjectId,
         PlainTextPassword oldPassword,
         PlainTextPassword newPassword,
-        Ct ct);
+        CancellationToken ct);
 
     // Resets a password without requiring the current password.
     // Use only after verifying the user's identity via another channel (e.g., OTP).
     Task<bool> TryResetPasswordAsync(
         UserSubjectId subjectId,
         PlainTextPassword password,
-        Ct ct);
+        CancellationToken ct);
 
     // ... other authenticator management methods
 }
@@ -145,7 +145,7 @@ Beyond the built-in complexity rules, you can implement `IPasswordValidator` to 
 ```csharp
 public interface IPasswordValidator
 {
-    Task<PasswordValidationResult> ValidateAsync(string password, Ct ct);
+    Task<PasswordValidationResult> ValidateAsync(string password, CancellationToken ct);
 }
 ```
 
@@ -175,7 +175,7 @@ public class BlocklistPasswordValidator : IPasswordValidator
         "Password1!", "Welcome1!", "Summer2024!"
     ];
 
-    public Task<PasswordValidationResult> ValidateAsync(string password, Ct ct)
+    public Task<PasswordValidationResult> ValidateAsync(string password, CancellationToken ct)
     {
         if (CommonPasswords.Contains(password))
         {
@@ -270,10 +270,10 @@ public async Task<IActionResult> OnPostLogin(string username, string password)
     if (userId == null)
         return Error("Invalid username or password");
 
-    var user = await userSelfService.TryGetUserAsync(userId, ct);
+    var user = await userAuthenticatorsSelfService.TryGetAsync(userId, ct);
 
     // Optionally check for a second factor before completing sign-in.
-    if (user.TotpAuthenticatorNames.Count > 0)
+    if (user?.TotpAuthenticators.Count > 0)
     {
         StoreAuthState(userId);
         return RedirectToPage("/LoginWith2FA");
@@ -345,4 +345,10 @@ The recommended pattern when using passwords is to combine them with Time-Based 
 * **Second Factor** - TOTP code (something you have)
 * **Backup** - Recovery codes (something you saved)
 
-See [TOTP Authentication Flow](/usermanagement/authentication/totp.mdx) for the second-factor implementation, and [Recovery Codes](/usermanagement/authentication/recovery-codes.mdx) for backup access.
+See [TOTP Authentication Flow](/usermanagement/authentication/totp.mdx) for the second-factor implementation, [Passkeys as Second Factor](/usermanagement/authentication/passkeys.mdx#second-factor-passkey-authentication) for using passkeys as a second step, and [Recovery Codes](/usermanagement/authentication/recovery-codes.mdx) for backup access.
+
+## Multi-Algorithm Password Hashing
+
+User Management supports multiple password hashing algorithms simultaneously, enabling transparent migration from legacy hashes to stronger algorithms. Each stored hash carries an algorithm identifier, and the system automatically re-hashes passwords on successful login when a stronger algorithm is available.
+
+For full details on the `IPasswordHashAlgorithm` interface, `HashedPasswordData`, transparent re-hashing via `NeedsRehash()`, the built-in PBKDF2-SHA-512 algorithm, and how to implement custom algorithms, see the [Password Hashing Algorithms](/usermanagement/reference/password-hashing.md) reference.

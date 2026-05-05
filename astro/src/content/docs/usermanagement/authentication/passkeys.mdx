@@ -172,7 +172,7 @@ After a successful registration ceremony, persist the credential:
 Task<bool> TryAddPasskeyAsync(
     UserSubjectId subjectId,
     PasskeyCredentialData credential,
-    Ct ct);
+    CancellationToken ct);
 ```
 
 `PasskeyCredentialData` is returned from a completed registration ceremony and contains:
@@ -197,7 +197,7 @@ Remove a specific passkey by its credential ID:
 Task<bool> TryRemovePasskeyAsync(
     UserSubjectId subjectId,
     PasskeyCredentialId credentialId,
-    Ct ct);
+    CancellationToken ct);
 ```
 
 Returns `true` if the credential was removed, `false` if the user or credential was not found.
@@ -366,7 +366,21 @@ The helper handles:
 * Encoding and decoding Base64URL values required by the WebAuthn API
 * Routing requests to the correct endpoint URLs (injected at build time from `PasskeysRouteOptions`)
 
-## Second-Factor Passkey Support
+## Second-Factor Passkey Authentication
+
+By default, passkeys are used as the **primary authenticator**: the user proves their identity with a passkey alone, and the ceremony establishes the session. This is the recommended flow for most applications because it is phishing-resistant and requires no password.
+
+However, some applications need a **layered authentication model** where a passkey is used as a *second factor* on top of an existing first factor (password, OTP, smart card, etc.). Common reasons include:
+
+* **Regulatory requirements**: certain compliance frameworks mandate two distinct authentication factors, each from a different category (knowledge, possession, inherence).
+* **Gradual migration**: you want to add passkey step-up to an existing password-based login without replacing it entirely.
+* **High-assurance flows**: admin consoles or financial transactions where you want both a password and a biometric confirmation.
+
+In this mode, the user first completes their primary authentication step. Your application stores the partially-authenticated user's identity in a temporary store (session, distributed cache, etc.). The client then calls the second-factor begin endpoint, which scopes the WebAuthn challenge to that specific user's registered passkeys. The user completes the passkey ceremony, and the server signs them in.
+
+The key difference from primary passkey auth is that the server already knows *who* is authenticating before the WebAuthn ceremony starts. This is why a resolver interface is required: User Management needs your application to hand it the user identity that was established in the first factor.
+
+The second-factor begin endpoint (`PasskeyBeginAuthenticationForSecondFactorEndpoint`) is only registered when you configure a resolver; it is not active by default. This prevents the endpoint from being called without a first-factor context in place.
 
 Passkeys can be used as a second factor after a primary authentication step (for example, after password or One-Time Password (OTP) verification). This requires implementing `ISecondFactorPasskeyAuthenticationResolver` to identify the partially-authenticated user.
 
@@ -379,7 +393,7 @@ public interface ISecondFactorPasskeyAuthenticationResolver
     /// Resolves the user that completed the first factor and is participating
     /// in the passkey second-factor ceremony.
     /// </summary>
-    Task<UserSubjectId?> ResolveAsync(Ct ct);
+    Task<UserSubjectId?> ResolveAsync(CancellationToken ct);
 }
 ```
 
@@ -399,7 +413,7 @@ public class MySecondFactorResolver : ISecondFactorPasskeyAuthenticationResolver
         _authStateStore = authStateStore;
     }
 
-    public async Task<UserSubjectId?> ResolveAsync(Ct ct)
+    public async Task<UserSubjectId?> ResolveAsync(CancellationToken ct)
     {
         // Retrieve the user ID stored after the first factor completed
         var stateKey = _httpContextAccessor.HttpContext?.Session.GetString("PendingUserId");
@@ -554,4 +568,48 @@ public async Task<IActionResult> OnPostRemovePasskey(
 
     return RedirectToPage();
 }
+```
 
+## WebAuthn Enhancements
+
+User Management includes several improvements to the underlying WebAuthn implementation. These are active by default and no additional configuration is required, but understanding what they do helps you reason about the security posture of your passkey deployment.
+
+### TPM Attestation Validation
+
+Attestation is the mechanism by which an authenticator proves its provenance: it cryptographically signs the new credential with a key that is specific to the authenticator model, allowing the server to verify that the credential was created by a genuine, known device.
+
+TPM (Trusted Platform Module) attestation is the format used by Windows Hello and other platform authenticators backed by a hardware security chip. User Management now validates TPM attestation statements, which means that when `AttestationConveyancePreference` is set to `"direct"` or `"enterprise"`, TPM-attested credentials are fully verified rather than accepted without attestation checks.
+
+This matters when you need to enforce an allowlist of approved authenticator models, for example in enterprise environments where only corporate-managed devices with a TPM should be permitted to register passkeys.
+
+### RS1 Signature Verifier Support
+
+WebAuthn credentials can use different cryptographic algorithms, identified by COSE algorithm identifiers. RS1 (`RSASSA-PKCS1-v1_5` with SHA-1) is an older RSA signature algorithm that some legacy authenticators and security keys use.
+
+User Management now includes a verifier for RS1 signatures. This broadens compatibility with older hardware security keys that do not support the preferred ES256 (ECDSA with P-256) or RS256 (RSASSA-PKCS1-v1_5 with SHA-256) algorithms.
+
+:::note
+RS1 uses SHA-1, which is considered cryptographically weak for new designs. If your security policy requires strong algorithms only, restrict `SupportedAlgorithms` to exclude RS1:
+
+```csharp
+options.Passkeys.SupportedAlgorithms = [CoseAlgorithms.Es256, CoseAlgorithms.Rs256];
+```
+
+Omitting RS1 from `SupportedAlgorithms` prevents registration of RS1-based credentials while still allowing RS1 verification for credentials already registered before the restriction was applied.
+:::
+
+### Expired Challenge Cleanup
+
+Each WebAuthn ceremony begins with the server issuing a cryptographic challenge. Challenges are stored server-side and expire after `ChallengeTimeout` (default: 5 minutes). Expired challenges that were never completed (for example, because the user abandoned the browser prompt) previously accumulated in the challenge store.
+
+User Management now automatically removes expired challenges. This keeps the challenge store lean and prevents unbounded growth in long-running applications with high registration or authentication traffic.
+
+No configuration is required. Cleanup runs as part of normal challenge lifecycle management.
+
+### Constant-Time Challenge Comparison
+
+When the server validates a completed WebAuthn ceremony, it compares the challenge returned by the authenticator against the challenge it originally issued. A naive string or byte comparison can leak timing information: an attacker who can measure response times precisely might infer how many bytes matched before the comparison failed.
+
+User Management now uses a constant-time comparison for challenge validation. The comparison always takes the same amount of time regardless of how many bytes match, eliminating this timing side-channel.
+
+This is a defense-in-depth measure. WebAuthn challenges are already large (32 bytes of random data by default) and single-use, so the practical exploitability of a timing side-channel is very low. Constant-time comparison removes it entirely.

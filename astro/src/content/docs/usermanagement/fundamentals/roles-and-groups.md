@@ -11,39 +11,48 @@ Roles and groups provide a flexible authorization model. A role represents a nam
 
 ## End-to-End Example
 
-The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive):
+The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive). It uses three services (`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) which are registered by calling `AddMembership()` (see [Configuration](/usermanagement/reference/configuration.md#membership-module)) and can be injected via constructor injection:
 
 ```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.Platform.Users.Membership;
 
-// 1. Create a role.
-var roleResult = await roleAdmin.CreateAsync(
-    new RoleDto { Name = RoleName.Parse("content-editor") },
-    ct);
-var roleId = roleResult.Value;
+public class RoleSetupService(
+    IRoleAdmin roleAdmin,
+    IGroupAdmin groupAdmin,
+    IMembershipAdmin membershipAdmin)
+{
+    public async Task SetupEditorRoleAsync(UserSubjectId subjectId, CancellationToken ct)
+    {
+        // 1. Create a role.
+        var roleResult = await roleAdmin.CreateAsync(
+            new RoleDto { Name = RoleName.Parse("content-editor") },
+            ct);
+        var roleId = roleResult.Value;
 
-// 2. Create a group.
-var groupResult = await groupAdmin.CreateAsync(
-    new GroupDto { Name = GroupName.Parse("editors") },
-    ct);
-var groupId = groupResult.Value;
+        // 2. Create a group.
+        var groupResult = await groupAdmin.CreateAsync(
+            new GroupDto { Name = GroupName.Parse("editors") },
+            ct);
+        var groupId = groupResult.Value;
 
-// 3. Assign the role to the group (transitive path).
-await roleMembershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
+        // 3. Assign the role to the group (transitive path).
+        await membershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
 
-// 4. Add the user to the group.
-await groupMembershipAdmin.AddUserProfileToGroupAsync(groupId, subjectId, ct);
+        // 4. Add the user to the group.
+        await membershipAdmin.AssignGroupAsync(subjectId, groupId, ct);
 
-// 5. Query effective roles (direct + transitive, merged in application code).
-var directRoles = await roleMembershipAdmin.GetDirectRolesForUserProfileAsync(subjectId, page: null, ct);
-var transitiveRoles = await roleMembershipAdmin.GetTransitiveRolesForUserProfileAsync(subjectId, page: null, ct);
+        // 5. Query effective roles (direct + transitive, merged in application code).
+        var directRoles = await membershipAdmin.GetDirectRolesAsync(subjectId, range: null, ct);
+        var transitiveRoles = await membershipAdmin.GetTransitiveRolesAsync(subjectId, range: null, ct);
 
-var effectiveRoles = directRoles.Items
-    .Concat(transitiveRoles.Items)
-    .DistinctBy(r => r.Id)
-    .ToList();
+        var effectiveRoles = directRoles.Items
+            .Concat(transitiveRoles.Items)
+            .DistinctBy(r => r.Id)
+            .ToList();
 
-// effectiveRoles now contains "content-editor" via the group.
+        // effectiveRoles now contains "content-editor" via the group.
+    }
+}
 ```
 
 ### Where this code typically lives
@@ -76,44 +85,41 @@ The core types in the `Duende.Platform.Users.Profiles.RolesAndGroups` namespace 
 * **`GroupDescription`**: An optional description for a group. Maximum 500 characters. Use `GroupDescription.Parse(string)` to construct.
 * **`GroupDto`**: The data transfer object used when creating or updating a group. Contains a required `Name` and an optional `Description`.
 * **`GroupListDto`**: The summary DTO returned by list and query operations. Contains `Id`, `Name`, and `Description`.
-* **`GroupFilter`**: Filter criteria for group queries. Supports contains-match filtering on `Name` and `Description`, plus an optional System for Cross-domain Identity Management (SCIM)-like `SearchExpression` (RFC 7644 §3.4.2.2).
+* **`GroupFilter`**: Filter criteria for group queries. Supports contains-match filtering on `Name` and `Description`, plus an optional `SearchExpression` for filter expressions (e.g., `displayName eq "Engineers"`).
 * **`GroupSortField`**: Enum with values `Name` and `Description` for sorting group query results.
 
 ### Membership Types
 
-* **`UserProfileRoleMemberListDto`**: Returned when listing users directly assigned to a role. Contains `SubjectId`.
+* **`MembershipDto`**: Returned by `EnsureMembershipAsync` and `GetMembershipAsync`. Represents a user's membership record, which must exist before roles or groups can be assigned.
+* **`MembershipRoleMemberListDto`**: Returned when listing users directly assigned to a role. Contains `SubjectId`.
 * **`GroupRoleMemberListDto`**: Returned when listing groups assigned to a role. Contains `Id` and `Name`.
-* **`UserProfileGroupMemberListDto`**: Returned when listing users in a group. Contains `SubjectId`.
+* **`MembershipGroupMemberListDto`**: Returned when listing users in a group. Contains `SubjectId`.
 
 ### Direct vs. Transitive Role Assignment
 
 A user can hold a role in two ways:
 
-* **Direct assignment**: The role is assigned directly to the user's profile via `IRoleMembershipAdmin.AssignRoleToUserProfileAsync`. The user holds the role regardless of group membership.
-* **Transitive assignment**: The role is assigned to a group via `IRoleMembershipAdmin.AssignRoleToGroupAsync`, and the user is a member of that group. The effective role path is: `Role <- GroupRole <- Group <- UserProfileGroup <- UserProfile`.
+* **Direct assignment**: The role is assigned directly to the user's profile via `IMembershipAdmin.AssignRoleAsync`. The user holds the role regardless of group membership.
+* **Transitive assignment**: The role is assigned to a group via `IMembershipAdmin.AssignRoleToGroupAsync`, and the user is a member of that group. The effective role path is: `Role <- GroupRole <- Group <- UserProfileGroup <- UserProfile`.
 
-Because the storage layer does not support union operations, direct and transitive roles cannot be combined in a single query. Use `GetDirectRolesForUserProfileAsync` and `GetTransitiveRolesForUserProfileAsync` separately and merge the results in application code.
+Because the storage layer does not support union operations, direct and transitive roles cannot be combined in a single query. Use `GetDirectRolesAsync` and `GetTransitiveRolesAsync` separately and merge the results in application code.
 
 ## `IRoleAdmin`
 
-`IRoleAdmin` provides full CRUD operations for roles, with optional filtering, sorting, and offset-based pagination.
+`IRoleAdmin` provides full CRUD operations for roles. It is registered in the dependency injection container by the Duende User Management infrastructure and is typically injected into admin controllers, background services, or seed scripts. Use it whenever you need to create, read, update, delete, or search roles independently of membership, for example to populate a role picker in an admin UI or to ensure a set of well-known roles exists at startup.
 
 ```csharp
 public interface IRoleAdmin
 {
-    Task<SaveResult<RoleId>> CreateAsync(RoleDto role, Ct ct);
-
-    Task<GetResult<RoleDto>> GetAsync(RoleId id, Ct ct);
-
-    Task<SaveResult<RoleId>> UpdateAsync(RoleId id, RoleDto role, Version expectedVersion, Ct ct);
-
-    Task<SaveResult<RoleId>> DeleteAsync(RoleId id, Ct ct);
-
-    Task<ListResult<RoleListDto>> QueryAsync(
+    Task<SaveResult<RoleId>> CreateAsync(RoleDto role, CancellationToken ct);
+    Task<GetResult<RoleDto>> GetAsync(RoleId id, CancellationToken ct);
+    Task<SaveResult<RoleId>> UpdateAsync(RoleId id, RoleDto role, Version expectedVersion, CancellationToken ct);
+    Task<SaveResult<RoleId>> DeleteAsync(RoleId id, CancellationToken ct);
+    Task<QueryResult<RoleListDto>> QueryAsync(
         RoleFilter? filter,
-        (RoleSortField Field, SortDirection Direction)? sort,
-        Page? page,
-        Ct ct);
+        SortBy.SortByField<RoleSortField>? sort,
+        DataRange? range,
+        CancellationToken ct);
 }
 ```
 
@@ -121,7 +127,7 @@ public interface IRoleAdmin
 * **`GetAsync`**: Retrieves a single role by its `RoleId`. Returns a `GetResult<RoleDto>` that is either found or not found.
 * **`UpdateAsync`**: Updates an existing role. Requires the current `Version` for optimistic concurrency. Returns an error on version conflict or if the role is not found.
 * **`DeleteAsync`**: Deletes a role by its `RoleId`. Returns an error if deletion fails.
-* **`QueryAsync`**: Returns a paged list of `RoleListDto` records. All parameters are optional: omit `filter` to return all roles, omit `sort` to use the default ordering, and omit `page` to return the first page with the default page size.
+* **`QueryAsync`**: Returns a paged list of `RoleListDto` records. All parameters are optional: omit `filter` to return all roles, omit `sort` to use the default ordering, and omit `range` to return the first page with the default page size.
 
 ### Creating a Role
 
@@ -150,10 +156,10 @@ using Duende.Platform.Storage;
 using Duende.Platform.Users.Profiles.RolesAndGroups;
 
 var filter = new RoleFilter { Name = "editor" };
-var sort = (RoleSortField.Name, SortDirection.Ascending);
-var page = new Page(Number: 1, Size: 20);
+var sort = SortBy.Ascending(RoleSortField.Name);
+var range = new DataRange(Offset: 0, Limit: 20);
 
-var roles = await roleAdmin.QueryAsync(filter, sort, page, ct);
+var roles = await roleAdmin.QueryAsync(filter, sort, range, ct);
 
 foreach (var r in roles.Items)
 {
@@ -180,24 +186,20 @@ if (existing.IsFound)
 
 ## `IGroupAdmin`
 
-`IGroupAdmin` provides full CRUD operations for groups, with optional filtering, sorting, and offset-based pagination.
+`IGroupAdmin` provides full CRUD operations for groups. Like `IRoleAdmin`, it is registered in the dependency injection container and is injected wherever group lifecycle management is needed, for example in an admin UI that lets administrators create and rename groups, or in a synchronisation service that mirrors groups from an external directory. Use it to manage the group catalogue independently of membership.
 
 ```csharp
 public interface IGroupAdmin
 {
-    Task<SaveResult<GroupId>> CreateAsync(GroupDto group, Ct ct);
-
-    Task<GetResult<GroupDto>> GetAsync(GroupId id, Ct ct);
-
-    Task<SaveResult<GroupId>> UpdateAsync(GroupId id, GroupDto group, Version expectedVersion, Ct ct);
-
-    Task<SaveResult<GroupId>> DeleteAsync(GroupId id, Ct ct);
-
-    Task<ListResult<GroupListDto>> QueryAsync(
+    Task<SaveResult<GroupId>> CreateAsync(GroupDto group, CancellationToken ct);
+    Task<GetResult<GroupDto>> GetAsync(GroupId id, CancellationToken ct);
+    Task<SaveResult<GroupId>> UpdateAsync(GroupId id, GroupDto group, Version expectedVersion, CancellationToken ct);
+    Task<SaveResult<GroupId>> DeleteAsync(GroupId id, CancellationToken ct);
+    Task<QueryResult<GroupListDto>> QueryAsync(
         GroupFilter? filter,
-        (GroupSortField Field, SortDirection Direction)? sort,
-        Page? page,
-        Ct ct);
+        SortBy.SortByField<GroupSortField>? sort,
+        DataRange? range,
+        CancellationToken ct);
 }
 ```
 
@@ -205,7 +207,7 @@ public interface IGroupAdmin
 * **`GetAsync`**: Retrieves a single group by its `GroupId`.
 * **`UpdateAsync`**: Updates an existing group with optimistic concurrency via `expectedVersion`.
 * **`DeleteAsync`**: Deletes a group by its `GroupId`.
-* **`QueryAsync`**: Returns a paged list of `GroupListDto` records. `GroupFilter` also supports a SCIM-like `SearchExpression` (e.g., `displayName eq "Engineers"`) that is combined with the other filter properties using AND logic.
+* **`QueryAsync`**: Returns a paged list of `GroupListDto` records. `GroupFilter` also supports a `SearchExpression` (e.g., `displayName eq "Engineers"`) that is combined with the other filter properties using AND logic.
 
 ### Creating a Group
 
@@ -227,7 +229,7 @@ if (result.IsSuccess)
 }
 ```
 
-### Querying Groups with a SCIM Expression
+### Querying Groups with a Filter Expression
 
 ```csharp
 using Duende.Platform.Users.Profiles.RolesAndGroups;
@@ -237,52 +239,94 @@ var filter = new GroupFilter
     SearchExpression = new SearchExpression("displayName eq \"editors\"")
 };
 
-var groups = await groupAdmin.QueryAsync(filter, sort: null, page: null, ct);
+var groups = await groupAdmin.QueryAsync(filter, sort: null, range: null, ct);
 ```
 
-## `IRoleMembershipAdmin`
+## `IMembershipAdmin`
 
-`IRoleMembershipAdmin` manages the assignment of roles to users and groups, and provides queries for both direct and transitive role memberships.
+`IMembershipAdmin` is the single interface for all membership operations. It replaces the former `IRoleMembershipAdmin` and `IGroupMembershipAdmin` interfaces, which no longer exist. It is registered in the dependency injection container alongside `IRoleAdmin` and `IGroupAdmin` and is injected wherever you need to assign roles or groups to users, query a user's effective roles, or manage the membership lifecycle.
+
+A user's membership record must exist before any role or group can be assigned to them. Use `EnsureMembershipAsync` to create the record on first use, or `GetMembershipAsync` to check whether it already exists. `DeleteMembershipAsync` removes the record and all associated assignments when a user is deprovisioned.
 
 ```csharp
-public interface IRoleMembershipAdmin
+public interface IMembershipAdmin
 {
-    Task<SaveResult<RoleId>> AssignRoleToUserProfileAsync(RoleId roleId, UserSubjectId subjectId, Ct ct);
+    // Membership lifecycle
+    Task<MembershipDto> EnsureMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
+    Task<MembershipDto?> GetMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
+    Task DeleteMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
 
-    Task<SaveResult<RoleId>> RemoveRoleFromUserProfileAsync(RoleId roleId, UserSubjectId subjectId, Ct ct);
+    // Direct role assignment
+    Task<SaveResult<RoleId>> AssignRoleAsync(UserSubjectId subjectId, RoleId roleId, CancellationToken ct);
+    Task<SaveResult<RoleId>> RemoveRoleAsync(UserSubjectId subjectId, RoleId roleId, CancellationToken ct);
 
-    Task<SaveResult<RoleId>> AssignRoleToGroupAsync(RoleId roleId, GroupId groupId, Ct ct);
+    // Group role assignment
+    Task<SaveResult<RoleId>> AssignRoleToGroupAsync(RoleId roleId, GroupId groupId, CancellationToken ct);
+    Task<SaveResult<RoleId>> RemoveRoleFromGroupAsync(RoleId roleId, GroupId groupId, CancellationToken ct);
 
-    Task<SaveResult<RoleId>> RemoveRoleFromGroupAsync(RoleId roleId, GroupId groupId, Ct ct);
+    // Group membership
+    Task<SaveResult<GroupId>> AssignGroupAsync(UserSubjectId subjectId, GroupId groupId, CancellationToken ct);
+    Task<SaveResult<GroupId>> RemoveGroupAsync(UserSubjectId subjectId, GroupId groupId, CancellationToken ct);
 
-    Task<ListResult<UserProfileRoleMemberListDto>> GetUserProfilesInRoleAsync(RoleId roleId, Page? page, Ct ct);
-
-    Task<ListResult<GroupRoleMemberListDto>> GetGroupsInRoleAsync(RoleId roleId, Page? page, Ct ct);
-
-    Task<ListResult<RoleListDto>> GetDirectRolesForUserProfileAsync(UserSubjectId subjectId, Page? page, Ct ct);
-
-    Task<ListResult<RoleListDto>> GetTransitiveRolesForUserProfileAsync(UserSubjectId subjectId, Page? page, Ct ct);
-
-    Task<ListResult<RoleListDto>> GetRolesForGroupAsync(GroupId groupId, Page? page, Ct ct);
+    // Query operations
+    Task<QueryResult<RoleListDto>> GetDirectRolesAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<RoleListDto>> GetTransitiveRolesAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<RoleListDto>> GetRolesForGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<GroupListDto>> GetGroupsAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<MembershipRoleMemberListDto>> GetMembersInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<GroupRoleMemberListDto>> GetGroupsInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<MembershipGroupMemberListDto>> GetMembersInGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
 }
 ```
 
-* **`AssignRoleToUserProfileAsync`**: Directly assigns a role to a user. Idempotent; succeeds if the assignment already exists.
-* **`RemoveRoleFromUserProfileAsync`**: Removes a direct role assignment from a user. Idempotent; succeeds if the assignment does not exist.
-* **`AssignRoleToGroupAsync`**: Assigns a role to a group. All members of the group transitively hold the role. Idempotent.
-* **`RemoveRoleFromGroupAsync`**: Removes a role assignment from a group. Idempotent.
-* **`GetUserProfilesInRoleAsync`**: Returns the users directly assigned to a role, with optional offset-based pagination.
-* **`GetGroupsInRoleAsync`**: Returns the groups assigned to a role, with optional offset-based pagination.
-* **`GetDirectRolesForUserProfileAsync`**: Returns roles directly assigned to a user (single-hop query).
-* **`GetTransitiveRolesForUserProfileAsync`**: Returns roles a user holds via group membership (multi-hop query: `Role <- GroupRole <- Group <- UserProfileGroup <- UserProfile`).
-* **`GetRolesForGroupAsync`**: Returns roles assigned to a group.
+### Membership lifecycle
+
+* **`EnsureMembershipAsync`**: Creates a membership record for the user if one does not already exist, then returns it. Idempotent, so it's safe to call on every login or provisioning event.
+* **`GetMembershipAsync`**: Returns the membership record for the user, or `null` if no record exists. Use this to check whether a user has been provisioned without creating a record as a side effect.
+* **`DeleteMembershipAsync`**: Deletes the membership record and all associated role and group assignments. Use this when deprovisioning a user.
+
+### Direct role assignment
+
+* **`AssignRoleAsync(UserSubjectId, RoleId, CancellationToken)`**: Directly assigns a role to a user. Idempotent; succeeds if the assignment already exists.
+* **`RemoveRoleAsync(UserSubjectId, RoleId, CancellationToken)`**: Removes a direct role assignment from a user. Idempotent; succeeds if the assignment does not exist.
+
+### Group role assignment
+
+* **`AssignRoleToGroupAsync(RoleId, GroupId, CancellationToken)`**: Assigns a role to a group. All members of the group transitively hold the role. Idempotent.
+* **`RemoveRoleFromGroupAsync(RoleId, GroupId, CancellationToken)`**: Removes a role assignment from a group. Idempotent.
+
+### Group membership
+
+* **`AssignGroupAsync(UserSubjectId, GroupId, CancellationToken)`**: Adds a user to a group. Idempotent; succeeds if the user is already a member.
+* **`RemoveGroupAsync(UserSubjectId, GroupId, CancellationToken)`**: Removes a user from a group. Idempotent; succeeds if the user is not a member.
+
+### Query operations
+
+* **`GetDirectRolesAsync(UserSubjectId, DataRange?, CancellationToken)`**: Returns roles directly assigned to a user (single-hop query).
+* **`GetTransitiveRolesAsync(UserSubjectId, DataRange?, CancellationToken)`**: Returns roles a user holds via group membership (multi-hop query: `Role <- GroupRole <- Group <- UserProfileGroup <- UserProfile`).
+* **`GetRolesForGroupAsync(GroupId, DataRange?, CancellationToken)`**: Returns roles assigned to a group.
+* **`GetGroupsAsync(UserSubjectId, DataRange?, CancellationToken)`**: Returns the groups a user belongs to.
+* **`GetMembersInRoleAsync(RoleId, DataRange?, CancellationToken)`**: Returns the users directly assigned to a role.
+* **`GetGroupsInRoleAsync(RoleId, DataRange?, CancellationToken)`**: Returns the groups assigned to a role.
+* **`GetMembersInGroupAsync(GroupId, DataRange?, CancellationToken)`**: Returns the users who are members of a group.
+
+### Ensuring a Membership Record
+
+Before assigning roles or groups, ensure the user's membership record exists:
+
+```csharp
+using Duende.Platform.Users.Profiles.RolesAndGroups;
+
+var membership = await membershipAdmin.EnsureMembershipAsync(subjectId, ct);
+Console.WriteLine($"Membership ready for: {membership.SubjectId}");
+```
 
 ### Assigning a Role Directly to a User
 
 ```csharp
 using Duende.Platform.Users.Profiles.RolesAndGroups;
 
-var result = await roleMembershipAdmin.AssignRoleToUserProfileAsync(roleId, subjectId, ct);
+var result = await membershipAdmin.AssignRoleAsync(subjectId, roleId, ct);
 
 if (result.IsSuccess)
 {
@@ -293,7 +337,26 @@ if (result.IsSuccess)
 ### Assigning a Role to a Group
 
 ```csharp
-var result = await roleMembershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
+var result = await membershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
+```
+
+### Adding a User to a Group
+
+```csharp
+using Duende.Platform.Users.Profiles.RolesAndGroups;
+
+var result = await membershipAdmin.AssignGroupAsync(subjectId, groupId, ct);
+
+if (result.IsSuccess)
+{
+    Console.WriteLine("User added to group.");
+}
+```
+
+### Removing a User from a Group
+
+```csharp
+var result = await membershipAdmin.RemoveGroupAsync(subjectId, groupId, ct);
 ```
 
 ### Querying a User's Effective Roles
@@ -303,8 +366,8 @@ Because direct and transitive roles cannot be combined in a single query, retrie
 ```csharp
 using Duende.Platform.Users.Profiles.RolesAndGroups;
 
-var directRoles = await roleMembershipAdmin.GetDirectRolesForUserProfileAsync(subjectId, page: null, ct);
-var transitiveRoles = await roleMembershipAdmin.GetTransitiveRolesForUserProfileAsync(subjectId, page: null, ct);
+var directRoles = await membershipAdmin.GetDirectRolesAsync(subjectId, range: null, ct);
+var transitiveRoles = await membershipAdmin.GetTransitiveRolesAsync(subjectId, range: null, ct);
 
 var effectiveRoles = directRoles.Items
     .Concat(transitiveRoles.Items)
@@ -317,79 +380,46 @@ foreach (var role in effectiveRoles)
 }
 ```
 
-## `IGroupMembershipAdmin`
-
-`IGroupMembershipAdmin` manages the membership of users in groups and provides queries for group membership. It supports both offset-based and cursor-based pagination for listing group members.
-
-```csharp
-public interface IGroupMembershipAdmin
-{
-    Task<SaveResult<GroupId>> AddUserProfileToGroupAsync(GroupId groupId, UserSubjectId subjectId, Ct ct);
-
-    Task<SaveResult<GroupId>> RemoveUserProfileFromGroupAsync(GroupId groupId, UserSubjectId subjectId, Ct ct);
-
-    Task<ListResult<UserProfileGroupMemberListDto>> GetUserProfilesInGroupAsync(GroupId groupId, Page? page, Ct ct);
-
-    Task<CursorListResult<UserProfileGroupMemberListDto>> GetUserProfilesInGroupAsync(
-        GroupId groupId, string? continuationToken, int pageSize, Ct ct);
-
-    Task<ListResult<GroupListDto>> GetGroupsForUserProfileAsync(UserSubjectId subjectId, Page? page, Ct ct);
-}
-```
-
-* **`AddUserProfileToGroupAsync`**: Adds a user to a group. Idempotent; succeeds if the user is already a member.
-* **`RemoveUserProfileFromGroupAsync`**: Removes a user from a group. Idempotent; succeeds if the user is not a member.
-* **`GetUserProfilesInGroupAsync(GroupId, Page?, Ct)`**: Returns users in a group using offset-based pagination.
-* **`GetUserProfilesInGroupAsync(GroupId, string?, int, Ct)`**: Returns users in a group using cursor-based pagination. Pass `null` as the `continuationToken` to start from the beginning, then pass the `ContinuationToken` from each result to fetch the next batch. The `pageSize` must be between 1 and 200.
-* **`GetGroupsForUserProfileAsync`**: Returns the groups a user belongs to, with optional offset-based pagination.
-
-### Adding a User to a Group
-
-```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
-
-var result = await groupMembershipAdmin.AddUserProfileToGroupAsync(groupId, subjectId, ct);
-
-if (result.IsSuccess)
-{
-    Console.WriteLine("User added to group.");
-}
-```
-
-### Listing Group Members with Cursor-Based Pagination
-
-Use cursor-based pagination when iterating over large groups to avoid the overhead of offset counting:
-
-```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
-
-string? continuationToken = null;
-
-do
-{
-    var batch = await groupMembershipAdmin.GetUserProfilesInGroupAsync(
-        groupId,
-        continuationToken,
-        pageSize: 100,
-        ct);
-
-    foreach (var member in batch.Items)
-    {
-        Console.WriteLine(member.SubjectId);
-    }
-
-    continuationToken = batch.ContinuationToken;
-}
-while (continuationToken is not null);
-```
-
 ### Querying Groups for a User
 
 ```csharp
-var groups = await groupMembershipAdmin.GetGroupsForUserProfileAsync(subjectId, page: null, ct);
+var groups = await membershipAdmin.GetGroupsAsync(subjectId, range: null, ct);
 
 foreach (var group in groups.Items)
 {
     Console.WriteLine($"{group.Id}: {group.Name}");
 }
+```
+
+### Listing Members of a Group
+
+```csharp
+using Duende.Platform.Users.Profiles.RolesAndGroups;
+
+var range = new DataRange(Offset: 0, Limit: 50);
+var members = await membershipAdmin.GetMembersInGroupAsync(groupId, range, ct);
+
+foreach (var member in members.Items)
+{
+    Console.WriteLine(member.SubjectId);
+}
+```
+
+### Listing Members of a Role
+
+```csharp
+var members = await membershipAdmin.GetMembersInRoleAsync(roleId, range: null, ct);
+
+foreach (var member in members.Items)
+{
+    Console.WriteLine(member.SubjectId);
+}
+```
+
+### Deprovisioning a User
+
+When a user is removed from the system, delete their membership record to clean up all role and group assignments:
+
+```csharp
+await membershipAdmin.DeleteMembershipAsync(subjectId, ct);
 ```
