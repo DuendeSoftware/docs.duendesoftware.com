@@ -9,7 +9,7 @@ sidebar:
 
 import { Steps } from "@astrojs/starlight/components";
 
-External authentication delegates sign-in to trusted third-party identity providers using OAuth 2.0 and OpenID Connect. Users authenticate with a provider they already trust (Google, Microsoft, a corporate IdP), and your application receives a verified identity without ever handling a password.
+External authentication delegates sign-in to trusted third-party identity providers using OAuth 2.0 and OpenID Connect. Users authenticate with a provider they already trust (e.g. Google, Microsoft, a corporate IdP), and your application receives a verified identity without ever handling a password.
 
 :::note[Code examples]
 The code examples on this page use ASP.NET Core Razor Pages (`PageModel`, `IActionResult`, `OnPost*` handler methods). The same patterns apply equally to **MVC controllers** (use action methods returning `IActionResult`) or **minimal API endpoints** (use route handler delegates). The Duende User Management interfaces are framework-agnostic.
@@ -41,8 +41,8 @@ The code examples on this page use ASP.NET Core Razor Pages (`PageModel`, `IActi
 | **User Memory** | Nothing to remember | Must remember password | Nothing to remember |
 | **Offline Support** | No | Yes | No |
 | **Security** | Provider-dependent | Strength-dependent | Channel-dependent |
-| **User Friction** | Click button | Type password | Check email or SMS |
-| **Infrastructure** | External identity provider | Password hashing | Email or SMS provider |
+| **User Friction** | Click button | Type password | Retrieve OTP from email, SMS or other channel and type/paste |
+| **Infrastructure** | External identity provider | Password hashing | Email, SMS or other channel provider |
 
 ## How It Works
 
@@ -63,7 +63,7 @@ External authentication follows the OAuth 2.0 Authorization Code Flow with PKCE:
 
 7. **Claim extraction** - Application validates the ID token and extracts user claims (`sub`, `email`, `name`, etc.).
 
-8. **User provisioning** - Application finds an existing user or creates a new account.
+8. **User provisioning** - Application finds an existing user or creates a new account, optionally prompting the user for further details and/or confirmation before doing or so.
 
 9. **Session establishment** - A local authentication session is created.
 </Steps>
