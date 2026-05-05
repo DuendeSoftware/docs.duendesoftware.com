@@ -101,6 +101,43 @@ For cross-cutting security topics (data protection key persistence and throttlin
 
 ## Configuration
 
+### Service Registration
+
+Passkey support involves two registration steps:
+
+1. **`AddUserAuthentication`** registers the core passkey services: cryptographic signature verification (ES256, RS256, RS1), WebAuthn registration and authentication ceremonies, credential storage, and challenge management. Use this when you want to drive the passkey flow yourself without the built-in HTTP endpoints.
+2. **`EnableUserAuthentication`** registers the web layer on top, including the passkey HTTP endpoints (`/passkeys/register/begin`, `/passkeys/register/complete`, `/passkeys/authenticate/begin`, `/passkeys/authenticate/complete`) and the JavaScript helper (`/passkeys/js`).
+
+Using `AddUserAuthentication` on its own:
+
+```csharp title="Program.cs"
+builder.Services.AddDuendePlatform()
+    .AddUserAuthentication(auth =>
+    {
+        auth.Configure(options =>
+        {
+            options.Passkeys.RelyingPartyName = "My Application";
+            options.Passkeys.ServerDomain = "example.com";
+        });
+    });
+```
+
+This gives you access to `IPasskeyCeremonies`, `IUserAuthenticatorsSelfService`, and the other core services via dependency injection, but does not expose any HTTP endpoints. This is useful if you want to build your own API layer or integrate passkeys into an existing controller/endpoint structure.
+
+If you are building a web application and want the ready-to-use passkey endpoints, use `EnableUserAuthentication` instead:
+
+```csharp title="Program.cs"
+builder.Services.AddDuendePlatform()
+    .AddDuendePlatformWebApp(web =>
+    {
+        web.EnableUserAuthentication();
+    });
+```
+
+:::note
+`EnableUserAuthentication` internally calls `AddUserAuthentication`, so you do not need to call both.
+:::
+
 ### Passkey Options
 
 Configure passkey behavior using `PasskeyOptions`, accessible via `UserAuthenticationOptions.Passkeys`. Use the `Configure` method on the authentication builder:
@@ -353,13 +390,24 @@ sequenceDiagram
 
 The built-in JavaScript helper is served at `/passkeys/js` (configurable via `PasskeysJavaScript`). It provides browser-side utilities for interacting with the WebAuthn API and the ceremony endpoints.
 
+:::note
+Passkey routes (including `/passkeys/js`) are only available when `EnableUserAuthentication` has been called and the Duende platform endpoints have been mapped, either via `app.UseIdentityServer()` or `app.MapDuendeEndpoints()`.
+:::
+
 Include it in your HTML:
 
 ```html
-<script src="/passkeys/js"></script>
+<script src="/passkeys/js" asp-append-version="true"></script>
 ```
 
-The helper handles:
+The default path is `/passkeys/js`, but this can be customized via `PasskeysRouteOptions`. If you have overridden the route, update the `src` attribute accordingly or read the path from the options.
+
+:::tip
+The `asp-append-version="true"` attribute appends a content-based version hash to the URL (e.g., `/passkeys/js?v=abc123`), ensuring browsers fetch the latest version after updates.
+This is an ASP.NET Core [Tag Helper](https://learn.microsoft.com/aspnet/core/mvc/views/tag-helpers/built-in/script-tag-helper) feature and requires the Razor view or its layout to include `@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers`.
+:::
+
+The JavaScript helper handles:
 
 * Calling the begin/complete endpoints
 * Invoking `navigator.credentials.create()` and `navigator.credentials.get()`
