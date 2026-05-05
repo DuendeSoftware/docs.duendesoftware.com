@@ -263,13 +263,13 @@ Available options:
   Per-SP override for how long issued assertions are valid. Uses `SamlOptions.DefaultAssertionLifetime` when `null`. Defaults to `null`.
 
 * **`AllowedScopes`** (`ICollection<string>`)
-  Controls which claim types are included in the assertion. When empty, all mapped claims are included. Defaults to empty.
+  Controls which scopes the SP is allowed to request. The requested scopes are resolved to identity resources, defining which claim types are included in the assertion. When empty, all mapped claims are included. Defaults to empty.
 
 * **`AuthnContextMappings`** (`Dictionary<string, string>`)
   Per-SP override for `acr`/`amr` → `AuthnContextClassRef` URI mappings. Overrides `SamlOptions.DefaultAuthnContextMappings` when set. Defaults to empty.
 
 * **`RequestedClaimTypes`** (`List<string>`)
-  Claim types this SP expects in assertions. Used to drive claim population for the SP.
+  Claim types this SP expects in assertions. Used to drive claim population for the SP. When both `AllowedScopes` and `RequestedClaimTypes` are configured, the effective set of claims is the intersection: only claim types that are both allowed by scopes and listed here will be included.
 
 * **`EmailNameIdClaimType`** (`string?`)
   Per-SP override for the claim used to resolve an email-format NameID. Uses `SamlOptions.EmailNameIdClaimType` when `null`. Defaults to `null`.
