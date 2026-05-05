@@ -443,9 +443,9 @@ login UI and back, the original request context (SP entity ID, ACS URL, relay st
 be stored somewhere durable for the duration of the interaction.
 
 The default implementation stores state in a browser cookie. Override this interface to store
-state in a distributed cache or database. This is particularly important in load-balanced
-environments where the callback may be handled by a different server than the one that received
-the original request, or when you need longer TTLs than a cookie allows.
+state in a server-side store (distributed cache or database) instead. This is useful when the
+sign-in state is too large for a cookie (even with chunking), when you want to avoid exposing
+state data to the client, or when you need server-side auditability of in-flight SSO requests.
 
 State is retained after a successful callback to allow browser retries (e.g., if the user
 navigates back). TTL-based expiry is the primary cleanup mechanism; `RemoveSigninRequestStateAsync`
@@ -464,10 +464,9 @@ public interface ISamlSigninStateStore
 
 Override `ISamlSigninStateStore` when:
 
-* Your deployment is load-balanced and cookie-based state is not reliably available across nodes.
-* You need a longer TTL for sign-in state than a browser cookie allows.
-* You want to store sign-in state in a centralized store (Redis, SQL, etc.) for auditability or
-  operational visibility.
+* The sign-in state exceeds cookie size limits (even with chunking) for your deployment.
+* You prefer not to expose sign-in state to the client browser (security or compliance reasons).
+* You want server-side visibility into in-flight SSO requests for auditing or operational monitoring.
 
 ### Registration
 
