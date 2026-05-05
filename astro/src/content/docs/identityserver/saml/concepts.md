@@ -9,7 +9,7 @@ sidebar:
 
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
 
-SAML 2.0 is an XML-based federation protocol widely used in enterprise, government, healthcare, and education environments. This page explains the nine core concepts you need to understand when working with IdentityServer as a [SAML 2.0 Identity Provider](/identityserver/saml/index.md). Once you are familiar with these concepts, see the [configuration reference](/identityserver/saml/configuration.md) to put them into practice.
+SAML 2.0 is an XML-based federation protocol widely used in enterprise, government, healthcare, and education environments. This page explains the core concepts you need to understand when working with SAML 2.0 federation. Where relevant, each section links to the corresponding IdentityServer [configuration](/identityserver/saml/configuration.md) so you can put these concepts into practice.
 
 ## Assertions
 
@@ -23,7 +23,9 @@ An assertion contains three key parts:
 * **Attribute Statement**: carries user properties such as email address, roles, group memberships, and department.
 * **Conditions**: constrain where and when the assertion is valid. `NotBefore` and `NotOnOrAfter` define a time window (typically minutes), and `AudienceRestriction` limits which recipients can accept it.
 
-The Identity Provider signs the assertion with its private key. The Service Provider validates the signature before trusting any claims inside. IdentityServer builds assertions automatically when it processes a SAML sign-in request. You control what attributes appear in assertions via claim mappings; see [`SamlOptions.DefaultClaimMappings` and `SamlServiceProvider.ClaimMappings`](/identityserver/saml/configuration.md#default-claim-mappings). The signing behavior is configured via the [`SamlSigningBehavior` enum](/identityserver/saml/configuration.md#samlsigningbehavior).
+The Identity Provider signs the assertion with its private key. The Service Provider validates the signature before trusting any claims inside.
+
+In IdentityServer, you control what attributes appear in assertions via [claim mappings](/identityserver/saml/configuration.md#default-claim-mappings) and configure signing via [`SamlSigningBehavior`](/identityserver/saml/configuration.md#samlsigningbehavior).
 
 ## Identity Provider
 
@@ -31,7 +33,7 @@ The Identity Provider (IdP) is the system that authenticates users and issues as
 
 When a user needs access to a protected application, they authenticate at the IdP. The IdP verifies the user's identity using whatever mechanism is configured (password, multi-factor authentication, smart card), then constructs a signed assertion and delivers it to the requesting application.
 
-**IdentityServer acts as the IdP** when you enable SAML 2.0 support via `AddSaml()`. It publishes its capabilities, endpoints, and certificates through a [metadata document](/identityserver/saml/endpoints.md#metadata-endpoint) that Service Providers import to configure trust.
+**IdentityServer acts as the IdP** when you enable SAML 2.0 support via `AddSaml()`. It publishes its capabilities through a [metadata document](/identityserver/saml/endpoints.md#metadata-endpoint) that Service Providers import to configure trust.
 
 ## Service Provider
 
@@ -39,13 +41,30 @@ The Service Provider (SP) is the application the user wants to access. Rather th
 
 When an unauthenticated user arrives, the SP sends an `AuthnRequest` to the IdP. After the IdP authenticates the user and returns an assertion, the SP validates the signature, checks the conditions, extracts identity and attributes, and establishes a local session. The SP never handles the user's credentials. It trusts the IdP because the two parties have established a federation agreement backed by exchanged metadata and certificates.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant SP as Service Provider
+    participant IdP as Identity Provider
+
+    User->>SP: Access protected resource
+    SP->>User: Redirect with AuthnRequest
+    User->>IdP: AuthnRequest (via browser)
+    IdP->>User: Login page
+    User->>IdP: Credentials
+    IdP->>User: SAML Response (assertion)
+    User->>SP: POST assertion to ACS URL
+    SP->>SP: Validate signature & conditions
+    SP->>User: Grant access (session created)
+```
+
 In IdentityServer, you register each SP using a `SamlServiceProvider` configuration object. This tells IdentityServer the SP's entity identifier, where to deliver assertions (the Assertion Consumer Service URL), and how to communicate. See the [Service Provider Store](/identityserver/saml/service-providers.md) and the [SamlServiceProvider model](/identityserver/saml/configuration.md#samlserviceprovider-model) for details.
 
 ## Metadata
 
 SAML metadata is an XML document that describes an entity's capabilities: its endpoints, supported bindings, and the certificates it uses for signing and encryption. Both IdPs and SPs publish metadata documents.
 
-Metadata makes federation scalable. Instead of manually exchanging certificates and endpoint URLs out-of-band, parties import each other's metadata and configure trust automatically. Large identity federations (such as InCommon, with over 1,000 organizations) rely on machine-readable metadata to coordinate trust across hundreds or thousands of participants.
+Metadata makes federation scalable. Instead of manually exchanging certificates and endpoint URLs out-of-band, parties import each other's metadata and configure trust automatically.
 
 IdentityServer publishes its IdP metadata at `/saml/metadata`. Share this URL with each Service Provider during federation setup so they can automatically discover your signing certificates, NameID formats, and endpoint locations. See the [metadata endpoint](/identityserver/saml/endpoints.md#metadata-endpoint) for more details.
 
@@ -75,7 +94,7 @@ AssertionConsumerServiceUrls = new List<IndexedEndpoint>
 }
 ```
 
-The [`SamlBinding` enum](/identityserver/saml/configuration.md#samlbinding) defines the available binding values. The older `AssertionConsumerServiceBinding` property on `SamlServiceProvider` is kept for backwards compatibility but is obsolete. Do not use it in new code.
+The [`SamlBinding` enum](/identityserver/saml/configuration.md#samlbinding) defines the available binding values. The older `AssertionConsumerServiceBinding` property on `SamlServiceProvider` is obsolete. Do not use it in new code.
 
 ## Profiles
 
@@ -111,6 +130,24 @@ IdentityServer preserves RelayState automatically through the authentication flo
 ## Single Logout
 
 SAML Single Logout (SLO) is a protocol for coordinating session termination across an entire federation. When a user logs out at one SP or at the IdP, the IdP sends `LogoutRequest` messages to every other SP where that user has an active session, then waits for each SP to confirm.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant SP_A as SP A (initiator)
+    participant IdP as Identity Provider
+    participant SP_B as SP B
+    participant SP_C as SP C
+
+    User->>SP_A: Logout
+    SP_A->>IdP: LogoutRequest
+    IdP->>IdP: End user session
+    IdP->>SP_B: LogoutRequest (front-channel)
+    SP_B-->>IdP: LogoutResponse
+    IdP->>SP_C: LogoutRequest (front-channel)
+    SP_C-->>IdP: LogoutResponse
+    IdP-->>SP_A: LogoutResponse
+```
 
 SLO is powerful in theory but complex in practice. Reliable SLO requires the IdP to track every active session across all SPs. Partial failures are common: an SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete. These partial failures create ambiguous states where some SPs consider the session terminated and others do not.
 

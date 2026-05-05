@@ -20,7 +20,7 @@ and can be replaced with custom implementations.
 
 ## ISamlInteractionService
 
-`ISamlInteractionService` provides SAML-specific request context to your login UI pages. It is **not required for standard login flows**. Your existing login pages work with SAML automatically because IdentityServer translates SAML AuthnRequests into the protocol-agnostic `IAuthenticationContext` model that your pages already use.
+`ISamlInteractionService` provides SAML-specific request context to your login UI pages. It is **not required for standard login flows**. Your existing login pages work with SAML automatically because IdentityServer translates SAML `AuthnRequest` messages into the protocol-agnostic `IAuthenticationContext` model that your pages already use.
 
 Inject `ISamlInteractionService` only when your login UI needs access to SAML-specific details that are not available through the standard `IAuthenticationContext` interface, such as the SP's `RequestedAuthnContext` requirements or the `RelayState` value.
 
@@ -41,7 +41,7 @@ public interface ISamlInteractionService
 Inject `ISamlInteractionService` into your login UI pages when you need to:
 
 * Display SAML-specific information about the requesting SP (beyond what `IAuthenticationContext.Application` provides)
-* Check the SP's `RequestedAuthnContext` requirements and adjust your authentication flow accordingly (e.g., enforce MFA when the SP requests a specific AuthnContext class)
+* Check the SP's `RequestedAuthnContext` requirements and adjust your authentication flow accordingly (e.g., enforce MFA when the SP requests a specific `AuthnContext` class)
 * Report back to IdentityServer whether the user's authentication met the SP's `RequestedAuthnContext` requirements via `StoreRequestedAuthnContextResultAsync`
 
 For standard login, consent, and logout flows, no SAML-specific code is needed in your pages.
@@ -51,7 +51,7 @@ For standard login, consent, and logout flows, no SAML-specific code is needed i
 ## ISamlSigninInteractionResponseGenerator
 
 `ISamlSigninInteractionResponseGenerator` determines what interaction (login, consent, or error)
-is required during a SAML sign-in flow. After an AuthnRequest is received and validated,
+is required during a SAML sign-in flow. After an `AuthnRequest` is received and validated,
 IdentityServer calls this interface to decide whether the user needs to be redirected to the login
 page, a consent screen, or whether the flow can proceed directly to assertion generation.
 
@@ -143,13 +143,13 @@ specific SP via the specified binding and destination URL.
 ## ISamlNameIdGenerator
 
 `ISamlNameIdGenerator` is responsible for generating the SAML `NameID` value included in
-assertions sent to Service Providers. The NameID identifies the subject of the assertion (typically
+assertions sent to Service Providers. The `NameID` identifies the subject of the assertion (typically
 the authenticated user) in a format the SP understands. It is called during assertion generation,
-after the user has authenticated and the requested NameID format has been resolved.
+after the user has authenticated and the requested `NameID` format has been resolved.
 
 The default implementation handles the most common formats: email address, persistent, and
-unspecified. Register a custom implementation to support additional NameID formats or to derive
-the NameID value from non-standard claims.
+unspecified. Register a custom implementation to support additional `NameID` formats or to derive
+the `NameID` value from non-standard claims.
 
 ```csharp
 public interface ISamlNameIdGenerator
@@ -179,9 +179,9 @@ public sealed class NameIdGenerationResult
 
 Override `ISamlNameIdGenerator` when:
 
-* You need to support a custom NameID format not handled by the default implementation.
-* The NameID value must be derived from a non-standard claim or computed from multiple claims.
-* You need SP-specific NameID generation logic based on `context.ServiceProvider`.
+* You need to support a custom `NameID` format not handled by the default implementation.
+* The `NameID` value must be derived from a non-standard claim or computed from multiple claims.
+* You need SP-specific `NameID` generation logic based on `context.ServiceProvider`.
 
 ### Registration
 
@@ -218,7 +218,7 @@ public class MyNameIdGenerator : ISamlNameIdGenerator
 ## IIdpInitiatedSsoService
 
 `IIdpInitiatedSsoService` enables IdP-initiated SSO, a flow where the Identity Provider sends a
-SAML assertion to a Service Provider without first receiving an AuthnRequest. This is commonly
+SAML assertion to a Service Provider without first receiving an `AuthnRequest`. This is commonly
 used in application portal pages (e.g., a "My Apps" dashboard) where the user is already
 authenticated and clicks a tile to launch an SP application.
 
@@ -373,7 +373,7 @@ is permitted.
 
 The default implementation enforces signature requirements, checks SP registration, and validates
 ACS URLs. Override this interface to add custom business rules on top of the default validation.
-For example, restricting which SPs can request certain AuthnContext classes, enforcing IP-based
+For example, restricting which SPs can request certain `AuthnContext` classes, enforcing IP-based
 access controls, or applying time-of-day restrictions.
 
 ```csharp
@@ -389,9 +389,9 @@ public interface IAuthnRequestValidator
 
 Override `IAuthnRequestValidator` when:
 
-* You need to enforce custom business rules on incoming AuthnRequests beyond what the default
+* You need to enforce custom business rules on incoming `AuthnRequest` messages beyond what the default
   implementation checks.
-* You want to restrict which SPs can request specific AuthnContext classes.
+* You want to restrict which SPs can request specific `AuthnContext` classes.
 * You need to apply IP-based, time-based, or other contextual access controls at the request
   validation stage.
 

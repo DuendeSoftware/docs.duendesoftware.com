@@ -34,7 +34,7 @@ builder.Services.AddIdentityServer()
 
 ## SamlOptions
 
-`SamlOptions` controls the global behavior and policy of the SAML 2.0 Identity Provider: how claims are mapped to SAML attributes, how assertions are signed, how NameIDs are resolved, and what tolerances apply to timestamps and request ages. It is distinct from `Saml2Options`, which handles protocol plumbing (entity ID, endpoint paths, metadata generation).
+`SamlOptions` controls the global behavior and policy of the SAML 2.0 Identity Provider: how claims are mapped to SAML attributes, how assertions are signed, how NameIDs are resolved, and what tolerances apply to timestamps and request lifetimes. It is distinct from `Saml2Options`, which handles protocol plumbing (entity ID, endpoint paths, metadata generation).
 
 Access `SamlOptions` via `IdentityServerOptions.Saml` when calling `AddIdentityServer()`:
 
@@ -53,7 +53,7 @@ Use `SamlOptions` when you need to set defaults that apply across all Service Pr
 Available options:
 
 * **`MetadataValidityDuration`**
-  IdentityServer-layer setting that, if set, causes the metadata document to include a `validUntil` attribute. Defaults to 7 days. This property predates `Saml2Options.Metadata.ExpiryDuration` and is kept for backwards compatibility. For new deployments, prefer configuring `Saml2Options.Metadata.ExpiryDuration` via the `AddSaml()` callback instead, which operates at the protocol layer and defaults to 5 days.
+  IdentityServer-layer setting that, if set, causes the metadata document to include a `validUntil` attribute. Defaults to 7 days. For most deployments, prefer configuring `Saml2Options.Metadata.ExpiryDuration` via the `AddSaml()` callback instead, which operates at the protocol layer and defaults to 5 days.
 
 * **`WantAuthnRequestsSigned`**
   When `true`, the IdP requires all AuthnRequests to be signed. Defaults to `false`.
@@ -185,7 +185,7 @@ Available options:
   How long clients should cache the metadata document. Defaults to 1 hour.
 
 * **`Metadata.ExpiryDuration`** (`TimeSpan`)
-  Protocol-layer setting that controls how far in the future the metadata `validUntil` attribute is set. Defaults to **5 days**. This is the preferred way to configure metadata expiry in new deployments. Set it via the `AddSaml()` callback on `Saml2Options`. It is distinct from `SamlOptions.MetadataValidityDuration` (the older IdentityServer-layer property accessed via `IdentityServerOptions.Saml`), which defaults to 7 days and is kept for backwards compatibility. When both are configured, `Saml2Options.Metadata.ExpiryDuration` takes effect at the protocol level.
+  Protocol-layer setting that controls how far in the future the metadata `validUntil` attribute is set. Defaults to **5 days**. This is the preferred way to configure metadata expiry. Set it via the `AddSaml()` callback on `Saml2Options`. It is distinct from `SamlOptions.MetadataValidityDuration` (the IdentityServer-layer property accessed via `IdentityServerOptions.Saml`), which defaults to 7 days. When both are configured, `Saml2Options.Metadata.ExpiryDuration` takes effect at the protocol level.
 
 ## SamlServiceProvider Model
 
@@ -228,9 +228,6 @@ Available options:
       }
   }
   ```
-
-* **`AssertionConsumerServiceBinding`** (`SamlBinding`) *(obsolete)*
-  Replaced by the per-endpoint `Binding` property on `IndexedEndpoint`. Kept for backwards compatibility.
 
 * **`SingleLogoutServiceUrl`** (`SamlEndpointType?`)
   SP's Single Logout Service endpoint, expressed as a `SamlEndpointType` with a `Location` (Uri) and `Binding` (SamlBinding). Required for SLO support. Defaults to `null`. See [SamlEndpointType](#samlendpointtype) below.
@@ -360,7 +357,7 @@ Controls what elements are signed in SAML responses:
 
 ### SamlEndpointType
 
-`SamlEndpointType` is a class (not an enum) that pairs a URL location with a SAML binding. It is used specifically for `SamlServiceProvider.SingleLogoutServiceUrl` to describe where the SP's SLO service lives and which HTTP binding it accepts.
+`SamlEndpointType` is a class that pairs a URL location with a SAML binding. It is used specifically for `SamlServiceProvider.SingleLogoutServiceUrl` to describe where the SP's SLO service lives and which HTTP binding it accepts.
 
 ```csharp
 new SamlServiceProvider

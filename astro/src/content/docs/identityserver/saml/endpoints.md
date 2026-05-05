@@ -101,7 +101,7 @@ Processes SAML `LogoutResponse` messages returned by Service Providers after the
 logout notification from IdentityServer. This endpoint completes the SAML SLO round-trip.
 
 :::note
-SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout) for more background.
+SAML Single Logout is inherently complex: the process requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider the session terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout) for more background.
 :::
 
 ## Customizing Endpoint Paths
