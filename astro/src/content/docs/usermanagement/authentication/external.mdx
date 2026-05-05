@@ -44,6 +44,8 @@ The code examples on this page use ASP.NET Core Razor Pages (`PageModel`, `IActi
 | **User Friction** | Click button | Type password | Retrieve OTP from email, SMS or other channel and type/paste |
 | **Infrastructure** | External identity provider | Password hashing | Email, SMS or other channel provider |
 
+For a full comparison that includes passkeys and TOTP, see the [Authentication Overview](/usermanagement/authentication/overview.mdx).
+
 ## How It Works
 
 External authentication follows the OAuth 2.0 Authorization Code Flow with PKCE:
@@ -255,48 +257,54 @@ The `OnTicketReceived` event fires after the provider has authenticated the user
 ```csharp
 public static async Task HandleExternalAuthentication(TicketReceivedContext context)
 {
-    var principal = context.Principal;
-    var userAuthenticatorsSelfService = context.HttpContext.RequestServices
+    var ct = context.HttpContext.RequestAborted;
+    var principal = context.Principal ?? throw new InvalidOperationException("No principal");
+    var authenticatorsSelfService = context.HttpContext.RequestServices
         .GetRequiredService<IUserAuthenticatorsSelfService>();
+    var profileSelfService = context.HttpContext.RequestServices
+        .GetRequiredService<IUserProfileSelfService>();
 
-    // Extract provider info from the incoming principal
-    var providerName = ExternalAuthenticatorName.Parse(context.Scheme.Name);
-    var providerSubject = principal.FindFirst(JwtClaimTypes.Subject)?.Value
-        ?? throw new Exception("No subject claim from provider");
-
+    // Build the external authenticator from the incoming principal
+    var externalAuthenticatorName = ExternalAuthenticatorName.Parse(context.Scheme.Name);
+    var sub = principal.FindFirst(JwtClaimTypes.Subject)
+        ?? throw new InvalidOperationException("No subject claim from provider");
     var authenticator = new ExternalAuthenticator(
-        providerName,
-        SubjectId.Parse(providerSubject));
+        externalAuthenticatorName, OpaqueSubjectId.Parse(sub.Value));
 
-    // Find or create the user
-    var user = await userAuthenticatorsSelfService.TryGetAsync(
-        authenticator,
-        context.HttpContext.RequestAborted);
+    // Look up an existing user by this external authenticator
+    var authenticators = await authenticatorsSelfService.TryGetAsync(authenticator, ct);
+    var profile = authenticators is not null
+        ? await profileSelfService.TryGetAsync(authenticators.SubjectId, ct)
+        : null;
 
-    if (user == null)
+    // If no existing user, auto-register
+    authenticators ??= await authenticatorsSelfService.TryRegisterAsync(
+        UserSubjectId.New(), authenticator, ct: ct);
+
+    if (authenticators is null)
+        throw new InvalidOperationException("Could not register user");
+
+    // Create a profile if one doesn't exist yet
+    if (profile is null)
     {
-        // Auto-register: create a new subject ID and register the user
-        var newSubjectId = UserSubjectId.New();
+        var schema = await profileSelfService.GetSchemaAsync(ct);
+        var name = principal.FindFirstValue(JwtClaimTypes.Name) ?? string.Empty;
+        var attributes = schema.CreateAttributes(
+            [schema.CreateAttribute(UserAttributes.Name.Name, name)]);
 
-        user = await userAuthenticatorsSelfService.TryRegisterAsync(
-            newSubjectId,
-            authenticator,
-            context.HttpContext.RequestAborted);
+        profile = await profileSelfService.TryRegisterAsync(
+            authenticators.SubjectId, attributes, ct);
 
-        if (user == null)
-            throw new Exception("Failed to register user");
+        if (profile is null)
+            throw new InvalidOperationException("Could not register user profile");
     }
 
     // Replace the incoming principal with a local claims identity
-    var name = principal.FindFirst(JwtClaimTypes.Name)?.Value ?? "";
-    var email = principal.FindFirst(JwtClaimTypes.Email)?.Value ?? "";
-
-    var claims = new List<Claim>
+    var claims = new Claim[]
     {
-        new(JwtClaimTypes.Subject, user.SubjectId.ToString()),
-        new(JwtClaimTypes.Name, name),
-        new(JwtClaimTypes.Email, email),
-        new(JwtClaimTypes.AuthenticationMethod, "external"),
+        new(JwtClaimTypes.Subject, profile.SubjectId.ToString()),
+        new(JwtClaimTypes.Name,
+            (string?)profile.Attributes.GetValueOrDefault(UserAttributes.Name.Name)?.UntypedValue ?? "")
     };
 
     context.Principal = new ClaimsPrincipal(
@@ -335,10 +343,10 @@ public static async Task HandleAddAuthenticator(TicketReceivedContext context)
     }
 
     var userIdString = context.Properties.Items["user_id"]!;
-    var userId = UserSubjectId.Parse(userIdString);
+    var userId = UserSubjectId.From(Guid.Parse(userIdString));
 
     var providerName = ExternalAuthenticatorName.Parse(context.Scheme.Name);
-    var providerSubject = SubjectId.Parse(
+    var providerSubject = OpaqueSubjectId.Parse(
         context.Principal.FindFirst(JwtClaimTypes.Subject)!.Value);
 
     var authenticator = new ExternalAuthenticator(providerName, providerSubject);
@@ -388,7 +396,7 @@ public async Task<IActionResult> OnPostRemoveAuthenticator(
 
     var authenticator = new ExternalAuthenticator(
         ExternalAuthenticatorName.Parse(providerName),
-        SubjectId.Parse(providerSubject));
+        OpaqueSubjectId.Parse(providerSubject));
 
     var removed = await userAuthenticatorsSelfService.TryRemoveExternalAuthenticatorAsync(
         userId,
@@ -424,9 +432,13 @@ if (existingUser != null && existingUser.SubjectId != currentUserId)
 
 When you delegate authentication to an external provider, you are trading one set of problems for another. You no longer store credentials, which is good. But you are now trusting a third party's security posture, and the OAuth/OpenID Connect protocol has enough moving parts that misconfiguration is easy.
 
-### What User Management Does for You
+### What ASP.NET Core Does for You
 
 ASP.NET Core's OAuth middleware handles the protocol-level protections: a cryptographically random `state` parameter on every flow to prevent CSRF on the callback, strict `redirect_uri` validation (no wildcards), full ID token validation including issuer, audience, expiry, and signature, and PKCE to prevent authorization code interception.
+
+### What User Management Does for You
+
+User Management handles the user lifecycle after the protocol completes: looking up users by their external authenticator, auto-registering new users, linking and unlinking external accounts, and ensuring that an external identity cannot be linked to multiple local accounts simultaneously.
 
 ### What You Need to Think About
 
