@@ -23,11 +23,11 @@ An assertion contains three key parts:
 * **Attribute Statement**: carries user properties such as email address, roles, group memberships, and department.
 * **Conditions**: constrain where and when the assertion is valid. `NotBefore` and `NotOnOrAfter` define a time window (typically minutes), and `AudienceRestriction` limits which recipients can accept it.
 
-The Identity Provider signs the assertion with its private key. The Service Provider validates the signature before trusting any claims inside. IdentityServer builds assertions automatically when it processes a SAML sign-in request. You control what attributes appear in assertions via claim mappings — see [`SamlOptions.DefaultClaimMappings` and `SamlServiceProvider.ClaimMappings`](/identityserver/saml/configuration.md#default-claim-mappings). The signing behavior is configured via the [`SamlSigningBehavior` enum](/identityserver/saml/configuration.md#samlsigningbehavior).
+The Identity Provider signs the assertion with its private key. The Service Provider validates the signature before trusting any claims inside. IdentityServer builds assertions automatically when it processes a SAML sign-in request. You control what attributes appear in assertions via claim mappings; see [`SamlOptions.DefaultClaimMappings` and `SamlServiceProvider.ClaimMappings`](/identityserver/saml/configuration.md#default-claim-mappings). The signing behavior is configured via the [`SamlSigningBehavior` enum](/identityserver/saml/configuration.md#samlsigningbehavior).
 
 ## Identity Provider
 
-The Identity Provider (IdP) is the system that authenticates users and issues assertions. It is the authority — the entity that knows who a user is and can prove it to other parties.
+The Identity Provider (IdP) is the system that authenticates users and issues assertions. It is the authority: the entity that knows who a user is and can prove it to other parties.
 
 When a user needs access to a protected application, they authenticate at the IdP. The IdP verifies the user's identity using whatever mechanism is configured (password, multi-factor authentication, smart card), then constructs a signed assertion and delivers it to the requesting application.
 
@@ -37,7 +37,7 @@ When a user needs access to a protected application, they authenticate at the Id
 
 The Service Provider (SP) is the application the user wants to access. Rather than managing credentials itself, it delegates authentication to the IdP and relies on the assertions it receives.
 
-When an unauthenticated user arrives, the SP sends an `AuthnRequest` to the IdP. After the IdP authenticates the user and returns an assertion, the SP validates the signature, checks the conditions, extracts identity and attributes, and establishes a local session. The SP never handles the user's credentials — it trusts the IdP because the two parties have established a federation agreement backed by exchanged metadata and certificates.
+When an unauthenticated user arrives, the SP sends an `AuthnRequest` to the IdP. After the IdP authenticates the user and returns an assertion, the SP validates the signature, checks the conditions, extracts identity and attributes, and establishes a local session. The SP never handles the user's credentials. It trusts the IdP because the two parties have established a federation agreement backed by exchanged metadata and certificates.
 
 In IdentityServer, you register each SP using a `SamlServiceProvider` configuration object. This tells IdentityServer the SP's entity identifier, where to deliver assertions (the Assertion Consumer Service URL), and how to communicate. See the [Service Provider Store](/identityserver/saml/service-providers.md) and the [SamlServiceProvider model](/identityserver/saml/configuration.md#samlserviceprovider-model) for details.
 
@@ -45,13 +45,13 @@ In IdentityServer, you register each SP using a `SamlServiceProvider` configurat
 
 SAML metadata is an XML document that describes an entity's capabilities: its endpoints, supported bindings, and the certificates it uses for signing and encryption. Both IdPs and SPs publish metadata documents.
 
-Metadata makes federation scalable. Instead of manually exchanging certificates and endpoint URLs out-of-band, parties import each other's metadata and configure trust automatically. Large identity federations — such as InCommon (over 1,000 organizations) — rely on machine-readable metadata to coordinate trust across hundreds or thousands of participants.
+Metadata makes federation scalable. Instead of manually exchanging certificates and endpoint URLs out-of-band, parties import each other's metadata and configure trust automatically. Large identity federations (such as InCommon, with over 1,000 organizations) rely on machine-readable metadata to coordinate trust across hundreds or thousands of participants.
 
 IdentityServer publishes its IdP metadata at `/saml/metadata`. Share this URL with each Service Provider during federation setup so they can automatically discover your signing certificates, NameID formats, and endpoint locations. See the [metadata endpoint](/identityserver/saml/endpoints.md#metadata-endpoint) for more details.
 
 ## Bindings
 
-SAML bindings define how SAML messages physically travel over HTTP. The protocol payload (the XML message) is the same regardless of binding — the binding determines the transport mechanism.
+SAML bindings define how SAML messages physically travel over HTTP. The protocol payload (the XML message) is the same regardless of binding; the binding determines the transport mechanism.
 
 IdentityServer supports two bindings:
 
@@ -60,11 +60,26 @@ IdentityServer supports two bindings:
 
 The SAML specification also defines **HTTP-Artifact** binding, which sends a short reference token through the browser and resolves the full assertion via a back-channel SOAP call. IdentityServer does not currently support Artifact binding.
 
-You configure the binding per SP via `AssertionConsumerServiceBinding` using the [`SamlBinding` enum](/identityserver/saml/configuration.md#samlbinding).
+You configure the binding per SP via the `Binding` property on each [`IndexedEndpoint`](/identityserver/saml/configuration.md#indexedendpoint) in `AssertionConsumerServiceUrls`. This is the current API:
+
+```csharp
+AssertionConsumerServiceUrls = new List<IndexedEndpoint>
+{
+    new IndexedEndpoint
+    {
+        Location = new Uri("https://sp.example.com/saml/acs"),
+        Binding = SamlBinding.HttpPost,
+        Index = 0,
+        IsDefault = true
+    }
+}
+```
+
+The [`SamlBinding` enum](/identityserver/saml/configuration.md#samlbinding) defines the available binding values. The older `AssertionConsumerServiceBinding` property on `SamlServiceProvider` is kept for backwards compatibility but is obsolete. Do not use it in new code.
 
 ## Profiles
 
-SAML profiles are predefined recipes that combine assertions, protocol messages, and bindings into complete workflows for specific use cases. Following a profile is what makes SAML implementations interoperable — without adhering to a profile, a system can produce syntactically valid SAML messages that no other implementation will accept.
+SAML profiles are predefined recipes that combine assertions, protocol messages, and bindings into complete workflows for specific use cases. Following a profile is what makes SAML implementations interoperable. Without adhering to a profile, a system can produce syntactically valid SAML messages that no other implementation will accept.
 
 The two profiles most relevant to IdentityServer are:
 
@@ -79,11 +94,11 @@ The Name Identifier (NameID) is the value inside an assertion that identifies th
 
 The three most common formats are:
 
-* **Persistent**: a stable, opaque identifier that remains the same for a given user-SP pair across all sessions. Use this when the SP needs to correlate the user over time — for example, to maintain account linking or preferences. Persistent identifiers do not reveal the user's real identity at the IdP.
+* **Persistent**: a stable, opaque identifier that remains the same for a given user-SP pair across all sessions. Use this when the SP needs to correlate the user over time (for example, to maintain account linking or preferences). Persistent identifiers do not reveal the user's real identity at the IdP.
 * **Transient**: a session-scoped, one-time identifier that changes with every SSO session. Use this when the SP does not need to recognize the user across sessions (for example, anonymous access or attribute-only scenarios). Transient identifiers offer the best privacy protection.
 * **emailAddress**: the user's email address. Human-readable and easy to work with, but it exposes personally identifiable information (PII) and couples the identifier to a value that can change.
 
-Mismatched NameID format expectations between an IdP and an SP are a common source of SSO failures. In IdentityServer, you configure the supported formats globally via `SamlOptions.SupportedNameIdFormats` and set a per-SP default via `SamlServiceProvider.DefaultNameIdFormat`. The claim used to resolve a persistent NameID value is set by `DefaultPersistentNameIdentifierClaimType`. See [SamlOptions](/identityserver/saml/configuration.md#samloptions) for the full configuration reference.
+Mismatched NameID format expectations between an IdP and an SP are a common source of SSO failures. In IdentityServer, you configure the supported formats globally via `SamlOptions.SupportedNameIdFormats` and set a per-SP default via `SamlServiceProvider.DefaultNameIdFormat`. For email-format NameIDs, the source claim is controlled by `SamlOptions.EmailNameIdClaimType`. For custom persistent NameID generation, implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator). See [SamlOptions](/identityserver/saml/configuration.md#samloptions) for the full configuration reference.
 
 ## RelayState
 
@@ -99,6 +114,6 @@ SAML Single Logout (SLO) is a protocol for coordinating session termination acro
 
 SLO is powerful in theory but complex in practice. Reliable SLO requires the IdP to track every active session across all SPs. Partial failures are common: an SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete. These partial failures create ambiguous states where some SPs consider the session terminated and others do not.
 
-For this reason, many deployments supplement SLO — or replace it entirely — with short session lifetimes and per-application logout as a simpler fallback.
+For this reason, many deployments supplement SLO, or replace it entirely, with short session lifetimes and per-application logout as a simpler fallback.
 
 In IdentityServer, you configure SLO per SP by setting `SamlServiceProvider.SingleLogoutServiceUrl`. IdentityServer then sends front-channel logout notifications to all SPs with a configured SLO endpoint when a user's session ends. See the [logout endpoint](/identityserver/saml/endpoints.md#logout-endpoint) and [`ISamlLogoutNotificationService`](/identityserver/saml/extensibility.md#isamllogoutnotificationservice) for customization options.

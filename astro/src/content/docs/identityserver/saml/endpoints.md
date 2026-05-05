@@ -61,7 +61,7 @@ Service Provider's Assertion Consumer Service (ACS) URL using the configured bin
 
 **Path**: `/saml/idp-initiated`  
 **Methods**: GET, POST  
-**Enabled by default**: No — requires explicit opt-in
+**Enabled by default**: No (requires explicit opt-in)
 
 Supports IdP-initiated SSO flows, where the IdP starts the authentication without receiving an
 `AuthnRequest` from the SP. The SP must have `AllowIdpInitiated = true` set in its
@@ -101,7 +101,7 @@ Processes SAML `LogoutResponse` messages returned by Service Providers after the
 logout notification from IdentityServer. This endpoint completes the SAML SLO round-trip.
 
 :::note
-SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common — an SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout) for more background.
+SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout) for more background.
 :::
 
 ## Customizing Endpoint Paths
@@ -122,4 +122,4 @@ builder.Services.AddIdentityServer(options =>
 });
 ```
 
-See [SAML Configuration](/identityserver/saml/configuration/) for full path option documentation.
+See [SamlUserInteractionOptions](/identityserver/saml/configuration.md#samluserinteractionoptions) for full path option documentation.
