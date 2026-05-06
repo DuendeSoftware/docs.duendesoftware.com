@@ -20,9 +20,11 @@ and can be replaced with custom implementations.
 
 ## ISamlInteractionService
 
-`ISamlInteractionService` provides SAML-specific request context to your login UI pages. It is **not required for standard login flows**. Your existing login pages work with SAML automatically because IdentityServer translates SAML `AuthnRequest` messages into the protocol-agnostic `IAuthenticationContext` model that your pages already use.
 
-Inject `ISamlInteractionService` only when your login UI needs access to SAML-specific details that are not available through the standard `IAuthenticationContext` interface, such as the SP's `RequestedAuthnContext` requirements or the `RelayState` value.
+TODO docs: `ISamlInteractionService` is being replaced. In the current implementation, SAML-specific request context is accessed by calling `GetAuthenticationContextAsync` on `IIdentityServerInteractionService` and pattern-matching the result to `SamlAuthenticationContext`. The concepts below still apply, but the access pattern is changing.
+
+
+To access SAML-specific request details from your login UI, call `GetAuthenticationContextAsync` on `IIdentityServerInteractionService`. The returned context can be pattern-matched to `SamlAuthenticationContext` for SAML requests or `AuthorizationRequest` for OIDC requests. This is **not required for standard login flows** — your existing login pages work with SAML automatically because IdentityServer redirects to your login page with a `returnUrl` regardless of protocol.
 
 ```csharp
 public interface ISamlInteractionService
@@ -38,29 +40,28 @@ public interface ISamlInteractionService
 
 ### When to Use
 
-Inject `ISamlInteractionService` into your login UI pages when you need to:
+Access SAML-specific context from your login UI pages when you need to:
 
-* Display SAML-specific information about the requesting SP (beyond what `IAuthenticationContext.Application` provides)
+* Display SAML-specific information about the requesting SP
 * Check the SP's `RequestedAuthnContext` requirements and adjust your authentication flow accordingly (e.g., enforce MFA when the SP requests a specific `AuthnContext` class)
-* Report back to IdentityServer whether the user's authentication met the SP's `RequestedAuthnContext` requirements via `StoreRequestedAuthnContextResultAsync`
+* Report back to IdentityServer whether the user's authentication met the SP's `RequestedAuthnContext` requirements
 
 For standard login, consent, and logout flows, no SAML-specific code is needed in your pages.
 
 ---
 
-## ISamlSigninInteractionResponseGenerator
+## ISaml2SsoInteractionResponseGenerator
 
-`ISamlSigninInteractionResponseGenerator` determines what interaction (login, consent, or error)
+`ISaml2SsoInteractionResponseGenerator` determines what interaction (login or error)
 is required during a SAML sign-in flow. After an `AuthnRequest` is received and validated,
 IdentityServer calls this interface to decide whether the user needs to be redirected to the login
-page, a consent screen, or whether the flow can proceed directly to assertion generation.
+page or whether the flow can proceed directly to assertion generation.
 
-The default implementation (`DefaultSamlSigninInteractionResponseGenerator`) handles standard
-login and consent flows. Override it when you need custom step-up authentication logic, per-SP
-consent requirements, or any other non-standard interaction decision.
+The default implementation handles standard login flows. Override it when you need custom step-up
+authentication logic or any other non-standard interaction decision.
 
 ```csharp
-public interface ISamlSigninInteractionResponseGenerator
+public interface ISaml2SsoInteractionResponseGenerator
 {
     Task<SamlInteractionResponse> ProcessInteractionAsync(
         SamlServiceProvider sp,
@@ -72,13 +73,13 @@ public interface ISamlSigninInteractionResponseGenerator
 ### When to Use
 
 Override this interface to customize the interaction flow for SAML sign-in requests. For example,
-to implement custom step-up authentication logic, or to enforce per-SP consent requirements.
+to implement custom step-up authentication logic.
 
 ### Registration
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISamlSigninInteractionResponseGenerator, MySamlSigninInteractionGenerator>();
+builder.Services.AddScoped<ISaml2SsoInteractionResponseGenerator, MySamlSsoInteractionGenerator>();
 ```
 
 ---
@@ -117,29 +118,6 @@ builder.Services.AddScoped<ISamlLogoutNotificationService, MySamlLogoutNotificat
 
 ---
 
-## ISamlFrontChannelLogout
-
-`ISamlFrontChannelLogout` represents a single front-channel logout notification to be sent to a
-Service Provider. Instances of this interface are produced by `ISamlLogoutNotificationService` and
-consumed by the SAML logout pipeline to deliver `LogoutRequest` messages to each SP. You typically
-do not need to implement this interface directly. It is a data carrier returned by your custom
-`ISamlLogoutNotificationService` implementation if you choose to override that service.
-
-```csharp
-public interface ISamlFrontChannelLogout
-{
-    SamlBinding SamlBinding { get; }
-    Uri Destination { get; }
-    string EncodedContent { get; }
-    string? RelayState { get; }
-}
-```
-
-Each instance represents a SAML `LogoutRequest` (or response) message encoded for delivery to a
-specific SP via the specified binding and destination URL.
-
----
-
 ## ISamlNameIdGenerator
 
 `ISamlNameIdGenerator` is responsible for generating the SAML `NameID` value included in
@@ -147,7 +125,7 @@ assertions sent to Service Providers. The `NameID` identifies the subject of the
 the authenticated user) in a format the SP understands. It is called during assertion generation,
 after the user has authenticated and the requested `NameID` format has been resolved.
 
-The default implementation handles the most common formats: email address, persistent, and
+The default implementation handles the most common formats: email address and
 unspecified. Register a custom implementation to support additional `NameID` formats or to derive
 the `NameID` value from non-standard claims.
 
@@ -442,10 +420,9 @@ the callback after the user has authenticated. Because SAML sign-in involves a r
 login UI and back, the original request context (SP entity ID, ACS URL, relay state, etc.) must
 be stored somewhere durable for the duration of the interaction.
 
-The default implementation stores state in a browser cookie. Override this interface to store
-state in a server-side store (distributed cache or database) instead. This is useful when the
-sign-in state is too large for a cookie (even with chunking), when you want to avoid exposing
-state data to the client, or when you need server-side auditability of in-flight SSO requests.
+The default implementation stores state in memory (suitable for development and testing).
+For production deployments, use the Entity Framework Core implementation that ships with
+IdentityServer, or implement a custom store backed by your own persistence layer.
 
 State is retained after a successful callback to allow browser retries (e.g., if the user
 navigates back). TTL-based expiry is the primary cleanup mechanism; `RemoveSigninRequestStateAsync`
@@ -464,9 +441,9 @@ public interface ISamlSigninStateStore
 
 Override `ISamlSigninStateStore` when:
 
-* The sign-in state exceeds cookie size limits (even with chunking) for your deployment.
-* You prefer not to expose sign-in state to the client browser (security or compliance reasons).
-* You want server-side visibility into in-flight SSO requests for auditing or operational monitoring.
+* You need a custom persistence mechanism beyond the built-in in-memory or EF Core implementations.
+* You want to store sign-in state in a specific distributed cache (Redis, etc.) for your infrastructure.
+* You need custom TTL or cleanup behavior for in-flight SSO requests.
 
 ### Registration
 

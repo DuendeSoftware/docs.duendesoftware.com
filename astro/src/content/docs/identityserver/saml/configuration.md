@@ -67,7 +67,7 @@ Available options:
 * **`SupportedNameIdFormats`**
   Supported NameID formats advertised by the IdP. Defaults to `[ EmailAddress, Unspecified ]`.
 
-  The NameID format determines how the user is identified to the SP. **Persistent** identifiers are stable and opaque, suitable when the SP needs to correlate the same user across sessions (for example, account linking). **Transient** identifiers are session-scoped and change with each login, best for privacy-sensitive scenarios where the SP does not need a stable identity. **emailAddress** is human-readable but exposes PII and is coupled to a value that can change. Mismatched format expectations are a common source of SSO failures. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
+  The NameID format determines how the user is identified to the SP. **emailAddress** is human-readable but exposes PII and is coupled to a value that can change. **Unspecified** leaves the format to the IdP's discretion. Persistent and transient formats are planned for a future release. Mismatched format expectations are a common source of SSO failures. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
 
 * **`DefaultClockSkew`**
   Clock skew tolerance for validating SAML message timestamps. Defaults to 5 minutes.
@@ -91,9 +91,6 @@ Available options:
 
 * **`EmailNameIdClaimType`**
   The claim type used to resolve an email-format NameID. Defaults to `ClaimTypes.Email`. Per-SP overrides are set via `SamlServiceProvider.EmailNameIdClaimType`.
-
-* **`SigninStateCookieName`**
-  Name of the cookie used to store SAML sign-in state between the initial request and the callback. Defaults to `__IdsSvr_SamlSigninState`.
 
 * **`UserInteraction`**
   Configures SAML endpoint paths. See [SamlUserInteractionOptions](#samluserinteractionoptions) below.
@@ -159,12 +156,12 @@ builder.Services.AddIdentityServer()
     });
 ```
 
-Use `Saml2Options` when you need to control the IdP's published identity (entity ID), the URL paths it listens on, or the shape of the metadata document it serves to Service Providers. Most deployments only need to set `EntityId`; the remaining defaults are suitable for standard configurations.
+Use `Saml2Options` when you need to control the IdP's published identity (entity ID), the URL paths it listens on, or the shape of the metadata document it serves to Service Providers. Most deployments do not need to set `EntityId` explicitly; the default (`{host}/saml`) is suitable for standard configurations.
 
 Available options:
 
 * **`EntityId`** (`string?`)
-  The SAML entity ID of this IdP. If not set, IdentityServer derives it from the OIDC issuer URL combined with `EntityIdPath`. Defaults to `null`.
+  The SAML entity ID of this IdP. If not set, IdentityServer derives it from the host URL combined with `EntityIdPath` (resulting in `{host}/saml` by default). Most deployments do not need to set this explicitly. Defaults to `null`.
 
 * **`EntityIdPath`** (`string`)
   Path component appended to the OIDC issuer URL when `EntityId` is not explicitly set. Defaults to `/saml`.
@@ -189,14 +186,14 @@ Available options:
 
 ## SamlServiceProvider Model
 
-`SamlServiceProvider` represents a registered SAML 2.0 Service Provider. Each SP has its own entity ID, ACS endpoints, signing and encryption certificates, and claim configuration. SPs can be registered statically in code or managed dynamically via the admin API.
+`SamlServiceProvider` represents a registered SAML 2.0 Service Provider. Each SP has its own entity ID, ACS endpoints, signing certificates, and claim configuration. SPs can be registered statically in code or managed dynamically via a custom store.
 
 Most properties on `SamlServiceProvider` are optional overrides of the global defaults set in `SamlOptions`. When a property is `null`, the corresponding `SamlOptions` default applies. This lets you configure sensible defaults once and only specify per-SP values where behavior needs to differ.
 
 Available options:
 
-* **`EntityId`** (`ServiceProviderEntityId`)
-  The SP's entity identifier, as declared in its SAML metadata. Required. Parsed via `ServiceProviderEntityId.Parse("https://sp.example.com", CultureInfo.InvariantCulture)`. See [ServiceProviderEntityId](#serviceproviderentityid) below.
+* **`EntityId`** (`string`)
+  The SP's entity identifier, as declared in its SAML metadata. Required.
 
 * **`DisplayName`** (`string`)
   Human-readable name shown in logs and consent screens. Required.
@@ -238,15 +235,6 @@ Available options:
 * **`SigningCertificates`** (`ICollection<X509Certificate2>?`)
   Certificates used to verify SP-signed messages. Defaults to `null`.
 
-* **`EncryptionCertificates`** (`ICollection<X509Certificate2>?`)
-  Certificates used to encrypt assertions for this SP. Defaults to `null`.
-
-* **`EncryptAssertions`** (`bool`)
-  When `true`, assertions are encrypted using `EncryptionCertificates`. Defaults to `false`.
-
-* **`RequireConsent`** (`bool`)
-  When `true`, the user is always shown a consent screen. Defaults to `false`.
-
 * **`AllowIdpInitiated`** (`bool`)
   When `true`, IdP-initiated SSO is allowed for this SP. Defaults to `false`.
 
@@ -263,71 +251,19 @@ Available options:
   Per-SP override for how long issued assertions are valid. Uses `SamlOptions.DefaultAssertionLifetime` when `null`. Defaults to `null`.
 
 * **`AllowedScopes`** (`ICollection<string>`)
-  Controls which scopes the SP is allowed to request. The requested scopes are resolved to identity resources, defining which claim types are included in the assertion. When empty, all mapped claims are included. Defaults to empty.
+  Scopes associated with this SP. Used to determine which identity resources (and their claim types) are available for inclusion in assertions. When empty, all mapped claims are included. Defaults to empty.
 
 * **`AuthnContextMappings`** (`Dictionary<string, string>`)
   Per-SP override for `acr`/`amr` → `AuthnContextClassRef` URI mappings. Overrides `SamlOptions.DefaultAuthnContextMappings` when set. Defaults to empty.
 
 * **`RequestedClaimTypes`** (`List<string>`)
-  Claim types this SP expects in assertions. Used to drive claim population for the SP. When both `AllowedScopes` and `RequestedClaimTypes` are configured, the effective set of claims is the intersection: only claim types that are both allowed by scopes and listed here will be included.
+  Claim types this SP expects in assertions. Used to drive claim population for the SP.
 
 * **`EmailNameIdClaimType`** (`string?`)
   Per-SP override for the claim used to resolve an email-format NameID. Uses `SamlOptions.EmailNameIdClaimType` when `null`. Defaults to `null`.
 
 * **`AllowedSignatureAlgorithms`** (`List<string>?`)
   Signature algorithms this SP accepts. When `null`, the IdP's default algorithm is used. Defaults to `null`.
-
-## Assertion Signing and Encryption
-
-SAML assertions carry sensitive user identity data (claims, NameIDs, and authentication context) across network boundaries to Service Providers. Signing and encryption protect this data in transit.
-
-**Signing** proves the assertion was issued by this IdP and has not been tampered with. It is always applied (controlled by `SamlSigningBehavior`). See [SamlSigningBehavior](#samlsigningbehavior) for the available options.
-
-**Encryption** wraps the assertion in an XML-Enc envelope using the SP's public key, so only the SP can decrypt and read it. Encryption is optional but recommended when assertions contain sensitive attributes (PII, roles, entitlements) or when the SP is accessed over untrusted networks.
-
-### Enabling Assertion Encryption
-
-Set `EncryptAssertions = true` and provide the SP's encryption certificate on the `SamlServiceProvider`:
-
-```csharp
-new SamlServiceProvider
-{
-    EntityId = ServiceProviderEntityId.Parse("https://sp.example.com", CultureInfo.InvariantCulture),
-    // ...
-    EncryptAssertions = true,
-    EncryptionCertificates = new[]
-    {
-        X509CertificateLoader.LoadCertificate(
-            Convert.FromBase64String(spCertificateBase64))
-    }
-}
-```
-
-IdentityServer uses the SP's public key (from `EncryptionCertificates`) to encrypt the assertion. The SP uses its corresponding private key to decrypt it. You only need the SP's **public** certificate here, never the private key.
-
-### Certificate Properties
-
-* **`SigningCertificates`** (`ICollection<X509Certificate2>?`)
-  Certificates used to **verify** SP-signed messages (AuthnRequests). Provide the SP's public signing certificate when `RequireSignedAuthnRequests = true`. Defaults to `null`.
-
-* **`EncryptionCertificates`** (`ICollection<X509Certificate2>?`)
-  Certificates used to **encrypt** assertions for this SP. Provide the SP's public encryption certificate when `EncryptAssertions = true`. Defaults to `null`.
-
-* **`EncryptAssertions`** (`bool`)
-  When `true`, assertions are encrypted using `EncryptionCertificates`. Defaults to `false`.
-
-Multiple certificates can be provided to support certificate rotation. IdentityServer will use the first certificate in the list for encryption.
-
-### Certificate Format
-
-Certificates are provided as `X509Certificate2` instances. When loading from Base64-encoded data (e.g., from environment variables or a configuration store):
-
-```csharp
-var cert = X509CertificateLoader.LoadCertificate(
-    Convert.FromBase64String(base64CertificateData));
-```
-
-When using the Admin API (`ISamlServiceProviderAdmin`), certificates are passed as `CertificateDto` objects with a `Base64Data` string and an optional `FriendlyName`. See [Service Providers](/identityserver/saml/service-providers.md) for details.
 
 ## Enums and Value Types
 
@@ -375,20 +311,6 @@ Properties:
 
 * **`Location`** (`Uri`): The URL of the endpoint.
 * **`Binding`** (`SamlBinding`): The HTTP binding the endpoint accepts.
-
-### ServiceProviderEntityId
-
-`ServiceProviderEntityId` is a value object that represents a SAML SP's entity ID string. It provides type safety and validation for entity ID values, preventing raw strings from being used where a validated entity ID is expected.
-
-Parse an entity ID from a string using the static `Parse` method:
-
-```csharp
-var entityId = ServiceProviderEntityId.Parse(
-    "https://sp.example.com",
-    CultureInfo.InvariantCulture);
-```
-
-Use `ServiceProviderEntityId` when setting `SamlServiceProvider.EntityId` in code, or when working with entity IDs returned from the admin API.
 
 ### IndexedEndpoint
 
@@ -441,7 +363,7 @@ builder.Services.AddIdentityServer(options =>
 ```csharp
 new SamlServiceProvider
 {
-    EntityId = ServiceProviderEntityId.Parse("https://sp.example.com", CultureInfo.InvariantCulture),
+    EntityId = "https://sp.example.com",
     AllowIdpInitiated = true,
     // ...
 }

@@ -94,7 +94,7 @@ AssertionConsumerServiceUrls = new List<IndexedEndpoint>
 }
 ```
 
-The [`SamlBinding` enum](/identityserver/saml/configuration.md#samlbinding) defines the available binding values. The older `AssertionConsumerServiceBinding` property on `SamlServiceProvider` is obsolete. Do not use it in new code.
+The [`SamlBinding` enum](/identityserver/saml/configuration.md#samlbinding) defines the available binding values.
 
 ## Profiles
 
@@ -117,7 +117,7 @@ The three most common formats are:
 * **Transient**: a session-scoped, one-time identifier that changes with every SSO session. Use this when the SP does not need to recognize the user across sessions (for example, anonymous access or attribute-only scenarios). Transient identifiers offer the best privacy protection.
 * **emailAddress**: the user's email address. Human-readable and easy to work with, but it exposes personally identifiable information (PII) and couples the identifier to a value that can change.
 
-Mismatched NameID format expectations between an IdP and an SP are a common source of SSO failures. In IdentityServer, you configure the supported formats globally via `SamlOptions.SupportedNameIdFormats` and set a per-SP default via `SamlServiceProvider.DefaultNameIdFormat`. For email-format NameIDs, the source claim is controlled by `SamlOptions.EmailNameIdClaimType`. For custom persistent NameID generation, implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator). See [SamlOptions](/identityserver/saml/configuration.md#samloptions) for the full configuration reference.
+IdentityServer currently supports `email` and `unspecified` NameID formats out of the box. Persistent format support is planned for a future release. For custom NameID generation, implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
 
 ## RelayState
 

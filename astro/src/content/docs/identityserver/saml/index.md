@@ -40,11 +40,10 @@ The SAML 2.0 IdP feature is a comprehensive implementation covering the full SP-
 - **SP-initiated SSO**: HTTP-Redirect and HTTP-POST bindings for authentication requests
 - **IdP-initiated SSO**: opt-in support for portal or launcher pages that push assertions to SPs without a prior request
 - **Single Logout (SLO)**: front-channel logout notifications to registered SPs
-- **Assertion signing and encryption**: per-SP configuration of signing algorithms and optional assertion encryption
-- **NameID format support**: email, persistent, transient, and unspecified formats
+- **Assertion signing**: per-SP configuration of signing algorithms
+- **NameID format support**: email and unspecified formats (persistent planned for a future release)
 - **AuthnContext class mapping**: maps OIDC `acr`/`amr` values to SAML AuthnContext class URIs
 - **Per-SP claim mappings**: transform and filter claims before they are included in assertions
-- **Runtime SP management**: register and update Service Providers dynamically via the admin API (`ISamlServiceProviderAdmin`)
 - **Extensibility interfaces**: customize NameID generation, response generation, metadata, and more
 
 ## Quick Setup
@@ -63,9 +62,7 @@ builder.Services.AddIdentityServer()
 
 ### 2. Register Service Providers
 
-Service Providers can be registered in-memory for development and testing, or managed dynamically via the admin API for production deployments.
-
-**Option A: In-memory (development/testing)**
+Register Service Providers using the in-memory store for development, the EF Core store for production, or implement a custom `ISamlServiceProviderStore`:
 
 ```csharp
 builder.Services.AddIdentityServer()
@@ -74,7 +71,7 @@ builder.Services.AddIdentityServer()
     {
         new SamlServiceProvider
         {
-            EntityId = ServiceProviderEntityId.Parse("https://sp.example.com", CultureInfo.InvariantCulture),
+            EntityId = "https://sp.example.com",
             DisplayName = "Example SP",
             AssertionConsumerServiceUrls = new List<IndexedEndpoint>
             {
@@ -90,25 +87,15 @@ builder.Services.AddIdentityServer()
     });
 ```
 
-**Option B: Admin API (production/dynamic)**
-
-For production deployments, use `ISamlServiceProviderAdmin` to register SPs dynamically from an admin UI or startup routine:
-
-```csharp
-// Inject ISamlServiceProviderAdmin and call CreateAsync at startup or from an admin UI
-var admin = serviceProvider.GetRequiredService<ISamlServiceProviderAdmin>();
-await admin.CreateAsync(new SamlServiceProviderDto { ... }, ct);
-```
-
-See [Service Providers](/identityserver/saml/service-providers.md) for the full set of SP configuration options and admin API usage.
+For production, use the EF Core store from `Duende.IdentityServer.EntityFramework.Stores` to persist SP configuration in your database. See [Service Providers](/identityserver/saml/service-providers.md) for all storage options.
 
 ## Login Page Compatibility
 
-Your existing IdentityServer login pages work with SAML without modification. IdentityServer uses a protocol-agnostic interaction model: when a SAML AuthnRequest arrives, it is translated into the same `IAuthenticationContext` interface that OIDC authorization requests use. Your login page receives a `returnUrl`, authenticates the user, and redirects back. The framework handles the rest, regardless of whether the original request was OIDC or SAML.
+Your existing IdentityServer login pages work with SAML without modification. When a SAML `AuthnRequest` arrives, IdentityServer processes it and redirects to your login page with a `returnUrl`, just as it does for OIDC authorization requests. Your login page authenticates the user and redirects back. The framework handles the rest, regardless of whether the original request was OIDC or SAML.
 
 No SAML-specific code is needed in your login, consent, or logout pages for standard flows.
 
-For advanced scenarios where your login UI needs access to SAML-specific request details (such as `RequestedAuthnContext` requirements), inject `ISamlInteractionService`. See [Extensibility](/identityserver/saml/extensibility.md) for details.
+For advanced scenarios where your login UI needs access to SAML-specific request details (such as `RequestedAuthnContext` requirements), call `GetAuthenticationContextAsync` on `IIdentityServerInteractionService` and pattern-match on the result to access `SamlAuthenticationContext`. See [Extensibility](/identityserver/saml/extensibility.md) for details.
 
 ## Protocol Endpoints
 
