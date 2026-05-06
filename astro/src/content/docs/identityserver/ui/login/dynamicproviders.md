@@ -123,15 +123,15 @@ containing the dynamic providers.
 public interface IIdentityProviderStore
 {
     /// <summary>
-    /// Gets all identity providers name.
+    /// Gets the display names and scheme names of all registered identity providers.
     /// </summary>
-    Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
+    Task<IReadOnlyCollection<IdentityProviderName>> GetAllSchemeNamesAsync(CancellationToken ct);
 
     // other APIs omitted
 }
 ```
 
-The `GetAllSchemeNamesAsync()` API returns a list of `IdentityProviderName` objects, which contain the scheme name and
+The `GetAllSchemeNamesAsync` API returns a read-only collection of `IdentityProviderName` objects, which contain the scheme name and
 display name of the provider and can be used on the login page, or in other places where you need this information.
 
 In the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/products/tree/main/identity-server/templates/src/UI/Pages/Account/Login/Index.cshtml.cs#l193-l210),
@@ -149,7 +149,7 @@ var providers = schemes
         AuthenticationScheme = x.Name
     }).ToList();
 
-var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
+var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync(HttpContext.RequestAborted))
     .Where(x => x.Enabled)
     .Select(x => new ExternalProvider
     {
