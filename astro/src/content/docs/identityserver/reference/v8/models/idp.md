@@ -53,7 +53,7 @@ Its properties map to the Open ID Connect options class from ASP.NET Core, and t
 
 * **`Scope`**
 
-  Space separated list of scope values.
+  Space separated list of scope values. Defaults to `openid`.
 
 * **`GetClaimsFromUserInfoEndpoint`**
 

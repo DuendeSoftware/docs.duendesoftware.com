@@ -53,6 +53,14 @@ This class models an API.
 
   List of associated user claim types that should be included in the access token.
 
+* **`ShowInDiscoveryDocument`**
+
+  Specifies whether this resource is shown in the discovery document. Defaults to `true`.
+
+* **`Properties`**
+
+  Dictionary to hold any custom resource-specific values as needed.
+
 * **`Scopes`**
 
   List of API scope names. You need to create those using [ApiScope](/identityserver/reference/v8/models/api-scope.md).

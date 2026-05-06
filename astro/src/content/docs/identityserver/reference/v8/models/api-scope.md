@@ -36,6 +36,23 @@ This class models an OAuth scope.
 
   List of associated user claim types that should be included in the access token.
 
+* **`Required`**
+
+  Specifies whether the user can de-select the scope on the consent screen. Defaults to `false`.
+
+* **`Emphasize`**
+
+  Specifies whether the consent screen will emphasize this scope. Use this setting for sensitive or important scopes.
+  Defaults to `false`.
+
+* **`ShowInDiscoveryDocument`**
+
+  Specifies whether this scope is shown in the discovery document. Defaults to `true`.
+
+* **`Properties`**
+
+  Dictionary to hold any custom scope-specific values as needed.
+
 ## Defining API Scope In appsettings.json
 
 The `AddInMemoryApiResource` extension method also supports adding clients from the ASP.NET Core configuration file:

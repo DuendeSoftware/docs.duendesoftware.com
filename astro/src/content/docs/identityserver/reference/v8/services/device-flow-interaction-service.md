@@ -28,7 +28,7 @@ All async methods accept a `CancellationToken ct` parameter.
 
 * **`HandleRequestAsync(string userCode, ConsentResponse consent, CancellationToken ct)`**
 
-  Completes device authorization for the given `userCode`.
+  Completes device authorization for the given `userCode`. Note that `ConsentResponse.RememberConsent` is always treated as `false` in device flow. Consent is never persisted across device flow sessions. This follows [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628) security guidance, since the device initiating the flow is different from the device where the user authenticates.
 
 ## DeviceFlowAuthorizationRequest
 
