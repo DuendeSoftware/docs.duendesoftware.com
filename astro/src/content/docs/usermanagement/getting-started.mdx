@@ -434,98 +434,106 @@ You can configure OTP expiry, code length, and rate-limiting behaviour through t
 2. Now create `Pages/EnterOtp.cshtml.cs`:
    
    ```csharp title="Pages/EnterOtp.cshtml.cs"
-   using System.ComponentModel.DataAnnotations;
-   using System.Security.Claims;
-   using Duende.Platform.Users;
-   using Duende.Platform.Users.Authentication;
-   using Duende.Platform.Users.Authentication.Otp;
-   using Microsoft.AspNetCore.Authentication;
-   using Microsoft.AspNetCore.Authentication.Cookies;
-   using Microsoft.AspNetCore.Mvc;
-   using Microsoft.AspNetCore.Mvc.RazorPages;
-   
-   namespace OtpUserManagement.Pages;
-   
-   public class EnterOtpModel(
-       IOtpAuthenticator otpAuthenticator,
-       IUserAuthenticatorsSelfService authenticatorsSelfService)
-       : PageModel
-   {
-       [BindProperty]
-       public InputModel Input { get; set; } = new();
-   
-       public class InputModel
-       {
-           [Required]
-           public string Token { get; set; } = string.Empty;
-   
-           [Required]
-           public string Code { get; set; } = string.Empty;
-       }
-   
-       public IActionResult OnGet()
-       {
-           var token = TempData["OtpToken"]?.ToString();
-           if (token is null)
-           {
-               return RedirectToPage("/Login");
-           }
-   
-           Input.Token = token;
-           return Page();
-       }
-   
-       public async Task<IActionResult> OnPostAsync()
-       {
-           if (!ModelState.IsValid)
-           {
-               return Page();
-           }
-   
-           if (string.IsNullOrWhiteSpace(Input.Code) || string.IsNullOrWhiteSpace(Input.Token))
-           {
-               ModelState.AddModelError(string.Empty, "Invalid input.");
-               return Page();
-           }
-   
-           var otp = PlainTextOtp.Parse(Input.Code);
-           var token = OtpToken.Parse(Input.Token);
-   
-           var address = await otpAuthenticator.TryAuthenticateAsync(
-               otp, token, HttpContext.RequestAborted);
-   
-           if (address is null)
-           {
-               ModelState.AddModelError(string.Empty, "Invalid or expired code. Please try again.");
-               return Page();
-           }
-   
-           // Get the existing user record, or register a new one on first sign-in.
-           var authenticators =
-               await authenticatorsSelfService.TryGetAsync(address, HttpContext.RequestAborted) ??
-               await authenticatorsSelfService.TryRegisterAsync(
-                   UserSubjectId.New(), address, HttpContext.RequestAborted);
-   
-           if (authenticators is null)
-           {
-               ModelState.AddModelError(string.Empty, "Failed to sign in. Please try again.");
-               return Page();
-           }
-   
-           var claims = new List<Claim>
-           {
-               new(ClaimTypes.NameIdentifier, authenticators.SubjectId.ToGuid().ToString()),
-               new(ClaimTypes.Name, address.SubjectId.ToString()),
-           };
-   
-           var identity = new ClaimsIdentity(
-               claims, CookieAuthenticationDefaults.AuthenticationScheme);
-   
-           await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
-   
-           return LocalRedirect(Url.Content("~/"));
-       }
-   }
+    using System.ComponentModel.DataAnnotations;
+    using System.Security.Claims;
+    using Duende.Platform.Users;
+    using Duende.Platform.Users.Authentication;
+    using Duende.Platform.Users.Authentication.Otp;
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    
+    namespace OtpUserManagement.Pages;
+    
+    public class EnterOtpModel(
+        IOtpAuthenticator otpAuthenticator,
+        IUserAuthenticatorsSelfService authenticatorsSelfService)
+        : PageModel
+    {
+        [BindProperty]
+        public InputModel Input { get; set; } = new();
+    
+        public class InputModel
+        {
+            [Required]
+            public string Token { get; set; } = string.Empty;
+    
+            [Required]
+            public string Code { get; set; } = string.Empty;
+        }
+    
+        public IActionResult OnGet()
+        {
+            var token = TempData["OtpToken"]?.ToString();
+            if (token is null)
+            {
+                return RedirectToPage("/Login");
+            }
+    
+            Input.Token = token;
+            return Page();
+        }
+    
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+    
+            if (string.IsNullOrWhiteSpace(Input.Code) || string.IsNullOrWhiteSpace(Input.Token))
+            {
+                ModelState.AddModelError(string.Empty, "Invalid input.");
+                return Page();
+            }
+    
+            var otp = PlainTextOtp.Parse(Input.Code);
+            var token = OtpToken.Parse(Input.Token);
+    
+            var authResult = await otpAuthenticator.TryAuthenticateAsync(
+                otp, token, HttpContext.RequestAborted);
+    
+            if (authResult is not OtpAuthenticationResult.Success otpSuccess)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid or expired code. Please try again.");
+                return Page();
+            }
+    
+            // Look up the existing user, or register a new one on first sign-in.
+            UserAuthenticators? authenticators = null;
+            if (otpSuccess.UserSubjectId is { } existingId)
+            {
+                authenticators = await authenticatorsSelfService.TryGetAsync(
+                    existingId, HttpContext.RequestAborted);
+            }
+
+            if (authenticators is null)
+            {
+                authenticators = await authenticatorsSelfService.TryRegisterAsync(
+                    UserSubjectId.New(), otpSuccess.Address, HttpContext.RequestAborted);
+            }
+    
+            if (authenticators is null)
+            {
+                ModelState.AddModelError(string.Empty, "Failed to sign in. Please try again.");
+                return Page();
+            }
+    
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, authenticators.SubjectId.ToGuid().ToString()),
+                new(ClaimTypes.Name, otpSuccess.Address.Value),
+            };
+    
+            var identity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+    
+            await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+    
+            return LocalRedirect(Url.Content("~/"));
+        }
+    }
    ```
 </Steps>
 
@@ -533,10 +541,10 @@ The code for this page handles both `GET` and `POST` requests, mapped to Razor P
 
 **`OnGet`** reads the OTP token that the Login page stored in `TempData["OtpToken"]` and copies it into the hidden form field. If the token is missing (e.g. the user navigated here directly), the page redirects back to `/Login`.
 
-**`OnPostAsync`** parses the submitted token and code into their strongly-typed counterparts (`OtpToken` and `PlainTextOtp`), then calls `IOtpAuthenticator.TryAuthenticateAsync`. If the code is correct and not expired, the method returns the `OtpAddress` that was authenticated. A `null` return value means the code was wrong or has expired.
+**`OnPostAsync`** parses the submitted token and code into their strongly-typed counterparts (`OtpToken` and `PlainTextOtp`), then calls `IOtpAuthenticator.TryAuthenticateAsync`. The method returns an `OtpAuthenticationResult`, which is a discriminated union: pattern-match on `OtpAuthenticationResult.Success` to continue, or show an error for any other result.
 
 :::note[Automatic User Registration]
-After a successful OTP verification, the page calls `IUserAuthenticatorsSelfService.TryGetAsync` to look up an existing user by their OTP address. If no record is found (which happens the very first time a given email address signs in), `TryRegisterAsync` is called instead to create a new user automatically. This "get-or-register" pattern means you do not need a separate sign-up flow: every new email address that successfully verifies an OTP becomes a registered user on the spot.
+After a successful OTP verification, the `Success` result carries an optional `UserSubjectId`. When present, the user already exists and can be looked up with `IUserAuthenticatorsSelfService.TryGetAsync`. When `UserSubjectId` is null (the very first time a given email address signs in), `TryRegisterAsync` is called to create a new user automatically. This pattern means you do not need a separate sign-up flow: every new email address that successfully verifies an OTP becomes a registered user on the spot.
 
 Once a user record is confirmed (or created), a `ClaimsPrincipal` is built from the subject ID and email address and passed to `HttpContext.SignInAsync`, which issues the authentication cookie and completes the sign-in.
 :::
