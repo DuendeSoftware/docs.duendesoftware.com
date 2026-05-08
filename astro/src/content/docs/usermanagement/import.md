@@ -1,12 +1,12 @@
 ---
 title: Import Data into User Management
-description: Import users in bulk from external systems or other identity providers using the IUserImporter API.
+description: Import users, roles, and authenticators from external systems or other identity providers using the IUserImporter API.
 sidebar:
   label: Importing Data
   order: 6
 ---
 
-The bulk import system in User Management lets you migrate users from another identity provider,
+User Management lets you migrate users, roles, and authenticators from another identity provider,
 or seed users from an external system. This is helpful in several scenarios:
 
 * Migrating from ASP.NET Identity or another identity provider
@@ -65,7 +65,7 @@ Passwords are the trickiest part of the migration because ASP.NET Identity uses 
 ### Batch Processing
 
 You do not have to import every user in a single call. For large datasets, splitting the work into chunks
-of 100 to 500 records is more practical. Smaller batches keep memory usage reasonable, make failures easier
+is more practical. Smaller batches keep memory usage reasonable, make failures easier
 to diagnose, and let you checkpoint progress so a crash does not force you to start over.
 
 The key thing that makes batching straightforward is that each record in a batch is processed independently.
