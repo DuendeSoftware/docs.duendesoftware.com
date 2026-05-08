@@ -105,7 +105,7 @@ For cross-cutting security topics (data protection key persistence and throttlin
 
 Passkey support involves two registration steps:
 
-1. **`AddUserAuthentication`** registers the core passkey services: cryptographic signature verification (ES256, RS256, RS1), WebAuthn registration and authentication ceremonies, credential storage, and challenge management. Use this when you want to drive the passkey flow yourself without the built-in HTTP endpoints.
+1. **`AddUserAuthentication`** registers the core passkey services: cryptographic signature verification (ES256, ES384, ES512, RS256, RS384, RS512, PS256, PS384, PS512, RS1), WebAuthn registration and authentication ceremonies, credential storage, and challenge management. Use this when you want to drive the passkey flow yourself without the built-in HTTP endpoints.
 2. **`EnableUserAuthentication`** registers the web layer on top, including the passkey HTTP endpoints (`/passkeys/register/begin`, `/passkeys/register/complete`, `/passkeys/authenticate/begin`, `/passkeys/authenticate/complete`) and the JavaScript helper (`/passkeys/js`).
 
 Using `AddUserAuthentication` on its own:
@@ -538,26 +538,26 @@ sequenceDiagram
 // After primary authentication succeeds, store the user ID for the second factor
 public async Task<IActionResult> OnPostLogin(string username, string password, CancellationToken ct)
 {
-    var userId = await passwordAuth.TryAuthenticateAsync(
+    var result = await passwordAuth.TryAuthenticateAsync(
         UserName.Parse(username),
         passwordFactory.Create(password),
         ct);
 
-    if (userId is null)
+    if (result is not PasswordAuthenticationResult.Success success)
     {
         return Error("Invalid credentials.");
     }
 
-    var authenticators = await selfService.TryGetAsync(userId, ct);
+    var authenticators = await selfService.TryGetAsync(success.UserSubjectId, ct);
 
     if (authenticators?.Passkeys.Count > 0)
     {
         // Store the user ID for the second-factor resolver to retrieve
-        HttpContext.Session.SetString("PendingUserId", userId.ToGuid().ToString());
+        HttpContext.Session.SetString("PendingUserId", success.UserSubjectId.ToGuid().ToString());
         return RedirectToPage("/LoginWithPasskey");
     }
 
-    await CompleteSignIn(userId);
+    await CompleteSignIn(success.UserSubjectId);
     return Redirect(returnUrl ?? "/");
 }
 ```

@@ -26,7 +26,7 @@ The system exposes three interfaces covering different access levels: self-servi
 
 ### Where to use these interfaces
 
-All three interfaces are registered with the DI container by `AddUserProfiles()` and can be injected anywhere in your application:
+All three interfaces are registered with the service provider by `AddUserProfiles()` and can be injected anywhere in your application:
 
 - **Razor Pages**: inject into page models to read or update the current user's profile.
 - **MVC controllers**: inject into controllers for profile endpoints.
@@ -283,6 +283,30 @@ public sealed record UserProfileListItem
 }
 ```
 
+### `UserProfileAttributeProjection`
+
+`UserProfileAttributeProjection` is the result type returned by the `QueryAsync` overload that accepts a `HashSet<AttributeName>`. It contains only the attributes you requested, making it more efficient than fetching full `UserProfile` records when you need a subset of data.
+
+```csharp
+public sealed record UserProfileAttributeProjection
+{
+    public UserSubjectId SubjectId { get; }
+    public UserName? UserName { get; }
+    public IReadOnlyDictionary<AttributeName, AttributeValue> Attributes { get; }
+
+    public AttributeValue this[AttributeName name] { get; }
+    public bool Contains(AttributeName name);
+    public bool TryGet(AttributeName name, out AttributeValue? value);
+}
+```
+
+* `SubjectId`: The user's subject identifier.
+* `UserName`: The user's username, if available.
+* `Attributes`: The projected attributes as a dictionary keyed by `AttributeName`. Only the attributes requested in the query are present.
+* `this[AttributeName]`: Gets an attribute value by name. Throws when the attribute is not present in the projection.
+* `Contains(AttributeName)`: Returns `true` when the named attribute is present in the projection.
+* `TryGet(AttributeName, out AttributeValue?)`: Tries to retrieve an attribute value by name. Returns `false` when the attribute is not present.
+
 ### `AttributeValueCollection`
 
 `AttributeValueCollection` is a mutable, name-keyed collection of `AttributeValue` instances used when creating or updating profiles.
@@ -467,7 +491,77 @@ if (profile is not null)
 }
 ```
 
-## Schema Interface
+## Querying Profiles
+
+`IUserProfileAdmin` provides query methods for searching and filtering user profiles. This is useful for admin operations such as finding all profiles with a specific attribute value, exporting profile data, or generating reports.
+
+### QueryAsync Methods
+
+```csharp
+public interface IUserProfileAdmin
+{
+    // ... other methods ...
+    
+    Task<QueryResult<UserProfile>> QueryAsync(
+        QueryRequest request,
+        CancellationToken ct);
+    
+    Task<QueryResult<UserProfileAttributeProjection>> QueryAsync(
+        QueryRequest request,
+        HashSet<AttributeName> attributes,
+        CancellationToken ct);
+}
+```
+
+Filtering and sorting are not supported for profile queries; only pagination via `Range` is available. Passing a filter or sort field will throw `NotSupportedException`. Use `QueryRequest.Create(new DataRange(...))` to construct the request.
+
+* **`QueryAsync(QueryRequest, CancellationToken)`**: Returns a paged list of `UserProfile` records. Use `QueryRequest.Create(new DataRange(offset, limit))` to control pagination.
+
+* **`QueryAsync(QueryRequest, HashSet<AttributeName>, CancellationToken)`**: Returns a paged list of `UserProfileAttributeProjection` records with only the specified attributes. This overload is useful for performance optimization when you only need a subset of attributes. The projection includes `SubjectId`, `UserName`, and the requested attributes.
+
+### Querying All Profiles
+
+```csharp
+using Duende.Platform.Storage;
+using Duende.Platform.Users.Profiles;
+
+var request = QueryRequest.Create(new DataRange(0, 50));
+var result = await userProfileAdmin.QueryAsync(request, ct);
+
+foreach (var profile in result.Items)
+{
+    Console.WriteLine($"Subject: {profile.SubjectId}");
+}
+```
+
+### Querying Profiles with Attribute Projection
+
+```csharp
+using Duende.Platform.EntityAttributeValue;
+using Duende.Platform.Storage;
+using Duende.Platform.Users.Profiles;
+
+// Only retrieve email and department attributes for performance
+var attributes = new HashSet<AttributeName>
+{
+    AttributeName.Parse("email"),
+    AttributeName.Parse("department")
+};
+
+var request = QueryRequest.Create(new DataRange(0, 50));
+var projections = await userProfileAdmin.QueryAsync(request, attributes, ct);
+
+foreach (var projection in projections.Items)
+{
+    Console.WriteLine($"Subject: {projection.SubjectId}");
+    foreach (var (name, value) in projection.Attributes)
+    {
+        Console.WriteLine($"  {name} = {value}");
+    }
+}
+```
+
+
 
 `IReadOnlyAttributeSchema` is returned by `GetSchemaAsync` on both `IUserProfileSelfService` and `IUserProfileAdmin`. It provides factory methods for creating schema-validated `AttributeValue` instances and exposes the full set of attribute definitions.
 

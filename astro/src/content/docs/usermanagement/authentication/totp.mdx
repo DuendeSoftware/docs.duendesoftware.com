@@ -311,25 +311,25 @@ After primary authentication (password or OTP), check whether the user has TOTP 
 public async Task<IActionResult> OnPostLogin(string username, string password, CancellationToken ct)
 {
     // Step 1: Verify primary credentials
-    var userId = await passwordAuth.TryAuthenticateAsync(
+    var result = await passwordAuth.TryAuthenticateAsync(
         UserName.Parse(username),
         passwordFactory.Create(password),
         ct);
 
-    if (userId == null)
+    if (result is not PasswordAuthenticationResult.Success success)
     {
         return Error("Invalid credentials.");
     }
 
     // Step 2: Check if TOTP is enabled
-    var authenticators = await userAuthenticatorsSelfService.TryGetAsync(userId, ct);
+    var authenticators = await userAuthenticatorsSelfService.TryGetAsync(success.UserSubjectId, ct);
 
     if (authenticators?.TotpAuthenticatorNames.Count > 0)
     {
         // Store intermediate authentication state
         authenticationStateService.Store(new AuthenticationState
         {
-            UserId = userId,
+            UserId = success.UserSubjectId,
             RememberMe = rememberMe,
             ReturnUrl = returnUrl
         });

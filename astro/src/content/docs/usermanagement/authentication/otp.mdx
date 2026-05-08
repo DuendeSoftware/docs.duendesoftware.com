@@ -92,12 +92,12 @@ public interface IOtpAuthenticator
     // Generate and send an OTP code to the given address
     Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, Ct ct);
 
-    // Verify an OTP code; returns the OtpAddress on success, null on failure
-    Task<OtpAddress?> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, Ct ct);
+    // Verify an OTP code; returns an OtpAuthenticationResult discriminated union
+    Task<OtpAuthenticationResult> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, Ct ct);
 }
 ```
 
-`TrySendOtpAsync` returns a `SendOtpResult` that carries the token and expiry information when the code was sent, or rate-limit information when sending was blocked. `TryAuthenticateAsync` returns the `OtpAddress` on success, or `null` if the code was invalid or expired.
+`TrySendOtpAsync` returns a `SendOtpResult` that carries the token and expiry information when the code was sent, or rate-limit information when sending was blocked. `TryAuthenticateAsync` returns an `OtpAuthenticationResult`, which is a discriminated union with two subtypes: `OtpAuthenticationResult.Success` (containing the `Address` and an optional `UserSubjectId`) and `OtpAuthenticationResult.Failure`.
 
 ### Supporting Types
 
@@ -160,9 +160,6 @@ public interface IUserAuthenticatorsSelfService
 {
     // Register a new user with an OTP address
     Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
-
-    // Look up a user by their OTP address
-    Task<UserAuthenticators?> TryGetAsync(OtpAddress address, Ct ct);
 
     // Look up a user by their subject ID
     Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, Ct ct);
@@ -263,23 +260,27 @@ public async Task<IActionResult> OnPostVerifyAsync(string code)
     if (!PlainTextOtp.TryParse(code, out var otp))
         return Error("Invalid code format");
 
-    var address = await otpAuthenticator.TryAuthenticateAsync(
+    var authResult = await otpAuthenticator.TryAuthenticateAsync(
         otp.Value,
         OtpToken.Parse(tokenValue),
         HttpContext.RequestAborted);
 
-    if (address == null)
+    if (authResult is not OtpAuthenticationResult.Success otpSuccess)
         return Error("Invalid or expired code");
 
     // Look up or auto-register the user
-    var user = await userAuthenticatorsSelfService.TryGetAsync(address, HttpContext.RequestAborted);
+    UserAuthenticators? user = null;
+    if (otpSuccess.UserSubjectId is { } existingId)
+    {
+        user = await userAuthenticatorsSelfService.TryGetAsync(existingId, HttpContext.RequestAborted);
+    }
 
     if (user == null)
     {
         var newSubjectId = UserSubjectId.New();
         user = await userAuthenticatorsSelfService.TryRegisterAsync(
             newSubjectId,
-            address,
+            otpSuccess.Address,
             HttpContext.RequestAborted);
     }
 
@@ -295,21 +296,21 @@ public async Task<IActionResult> OnPostVerifyAsync(string code)
 
 ### Auto-Registration
 
-OTP authentication naturally supports auto-registration. After a successful code verification, check whether the user already exists and register them if not:
+OTP authentication naturally supports auto-registration. After a successful code verification, use `otpSuccess.UserSubjectId` when present to look up an existing user, and call `TryRegisterAsync` when it is null:
 
 ```csharp
-var address = new OtpAddress(OtpChannel.Email, EmailAddress.Parse(email));
-
-var user = await userAuthenticatorsSelfService.TryGetAsync(
-    address,
-    HttpContext.RequestAborted);
+UserAuthenticators? user = null;
+if (otpSuccess.UserSubjectId is { } existingId)
+{
+    user = await userAuthenticatorsSelfService.TryGetAsync(existingId, HttpContext.RequestAborted);
+}
 
 if (user == null)
 {
     var newSubjectId = UserSubjectId.New();
     user = await userAuthenticatorsSelfService.TryRegisterAsync(
         newSubjectId,
-        address,
+        otpSuccess.Address,
         HttpContext.RequestAborted);
 }
 ```

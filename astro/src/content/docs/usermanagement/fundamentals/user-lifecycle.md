@@ -255,7 +255,7 @@ The following extension points are designed for you to implement or configure:
 | SCIM schema mapping | `IScimSchemaMapper` | Customize which attributes and schemas are exposed via the SCIM endpoint |
 | Custom profile attributes | `IUserProfileSchemaAdmin` | Add application-specific attributes to the user profile schema |
 
-These interfaces are registered in the DI container. Provide your own implementation during application startup to override the default behavior.
+These interfaces are registered with the service provider. Provide your own implementation during application startup to override the default behavior.
 
 ### Not extensible
 

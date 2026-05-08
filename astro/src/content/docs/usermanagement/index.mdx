@@ -13,7 +13,7 @@ Most .NET applications start authentication the same way: wire up ASP.NET Identi
 
 The pain points are predictable: no passkey support without significant custom work, MFA that lives outside the core auth flow, migration headaches when the user model needs to evolve, and gaps that surface during security reviews or compliance audits. Each of these is solvable in isolation, but solving them together, consistently and correctly, is where most teams lose time.
 
-Duende User Management is a first-party, embeddable .NET SDK that integrates with Duende IdentityServer and ASP.NET Core. It provides native user storage, a passwordless-first authentication layer (OTP, TOTP, passkeys, external providers, recovery codes), full lifecycle management (profiles, roles, groups), and membership management for assigning users to roles and groups programmatically. You register it in your DI container, configure what you need, and get a production-ready identity foundation without assembling it from parts.
+Duende User Management is a first-party, embeddable .NET SDK that integrates with Duende IdentityServer and ASP.NET Core. It provides native user storage, a passwordless-first authentication layer (OTP, TOTP, passkeys, external providers, recovery codes), full lifecycle management (profiles, roles, groups), and membership management for assigning users to roles and groups programmatically. You register it with the service provider, configure what you need, and get a production-ready identity foundation without assembling it from parts.
 
 <CardGrid>
   <LinkCard

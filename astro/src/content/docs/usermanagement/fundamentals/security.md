@@ -109,6 +109,33 @@ The default policy allows an attempt when:
 
 Implement `IAuthenticationAttemptPolicy` to replace the default policy with custom logic.
 
+### Velocity-Based Throttling
+
+In addition to failure-based throttling, User Management can limit the total rate of authentication attempts (both successful and failed) within a sliding window. This protects against high-frequency automated attacks that might not trigger failure-based throttling because they occasionally succeed.
+
+The following properties on `AuthenticationThrottlingOptions` control velocity-based throttling:
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `MaxAttemptsPerWindow` | `int` | `5` | Maximum total authentication attempts (successful and failed) allowed within the `VelocityWindow` |
+| `VelocityWindow` | `TimeSpan` | `00:00:10` | Sliding window duration for counting total attempts |
+| `VelocityThrottleDuration` | `TimeSpan` | `00:00:30` | How long to block further attempts after the velocity threshold is exceeded |
+
+Configure velocity-based throttling during registration:
+
+```csharp title="Program.cs"
+builder.Services
+    .AddDuendePlatform()
+    .AddUserAuthentication(options =>
+    {
+        options.Throttling.MaxAttemptsPerWindow = 3;
+        options.Throttling.VelocityWindow = TimeSpan.FromSeconds(15);
+        options.Throttling.VelocityThrottleDuration = TimeSpan.FromMinutes(1);
+    });
+```
+
+The `AuthenticatorAttemptInfo` record now includes a `RecentAttemptTimestamps` property (`IReadOnlyList<DateTimeOffset>`) that stores the timestamps of recent attempts. The velocity policy uses this list to count attempts within the sliding window and determine whether to block further attempts.
+
 ## OTP Security
 
 ### Rate Limiting

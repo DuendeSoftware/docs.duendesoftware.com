@@ -96,7 +96,7 @@ The iteration count is stored in `HashedPasswordData.Parameters` under the key `
 
 ## Implementing a Custom Algorithm
 
-To add a custom algorithm (for example, to verify passwords originally stored by a legacy system), implement `IPasswordHashAlgorithm` and register it with the DI container.
+To add a custom algorithm (for example, to verify passwords originally stored by a legacy system), implement `IPasswordHashAlgorithm` and register it with the service provider.
 
 The following example wraps a hypothetical legacy MD5-based hash for read-only verification. It always returns `true` from `NeedsRehash()` so that every user who logs in is immediately migrated to the current preferred algorithm:
 

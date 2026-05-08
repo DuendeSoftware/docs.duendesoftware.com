@@ -38,7 +38,7 @@ public class RoleSetupService(
         // 3. Assign the role to the group (transitive path).
         await membershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
 
-        // 4. Add the user to the group.
+        // 4. Add the user to the group. Membership is auto-created when assigning roles/groups.
         await membershipAdmin.AssignGroupAsync(subjectId, groupId, ct);
 
         // 5. Query effective roles (direct + transitive, merged in application code).
@@ -90,7 +90,6 @@ The core types in the `Duende.Platform.Users.Profiles.RolesAndGroups` namespace 
 
 ### Membership Types
 
-* **`MembershipDto`**: Returned by `EnsureMembershipAsync` and `GetMembershipAsync`. Represents a user's membership record, which must exist before roles or groups can be assigned.
 * **`MembershipRoleMemberListDto`**: Returned when listing users directly assigned to a role. Contains `SubjectId`.
 * **`GroupRoleMemberListDto`**: Returned when listing groups assigned to a role. Contains `Id` and `Name`.
 * **`MembershipGroupMemberListDto`**: Returned when listing users in a group. Contains `SubjectId`.
@@ -106,7 +105,7 @@ Because the storage layer does not support union operations, direct and transiti
 
 ## `IRoleAdmin`
 
-`IRoleAdmin` provides full CRUD operations for roles. It is registered in the dependency injection container by the Duende User Management infrastructure and is typically injected into admin controllers, background services, or seed scripts. Use it whenever you need to create, read, update, delete, or search roles independently of membership, for example to populate a role picker in an admin UI or to ensure a set of well-known roles exists at startup.
+`IRoleAdmin` provides full CRUD operations for roles. It is registered with the service provider by the Duende User Management infrastructure and is typically injected into admin controllers, background services, or seed scripts. Use it whenever you need to create, read, update, delete, or search roles independently of membership, for example to populate a role picker in an admin UI or to ensure a set of well-known roles exists at startup.
 
 ```csharp
 public interface IRoleAdmin
@@ -116,9 +115,7 @@ public interface IRoleAdmin
     Task<SaveResult<RoleId>> UpdateAsync(RoleId id, RoleDto role, Version expectedVersion, CancellationToken ct);
     Task<SaveResult<RoleId>> DeleteAsync(RoleId id, CancellationToken ct);
     Task<QueryResult<RoleListDto>> QueryAsync(
-        RoleFilter? filter,
-        SortBy.SortByField<RoleSortField>? sort,
-        DataRange? range,
+        QueryRequest<RoleFilter, RoleSortField> request,
         CancellationToken ct);
 }
 ```
@@ -127,7 +124,7 @@ public interface IRoleAdmin
 * **`GetAsync`**: Retrieves a single role by its `RoleId`. Returns a `GetResult<RoleDto>` that is either found or not found.
 * **`UpdateAsync`**: Updates an existing role. Requires the current `Version` for optimistic concurrency. Returns an error on version conflict or if the role is not found.
 * **`DeleteAsync`**: Deletes a role by its `RoleId`. Returns an error if deletion fails.
-* **`QueryAsync`**: Returns a paged list of `RoleListDto` records. All parameters are optional: omit `filter` to return all roles, omit `sort` to use the default ordering, and omit `range` to return the first page with the default page size.
+* **`QueryAsync`**: Returns a paged list of `RoleListDto` records. Use `QueryRequest.Create(filter, sort, range)` to construct the request. All parameters are optional: omit `filter` to return all roles, omit `sort` to use the default ordering, and omit `range` to return the first page with the default page size.
 
 ### Creating a Role
 
@@ -159,7 +156,7 @@ var filter = new RoleFilter { Name = "editor" };
 var sort = SortBy.Ascending(RoleSortField.Name);
 var range = new DataRange(Offset: 0, Limit: 20);
 
-var roles = await roleAdmin.QueryAsync(filter, sort, range, ct);
+var roles = await roleAdmin.QueryAsync(QueryRequest.Create(filter, sort, range), ct);
 
 foreach (var r in roles.Items)
 {
@@ -186,7 +183,7 @@ if (existing.IsFound)
 
 ## `IGroupAdmin`
 
-`IGroupAdmin` provides full CRUD operations for groups. Like `IRoleAdmin`, it is registered in the dependency injection container and is injected wherever group lifecycle management is needed, for example in an admin UI that lets administrators create and rename groups, or in a synchronisation service that mirrors groups from an external directory. Use it to manage the group catalogue independently of membership.
+`IGroupAdmin` provides full CRUD operations for groups. Like `IRoleAdmin`, it is registered with the service provider and is injected wherever group lifecycle management is needed, for example in an admin UI that lets administrators create and rename groups, or in a synchronisation service that mirrors groups from an external directory. Use it to manage the group catalogue independently of membership.
 
 ```csharp
 public interface IGroupAdmin
@@ -196,9 +193,7 @@ public interface IGroupAdmin
     Task<SaveResult<GroupId>> UpdateAsync(GroupId id, GroupDto group, Version expectedVersion, CancellationToken ct);
     Task<SaveResult<GroupId>> DeleteAsync(GroupId id, CancellationToken ct);
     Task<QueryResult<GroupListDto>> QueryAsync(
-        GroupFilter? filter,
-        SortBy.SortByField<GroupSortField>? sort,
-        DataRange? range,
+        QueryRequest<GroupFilter, GroupSortField> request,
         CancellationToken ct);
 }
 ```
@@ -207,7 +202,7 @@ public interface IGroupAdmin
 * **`GetAsync`**: Retrieves a single group by its `GroupId`.
 * **`UpdateAsync`**: Updates an existing group with optimistic concurrency via `expectedVersion`.
 * **`DeleteAsync`**: Deletes a group by its `GroupId`.
-* **`QueryAsync`**: Returns a paged list of `GroupListDto` records. `GroupFilter` also supports a `SearchExpression` (e.g., `displayName eq "Engineers"`) that is combined with the other filter properties using AND logic.
+* **`QueryAsync`**: Returns a paged list of `GroupListDto` records. Use `QueryRequest.Create(filter, sort, range)` to construct the request. `GroupFilter` also supports a `SearchExpression` (e.g., `displayName eq "Engineers"`) that is combined with the other filter properties using AND logic.
 
 ### Creating a Group
 
@@ -239,23 +234,18 @@ var filter = new GroupFilter
     SearchExpression = new SearchExpression("displayName eq \"editors\"")
 };
 
-var groups = await groupAdmin.QueryAsync(filter, sort: null, range: null, ct);
+var groups = await groupAdmin.QueryAsync(QueryRequest.Create(filter, sort: null, range: null), ct);
 ```
 
 ## `IMembershipAdmin`
 
-`IMembershipAdmin` is the single interface for all membership operations. It replaces the former `IRoleMembershipAdmin` and `IGroupMembershipAdmin` interfaces, which no longer exist. It is registered in the dependency injection container alongside `IRoleAdmin` and `IGroupAdmin` and is injected wherever you need to assign roles or groups to users, query a user's effective roles, or manage the membership lifecycle.
+`IMembershipAdmin` is the single interface for all membership operations. It replaces the former `IRoleMembershipAdmin` and `IGroupMembershipAdmin` interfaces, which no longer exist. It is registered with the service provider alongside `IRoleAdmin` and `IGroupAdmin` and is injected wherever you need to assign roles or groups to users, or query a user's effective roles.
 
-A user's membership record must exist before any role or group can be assigned to them. Use `EnsureMembershipAsync` to create the record on first use, or `GetMembershipAsync` to check whether it already exists. `DeleteMembershipAsync` removes the record and all associated assignments when a user is deprovisioned.
+A user's membership record is automatically created when a role or group is first assigned to them. There is no need to explicitly create or manage the membership lifecycle.
 
 ```csharp
 public interface IMembershipAdmin
 {
-    // Membership lifecycle
-    Task<MembershipDto> EnsureMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
-    Task<MembershipDto?> GetMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
-    Task DeleteMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
-
     // Direct role assignment
     Task<SaveResult<RoleId>> AssignRoleAsync(UserSubjectId subjectId, RoleId roleId, CancellationToken ct);
     Task<SaveResult<RoleId>> RemoveRoleAsync(UserSubjectId subjectId, RoleId roleId, CancellationToken ct);
@@ -279,15 +269,9 @@ public interface IMembershipAdmin
 }
 ```
 
-### Membership lifecycle
-
-* **`EnsureMembershipAsync`**: Creates a membership record for the user if one does not already exist, then returns it. Idempotent, so it's safe to call on every login or provisioning event.
-* **`GetMembershipAsync`**: Returns the membership record for the user, or `null` if no record exists. Use this to check whether a user has been provisioned without creating a record as a side effect.
-* **`DeleteMembershipAsync`**: Deletes the membership record and all associated role and group assignments. Use this when deprovisioning a user.
-
 ### Direct role assignment
 
-* **`AssignRoleAsync(UserSubjectId, RoleId, CancellationToken)`**: Directly assigns a role to a user. Idempotent; succeeds if the assignment already exists.
+* **`AssignRoleAsync(UserSubjectId, RoleId, CancellationToken)`**: Directly assigns a role to a user. Automatically creates the user's membership record if it does not exist. Idempotent; succeeds if the assignment already exists.
 * **`RemoveRoleAsync(UserSubjectId, RoleId, CancellationToken)`**: Removes a direct role assignment from a user. Idempotent; succeeds if the assignment does not exist.
 
 ### Group role assignment
@@ -309,17 +293,6 @@ public interface IMembershipAdmin
 * **`GetMembersInRoleAsync(RoleId, DataRange?, CancellationToken)`**: Returns the users directly assigned to a role.
 * **`GetGroupsInRoleAsync(RoleId, DataRange?, CancellationToken)`**: Returns the groups assigned to a role.
 * **`GetMembersInGroupAsync(GroupId, DataRange?, CancellationToken)`**: Returns the users who are members of a group.
-
-### Ensuring a Membership Record
-
-Before assigning roles or groups, ensure the user's membership record exists:
-
-```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
-
-var membership = await membershipAdmin.EnsureMembershipAsync(subjectId, ct);
-Console.WriteLine($"Membership ready for: {membership.SubjectId}");
-```
 
 ### Assigning a Role Directly to a User
 
@@ -418,8 +391,15 @@ foreach (var member in members.Items)
 
 ### Deprovisioning a User
 
-When a user is removed from the system, delete their membership record to clean up all role and group assignments:
+When a user is removed from the system, use `IUserAdmin.TryRemoveAsync()` to delete the user and clean up all role and group assignments:
 
 ```csharp
-await membershipAdmin.DeleteMembershipAsync(subjectId, ct);
+using Duende.Platform.Users.Profiles;
+
+var removed = await userAdmin.TryRemoveAsync(subjectId, ct);
+
+if (removed)
+{
+    Console.WriteLine("User and all role/group assignments removed.");
+}
 ```

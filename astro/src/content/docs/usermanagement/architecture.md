@@ -1,13 +1,13 @@
 ---
 title: User Management Architecture
-description: An overview of the layered architecture of Duende User Management, including its public API interfaces, domain layer, storage layer, and DI registration model.
+description: An overview of the layered architecture of Duende User Management, including its public API interfaces, domain layer, storage layer, and service provider registration model.
 date: 2026-04-29
 sidebar:
   label: Architecture
   order: 4
 ---
 
-Duende User Management is built on a layered architecture that separates concerns and provides clean extension points. The public API is exposed through scenario-based interfaces that are registered in the ASP.NET Core dependency injection container, backed by an internal domain layer and a document-based storage engine.
+Duende User Management is built on a layered architecture that separates concerns and provides clean extension points. The public API is exposed through scenario-based interfaces that are registered with the ASP.NET Core service provider, backed by an internal domain layer and a document-based storage engine.
 
 ## Architectural Layers
 
@@ -64,9 +64,7 @@ Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, ExternalAuth
 
 // Look up authenticators
 Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, CancellationToken ct);
-Task<UserAuthenticators?> TryGetAsync(OtpAddress address, CancellationToken ct);
 Task<UserAuthenticators?> TryGetAsync(ExternalAuthenticator authenticator, CancellationToken ct);
-Task<UserAuthenticators?> TryGetAsync(UserName userName, CancellationToken ct);
 
 // OTP address management
 Task<bool> TryAddOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, CancellationToken ct);
@@ -115,7 +113,7 @@ Admin interfaces are intended for back-office and management operations: actions
 | `IUserProfileSchemaAdmin` | Manage attribute definitions: get all definitions; add a definition; remove a definition |
 | `IRoleAdmin` | Role CRUD: create, get, update, delete, and query roles with filtering, sorting, and pagination |
 | `IGroupAdmin` | Group CRUD: create, get, update, delete, and query groups with filtering, sorting, and pagination |
-| `IMembershipAdmin` | Membership lifecycle, role and group assignment, and query operations for users and groups |
+| `IMembershipAdmin` | Role and group assignment, and query operations for users and groups |
 
 #### IUserAdmin
 
@@ -146,6 +144,9 @@ Task<bool> TryRemoveOtpAddressesAsync(UserSubjectId subjectId, IEnumerable<OtpAd
 // Bulk external authenticator management
 Task<bool> TryAddExternalAuthenticatorsAsync(UserSubjectId subjectId, IEnumerable<ExternalAuthenticator> authenticators, CancellationToken ct);
 Task<bool> TryRemoveExternalAuthenticatorsAsync(UserSubjectId subjectId, IEnumerable<ExternalAuthenticator> authenticators, CancellationToken ct);
+
+// Query user authenticators
+Task<QueryResult<UserAuthenticators>> QueryAsync(QueryRequest request, CancellationToken ct);
 ```
 
 #### IUserProfileAdmin
@@ -155,6 +156,10 @@ Task<IReadOnlyAttributeSchema> GetSchemaAsync(CancellationToken ct);
 Task<UserProfile?> TryAddAsync(UserSubjectId subjectId, AttributeValueCollection attributes, CancellationToken ct);
 Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, CancellationToken ct);
 Task<UserProfile?> TryGetAsync(AttributeName attributeName, object value, CancellationToken ct);
+
+// Query profiles
+Task<QueryResult<UserProfile>> QueryAsync(QueryRequest request, CancellationToken ct);
+Task<QueryResult<UserProfileAttributeProjection>> QueryAsync(QueryRequest request, HashSet<AttributeName> attributes, CancellationToken ct);
 ```
 
 #### IUserProfileSchemaAdmin
@@ -173,9 +178,7 @@ Task<GetResult<RoleDto>> GetAsync(RoleId id, CancellationToken ct);
 Task<SaveResult<RoleId>> UpdateAsync(RoleId id, RoleDto role, Version expectedVersion, CancellationToken ct);
 Task<SaveResult<RoleId>> DeleteAsync(RoleId id, CancellationToken ct);
 Task<QueryResult<RoleListDto>> QueryAsync(
-    RoleFilter? filter,
-    SortBy.SortByField<RoleSortField>? sort,
-    DataRange? range,
+    QueryRequest<RoleFilter, RoleSortField> request,
     CancellationToken ct);
 ```
 
@@ -187,20 +190,13 @@ Task<GetResult<GroupDto>> GetAsync(GroupId id, CancellationToken ct);
 Task<SaveResult<GroupId>> UpdateAsync(GroupId id, GroupDto group, Version expectedVersion, CancellationToken ct);
 Task<SaveResult<GroupId>> DeleteAsync(GroupId id, CancellationToken ct);
 Task<QueryResult<GroupListDto>> QueryAsync(
-    GroupFilter? filter,
-    SortBy.SortByField<GroupSortField>? sort,
-    DataRange? range,
+    QueryRequest<GroupFilter, GroupSortField> request,
     CancellationToken ct);
 ```
 
 #### IMembershipAdmin
 
 ```csharp
-// Membership lifecycle
-Task<MembershipDto> EnsureMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
-Task<MembershipDto?> GetMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
-Task DeleteMembershipAsync(UserSubjectId subjectId, CancellationToken ct);
-
 // Direct role assignment
 Task<SaveResult<RoleId>> AssignRoleAsync(UserSubjectId subjectId, RoleId roleId, CancellationToken ct);
 Task<SaveResult<RoleId>> RemoveRoleAsync(UserSubjectId subjectId, RoleId roleId, CancellationToken ct);
@@ -229,22 +225,22 @@ Authentication interfaces verify credentials during sign-in flows.
 
 | Interface | Purpose |
 |-----------|---------|
-| `IPasswordAuth` | Verify a username and password; returns the subject ID on success |
-| `IOtpAuthenticator` | Send a one-time password to an OTP address; verify a one-time password against a token |
+| `IPasswordAuth` | Verify a username and password; returns a discriminated union result indicating success or failure |
+| `IOtpAuthenticator` | Send a one-time password to an OTP address; verify a one-time password against a token; returns a discriminated union result |
 | `ITotpAuth` | Verify a TOTP code from an authenticator app |
 | `IRecoveryCodeAuth` | Verify and consume a single-use recovery code |
 
 #### IPasswordAuth
 
 ```csharp
-Task<UserSubjectId?> TryAuthenticateAsync(UserName userName, PlainTextPassword password, CancellationToken ct);
+Task<PasswordAuthenticationResult> TryAuthenticateAsync(UserName userName, PlainTextPassword password, CancellationToken ct);
 ```
 
 #### IOtpAuthenticator
 
 ```csharp
 Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, CancellationToken ct);
-Task<OtpAddress?> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, CancellationToken ct);
+Task<OtpAuthenticationResult> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, CancellationToken ct);
 ```
 
 #### ITotpAuth
@@ -314,9 +310,9 @@ The Membership module is the part of Duende User Management that manages how use
 
 `AddMembership()` registers the three membership admin interfaces: `IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`.
 
-- **`IRoleAdmin`**: Create, read, update, delete, and query roles with filtering, sorting, and pagination.
-- **`IGroupAdmin`**: Create, read, update, delete, and query groups with filtering, sorting, and pagination.
-- **`IMembershipAdmin`**: Membership lifecycle (ensure, get, delete), role and group assignment, and query operations for direct roles, transitive roles, group membership, and role membership.
+* **`IRoleAdmin`**: Create, read, update, delete, and query roles with filtering, sorting, and pagination.
+* **`IGroupAdmin`**: Create, read, update, delete, and query groups with filtering, sorting, and pagination.
+* **`IMembershipAdmin`**: Role and group assignment, and query operations for direct roles, transitive roles, group membership, and role membership.
 
 ```csharp title="Program.cs"
 builder.Services
@@ -337,6 +333,69 @@ builder.Services
 ```
 
 `IUserSelfService` and `IUserAdmin` are registered as part of the core platform and do not require a separate module call.
+
+## Query Request Type
+
+Several admin interfaces provide `QueryAsync` methods for searching and filtering records with pagination. Depending on the interface, these methods use either the generic `QueryRequest<TFilter, TSortField>` type (with filtering and sorting support) or the non-generic `QueryRequest` type (pagination only).
+
+### QueryRequest<TFilter, TSortField>
+
+Used by `IRoleAdmin.QueryAsync` and `IGroupAdmin.QueryAsync`, this type supports filtering, sorting, and pagination:
+
+```csharp
+public class QueryRequest<TFilter, TSortField>
+    where TFilter : class
+    where TSortField : struct, Enum
+{
+    public TFilter? Filter { get; set; }
+    public SortBy.SortByField<TSortField>? Sort { get; set; }
+    public DataRange? Range { get; set; }
+
+    public static QueryRequest<TFilter, TSortField> Create(
+        TFilter? filter = null,
+        SortBy.SortByField<TSortField>? sort = null,
+        DataRange? range = null);
+}
+```
+
+* **`Filter`**: Optional filter criteria. Omit to return all records.
+* **`Sort`**: Optional sort specification. Omit to use the default ordering.
+* **`Range`**: Optional pagination range (offset and limit). Omit to return the first page with the default page size.
+* **`Create`**: Factory method to construct a `QueryRequest` with optional parameters.
+
+### Usage
+
+The following interfaces use `QueryRequest<TFilter, TSortField>` and support filtering, sorting, and pagination:
+
+* **`IRoleAdmin.QueryAsync`**: Query roles with filtering, sorting, and pagination.
+* **`IGroupAdmin.QueryAsync`**: Query groups with filtering, sorting, and pagination.
+
+The following interfaces use the non-generic `QueryRequest` and support pagination only — filtering and sorting are not supported:
+
+* **`IUserProfileAdmin.QueryAsync`**: Query user profiles with pagination.
+* **`IUserAuthenticatorsAdmin.QueryAsync`**: Query user authenticators with pagination.
+
+### Example
+
+```csharp
+using Duende.Platform.Storage;
+using Duende.Platform.Users.Profiles.RolesAndGroups;
+
+var filter = new RoleFilter { Name = "editor" };
+var sort = SortBy.Ascending(RoleSortField.Name);
+var range = new DataRange(Offset: 0, Limit: 20);
+
+// Construct the request using the factory method
+var request = QueryRequest.Create(filter, sort, range);
+
+// Pass to QueryAsync
+var roles = await roleAdmin.QueryAsync(request, ct);
+
+foreach (var role in roles.Items)
+{
+    Console.WriteLine($"{role.Id}: {role.Name}");
+}
+```
 
 ## Design Principles
 

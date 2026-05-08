@@ -185,6 +185,9 @@ Controls the built-in per-authenticator failed-attempt throttling policy. Access
 | `MaxFailedAttempts` | `int` | `5` | Number of failed attempts allowed within the `FailureWindow` before throttling is applied. |
 | `FailureWindow` | `TimeSpan` | `00:15:00` | Rolling window from the last failure during which the failure count is tracked. If `LastFailedAtUtc + FailureWindow` has elapsed, the count resets to zero. |
 | `ThrottleDuration` | `TimeSpan` | `00:05:00` | How long to block further attempts after the threshold is exceeded, measured from the last failed attempt. |
+| `MaxAttemptsPerWindow` | `int` | `5` | Maximum total authentication attempts (successful and failed) allowed within the `VelocityWindow`. |
+| `VelocityWindow` | `TimeSpan` | `00:00:10` | Sliding window for counting total authentication attempts. |
+| `VelocityThrottleDuration` | `TimeSpan` | `00:00:30` | How long to block further attempts after the velocity threshold is exceeded. |
 
 Example (stricter throttling):
 
@@ -194,6 +197,9 @@ Example (stricter throttling):
     options.Throttling.MaxFailedAttempts = 3;
     options.Throttling.FailureWindow = TimeSpan.FromMinutes(30);
     options.Throttling.ThrottleDuration = TimeSpan.FromMinutes(15);
+    options.Throttling.MaxAttemptsPerWindow = 5;
+    options.Throttling.VelocityWindow = TimeSpan.FromSeconds(10);
+    options.Throttling.VelocityThrottleDuration = TimeSpan.FromSeconds(30);
 })
 ```
 
@@ -264,7 +270,7 @@ builder.Services
     .AddMembership();
 ```
 
-Calling `AddMembership()` registers the following services into the DI container:
+Calling `AddMembership()` registers the following services with the service provider:
 
 | Service | Description |
 |---|---|

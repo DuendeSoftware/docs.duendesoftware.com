@@ -247,19 +247,19 @@ Authenticate with a password first, then check whether the user has a TOTP authe
 
 ```csharp
 // Primary authentication with password
-var userId = await passwordAuth.TryAuthenticate(
+var result = await passwordAuth.TryAuthenticateAsync(
     UserName.Parse(username),
     passwordFactory.Create(password),
     ct);
 
-if (userId is null)
+if (result is not PasswordAuthenticationResult.Success success)
 {
     // Authentication failed
     return;
 }
 
 // Check if user has 2FA enabled
-var user = await userSelfService.TryGetUser(userId, ct);
+var user = await userSelfService.TryGetUser(success.UserSubjectId, ct);
 if (user?.TotpAuthenticatorNames.Count > 0)
 {
     // Require TOTP verification
