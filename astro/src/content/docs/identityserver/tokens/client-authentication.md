@@ -396,16 +396,20 @@ a victim OpenID Provider.
 The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
 explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
 
-You can enable strict audience validation using the [
-*`StrictClientAssertionAudienceValidation`*](/identityserver/reference/v8/options.md#strict-audience-validation)
-flag, which always strictly validates that the audience is equal to the issuer and validates the token's
+You can enable strict audience validation by setting [`StrictClientAssertionAudienceValidation`](/identityserver/reference/v8/options.md#main)
+to `true`. When enabled, IdentityServer strictly validates that the audience is equal to the issuer identifier and validates the token's
 `typ` header, as specified in [RFC 7523 bis](https://datatracker.ietf.org/doc/draft-ietf-oauth-rfc7523bis/).
 
-When *`StrictClientAssertionAudienceValidation`* is not enabled, validation behavior is determined based
+`StrictClientAssertionAudienceValidation` defaults to `false`. When `false`, IdentityServer accepts the following legacy audience values in addition to the issuer identifier:
+
+* The token endpoint URL
+* The CIBA endpoint URL
+* The PAR endpoint URL
+
+When `StrictClientAssertionAudienceValidation` is `false`, validation behavior is also determined based
 on the `typ` header being present. When the token sets the `typ` header to `client-authentication+jwt`,
 IdentityServer assumes the client's intention is to apply strict audience validation.
-If `typ` is not
-present, [default audience validation](/identityserver/apis/aspnetcore/jwt.md#adding-audience-validation)
+If `typ` is not present, [default audience validation](/identityserver/apis/aspnetcore/jwt.md#adding-audience-validation)
 is used.
 
 ### Mutual TLS Client Certificates

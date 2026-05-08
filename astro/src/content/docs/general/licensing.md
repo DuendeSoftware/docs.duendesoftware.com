@@ -228,7 +228,7 @@ will cause the host to log an error for every consecutive authenticated session:
 BFF is running in trial mode. The maximum number of allowed authenticated sessions (5) has been exceeded.
 
 See https://duende.link/l/bff/trial for more information. 
-````
+```
 
 The trial mode session limit is not distributed or shared across multiple nodes.
 
@@ -242,9 +242,10 @@ when trial mode is not enough.
 
 ## License Key
 
-The license key can be configured in one of two ways:
+The license key can be configured in one of three ways:
 
 * Via a well-known file on the file system
+* Via `IConfiguration` (for example, `appsettings.json` or environment variables)
 * Programmatically in your startup code
 
 You can also use other configuration sources such as Azure Key Vault, by using the
@@ -279,6 +280,48 @@ MyIdentityServer/
 
 :::tip
 To verify your `ContentRootPath` at runtime, inspect `builder.Environment.ContentRootPath`.
+:::
+
+### Configuration :badge[v8.0]
+
+
+IdentityServer can read the license key directly from `IConfiguration`, so you do not need to write any startup code.
+If `LicenseKey` is not set in your `AddIdentityServer` call, IdentityServer checks the following configuration keys in order,
+using the first non-empty value it finds:
+
+1. `Duende:IdentityServer:LicenseKey`
+2. `Duende:LicenseKey`
+
+Whitespace is trimmed, and empty or whitespace-only values are ignored.
+
+Add the license key to `appsettings.json` using the IdentityServer-specific key:
+
+```json title="appsettings.json"
+{
+  "Duende": {
+    "IdentityServer": {
+      "LicenseKey": "eyJhbG..."
+    }
+  }
+}
+```
+
+Or use the shorter key:
+
+```json title="appsettings.json"
+{
+  "Duende": {
+    "LicenseKey": "eyJhbG..."
+  }
+}
+```
+
+Because `IConfiguration` supports many providers, you can also supply the key via environment variables
+(for example, `Duende__IdentityServer__LicenseKey` or `Duende__LicenseKey`), Azure App Configuration, Azure Key Vault,
+or any other configuration source.
+
+:::note
+Loading the license key from configuration is not currently supported in Duende BFF.
 :::
 
 ### Startup

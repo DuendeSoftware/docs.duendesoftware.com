@@ -86,6 +86,41 @@ Top-level settings. Available directly on the `IdentityServerOptions` object.
 
   The allowed signature algorithms for client authentication using client assertions (`private_key_jwt`). The `alg` header of client assertions is validated against this collection, and the `token_endpoint_auth_signing_alg_values_supported` discovery property is populated with these values. Defaults to `[RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384, ES512]`. If set to an empty collection, all algorithms are allowed but `token_endpoint_auth_signing_alg_values_supported` will not be set.
 
+- **`LicenseKey`**
+
+  The license key for Duende IdentityServer. Set this property to the content of your license key file.
+
+  If you do not set `LicenseKey` in code, IdentityServer automatically reads it from `IConfiguration` at startup.
+  It checks the following configuration keys in order, using the first non-empty value it finds:
+
+  1. `Duende:IdentityServer:LicenseKey`
+  2. `Duende:LicenseKey`
+
+  Whitespace is trimmed, and empty or whitespace-only values are ignored. This means you can supply the license key via `appsettings.json`,
+  environment variables, Azure Key Vault, or any other [configuration provider](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/)
+  without writing any code.
+
+  See the [licensing documentation](/general/licensing.md#license-key) for all supported approaches.
+
+- **`StrictClientAssertionAudienceValidation`**
+
+  When using [private key JWT](/identityserver/tokens/client-authentication.md#private-key-jwts)
+  client authentication, there is a theoretical vulnerability where a relying party trusting
+  multiple OpenID Providers could be attacked if one of those providers is malicious or compromised.
+  The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an explicit
+  `typ` header in the authentication JWT.
+
+  Setting this flag to `true` strictly validates that the audience is equal to the issuer and
+  validates the token's `typ` header, as specified in
+  [RFC 7523 bis](https://datatracker.ietf.org/doc/draft-ietf-oauth-rfc7523bis/). Defaults to
+  `false`.
+
+  When this flag is `false`, validation behavior is determined based on the `typ` header being
+  present. When the token sets the `typ` header to `client-authentication+jwt`, IdentityServer
+  assumes the client's intention is to apply strict audience validation. If `typ` is not present,
+  [default audience validation](/identityserver/apis/aspnetcore/jwt.md#adding-audience-validation)
+  is used.
+
 ## Key management
 
 Automatic key management settings. Available on the `KeyManagement` property of the `IdentityServerOptions` object.
@@ -292,6 +327,21 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 ```csharp
 options.Discovery.CustomEntries.Add("my_custom_endpoint", "~/custom");
 ```
+
+- **`EnableDiscoveryDocumentCache`**
+
+  Enables caching of the discovery document response. In large deployments where many concurrent
+  users consume the [discovery endpoint](/identityserver/reference/v8/endpoints/discovery.md) to
+  retrieve metadata about your IdentityServer, enabling this cache can increase throughput.
+  Defaults to `false`.
+
+  Keep the cache duration low if you use the `CustomEntries` element on the discovery document or
+  implement a custom `IDiscoveryResponseGenerator`.
+
+- **`DiscoveryDocumentCacheDuration`**
+
+  The duration for which the discovery document is cached when `EnableDiscoveryDocumentCache` is
+  `true`. Defaults to 1 minute.
 
 ## Authentication
 
@@ -556,7 +606,7 @@ User interaction settings, including urls for pages in the UI, names of paramete
   The collection of OIDC prompt modes supported and that will be published in discovery. By
   default, this includes all values in `Constants.SupportedPromptModes`. If the
   `CreateAccountUrl` option is set, then the "create" value is also included. If additional
-  prompt values are added, a customized [`IAuthorizeInteractionResponseGenerator"`](/identityserver/ui/custom.md) is also required to handle those values.
+  prompt values are added, a customized [`IAuthorizeInteractionResponseGenerator`](/identityserver/ui/custom.md) is also required to handle those values.
 
 ## Caching
 
@@ -737,7 +787,7 @@ Settings for [server-side sessions](/identityserver/ui/server-side-sessions/inde
 - **`InvalidRedirectUriPrefixes`**
 
   Collection of URI scheme prefixes that should never be used as custom URI
-  schemes in the `redirect_uri` passed to tha authorize endpoint or the
+  schemes in the `redirect_uri` passed to the authorize endpoint or the
   `post_logout_redirect_uri` passed to the end_session endpoint. Defaults to
   _["javascript:", "file:", "data:", "mailto:", "ftp:", "blob:", "about:",
   "ssh:", "tel:", "view-source:", "ws:", "wss:"]_.
@@ -787,37 +837,3 @@ Demonstration of Proof-of-Possession settings. Available on the `DPoP` property 
 
   Maximum size of diagnostic data log message chunks in kilobytes. Defaults to 8160 bytes. 8 KB is a conservative limit for the max size of a log message that is imposed by some logging tools.
   We take 32 bytes less than that to allow for additional formatting of the log message.
-
-## Preview Features
-
-Preview Features settings. Available on the `Preview` property of the `IdentityServerOptions` object.
-
-:::note
-Duende IdentityServer may ship preview features, which can be configured using preview options.
-Note that preview features can be removed and may break in future releases.
-:::
-
-#### Discovery Document Cache
-
-In large deployments of Duende IdentityServer, where a lot of concurrent users attempt to
-consume the [discovery endpoint](/identityserver/reference/v8/endpoints/discovery.md) to retrieve
-metadata about your IdentityServer, you can increase throughput by enabling the
-discovery document cache preview using the _`EnableDiscoveryDocumentCache`_ flag.
-This will cache discovery document information for the duration specified in the
-_`DiscoveryDocumentCacheDuration`_ option.
-
-It's best to keep the cache time low if you use the _`CustomEntries`_ element on the
-discovery document or implement a custom _`IDiscoveryResponseGenerator`_.
-
-#### Strict Audience Validation
-
-When using [_private key JWT_](/identityserver/tokens/client-authentication.md#private-key-jwts),
-there is a theoretical vulnerability where a Relying Party trusting multiple OpenID Providers
-could be attacked if one of the OpenID Providers is malicious or compromised.
-
-The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
-explicit `typ` header in the authentication JWT.
-
-You can [enable strict audience validation in Duende IdentityServer](/identityserver/tokens/client-authentication.md#strict-audience-validation)
-using the _`StrictClientAssertionAudienceValidation`_ flag, which strictly validates that
-the audience is equal to the issuer and validates the token's `typ` header.

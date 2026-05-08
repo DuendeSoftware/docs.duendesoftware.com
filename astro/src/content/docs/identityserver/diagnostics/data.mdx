@@ -650,6 +650,8 @@ Diagnostics data is written to logs in one or more chunks containing data format
           "ShowTokenEndpointAuthenticationMethods":true,
           "ExpandRelativePathsInCustomEntries":true,
           "ResponseCacheInterval":null,
+          "EnableDiscoveryDocumentCache":false,
+          "DiscoveryDocumentCacheDuration":"00:01:00",
           "CustomEntries":{
 
           }
@@ -911,11 +913,7 @@ Diagnostics data is written to logs in one or more chunks containing data format
           "HS384",
           "HS512"
         ],
-        "Preview":{
-          "EnableDiscoveryDocumentCache":false,
-          "StrictClientAssertionAudienceValidation":false,
-          "DiscoveryDocumentCacheDuration":"00:01:00"
-        },
+        "StrictClientAssertionAudienceValidation":false,
         "Diagnostics":{
           "LogFrequency":"00:10:00",
           "ChunkSize":8160
