@@ -46,7 +46,7 @@ This feature is part of the [Duende IdentityServer Business and Enterprise Editi
 ### Configuration
 
 Automatic Key Management is configured by the options in the `KeyManagement`
-property on the [`IdentityServerOptions`](/identityserver/reference/options.md#key-management).
+property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.md#key-management).
 
 ### Managed Key Lifecycle
 
@@ -209,7 +209,7 @@ loading and rotation of keys.
 
 The automatic key management feature can be disabled by setting the `Enabled`
 flag to `false` on the `KeyManagement` property of
-[`IdentityServerOptions`](/identityserver/reference/options.md#key-management):
+[`IdentityServerOptions`](/identityserver/reference/v8/options.md#key-management):
 
 ```csharp
 // Program.cs
@@ -268,7 +268,7 @@ Console.WriteLine($"Certificate saved to {name}.pfx");
 
 ## Adding Keys
 
-Signing keys are added with the [`AddSigningCredential`](/identityserver/reference/di.md#signing-keys) configuration
+Signing keys are added with the [`AddSigningCredential`](/identityserver/reference/v8/di.md#signing-keys) configuration
 method:
 
 ```csharp

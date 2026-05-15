@@ -40,7 +40,7 @@ client.
 
 Clients that wish to be notified must have the `FrontChannelLogoutUri` configuration value set.
 IdentityServer tracks which clients the user has signed in to, and provides an API called `GetLogoutContextAsync` on
-the [IIdentityServerInteractionService](/identityserver/reference/services/interaction-service.md#iidentityserverinteractionservice-apis).
+the [IIdentityServerInteractionService](/identityserver/reference/v8/services/interaction-service.md#iidentityserverinteractionservice-apis).
 This API returns a `LogoutRequest` object with a `SignOutIFrameUrl` property that your logged out page must render into
 an `<iframe>`.
 
@@ -55,7 +55,7 @@ IdentityServer will automatically use this service when your logout page removes
 call to `HttpContext.SignOutAsync`.
 
 Clients that wish to be notified must have
-the [BackChannelLogoutUri](/identityserver/reference/models/client.md#authentication--session-management) configuration
+the [BackChannelLogoutUri](/identityserver/reference/v8/models/client.md#authentication--session-management) configuration
 value set.
 
 #### Implementing Back-channel Logout In .NET Applications
@@ -68,7 +68,7 @@ is [already implemented](/bff/fundamentals/session/management/back-channel-logou
 Back-channel logout notifications are logout tokens as specified
 by [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html#logouttoken).
 Beginning in v6.3, IdentityServer sets the `typ` header of the logout token to `logout+jwt` to comply with the final
-version of the specification. The [`LogoutTokenJwtType` option](/identityserver/reference/options.md#main) can override
+version of the specification. The [`LogoutTokenJwtType` option](/identityserver/reference/v8/options.md#main) can override
 this behavior.
 
 ### Browser-based JavaScript Clients

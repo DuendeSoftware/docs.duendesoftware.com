@@ -66,7 +66,7 @@ handler's [ClaimAction](https://docs.microsoft.com/en-us/dotnet/API/microsoft.as
 infrastructure, or by
 using [claims transformation](https://docs.microsoft.com/en-us/dotnet/API/microsoft.aspnetcore.authentication.iclaimstransformation?view=aspnetcore-7.0).
 For example, if you add a [claim](/identityserver/fundamentals/claims.md) to
-the [userinfo endpoint](/identityserver/reference/endpoints/userinfo.md) at IdentityServer that you would like to include
+the [userinfo endpoint](/identityserver/reference/v8/endpoints/userinfo.md) at IdentityServer that you would like to include
 in the */bff/user* endpoint, you need to add a corresponding ClaimAction in the BFF's OpenID Connect Handler to include
 the claim in the BFF's session.
 

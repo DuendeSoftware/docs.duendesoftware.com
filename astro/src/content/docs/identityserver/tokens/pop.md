@@ -195,8 +195,8 @@ tokens) that they are bound to.
 
 DPoP is something a client can use dynamically with no configuration in IdentityServer, but you can configure it as
 required.
-This is a per-client [setting](/identityserver/reference/models/client.md#dpop) in your IdentityServer.
-There are additional client and [global](/identityserver/reference/options.md#dpop) DPoP settings to control the
+This is a per-client [setting](/identityserver/reference/v8/models/client.md#dpop) in your IdentityServer.
+There are additional client and [global](/identityserver/reference/v8/options.md#dpop) DPoP settings to control the
 behavior.
 
 ```csharp

@@ -109,7 +109,7 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     needs an implementation of this interface.
     
     You can either use the Entity Framework Core-based implementation, or implement
-    the interface yourself. See [the IClientConfigurationStore reference](/identityserver/reference/stores/index.md)
+    the interface yourself. See [the IClientConfigurationStore reference](/identityserver/reference/v8/stores/index.md)
     for more details. If you wish to use the built-in implementation, install its NuGet
     package and add it to the ASP.NET Core service provider.
 
@@ -163,7 +163,7 @@ and configure the store implementation.
     needs an implementation of this interface.
 
     You can either use the Entity Framework Core-based implementation, or implement
-    the interface yourself. See [the IClientConfigurationStore reference](/identityserver/reference/stores/index.md)
+    the interface yourself. See [the IClientConfigurationStore reference](/identityserver/reference/v8/stores/index.md)
     for more details. If you wish to use the built-in implementation, install its NuGet
     package and add it to the ASP.NET Core service provider.
 
@@ -192,7 +192,7 @@ and configure the store implementation.
 
 ### Adding the Registration Endpoint to the Discovery Document
 
-By default, the Dynamic Client Registration (DCR) endpoint is not included in the [discovery document](/identityserver/reference/endpoints/discovery.md) of Duende IdentityServer.
+By default, the Dynamic Client Registration (DCR) endpoint is not included in the [discovery document](/identityserver/reference/v8/endpoints/discovery.md) of Duende IdentityServer.
 
 To include it, change the Discovery Document options when registering IdentityServer in the service collection:
 
@@ -263,7 +263,7 @@ authentication scheme and an authorization policy that requires a particular
 scope to be present in the JWTs. You could choose any name for the scope that
 gives access to the Configuration APIs. Let's use the name
 `IdentityServer.Configuration` for this example. You would then define the
-`IdentityServer.Configuration` scope as an [ApiScope](/identityserver/reference/models/api-scope.md) in your
+`IdentityServer.Configuration` scope as an [ApiScope](/identityserver/reference/v8/models/api-scope.md) in your
 IdentityServer and allow the appropriate clients to access it.
 
 An automated process running in a CI pipeline could be configured as an OAuth client
@@ -301,7 +301,7 @@ The registration endpoint is invoked by making an HTTP POST request to the `/con
 with a JSON payload containing metadata describing the desired client as described in [RFC 7591](https://datatracker.ietf.org/doc/rfc7591/)
 and [OpenID Connect Dynamic Client Registration 1.0](https://openid.net/specs/openid-connect-registration-1_0.html).
 
-The supported metadata properties are listed in the reference section on the [`DynamicClientRegistrationRequest` model](/identityserver/reference/dcr/models.md#dynamicclientregistrationrequest).
+The supported metadata properties are listed in the reference section on the [`DynamicClientRegistrationRequest` model](/identityserver/reference/v8/dcr/models.md#dynamicclientregistrationrequest).
 A mixture of standardized and IdentityServer-specific properties are supported. Most standardized properties that
 are applicable to the client credentials or code flow grants are supported.
 
@@ -346,7 +346,7 @@ the original request, the claims principal that made the request, and a dictiona
 pass state between customized steps. Each step should update the client in the context and return an `IStepResult` to
 indicate success or failure.
 
-For more details, see the [reference section on DCR validation](/identityserver/reference/dcr/validation.md).
+For more details, see the [reference section on DCR validation](/identityserver/reference/v8/dcr/validation.md).
 
 ### Processing
 
@@ -354,11 +354,11 @@ The request processor can be customized by implementing the `IDynamicClientRegis
 or by extending the default `DynamicClientRegistrationRequestProcessor`. The default request processor contains virtual
 methods that allow you to override (part of) its functionality.
 
-For more details, see the [reference section on DCR request processing](/identityserver/reference/dcr/processing.md).
+For more details, see the [reference section on DCR request processing](/identityserver/reference/v8/dcr/processing.md).
 
 ### Response Generation
 
 To customize the HTTP responses of the Configuration API, you can implement the `IDynamicClientRegistrationResponseGenerator`
 interface, or extend the default `DynamicClientRegistrationResponseGenerator`.
 
-For more details, see the [reference section on DCR response generation](/identityserver/reference/dcr/response.md).
+For more details, see the [reference section on DCR response generation](/identityserver/reference/v8/dcr/response.md).
