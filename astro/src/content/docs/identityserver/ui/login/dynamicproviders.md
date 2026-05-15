@@ -19,8 +19,8 @@ This feature is part of the [Duende IdentityServer Enterprise Edition](https://d
 ## Dynamic Identity Providers
 
 Authentication handlers for external providers are typically added into your IdentityServer using `AddAuthentication()`,
-`AddOpenIdConnect()`, `AddSaml2()`, and other helper methods. This is fine for a handful of schemes, but becomes harder
-to manage if you have too many of them.
+`AddOpenIdConnect()`, `AddSamlServiceProvider()`, and other helper methods. This is fine for a handful of schemes,
+but becomes harder to manage if you have too many of them.
 Additionally, you'd have to re-run your startup code for new authentication handlers to be picked up by ASP.NET Core.
 
 The authentication handler architecture in ASP.NET Core was not designed to have many statically registered authentication
@@ -41,6 +41,36 @@ There are two store implementations provided by Duende IdentityServer:
 
 You could also implement your own store based on the [`IIdentityProviderStore` interface](/identityserver/reference/v8/stores/idp-store.md).
 
+If your custom store supports custom derived `IdentityProvider` types (registered via `AddDynamicProvider` or `AddProviderType`),
+inject `IIdentityProviderFactory` and call its `Create` method on each `IdentityProvider` you load from your backing store.
+This converts the base model into the correct derived type (e.g., `OidcProvider`, `YourCustomProvider`) using the registered copy constructor:
+
+```csharp title="MyCustomIdentityProviderStore.cs"
+public class MyCustomIdentityProviderStore : IIdentityProviderStore
+{
+    private readonly IIdentityProviderFactory _factory;
+
+    public MyCustomIdentityProviderStore(IIdentityProviderFactory factory)
+    {
+        _factory = factory;
+    }
+
+    public async Task<IdentityProvider?> GetBySchemeAsync(string scheme, CancellationToken ct)
+    {
+        var baseModel = await LoadFromBackingStore(scheme, ct);
+        if (baseModel == null) return null;
+
+        // Converts to the correct derived type (e.g., OidcProvider, YourCustomProvider)
+        // based on the provider's Type property. Returns null if the type is unrecognized.
+        return _factory.Create(baseModel);
+    }
+
+    // ...
+}
+```
+
+`IIdentityProviderFactory` is automatically registered in the service container by IdentityServer.
+
 The configuration data for the OIDC provider is used to assign the configuration on the ASP.NET
 Core [OpenID Connect Options](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectoptions) class,
 much like you would if you were to statically configure the options when using `AddOpenIdConnect()`.
@@ -51,8 +81,9 @@ properties and how they are mapped to the options.
 :::tip[Consider caching dynamic identity providers]
 Like other configuration data in IdentityServer, by default the dynamic provider configuration is loaded from the store
 on every request unless caching is enabled.
-If you use a custom store, there is an [extension method to enable caching](/identityserver/data/configuration.md#caching-configuration-data).
-If you use the EF stores, there is a general helper [to enable caching for all configuration data](/identityserver/data/ef.md#enabling-caching-for-configuration-store).
+
+* If you use a custom store, there is an [extension method to enable caching](/identityserver/data/configuration.md#caching-configuration-data).
+* If you use the EF stores, there is a general helper [to enable caching for all configuration data](/identityserver/data/ef.md#enabling-caching-for-configuration-store).
 :::
 
 Here's an example of adding a dynamic provider to an IdentityServer instance using the in-memory store:
@@ -75,7 +106,8 @@ builder.Services
     })
 ```
 
-The identity provider store only provides an interface to query dynamic providers and does not provide any methods to add, update, or delete identity providers.
+The identity provider store only provides an interface to query dynamic providers and does not provide any methods to add,
+update, or delete identity providers.
 For custom store implementations, this means you'll need to implement a mechanism for populating the store with identity providers.
 
 If you're using the Entity Framework Core identity provider store from the `Duende.IdentityServer.EntityFramework.Storage` NuGet package,
@@ -123,15 +155,15 @@ containing the dynamic providers.
 public interface IIdentityProviderStore
 {
     /// <summary>
-    /// Gets the display names and scheme names of all registered identity providers.
+    /// Gets all identity provider names.
     /// </summary>
-    Task<IReadOnlyCollection<IdentityProviderName>> GetAllSchemeNamesAsync(CancellationToken ct);
+    Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync();
 
     // other APIs omitted
 }
 ```
 
-The `GetAllSchemeNamesAsync` API returns a read-only collection of `IdentityProviderName` objects, which contain the scheme name and
+The `GetAllSchemeNamesAsync()` API returns a list of `IdentityProviderName` objects, which contain the scheme name and
 display name of the provider and can be used on the login page, or in other places where you need this information.
 
 In the [IdentityServer Quickstart UI](https://github.com/DuendeSoftware/products/tree/main/identity-server/templates/src/UI/Pages/Account/Login/Index.cshtml.cs#l193-l210),
@@ -149,7 +181,7 @@ var providers = schemes
         AuthenticationScheme = x.Name
     }).ToList();
 
-var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync(HttpContext.RequestAborted))
+var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
     .Where(x => x.Enabled)
     .Select(x => new ExternalProvider
     {
@@ -160,15 +192,16 @@ var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync(HttpCo
 providers.AddRange(dynamicSchemes);
 ```
 
-The above code will query the identity provider store for all statically registered authentication schemes and merge them with (enabled) dynamic providers.
+The above code will query the identity provider store for all statically registered authentication schemes and merge
+them with (enabled) dynamic providers.
 
 :::note
-The dynamic identity provider store API is deliberately separate from the `IAuthenticationSchemeProvider` provided by ASP.NET Core, which returns the
-list of statically configured providers (from `Startup.cs`).
+The dynamic identity provider store API is deliberately separate from the `IAuthenticationSchemeProvider` provided by ASP.NET Core,
+which returns the list of statically configured providers (from `Startup.cs`).
 
-This split allows the developer to have more control over the customization on the login page. For example, there might be hundreds or
-thousands on dynamic providers, and therefore you would not want them displayed on the login page. At the same time, you might have a
-few social providers statically configured that you would want to display.
+This split allows the developer to have more control over the customization on the login page. For example, there might 
+be hundreds or thousands on dynamic providers, and therefore you would not want them displayed on the login page.
+At the same time, you might have a few social providers statically configured that you would want to display.
 :::
 
 ## Callback Paths
@@ -312,15 +345,18 @@ We have two samples that show how to use non-OIDC authentication handlers with d
 * Adding the [WS-Federation protocol type](/identityserver/samples/ui.mdx#adding-other-protocol-types-to-dynamic-providers)
 * Adding the [Saml2 protocol type](/identityserver/samples/ui.mdx#using-sustainsyssaml2-with-dynamic-providers), using the [Sustainsys.Saml2](https://saml2.sustainsys.com/) open source library
 
-In this section, we'll look at a minimal example of how to add other authentication handlers, such as the `GoogleHandler`, to dynamic identity providers,
+In this section, we'll look at a minimal example of how to add other authentication handlers, such as the `GoogleHandler`,
+to dynamic identity providers.
 
-To register other authentication handlers, you can use the `AddProviderType<T, TOptions, TIdentityProvider>(string scheme)` method on the `DynamicProviderOptions` object,
-where `T` is the authentication handler type, `TOptions` is the options type for that particular handler, and `TIdentityProvider` is the identity provider type that models the dynamic provider.
+The recommended way to register other authentication handlers is the `AddDynamicProvider<THandler, TOptions, TIdentityProvider, TConfigureOptions>` 
+extension method on the IdentityServer builder. It takes care of provider type mapping, configure options registration,
+and handler service registration in a single call.
 
 The authentication handler type and options type will typically be provided by the authentication provider itself.
 For example, the `GoogleHandler` and `GoogleOptions` types are provided by the `Microsoft.AspNetCore.Authentication.Google` NuGet package.
 `TIdentityProvider` will typically be a model class that maps to the identity provider data in the database
-and can either be IdentityServer's [`IdentityProvider`](/identityserver/reference/v8/models/idp.md) class, or a custom type provided and implemented by you.
+and can either be IdentityServer's [`IdentityProvider`](/identityserver/reference/v8/models/idp.md) class, or a custom
+type provided and implemented by you.
 
 Let's add Google authentication support to dynamic identity providers in IdentityServer!
 
@@ -346,6 +382,11 @@ public class GoogleIdentityProvider : IdentityProvider
     {
     }
 
+    public GoogleIdentityProvider(IdentityProvider other)
+        : base(ProviderType, other)
+    {
+    }
+
     public string? ClientId
     {
         get => this["ClientId"];
@@ -360,30 +401,17 @@ public class GoogleIdentityProvider : IdentityProvider
 }
 ```
 
-### 2. Register Dynamic Identity Provider Type
+:::note
+The copy constructor (`GoogleIdentityProvider(IdentityProvider other)`) is required.
+IdentityServer uses it to construct the correct derived type when loading providers from the store
+(for example, the Entity Framework store stores all providers as base `IdentityProvider` entities
+and reconstructs the derived type at runtime).
+:::
 
-In the host startup, you can register the handler and identity provider type. This registration provides IdentityServer
-with a way to map the dynamic identity provider configuration type created in the previous step, to an authentication handler type
-in ASP.NET Core.
+### 2. Configure Authentication Handler Options
 
-```csharp title="Program.cs" {6}
-builder.Services
-    .AddIdentityServer(options =>
-    {
-        // ...
-
-        options.DynamicProviders
-            .AddProviderType<GoogleHandler, GoogleOptions, GoogleIdentityProvider>(
-                GoogleIdentityProvider.ProviderType);
-    })
-```
-
-### 3. Configure Authentication Handler Options
-
-With the dynamic identity provider type mapped to an ASP.NET Core authentication handler type, you'll need to make sure
-an instance of the ASP.NET Core authentication handler options can be created based on a particular dynamic provider configuration.
-
-To do so, you can use the `ConfigureAuthenticationOptions<TOptions, TIdentityProvider>` base class. In our Google example:
+You need to implement a class that maps from your identity provider model to the authentication handler options.
+Derive from `ConfigureAuthenticationOptions<TOptions, TIdentityProvider>`:
 
 ```csharp title="GoogleDynamicConfigureOptions.cs"
 class GoogleDynamicConfigureOptions
@@ -410,35 +438,19 @@ class GoogleDynamicConfigureOptions
 }
 ```
 
-You will need to register this type in the service container at startup:
+### 3. Register With AddDynamicProvider
 
-```csharp title="Program.cs"
-builder.Services.ConfigureOptions<GoogleDynamicConfigureOptions>();
-```
-
-Note that for the `GoogleHandler` to work, you'll also need to register its `OAuthPostConfigureOptions<>`
-to make sure data protection and state data formatters are registered. While this is an implementation detail of the
-Google authentication handler, a similar implementation detail may exist for the custom dynamic provider type you are building.
-
-```csharp title="Program.cs"
-builder.Services.ConfigureOptions<OAuthPostConfigureOptions<GoogleOptions, GoogleHandler>>();
-```
-
-### 4. Use A Custom IdentityProvider
-
-With these building blocks in place, you can start using a custom identity provider type with Duende IdentityServer
-dynamic identity providers!
+Use the `AddDynamicProvider` extension method on the IdentityServer builder to register everything in one call.
+This registers the provider type mapping, the configure options, and the authentication handler:
 
 ```csharp title="Program.cs"
 builder.Services
     .AddIdentityServer(options =>
     {
         // ...
-
-        options.DynamicProviders
-            .AddProviderType<GoogleHandler, GoogleOptions, GoogleIdentityProvider>(
-                GoogleIdentityProvider.ProviderType);
     })
+    .AddDynamicProvider<GoogleHandler, GoogleOptions, GoogleIdentityProvider, GoogleDynamicConfigureOptions>(
+        GoogleIdentityProvider.ProviderType)
     .AddInMemoryIdentityProviders(new []
     {
         new GoogleIdentityProvider
@@ -451,3 +463,18 @@ builder.Services
         }
     })
 ```
+
+`AddDynamicProvider` handles:
+* Registering the provider type mapping (`AddProviderType`)
+* Registering the configure options as `IConfigureOptions<TOptions>`
+* Registering the authentication handler in DI (via `TryAddTransient`)
+
+:::note
+For this specific `GoogleHandler` to work, you'll also need to register its `OAuthPostConfigureOptions<>`
+to make sure data protection and state data formatters are registered. While this is an implementation detail of the
+Google authentication handler, a similar implementation detail may exist for the custom dynamic provider type you are building.
+
+```csharp title="Program.cs"
+builder.Services.ConfigureOptions<OAuthPostConfigureOptions<GoogleOptions, GoogleHandler>>();
+```
+:::
