@@ -626,7 +626,7 @@ User Management includes several improvements to the underlying WebAuthn impleme
 
 Attestation is the mechanism by which an authenticator proves its provenance: it cryptographically signs the new credential with a key that is specific to the authenticator model, allowing the server to verify that the credential was created by a genuine, known device.
 
-TPM (Trusted Platform Module) attestation is the format used by Windows Hello and other platform authenticators backed by a hardware security chip. User Management now validates TPM attestation statements, which means that when `AttestationConveyancePreference` is set to `"direct"` or `"enterprise"`, TPM-attested credentials are fully verified rather than accepted without attestation checks.
+TPM (Trusted Platform Module) attestation is the format used by Windows Hello and other platform authenticators backed by a hardware security chip. User Management validates TPM attestation statements, which means that when `AttestationConveyancePreference` is set to `"direct"` or `"enterprise"`, TPM-attested credentials are fully verified rather than accepted without attestation checks.
 
 This matters when you need to enforce an allowlist of approved authenticator models, for example in enterprise environments where only corporate-managed devices with a TPM should be permitted to register passkeys.
 
@@ -634,7 +634,7 @@ This matters when you need to enforce an allowlist of approved authenticator mod
 
 WebAuthn credentials can use different cryptographic algorithms, identified by COSE algorithm identifiers. RS1 (`RSASSA-PKCS1-v1_5` with SHA-1) is an older RSA signature algorithm that some legacy authenticators and security keys use.
 
-User Management now includes a verifier for RS1 signatures. This broadens compatibility with older hardware security keys that do not support the preferred ES256 (ECDSA with P-256) or RS256 (RSASSA-PKCS1-v1_5 with SHA-256) algorithms.
+User Management includes a verifier for RS1 signatures. This broadens compatibility with older hardware security keys that do not support the preferred ES256 (ECDSA with P-256) or RS256 (RSASSA-PKCS1-v1_5 with SHA-256) algorithms.
 
 :::note
 RS1 uses SHA-1, which is considered cryptographically weak for new designs. If your security policy requires strong algorithms only, restrict `SupportedAlgorithms` to exclude RS1:
@@ -650,7 +650,7 @@ Omitting RS1 from `SupportedAlgorithms` prevents registration of RS1-based crede
 
 Each WebAuthn ceremony begins with the server issuing a cryptographic challenge. Challenges are stored server-side and expire after `ChallengeTimeout` (default: 5 minutes). Expired challenges that were never completed (for example, because the user abandoned the browser prompt) previously accumulated in the challenge store.
 
-User Management now automatically removes expired challenges. This keeps the challenge store lean and prevents unbounded growth in long-running applications with high registration or authentication traffic.
+User Management automatically removes expired challenges. This keeps the challenge store lean and prevents unbounded growth in long-running applications with high registration or authentication traffic.
 
 No configuration is required. Cleanup runs as part of normal challenge lifecycle management.
 
@@ -658,7 +658,7 @@ No configuration is required. Cleanup runs as part of normal challenge lifecycle
 
 When the server validates a completed WebAuthn ceremony, it compares the challenge returned by the authenticator against the challenge it originally issued. A naive string or byte comparison can leak timing information: an attacker who can measure response times precisely might infer how many bytes matched before the comparison failed.
 
-User Management now uses a constant-time comparison for challenge validation. The comparison always takes the same amount of time regardless of how many bytes match, eliminating this timing side-channel.
+User Management uses a constant-time comparison for challenge validation. The comparison always takes the same amount of time regardless of how many bytes match, eliminating this timing side-channel.
 
 This is a defense-in-depth measure. WebAuthn challenges are already large (32 bytes of random data by default) and single-use, so the practical exploitability of a timing side-channel is very low. Constant-time comparison removes it entirely.
 
