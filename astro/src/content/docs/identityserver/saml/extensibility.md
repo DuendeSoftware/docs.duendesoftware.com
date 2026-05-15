@@ -1,7 +1,7 @@
 ---
 title: "SAML Extensibility"
 description: Extensibility interfaces for customizing SAML 2.0 Identity Provider behavior, including NameID generation, SSO response generation, metadata, AuthnRequest validation, interaction, logout, and sign-in state storage.
-date: 2026-03-02
+date: 2026-05-15
 sidebar:
   label: Extensibility
   order: 40
@@ -18,61 +18,84 @@ and can be replaced with custom implementations.
 
 ---
 
-## ISamlInteractionService
+## SAML Authentication Context
 
+When IdentityServer processes a SAML `AuthnRequest`, it stores the SAML-specific request details
+alongside the standard authorization context. Your login UI can access this information by calling
+`GetAuthenticationContextAsync` on `IIdentityServerInteractionService` and pattern-matching the
+result to `SamlAuthenticationContext`.
 
-TODO docs: `ISamlInteractionService` is being replaced. In the current implementation, SAML-specific request context is accessed by calling `GetAuthenticationContextAsync` on `IIdentityServerInteractionService` and pattern-matching the result to `SamlAuthenticationContext`. The concepts below still apply, but the access pattern is changing.
-
-
-To access SAML-specific request details from your login UI, call `GetAuthenticationContextAsync` on `IIdentityServerInteractionService`. The returned context can be pattern-matched to `SamlAuthenticationContext` for SAML requests or `AuthorizationRequest` for OIDC requests. This is **not required for standard login flows** — your existing login pages work with SAML automatically because IdentityServer redirects to your login page with a `returnUrl` regardless of protocol.
+This is not required for standard login flows. Your existing login pages work with SAML
+automatically because IdentityServer redirects to your login page with a `returnUrl` regardless of
+protocol. You only need this when your login UI needs to behave differently based on SAML-specific
+request details, such as enforcing MFA when the SP requests a specific `AuthnContext` class.
 
 ```csharp
-public interface ISamlInteractionService
-{
-    Task<SamlAuthenticationRequest?> GetAuthenticationRequestContextAsync(
-        CancellationToken ct = default);
+// LoginModel.cshtml.cs
+var context = await _interaction.GetAuthenticationContextAsync(returnUrl);
 
-    Task StoreRequestedAuthnContextResultAsync(
-        bool requestedAuthnContextRequirementsWereMet,
-        CancellationToken ct = default);
+if (context is SamlAuthenticationContext samlContext)
+{
+    var sp = samlContext.ServiceProvider;
+    var requestedAuthnContext = samlContext.RequestedAuthnContext;
+    // Adjust authentication flow based on SP requirements
 }
 ```
 
-### When to Use
+`SamlAuthenticationContext` exposes the following properties:
 
-Access SAML-specific context from your login UI pages when you need to:
+* **`ServiceProvider`** (`SamlServiceProvider`): The SP that initiated the request. Use this to
+  display SP-specific branding or to apply SP-specific authentication policies.
+* **`IdP`** (`string?`): The IdP entity ID from the `Scoping` element, if the SP specified one.
+* **`LoginHint`** (`string?`): A login hint derived from the `NameID` in the `AuthnRequest`, if
+  present.
+* **`Tenant`** (`string?`): A tenant identifier extracted from `RequestedAuthnContext`, if present.
+* **`PromptModes`** (`IEnumerable<string>`): Derived from `ForceAuthn` and `IsPassive` flags in
+  the `AuthnRequest`.
+* **`RelayState`** (`string?`): The relay state parameter from the `AuthnRequest`.
+* **`IsIdpInitiated`** (`bool`): Whether this is an IdP-initiated SSO flow.
+* **`RequestedAuthnContext`** (`RequestedAuthnContext?`): The authentication context requirements
+  from the SP, if specified.
 
-* Display SAML-specific information about the requesting SP
-* Check the SP's `RequestedAuthnContext` requirements and adjust your authentication flow accordingly (e.g., enforce MFA when the SP requests a specific `AuthnContext` class)
-* Report back to IdentityServer whether the user's authentication met the SP's `RequestedAuthnContext` requirements
+If the SP specified a `RequestedAuthnContext`, you can report back whether the user's
+authentication met those requirements by calling `StoreRequestedAuthnContextResultAsync` on the
+context object:
 
-For standard login, consent, and logout flows, no SAML-specific code is needed in your pages.
+```csharp
+// LoginModel.cshtml.cs
+// ... after authenticating the user
+if (context is SamlAuthenticationContext samlContext)
+{
+    await samlContext.StoreRequestedAuthnContextResultAsync(
+        requestedAuthnContextRequirementsWereMet: true);
+}
+```
 
 ---
 
 ## ISaml2SsoInteractionResponseGenerator
 
-`ISaml2SsoInteractionResponseGenerator` determines what interaction (login or error)
-is required during a SAML sign-in flow. After an `AuthnRequest` is received and validated,
-IdentityServer calls this interface to decide whether the user needs to be redirected to the login
-page or whether the flow can proceed directly to assertion generation.
+`ISaml2SsoInteractionResponseGenerator` determines what interaction (login or error) is required
+during a SAML sign-in flow. After an `AuthnRequest` is received and validated, IdentityServer
+calls this interface to decide whether the user needs to be redirected to the login page or
+whether the flow can proceed directly to assertion generation.
 
 The default implementation handles standard login flows. Override it when you need custom step-up
 authentication logic or any other non-standard interaction decision.
 
 ```csharp
+// ISaml2SsoInteractionResponseGenerator.cs
 public interface ISaml2SsoInteractionResponseGenerator
 {
-    Task<SamlInteractionResponse> ProcessInteractionAsync(
-        SamlServiceProvider sp,
-        AuthNRequest request,
+    Task<Saml2InteractionResponse> ProcessInteractionAsync(
+        ValidatedAuthnRequest request,
         CancellationToken ct = default);
 }
 ```
 
 ### When to Use
 
-Override this interface to customize the interaction flow for SAML sign-in requests. For example,
+Override this interface to customize the interaction flow for SAML sign-in requests, for example
 to implement custom step-up authentication logic.
 
 ### Registration
@@ -91,14 +114,15 @@ IdentityServer sends to SAML Service Providers when a user logs out. When a logo
 IdentityServer calls this service to determine which SPs should be notified and what messages to
 send them.
 
-The default implementation sends a SAML `LogoutRequest` to each SP that has a configured
-`SingleLogoutServiceUrl`. Override it to customize which SPs receive notifications or to modify
-the logout messages.
+The default implementation is `Saml2LogoutNotificationService`, which sends a SAML `LogoutRequest`
+to each SP that has a configured `SingleLogoutServiceUrl`. Override it to customize which SPs
+receive notifications or to modify the logout messages.
 
 ```csharp
+// ISamlLogoutNotificationService.cs
 public interface ISamlLogoutNotificationService
 {
-    Task<IEnumerable<ISamlFrontChannelLogout>> GetSamlFrontChannelLogoutsAsync(
+    Task<IReadOnlyCollection<OutboundSaml2Message>> GetSamlFrontChannelLogoutsAsync(
         LogoutNotificationContext context,
         CancellationToken ct);
 }
@@ -118,18 +142,219 @@ builder.Services.AddScoped<ISamlLogoutNotificationService, MySamlLogoutNotificat
 
 ---
 
+## ILogoutRequestValidator
+
+`ILogoutRequestValidator` validates incoming SAML `LogoutRequest` messages from Service Providers.
+It is called early in the SLO pipeline, before IdentityServer begins notifying other SPs.
+Validation ensures the request is well-formed, the SP is registered, and the signature is valid.
+
+The default implementation enforces signature requirements and checks SP registration. Override
+this interface to add custom business rules on top of the default validation.
+
+```csharp
+// ILogoutRequestValidator.cs
+public interface ILogoutRequestValidator
+{
+    Task<LogoutRequestValidationResult> ValidateAsync(
+        ValidatedLogoutRequest request,
+        CancellationToken ct);
+}
+```
+
+### When to Use
+
+Override `ILogoutRequestValidator` when you need to enforce custom rules on incoming
+`LogoutRequest` messages, such as restricting which SPs can initiate SLO or applying additional
+signature checks.
+
+### Registration
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ILogoutRequestValidator, MyLogoutRequestValidator>();
+```
+
+---
+
+## ISaml2SloResponseGenerator
+
+`ISaml2SloResponseGenerator` generates the final SAML `LogoutResponse` sent back to the SP that
+initiated the SLO flow. It is called after IdentityServer has notified all other SPs and collected
+their responses.
+
+The default implementation generates a success response when all SPs responded successfully, and a
+partial logout response when some SPs did not respond or returned errors. Override this interface
+to customize the response status or add custom response elements.
+
+```csharp
+// ISaml2SloResponseGenerator.cs
+public interface ISaml2SloResponseGenerator
+{
+    Task<Saml2FrontChannelResult> CreateSuccessResponse(
+        ValidatedLogoutRequest request,
+        CancellationToken ct);
+
+    Task<Saml2FrontChannelResult> CreatePartialLogoutResponse(
+        ValidatedLogoutRequest request,
+        CancellationToken ct);
+}
+```
+
+### When to Use
+
+Override `ISaml2SloResponseGenerator` when you need to customize the final `LogoutResponse` sent
+to the initiating SP, for example to include custom status details or to change how partial logout
+is reported.
+
+### Registration
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ISaml2SloResponseGenerator, MySloResponseGenerator>();
+```
+
+---
+
+## ISamlLogoutSessionStore
+
+`ISamlLogoutSessionStore` persists logout session state during the SLO flow. When IdentityServer
+initiates SLO, it creates a logout session that tracks which SPs are expected to respond and
+records their responses as they arrive. This state must survive across multiple HTTP requests (one
+per SP notification).
+
+The default implementation stores state in memory, which is suitable for development and
+single-server deployments. For production deployments with multiple servers, implement a custom
+store backed by a distributed cache or database.
+
+```csharp
+// ISamlLogoutSessionStore.cs
+public interface ISamlLogoutSessionStore
+{
+    Task StoreAsync(SamlLogoutSession session, CancellationToken ct);
+    Task<SamlLogoutSession?> GetByLogoutIdAsync(string logoutId, CancellationToken ct);
+    Task<bool> TryRecordResponseAsync(string requestId, string issuer, bool success, CancellationToken ct);
+    Task RemoveAsync(string logoutId, CancellationToken ct);
+}
+```
+
+* `StoreAsync`: stores a new logout session.
+* `GetByLogoutIdAsync`: retrieves a logout session by its logout ID; returns `null` if not found
+  or expired.
+* `TryRecordResponseAsync`: records a `LogoutResponse` for a previously stored request, looked up
+  by `InResponseTo` (the request ID). Returns `true` if the response was recorded, `false` if the
+  request ID was not found or the issuer did not match.
+* `RemoveAsync`: removes a logout session. Idempotent; does not throw if the session does not
+  exist.
+
+### When to Use
+
+Override `ISamlLogoutSessionStore` when:
+
+* You are running multiple server instances and need logout session state to be shared across them.
+* You want to store logout session state in a specific distributed cache (Redis, etc.) or database.
+* You need custom TTL or cleanup behavior for in-flight SLO sessions.
+
+### Registration
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ISamlLogoutSessionStore, MyDistributedSamlLogoutSessionStore>();
+```
+
+---
+
+## ISaml2FrontChannelLogoutRequestBuilder
+
+`ISaml2FrontChannelLogoutRequestBuilder` builds the outbound SAML `LogoutRequest` messages that
+IdentityServer sends to each SP during the SLO flow. It is called once per SP that needs to be
+notified, by `Saml2LogoutNotificationService`.
+
+The default implementation constructs a standards-compliant `LogoutRequest` including the user's
+`NameID` and session index. Override this interface to customize the logout request structure, for
+example to add custom extensions or to change how the `NameID` is derived.
+
+```csharp
+// ISaml2FrontChannelLogoutRequestBuilder.cs
+public interface ISaml2FrontChannelLogoutRequestBuilder
+{
+    Task<OutboundSaml2Message> BuildLogoutRequestAsync(
+        SamlServiceProvider serviceProvider,
+        string nameId,
+        string? nameIdFormat,
+        string sessionIndex,
+        string issuer,
+        CancellationToken ct);
+}
+```
+
+### When to Use
+
+Override `ISaml2FrontChannelLogoutRequestBuilder` when you need to customize the `LogoutRequest`
+messages sent to SPs during SLO, for example to include SP-specific extensions or to change the
+`NameID` format used in logout requests.
+
+### Registration
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ISaml2FrontChannelLogoutRequestBuilder, MyLogoutRequestBuilder>();
+```
+
+---
+
+## ISamlResourceResolver
+
+`ISamlResourceResolver` resolves the claim types that a SAML Service Provider is allowed to
+receive, based on its `AllowedScopes` and `RequestedClaimTypes` configuration. It is used during
+assertion generation to determine which claims are available for inclusion in the assertion. Note
+that `AllowedScopes` must contain only identity resource names; API resource scopes are not
+supported for SAML service providers.
+
+The default implementation (`DefaultSamlResourceResolver`) resolves claim types from the
+configured identity resource store based on the SP's `AllowedScopes`. Override this interface if
+you need custom resource resolution logic, for example to apply dynamic scope filtering or to load
+resources from a non-standard source.
+
+```csharp
+// ISamlResourceResolver.cs
+public interface ISamlResourceResolver
+{
+    Task<SamlResourceResolutionResult> ResolveRequestedClaimTypesAsync(
+        SamlServiceProvider sp,
+        CancellationToken ct);
+}
+```
+
+`SamlResourceResolutionResult` has a `Succeeded` property, a `ClaimTypes` list (populated on
+success), and an `Error` string (populated on failure).
+
+### When to Use
+
+Override `ISamlResourceResolver` when you need custom logic to determine which claim types are
+available for a given SP, beyond what the default scope-based resolution provides.
+
+### Registration
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ISamlResourceResolver, MyResourceResolver>();
+```
+
+---
+
 ## ISamlNameIdGenerator
 
 `ISamlNameIdGenerator` is responsible for generating the SAML `NameID` value included in
-assertions sent to Service Providers. The `NameID` identifies the subject of the assertion (typically
-the authenticated user) in a format the SP understands. It is called during assertion generation,
-after the user has authenticated and the requested `NameID` format has been resolved.
+assertions sent to Service Providers. The `NameID` identifies the subject of the assertion
+(typically the authenticated user) in a format the SP understands. It is called during assertion
+generation, after the user has authenticated and the requested `NameID` format has been resolved.
 
-The default implementation handles the most common formats: email address and
-unspecified. Register a custom implementation to support additional `NameID` formats or to derive
-the `NameID` value from non-standard claims.
+The default implementation handles the most common formats: email address and unspecified.
+Register a custom implementation to support additional `NameID` formats or to derive the `NameID`
+value from non-standard claims.
 
 ```csharp
+// ISamlNameIdGenerator.cs
 public interface ISamlNameIdGenerator
 {
     Task<NameIdGenerationResult> GenerateAsync(NameIdGenerationContext context, CancellationToken ct);
@@ -197,16 +422,17 @@ public class MyNameIdGenerator : ISamlNameIdGenerator
 
 `IIdpInitiatedSsoService` enables IdP-initiated SSO, a flow where the Identity Provider sends a
 SAML assertion to a Service Provider without first receiving an `AuthnRequest`. This is commonly
-used in application portal pages (e.g., a "My Apps" dashboard) where the user is already
+used in application portal pages (for example, a "My Apps" dashboard) where the user is already
 authenticated and clicks a tile to launch an SP application.
 
 The built-in endpoint `/saml/idp-initiated?spEntityId={entityId}` uses this service internally.
 You can also inject `IIdpInitiatedSsoService` directly into your own Razor Pages or controllers
 to generate and send the SAML response programmatically. Because this flow bypasses the normal
-SP-initiated request, **the caller is responsible for anti-forgery protection** (e.g., ensuring
+SP-initiated request, the caller is responsible for anti-forgery protection (for example, ensuring
 the request originates from a legitimate authenticated session).
 
 ```csharp
+// IIdpInitiatedSsoService.cs
 public interface IIdpInitiatedSsoService
 {
     Task<IdpInitiatedSsoResult> CreateResponseAsync(
@@ -228,7 +454,8 @@ Use `IIdpInitiatedSsoService` when:
 
 * You are building a portal page where authenticated users can launch SP applications with a single
   click, without the SP initiating the flow.
-* You need to pass a `relayState` value to the SP (e.g., a deep-link URL within the SP application).
+* You need to pass a `relayState` value to the SP (for example, a deep-link URL within the SP
+  application).
 * You want to trigger IdP-initiated SSO from custom application code rather than the built-in
   endpoint.
 
@@ -265,11 +492,12 @@ pipeline, after interaction is complete and the user's identity has been establi
 includes the SAML assertion with the subject, attributes, and conditions the SP expects.
 
 The default implementation produces a standards-compliant signed response. Override this interface
-when you need full control over the SAML response structure. For example, to add custom
-attributes, change signing behavior, or embed additional assertion elements required by a specific
-SP or federation.
+when you need full control over the SAML response structure, for example to add custom attributes,
+change signing behavior, or embed additional assertion elements required by a specific SP or
+federation.
 
 ```csharp
+// ISaml2SsoResponseGenerator.cs
 public interface ISaml2SsoResponseGenerator
 {
     Task<Saml2FrontChannelResult> CreateResponse(
@@ -309,17 +537,18 @@ keys to Service Providers and federation operators. SPs typically fetch this doc
 initial configuration to establish trust.
 
 The default implementation produces a standards-compliant metadata document from the configured
-`Saml2Options` and signing keys. Override this interface to add custom metadata elements
-such as organization information, contact details, additional key descriptors, or
-federation-specific extensions required by specific SPs or federation operators.
+`SamlOptions` and signing keys. Override this interface to add custom metadata elements such as
+organization information, contact details, additional key descriptors, or federation-specific
+extensions required by specific SPs or federation operators.
 
 ```csharp
+// ISaml2MetadataResponseGenerator.cs
 public interface ISaml2MetadataResponseGenerator
 {
     Task<Saml2MetadataResult> GenerateMetadataAsync(
         string issuer,
         IEnumerable<X509Certificate2> signingKeys,
-        Saml2Options options,
+        SamlOptions options,
         string baseUrl,
         CancellationToken ct);
 }
@@ -350,11 +579,12 @@ request is well-formed, the SP is registered, the signature is valid, and the re
 is permitted.
 
 The default implementation enforces signature requirements, checks SP registration, and validates
-ACS URLs. Override this interface to add custom business rules on top of the default validation.
-For example, restricting which SPs can request certain `AuthnContext` classes, enforcing IP-based
+ACS URLs. Override this interface to add custom business rules on top of the default validation,
+for example restricting which SPs can request certain `AuthnContext` classes, enforcing IP-based
 access controls, or applying time-of-day restrictions.
 
 ```csharp
+// IAuthnRequestValidator.cs
 public interface IAuthnRequestValidator
 {
     Task<AuthnRequestValidationResult> ValidateAsync(
@@ -367,8 +597,8 @@ public interface IAuthnRequestValidator
 
 Override `IAuthnRequestValidator` when:
 
-* You need to enforce custom business rules on incoming `AuthnRequest` messages beyond what the default
-  implementation checks.
+* You need to enforce custom business rules on incoming `AuthnRequest` messages beyond what the
+  default implementation checks.
 * You want to restrict which SPs can request specific `AuthnContext` classes.
 * You need to apply IP-based, time-based, or other contextual access controls at the request
   validation stage.
@@ -420,15 +650,16 @@ the callback after the user has authenticated. Because SAML sign-in involves a r
 login UI and back, the original request context (SP entity ID, ACS URL, relay state, etc.) must
 be stored somewhere durable for the duration of the interaction.
 
-The default implementation stores state in memory (suitable for development and testing).
-For production deployments, use the Entity Framework Core implementation that ships with
+The default implementation stores state in memory (suitable for development and testing). For
+production deployments, use the Entity Framework Core implementation that ships with
 IdentityServer, or implement a custom store backed by your own persistence layer.
 
-State is retained after a successful callback to allow browser retries (e.g., if the user
+State is retained after a successful callback to allow browser retries (for example, if the user
 navigates back). TTL-based expiry is the primary cleanup mechanism; `RemoveSigninRequestStateAsync`
 is called on explicit cleanup paths.
 
 ```csharp
+// ISamlSigninStateStore.cs
 public interface ISamlSigninStateStore
 {
     Task<StateId> StoreSigninRequestStateAsync(SamlAuthenticationState state, CancellationToken ct = default);
@@ -442,7 +673,8 @@ public interface ISamlSigninStateStore
 Override `ISamlSigninStateStore` when:
 
 * You need a custom persistence mechanism beyond the built-in in-memory or EF Core implementations.
-* You want to store sign-in state in a specific distributed cache (Redis, etc.) for your infrastructure.
+* You want to store sign-in state in a specific distributed cache (Redis, etc.) for your
+  infrastructure.
 * You need custom TTL or cleanup behavior for in-flight SSO requests.
 
 ### Registration

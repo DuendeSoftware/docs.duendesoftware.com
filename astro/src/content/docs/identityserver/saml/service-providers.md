@@ -1,7 +1,7 @@
 ---
 title: "SAML Service Provider Management"
 description: "How to register and manage SAML 2.0 Service Providers using ISamlServiceProviderStore for read-only lookup."
-date: 2026-03-02
+date: 2026-05-15
 sidebar:
   label: Service Providers
   order: 20
@@ -23,6 +23,7 @@ This interface is used for read-only lookup during request processing. Your stor
 `GetAllSamlServiceProvidersAsync` is used for bulk operations such as metadata generation or cache warming. It returns all registered SPs as an async stream.
 
 ```csharp
+// ISamlServiceProviderStore.cs
 public interface ISamlServiceProviderStore
 {
     Task<SamlServiceProvider?> FindByEntityIdAsync(string entityId, CancellationToken ct);
@@ -178,8 +179,15 @@ new SamlServiceProvider
 
     // Signing
     SigningBehavior = SamlSigningBehavior.SignAssertion,
-    RequireSignedAuthnRequests = true,
-    SigningCertificates = new[] { myCertificate },
+    RequireSignedAuthnRequests = true, // bool? -- null falls back to global SamlOptions.WantAuthnRequestsSigned
+    Certificates = new List<ServiceProviderCertificate>
+    {
+        new ServiceProviderCertificate
+        {
+            Certificate = myCertificate,
+            Use = KeyUse.Signing
+        }
+    },
 
     // NameID
     DefaultNameIdFormat = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
@@ -191,5 +199,7 @@ new SamlServiceProvider
     }),
 }
 ```
+
+Each entry in `Certificates` is a [`ServiceProviderCertificate`](/identityserver/saml/configuration.md#serviceprovidercertificate), which uses the `KeyUse` enum to annotate whether the certificate is used for signing, encryption, or both.
 
 See [SAML Configuration](/identityserver/saml/configuration.md) for full property documentation.

@@ -1,7 +1,7 @@
 ---
 title: "SAML Endpoints"
 description: Details of the SAML 2.0 protocol endpoints registered by IdentityServer, including metadata, sign-in, logout, and IdP-initiated SSO.
-date: 2026-03-02
+date: 2026-05-15
 sidebar:
   label: Endpoints
   order: 30
@@ -89,8 +89,12 @@ Enable it only for Service Providers that explicitly require it.
 
 Handles incoming SAML Single Logout (SLO) requests from Service Providers. The SP sends a SAML
 `LogoutRequest` message to this endpoint. IdentityServer processes the request, terminates the
-user's IdentityServer session, and sends front-channel logout notifications to other registered
-SPs.
+user's IdentityServer session, and coordinates logout across all other SPs.
+
+IdentityServer tracks which SPs have active sessions for the user. After receiving a `LogoutRequest`,
+it sends `LogoutRequest` messages to all other SPs with active sessions. It then collects their
+responses and, if some SPs do not respond or return an error, returns a partial logout status to the
+originating SP to indicate that not all sessions were successfully terminated.
 
 ## Logout Callback Endpoint
 
@@ -99,6 +103,10 @@ SPs.
 
 Processes SAML `LogoutResponse` messages returned by Service Providers after they have processed a
 logout notification from IdentityServer. This endpoint completes the SAML SLO round-trip.
+
+As each SP returns a `LogoutResponse`, IdentityServer records the result. If not all SPs with active
+sessions have responded by the time the logout flow completes, IdentityServer returns a partial
+logout status to the originating SP to indicate that some sessions may still be active.
 
 :::note
 SAML Single Logout is inherently complex: the process requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider the session terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout) for more background.

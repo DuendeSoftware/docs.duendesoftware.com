@@ -1,7 +1,7 @@
 ---
 title: "SAML 2.0 Concepts"
 description: Core SAML 2.0 concepts you need to understand when integrating with IdentityServer's SAML 2.0 Identity Provider feature.
-date: 2026-03-23
+date: 2026-05-15
 sidebar:
   label: Concepts
   order: 5
@@ -58,7 +58,9 @@ sequenceDiagram
     SP->>User: Grant access (session created)
 ```
 
-In IdentityServer, you register each SP using a `SamlServiceProvider` configuration object. This tells IdentityServer the SP's entity identifier, where to deliver assertions (the Assertion Consumer Service URL), and how to communicate. See the [Service Provider Store](/identityserver/saml/service-providers.md) and the [SamlServiceProvider model](/identityserver/saml/configuration.md#samlserviceprovider-model) for details.
+In IdentityServer, you register each SP using a `SamlServiceProvider` configuration object. This tells IdentityServer the SP's entity identifier, where to deliver assertions (the Assertion Consumer Service URL) and how to communicate. See the [Service Provider Store](/identityserver/saml/service-providers.md) and the [SamlServiceProvider model](/identityserver/saml/configuration.md#samlserviceprovider-model) for details.
+
+Duende IdentityServer can also act as a SAML Service Provider itself, consuming assertions from an external SAML IdP. See [Identity Provider and Service Provider](/identityserver/saml/idp-and-sp.md) for an overview of both roles.
 
 ## Metadata
 
@@ -127,9 +129,15 @@ The most common use of RelayState is deep linking: the SP encodes the URL the us
 
 IdentityServer preserves RelayState automatically through the authentication flow. The maximum permitted length is controlled by `SamlOptions.MaxRelayStateLength` (default: `80` bytes). See [SamlOptions](/identityserver/saml/configuration.md#samloptions).
 
-## Single Logout
+## Single Logout (SLO)
 
-SAML Single Logout (SLO) is a protocol for coordinating session termination across an entire federation. When a user logs out at one SP or at the IdP, the IdP sends `LogoutRequest` messages to every other SP where that user has an active session, then waits for each SP to confirm.
+SAML Single Logout (SLO) is a protocol for coordinating session termination across an entire federation.
+
+When a user authenticates via SAML, they establish a session at the IdP and a separate local session at each SP they visit. Logging out of one application ends only that application's local session. Without SLO, the user still has active sessions at every other SP they visited, and anyone with access to the browser can continue using those applications. SLO solves this by letting a single logout action propagate to all SPs in the federation.
+
+### SP-Initiated SLO
+
+The most common flow starts at an SP. When the user clicks "Log out" in an application, the SP sends a `LogoutRequest` to the IdP. The IdP ends the user's session, then sends `LogoutRequest` messages to every other SP where the user has an active session. Each SP terminates its local session and responds with a `LogoutResponse`. Once all SPs have responded (or timed out), the IdP sends a final `LogoutResponse` back to the originating SP.
 
 ```mermaid
 sequenceDiagram
@@ -149,8 +157,24 @@ sequenceDiagram
     IdP-->>SP_A: LogoutResponse
 ```
 
-SLO is powerful in theory but complex in practice. Reliable SLO requires the IdP to track every active session across all SPs. Partial failures are common: an SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete. These partial failures create ambiguous states where some SPs consider the session terminated and others do not.
+### IdP-Initiated SLO
 
-For this reason, many deployments supplement SLO, or replace it entirely, with short session lifetimes and per-application logout as a simpler fallback.
+The IdP can also initiate logout without waiting for an SP to start the flow. This happens when an administrator ends a session, a session timeout occurs, or the IdP detects a security event. The IdP sends `LogoutRequest` messages directly to all SPs with active sessions for that user. There is no originating SP to return a final `LogoutResponse` to.
+
+### Front-Channel Logout
+
+IdentityServer uses front-channel logout, which means logout notifications travel through the user's browser via redirects. The IdP redirects the browser to each SP's SLO endpoint in sequence, and each SP terminates its local session before the browser is redirected onward. This approach is simpler to implement than back-channel (server-to-server) logout, but it requires the user's browser to remain open and active throughout the logout sequence. Back-channel logout is not supported.
+
+### Partial Logout
+
+Not all SPs may respond successfully. An SP may be unreachable, slow to respond, or the user may close the browser before the sequence completes. IdentityServer tracks which SPs are expected to respond and can return a "partial logout" status when some SPs do not confirm. This is a normal outcome in real-world deployments, not an error condition.
+
+### Session Tracking
+
+For SLO to work, the IdP must know which SPs have active sessions for a given user. IdentityServer tracks this automatically as users authenticate at each SP. You can customize the storage backend by implementing [`ISamlLogoutSessionStore`](/identityserver/saml/extensibility.md#isamllogoutsessionstore).
+
+### Timeouts and Edge Cases
+
+If an SP is unreachable or the user closes the browser mid-flow, the logout sequence may not complete for all SPs. Short session lifetimes and per-application logout are common supplements to SLO in deployments where reliability matters more than protocol completeness. You can tune logout timeout behavior via `SamlOptions` to balance user experience against thoroughness.
 
 In IdentityServer, you configure SLO per SP by setting `SamlServiceProvider.SingleLogoutServiceUrl`. IdentityServer then sends front-channel logout notifications to all SPs with a configured SLO endpoint when a user's session ends. See the [logout endpoint](/identityserver/saml/endpoints.md#logout-endpoint) and [`ISamlLogoutNotificationService`](/identityserver/saml/extensibility.md#isamllogoutnotificationservice) for customization options.

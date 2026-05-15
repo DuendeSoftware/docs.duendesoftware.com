@@ -1,7 +1,7 @@
 ---
 title: "SAML 2.0 Identity Provider"
 description: Overview of IdentityServer's SAML 2.0 Identity Provider support for issuing SAML assertions to enterprise Service Providers.
-date: 2026-03-02
+date: 2026-05-15
 sidebar:
   label: Overview
   order: 1
@@ -33,18 +33,26 @@ interoperability with existing SAML-based systems.
 
 If you are new to SAML 2.0 or want a refresher on the protocol's core building blocks, see [SAML 2.0 Concepts](/identityserver/saml/concepts.md) for an overview of assertions, bindings, metadata, Name Identifiers, and other key concepts before diving into configuration.
 
+## SAML as an External Provider
+
+IdentityServer can also act as a SAML **Service Provider (SP)**, consuming assertions from an external SAML IdP. This lets you use a third-party SAML IdP as an upstream identity source, the same way you might use Google or Entra ID as an external OIDC provider.
+
+For an overview of both roles (IdP and SP) and how they relate, see [IdentityServer as IdP and SP](/identityserver/saml/idp-and-sp.md). For step-by-step setup instructions, see [Configuring a SAML external provider](/identityserver/ui/login/saml-provider.md).
+
+The rest of the `saml/` section covers the IdP role: configuring IdentityServer to issue SAML assertions to your registered Service Providers.
+
 ## What's Included
 
 The SAML 2.0 IdP feature is a comprehensive implementation covering the full SP-initiated and IdP-initiated SSO flows, logout, and a range of extensibility points. Key capabilities include:
 
-- **SP-initiated SSO**: HTTP-Redirect and HTTP-POST bindings for authentication requests
-- **IdP-initiated SSO**: opt-in support for portal or launcher pages that push assertions to SPs without a prior request
-- **Single Logout (SLO)**: front-channel logout notifications to registered SPs
-- **Assertion signing**: per-SP configuration of signing algorithms
-- **NameID format support**: email and unspecified formats (persistent planned for a future release)
-- **AuthnContext class mapping**: maps OIDC `acr`/`amr` values to SAML AuthnContext class URIs
-- **Per-SP claim mappings**: transform and filter claims before they are included in assertions
-- **Extensibility interfaces**: customize NameID generation, response generation, metadata, and more
+* **SP-initiated SSO**: HTTP-Redirect and HTTP-POST bindings for authentication requests
+* **IdP-initiated SSO**: opt-in support for portal or launcher pages that push assertions to SPs without a prior request
+* **Single Logout (SLO)**: front-channel logout notifications to registered SPs, with session tracking and partial logout responses when not all SPs respond
+* **Assertion signing**: per-SP configuration of signing algorithms
+* **NameID format support**: email and unspecified formats (persistent planned for a future release)
+* **AuthnContext class mapping**: maps OIDC `acr`/`amr` values to SAML AuthnContext class URIs
+* **Per-SP claim mappings**: transform and filter claims before they are included in assertions
+* **Extensibility interfaces**: customize NameID generation, response generation, metadata, and more
 
 ## Quick Setup
 

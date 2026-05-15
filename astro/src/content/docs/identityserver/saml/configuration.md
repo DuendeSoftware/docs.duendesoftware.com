@@ -1,7 +1,7 @@
 ---
 title: "SAML Configuration"
-description: Configuration options and models for the SAML 2.0 Identity Provider feature, including SamlOptions, Saml2Options, and SamlServiceProvider settings.
-date: 2026-03-02
+description: Configuration options and models for the SAML 2.0 Identity Provider feature, including SamlOptions and SamlServiceProvider settings.
+date: 2026-05-15
 sidebar:
   label: Configuration
   order: 10
@@ -21,20 +21,20 @@ builder.Services.AddIdentityServer()
     .AddSaml();
 ```
 
-`AddSaml()` registers all SAML services and six SAML endpoints, enabling five of them by default. The IdP-initiated SSO endpoint requires explicit opt-in (see [Enabling IdP-Initiated SSO](#enabling-idp-initiated-sso) below). It can be called with no arguments when all Service Provider configuration is managed via the admin API, or with an options callback to configure protocol-level settings via `Saml2Options`:
+`AddSaml()` registers all SAML services and endpoints, enabling most of them by default. The IdP-initiated SSO endpoint requires explicit opt-in (see [Enabling IdP-Initiated SSO](#enabling-idp-initiated-sso) below). It can be called with no arguments when all Service Provider configuration is managed via the admin API, or with an options callback to configure protocol-level settings:
 
 ```csharp
 builder.Services.AddIdentityServer()
-    .AddSaml(saml2 =>
+    .AddSaml(saml =>
     {
-        saml2.EntityId = "https://idp.example.com/saml";
-        saml2.Metadata.CacheDuration = TimeSpan.FromHours(1);
+        saml.EntityId = "https://idp.example.com/saml";
+        saml.Metadata.CacheDuration = TimeSpan.FromHours(1);
     });
 ```
 
 ## SamlOptions
 
-`SamlOptions` controls the global behavior and policy of the SAML 2.0 Identity Provider: how claims are mapped to SAML attributes, how assertions are signed, how NameIDs are resolved, and what tolerances apply to timestamps and request lifetimes. It is distinct from `Saml2Options`, which handles protocol plumbing (entity ID, endpoint paths, metadata generation).
+`SamlOptions` controls the global behavior and policy of the SAML 2.0 Identity Provider: how claims are mapped to SAML attributes, how assertions are signed, how NameIDs are resolved, and what tolerances apply to timestamps and request lifetimes.
 
 Access `SamlOptions` via `IdentityServerOptions.Saml` when calling `AddIdentityServer()`:
 
@@ -53,7 +53,7 @@ Use `SamlOptions` when you need to set defaults that apply across all Service Pr
 Available options:
 
 * **`MetadataValidityDuration`**
-  IdentityServer-layer setting that, if set, causes the metadata document to include a `validUntil` attribute. Defaults to 7 days. For most deployments, prefer configuring `Saml2Options.Metadata.ExpiryDuration` via the `AddSaml()` callback instead, which operates at the protocol layer and defaults to 5 days.
+  IdentityServer-layer setting that, if set, causes the metadata document to include a `validUntil` attribute. Defaults to 7 days.
 
 * **`WantAuthnRequestsSigned`**
   When `true`, the IdP requires all AuthnRequests to be signed. Defaults to `false`.
@@ -94,6 +94,21 @@ Available options:
 
 * **`UserInteraction`**
   Configures SAML endpoint paths. See [SamlUserInteractionOptions](#samluserinteractionoptions) below.
+
+### Error Inspector Callbacks
+
+These three optional callbacks let you observe and react to errors that occur while IdentityServer parses or validates incoming SAML messages. They are particularly useful when you are debugging interoperability issues with a specific SP, because they give you access to the raw XML and the error details before IdentityServer returns a failure response.
+
+None of these callbacks are required. When they are not set, IdentityServer handles errors using its default behavior.
+
+* **`AuthnRequestErrorInspector`**
+  A callback invoked when an error occurs while parsing or validating an incoming `AuthnRequest`. It receives the raw XML and the error details, so you can log the message, inspect the failure reason, or take corrective action on a per-SP basis. This is useful for diagnosing SP configuration problems such as malformed request signatures or unexpected XML structure.
+
+* **`LogoutRequestErrorInspector`**
+  A callback invoked when an error occurs while parsing or validating an incoming `LogoutRequest`. It works the same way as `AuthnRequestErrorInspector` but applies to SLO flows. Use it to investigate cases where an SP's logout request is rejected unexpectedly.
+
+* **`LogoutResponseErrorInspector`**
+  A callback invoked when an error occurs while processing an incoming `LogoutResponse` from an SP during Single Logout (SLO). It lets you handle cases where an SP returns a malformed or unexpected response, for example to log the raw XML for later analysis or to suppress the error for a known non-compliant SP.
 
 ### Default Claim Mappings
 
@@ -140,50 +155,6 @@ The full URL for each endpoint is formed by combining the base URL of the Identi
 the `Route` prefix and the individual path suffix. For example, the metadata endpoint is available
 at `https://your-idp.example.com/saml/metadata` by default.
 
-## Saml2Options
-
-`Saml2Options` is the protocol-level configuration class for the SAML 2.0 IdP. While `SamlOptions` controls behavior and policy (claim mappings, assertion lifetime, signing defaults), `Saml2Options` controls the SAML protocol plumbing: the IdP's entity identity, which endpoint paths and HTTP bindings are active, and how the metadata document is generated and cached.
-
-It lives in the `Duende.IdentityServer.Saml.Configuration` namespace and is configured via the `AddSaml()` options callback:
-
-```csharp
-builder.Services.AddIdentityServer()
-    .AddSaml(saml2 =>
-    {
-        saml2.EntityId = "https://idp.example.com/saml";
-        saml2.Endpoints.SingleSignOnServicePath = "/saml/sso";
-        saml2.Metadata.CacheDuration = TimeSpan.FromHours(1);
-    });
-```
-
-Use `Saml2Options` when you need to control the IdP's published identity (entity ID), the URL paths it listens on, or the shape of the metadata document it serves to Service Providers. Most deployments do not need to set `EntityId` explicitly; the default (`{host}/saml`) is suitable for standard configurations.
-
-Available options:
-
-* **`EntityId`** (`string?`)
-  The SAML entity ID of this IdP. If not set, IdentityServer derives it from the host URL combined with `EntityIdPath` (resulting in `{host}/saml` by default). Most deployments do not need to set this explicitly. Defaults to `null`.
-
-* **`EntityIdPath`** (`string`)
-  Path component appended to the OIDC issuer URL when `EntityId` is not explicitly set. Defaults to `/saml`.
-
-* **`Endpoints.SingleSignOnServicePath`** (`string`)
-  URL path for the SSO endpoint. Defaults to `/saml/signin`.
-
-* **`Endpoints.MetadataPath`** (`string`)
-  URL path for the metadata endpoint. Defaults to `/saml/metadata`.
-
-* **`Endpoints.SingleSignOnServiceBindings`** (`ICollection<string>`)
-  HTTP bindings accepted by the SSO endpoint. Defaults to both HTTP-Redirect and HTTP-POST.
-
-* **`Metadata.Enabled`** (`bool`)
-  Whether the metadata endpoint is active. Defaults to `true`.
-
-* **`Metadata.CacheDuration`** (`TimeSpan`)
-  How long clients should cache the metadata document. Defaults to 1 hour.
-
-* **`Metadata.ExpiryDuration`** (`TimeSpan`)
-  Protocol-layer setting that controls how far in the future the metadata `validUntil` attribute is set. Defaults to **5 days**. This is the preferred way to configure metadata expiry. Set it via the `AddSaml()` callback on `Saml2Options`. It is distinct from `SamlOptions.MetadataValidityDuration` (the IdentityServer-layer property accessed via `IdentityServerOptions.Saml`), which defaults to 7 days. When both are configured, `Saml2Options.Metadata.ExpiryDuration` takes effect at the protocol level.
-
 ## SamlServiceProvider Model
 
 `SamlServiceProvider` represents a registered SAML 2.0 Service Provider. Each SP has its own entity ID, ACS endpoints, signing certificates, and claim configuration. SPs can be registered statically in code or managed dynamically via a custom store.
@@ -229,11 +200,11 @@ Available options:
 * **`SingleLogoutServiceUrl`** (`SamlEndpointType?`)
   SP's Single Logout Service endpoint, expressed as a `SamlEndpointType` with a `Location` (Uri) and `Binding` (SamlBinding). Required for SLO support. Defaults to `null`. See [SamlEndpointType](#samlendpointtype) below.
 
-* **`RequireSignedAuthnRequests`** (`bool`)
-  When `true`, unsigned AuthnRequests from this SP are rejected. Defaults to `false`.
+* **`RequireSignedAuthnRequests`** (`bool?`)
+  When `true`, unsigned AuthnRequests from this SP are rejected. When `null`, falls back to the global `SamlOptions.WantAuthnRequestsSigned` default. Defaults to `null`.
 
-* **`SigningCertificates`** (`ICollection<X509Certificate2>?`)
-  Certificates used to verify SP-signed messages. Defaults to `null`.
+* **`Certificates`** (`ICollection<ServiceProviderCertificate>?`)
+  Certificates associated with this SP, with use annotations indicating whether each certificate is used for signature verification, encryption, or both. Replaces the old `SigningCertificates` property. See [ServiceProviderCertificate](#serviceprovidercertificate) below. Defaults to `null`.
 
 * **`AllowIdpInitiated`** (`bool`)
   When `true`, IdP-initiated SSO is allowed for this SP. Defaults to `false`.
@@ -346,6 +317,25 @@ AssertionConsumerServiceUrls = new List<IndexedEndpoint>
     }
 }
 ```
+
+### ServiceProviderCertificate
+
+`ServiceProviderCertificate` pairs an X.509 certificate with a use annotation that tells IdentityServer how to apply it for a given SP. Use it to configure signature verification certificates, encryption certificates, or certificates that serve both purposes.
+
+Properties:
+
+* **`Certificate`** (`X509Certificate2`): The X.509 certificate. Required.
+* **`Use`** (`KeyUse`): How the certificate is used. Defaults to `KeyUse.Signing`. See [KeyUse](#keyuse) below.
+
+### KeyUse
+
+`KeyUse` is a flags enum that controls how a `ServiceProviderCertificate` is applied.
+
+| Value | Description |
+|---|---|
+| `Signing` | Used to verify signatures on messages from this SP. |
+| `Encryption` | Used to encrypt assertions sent to this SP. |
+| `Both` | Used for both signature verification and encryption. Equivalent to `Signing \| Encryption`. |
 
 ## Enabling IdP-Initiated SSO
 
