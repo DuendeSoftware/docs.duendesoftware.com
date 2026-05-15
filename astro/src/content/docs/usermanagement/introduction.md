@@ -45,7 +45,7 @@ User Management supports the authentication methods that modern applications nee
 
 User Management is a good fit when you need:
 
-* Modern authentication methods beyond username and password, including passkeys, OTP, and TOTP.
+* Modern authentication methods beyond username and password, including passkeys, OTP and TOTP.
 * A complete user store that integrates with Duende IdentityServer without requiring you to wire up identity primitives manually.
 * Enterprise-grade features such as roles, groups, extensible user profiles, and programmatic membership management via `IMembershipAdmin`.
 * Recovery code support so users are never permanently locked out of their accounts.
