@@ -494,8 +494,8 @@ Additionally, `IClientStore` now includes a new required method:
 IAsyncEnumerable<Client> GetAllClientsAsync(CancellationToken ct);
 ```
 
-All custom `IClientStore` implementations must add this method. It is used by the conformance report
-and configuration validation features. Return an async enumerable of all configured clients.
+All custom `IClientStore` implementations must add this method. It is used by the Financial-Grade Security and Conformance
+report and configuration validation features. Return an async enumerable of all configured clients.
 
 ### Step 6: Migrate Signing Keys :badge[Optional]
 
@@ -633,17 +633,3 @@ The following breaking changes are new in Duende IdentityServer v8.0. For full d
 - **`IEnumerable<T>` return types changed to `IReadOnlyCollection<T>`.** Several interface methods updated. Custom implementations must update return types; callers that only enumerate are unaffected.
 - **`IUserSession`: new SAML session methods.** Three new methods for SAML 2.0 session tracking. Custom implementations must add them (no-op implementations are fine if not using SAML).
 - **DPoP changes in JwtBearer package.** `DPoPExtensions` replaced by `DPoPServiceCollectionExtensions`, with new properties for proof token expiration modes.
-
-## New Features in v8.0
-
-### SAML 2.0 Identity Provider
-
-IdentityServer 8.0 adds support for acting as a SAML 2.0 Identity Provider, enabling integration
-with enterprise applications and legacy systems that use SAML. See the
-[SAML 2.0 documentation](/identityserver/saml/) for setup and configuration details.
-
-### Conformance Report
-
-A new `Duende.IdentityServer.ConformanceReport` package generates an HTML report assessing your
-IdentityServer deployment against OAuth 2.1 and FAPI 2.0 specifications. See the
-[Conformance Report documentation](/identityserver/diagnostics/conformance-report/) for details.

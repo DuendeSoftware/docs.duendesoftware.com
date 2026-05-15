@@ -302,10 +302,10 @@ Extension method on `AuthenticationBuilder` for registering a [SAML 2.0 external
   Registers the SAML 2.0 SP authentication handler with a `SamlServiceProviderOptions` configuration.
   Available with a default scheme name, a custom scheme name, or a custom scheme name and display name.
 
-## Conformance Report :badge[v8.0]
+## Financial-Grade Security and Conformance Report :badge[v8.0]
 
 Added in `v8.0`.
 
 * **`AddConformanceReport`**
 
-  Adds the [conformance report](/identityserver/diagnostics/conformance-report.md) service that assesses server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. Requires the `Duende.IdentityServer.ConformanceReport` NuGet package.
+  Adds the [Financial-Grade Security and Conformance report](/identityserver/diagnostics/conformance-report.md) service that assesses server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. Requires the `Duende.IdentityServer.ConformanceReport` NuGet package.
