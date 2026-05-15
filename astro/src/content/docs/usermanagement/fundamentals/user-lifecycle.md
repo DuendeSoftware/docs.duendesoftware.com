@@ -89,16 +89,16 @@ public sealed record UserAuthenticators
 
 ### Properties
 
-| Property | Type | Description |
-|---|---|---|
-| `SubjectId` | `UserSubjectId` | The unique identifier of the user |
-| `OtpAddresses` | `IReadOnlyCollection<OtpAddress>` | Email addresses and phone numbers registered for One-Time Password (OTP) delivery |
-| `ExternalAuthenticators` | `IReadOnlyCollection<ExternalAuthenticator>` | External identity providers linked to this account (for example, Google, GitHub) |
+| Property                 | Type                                         | Description                                                                                                                                   |
+|--------------------------|----------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| `SubjectId`              | `UserSubjectId`                              | The unique identifier of the user                                                                                                             |
+| `OtpAddresses`           | `IReadOnlyCollection<OtpAddress>`            | Email addresses and phone numbers registered for One-Time Password (OTP) delivery                                                             |
+| `ExternalAuthenticators` | `IReadOnlyCollection<ExternalAuthenticator>` | External identity providers linked to this account (for example, Google, GitHub)                                                              |
 | `TotpAuthenticatorNames` | `IReadOnlyCollection<TotpAuthenticatorName>` | Names of registered Time-Based One-Time Password (TOTP) authenticators; a non-empty collection indicates two-factor authentication is enabled |
-| `Passkeys` | `IReadOnlyCollection<UserPasskey>` | Registered passkeys, each with a credential ID, display name, and creation timestamp |
-| `RecoveryCodeCount` | `int` | Number of unused recovery codes remaining |
-| `HasPassword` | `bool` | Whether the user has a password set |
-| `UserName` | `UserName?` | The user's username, or `null` if no username has been assigned |
+| `Passkeys`               | `IReadOnlyCollection<UserPasskey>`           | Registered passkeys, each with a credential ID, display name, and creation timestamp                                                          |
+| `RecoveryCodeCount`      | `int`                                        | Number of unused recovery codes remaining                                                                                                     |
+| `HasPassword`            | `bool`                                       | Whether the user has a password set                                                                                                           |
+| `UserName`               | `UserName?`                                  | The user's username, or `null` if no username has been assigned                                                                               |
 
 ### Usage
 
@@ -236,11 +236,11 @@ Understanding what Duende maintains internally versus what you can customize hel
 
 The following are implemented and maintained by Duende and updated with each release. You call these interfaces but do not implement them:
 
-- **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TrySetUserNameAsync`, `TryRemoveUserNameAsync`, `TryDeregisterAsync`)
-- **`IUserAdmin`**: administrative lifecycle operations (`TrySetUserNameAsync`, `TryRemoveUserNameAsync`, `TryRemoveAsync`)
-- **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes)
-- **Core storage**: the underlying user store, credential storage, and session state are internal to Duende and not designed for replacement or override
-- **Authentication logic and lifecycle state machine**: the rules governing registration, login, MFA enrollment, and deregistration are managed internally and are not extensible
+* **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TrySetUserNameAsync`, `TryRemoveUserNameAsync`, `TryDeregisterAsync`)
+* **`IUserAdmin`**: administrative lifecycle operations (`TrySetUserNameAsync`, `TryRemoveUserNameAsync`, `TryRemoveAsync`)
+* **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes)
+* **Core storage**: the underlying user store, credential storage, and session state are internal to Duende and not designed for replacement or override
+* **Authentication logic and lifecycle state machine**: the rules governing registration, login, MFA enrollment, and deregistration are managed internally and are not extensible
 
 You do not need to implement any of these; inject them where needed and call their methods.
 
@@ -248,12 +248,12 @@ You do not need to implement any of these; inject them where needed and call the
 
 The following extension points are designed for you to implement or configure:
 
-| Extension point | Interface | Purpose |
-|---|---|---|
-| OTP delivery | `IOtpSender` | Implement to send one-time password codes via your preferred channel (email, SMS, push notification, etc.) |
-| Password validation | `IPasswordValidator` | Implement custom password strength or policy rules beyond the built-in defaults |
-| SCIM schema mapping | `IScimSchemaMapper` | Customize which attributes and schemas are exposed via the SCIM endpoint |
-| Custom profile attributes | `IUserProfileSchemaAdmin` | Add application-specific attributes to the user profile schema |
+| Extension point           | Interface                 | Purpose                                                                                                    |
+|---------------------------|---------------------------|------------------------------------------------------------------------------------------------------------|
+| OTP delivery              | `IOtpSender`              | Implement to send one-time password codes via your preferred channel (email, SMS, push notification, etc.) |
+| Password validation       | `IPasswordValidator`      | Implement custom password strength or policy rules beyond the built-in defaults                            |
+| SCIM schema mapping       | `IScimSchemaMapper`       | Customize which attributes and schemas are exposed via the SCIM endpoint                                   |
+| Custom profile attributes | `IUserProfileSchemaAdmin` | Add application-specific attributes to the user profile schema                                             |
 
 These interfaces are registered with the service provider. Provide your own implementation during application startup to override the default behavior.
 
@@ -261,9 +261,9 @@ These interfaces are registered with the service provider. Provide your own impl
 
 The following are internal to Duende and are not designed for override or extension:
 
-- Core user storage and the database schema backing it
-- The authentication and credential verification logic
-- The lifecycle state machine (registration flow, deregistration cascade, authenticator enrollment rules)
+* Core user storage and the database schema backing it
+* The authentication and credential verification logic
+* The lifecycle state machine (registration flow, deregistration cascade, authenticator enrollment rules)
 
 Attempting to replace these by intercepting internal services is unsupported and may break across releases.
 

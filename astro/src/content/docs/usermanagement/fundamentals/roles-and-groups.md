@@ -14,7 +14,7 @@ Roles and groups provide a flexible authorization model. A role represents a nam
 The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive). It uses three services (`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) which are registered by calling `AddMembership()` (see [Configuration](/usermanagement/reference/configuration.md#membership-module)) and can be injected via constructor injection:
 
 ```csharp
-using Duende.Platform.Users.Membership;
+using Duende.UserManagement.Membership;
 
 public class RoleSetupService(
     IRoleAdmin roleAdmin,
@@ -59,18 +59,18 @@ public class RoleSetupService(
 
 This kind of programmatic role and group management is used in several common scenarios:
 
-- **Admin application**: A back-office UI where administrators create and manage roles and groups, assign users to groups, and review effective permissions. The admin app calls these APIs in response to user actions.
-- **Automation or background service**: A service that synchronises roles or group membership from an external system (for example, an HR directory or an identity provider). The service runs on a schedule or reacts to events, calling these APIs to keep the local state in sync.
-- **Seed script**: A startup routine that ensures required roles and groups exist before the application accepts traffic. Typically runs once on first deployment or after a database reset.
-- **Integration tests**: Test setup code that creates known roles, groups, and memberships so that tests run against a predictable, isolated state.
+* **Admin application**: A back-office UI where administrators create and manage roles and groups, assign users to groups, and review effective permissions. The admin app calls these APIs in response to user actions.
+* **Automation or background service**: A service that synchronises roles or group membership from an external system (for example, an HR directory or an identity provider). The service runs on a schedule or reacts to events, calling these APIs to keep the local state in sync.
+* **Seed script**: A startup routine that ensures required roles and groups exist before the application accepts traffic. Typically runs once on first deployment or after a database reset.
+* **Integration tests**: Test setup code that creates known roles, groups, and memberships so that tests run against a predictable, isolated state.
 
 ## Data Model
 
-The core types in the `Duende.Platform.Users.Profiles.RolesAndGroups` namespace are:
+The core types in the `Duende.UserManagement.Membership` namespace are:
 
 ### Role Types
 
-* **`RoleId`**: A strongly-typed, UUIDv7-based identifier for a role. Use `RoleId.New()` to create a new identifier, or `RoleId.Parse(string)` to parse one from its string representation.
+* **`RoleId`**: A strongly-typed, string-based identifier for a role. Use `RoleId.Parse(string)` to create one. Valid characters are alphanumeric, dashes, underscores, forward slashes, and backslashes.
 * **`RoleName`**: A validated role name. Maximum 200 characters, leading and trailing whitespace is trimmed. Use `RoleName.Parse(string)` to construct.
 * **`RoleDescription`**: An optional description for a role. Maximum 500 characters. Use `RoleDescription.Parse(string)` to construct.
 * **`RoleDto`**: The data transfer object used when creating or updating a role. Contains a required `Name` and an optional `Description`.
@@ -80,7 +80,7 @@ The core types in the `Duende.Platform.Users.Profiles.RolesAndGroups` namespace 
 
 ### Group Types
 
-* **`GroupId`**: A strongly-typed, UUIDv7-based identifier for a group. Use `GroupId.New()` to create a new identifier, or `GroupId.Parse(string)` to parse one.
+* **`GroupId`**: A strongly-typed, string-based identifier for a group. Use `GroupId.Parse(string)` to create one. Valid characters are alphanumeric, dashes, underscores, forward slashes, and backslashes.
 * **`GroupName`**: A validated group name. Maximum 200 characters, leading and trailing whitespace is trimmed. Use `GroupName.Parse(string)` to construct.
 * **`GroupDescription`**: An optional description for a group. Maximum 500 characters. Use `GroupDescription.Parse(string)` to construct.
 * **`GroupDto`**: The data transfer object used when creating or updating a group. Contains a required `Name` and an optional `Description`.
@@ -129,7 +129,7 @@ public interface IRoleAdmin
 ### Creating a Role
 
 ```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.UserManagement.Membership;
 
 var role = new RoleDto
 {
@@ -149,8 +149,8 @@ if (result.IsSuccess)
 ### Querying Roles
 
 ```csharp
-using Duende.Platform.Storage;
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.Storage;
+using Duende.UserManagement.Membership;
 
 var filter = new RoleFilter { Name = "editor" };
 var sort = SortBy.Ascending(RoleSortField.Name);
@@ -207,7 +207,7 @@ public interface IGroupAdmin
 ### Creating a Group
 
 ```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.UserManagement.Membership;
 
 var group = new GroupDto
 {
@@ -227,7 +227,7 @@ if (result.IsSuccess)
 ### Querying Groups with a Filter Expression
 
 ```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.UserManagement.Membership;
 
 var filter = new GroupFilter
 {
@@ -297,7 +297,7 @@ public interface IMembershipAdmin
 ### Assigning a Role Directly to a User
 
 ```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.UserManagement.Membership;
 
 var result = await membershipAdmin.AssignRoleAsync(subjectId, roleId, ct);
 
@@ -316,7 +316,7 @@ var result = await membershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
 ### Adding a User to a Group
 
 ```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.UserManagement.Membership;
 
 var result = await membershipAdmin.AssignGroupAsync(subjectId, groupId, ct);
 
@@ -337,7 +337,7 @@ var result = await membershipAdmin.RemoveGroupAsync(subjectId, groupId, ct);
 Because direct and transitive roles cannot be combined in a single query, retrieve both sets separately and merge them:
 
 ```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.UserManagement.Membership;
 
 var directRoles = await membershipAdmin.GetDirectRolesAsync(subjectId, range: null, ct);
 var transitiveRoles = await membershipAdmin.GetTransitiveRolesAsync(subjectId, range: null, ct);
@@ -367,7 +367,7 @@ foreach (var group in groups.Items)
 ### Listing Members of a Group
 
 ```csharp
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.UserManagement.Membership;
 
 var range = new DataRange(Offset: 0, Limit: 50);
 var members = await membershipAdmin.GetMembersInGroupAsync(groupId, range, ct);
@@ -394,7 +394,7 @@ foreach (var member in members.Items)
 When a user is removed from the system, use `IUserAdmin.TryRemoveAsync()` to delete the user and clean up all role and group assignments:
 
 ```csharp
-using Duende.Platform.Users.Profiles;
+using Duende.UserManagement.Profiles;
 
 var removed = await userAdmin.TryRemoveAsync(subjectId, ct);
 

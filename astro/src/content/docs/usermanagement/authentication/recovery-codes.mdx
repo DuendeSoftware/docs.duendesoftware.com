@@ -11,13 +11,13 @@ Recovery codes are a backup authentication method for when the primary two-facto
 
 ## Comparison With Other Authentication Methods
 
-| Aspect | Recovery Codes | TOTP | Password Reset |
-|---|---|---|---|
-| **Use Case** | Emergency backup | Primary 2FA | Lost password |
-| **Frequency** | Rare | Every login | Occasional |
-| **Device Required** | None | Authenticator app | Email access |
-| **Security Model** | Single-use | Time-based | Email dependent |
-| **User Burden** | Must save codes | Install app | Email access |
+| Aspect              | Recovery Codes   | TOTP              | Password Reset  |
+|---------------------|------------------|-------------------|-----------------|
+| **Use Case**        | Emergency backup | Primary 2FA       | Lost password   |
+| **Frequency**       | Rare             | Every login       | Occasional      |
+| **Device Required** | None             | Authenticator app | Email access    |
+| **Security Model**  | Single-use       | Time-based        | Email dependent |
+| **User Burden**     | Must save codes  | Install app       | Email access    |
 
 ## How It Works
 
@@ -299,9 +299,3 @@ if (usedRecoveryCode)
         "to keep your account secure.";
 }
 ```
-
-## Related Topics
-
-* [TOTP Authentication](/usermanagement/authentication/totp.mdx) - Primary 2FA method that recovery codes back up
-* [OTP Authentication](/usermanagement/authentication/otp.mdx) - One-time password authentication
-* [Password Authentication](/usermanagement/authentication/passwords.md) - Password-based authentication

@@ -6,6 +6,8 @@ sidebar:
   order: 6
 ---
 
+<!-- TODO - This should be based on sample being created - SKIP in reviews for now -->
+
 User Management lets you migrate users, roles, and authenticators from another identity provider,
 or seed users from an external system. This is helpful in several scenarios:
 
@@ -49,16 +51,16 @@ If you are moving from Duende IdentityServer with ASP.NET Identity to User Manag
 
 ASP.NET Identity stores user data across several tables. The following table shows how each concept maps to User Management's import types:
 
-| ASP.NET Identity | User Management | Notes |
-|---|---|---|
-| `AspNetUsers.Id` | `UserImportRecord.SubjectId` | You can use the GUID string directly as the subject ID. |
-| `AspNetUsers.UserName` | `UserImportRecord.UserName` | |
-| `AspNetUsers.Email`, `PhoneNumber`, and other profile columns | `UserImportRecord.ProfileAttributes` | Map each column to a profile attribute using the schema. |
-| `AspNetUsers.PasswordHash` | `AuthenticatorImport.Password` | Requires a custom `IPasswordHashAlgorithm` to verify the ASP.NET Identity hash format. See [ASP.NET Identity Password Hashes](#aspnet-identity-password-hashes) for the format details and parsing code. |
-| `AspNetUserRoles` + `AspNetRoles` | `MembershipImport.DirectRoles` | Create the roles first using `IRoleAdmin`, then reference them by ID during import. |
-| `AspNetUserClaims` | `UserImportRecord.ProfileAttributes` | Claims that represent profile data (name, address, etc.) map to profile attributes. Claims used for authorization decisions map better to roles or groups. |
-| `AspNetUserLogins` | `AuthenticatorImport.ExternalAuthenticators` | Each row becomes an `ExternalAuthenticator` with the `LoginProvider` as the provider name and `ProviderKey` as the subject ID. |
-| `AspNetUserTokens` | Not imported | Tokens (2FA recovery codes, authenticator keys) are runtime state. For TOTP authenticator keys, use `AuthenticatorImport.TotpAuthenticators` if you have access to the raw secret. Recovery codes can be imported via `AuthenticatorImport.RecoveryCodes`. |
+| ASP.NET Identity                                              | User Management                              | Notes                                                                                                                                                                                                                                                      |
+|---------------------------------------------------------------|----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AspNetUsers.Id`                                              | `UserImportRecord.SubjectId`                 | You can use the GUID string directly as the subject ID.                                                                                                                                                                                                    |
+| `AspNetUsers.UserName`                                        | `UserImportRecord.UserName`                  |                                                                                                                                                                                                                                                            |
+| `AspNetUsers.Email`, `PhoneNumber`, and other profile columns | `UserImportRecord.ProfileAttributes`         | Map each column to a profile attribute using the schema.                                                                                                                                                                                                   |
+| `AspNetUsers.PasswordHash`                                    | `AuthenticatorImport.Password`               | Requires a custom `IPasswordHashAlgorithm` to verify the ASP.NET Identity hash format. See [ASP.NET Identity Password Hashes](#aspnet-identity-password-hashes) for the format details and parsing code.                                                   |
+| `AspNetUserRoles` + `AspNetRoles`                             | `MembershipImport.DirectRoles`               | Create the roles first using `IRoleAdmin`, then reference them by ID during import.                                                                                                                                                                        |
+| `AspNetUserClaims`                                            | `UserImportRecord.ProfileAttributes`         | Claims that represent profile data (name, address, etc.) map to profile attributes. Claims used for authorization decisions map better to roles or groups.                                                                                                 |
+| `AspNetUserLogins`                                            | `AuthenticatorImport.ExternalAuthenticators` | Each row becomes an `ExternalAuthenticator` with the `LoginProvider` as the provider name and `ProviderKey` as the subject ID.                                                                                                                             |
+| `AspNetUserTokens`                                            | Not imported                                 | Tokens (2FA recovery codes, authenticator keys) are runtime state. For TOTP authenticator keys, use `AuthenticatorImport.TotpAuthenticators` if you have access to the raw secret. Recovery codes can be imported via `AuthenticatorImport.RecoveryCodes`. |
 
 Passwords are the trickiest part of the migration because ASP.NET Identity uses a proprietary binary format for its hashes. You need to register a custom `IPasswordHashAlgorithm` that can verify these hashes, and parse the stored blobs into `HashedPasswordData`. The [ASP.NET Identity Password Hashes](#aspnet-identity-password-hashes) section at the bottom of this page walks through the format and provides a parsing helper you can use directly.
 
@@ -195,7 +197,7 @@ public class UserImportService(IUserImporter importer, IUserProfileAdmin profile
                 },
                 Memberships = new MembershipImport
                 {
-                    Groups = new[] { new GroupId("admins") },
+                    Groups = new[] { GroupId.Parse("admins") },
                 },
             },
             new UserImportRecord
@@ -360,12 +362,12 @@ For all other statuses, `Error` is `null`.
 
 ### `UserImportStatus` enum
 
-| Value | Meaning |
-|-------|---------|
-| `Created` | The user was successfully created. |
+| Value     | Meaning                                                                        |
+|-----------|--------------------------------------------------------------------------------|
+| `Created` | The user was successfully created.                                             |
 | `Updated` | The user was successfully updated (overwrite conflict resolution was applied). |
-| `Skipped` | The user was skipped because a conflict was resolved as `Skip`. |
-| `Failed` | The user failed to import due to an error. |
+| `Skipped` | The user was skipped because a conflict was resolved as `Skip`.                |
+| `Failed`  | The user failed to import due to an error.                                     |
 
 ## Conflict Resolution
 
@@ -414,22 +416,22 @@ public sealed record UserImportConflict
 
 ### `UserImportStep` enum
 
-| Value | Meaning |
-|-------|---------|
-| `Profile` | The user profile creation or update step. |
+| Value           | Meaning                                    |
+|-----------------|--------------------------------------------|
+| `Profile`       | The user profile creation or update step.  |
 | `Authenticator` | The authenticator creation or update step. |
-| `Membership` | The membership assignment step. |
+| `Membership`    | The membership assignment step.            |
 
 ### `UserImportConflictReason` enum
 
-| Value | Meaning |
-|-------|---------|
-| `ProfileAlreadyExists` | A user profile with the same subject ID already exists. |
-| `ProfileUniqueKeyConflict` | A unique attribute value (including username) on the incoming record already belongs to a different user profile. |
-| `AuthenticatorAlreadyExists` | Authenticators for the same subject ID already exist. |
-| `AuthenticatorKeyConflict` | The username is already claimed by a different user's authenticators. |
-| `ConcurrencyConflict` | An optimistic concurrency conflict occurred. |
-| `MembershipAlreadyExists` | A membership record for the same subject ID already exists. |
+| Value                        | Meaning                                                                                                           |
+|------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| `ProfileAlreadyExists`       | A user profile with the same subject ID already exists.                                                           |
+| `ProfileUniqueKeyConflict`   | A unique attribute value (including username) on the incoming record already belongs to a different user profile. |
+| `AuthenticatorAlreadyExists` | Authenticators for the same subject ID already exist.                                                             |
+| `AuthenticatorKeyConflict`   | The username is already claimed by a different user's authenticators.                                             |
+| `ConcurrencyConflict`        | An optimistic concurrency conflict occurred.                                                                      |
+| `MembershipAlreadyExists`    | A membership record for the same subject ID already exists.                                                       |
 
 ### `UserImportConflictResolution`
 

@@ -47,14 +47,14 @@ User Management uses **PBKDF2** (RFC 2898) with the following parameters, verifi
 
 The default `PasswordOptions` enforces the following constraints:
 
-| Property | Default | Description |
-|---|---|---|
-| `MinLength` | `8` | Minimum password length |
-| `MinLower` | `2` | Minimum lowercase characters |
-| `MinUpper` | `2` | Minimum uppercase characters |
-| `MinDigits` | `2` | Minimum numeric digit characters |
-| `MinSymbols` | `2` | Minimum symbol characters |
-| `MaxLength` | PBKDF2 limit | Maximum length based on HMAC-SHA-512 digest size |
+| Property     | Default      | Description                                      |
+|--------------|--------------|--------------------------------------------------|
+| `MinLength`  | `8`          | Minimum password length                          |
+| `MinLower`   | `2`          | Minimum lowercase characters                     |
+| `MinUpper`   | `2`          | Minimum uppercase characters                     |
+| `MinDigits`  | `2`          | Minimum numeric digit characters                 |
+| `MinSymbols` | `2`          | Minimum symbol characters                        |
+| `MaxLength`  | PBKDF2 limit | Maximum length based on HMAC-SHA-512 digest size |
 
 Override these defaults during registration:
 
@@ -82,11 +82,11 @@ User Management includes a per-authenticator throttling policy that limits repea
 
 ### `AuthenticationThrottlingOptions`
 
-| Property | Default | Description |
-|---|---|---|
-| `MaxFailedAttempts` | `5` | Maximum number of failed attempts before throttling activates |
-| `FailureWindow` | `15 minutes` | Window after the last failure during which the failure count is relevant. If `LastFailedAtUtc + FailureWindow` has elapsed, the count resets to zero |
-| `ThrottleDuration` | `5 minutes` | How long to block after exceeding the threshold, measured from `LastFailedAtUtc` |
+| Property            | Default      | Description                                                                                                                                          |
+|---------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `MaxFailedAttempts` | `5`          | Maximum number of failed attempts before throttling activates                                                                                        |
+| `FailureWindow`     | `15 minutes` | Window after the last failure during which the failure count is relevant. If `LastFailedAtUtc + FailureWindow` has elapsed, the count resets to zero |
+| `ThrottleDuration`  | `5 minutes`  | How long to block after exceeding the threshold, measured from `LastFailedAtUtc`                                                                     |
 
 Configure throttling during registration:
 
@@ -115,11 +115,11 @@ In addition to failure-based throttling, User Management can limit the total rat
 
 The following properties on `AuthenticationThrottlingOptions` control velocity-based throttling:
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `MaxAttemptsPerWindow` | `int` | `5` | Maximum total authentication attempts (successful and failed) allowed within the `VelocityWindow` |
-| `VelocityWindow` | `TimeSpan` | `00:00:10` | Sliding window duration for counting total attempts |
-| `VelocityThrottleDuration` | `TimeSpan` | `00:00:30` | How long to block further attempts after the velocity threshold is exceeded |
+| Property                   | Type       | Default    | Description                                                                                       |
+|----------------------------|------------|------------|---------------------------------------------------------------------------------------------------|
+| `MaxAttemptsPerWindow`     | `int`      | `5`        | Maximum total authentication attempts (successful and failed) allowed within the `VelocityWindow` |
+| `VelocityWindow`           | `TimeSpan` | `00:00:10` | Sliding window duration for counting total attempts                                               |
+| `VelocityThrottleDuration` | `TimeSpan` | `00:00:30` | How long to block further attempts after the velocity threshold is exceeded                       |
 
 Configure velocity-based throttling during registration:
 
@@ -142,11 +142,11 @@ The `AuthenticatorAttemptInfo` record now includes a `RecentAttemptTimestamps` p
 
 User Management includes built-in rate limiting for OTP operations. The following values are verified from source (`OtpWorkflow.cs`):
 
-| Protection | Value | Purpose |
-|---|---|---|
+| Protection                | Value         | Purpose                     |
+|---------------------------|---------------|-----------------------------|
 | Max verification attempts | `5` per token | Prevents code brute-forcing |
-| Min time between sends | `1 minute` | Prevents request flooding |
-| Code expiration | `5 minutes` | Limits the attack window |
+| Min time between sends    | `1 minute`    | Prevents request flooding   |
+| Code expiration           | `5 minutes`   | Limits the attack window    |
 
 These values are fixed in the OTP workflow and are not configurable. The OTP code is hashed using PBKDF2 before storage and verified using constant-time comparison.
 
@@ -185,17 +185,17 @@ Passkeys (WebAuthn/FIDO2) provide the strongest authentication guarantees availa
 
 Passkey behavior is controlled by `PasskeyOptions`, accessible via `UserAuthenticationOptions.Passkeys`. The following defaults are verified from source:
 
-| Property | Default | Description |
-|---|---|---|
-| `ChallengeSize` | `32` bytes (256 bits) | Size of the server-generated challenge |
-| `ChallengeTimeout` | `300` seconds (5 minutes) | Maximum validity period for a passkey challenge |
-| `UserVerificationRequirement` | `"preferred"` | Whether user verification (PIN, biometric) is required during authentication |
-| `AttestationConveyancePreference` | `"none"` | Whether the authenticator must provide an attestation statement during registration |
-| `ResidentKeyRequirement` | `"preferred"` | Whether a discoverable (resident) credential is required |
-| `AuthenticatorAttachment` | `null` (any) | Restricts authenticator type: `"platform"` (built-in), `"cross-platform"` (roaming), or `null` for any |
-| `SupportedAlgorithms` | `[]` (all) | COSE algorithm identifiers to accept, in preference order |
-| `ServerDomain` | `null` | Explicit relying party ID; set when sharing passkeys across subdomains |
-| `AllowedOrigins` | Required | Fully-qualified origins permitted to use passkeys with this relying party |
+| Property                          | Default                   | Description                                                                                            |
+|-----------------------------------|---------------------------|--------------------------------------------------------------------------------------------------------|
+| `ChallengeSize`                   | `32` bytes (256 bits)     | Size of the server-generated challenge                                                                 |
+| `ChallengeTimeout`                | `300` seconds (5 minutes) | Maximum validity period for a passkey challenge                                                        |
+| `UserVerificationRequirement`     | `"preferred"`             | Whether user verification (PIN, biometric) is required during authentication                           |
+| `AttestationConveyancePreference` | `"none"`                  | Whether the authenticator must provide an attestation statement during registration                    |
+| `ResidentKeyRequirement`          | `"preferred"`             | Whether a discoverable (resident) credential is required                                               |
+| `AuthenticatorAttachment`         | `null` (any)              | Restricts authenticator type: `"platform"` (built-in), `"cross-platform"` (roaming), or `null` for any |
+| `SupportedAlgorithms`             | `[]` (all)                | COSE algorithm identifiers to accept, in preference order                                              |
+| `ServerDomain`                    | `null`                    | Explicit relying party ID; set when sharing passkeys across subdomains                                 |
+| `AllowedOrigins`                  | Required                  | Fully-qualified origins permitted to use passkeys with this relying party                              |
 
 Configure passkey options during registration:
 
@@ -213,28 +213,28 @@ builder.Services
 
 ### User Verification Requirement Values
 
-| Value | Meaning |
-|---|---|
-| `"required"` | User verification (PIN, biometric) must be performed |
-| `"preferred"` | User verification is preferred but not required (default) |
-| `"discouraged"` | User verification should not be performed |
+| Value           | Meaning                                                   |
+|-----------------|-----------------------------------------------------------|
+| `"required"`    | User verification (PIN, biometric) must be performed      |
+| `"preferred"`   | User verification is preferred but not required (default) |
+| `"discouraged"` | User verification should not be performed                 |
 
 ### Resident Key Requirement Values
 
-| Value | Meaning |
-|---|---|
-| `"required"` | Authenticator must create a discoverable credential |
-| `"preferred"` | Discoverable credential preferred if supported (default) |
-| `"discouraged"` | Non-discoverable credential preferred |
+| Value           | Meaning                                                  |
+|-----------------|----------------------------------------------------------|
+| `"required"`    | Authenticator must create a discoverable credential      |
+| `"preferred"`   | Discoverable credential preferred if supported (default) |
+| `"discouraged"` | Non-discoverable credential preferred                    |
 
 ### Attestation Conveyance Values
 
-| Value | Meaning |
-|---|---|
-| `"none"` | No attestation statement required (default) |
-| `"indirect"` | Attestation statement may be anonymized |
-| `"direct"` | Attestation statement provided directly by the authenticator |
-| `"enterprise"` | Enterprise attestation for managed authenticators |
+| Value          | Meaning                                                      |
+|----------------|--------------------------------------------------------------|
+| `"none"`       | No attestation statement required (default)                  |
+| `"indirect"`   | Attestation statement may be anonymized                      |
+| `"direct"`     | Attestation statement provided directly by the authenticator |
+| `"enterprise"` | Enterprise attestation for managed authenticators            |
 
 ## Encryption Algorithms
 
@@ -245,7 +245,6 @@ Detailed coverage of the encryption algorithms used for password hashing, recove
 * Codes are **hashed** (not encrypted) in storage using PBKDF2. They cannot be retrieved, only verified.
 * Each code is **single-use**, consumed on successful verification.
 * **Generate new codes** to invalidate all previous codes.
-<!-- REVIEW: Should recovery code invalidation be configurable? See PR #14 comment #19 -->
 * Warn users when the remaining code count drops below a safe threshold.
 
 ## Recommendations

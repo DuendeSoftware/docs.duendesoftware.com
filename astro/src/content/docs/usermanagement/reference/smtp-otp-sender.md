@@ -30,17 +30,17 @@ builder.Services
 
 All properties on `SmtpOtpSenderOptions` are configured via the `Action<SmtpOtpSenderOptions>` delegate passed to `UseSmtpOtpSender`.
 
-| Property | Type | Required | Default | Description |
-|---|---|---|---|---|
-| `Host` | `string` | Yes | — | SMTP server hostname or IP address. |
-| `Port` | `int` | No | `1025` | SMTP server port. Typically `587` for STARTTLS or `465` for implicit TLS. |
-| `EnableSsl` | `bool` | No | `true` | Whether to use SSL/TLS for the SMTP connection. Always set to `true` in production. |
-| `FromEmail` | `string` | Yes | — | The sender email address used in the `From` header. |
-| `FromName` | `string` | Yes | — | The sender display name used in the `From` header and in email templates. |
-| `Domain` | `string?` | No | `null` | The domain or URL where the user should enter the code (e.g. `"https://app.example.com"`). When set, the default template includes a domain-specific security warning. When `null`, templates receive `"our official website"` for the `{Domain}` placeholder. |
-| `PlainTextTemplate` | `string?` | No | `null` | Custom plain text body template. Supports [template placeholders](#template-placeholders). When `null`, the built-in default template is used. |
-| `HtmlTemplate` | `string?` | No | `null` | Custom HTML body template. Supports [template placeholders](#template-placeholders). When set, the email is sent as HTML. Takes precedence over `PlainTextTemplate`. |
-| `SubjectTemplate` | `string?` | No | `null` | Custom subject line template. Supports `{FromName}` and `{Code}` placeholders. When `null`, defaults to `"{FromName} confirmation code"`. |
+| Property            | Type      | Required | Default | Description                                                                                                                                                                                                                                                    |
+|---------------------|-----------|----------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Host`              | `string`  | Yes      | N/A     | SMTP server hostname or IP address.                                                                                                                                                                                                                            |
+| `Port`              | `int`     | No       | `1025`  | SMTP server port. Typically `587` for STARTTLS or `465` for implicit TLS.                                                                                                                                                                                      |
+| `EnableSsl`         | `bool`    | No       | `true`  | Whether to use SSL/TLS for the SMTP connection. Always set to `true` in production.                                                                                                                                                                            |
+| `FromEmail`         | `string`  | Yes      | N/A     | The sender email address used in the `From` header.                                                                                                                                                                                                            |
+| `FromName`          | `string`  | Yes      | N/A     | The sender display name used in the `From` header and in email templates.                                                                                                                                                                                      |
+| `Domain`            | `string?` | No       | `null`  | The domain or URL where the user should enter the code (e.g. `"https://app.example.com"`). When set, the default template includes a domain-specific security warning. When `null`, templates receive `"our official website"` for the `{Domain}` placeholder. |
+| `PlainTextTemplate` | `string?` | No       | `null`  | Custom plain text body template. Supports [template placeholders](#template-placeholders). When `null`, the built-in default template is used.                                                                                                                 |
+| `HtmlTemplate`      | `string?` | No       | `null`  | Custom HTML body template. Supports [template placeholders](#template-placeholders). When set, the email is sent as HTML. Takes precedence over `PlainTextTemplate`.                                                                                           |
+| `SubjectTemplate`   | `string?` | No       | `null`  | Custom subject line template. Supports `{FromName}` and `{Code}` placeholders. When `null`, defaults to `"{FromName} confirmation code"`.                                                                                                                      |
 
 ## Default Email Format
 
@@ -71,12 +71,12 @@ The domain line is only included when `Domain` is set. Without it, the line read
 
 All three template properties (`PlainTextTemplate`, `HtmlTemplate`, `SubjectTemplate`) support the following placeholders:
 
-| Placeholder | Description | Example Value |
-|---|---|---|
-| `{Code}` | The OTP code, formatted with hyphens between groups. | `123-456` |
-| `{FromName}` | The configured sender name (`SmtpOtpSenderOptions.FromName`). | `MyApp` |
-| `{ExpiresMinutes}` | The number of minutes until the code expires, as a whole number. | `5` |
-| `{Domain}` | The configured domain (`SmtpOtpSenderOptions.Domain`), or `"our official website"` when not set. | `app.example.com` |
+| Placeholder        | Description                                                                                      | Example Value     |
+|--------------------|--------------------------------------------------------------------------------------------------|-------------------|
+| `{Code}`           | The OTP code, formatted with hyphens between groups.                                             | `123-456`         |
+| `{FromName}`       | The configured sender name (`SmtpOtpSenderOptions.FromName`).                                    | `MyApp`           |
+| `{ExpiresMinutes}` | The number of minutes until the code expires, as a whole number.                                 | `5`               |
+| `{Domain}`         | The configured domain (`SmtpOtpSenderOptions.Domain`), or `"our official website"` when not set. | `app.example.com` |
 
 Note: `SubjectTemplate` only supports `{FromName}` and `{Code}`.
 

@@ -96,7 +96,7 @@ Open `Program.cs` and modify its contents step by step as described below.
        User Management does not contain a console-based OTP sender. Implement `IOtpSender` to write codes to the console:
    
        ```csharp title="ConsoleOtpSender.cs"
-       using Duende.Platform.Users.Authentication.Otp;
+       using Duende.UserManagement.Authentication.Otp;
 
        public class ConsoleOtpSender : IOtpSender
        {
@@ -184,9 +184,9 @@ The application configuration is now complete. Next, we'll add the pages and mod
          <TabItem label="Console sender (development)">
             ```csharp title="Program.cs"
             using Duende.Platform.Builder;
-            using Duende.Platform.Storage;
-            using Duende.Platform.Users.Authentication;
-            using Duende.Platform.Users.Authentication.Otp;
+            using Duende.Storage;
+            using Duende.UserManagement.Authentication;
+            using Duende.UserManagement.Authentication.Otp;
 
             using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -249,7 +249,7 @@ The application configuration is now complete. Next, we'll add the pages and mod
         <TabItem label="SMTP sender">
             ```csharp title="Program.cs"
             using Duende.Platform.Builder;
-            using Duende.Platform.Users.Authentication;
+            using Duende.UserManagement.Authentication;
             using Microsoft.AspNetCore.Authentication.Cookies;
 
             var builder = WebApplication.CreateBuilder(args);
@@ -338,8 +338,8 @@ The application configuration is now complete. Next, we'll add the pages and mod
    
    ```csharp title="Pages/Login.cshtml.cs"
    using System.ComponentModel.DataAnnotations;
-   using Duende.Platform.Users;
-   using Duende.Platform.Users.Authentication.Otp;
+   using Duende.UserManagement;
+   using Duende.UserManagement.Authentication.Otp;
    using Microsoft.AspNetCore.Mvc;
    using Microsoft.AspNetCore.Mvc.RazorPages;
    
@@ -436,9 +436,9 @@ You can configure OTP expiry, code length, and rate-limiting behaviour through t
    ```csharp title="Pages/EnterOtp.cshtml.cs"
     using System.ComponentModel.DataAnnotations;
     using System.Security.Claims;
-    using Duende.Platform.Users;
-    using Duende.Platform.Users.Authentication;
-    using Duende.Platform.Users.Authentication.Otp;
+    using Duende.UserManagement;
+    using Duende.UserManagement.Authentication;
+    using Duende.UserManagement.Authentication.Otp;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;

@@ -16,7 +16,7 @@ public sealed record UserProfile
 {
     public UserSubjectId SubjectId { get; }
     public UserName? UserName { get; }
-    public IReadOnlyDictionary<AttributeName, AttributeValue> Attributes { get; }
+    public IReadOnlyDictionary<AttributeCode, AttributeValue> Attributes { get; }
 }
 ```
 
@@ -28,10 +28,10 @@ The system exposes three interfaces covering different access levels: self-servi
 
 All three interfaces are registered with the service provider by `AddUserProfiles()` and can be injected anywhere in your application:
 
-- **Razor Pages**: inject into page models to read or update the current user's profile.
-- **MVC controllers**: inject into controllers for profile endpoints.
-- **Backend services / hosted services**: inject into `IHostedService` implementations for background provisioning or migration tasks.
-- **Seed scripts / startup code**: inject `IUserProfileSchemaAdmin` into an `IHostedService` or a startup filter to initialize the schema before the application starts serving requests.
+* **Razor Pages**: inject into page models to read or update the current user's profile.
+* **MVC controllers**: inject into controllers for profile endpoints.
+* **Backend services / hosted services**: inject into `IHostedService` implementations for background provisioning or migration tasks.
+* **Seed scripts / startup code**: inject `IUserProfileSchemaAdmin` into an `IHostedService` or a startup filter to initialize the schema before the application starts serving requests.
 
 ## Registration
 
@@ -47,7 +47,7 @@ This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSche
 
 ## Schema Management
 
-Before storing attributes you must define them in the schema. The schema is a dictionary of `AttributeName` to `AttributeDefinition` pairs that describes every attribute the system accepts, its data type, and optional uniqueness constraints.
+Before storing attributes you must define them in the schema. The schema is a dictionary of `AttributeCode` to `AttributeDefinition` pairs that describes every attribute the system accepts, its data type, and optional uniqueness constraints.
 
 ### `IUserProfileSchemaAdmin`
 
@@ -56,17 +56,19 @@ Before storing attributes you must define them in the schema. The schema is a di
 ```csharp
 public interface IUserProfileSchemaAdmin
 {
-    Task<IReadOnlyDictionary<AttributeName, AttributeDefinition>> GetAllAttributeDefinitionsAsync(Ct ct);
+    Task<IReadOnlyDictionary<AttributeCode, AttributeDefinition>> GetAllAttributeDefinitionsAsync(Ct ct);
 
     Task<bool> TryAddAttributeDefinitionAsync(AttributeDefinition definition, Ct ct);
 
-    Task<bool> TryRemoveAttributeDefinitionAsync(AttributeName name, Ct ct);
+    Task<bool> TryRemoveAttributeDefinitionAsync(AttributeCode code, Ct ct);
 }
 ```
 
-* `GetAllAttributeDefinitionsAsync`: Returns all currently registered attribute definitions keyed by name. Returns an empty dictionary when no schema has been configured yet.
-* `TryAddAttributeDefinitionAsync`: Adds a new attribute definition to the schema. Returns `true` on success and `false` if the definition could not be added (for example, a definition with the same name already exists).
-* `TryRemoveAttributeDefinitionAsync`: Removes an attribute definition by name. Returns `true` whether or not the definition existed.
+* `GetAllAttributeDefinitionsAsync`: Returns all currently registered attribute definitions keyed by code. Returns an empty dictionary when no schema has been configured yet.
+* `TryAddAttributeDefinitionAsync`: Adds a new attribute definition to the schema. Returns `true` on success and `false` if the definition could not be added (for example, a definition with the same code already exists).
+* `TryRemoveAttributeDefinitionAsync`: Removes an attribute definition by code. Returns `true` whether or not the definition existed.
+
+To organize attributes into groups and control their display order, see [Attribute groups and ordering](./attribute-groups.md).
 
 ### `AttributeDefinition`
 
@@ -75,21 +77,27 @@ An `AttributeDefinition` describes a single attribute in the schema.
 ```csharp
 public sealed record AttributeDefinition
 {
-    public AttributeName Name { get; }
+    public AttributeCode Code { get; }
+    public AttributeDisplayName? DisplayName { get; }
     public AttributeType AttributeType { get; }
     public ScalarDataType DataType { get; }   // convenience; throws for non-scalar types
     public AttributeDescription Description { get; }
     public bool IsUnique { get; }
     public IReadOnlyCollection<string> Tags { get; }
+    public AttributeGroupCode? GroupCode { get; }
+    public int Order { get; }
 }
 ```
 
-* `Name`: The attribute's identifier. Must be lowercase alphanumeric with underscores, not starting or ending with an underscore.
+* `Code`: The attribute's identifier. Must start with an ASCII letter, must not end with an underscore, and may only contain ASCII letters, digits, or underscores.
+* `DisplayName`: Optional human-readable display name for the attribute. When set, UIs can show this instead of the raw code.
 * `AttributeType`: The full type descriptor. Use `ScalarAttributeType`, `ComplexAttributeType`, or `ListAttributeType`.
 * `DataType`: Convenience accessor for scalar types. Throws `InvalidOperationException` for complex or list types.
 * `Description`: Human-readable description of the attribute.
 * `IsUnique`: When `true`, the system enforces that no two profiles share the same value for this attribute. Not supported for complex or list types.
 * `Tags`: Optional string tags for grouping or filtering definitions.
+* `GroupCode`: The code of the group this attribute belongs to. `null` means the attribute is ungrouped.
+* `Order`: Sort weight within the group. Lower values appear first.
 
 ### Attribute Types
 
@@ -120,20 +128,20 @@ public enum ScalarDataType
 The following example adds a custom `department` string attribute and a unique `employee_id` integer attribute to the schema:
 
 ```csharp
-using Duende.Platform.EntityAttributeValue;
-using Duende.Platform.Users.Profiles;
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement.Profiles;
 
 public class ProfileSchemaInitializer(IUserProfileSchemaAdmin schemaAdmin)
 {
     public async Task InitializeAsync(CancellationToken ct)
     {
         var department = new AttributeDefinition(
-            AttributeName.Parse("department"),
+            AttributeCode.Parse("department"),
             ScalarDataType.String,
             AttributeDescription.Parse("The department the user belongs to."));
 
         var employeeId = new AttributeDefinition(
-            AttributeName.Parse("employee_id"),
+            AttributeCode.Parse("employee_id"),
             ScalarDataType.Integer,
             AttributeDescription.Parse("The unique employee identifier."),
             isUnique: true);
@@ -158,7 +166,7 @@ var addressType = new ComplexAttributeType(
     });
 
 var address = new AttributeDefinition(
-    AttributeName.Parse("address"),
+    AttributeCode.Parse("address"),
     addressType,
     AttributeDescription.Parse("The user's postal address."));
 
@@ -171,7 +179,7 @@ Use `ListAttributeType` to model multi-value attributes such as a list of phone 
 
 ```csharp
 var phoneNumbers = new AttributeDefinition(
-    AttributeName.Parse("phone_numbers"),
+    AttributeCode.Parse("phone_numbers"),
     new ListAttributeType(new ScalarAttributeType(ScalarDataType.String)),
     AttributeDescription.Parse("Additional phone numbers for the user."));
 
@@ -182,7 +190,7 @@ await schemaAdmin.TryAddAttributeDefinitionAsync(phoneNumbers, ct);
 
 ```csharp
 await schemaAdmin.TryRemoveAttributeDefinitionAsync(
-    AttributeName.Parse("department"), ct);
+    AttributeCode.Parse("department"), ct);
 ```
 
 ### Inspecting the Schema
@@ -246,7 +254,7 @@ public sealed record UserProfile
 {
     public UserSubjectId SubjectId { get; }
     public UserName? UserName { get; }
-    public IReadOnlyDictionary<AttributeName, AttributeValue> Attributes { get; }
+    public IReadOnlyDictionary<AttributeCode, AttributeValue> Attributes { get; }
 
     public UserProfileUpdate ToUpdate();
 }
@@ -254,7 +262,7 @@ public sealed record UserProfile
 
 * `SubjectId`: The unique subject identifier for the user.
 * `UserName`: The user's login name, if one has been set.
-* `Attributes`: All stored attribute values keyed by `AttributeName`.
+* `Attributes`: All stored attribute values keyed by `AttributeCode`.
 * `ToUpdate()`: Creates a `UserProfileUpdate` pre-populated with the profile's current attribute values, ready for modification and submission.
 
 ### `UserProfileUpdate`
@@ -285,27 +293,27 @@ public sealed record UserProfileListItem
 
 ### `UserProfileAttributeProjection`
 
-`UserProfileAttributeProjection` is the result type returned by the `QueryAsync` overload that accepts a `HashSet<AttributeName>`. It contains only the attributes you requested, making it more efficient than fetching full `UserProfile` records when you need a subset of data.
+`UserProfileAttributeProjection` is the result type returned by the `QueryAsync` overload that accepts a `HashSet<AttributeCode>`. It contains only the attributes you requested, making it more efficient than fetching full `UserProfile` records when you need a subset of data.
 
 ```csharp
 public sealed record UserProfileAttributeProjection
 {
     public UserSubjectId SubjectId { get; }
     public UserName? UserName { get; }
-    public IReadOnlyDictionary<AttributeName, AttributeValue> Attributes { get; }
+    public IReadOnlyDictionary<AttributeCode, AttributeValue> Attributes { get; }
 
-    public AttributeValue this[AttributeName name] { get; }
-    public bool Contains(AttributeName name);
-    public bool TryGet(AttributeName name, out AttributeValue? value);
+    public AttributeValue this[AttributeCode code] { get; }
+    public bool Contains(AttributeCode code);
+    public bool TryGet(AttributeCode code, out AttributeValue? value);
 }
 ```
 
 * `SubjectId`: The user's subject identifier.
 * `UserName`: The user's username, if available.
-* `Attributes`: The projected attributes as a dictionary keyed by `AttributeName`. Only the attributes requested in the query are present.
-* `this[AttributeName]`: Gets an attribute value by name. Throws when the attribute is not present in the projection.
-* `Contains(AttributeName)`: Returns `true` when the named attribute is present in the projection.
-* `TryGet(AttributeName, out AttributeValue?)`: Tries to retrieve an attribute value by name. Returns `false` when the attribute is not present.
+* `Attributes`: The projected attributes as a dictionary keyed by `AttributeCode`. Only the attributes requested in the query are present.
+* `this[AttributeCode]`: Gets an attribute value by code. Throws when the attribute is not present in the projection.
+* `Contains(AttributeCode)`: Returns `true` when the named attribute is present in the projection.
+* `TryGet(AttributeCode, out AttributeValue?)`: Tries to retrieve an attribute value by code. Returns `false` when the attribute is not present.
 
 ### `AttributeValueCollection`
 
@@ -317,10 +325,10 @@ public sealed class AttributeValueCollection : IEnumerable<AttributeValue>
     public int Count { get; }
 
     public void Set(AttributeValue attribute);
-    public bool Remove(AttributeName name);
-    public bool Contains(AttributeName name);
-    public bool TryGet(AttributeName name, out AttributeValue attribute);
-    public AttributeValue this[AttributeName name] { get; }
+    public bool Remove(AttributeCode code);
+    public bool Contains(AttributeCode code);
+    public bool TryGet(AttributeCode code, out AttributeValue attribute);
+    public AttributeValue this[AttributeCode code] { get; }
 }
 ```
 
@@ -330,9 +338,9 @@ Build an `AttributeValueCollection` from the schema so that attribute values are
 var schema = await selfService.GetSchemaAsync(ct);
 var attributes = new AttributeValueCollection();
 
-attributes.Set(schema.CreateAttribute(AttributeName.Parse("given_name"), "Jane"));
-attributes.Set(schema.CreateAttribute(AttributeName.Parse("family_name"), "Smith"));
-attributes.Set(schema.CreateAttribute(AttributeName.Parse("email_verified"), true));
+attributes.Set(schema.CreateAttribute(AttributeCode.Parse("given_name"), "Jane"));
+attributes.Set(schema.CreateAttribute(AttributeCode.Parse("family_name"), "Smith"));
+attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email_verified"), true));
 ```
 
 ## Self-Service Profile Operations
@@ -362,9 +370,9 @@ public interface IUserProfileSelfService
 ### Registering a Profile
 
 ```csharp
-using Duende.Platform.EntityAttributeValue;
-using Duende.Platform.Users;
-using Duende.Platform.Users.Profiles;
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement;
+using Duende.UserManagement.Profiles;
 
 public class RegistrationService(IUserProfileSelfService profileService)
 {
@@ -378,9 +386,9 @@ public class RegistrationService(IUserProfileSelfService profileService)
         var schema = await profileService.GetSchemaAsync(ct);
         var attributes = new AttributeValueCollection();
 
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("given_name"), givenName));
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("family_name"), familyName));
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("email"), email));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("given_name"), givenName));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("family_name"), familyName));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email"), email));
 
         return await profileService.TryRegisterAsync(
             UserSubjectId.Parse(subjectId), attributes, ct);
@@ -399,7 +407,7 @@ if (profile is null)
     return;
 }
 
-if (profile.Attributes.TryGetValue(AttributeName.Parse("given_name"), out var givenName))
+if (profile.Attributes.TryGetValue(AttributeCode.Parse("given_name"), out var givenName))
 {
     Console.WriteLine($"Hello, {givenName}");
 }
@@ -420,7 +428,7 @@ if (profile is null)
 var schema = await profileService.GetSchemaAsync(ct);
 var update = profile.ToUpdate();
 
-update.Attributes.Set(schema.CreateAttribute(AttributeName.Parse("given_name"), "Janet"));
+update.Attributes.Set(schema.CreateAttribute(AttributeCode.Parse("given_name"), "Janet"));
 
 var updated = await profileService.TryUpdateAsync(
     UserSubjectId.Parse(subjectId), update, ct);
@@ -441,21 +449,21 @@ public interface IUserProfileAdmin
 
     Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
 
-    Task<UserProfile?> TryGetAsync(AttributeName attributeName, object value, Ct ct);
+    Task<UserProfile?> TryGetAsync(AttributeCode attributeCode, object value, Ct ct);
 }
 ```
 
 * `GetSchemaAsync`: Returns the current attribute schema, identical to the self-service variant.
 * `TryAddAsync`: Creates a new profile for the given subject. Returns the created `UserProfile` on success, or `null` if a profile already exists.
 * `TryGetAsync(UserSubjectId, Ct)`: Retrieves a profile by subject identifier.
-* `TryGetAsync(AttributeName, object, Ct)`: Retrieves a profile by matching an attribute value. This overload is useful for looking up a user by a unique attribute such as `employee_id` or `email`. Returns `null` when no matching profile is found.
+* `TryGetAsync(AttributeCode, object, Ct)`: Retrieves a profile by matching an attribute value. This overload is useful for looking up a user by a unique attribute such as `employee_id` or `email`. Returns `null` when no matching profile is found.
 
 ### Creating a Profile (Admin)
 
 ```csharp
-using Duende.Platform.EntityAttributeValue;
-using Duende.Platform.Users;
-using Duende.Platform.Users.Profiles;
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement;
+using Duende.UserManagement.Profiles;
 
 public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
 {
@@ -468,8 +476,8 @@ public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
         var schema = await profileAdmin.GetSchemaAsync(ct);
         var attributes = new AttributeValueCollection();
 
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("email"), email));
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("employee_id"), employeeId));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email"), email));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("employee_id"), employeeId));
 
         return await profileAdmin.TryAddAsync(
             UserSubjectId.Parse(subjectId), attributes, ct);
@@ -481,7 +489,7 @@ public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
 
 ```csharp
 var profile = await profileAdmin.TryGetAsync(
-    AttributeName.Parse("employee_id"),
+    AttributeCode.Parse("employee_id"),
     42,
     ct);
 
@@ -508,7 +516,7 @@ public interface IUserProfileAdmin
     
     Task<QueryResult<UserProfileAttributeProjection>> QueryAsync(
         QueryRequest request,
-        HashSet<AttributeName> attributes,
+        HashSet<AttributeCode> attributes,
         CancellationToken ct);
 }
 ```
@@ -517,13 +525,13 @@ Filtering and sorting are not supported for profile queries; only pagination via
 
 * **`QueryAsync(QueryRequest, CancellationToken)`**: Returns a paged list of `UserProfile` records. Use `QueryRequest.Create(new DataRange(offset, limit))` to control pagination.
 
-* **`QueryAsync(QueryRequest, HashSet<AttributeName>, CancellationToken)`**: Returns a paged list of `UserProfileAttributeProjection` records with only the specified attributes. This overload is useful for performance optimization when you only need a subset of attributes. The projection includes `SubjectId`, `UserName`, and the requested attributes.
+* **`QueryAsync(QueryRequest, HashSet<AttributeCode>, CancellationToken)`**: Returns a paged list of `UserProfileAttributeProjection` records with only the specified attributes. This overload is useful for performance optimization when you only need a subset of attributes. The projection includes `SubjectId`, `UserName`, and the requested attributes.
 
 ### Querying All Profiles
 
 ```csharp
-using Duende.Platform.Storage;
-using Duende.Platform.Users.Profiles;
+using Duende.Storage;
+using Duende.UserManagement.Profiles;
 
 var request = QueryRequest.Create(new DataRange(0, 50));
 var result = await userProfileAdmin.QueryAsync(request, ct);
@@ -537,15 +545,15 @@ foreach (var profile in result.Items)
 ### Querying Profiles with Attribute Projection
 
 ```csharp
-using Duende.Platform.EntityAttributeValue;
-using Duende.Platform.Storage;
-using Duende.Platform.Users.Profiles;
+using Duende.Storage.EntityAttributeValue;
+using Duende.Storage;
+using Duende.UserManagement.Profiles;
 
 // Only retrieve email and department attributes for performance
-var attributes = new HashSet<AttributeName>
+var attributes = new HashSet<AttributeCode>
 {
-    AttributeName.Parse("email"),
-    AttributeName.Parse("department")
+    AttributeCode.Parse("email"),
+    AttributeCode.Parse("department")
 };
 
 var request = QueryRequest.Create(new DataRange(0, 50));
@@ -568,25 +576,25 @@ foreach (var projection in projections.Items)
 ```csharp
 public interface IReadOnlyAttributeSchema
 {
-    IReadOnlyDictionary<AttributeName, AttributeDefinition> AttributeDefinitions { get; }
+    IReadOnlyDictionary<AttributeCode, AttributeDefinition> AttributeDefinitions { get; }
 
-    AttributeValue<bool>                              CreateAttribute(AttributeName name, bool value);
-    AttributeValue<DateOnly>                          CreateAttribute(AttributeName name, DateOnly value);
-    AttributeValue<DateTimeOffset>                    CreateAttribute(AttributeName name, DateTimeOffset value);
-    AttributeValue<decimal>                           CreateAttribute(AttributeName name, decimal value);
-    AttributeValue<int>                               CreateAttribute(AttributeName name, int value);
-    AttributeValue<string>                            CreateAttribute(AttributeName name, string value);
-    AttributeValue<IReadOnlyDictionary<string,object>> CreateAttribute(AttributeName name, IReadOnlyDictionary<string, object> complexValue);
-    AttributeValue<IReadOnlyList<object>>             CreateAttribute(AttributeName name, IReadOnlyList<object> listValue);
+    AttributeValue<bool>                              CreateAttribute(AttributeCode name, bool value);
+    AttributeValue<DateOnly>                          CreateAttribute(AttributeCode name, DateOnly value);
+    AttributeValue<DateTimeOffset>                    CreateAttribute(AttributeCode name, DateTimeOffset value);
+    AttributeValue<decimal>                           CreateAttribute(AttributeCode name, decimal value);
+    AttributeValue<int>                               CreateAttribute(AttributeCode name, int value);
+    AttributeValue<string>                            CreateAttribute(AttributeCode name, string value);
+    AttributeValue<IReadOnlyDictionary<string,object>> CreateAttribute(AttributeCode name, IReadOnlyDictionary<string, object> complexValue);
+    AttributeValue<IReadOnlyList<object>>             CreateAttribute(AttributeCode name, IReadOnlyList<object> listValue);
 
-    bool TryCreateAttribute(AttributeName name, bool value, out AttributeValue<bool>? attribute);
-    bool TryCreateAttribute(AttributeName name, DateOnly value, out AttributeValue<DateOnly>? attribute);
-    bool TryCreateAttribute(AttributeName name, DateTimeOffset value, out AttributeValue<DateTimeOffset>? attribute);
-    bool TryCreateAttribute(AttributeName name, decimal value, out AttributeValue<decimal>? attribute);
-    bool TryCreateAttribute(AttributeName name, int value, out AttributeValue<int>? attribute);
-    bool TryCreateAttribute(AttributeName name, string value, out AttributeValue<string>? attribute);
-    bool TryCreateAttribute(AttributeName name, IReadOnlyDictionary<string, object> complexValue, out AttributeValue<IReadOnlyDictionary<string, object>>? attribute);
-    bool TryCreateAttribute(AttributeName name, IReadOnlyList<object> listValue, out AttributeValue<IReadOnlyList<object>>? attribute);
+    bool TryCreateAttribute(AttributeCode name, bool value, out AttributeValue<bool>? attribute);
+    bool TryCreateAttribute(AttributeCode name, DateOnly value, out AttributeValue<DateOnly>? attribute);
+    bool TryCreateAttribute(AttributeCode name, DateTimeOffset value, out AttributeValue<DateTimeOffset>? attribute);
+    bool TryCreateAttribute(AttributeCode name, decimal value, out AttributeValue<decimal>? attribute);
+    bool TryCreateAttribute(AttributeCode name, int value, out AttributeValue<int>? attribute);
+    bool TryCreateAttribute(AttributeCode name, string value, out AttributeValue<string>? attribute);
+    bool TryCreateAttribute(AttributeCode name, IReadOnlyDictionary<string, object> complexValue, out AttributeValue<IReadOnlyDictionary<string, object>>? attribute);
+    bool TryCreateAttribute(AttributeCode name, IReadOnlyList<object> listValue, out AttributeValue<IReadOnlyList<object>>? attribute);
 
     AttributeValueCollection CreateAttributes(IEnumerable<AttributeValue> attributes);
 }
@@ -602,9 +610,9 @@ public interface IReadOnlyAttributeSchema
 The following example shows a complete flow: initialising the schema on startup, registering a user profile, and then reading it back.
 
 ```csharp
-using Duende.Platform.EntityAttributeValue;
-using Duende.Platform.Users;
-using Duende.Platform.Users.Profiles;
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement;
+using Duende.UserManagement.Profiles;
 
 // 1. Add OIDC standard attributes and a custom attribute to the schema.
 public class SchemaSetup(IUserProfileSchemaAdmin schemaAdmin)
@@ -617,7 +625,7 @@ public class SchemaSetup(IUserProfileSchemaAdmin schemaAdmin)
         await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVerified, ct);
 
         var department = new AttributeDefinition(
-            AttributeName.Parse("department"),
+            AttributeCode.Parse("department"),
             ScalarDataType.String,
             AttributeDescription.Parse("The department the user belongs to."));
 
@@ -638,10 +646,10 @@ public class OnboardingHandler(IUserProfileSelfService profileService)
         var schema = await profileService.GetSchemaAsync(ct);
         var attributes = new AttributeValueCollection();
 
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("given_name"), givenName));
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("family_name"), familyName));
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("email"), email));
-        attributes.Set(schema.CreateAttribute(AttributeName.Parse("email_verified"), false));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("given_name"), givenName));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("family_name"), familyName));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email"), email));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email_verified"), false));
 
         return await profileService.TryRegisterAsync(
             UserSubjectId.Parse(subjectId), attributes, ct);

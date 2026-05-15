@@ -39,15 +39,15 @@ For applications requiring FAPI (Financial-grade API) compliance, Duende offers 
 
 ## Passkeys vs Other Authentication Methods
 
-| Aspect | Passkeys | Time-Based One-Time Password (TOTP) | Password |
-|---|---|---|---|
-| **Phishing resistance** | Excellent | High | None |
-| **User experience** | Excellent | Moderate | Moderate |
-| **Device dependency** | Yes | Yes (app) | No |
-| **Offline support** | Yes | Yes | Yes |
-| **Shared secret** | No | Yes | Yes |
-| **Replay attacks** | Not vulnerable | Not vulnerable | Vulnerable |
-| **Setup complexity** | Low | Moderate | Low |
+| Aspect                  | Passkeys       | Time-Based One-Time Password (TOTP) | Password   |
+|-------------------------|----------------|-------------------------------------|------------|
+| **Phishing resistance** | Excellent      | High                                | None       |
+| **User experience**     | Excellent      | Moderate                            | Moderate   |
+| **Device dependency**   | Yes            | Yes (app)                           | No         |
+| **Offline support**     | Yes            | Yes                                 | Yes        |
+| **Shared secret**       | No             | Yes                                 | Yes        |
+| **Replay attacks**      | Not vulnerable | Not vulnerable                      | Vulnerable |
+| **Setup complexity**    | Low            | Moderate                            | Low        |
 
 ## How It Works
 
@@ -184,18 +184,18 @@ builder.Services.AddDuendePlatform()
 
 All `PasskeyOptions` properties and their defaults:
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `RelyingPartyName` | `string` | Assembly name | Human-readable name shown during registration |
-| `ServerDomain` | `string?` | `null` | Relying party ID (domain). Set to share passkeys across subdomains |
-| `AllowedOrigins` | `IReadOnlyList<string>?` | `null` | Fully-qualified origins permitted to use passkeys |
-| `UserVerificationRequirement` | `string` | `"preferred"` | Whether user verification (PIN/biometric) is required |
-| `AttestationConveyancePreference` | `string` | `"none"` | Whether attestation statements are requested |
-| `AuthenticatorAttachment` | `string?` | `null` | Restrict to `"platform"` or `"cross-platform"` authenticators |
-| `ResidentKeyRequirement` | `string` | `"preferred"` | Whether discoverable credentials are required |
-| `ChallengeSize` | `int` | `32` | Challenge size in bytes |
-| `ChallengeTimeout` | `TimeSpan` | 5 minutes | How long a challenge remains valid |
-| `SupportedAlgorithms` | `IReadOnlyList<int>` | `[]` (all) | COSE algorithm identifiers, in preference order |
+| Property                          | Type                     | Default       | Description                                                        |
+|-----------------------------------|--------------------------|---------------|--------------------------------------------------------------------|
+| `RelyingPartyName`                | `string`                 | Assembly name | Human-readable name shown during registration                      |
+| `ServerDomain`                    | `string?`                | `null`        | Relying party ID (domain). Set to share passkeys across subdomains |
+| `AllowedOrigins`                  | `IReadOnlyList<string>?` | `null`        | Fully-qualified origins permitted to use passkeys                  |
+| `UserVerificationRequirement`     | `string`                 | `"preferred"` | Whether user verification (PIN/biometric) is required              |
+| `AttestationConveyancePreference` | `string`                 | `"none"`      | Whether attestation statements are requested                       |
+| `AuthenticatorAttachment`         | `string?`                | `null`        | Restrict to `"platform"` or `"cross-platform"` authenticators      |
+| `ResidentKeyRequirement`          | `string`                 | `"preferred"` | Whether discoverable credentials are required                      |
+| `ChallengeSize`                   | `int`                    | `32`          | Challenge size in bytes                                            |
+| `ChallengeTimeout`                | `TimeSpan`               | 5 minutes     | How long a challenge remains valid                                 |
+| `SupportedAlgorithms`             | `IReadOnlyList<int>`     | `[]` (all)    | COSE algorithm identifiers, in preference order                    |
 
 ## Core Passkey Management
 
@@ -264,14 +264,14 @@ foreach (var passkey in authenticators?.Passkeys ?? [])
 
 When `AddUserAuthentication()` is called, the following HTTP endpoints are registered automatically to handle the WebAuthn ceremony protocol:
 
-| Endpoint | Method | Default Path | Description |
-|---|---|---|---|
-| Begin Registration | `POST` | `/passkeys/register/begin` | Starts a registration ceremony for the authenticated user |
-| Complete Registration | `POST` | `/passkeys/register/complete` | Validates the attestation response and stores the credential |
-| Begin Authentication (2nd factor) | `POST` | `/passkeys/authenticate/begin` | Starts an authentication ceremony for a known user (second-factor) |
-| Begin Discoverable Authentication | `POST` | `/passkeys/authenticate/discoverable/begin` | Starts a usernameless authentication ceremony |
-| Complete Authentication | `POST` | `/passkeys/authenticate/complete` | Validates the assertion response and signs the user in |
-| JavaScript Helper | `GET` | `/passkeys/js` | Serves the built-in passkeys JavaScript helper |
+| Endpoint                          | Method | Default Path                                | Description                                                        |
+|-----------------------------------|--------|---------------------------------------------|--------------------------------------------------------------------|
+| Begin Registration                | `POST` | `/passkeys/register/begin`                  | Starts a registration ceremony for the authenticated user          |
+| Complete Registration             | `POST` | `/passkeys/register/complete`               | Validates the attestation response and stores the credential       |
+| Begin Authentication (2nd factor) | `POST` | `/passkeys/authenticate/begin`              | Starts an authentication ceremony for a known user (second-factor) |
+| Begin Discoverable Authentication | `POST` | `/passkeys/authenticate/discoverable/begin` | Starts a usernameless authentication ceremony                      |
+| Complete Authentication           | `POST` | `/passkeys/authenticate/complete`           | Validates the assertion response and signs the user in             |
+| JavaScript Helper                 | `GET`  | `/passkeys/js`                              | Serves the built-in passkeys JavaScript helper                     |
 
 The Begin Registration and Complete Registration endpoints require an authenticated user (they use `RequireAuthorization()`). The authentication endpoints are unauthenticated; they establish the session.
 
@@ -316,15 +316,15 @@ builder.Services.AddDuendePlatform()
 
 `PasskeysRouteOptions` properties:
 
-| Property | Default | Description |
-|---|---|---|
-| `Route` | `/passkeys` | Base route prefix for all passkey endpoints |
-| `BeginRegistration` | `/register/begin` | Path for the begin registration endpoint |
-| `CompleteRegistration` | `/register/complete` | Path for the complete registration endpoint |
-| `BeginAuthentication` | `/authenticate/begin` | Path for the begin authentication endpoint (second-factor) |
-| `BeginDiscoverableAuthentication` | `/authenticate/discoverable/begin` | Path for the begin discoverable authentication endpoint |
-| `CompleteAuthentication` | `/authenticate/complete` | Path for the complete authentication endpoint |
-| `PasskeysJavaScript` | `/js` | Path for the JavaScript helper endpoint |
+| Property                          | Default                            | Description                                                |
+|-----------------------------------|------------------------------------|------------------------------------------------------------|
+| `Route`                           | `/passkeys`                        | Base route prefix for all passkey endpoints                |
+| `BeginRegistration`               | `/register/begin`                  | Path for the begin registration endpoint                   |
+| `CompleteRegistration`            | `/register/complete`               | Path for the complete registration endpoint                |
+| `BeginAuthentication`             | `/authenticate/begin`              | Path for the begin authentication endpoint (second-factor) |
+| `BeginDiscoverableAuthentication` | `/authenticate/discoverable/begin` | Path for the begin discoverable authentication endpoint    |
+| `CompleteAuthentication`          | `/authenticate/complete`           | Path for the complete authentication endpoint              |
+| `PasskeysJavaScript`              | `/js`                              | Path for the JavaScript helper endpoint                    |
 
 ### Ceremony Protocol
 
@@ -540,7 +540,7 @@ public async Task<IActionResult> OnPostLogin(string username, string password, C
 {
     var result = await passwordAuth.TryAuthenticateAsync(
         UserName.Parse(username),
-        passwordFactory.Create(password),
+        NonValidatedPassword.Parse(password),
         ct);
 
     if (result is not PasswordAuthenticationResult.Success success)
@@ -661,3 +661,103 @@ When the server validates a completed WebAuthn ceremony, it compares the challen
 User Management now uses a constant-time comparison for challenge validation. The comparison always takes the same amount of time regardless of how many bytes match, eliminating this timing side-channel.
 
 This is a defense-in-depth measure. WebAuthn challenges are already large (32 bytes of random data by default) and single-use, so the practical exploitability of a timing side-channel is very low. Constant-time comparison removes it entirely.
+
+## Attestation Trust Policies
+
+By default, User Management accepts any authenticator during passkey registration. If you need to restrict which authenticators are allowed, you can implement `IAttestationTrustPolicy`. Common reasons to do this include:
+
+* Enforcing enterprise security policies that permit only corporate-managed hardware
+* Requiring FIDO-certified authenticators for regulated environments
+* Allowlisting specific authenticator models by their AAGUID
+
+### IAttestationTrustPolicy
+
+Implement `IAttestationTrustPolicy` (in `Duende.UserManagement.Authentication.Passkeys`) to evaluate each authenticator at registration time:
+
+```csharp
+// IAttestationTrustPolicy.cs
+public interface IAttestationTrustPolicy
+{
+    ValueTask<AttestationTrustPolicyResult> EvaluateAsync(AttestationTrustContext context, CancellationToken ct);
+}
+```
+
+Your implementation receives an `AttestationTrustContext` and returns either `Accept()` or `Reject(reason)`.
+
+### AttestationTrustContext
+
+`AttestationTrustContext` carries all the information you need to make a trust decision:
+
+```csharp
+// AttestationTrustContext.cs
+public sealed record AttestationTrustContext
+{
+    public required UserSubjectId UserSubjectId { get; init; }
+    public required Guid Aaguid { get; init; }
+    public required string AttestationFormat { get; init; }
+    public IReadOnlyList<byte[]>? CertificateChain { get; init; }
+}
+```
+
+* `UserSubjectId`: the user registering the credential, so you can make per-user trust decisions if needed
+* `Aaguid`: the authenticator model identifier from the attested credential data; use this to allowlist or blocklist specific models
+* `AttestationFormat`: the attestation format string (for example, `"none"`, `"packed"`, `"tpm"`)
+* `CertificateChain`: DER-encoded certificate bytes from the attestation statement, if present. Index 0 is the attestation certificate. This is `null` when the format carries no certificates (for example, `"none"` or self-attestation)
+
+### AttestationTrustPolicyResult
+
+Return `Accept()` to allow the registration to proceed, or `Reject(reason)` to block it:
+
+```csharp
+// Accept the authenticator
+return AttestationTrustPolicyResult.Accept();
+
+// Reject with a reason
+return AttestationTrustPolicyResult.Reject("Authenticator not in allowlist.");
+```
+
+### Registering a Custom Policy
+
+Register your policy using `WithAttestationTrustPolicy<T>()` on the passkey builder:
+
+```csharp
+// Program.cs
+builder.AddDuendePlatform()
+    .AddUserAuthentication(auth =>
+        auth.AddPasskeyAuthentication(passkeys =>
+            passkeys.WithAttestationTrustPolicy<MyAttestationTrustPolicy>()));
+```
+
+### Example: AAGUID Allowlist
+
+The following example shows a complete policy that only accepts authenticators whose AAGUID appears in a known-good list:
+
+```csharp
+// MyAttestationTrustPolicy.cs
+using Duende.UserManagement.Authentication.Passkeys;
+
+public class MyAttestationTrustPolicy : IAttestationTrustPolicy
+{
+    // Known-good authenticator AAGUIDs (e.g. YubiKey 5 series)
+    private static readonly HashSet<Guid> AllowedAaguids =
+    [
+        Guid.Parse("2fc0579f-8113-47ea-b116-bb5a8db9202a"), // YubiKey 5 NFC
+        Guid.Parse("c1f9a0bc-1dd2-404a-b27f-8e29047a43fd"), // YubiKey 5C
+    ];
+
+    public ValueTask<AttestationTrustPolicyResult> EvaluateAsync(
+        AttestationTrustContext context,
+        CancellationToken ct)
+    {
+        if (AllowedAaguids.Contains(context.Aaguid))
+            return ValueTask.FromResult(AttestationTrustPolicyResult.Accept());
+
+        return ValueTask.FromResult(
+            AttestationTrustPolicyResult.Reject($"Authenticator {context.Aaguid} is not in the allowlist."));
+    }
+}
+```
+
+:::tip
+`AAGUID` values for well-known authenticators are published by the FIDO Alliance in the [FIDO Metadata Service](https://fidoalliance.org/metadata/). You can use the metadata service to look up AAGUIDs for specific authenticator models and build your allowlist from there.
+:::

@@ -147,14 +147,14 @@ Backup authentication using single-use codes generated when two-factor authentic
 
 ## Flow Comparison
 
-| Flow | Requires Password | User Experience | Security Level | Network Required |
-|------|:-----------------:|-----------------|:--------------:|:----------------:|
-| **OTP** | No | Simple, passwordless | Medium | Yes (to receive code) |
-| **TOTP** | Yes* | Two-step | High | No |
-| **Passwords** | Yes | Traditional | Medium | No |
-| **External** | No | Familiar (social/SSO) | Medium-High | Yes (for auth) |
-| **Passkeys** | No | Biometric / hardware key | Very High | No |
-| **Recovery Codes** | No | Emergency only | Medium | No |
+| Flow               | Requires Password | User Experience          | Security Level |   Network Required    |
+|--------------------|:-----------------:|--------------------------|:--------------:|:---------------------:|
+| **OTP**            |        No         | Simple, passwordless     |     Medium     | Yes (to receive code) |
+| **TOTP**           |       Yes*        | Two-step                 |      High      |          No           |
+| **Passwords**      |        Yes        | Traditional              |     Medium     |          No           |
+| **External**       |        No         | Familiar (social/SSO)    |  Medium-High   |    Yes (for auth)     |
+| **Passkeys**       |        No         | Biometric / hardware key |   Very High    |          No           |
+| **Recovery Codes** |        No         | Emergency only           |     Medium     |          No           |
 
 \* TOTP is typically used as a second factor on top of password authentication.
 
@@ -162,24 +162,24 @@ Backup authentication using single-use codes generated when two-factor authentic
 
 ### OTP vs Password vs External Authentication
 
-| Aspect | OTP | Password | External Auth |
-|--------|-----|----------|---------------|
-| **User Memory** | Nothing to remember | Must remember password | Nothing to remember |
-| **Offline Support** | No | Yes | No |
-| **Security** | Channel-dependent | Strength-dependent | Provider-dependent |
-| **User Friction** | Check email or SMS | Type password | Click button |
-| **Infrastructure** | Email or SMS provider | Password hashing | External identity provider |
+| Aspect              | OTP                   | Password               | External Auth              |
+|---------------------|-----------------------|------------------------|----------------------------|
+| **User Memory**     | Nothing to remember   | Must remember password | Nothing to remember        |
+| **Offline Support** | No                    | Yes                    | No                         |
+| **Security**        | Channel-dependent     | Strength-dependent     | Provider-dependent         |
+| **User Friction**   | Check email or SMS    | Type password          | Click button               |
+| **Infrastructure**  | Email or SMS provider | Password hashing       | External identity provider |
 
 ### TOTP vs SMS as a Second Factor
 
-| Aspect | TOTP | SMS |
-|--------|------|-----|
-| **Security** | High | Medium |
-| **Offline** | Yes | No |
-| **Phishing resistance** | High | Low |
-| **SIM swapping** | Not vulnerable | Vulnerable |
-| **Cost** | Free | SMS costs |
-| **Setup** | Requires authenticator app | Works with any phone |
+| Aspect                  | TOTP                       | SMS                  |
+|-------------------------|----------------------------|----------------------|
+| **Security**            | High                       | Medium               |
+| **Offline**             | Yes                        | No                   |
+| **Phishing resistance** | High                       | Low                  |
+| **SIM swapping**        | Not vulnerable             | Vulnerable           |
+| **Cost**                | Free                       | SMS costs            |
+| **Setup**               | Requires authenticator app | Works with any phone |
 
 ## Choosing a Flow
 
@@ -249,7 +249,7 @@ Authenticate with a password first, then check whether the user has a TOTP authe
 // Primary authentication with password
 var result = await passwordAuth.TryAuthenticateAsync(
     UserName.Parse(username),
-    passwordFactory.Create(password),
+    NonValidatedPassword.Parse(password),
     ct);
 
 if (result is not PasswordAuthenticationResult.Success success)

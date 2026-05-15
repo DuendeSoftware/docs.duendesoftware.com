@@ -31,7 +31,7 @@ TOTP (Time-Based One-Time Password) adds a second factor using time-synchronized
 * Low-risk applications with non-sensitive data
 * High-frequency access scenarios where the additional step creates significant friction
 
-For a comparison of all authentication methods, see [Choosing an Authentication Method](/usermanagement/authentication/overview#choosing-an-authentication-method).
+For a comparison of all authentication methods, see [Choosing an Authentication Method](/usermanagement/authentication/overview.mdx#choosing-an-authentication-method).
 
 ## How It Works
 
@@ -313,7 +313,7 @@ public async Task<IActionResult> OnPostLogin(string username, string password, C
     // Step 1: Verify primary credentials
     var result = await passwordAuth.TryAuthenticateAsync(
         UserName.Parse(username),
-        passwordFactory.Create(password),
+        NonValidatedPassword.Parse(password),
         ct);
 
     if (result is not PasswordAuthenticationResult.Success success)

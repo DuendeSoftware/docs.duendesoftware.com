@@ -41,11 +41,11 @@ See [Storage](/usermanagement/fundamentals/storage.md) for details on the storag
 
 Self-service interfaces are intended for user-facing operations: actions a user performs on their own account.
 
-| Interface | Purpose |
-|-----------|---------|
-| `IUserSelfService` | Set or remove a username; deregister (delete) the user's own account |
+| Interface                        | Purpose                                                                                                                                                                                                                                                                                                                                       |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `IUserSelfService`               | Set or remove a username; deregister (delete) the user's own account                                                                                                                                                                                                                                                                          |
 | `IUserAuthenticatorsSelfService` | All authenticator management: register by One-Time Password (OTP) address or external authenticator; look up authenticators; add/replace/remove OTP addresses; add/remove external authenticators; add/remove Time-Based One-Time Password (TOTP) authenticators; add/remove passkeys; create recovery codes; set, change, and reset password |
-| `IUserProfileSelfService` | User profile operations: get the attribute schema; register a profile; get the current profile; update profile attributes |
+| `IUserProfileSelfService`        | User profile operations: get the attribute schema; register a profile; get the current profile; update profile attributes                                                                                                                                                                                                                     |
 
 #### IUserSelfService
 
@@ -105,15 +105,15 @@ Task<UserProfile?> TryUpdateAsync(UserSubjectId subjectId, UserProfileUpdate upd
 
 Admin interfaces are intended for back-office and management operations: actions performed by administrators or background services.
 
-| Interface | Purpose |
-|-----------|---------|
-| `IUserAdmin` | Set or remove a username; remove a user entirely |
+| Interface                  | Purpose                                                                                                                                                                                          |
+|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `IUserAdmin`               | Set or remove a username; remove a user entirely                                                                                                                                                 |
 | `IUserAuthenticatorsAdmin` | Admin-level authenticator management: create user with OTP addresses and external authenticators; look up authenticators; bulk add/remove OTP addresses; bulk add/remove external authenticators |
-| `IUserProfileAdmin` | Admin profile operations: get the attribute schema; add a profile; get a profile by subject ID or by attribute value |
-| `IUserProfileSchemaAdmin` | Manage attribute definitions: get all definitions; add a definition; remove a definition |
-| `IRoleAdmin` | Role CRUD: create, get, update, delete, and query roles with filtering, sorting, and pagination |
-| `IGroupAdmin` | Group CRUD: create, get, update, delete, and query groups with filtering, sorting, and pagination |
-| `IMembershipAdmin` | Role and group assignment, and query operations for users and groups |
+| `IUserProfileAdmin`        | Admin profile operations: get the attribute schema; add a profile; get a profile by subject ID or by attribute value                                                                             |
+| `IUserProfileSchemaAdmin`  | Manage attribute definitions: get all definitions; add a definition; remove a definition                                                                                                         |
+| `IRoleAdmin`               | Role CRUD: create, get, update, delete, and query roles with filtering, sorting, and pagination                                                                                                  |
+| `IGroupAdmin`              | Group CRUD: create, get, update, delete, and query groups with filtering, sorting, and pagination                                                                                                |
+| `IMembershipAdmin`         | Role and group assignment, and query operations for users and groups                                                                                                                             |
 
 #### IUserAdmin
 
@@ -223,12 +223,12 @@ Task<QueryResult<MembershipGroupMemberListDto>> GetMembersInGroupAsync(GroupId g
 
 Authentication interfaces verify credentials during sign-in flows.
 
-| Interface | Purpose |
-|-----------|---------|
-| `IPasswordAuth` | Verify a username and password; returns a discriminated union result indicating success or failure |
+| Interface           | Purpose                                                                                                                      |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------|
+| `IPasswordAuth`     | Verify a username and password; returns a discriminated union result indicating success or failure                           |
 | `IOtpAuthenticator` | Send a one-time password to an OTP address; verify a one-time password against a token; returns a discriminated union result |
-| `ITotpAuth` | Verify a TOTP code from an authenticator app |
-| `IRecoveryCodeAuth` | Verify and consume a single-use recovery code |
+| `ITotpAuth`         | Verify a TOTP code from an authenticator app                                                                                 |
+| `IRecoveryCodeAuth` | Verify and consume a single-use recovery code                                                                                |
 
 #### IPasswordAuth
 
@@ -306,7 +306,7 @@ builder.Services
 
 ### Registering Membership (Roles and Groups)
 
-The Membership module is the part of Duende User Management that manages how users are organized into roles and groups, and how those relationships evolve over time. It is registered by calling `AddMembership()` on the `IDuendePlatformBuilder` and lives in the `Duende.Platform.Users.Membership` namespace. Use this module whenever your application needs to assign roles to users, organize users into groups, or query transitive role assignments, for example to drive authorization decisions or to build an admin UI for managing access.
+The Membership module is the part of Duende User Management that manages how users are organized into roles and groups, and how those relationships evolve over time. It is registered by calling `AddMembership()` on the `IDuendePlatformBuilder` and lives in the `Duende.UserManagement.Membership` namespace. Use this module whenever your application needs to assign roles to users, organize users into groups, or query transitive role assignments, for example to drive authorization decisions or to build an admin UI for managing access.
 
 `AddMembership()` registers the three membership admin interfaces: `IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`.
 
@@ -370,7 +370,7 @@ The following interfaces use `QueryRequest<TFilter, TSortField>` and support fil
 * **`IRoleAdmin.QueryAsync`**: Query roles with filtering, sorting, and pagination.
 * **`IGroupAdmin.QueryAsync`**: Query groups with filtering, sorting, and pagination.
 
-The following interfaces use the non-generic `QueryRequest` and support pagination only — filtering and sorting are not supported:
+The following interfaces use the non-generic `QueryRequest` and support pagination only (filtering and sorting are not supported):
 
 * **`IUserProfileAdmin.QueryAsync`**: Query user profiles with pagination.
 * **`IUserAuthenticatorsAdmin.QueryAsync`**: Query user authenticators with pagination.
@@ -378,8 +378,8 @@ The following interfaces use the non-generic `QueryRequest` and support paginati
 ### Example
 
 ```csharp
-using Duende.Platform.Storage;
-using Duende.Platform.Users.Profiles.RolesAndGroups;
+using Duende.Storage;
+using Duende.UserManagement.Membership;
 
 var filter = new RoleFilter { Name = "editor" };
 var sort = SortBy.Ascending(RoleSortField.Name);

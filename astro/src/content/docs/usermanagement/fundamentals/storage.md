@@ -27,14 +27,14 @@ The adapter pattern means you can switch databases without changing your applica
 
 ## Storage Options Comparison
 
-| Feature | In-Memory | PostgreSQL | SQL Server |
-|---|---|---|---|
-| **Setup** | Zero setup required | Requires PostgreSQL infrastructure | Requires SQL Server infrastructure |
-| **Best for** | Tests and local development | Production workloads (recommended) | Production workloads in .NET/Windows environments |
-| **Data persistence** | Lost on restart | Durable | Durable |
-| **JSON support** | N/A | Native JSONB with excellent query performance | JSON support (less native than PostgreSQL JSONB) |
-| **Enterprise support** | None | Community + commercial options | Full Microsoft enterprise support |
-| **Production use** | ❌ Not recommended | ✅ Recommended | ✅ Supported |
+| Feature                | In-Memory                   | PostgreSQL                                    | SQL Server                                        |
+|------------------------|-----------------------------|-----------------------------------------------|---------------------------------------------------|
+| **Setup**              | Zero setup required         | Requires PostgreSQL infrastructure            | Requires SQL Server infrastructure                |
+| **Best for**           | Tests and local development | Production workloads (recommended)            | Production workloads in .NET/Windows environments |
+| **Data persistence**   | Lost on restart             | Durable                                       | Durable                                           |
+| **JSON support**       | N/A                         | Native JSONB with excellent query performance | JSON support (less native than PostgreSQL JSONB)  |
+| **Enterprise support** | None                        | Community + commercial options                | Full Microsoft enterprise support                 |
+| **Production use**     | ❌ Not recommended           | ✅ Recommended                                 | ✅ Supported                                       |
 
 :::tip
 PostgreSQL is the recommended production adapter due to its native JSONB support and excellent JSON query performance. SQL Server is a strong choice for teams already invested in the Microsoft/Windows ecosystem.
@@ -63,7 +63,7 @@ PostgreSQL is the recommended production storage adapter. It uses PostgreSQL's n
 Install the PostgreSQL storage package:
 
 ```bash
-dotnet add package Duende.UserManagement.Storage.PostgreSQL
+dotnet add package Duende.Storage.PostgreSQL
 ```
 
 ### Basic Setup
@@ -72,8 +72,8 @@ Configure User Management to use PostgreSQL storage:
 
 ```csharp title="Program.cs"
 using Duende.Platform.Builder;
-using Duende.Platform.Storage;
-using Duende.Platform.Storage.PostgreSql;
+using Duende.Storage;
+using Duende.Storage.PostgreSql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -191,7 +191,7 @@ SQL Server is a production-ready storage adapter that uses SQL Server's JSON sup
 Install the SQL Server storage package:
 
 ```bash
-dotnet add package Duende.UserManagement.Storage.SqlServer
+dotnet add package Duende.Storage.SqlServer
 ```
 
 ### Basic Setup
@@ -200,8 +200,8 @@ Configure User Management to use SQL Server storage:
 
 ```csharp title="Program.cs"
 using Duende.Platform.Builder;
-using Duende.Platform.Storage;
-using Duende.Platform.Storage.MsSql;
+using Duende.Storage;
+using Duende.Storage.MsSql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -337,9 +337,9 @@ dotnet run --project tools/SchemaInit -- --connection-string "$DB_CONNECTION_STR
 ```
 
 This approach ensures:
-- Schema changes are applied before new application instances start.
-- Rollback is possible if schema initialization fails.
-- Multiple application instances starting simultaneously do not race to initialize the schema.
+* Schema changes are applied before new application instances start.
+* Rollback is possible if schema initialization fails.
+* Multiple application instances starting simultaneously do not race to initialize the schema.
 
 ### Manage Connection String Secrets
 
@@ -364,9 +364,9 @@ Both the Npgsql (PostgreSQL) and Microsoft.Data.SqlClient (SQL Server) drivers m
 ```
 
 General guidelines:
-- Set minimum pool size to avoid cold-start latency under burst traffic.
-- Set maximum pool size to prevent overwhelming the database server.
-- Monitor pool exhaustion (timeout errors) and adjust accordingly.
+* Set minimum pool size to avoid cold-start latency under burst traffic.
+* Set maximum pool size to prevent overwhelming the database server.
+* Monitor pool exhaustion (timeout errors) and adjust accordingly.
 
 ### Use Read Replicas for Query-Heavy Workloads
 

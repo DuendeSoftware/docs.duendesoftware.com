@@ -36,13 +36,13 @@ The code examples on this page use ASP.NET Core Razor Pages (`PageModel`, `IActi
 
 ## Comparison With Other Authentication Flows
 
-| Aspect | External Auth | Password | One-Time Password (OTP) |
-|---|---|---|---|
-| **User Memory** | Nothing to remember | Must remember password | Nothing to remember |
-| **Offline Support** | No | Yes | No |
-| **Security** | Provider-dependent | Strength-dependent | Channel-dependent |
-| **User Friction** | Click button | Type password | Retrieve OTP from email, SMS or other channel and type/paste |
-| **Infrastructure** | External identity provider | Password hashing | Email, SMS or other channel provider |
+| Aspect              | External Auth              | Password               | One-Time Password (OTP)                                      |
+|---------------------|----------------------------|------------------------|--------------------------------------------------------------|
+| **User Memory**     | Nothing to remember        | Must remember password | Nothing to remember                                          |
+| **Offline Support** | No                         | Yes                    | No                                                           |
+| **Security**        | Provider-dependent         | Strength-dependent     | Channel-dependent                                            |
+| **User Friction**   | Click button               | Type password          | Retrieve OTP from email, SMS or other channel and type/paste |
+| **Infrastructure**  | External identity provider | Password hashing       | Email, SMS or other channel provider                         |
 
 For a full comparison that includes passkeys and TOTP, see the [Authentication Overview](/usermanagement/authentication/overview.mdx).
 
@@ -171,8 +171,8 @@ public sealed record UserAuthenticators
 Register an external provider using ASP.NET Core's `AddOpenIdConnect` extension. Hook into `OnTicketReceived` to run your user provisioning logic after a successful authentication.
 
 Install the required NuGet package:
-- [`Microsoft.AspNetCore.Authentication.OpenIdConnect`](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OpenIdConnect) for OpenID Connect providers (Google, Microsoft, Okta, etc.)
-- [`Microsoft.AspNetCore.Authentication.OAuth`](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OAuth) for generic OAuth 2.0 providers (GitHub, etc.)
+* [`Microsoft.AspNetCore.Authentication.OpenIdConnect`](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OpenIdConnect) for OpenID Connect providers (Google, Microsoft, Okta, etc.)
+* [`Microsoft.AspNetCore.Authentication.OAuth`](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OAuth) for generic OAuth 2.0 providers (GitHub, etc.)
 
 ```csharp title="Program.cs"
 builder.Services.AddAuthentication()
@@ -208,9 +208,9 @@ builder.Services.AddAuthentication()
 
 Each provider has its own developer console where you register your application and obtain credentials. Refer to the official documentation for setup instructions:
 
-- **Google**: [Google Identity: OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect)
-- **Microsoft / Azure AD**: [Microsoft Entra identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/)
-- **GitHub**: [Authorizing OAuth Apps](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
+* **Google**: [Google Identity: OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect)
+* **Microsoft / Azure AD**: [Microsoft Entra identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/)
+* **GitHub**: [Authorizing OAuth Apps](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
 
 :::note
 These are just a few examples. Any OAuth 2.0 or OpenID Connect provider can be used with User Management. For a broader list of third-party authentication providers and configuration guidance, see the [IdentityServer login documentation](/identityserver/ui/login.md).
