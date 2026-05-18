@@ -9,6 +9,7 @@ redirect_from:
   - /identityserver/v7/data/configuration/
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Configuration data models the information for [Clients](/identityserver/fundamentals/clients.md)
 and [Resources](/identityserver/fundamentals/resources).
@@ -46,8 +47,6 @@ builder.Services.AddIdentityServer()
 Configuration data is used frequently during request processing.
 If this data is loaded from a database or other external store, then it might be expensive to frequently re-load the
 same data.
-
-import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="isVersion">
 <TabItem label="v8.0+">
