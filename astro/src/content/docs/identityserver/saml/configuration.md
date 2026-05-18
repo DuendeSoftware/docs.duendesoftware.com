@@ -59,19 +59,16 @@ Available options:
   The path segment appended to the host URL to form the default `EntityId`. Defaults to `/Saml2`.
 
 * **`SigninStateLifetime`**
-  How long sign-in request state is retained while the user authenticates. This controls the TTL for records in the `ISamlSigninStateStore`. Type: `TimeSpan`. Defaults to 15 minutes.
+  How long sign-in request state is retained while the user authenticates. This controls the TTL for records in the `ISamlSigninStateStore`. Defaults to 15 minutes.
 
 * **`MaxMessageSize`**
-  Maximum size (in bytes) of inbound SAML messages that IdentityServer will accept. Messages exceeding this limit are rejected. Defaults to 2 MB.
+  Maximum size (in characters) of inbound SAML messages that IdentityServer will accept. Messages exceeding this limit are rejected. Defaults to 1,048,576 (1 MB).
 
 * **`Endpoints`**
-  Configures the URL paths for SAML endpoints. See [Customizing Endpoint Paths](/identityserver/saml/endpoints.md#customizing-endpoint-paths) for details.
+  Configures the URL paths and supported bindings for SAML endpoints. See [`SamlEndpointOptions`](#samlendpointoptions) below.
 
 * **`Metadata`**
-  Configures metadata document generation options such as `CacheDuration` and `ValidUntil`. Access via `SamlOptions.Metadata`.
-
-* **`MetadataValidityDuration`**
-  IdentityServer-layer setting that, if set, causes the metadata document to include a `validUntil` attribute. Defaults to 7 days.
+  Configures metadata document generation. See [SamlMetadataOptions](#samlmetadataoptions) below.
 
 * **`WantAuthnRequestsSigned`**
   When `true`, the IdP requires all AuthnRequests to be signed. Defaults to `true`.
@@ -99,14 +96,14 @@ Available options:
   RelayState is an opaque string that an SP includes in its `AuthnRequest` to preserve application state (typically the URL the user originally requested) across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can redirect the user to the right page after authentication. The SAML specification recommends keeping RelayState short; this limit enforces that guidance. See [`RelayState`](/identityserver/saml/concepts.md#relaystate) for more context.
 
 * **`DefaultAuthnContextMappings`**
-  Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML URI. Type: `Dictionary<string, string>`.
+  Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML URI.
   
   Default mappings include `pwd` → `urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport` and `external` → `urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified`. 
   
   Per-SP overrides are set via `SamlServiceProvider.AuthnContextMappings`.
 
 * **`DefaultAssertionLifetime`**
-  How long issued assertions are considered valid. Type: `TimeSpan`. Defaults to 5 minutes. Per-SP overrides are set via `SamlServiceProvider.AssertionLifetime`.
+  How long issued assertions are considered valid. Defaults to 5 minutes. Per-SP overrides are set via `SamlServiceProvider.AssertionLifetime`.
 
 * **`EmailNameIdClaimType`**
   The claim type used to resolve an email-format NameID. Defaults to `ClaimTypes.Email`. Per-SP overrides are set via `SamlServiceProvider.EmailNameIdClaimType`.
@@ -137,9 +134,51 @@ names:
 | `email`    | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress` |
 | `role`     | `http://schemas.xmlsoap.org/ws/2005/05/identity/role`                |
 
-Claims not present in this mapping are still included in the assertion but use their original claim type as the attribute name. Override mappings globally
-via `SamlOptions.DefaultClaimMappings` or per Service Provider via
-`SamlServiceProvider.ClaimMappings`.
+Claims not present in this mapping are still included in the assertion but use their original claim type as the attribute name.
+Override mappings globally via `SamlOptions.DefaultClaimMappings` or per Service Provider via `SamlServiceProvider.ClaimMappings`.
+
+## SamlMetadataOptions
+
+`SamlMetadataOptions` controls how the IdP metadata document is generated. Access it via `SamlOptions.Metadata`.
+
+* **`CacheDuration`** (`TimeSpan`)
+  How long consumers (Service Providers and federation tools) should cache the metadata document before re-fetching it. This value is included as the `cacheDuration` attribute in the metadata XML. Defaults to 12 hours.
+
+* **`ExpiryDuration`** (`TimeSpan`)
+  How long the metadata document is considered valid. This value is used to compute the `validUntil` attribute in the metadata XML. After this time, consumers should treat the metadata as stale and re-fetch it. Defaults to 5 days.
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer(options =>
+{
+    options.Saml.Metadata.CacheDuration = TimeSpan.FromHours(6);
+    options.Saml.Metadata.ExpiryDuration = TimeSpan.FromDays(7);
+});
+```
+
+## SamlEndpointOptions
+
+`SamlEndpointOptions` configures the URL paths and supported bindings for all SAML protocol endpoints. Access it via `SamlOptions.Endpoints`.
+
+| Property                      | Type                  | Default                    | Description                                                              |
+|-------------------------------|-----------------------|----------------------------|--------------------------------------------------------------------------|
+| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                      |
+| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SSO endpoint.                                   |
+| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates).           |
+| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses). |
+| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SLO endpoint.                                   |
+| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow).          |
+
+All paths are relative to the `EntityIdPath` prefix (which defaults to `/Saml2`). The full URL for each endpoint is formed by combining the host URL with `EntityIdPath` and the path suffix. For example, the SSO endpoint is available at `https://your-idp.example.com/Saml2/SSO` by default.
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer(options =>
+{
+    options.Saml.Endpoints.SingleSignOnServicePath = "/Saml2/SSO";
+    options.Saml.Endpoints.SingleLogoutServicePath = "/Saml2/SLO";
+});
+```
 
 ## SamlServiceProvider Model
 

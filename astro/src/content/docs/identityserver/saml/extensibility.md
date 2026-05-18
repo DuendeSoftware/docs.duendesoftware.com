@@ -559,6 +559,38 @@ builder.Services.AddScoped<ISaml2MetadataResponseGenerator, MyMetadataGenerator>
 
 ---
 
+## ISaml2IssuerNameService
+
+`ISaml2IssuerNameService` resolves the SAML entity ID that IdentityServer uses as its IdP issuer.
+The default implementation derives the entity ID from the OIDC issuer name combined with
+`SamlOptions.EntityIdPath`. Override this interface when you need dynamic entity ID resolution,
+for example in multi-tenant deployments where each tenant has a distinct SAML entity ID.
+
+```csharp
+// ISaml2IssuerNameService.cs
+public interface ISaml2IssuerNameService
+{
+    Task<string> GetCurrentAsync(CancellationToken ct);
+}
+```
+
+### When to Use
+
+Override `ISaml2IssuerNameService` when:
+
+* You run a multi-tenant deployment and each tenant needs a unique SAML entity ID.
+* The entity ID must be resolved dynamically based on the incoming request (for example, from a
+  custom domain or path).
+
+### Registration
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ISaml2IssuerNameService, MyIssuerNameService>();
+```
+
+---
+
 ## IAuthnRequestValidator
 
 `IAuthnRequestValidator` validates incoming SAML `AuthnRequest` messages from Service Providers.
