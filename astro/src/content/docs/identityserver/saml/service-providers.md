@@ -37,7 +37,7 @@ public interface ISamlServiceProviderStore
 
 ## In-Memory Store (Development / Testing)
 
-The in-memory store is the simplest way to register SPs. It is configured at startup with a static list of `SamlServiceProvider` objects and is ideal for development, testing, and demos. Because it holds SPs in memory, it does not support the Admin API. Use a persistent store for runtime management.
+The in-memory store is the simplest way to register SPs. It is configured at startup with a static list of `SamlServiceProvider` objects and is ideal for development, testing, and demos.
 
 Register the in-memory store using the IdentityServer builder:
 
@@ -55,7 +55,7 @@ builder.Services.AddIdentityServer()
             {
                 new IndexedEndpoint
                 {
-                    Location = new Uri("https://sp.example.com/acs"),
+                    Location = "https://sp.example.com/acs",
                     Binding = SamlBinding.HttpPost,
                     Index = 0,
                     IsDefault = true
@@ -75,7 +75,7 @@ Register the EF Core store using the IdentityServer builder:
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddSaml()
-    .AddSamlConfigurationStore(options =>
+    .AddConfigurationStore(options =>
     {
         options.ConfigureDbContext = b =>
             b.UseSqlServer(connectionString);
@@ -122,7 +122,7 @@ public class MySamlServiceProviderStore : ISamlServiceProviderStore
             DisplayName = record.DisplayName,
             AssertionConsumerServiceUrls = record.AcsEndpoints.Select(e => new IndexedEndpoint
             {
-                Location = new Uri(e.Url),
+                Location = e.Url,
                 Binding = SamlBinding.HttpPost,
                 Index = e.Index,
                 IsDefault = e.IsDefault
@@ -163,7 +163,7 @@ new SamlServiceProvider
     {
         new IndexedEndpoint
         {
-            Location = new Uri("https://sp.example.com/acs"),
+            Location = "https://sp.example.com/acs",
             Binding = SamlBinding.HttpPost,
             Index = 0,
             IsDefault = true
@@ -173,7 +173,7 @@ new SamlServiceProvider
     // Single Logout Service
     SingleLogoutServiceUrl = new SamlEndpointType
     {
-        Location = new Uri("https://sp.example.com/saml/slo"),
+        Location = "https://sp.example.com/saml/slo",
         Binding = SamlBinding.HttpPost,
     },
 

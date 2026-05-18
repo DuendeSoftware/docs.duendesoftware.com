@@ -36,19 +36,23 @@ builder.Services.AddIdentityServer()
 
 `SamlOptions` controls the global behavior and policy of the SAML 2.0 Identity Provider: how claims are mapped to SAML attributes, how assertions are signed, how NameIDs are resolved, and what tolerances apply to timestamps and request lifetimes.
 
-Access `SamlOptions` via `IdentityServerOptions.Saml` when calling `AddIdentityServer()`:
+Access `SamlOptions` when calling `AddSaml()`:
 
 ```csharp
 // Program.cs
-builder.Services.AddIdentityServer(options =>
-{
-    options.Saml.DefaultSigningBehavior = SamlSigningBehavior.SignAssertion;
-    options.Saml.DefaultClockSkew = TimeSpan.FromMinutes(5);
-    options.Saml.WantAuthnRequestsSigned = true;
+builder.Services.AddIdentityServer()
+    .AddSaml(saml =>
+    {
+        saml.DefaultSigningBehavior = SamlSigningBehavior.SignAssertion;
+        saml.DefaultClockSkew = TimeSpan.FromMinutes(5);
+        saml.WantAuthnRequestsSigned = true;
+    });
 });
 ```
 
-Use `SamlOptions` when you need to set defaults that apply across all Service Providers (for example, a shared assertion lifetime, a common set of AuthnContext mappings, or a global signing policy). Individual SPs can override most of these defaults via their own `SamlServiceProvider` configuration.
+Use `SamlOptions` when you need to set defaults that apply across all Service Providers (for example, a shared assertion
+lifetime, a common set of AuthnContext mappings, or a global signing policy). Individual SPs can override most of these
+defaults via their own `SamlServiceProvider` configuration.
 
 Available options:
 
@@ -149,11 +153,12 @@ Override mappings globally via `SamlOptions.DefaultClaimMappings` or per Service
 
 ```csharp
 // Program.cs
-builder.Services.AddIdentityServer(options =>
-{
-    options.Saml.Metadata.CacheDuration = TimeSpan.FromHours(6);
-    options.Saml.Metadata.ExpiryDuration = TimeSpan.FromDays(7);
-});
+builder.Services.AddIdentityServer()
+    .AddSaml(saml =>
+    {
+        saml.Metadata.CacheDuration = TimeSpan.FromHours(6);
+        saml.Metadata.ExpiryDuration = TimeSpan.FromDays(7);
+    });
 ```
 
 ## SamlEndpointOptions
@@ -169,15 +174,15 @@ builder.Services.AddIdentityServer(options =>
 | `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SLO endpoint.                                   |
 | `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow).          |
 
-All paths are relative to the `EntityIdPath` prefix (which defaults to `/Saml2`). The full URL for each endpoint is formed by combining the host URL with `EntityIdPath` and the path suffix. For example, the SSO endpoint is available at `https://your-idp.example.com/Saml2/SSO` by default.
 
 ```csharp
 // Program.cs
-builder.Services.AddIdentityServer(options =>
-{
-    options.Saml.Endpoints.SingleSignOnServicePath = "/Saml2/SSO";
-    options.Saml.Endpoints.SingleLogoutServicePath = "/Saml2/SLO";
-});
+builder.Services.AddIdentityServer()
+    .AddSaml(saml =>
+    {
+        saml.Endpoints.SingleSignOnServicePath = "/Saml2/SSO";
+        saml.Endpoints.SingleLogoutServicePath = "/Saml2/SLO";
+    });
 ```
 
 ## SamlServiceProvider Model
@@ -214,7 +219,7 @@ Available options:
   {
       new IndexedEndpoint
       {
-          Location = new Uri("https://sp.example.com/saml/acs"),
+          Location = "https://sp.example.com/saml/acs",
           Binding = SamlBinding.HttpPost,
           Index = 0,
           IsDefault = true
@@ -247,7 +252,7 @@ Available options:
   Per-SP override for how long issued assertions are valid. Uses `SamlOptions.DefaultAssertionLifetime` when `null`. Defaults to `null`.
 
 * **`AllowedScopes`** (`ICollection<string>`)
-  Scopes associated with this SP. Used to determine which identity resources (and their claim types) are available for inclusion in assertions. When empty, all mapped claims are included. Defaults to empty.
+  Scopes associated with this SP. Used to determine which identity resources (and their claim types) are available for inclusion in assertions. Should not be empty.
 
 * **`AuthnContextMappings`** (`Dictionary<string, string>`)
   Per-SP override for `acr`/`amr` → `AuthnContextClassRef` URI mappings. Overrides `SamlOptions.DefaultAuthnContextMappings` when set. Defaults to empty.
@@ -297,7 +302,7 @@ new SamlServiceProvider
     // ...
     SingleLogoutServiceUrl = new SamlEndpointType
     {
-        Location = new Uri("https://sp.example.com/saml/slo"),
+        Location = "https://sp.example.com/saml/slo",
         Binding = SamlBinding.HttpPost,
     }
 }
@@ -305,7 +310,7 @@ new SamlServiceProvider
 
 Properties:
 
-* **`Location`** (`Uri`): The URL of the endpoint.
+* **`Location`** (`string`): The URL of the endpoint.
 * **`Binding`** (`SamlBinding`): The HTTP binding the endpoint accepts.
 
 ### IndexedEndpoint
@@ -328,14 +333,14 @@ AssertionConsumerServiceUrls = new List<IndexedEndpoint>
 {
     new IndexedEndpoint
     {
-        Location = new Uri("https://sp.example.com/saml/acs"),
+        Location = "https://sp.example.com/saml/acs",
         Binding = SamlBinding.HttpPost,
         Index = 0,
         IsDefault = true
     },
     new IndexedEndpoint
     {
-        Location = new Uri("https://sp.example.com/saml/acs/redirect"),
+        Location = "https://sp.example.com/saml/acs/redirect",
         Binding = SamlBinding.HttpRedirect,
         Index = 1,
         IsDefault = false

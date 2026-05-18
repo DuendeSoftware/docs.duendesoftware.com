@@ -94,13 +94,14 @@ Endpoint paths can be customized via `SamlOptions.Endpoints`:
 
 ```csharp
 // Program.cs
-builder.Services.AddIdentityServer(options =>
-{
-    options.Saml.Endpoints.SingleSignOnServicePath = "/Saml2/SSO";
-    options.Saml.Endpoints.SingleSignOnCallbackPath = "/Saml2/SSO/Callback";
-    options.Saml.Endpoints.SingleLogoutServicePath = "/Saml2/SLO";
-    options.Saml.Endpoints.SingleLogoutCallbackPath = "/Saml2/SLO/Callback";
-});
+builder.Services.AddIdentityServer()
+    .AddSaml(saml =>
+    {
+        saml.Endpoints.SingleSignOnServicePath = "/Saml2/SSO";
+        saml.Endpoints.SingleSignOnCallbackPath = "/Saml2/SSO/Callback";
+        saml.Endpoints.SingleLogoutServicePath = "/Saml2/SLO";
+        saml.Endpoints.SingleLogoutCallbackPath = "/Saml2/SLO/Callback";
+    });
 ```
 
-The full URL for each endpoint is formed by combining the host URL with the `EntityIdPath` prefix and the individual path suffix. For example, the sign-in endpoint is available at `https://your-idp.example.com/Saml2/SSO` by default. See [`SamlEndpointOptions`](/identityserver/saml/configuration.md#samlendpointoptions) for the full property reference.
+See [`SamlEndpointOptions`](/identityserver/saml/configuration.md#samlendpointoptions) for the full property reference.

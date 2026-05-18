@@ -93,7 +93,7 @@ AssertionConsumerServiceUrls = new List<IndexedEndpoint>
 {
     new IndexedEndpoint
     {
-        Location = new Uri("https://sp.example.com/saml/acs"),
+        Location = "https://sp.example.com/saml/acs",
         Binding = SamlBinding.HttpPost,
         Index = 0,
         IsDefault = true

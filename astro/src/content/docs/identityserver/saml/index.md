@@ -85,7 +85,7 @@ builder.Services.AddIdentityServer()
             {
                 new IndexedEndpoint
                 {
-                    Location = new Uri("https://sp.example.com/acs"),
+                    Location = "https://sp.example.com/acs",
                     Binding = SamlBinding.HttpPost,
                     Index = 0,
                     IsDefault = true
