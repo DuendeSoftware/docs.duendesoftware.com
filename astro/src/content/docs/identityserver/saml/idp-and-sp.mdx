@@ -7,6 +7,8 @@ sidebar:
   order: 2
 ---
 
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
 IdentityServer can participate in SAML 2.0 in two distinct roles: as an Identity Provider, or as a Service Provider.
 Understanding which role you need determines which part of the documentation to follow.
 
@@ -20,8 +22,6 @@ the user's identity.
 
 This is the most common setup. You configure IdentityServer to trust one or more SPs, and those SPs delegate authentication to IdentityServer.
 
-See [SAML Identity Provider setup and configuration](/identityserver/saml/index.md) to get started.
-
 ## Acting as a Service Provider
 
 When IdentityServer acts as a Service Provider (SP), it consumes SAML assertions from an external IdP. IdentityServer redirects
@@ -30,4 +30,17 @@ users to the external IdP for authentication, then processes the resulting asser
 This is useful when you need to federate with enterprise systems like ADFS or Shibboleth. In this setup, IdentityServer
 is a consumer of SAML, not a producer.
 
-See [SAML Service Provider setup](/identityserver/ui/login/saml-provider.md) to get started.
+## Get started
+
+<CardGrid>
+  <LinkCard
+    href="/identityserver/saml/"
+    title="SAML Identity Provider"
+    description="Configure IdentityServer to issue SAML assertions to Service Providers."
+  />
+  <LinkCard
+    href="/identityserver/ui/login/saml-provider/"
+    title="SAML Service Provider"
+    description="Configure IdentityServer to consume SAML assertions from an external IdP."
+  />
+</CardGrid>
