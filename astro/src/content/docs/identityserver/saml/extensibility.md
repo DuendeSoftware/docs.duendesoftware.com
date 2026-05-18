@@ -10,7 +10,7 @@ tableOfContents:
   maxHeadingLevel: 2
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
 IdentityServer's SAML 2.0 Identity Provider feature exposes several extensibility interfaces that
 you can implement to customize SAML behavior. All interfaces are registered in the DI container

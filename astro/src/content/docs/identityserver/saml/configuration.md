@@ -7,7 +7,7 @@ sidebar:
   order: 10
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
 This page documents the configuration options and models for the SAML 2.0 Identity Provider feature.
 

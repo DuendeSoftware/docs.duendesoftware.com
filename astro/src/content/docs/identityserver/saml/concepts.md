@@ -7,7 +7,7 @@ sidebar:
   order: 5
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
 SAML 2.0 is an XML-based federation protocol widely used in enterprise, government, healthcare, and education environments. This page explains the core concepts you need to understand when working with SAML 2.0 federation. Where relevant, each section links to the corresponding IdentityServer [configuration](/identityserver/saml/configuration.md) so you can put these concepts into practice.
 
