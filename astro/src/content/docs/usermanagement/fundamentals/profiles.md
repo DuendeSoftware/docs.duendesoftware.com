@@ -26,7 +26,7 @@ The system exposes three interfaces covering different access levels: self-servi
 
 ### Where to use these interfaces
 
-All three interfaces are registered with the service provider by `AddUserProfiles()` and can be injected anywhere in your application:
+All three interfaces are registered with the service provider by `EnableProfiles()` and can be injected anywhere in your application:
 
 * **Razor Pages**: inject into page models to read or update the current user's profile.
 * **MVC controllers**: inject into controllers for profile endpoints.
@@ -35,12 +35,14 @@ All three interfaces are registered with the service provider by `AddUserProfile
 
 ## Registration
 
-Call `AddUserProfiles()` on the platform builder to register all profile services:
+Call `EnableProfiles()` through `AddUserManagement()` to register all profile services:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserProfiles();
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableProfiles()
+);
 ```
 
 This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin` available for injection.

@@ -12,8 +12,8 @@ import { CardGrid, LinkCard, Tabs, TabItem, Aside, Steps } from "@astrojs/starli
 In this tutorial, you'll build a complete OTP (one-time password) login flow from scratch using Duende User Management. By the end, you'll have a working ASP.NET Core Razor Pages app where users log in with their email address and a one-time code.
 
 <Aside type="caution">
-  This guide uses in-memory storage. All data is lost when the app restarts, so it is intended for local development only.
-  For production, switch to a persistent storage engine such as PostgreSQL or SQL Server. See the [Storage documentation](/usermanagement/fundamentals/storage.md) for details.
+  This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and single-server deployments, but not recommended for production at scale.
+  For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/usermanagement/fundamentals/storage.md) for details.
 </Aside>
 
 ## Prerequisites
@@ -33,10 +33,11 @@ The `webapp` template gives you a Razor Pages project with a `Program.cs` entry 
 
 ## Add NuGet Packages
 
-Add the Duende User Management package:
+Add the Duende User Management and in-memory storage packages:
 
 ```bash title="Terminal"
 dotnet add package Duende.UserManagement
+dotnet add package Duende.Storage.Sqlite
 ```
 
 ## Configure Services
@@ -86,14 +87,21 @@ Open `Program.cs` and modify its contents step by step as described below.
      <TabItem label="Console sender (development)">
        The console sender prints OTP codes to the terminal, useful during local development without any mail infrastructure.
 
-       ```csharp title="Program.cs"
-       builder.Services
-           .AddDuendePlatform()
-           .AddUserAuthentication()
-           .AddStorage(s => s.InMemory());
-       ```
+        ```csharp title="Program.cs"
+         using Duende.UserManagement;
+         using Duende.Storage.Sqlite;
 
-       User Management does not contain a console-based OTP sender. Implement `IOtpSender` to write codes to the console:
+         builder.Services.AddUserManagement(um => um
+             .EnableAuthentication()
+         );
+
+         builder.Services.AddSqliteStore(options =>
+         {
+             options.ConnectionString = "Data Source=usermanagement.db";
+         });
+         ```
+
+        User Management does not contain a console-based OTP sender. Implement `IOtpSender` to write codes to the console:
    
        ```csharp title="ConsoleOtpSender.cs"
        using Duende.UserManagement.Authentication.Otp;
@@ -122,14 +130,21 @@ Open `Program.cs` and modify its contents step by step as described below.
      <TabItem label="SMTP sender">
        The SMTP sender delivers OTP codes by email. Bind the `Smtp` configuration section to the sender options:
 
-       ```csharp title="Program.cs"
-       builder.Services
-           .AddDuendePlatform()
-           .AddUserAuthentication(authentication => authentication
-               .UseSmtpOtpSender(options =>
-                   builder.Configuration.GetSection("Smtp").Bind(options)))
-           .AddStorage(s => s.InMemory());
-       ```
+        ```csharp title="Program.cs"
+         using Duende.UserManagement;
+         using Duende.Storage.Sqlite;
+
+         builder.Services.AddUserManagement(um => um
+             .EnableAuthentication(auth => auth
+                 .UseSmtpOtpSender(options =>
+                     builder.Configuration.GetSection("Smtp").Bind(options)))
+         );
+
+         builder.Services.AddSqliteStore(options =>
+         {
+             options.ConnectionString = "Data Source=usermanagement.db";
+         });
+         ```
 
        Add the corresponding section to `appsettings.json`:
 
@@ -162,7 +177,24 @@ Open `Program.cs` and modify its contents step by step as described below.
    For production environments, configure [ASP.NET Core Data Protection](/general/data-protection.md) to persist encryption keys across restarts, for example using Azure Key Vault, Redis, or a shared file system.
    :::
 
-4. **Add authentication middleware**
+4. **Register storage**
+
+   Register the SQLite store for local development. This stores user data in a file-based database:
+
+   ```csharp title="Program.cs"
+   using Duende.Storage.Sqlite;
+
+   builder.Services.AddSqliteStore(options =>
+   {
+       options.ConnectionString = "Data Source=usermanagement.db";
+   });
+   ```
+
+   :::tip
+   For production, use PostgreSQL or SQL Server instead. See the [Storage documentation](/usermanagement/fundamentals/storage.md) for details.
+   :::
+
+5. **Add authentication middleware**
 
    Add the authentication and authorization middleware in the correct order:
 
@@ -182,128 +214,153 @@ The application configuration is now complete. Next, we'll add the pages and mod
     <summary>Complete `Program.cs`</summary>
       <Tabs syncKey="umgsOtpSender">
          <TabItem label="Console sender (development)">
-            ```csharp title="Program.cs"
-            using Duende.Platform.Builder;
-            using Duende.Storage;
-            using Duende.UserManagement.Authentication;
-            using Duende.UserManagement.Authentication.Otp;
+             ```csharp title="Program.cs"
+              using Duende.UserManagement;
+              using Duende.UserManagement.Authentication;
+              using Duende.UserManagement.Authentication.Otp;
+              using Duende.Storage;
+              using Duende.Storage.Sqlite;
 
-            using Microsoft.AspNetCore.Authentication.Cookies;
+              using Microsoft.AspNetCore.Authentication.Cookies;
 
-            using OtpUserManagement;
+              using OtpUserManagement;
 
-            var builder = WebApplication.CreateBuilder(args);
+              var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddRazorPages();
+              builder.Services.AddRazorPages();
 
-            builder.Services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                {
-                    options.Cookie.Name = "__Host-AuthSession";
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.Cookie.SameSite = SameSiteMode.Lax;
-                    options.Cookie.IsEssential = true;
-                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
-                    options.SlidingExpiration = true;
-                    options.LoginPath = "/Login";
-                    options.LogoutPath = "/Logout";
-                });
+              builder.Services
+                  .AddAuthentication(options =>
+                  {
+                      options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                      options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                      options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                      options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                  })
+                  .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                  {
+                      options.Cookie.Name = "__Host-AuthSession";
+                      options.Cookie.HttpOnly = true;
+                      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                      options.Cookie.SameSite = SameSiteMode.Lax;
+                      options.Cookie.IsEssential = true;
+                      options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                      options.SlidingExpiration = true;
+                      options.LoginPath = "/Login";
+                      options.LogoutPath = "/Logout";
+                  });
 
-            builder.Services
-                .AddDuendePlatform()
-                .AddUserAuthentication()
-                .AddStorage(s => s.InMemory());
+              builder.Services.AddUserManagement(um => um
+                  .EnableAuthentication()
+              );
 
-            builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
+              builder.Services.AddSqliteStore(options =>
+              {
+                  options.ConnectionString = "Data Source=usermanagement.db";
+              });
 
-            builder.Services.AddAuthorization();
-            builder.Services.AddDataProtection();
+              builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
 
-            var app = builder.Build();
+              builder.Services.AddAuthorization();
+              builder.Services.AddDataProtection();
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
+              var app = builder.Build();
 
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.MapStaticAssets();
-            app.MapRazorPages().WithStaticAssets();
+              using (var scope = app.Services.CreateScope())
+              {
+                  await scope.ServiceProvider
+                      .GetRequiredService<IDatabaseSchema>()
+                      .CreateIfNotExistsAsync(CancellationToken.None);
+              }
 
-            app.Run();
+              if (!app.Environment.IsDevelopment())
+              {
+                  app.UseExceptionHandler("/Error");
+                  app.UseHsts();
+              }
 
-            ```
+              app.UseHttpsRedirection();
+              app.UseRouting();
+              app.UseAuthentication();
+              app.UseAuthorization();
+              app.MapStaticAssets();
+              app.MapRazorPages().WithStaticAssets();
+
+              app.Run();
+
+              ```
         </TabItem>
         <TabItem label="SMTP sender">
             ```csharp title="Program.cs"
-            using Duende.Platform.Builder;
-            using Duende.UserManagement.Authentication;
-            using Microsoft.AspNetCore.Authentication.Cookies;
+              using Duende.UserManagement;
+              using Duende.UserManagement.Authentication;
+              using Duende.Storage;
+              using Duende.Storage.Sqlite;
+              using Microsoft.AspNetCore.Authentication.Cookies;
 
-            var builder = WebApplication.CreateBuilder(args);
+              var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddRazorPages();
+              builder.Services.AddRazorPages();
 
-            builder.Services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                {
-                    options.Cookie.Name = "__Host-AuthSession";
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.Cookie.SameSite = SameSiteMode.Lax;
-                    options.Cookie.IsEssential = true;
-                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
-                    options.SlidingExpiration = true;
-                    options.LoginPath = "/Login";
-                    options.LogoutPath = "/Logout";
-                });
+              builder.Services
+                  .AddAuthentication(options =>
+                  {
+                      options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                      options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                      options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                      options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                  })
+                  .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                  {
+                      options.Cookie.Name = "__Host-AuthSession";
+                      options.Cookie.HttpOnly = true;
+                      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                      options.Cookie.SameSite = SameSiteMode.Lax;
+                      options.Cookie.IsEssential = true;
+                      options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                      options.SlidingExpiration = true;
+                      options.LoginPath = "/Login";
+                      options.LogoutPath = "/Logout";
+                  });
 
-            builder.Services.AddAuthorization();
-            builder.Services.AddDataProtection();
+              builder.Services.AddAuthorization();
+              builder.Services.AddDataProtection();
 
-            builder.Services
-                .AddDuendePlatform()
-                .AddUserAuthentication(authentication => authentication
-                    .UseSmtpOtpSender(options =>
-                        builder.Configuration.GetSection("Smtp").Bind(options)))
-                .AddStorage(s => s.InMemory());
+              builder.Services.AddUserManagement(um => um
+                  .EnableAuthentication(auth => auth
+                      .UseSmtpOtpSender(options =>
+                          builder.Configuration.GetSection("Smtp").Bind(options)))
+              );
 
-            var app = builder.Build();
+              builder.Services.AddSqliteStore(options =>
+              {
+                  options.ConnectionString = "Data Source=usermanagement.db";
+              });
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
+              var app = builder.Build();
 
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.MapStaticAssets();
-            app.MapRazorPages().WithStaticAssets();
+              using (var scope = app.Services.CreateScope())
+              {
+                  await scope.ServiceProvider
+                      .GetRequiredService<IDatabaseSchema>()
+                      .CreateIfNotExistsAsync(CancellationToken.None);
+              }
 
-            app.Run();
-            ```
+              if (!app.Environment.IsDevelopment())
+              {
+                  app.UseExceptionHandler("/Error");
+                  app.UseHsts();
+              }
+
+              app.UseHttpsRedirection();
+              app.UseRouting();
+              app.UseAuthentication();
+              app.UseAuthorization();
+              app.MapStaticAssets();
+              app.MapRazorPages().WithStaticAssets();
+
+              app.Run();
+              ```
         </TabItem>
     </Tabs>
 </details>

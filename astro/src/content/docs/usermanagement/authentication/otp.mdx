@@ -175,12 +175,13 @@ public interface IUserAuthenticatorsSelfService
 
 ### Registering the SMTP OTP Sender
 
-OTP delivery requires configuring a sender. Use `UseSmtpOtpSender` on the `IUserAuthenticationBuilder` to configure the built-in SMTP sender:
+OTP delivery requires configuring a sender. Use `UseSmtpOtpSender` on the authentication builder to configure the built-in SMTP sender:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(auth =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         auth.UseSmtpOtpSender(options =>
         {
@@ -191,7 +192,8 @@ builder.Services
             options.FromName = "My Application";
             options.Domain = "example.com";
         });
-    });
+    })
+);
 ```
 
 ### Custom OTP Sender
@@ -210,12 +212,14 @@ public interface IOtpSender
 Register the custom sender using `UseOtpSender<T>`:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(auth =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         auth.UseOtpSender<MyCustomOtpSender>();
-    });
+    })
+);
 ```
 
 ## Implementation Patterns

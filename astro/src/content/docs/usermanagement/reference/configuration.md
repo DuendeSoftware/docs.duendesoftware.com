@@ -14,39 +14,44 @@ Duende User Management is configured through a set of strongly-typed options cla
 Register User Management services in `Program.cs` using the builder pattern:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.Configure(options =>
     {
         options.Passwords.MinLength = 10;
         options.Passkeys.RelyingPartyName = "My Application";
         options.Passkeys.AllowedOrigins = ["https://app.example.com"];
         options.Throttling.MaxFailedAttempts = 3;
-    })
-    .AddUserProfiles();
+    }))
+    .EnableProfiles()
+);
 ```
 
 To configure both options and the feature builder in a single call:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(
-        options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
+    {
+        auth.Configure(options =>
         {
             options.Passkeys.RelyingPartyName = "My Application";
             options.Passkeys.AllowedOrigins = ["https://app.example.com"];
-        },
-        auth => auth.ConfigureEndpoints(endpoints =>
+        });
+        auth.ConfigureEndpoints(endpoints =>
         {
             endpoints.Passkeys.Route = "/auth/passkeys";
-        })
-    );
+        });
+    })
+);
 ```
 
 ## `UserAuthenticationOptions`
 
-Top-level options class for the `AddUserAuthentication()` call. Accessed via `IOptions<UserAuthenticationOptions>`.
+Top-level options class for the `EnableAuthentication()` call. Accessed via `IOptions<UserAuthenticationOptions>`.
 
 | Property     | Type                              | Description                                                                  |
 |--------------|-----------------------------------|------------------------------------------------------------------------------|
@@ -73,14 +78,14 @@ Controls the built-in password complexity validator. Accessed via `UserAuthentic
 Example (relaxed password policy):
 
 ```csharp title="Program.cs"
-.AddUserAuthentication(options =>
+.EnableAuthentication(auth => auth.Configure(options =>
 {
     options.Passwords.MinLength = 12;
     options.Passwords.MinLower = 1;
     options.Passwords.MinUpper = 1;
     options.Passwords.MinDigits = 1;
     options.Passwords.MinSymbols = 0;
-})
+}))
 ```
 
 ## `PasskeyOptions`
@@ -136,7 +141,7 @@ The `ResidentKeyRequirement` property accepts the following string values:
 ### Passkey Configuration Example
 
 ```csharp title="Program.cs"
-.AddUserAuthentication(options =>
+.EnableAuthentication(auth => auth.Configure(options =>
 {
     options.Passkeys.RelyingPartyName = "ACME Corporation";
     options.Passkeys.ServerDomain = "example.com";
@@ -148,7 +153,7 @@ The `ResidentKeyRequirement` property accepts the following string values:
     options.Passkeys.UserVerificationRequirement = "required";
     options.Passkeys.AuthenticatorAttachment = "platform";
     options.Passkeys.ChallengeTimeout = TimeSpan.FromMinutes(3);
-})
+}))
 ```
 
 ## `TotpOptions`
@@ -170,10 +175,10 @@ Nested within `TotpOptions`. Controls TOTP secret storage behavior.
 Example (disable key protection; not recommended unless storage is encrypted externally):
 
 ```csharp title="Program.cs"
-.AddUserAuthentication(options =>
+.EnableAuthentication(auth => auth.Configure(options =>
 {
     options.Totp.Storage.ProtectKeys = false;
-})
+}))
 ```
 
 ## `AuthenticationThrottlingOptions`
@@ -192,7 +197,7 @@ Controls the built-in per-authenticator failed-attempt throttling policy. Access
 Example (stricter throttling):
 
 ```csharp title="Program.cs"
-.AddUserAuthentication(options =>
+.EnableAuthentication(auth => auth.Configure(options =>
 {
     options.Throttling.MaxFailedAttempts = 3;
     options.Throttling.FailureWindow = TimeSpan.FromMinutes(30);
@@ -200,32 +205,34 @@ Example (stricter throttling):
     options.Throttling.MaxAttemptsPerWindow = 5;
     options.Throttling.VelocityWindow = TimeSpan.FromSeconds(10);
     options.Throttling.VelocityThrottleDuration = TimeSpan.FromSeconds(30);
-})
+}))
 ```
 
 ## `UserAuthenticationEndpointOptions`
 
-Controls the HTTP endpoint routes exposed by the web layer. Configure via `ConfigureEndpoints()` on the `IUserAuthenticationBuilder`:
+Controls the HTTP endpoint routes exposed by the web layer. Configure via `ConfigureEndpoints()` on the authentication builder:
 
 ```csharp title="Program.cs"
-.AddUserAuthentication(
-    options => { /* UserAuthenticationOptions */ },
-    auth => auth.ConfigureEndpoints(endpoints =>
+.EnableAuthentication(auth =>
+{
+    auth.Configure(options => { /* UserAuthenticationOptions */ });
+    auth.ConfigureEndpoints(endpoints =>
     {
         endpoints.Passkeys.Route = "/auth/passkeys";
-    })
-)
+    });
+})
 ```
 
 Or bind from configuration:
 
 ```csharp title="Program.cs"
-.AddUserAuthentication(
-    options => { },
-    auth => auth.ConfigureEndpoints(
+.EnableAuthentication(auth =>
+{
+    auth.Configure(options => { });
+    auth.ConfigureEndpoints(
         builder.Configuration.GetSection("UserAuthentication:Endpoints")
-    )
-)
+    );
+})
 ```
 
 | Property   | Type                   | Description                                    |
@@ -261,16 +268,18 @@ This changes all passkey endpoints to use `/auth/webauthn` as the base, so regis
 
 The membership module provides administrative services for managing users, roles, and groups within your application. It is an optional add-on to the core User Management stack; register it when your application needs to programmatically create or modify users, assign roles, or manage group membership from server-side code (for example, in admin UIs or API endpoints).
 
-The module is registered by calling `AddMembership()` on the `IDuendePlatformBuilder` returned by `AddDuendePlatform()`:
+The module is registered by calling `EnableMembership()` through `AddUserManagement()`:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication()
-    .AddMembership();
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication()
+    .EnableMembership()
+);
 ```
 
-Calling `AddMembership()` registers the following services with the service provider:
+Calling `EnableMembership()` registers the following services with the service provider:
 
 | Service            | Description                                                                                                 |
 |--------------------|-------------------------------------------------------------------------------------------------------------|

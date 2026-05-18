@@ -105,37 +105,44 @@ For cross-cutting security topics (data protection key persistence and throttlin
 
 Passkey support involves two registration steps:
 
-1. **`AddUserAuthentication`** registers the core passkey services: cryptographic signature verification (ES256, ES384, ES512, RS256, RS384, RS512, PS256, PS384, PS512, RS1), WebAuthn registration and authentication ceremonies, credential storage, and challenge management. Use this when you want to drive the passkey flow yourself without the built-in HTTP endpoints.
-2. **`EnableUserAuthentication`** registers the web layer on top, including the passkey HTTP endpoints (`/passkeys/register/begin`, `/passkeys/register/complete`, `/passkeys/authenticate/begin`, `/passkeys/authenticate/complete`) and the JavaScript helper (`/passkeys/js`).
+1. **`EnableAuthentication()`** registers the core passkey services: cryptographic signature verification (ES256, ES384, ES512, RS256, RS384, RS512, PS256, PS384, PS512, RS1), WebAuthn registration and authentication ceremonies, credential storage, and challenge management. Use this when you want to drive the passkey flow yourself without the built-in HTTP endpoints.
+2. **`MapUserManagement()`** maps the web layer, including the passkey HTTP endpoints (`/passkeys/register/begin`, `/passkeys/register/complete`, `/passkeys/authenticate/begin`, `/passkeys/authenticate/complete`) and the JavaScript helper (`/passkeys/js`).
 
-Using `AddUserAuthentication` on its own:
+Using `EnableAuthentication()` on its own:
 
 ```csharp title="Program.cs"
-builder.Services.AddDuendePlatform()
-    .AddUserAuthentication(auth =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         auth.Configure(options =>
         {
             options.Passkeys.RelyingPartyName = "My Application";
             options.Passkeys.ServerDomain = "example.com";
         });
-    });
+    })
+);
 ```
 
 This gives you access to `IPasskeyCeremonies`, `IUserAuthenticatorsSelfService`, and the other core services via dependency injection, but does not expose any HTTP endpoints. This is useful if you want to build your own API layer or integrate passkeys into an existing controller/endpoint structure.
 
-If you are building a web application and want the ready-to-use passkey endpoints, use `EnableUserAuthentication` instead:
+If you are building a web application and want the ready-to-use passkey endpoints, call `MapUserManagement()` on your endpoint route builder:
 
 ```csharp title="Program.cs"
-builder.Services.AddDuendePlatform()
-    .AddDuendePlatformWebApp(web =>
-    {
-        web.EnableUserAuthentication();
-    });
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication()
+);
+
+// After building the app:
+var app = builder.Build();
+app.MapUserManagement();
 ```
 
 :::note
-`EnableUserAuthentication` internally calls `AddUserAuthentication`, so you do not need to call both.
+`MapUserManagement()` maps all User Management HTTP endpoints, including passkey registration and authentication ceremonies.
 :::
 
 ### Passkey Options
@@ -143,8 +150,10 @@ builder.Services.AddDuendePlatform()
 Configure passkey behavior using `PasskeyOptions`, accessible via `UserAuthenticationOptions.Passkeys`. Use the `Configure` method on the authentication builder:
 
 ```csharp title="Program.cs"
-builder.Services.AddDuendePlatform()
-    .AddUserAuthentication(auth =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         auth.Configure(options =>
         {
@@ -179,7 +188,8 @@ builder.Services.AddDuendePlatform()
             // Restrict to specific COSE algorithms (empty = all supported)
             options.Passkeys.SupportedAlgorithms = [CoseAlgorithms.Es256, CoseAlgorithms.Rs256];
         });
-    });
+    })
+);
 ```
 
 All `PasskeyOptions` properties and their defaults:
@@ -262,7 +272,7 @@ foreach (var passkey in authenticators?.Passkeys ?? [])
 
 ## Web Endpoints
 
-When `AddUserAuthentication()` is called, the following HTTP endpoints are registered automatically to handle the WebAuthn ceremony protocol:
+When `EnableAuthentication()` is called, the following HTTP endpoints are registered automatically to handle the WebAuthn ceremony protocol:
 
 | Endpoint                          | Method | Default Path                                | Description                                                        |
 |-----------------------------------|--------|---------------------------------------------|--------------------------------------------------------------------|
@@ -280,8 +290,10 @@ The Begin Registration and Complete Registration endpoints require an authentica
 Customize endpoint paths using `UserAuthenticationEndpointOptions` and `PasskeysRouteOptions`:
 
 ```csharp title="Program.cs"
-builder.Services.AddDuendePlatform()
-    .AddUserAuthentication(auth =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         auth.ConfigureEndpoints(options =>
         {
@@ -300,18 +312,22 @@ builder.Services.AddDuendePlatform()
             // JavaScript helper endpoint (relative to Route)
             options.Passkeys.PasskeysJavaScript = "/js";
         });
-    });
+    })
+);
 ```
 
 Configuration can also be loaded from `appsettings.json`:
 
 ```csharp title="Program.cs"
-builder.Services.AddDuendePlatform()
-    .AddUserAuthentication(auth =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         auth.ConfigureEndpoints(
             builder.Configuration.GetSection("UserAuthentication:Endpoints"));
-    });
+    })
+);
 ```
 
 `PasskeysRouteOptions` properties:
@@ -391,7 +407,7 @@ sequenceDiagram
 The built-in JavaScript helper is served at `/passkeys/js` (configurable via `PasskeysJavaScript`). It provides browser-side utilities for interacting with the WebAuthn API and the ceremony endpoints.
 
 :::note
-Passkey routes (including `/passkeys/js`) are only available when `EnableUserAuthentication` has been called and the Duende platform endpoints have been mapped, either via `app.UseIdentityServer()` or `app.MapDuendeEndpoints()`.
+Passkey routes (including `/passkeys/js`) are only available when `EnableAuthentication()` has been called during service registration and `app.MapUserManagement()` has been called on the endpoint route builder.
 :::
 
 Include it in your HTML:
@@ -486,11 +502,14 @@ public class MySecondFactorResolver : ISecondFactorPasskeyAuthenticationResolver
 Register the resolver using `EnablePasskeyForSecondFactor<T>()`:
 
 ```csharp title="Program.cs"
-builder.Services.AddDuendePlatform()
-    .AddUserAuthentication(auth =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         auth.EnablePasskeyForSecondFactor<MySecondFactorResolver>();
-    });
+    })
+);
 ```
 
 When a resolver is registered, the `POST /passkeys/authenticate/begin` endpoint becomes active. It calls `ResolveAsync()` to identify the user and begins an authentication ceremony scoped to that user's registered credentials. Without a resolver, this endpoint is not registered.
@@ -498,11 +517,14 @@ When a resolver is registered, the `POST /passkeys/authenticate/begin` endpoint 
 An instance overload is also available for singleton resolvers:
 
 ```csharp title="Program.cs"
-builder.Services.AddDuendePlatform()
-    .AddUserAuthentication(auth =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         auth.EnablePasskeyForSecondFactor(new MySecondFactorResolver(...));
-    });
+    })
+);
 ```
 
 ### Second-Factor Flow
@@ -718,14 +740,18 @@ return AttestationTrustPolicyResult.Reject("Authenticator not in allowlist.");
 
 ### Registering a Custom Policy
 
-Register your policy using `WithAttestationTrustPolicy<T>()` on the passkey builder:
+Register your policy using `AddAttestationTrustPolicy<T>()` on the authentication builder:
 
 ```csharp
 // Program.cs
-builder.AddDuendePlatform()
-    .AddUserAuthentication(auth =>
-        auth.AddPasskeyAuthentication(passkeys =>
-            passkeys.WithAttestationTrustPolicy<MyAttestationTrustPolicy>()));
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
+    {
+        auth.AddAttestationTrustPolicy<MyAttestationTrustPolicy>();
+    })
+);
 ```
 
 ### Example: AAGUID Allowlist

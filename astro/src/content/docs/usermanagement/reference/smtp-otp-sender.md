@@ -11,19 +11,21 @@ The `SmtpOtpSender` delivers one-time passwords (OTPs) via email using SMTP. It 
 
 ## Registration
 
-Register the SMTP One-Time Password (OTP) sender using `UseSmtpOtpSender` on the `IUserAuthenticationBuilder`:
+Register the SMTP One-Time Password (OTP) sender using `UseSmtpOtpSender` on the authentication builder:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(auth => auth.UseSmtpOtpSender(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
     {
         options.Host = "smtp.example.com";
         options.Port = 587;
         options.EnableSsl = true;
         options.FromEmail = "noreply@example.com";
         options.FromName = "MyApp";
-    }));
+    }))
+);
 ```
 
 ## `SmtpOtpSenderOptions`
@@ -48,13 +50,13 @@ When no custom templates are configured, the sender uses a built-in plain text t
 
 **Subject:**
 
-```
+```text
 MyApp confirmation code
 ```
 
 **Body:**
 
-```
+```text
 123-456 is your MyApp confirmation code (expires after 5 minute(s))
 
 IMPORTANT SECURITY INFORMATION:
@@ -85,9 +87,10 @@ Note: `SubjectTemplate` only supports `{FromName}` and `{Code}`.
 ### Plain Text Template
 
 ```csharp
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(auth => auth.UseSmtpOtpSender(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
     {
         options.Host = "smtp.example.com";
         options.Port = 587;
@@ -112,15 +115,17 @@ SECURITY NOTICE:
 Thank you,
 The {FromName} Team
 ";
-    }));
+    }))
+);
 ```
 
 ### HTML Template
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(auth => auth.UseSmtpOtpSender(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
     {
         options.Host = "smtp.example.com";
         options.Port = 587;
@@ -154,7 +159,8 @@ builder.Services
 </body>
 </html>
 ";
-    }));
+    }))
+);
 ```
 
 ### Custom Subject
@@ -180,15 +186,17 @@ SMTP connection settings can be bound from `appsettings.json`:
 Your startup code can then bind to this section:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(auth => auth.UseSmtpOtpSender(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
     {
         builder.Configuration.GetSection("Smtp").Bind(options);
         options.EnableSsl = true;
         options.FromName = "MyCompany";
         options.Domain = "https://app.mycompany.com";
-    }));
+    }))
+);
 ```
 
 ## Security Best Practices

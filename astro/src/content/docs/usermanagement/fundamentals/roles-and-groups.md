@@ -11,7 +11,7 @@ Roles and groups provide a flexible authorization model. A role represents a nam
 
 ## End-to-End Example
 
-The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive). It uses three services (`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) which are registered by calling `AddMembership()` (see [Configuration](/usermanagement/reference/configuration.md#membership-module)) and can be injected via constructor injection:
+The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive). It uses three services (`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) which are registered by calling `EnableMembership()` (see [Configuration](/usermanagement/reference/configuration.md#membership-module)) and can be injected via constructor injection:
 
 ```csharp
 using Duende.UserManagement.Membership;

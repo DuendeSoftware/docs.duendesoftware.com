@@ -42,12 +42,15 @@ PostgreSQL is the recommended production adapter due to its native JSONB support
 
 ## In-Memory Storage
 
-The in-memory adapter stores data in process memory and is intended exclusively for local development and automated testing. No installation or infrastructure is required; it is included with the core `Duende.UserManagement` package.
+The in-memory adapter stores data in process memory and is intended exclusively for local development and automated testing. No installation or infrastructure is required; it uses SQLite with an in-memory connection string.
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddStorage(s => s.InMemory());
+using Duende.Storage.Sqlite;
+
+builder.Services.AddSqliteStore(options =>
+{
+    options.ConnectionString = "Data Source=:memory:";
+});
 ```
 
 :::danger[Not for production]
@@ -71,24 +74,26 @@ dotnet add package Duende.Storage.PostgreSQL
 Configure User Management to use PostgreSQL storage:
 
 ```csharp title="Program.cs"
-using Duende.Platform.Builder;
 using Duende.Storage;
 using Duende.Storage.PostgreSql;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register the NpgsqlDataSource and PostgreSQL store
 builder.Services
-    .AddDuendePlatform()
-    .AddStorage(s => s.PostgreSql(
-        builder.Configuration.GetConnectionString("pgsql")!));
+    .AddSingleton(new NpgsqlDataSourceBuilder(
+        builder.Configuration.GetConnectionString("pgsql")!).Build())
+    .AddPostgreSqlStore();
 
 var app = builder.Build();
 
 // Initialize the database schema on startup.
 using (var scope = app.Services.CreateScope())
 {
-    var store = scope.ServiceProvider.GetRequiredService<IPostgreSqlStore>();
-    await store.CreateIfNotExistsAsync(CancellationToken.None);
+    await scope.ServiceProvider
+        .GetRequiredService<IDatabaseSchema>()
+        .CreateIfNotExistsAsync(CancellationToken.None);
 }
 
 app.Run();
@@ -134,14 +139,10 @@ Production connection string example:
 Customize the database schema name using `PostgreSqlStoreOptions`:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddStorage(s => s.PostgreSql(
-        builder.Configuration.GetConnectionString("pgsql")!,
-        options =>
-        {
-            options.SchemaName = "usermanagement"; // Default is "public"
-        }));
+builder.Services.AddPostgreSqlStore(options =>
+{
+    options.SchemaName = "usermanagement";
+});
 ```
 
 Using a custom schema name helps:
@@ -150,14 +151,21 @@ Using a custom schema name helps:
 * Isolate User Management tables from other application data.
 * Support multi-tenant deployments.
 
+:::tip[Multiple stores with keyed services]
+If your application needs more than one store instance (for example, in a multi-tenant setup where each tenant has its own database), see [Multiple Store Instances](#multiple-store-instances) below.
+:::
+
 ### Schema Initialization
 
 Call `CreateIfNotExistsAsync` once on startup to create the schema, tables, and indexes. The operation is idempotent and uses advisory locks to prevent concurrent initialization:
 
 ```csharp title="Program.cs"
+using Duende.Storage;
+
 using var scope = app.Services.CreateScope();
-var store = scope.ServiceProvider.GetRequiredService<IPostgreSqlStore>();
-await store.CreateIfNotExistsAsync(CancellationToken.None);
+await scope.ServiceProvider
+    .GetRequiredService<IDatabaseSchema>()
+    .CreateIfNotExistsAsync(CancellationToken.None);
 ```
 
 ### Schema Version Check
@@ -165,9 +173,11 @@ await store.CreateIfNotExistsAsync(CancellationToken.None);
 Check schema compatibility before the application starts accepting traffic:
 
 ```csharp title="Program.cs"
+using Duende.Storage;
+
 using var scope = app.Services.CreateScope();
-var store = scope.ServiceProvider.GetRequiredService<IPostgreSqlStore>();
-var result = await store.CheckVersionAsync(CancellationToken.None);
+var schema = scope.ServiceProvider.GetRequiredService<IDatabaseSchema>();
+var result = await schema.CheckVersionAsync(CancellationToken.None);
 
 if (!result.IsCompatible)
 {
@@ -199,24 +209,26 @@ dotnet add package Duende.Storage.SqlServer
 Configure User Management to use SQL Server storage:
 
 ```csharp title="Program.cs"
-using Duende.Platform.Builder;
 using Duende.Storage;
 using Duende.Storage.MsSql;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register the connection factory and SQL Server store
+var connectionString = builder.Configuration.GetConnectionString("mssql")!;
 builder.Services
-    .AddDuendePlatform()
-    .AddStorage(s => s.MsSql(
-        builder.Configuration.GetConnectionString("mssql")!));
+    .AddSingleton<CreateSqlConnection>(() => new SqlConnection(connectionString))
+    .AddMsSqlStore(options => { });
 
 var app = builder.Build();
 
 // Initialize the database schema on startup.
 using (var scope = app.Services.CreateScope())
 {
-    var store = scope.ServiceProvider.GetRequiredService<IMsSqlStore>();
-    await store.CreateIfNotExistsAsync(CancellationToken.None);
+    await scope.ServiceProvider
+        .GetRequiredService<IDatabaseSchema>()
+        .CreateIfNotExistsAsync(CancellationToken.None);
 }
 
 app.Run();
@@ -273,14 +285,10 @@ Windows Authentication example:
 Customize the database schema name using `MsSqlStoreOptions`:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddStorage(s => s.MsSql(
-        builder.Configuration.GetConnectionString("mssql")!,
-        options =>
-        {
-            options.SchemaName = "usermanagement"; // Default is "dbo"
-        }));
+builder.Services.AddMsSqlStore(options =>
+{
+    options.SchemaName = "usermanagement";
+});
 ```
 
 Using a custom schema name helps:
@@ -290,14 +298,21 @@ Using a custom schema name helps:
 * Support multi-tenant deployments.
 * Manage permissions at the schema level.
 
+:::tip[Multiple stores with keyed services]
+If your application needs more than one store instance (for example, in a multi-tenant setup where each tenant has its own database), see [Multiple Store Instances](#multiple-store-instances) below.
+:::
+
 ### Schema Initialization
 
 Call `CreateIfNotExistsAsync` once on startup to create the schema, tables, and indexes. The operation is idempotent and uses application locks to prevent concurrent initialization:
 
 ```csharp title="Program.cs"
+using Duende.Storage;
+
 using var scope = app.Services.CreateScope();
-var store = scope.ServiceProvider.GetRequiredService<IMsSqlStore>();
-await store.CreateIfNotExistsAsync(CancellationToken.None);
+await scope.ServiceProvider
+    .GetRequiredService<IDatabaseSchema>()
+    .CreateIfNotExistsAsync(CancellationToken.None);
 ```
 
 ### Schema Version Check
@@ -305,9 +320,11 @@ await store.CreateIfNotExistsAsync(CancellationToken.None);
 Check schema compatibility before the application starts accepting traffic:
 
 ```csharp title="Program.cs"
+using Duende.Storage;
+
 using var scope = app.Services.CreateScope();
-var store = scope.ServiceProvider.GetRequiredService<IMsSqlStore>();
-var result = await store.CheckVersionAsync(CancellationToken.None);
+var schema = scope.ServiceProvider.GetRequiredService<IDatabaseSchema>();
+var result = await schema.CheckVersionAsync(CancellationToken.None);
 
 if (!result.IsCompatible)
 {
@@ -376,4 +393,74 @@ If your workload is read-heavy, consider routing read operations to a read repli
 * **SQL Server**: Use the `ApplicationIntent=ReadOnly` connection string parameter to route reads to an Always On availability group secondary.
 * **Azure SQL / Azure Database for PostgreSQL**: Enable read replicas in the Azure portal and configure a separate connection string for read traffic.
 
+## Multiple Store Instances
+
+If your application needs more than one store instance (for example, in a multi-tenant setup where each tenant has its own database),
+you can register named stores using [.NET's keyed services](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection#keyed-services).
+
+Both the PostgreSQL and SQL Server adapters accept a service key as their first parameter. When you provide a key, the adapter registers itself
+and resolves its dependencies (the `NpgsqlDataSource` or `CreateSqlConnection` delegate) as keyed services under that same key. 
+This lets you run multiple isolated stores side-by-side in a single application.
+
+### PostgreSQL
+
+Register each tenant's `NpgsqlDataSource` as a keyed singleton, then pass the same key to `AddPostgreSqlStore`.
+Each store gets its own connection pool and can target a different database or schema:
+
+```csharp title="Program.cs"
+using Duende.Storage.PostgreSql;
+using Npgsql;
+
+// Tenant A
+builder.Services
+    .AddKeyedSingleton("tenant-a",
+        new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("pgsql-tenant-a")!).Build())
+    .AddPostgreSqlStore("tenant-a", options =>
+    {
+        options.SchemaName = "tenant_a";
+    });
+
+// Tenant B
+builder.Services
+    .AddKeyedSingleton("tenant-b",
+        new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("pgsql-tenant-b")!).Build())
+    .AddPostgreSqlStore("tenant-b", options =>
+    {
+        options.SchemaName = "tenant_b";
+    });
+```
+
+### SQL Server
+
+The same pattern applies to SQL Server. Register a keyed `CreateSqlConnection` delegate for each tenant,
+then pass the key to `AddMsSqlStore`:
+
+```csharp title="Program.cs"
+using Duende.Storage.MsSql;
+using Microsoft.Data.SqlClient;
+
+// Tenant A
+var tenantAConnectionString = builder.Configuration.GetConnectionString("mssql-tenant-a")!;
+builder.Services
+    .AddKeyedSingleton<CreateSqlConnection>("tenant-a", () => new SqlConnection(tenantAConnectionString))
+    .AddMsSqlStore("tenant-a", options =>
+    {
+        options.SchemaName = "tenant_a";
+    });
+```
+
+### Resolving Keyed Stores
+
+Once registered, you can inject a specific store instance using the `[FromKeyedServices]` attribute
+on constructor parameters:
+
+```csharp title="Example.cs"
+public class TenantAService([FromKeyedServices("tenant-a")] IPooledStore store)
+{
+    // Use the tenant-a store instance
+}
+```
+
+You can also resolve keyed services programmatically via `IServiceProvider.GetRequiredKeyedService<IPooledStore>("tenant-a")`,
+which is useful when the tenant key is determined at runtime (for example, from a request header or route value).
 

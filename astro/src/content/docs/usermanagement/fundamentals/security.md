@@ -59,13 +59,15 @@ The default `PasswordOptions` enforces the following constraints:
 Override these defaults during registration:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.Configure(options =>
     {
         options.Passwords.MinLength = 12;
         options.Passwords.MinSymbols = 1;
-    });
+    }))
+);
 ```
 
 ### ASP.NET Identity Password Hash Compatibility
@@ -91,14 +93,16 @@ User Management includes a per-authenticator throttling policy that limits repea
 Configure throttling during registration:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.Configure(options =>
     {
         options.Throttling.MaxFailedAttempts = 3;
         options.Throttling.FailureWindow = TimeSpan.FromMinutes(30);
         options.Throttling.ThrottleDuration = TimeSpan.FromMinutes(10);
-    });
+    }))
+);
 ```
 
 The default policy allows an attempt when:
@@ -124,14 +128,16 @@ The following properties on `AuthenticationThrottlingOptions` control velocity-b
 Configure velocity-based throttling during registration:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.Configure(options =>
     {
         options.Throttling.MaxAttemptsPerWindow = 3;
         options.Throttling.VelocityWindow = TimeSpan.FromSeconds(15);
         options.Throttling.VelocityThrottleDuration = TimeSpan.FromMinutes(1);
-    });
+    }))
+);
 ```
 
 The `AuthenticatorAttemptInfo` record now includes a `RecentAttemptTimestamps` property (`IReadOnlyList<DateTimeOffset>`) that stores the timestamps of recent attempts. The velocity policy uses this list to count attempts within the sliding window and determine whether to block further attempts.
@@ -200,15 +206,17 @@ Passkey behavior is controlled by `PasskeyOptions`, accessible via `UserAuthenti
 Configure passkey options during registration:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth => auth.Configure(options =>
     {
         options.Passkeys.UserVerificationRequirement = "required";
         options.Passkeys.ResidentKeyRequirement = "required";
         options.Passkeys.AllowedOrigins = ["https://auth.example.com"];
         options.Passkeys.ServerDomain = "example.com";
-    });
+    }))
+);
 ```
 
 ### User Verification Requirement Values

@@ -155,19 +155,26 @@ Task<QueryResult<UserAuthenticators>> QueryAsync(QueryRequest request, Cancellat
 Task<IReadOnlyAttributeSchema> GetSchemaAsync(CancellationToken ct);
 Task<UserProfile?> TryAddAsync(UserSubjectId subjectId, AttributeValueCollection attributes, CancellationToken ct);
 Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, CancellationToken ct);
-Task<UserProfile?> TryGetAsync(AttributeName attributeName, object value, CancellationToken ct);
+Task<UserProfile?> TryGetAsync(AttributeCode attributeCode, object value, CancellationToken ct);
 
 // Query profiles
 Task<QueryResult<UserProfile>> QueryAsync(QueryRequest request, CancellationToken ct);
-Task<QueryResult<UserProfileAttributeProjection>> QueryAsync(QueryRequest request, HashSet<AttributeName> attributes, CancellationToken ct);
+Task<QueryResult<UserProfileAttributeProjection>> QueryAsync(QueryRequest request, HashSet<AttributeCode> attributes, CancellationToken ct);
 ```
 
 #### IUserProfileSchemaAdmin
 
 ```csharp
-Task<IReadOnlyDictionary<AttributeName, AttributeDefinition>> GetAllAttributeDefinitionsAsync(CancellationToken ct);
+Task<IReadOnlyDictionary<AttributeCode, AttributeDefinition>> GetAllAttributeDefinitionsAsync(CancellationToken ct);
 Task<bool> TryAddAttributeDefinitionAsync(AttributeDefinition definition, CancellationToken ct);
-Task<bool> TryRemoveAttributeDefinitionAsync(AttributeName name, CancellationToken ct);
+Task<bool> TryRemoveAttributeDefinitionAsync(AttributeCode code, CancellationToken ct);
+
+// Attribute grouping and ordering
+Task<IReadOnlyList<AttributeGroup>> GetAllGroupsAsync(CancellationToken ct);
+Task<bool> TryAddGroupAsync(AttributeGroup group, CancellationToken ct);
+Task<bool> TryRemoveGroupAsync(AttributeGroupCode code, CancellationToken ct);
+Task ReorderAttributesAsync(AttributeGroupCode? groupCode, IReadOnlyList<AttributeCode> orderedCodes, CancellationToken ct);
+Task ReorderGroupsAsync(IReadOnlyList<AttributeGroupCode> orderedGroupCodes, CancellationToken ct);
 ```
 
 #### IRoleAdmin
@@ -257,28 +264,34 @@ Task<bool> TryAuthenticateAsync(UserSubjectId subjectId, PlainTextRecoveryCode r
 
 ## DI Registration
 
-User Management is registered as a set of modules on the `IDuendePlatformBuilder`. The three primary modules are `AddUserAuthentication()`, `AddUserProfiles()`, and `AddMembership()`.
+User Management is registered through `AddUserManagement()` on the service collection. The three primary modules are `EnableAuthentication()`, `EnableProfiles()`, and `EnableMembership()`.
 
 ### Registering Authentication
 
-`AddUserAuthentication()` registers all authentication-related services, including `IUserAuthenticatorsSelfService`, `IUserAuthenticatorsAdmin`, `IPasswordAuth`, `IOtpAuthenticator`, `ITotpAuth`, and `IRecoveryCodeAuth`.
+`EnableAuthentication()` registers all authentication-related services, including `IUserAuthenticatorsSelfService`, `IUserAuthenticatorsAdmin`, `IPasswordAuth`, `IOtpAuthenticator`, `ITotpAuth`, and `IRecoveryCodeAuth`.
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication();
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication()
+);
 ```
 
 You can configure authentication options and sub-features using the builder overload:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication(options =>
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication(auth =>
     {
         // Configure throttling, TOTP window, etc.
-    }, auth =>
-    {
+        auth.Configure(options =>
+        {
+            // Configure throttling, TOTP window, etc.
+        });
+
         // Register a custom OTP sender
         auth.UseOtpSender<MyOtpSender>();
 
@@ -291,33 +304,38 @@ builder.Services
 
         // Register a custom password validator
         auth.AddPasswordValidator<MyPasswordValidator>();
-    });
+    })
+);
 ```
 
 ### Registering Profiles, Roles, and Groups
 
-`AddUserProfiles()` registers all profile-related services, including `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin`.
+`EnableProfiles()` registers all profile-related services, including `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin`.
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserProfiles();
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableProfiles()
+);
 ```
 
 ### Registering Membership (Roles and Groups)
 
-The Membership module is the part of Duende User Management that manages how users are organized into roles and groups, and how those relationships evolve over time. It is registered by calling `AddMembership()` on the `IDuendePlatformBuilder` and lives in the `Duende.UserManagement.Membership` namespace. Use this module whenever your application needs to assign roles to users, organize users into groups, or query transitive role assignments, for example to drive authorization decisions or to build an admin UI for managing access.
+The Membership module is the part of Duende User Management that manages how users are organized into roles and groups, and how those relationships evolve over time. It is registered by calling `EnableMembership()` through `AddUserManagement()` and lives in the `Duende.UserManagement.Membership` namespace. Use this module whenever your application needs to assign roles to users, organize users into groups, or query transitive role assignments, for example to drive authorization decisions or to build an admin UI for managing access.
 
-`AddMembership()` registers the three membership admin interfaces: `IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`.
+`EnableMembership()` registers the three membership admin interfaces: `IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`.
 
 * **`IRoleAdmin`**: Create, read, update, delete, and query roles with filtering, sorting, and pagination.
 * **`IGroupAdmin`**: Create, read, update, delete, and query groups with filtering, sorting, and pagination.
 * **`IMembershipAdmin`**: Role and group assignment, and query operations for direct roles, transitive roles, group membership, and role membership.
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddMembership();
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableMembership()
+);
 ```
 
 ### Registering All Modules
@@ -325,11 +343,13 @@ builder.Services
 Most applications register all three modules together:
 
 ```csharp title="Program.cs"
-builder.Services
-    .AddDuendePlatform()
-    .AddUserAuthentication()
-    .AddUserProfiles()
-    .AddMembership();
+using Duende.UserManagement;
+
+builder.Services.AddUserManagement(um => um
+    .EnableAuthentication()
+    .EnableProfiles()
+    .EnableMembership()
+);
 ```
 
 `IUserSelfService` and `IUserAdmin` are registered as part of the core platform and do not require a separate module call.
