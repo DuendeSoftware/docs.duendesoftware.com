@@ -62,25 +62,43 @@ The `SamlServiceProviderOptions` class controls how the SP handler communicates 
 
 ### Required Properties
 
-| Property                 | Description                                                                                                                  |
-|--------------------------|------------------------------------------------------------------------------------------------------------------------------|
-| `SpEntityId`             | The entity ID of your application (the Service Provider). This is the identifier the IdP uses to recognize your application. |
-| `IdpEntityId`            | The entity ID of the remote SAML Identity Provider.                                                                          |
-| `SingleSignOnServiceUrl` | The URL of the IdP's Single Sign-On endpoint where authentication requests are sent.                                         |
+* **`SpEntityId`**
+  The entity ID of your application (the Service Provider). This is the identifier the IdP uses to recognize your application.
+
+* **`IdpEntityId`**
+  The entity ID of the remote SAML Identity Provider.
+
+* **`SingleSignOnServiceUrl`**
+  The URL of the IdP's Single Sign-On endpoint where authentication requests are sent.
 
 ### Optional Properties
 
-| Property                        | Default                        | Description                                                                                                                                      |
-|---------------------------------|--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| `BindingType`                   | `SamlBindingType.HttpRedirect` | The SAML binding to use when sending authentication requests. Accepted values are `SamlBindingType.HttpRedirect` and `SamlBindingType.HttpPost`. |
-| `SingleLogoutServiceUrl`        | `null`                         | The URL of the IdP's Single Logout endpoint. When not set, outbound logout requests are disabled.                                                |
-| `SigningCertificatesBase64`     | empty list                     | Base64-encoded X.509 certificates used to validate signatures from the IdP. You can provide multiple certificates to support key rotation.       |
-| `AllowUnsolicitedAuthnResponse` | `false`                        | Whether to allow unsolicited (IdP-initiated) authentication responses.                                                                           |
-| `WantAssertionsSigned`          | `true`                         | Whether assertions from the IdP must be signed.                                                                                                  |
-| `OutboundSigningAlgorithm`      | RSA-SHA256                     | The XML signature algorithm used for outbound SAML requests.                                                                                     |
-| `ModulePath`                    | `"/Saml2"`                     | The application-relative path prefix for the handler's ACS and metadata endpoints.                                                               |
-| `SignInScheme`                  | `null`                         | The authentication scheme used to persist the session after SAML authentication. When `null`, the default sign-in scheme is used.                |
-| `SignOutScheme`                 | `null`                         | The authentication scheme used when processing logout requests from the IdP. When `null`, the default sign-out scheme is used.                   |
+* **`BindingType`**
+  The SAML binding to use when sending authentication requests. Accepted values are `SamlBindingType.HttpRedirect` and `SamlBindingType.HttpPost`. Defaults to `SamlBindingType.HttpRedirect`.
+
+* **`SingleLogoutServiceUrl`**
+  The URL of the IdP's Single Logout endpoint. When not set, outbound logout requests are disabled. Defaults to `null`.
+
+* **`SigningCertificatesBase64`**
+  Base64-encoded X.509 certificates used to validate signatures from the IdP. You can provide multiple certificates to support key rotation. Defaults to empty list.
+
+* **`AllowUnsolicitedAuthnResponse`**
+  Whether to allow unsolicited (IdP-initiated) authentication responses. Defaults to `false`.
+
+* **`WantAssertionsSigned`**
+  Whether assertions from the IdP must be signed. Defaults to `true`.
+
+* **`OutboundSigningAlgorithm`**
+  The XML signature algorithm used for outbound SAML requests. Defaults to RSA-SHA256.
+
+* **`ModulePath`**
+  The application-relative path prefix for the handler's ACS and metadata endpoints. Defaults to `"/Saml2"`.
+
+* **`SignInScheme`**
+  The authentication scheme used to persist the session after SAML authentication. When `null`, the default sign-in scheme is used. Defaults to `null`.
+
+* **`SignOutScheme`**
+  The authentication scheme used when processing logout requests from the IdP. When `null`, the default sign-out scheme is used. Defaults to `null`.
 
 The `BindingType` property accepts values from the `SamlBindingType` enum:
 
