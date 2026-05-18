@@ -633,3 +633,4 @@ The following breaking changes are new in Duende IdentityServer v8.0. For full d
 - **`IEnumerable<T>` return types changed to `IReadOnlyCollection<T>`.** Several interface methods updated. Custom implementations must update return types; callers that only enumerate are unaffected.
 - **`IUserSession`: new SAML session methods.** Three new methods for SAML 2.0 session tracking. Custom implementations must add them (no-op implementations are fine if not using SAML).
 - **DPoP changes in JwtBearer package.** `DPoPExtensions` replaced by `DPoPServiceCollectionExtensions`, with new properties for proof token expiration modes.
+- **`IAuthorizationParametersMessageStore` removed.** This interface and its implementations have been removed. If you used it to pass large authorization parameters, migrate to [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md).

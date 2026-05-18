@@ -43,7 +43,7 @@ You could also implement your own store based on the [`IIdentityProviderStore` i
 
 If your custom store supports custom derived `IdentityProvider` types (registered via `AddDynamicProvider` or `AddProviderType`),
 inject `IIdentityProviderFactory` and call its `Create` method on each `IdentityProvider` you load from your backing store.
-This converts the base model into the correct derived type (e.g., `OidcProvider`, `YourCustomProvider`) using the registered copy constructor:
+This converts the base model into the correct derived type (for example, `OidcProvider`, `YourCustomProvider`) using the registered copy constructor:
 
 ```csharp title="MyCustomIdentityProviderStore.cs"
 public class MyCustomIdentityProviderStore : IIdentityProviderStore
@@ -60,7 +60,7 @@ public class MyCustomIdentityProviderStore : IIdentityProviderStore
         var baseModel = await LoadFromBackingStore(scheme, ct);
         if (baseModel == null) return null;
 
-        // Converts to the correct derived type (e.g., OidcProvider, YourCustomProvider)
+        // Converts to the correct derived type (for example, OidcProvider, YourCustomProvider)
         // based on the provider's Type property. Returns null if the type is unrecognized.
         return _factory.Create(baseModel);
     }
