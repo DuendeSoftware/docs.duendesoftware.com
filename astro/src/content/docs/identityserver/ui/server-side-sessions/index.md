@@ -100,3 +100,10 @@ When listing sessions, prefer `GetSessionsAsync` over `QuerySessionsAsync`.
 The `QuerySessionsAsync` method performs a full-text search and may be slower to retrieve a list of sessions than `GetSessionsAsync`.
 Use `QuerySessionsAsync` only when more advanced filtering is required for the solution you are building.
 :::
+
+### Session Overwrite and Orphaned Grant Cleanup
+
+When a session cookie key is reused by a different user or a new session, IdentityServer automatically revokes the grants that belonged to the previous session.
+This keeps your token store clean and prevents tokens from a prior user's session from remaining valid after the session is overwritten.
+
+See [Session Management](/identityserver/ui/server-side-sessions/session-management.md#orphaned-grant-revocation-on-session-overwrite) for details.

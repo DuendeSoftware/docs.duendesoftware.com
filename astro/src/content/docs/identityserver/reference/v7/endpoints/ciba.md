@@ -55,7 +55,7 @@ required to implement the `IBackchannelAuthenticationUserValidator` interface.
 
 * **`requested_expiry`**
 
-  a positive integer allowing the client to request the expires_in value for the auth_req_id the server will return. if
+  a positive integer allowing the client to request the `expires_in` value for the `auth_req_id` the server will return. if
   not present, then the optional `CibaLifetime` property on the `Client` is used, and if that is not present, then the
   `DefaultLifetime` on the `CibaOptions` will be used.
 
@@ -81,14 +81,6 @@ required to implement the `IBackchannelAuthenticationUserValidator` interface.
 
   instead of providing all parameters as individual parameters, you can provide all them as a JWT
 
-```http request
-POST /connect/ciba
-
-    client_id=client1&
-    client_secret=secret&
-    scope=openid api1&
-    login_hint=alice
-```
 
 And a successful response will look something like:
 

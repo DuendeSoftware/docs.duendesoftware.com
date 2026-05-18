@@ -13,6 +13,12 @@ The `IHttpResponseWriter` interface is the contract for services that can produc
 This is a low level abstraction that is intended to be used if you need to customize the serialization, encoding, or
 HTTP headers in a response from a protocol endpoint.
 
+IdentityServer ships a concrete implementation, `AuthorizeInteractionPageHttpWriter`, that handles redirects to login,
+consent, create-account, and custom interaction pages. It is public and designed to be subclassed: you can override
+`BuildReturnUrlAsync`, `BuildRedirectUrlAsync`, or `WriteResponseAsync` to change how those redirects are constructed
+and delivered. See [Customizing authorize interaction redirects](/identityserver/ui/custom-redirect.md) for a how-to
+guide and code examples.
+
 #### Duende.IdentityServer.Hosting.IHttpResponseWriter
 
 ```csharp
