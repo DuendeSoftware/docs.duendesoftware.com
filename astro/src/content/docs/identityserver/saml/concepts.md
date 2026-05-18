@@ -25,7 +25,12 @@ An assertion contains three key parts:
 
 The Identity Provider signs the assertion with its private key. The Service Provider validates the signature before trusting any claims inside.
 
-In IdentityServer, you control what attributes appear in assertions via [claim mappings](/identityserver/saml/configuration.md#default-claim-mappings) and configure signing via [`SamlSigningBehavior`](/identityserver/saml/configuration.md#samlsigningbehavior).
+In IdentityServer, you control what attributes appear in assertions through a chain of settings on `SamlServiceProvider`:
+
+* `AllowedScopes` determines which identity resources (and their claim types) are available
+* `RequestedClaimTypes` narrows that set to specific claims the SP expects
+* [Claim mappings](/identityserver/saml/configuration.md#default-claim-mappings) control how those claim types are translated to SAML attribute names
+* You configure signing via [`SamlSigningBehavior`](/identityserver/saml/configuration.md#samlsigningbehavior)
 
 ## Identity Provider
 
@@ -68,7 +73,7 @@ SAML metadata is an XML document that describes an entity's capabilities: its en
 
 Metadata makes federation scalable. Instead of manually exchanging certificates and endpoint URLs out-of-band, parties import each other's metadata and configure trust automatically.
 
-IdentityServer publishes its IdP metadata at `/saml/metadata`. Share this URL with each Service Provider during federation setup so they can automatically discover your signing certificates, NameID formats, and endpoint locations. See the [metadata endpoint](/identityserver/saml/endpoints.md#metadata-endpoint) for more details.
+IdentityServer publishes its IdP metadata at the entity ID URL, which defaults to `/Saml2`. Share this URL with each Service Provider during federation setup so they can automatically discover your signing certificates, NameID formats, and endpoint locations. See the [metadata endpoint](/identityserver/saml/endpoints.md#metadata-endpoint) for more details.
 
 ## Bindings
 
@@ -150,9 +155,10 @@ sequenceDiagram
     User->>SP_A: Logout
     SP_A->>IdP: LogoutRequest
     IdP->>IdP: End user session
-    IdP->>SP_B: LogoutRequest (front-channel)
+    Note over IdP,User: IdP renders page with iframes
+    IdP->>SP_B: LogoutRequest (iframe, HttpRedirect)
+    IdP->>SP_C: LogoutRequest (iframe, HttpRedirect)
     SP_B-->>IdP: LogoutResponse
-    IdP->>SP_C: LogoutRequest (front-channel)
     SP_C-->>IdP: LogoutResponse
     IdP-->>SP_A: LogoutResponse
 ```
@@ -163,11 +169,15 @@ The IdP can also initiate logout without waiting for an SP to start the flow. Th
 
 ### Front-Channel Logout
 
-IdentityServer uses front-channel logout, which means logout notifications travel through the user's browser via redirects. The IdP redirects the browser to each SP's SLO endpoint in sequence, and each SP terminates its local session before the browser is redirected onward. This approach is simpler to implement than back-channel (server-to-server) logout, but it requires the user's browser to remain open and active throughout the logout sequence. Back-channel logout is not supported.
+IdentityServer uses a front-channel logout approach based on iframes. Rather than redirecting the browser sequentially to each SP's SLO endpoint (which fails entirely if one SP does not respond), IdentityServer renders a page with an iframe for each SP that has an active session. Each iframe loads the SP's SLO endpoint, which terminates the local session and returns a `LogoutResponse`. This approach is more resilient than a redirect chain because a single unresponsive SP does not block logout at other SPs.
+
+Only the `HttpRedirect` binding is supported for SLO. This restriction simplifies the implementation and avoids potential issues with POST-based logout flows in iframes.
+
+The user must remain on the logout page while the iframes load. If the user navigates away before all SPs have responded, some sessions may remain active, resulting in a partial logout.
 
 ### Partial Logout
 
-Not all SPs may respond successfully. An SP may be unreachable, slow to respond, or the user may close the browser before the sequence completes. IdentityServer tracks which SPs are expected to respond and can return a "partial logout" status when some SPs do not confirm. This is a normal outcome in real-world deployments, not an error condition.
+Not all SPs may respond successfully. An SP may be unreachable, slow to respond, or the user may navigate away from the logout page before the sequence completes. IdentityServer tracks which SPs are expected to respond and can return a "partial logout" status when some SPs do not confirm. This is a normal outcome in real-world deployments, not an error condition.
 
 ### Session Tracking
 
@@ -175,6 +185,6 @@ For SLO to work, the IdP must know which SPs have active sessions for a given us
 
 ### Timeouts and Edge Cases
 
-If an SP is unreachable or the user closes the browser mid-flow, the logout sequence may not complete for all SPs. Short session lifetimes and per-application logout are common supplements to SLO in deployments where reliability matters more than protocol completeness. You can tune logout timeout behavior via `SamlOptions` to balance user experience against thoroughness.
+The biggest factor in SLO reliability is how long the user stays on the logout page where the iframes are rendered. If the user navigates away before all SPs respond, the result is the same as if the logout sequence did not complete: some SPs retain active sessions. The `ISamlLogoutSessionStore` TTL (controlled via `SamlOptions`) determines how long logout session records are retained for SPs that have not yet responded. Short session lifetimes and per-application logout are common supplements to SLO in deployments where reliability matters more than protocol completeness.
 
 In IdentityServer, you configure SLO per SP by setting `SamlServiceProvider.SingleLogoutServiceUrl`. IdentityServer then sends front-channel logout notifications to all SPs with a configured SLO endpoint when a user's session ends. See the [logout endpoint](/identityserver/saml/endpoints.md#logout-endpoint) and [`ISamlLogoutNotificationService`](/identityserver/saml/extensibility.md#isamllogoutnotificationservice) for customization options.

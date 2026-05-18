@@ -60,7 +60,7 @@ The following steps show the minimum configuration needed to get SAML 2.0 workin
 
 ### 1. Register SAML Services
 
-Call `AddSaml()` on the IdentityServer builder to enable all SAML endpoints (IdP-initiated SSO requires explicit opt-in):
+Call `AddSaml()` on the IdentityServer builder to enable all SAML endpoints:
 
 ```csharp
 // Program.cs
@@ -107,15 +107,14 @@ For advanced scenarios where your login UI needs access to SAML-specific request
 
 ## Protocol Endpoints
 
-SAML 2.0 endpoints are registered under the `/saml` path prefix:
+SAML 2.0 endpoints are registered under the `/Saml2` path prefix:
 
 | Endpoint          | Path                    |
 | ----------------- | ----------------------- |
-| Metadata          | `/saml/metadata`        |
-| Sign-in           | `/saml/signin`          |
-| Sign-in Callback  | `/saml/signin_callback` |
-| IdP-initiated SSO | `/saml/idp-initiated`   |
-| Logout            | `/saml/logout`          |
-| Logout Callback   | `/saml/logout_callback` |
+| Metadata          | `/Saml2`                |
+| Sign-in           | `/Saml2/SSO`            |
+| Sign-in Callback  | `/Saml2/SSO/Callback`   |
+| Logout            | `/Saml2/SLO`            |
+| Logout Callback   | `/Saml2/SLO/Callback`   |
 
 See [SAML Endpoints](/identityserver/saml/endpoints.md) for full details.

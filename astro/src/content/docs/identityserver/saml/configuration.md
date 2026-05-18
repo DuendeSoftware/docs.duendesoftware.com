@@ -21,7 +21,7 @@ builder.Services.AddIdentityServer()
     .AddSaml();
 ```
 
-`AddSaml()` registers all SAML services and endpoints, enabling most of them by default. The IdP-initiated SSO endpoint requires explicit opt-in (see [Enabling IdP-Initiated SSO](#enabling-idp-initiated-sso) below). It can be called with no arguments when all Service Provider configuration is managed via the admin API, or with an options callback to configure protocol-level settings:
+`AddSaml()` registers all SAML services and endpoints. It can be called with no arguments when all Service Provider configuration is managed via a store, or with an options callback to configure protocol-level settings:
 
 ```csharp
 builder.Services.AddIdentityServer()
@@ -44,7 +44,7 @@ builder.Services.AddIdentityServer(options =>
 {
     options.Saml.DefaultSigningBehavior = SamlSigningBehavior.SignAssertion;
     options.Saml.DefaultClockSkew = TimeSpan.FromMinutes(5);
-    options.Saml.WantAuthnRequestsSigned = false;
+    options.Saml.WantAuthnRequestsSigned = true;
 });
 ```
 
@@ -52,14 +52,29 @@ Use `SamlOptions` when you need to set defaults that apply across all Service Pr
 
 Available options:
 
+* **`EntityId`**
+  The SAML entity identifier for IdentityServer when acting as an IdP. Most deployments do not need to set this; the default value is derived from the host URL combined with `EntityIdPath`. Defaults to `{host}/Saml2`.
+
+* **`EntityIdPath`**
+  The path segment appended to the host URL to form the default `EntityId`. Defaults to `/Saml2`.
+
+* **`SigninStateLifetime`**
+  How long sign-in request state is retained while the user authenticates. This controls the TTL for records in the `ISamlSigninStateStore`. Type: `TimeSpan`. Defaults to 15 minutes.
+
+* **`MaxMessageSize`**
+  Maximum size (in bytes) of inbound SAML messages that IdentityServer will accept. Messages exceeding this limit are rejected. Defaults to 2 MB.
+
+* **`Endpoints`**
+  Configures the URL paths for SAML endpoints. See [Customizing Endpoint Paths](/identityserver/saml/endpoints.md#customizing-endpoint-paths) for details.
+
+* **`Metadata`**
+  Configures metadata document generation options such as `CacheDuration` and `ValidUntil`. Access via `SamlOptions.Metadata`.
+
 * **`MetadataValidityDuration`**
   IdentityServer-layer setting that, if set, causes the metadata document to include a `validUntil` attribute. Defaults to 7 days.
 
 * **`WantAuthnRequestsSigned`**
-  When `true`, the IdP requires all AuthnRequests to be signed. Defaults to `false`.
-
-* **`DefaultAttributeNameFormat`**
-  Default SAML attribute name format URI for attributes in assertions. Defaults to `uri`.
+  When `true`, the IdP requires all AuthnRequests to be signed. Defaults to `true`.
 
 * **`DefaultClaimMappings`**
   Maps OIDC claim types to SAML attribute names. See [Default Claim Mappings](#default-claim-mappings) below.
@@ -67,7 +82,7 @@ Available options:
 * **`SupportedNameIdFormats`**
   Supported NameID formats advertised by the IdP. Defaults to `[ EmailAddress, Unspecified ]`.
 
-  The NameID format determines how the user is identified to the SP. **emailAddress** is human-readable but exposes PII and is coupled to a value that can change. **Unspecified** leaves the format to the IdP's discretion. Persistent and transient formats are planned for a future release. Mismatched format expectations are a common source of SSO failures. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
+  The NameID format determines how the user is identified to the SP. **emailAddress** is human-readable but exposes PII and is coupled to a value that can change. **Unspecified** leaves the format to the IdP's discretion. Inbound AuthnRequests are validated against the formats configured here; requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
 
 * **`DefaultClockSkew`**
   Clock skew tolerance for validating SAML message timestamps. Defaults to 5 minutes.
@@ -81,19 +96,20 @@ Available options:
 * **`MaxRelayStateLength`**
   Maximum length (in UTF-8 bytes) of the RelayState parameter. Defaults to 80.
 
-  RelayState is an opaque string that an SP includes in its `AuthnRequest` to preserve application state (typically the URL the user originally requested) across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can redirect the user to the right page after authentication. The SAML specification recommends keeping RelayState short; this limit enforces that guidance. See [RelayState](/identityserver/saml/concepts.md#relaystate) for more context.
+  RelayState is an opaque string that an SP includes in its `AuthnRequest` to preserve application state (typically the URL the user originally requested) across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can redirect the user to the right page after authentication. The SAML specification recommends keeping RelayState short; this limit enforces that guidance. See [`RelayState`](/identityserver/saml/concepts.md#relaystate) for more context.
 
 * **`DefaultAuthnContextMappings`**
-  Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML URI. Type: `Dictionary<string, string>`. Defaults to empty. Per-SP overrides are set via `SamlServiceProvider.AuthnContextMappings`.
+  Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML URI. Type: `Dictionary<string, string>`.
+  
+  Default mappings include `pwd` → `urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport` and `external` → `urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified`. 
+  
+  Per-SP overrides are set via `SamlServiceProvider.AuthnContextMappings`.
 
 * **`DefaultAssertionLifetime`**
   How long issued assertions are considered valid. Type: `TimeSpan`. Defaults to 5 minutes. Per-SP overrides are set via `SamlServiceProvider.AssertionLifetime`.
 
 * **`EmailNameIdClaimType`**
   The claim type used to resolve an email-format NameID. Defaults to `ClaimTypes.Email`. Per-SP overrides are set via `SamlServiceProvider.EmailNameIdClaimType`.
-
-* **`UserInteraction`**
-  Configures SAML endpoint paths. See [SamlUserInteractionOptions](#samluserinteractionoptions) below.
 
 ### Error Inspector Callbacks
 
@@ -121,39 +137,9 @@ names:
 | `email`    | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress` |
 | `role`     | `http://schemas.xmlsoap.org/ws/2005/05/identity/role`                |
 
-Claims not present in this mapping are excluded from the SAML assertion. Override mappings globally
+Claims not present in this mapping are still included in the assertion but use their original claim type as the attribute name. Override mappings globally
 via `SamlOptions.DefaultClaimMappings` or per Service Provider via
 `SamlServiceProvider.ClaimMappings`.
-
-## SamlUserInteractionOptions
-
-`SamlUserInteractionOptions` configures the URL paths for all SAML endpoints. All paths are
-relative to the application root.
-
-* **`Route`**
-  Base route prefix for all SAML endpoints. Defaults to `/saml`.
-
-* **`Metadata`**
-  Path suffix for the metadata endpoint. Defaults to `/metadata`.
-
-* **`SignInPath`**
-  Path suffix for the SP-initiated sign-in endpoint. Defaults to `/signin`.
-
-* **`SignInCallbackPath`**
-  Path suffix for the sign-in callback endpoint. Defaults to `/signin_callback`.
-
-* **`IdpInitiatedPath`**
-  Path suffix for the IdP-initiated SSO endpoint. Defaults to `/idp-initiated`.
-
-* **`SingleLogoutPath`**
-  Path suffix for the single logout endpoint. Defaults to `/logout`.
-
-* **`SingleLogoutCallbackPath`**
-  Path suffix for the logout callback endpoint. Defaults to `/logout_callback`.
-
-The full URL for each endpoint is formed by combining the base URL of the IdentityServer host with
-the `Route` prefix and the individual path suffix. For example, the metadata endpoint is available
-at `https://your-idp.example.com/saml/metadata` by default.
 
 ## SamlServiceProvider Model
 
@@ -182,7 +168,7 @@ Available options:
   Per-SP request maximum age. Uses `SamlOptions.DefaultRequestMaxAge` when `null`. Defaults to `null`.
 
 * **`AssertionConsumerServiceUrls`** (`ICollection<IndexedEndpoint>`)
-  ACS endpoints where SAML responses will be delivered. At least one is required. Each entry is an `IndexedEndpoint` that specifies the URL, binding, ordering index, and whether it is the default endpoint. See [IndexedEndpoint](#indexedendpoint) below.
+  ACS endpoints where SAML responses will be delivered. At least one is required. Each entry is an `IndexedEndpoint` that specifies the URL, binding, ordering index, and whether it is the default endpoint. See [`IndexedEndpoint`](#indexedendpoint) below.
 
   ```csharp
   AssertionConsumerServiceUrls = new List<IndexedEndpoint>
@@ -198,13 +184,13 @@ Available options:
   ```
 
 * **`SingleLogoutServiceUrl`** (`SamlEndpointType?`)
-  SP's Single Logout Service endpoint, expressed as a `SamlEndpointType` with a `Location` (Uri) and `Binding` (SamlBinding). Required for SLO support. Defaults to `null`. See [SamlEndpointType](#samlendpointtype) below.
+  SP's Single Logout Service endpoint, expressed as a `SamlEndpointType` with a `Location` (Uri) and `Binding` (SamlBinding). Required for SLO support. Defaults to `null`. See [`SamlEndpointType`](#samlendpointtype) below.
 
 * **`RequireSignedAuthnRequests`** (`bool?`)
   When `true`, unsigned AuthnRequests from this SP are rejected. When `null`, falls back to the global `SamlOptions.WantAuthnRequestsSigned` default. Defaults to `null`.
 
 * **`Certificates`** (`ICollection<ServiceProviderCertificate>?`)
-  Certificates associated with this SP, with use annotations indicating whether each certificate is used for signature verification, encryption, or both. Replaces the old `SigningCertificates` property. See [ServiceProviderCertificate](#serviceprovidercertificate) below. Defaults to `null`.
+  Certificates associated with this SP, with use annotations indicating whether each certificate is used for signature verification, encryption, or both. See [`ServiceProviderCertificate`](#serviceprovidercertificate) below. Defaults to `null`.
 
 * **`AllowIdpInitiated`** (`bool`)
   When `true`, IdP-initiated SSO is allowed for this SP. Defaults to `false`.
@@ -325,7 +311,7 @@ AssertionConsumerServiceUrls = new List<IndexedEndpoint>
 Properties:
 
 * **`Certificate`** (`X509Certificate2`): The X.509 certificate. Required.
-* **`Use`** (`KeyUse`): How the certificate is used. Defaults to `KeyUse.Signing`. See [KeyUse](#keyuse) below.
+* **`Use`** (`KeyUse`): How the certificate is used. Defaults to `KeyUse.Signing`. See [`KeyUse`](#keyuse) below.
 
 ### KeyUse
 
@@ -337,18 +323,13 @@ Properties:
 | `Encryption` | Used to encrypt assertions sent to this SP. |
 | `Both` | Used for both signature verification and encryption. Equivalent to `Signing \| Encryption`. |
 
-## Enabling IdP-Initiated SSO
+## IdP-Initiated SSO
 
-IdP-initiated SSO is disabled by default. To enable it, set the endpoint option and configure
-`AllowIdpInitiated = true` on each SP that should permit IdP-initiated flows:
+IdP-initiated SSO is a flow where the Identity Provider sends a SAML assertion to a Service Provider without first receiving an `AuthnRequest`. This is commonly used in application portal pages (for example, a "My Apps" dashboard) where the user is already authenticated and clicks a tile to launch an SP application.
 
-```csharp
-// Program.cs
-builder.Services.AddIdentityServer(options =>
-{
-    options.Endpoints.EnableSamlIdpInitiatedEndpoint = true;
-});
-```
+There is no built-in endpoint for IdP-initiated SSO. Instead, inject `IIdpInitiatedSsoService` into your own Razor Pages or controllers to generate and send the SAML response programmatically. See [`IIdpInitiatedSsoService`](/identityserver/saml/extensibility.md#iidpinitiatedssoservice) for usage details.
+
+To allow IdP-initiated SSO for a given SP, set `AllowIdpInitiated = true` on its `SamlServiceProvider` configuration:
 
 ```csharp
 new SamlServiceProvider
@@ -360,26 +341,7 @@ new SamlServiceProvider
 ```
 
 :::caution
-IdP-initiated SSO is disabled by default because it is not protected by the usual SAML request
-binding (there is no AuthnRequest to validate). Only enable it for SPs that you explicitly trust
-and that require IdP-initiated flows.
+IdP-initiated SSO requires the Service Provider to accept unsolicited SAML responses from the IdP. Only enable it for SPs that explicitly support and require this flow.
 :::
 
-## Endpoint Enable/Disable Options
 
-Individual SAML endpoints can be enabled or disabled via `IdentityServerOptions.Endpoints`:
-
-```csharp
-// Program.cs
-builder.Services.AddIdentityServer(options =>
-{
-    options.Endpoints.EnableSamlMetadataEndpoint = true;
-    options.Endpoints.EnableSamlSigninEndpoint = true;
-    options.Endpoints.EnableSamlSigninCallbackEndpoint = true;
-    options.Endpoints.EnableSamlIdpInitiatedEndpoint = false; // must opt in
-    options.Endpoints.EnableSamlLogoutEndpoint = true;
-    options.Endpoints.EnableSamlLogoutCallbackEndpoint = true;
-});
-```
-
-`AddSaml()` sets all of the above to `true` except `EnableSamlIdpInitiatedEndpoint`.

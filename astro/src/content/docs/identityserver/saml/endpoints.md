@@ -10,22 +10,21 @@ sidebar:
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
 
 When SAML 2.0 support is enabled via `AddSaml()`, IdentityServer registers the following SAML
-protocol endpoints under the `/saml` path prefix.
+protocol endpoints under the `/Saml2` path prefix.
 
 ## Endpoint Summary
 
 | Endpoint          | Path                    | HTTP Methods | Enabled by Default |
 | ----------------- | ----------------------- | ------------ | ------------------ |
-| Metadata          | `/saml/metadata`        | GET          | ✅ Yes             |
-| Sign-in           | `/saml/signin`          | GET, POST    | ✅ Yes             |
-| Sign-in Callback  | `/saml/signin_callback` | GET, POST    | ✅ Yes             |
-| IdP-initiated SSO | `/saml/idp-initiated`   | GET, POST    | ❌ No (opt-in)     |
-| Logout            | `/saml/logout`          | GET, POST    | ✅ Yes             |
-| Logout Callback   | `/saml/logout_callback` | GET, POST    | ✅ Yes             |
+| Metadata          | `/Saml2`                | GET          | ✅ Yes             |
+| Sign-in           | `/Saml2/SSO`            | GET, POST    | ✅ Yes             |
+| Sign-in Callback  | `/Saml2/SSO/Callback`   | GET, POST    | ✅ Yes             |
+| Logout            | `/Saml2/SLO`            | GET, POST    | ✅ Yes             |
+| Logout Callback   | `/Saml2/SLO/Callback`   | GET, POST    | ✅ Yes             |
 
 ## Metadata Endpoint
 
-**Path**: `/saml/metadata`  
+**Path**: `/Saml2`  
 **Methods**: GET
 
 Returns the IdentityServer SAML 2.0 Identity Provider metadata document (an XML document). Service
@@ -39,7 +38,7 @@ IdP settings.
 
 ## Sign-in Endpoint
 
-**Path**: `/saml/signin`  
+**Path**: `/Saml2/SSO`  
 **Methods**: GET, POST
 
 The entry point for SP-initiated SSO. The Service Provider redirects the user to this endpoint
@@ -50,45 +49,21 @@ if needed), and then continues to the Sign-in Callback endpoint.
 
 ## Sign-in Callback Endpoint
 
-**Path**: `/saml/signin_callback`  
+**Path**: `/Saml2/SSO/Callback`  
 **Methods**: GET, POST
 
 Processes the outcome of user authentication during SP-initiated SSO. After the user authenticates,
 this endpoint builds the SAML `Response` (containing the `Assertion`) and delivers it to the
 Service Provider's Assertion Consumer Service (ACS) URL using the configured binding.
 
-## IdP-Initiated SSO Endpoint
-
-**Path**: `/saml/idp-initiated`  
-**Methods**: GET, POST  
-**Enabled by default**: No (requires explicit opt-in)
-
-Supports IdP-initiated SSO flows, where the IdP starts the authentication without receiving an
-`AuthnRequest` from the SP. The SP must have `AllowIdpInitiated = true` set in its
-`SamlServiceProvider` configuration.
-
-To enable this endpoint:
-
-```csharp
-// Program.cs
-builder.Services.AddIdentityServer(options =>
-{
-    options.Endpoints.EnableSamlIdpInitiatedEndpoint = true;
-});
-```
-
-:::caution
-IdP-initiated SSO carries additional security risks because there is no `AuthnRequest` to validate.
-Enable it only for Service Providers that explicitly require it.
-:::
-
 ## Logout Endpoint
 
-**Path**: `/saml/logout`  
+**Path**: `/Saml2/SLO`  
 **Methods**: GET, POST
 
-Handles incoming SAML Single Logout (SLO) requests from Service Providers. The SP sends a SAML
-`LogoutRequest` message to this endpoint. IdentityServer processes the request, terminates the
+Handles incoming SAML Single Logout (SLO) requests and responses. Service Providers send a SAML
+`LogoutRequest` message to this endpoint to initiate logout, or a `LogoutResponse` after processing
+a logout notification from IdentityServer. IdentityServer processes the request, terminates the
 user's IdentityServer session, and coordinates logout across all other SPs.
 
 IdentityServer tracks which SPs have active sessions for the user. After receiving a `LogoutRequest`,
@@ -98,11 +73,12 @@ originating SP to indicate that not all sessions were successfully terminated.
 
 ## Logout Callback Endpoint
 
-**Path**: `/saml/logout_callback`  
+**Path**: `/Saml2/SLO/Callback`  
 **Methods**: GET, POST
 
-Processes SAML `LogoutResponse` messages returned by Service Providers after they have processed a
-logout notification from IdentityServer. This endpoint completes the SAML SLO round-trip.
+Completes the SAML SLO round-trip after all Service Providers have been notified. This endpoint
+processes the aggregated results of the logout notifications and sends the final `LogoutResponse`
+back to the SP that initiated the logout flow.
 
 As each SP returns a `LogoutResponse`, IdentityServer records the result. If not all SPs with active
 sessions have responded by the time the logout flow completes, IdentityServer returns a partial
@@ -114,20 +90,17 @@ SAML Single Logout is inherently complex: the process requires coordinated sessi
 
 ## Customizing Endpoint Paths
 
-Endpoint paths can be customized via `SamlOptions.UserInteraction`:
+Endpoint paths can be customized via `SamlOptions.Endpoints`:
 
 ```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options =>
 {
-    options.Saml.UserInteraction.Route = "/saml";
-    options.Saml.UserInteraction.Metadata = "/metadata";
-    options.Saml.UserInteraction.SignInPath = "/signin";
-    options.Saml.UserInteraction.SignInCallbackPath = "/signin_callback";
-    options.Saml.UserInteraction.IdpInitiatedPath = "/idp-initiated";
-    options.Saml.UserInteraction.SingleLogoutPath = "/logout";
-    options.Saml.UserInteraction.SingleLogoutCallbackPath = "/logout_callback";
+    options.Saml.Endpoints.SsoPath = "/SSO";
+    options.Saml.Endpoints.SsoCallbackPath = "/SSO/Callback";
+    options.Saml.Endpoints.SloPath = "/SLO";
+    options.Saml.Endpoints.SloCallbackPath = "/SLO/Callback";
 });
 ```
 
-See [SamlUserInteractionOptions](/identityserver/saml/configuration.md#samluserinteractionoptions) for full path option documentation.
+The full URL for each endpoint is formed by combining the host URL with the `EntityIdPath` prefix and the individual path suffix. For example, the sign-in endpoint is available at `https://your-idp.example.com/Saml2/SSO` by default.

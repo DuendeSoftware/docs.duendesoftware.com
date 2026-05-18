@@ -46,7 +46,7 @@ if (context is SamlAuthenticationContext samlContext)
 
 * **`ServiceProvider`** (`SamlServiceProvider`): The SP that initiated the request. Use this to
   display SP-specific branding or to apply SP-specific authentication policies.
-* **`IdP`** (`string?`): The IdP entity ID from the `Scoping` element, if the SP specified one.
+* **`IdP`** (`string?`): The IdP entity ID from the `Scoping` element, populated only when the SP specified a single IdP in the `IDPList`. When multiple IdPs are listed, this property is `null`.
 * **`LoginHint`** (`string?`): A login hint derived from the `NameID` in the `AuthnRequest`, if
   present.
 * **`Tenant`** (`string?`): A tenant identifier extracted from `RequestedAuthnContext`, if present.
@@ -56,20 +56,6 @@ if (context is SamlAuthenticationContext samlContext)
 * **`IsIdpInitiated`** (`bool`): Whether this is an IdP-initiated SSO flow.
 * **`RequestedAuthnContext`** (`RequestedAuthnContext?`): The authentication context requirements
   from the SP, if specified.
-
-If the SP specified a `RequestedAuthnContext`, you can report back whether the user's
-authentication met those requirements by calling `StoreRequestedAuthnContextResultAsync` on the
-context object:
-
-```csharp
-// LoginModel.cshtml.cs
-// ... after authenticating the user
-if (context is SamlAuthenticationContext samlContext)
-{
-    await samlContext.StoreRequestedAuthnContextResultAsync(
-        requestedAuthnContextRequirementsWereMet: true);
-}
-```
 
 ---
 
@@ -223,8 +209,9 @@ records their responses as they arrive. This state must survive across multiple 
 per SP notification).
 
 The default implementation stores state in memory, which is suitable for development and
-single-server deployments. For production deployments with multiple servers, implement a custom
-store backed by a distributed cache or database.
+single-server deployments. For production deployments with multiple servers, use the Entity
+Framework Core implementation that ships with IdentityServer, or implement a custom store backed
+by a distributed cache or database.
 
 ```csharp
 // ISamlLogoutSessionStore.cs
@@ -306,9 +293,11 @@ builder.Services.AddScoped<ISaml2FrontChannelLogoutRequestBuilder, MyLogoutReque
 
 `ISamlResourceResolver` resolves the claim types that a SAML Service Provider is allowed to
 receive, based on its `AllowedScopes` and `RequestedClaimTypes` configuration. It is used during
-assertion generation to determine which claims are available for inclusion in the assertion. Note
-that `AllowedScopes` must contain only identity resource names; API resource scopes are not
-supported for SAML service providers.
+assertion generation to determine which claims are available for inclusion in the assertion.
+
+The resolution chain works as follows: `AllowedScopes` determines which identity resources (and their claim types)
+are available. If `RequestedClaimTypes` is also configured, it narrows the resolved set to only those specific claim types.
+Note that `AllowedScopes` must contain only identity resource names; API resource scopes are not supported for SAML service providers.
 
 The default implementation (`DefaultSamlResourceResolver`) resolves claim types from the
 configured identity resource store based on the SP's `AllowedScopes`. Override this interface if
@@ -425,8 +414,7 @@ SAML assertion to a Service Provider without first receiving an `AuthnRequest`. 
 used in application portal pages (for example, a "My Apps" dashboard) where the user is already
 authenticated and clicks a tile to launch an SP application.
 
-The built-in endpoint `/saml/idp-initiated?spEntityId={entityId}` uses this service internally.
-You can also inject `IIdpInitiatedSsoService` directly into your own Razor Pages or controllers
+Inject `IIdpInitiatedSsoService` into your own Razor Pages or controllers
 to generate and send the SAML response programmatically. Because this flow bypasses the normal
 SP-initiated request, the caller is responsible for anti-forgery protection (for example, ensuring
 the request originates from a legitimate authenticated session).
@@ -532,7 +520,7 @@ builder.Services.AddScoped<ISaml2SsoResponseGenerator, MySsoResponseGenerator>()
 ## ISaml2MetadataResponseGenerator
 
 `ISaml2MetadataResponseGenerator` generates the IdP metadata document served at the
-`/saml/metadata` endpoint. SAML metadata describes the IdP's capabilities, endpoints, and signing
+`/Saml2` endpoint. SAML metadata describes the IdP's capabilities, endpoints, and signing
 keys to Service Providers and federation operators. SPs typically fetch this document during
 initial configuration to establish trust.
 
