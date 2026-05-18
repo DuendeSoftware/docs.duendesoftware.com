@@ -316,7 +316,7 @@ Or use the shorter key:
 }
 ```
 
-Because `IConfiguration` supports many providers, you can also supply the key via environment variables
+Because [`IConfiguration`](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) supports many providers, you can also supply the key via environment variables
 (for example, `Duende__IdentityServer__LicenseKey` or `Duende__LicenseKey`), Azure App Configuration, Azure Key Vault,
 or any other configuration source.
 
