@@ -1,7 +1,7 @@
 ---
 title: User Management Architecture
 description: An overview of the layered architecture of Duende User Management, including its public API interfaces, domain layer, storage layer, and service provider registration model.
-date: 2026-04-29
+date: 2026-05-19
 sidebar:
   label: Architecture
   order: 4
@@ -58,8 +58,7 @@ Task<bool> TryDeregisterAsync(UserSubjectId subjectId, CancellationToken ct);
 #### IUserAuthenticatorsSelfService
 
 ```csharp
-// Register a new user by OTP address or external authenticator
-Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, OtpAddress address, CancellationToken ct);
+// Register a new user with an external authenticator
 Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, ExternalAuthenticator authenticator, CancellationToken ct);
 
 // Look up authenticators

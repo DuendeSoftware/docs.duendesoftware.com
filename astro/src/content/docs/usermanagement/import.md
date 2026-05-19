@@ -3,7 +3,7 @@ title: Import Data into User Management
 description: Import users, roles, and authenticators from external systems or other identity providers using the IUserImporter API.
 sidebar:
   label: Importing Data
-  order: 6
+  order: 5
 ---
 
 <!-- TODO - This should be based on sample being created - SKIP in reviews for now -->

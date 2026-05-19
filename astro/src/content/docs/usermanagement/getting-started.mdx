@@ -1,7 +1,7 @@
 ---
 title: Getting Started with User Management
 description: Build a complete OTP (one-time password) login flow from scratch using Duende User Management in an ASP.NET Core Razor Pages app.
-date: 2026-04-29
+date: 2026-05-19
 sidebar:
   label: Getting Started
   order: 3
@@ -170,7 +170,8 @@ Open `Program.cs` and modify its contents step by step as described below.
    Register ASP.NET Core Data Protection so that cookies and tokens are encrypted at rest:
 
    ```csharp title="Program.cs"
-   builder.Services.AddDataProtection();
+   builder.Services.AddDataProtection()
+       .SetApplicationName("OtpUserManagementGettingStarted");
    ```
    
    :::tip
@@ -220,9 +221,7 @@ The application configuration is now complete. Next, we'll add the pages and mod
               using Duende.UserManagement.Authentication.Otp;
               using Duende.Storage;
               using Duende.Storage.Sqlite;
-
               using Microsoft.AspNetCore.Authentication.Cookies;
-
               using OtpUserManagement;
 
               var builder = WebApplication.CreateBuilder(args);
@@ -262,7 +261,8 @@ The application configuration is now complete. Next, we'll add the pages and mod
               builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
 
               builder.Services.AddAuthorization();
-              builder.Services.AddDataProtection();
+              builder.Services.AddDataProtection()
+                  .SetApplicationName("OtpUserManagementGettingStarted");
 
               var app = builder.Build();
 
@@ -324,7 +324,8 @@ The application configuration is now complete. Next, we'll add the pages and mod
                   });
 
               builder.Services.AddAuthorization();
-              builder.Services.AddDataProtection();
+              builder.Services.AddDataProtection()
+                  .SetApplicationName("OtpUserManagementGettingStarted");
 
               builder.Services.AddUserManagement(um => um
                   .EnableAuthentication(auth => auth
@@ -493,20 +494,14 @@ You can configure OTP expiry, code length, and rate-limiting behaviour through t
    ```csharp title="Pages/EnterOtp.cshtml.cs"
     using System.ComponentModel.DataAnnotations;
     using System.Security.Claims;
-    using Duende.UserManagement;
-    using Duende.UserManagement.Authentication;
     using Duende.UserManagement.Authentication.Otp;
-    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     
     namespace OtpUserManagement.Pages;
     
-    public class EnterOtpModel(
-        IOtpAuthenticator otpAuthenticator,
-        IUserAuthenticatorsSelfService authenticatorsSelfService)
-        : PageModel
+    public class EnterOtpModel(IOtpAuthenticator otpAuthenticator) : PageModel
     {
         [BindProperty]
         public InputModel Input { get; set; } = new();
@@ -556,43 +551,29 @@ You can configure OTP expiry, code length, and rate-limiting behaviour through t
                 ModelState.AddModelError(string.Empty, "Invalid or expired code. Please try again.");
                 return Page();
             }
-    
-            // Look up the existing user, or register a new one on first sign-in.
-            UserAuthenticators? authenticators = null;
-            if (otpSuccess.UserSubjectId is { } existingId)
-            {
-                authenticators = await authenticatorsSelfService.TryGetAsync(
-                    existingId, HttpContext.RequestAborted);
-            }
 
-            if (authenticators is null)
-            {
-                authenticators = await authenticatorsSelfService.TryRegisterAsync(
-                    UserSubjectId.New(), otpSuccess.Address, HttpContext.RequestAborted);
-            }
-    
-            if (authenticators is null)
-            {
-                ModelState.AddModelError(string.Empty, "Failed to sign in. Please try again.");
-                return Page();
-            }
-    
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, authenticators.SubjectId.ToGuid().ToString()),
+                new(ClaimTypes.NameIdentifier, otpSuccess.UserSubjectId.ToGuid().ToString()),
                 new(ClaimTypes.Name, otpSuccess.Address.Value),
             };
-    
+   
             var identity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);
-    
+   
             await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
-    
+   
             return LocalRedirect(Url.Content("~/"));
         }
     }
-   ```
+    ```
 </Steps>
+
+:::tip
+If you need to access the full user record, for example to read additional OTP addresses or linked authenticators,
+inject `IUserAuthenticatorsSelfService` and call `TryGetAsync` with the subject ID.
+See [OTP Authentication](/usermanagement/authentication/otp.mdx) for details.
+:::
 
 The code for this page handles both `GET` and `POST` requests, mapped to Razor Pages methods:
 
@@ -601,9 +582,7 @@ The code for this page handles both `GET` and `POST` requests, mapped to Razor P
 **`OnPostAsync`** parses the submitted token and code into their strongly-typed counterparts (`OtpToken` and `PlainTextOtp`), then calls `IOtpAuthenticator.TryAuthenticateAsync`. The method returns an `OtpAuthenticationResult`, which is a discriminated union: pattern-match on `OtpAuthenticationResult.Success` to continue, or show an error for any other result.
 
 :::note[Automatic User Registration]
-After a successful OTP verification, the `Success` result carries an optional `UserSubjectId`. When present, the user already exists and can be looked up with `IUserAuthenticatorsSelfService.TryGetAsync`. When `UserSubjectId` is null (the very first time a given email address signs in), `TryRegisterAsync` is called to create a new user automatically. This pattern means you do not need a separate sign-up flow: every new email address that successfully verifies an OTP becomes a registered user on the spot.
-
-Once a user record is confirmed (or created), a `ClaimsPrincipal` is built from the subject ID and email address and passed to `HttpContext.SignInAsync`, which issues the authentication cookie and completes the sign-in.
+After a successful OTP verification, User Management automatically creates a user record and profile if this is the first time the address has been used. The `UserSubjectId` on the `Success` result is always set, so you can use it directly to build the user's claims without any additional lookup or registration step.
 :::
 
 ## Add a Logout Page

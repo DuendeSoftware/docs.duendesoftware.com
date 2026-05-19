@@ -1,7 +1,7 @@
 ---
 title: User Profiles and Attributes
 description: How to store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfService, IUserProfileAdmin, and IUserProfileSchemaAdmin.
-date: 2026-04-29
+date: 2026-05-19
 sidebar:
   label: User Profiles and Attributes
   order: 1
@@ -46,6 +46,15 @@ builder.Services.AddUserManagement(um => um
 ```
 
 This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin` available for injection.
+
+:::note[Automatic profile provisioning]
+When a user signs in via OTP for the first time, User Management automatically creates a profile for them
+and sets the email attribute from their OTP address. You do not need to call `IUserProfileSelfService.TryRegisterAsync`
+manually for OTP-authenticated users.
+
+If you want to skip automatic profile provisioning, you can provide a custom `IOtpAuthenticator` implementation.
+See [OTP Authentication](/usermanagement/authentication/otp.mdx) for details.
+:::
 
 ## Schema Management
 

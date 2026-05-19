@@ -1,7 +1,7 @@
 ---
 title: OTP Authentication Flow
 description: How to implement one-time password (OTP) authentication in Duende User Management, including code generation, delivery, verification, auto-registration, and OTP address management.
-date: 2026-04-29
+date: 2026-05-19
 sidebar:
   label: OTP Authentication
   order: 2
@@ -55,7 +55,7 @@ The OTP authentication flow has two main steps.
 
 2. **Code validation** - User Management verifies the code matches the stored token and has not expired.
 
-3. **User lookup or creation** - If the user exists, they are retrieved; otherwise, they can be auto-registered.
+3. **User lookup or creation** - The user is automatically created if this is their first authentication with this address.
 
 4. **Session establishment** - A local authentication session is created.
 </Steps>
@@ -90,14 +90,18 @@ sequenceDiagram
 public interface IOtpAuthenticator
 {
     // Generate and send an OTP code to the given address
-    Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, Ct ct);
+    Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, CancellationToken ct);
 
     // Verify an OTP code; returns an OtpAuthenticationResult discriminated union
-    Task<OtpAuthenticationResult> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, Ct ct);
+    Task<OtpAuthenticationResult> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, CancellationToken ct);
 }
 ```
 
-`TrySendOtpAsync` returns a `SendOtpResult` that carries the token and expiry information when the code was sent, or rate-limit information when sending was blocked. `TryAuthenticateAsync` returns an `OtpAuthenticationResult`, which is a discriminated union with two subtypes: `OtpAuthenticationResult.Success` (containing the `Address` and an optional `UserSubjectId`) and `OtpAuthenticationResult.Failure`.
+`TrySendOtpAsync` returns a `SendOtpResult` that carries the token and expiry information when the code was sent, or rate-limit information when sending was blocked.
+
+`TryAuthenticateAsync` returns an `OtpAuthenticationResult`, which is a discriminated union with two subtypes:
+* `OtpAuthenticationResult.Success` (containing the `Address` and the `UserSubjectId`)
+* `OtpAuthenticationResult.Failure` on failure
 
 ### Supporting Types
 
@@ -158,16 +162,13 @@ public sealed record SendOtpResult
 ```csharp
 public interface IUserAuthenticatorsSelfService
 {
-    // Register a new user with an OTP address
-    Task<UserAuthenticators?> TryRegisterAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
-
     // Look up a user by their subject ID
-    Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, Ct ct);
+    Task<UserAuthenticators?> TryGetAsync(UserSubjectId subjectId, CancellationToken ct);
 
     // OTP address management
-    Task<bool> TryAddOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
-    Task<bool> TryReplaceOtpAddressAsync(UserSubjectId subjectId, OtpAddress oldAddress, OtpAddress newAddress, Ct ct);
-    Task<bool> TryRemoveOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, Ct ct);
+    Task<bool> TryAddOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, CancellationToken ct);
+    Task<bool> TryReplaceOtpAddressAsync(UserSubjectId subjectId, OtpAddress oldAddress, OtpAddress newAddress, CancellationToken ct);
+    Task<bool> TryRemoveOtpAddressAsync(UserSubjectId subjectId, OtpAddress address, CancellationToken ct);
 }
 ```
 
@@ -224,100 +225,92 @@ builder.Services.AddUserManagement(um => um
 
 ## Implementation Patterns
 
+The following examples show common OTP workflows using Razor Pages and Duende User Management.
+
 ### Basic OTP Login
 
-The following example shows a two-step OTP login using Razor Pages. Inject `IOtpAuthenticator` and `IUserAuthenticatorsSelfService` into your page model.
+The following example shows a two-step OTP login using Razor Pages. Inject `IOtpAuthenticator` into your page model.
 
-**Step 1 - Send the OTP:**
+<Steps>
+1. **Send the OTP:**
 
-```csharp
-public async Task<IActionResult> OnPostSendOtpAsync(string email)
-{
-    if (!EmailAddress.TryParse(email, out var emailAddress))
-        return Error("Invalid email address");
+   ```csharp
+   public async Task<IActionResult> OnPostSendOtpAsync(string email)
+   {
+       if (!EmailAddress.TryParse(email, out var emailAddress))
+           return Error("Invalid email address");
 
-    var address = new OtpAddress(OtpChannel.Email, emailAddress);
+       var address = new OtpAddress(OtpChannel.Email, emailAddress);
 
-    var result = await otpAuthenticator.TrySendOtpAsync(
-        address,
-        HttpContext.RequestAborted);
+       var result = await otpAuthenticator.TrySendOtpAsync(
+           address,
+           HttpContext.RequestAborted);
 
-    if (result == null || !result.Sent)
-        return Error("Failed to send verification code. Please try again later.");
+       if (result == null || !result.Sent)
+           return Error("Failed to send verification code. Please try again later.");
 
-    // Store the token and address in an encrypted cookie for the verify step
-    StoreCookie("otp_token", result.Token.Value.ToString());
-    StoreCookie("otp_email", email);
+       // Store the token and address in an encrypted cookie for the verify step
+       StoreCookie("otp_token", result.Token.Value.ToString());
+       StoreCookie("otp_email", email);
 
-    return RedirectToPage("/Verify");
-}
-```
+       return RedirectToPage("/Verify");
+   }
+   ```
 
-**Step 2 - Verify the OTP:**
+2. **Verify the OTP:**
 
-```csharp
-public async Task<IActionResult> OnPostVerifyAsync(string code)
-{
-    var tokenValue = GetCookie("otp_token");
-    var email = GetCookie("otp_email");
+   ```csharp
+   public async Task<IActionResult> OnPostVerifyAsync(string code)
+   {
+       var tokenValue = GetCookie("otp_token");
+       var email = GetCookie("otp_email");
 
-    if (!PlainTextOtp.TryParse(code, out var otp))
-        return Error("Invalid code format");
+       if (!PlainTextOtp.TryParse(code, out var otp))
+           return Error("Invalid code format");
 
-    var authResult = await otpAuthenticator.TryAuthenticateAsync(
-        otp.Value,
-        OtpToken.Parse(tokenValue),
-        HttpContext.RequestAborted);
+       var authResult = await otpAuthenticator.TryAuthenticateAsync(
+           otp.Value,
+           OtpToken.Parse(tokenValue),
+           HttpContext.RequestAborted);
 
-    if (authResult is not OtpAuthenticationResult.Success otpSuccess)
-        return Error("Invalid or expired code");
+       if (authResult is not OtpAuthenticationResult.Success otpSuccess)
+           return Error("Invalid or expired code");
 
-    // Look up or auto-register the user
-    UserAuthenticators? user = null;
-    if (otpSuccess.UserSubjectId is { } existingId)
-    {
-        user = await userAuthenticatorsSelfService.TryGetAsync(existingId, HttpContext.RequestAborted);
-    }
+       var claims = new List<Claim>
+       {
+           new(ClaimTypes.NameIdentifier, otpSuccess.UserSubjectId.ToGuid().ToString()),
+           new(ClaimTypes.Name, otpSuccess.Address.Value),
+       };
 
-    if (user == null)
-    {
-        var newSubjectId = UserSubjectId.New();
-        user = await userAuthenticatorsSelfService.TryRegisterAsync(
-            newSubjectId,
-            otpSuccess.Address,
-            HttpContext.RequestAborted);
-    }
+       await SignIn(new ClaimsPrincipal(
+           new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)));
+       ClearCookies();
 
-    if (user == null)
-        return Error("Unable to retrieve or create user account");
-
-    await SignIn(user);
-    ClearCookies();
-
-    return RedirectToPage("/Index");
-}
-```
+       return RedirectToPage("/Index");
+   }
+   ```
+</Steps>
 
 ### Auto-Registration
 
-OTP authentication naturally supports auto-registration. After a successful code verification, use `otpSuccess.UserSubjectId` when present to look up an existing user, and call `TryRegisterAsync` when it is null:
+When a user authenticates via OTP for the first time, User Management automatically creates a `UserAuthenticators` record
+and a user profile. The profile is initialized with the email attribute from the OTP address. You do not need a separate sign-up flow.
 
-```csharp
-UserAuthenticators? user = null;
-if (otpSuccess.UserSubjectId is { } existingId)
-{
-    user = await userAuthenticatorsSelfService.TryGetAsync(existingId, HttpContext.RequestAborted);
-}
+`TryRegisterAsync` on `IUserAuthenticatorsSelfService` is still available for programmatic registration scenarios,
+such as importing users from an external system or linking an external authenticator to an existing account.
 
-if (user == null)
-{
-    var newSubjectId = UserSubjectId.New();
-    user = await userAuthenticatorsSelfService.TryRegisterAsync(
-        newSubjectId,
-        otpSuccess.Address,
-        HttpContext.RequestAborted);
-}
+:::note[Skipping auto-registration]
+There is no built-in configuration flag to disable automatic user creation. If you need to control this behavior,
+for example to require an explicit invitation before a user can sign in, you can provide a custom `IOtpAuthenticator`
+implementation and register it with the service provider:
+
+```csharp title="Program.cs"
+builder.Services.AddTransient<IOtpAuthenticator, MyCustomOtpAuthenticator>();
 ```
+
+Your implementation can check whether the user already exists before completing authentication
+and return `OtpAuthenticationResult.Failure.Instance` for unknown addresses.
+:::
 
 ### Managing OTP Addresses
 
@@ -369,7 +362,7 @@ StoreCookie("otp_token", result.Token.Value.ToString());
 
 ## Security
 
-OTP is a good default for consumer applications: simple, passwordless, and requires no app install. The trade-off is that its security depends entirely on the delivery channel. If someone can read your email or intercept your SMS, they can log in as you.
+OTP is a good default for consumer applications: passwordless, and requires no app install. The trade-off is that its security depends entirely on the delivery channel. If someone can read your email or intercept your SMS, they can log in as you.
 
 ### What User Management Does for You
 
