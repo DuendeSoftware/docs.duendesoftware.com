@@ -132,7 +132,7 @@ public class MySamlServiceProviderStore : ISamlServiceProviderStore
     }
 
     public async IAsyncEnumerable<SamlServiceProvider> GetAllSamlServiceProvidersAsync(
-        [EnumeratorCancellation] CancellationToken ct = default)
+        [EnumeratorCancellation] CancellationToken ct)
     {
         await foreach (var record in _repository.GetAllAsync(ct))
         {
@@ -193,10 +193,10 @@ new SamlServiceProvider
     DefaultNameIdFormat = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
 
     // Claims
-    ClaimMappings = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>
+    ClaimMappings = new Dictionary<string, string>
     {
         ["department"] = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/department",
-    }),
+    },
 }
 ```
 

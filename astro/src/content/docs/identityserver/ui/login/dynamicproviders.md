@@ -72,7 +72,7 @@ builder.Services
     {
         // ...
     })
-    .AddInMemoryOidcIdentityProviders(new []
+    .AddInMemoryOidcProviders(new []
     {
         new OidcProvider
         {

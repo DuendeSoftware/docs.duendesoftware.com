@@ -110,7 +110,7 @@ Available options:
   How long issued assertions are considered valid. Defaults to 5 minutes. Per-SP overrides are set via `SamlServiceProvider.AssertionLifetime`.
 
 * **`EmailNameIdClaimType`**
-  The claim type used to resolve an email-format NameID. Defaults to `ClaimTypes.Email`. Per-SP overrides are set via `SamlServiceProvider.EmailNameIdClaimType`.
+  The claim type used to resolve an email-format NameID. Defaults to `"email"`. Per-SP overrides are set via `SamlServiceProvider.EmailNameIdClaimType`.
 
 ### Error Inspector Callbacks
 
@@ -239,7 +239,7 @@ Available options:
 * **`AllowIdpInitiated`** (`bool`)
   When `true`, IdP-initiated SSO is allowed for this SP. Defaults to `false`.
 
-* **`ClaimMappings`** (`ReadOnlyDictionary<string, string>`)
+* **`ClaimMappings`** (`IDictionary<string, string>`)
   Per-SP claim-to-attribute mappings (internal claim name → SAML attribute URI) that override `SamlOptions.DefaultClaimMappings`. Defaults to `{}`.
 
 * **`DefaultNameIdFormat`** (`string`)
@@ -254,7 +254,7 @@ Available options:
 * **`AllowedScopes`** (`ICollection<string>`)
   Scopes associated with this SP. Used to determine which identity resources (and their claim types) are available for inclusion in assertions. Should not be empty.
 
-* **`AuthnContextMappings`** (`Dictionary<string, string>`)
+* **`AuthnContextMappings`** (`IDictionary<string, string>`)
   Per-SP override for `acr`/`amr` → `AuthnContextClassRef` URI mappings. Overrides `SamlOptions.DefaultAuthnContextMappings` when set. Defaults to empty.
 
 * **`RequestedClaimTypes`** (`List<string>`)
@@ -321,7 +321,7 @@ Properties:
 
 Properties:
 
-* **`Location`** (`Uri`): The ACS URL where SAML responses are delivered.
+* **`Location`** (`string`): The ACS URL where SAML responses are delivered.
 * **`Binding`** (`SamlBinding`): The HTTP binding the ACS endpoint accepts (`HttpPost` or `HttpRedirect`).
 * **`Index`** (`int`): Integer index used to order multiple ACS endpoints. Lower values take precedence.
 * **`IsDefault`** (`bool?`): When `true`, this endpoint is the default ACS. When multiple endpoints are registered, exactly one should be marked as default.

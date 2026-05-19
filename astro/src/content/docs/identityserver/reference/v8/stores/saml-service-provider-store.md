@@ -33,14 +33,15 @@ public interface ISamlServiceProviderStore
     /// <param name="ct">The cancellation token.</param>
     /// <returns>The Service Provider, or null if not found.</returns>
     Task<SamlServiceProvider?> FindByEntityIdAsync(string entityId, CancellationToken ct);
+
+    /// <summary>
+    /// Returns all registered SAML Service Providers.
+    /// </summary>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>An async enumerable of all Service Providers.</returns>
+    IAsyncEnumerable<SamlServiceProvider> GetAllSamlServiceProvidersAsync(CancellationToken ct);
 }
 ```
-
-#### Members
-
-| Name                                                                                    | Description                                                                 |
-|-----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| `Task<SamlServiceProvider?> FindByEntityIdAsync(string entityId, CancellationToken ct)` | Retrieves a SAML Service Provider by its entity ID, or `null` if not found. |
 
 For full details on the `SamlServiceProvider` model and how to register service providers,
 see the [SAML Service Providers](/identityserver/saml/service-providers/) page.
