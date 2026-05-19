@@ -1,6 +1,6 @@
 ---
 title: "SAML Endpoints"
-description: Details of the SAML 2.0 protocol endpoints registered by IdentityServer, including metadata, sign-in, logout, and IdP-initiated SSO.
+description: Details of the SAML 2.0 protocol endpoints registered by IdentityServer, including metadata, sign-in, and logout.
 date: 2026-05-15
 sidebar:
   label: Endpoints
