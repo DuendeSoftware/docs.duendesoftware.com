@@ -13,7 +13,7 @@ tableOfContents:
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
 IdentityServer's SAML 2.0 Identity Provider feature exposes several extensibility interfaces that
-you can implement to customize SAML behavior. All interfaces are registered in the DI container
+you can implement to customize SAML behavior. All interfaces are registered in the service provider
 and can be replaced with custom implementations.
 
 ---
@@ -209,9 +209,10 @@ records their responses as they arrive. This state must survive across multiple 
 per SP notification).
 
 The default implementation stores state in memory, which is suitable for development and
-single-server deployments. For production deployments with multiple servers, use the Entity
-Framework Core implementation that ships with IdentityServer, or implement a custom store backed
-by a distributed cache or database.
+single-server deployments. For production deployments with multiple servers, IdentityServer ships
+an EF Core implementation as part of the configuration store. You get it automatically when you
+configure the configuration store with `AddConfigurationStore()`. You can also implement a custom
+store backed by a distributed cache or database.
 
 ```csharp
 // ISamlLogoutSessionStore.cs
@@ -671,8 +672,10 @@ login UI and back, the original request context (SP entity ID, ACS URL, relay st
 be stored somewhere durable for the duration of the interaction.
 
 The default implementation stores state in memory (suitable for development and testing). For
-production deployments, use the Entity Framework Core implementation that ships with
-IdentityServer, or implement a custom store backed by your own persistence layer.
+production deployments, IdentityServer ships an EF Core implementation as part of the
+configuration store. You get it automatically when you configure the configuration store with
+`AddConfigurationStore()`. No separate registration is needed. You can also implement a custom
+store backed by your own persistence layer.
 
 State is retained after a successful callback to allow browser retries (for example, if the user
 navigates back). TTL-based expiry is the primary cleanup mechanism; `RemoveSigninRequestStateAsync`
@@ -719,7 +722,7 @@ public class MyDistributedSamlSigninStateStore : ISamlSigninStateStore
         SamlAuthenticationState state,
         CancellationToken ct = default)
     {
-        var stateId = StateId.New();
+        var stateId = StateId.NewId();
         var json = JsonSerializer.Serialize(state);
         await _cache.SetStringAsync(stateId.Value, json,
             new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) },

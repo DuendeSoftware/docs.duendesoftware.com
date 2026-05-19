@@ -110,7 +110,7 @@ SAML profiles are predefined recipes that combine assertions, protocol messages,
 The two profiles most relevant to IdentityServer are:
 
 * **Web Browser SSO Profile**: the most widely used profile. It defines the exact sequence of redirects, requests, assertions, and validations for browser-based single sign-on. IdentityServer's [sign-in endpoints](/identityserver/saml/endpoints.md#sign-in-endpoint) implement this profile.
-* **Single Logout Profile**: coordinates session termination across all SPs in a federation when a user logs out. See [Single Logout](#single-logout) below.
+* **Single Logout Profile**: coordinates session termination across all SPs in a federation when a user logs out. See [Single Logout](#single-logout-slo) below.
 
 The **Enhanced Client or Proxy (ECP) Profile** handles non-browser clients (such as native apps or SOAP clients). It is not covered here.
 
