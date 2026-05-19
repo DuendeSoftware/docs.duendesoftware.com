@@ -272,7 +272,7 @@ builder.Services.AddIdentityServer()
     });
 ```
 
-For production, use the Entity Framework Core store. `SamlProvider` records are stored in the `SamlServiceProviders` table and managed via the `ConfigurationDbContext`.
+For production, use the Entity Framework Core store. `SamlProvider` records are stored in the `IdentityProviers` table and managed via the `ConfigurationDbContext`.
 
 ### Callback Paths
 
