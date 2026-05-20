@@ -21,7 +21,9 @@ public interface IUserImporter
 }
 ```
 
-For each record in the batch, the importer runs up to three steps in order:
+For each record in the batch, the importer first ensures a root user record exists for the given `SubjectId`.
+This record coordinates identity across all aspects and is created before any per-aspect work begins.
+Then, the importer runs up to three steps in order:
 
 1. **Profile**: creates or updates the user profile with the provided `SubjectId`, `UserName`, and `ProfileAttributes`.
 2. **Authenticator**: creates or updates authenticator data (passwords, passkeys, TOTP keys, OTP addresses, external providers, recovery codes).

@@ -35,6 +35,16 @@ The bottom layer persists data through the Duende Storage Engine, a document-bas
 
 See [Storage](/usermanagement/fundamentals/storage.md) for details on the storage engine.
 
+## Unified User Record
+
+Every user in Duende User Management is anchored by a single root record that ties together all user aspects: their authenticators, their profile, and their membership links. When you perform a coordinated operation, such as updating a username, the change propagates atomically to all aspects because they all reference this shared record. You never have to synchronize separate stores manually.
+
+The root record holds:
+
+* **SubjectId**: the stable, unique identifier for the user across all aspects
+* **UserName**: the optional human-readable name used for credential lookup
+* **References to aspects**: links to the user's authenticators, profile, and membership data, kept consistent as a unit
+
 ## Public API Interfaces
 
 ### Self-Service Interfaces
@@ -398,6 +408,7 @@ The following interfaces use the non-generic `QueryRequest` and support paginati
 
 ```csharp
 using Duende.Storage;
+using Duende.Storage.Querying;
 using Duende.UserManagement.Membership;
 
 var filter = new RoleFilter { Name = "editor" };

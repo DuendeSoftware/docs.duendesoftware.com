@@ -150,6 +150,7 @@ if (result.IsSuccess)
 
 ```csharp
 using Duende.Storage;
+using Duende.Storage.Querying;
 using Duende.UserManagement.Membership;
 
 var filter = new RoleFilter { Name = "editor" };
@@ -228,6 +229,7 @@ if (result.IsSuccess)
 
 ```csharp
 using Duende.UserManagement.Membership;
+using Duende.Storage.Querying;
 
 var filter = new GroupFilter
 {
@@ -394,7 +396,7 @@ foreach (var member in members.Items)
 When a user is removed from the system, use `IUserAdmin.TryRemoveAsync()` to delete the user and clean up all role and group assignments:
 
 ```csharp
-using Duende.UserManagement.Profiles;
+using Duende.UserManagement;
 
 var removed = await userAdmin.TryRemoveAsync(subjectId, ct);
 

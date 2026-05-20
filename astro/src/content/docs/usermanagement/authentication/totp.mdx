@@ -283,8 +283,8 @@ public async Task<IActionResult> OnPostVerify(string code, CancellationToken ct)
     var success = await userAuthenticatorsSelfService.TryAddTotpAuthenticatorAsync(
         userId,
         TotpAuthenticatorName.Default,
-        key.Value,
-        totp.Value,
+        key,
+        totp,
         ct);
 
     if (!success)
@@ -359,7 +359,7 @@ public async Task<IActionResult> OnPostVerifyTotp(string code, CancellationToken
     var success = await totpAuth.TryAuthenticateAsync(
         authState.UserId,
         TotpAuthenticatorName.Default,
-        totp.Value,
+        totp,
         ct);
 
     if (!success)
@@ -449,7 +449,7 @@ int codesRemaining = authenticators?.RecoveryCodeCount ?? 0;
 
 ### QR Code Display
 
-Generate QR codes from the `otpauth://` URI to make setup easy for users. Any standard QR code library can encode the URI:
+Generate QR codes from the `otpauth://` URI to make setup straightforward for users. Any standard QR code library can encode the URI:
 
 ```csharp
 var qrUri = TotpAuthenticatorUri.Generate("MyApp", userEmail, key);

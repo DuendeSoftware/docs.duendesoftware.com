@@ -542,6 +542,7 @@ Filtering and sorting are not supported for profile queries; only pagination via
 
 ```csharp
 using Duende.Storage;
+using Duende.Storage.Querying;
 using Duende.UserManagement.Profiles;
 
 var request = QueryRequest.Create(new DataRange(0, 50));
@@ -556,8 +557,9 @@ foreach (var profile in result.Items)
 ### Querying Profiles with Attribute Projection
 
 ```csharp
-using Duende.Storage.EntityAttributeValue;
 using Duende.Storage;
+using Duende.Storage.EntityAttributeValue;
+using Duende.Storage.Querying;
 using Duende.UserManagement.Profiles;
 
 // Only retrieve email and department attributes for performance
