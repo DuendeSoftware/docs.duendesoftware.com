@@ -689,21 +689,24 @@ the callback after the user has authenticated. Because SAML sign-in involves a r
 login UI and back, the original request context (SP entity ID, ACS URL, relay state, etc.) must
 be stored somewhere durable for the duration of the interaction.
 
-Three implementations are available, and `AddSaml()` picks the right one automatically based on
-what you have already registered:
+Several implementations are available:
 
-* **In-memory** (default): suitable for development and testing. State is lost on restart and is
+* **In-memory** (default, added by `AddSaml()`): suitable for development and testing. State is lost on restart and is
   not shared across multiple server instances.
-* **EF Core**: registered automatically when you call `AddOperationalStore()` from
-  `Duende.IdentityServer.EntityFramework`. Use this for production. `AddSaml()` detects the EF
-  store and uses it instead of the in-memory fallback. No extra configuration is needed.
+* **EF Core**: registered when you call `AddOperationalStore()` from
+  `Duende.IdentityServer.EntityFramework`. Use this for production. The operational store
+  registration replaces the in-memory fallback. No extra configuration is needed.
 * **Custom**: register your own implementation for a specific persistence backend (Redis,
-  DynamoDB, etc.) by registering it in the service provider.
+  DynamoDB, etc.) by adding it to the service collection before calling `AddSaml()`.
 
 State is retained after a successful callback to allow browser retries (for example, if the user
 navigates back). The `TokenCleanupService` automatically removes expired sign-in state entries
 from the EF Core store during its scheduled cleanup runs. TTL-based expiry is the primary cleanup
 mechanism; `RemoveSigninRequestStateAsync` is called on explicit cleanup paths.
+
+If you implement `IOperationalStoreNotification`, the `SamlSigninStatesRemovedAsync()` callback
+is invoked each time `TokenCleanupService` removes a batch of expired sign-in state entries. This
+lets you react to cleanup events, for example to emit metrics or update external systems.
 
 ```csharp
 // ISamlSigninStateStore.cs
