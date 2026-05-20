@@ -41,10 +41,9 @@ The rest of the `saml/` section covers the IdP role: configuring IdentityServer 
 
 ## What's Included
 
-The SAML 2.0 IdP feature is a comprehensive implementation covering the full SP-initiated and IdP-initiated SSO flows, logout, and a range of extensibility points. Key capabilities include:
+The SAML 2.0 IdP feature is a comprehensive implementation covering the full SP-initiated flow, logout, and a range of extensibility points. Key capabilities include:
 
 * **SP-initiated SSO**: HTTP-Redirect and HTTP-POST bindings for authentication requests
-* **IdP-initiated SSO**: opt-in support for portal or launcher pages that push assertions to SPs without a prior request
 * **Single Logout (SLO)**: front-channel logout notifications to registered SPs, with session tracking and partial logout responses when not all SPs respond
 * **Assertion signing**: per-SP configuration of signing algorithms
 * **NameID format support**: email and unspecified formats (persistent planned for a future release)
