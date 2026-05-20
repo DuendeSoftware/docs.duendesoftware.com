@@ -79,7 +79,7 @@ public interface IUserProfileSchemaAdmin
 * `TryAddAttributeDefinitionAsync`: Adds a new attribute definition to the schema. Returns `true` on success and `false` if the definition could not be added (for example, a definition with the same code already exists).
 * `TryRemoveAttributeDefinitionAsync`: Removes an attribute definition by code. Returns `true` whether or not the definition existed.
 
-To organize attributes into groups and control their display order, see [Attribute groups and ordering](./attribute-groups.md).
+To organize attributes into groups and control their display order, see [Attribute groups and ordering](/usermanagement/fundamentals/attribute-groups.md).
 
 ### `AttributeDefinition`
 

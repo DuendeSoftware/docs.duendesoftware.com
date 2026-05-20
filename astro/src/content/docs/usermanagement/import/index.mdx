@@ -1,0 +1,145 @@
+---
+title: Importing and migrating data
+description: Import users, roles, and authenticators from external systems or other identity providers using the IUserImporter API.
+sidebar:
+  label: Overview
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+User Management lets you migrate users, roles, and authenticators from another identity provider,
+or seed users from an external system. This is helpful in several scenarios:
+
+* Migrating from ASP.NET Identity or another identity provider
+* Seeding users from an HR system, directory service, or CSV export
+* Consolidating users from multiple applications into a single identity store
+
+Import works by submitting a batch of `UserImportRecord` objects, with a per-record result indicating
+whether a record was created, updated, skipped, or failed. Records in a batch are processed independently,
+so a failure on one record does not affect the others.
+
+## Migration Strategies
+
+Before you write any import code, a bit of planning saves you from surprises mid-migration.
+
+### Planning Your Migration
+
+Most migrations involve some combination of user profiles, passwords, and group or role memberships.
+For some, all of this data may need to be migrated. Other migrations will be more selective.
+A user who authenticated exclusively through an external provider (Google, Entra ID, ...)
+often has no password to migrate, for example, and a system that never had roles can skip membership entirely.
+Each field on `UserImportRecord` is optional, so you only need to populate what applies.
+
+Passwords deserve special attention. The import system stores pre-hashed passwords verbatim: it does not re-hash
+them on the way in. When a user logs in after migration, the system looks up the `algorithmId` stored alongside
+the hash, routes the verification call to the matching `IPasswordHashAlgorithm`, and checks
+whether `NeedsRehash()` returns `true`. If it does, the password is transparently re-hashed with the current
+preferred algorithm. The user notices nothing. This means you need a registered `IPasswordHashAlgorithm` that
+understands your source system's hash format.  See [Password Hashing Algorithms](/usermanagement/reference/password-hashing.md)
+for how to implement and register one.
+
+A few things to sort out before you start:
+
+* **Groups and roles must exist first.** `MembershipImport` references groups and roles by ID. If a referenced group or role does not exist at import time, the record fails. Create them before you run the import.
+* **Decide on batch size.** For small datasets (a few thousand users), a single import call works fine. For larger datasets, process records in chunks of 100 to 500. Smaller batches make it easier to track progress, isolate failures, and resume after an interruption.
+* **Test with a small batch.** Run a representative sample of 10 to 20 records before committing to a full migration. Verify that passwords verify correctly, profile attributes land in the right fields, and memberships are assigned as expected.
+
+### Migrating from ASP.NET Identity
+
+If you are moving from Duende IdentityServer with ASP.NET Identity to User Management, see the [ASP.NET Identity Integration](/identityserver/aspnet-identity/) docs for background on how the existing integration works.
+
+ASP.NET Identity stores user data across several tables. The following table shows how each concept maps to User Management's import types:
+
+| ASP.NET Identity                                              | User Management                              | Notes                                                                                                                                                                                                                                                      |
+|---------------------------------------------------------------|----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AspNetUsers.Id`                                              | `UserImportRecord.SubjectId`                 | You can use the GUID string directly as the subject ID.                                                                                                                                                                                                    |
+| `AspNetUsers.UserName`                                        | `UserImportRecord.UserName`                  |                                                                                                                                                                                                                                                            |
+| `AspNetUsers.Email`, `PhoneNumber`, and other profile columns | `UserImportRecord.ProfileAttributes`         | Map each column to a profile attribute using the schema.                                                                                                                                                                                                   |
+| `AspNetUsers.PasswordHash`                                    | `AuthenticatorImport.Password`               | Requires a custom `IPasswordHashAlgorithm` to verify the ASP.NET Identity hash format. See [Migrating from ASP.NET Identity](/usermanagement/import/aspnet-identity.mdx) for the format details and a complete implementation.                              |
+| `AspNetUserRoles` + `AspNetRoles`                             | `MembershipImport.DirectRoles`               | Create the roles first using `IRoleAdmin`, then reference them by ID during import.                                                                                                                                                                        |
+| `AspNetUserClaims`                                            | `UserImportRecord.ProfileAttributes`         | Claims that represent profile data (name, address, etc.) map to profile attributes. Claims used for authorization decisions map better to roles or groups.                                                                                                 |
+| `AspNetUserLogins`                                            | `AuthenticatorImport.ExternalAuthenticators` | Each row becomes an `ExternalAuthenticator` with the `LoginProvider` as the provider name and `ProviderKey` as the subject ID.                                                                                                                             |
+| `AspNetUserTokens`                                            | Not imported                                 | Tokens (2FA recovery codes, authenticator keys) are runtime state. For TOTP authenticator keys, use `AuthenticatorImport.TotpAuthenticators` if you have access to the raw secret. Recovery codes can be imported via `AuthenticatorImport.RecoveryCodes`. |
+
+Passwords are the trickiest part of the migration because ASP.NET Identity uses a proprietary binary format for its hashes. You need to register a custom `IPasswordHashAlgorithm` that can verify these hashes. The [Migrating from ASP.NET Identity](/usermanagement/import/aspnet-identity.mdx) page explains the format and includes a complete implementation.
+
+For a complete walkthrough with working code, see [Migrating from ASP.NET Identity](/usermanagement/import/aspnet-identity.mdx).
+
+### Batch Processing
+
+You do not have to import every user in a single call. For large datasets, splitting the work into chunks
+is more practical. Smaller batches keep memory usage reasonable, make failures easier
+to diagnose, and let you checkpoint progress so a crash does not force you to start over.
+
+The key thing that makes batching straightforward is that each record in a batch is processed independently.
+If record 47 out of 250 fails, the other 249 still succeed. After each batch completes, inspect `result.Results`
+for entries with `Status == UserImportStatus.Failed`, log the `SubjectId` and `Error`, and collect them for a retry pass.
+
+If you expect to re-run the import (for example, after fixing bad source data), configure your conflict resolver
+to return `Overwrite` for `ProfileAlreadyExists` and `AuthenticatorAlreadyExists`. That way, re-submitting a record that
+was already imported updates it in place rather than failing. This makes the whole process idempotent;
+you can run it as many times as you need without worrying about duplicates.
+
+:::note[Conflict Resolution]
+A conflict resolver controls what happens when an import record collides with data that already exists in the store.
+The default resolver (`DefaultUserImportConflictResolver`) skips most conflicts and retries on concurrency errors,
+which is safe for a first-time import but means re-running the same batch will skip every record.
+
+For idempotent re-runs, you need a custom resolver that returns `Overwrite` instead of `Skip`.
+See [Conflict Resolution](/usermanagement/import/reference.md#conflict-resolution) for the full details and a custom resolver example.
+:::
+
+```csharp title="BatchImportService.cs"
+public class BatchImportService(IUserImporter importer)
+{
+    private const int BatchSize = 250;
+
+    public async Task ImportAllAsync(IEnumerable<UserImportRecord> allRecords, CancellationToken ct)
+    {
+        var failed = new List<UserImportResult>();
+        var batch = new List<UserImportRecord>(BatchSize);
+        int totalCreated = 0, totalUpdated = 0, totalFailed = 0;
+
+        foreach (var record in allRecords)
+        {
+            batch.Add(record);
+
+            if (batch.Count < BatchSize)
+                continue;
+
+            var result = await importer.ImportAsync(batch, ct);
+            totalCreated += result.CreatedCount;
+            totalUpdated += result.UpdatedCount;
+            totalFailed += result.FailedCount;
+            failed.AddRange(result.Results.Where(r => r.Status == UserImportStatus.Failed));
+            batch.Clear();
+        }
+
+        // Process the final partial batch.
+        if (batch.Count > 0)
+        {
+            var result = await importer.ImportAsync(batch, ct);
+            totalCreated += result.CreatedCount;
+            totalUpdated += result.UpdatedCount;
+            totalFailed += result.FailedCount;
+            failed.AddRange(result.Results.Where(r => r.Status == UserImportStatus.Failed));
+        }
+
+        Console.WriteLine($"Created: {totalCreated}, Updated: {totalUpdated}, Failed: {totalFailed}");
+
+        foreach (var r in failed)
+            Console.WriteLine($"  FAILED {r.SubjectId}: {r.Error}");
+    }
+}
+```
+
+## Where to go from here
+
+The best starting point depends on where your users live today:
+
+<CardGrid>
+  <LinkCard title="Migrating from ASP.NET Identity" href="/usermanagement/import/aspnet-identity" description="Step-by-step guide covering source data extraction, password hash verification, and building import records." />
+  <LinkCard title="Import API reference" href="/usermanagement/import/reference" description="Full reference for IUserImporter, UserImportRecord, conflict resolution, and result handling." />
+  <LinkCard title="Password hashing algorithms" href="/usermanagement/reference/password-hashing" description="Implement and register a custom IPasswordHashAlgorithm to verify hashes from your source system." />
+</CardGrid>
