@@ -114,7 +114,7 @@ public sealed record OtpAddress(OtpChannel Channel, SubjectId SubjectId);
 `OtpChannel` - The delivery mechanism:
 
 ```csharp
-public readonly record struct OtpChannel
+public record OtpChannel
 {
     public static OtpChannel Email { get; }  // Deliver via email
     public static OtpChannel Sms { get; }    // Deliver via SMS
@@ -124,7 +124,7 @@ public readonly record struct OtpChannel
 `OtpToken` - Opaque token linking a code to an authentication attempt:
 
 ```csharp
-public readonly record struct OtpToken
+public record OtpToken
 {
     public static OtpToken Parse(string input);
     public override string ToString();
@@ -134,10 +134,10 @@ public readonly record struct OtpToken
 `PlainTextOtp` - The verification code entered by the user:
 
 ```csharp
-public readonly record struct PlainTextOtp
+public record PlainTextOtp
 {
     public static PlainTextOtp Parse(string value);
-    public static bool TryParse(string input, out PlainTextOtp result);
+    public static bool TryParse(string? input, [NotNullWhen(true)] out PlainTextOtp? result);
 }
 ```
 

@@ -118,7 +118,7 @@ Task<IReadOnlyCollection<PlainTextRecoveryCode>?> TryCreateRecoveryCodesAsync(
 Represents the shared secret key (160-bit):
 
 ```csharp
-public readonly record struct PlainBytesTotpKey
+public record PlainBytesTotpKey
 {
     // Generate a new cryptographically secure random key
     public static PlainBytesTotpKey New();
@@ -133,7 +133,7 @@ public readonly record struct PlainBytesTotpKey
     public static PlainBytesTotpKey DecodeFromBase32(string input);
 
     // Try to decode from a Base32 string without throwing
-    public static bool TryDecodeFromBase32(string input, out PlainBytesTotpKey result);
+    public static bool TryDecodeFromBase32(string input, [NotNullWhen(true)] out PlainBytesTotpKey? result);
 }
 ```
 
@@ -142,13 +142,13 @@ public readonly record struct PlainBytesTotpKey
 Represents the 6-digit verification code entered by the user:
 
 ```csharp
-public readonly record struct PlainTextTotp
+public record PlainTextTotp
 {
     // Parse a TOTP code, throwing on invalid input
     public static PlainTextTotp Parse(string input);
 
     // Try to parse a TOTP code without throwing
-    public static bool TryParse(string input, out PlainTextTotp result);
+    public static bool TryParse(string? input, [NotNullWhen(true)] out PlainTextTotp? result);
 }
 ```
 
@@ -157,7 +157,7 @@ public readonly record struct PlainTextTotp
 Identifies a specific TOTP authenticator registered to a user. Multiple authenticators per user are supported:
 
 ```csharp
-public readonly record struct TotpAuthenticatorName
+public record TotpAuthenticatorName
 {
     // The default authenticator name ("Default")
     public static TotpAuthenticatorName Default { get; }
@@ -166,7 +166,7 @@ public readonly record struct TotpAuthenticatorName
     public static TotpAuthenticatorName Parse(string input);
 
     // Try to parse an authenticator name without throwing
-    public static bool TryParse(string input, out TotpAuthenticatorName result);
+    public static bool TryParse(string? input, [NotNullWhen(true)] out TotpAuthenticatorName? result);
 }
 ```
 

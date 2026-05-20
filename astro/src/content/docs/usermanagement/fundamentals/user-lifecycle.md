@@ -275,6 +275,6 @@ The subject identifier value objects follow the [RFC 9493](https://www.rfc-edito
 * `EmailAddress`: validated email address (max 320 characters)
 * `PhoneNumber`: validated phone number in E.164 format (max 15 digits)
 
-These are all `readonly record struct` types. There is no inheritance between them: they are independent types that share the `ISubjectId` contract.
+These are all `record` types. There is no inheritance between them: they are independent types that share the `ISubjectId` contract.
 
 `UserName` is a related value object (max 320 characters) but does not implement `ISubjectId`.

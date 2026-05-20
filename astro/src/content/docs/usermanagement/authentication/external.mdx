@@ -144,11 +144,11 @@ public sealed record ExternalAuthenticator(
 `ExternalAuthenticatorName` - Identifies the external provider:
 
 ```csharp
-public readonly record struct ExternalAuthenticatorName
+public record ExternalAuthenticatorName
 {
     // Typically matches the ASP.NET Core authentication scheme name
     public static ExternalAuthenticatorName Parse(string input);
-    public static bool TryParse(string input, out ExternalAuthenticatorName result);
+    public static bool TryParse(string? input, [NotNullWhen(true)] out ExternalAuthenticatorName? result);
 }
 ```
 

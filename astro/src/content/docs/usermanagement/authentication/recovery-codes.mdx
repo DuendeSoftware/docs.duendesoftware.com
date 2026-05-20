@@ -95,10 +95,10 @@ Returns `null` if code generation fails (for example, when 2FA is not enabled fo
 `PlainTextRecoveryCode` represents a recovery code value and provides parsing and display helpers:
 
 ```csharp
-public readonly record struct PlainTextRecoveryCode
+public record PlainTextRecoveryCode
 {
     // Parse a user-supplied string into a recovery code
-    public static bool TryParse(string input, out PlainTextRecoveryCode result);
+    public static bool TryParse(string? input, [NotNullWhen(true)] out PlainTextRecoveryCode? result);
 
     // Parse or throw on invalid input
     public static PlainTextRecoveryCode Parse(string input);
