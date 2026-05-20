@@ -1,7 +1,7 @@
 ---
 title: "Events"
 description: Documentation about IdentityServer's event system for structured logging and monitoring of important operations
-date: 2020-09-10T08:22:12+02:00
+date: 2026-05-20
 sidebar:
   order: 20
 redirect_from:
@@ -139,6 +139,34 @@ The following events are defined in IdentityServer:
 * **`DeviceAuthorizationFailureEvent`** & **`DeviceAuthorizationSuccessEvent`**
 
   Gets raised for successful/failed device authorization requests.
+
+### SAML Events :badge[v8.0]
+
+The following events are raised by SAML components:
+
+* **`SamlSsoSuccessEvent`**
+
+  Raised when a SAML single sign-on request completes successfully.
+
+* **`SamlSsoFailureEvent`**
+
+  Raised when a SAML single sign-on request fails.
+
+* **`SamlSloSuccessEvent`**
+
+  Raised when a SAML single logout request completes successfully.
+
+* **`SamlSloFailureEvent`**
+
+  Raised when a SAML single logout request fails.
+
+* **`SamlAuthnRequestValidationFailureEvent`**
+
+  Raised when validation of an incoming SAML authentication request fails.
+
+* **`SamlLogoutRequestValidationFailureEvent`**
+
+  Raised when validation of an incoming SAML logout request fails.
 
 ### Custom events
 

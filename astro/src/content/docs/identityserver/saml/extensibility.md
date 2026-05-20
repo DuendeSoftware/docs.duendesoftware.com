@@ -56,6 +56,9 @@ if (context is SamlAuthenticationContext samlContext)
 * **`IsIdpInitiated`** (`bool`): Whether this is an IdP-initiated SSO flow.
 * **`RequestedAuthnContext`** (`RequestedAuthnContext?`): The authentication context requirements
   from the SP, if specified.
+* **`StateId`** (`StateId`): The identifier for the stored sign-in state entry. You need this when
+  calling `DenyAuthenticationAsync` to deny the authentication request (see
+  [denying authentication](/identityserver/ui/login/context.md#denying-authentication)).
 
 ---
 
@@ -264,7 +267,7 @@ You can register your custom store at startup:
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddSaml()
-    .AddSamlLogoutSessionStore<MyDistributedSamlLogoutSessionStore>();
+    .AddSamlLogoutSessionStore<CustomDistributedSamlLogoutSessionStore>();
 ```
 
 ---
@@ -714,6 +717,7 @@ public interface ISamlSigninStateStore
 {
     Task<StateId> StoreSigninRequestStateAsync(SamlAuthenticationState state, CancellationToken ct = default);
     Task<SamlAuthenticationState?> RetrieveSigninRequestStateAsync(StateId stateId, CancellationToken ct = default);
+    Task UpdateSigninRequestStateAsync(StateId stateId, SamlAuthenticationState state, CancellationToken ct = default);
     Task RemoveSigninRequestStateAsync(StateId stateId, CancellationToken ct = default);
 }
 ```
@@ -742,7 +746,7 @@ To register a custom implementation, add it to the service collection before `Ad
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISamlSigninStateStore, MyDistributedSamlSigninStateStore>();
+builder.Services.AddScoped<ISamlSigninStateStore, CustomDistributedSamlSigninStateStore>();
 builder.Services.AddIdentityServer()
     .AddSaml();
 ```
@@ -750,12 +754,12 @@ builder.Services.AddIdentityServer()
 ### Example
 
 ```csharp
-// MyDistributedSamlSigninStateStore.cs
-public class MyDistributedSamlSigninStateStore : ISamlSigninStateStore
+// CustomDistributedSamlSigninStateStore.cs
+public class CustomDistributedSamlSigninStateStore : ISamlSigninStateStore
 {
     private readonly IDistributedCache _cache;
 
-    public MyDistributedSamlSigninStateStore(IDistributedCache cache)
+    public CustomDistributedSamlSigninStateStore(IDistributedCache cache)
         => _cache = cache;
 
     public async Task<StateId> StoreSigninRequestStateAsync(
@@ -780,5 +784,16 @@ public class MyDistributedSamlSigninStateStore : ISamlSigninStateStore
 
     public Task RemoveSigninRequestStateAsync(StateId stateId, CancellationToken ct = default)
         => _cache.RemoveAsync(stateId.Value, ct);
+
+    public async Task UpdateSigninRequestStateAsync(
+        StateId stateId,
+        SamlAuthenticationState state,
+        CancellationToken ct = default)
+    {
+        var json = JsonSerializer.Serialize(state);
+        await _cache.SetStringAsync(stateId.Value, json,
+            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) },
+            ct);
+    }
 }
 ```

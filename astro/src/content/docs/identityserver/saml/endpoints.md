@@ -105,3 +105,10 @@ builder.Services.AddIdentityServer()
 ```
 
 See [`SamlEndpointOptions`](/identityserver/saml/configuration.md#samlendpointoptions) for the full property reference.
+
+## Observability
+
+All SAML endpoints emit [audit events](/identityserver/diagnostics/events.md#saml-events) and
+[telemetry counters](/identityserver/diagnostics/otel.md#telemetrymetricscounterssamlsso) for
+monitoring and troubleshooting. The SSO and SLO endpoints also participate in distributed tracing
+through the `Duende.IdentityServer` activity source.
