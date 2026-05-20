@@ -1,7 +1,7 @@
 ---
 title: "SAML Configuration"
 description: Configuration options and models for the SAML 2.0 Identity Provider feature, including SamlOptions and SamlServiceProvider settings.
-date: 2026-05-15
+date: 2026-05-20
 sidebar:
   label: Configuration
   order: 10
@@ -64,6 +64,9 @@ Available options:
 
 * **`SigninStateLifetime`**
   How long sign-in request state is retained while the user authenticates. This controls the TTL for records in the `ISamlSigninStateStore`. Defaults to 15 minutes.
+
+* **`LogoutSessionLifetime`**
+  Controls how long logout session tracking state is retained while front-channel logout completes. This controls the TTL for records in the [`ISamlLogoutSessionStore`](/identityserver/saml/extensibility.md#isamllogoutsessionstore). Defaults to 5 minutes.
 
 * **`MaxMessageSize`**
   Maximum size (in characters) of inbound SAML messages that IdentityServer will accept. Messages exceeding this limit are rejected. Defaults to 1,048,576 (1 MB).
@@ -133,7 +136,7 @@ The default `DefaultClaimMappings` dictionary maps common OIDC claim types to SA
 names:
 
 | Claim type | SAML attribute name                                                  |
-| ---------- | -------------------------------------------------------------------- |
+|------------|----------------------------------------------------------------------|
 | `name`     | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`         |
 | `email`    | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress` |
 | `role`     | `http://schemas.xmlsoap.org/ws/2005/05/identity/role`                |
@@ -275,7 +278,7 @@ SAML bindings define how messages travel over HTTP. HTTP-Redirect encodes the me
 `SamlBinding` is used in two places: on `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`) and on `SamlEndpointType` (for `SingleLogoutServiceUrl`).
 
 | Value          | Description                                                                           |
-| -------------- | ------------------------------------------------------------------------------------- |
+|----------------|---------------------------------------------------------------------------------------|
 | `HttpRedirect` | HTTP-Redirect binding. The SAML message is URL-encoded and sent as a query parameter. |
 | `HttpPost`     | HTTP-POST binding. The SAML message is Base64-encoded and sent in an HTML form.       |
 
@@ -286,7 +289,7 @@ SAML assertions and responses are typically signed with the IdP's private key to
 Controls what elements are signed in SAML responses:
 
 | Value           | Description                                                                           |
-| --------------- | ------------------------------------------------------------------------------------- |
+|-----------------|---------------------------------------------------------------------------------------|
 | `DoNotSign`     | No signing. For testing only. Do not use in production.                               |
 | `SignResponse`  | Signs the entire SAML `<Response>` element.                                           |
 | `SignAssertion` | Signs the `<Assertion>` element inside the response. **Recommended.**                 |
@@ -361,11 +364,11 @@ Properties:
 
 `KeyUse` is a flags enum that controls how a `ServiceProviderCertificate` is applied.
 
-| Value | Description |
-|---|---|
-| `Signing` | Used to verify signatures on messages from this SP. |
-| `Encryption` | Used to encrypt assertions sent to this SP. |
-| `Both` | Used for both signature verification and encryption. Equivalent to `Signing \| Encryption`. |
+| Value        | Description                                                                                 |
+|--------------|---------------------------------------------------------------------------------------------|
+| `Signing`    | Used to verify signatures on messages from this SP.                                         |
+| `Encryption` | Used to encrypt assertions sent to this SP.                                                 |
+| `Both`       | Used for both signature verification and encryption. Equivalent to `Signing \| Encryption`. |
 
 ## IdP-Initiated SSO
 

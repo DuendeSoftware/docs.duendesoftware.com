@@ -1,7 +1,7 @@
 ---
 title: "SAML Extensibility"
 description: Extensibility interfaces for customizing SAML 2.0 Identity Provider behavior, including NameID generation, SSO response generation, metadata, AuthnRequest validation, interaction, logout, and sign-in state storage.
-date: 2026-05-15
+date: 2026-05-20
 sidebar:
   label: Extensibility
   order: 40
@@ -208,11 +208,24 @@ initiates SLO, it creates a logout session that tracks which SPs are expected to
 records their responses as they arrive. This state must survive across multiple HTTP requests (one
 per SP notification).
 
-The default implementation stores state in memory, which is suitable for development and
-single-server deployments. For production deployments with multiple servers, IdentityServer ships
-an EF Core implementation as part of the configuration store. You get it automatically when you
-configure the configuration store with `AddConfigurationStore()`. You can also implement a custom
-store backed by a distributed cache or database.
+**Default (in-memory):** When you register SAML without an EF operational store, IdentityServer
+uses an in-memory implementation. This is suitable for development and single-server deployments,
+but state is lost on restart and is not shared across multiple server instances.
+
+**EF Core (automatic):** When you call `AddOperationalStore()` on the IdentityServer builder,
+IdentityServer automatically registers an EF Core-backed implementation. No additional configuration
+is needed.
+
+**Custom implementation:** You can register your own implementation using the `AddSamlLogoutSessionStore<T>()`extension 
+method on the IdentityServer builder.
+
+Expired logout sessions are removed automatically by `TokenCleanupService`. The lifetime of each
+session is controlled by `LogoutSessionLifetime` in `SamlOptions` (see
+[configuration](/identityserver/saml/configuration.md)).
+
+If you implement `IOperationalStoreNotification`, the new `SamlLogoutSessionsRemovedAsync()`
+callback is invoked each time `TokenCleanupService` removes a batch of expired logout sessions.
+This lets you react to cleanup events, for example to update a secondary index or emit metrics.
 
 ```csharp
 // ISamlLogoutSessionStore.cs
@@ -238,15 +251,20 @@ public interface ISamlLogoutSessionStore
 
 Override `ISamlLogoutSessionStore` when:
 
-* You are running multiple server instances and need logout session state to be shared across them.
+* You are running multiple server instances and need logout session state to be shared across them
+  without using the EF operational store.
 * You want to store logout session state in a specific distributed cache (Redis, etc.) or database.
 * You need custom TTL or cleanup behavior for in-flight SLO sessions.
 
 ### Registration
 
+You can register your custom store at startup:
+
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISamlLogoutSessionStore, MyDistributedSamlLogoutSessionStore>();
+builder.Services.AddIdentityServer()
+    .AddSaml()
+    .AddSamlLogoutSessionStore<MyDistributedSamlLogoutSessionStore>();
 ```
 
 ---
@@ -671,15 +689,21 @@ the callback after the user has authenticated. Because SAML sign-in involves a r
 login UI and back, the original request context (SP entity ID, ACS URL, relay state, etc.) must
 be stored somewhere durable for the duration of the interaction.
 
-The default implementation stores state in memory (suitable for development and testing). For
-production deployments, IdentityServer ships an EF Core implementation as part of the
-configuration store. You get it automatically when you configure the configuration store with
-`AddConfigurationStore()`. No separate registration is needed. You can also implement a custom
-store backed by your own persistence layer.
+Three implementations are available, and `AddSaml()` picks the right one automatically based on
+what you have already registered:
+
+* **In-memory** (default): suitable for development and testing. State is lost on restart and is
+  not shared across multiple server instances.
+* **EF Core**: registered automatically when you call `AddOperationalStore()` from
+  `Duende.IdentityServer.EntityFramework`. Use this for production. `AddSaml()` detects the EF
+  store and uses it instead of the in-memory fallback. No extra configuration is needed.
+* **Custom**: register your own implementation for a specific persistence backend (Redis,
+  DynamoDB, etc.) by registering it in the service provider.
 
 State is retained after a successful callback to allow browser retries (for example, if the user
-navigates back). TTL-based expiry is the primary cleanup mechanism; `RemoveSigninRequestStateAsync`
-is called on explicit cleanup paths.
+navigates back). The `TokenCleanupService` automatically removes expired sign-in state entries
+from the EF Core store during its scheduled cleanup runs. TTL-based expiry is the primary cleanup
+mechanism; `RemoveSigninRequestStateAsync` is called on explicit cleanup paths.
 
 ```csharp
 // ISamlSigninStateStore.cs
@@ -693,18 +717,31 @@ public interface ISamlSigninStateStore
 
 ### When to Use
 
-Override `ISamlSigninStateStore` when:
-
-* You need a custom persistence mechanism beyond the built-in in-memory or EF Core implementations.
-* You want to store sign-in state in a specific distributed cache (Redis, etc.) for your
-  infrastructure.
-* You need custom TTL or cleanup behavior for in-flight SSO requests.
+* **In-memory**: use during development or when you run a single server instance and do not need
+  state to survive a restart.
+* **EF Core**: use in production. Call `AddOperationalStore()` and the store is registered for
+  you automatically.
+* **Custom**: use when you need a specific persistence backend (Redis, DynamoDB, etc.) or custom
+  TTL behavior. Register your implementation in the service provider at startup.
 
 ### Registration
+
+To use the EF Core store, call `AddOperationalStore()` as part of your IdentityServer setup:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer()
+    .AddOperationalStore(options => { /* ... */ })
+    .AddSaml();
+```
+
+To register a custom implementation, add it to the service collection before `AddSaml()`:
 
 ```csharp
 // Program.cs
 builder.Services.AddScoped<ISamlSigninStateStore, MyDistributedSamlSigninStateStore>();
+builder.Services.AddIdentityServer()
+    .AddSaml();
 ```
 
 ### Example
