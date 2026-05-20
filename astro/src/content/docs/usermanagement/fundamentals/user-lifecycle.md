@@ -125,17 +125,17 @@ User Management uses strongly-typed value objects for all identifiers. These typ
 
 ### `UserSubjectId`
 
-The unique identifier for a user. Internally backed by a UUIDv4 value, compliant with [RFC 9493](https://www.rfc-editor.org/rfc/rfc9493.html).
+The unique identifier for a user. Stored as a string value (maximum 200 characters), compliant with [RFC 9493](https://www.rfc-editor.org/rfc/rfc9493.html).
 
 ```csharp
-// Create from an existing Guid
-var subjectId = UserSubjectId.From(guid);
+// Parse from an existing string identifier
+var subjectId = UserSubjectId.Parse("some-existing-id");
 
-// Generate a new unique identifier
+// Generate a new unique identifier (creates a GUID string internally)
 var newId = UserSubjectId.New();
 
-// Convert back to Guid
-Guid guid = subjectId.ToGuid();
+// Access the underlying string value
+string value = subjectId.Value;
 ```
 
 ### `UserName`
@@ -149,7 +149,7 @@ var userName = UserName.Parse("jane.doe");
 // TryParse: returns false on invalid input
 if (UserName.TryParse("jane.doe", out var result))
 {
-    // result is non-null here
+    // result is valid here
 }
 ```
 
@@ -177,7 +177,7 @@ var email = EmailAddress.Parse("jane@example.com");
 // TryParse: returns false on invalid input
 if (EmailAddress.TryParse("jane@example.com", out var result))
 {
-    // result is non-null here
+    // result is valid here
 }
 ```
 
@@ -192,7 +192,7 @@ var phone = PhoneNumber.Parse("+12025550100");
 // TryParse: returns false on invalid input
 if (PhoneNumber.TryParse("+12025550100", out var result))
 {
-    // result is non-null here
+    // result is valid here
 }
 ```
 
@@ -207,7 +207,7 @@ var name = ExternalAuthenticatorName.Parse("Google");
 // TryParse: returns false on invalid input
 if (ExternalAuthenticatorName.TryParse("Google", out var result))
 {
-    // result is non-null here
+    // result is valid here
 }
 ```
 
@@ -222,11 +222,11 @@ var id = OpaqueSubjectId.Parse("1234567890");
 // TryParse: returns false on invalid input
 if (OpaqueSubjectId.TryParse("1234567890", out var result))
 {
-    // result is non-null here
+    // result is valid here
 }
 ```
 
-`UserSubjectId` is a sealed subtype of `OpaqueSubjectId`. Use `UserSubjectId` when referring to users within User Management, and `OpaqueSubjectId` when working with external provider subject IDs.
+`UserSubjectId` and `OpaqueSubjectId` both implement the `ISubjectId` interface but are independent types. Use `UserSubjectId` when referring to users within User Management, and `OpaqueSubjectId` when working with external provider subject IDs.
 
 ## Extensibility and Maintenance Boundaries
 
@@ -252,7 +252,6 @@ The following extension points are designed for you to implement or configure:
 |---------------------------|---------------------------|------------------------------------------------------------------------------------------------------------|
 | OTP delivery              | `IOtpSender`              | Implement to send one-time password codes via your preferred channel (email, SMS, push notification, etc.) |
 | Password validation       | `IPasswordValidator`      | Implement custom password strength or policy rules beyond the built-in defaults                            |
-| SCIM schema mapping       | `IScimSchemaMapper`       | Customize which attributes and schemas are exposed via the SCIM endpoint                                   |
 | Custom profile attributes | `IUserProfileSchemaAdmin` | Add application-specific attributes to the user profile schema                                             |
 
 These interfaces are registered with the service provider. Provide your own implementation during application startup to override the default behavior.
@@ -269,10 +268,13 @@ Attempting to replace these by intercepting internal services is unsupported and
 
 ## Type Hierarchy
 
-The value objects follow the [RFC 9493](https://www.rfc-editor.org/rfc/rfc9493.html) subject identifier specification:
+The subject identifier value objects follow the [RFC 9493](https://www.rfc-editor.org/rfc/rfc9493.html) subject identifier specification. They all implement the `ISubjectId` interface:
 
-* `SubjectId` (abstract base)
-  * `OpaqueSubjectId`: opaque string identifier
-    * `UserSubjectId`: UUIDv4-backed user identifier
-  * `EmailAddress`: validated email address
-  * `PhoneNumber`: validated phone number (E.164 digits)
+* `OpaqueSubjectId`: opaque string identifier (max 255 characters)
+* `UserSubjectId`: User Management user identifier (max 200 characters)
+* `EmailAddress`: validated email address (max 320 characters)
+* `PhoneNumber`: validated phone number in E.164 format (max 15 digits)
+
+These are all `readonly record struct` types. There is no inheritance between them: they are independent types that share the `ISubjectId` contract.
+
+`UserName` is a related value object (max 320 characters) but does not implement `ISubjectId`.

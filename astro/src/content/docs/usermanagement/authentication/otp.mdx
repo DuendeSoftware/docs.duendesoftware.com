@@ -137,7 +137,7 @@ public readonly record struct OtpToken
 public readonly record struct PlainTextOtp
 {
     public static PlainTextOtp Parse(string value);
-    public static bool TryParse(string input, out PlainTextOtp? result);
+    public static bool TryParse(string input, out PlainTextOtp result);
 }
 ```
 
@@ -269,7 +269,7 @@ The following example shows a two-step OTP login using Razor Pages. Inject `IOtp
            return Error("Invalid code format");
 
        var authResult = await otpAuthenticator.TryAuthenticateAsync(
-           otp.Value,
+            otp,
            OtpToken.Parse(tokenValue),
            HttpContext.RequestAborted);
 
@@ -278,7 +278,7 @@ The following example shows a two-step OTP login using Razor Pages. Inject `IOtp
 
        var claims = new List<Claim>
        {
-           new(ClaimTypes.NameIdentifier, otpSuccess.UserSubjectId.ToGuid().ToString()),
+           new(ClaimTypes.NameIdentifier, otpSuccess.UserSubjectId.Value),
            new(ClaimTypes.Name, otpSuccess.Address.Value),
        };
 

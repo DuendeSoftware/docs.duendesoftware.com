@@ -98,7 +98,7 @@ Returns `null` if code generation fails (for example, when 2FA is not enabled fo
 public readonly record struct PlainTextRecoveryCode
 {
     // Parse a user-supplied string into a recovery code
-    public static bool TryParse(string input, out PlainTextRecoveryCode? result);
+    public static bool TryParse(string input, out PlainTextRecoveryCode result);
 
     // Parse or throw on invalid input
     public static PlainTextRecoveryCode Parse(string input);

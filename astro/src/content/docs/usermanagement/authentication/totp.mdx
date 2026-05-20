@@ -133,7 +133,7 @@ public readonly record struct PlainBytesTotpKey
     public static PlainBytesTotpKey DecodeFromBase32(string input);
 
     // Try to decode from a Base32 string without throwing
-    public static bool TryDecodeFromBase32(string input, out PlainBytesTotpKey? result);
+    public static bool TryDecodeFromBase32(string input, out PlainBytesTotpKey result);
 }
 ```
 
@@ -148,7 +148,7 @@ public readonly record struct PlainTextTotp
     public static PlainTextTotp Parse(string input);
 
     // Try to parse a TOTP code without throwing
-    public static bool TryParse(string input, out PlainTextTotp? result);
+    public static bool TryParse(string input, out PlainTextTotp result);
 }
 ```
 
@@ -166,7 +166,7 @@ public readonly record struct TotpAuthenticatorName
     public static TotpAuthenticatorName Parse(string input);
 
     // Try to parse an authenticator name without throwing
-    public static bool TryParse(string input, out TotpAuthenticatorName? result);
+    public static bool TryParse(string input, out TotpAuthenticatorName result);
 }
 ```
 

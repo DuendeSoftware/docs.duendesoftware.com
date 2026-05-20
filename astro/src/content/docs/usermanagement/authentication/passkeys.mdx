@@ -464,35 +464,29 @@ public interface ISecondFactorPasskeyAuthenticationResolver
 Implement this interface to retrieve the user's `UserSubjectId` from your intermediate authentication state (for example, from a session, cookie, or distributed cache):
 
 ```csharp
-public class MySecondFactorResolver : ISecondFactorPasskeyAuthenticationResolver
+public class CustomSecondFactorResolver : ISecondFactorPasskeyAuthenticationResolver
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IMyAuthStateStore _authStateStore;
+    // Note: In a real application, use a distributed cache or database
+    // to persist pending user IDs across requests.
+    private static readonly ConcurrentDictionary<string, string> PendingUsers = new();
 
-    public MySecondFactorResolver(
-        IHttpContextAccessor httpContextAccessor,
-        IMyAuthStateStore authStateStore)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public CustomSecondFactorResolver(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
-        _authStateStore = authStateStore;
     }
 
-    public async Task<UserSubjectId?> ResolveAsync(CancellationToken ct)
+    public Task<UserSubjectId?> ResolveAsync(CancellationToken ct)
     {
         // Retrieve the user ID stored after the first factor completed
         var stateKey = _httpContextAccessor.HttpContext?.Session.GetString("PendingUserId");
-        if (stateKey is null)
+        if (stateKey is null || !PendingUsers.TryGetValue(stateKey, out var userId))
         {
-            return null;
+            return Task.FromResult<UserSubjectId?>(null);
         }
 
-        var state = await _authStateStore.GetAsync(stateKey, ct);
-        if (state is null || !Guid.TryParse(state.UserId, out var userId))
-        {
-            return null;
-        }
-
-        return UserSubjectId.From(userId);
+        return Task.FromResult<UserSubjectId?>(UserSubjectId.Parse(userId));
     }
 }
 ```
@@ -507,7 +501,7 @@ using Duende.UserManagement;
 builder.Services.AddUserManagement(um => um
     .EnableAuthentication(auth =>
     {
-        auth.EnablePasskeyForSecondFactor<MySecondFactorResolver>();
+        auth.EnablePasskeyForSecondFactor<CustomSecondFactorResolver>();
     })
 );
 ```
@@ -522,7 +516,7 @@ using Duende.UserManagement;
 builder.Services.AddUserManagement(um => um
     .EnableAuthentication(auth =>
     {
-        auth.EnablePasskeyForSecondFactor(new MySecondFactorResolver(...));
+        auth.EnablePasskeyForSecondFactor(new CustomSecondFactorResolver(...));
     })
 );
 ```
@@ -575,7 +569,7 @@ public async Task<IActionResult> OnPostLogin(string username, string password, C
     if (authenticators?.Passkeys.Count > 0)
     {
         // Store the user ID for the second-factor resolver to retrieve
-        HttpContext.Session.SetString("PendingUserId", success.UserSubjectId.ToGuid().ToString());
+        HttpContext.Session.SetString("PendingUserId", success.UserSubjectId.Value);
         return RedirectToPage("/LoginWithPasskey");
     }
 

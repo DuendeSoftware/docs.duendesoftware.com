@@ -554,7 +554,7 @@ You can configure OTP expiry, code length, and rate-limiting behaviour through t
 
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, otpSuccess.UserSubjectId.ToGuid().ToString()),
+                new(ClaimTypes.NameIdentifier, otpSuccess.UserSubjectId.Value),
                 new(ClaimTypes.Name, otpSuccess.Address.Value),
             };
    
