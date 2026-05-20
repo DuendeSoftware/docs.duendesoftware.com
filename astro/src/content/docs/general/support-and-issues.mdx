@@ -125,10 +125,6 @@ Premium Support is designed for organizations with mission-critical or complex i
 
 ## Supported Versions
 
-The following tables track release and end of support dates for Duende products.
-
-### Support Model
-
 Duende differentiates between two categories of NuGet packages: **Product packages** and **Component packages**.
 
 **Product packages** are the primary, user-facing products: IdentityServer and BFF. The following support rules apply:
@@ -139,14 +135,17 @@ Duende differentiates between two categories of NuGet packages: **Product packag
 * The **latest patch of a minor** version also receives bug fixes.
 * Product packages do **not** follow Semantic Versioning (SemVer); minor releases may contain breaking API changes.
 
+:::caution[Internal namespaces]
+Types in `Internal` namespaces, even when exposed as `public`, are intended for internal use by Duende.
+No bugfixes, security fixes or product support is provided for these types, and these types may change between versions.  
+:::
+
 **Component packages** are transitive dependencies and supporting libraries, such as User Management, Storage, Jobs, and similar packages. The following support rules apply:
 
 - The **current major and minor** versions are supported for both bug fixes and security fixes.
 - Component packages follow Semantic Versioning (SemVer).
 
-:::note
-Duende IdentityServer versions prior to v8, as well as BFF until they adopt the new support model, follow the per-platform lifecycle shown in the tables below.
-:::
+The following sections track release and end of support dates for Duende product packages.
 
 ### Duende IdentityServer
 
