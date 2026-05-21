@@ -10,14 +10,21 @@ redirect_from:
   - /identityserver/v7/aspnet_identity/
 ---
 
-
 An ASP.NET Identity-based implementation is provided for managing the identity database for users of IdentityServer.
 This implementation implements the extensibility points in IdentityServer needed to load identity data for your users to
 emit claims into tokens.
 
-To use this library, ensure that you have the NuGet package for the ASP.NET Identity integration.
-It is called `Duende.IdentityServer.AspNetIdentity`.
-You can install it with:
+:::tip[Duende User Management]
+<span data-shb-badge data-shb-badge-variant="default">Added in v8</span>
+
+If you are starting a new project or want a more modern user management solution,
+consider [Duende User Management](/usermanagement/identityserver-integration.mdx) as an alternative to ASP.NET Identity.
+It provides built-in support for passwordless authentication (OTP, passkeys), profile attribute management,
+and role-based authorization.
+:::
+
+To use the ASP.NET Identity-based implementation, ensure that you have the NuGet package for the ASP.NET Identity integration.
+It is called `Duende.IdentityServer.AspNetIdentity`:
 
 ```bash title=Terminal
 dotnet add package Duende.IdentityServer.AspNetIdentity

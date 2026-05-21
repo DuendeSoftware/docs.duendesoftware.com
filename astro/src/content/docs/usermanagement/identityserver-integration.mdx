@@ -1,0 +1,103 @@
+---
+title: "IdentityServer Integration"
+description: "How to integrate Duende User Management with IdentityServer for user profiles, claims mapping, and role-based authorization."
+date: 2025-05-21
+sidebar:
+  label: IdentityServer Integration
+  order: 8
+  badge:
+    text: v8.0
+    variant: tip
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+The `Duende.IdentityServer.UserManagement` package bridges Duende IdentityServer with User Management.
+It provides an `IProfileService` implementation that maps user profile attributes to OIDC claims and emits role claims
+(both direct and transitive, deduplicated). A single `AddUserManagement()` extension method on `IIdentityServerBuilder`
+wires everything up.
+
+Use this package when you want IdentityServer to issue claims from User Management profiles and roles rather than from
+ASP.NET Identity or a custom profile service. If you are using ASP.NET Identity, see [ASP.NET Identity Integration](/identityserver/aspnet-identity/index.md) instead.
+
+## Setup
+
+<Steps>
+
+1. **Add the NuGet package**
+
+    ```bash title="Terminal"
+    dotnet add package Duende.IdentityServer.UserManagement
+    ```
+
+2. **Call `AddUserManagement()` on the IdentityServer builder**
+
+    The configure delegate is where you enable features and configure storage. This registers both the User Management
+    services and the `ProfileService` implementation of `IProfileService`.
+
+    ```csharp
+    // Program.cs
+    builder.Services
+        .AddIdentityServer(options =>
+        {
+            options.UserInteraction.LoginUrl = "/Account/Login";
+            options.UserInteraction.LogoutUrl = "/Account/Logout";
+        })
+        .AddInMemoryIdentityResources(Config.IdentityResources)
+        .AddInMemoryApiScopes(Config.ApiScopes)
+        .AddInMemoryClients(Config.Clients)
+        .AddUserManagement(options =>
+        {
+            options.EnableAuthentication(configure =>
+            {
+                configure.UseSmtpOtpSender(x => builder.Configuration.GetSection("Smtp").Bind(x));
+            });
+            options.EnableProfiles();
+            options.AddPostgreSqlStore();
+        });
+    ```
+
+    :::tip
+    You do not need to call `AddUserManagement()` separately on `IServiceCollection`.
+    The extension method on `IIdentityServerBuilder` handles both registrations.
+    :::
+</Steps>
+
+## Claims Mapping
+
+When IdentityServer calls `GetProfileDataAsync`, the `ProfileService` loads the user's profile and maps it to claims:
+
+* **Profile attributes**: Each attribute's code becomes the claim type and its value becomes the claim value. Boolean attributes emit `"true"` or `"false"` with `ClaimValueTypes.Boolean`.
+* **`preferred_username`**: Emitted from the user's `UserName` property.
+* **`role`**: Emitted for every role assigned directly to the user and for every role inherited transitively through group membership. Duplicate roles (by role ID) are deduplicated before emission.
+
+Only claims that match the requested scopes are issued. The `ProfileService` uses `context.AddRequestedClaims(claims)`
+internally, so IdentityServer's standard scope-to-claim filtering applies.
+
+## Subject ID Requirements
+
+The `sub` claim in the token must be a valid UUID (parseable as a `Guid`). The `ProfileService` converts it to a
+`UserSubjectId` to look up the user. If parsing fails, no claims are issued and a warning is logged. Make sure your
+IdentityServer configuration issues a UUID as the subject identifier.
+
+`IsActiveAsync` returns `true` when the user profile exists and `false` otherwise, which causes IdentityServer to
+reject tokens for deleted or missing users.
+
+## Customization
+
+`ProfileService` is a public class with virtual methods you can override by subclassing it and registering your
+subclass with the service provider:
+
+* `FindUserAsync(UserSubjectId subjectId, CancellationToken ct)` - override to customize how the user profile is loaded.
+* `GetProfileDataAsync(ProfileDataRequestContext context, UserProfile user, CancellationToken ct)` - override to customize how claims are built from the profile.
+* `GetRoleClaimsAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to customize how role claims are collected.
+
+Register your subclass after calling `AddUserManagement()`:
+
+```csharp
+// Program.cs
+builder.Services
+    .AddIdentityServer(...)
+    .AddUserManagement(options => { ... })
+    .AddProfileService<CustomProfileService>();
+```

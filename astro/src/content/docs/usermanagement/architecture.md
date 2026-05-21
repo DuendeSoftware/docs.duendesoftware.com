@@ -4,7 +4,7 @@ description: An overview of the layered architecture of Duende User Management, 
 date: 2026-05-19
 sidebar:
   label: Architecture
-  order: 4
+  order: 10
 ---
 
 Duende User Management is built on a layered architecture that separates concerns and provides clean extension points. The public API is exposed through scenario-based interfaces that are registered with the ASP.NET Core service provider, backed by an internal domain layer and a document-based storage engine.
