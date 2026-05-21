@@ -33,11 +33,11 @@ public sealed record AttributeGroup(
 
 `AttributeGroupCode` is a string-based identifier for a group. Valid characters are alphanumeric, dashes, and underscores. Comparison is case-insensitive.
 
-Create an `AttributeGroupCode` using the static `Parse` method:
+Create an `AttributeGroupCode` using the static `Create` method:
 
 ```csharp
 // attribute-group-code.cs
-var code = AttributeGroupCode.Parse("personal-info");
+var code = AttributeGroupCode.Create("personal-info");
 ```
 
 ### `AttributeDefinition` group properties
@@ -88,8 +88,8 @@ using Duende.UserManagement.Profiles;
 
 // Create a group
 var group = new AttributeGroup(
-    Code: AttributeGroupCode.Parse("personal-info"),
-    DisplayName: AttributeDisplayName.Parse("Personal Information"),
+    Code: AttributeGroupCode.Create("personal-info"),
+    DisplayName: AttributeDisplayName.Create("Personal Information"),
     Description: null,
     Order: 0);
 
@@ -97,21 +97,21 @@ await schemaAdmin.TryAddGroupAsync(group, ct);
 
 // Add attributes to the group
 var givenName = new AttributeDefinition(
-    Code: AttributeCode.Parse("given_name"),
+    Code: AttributeCode.Create("given_name"),
     DataType: ScalarDataType.String,
     Description: null,
     IsUnique: false,
     Tags: null,
-    GroupCode: AttributeGroupCode.Parse("personal-info"),
+    GroupCode: AttributeGroupCode.Create("personal-info"),
     Order: 0);
 
 var familyName = new AttributeDefinition(
-    Code: AttributeCode.Parse("family_name"),
+    Code: AttributeCode.Create("family_name"),
     DataType: ScalarDataType.String,
     Description: null,
     IsUnique: false,
     Tags: null,
-    GroupCode: AttributeGroupCode.Parse("personal-info"),
+    GroupCode: AttributeGroupCode.Create("personal-info"),
     Order: 1);
 
 await schemaAdmin.TryAddAttributeDefinitionAsync(givenName, ct);
@@ -119,8 +119,8 @@ await schemaAdmin.TryAddAttributeDefinitionAsync(familyName, ct);
 
 // Reorder attributes within the group
 await schemaAdmin.ReorderAttributesAsync(
-    AttributeGroupCode.Parse("personal-info"),
-    [AttributeCode.Parse("family_name"), AttributeCode.Parse("given_name")],
+    AttributeGroupCode.Create("personal-info"),
+    [AttributeCode.Create("family_name"), AttributeCode.Create("given_name")],
     ct);
 ```
 

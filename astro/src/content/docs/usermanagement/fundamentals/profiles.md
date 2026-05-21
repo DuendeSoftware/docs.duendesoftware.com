@@ -147,14 +147,14 @@ public class ProfileSchemaInitializer(IUserProfileSchemaAdmin schemaAdmin)
     public async Task InitializeAsync(CancellationToken ct)
     {
         var department = new AttributeDefinition(
-            AttributeCode.Parse("department"),
+            AttributeCode.Create("department"),
             ScalarDataType.String,
-            AttributeDescription.Parse("The department the user belongs to."));
+            AttributeDescription.Create("The department the user belongs to."));
 
         var employeeId = new AttributeDefinition(
-            AttributeCode.Parse("employee_id"),
+            AttributeCode.Create("employee_id"),
             ScalarDataType.Integer,
-            AttributeDescription.Parse("The unique employee identifier."),
+            AttributeDescription.Create("The unique employee identifier."),
             isUnique: true);
 
         await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct);
@@ -177,9 +177,9 @@ var addressType = new ComplexAttributeType(
     });
 
 var address = new AttributeDefinition(
-    AttributeCode.Parse("address"),
+    AttributeCode.Create("address"),
     addressType,
-    AttributeDescription.Parse("The user's postal address."));
+    AttributeDescription.Create("The user's postal address."));
 
 await schemaAdmin.TryAddAttributeDefinitionAsync(address, ct);
 ```
@@ -190,9 +190,9 @@ Use `ListAttributeType` to model multi-value attributes such as a list of phone 
 
 ```csharp
 var phoneNumbers = new AttributeDefinition(
-    AttributeCode.Parse("phone_numbers"),
+    AttributeCode.Create("phone_numbers"),
     new ListAttributeType(new ScalarAttributeType(ScalarDataType.String)),
-    AttributeDescription.Parse("Additional phone numbers for the user."));
+    AttributeDescription.Create("Additional phone numbers for the user."));
 
 await schemaAdmin.TryAddAttributeDefinitionAsync(phoneNumbers, ct);
 ```
@@ -201,7 +201,7 @@ await schemaAdmin.TryAddAttributeDefinitionAsync(phoneNumbers, ct);
 
 ```csharp
 await schemaAdmin.TryRemoveAttributeDefinitionAsync(
-    AttributeCode.Parse("department"), ct);
+    AttributeCode.Create("department"), ct);
 ```
 
 ### Inspecting the Schema
@@ -349,9 +349,9 @@ Build an `AttributeValueCollection` from the schema so that attribute values are
 var schema = await selfService.GetSchemaAsync(ct);
 var attributes = new AttributeValueCollection();
 
-attributes.Set(schema.CreateAttribute(AttributeCode.Parse("given_name"), "Jane"));
-attributes.Set(schema.CreateAttribute(AttributeCode.Parse("family_name"), "Smith"));
-attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email_verified"), true));
+attributes.Set(schema.CreateAttribute(AttributeCode.Create("given_name"), "Jane"));
+attributes.Set(schema.CreateAttribute(AttributeCode.Create("family_name"), "Smith"));
+attributes.Set(schema.CreateAttribute(AttributeCode.Create("email_verified"), true));
 ```
 
 ## Self-Service Profile Operations
@@ -397,12 +397,12 @@ public class RegistrationService(IUserProfileSelfService profileService)
         var schema = await profileService.GetSchemaAsync(ct);
         var attributes = new AttributeValueCollection();
 
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("given_name"), givenName));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("family_name"), familyName));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email"), email));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("given_name"), givenName));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("family_name"), familyName));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("email"), email));
 
         return await profileService.TryRegisterAsync(
-            UserSubjectId.Parse(subjectId), attributes, ct);
+            UserSubjectId.Create(subjectId), attributes, ct);
     }
 }
 ```
@@ -410,7 +410,7 @@ public class RegistrationService(IUserProfileSelfService profileService)
 ### Retrieving a Profile
 
 ```csharp
-var profile = await profileService.TryGetAsync(UserSubjectId.Parse(subjectId), ct);
+var profile = await profileService.TryGetAsync(UserSubjectId.Create(subjectId), ct);
 
 if (profile is null)
 {
@@ -418,7 +418,7 @@ if (profile is null)
     return;
 }
 
-if (profile.Attributes.TryGetValue(AttributeCode.Parse("given_name"), out var givenName))
+if (profile.Attributes.TryGetValue(AttributeCode.Create("given_name"), out var givenName))
 {
     Console.WriteLine($"Hello, {givenName}");
 }
@@ -429,7 +429,7 @@ if (profile.Attributes.TryGetValue(AttributeCode.Parse("given_name"), out var gi
 Call `ToUpdate()` on the existing profile to get a pre-populated `UserProfileUpdate`, modify the attributes, then submit the update:
 
 ```csharp
-var profile = await profileService.TryGetAsync(UserSubjectId.Parse(subjectId), ct);
+var profile = await profileService.TryGetAsync(UserSubjectId.Create(subjectId), ct);
 
 if (profile is null)
 {
@@ -439,10 +439,10 @@ if (profile is null)
 var schema = await profileService.GetSchemaAsync(ct);
 var update = profile.ToUpdate();
 
-update.Attributes.Set(schema.CreateAttribute(AttributeCode.Parse("given_name"), "Janet"));
+update.Attributes.Set(schema.CreateAttribute(AttributeCode.Create("given_name"), "Janet"));
 
 var updated = await profileService.TryUpdateAsync(
-    UserSubjectId.Parse(subjectId), update, ct);
+    UserSubjectId.Create(subjectId), update, ct);
 ```
 
 ## Administrative Profile Operations
@@ -487,11 +487,11 @@ public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
         var schema = await profileAdmin.GetSchemaAsync(ct);
         var attributes = new AttributeValueCollection();
 
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email"), email));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("employee_id"), employeeId));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("email"), email));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("employee_id"), employeeId));
 
         return await profileAdmin.TryAddAsync(
-            UserSubjectId.Parse(subjectId), attributes, ct);
+            UserSubjectId.Create(subjectId), attributes, ct);
     }
 }
 ```
@@ -500,7 +500,7 @@ public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
 
 ```csharp
 var profile = await profileAdmin.TryGetAsync(
-    AttributeCode.Parse("employee_id"),
+    AttributeCode.Create("employee_id"),
     42,
     ct);
 
@@ -565,8 +565,8 @@ using Duende.UserManagement.Profiles;
 // Only retrieve email and department attributes for performance
 var attributes = new HashSet<AttributeCode>
 {
-    AttributeCode.Parse("email"),
-    AttributeCode.Parse("department")
+    AttributeCode.Create("email"),
+    AttributeCode.Create("department")
 };
 
 var request = QueryRequest.Create(new DataRange(0, 50));
@@ -638,9 +638,9 @@ public class SchemaSetup(IUserProfileSchemaAdmin schemaAdmin)
         await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVerified, ct);
 
         var department = new AttributeDefinition(
-            AttributeCode.Parse("department"),
+            AttributeCode.Create("department"),
             ScalarDataType.String,
-            AttributeDescription.Parse("The department the user belongs to."));
+            AttributeDescription.Create("The department the user belongs to."));
 
         await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct);
     }
@@ -659,13 +659,13 @@ public class OnboardingHandler(IUserProfileSelfService profileService)
         var schema = await profileService.GetSchemaAsync(ct);
         var attributes = new AttributeValueCollection();
 
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("given_name"), givenName));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("family_name"), familyName));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email"), email));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Parse("email_verified"), false));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("given_name"), givenName));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("family_name"), familyName));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("email"), email));
+        attributes.Set(schema.CreateAttribute(AttributeCode.Create("email_verified"), false));
 
         return await profileService.TryRegisterAsync(
-            UserSubjectId.Parse(subjectId), attributes, ct);
+            UserSubjectId.Create(subjectId), attributes, ct);
     }
 }
 
@@ -674,7 +674,7 @@ public class ProfileReader(IUserProfileSelfService profileService)
 {
     public async Task PrintAsync(string subjectId, CancellationToken ct)
     {
-        var profile = await profileService.TryGetAsync(UserSubjectId.Parse(subjectId), ct);
+        var profile = await profileService.TryGetAsync(UserSubjectId.Create(subjectId), ct);
 
         if (profile is null)
         {

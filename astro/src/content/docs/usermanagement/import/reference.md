@@ -53,8 +53,8 @@ public class UserImportService(IUserImporter importer, IUserProfileAdmin profile
         var schema = await profileAdmin.GetSchemaAsync(ct);
 
         var aliceAttributes = new AttributeValueCollection();
-        aliceAttributes.Set(schema.CreateAttribute(AttributeCode.Parse("email"), "alice@example.com"));
-        aliceAttributes.Set(schema.CreateAttribute(AttributeCode.Parse("display_name"), "Alice"));
+        aliceAttributes.Set(schema.CreateAttribute(AttributeCode.Create("email"), "alice@example.com"));
+        aliceAttributes.Set(schema.CreateAttribute(AttributeCode.Create("display_name"), "Alice"));
 
         // Represent a pre-hashed bcrypt password from the source system.
         // Hash and Salt are raw bytes; supply the actual bytes from your source data.
@@ -77,7 +77,7 @@ public class UserImportService(IUserImporter importer, IUserProfileAdmin profile
                 },
                 Memberships = new MembershipImport
                 {
-                    Groups = new[] { GroupId.Parse("admins") },
+                    Groups = new[] { GroupId.Create("admins") },
                 },
             },
             new UserImportRecord

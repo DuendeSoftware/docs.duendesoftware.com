@@ -424,7 +424,7 @@ The application configuration is now complete. Next, we'll add the pages and mod
                return Page();
            }
    
-           if (!EmailAddress.TryParse(Input.Email, out var email))
+           if (!EmailAddress.TryCreate(Input.Email, out var email))
            {
                ModelState.AddModelError(nameof(Input.Email), "Invalid email format.");
                return Page();
@@ -540,8 +540,8 @@ You can configure OTP expiry, code length, and rate-limiting behaviour through t
                 return Page();
             }
     
-            var otp = PlainTextOtp.Parse(Input.Code);
-            var token = OtpToken.Parse(Input.Token);
+            var otp = PlainTextOtp.Create(Input.Code);
+            var token = OtpToken.Create(Input.Token);
     
             var authResult = await otpAuthenticator.TryAuthenticateAsync(
                 otp, token, HttpContext.RequestAborted);

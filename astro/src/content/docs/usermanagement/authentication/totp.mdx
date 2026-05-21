@@ -144,11 +144,11 @@ Represents the 6-digit verification code entered by the user:
 ```csharp
 public record PlainTextTotp
 {
-    // Parse a TOTP code, throwing on invalid input
-    public static PlainTextTotp Parse(string input);
+    // Create a TOTP code, throwing on invalid input
+    public static PlainTextTotp Create(string input);
 
     // Try to parse a TOTP code without throwing
-    public static bool TryParse(string? input, [NotNullWhen(true)] out PlainTextTotp? result);
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out PlainTextTotp? result);
 }
 ```
 
@@ -162,11 +162,11 @@ public record TotpAuthenticatorName
     // The default authenticator name ("Default")
     public static TotpAuthenticatorName Default { get; }
 
-    // Parse an authenticator name, throwing on invalid input
-    public static TotpAuthenticatorName Parse(string input);
+    // Create an authenticator name, throwing on invalid input
+    public static TotpAuthenticatorName Create(string input);
 
     // Try to parse an authenticator name without throwing
-    public static bool TryParse(string? input, [NotNullWhen(true)] out TotpAuthenticatorName? result);
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out TotpAuthenticatorName? result);
 }
 ```
 
@@ -274,7 +274,7 @@ public async Task<IActionResult> OnPostVerify(string code, CancellationToken ct)
         return Error("Invalid key.");
     }
 
-    if (!PlainTextTotp.TryParse(code, out var totp))
+    if (!PlainTextTotp.TryCreate(code, out var totp))
     {
         return Error("Invalid code format.");
     }
@@ -312,8 +312,8 @@ public async Task<IActionResult> OnPostLogin(string username, string password, C
 {
     // Step 1: Verify primary credentials
     var result = await passwordAuth.TryAuthenticateAsync(
-        UserName.Parse(username),
-        NonValidatedPassword.Parse(password),
+        UserName.Create(username),
+        NonValidatedPassword.Create(password),
         ct);
 
     if (result is not PasswordAuthenticationResult.Success success)
@@ -351,7 +351,7 @@ public async Task<IActionResult> OnPostVerifyTotp(string code, CancellationToken
         return RedirectToPage("/Login");
     }
 
-    if (!PlainTextTotp.TryParse(code, out var totp))
+    if (!PlainTextTotp.TryCreate(code, out var totp))
     {
         return Error("Invalid code format.");
     }

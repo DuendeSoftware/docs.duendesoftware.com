@@ -126,7 +126,7 @@ public record OtpChannel
 ```csharp
 public record OtpToken
 {
-    public static OtpToken Parse(string input);
+    public static OtpToken Create(string input);
     public override string ToString();
 }
 ```
@@ -136,8 +136,8 @@ public record OtpToken
 ```csharp
 public record PlainTextOtp
 {
-    public static PlainTextOtp Parse(string value);
-    public static bool TryParse(string? input, [NotNullWhen(true)] out PlainTextOtp? result);
+    public static PlainTextOtp Create(string value);
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out PlainTextOtp? result);
 }
 ```
 
@@ -237,7 +237,7 @@ The following example shows a two-step OTP login using Razor Pages. Inject `IOtp
    ```csharp
    public async Task<IActionResult> OnPostSendOtpAsync(string email)
    {
-       if (!EmailAddress.TryParse(email, out var emailAddress))
+       if (!EmailAddress.TryCreate(email, out var emailAddress))
            return Error("Invalid email address");
 
        var address = new OtpAddress(OtpChannel.Email, emailAddress);
@@ -265,12 +265,12 @@ The following example shows a two-step OTP login using Razor Pages. Inject `IOtp
        var tokenValue = GetCookie("otp_token");
        var email = GetCookie("otp_email");
 
-       if (!PlainTextOtp.TryParse(code, out var otp))
+       if (!PlainTextOtp.TryCreate(code, out var otp))
            return Error("Invalid code format");
 
        var authResult = await otpAuthenticator.TryAuthenticateAsync(
             otp,
-           OtpToken.Parse(tokenValue),
+           OtpToken.Create(tokenValue),
            HttpContext.RequestAborted);
 
        if (authResult is not OtpAuthenticationResult.Success otpSuccess)
@@ -318,15 +318,15 @@ Users can have multiple OTP addresses (e.g., both an email and a phone number). 
 
 ```csharp
 // Add a second OTP address (e.g., a phone number) to an existing user
-var phoneAddress = new OtpAddress(OtpChannel.Sms, PhoneNumber.Parse("+15551234567"));
+var phoneAddress = new OtpAddress(OtpChannel.Sms, PhoneNumber.Create("+15551234567"));
 await userAuthenticatorsSelfService.TryAddOtpAddressAsync(
     subjectId,
     phoneAddress,
     HttpContext.RequestAborted);
 
 // Replace an existing OTP address (e.g., after an email change)
-var oldAddress = new OtpAddress(OtpChannel.Email, EmailAddress.Parse("old@example.com"));
-var newAddress = new OtpAddress(OtpChannel.Email, EmailAddress.Parse("new@example.com"));
+var oldAddress = new OtpAddress(OtpChannel.Email, EmailAddress.Create("old@example.com"));
+var newAddress = new OtpAddress(OtpChannel.Email, EmailAddress.Create("new@example.com"));
 await userAuthenticatorsSelfService.TryReplaceOtpAddressAsync(
     subjectId,
     oldAddress,

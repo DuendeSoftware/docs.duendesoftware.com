@@ -147,8 +147,8 @@ public sealed record ExternalAuthenticator(
 public record ExternalAuthenticatorName
 {
     // Typically matches the ASP.NET Core authentication scheme name
-    public static ExternalAuthenticatorName Parse(string input);
-    public static bool TryParse(string? input, [NotNullWhen(true)] out ExternalAuthenticatorName? result);
+    public static ExternalAuthenticatorName Create(string input);
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out ExternalAuthenticatorName? result);
 }
 ```
 
@@ -265,11 +265,11 @@ public static async Task HandleExternalAuthentication(TicketReceivedContext cont
         .GetRequiredService<IUserProfileSelfService>();
 
     // Build the external authenticator from the incoming principal
-    var externalAuthenticatorName = ExternalAuthenticatorName.Parse(context.Scheme.Name);
+    var externalAuthenticatorName = ExternalAuthenticatorName.Create(context.Scheme.Name);
     var sub = principal.FindFirst(JwtClaimTypes.Subject)
         ?? throw new InvalidOperationException("No subject claim from provider");
     var authenticator = new ExternalAuthenticator(
-        externalAuthenticatorName, OpaqueSubjectId.Parse(sub.Value));
+        externalAuthenticatorName, OpaqueSubjectId.Create(sub.Value));
 
     // Look up an existing user by this external authenticator
     var authenticators = await authenticatorsSelfService.TryGetAsync(authenticator, ct);
@@ -343,10 +343,10 @@ public static async Task HandleAddAuthenticator(TicketReceivedContext context)
     }
 
     var userIdString = context.Properties.Items["user_id"]!;
-    var userId = UserSubjectId.Parse(userIdString);
+    var userId = UserSubjectId.Create(userIdString);
 
-    var providerName = ExternalAuthenticatorName.Parse(context.Scheme.Name);
-    var providerSubject = OpaqueSubjectId.Parse(
+    var providerName = ExternalAuthenticatorName.Create(context.Scheme.Name);
+    var providerSubject = OpaqueSubjectId.Create(
         context.Principal.FindFirst(JwtClaimTypes.Subject)!.Value);
 
     var authenticator = new ExternalAuthenticator(providerName, providerSubject);
@@ -395,8 +395,8 @@ public async Task<IActionResult> OnPostRemoveAuthenticator(
         return Error("Cannot remove the last authentication method");
 
     var authenticator = new ExternalAuthenticator(
-        ExternalAuthenticatorName.Parse(providerName),
-        OpaqueSubjectId.Parse(providerSubject));
+        ExternalAuthenticatorName.Create(providerName),
+        OpaqueSubjectId.Create(providerSubject));
 
     var removed = await userAuthenticatorsSelfService.TryRemoveExternalAuthenticatorAsync(
         userId,

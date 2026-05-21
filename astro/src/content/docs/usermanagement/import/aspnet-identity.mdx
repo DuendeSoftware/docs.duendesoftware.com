@@ -246,8 +246,8 @@ This is the core of the migration: reading each `IdentityUser` and its claims, t
 
 The key decisions:
 
-* **`SubjectId`**: use `UserSubjectId.Parse(user.Id)` to carry the existing GUID across as-is. This preserves any existing tokens or references that use the subject ID.
-* **`UserName`**: use `UserName.TryParse(user.UserName, out var parsedUserName)` if the user has a username set.
+* **`SubjectId`**: use `UserSubjectId.Create(user.Id)` to carry the existing GUID across as-is. This preserves any existing tokens or references that use the subject ID.
+* **`UserName`**: use `UserName.TryCreate(user.UserName, out var parsedUserName)` if the user has a username set.
 * **`ProfileAttributes`**: map email, phone, and claims to profile attributes using the schema.
 * **`Password`**: wrap the raw base64 hash using `AspNetIdentityPasswordHashAlgorithm.CreateImportData`.
 
@@ -280,7 +280,7 @@ static UserImportRecord MapUser(
                 ["primary"] = true
             }
         ];
-        var emailCode = AttributeCode.Parse("emails");
+        var emailCode = AttributeCode.Create("emails");
         if (schema.AttributeDefinitions.ContainsKey(emailCode))
             attrs.Set(schema.CreateAttribute(emailCode, emailList));
     }
@@ -291,7 +291,7 @@ static UserImportRecord MapUser(
         var attrName = MapClaimToAttribute(claim.ClaimType);
         if (attrName is null) continue;
 
-        var code = AttributeCode.Parse(attrName);
+        var code = AttributeCode.Create(attrName);
         if (schema.AttributeDefinitions.ContainsKey(code))
             attrs.Set(schema.CreateAttribute(code, claim.ClaimValue));
     }
@@ -309,7 +309,7 @@ static UserImportRecord MapUser(
     }
     if (nameProps.Count > 0)
     {
-        var nameCode = AttributeCode.Parse("name");
+        var nameCode = AttributeCode.Create("name");
         if (schema.AttributeDefinitions.ContainsKey(nameCode))
             attrs.Set(schema.CreateAttribute(nameCode, (IReadOnlyDictionary<string, object>)nameProps));
     }
@@ -325,7 +325,7 @@ static UserImportRecord MapUser(
     // OTP email address (for email-based one-time passwords)
     var otpAddresses = new List<OtpAddress>();
     if (!string.IsNullOrEmpty(user.Email) &&
-        EmailAddress.TryParse(user.Email, out var emailAddress))
+        EmailAddress.TryCreate(user.Email, out var emailAddress))
     {
         otpAddresses.Add(new OtpAddress(OtpChannel.Email, emailAddress));
     }
@@ -333,14 +333,14 @@ static UserImportRecord MapUser(
     // Username
     UserName? userName = null;
     if (!string.IsNullOrEmpty(user.UserName) &&
-        Duende.UserManagement.UserName.TryParse(user.UserName, out var parsedUserName))
+        Duende.UserManagement.UserName.TryCreate(user.UserName, out var parsedUserName))
     {
         userName = parsedUserName;
     }
 
     return new UserImportRecord
     {
-        SubjectId = UserSubjectId.Parse(user.Id),
+        SubjectId = UserSubjectId.Create(user.Id),
         UserName = userName,
         ProfileAttributes = attrs.Count > 0 ? attrs : null,
         Authenticators = new AuthenticatorImport
@@ -512,7 +512,7 @@ if (phoneClaim is not null)
             ["primary"] = false
         }
     ];
-    var phoneCode = AttributeCode.Parse("phoneNumbers");
+    var phoneCode = AttributeCode.Create("phoneNumbers");
     if (schema.AttributeDefinitions.ContainsKey(phoneCode))
         attrs.Set(schema.CreateAttribute(phoneCode, phoneList));
 }

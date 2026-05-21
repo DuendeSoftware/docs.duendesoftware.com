@@ -486,7 +486,7 @@ public class CustomSecondFactorResolver : ISecondFactorPasskeyAuthenticationReso
             return Task.FromResult<UserSubjectId?>(null);
         }
 
-        return Task.FromResult<UserSubjectId?>(UserSubjectId.Parse(userId));
+        return Task.FromResult<UserSubjectId?>(UserSubjectId.Create(userId));
     }
 }
 ```
@@ -555,8 +555,8 @@ sequenceDiagram
 public async Task<IActionResult> OnPostLogin(string username, string password, CancellationToken ct)
 {
     var result = await passwordAuth.TryAuthenticateAsync(
-        UserName.Parse(username),
-        NonValidatedPassword.Parse(password),
+        UserName.Create(username),
+        NonValidatedPassword.Create(password),
         ct);
 
     if (result is not PasswordAuthenticationResult.Success success)

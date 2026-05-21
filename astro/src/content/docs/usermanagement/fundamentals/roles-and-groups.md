@@ -25,13 +25,13 @@ public class RoleSetupService(
     {
         // 1. Create a role.
         var roleResult = await roleAdmin.CreateAsync(
-            new RoleDto { Name = RoleName.Parse("content-editor") },
+            new RoleDto { Name = RoleName.Create("content-editor") },
             ct);
         var roleId = roleResult.Value;
 
         // 2. Create a group.
         var groupResult = await groupAdmin.CreateAsync(
-            new GroupDto { Name = GroupName.Parse("editors") },
+            new GroupDto { Name = GroupName.Create("editors") },
             ct);
         var groupId = groupResult.Value;
 
@@ -70,9 +70,9 @@ The core types in the `Duende.UserManagement.Membership` namespace are:
 
 ### Role Types
 
-* **`RoleId`**: A strongly-typed, string-based identifier for a role. Use `RoleId.Parse(string)` to create one. Valid characters are alphanumeric, dashes, underscores, forward slashes, and backslashes.
-* **`RoleName`**: A validated role name. Maximum 200 characters, leading and trailing whitespace is trimmed. Use `RoleName.Parse(string)` to construct.
-* **`RoleDescription`**: An optional description for a role. Maximum 500 characters. Use `RoleDescription.Parse(string)` to construct.
+* **`RoleId`**: A strongly-typed, string-based identifier for a role. Use `RoleId.Create(string)` to create one. Valid characters are alphanumeric, dashes, underscores, forward slashes, and backslashes.
+* **`RoleName`**: A validated role name. Maximum 200 characters, leading and trailing whitespace is trimmed. Use `RoleName.Create(string)` to construct.
+* **`RoleDescription`**: An optional description for a role. Maximum 500 characters. Use `RoleDescription.Create(string)` to construct.
 * **`RoleDto`**: The data transfer object used when creating or updating a role. Contains a required `Name` and an optional `Description`.
 * **`RoleListDto`**: The summary DTO returned by list and query operations. Contains `Id`, `Name`, and `Description`.
 * **`RoleFilter`**: Filter criteria for role queries. Supports contains-match filtering on `Name` and `Description`.
@@ -80,9 +80,9 @@ The core types in the `Duende.UserManagement.Membership` namespace are:
 
 ### Group Types
 
-* **`GroupId`**: A strongly-typed, string-based identifier for a group. Use `GroupId.Parse(string)` to create one. Valid characters are alphanumeric, dashes, underscores, forward slashes, and backslashes.
-* **`GroupName`**: A validated group name. Maximum 200 characters, leading and trailing whitespace is trimmed. Use `GroupName.Parse(string)` to construct.
-* **`GroupDescription`**: An optional description for a group. Maximum 500 characters. Use `GroupDescription.Parse(string)` to construct.
+* **`GroupId`**: A strongly-typed, string-based identifier for a group. Use `GroupId.Create(string)` to create one. Valid characters are alphanumeric, dashes, underscores, forward slashes, and backslashes.
+* **`GroupName`**: A validated group name. Maximum 200 characters, leading and trailing whitespace is trimmed. Use `GroupName.Create(string)` to construct.
+* **`GroupDescription`**: An optional description for a group. Maximum 500 characters. Use `GroupDescription.Create(string)` to construct.
 * **`GroupDto`**: The data transfer object used when creating or updating a group. Contains a required `Name` and an optional `Description`.
 * **`GroupListDto`**: The summary DTO returned by list and query operations. Contains `Id`, `Name`, and `Description`.
 * **`GroupFilter`**: Filter criteria for group queries. Supports contains-match filtering on `Name` and `Description`, plus an optional `SearchExpression` for filter expressions (e.g., `displayName eq "Engineers"`).
@@ -133,8 +133,8 @@ using Duende.UserManagement.Membership;
 
 var role = new RoleDto
 {
-    Name = RoleName.Parse("content-editor"),
-    Description = RoleDescription.Parse("Can create and edit content.")
+    Name = RoleName.Create("content-editor"),
+    Description = RoleDescription.Create("Can create and edit content.")
 };
 
 var result = await roleAdmin.CreateAsync(role, ct);
@@ -175,7 +175,7 @@ if (existing.IsFound)
     var updated = new RoleDto
     {
         Name = existing.Value.Name,
-        Description = RoleDescription.Parse("Updated description.")
+        Description = RoleDescription.Create("Updated description.")
     };
 
     var result = await roleAdmin.UpdateAsync(roleId, updated, existing.Version, ct);
@@ -212,8 +212,8 @@ using Duende.UserManagement.Membership;
 
 var group = new GroupDto
 {
-    Name = GroupName.Parse("editors"),
-    Description = GroupDescription.Parse("All content editors.")
+    Name = GroupName.Create("editors"),
+    Description = GroupDescription.Create("All content editors.")
 };
 
 var result = await groupAdmin.CreateAsync(group, ct);

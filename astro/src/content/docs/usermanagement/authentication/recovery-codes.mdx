@@ -97,11 +97,11 @@ Returns `null` if code generation fails (for example, when 2FA is not enabled fo
 ```csharp
 public record PlainTextRecoveryCode
 {
-    // Parse a user-supplied string into a recovery code
-    public static bool TryParse(string? input, [NotNullWhen(true)] out PlainTextRecoveryCode? result);
+    // Create from a user-supplied string into a recovery code
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out PlainTextRecoveryCode? result);
 
-    // Parse or throw on invalid input
-    public static PlainTextRecoveryCode Parse(string input);
+    // Create or throw on invalid input
+    public static PlainTextRecoveryCode Create(string input);
 
     // Format into groups for display, e.g. ["7e8a", "9b2c", "4d1f"]
     public IReadOnlyCollection<string> ToTextGroups();
@@ -134,7 +134,7 @@ public async Task<IActionResult> OnPostEnableTotpAsync(string verificationCode)
         subjectId,
         TotpAuthenticatorName.Default,
         totpKey,
-        PlainTextTotp.Parse(verificationCode),
+        PlainTextTotp.Create(verificationCode),
         ct);
 
     if (!success)
@@ -180,7 +180,7 @@ public async Task<IActionResult> OnPostLoginWithRecoveryCodeAsync(string recover
         .Replace(" ", string.Empty)
         .Replace("-", string.Empty);
 
-    if (!PlainTextRecoveryCode.TryParse(cleanCode, out var code))
+    if (!PlainTextRecoveryCode.TryCreate(cleanCode, out var code))
     {
         return Error("Invalid recovery code format");
     }

@@ -248,8 +248,8 @@ Authenticate with a password first, then check whether the user has a TOTP authe
 ```csharp
 // Primary authentication with password
 var result = await passwordAuth.TryAuthenticateAsync(
-    UserName.Parse(username),
-    NonValidatedPassword.Parse(password),
+    UserName.Create(username),
+    NonValidatedPassword.Create(password),
     ct);
 
 if (result is not PasswordAuthenticationResult.Success success)
