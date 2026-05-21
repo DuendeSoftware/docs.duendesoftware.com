@@ -1,7 +1,7 @@
 ---
 title: "SAML Configuration"
 description: Configuration options and models for the SAML 2.0 Identity Provider feature, including SamlOptions and SamlServiceProvider settings.
-date: 2026-05-20
+date: 2026-05-21
 sidebar:
   label: Configuration
   order: 10
@@ -330,11 +330,11 @@ Properties:
 Properties:
 
 * **`Location`** (`string`): The ACS URL where SAML responses are delivered.
-* **`Binding`** (`SamlBinding`): The HTTP binding the ACS endpoint accepts (`HttpPost` or `HttpRedirect`).
+* **`Binding`** (`SamlBinding`): The HTTP binding the ACS endpoint uses. Must be `SamlBinding.HttpPost`. HTTP-Redirect is not supported for SAML Response delivery.
 * **`Index`** (`int`): Integer index used to order multiple ACS endpoints. Lower values take precedence.
 * **`IsDefault`** (`bool?`): When `true`, this endpoint is the default ACS. When multiple endpoints are registered, exactly one should be marked as default.
 
-Example with multiple ACS endpoints:
+Example:
 
 ```csharp
 AssertionConsumerServiceUrls = new List<IndexedEndpoint>
@@ -345,13 +345,6 @@ AssertionConsumerServiceUrls = new List<IndexedEndpoint>
         Binding = SamlBinding.HttpPost,
         Index = 0,
         IsDefault = true
-    },
-    new IndexedEndpoint
-    {
-        Location = "https://sp.example.com/saml/acs/redirect",
-        Binding = SamlBinding.HttpRedirect,
-        Index = 1,
-        IsDefault = false
     }
 }
 ```
@@ -374,6 +367,28 @@ Properties:
 | `Signing`    | Used to verify signatures on messages from this SP.                                         |
 | `Encryption` | Used to encrypt assertions sent to this SP.                                                 |
 | `Both`       | Used for both signature verification and encryption. Equivalent to `Signing \| Encryption`. |
+
+## Caching Options
+
+The SAML add-on integrates with IdentityServer's built-in caching infrastructure.
+When you register a custom SP store with `AddSamlServiceProviderStoreCache<T>()`, IdentityServer wraps your store with
+an in-memory cache to reduce repeated lookups.
+
+The cache duration is controlled by `SamlServiceProviderStoreExpiration` on `IdentityServerOptions.Caching`:
+
+* **`SamlServiceProviderStoreExpiration`** (`TimeSpan`)
+  How long SP lookups are cached when you use `AddSamlServiceProviderStoreCache<T>()`. Defaults to 15 minutes. This setting has no effect unless you call `AddSamlServiceProviderStoreCache<T>()`.
+
+```csharp
+// Program.cs
+builder.Services
+    .AddIdentityServer(options =>
+    {
+        options.Caching.SamlServiceProviderStoreExpiration = TimeSpan.FromMinutes(30);
+    })
+    .AddSaml()
+    .AddSamlServiceProviderStoreCache<MySamlServiceProviderStore>();
+```
 
 ## IdP-Initiated SSO
 

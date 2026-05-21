@@ -866,3 +866,78 @@ public class CustomDistributedSamlSigninStateStore : ISamlSigninStateStore
     }
 }
 ```
+
+---
+
+## ISamlServiceProviderConfigurationValidator
+
+`ISamlServiceProviderConfigurationValidator` validates the configuration of a SAML Service Provider
+at runtime, before IdentityServer processes requests from that SP. It is called by
+`ValidatingSamlServiceProviderStore<T>`, which wraps your store automatically when you use
+`AddSamlServiceProviderStore<T>()`.
+
+```csharp
+// ISamlServiceProviderConfigurationValidator.cs
+public interface ISamlServiceProviderConfigurationValidator
+{
+    Task ValidateAsync(SamlServiceProviderConfigurationValidationContext context, CancellationToken ct);
+}
+```
+
+The `SamlServiceProviderConfigurationValidationContext` passed to `ValidateAsync` exposes:
+
+* `ServiceProvider` (`SamlServiceProvider`) - the SP being validated.
+* `IsValid` (`bool`) - `true` by default; set to `false` when validation fails.
+* `ErrorMessage` (`string?`) - the error message when invalid.
+* `SetError(string message)` - sets `IsValid` to `false` and records the error message.
+
+### When to Use
+
+The built-in `DefaultSamlServiceProviderConfigurationValidator` already checks EntityId, ACS URLs
+(which must use HTTP-POST), AllowedScopes, and lifetime values. It exposes virtual methods you can
+override without replacing the whole validator:
+
+* `ValidateEntityIdAsync` - validates that EntityId is not null or empty.
+* `ValidateAssertionConsumerServiceUrlsAsync` - validates that ACS URLs exist and use HTTP-POST.
+* `ValidateAllowedScopesAsync` - validates that at least one scope is configured.
+* `ValidateLifetimesAsync` - validates `AssertionLifetime`, `ClockSkew`, and `RequestMaxAge`.
+
+Override the validator when you need custom rules beyond those checks, for example to enforce naming
+conventions on EntityIds, restrict which scopes are allowed, or apply business-specific rules.
+
+### Registration
+
+The default is registered with `TryAddScoped`, so register your implementation as a scoped service
+before calling `AddSaml()`:
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ISamlServiceProviderConfigurationValidator, CustomSamlServiceProviderConfigurationValidator>();
+builder.Services.AddIdentityServer()
+    .AddSaml();
+```
+
+### Example
+
+The example below extends `DefaultSamlServiceProviderConfigurationValidator` by overriding
+`ValidateAllowedScopesAsync` to require that every SP includes the `openid` scope.
+
+```csharp
+// CustomSamlServiceProviderConfigurationValidator.cs
+public class CustomSamlServiceProviderConfigurationValidator : DefaultSamlServiceProviderConfigurationValidator
+{
+    protected override async Task ValidateAllowedScopesAsync(SamlServiceProviderConfigurationValidationContext context)
+    {
+        // Run the default scope check first
+        await base.ValidateAllowedScopesAsync(context);
+        if (!context.IsValid)
+            return;
+
+        // Custom rule: all SPs must include the "openid" scope
+        if (!context.ServiceProvider.AllowedScopes.Contains("openid"))
+        {
+            context.SetError("AllowedScopes must include 'openid'.");
+        }
+    }
+}
+```

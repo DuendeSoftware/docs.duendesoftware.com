@@ -1,7 +1,7 @@
 ---
 title: "SAML Service Provider Management"
 description: "How to register and manage SAML 2.0 Service Providers using ISamlServiceProviderStore for read-only lookup."
-date: 2026-05-15
+date: 2026-05-21
 sidebar:
   label: Service Providers
   order: 20
@@ -147,9 +147,61 @@ public class MySamlServiceProviderStore : ISamlServiceProviderStore
 }
 ```
 
+## Runtime Validation
+
+When you call `AddSamlServiceProviderStore<T>()`, IdentityServer automatically wraps your store with a `ValidatingSamlServiceProviderStore<T>` that runs configuration checks on every SP loaded from the store.
+
+The default validator (`DefaultSamlServiceProviderConfigurationValidator`) checks the following:
+
+* `EntityId` is required.
+* At least one Assertion Consumer Service URL is required.
+* All ACS URLs must use `SamlBinding.HttpPost`. HTTP-Redirect is not supported for SAML Response delivery.
+* At least one `AllowedScopes` entry is required.
+* `AssertionLifetime` must be positive (if set).
+* `ClockSkew` must be non-negative (if set).
+* `RequestMaxAge` must be positive (if set).
+
+If an SP fails validation, it is treated as if it does not exist: the store returns `null` and an `InvalidSamlServiceProviderConfigurationEvent` is raised. This means a misconfigured SP is silently rejected at runtime rather than causing an unhandled exception.
+
+You can replace the default validator with your own implementation. See [Extensibility: ISamlServiceProviderConfigurationValidator](/identityserver/saml/extensibility.md#isamlserviceproviderconfigurationvalidator) for details.
+
+## Caching
+
+For custom stores, you can add a caching layer by calling `AddSamlServiceProviderStoreCache<T>()` instead of `AddSamlServiceProviderStore<T>()`. This wraps your store with `CachingSamlServiceProviderStore<T>`, which uses `HybridCache` to cache SP lookups.
+
+Validation still runs: the caching layer wraps the validating store, so only valid SPs are cached. Invalid SPs are rejected before they reach the cache.
+
+The cache duration is controlled by `IdentityServerOptions.Caching.SamlServiceProviderStoreExpiration` (default: 15 minutes).
+
+To register your store with caching:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer()
+    .AddSaml()
+    .AddSamlServiceProviderStoreCache<MySamlServiceProviderStore>();
+```
+
+To configure the cache expiration:
+
+```csharp
+// Program.cs
+builder.Services
+    .AddIdentityServer(options =>
+    {
+        options.Caching.SamlServiceProviderStoreExpiration = TimeSpan.FromMinutes(30);
+    })
+    .AddSaml()
+    .AddSamlServiceProviderStoreCache<MySamlServiceProviderStore>();
+```
+
 ## Full Configuration Example
 
 The following example shows a fully configured `SamlServiceProvider` with signing, single logout, and claim mappings. This object can be used directly with the in-memory store or returned from a custom `ISamlServiceProviderStore` implementation.
+
+:::note
+All `AssertionConsumerServiceUrls` entries must use `SamlBinding.HttpPost`. HTTP-Redirect is not supported for SAML Response delivery. If you configure an ACS endpoint with `SamlBinding.HttpRedirect`, the SP will fail runtime validation and be rejected.
+:::
 
 ```csharp
 new SamlServiceProvider
@@ -179,7 +231,7 @@ new SamlServiceProvider
 
     // Signing
     SigningBehavior = SamlSigningBehavior.SignAssertion,
-    RequireSignedAuthnRequests = true, // bool? -- null falls back to global SamlOptions.WantAuthnRequestsSigned
+    RequireSignedAuthnRequests = true, // bool?: null falls back to global SamlOptions.WantAuthnRequestsSigned
     Certificates = new List<ServiceProviderCertificate>
     {
         new ServiceProviderCertificate
