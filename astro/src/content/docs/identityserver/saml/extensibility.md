@@ -1,7 +1,7 @@
 ---
 title: "SAML Extensibility"
 description: Extensibility interfaces for customizing SAML 2.0 Identity Provider behavior, including NameID generation, SSO response generation, metadata, AuthnRequest validation, interaction, logout, and sign-in state storage.
-date: 2026-05-20
+date: 2026-05-21
 sidebar:
   label: Extensibility
   order: 40
@@ -87,11 +87,26 @@ public interface ISaml2SsoInteractionResponseGenerator
 Override this interface to customize the interaction flow for SAML sign-in requests, for example
 to implement custom step-up authentication logic.
 
+### Error Reporting
+
+Instead of redirecting the user to the login page, you can return a SAML error response directly
+to the SP by returning `Saml2InteractionResponse.Error(statusCode, subStatusCode)` from
+`ProcessInteractionAsync`. This is useful when you want to reject the SSO request
+programmatically. For example, when the SP is not permitted to request SSO at the current time
+and you want the SP to receive a SAML error response rather than a login redirect.
+
+`Saml2InteractionResponse` has three factory methods:
+
+* `Login()` - redirect the user to the login page.
+* `NoInteraction()` - proceed directly to assertion generation without interaction.
+* `Error(statusCode, subStatusCode)` / `Error(statusCode, subStatusCode, message)` - return a
+  SAML error response to the SP with the given status codes and an optional human-readable message.
+
 ### Registration
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISaml2SsoInteractionResponseGenerator, MySamlSsoInteractionGenerator>();
+builder.Services.AddScoped<ISaml2SsoInteractionResponseGenerator, CustomSamlSsoInteractionGenerator>();
 ```
 
 ---
@@ -126,7 +141,7 @@ modify the logout messages sent.
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISamlLogoutNotificationService, MySamlLogoutNotificationService>();
+builder.Services.AddScoped<ISamlLogoutNotificationService, CustomSamlLogoutNotificationService>();
 ```
 
 ---
@@ -160,7 +175,7 @@ signature checks.
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ILogoutRequestValidator, MyLogoutRequestValidator>();
+builder.Services.AddScoped<ILogoutRequestValidator, CustomLogoutRequestValidator>();
 ```
 
 ---
@@ -199,7 +214,7 @@ is reported.
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISaml2SloResponseGenerator, MySloResponseGenerator>();
+builder.Services.AddScoped<ISaml2SloResponseGenerator, CustomSloResponseGenerator>();
 ```
 
 ---
@@ -306,7 +321,7 @@ messages sent to SPs during SLO, for example to include SP-specific extensions o
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISaml2FrontChannelLogoutRequestBuilder, MyLogoutRequestBuilder>();
+builder.Services.AddScoped<ISaml2FrontChannelLogoutRequestBuilder, CustomLogoutRequestBuilder>();
 ```
 
 ---
@@ -348,7 +363,7 @@ available for a given SP, beyond what the default scope-based resolution provide
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISamlResourceResolver, MyResourceResolver>();
+builder.Services.AddScoped<ISamlResourceResolver, CustomResourceResolver>();
 ```
 
 ---
@@ -401,7 +416,7 @@ Override `ISamlNameIdGenerator` when:
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISamlNameIdGenerator, MyNameIdGenerator>();
+builder.Services.AddScoped<ISamlNameIdGenerator, CustomNameIdGenerator>();
 ```
 
 ### Example
@@ -534,7 +549,61 @@ Override `ISaml2SsoResponseGenerator` when:
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISaml2SsoResponseGenerator, MySsoResponseGenerator>();
+builder.Services.AddScoped<ISaml2SsoResponseGenerator, CustomSsoResponseGenerator>();
+```
+
+---
+
+## ISamlSigningService
+
+`ISamlSigningService` provides access to the certificate used to sign SAML messages and metadata.
+IdentityServer calls this service when it needs to sign a SAML response or include the signing
+certificate in the IdP metadata document.
+
+```csharp
+// ISamlSigningService.cs
+public interface ISamlSigningService
+{
+    Task<X509Certificate2> GetSigningCertificateAsync(CancellationToken ct);
+    Task<string> GetSigningCertificateBase64Async(CancellationToken ct);
+}
+```
+
+* `GetSigningCertificateAsync` - returns the `X509Certificate2` with private key used to sign
+  SAML messages. Throws `InvalidOperationException` if no signing credential is configured, if
+  the credential is not an X.509 certificate or RSA key, or if the certificate has no private key.
+* `GetSigningCertificateBase64Async` - returns the base64-encoded DER representation of the
+  certificate, used when embedding the certificate in SAML metadata key descriptors.
+
+The default implementation derives the certificate from IdentityServer's configured signing keys.
+When the active signing key is an `X509SecurityKey`, it uses the certificate directly. When the
+key is a raw `RsaSecurityKey` managed by automatic key management, it wraps the key in a
+self-signed X.509 container automatically.
+
+### When to Use
+
+Override `ISamlSigningService` when:
+
+* Your signing certificate is stored in an external system such as Azure Key Vault or a hardware
+  security module (HSM) and cannot be loaded as a standard `X509SecurityKey`.
+* You need to rotate the SAML signing certificate independently of the IdentityServer signing key
+  configuration.
+* You need to return a different certificate for SAML signing than the one used for OIDC token
+  signing.
+
+For most deployments the default implementation is sufficient. Only replace it if you have a
+specific certificate selection or key management requirement that the default cannot satisfy.
+
+### Registration
+
+`ISamlSigningService` is registered with `TryAddScoped`, so register your implementation before
+calling `AddSaml()` to replace the default:
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ISamlSigningService, CustomSigningService>();
+builder.Services.AddIdentityServer()
+    .AddSaml();
 ```
 
 ---
@@ -576,7 +645,7 @@ Override `ISaml2MetadataResponseGenerator` when:
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISaml2MetadataResponseGenerator, MyMetadataGenerator>();
+builder.Services.AddScoped<ISaml2MetadataResponseGenerator, CustomMetadataGenerator>();
 ```
 
 ---
@@ -608,7 +677,7 @@ Override `ISaml2IssuerNameService` when:
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISaml2IssuerNameService, MyIssuerNameService>();
+builder.Services.AddScoped<ISaml2IssuerNameService, CustomIssuerNameService>();
 ```
 
 ---
@@ -649,7 +718,7 @@ Override `IAuthnRequestValidator` when:
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<IAuthnRequestValidator, MyAuthnRequestValidator>();
+builder.Services.AddScoped<IAuthnRequestValidator, CustomAuthnRequestValidator>();
 ```
 
 ### Example

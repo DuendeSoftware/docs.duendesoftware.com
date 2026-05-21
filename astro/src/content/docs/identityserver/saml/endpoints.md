@@ -1,7 +1,7 @@
 ---
 title: "SAML Endpoints"
 description: Details of the SAML 2.0 protocol endpoints registered by IdentityServer, including metadata, sign-in, and logout.
-date: 2026-05-15
+date: 2026-05-21
 sidebar:
   label: Endpoints
   order: 30
@@ -46,6 +46,17 @@ with a SAML `AuthnRequest` message (encoded using the HTTP-Redirect or HTTP-POST
 
 IdentityServer validates the `AuthnRequest`, authenticates the user (redirecting to the login page
 if needed), and then continues to the Sign-in Callback endpoint.
+
+### Profile active check
+
+During SSO, IdentityServer calls [`IProfileService.IsActiveAsync`](/identityserver/reference/v8/services/profile-service.md)
+to verify the user's account is still active. If `IsActiveAsync` sets `IsActive` to `false`, the SSO flow does not continue:
+
+* For passive authentication requests (`IsPassive=true`), IdentityServer returns a SAML error response to the SP with a `NoPassive` status code.
+* For all other requests, IdentityServer redirects the user to the login page.
+
+This check runs on every SSO request, including when the user already has an active session. You can use it to block access
+for disabled or locked accounts without waiting for the session to expire.
 
 ## Sign-in Callback Endpoint
 

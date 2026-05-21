@@ -97,6 +97,10 @@ Available options:
 * **`DefaultSigningBehavior`**
   Default signing behavior for SAML responses. Defaults to `SignAssertion`.
 
+  :::note
+  When you configure an RSA signing key without an X509 certificate (for example, using `AddDeveloperSigningCredential()` or a raw RSA key), IdentityServer automatically generates an X509 container for SAML signing operations. You do not need to create or provide a certificate manually - the generated container wraps your existing RSA key material and is cached for the lifetime of the application.
+  :::
+
 * **`MaxRelayStateLength`**
   Maximum length (in UTF-8 bytes) of the RelayState parameter. Defaults to 80.
 
@@ -168,14 +172,15 @@ builder.Services.AddIdentityServer()
 
 `SamlEndpointOptions` configures the URL paths and supported bindings for all SAML protocol endpoints. Access it via `SamlOptions.Endpoints`.
 
-| Property                      | Type                  | Default                    | Description                                                              |
-|-------------------------------|-----------------------|----------------------------|--------------------------------------------------------------------------|
-| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                      |
-| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SSO endpoint.                                   |
-| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates).           |
-| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses). |
-| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SLO endpoint.                                   |
-| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow).          |
+| Property                      | Type                  | Default                    | Description                                                                                                                     |
+|-------------------------------|-----------------------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                                                                             |
+| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SSO endpoint. Set to an empty collection to disable the SSO endpoint entirely.                         |
+| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates).                                                                  |
+| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses).                                                        |
+| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SLO endpoint. Set to an empty collection to disable the SLO endpoint entirely.                         |
+| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow).                                                                 |
+| `StateIdParameterName`        | `string`              | `"samlStateId"`            | Query string parameter name used to pass the SAML sign-in state identifier through the return URL. |
 
 
 ```csharp
@@ -255,7 +260,7 @@ Available options:
   Per-SP override for how long issued assertions are valid. Uses `SamlOptions.DefaultAssertionLifetime` when `null`. Defaults to `null`.
 
 * **`AllowedScopes`** (`ICollection<string>`)
-  Scopes associated with this SP. Used to determine which identity resources (and their claim types) are available for inclusion in assertions. Should not be empty.
+  Identity resource names associated with this SP. Used to determine which identity resources (and their claim types) are available for inclusion in assertions. Only identity resource names are valid here - including API scope names causes resource validation to fail. Should not be empty.
 
 * **`AuthnContextMappings`** (`IDictionary<string, string>`)
   Per-SP override for `acr`/`amr` → `AuthnContextClassRef` URI mappings. Overrides `SamlOptions.DefaultAuthnContextMappings` when set. Defaults to empty.
