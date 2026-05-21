@@ -76,9 +76,9 @@ internally, so IdentityServer's standard scope-to-claim filtering applies.
 
 ## Subject ID Requirements
 
-The `sub` claim in the token must be a valid UUID (parseable as a `Guid`). The `ProfileService` converts it to a
-`UserSubjectId` to look up the user. If parsing fails, no claims are issued and a warning is logged. Make sure your
-IdentityServer configuration issues a UUID as the subject identifier.
+The `sub` claim in the token must be a non-empty string (up to 200 characters) that can be parsed as a `UserSubjectId`.
+The `ProfileService` converts it using `UserSubjectId.TryCreate`. If parsing fails, no claims are issued and a warning
+is logged.
 
 `IsActiveAsync` returns `true` when the user profile exists and `false` otherwise, which causes IdentityServer to
 reject tokens for deleted or missing users.
