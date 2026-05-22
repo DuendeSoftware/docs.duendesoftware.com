@@ -13,7 +13,7 @@ Models the information to initiate a user login request for [CIBA](/identityserv
 
 * **`InternalId`**
 
-  Ihe identifier of the request in the store.
+  The identifier of the request in the store.
 
 * **`Subject`**
 

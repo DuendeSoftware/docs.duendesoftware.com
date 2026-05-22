@@ -50,7 +50,7 @@ implementations or subclasses of `DefaultRefreshTokenService` to use the new sig
 :::
 
 The behavior of the refresh token service is complex. We don't recommend
-implementing the interface from scratch, unless you know exactly know what you
+implementing the interface from scratch, unless you know exactly what you
 are doing. If you want to customize how refresh tokens are handled, we
 recommended that you create a class that derives from the default implementation
 and override its virtual methods, calling the methods in the base class before
