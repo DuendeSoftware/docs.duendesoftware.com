@@ -7,7 +7,9 @@ sidebar:
   order: 2
 ---
 
-When a schema contains many attributes, displaying them as a flat list quickly becomes hard to navigate. Attribute groups let you organize attributes into named sections and control the order in which both groups and individual attributes appear. This is especially useful when building admin UIs or profile editors that need to present attributes in a structured, logical way.
+When a schema contains many attributes, displaying them as a flat list quickly becomes hard to navigate.
+Attribute groups let you organize attributes into named sections and control the order in which both groups and individual attributes appear. 
+This is especially useful when building your own admin UIs or profile editors that need to present attributes in a structured, logical way.
 
 ## Types
 
@@ -25,7 +27,7 @@ public sealed record AttributeGroup(
 ```
 
 * `Code`: The unique identifier for the group. See [`AttributeGroupCode`](#attributegroupcode) below.
-* `DisplayName`: Optional human-readable label shown in UIs instead of the raw code.
+* `DisplayName`: Optional human-readable label you can show in UIs instead of the raw code.
 * `Description`: Optional description of what the group contains.
 * `Order`: Sort weight controlling the position of this group relative to other groups. Lower values appear first.
 
@@ -122,7 +124,8 @@ await schemaAdmin.ReorderAttributesAsync(
     ct);
 ```
 
-After the `ReorderAttributesAsync` call, `family_name` will have `Order: 0` and `given_name` will have `Order: 1`, so family name appears before given name in any UI that respects the ordering.
+After the `ReorderAttributesAsync` call, `family_name` will have `Order: 0` and `given_name` will have `Order: 1`,
+so when you build a UI you can use the field ordering and have family name appear before given name.
 
 ## Notes on Ordering
 
