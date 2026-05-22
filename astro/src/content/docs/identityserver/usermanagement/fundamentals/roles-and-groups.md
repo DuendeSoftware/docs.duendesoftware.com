@@ -25,13 +25,13 @@ public class RoleSetupService(
     {
         // 1. Create a role.
         var roleResult = await roleAdmin.CreateAsync(
-            new RoleDto { Name = RoleName.Create("content-editor") },
+            new Role { Name = RoleName.Create("content-editor") },
             ct);
         var roleId = roleResult.Value;
 
         // 2. Create a group.
         var groupResult = await groupAdmin.CreateAsync(
-            new GroupDto { Name = GroupName.Create("editors") },
+            new Group { Name = GroupName.Create("editors") },
             ct);
         var groupId = groupResult.Value;
 
@@ -73,8 +73,8 @@ The core types in the `Duende.UserManagement.Membership` namespace are:
 * **`RoleId`**: A strongly-typed, string-based identifier for a role. Use `RoleId.Create(string)` to create one. Valid characters are alphanumeric, dashes, underscores, forward slashes, and backslashes.
 * **`RoleName`**: A validated role name. Maximum 200 characters, leading and trailing whitespace is trimmed. Use `RoleName.Create(string)` to construct.
 * **`RoleDescription`**: An optional description for a role. Maximum 500 characters. Use `RoleDescription.Create(string)` to construct.
-* **`RoleDto`**: The data transfer object used when creating or updating a role. Contains a required `Name` and an optional `Description`.
-* **`RoleListDto`**: The summary DTO returned by list and query operations. Contains `Id`, `Name`, and `Description`.
+* **`Role`**: The record used when creating or updating a role. Contains a required `Name` and an optional `Description`.
+* **`RoleListItem`**: The summary record returned by list and query operations. Contains `Id`, `Name`, and `Description`.
 * **`RoleFilter`**: Filter criteria for role queries. Supports contains-match filtering on `Name` and `Description`.
 * **`RoleSortField`**: Enum with values `Name` and `Description` for sorting role query results.
 
@@ -83,16 +83,16 @@ The core types in the `Duende.UserManagement.Membership` namespace are:
 * **`GroupId`**: A strongly-typed, string-based identifier for a group. Use `GroupId.Create(string)` to create one. Valid characters are alphanumeric, dashes, underscores, forward slashes, and backslashes.
 * **`GroupName`**: A validated group name. Maximum 200 characters, leading and trailing whitespace is trimmed. Use `GroupName.Create(string)` to construct.
 * **`GroupDescription`**: An optional description for a group. Maximum 500 characters. Use `GroupDescription.Create(string)` to construct.
-* **`GroupDto`**: The data transfer object used when creating or updating a group. Contains a required `Name` and an optional `Description`.
-* **`GroupListDto`**: The summary DTO returned by list and query operations. Contains `Id`, `Name`, and `Description`.
+* **`Group`**: The record used when creating or updating a group. Contains a required `Name` and an optional `Description`.
+* **`GroupListItem`**: The summary record returned by list and query operations. Contains `Id`, `Name`, and `Description`.
 * **`GroupFilter`**: Filter criteria for group queries. Supports contains-match filtering on `Name` and `Description`, plus an optional `SearchExpression` for filter expressions (e.g., `displayName eq "Engineers"`).
 * **`GroupSortField`**: Enum with values `Name` and `Description` for sorting group query results.
 
 ### Membership Types
 
-* **`MembershipRoleMemberListDto`**: Returned when listing users directly assigned to a role. Contains `SubjectId`.
-* **`GroupRoleMemberListDto`**: Returned when listing groups assigned to a role. Contains `Id` and `Name`.
-* **`MembershipGroupMemberListDto`**: Returned when listing users in a group. Contains `SubjectId`.
+* **`MembershipRoleMemberListItem`**: Returned when listing users directly assigned to a role. Contains `SubjectId`.
+* **`RoleGroupMemberListItem`**: Returned when listing groups assigned to a role. Contains `Id` and `Name`.
+* **`MembershipGroupMemberListItem`**: Returned when listing users in a group. Contains `SubjectId`.
 
 ### Direct vs. Transitive Role Assignment
 
@@ -110,28 +110,28 @@ Because the storage layer does not support union operations, direct and transiti
 ```csharp
 public interface IRoleAdmin
 {
-    Task<SaveResult<RoleId>> CreateAsync(RoleDto role, CancellationToken ct);
-    Task<GetResult<RoleDto>> GetAsync(RoleId id, CancellationToken ct);
-    Task<SaveResult<RoleId>> UpdateAsync(RoleId id, RoleDto role, Version expectedVersion, CancellationToken ct);
+    Task<SaveResult<RoleId>> CreateAsync(Role role, CancellationToken ct);
+    Task<GetResult<Role>> GetAsync(RoleId id, CancellationToken ct);
+    Task<SaveResult<RoleId>> UpdateAsync(RoleId id, Role role, Version expectedVersion, CancellationToken ct);
     Task<SaveResult<RoleId>> DeleteAsync(RoleId id, CancellationToken ct);
-    Task<QueryResult<RoleListDto>> QueryAsync(
+    Task<QueryResult<RoleListItem>> QueryAsync(
         QueryRequest<RoleFilter, RoleSortField> request,
         CancellationToken ct);
 }
 ```
 
 * **`CreateAsync`**: Creates a new role. Returns a `SaveResult<RoleId>` containing the new role's identifier and version on success, or an error if the role name already exists.
-* **`GetAsync`**: Retrieves a single role by its `RoleId`. Returns a `GetResult<RoleDto>` that is either found or not found.
+* **`GetAsync`**: Retrieves a single role by its `RoleId`. Returns a `GetResult<Role>` that is either found or not found.
 * **`UpdateAsync`**: Updates an existing role. Requires the current `Version` for optimistic concurrency. Returns an error on version conflict or if the role is not found.
 * **`DeleteAsync`**: Deletes a role by its `RoleId`. Returns an error if deletion fails.
-* **`QueryAsync`**: Returns a paged list of `RoleListDto` records. Use `QueryRequest.Create(filter, sort, range)` to construct the request. All parameters are optional: omit `filter` to return all roles, omit `sort` to use the default ordering, and omit `range` to return the first page with the default page size.
+* **`QueryAsync`**: Returns a paged list of `RoleListItem` records. Use `QueryRequest.Create(filter, sort, range)` to construct the request. All parameters are optional: omit `filter` to return all roles, omit `sort` to use the default ordering, and omit `range` to return the first page with the default page size.
 
 ### Creating a Role
 
 ```csharp
 using Duende.UserManagement.Membership;
 
-var role = new RoleDto
+var role = new Role
 {
     Name = RoleName.Create("content-editor"),
     Description = RoleDescription.Create("Can create and edit content.")
@@ -172,7 +172,7 @@ var existing = await roleAdmin.GetAsync(roleId, ct);
 
 if (existing.IsFound)
 {
-    var updated = new RoleDto
+    var updated = new Role
     {
         Name = existing.Value.Name,
         Description = RoleDescription.Create("Updated description.")
@@ -189,11 +189,11 @@ if (existing.IsFound)
 ```csharp
 public interface IGroupAdmin
 {
-    Task<SaveResult<GroupId>> CreateAsync(GroupDto group, CancellationToken ct);
-    Task<GetResult<GroupDto>> GetAsync(GroupId id, CancellationToken ct);
-    Task<SaveResult<GroupId>> UpdateAsync(GroupId id, GroupDto group, Version expectedVersion, CancellationToken ct);
+    Task<SaveResult<GroupId>> CreateAsync(Group group, CancellationToken ct);
+    Task<GetResult<Group>> GetAsync(GroupId id, CancellationToken ct);
+    Task<SaveResult<GroupId>> UpdateAsync(GroupId id, Group group, Version expectedVersion, CancellationToken ct);
     Task<SaveResult<GroupId>> DeleteAsync(GroupId id, CancellationToken ct);
-    Task<QueryResult<GroupListDto>> QueryAsync(
+    Task<QueryResult<GroupListItem>> QueryAsync(
         QueryRequest<GroupFilter, GroupSortField> request,
         CancellationToken ct);
 }
@@ -203,14 +203,14 @@ public interface IGroupAdmin
 * **`GetAsync`**: Retrieves a single group by its `GroupId`.
 * **`UpdateAsync`**: Updates an existing group with optimistic concurrency via `expectedVersion`.
 * **`DeleteAsync`**: Deletes a group by its `GroupId`.
-* **`QueryAsync`**: Returns a paged list of `GroupListDto` records. Use `QueryRequest.Create(filter, sort, range)` to construct the request. `GroupFilter` also supports a `SearchExpression` (e.g., `displayName eq "Engineers"`) that is combined with the other filter properties using AND logic.
+* **`QueryAsync`**: Returns a paged list of `GroupListItem` records. Use `QueryRequest.Create(filter, sort, range)` to construct the request. `GroupFilter` also supports a `SearchExpression` (e.g., `displayName eq "Engineers"`) that is combined with the other filter properties using AND logic.
 
 ### Creating a Group
 
 ```csharp
 using Duende.UserManagement.Membership;
 
-var group = new GroupDto
+var group = new Group
 {
     Name = GroupName.Create("editors"),
     Description = GroupDescription.Create("All content editors.")
@@ -261,13 +261,13 @@ public interface IMembershipAdmin
     Task<SaveResult<GroupId>> RemoveGroupAsync(UserSubjectId subjectId, GroupId groupId, CancellationToken ct);
 
     // Query operations
-    Task<QueryResult<RoleListDto>> GetDirectRolesAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
-    Task<QueryResult<RoleListDto>> GetTransitiveRolesAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
-    Task<QueryResult<RoleListDto>> GetRolesForGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
-    Task<QueryResult<GroupListDto>> GetGroupsAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
-    Task<QueryResult<MembershipRoleMemberListDto>> GetMembersInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
-    Task<QueryResult<GroupRoleMemberListDto>> GetGroupsInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
-    Task<QueryResult<MembershipGroupMemberListDto>> GetMembersInGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<RoleListItem>> GetDirectRolesAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<RoleListItem>> GetTransitiveRolesAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<RoleListItem>> GetRolesForGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<GroupListItem>> GetGroupsAsync(UserSubjectId subjectId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<MembershipRoleMemberListItem>> GetMembersInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<RoleGroupMemberListItem>> GetGroupsInRoleAsync(RoleId roleId, DataRange? range, CancellationToken ct);
+    Task<QueryResult<MembershipGroupMemberListItem>> GetMembersInGroupAsync(GroupId groupId, DataRange? range, CancellationToken ct);
 }
 ```
 

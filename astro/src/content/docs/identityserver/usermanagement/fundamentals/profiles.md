@@ -268,28 +268,12 @@ public sealed record UserProfile
     public UserSubjectId SubjectId { get; }
     public UserName? UserName { get; }
     public IReadOnlyDictionary<AttributeCode, AttributeValue> Attributes { get; }
-
-    public UserProfileUpdate ToUpdate();
 }
 ```
 
 * `SubjectId`: The unique subject identifier for the user.
 * `UserName`: The user's login name, if one has been set.
 * `Attributes`: All stored attribute values keyed by `AttributeCode`.
-* `ToUpdate()`: Creates a `UserProfileUpdate` pre-populated with the profile's current attribute values, ready for modification and submission.
-
-### `UserProfileUpdate`
-
-`UserProfileUpdate` is the write model passed to update operations. It holds an `AttributeValueCollection` that replaces the profile's attributes in full.
-
-```csharp
-public sealed record UserProfileUpdate
-{
-    public AttributeValueCollection Attributes { get; }
-}
-```
-
-Obtain an instance by calling `UserProfile.ToUpdate()` on an existing profile, then modify the collection before passing it back to `TryUpdateAsync`.
 
 ### `UserProfileListItem`
 
@@ -330,20 +314,48 @@ public sealed record UserProfileAttributeProjection
 
 ### `AttributeValueCollection`
 
-`AttributeValueCollection` is a mutable, name-keyed collection of `AttributeValue` instances used when creating or updating profiles.
+`AttributeValueCollection` is a mutable, schema-aware collection of `AttributeValue` instances used when building profile data. It validates attribute values against the schema on every mutation.
 
 ```csharp
 public sealed class AttributeValueCollection : IEnumerable<AttributeValue>
 {
+    public AttributeValueCollection(IReadOnlyAttributeSchema schema);
+
     public int Count { get; }
 
+    // Typed setters — validate code exists in schema and value matches declared type
+    public void Set(AttributeCode code, string value);
+    public void Set(AttributeCode code, bool value);
+    public void Set(AttributeCode code, int value);
+    public void Set(AttributeCode code, decimal value);
+    public void Set(AttributeCode code, DateOnly value);
+    public void Set(AttributeCode code, DateTimeOffset value);
+    public void Set(AttributeCode code, IReadOnlyDictionary<string, object> value);
+    public void Set(AttributeCode code, IReadOnlyList<object> value);
+
+    // Try variants — return false with error list instead of throwing
+    public bool TrySet(AttributeCode code, string value, out IReadOnlyList<string>? errors);
+    // ... (overloads for bool, int, decimal, DateOnly, DateTimeOffset, complex, list)
+
+    // Low-level setter (validates against schema if present)
     public void Set(AttributeValue attribute);
+
     public bool Remove(AttributeCode code);
     public bool Contains(AttributeCode code);
     public bool TryGet(AttributeCode code, out AttributeValue attribute);
     public AttributeValue this[AttributeCode code] { get; }
+
+    // Validation — produces the immutable type required by persist methods
+    public ValidatedAttributeValueCollection Validate();
+    public bool TryValidate(out ValidatedAttributeValueCollection? validated, out IReadOnlyList<string>? errors);
 }
 ```
+
+### `ValidatedAttributeValueCollection`
+
+`ValidatedAttributeValueCollection` is an immutable collection that guarantees all required attributes are present and all values conform to the schema. Persist methods (`TryAddAsync`, `TryUpdateAsync`, `TryRegisterAsync`) accept only this type, enforcing correctness at compile time.
+
+Obtain an instance by calling `Validate()` or `TryValidate()` on an `AttributeValueCollection`. Use `ValidatedAttributeValueCollection.Empty` when no attributes are needed.
 
 Build an `AttributeValueCollection` from the schema so that attribute values are validated against their declared types:
 
@@ -592,7 +604,7 @@ foreach (var projection in projections.Items)
 public interface IReadOnlyAttributeSchema
 {
     IReadOnlyDictionary<AttributeCode, AttributeDefinition> AttributeDefinitions { get; }
-    IReadOnlyList<AttributeGroup> Groups { get; }
+    IReadOnlyDictionary<AttributeGroupCode, AttributeGroup> Groups { get; }
 }
 ```
 

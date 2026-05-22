@@ -128,7 +128,7 @@ public sealed record UserImportRecord
 {
     public required UserSubjectId SubjectId { get; init; }
     public UserName? UserName { get; init; }
-    public AttributeValueCollection? ProfileAttributes { get; init; }
+    public ValidatedAttributeValueCollection? ProfileAttributes { get; init; }
     public AuthenticatorImport? Authenticators { get; init; }
     public MembershipImport? Memberships { get; init; }
 }
