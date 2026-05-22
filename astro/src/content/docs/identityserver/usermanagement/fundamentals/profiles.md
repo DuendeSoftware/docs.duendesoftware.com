@@ -88,26 +88,30 @@ To organize attributes into groups and control their display order, see [Attribu
 An `AttributeDefinition` describes a single attribute in the schema.
 
 ```csharp
-public sealed record AttributeDefinition
+public sealed class AttributeDefinition
 {
-    public AttributeCode Code { get; }
-    public AttributeDisplayName? DisplayName { get; }
-    public AttributeType AttributeType { get; }
+    public required AttributeCode Code { get; init; }
+    public required AttributeType AttributeType { get; init; }
+    public AttributeDescription? Description { get; init; }
+    public AttributeDisplayName? DisplayName { get; init; }
     public ScalarDataType DataType { get; }   // convenience; throws for non-scalar types
-    public AttributeDescription Description { get; }
-    public bool IsUnique { get; }
-    public IReadOnlyCollection<string> Tags { get; }
-    public AttributeGroupCode? GroupCode { get; }
-    public int Order { get; }
+    public bool IsUnique { get; init; }
+    public bool IsQueryable { get; init; } = true;
+    public bool IsRequired { get; init; }
+    public IReadOnlyCollection<string> Tags { get; init; }
+    public AttributeGroupCode? GroupCode { get; init; }
+    public int Order { get; init; }
 }
 ```
 
 * `Code`: The attribute's identifier. Must start with an ASCII letter, must not end with an underscore, and may only contain ASCII letters, digits, or underscores.
-* `DisplayName`: Optional human-readable display name for the attribute. When set, UIs can show this instead of the raw code.
 * `AttributeType`: The full type descriptor. Use `ScalarAttributeType`, `ComplexAttributeType`, or `ListAttributeType`.
-* `DataType`: Convenience accessor for scalar types. Throws `InvalidOperationException` for complex or list types.
 * `Description`: Human-readable description of the attribute.
+* `DisplayName`: Optional human-readable display name for the attribute. When set, UIs can show this instead of the raw code.
+* `DataType`: Convenience accessor for scalar types. Throws `InvalidOperationException` for complex or list types.
 * `IsUnique`: When `true`, the system enforces that no two profiles share the same value for this attribute. Not supported for complex or list types.
+* `IsQueryable`: When `true` (the default), the attribute is indexed and can be searched via SCIM filter expressions. Set to `false` for attributes that are stored but never queried, reducing storage overhead.
+* `IsRequired`: When `true`, the attribute must be present in the `AttributeValueCollection` before `Validate()` succeeds. Defaults to `false`.
 * `Tags`: Optional string tags for grouping or filtering definitions.
 * `GroupCode`: The code of the group this attribute belongs to. `null` means the attribute is ungrouped.
 * `Order`: Sort weight within the group. Lower values appear first.
@@ -138,6 +142,10 @@ public enum ScalarDataType
 
 ### Defining Custom Attributes
 
+:::tip[Implicit conversions]
+Value objects like `AttributeCode` and `AttributeGroupCode` support implicit conversion from `string`, so you can write `AttributeCode code = "department"` instead of `AttributeCode.Create("department")`. The examples in this documentation use the explicit `Create` method for clarity.
+:::
+
 The following example adds a custom `department` string attribute and a unique `employee_id` integer attribute to the schema:
 
 ```csharp
@@ -148,16 +156,20 @@ public class ProfileSchemaInitializer(IUserProfileSchemaAdmin schemaAdmin)
 {
     public async Task InitializeAsync(CancellationToken ct)
     {
-        var department = new AttributeDefinition(
-            AttributeCode.Create("department"),
-            ScalarDataType.String,
-            AttributeDescription.Create("The department the user belongs to."));
+        var department = new AttributeDefinition
+        {
+            Code = AttributeCode.Create("department"),
+            AttributeType = new ScalarAttributeType(ScalarDataType.String),
+            Description = AttributeDescription.Create("The department the user belongs to.")
+        };
 
-        var employeeId = new AttributeDefinition(
-            AttributeCode.Create("employee_id"),
-            ScalarDataType.Integer,
-            AttributeDescription.Create("The unique employee identifier."),
-            isUnique: true);
+        var employeeId = new AttributeDefinition
+        {
+            Code = AttributeCode.Create("employee_id"),
+            AttributeType = new ScalarAttributeType(ScalarDataType.Integer),
+            Description = AttributeDescription.Create("The unique employee identifier."),
+            IsUnique = true
+        };
 
         await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct);
         await schemaAdmin.TryAddAttributeDefinitionAsync(employeeId, ct);
@@ -171,32 +183,146 @@ Use `ComplexAttributeType` to model structured values such as an address:
 
 ```csharp
 var addressType = new ComplexAttributeType(
-    new Dictionary<string, AttributeType>
+    new Dictionary<AttributeCode, ComplexAttributeProperty>
     {
-        ["street"]  = new ScalarAttributeType(ScalarDataType.String),
-        ["city"]    = new ScalarAttributeType(ScalarDataType.String),
-        ["country"] = new ScalarAttributeType(ScalarDataType.String),
+        [AttributeCode.Create("street")]  = ComplexAttributeProperty.Of(ScalarDataType.String),
+        [AttributeCode.Create("city")]    = ComplexAttributeProperty.Of(ScalarDataType.String),
+        [AttributeCode.Create("country")] = ComplexAttributeProperty.Of(ScalarDataType.String),
     });
 
-var address = new AttributeDefinition(
-    AttributeCode.Create("address"),
-    addressType,
-    AttributeDescription.Create("The user's postal address."));
+var address = new AttributeDefinition
+{
+    Code = AttributeCode.Create("address"),
+    AttributeType = addressType,
+    Description = AttributeDescription.Create("The user's postal address.")
+};
 
 await schemaAdmin.TryAddAttributeDefinitionAsync(address, ct);
 ```
 
-### Defining List Attributes
-
-Use `ListAttributeType` to model multi-value attributes such as a list of phone numbers:
+Complex types can be nested. For example, an address with a geo-location sub-object:
 
 ```csharp
-var phoneNumbers = new AttributeDefinition(
-    AttributeCode.Create("phone_numbers"),
-    new ListAttributeType(new ScalarAttributeType(ScalarDataType.String)),
-    AttributeDescription.Create("Additional phone numbers for the user."));
+var addressWithGeo = new ComplexAttributeType(
+    new Dictionary<AttributeCode, ComplexAttributeProperty>
+    {
+        [AttributeCode.Create("city")] = ComplexAttributeProperty.Of(ScalarDataType.String),
+        [AttributeCode.Create("geo")]  = ComplexAttributeProperty.Of(
+            new ComplexAttributeType(new Dictionary<AttributeCode, ComplexAttributeProperty>
+            {
+                [AttributeCode.Create("lat")] = ComplexAttributeProperty.Of(ScalarDataType.Decimal),
+                [AttributeCode.Create("lng")] = ComplexAttributeProperty.Of(ScalarDataType.Decimal),
+            })),
+    });
+```
+
+### Defining List Attributes
+
+Use `ListAttributeType` to model multi-value attributes. The element type can be a scalar or a complex type.
+
+A list of strings (e.g., tags):
+
+```csharp
+var tags = new AttributeDefinition
+{
+    Code = AttributeCode.Create("tags"),
+    AttributeType = new ListAttributeType(new ScalarAttributeType(ScalarDataType.String)),
+    Description = AttributeDescription.Create("User tags.")
+};
+
+await schemaAdmin.TryAddAttributeDefinitionAsync(tags, ct);
+```
+
+A list of complex objects (e.g., phone numbers with type and number):
+
+```csharp
+var phoneNumbers = new AttributeDefinition
+{
+    Code = AttributeCode.Create("phone_numbers"),
+    AttributeType = new ListAttributeType(new ComplexAttributeType(
+        new Dictionary<AttributeCode, ComplexAttributeProperty>
+        {
+            [AttributeCode.Create("type")]   = ComplexAttributeProperty.Of(ScalarDataType.String),
+            [AttributeCode.Create("number")] = ComplexAttributeProperty.Of(ScalarDataType.String),
+        })),
+    Description = AttributeDescription.Create("Phone numbers for the user.")
+};
 
 await schemaAdmin.TryAddAttributeDefinitionAsync(phoneNumbers, ct);
+```
+
+### Setting Complex and List Values
+
+Once the schema is defined, use the `Set` overloads on `AttributeValueCollection` that accept `IReadOnlyDictionary<string, object>` (for complex) or `IReadOnlyList<object>` (for list) values.
+
+#### Complex attribute
+
+```csharp
+var schema = await selfService.GetSchemaAsync(ct);
+var attributes = new AttributeValueCollection(schema);
+
+attributes.Set(
+    AttributeCode.Create("address"),
+    (IReadOnlyDictionary<string, object>)new Dictionary<string, object>
+    {
+        ["street"] = "123 Main St",
+        ["city"] = "Seattle",
+        ["country"] = "US"
+    });
+
+var profile = await selfService.TryRegisterAsync(subjectId, attributes.Validate(), ct);
+```
+
+For nested complex types, nest dictionaries:
+
+```csharp
+attributes.Set(
+    AttributeCode.Create("address"),
+    (IReadOnlyDictionary<string, object>)new Dictionary<string, object>
+    {
+        ["city"] = "Seattle",
+        ["geo"] = new Dictionary<string, object> { ["lat"] = 47.6m, ["lng"] = -122.3m }
+    });
+```
+
+#### List of scalars
+
+```csharp
+attributes.Set(
+    AttributeCode.Create("tags"),
+    (IReadOnlyList<object>)new List<object> { "admin", "power-user" });
+```
+
+#### List of complex objects
+
+```csharp
+attributes.Set(
+    AttributeCode.Create("phone_numbers"),
+    (IReadOnlyList<object>)new List<object>
+    {
+        new Dictionary<string, object> { ["type"] = "mobile", ["number"] = "555-0001" },
+        new Dictionary<string, object> { ["type"] = "home", ["number"] = "555-0002" },
+    });
+```
+
+### Reading Complex and List Values
+
+When you read a profile back, complex attributes are returned as `IReadOnlyDictionary<string, object>` and list attributes as `IReadOnlyList<object>`. Cast the value from the `Attributes` dictionary:
+
+```csharp
+var profile = await selfService.TryGetAsync(subjectId, ct);
+
+// Complex attribute
+var address = (IReadOnlyDictionary<string, object>)profile!.Attributes[AttributeCode.Create("address")].UntypedValue;
+Console.WriteLine(address["city"]); // "Seattle"
+
+// List attribute
+var phones = (IReadOnlyList<object>)profile.Attributes[AttributeCode.Create("phone_numbers")].UntypedValue;
+foreach (var item in phones)
+{
+    var phone = (IReadOnlyDictionary<string, object>)item;
+    Console.WriteLine($"{phone["type"]}: {phone["number"]}");
+}
 ```
 
 ### Removing an Attribute Definition
@@ -630,10 +756,12 @@ public class SchemaSetup(IUserProfileSchemaAdmin schemaAdmin)
         await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.Email, ct);
         await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVerified, ct);
 
-        var department = new AttributeDefinition(
-            AttributeCode.Create("department"),
-            ScalarDataType.String,
-            AttributeDescription.Create("The department the user belongs to."));
+        var department = new AttributeDefinition
+        {
+            Code = AttributeCode.Create("department"),
+            AttributeType = new ScalarAttributeType(ScalarDataType.String),
+            Description = AttributeDescription.Create("The department the user belongs to.")
+        };
 
         await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct);
     }

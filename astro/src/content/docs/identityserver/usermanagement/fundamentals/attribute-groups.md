@@ -96,23 +96,21 @@ var group = new AttributeGroup(
 await schemaAdmin.TryAddGroupAsync(group, ct);
 
 // Add attributes to the group
-var givenName = new AttributeDefinition(
-    Code: AttributeCode.Create("given_name"),
-    DataType: ScalarDataType.String,
-    Description: null,
-    IsUnique: false,
-    Tags: null,
-    GroupCode: AttributeGroupCode.Create("personal-info"),
-    Order: 0);
+var givenName = new AttributeDefinition
+{
+    Code = AttributeCode.Create("given_name"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.String),
+    GroupCode = AttributeGroupCode.Create("personal-info"),
+    Order = 0
+};
 
-var familyName = new AttributeDefinition(
-    Code: AttributeCode.Create("family_name"),
-    DataType: ScalarDataType.String,
-    Description: null,
-    IsUnique: false,
-    Tags: null,
-    GroupCode: AttributeGroupCode.Create("personal-info"),
-    Order: 1);
+var familyName = new AttributeDefinition
+{
+    Code = AttributeCode.Create("family_name"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.String),
+    GroupCode = AttributeGroupCode.Create("personal-info"),
+    Order = 1
+};
 
 await schemaAdmin.TryAddAttributeDefinitionAsync(givenName, ct);
 await schemaAdmin.TryAddAttributeDefinitionAsync(familyName, ct);
