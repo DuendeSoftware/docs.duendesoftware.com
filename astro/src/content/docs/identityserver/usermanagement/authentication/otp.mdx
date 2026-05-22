@@ -28,7 +28,7 @@ OTP (One-Time Password) authentication is a passwordless flow where users receiv
 * High-frequency logins where the context switch to email or SMS creates too much friction.
 * Regulated industries where OTP may not satisfy compliance requirements.
 
-For a comparison of all authentication methods, see [Choosing an Authentication Method](/usermanagement/authentication/overview.mdx#choosing-an-authentication-method).
+For a comparison of all authentication methods, see [Choosing an Authentication Method](/identityserver/usermanagement/authentication/overview#choosing-an-authentication-method).
 
 ## How It Works
 
@@ -181,20 +181,22 @@ OTP delivery requires configuring a sender. Use `UseSmtpOtpSender` on the authen
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.UseSmtpOtpSender(options =>
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
         {
-            options.Host = "smtp.example.com";
-            options.Port = 587;
-            options.EnableSsl = true;
-            options.FromEmail = "noreply@example.com";
-            options.FromName = "My Application";
-            options.Domain = "example.com";
-        });
-    })
-);
+            auth.UseSmtpOtpSender(options =>
+            {
+                options.Host = "smtp.example.com";
+                options.Port = 587;
+                options.EnableSsl = true;
+                options.FromEmail = "noreply@example.com";
+                options.FromName = "My Application";
+                options.Domain = "example.com";
+            });
+        })
+    );
 ```
 
 ### Custom OTP Sender
@@ -215,12 +217,14 @@ Register the custom sender using `UseOtpSender<T>`:
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.UseOtpSender<MyCustomOtpSender>();
-    })
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
+        {
+            auth.UseOtpSender<MyCustomOtpSender>();
+        })
+    );
 ```
 
 ## Implementation Patterns
@@ -376,4 +380,4 @@ OTP is a single factor. For high-value accounts, pair it with TOTP or a passkey.
 
 Reflect the built-in rate limits in your UI: show a countdown timer for code expiry, disable the "Resend" button during the cooldown period, and display the number of remaining verification attempts.
 
-For cross-cutting security topics (data protection key persistence, throttling configuration, and password hashing) see [Security Considerations](/usermanagement/fundamentals/security.md).
+For cross-cutting security topics (data protection key persistence, throttling configuration, and password hashing) see [Security Considerations](/identityserver/usermanagement/fundamentals/security.md).

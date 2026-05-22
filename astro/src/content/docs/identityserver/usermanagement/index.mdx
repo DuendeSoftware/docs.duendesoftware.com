@@ -1,0 +1,82 @@
+---
+title: Duende User Management
+description: Overview of Duende User Management, a passwordless-first identity solution supporting OTP, TOTP, passkeys, external authentication, user profiles, roles, groups, and membership management.
+date: 2026-04-29
+sidebar:
+  label: Overview
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Most .NET applications start authentication the same way: wire up ASP.NET Identity, add a login page, and ship. That works until requirements grow. MFA gets bolted on later, and passkey support requires a separate library. Greenfield projects face the same trap. Rolling custom auth feels faster at first, but compliance requirements, account recovery flows, and external provider integration accumulate quickly.
+
+The pain points are predictable: no passkey support without significant custom work, MFA that lives outside the core auth flow, migration headaches when the user model needs to evolve, and gaps that surface during security reviews or compliance audits. Each of these is solvable in isolation, but solving them together, consistently and correctly, is where most teams lose time.
+
+Duende User Management is an optional, first-party component of Duende IdentityServer. It provides native user storage, a passwordless-first authentication layer (OTP, TOTP, passkeys, external providers, recovery codes), full lifecycle management (profiles, roles, groups), and membership management for assigning users to roles and groups programmatically. You enable it through the IdentityServer builder and get a production-ready identity foundation without assembling it from parts.
+
+## How User Management fits into IdentityServer
+
+User Management is a component of Duende IdentityServer, not a separate product. IdentityServer handles the OpenID Connect, OAuth 2.0, and SAML protocol layer: issuing tokens, managing clients and scopes, and enforcing authorization policies. User Management provides the user store and authentication UI that plugs into that protocol layer.
+
+You can add User Management to a new IdentityServer deployment or integrate it into an existing one. You adopt User Management incrementally: enable only the modules you need today and add more later.
+
+## Authentication methods
+
+User Management supports the authentication methods that modern applications need:
+
+* **One-Time Passwords (OTP)**: Passwordless authentication via email or SMS-delivered one-time codes, suitable for both primary and step-up authentication flows.
+* **TOTP**: Time-based one-time passwords compatible with authenticator apps such as Microsoft Authenticator and Google Authenticator.
+* **Passkeys (WebAuthn/FIDO2)**: Phishing-resistant, device-bound authentication using the FIDO2/WebAuthn standard.
+* **External Authentication**: Federate with external identity providers (social logins, enterprise IdPs) via OpenID Connect and OAuth 2.0.
+* **Username and Password**: Traditional credential-based authentication, supported for scenarios where it is required.
+* **Recovery Codes**: Single-use backup codes that allow users to regain access when their primary authentication method is unavailable.
+
+## Key features
+
+* **Passwordless-First Design**: Built from the ground up to support modern, password-free authentication flows, with passwords as an opt-in rather than the default.
+* **User Profiles**: An extensible user profile model for storing and surfacing custom claims and attributes alongside standard identity information.
+* **Roles and Groups**: Built-in support for role-based access control and group membership management, making it straightforward to model organizational structures and permission boundaries.
+* **Membership Management**: A dedicated API surface (`IMembershipAdmin`) for assigning and removing users from roles and groups programmatically. This matters when user-to-role and user-to-group relationships need to be managed by application code, for example during provisioning workflows, admin UIs, or automated onboarding, rather than only at login time.
+* **Opinionated Defaults**: Sensible, security-oriented defaults that reduce the surface area for misconfiguration without sacrificing extensibility.
+
+## When to use User Management
+
+User Management is a good fit when you need:
+
+* Modern authentication methods beyond username and password, including passkeys, OTP, and TOTP.
+* A complete user store that integrates with Duende IdentityServer without requiring you to wire up identity primitives manually.
+* Enterprise-grade features such as roles, groups, extensible user profiles, and programmatic membership management via `IMembershipAdmin`.
+* Recovery code support so users are never permanently locked out of their accounts.
+* A passwordless-first approach that still accommodates password-based authentication where required.
+
+<CardGrid>
+  <LinkCard
+    href="https://github.com/DuendeSoftware/products"
+    title="GitHub Repository"
+    description="View the source code for this library on GitHub."
+  />
+  <LinkCard
+    href="https://www.nuget.org/packages/Duende.IdentityServer.UserManagement"
+    title="NuGet Package"
+    description="View the package on NuGet.org."
+  />
+</CardGrid>
+
+## Licensing
+
+A Duende license is required to use User Management. See the [licensing documentation](/general/licensing.md) for details.
+
+* **Development and Testing**: You are free to use and explore the code for development, testing, or personal projects without a license.
+* **Production**: A license is required for production environments.
+
+## Learn More
+
+See the [glossary](/general/glossary.mdx) for definitions of terms used throughout this documentation.
+
+<CardGrid>
+  <LinkCard title="Getting Started" href="/identityserver/usermanagement/getting-started" description="Add User Management to an ASP.NET Core app with a working OTP login flow." />
+  <LinkCard title="IdentityServer Integration" href="/identityserver/usermanagement/identityserver-integration" description="Add User Management to an existing or new IdentityServer deployment." />
+  <LinkCard title="Authentication Flows" href="/identityserver/usermanagement/authentication/overview" description="Compare OTP, TOTP, passkeys, passwords, external providers, and recovery codes." />
+  <LinkCard title="Configuration Reference" href="/identityserver/usermanagement/reference/configuration" description="All configuration options for authentication, profiles, and membership modules." />
+</CardGrid>

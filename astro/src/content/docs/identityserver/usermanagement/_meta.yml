@@ -1,6 +1,6 @@
-label: "SAML 2.0"
+label: "User Management"
 collapsed: true
-order: 12
+order: 11
 badge:
   text: v8.0
   variant: tip

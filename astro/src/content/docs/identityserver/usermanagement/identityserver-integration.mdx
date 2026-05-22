@@ -1,26 +1,22 @@
 ---
-title: "IdentityServer Integration"
-description: "How to integrate Duende User Management with IdentityServer for user profiles, claims mapping, and role-based authorization."
+title: "Enabling User Management in IdentityServer"
+description: "How to add User Management to IdentityServer, including user storage, authentication flows, claims mapping, and role-based authorization."
 date: 2025-05-21
 sidebar:
   label: IdentityServer Integration
-  order: 8
-  badge:
-    text: v8.0
-    variant: tip
+  order: 3
 ---
 
 import { Steps } from "@astrojs/starlight/components";
 
-The `Duende.IdentityServer.UserManagement` package bridges Duende IdentityServer with User Management.
-It provides an `IProfileService` implementation that maps user profile attributes to OIDC claims and emits role claims
-(both direct and transitive, deduplicated). A single `AddUserManagement()` extension method on `IIdentityServerBuilder`
-wires everything up.
-
-Use this package when you want IdentityServer to issue claims from User Management profiles and roles rather than from
-ASP.NET Identity or a custom profile service. If you are using ASP.NET Identity, see [ASP.NET Identity Integration](/identityserver/aspnet-identity/index.md) instead.
+The `Duende.IdentityServer.UserManagement` package is what you add to your IdentityServer project to enable User Management.
+It wires up user storage, authentication flows, and claims mapping through a single `AddUserManagement()` call on the IdentityServer builder.
+Under the hood, it registers an `IProfileService` implementation that maps user profile attributes to OIDC claims and emits role claims
+(both direct and transitive, deduplicated).
 
 ## Setup
+
+Once you have IdentityServer set up, adding User Management takes a single call on the builder.
 
 <Steps>
 

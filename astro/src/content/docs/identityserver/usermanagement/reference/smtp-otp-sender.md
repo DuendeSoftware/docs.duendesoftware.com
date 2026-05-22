@@ -16,16 +16,18 @@ Register the SMTP One-Time Password (OTP) sender using `UseSmtpOtpSender` on the
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
-    {
-        options.Host = "smtp.example.com";
-        options.Port = 587;
-        options.EnableSsl = true;
-        options.FromEmail = "noreply@example.com";
-        options.FromName = "MyApp";
-    }))
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
+        {
+            options.Host = "smtp.example.com";
+            options.Port = 587;
+            options.EnableSsl = true;
+            options.FromEmail = "noreply@example.com";
+            options.FromName = "MyApp";
+        }))
+    );
 ```
 
 ## `SmtpOtpSenderOptions`
@@ -87,19 +89,19 @@ Note: `SubjectTemplate` only supports `{FromName}` and `{Code}`.
 ### Plain Text Template
 
 ```csharp
-using Duende.UserManagement;
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
+        {
+            options.Host = "smtp.example.com";
+            options.Port = 587;
+            options.EnableSsl = true;
+            options.FromEmail = "noreply@example.com";
+            options.FromName = "MyApp";
+            options.Domain = "app.example.com";
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
-    {
-        options.Host = "smtp.example.com";
-        options.Port = 587;
-        options.EnableSsl = true;
-        options.FromEmail = "noreply@example.com";
-        options.FromName = "MyApp";
-        options.Domain = "app.example.com";
-
-        options.PlainTextTemplate = @"
+            options.PlainTextTemplate = @"
 Hello,
 
 Your verification code is: {Code}
@@ -115,8 +117,8 @@ SECURITY NOTICE:
 Thank you,
 The {FromName} Team
 ";
-    }))
-);
+        }))
+    );
 ```
 
 ### HTML Template
@@ -124,17 +126,19 @@ The {FromName} Team
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
-    {
-        options.Host = "smtp.example.com";
-        options.Port = 587;
-        options.EnableSsl = true;
-        options.FromEmail = "noreply@example.com";
-        options.FromName = "MyApp";
-        options.Domain = "app.example.com";
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
+        {
+            options.Host = "smtp.example.com";
+            options.Port = 587;
+            options.EnableSsl = true;
+            options.FromEmail = "noreply@example.com";
+            options.FromName = "MyApp";
+            options.Domain = "app.example.com";
 
-        options.HtmlTemplate = @"
+            options.HtmlTemplate = @"
 <!DOCTYPE html>
 <html>
 <head>
@@ -159,8 +163,8 @@ builder.Services.AddUserManagement(um => um
 </body>
 </html>
 ";
-    }))
-);
+        }))
+    );
 ```
 
 ### Custom Subject
@@ -188,15 +192,17 @@ Your startup code can then bind to this section:
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
-    {
-        builder.Configuration.GetSection("Smtp").Bind(options);
-        options.EnableSsl = true;
-        options.FromName = "MyCompany";
-        options.Domain = "https://app.mycompany.com";
-    }))
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
+        {
+            builder.Configuration.GetSection("Smtp").Bind(options);
+            options.EnableSsl = true;
+            options.FromName = "MyCompany";
+            options.Domain = "https://app.mycompany.com";
+        }))
+    );
 ```
 
 ## Security Best Practices

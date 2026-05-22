@@ -96,11 +96,6 @@ export default defineConfig({
                 "Documentation for Duende's open-source IdentityModel.OidcClient library which can be used to build OIDC native clients with a variety of .NET UI tools",
               paths: ["identitymodel-oidcclient/**"],
             },
-            {
-              label: "User Management",
-              description: "Documentation for Duende User Management, providing user authentication, profiles, roles, and groups capabilities",
-              paths: ["usermanagement/**"],
-            },
           ],
         }),
         starlightHeadingBadges(),
@@ -210,15 +205,6 @@ export default defineConfig({
         {
           label: "IdentityServer",
           autogenerate: { directory: "identityserver" },
-          collapsed: true,
-        },
-        {
-          label: "User Management",
-          badge: {
-            variant: "success",
-            text: "new"
-          },
-          autogenerate: { directory: "usermanagement" },
           collapsed: true,
         },
         {

@@ -59,6 +59,6 @@ builder.Services
 IdentityServer needs a user store to authenticate users and issue claims. Two first-party integrations are available:
 
 * [ASP.NET Identity](/identityserver/aspnet-identity/index.md) provides integration with the widely-used ASP.NET Core Identity system.
-* [Duende User Management](/usermanagement/identityserver-integration.mdx) provides a more modern alternative with built-in support for OTP, TOTP, passkeys, and profile attribute-to-claim mapping.
+* [Duende User Management](/identityserver/usermanagement/identityserver-integration.mdx) provides a more modern alternative with built-in support for OTP, TOTP, passkeys, and profile attribute-to-claim mapping.
 
 Both options provide an `IProfileService` implementation that IdentityServer uses to load claims into tokens.

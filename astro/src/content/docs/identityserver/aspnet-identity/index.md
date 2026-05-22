@@ -18,7 +18,7 @@ emit claims into tokens.
 <span data-shb-badge data-shb-badge-variant="default">Added in v8</span>
 
 If you are starting a new project or want a more modern user management solution,
-consider [Duende User Management](/usermanagement/identityserver-integration.mdx) as an alternative to ASP.NET Identity.
+consider [Duende User Management](/identityserver/usermanagement/identityserver-integration.mdx) as an alternative to ASP.NET Identity.
 It provides built-in support for passwordless authentication (OTP, passkeys), profile attribute management,
 and role-based authorization.
 :::

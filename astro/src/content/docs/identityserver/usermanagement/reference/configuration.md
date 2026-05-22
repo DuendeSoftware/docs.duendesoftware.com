@@ -16,16 +16,18 @@ Register User Management services in `Program.cs` using the builder pattern:
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth => auth.Configure(options =>
-    {
-        options.Passwords.MinLength = 10;
-        options.Passkeys.RelyingPartyName = "My Application";
-        options.Passkeys.AllowedOrigins = ["https://app.example.com"];
-        options.Throttling.MaxFailedAttempts = 3;
-    }))
-    .EnableProfiles()
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth => auth.Configure(options =>
+        {
+            options.Passwords.MinLength = 10;
+            options.Passkeys.RelyingPartyName = "My Application";
+            options.Passkeys.AllowedOrigins = ["https://app.example.com"];
+            options.Throttling.MaxFailedAttempts = 3;
+        }))
+        .EnableProfiles()
+    );
 ```
 
 To configure both options and the feature builder in a single call:
@@ -33,20 +35,22 @@ To configure both options and the feature builder in a single call:
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.Configure(options =>
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
         {
-            options.Passkeys.RelyingPartyName = "My Application";
-            options.Passkeys.AllowedOrigins = ["https://app.example.com"];
-        });
-        auth.ConfigureEndpoints(endpoints =>
-        {
-            endpoints.Passkeys.Route = "/auth/passkeys";
-        });
-    })
-);
+            auth.Configure(options =>
+            {
+                options.Passkeys.RelyingPartyName = "My Application";
+                options.Passkeys.AllowedOrigins = ["https://app.example.com"];
+            });
+            auth.ConfigureEndpoints(endpoints =>
+            {
+                endpoints.Passkeys.Route = "/auth/passkeys";
+            });
+        })
+    );
 ```
 
 ## `UserAuthenticationOptions`
@@ -273,10 +277,12 @@ The module is registered by calling `EnableMembership()` through `AddUserManagem
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication()
-    .EnableMembership()
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication()
+        .EnableMembership()
+    );
 ```
 
 Calling `EnableMembership()` registers the following services with the service provider:

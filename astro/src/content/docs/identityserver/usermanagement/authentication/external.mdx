@@ -44,7 +44,7 @@ The code examples on this page use ASP.NET Core Razor Pages (`PageModel`, `IActi
 | **User Friction**   | Click button               | Type password          | Retrieve OTP from email, SMS or other channel and type/paste |
 | **Infrastructure**  | External identity provider | Password hashing       | Email, SMS or other channel provider                         |
 
-For a full comparison that includes passkeys and TOTP, see the [Authentication Overview](/usermanagement/authentication/overview.mdx).
+For a full comparison that includes passkeys and TOTP, see the [Authentication Overview](/identityserver/usermanagement/authentication/overview.mdx).
 
 ## How It Works
 
@@ -213,7 +213,7 @@ Each provider has its own developer console where you register your application 
 * **GitHub**: [Authorizing OAuth Apps](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
 
 :::note
-These are just a few examples. Any OAuth 2.0 or OpenID Connect provider can be used with User Management. For a broader list of third-party authentication providers and configuration guidance, see the [IdentityServer login documentation](/identityserver/ui/login.md).
+These are just a few examples. Any OAuth 2.0 or OpenID Connect provider can be used with User Management. For a broader list of third-party authentication providers and configuration guidance, see the [IdentityServer login documentation](/identityserver/ui/login/index.md).
 :::
 
 #### Google
@@ -448,4 +448,4 @@ Be careful with account linking flows. If a user can link a new external provide
 
 Every external provider you add is a new trust boundary. If Google's OAuth is compromised, every user who logs in with Google is affected. Be deliberate about which providers you integrate, and monitor for unexpected changes to a user's linked authenticators. A sudden change can be a sign of account takeover.
 
-For cross-cutting security topics (data protection key persistence and throttling configuration) see [Security Considerations](/usermanagement/fundamentals/security.md).
+For cross-cutting security topics (data protection key persistence and throttling configuration) see [Security Considerations](/identityserver/usermanagement/fundamentals/security.md).

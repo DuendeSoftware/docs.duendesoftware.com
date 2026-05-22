@@ -36,7 +36,7 @@ them on the way in. When a user logs in after migration, the system looks up the
 the hash, routes the verification call to the matching `IPasswordHashAlgorithm`, and checks
 whether `NeedsRehash()` returns `true`. If it does, the password is transparently re-hashed with the current
 preferred algorithm. The user notices nothing. This means you need a registered `IPasswordHashAlgorithm` that
-understands your source system's hash format.  See [Password Hashing Algorithms](/usermanagement/reference/password-hashing.md)
+understands your source system's hash format.  See [Password Hashing Algorithms](/identityserver/usermanagement/reference/password-hashing.md)
 for how to implement and register one.
 
 A few things to sort out before you start:
@@ -47,22 +47,22 @@ A few things to sort out before you start:
 
 ### Migrating from ASP.NET Identity
 
-If you are moving from Duende IdentityServer with ASP.NET Identity to User Management, see the [ASP.NET Identity Integration](/identityserver/aspnet-identity/) docs for background on how the existing integration works.
+If you are moving from Duende IdentityServer with ASP.NET Identity to User Management, see the [ASP.NET Identity Integration](/identityserver/aspnet-identity/index.md) docs for background on how the existing integration works.
 
 ASP.NET Identity stores user data across several tables. Here is how each concept maps to User Management's import types:
 
 * **`AspNetUsers.Id`** → `UserImportRecord.SubjectId` -- you can use the GUID string directly as the subject ID.
 * **`AspNetUsers.UserName`** → `UserImportRecord.UserName`
 * **`AspNetUsers.Email`, `PhoneNumber`, and other profile columns** → `UserImportRecord.ProfileAttributes` -- map each column to a profile attribute using the schema.
-* **`AspNetUsers.PasswordHash`** → `AuthenticatorImport.Password` -- requires a custom `IPasswordHashAlgorithm` to verify the ASP.NET Identity hash format. See [Migrating from ASP.NET Identity](/usermanagement/import/aspnet-identity.mdx) for the format details and a complete implementation.
+* **`AspNetUsers.PasswordHash`** → `AuthenticatorImport.Password` -- requires a custom `IPasswordHashAlgorithm` to verify the ASP.NET Identity hash format. See [Migrating from ASP.NET Identity](/identityserver/usermanagement/import/aspnet-identity.mdx) for the format details and a complete implementation.
 * **`AspNetUserRoles` + `AspNetRoles`** → `MembershipImport.DirectRoles` -- create the roles first using `IRoleAdmin`, then reference them by ID during import.
 * **`AspNetUserClaims`** → `UserImportRecord.ProfileAttributes` -- claims that represent profile data (name, address, etc.) map to profile attributes. Claims used for authorization decisions map better to roles or groups.
 * **`AspNetUserLogins`** → `AuthenticatorImport.ExternalAuthenticators` -- each row becomes an `ExternalAuthenticator` with the `LoginProvider` as the provider name and `ProviderKey` as the subject ID.
 * **`AspNetUserTokens`** → not imported -- tokens (2FA recovery codes, authenticator keys) are runtime state. For TOTP authenticator keys, use `AuthenticatorImport.TotpAuthenticators` if you have access to the raw secret. Recovery codes can be imported via `AuthenticatorImport.RecoveryCodes`.
 
-Passwords are the trickiest part of the migration because ASP.NET Identity uses a proprietary binary format for its hashes. You need to register a custom `IPasswordHashAlgorithm` that can verify these hashes. The [Migrating from ASP.NET Identity](/usermanagement/import/aspnet-identity.mdx) page explains the format and includes a complete implementation.
+Passwords are the trickiest part of the migration because ASP.NET Identity uses a proprietary binary format for its hashes. You need to register a custom `IPasswordHashAlgorithm` that can verify these hashes. The [Migrating from ASP.NET Identity](/identityserver/usermanagement/import/aspnet-identity.mdx) page explains the format and includes a complete implementation.
 
-For a complete walkthrough with working code, see [Migrating from ASP.NET Identity](/usermanagement/import/aspnet-identity.mdx).
+For a complete walkthrough with working code, see [Migrating from ASP.NET Identity](/identityserver/usermanagement/import/aspnet-identity.mdx).
 
 ### Batch Processing
 
@@ -85,7 +85,7 @@ The default resolver (`DefaultUserImportConflictResolver`) skips most conflicts 
 which is safe for a first-time import but means re-running the same batch will skip every record.
 
 For idempotent re-runs, you need a custom resolver that returns `Overwrite` instead of `Skip`.
-See [Conflict Resolution](/usermanagement/import/reference.md#conflict-resolution) for the full details and a custom resolver example.
+See [Conflict Resolution](/identityserver/usermanagement/import/reference.md#conflict-resolution) for the full details and a custom resolver example.
 :::
 
 ```csharp title="BatchImportService.cs"
@@ -137,7 +137,7 @@ public class BatchImportService(IUserImporter importer)
 The best starting point depends on where your users live today:
 
 <CardGrid>
-  <LinkCard title="Migrating from ASP.NET Identity" href="/usermanagement/import/aspnet-identity" description="Step-by-step guide covering source data extraction, password hash verification, and building import records." />
-  <LinkCard title="Import API reference" href="/usermanagement/import/reference" description="Full reference for IUserImporter, UserImportRecord, conflict resolution, and result handling." />
-  <LinkCard title="Password hashing algorithms" href="/usermanagement/reference/password-hashing" description="Implement and register a custom IPasswordHashAlgorithm to verify hashes from your source system." />
+  <LinkCard title="Migrating from ASP.NET Identity" href="/identityserver/usermanagement/import/aspnet-identity" description="Step-by-step guide covering source data extraction, password hash verification, and building import records." />
+  <LinkCard title="Import API reference" href="/identityserver/usermanagement/import/reference" description="Full reference for IUserImporter, UserImportRecord, conflict resolution, and result handling." />
+  <LinkCard title="Password hashing algorithms" href="/identityserver/usermanagement/reference/password-hashing" description="Implement and register a custom IPasswordHashAlgorithm to verify hashes from your source system." />
 </CardGrid>

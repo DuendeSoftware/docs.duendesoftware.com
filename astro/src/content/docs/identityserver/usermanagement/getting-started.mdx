@@ -1,0 +1,649 @@
+---
+title: Getting Started with User Management
+description: Build a complete OTP (one-time password) login flow from scratch using Duende User Management with IdentityServer as the foundation.
+date: 2026-05-22
+sidebar:
+  label: Getting Started
+  order: 2
+---
+
+import { CardGrid, LinkCard, Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+
+In this tutorial, you'll build a complete OTP (one-time password) login flow from scratch using Duende User Management on top of IdentityServer. By the end, you'll have a working ASP.NET Core Razor Pages app where IdentityServer handles authentication and users log in with their email address and a one-time code.
+
+The tutorial is split into two phases:
+
+- **Phase 1** scaffolds IdentityServer with User Management wired in.
+- **Phase 2** builds the OTP login pages that drive the actual user experience.
+
+<Aside type="caution">
+  This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and single-server deployments, but not recommended for production at scale.
+  For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/identityserver/usermanagement/fundamentals/storage.md) for details.
+</Aside>
+
+## Prerequisites
+
+* .NET 10 SDK or later
+* A code editor (e.g. Visual Studio, VS Code, JetBrains Rider)
+
+---
+
+## Phase 1: Scaffold IdentityServer with User Management
+
+### Create the Project
+
+Run the following commands to scaffold a new ASP.NET Core web app and move into its directory:
+
+```bash title="Terminal"
+dotnet new webapp -o OtpIdentityServer && cd OtpIdentityServer
+```
+
+The `webapp` template gives you a Razor Pages project with a `Program.cs` entry point, a `Pages/` folder with a sample `Index` page, and the standard `appsettings.json` configuration files.
+
+### Add NuGet Packages
+
+Add the IdentityServer, IdentityServer User Management, and the SQLite storage NuGet packages:
+
+```bash title="Terminal"
+dotnet add package Duende.IdentityServer
+dotnet add package Duende.IdentityServer.UserManagement
+dotnet add package Duende.Storage.Sqlite
+```
+
+`Duende.IdentityServer` is the core IdentityServer package. `Duende.IdentityServer.UserManagement` adds the User Management integration on top of it. `Duende.Storage.Sqlite` provides the SQLite-backed store for user data.
+
+### Add an IdentityServer Config File
+
+Create a `Config.cs` file at the project root with minimal in-memory configuration. This is enough to get IdentityServer running for local development. You can expand it later to add real clients and resources.
+
+```csharp title="Config.cs"
+using Duende.IdentityServer.Models;
+
+public static class Config
+{
+    public static IEnumerable<IdentityResource> IdentityResources =>
+    [
+        new IdentityResources.OpenId(),
+        new IdentityResources.Profile(),
+        new IdentityResources.Email(),
+    ];
+
+    public static IEnumerable<ApiScope> ApiScopes =>
+    [
+        new ApiScope("api", "My API"),
+    ];
+
+    public static IEnumerable<Client> Clients =>
+    [
+        new Client
+        {
+            ClientId = "interactive",
+            ClientSecrets = { new Secret("secret".Sha256()) },
+            AllowedGrantTypes = GrantTypes.Code,
+            RedirectUris = { "https://localhost:5002/signin-oidc" },
+            PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+            AllowedScopes = { "openid", "profile", "email", "api" },
+        },
+    ];
+}
+```
+
+For a full explanation of clients, resources, and scopes, see the [IdentityServer documentation](/identityserver/overview/big-picture.md).
+
+### Configure Services
+
+Open `Program.cs` and replace its contents with the following. The key call is `.AddIdentityServer(...).AddUserManagement(...)`: User Management is registered as an extension on the IdentityServer builder, not as a separate top-level service.
+
+<Tabs syncKey="umgsOtpSender">
+  <TabItem label="Console sender (development)">
+    The console sender prints OTP codes to the terminal, useful during local development without any mail infrastructure.
+
+    User Management does not include a console-based OTP sender. Implement `IOtpSender` to write codes to the console. Create `ConsoleOtpSender.cs`:
+
+    ```csharp title="ConsoleOtpSender.cs"
+    using Duende.UserManagement.Authentication.Otp;
+
+    public class ConsoleOtpSender : IOtpSender
+    {
+        public bool CanSend(OtpAddress address) => true;
+
+        public Task SendAsync(OtpAddress address, PlainTextOtp otp, TimeSpan expiresAfter, CancellationToken ct)
+        {
+            Console.WriteLine($"OTP for {address}: {otp.Text}");
+            return Task.CompletedTask;
+        }
+    }
+    ```
+
+    Then configure `Program.cs`:
+
+    ```csharp title="Program.cs"
+    using Duende.Storage;
+    using Duende.UserManagement.Authentication.Otp;
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddRazorPages();
+
+    builder.Services
+        .AddIdentityServer(options =>
+        {
+            options.UserInteraction.LoginUrl = "/Account/Login";
+            options.UserInteraction.LogoutUrl = "/Account/Logout";
+            options.Events.RaiseErrorEvents = true;
+            options.Events.RaiseInformationEvents = true;
+            options.Events.RaiseFailureEvents = true;
+            options.Events.RaiseSuccessEvents = true;
+        })
+        .AddInMemoryIdentityResources(Config.IdentityResources)
+        .AddInMemoryApiScopes(Config.ApiScopes)
+        .AddInMemoryClients(Config.Clients)
+        .AddUserManagement(options =>
+        {
+            options.EnableAuthentication();
+            options.AddSqliteStore(o =>
+            {
+                o.ConnectionString = "Data Source=usermanagement.db";
+            });
+        });
+
+    builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
+
+    builder.Services.AddDataProtection()
+        .SetApplicationName("OtpIdentityServerGettingStarted");
+
+    var app = builder.Build();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        await scope.ServiceProvider
+            .GetRequiredService<IDatabaseSchema>()
+            .CreateIfNotExistsAsync(CancellationToken.None);
+    }
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+    app.UseRouting();
+    app.UseIdentityServer();
+    app.UseAuthorization();
+    app.MapStaticAssets();
+    app.MapRazorPages().WithStaticAssets();
+
+    app.Run();
+    ```
+  </TabItem>
+  <TabItem label="SMTP sender">
+    The SMTP sender delivers OTP codes by email. Bind the `Smtp` configuration section to the sender options:
+
+    ```csharp title="Program.cs"
+    using Duende.Storage;
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddRazorPages();
+
+    builder.Services
+        .AddIdentityServer(options =>
+        {
+            options.UserInteraction.LoginUrl = "/Account/Login";
+            options.UserInteraction.LogoutUrl = "/Account/Logout";
+            options.Events.RaiseErrorEvents = true;
+            options.Events.RaiseInformationEvents = true;
+            options.Events.RaiseFailureEvents = true;
+            options.Events.RaiseSuccessEvents = true;
+        })
+        .AddInMemoryIdentityResources(Config.IdentityResources)
+        .AddInMemoryApiScopes(Config.ApiScopes)
+        .AddInMemoryClients(Config.Clients)
+        .AddUserManagement(options =>
+        {
+            options.EnableAuthentication(configure =>
+            {
+                configure.UseSmtpOtpSender(x =>
+                    builder.Configuration.GetSection("Smtp").Bind(x));
+            });
+            options.AddSqliteStore(o =>
+            {
+                o.ConnectionString = "Data Source=usermanagement.db";
+            });
+        });
+
+    builder.Services.AddDataProtection()
+        .SetApplicationName("OtpIdentityServerGettingStarted");
+
+    var app = builder.Build();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        await scope.ServiceProvider
+            .GetRequiredService<IDatabaseSchema>()
+            .CreateIfNotExistsAsync(CancellationToken.None);
+    }
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+    app.UseRouting();
+    app.UseIdentityServer();
+    app.UseAuthorization();
+    app.MapStaticAssets();
+    app.MapRazorPages().WithStaticAssets();
+
+    app.Run();
+    ```
+
+    Add the corresponding section to `appsettings.json`:
+
+    ```json title="appsettings.json"
+    {
+      "Smtp": {
+        "Host": "localhost",
+        "Port": 1025,
+        "FromEmail": "noreply@example.com",
+        "FromName": "noreply"
+      }
+    }
+    ```
+
+    :::tip[Development SMTP server]
+    If you prefer an SMTP experience locally, [Mailpit](https://github.com/axllent/mailpit) is a lightweight local SMTP server that captures outgoing email in a web UI. No external mail account required.
+    :::
+  </TabItem>
+</Tabs>
+
+A few things to note about this setup:
+
+- Storage is configured **inside** `AddUserManagement` using `options.AddSqliteStore(...)`, not as a separate top-level call.
+- `app.UseIdentityServer()` replaces the standalone `app.UseAuthentication()` call. IdentityServer sets up authentication for you.
+- The database migration runs at startup using `IDatabaseSchema.CreateIfNotExistsAsync`. This creates the SQLite file and schema on first run.
+
+:::tip
+For production environments, configure [ASP.NET Core Data Protection](/general/data-protection.md) to persist encryption keys across restarts, for example using Azure Key Vault, Redis, or a shared file system.
+:::
+
+---
+
+## Phase 2: Build the OTP Login Pages
+
+With IdentityServer running, you now need the Razor Pages that handle the actual login flow. IdentityServer will redirect unauthenticated users to `/Account/Login` (as configured in `options.UserInteraction.LoginUrl`), so that is where you start.
+
+### Add a Login Page
+
+<Steps>
+1. Create the `Pages/Account/` directory, then create `Pages/Account/Login.cshtml` with an email input form:
+
+   ```html title="Pages/Account/Login.cshtml"
+   @page
+   @model OtpIdentityServer.Pages.Account.LoginModel
+   @{
+       ViewData["Title"] = "Log in";
+   }
+
+   <h2>Log in</h2>
+
+   <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+   <form method="post">
+       <div>
+           <label asp-for="Input.Email">Email address</label>
+           <input asp-for="Input.Email" type="email" required autofocus autocomplete="email" />
+           <span asp-validation-for="Input.Email"></span>
+       </div>
+       <button type="submit">Send one-time password</button>
+   </form>
+   ```
+
+2. Create the page model in `Pages/Account/Login.cshtml.cs`:
+
+   ```csharp title="Pages/Account/Login.cshtml.cs"
+   using System.ComponentModel.DataAnnotations;
+   using Duende.UserManagement;
+   using Duende.UserManagement.Authentication.Otp;
+   using Microsoft.AspNetCore.Mvc;
+   using Microsoft.AspNetCore.Mvc.RazorPages;
+
+   namespace OtpIdentityServer.Pages.Account;
+
+   public class LoginModel(IOtpAuthenticator otpAuthenticator) : PageModel
+   {
+       [BindProperty]
+       public InputModel Input { get; set; } = new();
+
+       public class InputModel
+       {
+           [Required]
+           [EmailAddress]
+           public string Email { get; set; } = string.Empty;
+       }
+
+       public void OnGet() { }
+
+       public async Task<IActionResult> OnPostAsync()
+       {
+           if (!ModelState.IsValid)
+           {
+               return Page();
+           }
+
+           if (!EmailAddress.TryCreate(Input.Email, out var email))
+           {
+               ModelState.AddModelError(nameof(Input.Email), "Invalid email format.");
+               return Page();
+           }
+
+           var result = await otpAuthenticator.TrySendOtpAsync(
+               new OtpAddress(OtpChannel.Email, email),
+               HttpContext.RequestAborted);
+
+           if (result is null || !result.Sent)
+           {
+               var message = "Failed to send one-time password.";
+               if (result?.SendingBlockedUntilUtc is DateTimeOffset blockedUntil && blockedUntil > DateTimeOffset.UtcNow)
+               {
+                   var blockedFor = blockedUntil - DateTimeOffset.UtcNow;
+                   message = $"Too many attempts. Try again in {Math.Ceiling(blockedFor.TotalSeconds)} second(s).";
+               }
+               ModelState.AddModelError(string.Empty, message);
+               return Page();
+           }
+
+           TempData["OtpToken"] = result.Token.Value.ToString();
+           return RedirectToPage("/Account/EnterOtp");
+       }
+   }
+   ```
+</Steps>
+
+When the form is submitted, `IOtpAuthenticator.TrySendOtpAsync` sends a one-time password to the provided email address and returns a result containing the OTP token. If sending succeeds, the token is stored in `TempData` so the next page can verify the code the user enters. If sending is blocked due to rate limiting, a descriptive error is shown instead.
+
+:::note
+You can configure OTP expiry, code length, and rate-limiting behavior through the `OtpAuthenticatorOptions`. See the [OTP authentication docs](/identityserver/usermanagement/authentication/otp.mdx) for all available options.
+:::
+
+### Add an OTP Verification Page
+
+<Steps>
+1. Create `Pages/Account/EnterOtp.cshtml`, the page where the user enters the one-time password they received by email:
+
+   ```html title="Pages/Account/EnterOtp.cshtml"
+   @page
+   @model OtpIdentityServer.Pages.Account.EnterOtpModel
+
+   <h2>Enter one-time password</h2>
+
+   @if (!ViewData.ModelState.IsValid)
+   {
+       <ul>
+           @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+           {
+               <li>@error.ErrorMessage</li>
+           }
+       </ul>
+   }
+
+   <form method="post">
+       <input type="hidden" asp-for="Input.Token" />
+       <label asp-for="Input.Code">One-time password</label>
+       <input asp-for="Input.Code" type="text" autocomplete="one-time-code" autofocus />
+       <button type="submit">Sign in</button>
+   </form>
+   ```
+
+2. Create `Pages/Account/EnterOtp.cshtml.cs`:
+
+   ```csharp title="Pages/Account/EnterOtp.cshtml.cs"
+   using System.ComponentModel.DataAnnotations;
+   using System.Security.Claims;
+   using Duende.IdentityServer.Services;
+   using Duende.UserManagement.Authentication.Otp;
+   using Microsoft.AspNetCore.Authentication;
+   using Microsoft.AspNetCore.Mvc;
+   using Microsoft.AspNetCore.Mvc.RazorPages;
+
+   namespace OtpIdentityServer.Pages.Account;
+
+   public class EnterOtpModel(
+       IOtpAuthenticator otpAuthenticator,
+       IIdentityServerInteractionService interaction) : PageModel
+   {
+       [BindProperty]
+       public InputModel Input { get; set; } = new();
+
+       public class InputModel
+       {
+           [Required]
+           public string Token { get; set; } = string.Empty;
+
+           [Required]
+           public string Code { get; set; } = string.Empty;
+       }
+
+       public IActionResult OnGet()
+       {
+           var token = TempData["OtpToken"]?.ToString();
+           if (token is null)
+           {
+               return RedirectToPage("/Account/Login");
+           }
+
+           Input.Token = token;
+           return Page();
+       }
+
+       public async Task<IActionResult> OnPostAsync(string? returnUrl)
+       {
+           if (!ModelState.IsValid)
+           {
+               return Page();
+           }
+
+           if (string.IsNullOrWhiteSpace(Input.Code) || string.IsNullOrWhiteSpace(Input.Token))
+           {
+               ModelState.AddModelError(string.Empty, "Invalid input.");
+               return Page();
+           }
+
+           var otp = PlainTextOtp.Create(Input.Code);
+           var token = OtpToken.Create(Input.Token);
+
+           var authResult = await otpAuthenticator.TryAuthenticateAsync(
+               otp, token, HttpContext.RequestAborted);
+
+           if (authResult is not OtpAuthenticationResult.Success otpSuccess)
+           {
+               ModelState.AddModelError(string.Empty, "Invalid or expired code. Please try again.");
+               return Page();
+           }
+
+           var claims = new List<Claim>
+           {
+               new(ClaimTypes.Name, otpSuccess.Address.Value),
+           };
+
+           var identity = new ClaimsIdentity(claims, "otp");
+           var principal = new ClaimsPrincipal(identity);
+
+           await HttpContext.SignInAsync(
+               Duende.IdentityServer.IdentityServerConstants.DefaultCookieAuthenticationScheme,
+               principal,
+               new AuthenticationProperties());
+
+           returnUrl = interaction.IsValidReturnUrl(returnUrl) ? returnUrl : "~/";
+           return LocalRedirect(returnUrl!);
+       }
+   }
+   ```
+</Steps>
+
+**`OnGet`** reads the OTP token that the Login page stored in `TempData["OtpToken"]` and copies it into the hidden form field. If the token is missing (for example, the user navigated here directly), the page redirects back to `/Account/Login`.
+
+**`OnPostAsync`** parses the submitted token and code into their strongly-typed counterparts (`OtpToken` and `PlainTextOtp`), then calls `IOtpAuthenticator.TryAuthenticateAsync`. The method returns an `OtpAuthenticationResult`, which is a discriminated union: pattern-match on `OtpAuthenticationResult.Success` to continue, or show an error for any other result.
+
+On success, the page signs the user in using IdentityServer's default cookie scheme and redirects to the `returnUrl` provided by IdentityServer (validated with `IIdentityServerInteractionService`).
+
+:::note[Automatic User Registration]
+After a successful OTP verification, User Management automatically creates a user record and profile if this is the first time the address has been used. The `UserSubjectId` on the `Success` result is always set, so you can use it directly to build the user's claims without any additional lookup or registration step.
+:::
+
+:::tip
+If you need to access the full user record, for example to read additional OTP addresses or linked authenticators, inject `IUserAuthenticatorsSelfService` and call `TryGetAsync` with the subject ID.
+See [OTP Authentication](/identityserver/usermanagement/authentication/otp.mdx) for details.
+:::
+
+### Add a Logout Page
+
+<Steps>
+1. Create `Pages/Account/Logout.cshtml`:
+
+   ```html title="Pages/Account/Logout.cshtml"
+   @page
+   @model OtpIdentityServer.Pages.Account.LogoutModel
+   ```
+
+2. Create `Pages/Account/Logout.cshtml.cs`:
+
+   ```csharp title="Pages/Account/Logout.cshtml.cs"
+   using Duende.IdentityServer.Services;
+   using Microsoft.AspNetCore.Authentication;
+   using Microsoft.AspNetCore.Mvc;
+   using Microsoft.AspNetCore.Mvc.RazorPages;
+
+   namespace OtpIdentityServer.Pages.Account;
+
+   public class LogoutModel(IIdentityServerInteractionService interaction) : PageModel
+   {
+       public async Task<IActionResult> OnPostAsync(string? logoutId)
+       {
+           var context = await interaction.GetLogoutContextAsync(logoutId);
+
+           await HttpContext.SignOutAsync(
+               Duende.IdentityServer.IdentityServerConstants.DefaultCookieAuthenticationScheme);
+
+           var postLogoutRedirect = context?.PostLogoutRedirectUri;
+           if (!string.IsNullOrEmpty(postLogoutRedirect))
+           {
+               return Redirect(postLogoutRedirect);
+           }
+
+           return RedirectToPage("/Account/Login");
+       }
+   }
+   ```
+</Steps>
+
+`OnPostAsync` signs the user out of IdentityServer's cookie scheme and then redirects to the post-logout URI provided by the client application, or back to `/Account/Login` if none is set. Using POST (rather than GET) prevents cross-site request forgery attacks that could silently sign a user out by embedding a link.
+
+### Protect the Home Page
+
+<Steps>
+1. Update `Pages/Index.cshtml.cs` to require an authenticated user by adding the `[Authorize]` attribute:
+
+   ```csharp title="Pages/Index.cshtml.cs" {6}
+   using Microsoft.AspNetCore.Authorization;
+   using Microsoft.AspNetCore.Mvc.RazorPages;
+
+   namespace OtpIdentityServer.Pages;
+
+   [Authorize]
+   public class IndexModel : PageModel
+   {
+       public void OnGet()
+       {
+       }
+   }
+   ```
+
+2. Update `Pages/Index.cshtml` to greet the signed-in user and provide a sign-out button:
+
+   ```html title="Pages/Index.cshtml"
+   @page
+   @model OtpIdentityServer.Pages.IndexModel
+   @{
+       ViewData["Title"] = "Home";
+   }
+
+   <h2>Welcome, @User.Identity!.Name!</h2>
+
+   <form method="post" asp-page="/Account/Logout">
+       <button type="submit">Sign out</button>
+   </form>
+   ```
+</Steps>
+
+`User.Identity!.Name` contains the email address that was set as `ClaimTypes.Name` during OTP verification. Because IdentityServer is configured with `LoginUrl = "/Account/Login"`, any unauthenticated request to `/` is automatically redirected to the login page.
+
+---
+
+## Run and Test
+
+<Steps>
+
+1. Start the application:
+
+   ```bash title="Terminal"
+   dotnet run
+   ```
+
+2. Open your browser and navigate to `https://localhost:5001` (or the URL shown in the terminal).
+
+3. You are redirected to `/Account/Login`. Enter your email address and click **Send one-time password**.
+
+4. Retrieve the OTP code:
+
+   <Tabs syncKey="umgsOtpSender">
+     <TabItem label="Console sender">
+       The OTP code is printed directly to the terminal. Copy it from there.
+     </TabItem>
+     <TabItem label="SMTP sender">
+       Check your inbox for the email containing the OTP code. If you are using Mailpit locally, open `http://localhost:8025` to find the message.
+     </TabItem>
+   </Tabs>
+
+5. Enter the code on the `/Account/EnterOtp` page and click **Sign in**.
+
+6. You land on the home page showing a welcome message with the email address of the user.
+
+7. Click **Sign out** to return to the login page.
+
+</Steps>
+
+**Congratulations!** You now have a working ASP.NET Core application with IdentityServer and OTP-based authentication powered by Duende User Management. Users can sign in with their email address, verify a one-time code, and access protected pages. New users are automatically registered on their first successful login.
+
+## Next Steps
+
+<CardGrid>
+  <LinkCard
+    title="IdentityServer Integration"
+    href="/identityserver/usermanagement/identityserver-integration"
+    description="Learn how User Management integrates with IdentityServer for claims mapping and profile services."
+  />
+  <LinkCard
+    title="Storage options"
+    href="/identityserver/usermanagement/fundamentals/storage"
+    description="Switch to PostgreSQL or SQL Server, or configure separate stores for different data categories."
+  />
+  <LinkCard
+    title="OTP customization"
+    href="/identityserver/usermanagement/authentication/otp"
+    description="Configure code length, expiry, rate limiting, and custom OTP senders."
+  />
+  <LinkCard
+    title="User profiles"
+    href="/identityserver/usermanagement/fundamentals/profiles"
+    description="Store and retrieve custom attributes for your users."
+  />
+  <LinkCard
+    title="More authenticators"
+    href="/identityserver/usermanagement/authentication/overview"
+    description="Add TOTP, passkeys, or external identity providers alongside OTP."
+  />
+</CardGrid>

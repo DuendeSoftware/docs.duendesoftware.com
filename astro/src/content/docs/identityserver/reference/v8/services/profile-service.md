@@ -19,7 +19,7 @@ Encapsulates retrieval of user claims from a data source of your choice.
 See [here](/identityserver/samples/ui.mdx#custom-profile-service) for a sample.
 
 Two first-party implementations are available: the [ASP.NET Identity integration](/identityserver/aspnet-identity/index.md)
-and the [Duende User Management integration](/usermanagement/identityserver-integration.mdx). You can also write your own implementation.
+and the [Duende User Management integration](/identityserver/usermanagement/identityserver-integration.mdx). You can also write your own implementation.
 
 ```csharp
 /// <summary>

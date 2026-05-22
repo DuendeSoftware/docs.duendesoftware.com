@@ -141,17 +141,19 @@ Register the custom algorithm alongside the built-in one. The first registration
 ```csharp
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.Configure(options =>
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
         {
-            // Preferred algorithm for all new hashes.
-            options.Passwords.PasswordHashAlgorithm =
-                new Pbkdf2Sha512PasswordHashAlgorithm();
-        });
-    })
-);
+            auth.Configure(options =>
+            {
+                // Preferred algorithm for all new hashes.
+                options.Passwords.PasswordHashAlgorithm =
+                    new Pbkdf2Sha512PasswordHashAlgorithm();
+            });
+        })
+    );
 
 // Register the legacy algorithm so existing hashes can still be verified.
 builder.Services.AddSingleton<IPasswordHashAlgorithm, LegacyMd5PasswordHashAlgorithm>();

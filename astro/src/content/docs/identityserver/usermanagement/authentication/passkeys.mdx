@@ -22,7 +22,7 @@ Passkeys provide phishing-resistant, passwordless authentication using the WebAu
 * Applications targeting modern devices and browsers
 
 :::tip[FAPI Conformance]
-For applications requiring FAPI (Financial-grade API) compliance, Duende offers [FAPI 2.0 support](/identityserver/tokens/fapi-2-0-specification) for IdentityServer, which extends security with additional requirements aligned to financial-grade standards. See also the [conformance report](/identityserver/diagnostics/conformance-report.md).
+For applications requiring FAPI (Financial-grade API) compliance, Duende offers [FAPI 2.0 support](/identityserver/tokens/fapi-2-0-specification.md) for IdentityServer, which extends security with additional requirements aligned to financial-grade standards. See also the [conformance report](/identityserver/diagnostics/conformance-report.md).
 :::
 
 **Good for:**
@@ -97,7 +97,7 @@ The default `UserVerificationRequirement` is `"preferred"`, which means authenti
 
 For regulated environments where you need to know exactly what kind of authenticator your users are using, set `AttestationConveyancePreference` to `"direct"` and verify the attestation statement. This lets you enforce an allowlist of approved authenticator models.
 
-For cross-cutting security topics (data protection key persistence and throttling configuration) see [Security Considerations](/usermanagement/fundamentals/security.md).
+For cross-cutting security topics (data protection key persistence and throttling configuration) see [Security Considerations](/identityserver/usermanagement/fundamentals/security.md).
 
 ## Configuration
 
@@ -113,16 +113,18 @@ Using `EnableAuthentication()` on its own:
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.Configure(options =>
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
         {
-            options.Passkeys.RelyingPartyName = "My Application";
-            options.Passkeys.ServerDomain = "example.com";
-        });
-    })
-);
+            auth.Configure(options =>
+            {
+                options.Passkeys.RelyingPartyName = "My Application";
+                options.Passkeys.ServerDomain = "example.com";
+            });
+        })
+    );
 ```
 
 This gives you access to `IPasskeyCeremonies`, `IUserAuthenticatorsSelfService`, and the other core services via dependency injection, but does not expose any HTTP endpoints. This is useful if you want to build your own API layer or integrate passkeys into an existing controller/endpoint structure.
@@ -132,9 +134,11 @@ If you are building a web application and want the ready-to-use passkey endpoint
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication()
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication()
+    );
 
 // After building the app:
 var app = builder.Build();
@@ -152,44 +156,46 @@ Configure passkey behavior using `PasskeyOptions`, accessible via `UserAuthentic
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.Configure(options =>
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
         {
-            // Human-readable name shown to users during registration
-            options.Passkeys.RelyingPartyName = "My Application";
+            auth.Configure(options =>
+            {
+                // Human-readable name shown to users during registration
+                options.Passkeys.RelyingPartyName = "My Application";
 
-            // Explicit relying party ID (domain). Required when sharing passkeys
-            // across subdomains (e.g., "example.com" for auth.example.com and app.example.com)
-            options.Passkeys.ServerDomain = "example.com";
+                // Explicit relying party ID (domain). Required when sharing passkeys
+                // across subdomains (e.g., "example.com" for auth.example.com and app.example.com)
+                options.Passkeys.ServerDomain = "example.com";
 
-            // Origins permitted to use passkeys with this relying party
-            options.Passkeys.AllowedOrigins = ["https://app.example.com", "https://auth.example.com"];
+                // Origins permitted to use passkeys with this relying party
+                options.Passkeys.AllowedOrigins = ["https://app.example.com", "https://auth.example.com"];
 
-            // User verification: "required", "preferred" (default), or "discouraged"
-            options.Passkeys.UserVerificationRequirement = "required";
+                // User verification: "required", "preferred" (default), or "discouraged"
+                options.Passkeys.UserVerificationRequirement = "required";
 
-            // Attestation: "none" (default), "indirect", "direct", or "enterprise"
-            options.Passkeys.AttestationConveyancePreference = "none";
+                // Attestation: "none" (default), "indirect", "direct", or "enterprise"
+                options.Passkeys.AttestationConveyancePreference = "none";
 
-            // Authenticator attachment: "platform", "cross-platform", or null (any, default)
-            options.Passkeys.AuthenticatorAttachment = null;
+                // Authenticator attachment: "platform", "cross-platform", or null (any, default)
+                options.Passkeys.AuthenticatorAttachment = null;
 
-            // Resident key: "discouraged", "preferred" (default), or "required"
-            options.Passkeys.ResidentKeyRequirement = "preferred";
+                // Resident key: "discouraged", "preferred" (default), or "required"
+                options.Passkeys.ResidentKeyRequirement = "preferred";
 
-            // Challenge size in bytes (default: 32)
-            options.Passkeys.ChallengeSize = 32;
+                // Challenge size in bytes (default: 32)
+                options.Passkeys.ChallengeSize = 32;
 
-            // How long a challenge remains valid (default: 5 minutes)
-            options.Passkeys.ChallengeTimeout = TimeSpan.FromMinutes(5);
+                // How long a challenge remains valid (default: 5 minutes)
+                options.Passkeys.ChallengeTimeout = TimeSpan.FromMinutes(5);
 
-            // Restrict to specific COSE algorithms (empty = all supported)
-            options.Passkeys.SupportedAlgorithms = [CoseAlgorithms.Es256, CoseAlgorithms.Rs256];
-        });
-    })
-);
+                // Restrict to specific COSE algorithms (empty = all supported)
+                options.Passkeys.SupportedAlgorithms = [CoseAlgorithms.Es256, CoseAlgorithms.Rs256];
+            });
+        })
+    );
 ```
 
 All `PasskeyOptions` properties and their defaults:
@@ -292,28 +298,30 @@ Customize endpoint paths using `UserAuthenticationEndpointOptions` and `Passkeys
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.ConfigureEndpoints(options =>
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
         {
-            // Base route prefix for all passkey endpoints (default: "/passkeys")
-            options.Passkeys.Route = "/passkeys";
+            auth.ConfigureEndpoints(options =>
+            {
+                // Base route prefix for all passkey endpoints (default: "/passkeys")
+                options.Passkeys.Route = "/passkeys";
 
-            // Registration endpoints (relative to Route)
-            options.Passkeys.BeginRegistration = "/register/begin";
-            options.Passkeys.CompleteRegistration = "/register/complete";
+                // Registration endpoints (relative to Route)
+                options.Passkeys.BeginRegistration = "/register/begin";
+                options.Passkeys.CompleteRegistration = "/register/complete";
 
-            // Authentication endpoints (relative to Route)
-            options.Passkeys.BeginAuthentication = "/authenticate/begin";
-            options.Passkeys.BeginDiscoverableAuthentication = "/authenticate/discoverable/begin";
-            options.Passkeys.CompleteAuthentication = "/authenticate/complete";
+                // Authentication endpoints (relative to Route)
+                options.Passkeys.BeginAuthentication = "/authenticate/begin";
+                options.Passkeys.BeginDiscoverableAuthentication = "/authenticate/discoverable/begin";
+                options.Passkeys.CompleteAuthentication = "/authenticate/complete";
 
-            // JavaScript helper endpoint (relative to Route)
-            options.Passkeys.PasskeysJavaScript = "/js";
-        });
-    })
-);
+                // JavaScript helper endpoint (relative to Route)
+                options.Passkeys.PasskeysJavaScript = "/js";
+            });
+        })
+    );
 ```
 
 Configuration can also be loaded from `appsettings.json`:
@@ -321,13 +329,15 @@ Configuration can also be loaded from `appsettings.json`:
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.ConfigureEndpoints(
-            builder.Configuration.GetSection("UserAuthentication:Endpoints"));
-    })
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
+        {
+            auth.ConfigureEndpoints(
+                builder.Configuration.GetSection("UserAuthentication:Endpoints"));
+        })
+    );
 ```
 
 `PasskeysRouteOptions` properties:
@@ -498,12 +508,14 @@ Register the resolver using `EnablePasskeyForSecondFactor<T>()`:
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.EnablePasskeyForSecondFactor<CustomSecondFactorResolver>();
-    })
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
+        {
+            auth.EnablePasskeyForSecondFactor<CustomSecondFactorResolver>();
+        })
+    );
 ```
 
 When a resolver is registered, the `POST /passkeys/authenticate/begin` endpoint becomes active. It calls `ResolveAsync()` to identify the user and begins an authentication ceremony scoped to that user's registered credentials. Without a resolver, this endpoint is not registered.
@@ -513,12 +525,14 @@ An instance overload is also available for singleton resolvers:
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.EnablePasskeyForSecondFactor(new CustomSecondFactorResolver(...));
-    })
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
+        {
+            auth.EnablePasskeyForSecondFactor(new CustomSecondFactorResolver(...));
+        })
+    );
 ```
 
 ### Second-Factor Flow
@@ -740,12 +754,14 @@ Register your policy using `AddAttestationTrustPolicy<T>()` on the authenticatio
 // Program.cs
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableAuthentication(auth =>
-    {
-        auth.AddAttestationTrustPolicy<MyAttestationTrustPolicy>();
-    })
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
+        {
+            auth.AddAttestationTrustPolicy<MyAttestationTrustPolicy>();
+        })
+    );
 ```
 
 ### Example: AAGUID Allowlist

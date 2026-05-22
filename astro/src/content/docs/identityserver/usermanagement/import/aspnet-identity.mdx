@@ -1,6 +1,7 @@
 ---
 title: "Migrating from ASP.NET Identity"
-description: Step-by-step guide to migrating users from an ASP.NET Identity database into Duende User Management using a console app and the IUserImporter API.
+description: Step-by-step guide to migrating users from an ASP.NET Identity database into Duende User Management using a hosted service and the IUserImporter API.
+date: 2025-05-22
 sidebar:
   label: "From ASP.NET Identity"
   order: 2
@@ -11,13 +12,13 @@ import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 You have a working application with real users. Passwords are stored, sessions are active, and everything runs. Now you want to adopt Duende User Management
 without losing a single account or forcing anyone to reset their password.
 
-This guide walks you through building a small console app that reads users from your existing ASP.NET Identity database and imports them into User Management.
-The approach is straightforward: query the source database directly, map each user to a `UserImportRecord`, and call `IUserImporter.ImportAsync`.
+This guide walks you through building a hosted service that reads users from your existing ASP.NET Identity database and imports them into User Management.
+The approach: query the source database directly, map each user to a `UserImportRecord`, and call `IUserImporter.ImportAsync`.
 
 When the migration is done, your users log in exactly as before. They will not notice anything changed.
 
-Before you start, you need two things: an existing ASP.NET Identity database with users to migrate, and a target application that already has User Management configured
-If you have not set up User Management yet, see the [getting started guide](/usermanagement/getting-started.mdx) first.
+Before you start, you need two things: an existing ASP.NET Identity database with users to migrate, and a target IdentityServer application that already has User Management configured.
+If you have not set up User Management yet, see the [getting started guide](/identityserver/usermanagement/getting-started.mdx) first.
 
 ## How it works
 
@@ -27,60 +28,46 @@ A failure on one record does not affect the others.
 
 The import is idempotent by default for new users. If you run it a second time, existing records are skipped rather than duplicated. 
 If you want re-runs to overwrite existing data (useful when fixing source data and re-importing), you can register a custom conflict resolver
-(see [Conflict Resolution](/usermanagement/import/reference.md#conflict-resolution) for details).
+(see [Conflict Resolution](/identityserver/usermanagement/import/reference.md#conflict-resolution) for details).
 
 Passwords carry over without any disruption. ASP.NET Identity uses a proprietary binary format for its hashes. You store the hash as-is during import,
 and register a custom `IPasswordHashAlgorithm` that knows how to verify it. On the first successful login after migration, User Management transparently
 re-hashes the password with its preferred algorithm. The user types their password, it works, and the hash is silently upgraded in the background.
 
-## Create the project
+## Set Up The Migration
 
-Start with a new console app:
+Your IdentityServer application already has `AddIdentityServer().AddUserManagement(...)` configured. You do not need a separate project. Instead, you add the migration as a hosted service that runs once on startup, imports the users, and then stops.
 
-```bash
-dotnet new console -n IdentityMigrator
-cd IdentityMigrator
-```
-
-Add the packages you need:
+Add the packages needed to read the source ASP.NET Identity database:
 
 ```bash
-dotnet add package Duende.UserManagement
-dotnet add package Duende.Storage.PostgreSql
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 ```
 
-Replace `Duende.Storage.PostgreSql` and `Npgsql.EntityFrameworkCore.PostgreSQL` with the packages for your database if you are using SQL Server or another provider.
-The `Microsoft.AspNetCore.Identity.EntityFrameworkCore` package gives you the `IdentityDbContext` base class, which you will use to read from the source database.
+:::note
+The example code assumes the source database is PostgreSQL. Replace `Npgsql.EntityFrameworkCore.PostgreSQL` with the Entity Framework Core provider for your source database.
+:::
 
-The top-level `Program.cs` uses `HostApplicationBuilder` to wire up services and configuration:
+In your existing `Program.cs`, register the source database context and the hosted service:
 
 ```csharp
-// Program.cs
-using Duende.Storage;
-using Duende.Storage.PostgreSql;
-using Duende.UserManagement;
-using Duende.UserManagement.Import;
-using Duende.UserManagement.Profiles;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Npgsql;
-
-var builder = Host.CreateApplicationBuilder(args);
-
-// Source: ASP.NET Identity database
+// In your existing Program.cs, add the source database context
 var sourceConnectionString = builder.Configuration.GetConnectionString("Source")!;
 builder.Services.AddDbContext<SourceIdentityDbContext>(options =>
     options.UseNpgsql(sourceConnectionString));
 
-// Target: User Management
-// AddPostgreSqlStore reads the connection from the NpgsqlDataSource singleton.
-var targetConnectionString = builder.Configuration.GetConnectionString("Target")!;
-builder.Services
-    .AddSingleton(new NpgsqlDataSourceBuilder(targetConnectionString).Build())
+// Register the migration as a hosted service
+builder.Services.AddHostedService<AspNetIdentityMigrationService>();
+
+// Register an overwrite resolver so re-runs update existing records
+builder.Services.AddSingleton<IUserImportConflictResolver, OverwriteConflictResolver>();
+```
+
+Your User Management registration already includes the custom `AspNetIdentityPasswordHashAlgorithm` password hash algorithm. Make sure it includes:
+
+```csharp
+builder.Services.AddIdentityServer()
     .AddUserManagement(users =>
     {
         users.EnableProfiles();
@@ -88,31 +75,19 @@ builder.Services
         {
             auth.AddPasswordHashAlgorithm<AspNetIdentityPasswordHashAlgorithm>();
         });
-    })
-    .AddPostgreSqlStore();
-
-// Register an overwrite resolver so re-runs update existing records
-builder.Services.AddSingleton<IUserImportConflictResolver, OverwriteConflictResolver>();
-
-var host = builder.Build();
-await RunMigrationAsync(host.Services);
+    });
 ```
 
-Add connection strings to `appsettings.json`:
+Add the source connection string to `appsettings.json`:
 
 ```json
 // appsettings.json
 {
   "ConnectionStrings": {
-    "Source": "Host=localhost;Database=identity_db;Username=postgres;Password=...",
-    "Target": "Host=localhost;Database=usermgmt_db;Username=postgres;Password=..."
+    "Source": "Host=localhost;Database=identity_db;Username=postgres;Password=..."
   }
 }
 ```
-
-:::note
-The example code assumes both source and target are PostgreSQL databases. Other database types can be used as well.
-:::
 
 ## Connect to Your ASP.NET Identity Database
 
@@ -237,7 +212,7 @@ algorithm on the user's first successful login.
 Use `AspNetIdentityPasswordHashAlgorithm.CreateImportData(user.PasswordHash)` to wrap the raw hash during import,
 and register the algorithm with `auth.AddPasswordHashAlgorithm<AspNetIdentityPasswordHashAlgorithm>()` in your User Management setup.
 
-See [Password Hashing Algorithms](/usermanagement/reference/password-hashing.md) for a full walkthrough of implementing and registering
+See [Password Hashing Algorithms](/identityserver/usermanagement/reference/password-hashing.md) for a full walkthrough of implementing and registering
 a custom algorithm, including a complete example of a read-only legacy algorithm.
 
 ## Map Users to User Management
@@ -371,71 +346,101 @@ as a structured object rather than flat strings.
 
 ## Run the Import
 
-Now wire everything together. Query users in batches, map each one, and call `ImportAsync`:
+Now wire everything together in a hosted service. The service runs once on application startup, imports the users, and completes:
 
 ```csharp
-// Program.cs (continued -- add this method)
-static async Task RunMigrationAsync(IServiceProvider services)
+// AspNetIdentityMigrationService.cs
+using Duende.Storage;
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement;
+using Duende.UserManagement.Import;
+using Duende.UserManagement.Profiles;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
+public class AspNetIdentityMigrationService : IHostedService
 {
-    await using var scope = services.CreateAsyncScope();
-    var sp = scope.ServiceProvider;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<AspNetIdentityMigrationService> _logger;
 
-    // Ensure the User Management schema exists in the target database.
-    await sp.GetRequiredService<IDatabaseSchema>().CreateIfNotExistsAsync(CancellationToken.None);
-
-    var sourceDb = sp.GetRequiredService<SourceIdentityDbContext>();
-    var importer = sp.GetRequiredService<IUserImporter>();
-    var profileAdmin = sp.GetRequiredService<IUserProfileAdmin>();
-
-    var schema = await profileAdmin.GetSchemaAsync(CancellationToken.None);
-
-    // Load all users and their claims from the source database
-    var users = await sourceDb.Users
-        .AsNoTracking()
-        .ToListAsync();
-
-    var claimsByUser = await sourceDb.UserClaims
-        .AsNoTracking()
-        .GroupBy(c => c.UserId)
-        .ToDictionaryAsync(g => g.Key, g => (IReadOnlyList<IdentityUserClaim<string>>)g.ToList());
-
-    Console.WriteLine($"Found {users.Count} users to migrate.");
-
-    const int batchSize = 100;
-    var totalCreated = 0;
-    var totalUpdated = 0;
-    var totalFailed = 0;
-
-    for (var i = 0; i < users.Count; i += batchSize)
+    public AspNetIdentityMigrationService(
+        IServiceProvider serviceProvider,
+        ILogger<AspNetIdentityMigrationService> logger)
     {
-        var batch = users
-            .Skip(i)
-            .Take(batchSize)
-            .Select(u =>
-            {
-                var claims = claimsByUser.GetValueOrDefault(u.Id, []);
-                return MapUser(u, claims, schema);
-            })
-            .ToList();
-
-        var result = await importer.ImportAsync(batch, CancellationToken.None);
-        totalCreated += result.CreatedCount;
-        totalUpdated += result.UpdatedCount;
-        totalFailed += result.FailedCount;
-
-        foreach (var r in result.Results.Where(r => r.Status == UserImportStatus.Failed))
-            Console.WriteLine($"  FAILED {r.SubjectId}: {r.Error}");
-
-        Console.WriteLine(
-            $"Batch {i / batchSize + 1}: created={result.CreatedCount}, " +
-            $"updated={result.UpdatedCount}, failed={result.FailedCount}");
+        _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
-    Console.WriteLine();
-    Console.WriteLine($"Migration complete.");
-    Console.WriteLine($"  Created: {totalCreated}");
-    Console.WriteLine($"  Updated: {totalUpdated}");
-    Console.WriteLine($"  Failed:  {totalFailed}");
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var sp = scope.ServiceProvider;
+
+        // Ensure the User Management schema exists in the target database.
+        await sp.GetRequiredService<IDatabaseSchema>().CreateIfNotExistsAsync(cancellationToken);
+
+        var sourceDb = sp.GetRequiredService<SourceIdentityDbContext>();
+        var importer = sp.GetRequiredService<IUserImporter>();
+        var profileAdmin = sp.GetRequiredService<IUserProfileAdmin>();
+
+        var schema = await profileAdmin.GetSchemaAsync(cancellationToken);
+
+        // Load all users and their claims from the source database
+        var users = await sourceDb.Users
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        var claimsByUser = await sourceDb.UserClaims
+            .AsNoTracking()
+            .GroupBy(c => c.UserId)
+            .ToDictionaryAsync(
+                g => g.Key,
+                g => (IReadOnlyList<IdentityUserClaim<string>>)g.ToList(),
+                cancellationToken);
+
+        _logger.LogInformation("Found {UserCount} users to migrate.", users.Count);
+
+        const int batchSize = 100;
+        var totalCreated = 0;
+        var totalUpdated = 0;
+        var totalFailed = 0;
+
+        for (var i = 0; i < users.Count; i += batchSize)
+        {
+            var batch = users
+                .Skip(i)
+                .Take(batchSize)
+                .Select(u =>
+                {
+                    var claims = claimsByUser.GetValueOrDefault(u.Id, []);
+                    return MapUser(u, claims, schema);
+                })
+                .ToList();
+
+            var result = await importer.ImportAsync(batch, cancellationToken);
+            totalCreated += result.CreatedCount;
+            totalUpdated += result.UpdatedCount;
+            totalFailed += result.FailedCount;
+
+            foreach (var r in result.Results.Where(r => r.Status == UserImportStatus.Failed))
+            {
+                _logger.LogWarning("FAILED {SubjectId}: {Error}", r.SubjectId, r.Error);
+            }
+
+            _logger.LogInformation(
+                "Batch {BatchNumber}: created={Created}, updated={Updated}, failed={Failed}",
+                i / batchSize + 1, result.CreatedCount, result.UpdatedCount, result.FailedCount);
+        }
+
+        _logger.LogInformation(
+            "Migration complete. Created: {Created}, Updated: {Updated}, Failed: {Failed}",
+            totalCreated, totalUpdated, totalFailed);
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
 ```
 
@@ -467,7 +472,7 @@ public sealed class OverwriteConflictResolver : IUserImportConflictResolver
 ```
 
 This resolver overwrites any existing profile or authenticator data for the same subject ID, and retries on concurrency conflicts.
-Register it in `Program.cs` before building the host:
+Register it in your `Program.cs` alongside the other service registrations:
 
 ```csharp
 builder.Services.AddSingleton<IUserImportConflictResolver, OverwriteConflictResolver>();
@@ -512,9 +517,12 @@ if (phoneClaim is not null)
             ["primary"] = false
         }
     ];
+    
     var phoneCode = AttributeCode.Create("phoneNumbers");
     if (schema.AttributeDefinitions.ContainsKey(phoneCode))
+    {
         attrs.Set(schema.CreateAttribute(phoneCode, phoneList));
+    }
 }
 ```
 
@@ -530,7 +538,7 @@ does not exist in your schema, which would cause an import failure.
 var users = await sourceDb.Users
     .AsNoTracking()
     .Take(10)  // remove this line for the full migration
-    .ToListAsync();
+    .ToListAsync(cancellationToken);
 ```
 
 Check that:
@@ -539,9 +547,9 @@ Check that:
 * Profile attributes land in the right fields in the User Management admin UI.
 * The subject IDs match what you expect.
 
-Once you are satisfied, remove the `Take(10)` and run the full migration.
+Once you are satisfied, remove the `Take(10)` and deploy the application. The hosted service runs the full migration on startup. After the migration completes, remove the `AddHostedService<AspNetIdentityMigrationService>()` registration so it does not run again on subsequent deployments.
 
-**Run against staging first.** Point the `Target` connection string at a staging database and run the full migration there
+**Run against staging first.** Deploy to a staging environment and run the full migration there
 before touching production. This gives you a chance to catch mapping errors without any risk to live users.
 
 **The import is idempotent.** With the `OverwriteConflictResolver` registered, you can re-run the migration as many times
@@ -556,7 +564,7 @@ as you need. Each run updates existing records in place. This is useful when you
 ## Next steps
 
 <CardGrid>
-  <LinkCard title="Getting started" href="/usermanagement/getting-started" description="Set up User Management in your target application if you have not already." />
-  <LinkCard title="Conflict resolution" href="/usermanagement/import/reference#conflict-resolution" description="Control what happens when an imported record collides with existing data." />
-  <LinkCard title="Batch processing" href="/usermanagement/import/#batch-processing" description="Chunk large datasets, track progress, and resume after failures." />
+  <LinkCard title="Getting started" href="/identityserver/usermanagement/getting-started" description="Set up User Management in your target application if you have not already." />
+  <LinkCard title="Conflict resolution" href="/identityserver/usermanagement/import/reference#conflict-resolution" description="Control what happens when an imported record collides with existing data." />
+  <LinkCard title="Batch processing" href="/identityserver/usermanagement/import/#batch-processing" description="Chunk large datasets, track progress, and resume after failures." />
 </CardGrid>

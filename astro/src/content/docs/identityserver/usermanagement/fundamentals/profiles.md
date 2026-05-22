@@ -35,14 +35,16 @@ All three interfaces are registered with the service provider by `EnableProfiles
 
 ## Registration
 
-Call `EnableProfiles()` through `AddUserManagement()` to register all profile services:
+Call `AddUserManagement()` on the IdentityServer builder and chain `EnableProfiles()` to register all profile services:
 
 ```csharp title="Program.cs"
 using Duende.UserManagement;
 
-builder.Services.AddUserManagement(um => um
-    .EnableProfiles()
-);
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableProfiles()
+    );
 ```
 
 This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin` available for injection.
@@ -53,7 +55,7 @@ and sets the email attribute from their OTP address. You do not need to call `IU
 manually for OTP-authenticated users.
 
 If you want to skip automatic profile provisioning, you can provide a custom `IOtpAuthenticator` implementation.
-See [OTP Authentication](/usermanagement/authentication/otp.mdx) for details.
+See [OTP Authentication](/identityserver/usermanagement/authentication/otp.mdx) for details.
 :::
 
 ## Schema Management
@@ -79,7 +81,7 @@ public interface IUserProfileSchemaAdmin
 * `TryAddAttributeDefinitionAsync`: Adds a new attribute definition to the schema. Returns `true` on success and `false` if the definition could not be added (for example, a definition with the same code already exists).
 * `TryRemoveAttributeDefinitionAsync`: Removes an attribute definition by code. Returns `true` whether or not the definition existed.
 
-To organize attributes into groups and control their display order, see [Attribute groups and ordering](/usermanagement/fundamentals/attribute-groups.md).
+To organize attributes into groups and control their display order, see [Attribute groups and ordering](/identityserver/usermanagement/fundamentals/attribute-groups.md).
 
 ### `AttributeDefinition`
 
