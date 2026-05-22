@@ -29,7 +29,7 @@ Models the information to initiate a user login request for [CIBA](/identityserv
 
 * **`Tenant`**
 
-  The `tenant` value from the `acr_values` used the request.
+  The `tenant` value from the `acr_values` used in the request.
 
 * **`IdP`**
 
