@@ -285,6 +285,46 @@ scheme is "corporate-idp", the ACS endpoint would be at `https://sample.duendeso
 For static SAML provider registration (when you have a small, fixed set of SAML IdPs),
 see [SAML 2.0 External Provider](/identityserver/ui/login/saml-provider.md) instead.
 
+### Accessing SamlProvider Data in IConfigureNamedOptions
+
+If your customization of SAML authentication options requires per-provider data available 
+in the `SamlProvider`, Duende IdentityServer provides an abstraction for `IConfigureNamedOptions<SamlAuthenticationOptions>`.
+
+This abstraction requires your code to derive from `ConfigureAuthenticationOptions<SamlAuthenticationOptions, SamlProvider>`
+(rather than `IConfigureNamedOptions<SamlAuthenticationOptions>`).
+
+The `SamlAuthenticationOptions` instance is pre-populated from the `SamlProvider` configuration.
+Your overrides take priority over the stored provider values, which in turn take priority over defaults.
+
+Here's an example implementation:
+
+```csharp title="CustomSamlConfigureOptions.cs"
+class CustomSamlConfigureOptions
+    : ConfigureAuthenticationOptions<SamlAuthenticationOptions, SamlProvider>
+{
+    public CustomSamlConfigureOptions(IHttpContextAccessor httpContextAccessor,
+        ILogger<CustomSamlConfigureOptions> logger) : base(httpContextAccessor, logger)
+    {
+    }
+
+    protected override void Configure(
+        ConfigureAuthenticationContext<SamlAuthenticationOptions, SamlProvider> context)
+    {
+        var samlProvider = context.IdentityProvider;
+        var samlOptions = context.AuthenticationOptions;
+
+        // TODO: configure samlOptions with values from samlProvider
+    }
+}
+```
+
+Register the options type in the service provider at startup:
+
+```csharp
+// Program.cs
+builder.Services.ConfigureOptions<CustomSamlConfigureOptions>();
+```
+
 ## Listing Providers on the Login Page
 
 When working with dynamic providers, you'll typically want to display a list of the available providers on the login
