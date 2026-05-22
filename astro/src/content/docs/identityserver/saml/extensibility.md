@@ -122,15 +122,25 @@ The default implementation is `Saml2LogoutNotificationService`, which sends a SA
 to each SP that has a configured `SingleLogoutServiceUrl`. Override it to customize which SPs
 receive notifications or to modify the logout messages.
 
+The method returns a collection of `SamlLogoutRequestContext` objects. Each context includes
+correlation metadata (the request ID and the SP entity ID) alongside the outbound message itself,
+giving you more information to work with when customizing logout behavior.
+
 ```csharp
 // ISamlLogoutNotificationService.cs
 public interface ISamlLogoutNotificationService
 {
-    Task<IReadOnlyCollection<OutboundSaml2Message>> GetSamlFrontChannelLogoutsAsync(
+    Task<IReadOnlyCollection<SamlLogoutRequestContext>> GetSamlFrontChannelLogoutsAsync(
         LogoutNotificationContext context,
         CancellationToken ct);
 }
 ```
+
+`SamlLogoutRequestContext` is a record with three properties:
+
+* `Message` (`OutboundSaml2Message`) -- the outbound message ready to send to the SP
+* `RequestId` (`string`) -- the SAML ID attribute value from the `LogoutRequest`, used to correlate the SP's `LogoutResponse` via its `InResponseTo` attribute
+* `SpEntityId` (`string`) -- the entity ID of the destination SP
 
 ### When to Use
 
@@ -297,11 +307,19 @@ The default implementation constructs a standards-compliant `LogoutRequest` incl
 `NameID` and session index. Override this interface to customize the logout request structure, for
 example to add custom extensions or to change how the `NameID` is derived.
 
+The method returns a `SamlLogoutRequestContext`, which wraps the outbound message together with the
+request ID and SP entity ID, giving you the information needed to correlate the logout response back to the original
+request when the SP replies.
+
 ```csharp
 // ISaml2FrontChannelLogoutRequestBuilder.cs
 public interface ISaml2FrontChannelLogoutRequestBuilder
 {
-    Task<OutboundSaml2Message> BuildLogoutRequestAsync(
+    /// <returns>
+    /// A <see cref="SamlLogoutRequestContext"/> that wraps the outbound message with the
+    /// request ID and SP entity ID for response correlation.
+    /// </returns>
+    Task<SamlLogoutRequestContext> BuildLogoutRequestAsync(
         SamlServiceProvider serviceProvider,
         string nameId,
         string? nameIdFormat,
