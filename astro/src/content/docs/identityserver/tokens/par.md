@@ -35,7 +35,7 @@ care, and in other industries with high security requirements.
 ## Licensing
 
 :::note
-This feature is part of the [Duende IdentityServer Business and Enterprise Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Business (legacy), Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 In the Starter edition, PAR requests will not be processed and instead log errors. If you have a starter edition license, you should disable the

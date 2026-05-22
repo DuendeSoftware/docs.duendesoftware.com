@@ -157,7 +157,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 attacks by making it difficult for attackers to use stolen tokens.
 
 :::note
-This feature is part of the [Duende IdentityServer Enterprise Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 DPoP specifies how to bind

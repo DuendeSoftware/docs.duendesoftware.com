@@ -37,6 +37,6 @@ public interface IClientStore
 }
 ```
 
-`GetAllClientsAsync` returns all configured clients as an async enumerable. <span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+`GetAllClientsAsync` returns all configured clients as an async enumerable. <span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
 Used by the [Financial-Grade Security and Conformance report](/identityserver/diagnostics/conformance-report.md) and configuration validation features. Custom `IClientStore` implementations must implement this method — see the [upgrade guide](/identityserver/upgrades/v7_4-to-v8_0.md#iclientstoregetallclientsasync-now-required) for details.

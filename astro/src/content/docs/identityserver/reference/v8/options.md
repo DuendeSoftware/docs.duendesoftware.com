@@ -133,7 +133,7 @@ Automatic key management settings. Available on the `KeyManagement` property of 
 
   The signing algorithms for which automatic key management will manage keys.
 
-  This option is configured with a list of objects containing a Name property, which is the name of a supported signing algorithm, and a UseX509Certificate property, which is a flag indicating if the signing key should be wrapped in an X.509 certificate.
+  This option is configured with a list of objects containing a Name property, which is the name of a supported signing algorithm, and a `UseX509Certificate` property, which is a flag indicating if the signing key should be wrapped in an X.509 certificate.
 
   The first algorithm in the collection will be used as the default for clients that do not specify `AllowedIdentityTokenSigningAlgorithms`.
 
@@ -205,7 +205,7 @@ must decide whether to continue using it or replace it with a new certificate.
 
 ## Endpoints
 
-Endpoint settings, including flags to disable individual endpoints and support for the request_uri JAR parameter. Available on the `Endpoints` property of the `IdentityServerOptions` object.
+Endpoint settings, including flags to disable individual endpoints and support for the `request_uri` JAR parameter. Available on the `Endpoints` property of the `IdentityServerOptions` object.
 
 - **`EnableAuthorizeEndpoint`**
 
@@ -256,7 +256,7 @@ Endpoint settings, including flags to disable individual endpoints and support f
   Enables the OAuth 2.0 authorization server metadata endpoint (`/.well-known/oauth-authorization-server`). Defaults to true.
 
 - **`EnableJwtRequestUri`**
-  Enables the `request_uri` parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the request_uri parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).
+  Enables the `request_uri` parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the `request_uri` parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).
 
 ## Discovery
 
@@ -266,43 +266,43 @@ If you want to take full control over the rendering of the discovery and jwks do
 
 - **`ShowEndpoints`**
 
-  Shows endpoints (authorization_endpoint, token_endpoint, etc.) in the discovery document. Defaults to true.
+  Shows endpoints (`authorization_endpoint`, `token_endpoint`, etc.) in the discovery document. Defaults to true.
 
 - **`ShowKeySet`**
 
-  Shows the jwks_uri in the discovery document and enables the jwks endpoint. Defaults to true.
+  Shows the `jwks_uri` in the discovery document and enables the jwks endpoint. Defaults to true.
 
 - **`ShowIdentityScopes`**
 
-  Includes IdentityResources in the supported_scopes of the discovery document. Defaults to true.
+  Includes IdentityResources in the `supported_scopes` of the discovery document. Defaults to true.
 
 - **`ShowApiScopes`**
 
-  Includes ApiScopes in the supported_scopes of the discovery document. Defaults to true.
+  Includes ApiScopes in the `supported_scopes` of the discovery document. Defaults to true.
 
 - **`ShowClaims`**
 
-  Shows claims_supported in the discovery document. Defaults to true.
+  Shows `claims_supported` in the discovery document. Defaults to true.
 
 - **`ShowResponseTypes`**
 
-  Shows response_types_supported in the discovery document. Defaults to true.
+  Shows `response_types_supported` in the discovery document. Defaults to true.
 
 - **`ShowResponseModes`**
 
-  Shows response_modes_supported in the discovery document. Defaults to true.
+  Shows `response_modes_supported` in the discovery document. Defaults to true.
 
 - **`ShowGrantTypes`**
 
-  Shows grant_types_supported in the discovery document. Defaults to true.
+  Shows `grant_types_supported` in the discovery document. Defaults to true.
 
 - **`ShowExtensionGrantTypes`**
 
-  Includes extension grant types in the grant_types_supported of the discovery document. Defaults to true.
+  Includes extension grant types in the `grant_types_supported` of the discovery document. Defaults to true.
 
 - **`ShowTokenEndpointAuthenticationMethods`**
 
-  Shows token_endpoint_auth_methods_supported in the discovery document. Defaults to true.
+  Shows `token_endpoint_auth_methods_supported` in the discovery document. Defaults to true.
 
 - **`CustomEntries`**
   Adds custom elements to the discovery document. For example:
