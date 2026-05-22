@@ -1,0 +1,146 @@
+---
+title: "Logging"
+description: "How to configure and use logging in Duende User Management, including log categories, levels, and troubleshooting guidance."
+date: 2026-05-22
+sidebar:
+  label: Logging
+  order: 10
+---
+
+Duende User Management uses the standard logging facilities provided by ASP.NET Core
+(`Microsoft.Extensions.Logging`). You don't need any extra configuration to get rich logging out of the box.
+
+For general information on setting up logging, configuring Serilog, and understanding log levels
+across all Duende products, see the [Logging Fundamentals](/general/logging.md) guide.
+
+## Configuration
+
+User Management writes logs under the `Duende.UserManagement` category. 
+More specific sub-categories exist for individual features:
+
+| Feature                   | Log category                                                  |
+|---------------------------|---------------------------------------------------------------|
+| Authentication (general)  | `Duende.UserManagement.Authentication.Internal`               |
+| Passwords                 | `Duende.UserManagement.Authentication.Passwords.Internal`     |
+| Passkeys                  | `Duende.UserManagement.Authentication.Passkeys.Internal`      |
+| One-Time Passwords (OTP)  | `Duende.UserManagement.Authentication.Otp.Internal`           |
+| TOTP                      | `Duende.UserManagement.Authentication.Totp.Internal`          |
+| Recovery codes            | `Duende.UserManagement.Authentication.RecoveryCodes.Internal` |
+| User profiles             | `Duende.UserManagement.Profiles.Internal`                     |
+| Membership (groups/roles) | `Duende.UserManagement.Membership.Internal`                   |
+| User import               | `Duende.UserManagement.Import.Internal`                       |
+
+To enable detailed logging for all User Management components, set the `Duende.UserManagement` 
+namespace to `Debug` in your `appsettings.json`:
+
+```json
+// appsettings.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Duende.UserManagement": "Debug"
+    }
+  }
+}
+```
+
+If you only want to troubleshoot a specific area (for example, passkey authentication), 
+you can target that sub-category:
+
+```json
+// appsettings.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Duende.UserManagement.Authentication.Passkeys.Internal": "Debug"
+    }
+  }
+}
+```
+
+## Log Levels
+
+User Management follows the standard Microsoft guidelines for log levels:
+
+* **Information** -- General flow events like authentication attempts starting, succeeding, or failing. Also covers user profile operations, group/role management, and import progress.
+* **Warning** -- Unexpected situations that don't stop the application but may need investigation. For example, failing to clean up a consumed passkey challenge, or authentication throttling kicking in.
+* **Error** -- Failures that could not be handled gracefully. For example, a passkey registration that failed to persist, or an optimistic concurrency conflict that could not be resolved on retry.
+
+:::note
+In production, you typically want to keep logging at `Warning` or higher to avoid excessive log volume.
+Drop to `Information` or `Debug` only when actively troubleshooting.
+:::
+
+## What Gets Logged
+
+Here is an overview of the key events that User Management logs, grouped by feature area.
+
+### Password Authentication
+
+* Authentication attempt started, succeeded, or failed
+* User not found (timing-safe dummy authentication is still performed)
+* Throttling applied by the attempt policy
+* Password re-hashed to a newer algorithm after successful authentication
+
+### Passkey Authentication and Registration
+
+* Begin/complete ceremony started, succeeded, or failed
+* Challenge expired or not found
+* Credential not found, user mismatch, or sign count update failures
+* Registration rejected (unauthenticated, duplicate credential, persist failure)
+
+### OTP (One-Time Password)
+
+* OTP send started, succeeded, or blocked by rate limiting
+* OTP authentication started, succeeded, or failed (workflow not found, expired, verification failed)
+* Email send success or failure
+* No sender registered for a given address type
+
+### TOTP (Time-Based One-Time Password)
+
+* Authentication attempt started, succeeded, or failed
+* User not found (dummy authentication performed)
+* Throttling applied
+
+### Recovery Codes
+
+* Authentication attempt started, succeeded, or failed
+* User not found or throttled
+
+### User Profiles
+
+* Profile created, found, updated, or not found
+* Profile registration (self-service) succeeded or failed
+* Schema attribute/group added, removed, or reordered
+
+### Membership (Groups and Roles)
+
+* Group/role created, updated, deleted, or not found
+* Role/group assigned to or removed from a user or group
+* Version conflicts on updates
+
+### User Import
+
+* Batch import started and completed (with counts of created, updated, skipped, and failed records)
+* Validation failures and conflict detection
+* Retry attempts
+
+### Optimistic Concurrency
+
+Several authentication flows log when an optimistic concurrency conflict occurs during failed-attempt
+recording. These are typically at `Information` level for the first retry and `Error` if the retry also fails.
+
+## Structured Log Properties
+
+Log messages include structured properties that you can use for filtering and correlation in your log sink:
+
+* `subjectId` -- The user's subject identifier
+* `userName` -- The username (password authentication)
+* `groupId` -- Group identifier (membership operations)
+* `roleId` -- Role identifier (membership operations)
+* `error` -- Error details for failed ceremonies
+
+These properties appear in the log scope, so structured logging sinks like [Seq](https://datalust.co/seq)
+or [Elasticsearch](https://www.elastic.co/elasticsearch) let you filter and search by them.
