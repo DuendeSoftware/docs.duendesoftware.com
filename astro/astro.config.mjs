@@ -10,7 +10,7 @@ import starlightLlmsTxt from "starlight-llms-txt";
 import rehypeAstroRelativeMarkdownLinks from "astro-rehype-relative-markdown-links";
 import opengraphImages from "astro-opengraph-images";
 import rehypeExternalLinks from "rehype-external-links";
-import wawoff from "wawoff2"
+import wawoff from "wawoff2";
 import * as fs from "node:fs";
 
 // don't convert to path aliases, it doesn't work here
