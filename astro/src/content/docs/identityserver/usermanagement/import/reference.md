@@ -52,9 +52,9 @@ public class UserImportService(IUserImporter importer, IUserProfileAdmin profile
         // Build profile attributes using the schema so values are type-validated.
         var schema = await profileAdmin.GetSchemaAsync(ct);
 
-        var aliceAttributes = new AttributeValueCollection();
-        aliceAttributes.Set(schema.CreateAttribute(AttributeCode.Create("email"), "alice@example.com"));
-        aliceAttributes.Set(schema.CreateAttribute(AttributeCode.Create("display_name"), "Alice"));
+        var aliceAttributes = new AttributeValueCollection(schema);
+        aliceAttributes.Set(AttributeCode.Create("email"), "alice@example.com");
+        aliceAttributes.Set(AttributeCode.Create("display_name"), "Alice");
 
         // Represent a pre-hashed bcrypt password from the source system.
         // Hash and Salt are raw bytes; supply the actual bytes from your source data.
@@ -70,7 +70,7 @@ public class UserImportService(IUserImporter importer, IUserProfileAdmin profile
             {
                 SubjectId = new UserSubjectId("user-001"),
                 UserName = new UserName("alice@example.com"),
-                ProfileAttributes = aliceAttributes,
+                ProfileAttributes = aliceAttributes.Validate(),
                 Authenticators = new AuthenticatorImport
                 {
                     Password = new PasswordImport(bcryptHash),

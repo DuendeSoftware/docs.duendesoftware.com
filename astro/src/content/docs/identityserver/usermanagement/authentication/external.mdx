@@ -289,11 +289,11 @@ public static async Task HandleExternalAuthentication(TicketReceivedContext cont
     {
         var schema = await profileSelfService.GetSchemaAsync(ct);
         var name = principal.FindFirstValue(JwtClaimTypes.Name) ?? string.Empty;
-        var attributes = schema.CreateAttributes(
-            [schema.CreateAttribute(UserAttributes.Name.Name, name)]);
+        var attributes = new AttributeValueCollection(schema);
+        attributes.Set(UserAttributes.Name.Name, name);
 
         profile = await profileSelfService.TryRegisterAsync(
-            authenticators.SubjectId, attributes, ct);
+            authenticators.SubjectId, attributes.Validate(), ct);
 
         if (profile is null)
             throw new InvalidOperationException("Could not register user profile");

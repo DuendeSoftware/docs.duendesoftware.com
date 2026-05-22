@@ -349,11 +349,11 @@ Build an `AttributeValueCollection` from the schema so that attribute values are
 
 ```csharp
 var schema = await selfService.GetSchemaAsync(ct);
-var attributes = new AttributeValueCollection();
+var attributes = new AttributeValueCollection(schema);
 
-attributes.Set(schema.CreateAttribute(AttributeCode.Create("given_name"), "Jane"));
-attributes.Set(schema.CreateAttribute(AttributeCode.Create("family_name"), "Smith"));
-attributes.Set(schema.CreateAttribute(AttributeCode.Create("email_verified"), true));
+attributes.Set(AttributeCode.Create("given_name"), "Jane");
+attributes.Set(AttributeCode.Create("family_name"), "Smith");
+attributes.Set(AttributeCode.Create("email_verified"), true);
 ```
 
 ## Self-Service Profile Operations
@@ -367,18 +367,18 @@ public interface IUserProfileSelfService
 {
     Task<IReadOnlyAttributeSchema> GetSchemaAsync(Ct ct);
 
-    Task<UserProfile?> TryRegisterAsync(UserSubjectId subjectId, AttributeValueCollection attributes, Ct ct);
+    Task<UserProfile?> TryRegisterAsync(UserSubjectId subjectId, ValidatedAttributeValueCollection attributes, Ct ct);
 
     Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
 
-    Task<UserProfile?> TryUpdateAsync(UserSubjectId subjectId, UserProfileUpdate update, Ct ct);
+    Task<UserProfile?> TryUpdateAsync(UserSubjectId subjectId, ValidatedAttributeValueCollection attributes, Ct ct);
 }
 ```
 
-* `GetSchemaAsync`: Returns the current attribute schema. Use the returned `IReadOnlyAttributeSchema` to create typed `AttributeValue` instances that are validated against the schema before storage.
+* `GetSchemaAsync`: Returns the current attribute schema. Pass the returned `IReadOnlyAttributeSchema` to the `AttributeValueCollection` constructor so attribute values are validated against their declared types.
 * `TryRegisterAsync`: Creates a new profile for the given subject with the supplied attributes. Returns the created `UserProfile` on success, or `null` if a profile already exists for that subject.
 * `TryGetAsync`: Retrieves the profile for the given subject. Returns `null` when no profile exists.
-* `TryUpdateAsync`: Replaces the attributes of an existing profile with those in the `UserProfileUpdate`. Returns the updated `UserProfile` on success, or `null` when the profile does not exist or a concurrent update conflict occurs.
+* `TryUpdateAsync`: Replaces the attributes of an existing profile. Returns the updated `UserProfile` on success, or `null` when the profile does not exist or a concurrent update conflict occurs.
 
 ### Registering a Profile
 
@@ -397,14 +397,14 @@ public class RegistrationService(IUserProfileSelfService profileService)
         CancellationToken ct)
     {
         var schema = await profileService.GetSchemaAsync(ct);
-        var attributes = new AttributeValueCollection();
+        var attributes = new AttributeValueCollection(schema);
 
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("given_name"), givenName));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("family_name"), familyName));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("email"), email));
+        attributes.Set(AttributeCode.Create("given_name"), givenName);
+        attributes.Set(AttributeCode.Create("family_name"), familyName);
+        attributes.Set(AttributeCode.Create("email"), email);
 
         return await profileService.TryRegisterAsync(
-            UserSubjectId.Create(subjectId), attributes, ct);
+            UserSubjectId.Create(subjectId), attributes.Validate(), ct);
     }
 }
 ```
@@ -428,7 +428,7 @@ if (profile.Attributes.TryGetValue(AttributeCode.Create("given_name"), out var g
 
 ### Updating a Profile
 
-Call `ToUpdate()` on the existing profile to get a pre-populated `UserProfileUpdate`, modify the attributes, then submit the update:
+Build a new `AttributeValueCollection` with the updated values and call `TryUpdateAsync`:
 
 ```csharp
 var profile = await profileService.TryGetAsync(UserSubjectId.Create(subjectId), ct);
@@ -439,12 +439,12 @@ if (profile is null)
 }
 
 var schema = await profileService.GetSchemaAsync(ct);
-var update = profile.ToUpdate();
+var attributes = new AttributeValueCollection(schema);
 
-update.Attributes.Set(schema.CreateAttribute(AttributeCode.Create("given_name"), "Janet"));
+attributes.Set(AttributeCode.Create("given_name"), "Janet");
 
 var updated = await profileService.TryUpdateAsync(
-    UserSubjectId.Create(subjectId), update, ct);
+    UserSubjectId.Create(subjectId), attributes.Validate(), ct);
 ```
 
 ## Administrative Profile Operations
@@ -458,7 +458,7 @@ public interface IUserProfileAdmin
 {
     Task<IReadOnlyAttributeSchema> GetSchemaAsync(Ct ct);
 
-    Task<UserProfile?> TryAddAsync(UserSubjectId subjectId, AttributeValueCollection attributes, Ct ct);
+    Task<UserProfile?> TryAddAsync(UserSubjectId subjectId, ValidatedAttributeValueCollection attributes, Ct ct);
 
     Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
 
@@ -487,13 +487,13 @@ public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
         CancellationToken ct)
     {
         var schema = await profileAdmin.GetSchemaAsync(ct);
-        var attributes = new AttributeValueCollection();
+        var attributes = new AttributeValueCollection(schema);
 
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("email"), email));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("employee_id"), employeeId));
+        attributes.Set(AttributeCode.Create("email"), email);
+        attributes.Set(AttributeCode.Create("employee_id"), employeeId);
 
         return await profileAdmin.TryAddAsync(
-            UserSubjectId.Create(subjectId), attributes, ct);
+            UserSubjectId.Create(subjectId), attributes.Validate(), ct);
     }
 }
 ```
@@ -586,39 +586,18 @@ foreach (var projection in projections.Items)
 
 
 
-`IReadOnlyAttributeSchema` is returned by `GetSchemaAsync` on both `IUserProfileSelfService` and `IUserProfileAdmin`. It provides factory methods for creating schema-validated `AttributeValue` instances and exposes the full set of attribute definitions.
+`IReadOnlyAttributeSchema` is returned by `GetSchemaAsync` on both `IUserProfileSelfService` and `IUserProfileAdmin`. It exposes the full set of attribute definitions and their groupings. Pass the schema to the `AttributeValueCollection` constructor so the collection validates attribute values against their declared types.
 
 ```csharp
 public interface IReadOnlyAttributeSchema
 {
     IReadOnlyDictionary<AttributeCode, AttributeDefinition> AttributeDefinitions { get; }
-
-    AttributeValue<bool>                              CreateAttribute(AttributeCode name, bool value);
-    AttributeValue<DateOnly>                          CreateAttribute(AttributeCode name, DateOnly value);
-    AttributeValue<DateTimeOffset>                    CreateAttribute(AttributeCode name, DateTimeOffset value);
-    AttributeValue<decimal>                           CreateAttribute(AttributeCode name, decimal value);
-    AttributeValue<int>                               CreateAttribute(AttributeCode name, int value);
-    AttributeValue<string>                            CreateAttribute(AttributeCode name, string value);
-    AttributeValue<IReadOnlyDictionary<string,object>> CreateAttribute(AttributeCode name, IReadOnlyDictionary<string, object> complexValue);
-    AttributeValue<IReadOnlyList<object>>             CreateAttribute(AttributeCode name, IReadOnlyList<object> listValue);
-
-    bool TryCreateAttribute(AttributeCode name, bool value, out AttributeValue<bool>? attribute);
-    bool TryCreateAttribute(AttributeCode name, DateOnly value, out AttributeValue<DateOnly>? attribute);
-    bool TryCreateAttribute(AttributeCode name, DateTimeOffset value, out AttributeValue<DateTimeOffset>? attribute);
-    bool TryCreateAttribute(AttributeCode name, decimal value, out AttributeValue<decimal>? attribute);
-    bool TryCreateAttribute(AttributeCode name, int value, out AttributeValue<int>? attribute);
-    bool TryCreateAttribute(AttributeCode name, string value, out AttributeValue<string>? attribute);
-    bool TryCreateAttribute(AttributeCode name, IReadOnlyDictionary<string, object> complexValue, out AttributeValue<IReadOnlyDictionary<string, object>>? attribute);
-    bool TryCreateAttribute(AttributeCode name, IReadOnlyList<object> listValue, out AttributeValue<IReadOnlyList<object>>? attribute);
-
-    AttributeValueCollection CreateAttributes(IEnumerable<AttributeValue> attributes);
+    IReadOnlyList<AttributeGroup> Groups { get; }
 }
 ```
 
-* `AttributeDefinitions`: The full schema as a read-only dictionary.
-* `CreateAttribute` overloads: Create a typed `AttributeValue` and validate that the name exists in the schema and the value matches the declared type. Throws when validation fails.
-* `TryCreateAttribute` overloads: Non-throwing variants that return `false` when the attribute name is not in the schema or the value type does not match.
-* `CreateAttributes`: Wraps an enumerable of `AttributeValue` instances into an `AttributeValueCollection`, validating for duplicate names.
+* `AttributeDefinitions`: The full schema as a read-only dictionary. Each `AttributeDefinition` includes an `IsRequired` property (defaults to `false`).
+* `Groups`: The attribute groups defined in the schema.
 
 ## End-To-End Example
 
@@ -659,15 +638,15 @@ public class OnboardingHandler(IUserProfileSelfService profileService)
         CancellationToken ct)
     {
         var schema = await profileService.GetSchemaAsync(ct);
-        var attributes = new AttributeValueCollection();
+        var attributes = new AttributeValueCollection(schema);
 
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("given_name"), givenName));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("family_name"), familyName));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("email"), email));
-        attributes.Set(schema.CreateAttribute(AttributeCode.Create("email_verified"), false));
+        attributes.Set(AttributeCode.Create("given_name"), givenName);
+        attributes.Set(AttributeCode.Create("family_name"), familyName);
+        attributes.Set(AttributeCode.Create("email"), email);
+        attributes.Set(AttributeCode.Create("email_verified"), false);
 
         return await profileService.TryRegisterAsync(
-            UserSubjectId.Create(subjectId), attributes, ct);
+            UserSubjectId.Create(subjectId), attributes.Validate(), ct);
     }
 }
 
