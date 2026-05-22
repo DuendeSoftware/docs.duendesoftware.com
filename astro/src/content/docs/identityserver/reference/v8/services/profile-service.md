@@ -64,10 +64,10 @@ Models the request for user claims and is the vehicle to return those claims. It
   invoked for tokens, the `Subject` property will contain the user's principal. Which claims are contained in the
   principal depends on the following:
 
-    - When the [server side sessions feature](/identityserver/ui/server-side-sessions/index.md) is enabled _Subject_ will always contain
+    - When the [server side sessions feature](/identityserver/ui/server-side-sessions/index.md) is enabled `Subject` will always contain
       the claims stored in the server side session.
     - When that is not the case, it depends on the caller context:
-        - If the _ProfileService_ is called in the context of a grant (e.g. exchanging a code for a token), the claims
+        - If the `ProfileService` is called in the context of a grant (e.g. exchanging a code for a token), the claims
           associated with that grant in the grant store will be used. When grants are stored, by default a snapshot of
           the logged-in user's claims are captured with the grant.
         - If there's no grant context (e.g. when the user info endpoint is called) the claims in the access token will

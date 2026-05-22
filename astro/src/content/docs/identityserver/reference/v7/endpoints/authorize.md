@@ -38,13 +38,13 @@ see [here](https://openid.net/specs/openid-connect-core-1_0.html#authrequest).
 
     * **`token`**
 
-    * ***id_token token***
+    * **`id_token token`**
 
     * **`code`**
 
-    * ***code id_token***
+    * **`code id_token`**
 
-    * ***code id_token token***
+    * **`code id_token token`**
 
 ### Optional Parameters
 

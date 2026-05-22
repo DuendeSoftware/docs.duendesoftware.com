@@ -24,13 +24,6 @@ This endpoint is used to start the device flow authorization process.
 
   one or more registered scopes. If not specified, a token for all explicitly allowed scopes will be issued
 
-```text
-POST /connect/deviceauthorization
-
-    client_id=client1&
-    client_secret=secret&
-    scope=openid api1
-```
 
 ## .NET Client Library
 

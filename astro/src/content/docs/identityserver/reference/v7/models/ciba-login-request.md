@@ -25,15 +25,15 @@ Models the information to initiate a user login request for [CIBA](/identityserv
 
 * **`AuthenticationContextReferenceClasses`**
 
-  The acr_values used in the request.
+  The `acr_values` used in the request.
 
 * **`Tenant`**
 
-  The tenant value from the acr_values used the request.
+  The `tenant` value from the `acr_values` used the request.
 
 * **`IdP`**
 
-  The idp value from the acr_values used in the request.
+  The `idp` value from the `acr_values` used in the request.
 
 * **`RequestedResourceIndicators`**
 

@@ -29,9 +29,71 @@ processes, etc.
   title="Documentation"
 />
 
+## Connected Application
+
+A connected application is any application or service registered with your Duende IdentityServer instance that relies
+on it for identity, access, or federation. Each connected application has a unique registration that defines how it 
+interacts with IdentityServer and what it is allowed to do.
+
+Connected applications fall into four categories:
+
+1.  Interactive applications use OpenID Connect (OIDC) to authenticate users and obtain tokens. These include web applications, native mobile or desktop applications, and SPAs, each identified by its own [Client ID](/general/glossary.mdx#client).
+2.  Machine-to-machine clients request access tokens without user interaction, typically using the client credentials grant. Background services, APIs calling other APIs, and MCP clients are common examples.
+3.  Third-party API consumer that requires a client ID and client secret, typically in a SaaS situation or B2B situation.
+4.  SAML Service Providers use SAML 2.0 to establish federated trust with IdentityServer acting as the Identity Provider (IdP), enabling single sign-on for applications that rely on SAML-based authentication.
+
+## Core Protocols
+
+**License: <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+Core protocols cover the OpenID Connect (OIDC) and OAuth 2.0 foundations that most applications need. If you're building a typical web app, API, or mobile client, core protocols handle authentication, token issuance, and token validation out of the box.
+
+Here's what's included:
+
+| Protocol                                           | What It Does                                                           |
+|:---------------------------------------------------|:-----------------------------------------------------------------------|
+| OAuth 2.0 Core                                     | Token-based authorization for APIs                                     |
+| OpenID Connect Core                                | User authentication on top of OAuth 2.0                                |
+| OIDC Discovery / Authorization Server Metadata     | Clients auto-discover your server's endpoints and capabilities         |
+| Authorization Code Flow                            | The recommended flow for interactive apps (with PKCE)                  |
+| Client Credentials Flow                            | Machine-to-machine token acquisition                                   |
+| Token Exchange                                     | Swap one token for another across trust boundaries                     |
+| Step-up Authentication                             | Require stronger authentication for sensitive operations               |
+| JSON Web Tokens (JWT)                              | Standard token format for access and identity tokens                   |
+| JWT Access Token Profile                           | Structured JWT access tokens per the IETF profile                      |
+| JWT Client Authentication                          | Clients authenticate using signed JWTs instead of shared secrets       |
+| JWT Introspection Response                         | Token metadata returned as a signed JWT                                |
+| Bearer Token Usage                                 | Standard `Authorization: Bearer` header for API calls                  |
+| Token Revocation                                   | Invalidate tokens before they expire                                   |
+| Token Introspection                                | APIs verify opaque tokens against the server                           |
+| RP-Initiated / Front-Channel / Back-Channel Logout | Full suite of logout flows                                             |
+| PAR (Pushed Authorization Requests)                | Clients send auth parameters directly to the server before redirect    |
+| DPoP (Demonstration of Proof-of-Possession)        | Binds tokens to a client's key pair so stolen tokens can't be replayed |
+| Form Post Response Mode                            | Auth responses delivered via POST instead of the query string          |
+| Multiple Response Types                            | Support for different OAuth response modes                             |
+
+For the majority of .NET applications, core protocols handle every scenario: users log in, APIs validate tokens, machines talk to machines, and sessions end cleanly.
+
+## Extended Protocols
+
+**License: <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+Extended protocols address requirements that go beyond typical web and API scenarios.
+
+| Protocol                                           | What It Does                                                                      |
+|:---------------------------------------------------|:----------------------------------------------------------------------------------|
+| mTLS (Mutual TLS)                                  | Binds tokens to a client certificate for sender-constrained access                |
+| JAR (JWT-Secured Authorization Requests)           | Wraps the authorization request in a signed JWT for integrity and confidentiality |
+| Resource Indicators                                | Lets a client specify which API it's targeting when requesting tokens             |
+| CIBA (Client-Initiated Backchannel Authentication) | Authentication triggered by a backend service, not a browser redirect             |
+| Device Authorization Grant                         | Login flow for devices without a browser (smart TVs, CLI tools, IoT)              |
+| DCR (Dynamic Client Registration)                  | Clients register themselves programmatically instead of being pre-configured      |
+
+These protocols solve real problems, but they're problems that surface in specific business contexts rather than in every project.
+
 ## Automatic Key Management
 
-**License: <Badge text="Business" />**
+**License: <Badge text="Business (legacy)" />, <Badge text="Enterprise (legacy)" />, <Badge text="Standard (add-on)" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 The automatic key management feature creates and manages key material for signing tokens and follows best practices for
 handling this key material, including storage and rotation.
@@ -52,7 +114,7 @@ handling this key material, including storage and rotation.
 
 ## Server-side Session Management
 
-**License: <Badge text="Business" />**
+**License: <Badge text="Business (legacy)" />, <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 The server-side session management feature extends the ASP.NET Core cookie authentication handler to maintain a user's
 authentication session state in a server-side store, rather than putting it all into a self-contained cookie. Using
@@ -78,6 +140,8 @@ server-side sessions enables more architectural features in your IdentityServer,
 
 ## BFF Security Framework
 
+**License: <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
 The Duende Backend For Frontend (BFF) security framework packages up guidance and the necessary components to secure
 browser-based frontends (e.g. SPAs or Blazor WASM applications) with ASP.NET Core backends.
 
@@ -97,7 +161,7 @@ browser-based frontends (e.g. SPAs or Blazor WASM applications) with ASP.NET Cor
 
 ## Dynamic Client Registration
 
-**License: <Badge text="Business" />**
+**License: <Badge text="Business (legacy)" />, <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register
 clients and their configuration.
@@ -110,7 +174,7 @@ clients and their configuration.
 
 ## Pushed Authorization Requests
 
-**License: <Badge text="Business" />**
+**License: <Badge text="Business (legacy)" />, <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 Implementation of [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html). Provides a more secure way to start a
 browser-based token/authentication request.
@@ -123,7 +187,7 @@ browser-based token/authentication request.
 
 ## Dynamic Authentication Providers
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 The dynamic configuration feature allows dynamic loading of configuration for OpenID Connect providers from a store.
 This is designed to address the performance concern and allowing changes to the configuration to a running server.
@@ -144,7 +208,7 @@ This is designed to address the performance concern and allowing changes to the 
 
 ## Resource Isolation
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 The resource isolation feature allows a client to request access tokens for an individual resource server.
 This allows API-specific features such as access token encryption and isolation of APIs that are not in the same trust
@@ -153,7 +217,7 @@ boundary.
 <CardGrid>
   <LinkCard
     description="Resource Isolation post"
-    href="https://duendesoftware.com/blog/20201230-resource-isolation"
+    href="https://duendesoftware.com/blog/20260210-implementing-zero-trust-with-resource-isolation"
     title="More Details"
     target="_blank"
   />
@@ -166,7 +230,7 @@ boundary.
 
 ## Client-Initiated Backchannel Authentication (CIBA)
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 Duende IdentityServer supports the Client-Initiated Backchannel Authentication Flow (also known as CIBA).
 This allows a user to log in with a higher security device (e.g. their mobile phone) than the device on which they are
@@ -189,16 +253,52 @@ CIBA is one of the requirements to support the Financal-grade API compliance.
 
 ## Proof-of-Possession At The Application Layer / DPoP
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This
 mechanism allows for the detection of replay attacks with access and refresh tokens.
 
 <LinkCard
   description="Learn more about Proof-of-Possession"
-  href="/identityserver/tokens/pop"
+  href="/identityserver/tokens/pop/"
   title="Documentation"
 />
+
+## SAML 2.0 Identity Provider
+
+**License: <Badge text="Standard (add-on)" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+IdentityServer can act as a SAML 2.0 Identity Provider (IdP), issuing SAML assertions to Service Providers (SPs) that
+use the SAML 2.0 protocol rather than OAuth 2.0 / OpenID Connect. This is useful for integrating with enterprise SaaS
+applications (e.g. Salesforce, ServiceNow) or legacy SSO systems that require SAML-based federation.
+
+<LinkCard
+  description="Learn more about SAML 2.0 Identity Provider support"
+  href="/identityserver/saml/"
+  title="Documentation"
+/>
+
+## Financial-Grade Security and Conformance (FAPI 2.0)
+
+**License: <Badge text="Standard (add-on)" />, <Badge text="Advanced (add-on)" />, <Badge text="Custom (add-on)" />**
+
+The [Financial-grade API (FAPI) 2.0 Security Profile](https://openid.net/specs/fapi-security-profile-2_0-final.html) is
+an API security profile based on OAuth 2.0 designed to protect APIs in high-value scenarios such as e-health and
+e-government. Duende IdentityServer implements the FAPI 2.0 best current practice features and includes a built-in
+conformance report that assesses your server and client configuration against OAuth 2.1 and FAPI 2.0 specifications.
+
+<CardGrid>
+  <LinkCard
+    description="Learn more about FAPI 2.0 compliance"
+    href="/identityserver/tokens/fapi-2-0-specification/"
+    title="Documentation"
+  />
+  <LinkCard
+    description="Assess your configuration against FAPI 2.0"
+    href="/identityserver/diagnostics/conformance-report/"
+    title="Conformance Report"
+  />
+</CardGrid>
 
 ## Single Deployment
 
@@ -278,7 +378,7 @@ issues and bugs.
 
 ## Priority Developer Support
 
-**License: <Badge text="Enterprise" />**
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 Helpdesk system with guaranteed response time for Duende Software product issues and bugs.
 

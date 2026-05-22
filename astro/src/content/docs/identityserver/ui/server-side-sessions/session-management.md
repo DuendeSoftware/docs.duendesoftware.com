@@ -106,3 +106,17 @@ await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext {
 ```
 
 Internally this uses the `IServerSideTicketStore`, `IPersistedGrantStore` and `IBackChannelLogoutService` features from IdentityServer.
+
+## Orphaned Grant Revocation on Session Overwrite
+
+When a session cookie key is reused by a different user or a new session (that is, the subject ID or session ID stored in the cookie
+no longer matches what is in the server-side store), IdentityServer automatically revokes the grants that belonged to the previous
+session before writing the new one. The grants revoked are:
+
+* refresh tokens
+* reference tokens
+* authorization codes
+* backchannel authentication requests
+
+This prevents tokens from a previous user's session from remaining valid after the session is overwritten. Without this cleanup,
+a user whose session was silently replaced could retain working tokens even though their session no longer exists in the store.

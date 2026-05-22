@@ -36,29 +36,47 @@ requires a [license](https://duendesoftware.com/products/identityserver).
 
 There are three license editions which include different [features](https://duendesoftware.com/products/features).
 
-#### Starter Edition
+#### Lite Edition
 
-The Starter edition includes the core OIDC and OAuth protocol implementation. This is an
+The Lite edition includes the core OIDC and OAuth protocol implementation. This is an
 economical option that is a good fit for organizations with basic needs. It's also a great
 choice if you have an aging [IdentityServer4 implementation that needs to be updated](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx)
-and licensed. The Starter edition includes all the features that were part of
+and licensed. The Lite edition includes all the features that were part of
 IdentityServer4, along with support for the latest .NET releases, improved observability
 through [OpenTelemetry support](/identityserver/diagnostics/otel.md), and years of bug fixes and enhancements.
 
-#### Business Edition
+#### Standard Edition
 
-The Business edition adds additional features that go beyond the core protocol support
+The Standard edition adds additional features that go beyond the core protocol support
 included in the Starter edition. This is a popular license because it adds the most
 commonly needed tools and features outside a basic protocol implementation. Feature
-highlights include support for server side sessions and automatic signing key management.
+highlights include resource isolation, the OpenId Connect CIBA flow support,
+and server side sessions.
 
-#### Enterprise Edition
+#### Advanced Edition
 
-Finally, the Enterprise edition includes everything in the Business edition and adds
+Finally, the Advanced edition includes everything in the Standard edition and adds
 support for features that are typically used by enterprises with particularly complex
-architectures or that handle particularly sensitive data. Highlights include resource
-isolation, the OpenId Connect CIBA flow, and dynamic federation. This is the best option
-when you have a specific threat model or architectural need for these features.
+architectures or that handle particularly sensitive data. Highlights include
+automatic key management, SAML, and priority developer support.
+
+This is the best option when you have a specific threat model or architectural
+need for these features.
+
+#### Starter Edition (legacy)
+
+The (legacy) Starter edition includes the core OIDC and OAuth protocol implementation.
+
+#### Business Edition (legacy)
+
+The (legacy) Business edition adds additional features that go beyond the core protocol support
+included in the Starter edition. Feature highlights include support for server side sessions and
+automatic signing key management.
+
+#### Enterprise Edition (legacy)
+
+The (legacy) Enterprise edition includes everything in the Business edition and adds
+resource isolation, the OpenId Connect CIBA flow, and dynamic federation.
 
 ### Redistribution
 
@@ -228,7 +246,7 @@ will cause the host to log an error for every consecutive authenticated session:
 BFF is running in trial mode. The maximum number of allowed authenticated sessions (5) has been exceeded.
 
 See https://duende.link/l/bff/trial for more information. 
-````
+```
 
 The trial mode session limit is not distributed or shared across multiple nodes.
 
@@ -242,9 +260,10 @@ when trial mode is not enough.
 
 ## License Key
 
-The license key can be configured in one of two ways:
+The license key can be configured in one of three ways:
 
 * Via a well-known file on the file system
+* Via `IConfiguration` (for example, `appsettings.json` or environment variables)
 * Programmatically in your startup code
 
 You can also use other configuration sources such as Azure Key Vault, by using the
@@ -279,6 +298,48 @@ MyIdentityServer/
 
 :::tip
 To verify your `ContentRootPath` at runtime, inspect `builder.Environment.ContentRootPath`.
+:::
+
+### Configuration :badge[v8.0]
+
+
+IdentityServer can read the license key directly from `IConfiguration`, so you do not need to write any startup code.
+If `LicenseKey` is not set in your `AddIdentityServer` call, IdentityServer checks the following configuration keys in order,
+using the first non-empty value it finds:
+
+1. `Duende:IdentityServer:LicenseKey`
+2. `Duende:LicenseKey`
+
+Whitespace is trimmed, and empty or whitespace-only values are ignored.
+
+Add the license key to `appsettings.json` using the IdentityServer-specific key:
+
+```json title="appsettings.json"
+{
+  "Duende": {
+    "IdentityServer": {
+      "LicenseKey": "eyJhbG..."
+    }
+  }
+}
+```
+
+Or use the shorter key:
+
+```json title="appsettings.json"
+{
+  "Duende": {
+    "LicenseKey": "eyJhbG..."
+  }
+}
+```
+
+Because [`IConfiguration`](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) supports many providers, you can also supply the key via environment variables
+(for example, `Duende__IdentityServer__LicenseKey` or `Duende__LicenseKey`), Azure App Configuration, Azure Key Vault,
+or any other configuration source.
+
+:::note
+Loading the license key from configuration is not currently supported in Duende BFF.
 :::
 
 ### Startup
