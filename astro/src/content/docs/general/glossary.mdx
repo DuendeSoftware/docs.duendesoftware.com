@@ -29,6 +29,68 @@ processes, etc.
   title="Documentation"
 />
 
+## Connected Application
+
+A connected application is any application or service registered with your Duende IdentityServer instance that relies
+on it for identity, access, or federation. Each connected application has a unique registration that defines how it 
+interacts with IdentityServer and what it is allowed to do.
+
+Connected applications fall into four categories:
+
+1.  Interactive applications use OpenID Connect (OIDC) to authenticate users and obtain tokens. These include web applications, native mobile or desktop applications, and SPAs, each identified by its own [Client ID](/general/glossary.mdx#client).
+2.  Machine-to-machine clients request access tokens without user interaction, typically using the client credentials grant. Background services, APIs calling other APIs, and MCP clients are common examples.
+3.  Third-party API consumer that requires a client ID and client secret, typically in a SaaS situation or B2B situation.
+4.  SAML Service Providers use SAML 2.0 to establish federated trust with IdentityServer acting as the Identity Provider (IdP), enabling single sign-on for applications that rely on SAML-based authentication.
+
+## Core Protocols
+
+**License: <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+Core protocols cover the OpenID Connect (OIDC) and OAuth 2.0 foundations that most applications need. If you're building a typical web app, API, or mobile client, core protocols handle authentication, token issuance, and token validation out of the box.
+
+Here's what's included:
+
+| Protocol                                           | What It Does                                                           |
+|:---------------------------------------------------|:-----------------------------------------------------------------------|
+| OAuth 2.0 Core                                     | Token-based authorization for APIs                                     |
+| OpenID Connect Core                                | User authentication on top of OAuth 2.0                                |
+| OIDC Discovery / Authorization Server Metadata     | Clients auto-discover your server's endpoints and capabilities         |
+| Authorization Code Flow                            | The recommended flow for interactive apps (with PKCE)                  |
+| Client Credentials Flow                            | Machine-to-machine token acquisition                                   |
+| Token Exchange                                     | Swap one token for another across trust boundaries                     |
+| Step-up Authentication                             | Require stronger authentication for sensitive operations               |
+| JSON Web Tokens (JWT)                              | Standard token format for access and identity tokens                   |
+| JWT Access Token Profile                           | Structured JWT access tokens per the IETF profile                      |
+| JWT Client Authentication                          | Clients authenticate using signed JWTs instead of shared secrets       |
+| JWT Introspection Response                         | Token metadata returned as a signed JWT                                |
+| Bearer Token Usage                                 | Standard `Authorization: Bearer` header for API calls                  |
+| Token Revocation                                   | Invalidate tokens before they expire                                   |
+| Token Introspection                                | APIs verify opaque tokens against the server                           |
+| RP-Initiated / Front-Channel / Back-Channel Logout | Full suite of logout flows                                             |
+| PAR (Pushed Authorization Requests)                | Clients send auth parameters directly to the server before redirect    |
+| DPoP (Demonstration of Proof-of-Possession)        | Binds tokens to a client's key pair so stolen tokens can't be replayed |
+| Form Post Response Mode                            | Auth responses delivered via POST instead of the query string          |
+| Multiple Response Types                            | Support for different OAuth response modes                             |
+
+For the majority of .NET applications, core protocols handle every scenario: users log in, APIs validate tokens, machines talk to machines, and sessions end cleanly.
+
+## Extended Protocols
+
+**License: <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+Extended protocols address requirements that go beyond typical web and API scenarios.
+
+| Protocol                                           | What It Does                                                                      |
+|:---------------------------------------------------|:----------------------------------------------------------------------------------|
+| mTLS (Mutual TLS)                                  | Binds tokens to a client certificate for sender-constrained access                |
+| JAR (JWT-Secured Authorization Requests)           | Wraps the authorization request in a signed JWT for integrity and confidentiality |
+| Resource Indicators                                | Lets a client specify which API it's targeting when requesting tokens             |
+| CIBA (Client-Initiated Backchannel Authentication) | Authentication triggered by a backend service, not a browser redirect             |
+| Device Authorization Grant                         | Login flow for devices without a browser (smart TVs, CLI tools, IoT)              |
+| DCR (Dynamic Client Registration)                  | Clients register themselves programmatically instead of being pre-configured      |
+
+These protocols solve real problems, but they're problems that surface in specific business contexts rather than in every project.
+
 ## Automatic Key Management
 
 **License: <Badge text="Business (legacy)" />, <Badge text="Enterprise (legacy)" />, <Badge text="Standard (add-on)" />, <Badge text="Advanced" />, <Badge text="Custom" />**
