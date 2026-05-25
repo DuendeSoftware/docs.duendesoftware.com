@@ -120,4 +120,4 @@ Use this table to decide which registration approach fits your situation:
 
 Both approaches use the same underlying SAML SP handler. Static registration is simpler when you have a fixed set of providers and do not need runtime management.
 
-For background on the IdP and SP roles in SAML 2.0, see [IdP and SP Concepts](/identityserver/saml/idp-and-sp.md).
+For background on the IdP and SP roles in SAML 2.0, see [IdP and SP Concepts](/identityserver/saml/idp-and-sp.mdx).

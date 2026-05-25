@@ -1,7 +1,7 @@
 ---
 title: "SAML Extensibility"
 description: Extensibility interfaces for customizing SAML 2.0 Identity Provider behavior, including NameID generation, SSO response generation, metadata, AuthnRequest validation, interaction, logout, and sign-in state storage.
-date: 2026-05-21
+date: 2026-05-25
 sidebar:
   label: Extensibility
   order: 40
@@ -56,7 +56,7 @@ if (context is SamlAuthenticationContext samlContext)
 * **`IsIdpInitiated`** (`bool`): Whether this is an IdP-initiated SSO flow.
 * **`RequestedAuthnContext`** (`RequestedAuthnContext?`): The authentication context requirements
   from the SP, if specified.
-* **`StateId`** (`StateId`): The identifier for the stored sign-in state entry. You need this when
+* **`StateId`** (`Guid`): The identifier for the stored sign-in state entry. You need this when
   calling `DenyAuthenticationAsync` to deny the authentication request (see
   [denying authentication](/identityserver/ui/login/context.md#denying-authentication)).
 
@@ -280,6 +280,14 @@ public interface ISamlLogoutSessionStore
 be notified during logout. This value is set from `SamlLogoutNotificationResult.SkippedCount`
 when the session is created. When `SkippedSpCount` is greater than zero, the best achievable
 logout outcome is `PartialLogout`, regardless of whether the remaining SPs respond successfully.
+
+Each session also carries an `ExpiresAtUtc` (`DateTime`) property that controls when the session
+becomes eligible for cleanup. Store implementations should treat entries past this time as expired.
+
+The `ExpectedResponses` dictionary on `SamlLogoutSession` maps each outbound `LogoutRequest` ID
+to an `ExpectedSpLogout` record. That record holds the SP's entity ID and, once the SP replies, a
+`SamlSpLogoutResponse` with the outcome (`Success`) and the time the response was received
+(`ReceivedUtc`).
 
 ### When to Use
 
@@ -797,8 +805,10 @@ Several implementations are available:
 
 State is retained after a successful callback to allow browser retries (for example, if the user
 navigates back). The `TokenCleanupService` automatically removes expired sign-in state entries
-from the EF Core store during its scheduled cleanup runs. TTL-based expiry is the primary cleanup
-mechanism; `RemoveSigninRequestStateAsync` is called on explicit cleanup paths.
+from the EF Core store during its scheduled cleanup runs. Each `SamlAuthenticationState` carries
+an `ExpiresAtUtc` property that controls when the entry becomes eligible for removal. TTL-based
+expiry is the primary cleanup mechanism; `RemoveSigninRequestStateAsync` is available for
+scenarios that need immediate cleanup but is not called in the default flow.
 
 If you implement `IOperationalStoreNotification`, the `SamlSigninStatesRemovedAsync()` callback
 is invoked each time `TokenCleanupService` removes a batch of expired sign-in state entries. This
@@ -808,10 +818,10 @@ lets you react to cleanup events, for example to emit metrics or update external
 // ISamlSigninStateStore.cs
 public interface ISamlSigninStateStore
 {
-    Task<StateId> StoreSigninRequestStateAsync(SamlAuthenticationState state, CancellationToken ct = default);
-    Task<SamlAuthenticationState?> RetrieveSigninRequestStateAsync(StateId stateId, CancellationToken ct = default);
-    Task UpdateSigninRequestStateAsync(StateId stateId, SamlAuthenticationState state, CancellationToken ct = default);
-    Task RemoveSigninRequestStateAsync(StateId stateId, CancellationToken ct = default);
+    Task<Guid> StoreSigninRequestStateAsync(SamlAuthenticationState state, CancellationToken ct = default);
+    Task<SamlAuthenticationState?> RetrieveSigninRequestStateAsync(Guid stateId, CancellationToken ct = default);
+    Task UpdateSigninRequestStateAsync(Guid stateId, SamlAuthenticationState state, CancellationToken ct = default);
+    Task RemoveSigninRequestStateAsync(Guid stateId, CancellationToken ct = default);
 }
 ```
 
@@ -855,37 +865,39 @@ public class CustomDistributedSamlSigninStateStore : ISamlSigninStateStore
     public CustomDistributedSamlSigninStateStore(IDistributedCache cache)
         => _cache = cache;
 
-    public async Task<StateId> StoreSigninRequestStateAsync(
+    public async Task<Guid> StoreSigninRequestStateAsync(
         SamlAuthenticationState state,
         CancellationToken ct = default)
     {
-        var stateId = StateId.NewId();
+        var stateId = Guid.NewGuid();
         var json = JsonSerializer.Serialize(state);
-        await _cache.SetStringAsync(stateId.Value, json,
-            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) },
+        var expiry = state.ExpiresAtUtc - DateTime.UtcNow;
+        await _cache.SetStringAsync(stateId.ToString(), json,
+            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiry },
             ct);
         return stateId;
     }
 
     public async Task<SamlAuthenticationState?> RetrieveSigninRequestStateAsync(
-        StateId stateId,
+        Guid stateId,
         CancellationToken ct = default)
     {
-        var json = await _cache.GetStringAsync(stateId.Value, ct);
+        var json = await _cache.GetStringAsync(stateId.ToString(), ct);
         return json is null ? null : JsonSerializer.Deserialize<SamlAuthenticationState>(json);
     }
 
-    public Task RemoveSigninRequestStateAsync(StateId stateId, CancellationToken ct = default)
-        => _cache.RemoveAsync(stateId.Value, ct);
+    public Task RemoveSigninRequestStateAsync(Guid stateId, CancellationToken ct = default)
+        => _cache.RemoveAsync(stateId.ToString(), ct);
 
     public async Task UpdateSigninRequestStateAsync(
-        StateId stateId,
+        Guid stateId,
         SamlAuthenticationState state,
         CancellationToken ct = default)
     {
         var json = JsonSerializer.Serialize(state);
-        await _cache.SetStringAsync(stateId.Value, json,
-            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) },
+        var expiry = state.ExpiresAtUtc - DateTime.UtcNow;
+        await _cache.SetStringAsync(stateId.ToString(), json,
+            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiry },
             ct);
     }
 }
