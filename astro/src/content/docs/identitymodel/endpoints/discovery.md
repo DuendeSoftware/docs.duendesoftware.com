@@ -56,10 +56,10 @@ var rawJson = disco.TryGetValue("some_element");
 
 By default, the discovery response is validated before it is returned to the client, validation includes:
 
--   enforce that HTTPS is used (except for localhost addresses)
--   enforce that the issuer matches the authority
--   enforce that the protocol endpoints are on the same DNS name as the `authority`
--   enforce the existence of a keyset
+* enforce that HTTPS is used (except for localhost addresses)
+* enforce that the issuer matches the authority
+* enforce that the protocol endpoints are on the same DNS name as the `authority`
+* enforce the existence of a keyset
 
 Policy violation errors will set the `ErrorType` property on the
 `DiscoveryDocumentResponse` to `PolicyViolation`.
@@ -78,18 +78,41 @@ var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
 });
 ```
 
-When the URIs in the discovery document are on a different base address than the issuer URI, you may encounter the error *Endpoint is on a different host than authority*.
-For such scenario, additional endpoint base addresses can be configured:
+#### Cross-Host Endpoints
+
+When the URIs in the discovery document are on a different base address than the issuer URI (for example, a
+[Dynamic Client Registration endpoint](/identityserver/configuration/dcr.mdx#adding-the-registration-endpoint-to-the-discovery-document)
+hosted on a separate service), the discovery policy will reject those endpoints by default with:
+
+```text
+Endpoint is on a different host than authority
+```
+
+You can resolve this by adding the additional host to `AdditionalEndpointBaseAddresses` (recommended),
+or by setting `ValidateEndpoints = false` to disable endpoint validation entirely.
+
+The same applies to any component that has its own `DiscoveryPolicy`, such as `OAuth2IntrospectionOptions.DiscoveryPolicy`.
+Each instance needs to be configured independently.
 
 ```csharp
+// Using AdditionalEndpointBaseAddresses (recommended)
 var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
 {
-    Address = "https://demo.duendesoftware.com",
-    Policy = 
+    Address = "https://authority.example.com",
+    Policy =
     {
-        AdditionalEndpointBaseAddresses = [ "https://auth.domain.tld" ]
+        AdditionalEndpointBaseAddresses = [ "https://config-api.example.com" ]
     }
 });
+
+// Or when using DiscoveryCache
+var cache = new DiscoveryCache(
+    "https://authority.example.com",
+    () => factory.CreateClient(),
+    new DiscoveryPolicy
+    {
+        AdditionalEndpointBaseAddresses = [ "https://config-api.example.com" ]
+    });
 ```
 
 You can also customize validation strategy based on the authority with
