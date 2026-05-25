@@ -1,7 +1,7 @@
 ---
 title: Configuration Reference
 description: Complete reference for all configuration options in Duende User Management, including authentication, passwords, passkeys, TOTP, throttling, and endpoint routing.
-date: 2026-04-29
+date: 2026-05-25
 sidebar:
   label: Configuration Reference
   order: 1
@@ -57,12 +57,13 @@ builder.Services
 
 Top-level options class for the `EnableAuthentication()` call. Accessed via `IOptions<UserAuthenticationOptions>`.
 
-| Property     | Type                              | Description                                                                  |
-|--------------|-----------------------------------|------------------------------------------------------------------------------|
-| `Totp`       | `TotpOptions`                     | Configuration for Time-Based One-Time Password (TOTP) authenticator storage. |
-| `Passkeys`   | `PasskeyOptions`                  | Configuration for passkey registration and authentication.                   |
-| `Passwords`  | `PasswordOptions`                 | Configuration for the password validator.                                    |
-| `Throttling` | `AuthenticationThrottlingOptions` | Configuration for per-authenticator attempt throttling.                      |
+| Property        | Type                              | Description                                                                  |
+|-----------------|-----------------------------------|------------------------------------------------------------------------------|
+| `Totp`          | `TotpOptions`                     | Configuration for Time-Based One-Time Password (TOTP) authenticator storage. |
+| `Passkeys`      | `PasskeyOptions`                  | Configuration for passkey registration and authentication.                   |
+| `Passwords`     | `PasswordOptions`                 | Configuration for the password validator.                                    |
+| `RecoveryCodes` | `RecoveryCodeOptions`             | Configuration for recovery code behavior.                                    |
+| `Throttling`    | `AuthenticationThrottlingOptions` | Configuration for per-authenticator attempt throttling.                      |
 
 All sub-option objects are initialized with their defaults automatically. You only need to set the properties you want to override.
 
@@ -70,14 +71,17 @@ All sub-option objects are initialized with their defaults automatically. You on
 
 Controls the built-in password complexity validator. Accessed via `UserAuthenticationOptions.Passwords`.
 
-| Property     | Type  | Default | Description                                                                                                                   |
-|--------------|-------|---------|-------------------------------------------------------------------------------------------------------------------------------|
-| `MinLength`  | `int` | `8`     | Minimum required password length in characters.                                                                               |
-| `MaxLength`  | `int` | `64`    | Maximum allowed password length. Capped at 64 characters (512 bits) to avoid PBKDF2 pre-hashing vulnerabilities with SHA-512. |
-| `MinLower`   | `int` | `2`     | Minimum number of lowercase letters required.                                                                                 |
-| `MinUpper`   | `int` | `2`     | Minimum number of uppercase letters required.                                                                                 |
-| `MinDigits`  | `int` | `2`     | Minimum number of numeric digit characters required.                                                                          |
-| `MinSymbols` | `int` | `2`     | Minimum number of symbol characters required.                                                                                 |
+| Property                 | Type     | Default    | Description                                                                                                                                 |
+|--------------------------|----------|------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `MinLength`              | `int`    | `8`        | Minimum required password length in characters.                                                                                             |
+| `MaxLength`              | `int`    | `64`       | Maximum allowed password length. Capped at 64 characters (512 bits) to avoid PBKDF2 pre-hashing vulnerabilities with SHA-512.               |
+| `MinLower`               | `int`    | `2`        | Minimum number of lowercase letters required.                                                                                               |
+| `MinUpper`               | `int`    | `2`        | Minimum number of uppercase letters required.                                                                                               |
+| `MinDigits`              | `int`    | `2`        | Minimum number of numeric digit characters required.                                                                                        |
+| `MinSymbols`             | `int`    | `2`        | Minimum number of symbol characters required.                                                                                               |
+| `HistoryCount`           | `int`    | `0`        | Number of previous passwords to remember and reject on change or reset; `0` disables history.                                               |
+| `MaxAgeDays`             | `int?`   | `null`     | Maximum password age in days before the password is considered expired; `null` disables expiration.                                         |
+| `PreferredHashAlgorithm` | `string` | `"pbkdf2"` | Algorithm used when hashing new passwords; see [Password Hashing Algorithms](/identityserver/usermanagement/reference/password-hashing.md). |
 
 Example (relaxed password policy):
 
@@ -189,14 +193,15 @@ Example (disable key protection; not recommended unless storage is encrypted ext
 
 Controls the built-in per-authenticator failed-attempt throttling policy. Accessed via `UserAuthenticationOptions.Throttling`.
 
-| Property                   | Type       | Default    | Description                                                                                                                                                 |
-|----------------------------|------------|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `MaxFailedAttempts`        | `int`      | `5`        | Number of failed attempts allowed within the `FailureWindow` before throttling is applied.                                                                  |
-| `FailureWindow`            | `TimeSpan` | `00:15:00` | Rolling window from the last failure during which the failure count is tracked. If `LastFailedAtUtc + FailureWindow` has elapsed, the count resets to zero. |
-| `ThrottleDuration`         | `TimeSpan` | `00:05:00` | How long to block further attempts after the threshold is exceeded, measured from the last failed attempt.                                                  |
-| `MaxAttemptsPerWindow`     | `int`      | `5`        | Maximum total authentication attempts (successful and failed) allowed within the `VelocityWindow`.                                                          |
-| `VelocityWindow`           | `TimeSpan` | `00:00:10` | Sliding window for counting total authentication attempts.                                                                                                  |
-| `VelocityThrottleDuration` | `TimeSpan` | `00:00:30` | How long to block further attempts after the velocity threshold is exceeded.                                                                                |
+| Property                      | Type                       | Default    | Description                                                                                                                                                           |
+|-------------------------------|----------------------------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `MaxFailedAttempts`           | `int`                      | `5`        | Number of failed attempts allowed within the `FailureWindow` before throttling is applied.                                                                            |
+| `FailureWindow`               | `TimeSpan`                 | `00:15:00` | Rolling window from the last failure during which the failure count is tracked. If `LastFailedAtUtc + FailureWindow` has elapsed, the count resets to zero.           |
+| `ThrottleDuration`            | `TimeSpan`                 | `00:05:00` | How long to block further attempts after the threshold is exceeded, measured from the last failed attempt.                                                            |
+| `MaxAttemptsPerWindow`        | `int`                      | `5`        | Maximum total authentication attempts (successful and failed) allowed within the `VelocityWindow`.                                                                    |
+| `VelocityWindow`              | `TimeSpan`                 | `00:00:10` | Sliding window for counting total authentication attempts.                                                                                                            |
+| `VelocityThrottleDuration`    | `TimeSpan`                 | `00:00:30` | How long to block further attempts after the velocity threshold is exceeded.                                                                                          |
+| `EscalatingThrottleDurations` | `IReadOnlyList<TimeSpan>?` | `null`     | Per-lockout durations for escalating lockout; when set, each successive lockout uses the next duration in the list; when `null` or empty, `ThrottleDuration` applies. |
 
 Example (stricter throttling):
 
@@ -211,6 +216,15 @@ Example (stricter throttling):
     options.Throttling.VelocityThrottleDuration = TimeSpan.FromSeconds(30);
 }))
 ```
+
+## `RecoveryCodeOptions`
+
+Controls recovery code generation and authentication. Accessed via `UserAuthenticationOptions.RecoveryCodes`.
+
+| Property  | Type   | Default | Description                                                                                                                         |
+|-----------|--------|---------|-------------------------------------------------------------------------------------------------------------------------------------|
+| `Count`   | `int`  | `10`    | Number of recovery codes generated per call to `TryCreateRecoveryCodesAsync`; valid range is 1 to 50.                               |
+| `Enabled` | `bool` | `true`  | When `false`, recovery codes are disabled; `TryCreateRecoveryCodesAsync` returns `null` and `TryAuthenticateAsync` returns `false`. |
 
 ## `UserAuthenticationEndpointOptions`
 

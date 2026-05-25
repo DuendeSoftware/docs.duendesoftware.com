@@ -1,7 +1,7 @@
 ---
 title: Security Considerations
 description: Security best practices, rate limiting values, authentication throttling, passkey properties, and data protection guidance for Duende User Management.
-date: 2026-04-29
+date: 2026-05-25
 sidebar:
   label: Security Considerations
   order: 5
@@ -86,11 +86,12 @@ User Management includes a per-authenticator throttling policy that limits repea
 
 ### `AuthenticationThrottlingOptions`
 
-| Property            | Default      | Description                                                                                                                                          |
-|---------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `MaxFailedAttempts` | `5`          | Maximum number of failed attempts before throttling activates                                                                                        |
-| `FailureWindow`     | `15 minutes` | Window after the last failure during which the failure count is relevant. If `LastFailedAtUtc + FailureWindow` has elapsed, the count resets to zero |
-| `ThrottleDuration`  | `5 minutes`  | How long to block after exceeding the threshold, measured from `LastFailedAtUtc`                                                                     |
+| Property                      | Type                       | Default      | Description                                                                                                                                                                                     |
+|-------------------------------|----------------------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `MaxFailedAttempts`           | `int`                      | `5`          | Maximum number of failed attempts before throttling activates.                                                                                                                                  |
+| `FailureWindow`               | `TimeSpan`                 | `15 minutes` | Window after the last failure during which the failure count is relevant. If `LastFailedAtUtc + FailureWindow` has elapsed, the count resets to zero.                                           |
+| `ThrottleDuration`            | `TimeSpan`                 | `5 minutes`  | How long to block after exceeding the threshold, measured from `LastFailedAtUtc`.                                                                                                               |
+| `EscalatingThrottleDurations` | `IReadOnlyList<TimeSpan>?` | `null`       | Per-lockout durations for escalating lockout behavior. When set, each successive lockout uses the next duration in the list. When `null` or empty, `ThrottleDuration` applies for all lockouts. |
 
 Configure throttling during registration:
 
@@ -147,6 +148,31 @@ builder.Services
 ```
 
 The `AuthenticatorAttemptInfo` record now includes a `RecentAttemptTimestamps` property (`IReadOnlyList<DateTimeOffset>`) that stores the timestamps of recent attempts. The velocity policy uses this list to count attempts within the sliding window and determine whether to block further attempts.
+
+### Escalating Lockout
+
+By default, every lockout applies the same flat `ThrottleDuration`. You can make repeated lockouts progressively longer by setting `EscalatingThrottleDurations` to a list of `TimeSpan` values.
+
+When `EscalatingThrottleDurations` is set, the lockout duration is chosen by indexing into the list using the user's current lockout count:
+
+* The first lockout uses the first duration in the list.
+* The second lockout uses the second duration, and so on.
+* Once the list is exhausted, the last duration is reused for all subsequent lockouts.
+
+`AuthenticatorAttemptInfo.LockoutCount` tracks how many times the user has been locked out for a given authenticator since their last successful authentication. The throttling policy reads this value to select the appropriate duration from the list.
+
+When `EscalatingThrottleDurations` is `null` or empty, the flat `ThrottleDuration` applies as before.
+
+```csharp
+// Program.cs
+options.Throttling.EscalatingThrottleDurations = [
+    TimeSpan.FromMinutes(5),
+    TimeSpan.FromMinutes(15),
+    TimeSpan.FromHours(1)
+];
+```
+
+With this configuration, the first lockout blocks for 5 minutes, the second for 15 minutes, and every subsequent lockout for 1 hour.
 
 ## OTP Security
 

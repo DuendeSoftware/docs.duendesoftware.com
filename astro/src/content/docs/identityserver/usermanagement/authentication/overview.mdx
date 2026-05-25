@@ -243,7 +243,7 @@ Flows can be combined. For example, you can allow users to sign in with an exter
 
 ### Password + TOTP (Most Common)
 
-Authenticate with a password first, then check whether the user has a TOTP authenticator enrolled:
+Authenticate with a password first, then check whether the user has a TOTP authenticator enrolled. Passwords can also expire; when they do, `TryAuthenticateAsync` returns `PasswordAuthenticationResult.Expired` so you can redirect the user to a password-change page. See the [passwords page](./passwords.mdx) for details on configuring expiry.
 
 ```csharp
 // Primary authentication with password
@@ -252,18 +252,25 @@ var result = await passwordAuth.TryAuthenticateAsync(
     NonValidatedPassword.Create(password),
     ct);
 
-if (result is not PasswordAuthenticationResult.Success success)
+switch (result)
 {
-    // Authentication failed
-    return;
-}
+    case PasswordAuthenticationResult.Success success:
+        // Check if user has 2FA enabled
+        var user = await userSelfService.TryGetUser(success.UserSubjectId, ct);
+        if (user?.TotpAuthenticatorNames.Count > 0)
+        {
+            // Require TOTP verification
+            return RedirectToPage("/LoginWith2FA");
+        }
+        break;
 
-// Check if user has 2FA enabled
-var user = await userSelfService.TryGetUser(success.UserSubjectId, ct);
-if (user?.TotpAuthenticatorNames.Count > 0)
-{
-    // Require TOTP verification
-    return RedirectToPage("/LoginWith2FA");
+    case PasswordAuthenticationResult.Expired expired:
+        // The user's password has expired; redirect them to set a new one
+        return RedirectToPage("/ChangePassword", new { userId = expired.UserSubjectId });
+
+    default:
+        // Authentication failed
+        return;
 }
 ```
 

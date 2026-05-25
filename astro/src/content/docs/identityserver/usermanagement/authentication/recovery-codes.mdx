@@ -71,7 +71,7 @@ public interface IRecoveryCodeAuth
     Task<bool> TryAuthenticateAsync(
         UserSubjectId subjectId,
         PlainTextRecoveryCode recoveryCode,
-        Ct ct);
+        CancellationToken ct);
 }
 ```
 
@@ -85,7 +85,7 @@ The method verifies the supplied code against stored hashes and, if valid, marks
 // Generate new recovery codes. Invalidates all existing codes
 Task<IReadOnlyCollection<PlainTextRecoveryCode>?> TryCreateRecoveryCodesAsync(
     UserSubjectId subjectId,
-    Ct ct);
+    CancellationToken ct);
 ```
 
 Returns `null` if code generation fails (for example, when 2FA is not enabled for the user).
@@ -187,7 +187,7 @@ public async Task<IActionResult> OnPostLoginWithRecoveryCodeAsync(string recover
 
     // Verify and consume the recovery code
     var success = await recoveryCodeAuth.TryAuthenticateAsync(
-        authState.UserId, code.Value, ct);
+        authState.UserId, code, ct);
 
     if (!success)
     {
@@ -267,6 +267,49 @@ public async Task<IActionResult> OnGetAsync()
     return Page();
 }
 ```
+
+## Configuration
+
+You can control how recovery codes are generated and whether they are enabled at all.
+
+### RecoveryCodeOptions
+
+Recovery code behavior is configured via `RecoveryCodeOptions`, accessible through the top-level options object when registering User Management services.
+
+```csharp
+// Program.cs
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .EnableAuthentication(auth =>
+        {
+            auth.Configure(options =>
+            {
+                options.RecoveryCodes.Count = 8;
+                options.RecoveryCodes.Enabled = true;
+            });
+        })
+    );
+```
+
+| Property  | Type   | Default | Description                                                                                                                                                                        |
+|-----------|--------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Count`   | `int`  | `10`    | Number of recovery codes generated per call to `TryCreateRecoveryCodesAsync`. Valid range is 1 to 50.                                                                              |
+| `Enabled` | `bool` | `true`  | When set to `false`, recovery codes are disabled entirely. `TryCreateRecoveryCodesAsync` returns `null` and `TryAuthenticateAsync` returns `false` for all recovery code attempts. |
+
+### Disabling recovery codes
+
+You may want to set `Enabled = false` if your application only supports TOTP or passkeys as second factors and you don't want recovery codes as a fallback. For example, some high-security applications prefer to require users to contact support for account recovery rather than relying on stored codes.
+
+```csharp
+// Program.cs - disable recovery codes entirely
+auth.Configure(options =>
+{
+    options.RecoveryCodes.Enabled = false;
+});
+```
+
+When `Enabled` is `false`, any call to `TryCreateRecoveryCodesAsync` returns `null`, and any call to `TryAuthenticateAsync` returns `false`, regardless of what codes the user may have stored.
 
 ## Security
 
