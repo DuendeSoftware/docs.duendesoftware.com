@@ -31,10 +31,15 @@ Returns the IdentityServer SAML 2.0 Identity Provider metadata document (an XML 
 Providers use this document to discover the IdP's signing certificates, supported NameID formats,
 and endpoint locations.
 
-SAML metadata enables automated federation setup. Instead of manually exchanging certificates and endpoint URLs out-of-band, Service Providers import the IdP's metadata document to configure trust automatically. This is the standard mechanism for onboarding new Service Providers into a federation. See [Metadata](/identityserver/saml/concepts.md#metadata) for more background.
+SAML metadata enables automated federation setup. Instead of manually exchanging certificates and endpoint URLs out-of-band,
+Service Providers import the IdP's metadata document to configure trust automatically. This is the standard mechanism 
+for onboarding new Service Providers into a federation. See [Metadata](/identityserver/saml/concepts.md#metadata) for more background.
 
 Share this URL with Service Providers during SP configuration so they can automatically import
 IdP settings.
+
+In the `IDPSSODescriptor`, `SingleLogoutService` elements appear before `NameIDFormat` elements, matching the ordering 
+required by the SAML metadata schema.
 
 ## Sign-in Endpoint
 

@@ -122,25 +122,26 @@ The default implementation is `Saml2LogoutNotificationService`, which sends a SA
 to each SP that has a configured `SingleLogoutServiceUrl`. Override it to customize which SPs
 receive notifications or to modify the logout messages.
 
-The method returns a collection of `SamlLogoutRequestContext` objects. Each context includes
-correlation metadata (the request ID and the SP entity ID) alongside the outbound message itself,
-giving you more information to work with when customizing logout behavior.
-
 ```csharp
 // ISamlLogoutNotificationService.cs
 public interface ISamlLogoutNotificationService
 {
-    Task<IReadOnlyCollection<SamlLogoutRequestContext>> GetSamlFrontChannelLogoutsAsync(
+    Task<SamlLogoutNotificationResult> GetSamlFrontChannelLogoutsAsync(
         LogoutNotificationContext context,
         CancellationToken ct);
 }
 ```
 
+The method returns a `SamlLogoutNotificationResult` record with two properties:
+
+* `Messages` (`IReadOnlyCollection<SamlLogoutRequestContext>`): the successfully generated logout request contexts, one per SP to notify.
+* `SkippedCount` (`int`): the number of SPs that could not be notified (for example, because they are disabled, have no SLO URL, use an unsupported binding, or request generation failed).
+
 `SamlLogoutRequestContext` is a record with three properties:
 
-* `Message` (`OutboundSaml2Message`) -- the outbound message ready to send to the SP
-* `RequestId` (`string`) -- the SAML ID attribute value from the `LogoutRequest`, used to correlate the SP's `LogoutResponse` via its `InResponseTo` attribute
-* `SpEntityId` (`string`) -- the entity ID of the destination SP
+* `Message` (`OutboundSaml2Message`): the outbound message ready to send to the SP.
+* `RequestId` (`string`): the SAML ID attribute value from the `LogoutRequest`, used to correlate the SP's `LogoutResponse` via its `InResponseTo` attribute.
+* `SpEntityId` (`string`): the entity ID of the destination SP.
 
 ### When to Use
 
@@ -274,6 +275,11 @@ public interface ISamlLogoutSessionStore
   request ID was not found or the issuer did not match.
 * `RemoveAsync`: removes a logout session. Idempotent; does not throw if the session does not
   exist.
+
+`SamlLogoutSession` has a `SkippedSpCount` (`int`) property that records how many SPs could not
+be notified during logout. This value is set from `SamlLogoutNotificationResult.SkippedCount`
+when the session is created. When `SkippedSpCount` is greater than zero, the best achievable
+logout outcome is `PartialLogout`, regardless of whether the remaining SPs respond successfully.
 
 ### When to Use
 

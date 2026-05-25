@@ -80,6 +80,10 @@ Available options:
 * **`WantAuthnRequestsSigned`**
   When `true`, the IdP requires all AuthnRequests to be signed. Defaults to `true`.
 
+* **`RequireSignedLogoutResponses`**
+  When `true`, IdentityServer requires LogoutResponse messages from SPs to be signed or delivered over TLS.
+  Defaults to `true`, per SAML 2.0 Profiles §4.4.4. Individual SPs can override this via `SamlServiceProvider.RequireSignedLogoutResponses`.
+
 * **`DefaultClaimMappings`**
   Maps OIDC claim types to SAML attribute names. See [Default Claim Mappings](#default-claim-mappings) below.
 
@@ -240,6 +244,10 @@ Available options:
 
 * **`RequireSignedAuthnRequests`** (`bool?`)
   When `true`, unsigned AuthnRequests from this SP are rejected. When `null`, falls back to the global `SamlOptions.WantAuthnRequestsSigned` default. Defaults to `null`.
+
+* **`RequireSignedLogoutResponses`** (`bool?`)
+  Per-SP override for whether LogoutResponse messages must be signed or delivered over TLS. 
+  When `null`, falls back to `SamlOptions.RequireSignedLogoutResponses`. Defaults to `null`.
 
 * **`Certificates`** (`ICollection<ServiceProviderCertificate>?`)
   Certificates associated with this SP, with use annotations indicating whether each certificate is used for signature verification, encryption, or both. See [`ServiceProviderCertificate`](#serviceprovidercertificate) below. Defaults to `null`.
