@@ -1,7 +1,7 @@
 ---
 title: "Enabling User Management in IdentityServer"
 description: "How to add User Management to IdentityServer, including user storage, authentication flows, claims mapping, and role-based authorization."
-date: 2025-05-21
+date: 2025-05-26
 sidebar:
   label: IdentityServer Integration
   order: 3
@@ -29,7 +29,7 @@ Once you have IdentityServer set up, adding User Management takes a single call 
 2. **Call `AddUserManagement()` on the IdentityServer builder**
 
     The configure delegate is where you enable features and configure storage. This registers both the User Management
-    services and the `ProfileService` implementation of `IProfileService`.
+    services and the `UserManagementProfileService` implementation of `IProfileService`.
 
     ```csharp
     // Program.cs
@@ -61,19 +61,20 @@ Once you have IdentityServer set up, adding User Management takes a single call 
 
 ## Claims Mapping
 
-When IdentityServer calls `GetProfileDataAsync`, the `ProfileService` loads the user's profile and maps it to claims:
+When IdentityServer calls `GetProfileDataAsync`, the `UserManagementProfileService` loads the user's profile
+and maps it to claims:
 
 * **Profile attributes**: Each attribute's code becomes the claim type and its value becomes the claim value. Boolean attributes emit `"true"` or `"false"` with `ClaimValueTypes.Boolean`.
 * **`preferred_username`**: Emitted from the user's `UserName` property.
 * **`role`**: Emitted for every role assigned directly to the user and for every role inherited transitively through group membership. Duplicate roles (by role ID) are deduplicated before emission.
 
-Only claims that match the requested scopes are issued. The `ProfileService` uses `context.AddRequestedClaims(claims)`
-internally, so IdentityServer's standard scope-to-claim filtering applies.
+Only claims that match the requested scopes are issued. The `UserManagementProfileService`
+uses `context.AddRequestedClaims(claims)` internally, so IdentityServer's standard scope-to-claim filtering applies.
 
 ## Subject ID Requirements
 
 The `sub` claim in the token must be a non-empty string (up to 200 characters) that can be parsed as a `UserSubjectId`.
-The `ProfileService` converts it using `UserSubjectId.TryCreate`. If parsing fails, no claims are issued and a warning
+The `UserManagementProfileService` converts it using `UserSubjectId.TryCreate`. If parsing fails, no claims are issued and a warning
 is logged.
 
 `IsActiveAsync` returns `true` when the user profile exists and `false` otherwise, which causes IdentityServer to
@@ -81,7 +82,7 @@ reject tokens for deleted or missing users.
 
 ## Customization
 
-`ProfileService` is a public class with virtual methods you can override by subclassing it and registering your
+`UserManagementProfileService` is a public class with virtual methods you can override by subclassing it and registering your
 subclass with the service provider:
 
 * `FindUserAsync(UserSubjectId subjectId, CancellationToken ct)` - override to customize how the user profile is loaded.
