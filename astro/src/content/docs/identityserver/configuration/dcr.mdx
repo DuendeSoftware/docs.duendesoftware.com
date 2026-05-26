@@ -213,6 +213,17 @@ builder.Services.AddIdentityServer(options =>
 });
 ```
 
+:::caution[Cross-host Registration Endpoint]
+When using `RegistrationEndpointMode.Static` with a registration endpoint on a different host than the authority,
+clients that consume the discovery document may reject the cross-host endpoint by default due to endpoint validation
+in their discovery policy.
+
+This applies to [Duende IdentityModel](/identitymodel/endpoints/discovery.md#cross-host-endpoints), and may also apply
+to other client libraries that validate discovery document endpoints.
+
+You will need to configure the discovery policy on any downstream service that fetches the discovery document.
+:::
+
 :::note
 DCR support was added to Duende IdentityServer v7.4. If you cannot upgrade your IdentityServer solution yet,
 you'll have to add custom entries to the Discovery Document instead:
