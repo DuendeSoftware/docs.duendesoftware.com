@@ -35,7 +35,7 @@ If you are new to SAML 2.0 or want a refresher on the protocol's core building b
 
 IdentityServer can also act as a SAML **Service Provider (SP)**, consuming assertions from an external SAML IdP. This lets you use a third-party SAML IdP as an upstream identity source, the same way you might use Google or Entra ID as an external OIDC provider.
 
-For an overview of both roles (IdP and SP) and how they relate, see [IdentityServer as IdP and SP](/identityserver/saml/idp-and-sp.mdx). For step-by-step setup instructions, see [Configuring a SAML external provider](/identityserver/ui/login/saml-provider.md).
+For an overview of both roles (IdP and SP) and how they relate, see [IdentityServer as IdP and SP](/identityserver/saml/idp-and-sp.mdx). For step-by-step setup instructions, see [Configuring a SAML external provider](/identityserver/ui/login/saml-provider.md). If you have many SAML IdPs to manage, consider using [dynamic providers](/identityserver/ui/login/dynamicproviders.md#saml-providers) instead of static registration.
 
 The rest of the `saml/` section covers the IdP role: configuring IdentityServer to issue SAML assertions to your registered Service Providers.
 
