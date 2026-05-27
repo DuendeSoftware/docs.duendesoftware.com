@@ -71,6 +71,15 @@ and maps it to claims:
 Only claims that match the requested scopes are issued. The `UserManagementProfileService`
 uses `context.AddRequestedClaims(claims)` internally, so IdentityServer's standard scope-to-claim filtering applies.
 
+## Partial Module Registration
+
+You don't have to enable every User Management module. The `UserManagementProfileService` handles missing modules gracefully:
+
+* **Profiles module not registered** (no `IUserProfileAdmin` in the service provider): The profile service falls back to passing through the claims from the authentication session's subject principal. `IsActiveAsync` treats the user as always active. This matches the behavior of IdentityServer's built-in `DefaultProfileService`.
+* **Membership module not registered** (no `IMembershipAdmin` in the service provider): Role claim resolution is skipped entirely. No `role` claims are emitted.
+
+This means you can call `AddUserManagement()` with only authentication enabled, for example, and the profile service still works without errors.
+
 ## Subject ID Requirements
 
 The `sub` claim in the token must be a non-empty string (up to 200 characters) that can be parsed as a `UserSubjectId`.
@@ -86,6 +95,7 @@ reject tokens for deleted or missing users.
 subclass with the service provider:
 
 * `FindUserAsync(UserSubjectId subjectId, CancellationToken ct)` - override to customize how the user profile is loaded.
+* `GetProfileDataAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to intercept profile loading after the subject ID is parsed but before the user profile is fetched.
 * `GetProfileDataAsync(ProfileDataRequestContext context, UserProfile user, CancellationToken ct)` - override to customize how claims are built from the profile.
 * `GetRoleClaimsAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to customize how role claims are collected.
 

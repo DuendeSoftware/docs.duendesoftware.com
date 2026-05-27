@@ -110,7 +110,7 @@ public sealed class AttributeDefinition
 * `DisplayName`: Optional human-readable display name for the attribute. When set, UIs can show this instead of the raw code.
 * `DataType`: Convenience accessor for scalar types. Throws `InvalidOperationException` for complex or list types.
 * `IsUnique`: When `true`, the system enforces that no two profiles share the same value for this attribute. Not supported for complex or list types.
-* `IsQueryable`: When `true` (the default), the attribute is indexed and can be searched via SCIM filter expressions. Set to `false` for attributes that are stored but never queried, reducing storage overhead.
+* `IsQueryable`: When `true` (the default), the attribute is indexed and can be searched and filtered. Set to `false` for attributes that are stored but never queried, reducing storage overhead.
 * `IsRequired`: When `true`, the attribute must be present in the `AttributeValueCollection` before `Validate()` succeeds. Defaults to `false`.
 * `Tags`: Optional string tags for grouping or filtering definitions.
 * `GroupCode`: The code of the group this attribute belongs to. `null` means the attribute is ungrouped.
