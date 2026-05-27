@@ -86,7 +86,7 @@ IdentityServer supports two bindings:
 
 The SAML specification also defines **HTTP-Artifact** binding, which sends a short reference token through the browser and resolves the full assertion via a back-channel SOAP call. IdentityServer does not currently support Artifact binding.
 
-You configure the binding per SP via the `Binding` property on each [`IndexedEndpoint`](/identityserver/saml/configuration.md#indexedendpoint) in `AssertionConsumerServiceUrls`. This is the current API:
+You configure the binding per SP via the `Binding` property on each [`IndexedEndpoint`](/identityserver/saml/configuration.md#indexedendpoint) in `AssertionConsumerServiceUrls`:
 
 ```csharp
 AssertionConsumerServiceUrls = new List<IndexedEndpoint>
