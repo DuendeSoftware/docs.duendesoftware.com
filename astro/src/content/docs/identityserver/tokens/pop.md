@@ -1,7 +1,7 @@
 ---
 title: "Proof-of-Possession Access Tokens"
 description: "Documentation for Proof-of-Possession (PoP) tokens, which enhance security by cryptographically binding tokens to clients, including both Mutual TLS and DPoP implementations."
-date: 2020-09-10T08:22:12+02:00
+date: 2026-05-27
 sidebar:
   label: Proof-of-Possession
   order: 100
@@ -190,6 +190,20 @@ The creation and management of this DPoP key is up to the policy of the client.
 For example is can be dynamically created when the client starts up, and can be periodically rotated.
 The main constraint is that it must be stored for as long as the client uses any access tokens (and possibly refresh
 tokens) that they are bound to.
+
+#### URL Matching (`htu` Claim) :badge[v8.0]
+
+When validating the `htu` claim in a DPoP proof token, IdentityServer follows
+[RFC 9449 section 4.3 step 9](https://datatracker.ietf.org/doc/html/rfc9449#section-4.3).
+The comparison between the request URL and the `htu` value:
+
+* Ignores query string and fragment components
+* Compares scheme and host case-insensitively
+* Compares the path case-sensitively
+* Normalizes default ports (e.g. port 443 for HTTPS) per [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-6.2.3)
+
+This means a proof token with an `htu` of `https://example.com/api/resource` will match a request to 
+`https://example.com/api/resource?page=1`, but not `https://example.com/API/resource`.
 
 #### Enabling DPoP In IdentityServer
 
