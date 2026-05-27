@@ -21,16 +21,7 @@ builder.Services.AddIdentityServer()
     .AddSaml();
 ```
 
-`AddSaml()` registers all SAML services and endpoints. It can be called with no arguments when all Service Provider configuration is managed via a store, or with an options callback to configure protocol-level settings:
-
-```csharp
-builder.Services.AddIdentityServer()
-    .AddSaml(saml =>
-    {
-        saml.EntityId = "https://idp.example.com/saml";
-        saml.Metadata.CacheDuration = TimeSpan.FromHours(1);
-    });
-```
+`AddSaml()` registers all SAML services and endpoints. It can be called with no arguments when all Service Provider configuration is managed via a store (the IdP's entity ID and other defaults are derived automatically). Pass an options callback to configure protocol-level settings explicitly.
 
 ## SamlOptions
 
@@ -90,7 +81,7 @@ Available options:
 * **`SupportedNameIdFormats`**
   Supported NameID formats advertised by the IdP. Defaults to `[ EmailAddress, Unspecified ]`.
 
-  The NameID format determines how the user is identified to the SP. **emailAddress** is human-readable but exposes PII and is coupled to a value that can change. **Unspecified** leaves the format to the IdP's discretion. Inbound AuthnRequests are validated against the formats configured here; requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
+  The NameID format determines how the user is identified to the SP. **emailAddress** uses the user's email claim and is human-readable but exposes PII. **Unspecified** uses the user's `sub` claim value. Inbound AuthnRequests are validated against the formats configured here; requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
 
 * **`DefaultClockSkew`**
   Clock skew tolerance for validating SAML message timestamps. Defaults to 5 minutes.
@@ -102,13 +93,13 @@ Available options:
   Default signing behavior for SAML responses. Defaults to `SignAssertion`.
 
   :::note
-  When you configure an RSA signing key without an X509 certificate (for example, using `AddDeveloperSigningCredential()` or a raw RSA key), IdentityServer automatically generates an X509 container for SAML signing operations. You do not need to create or provide a certificate manually - the generated container wraps your existing RSA key material and is cached for the lifetime of the application.
+  SAML signing requires an X509 certificate. When you use automatic key management or `AddDeveloperSigningCredential()` (which provide RSA keys without a certificate), IdentityServer automatically generates an X509 container that wraps your existing RSA key material. You do not need to create or provide a certificate manually.
   :::
 
 * **`MaxRelayStateLength`**
   Maximum length (in UTF-8 bytes) of the RelayState parameter. Defaults to 80.
 
-  RelayState is an opaque string that an SP includes in its `AuthnRequest` to preserve application state (typically the URL the user originally requested) across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can redirect the user to the right page after authentication. The SAML specification recommends keeping RelayState short; this limit enforces that guidance. See [`RelayState`](/identityserver/saml/concepts.md#relaystate) for more context.
+  RelayState is an opaque string that an SP includes in its `AuthnRequest` to preserve application state across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can keep state that it needs for processing after authentication. The SAML specification mandates that RelayState MUST NOT exceed 80 bytes in length; this limit enforces that requirement. See [`RelayState`](/identityserver/saml/concepts.md#relaystate) for more context.
 
 * **`DefaultAuthnContextMappings`**
   Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML URI.
@@ -151,6 +142,10 @@ names:
 
 Claims not present in this mapping are still included in the assertion but use their original claim type as the attribute name.
 Override mappings globally via `SamlOptions.DefaultClaimMappings` or per Service Provider via `SamlServiceProvider.ClaimMappings`.
+
+:::note
+Claim selection and attribute naming are two separate steps. You select which claims to include in assertions using OIDC claim type names (via identity resources and `RequestedClaimTypes`). The claim mapping then controls what SAML attribute name each selected claim is emitted as. For example, selecting the `email` claim (an OIDC name) results in an attribute named `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress` (a SAML URI) in the assertion.
+:::
 
 ## SamlMetadataOptions
 
