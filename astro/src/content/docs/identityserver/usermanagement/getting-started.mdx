@@ -42,7 +42,7 @@ The `webapp` template gives you a Razor Pages project with a `Program.cs` entry 
 
 ### Add NuGet Packages
 
-Add the IdentityServer, IdentityServer User Management, and the SQLite storage NuGet packages:
+Add the IdentityServer, IdentityServer User Management, and a storage NuGet package:
 
 ```bash title="Terminal"
 dotnet add package Duende.IdentityServer
@@ -50,7 +50,17 @@ dotnet add package Duende.IdentityServer.UserManagement
 dotnet add package Duende.Storage.Sqlite
 ```
 
-`Duende.IdentityServer` is the core IdentityServer package. `Duende.IdentityServer.UserManagement` adds the User Management integration on top of it. `Duende.Storage.Sqlite` provides the SQLite-backed store for user data.
+`Duende.IdentityServer` is the core IdentityServer package. `Duende.IdentityServer.UserManagement` adds the User Management integration on top of it. The storage package provides the backing store for user data.
+
+Three storage adapters are available:
+
+| Package | Database | Notes |
+|---------|----------|-------|
+| `Duende.Storage.Postgresql` | PostgreSQL | Recommended for production. Requires an `NpgsqlDataSource` registered in DI. |
+| `Duende.Storage.Mssql` | SQL Server | Production-ready for Microsoft/Windows environments. |
+| `Duende.Storage.Sqlite` | SQLite | File-based storage for local development. Also supports an in-memory mode (`Data Source=:memory:`) for automated testing. |
+
+This tutorial uses SQLite for simplicity. For production configuration and setup of each provider, see the [Storage documentation](/identityserver/usermanagement/fundamentals/storage.md).
 
 ### Add an IdentityServer Config File
 
