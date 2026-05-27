@@ -96,9 +96,9 @@ For production, use the EF Core store from `Duende.IdentityServer.EntityFramewor
 
 ## Login Page Compatibility
 
-Your existing IdentityServer login pages work with SAML without modification. When a SAML `AuthnRequest` arrives, IdentityServer processes it and redirects to your login page with a `returnUrl`, just as it does for OIDC authorization requests. Your login page authenticates the user and redirects back. The framework handles the rest, regardless of whether the original request was OIDC or SAML.
+When a SAML `AuthnRequest` arrives, IdentityServer processes it and redirects to your login page with a `returnUrl`, just as it does for OIDC authorization requests. Your login page authenticates the user and redirects back. The framework handles the rest, regardless of whether the original request was OIDC or SAML.
 
-No SAML-specific code is needed in your login, consent, or logout pages for standard flows.
+However, your login page does need one update for SAML support: the non-success path. If the user clicks "Cancel" or authentication is denied for another reason, your login page must call `DenyAuthenticationAsync` on `IIdentityServerInteractionService` so that IdentityServer can return the correct SAML error response to the SP. Without this, cancellation will not work for SAML flows. See [Denying Authentication](/identityserver/ui/login/context.md#denying-authentication) for implementation details.
 
 For advanced scenarios where your login UI needs access to SAML-specific request details (such as `RequestedAuthnContext` requirements), call `GetAuthenticationContextAsync` on `IIdentityServerInteractionService` and pattern-match on the result to access `SamlAuthenticationContext`. See [Extensibility](/identityserver/saml/extensibility.md) for details.
 

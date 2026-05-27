@@ -176,15 +176,15 @@ builder.Services.AddIdentityServer()
 
 `SamlEndpointOptions` configures the URL paths and supported bindings for all SAML protocol endpoints. Access it via `SamlOptions.Endpoints`.
 
-| Property                      | Type                  | Default                    | Description                                                                                                                     |
-|-------------------------------|-----------------------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                                                                             |
-| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SSO endpoint. Set to an empty collection to disable the SSO endpoint entirely.                         |
-| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates).                                                                  |
-| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses).                                                        |
-| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings accepted by the SLO endpoint. Set to an empty collection to disable the SLO endpoint entirely.                         |
-| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow).                                                                 |
-| `StateIdParameterName`        | `string`              | `"samlStateId"`            | Query string parameter name used to pass the SAML sign-in state identifier through the return URL. |
+| Property                      | Type                  | Default                    | Description                                                                                                                                           |
+|-------------------------------|-----------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                                                                                                   |
+| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SSO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. |
+| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates).                                                                                        |
+| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses).                                                                              |
+| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SLO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. |
+| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow).                                                                                       |
+| `StateIdParameterName`        | `string`              | `"samlStateId"`            | Query string parameter name used to pass the SAML sign-in state identifier through the return URL.                                                    |
 
 
 ```csharp

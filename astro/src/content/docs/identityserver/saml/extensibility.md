@@ -25,10 +25,14 @@ alongside the standard authorization context. Your login UI can access this info
 `GetAuthenticationContextAsync` on `IIdentityServerInteractionService` and pattern-matching the
 result to `SamlAuthenticationContext`.
 
-This is not required for standard login flows. Your existing login pages work with SAML
-automatically because IdentityServer redirects to your login page with a `returnUrl` regardless of
-protocol. You only need this when your login UI needs to behave differently based on SAML-specific
-request details, such as enforcing MFA when the SP requests a specific `AuthnContext` class.
+For the happy path (user authenticates successfully), your existing login pages work with SAML
+without changes because IdentityServer redirects to your login page with a `returnUrl` regardless of
+protocol. However, for non-success paths (such as the user clicking a cancel button), your login page
+needs to call `DenyAuthenticationAsync` on `IIdentityServerInteractionService` so that IdentityServer
+can return the appropriate SAML error response to the SP. See [Denying Authentication](/identityserver/ui/login/context.md#denying-authentication) for details.
+
+You need `GetAuthenticationContextAsync` when your login UI needs to behave differently based on
+SAML-specific request details, such as enforcing MFA when the SP requests a specific `AuthnContext` class.
 
 ```csharp
 // LoginModel.cshtml.cs
