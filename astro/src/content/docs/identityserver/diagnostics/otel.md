@@ -331,7 +331,7 @@ On failure:
 
 The `error` tag uses a bounded set of values to prevent cardinality explosion in your metrics backend:
 
-`invalid`, `unknown`, `sp_not_found`, `sp_disabled`, `invalid_acs_url`, `access_denied`, `partial_logout`, `interaction_error`
+`invalid`, `unknown`, `sp_not_found`, `sp_disabled`, `invalid_acs_url`, `access_denied`, `interaction_error`
 
 #### Telemetry.Metrics.Counters.SamlSlo
 

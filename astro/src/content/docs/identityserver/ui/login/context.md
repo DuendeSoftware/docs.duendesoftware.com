@@ -51,7 +51,7 @@ public async Task<IActionResult> OnPostCancelAsync(string returnUrl)
 
     if (context is not null)
     {
-        await _interaction.DenyAuthenticationAsync(context, InteractionError.AccessDenied);
+        await _interaction.DenyAuthenticationAsync(context, InteractionError.AccessDenied, Request.HttpContext.RequestAborted);
     }
 
     return Redirect(returnUrl);

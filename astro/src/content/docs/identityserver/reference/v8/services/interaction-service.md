@@ -58,6 +58,10 @@ All async methods accept a `CancellationToken ct` parameter.
 
   Accepts a `ConsentResponse` to inform IdentityServer of the user's consent to a particular `AuthorizationRequest`.
 
+* **`DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, CancellationToken ct, string? errorDescription = null)`**
+
+  Accepts a `AuthorizationError` to inform IdentityServer of the error to return to the client for a particular `AuthorizationRequest`.
+
 * **`DenyAuthenticationAsync(IAuthenticationContext context, InteractionError error, CancellationToken ct, string? errorDescription = null)`**
 
   Denies the current authentication request. Works for both OIDC and SAML flows. Accepts an
