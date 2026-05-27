@@ -19,14 +19,13 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.Configure(options =>
+        .Authentication(auth => auth.Configure(options =>
         {
             options.Passwords.MinLength = 10;
             options.Passkeys.RelyingPartyName = "My Application";
             options.Passkeys.AllowedOrigins = ["https://app.example.com"];
             options.Throttling.MaxFailedAttempts = 3;
         }))
-        .EnableProfiles()
     );
 ```
 
@@ -38,7 +37,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.Configure(options =>
             {
@@ -55,7 +54,7 @@ builder.Services
 
 ## `UserAuthenticationOptions`
 
-Top-level options class for the `EnableAuthentication()` call. Accessed via `IOptions<UserAuthenticationOptions>`.
+Top-level options class for authentication configuration. Accessed via `IOptions<UserAuthenticationOptions>`.
 
 | Property        | Type                              | Description                                                                  |
 |-----------------|-----------------------------------|------------------------------------------------------------------------------|
@@ -86,7 +85,7 @@ Controls the built-in password complexity validator. Accessed via `UserAuthentic
 Example (relaxed password policy):
 
 ```csharp title="Program.cs"
-.EnableAuthentication(auth => auth.Configure(options =>
+.Authentication(auth => auth.Configure(options =>
 {
     options.Passwords.MinLength = 12;
     options.Passwords.MinLower = 1;
@@ -149,7 +148,7 @@ The `ResidentKeyRequirement` property accepts the following string values:
 ### Passkey Configuration Example
 
 ```csharp title="Program.cs"
-.EnableAuthentication(auth => auth.Configure(options =>
+.Authentication(auth => auth.Configure(options =>
 {
     options.Passkeys.RelyingPartyName = "ACME Corporation";
     options.Passkeys.ServerDomain = "example.com";
@@ -183,7 +182,7 @@ Nested within `TotpOptions`. Controls TOTP secret storage behavior.
 Example (disable key protection; not recommended unless storage is encrypted externally):
 
 ```csharp title="Program.cs"
-.EnableAuthentication(auth => auth.Configure(options =>
+.Authentication(auth => auth.Configure(options =>
 {
     options.Totp.Storage.ProtectKeys = false;
 }))
@@ -206,7 +205,7 @@ Controls the built-in per-authenticator failed-attempt throttling policy. Access
 Example (stricter throttling):
 
 ```csharp title="Program.cs"
-.EnableAuthentication(auth => auth.Configure(options =>
+.Authentication(auth => auth.Configure(options =>
 {
     options.Throttling.MaxFailedAttempts = 3;
     options.Throttling.FailureWindow = TimeSpan.FromMinutes(30);
@@ -231,7 +230,7 @@ Controls recovery code generation and authentication. Accessed via `UserAuthenti
 Controls the HTTP endpoint routes exposed by the web layer. Configure via `ConfigureEndpoints()` on the authentication builder:
 
 ```csharp title="Program.cs"
-.EnableAuthentication(auth =>
+.Authentication(auth =>
 {
     auth.Configure(options => { /* UserAuthenticationOptions */ });
     auth.ConfigureEndpoints(endpoints =>
@@ -244,7 +243,7 @@ Controls the HTTP endpoint routes exposed by the web layer. Configure via `Confi
 Or bind from configuration:
 
 ```csharp title="Program.cs"
-.EnableAuthentication(auth =>
+.Authentication(auth =>
 {
     auth.Configure(options => { });
     auth.ConfigureEndpoints(
@@ -284,22 +283,9 @@ This changes all passkey endpoints to use `/auth/webauthn` as the base, so regis
 
 ## Membership Module
 
-The membership module provides administrative services for managing users, roles, and groups within your application. It is an optional add-on to the core User Management stack; register it when your application needs to programmatically create or modify users, assign roles, or manage group membership from server-side code (for example, in admin UIs or API endpoints).
+The membership module provides administrative services for managing users, roles, and groups within your application. It is registered automatically by `AddUserManagement()` when your application needs to programmatically create or modify users, assign roles, or manage group membership from server-side code (for example, in admin UIs or API endpoints).
 
-The module is registered by calling `EnableMembership()` through `AddUserManagement()`:
-
-```csharp title="Program.cs"
-using Duende.UserManagement;
-
-builder.Services
-    .AddIdentityServer()
-    .AddUserManagement(um => um
-        .EnableAuthentication()
-        .EnableMembership()
-    );
-```
-
-Calling `EnableMembership()` registers the following services with the service provider:
+The following services are registered automatically with the service provider:
 
 | Service            | Description                                                                                                 |
 |--------------------|-------------------------------------------------------------------------------------------------------------|

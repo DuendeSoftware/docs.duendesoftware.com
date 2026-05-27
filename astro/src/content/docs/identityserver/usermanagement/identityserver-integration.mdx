@@ -44,11 +44,10 @@ Once you have IdentityServer set up, adding User Management takes a single call 
         .AddInMemoryClients(Config.Clients)
         .AddUserManagement(options =>
         {
-            options.EnableAuthentication(configure =>
+            options.Authentication(configure =>
             {
                 configure.UseSmtpOtpSender(x => builder.Configuration.GetSection("Smtp").Bind(x));
             });
-            options.EnableProfiles();
             options.AddPostgreSqlStore();
         });
     ```
@@ -71,14 +70,15 @@ and maps it to claims:
 Only claims that match the requested scopes are issued. The `UserManagementProfileService`
 uses `context.AddRequestedClaims(claims)` internally, so IdentityServer's standard scope-to-claim filtering applies.
 
-## Partial Module Registration
+## Fallback Behavior
 
-You don't have to enable every User Management module. The `UserManagementProfileService` handles missing modules gracefully:
+All User Management modules (profiles, authentication, membership) are registered automatically when you call `AddUserManagement()`. 
+However, the `UserManagementProfileService` is designed to degrade gracefully if a module's services are not available in the service provider:
 
-* **Profiles module not registered** (no `IUserProfileAdmin` in the service provider): The profile service falls back to passing through the claims from the authentication session's subject principal. `IsActiveAsync` treats the user as always active. This matches the behavior of IdentityServer's built-in `DefaultProfileService`.
-* **Membership module not registered** (no `IMembershipAdmin` in the service provider): Role claim resolution is skipped entirely. No `role` claims are emitted.
+* **Profiles not available** (no `IUserProfileAdmin`): The profile service falls back to passing through the claims from the authentication session's subject principal. `IsActiveAsync` treats the user as always active. This matches the behavior of IdentityServer's built-in `DefaultProfileService`.
+* **Membership not available** (no `IMembershipAdmin`): Role claim resolution is skipped entirely. No `role` claims are emitted.
 
-This means you can call `AddUserManagement()` with only authentication enabled, for example, and the profile service still works without errors.
+This is primarily relevant if you subclass `UserManagementProfileService` or use it in testing scenarios with a partial service provider setup.
 
 ## Subject ID Requirements
 

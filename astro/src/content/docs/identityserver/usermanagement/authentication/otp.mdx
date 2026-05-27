@@ -184,7 +184,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.UseSmtpOtpSender(options =>
             {
@@ -220,7 +220,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.UseOtpSender<MyCustomOtpSender>();
         })

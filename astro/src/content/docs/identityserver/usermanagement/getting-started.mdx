@@ -140,7 +140,6 @@ Open `Program.cs` and replace its contents with the following. The key call is `
         .AddInMemoryClients(Config.Clients)
         .AddUserManagement(options =>
         {
-            options.EnableAuthentication();
             options.AddSqliteStore(o =>
             {
                 o.ConnectionString = "Data Source=usermanagement.db";
@@ -202,7 +201,7 @@ Open `Program.cs` and replace its contents with the following. The key call is `
         .AddInMemoryClients(Config.Clients)
         .AddUserManagement(options =>
         {
-            options.EnableAuthentication(configure =>
+            options.Authentication(configure =>
             {
                 configure.UseSmtpOtpSender(x =>
                     builder.Configuration.GetSection("Smtp").Bind(x));

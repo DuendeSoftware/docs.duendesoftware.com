@@ -281,7 +281,7 @@ Recovery code behavior is configured via `RecoveryCodeOptions`, accessible throu
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.Configure(options =>
             {

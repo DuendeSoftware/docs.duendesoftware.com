@@ -11,7 +11,7 @@ Roles and groups provide a flexible authorization model. A role represents a nam
 
 ## End-to-End Example
 
-The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive). It uses three services (`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) which are registered by calling `EnableMembership()` (see [Configuration](/identityserver/usermanagement/reference/configuration.md#membership-module)) and can be injected via constructor injection:
+The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive). It uses three services (`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) which are registered automatically when you call `AddUserManagement()` (see [Configuration](/identityserver/usermanagement/reference/configuration.md#membership-module)) and can be injected via constructor injection:
 
 ```csharp
 using Duende.UserManagement.Membership;
@@ -105,7 +105,7 @@ Because the storage layer does not support union operations, direct and transiti
 
 ## `IRoleAdmin`
 
-`IRoleAdmin` provides full CRUD operations for roles. It is registered when you call `EnableMembership()` inside `AddUserManagement()` and is typically injected into admin controllers, background services, or seed scripts. Use it whenever you need to create, read, update, delete, or search roles independently of membership, for example to populate a role picker in an admin UI or to ensure a set of well-known roles exists at startup.
+`IRoleAdmin` provides full CRUD operations for roles. It is registered automatically when you call `AddUserManagement()` and is typically injected into admin controllers, background services, or seed scripts. Use it whenever you need to create, read, update, delete, or search roles independently of membership, for example to populate a role picker in an admin UI or to ensure a set of well-known roles exists at startup.
 
 ```csharp
 public interface IRoleAdmin
@@ -184,7 +184,7 @@ if (existing.IsFound)
 
 ## `IGroupAdmin`
 
-`IGroupAdmin` provides full CRUD operations for groups. Like `IRoleAdmin`, it is registered by `EnableMembership()` and is injected wherever group lifecycle management is needed, for example in an admin UI that lets administrators create and rename groups, or in a synchronization service that mirrors groups from an external directory. Use it to manage the group catalog independently of membership.
+`IGroupAdmin` provides full CRUD operations for groups. Like `IRoleAdmin`, it is registered by `AddUserManagement()` and is injected wherever group lifecycle management is needed, for example in an admin UI that lets administrators create and rename groups, or in a synchronization service that mirrors groups from an external directory. Use it to manage the group catalog independently of membership.
 
 ```csharp
 public interface IGroupAdmin
@@ -241,7 +241,7 @@ var groups = await groupAdmin.QueryAsync(QueryRequest.Create(filter, sort: null,
 
 ## `IMembershipAdmin`
 
-`IMembershipAdmin` is the single interface for all membership operations. It replaces the former `IRoleMembershipAdmin` and `IGroupMembershipAdmin` interfaces, which no longer exist. It is registered by `EnableMembership()` alongside `IRoleAdmin` and `IGroupAdmin` and is injected wherever you need to assign roles or groups to users, or query a user's effective roles.
+`IMembershipAdmin` is the single interface for all membership operations. It replaces the former `IRoleMembershipAdmin` and `IGroupMembershipAdmin` interfaces, which no longer exist. It is registered by `AddUserManagement()` alongside `IRoleAdmin` and `IGroupAdmin` and is injected wherever you need to assign roles or groups to users, or query a user's effective roles.
 
 A user's membership record is automatically created when a role or group is first assigned to them. There is no need to explicitly create or manage the membership lifecycle.
 

@@ -105,10 +105,10 @@ For cross-cutting security topics (data protection key persistence and throttlin
 
 Passkey support involves two registration steps:
 
-1. **`EnableAuthentication()`** registers the core passkey services: cryptographic signature verification (ES256, ES384, ES512, RS256, RS384, RS512, PS256, PS384, PS512, RS1), WebAuthn registration and authentication ceremonies, credential storage, and challenge management. Use this when you want to drive the passkey flow yourself without the built-in HTTP endpoints.
+1. **`AddUserManagement()`** automatically registers the core passkey services: cryptographic signature verification (ES256, ES384, ES512, RS256, RS384, RS512, PS256, PS384, PS512, RS1), WebAuthn registration and authentication ceremonies, credential storage, and challenge management. Use `Authentication(configure => ...)` to configure options when you want to drive the passkey flow yourself without the built-in HTTP endpoints.
 2. **`MapUserManagement()`** maps the web layer, including the passkey HTTP endpoints (`/passkeys/register/begin`, `/passkeys/register/complete`, `/passkeys/authenticate/begin`, `/passkeys/authenticate/complete`) and the JavaScript helper (`/passkeys/js`).
 
-Using `EnableAuthentication()` on its own:
+Using `Authentication(configure => ...)` to configure passkey options:
 
 ```csharp title="Program.cs"
 using Duende.UserManagement;
@@ -116,7 +116,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.Configure(options =>
             {
@@ -136,9 +136,7 @@ using Duende.UserManagement;
 
 builder.Services
     .AddIdentityServer()
-    .AddUserManagement(um => um
-        .EnableAuthentication()
-    );
+    .AddUserManagement();
 
 // After building the app:
 var app = builder.Build();
@@ -159,7 +157,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.Configure(options =>
             {
@@ -278,7 +276,7 @@ foreach (var passkey in authenticators?.Passkeys ?? [])
 
 ## Web Endpoints
 
-When `EnableAuthentication()` is called, the following HTTP endpoints are registered automatically to handle the WebAuthn ceremony protocol:
+When `AddUserManagement()` is called, the following HTTP endpoints are registered automatically to handle the WebAuthn ceremony protocol:
 
 | Endpoint                          | Method | Default Path                                | Description                                                        |
 |-----------------------------------|--------|---------------------------------------------|--------------------------------------------------------------------|
@@ -301,7 +299,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.ConfigureEndpoints(options =>
             {
@@ -332,7 +330,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.ConfigureEndpoints(
                 builder.Configuration.GetSection("UserAuthentication:Endpoints"));
@@ -417,7 +415,7 @@ sequenceDiagram
 The built-in JavaScript helper is served at `/passkeys/js` (configurable via `PasskeysJavaScript`). It provides browser-side utilities for interacting with the WebAuthn API and the ceremony endpoints.
 
 :::note
-Passkey routes (including `/passkeys/js`) are only available when `EnableAuthentication()` has been called during service registration and `app.MapUserManagement()` has been called on the endpoint route builder.
+Passkey routes (including `/passkeys/js`) are only available when `AddUserManagement()` has been called during service registration and `app.MapUserManagement()` has been called on the endpoint route builder.
 :::
 
 Include it in your HTML:
@@ -511,7 +509,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.EnablePasskeyForSecondFactor<CustomSecondFactorResolver>();
         })
@@ -528,7 +526,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.EnablePasskeyForSecondFactor(new CustomSecondFactorResolver(...));
         })
@@ -757,7 +755,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.AddAttestationTrustPolicy<MyAttestationTrustPolicy>();
         })

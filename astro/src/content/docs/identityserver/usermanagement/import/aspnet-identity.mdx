@@ -70,8 +70,7 @@ Your User Management registration already includes the custom `AspNetIdentityPas
 builder.Services.AddIdentityServer()
     .AddUserManagement(users =>
     {
-        users.EnableProfiles();
-        users.EnableAuthentication(auth =>
+        users.Authentication(auth =>
         {
             auth.AddPasswordHashAlgorithm<AspNetIdentityPasswordHashAlgorithm>();
         });

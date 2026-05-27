@@ -64,7 +64,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.Configure(options =>
+        .Authentication(auth => auth.Configure(options =>
         {
             options.Passwords.MinLength = 12;
             options.Passwords.MinSymbols = 1;
@@ -101,7 +101,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.Configure(options =>
+        .Authentication(auth => auth.Configure(options =>
         {
             options.Throttling.MaxFailedAttempts = 3;
             options.Throttling.FailureWindow = TimeSpan.FromMinutes(30);
@@ -138,7 +138,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.Configure(options =>
+        .Authentication(auth => auth.Configure(options =>
         {
             options.Throttling.MaxAttemptsPerWindow = 3;
             options.Throttling.VelocityWindow = TimeSpan.FromSeconds(15);
@@ -243,7 +243,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.Configure(options =>
+        .Authentication(auth => auth.Configure(options =>
         {
             options.Passkeys.UserVerificationRequirement = "required";
             options.Passkeys.ResidentKeyRequirement = "required";

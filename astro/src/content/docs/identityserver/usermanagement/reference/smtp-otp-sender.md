@@ -19,7 +19,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
+        .Authentication(auth => auth.UseSmtpOtpSender(options =>
         {
             options.Host = "smtp.example.com";
             options.Port = 587;
@@ -92,7 +92,7 @@ Note: `SubjectTemplate` only supports `{FromName}` and `{Code}`.
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
+        .Authentication(auth => auth.UseSmtpOtpSender(options =>
         {
             options.Host = "smtp.example.com";
             options.Port = 587;
@@ -129,7 +129,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
+        .Authentication(auth => auth.UseSmtpOtpSender(options =>
         {
             options.Host = "smtp.example.com";
             options.Port = 587;
@@ -195,7 +195,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth => auth.UseSmtpOtpSender(options =>
+        .Authentication(auth => auth.UseSmtpOtpSender(options =>
         {
             builder.Configuration.GetSection("Smtp").Bind(options);
             options.EnableSsl = true;

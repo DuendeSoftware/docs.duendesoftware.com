@@ -144,7 +144,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .EnableAuthentication(auth =>
+        .Authentication(auth =>
         {
             auth.Configure(options =>
             {
