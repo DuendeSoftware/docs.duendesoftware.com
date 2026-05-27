@@ -1,7 +1,7 @@
 ---
 title: "Profile Service"
 description: Documentation for the IProfileService interface which encapsulates retrieval of user claims and determines if users are active for token issuance.
-date: 2026-05-21
+date: 2026-05-27
 sidebar:
   label: Profile
   order: 40
@@ -88,6 +88,14 @@ Models the request for user claims and is the vehicle to return those claims. It
 
   The list of claims that will be returned. This is expected to be populated by the custom `IProfileService`
   implementation.
+
+* **`SamlAttributes`**
+
+  A list of `SamlAttribute` objects to include directly in SAML assertions, bypassing the standard claim-to-attribute mapping.
+  Use this when you need full control over the SAML attribute name, format, or values.
+  
+  Any claims added to `IssuedClaims` are also carried over to the assertion by running through the
+  [claim mapping](/identityserver/saml/configuration.md#default-claim-mappings) translation layer.
 
 * **`AddRequestedClaims`**
 
