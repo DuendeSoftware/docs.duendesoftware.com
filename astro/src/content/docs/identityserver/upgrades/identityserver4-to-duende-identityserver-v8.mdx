@@ -135,7 +135,7 @@ A couple of compilation errors and required changes you may encounter:
 
   ```diff lang="csharp" title="*.cs"
   - await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
-  + await _interaction.DenyAuthenticationAsync(context, InteractionError.AccessDenied);
+  + await _interaction.DenyAuthorizationAsync(context, InteractionError.AccessDenied);
   ```
 
 * No overload method `SignInAsync` takes N arguments. The `HttpContext.SignInAsync` signature changed:

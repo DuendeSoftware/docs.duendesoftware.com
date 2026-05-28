@@ -1,7 +1,7 @@
 ---
 title: Protecting APIs
 description: Learn how to secure and protect your APIs using Duende IdentityServer's token-based authentication and authorization
-date: 2020-09-10T08:20:20+02:00
+date: 2026-05-27
 sidebar:
   label: Overview
   order: 1
@@ -141,3 +141,11 @@ builder.Services.AddLocalApiAuthentication(principal =>
 ```
 
 ...or implement the event on the options if you add the authentication handler manually.
+
+## DPoP Support :badge[v8.0]
+
+The local API authentication handler supports [DPoP](/identityserver/tokens/pop.md) proof validation.
+When a client sends a DPoP-bound access token to a local API, the handler validates the accompanying proof token automatically.
+
+Requests must include exactly one `DPoP` header. If multiple `DPoP` headers are present, 
+the handler rejects the request with an `invalid_dpop_proof` error.

@@ -58,16 +58,19 @@ All async methods accept a `CancellationToken ct` parameter.
 
   Accepts a `ConsentResponse` to inform IdentityServer of the user's consent to a particular `AuthorizationRequest`.
 
-* **`DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, CancellationToken ct, string? errorDescription = null)`**
+* **`DenyAuthorizationAsync(AuthorizationRequest request, InteractionError error, CancellationToken ct, string? errorDescription = null)`**
 
-  Accepts a `AuthorizationError` to inform IdentityServer of the error to return to the client for a particular `AuthorizationRequest`.
+  Accepts an `InteractionError` to inform IdentityServer of the error to return to the client for a particular
+  `AuthorizationRequest`. This is specific to OIDC flows. For a protocol-agnostic alternative, see
+  `DenyAuthenticationAsync`.
 
 * **`DenyAuthenticationAsync(IAuthenticationContext context, InteractionError error, CancellationToken ct, string? errorDescription = null)`**
 
-  Denies the current authentication request. Works for both OIDC and SAML flows. Accepts an
-  `InteractionError` to inform IdentityServer of the error to return to the client or service
-  provider. For OIDC, this returns an error to the client's redirect URI. For SAML, this generates
-  a SAML error response with the appropriate status codes.
+  A protocol-agnostic way for the login page to signal that the user cancelled or refused the authentication request.
+  Works for both OIDC and SAML flows through the `IAuthenticationContext` interface (retrieved via
+  `GetAuthenticationContextAsync`). For OIDC, this is equivalent to calling `DenyAuthorizationAsync`. For SAML, it
+  writes a denial to the SAML signin state store, causing the callback endpoint to generate an error response back to
+  the service provider.
 
 * **`GetAllUserGrantsAsync(CancellationToken ct)`**
 
