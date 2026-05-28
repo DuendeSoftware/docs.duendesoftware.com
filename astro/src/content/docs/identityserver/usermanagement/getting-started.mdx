@@ -46,19 +46,19 @@ Add the IdentityServer, IdentityServer User Management, and a storage NuGet pack
 
 ```bash title="Terminal"
 dotnet add package Duende.IdentityServer
-dotnet add package Duende.IdentityServer.UserManagement
+dotnet add package Duende.UserManagement.IdentityServer8
 dotnet add package Duende.Storage.Sqlite
 ```
 
-`Duende.IdentityServer` is the core IdentityServer package. `Duende.IdentityServer.UserManagement` adds the User Management integration on top of it. The storage package provides the backing store for user data.
+`Duende.IdentityServer` is the core IdentityServer package. `Duende.UserManagement.IdentityServer8` adds the User Management integration on top of it. The storage package provides the backing store for user data.
 
 Three storage adapters are available:
 
-| Package | Database | Notes |
-|---------|----------|-------|
-| `Duende.Storage.Postgresql` | PostgreSQL | Recommended for production. Requires an `NpgsqlDataSource` registered in DI. |
-| `Duende.Storage.Mssql` | SQL Server | Production-ready for Microsoft/Windows environments. |
-| `Duende.Storage.Sqlite` | SQLite | File-based storage for local development. Also supports an in-memory mode (`Data Source=:memory:`) for automated testing. |
+| Package                     | Database   | Notes                                                                                                                     |
+|-----------------------------|------------|---------------------------------------------------------------------------------------------------------------------------|
+| `Duende.Storage.Postgresql` | PostgreSQL | Recommended for production. Requires an `NpgsqlDataSource` registered in DI.                                              |
+| `Duende.Storage.Mssql`      | SQL Server | Production-ready for Microsoft/Windows environments.                                                                      |
+| `Duende.Storage.Sqlite`     | SQLite     | File-based storage for local development. Also supports an in-memory mode (`Data Source=:memory:`) for automated testing. |
 
 This tutorial uses SQLite for simplicity. For production configuration and setup of each provider, see the [Storage documentation](/identityserver/usermanagement/fundamentals/storage.md).
 
@@ -128,7 +128,9 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     Then configure `Program.cs`:
 
     ```csharp title="Program.cs"
+    using Duende.IdentityServer;
     using Duende.Storage;
+    using Duende.Storage.Sqlite;
     using Duende.UserManagement.Authentication.Otp;
 
     var builder = WebApplication.CreateBuilder(args);
@@ -190,7 +192,9 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     The SMTP sender delivers OTP codes by email. Bind the `Smtp` configuration section to the sender options:
 
     ```csharp title="Program.cs"
+    using Duende.IdentityServer;
     using Duende.Storage;
+    using Duende.Storage.Sqlite;
 
     var builder = WebApplication.CreateBuilder(args);
 

@@ -139,6 +139,7 @@ public class LegacyMd5PasswordHashAlgorithm : IPasswordHashAlgorithm
 Register the custom algorithm alongside the built-in one. The first registration is treated as the preferred algorithm for new hashes; additional registrations are used only for verification and migration:
 
 ```csharp
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services

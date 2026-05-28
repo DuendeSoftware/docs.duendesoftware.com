@@ -111,6 +111,7 @@ Passkey support involves two registration steps:
 Using `Authentication(configure => ...)` to configure passkey options:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -132,6 +133,7 @@ This gives you access to `IPasskeyCeremonies`, `IUserAuthenticatorsSelfService`,
 If you are building a web application and want the ready-to-use passkey endpoints, call `MapUserManagement()` on your endpoint route builder:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -152,6 +154,7 @@ app.MapUserManagement();
 Configure passkey behavior using `PasskeyOptions`, accessible via `UserAuthenticationOptions.Passkeys`. Use the `Configure` method on the authentication builder:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -161,36 +164,8 @@ builder.Services
         {
             auth.Configure(options =>
             {
-                // Human-readable name shown to users during registration
                 options.Passkeys.RelyingPartyName = "My Application";
-
-                // Explicit relying party ID (domain). Required when sharing passkeys
-                // across subdomains (e.g., "example.com" for auth.example.com and app.example.com)
                 options.Passkeys.ServerDomain = "example.com";
-
-                // Origins permitted to use passkeys with this relying party
-                options.Passkeys.AllowedOrigins = ["https://app.example.com", "https://auth.example.com"];
-
-                // User verification: "required", "preferred" (default), or "discouraged"
-                options.Passkeys.UserVerificationRequirement = "required";
-
-                // Attestation: "none" (default), "indirect", "direct", or "enterprise"
-                options.Passkeys.AttestationConveyancePreference = "none";
-
-                // Authenticator attachment: "platform", "cross-platform", or null (any, default)
-                options.Passkeys.AuthenticatorAttachment = null;
-
-                // Resident key: "discouraged", "preferred" (default), or "required"
-                options.Passkeys.ResidentKeyRequirement = "preferred";
-
-                // Challenge size in bytes (default: 32)
-                options.Passkeys.ChallengeSize = 32;
-
-                // How long a challenge remains valid (default: 5 minutes)
-                options.Passkeys.ChallengeTimeout = TimeSpan.FromMinutes(5);
-
-                // Restrict to specific COSE algorithms (empty = all supported)
-                options.Passkeys.SupportedAlgorithms = [CoseAlgorithms.Es256, CoseAlgorithms.Rs256];
             });
         })
     );
@@ -294,6 +269,7 @@ The Begin Registration and Complete Registration endpoints require an authentica
 Customize endpoint paths using `UserAuthenticationEndpointOptions` and `PasskeysRouteOptions`:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -325,6 +301,7 @@ builder.Services
 Configuration can also be loaded from `appsettings.json`:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -504,6 +481,7 @@ public class CustomSecondFactorResolver : ISecondFactorPasskeyAuthenticationReso
 Register the resolver using `EnablePasskeyForSecondFactor<T>()`:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -521,6 +499,7 @@ When a resolver is registered, the `POST /passkeys/authenticate/begin` endpoint 
 An instance overload is also available for singleton resolvers:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -750,6 +729,7 @@ Register your policy using `AddAttestationTrustPolicy<T>()` on the authenticatio
 
 ```csharp
 // Program.cs
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services

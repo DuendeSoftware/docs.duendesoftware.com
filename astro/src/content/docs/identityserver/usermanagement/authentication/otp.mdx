@@ -179,6 +179,7 @@ public interface IUserAuthenticatorsSelfService
 OTP delivery requires configuring a sender. Use `UseSmtpOtpSender` on the authentication builder to configure the built-in SMTP sender:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -215,6 +216,7 @@ public interface IOtpSender
 Register the custom sender using `UseOtpSender<T>`:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services

@@ -38,6 +38,7 @@ All three interfaces are registered with the service provider by `AddUserManagem
 Call `AddUserManagement()` on the IdentityServer builder to register all profile services:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services

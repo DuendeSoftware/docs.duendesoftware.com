@@ -59,6 +59,7 @@ The default `PasswordOptions` enforces the following constraints:
 Override these defaults during registration:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -96,6 +97,7 @@ User Management includes a per-authenticator throttling policy that limits repea
 Configure throttling during registration:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -133,6 +135,7 @@ The following properties on `AuthenticationThrottlingOptions` control velocity-b
 Configure velocity-based throttling during registration:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -238,6 +241,7 @@ Passkey behavior is controlled by `PasskeyOptions`, accessible via `UserAuthenti
 Configure passkey options during registration:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services

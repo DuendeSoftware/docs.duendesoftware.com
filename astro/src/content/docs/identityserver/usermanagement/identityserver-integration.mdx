@@ -9,7 +9,7 @@ sidebar:
 
 import { Steps } from "@astrojs/starlight/components";
 
-The `Duende.IdentityServer.UserManagement` package is what you add to your IdentityServer project to enable User Management.
+The `Duende.UserManagement.IdentityServer8` package is what you add to your IdentityServer project to enable User Management.
 It wires up user storage, authentication flows, and claims mapping through a single `AddUserManagement()` call on the IdentityServer builder.
 Under the hood, it registers an `IProfileService` implementation that maps user profile attributes to OIDC claims and emits role claims
 (both direct and transitive, deduplicated).
@@ -23,7 +23,7 @@ Once you have IdentityServer set up, adding User Management takes a single call 
 1. **Add the NuGet package**
 
     ```bash title="Terminal"
-    dotnet add package Duende.IdentityServer.UserManagement
+    dotnet add package Duende.UserManagement.IdentityServer8
     ```
 
 2. **Call `AddUserManagement()` on the IdentityServer builder**
@@ -33,6 +33,8 @@ Once you have IdentityServer set up, adding User Management takes a single call 
 
     ```csharp
     // Program.cs
+    using Duende.IdentityServer;
+
     builder.Services
         .AddIdentityServer(options =>
         {
@@ -103,6 +105,8 @@ Register your subclass after calling `AddUserManagement()`:
 
 ```csharp
 // Program.cs
+using Duende.IdentityServer;
+
 builder.Services
     .AddIdentityServer(...)
     .AddUserManagement(options => { ... })

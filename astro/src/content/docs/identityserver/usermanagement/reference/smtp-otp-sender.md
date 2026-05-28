@@ -14,6 +14,7 @@ The `SmtpOtpSender` delivers one-time passwords (OTPs) via email using SMTP. It 
 Register the SMTP One-Time Password (OTP) sender using `UseSmtpOtpSender` on the authentication builder:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -89,6 +90,8 @@ Note: `SubjectTemplate` only supports `{FromName}` and `{Code}`.
 ### Plain Text Template
 
 ```csharp
+using Duende.IdentityServer;
+
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
@@ -124,6 +127,7 @@ The {FromName} Team
 ### HTML Template
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -190,6 +194,7 @@ SMTP connection settings can be bound from `appsettings.json`:
 Your startup code can then bind to this section:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services

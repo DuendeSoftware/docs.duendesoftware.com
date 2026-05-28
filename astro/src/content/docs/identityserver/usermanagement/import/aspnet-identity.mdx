@@ -67,6 +67,8 @@ builder.Services.AddSingleton<IUserImportConflictResolver, OverwriteConflictReso
 Your User Management registration already includes the custom `AspNetIdentityPasswordHashAlgorithm` password hash algorithm. Make sure it includes:
 
 ```csharp
+using Duende.IdentityServer;
+
 builder.Services.AddIdentityServer()
     .AddUserManagement(users =>
     {
@@ -474,7 +476,16 @@ This resolver overwrites any existing profile or authenticator data for the same
 Register it in your `Program.cs` alongside the other service registrations:
 
 ```csharp
-builder.Services.AddSingleton<IUserImportConflictResolver, OverwriteConflictResolver>();
+using Duende.IdentityServer;
+
+builder.Services.AddIdentityServer()
+    .AddUserManagement(users =>
+    {
+        users.Authentication(auth =>
+        {
+            auth.AddPasswordHashAlgorithm<AspNetIdentityPasswordHashAlgorithm>();
+        });
+    });
 ```
 
 ## Mapping Claims to Profile Attributes

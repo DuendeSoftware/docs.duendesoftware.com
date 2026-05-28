@@ -278,6 +278,8 @@ Recovery code behavior is configured via `RecoveryCodeOptions`, accessible throu
 
 ```csharp
 // Program.cs
+using Duende.IdentityServer;
+
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um

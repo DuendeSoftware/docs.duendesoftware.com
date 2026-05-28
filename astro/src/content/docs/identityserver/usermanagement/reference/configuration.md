@@ -14,6 +14,7 @@ Duende User Management is configured through a set of strongly-typed options cla
 Register User Management services in `Program.cs` using the builder pattern:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
@@ -32,6 +33,7 @@ builder.Services
 To configure both options and the feature builder in a single call:
 
 ```csharp title="Program.cs"
+using Duende.IdentityServer;
 using Duende.UserManagement;
 
 builder.Services
