@@ -123,7 +123,7 @@ IdentityServer calls this service to determine which SPs should be notified and 
 send them.
 
 The default implementation is `Saml2LogoutNotificationService`, which sends a SAML `LogoutRequest`
-to each SP that has a configured `SingleLogoutServiceUrl`. Override it to customize which SPs
+to each SP that has a configured `SingleLogoutServiceUrls` entry. Override it to customize which SPs
 receive notifications or to modify the logout messages.
 
 ```csharp
@@ -241,16 +241,18 @@ initiates SLO, it creates a logout session that tracks which SPs are expected to
 records their responses as they arrive. This state must survive across multiple HTTP requests (one
 per SP notification).
 
-**Default (in-memory):** When you register SAML without an EF operational store, IdentityServer
-uses an in-memory implementation. This is suitable for development and single-server deployments,
-but state is lost on restart and is not shared across multiple server instances.
+**This store is optional.** If no implementation is registered, IdentityServer still sends SLO
+notifications to each SP, but it cannot track their responses. Without a store, the SLO flow
+completes without waiting for or recording SP `LogoutResponse` messages. You should register an
+implementation whenever you need reliable SLO response tracking.
 
 **EF Core (automatic):** When you call `AddOperationalStore()` on the IdentityServer builder,
 IdentityServer automatically registers an EF Core-backed implementation. No additional configuration
-is needed.
+is needed. This is the recommended approach for production deployments.
 
-**Custom implementation:** You can register your own implementation using the `AddSamlLogoutSessionStore<T>()`extension 
-method on the IdentityServer builder.
+**Custom implementation:** You can register your own implementation using the `AddSamlLogoutSessionStore<T>()` extension
+method on the IdentityServer builder. Use this when you need a specific persistence backend such as
+Redis or DynamoDB, or when you are not using the EF operational store.
 
 Expired logout sessions are removed automatically by `TokenCleanupService`. The lifetime of each
 session is controlled by `LogoutSessionLifetime` in `SamlOptions` (see
@@ -295,8 +297,10 @@ to an `ExpectedSpLogout` record. That record holds the SP's entity ID and, once 
 
 ### When to Use
 
-Override `ISamlLogoutSessionStore` when:
+Register an `ISamlLogoutSessionStore` implementation when:
 
+* You want SLO response tracking to work (without a store, notifications are sent but responses are
+  not tracked).
 * You are running multiple server instances and need logout session state to be shared across them
   without using the EF operational store.
 * You want to store logout session state in a specific distributed cache (Redis, etc.) or database.

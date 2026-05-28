@@ -249,6 +249,8 @@ SAML dynamic providers use the `SamlProvider` model, which extends `IdentityProv
 * `AllowUnsolicitedAuthnResponse` (`bool`, default `false`) — Whether to accept IdP-initiated (unsolicited) responses.
 * `WantAssertionsSigned` (`bool`, default `true`) — Whether assertions from the IdP must be signed.
 * `OutboundSigningAlgorithm` (`string`, default RSA-SHA256) — The XML signature algorithm for outbound requests.
+* `SpSigningCertificateBase64` (`string?`, default `null`) — Base64-encoded PKCS#12 certificate (with private key) that your SP uses to sign outbound SAML messages such as `AuthnRequest` and `LogoutResponse`. Set this when the remote IdP requires signed requests or when you use single logout.
+* `SpSigningCertificatePassword` (`string?`, default `null`) — Optional password for the PKCS#12 certificate supplied in `SpSigningCertificateBase64`. Omit this property if the certificate has no password.
 
 `SamlProvider` also inherits `Scheme`, `DisplayName`, `Enabled`, and the `Properties` dictionary from `IdentityProvider`.
 

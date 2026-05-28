@@ -91,6 +91,12 @@ The `SamlServiceProviderOptions` class controls how the SP handler communicates 
 * **`OutboundSigningAlgorithm`**
   The XML signature algorithm used for outbound SAML requests. Defaults to RSA-SHA256.
 
+* **`SpSigningCertificateBase64`**
+  A base64-encoded PKCS#12 (PFX) certificate that includes the SP's private key. The SP uses this certificate to sign outbound SAML messages such as `AuthnRequest` and `LogoutResponse`. You need to set this property when the remote IdP requires signed authentication requests, or when you enable single logout (SLO) via `SingleLogoutServiceUrl`. Defaults to `null`.
+
+* **`SpSigningCertificatePassword`**
+  The password for the PKCS#12 SP signing certificate set in `SpSigningCertificateBase64`. Leave this `null` if the certificate file has no password. Defaults to `null`.
+
 * **`ModulePath`**
   The application-relative path prefix for the handler's ACS and metadata endpoints. Defaults to `"/Saml2"`.
 
