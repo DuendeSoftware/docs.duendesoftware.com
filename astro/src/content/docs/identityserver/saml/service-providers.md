@@ -226,7 +226,7 @@ new SamlServiceProvider
     SingleLogoutServiceUrls = [new SamlEndpointType
     {
         Location = "https://sp.example.com/saml/slo",
-        Binding = SamlBinding.HttpPost,
+        Binding = SamlBinding.HttpRedirect,
     }],
 
     // Signing
