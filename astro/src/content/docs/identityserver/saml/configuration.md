@@ -1,7 +1,7 @@
 ---
 title: "SAML Configuration"
 description: Configuration options and models for the SAML 2.0 Identity Provider feature, including SamlOptions and SamlServiceProvider settings.
-date: 2026-05-21
+date: 2026-05-28
 sidebar:
   label: Configuration
   order: 10
@@ -234,8 +234,25 @@ Available options:
   }
   ```
 
-* **`SingleLogoutServiceUrl`** (`SamlEndpointType?`)
-  SP's Single Logout Service endpoint, expressed as a `SamlEndpointType` with a `Location` (Uri) and `Binding` (SamlBinding). Required for SLO support. Defaults to `null`. See [`SamlEndpointType`](#samlendpointtype) below.
+* **`SingleLogoutServiceUrls`** (`ICollection<SamlEndpointType>`)
+  The SP's Single Logout Service endpoints. Each entry is a `SamlEndpointType` that pairs a `Location` (URL) with a `Binding` (SamlBinding). You can configure multiple endpoints for different bindings. Currently only HTTP-Redirect is supported for SLO. Required for SLO support. Defaults to an empty collection. See [`SamlEndpointType`](#samlendpointtype) below.
+
+  ```csharp
+  SingleLogoutServiceUrls = new List<SamlEndpointType>
+  {
+      new SamlEndpointType
+      {
+          Location = "https://sp.example.com/saml/slo",
+          Binding = SamlBinding.HttpRedirect,
+      }
+  }
+  ```
+
+  Use the `GetSingleLogoutServiceEndpoint(SamlBinding binding)` helper method to retrieve the endpoint for a specific binding:
+
+  ```csharp
+  var sloEndpoint = sp.GetSingleLogoutServiceEndpoint(SamlBinding.HttpRedirect);
+  ```
 
 * **`RequireSignedAuthnRequests`** (`bool?`)
   When `true`, unsigned AuthnRequests from this SP are rejected. When `null`, falls back to the global `SamlOptions.WantAuthnRequestsSigned` default. Defaults to `null`.
@@ -283,7 +300,7 @@ Available options:
 
 SAML bindings define how messages travel over HTTP. HTTP-Redirect encodes the message into the URL query string, which works well for small messages such as `AuthnRequest` but is limited by URL length constraints. HTTP-POST encodes the message in a hidden HTML form field and submits it automatically, making it the right choice for larger payloads (such as assertions with many attributes) and for keeping message content out of server access logs. See [Bindings](/identityserver/saml/concepts.md#bindings) for a deeper explanation.
 
-`SamlBinding` is used in two places: on `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`) and on `SamlEndpointType` (for `SingleLogoutServiceUrl`).
+`SamlBinding` is used in two places: on `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`) and on `SamlEndpointType` (for each entry in `SingleLogoutServiceUrls`).
 
 | Value          | Description                                                                           |
 |----------------|---------------------------------------------------------------------------------------|
@@ -305,16 +322,19 @@ Controls what elements are signed in SAML responses:
 
 ### SamlEndpointType
 
-`SamlEndpointType` is a class that pairs a URL location with a SAML binding. It is used specifically for `SamlServiceProvider.SingleLogoutServiceUrl` to describe where the SP's SLO service lives and which HTTP binding it accepts.
+`SamlEndpointType` is a class that pairs a URL location with a SAML binding. It is used as the element type of `SamlServiceProvider.SingleLogoutServiceUrls` to describe where the SP's SLO service lives and which HTTP binding it accepts.
 
 ```csharp
 new SamlServiceProvider
 {
     // ...
-    SingleLogoutServiceUrl = new SamlEndpointType
+    SingleLogoutServiceUrls = new List<SamlEndpointType>
     {
-        Location = "https://sp.example.com/saml/slo",
-        Binding = SamlBinding.HttpPost,
+        new SamlEndpointType
+        {
+            Location = "https://sp.example.com/saml/slo",
+            Binding = SamlBinding.HttpRedirect,
+        }
     }
 }
 ```

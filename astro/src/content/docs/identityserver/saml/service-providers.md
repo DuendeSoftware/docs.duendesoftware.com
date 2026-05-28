@@ -223,11 +223,11 @@ new SamlServiceProvider
     },
 
     // Single Logout Service
-    SingleLogoutServiceUrl = new SamlEndpointType
+    SingleLogoutServiceUrls = [new SamlEndpointType
     {
         Location = "https://sp.example.com/saml/slo",
         Binding = SamlBinding.HttpPost,
-    },
+    }],
 
     // Signing
     SigningBehavior = SamlSigningBehavior.SignAssertion,
