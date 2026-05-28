@@ -126,4 +126,21 @@ app.MapRemoteBffApiEndpoint(
      .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>();
 ```
 
-The `GetAccessTokenAsync` method will be invoked on every call to APIs that use the access token retriever. If retrieving the token is an expensive operation, you may need to cache it. It is up to your retriever code to perform caching.
+Custom access token retrievers can also be used with [YARP routes and clusters](/bff/fundamentals/apis/yarp.md#custom-access-token-retriever). 
+Use the `WithAccessTokenRetriever<T>()` extension method on a `RouteConfig` or `ClusterConfig`, 
+or set the `Duende.Bff.Yarp.AccessTokenRetriever` metadata key in JSON configuration:
+
+```csharp
+// YARP route with custom retriever
+new RouteConfig()
+{
+    RouteId = "impersonation",
+    ClusterId = "cluster1",
+    Match = new RouteMatch { Path = "/api/impersonation/{**catch-all}" }
+}.WithAccessToken(RequiredTokenType.User)
+ .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>()
+```
+
+The `GetAccessTokenAsync` method will be invoked on every call to APIs that use the access token retriever.
+ If retrieving the token is an expensive operation, you may need to cache it. It is up to your retriever code
+  to perform caching.
