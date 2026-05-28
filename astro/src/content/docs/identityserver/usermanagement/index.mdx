@@ -19,7 +19,7 @@ Duende User Management is an optional, first-party component of Duende IdentityS
 
 User Management is a component of Duende IdentityServer, not a separate product. IdentityServer handles the OpenID Connect, OAuth 2.0, and SAML protocol layer: issuing tokens, managing clients and scopes, and enforcing authorization policies. User Management provides the user store and authentication UI that plugs into that protocol layer.
 
-You can add User Management to a new IdentityServer deployment or integrate it into an existing one. You adopt User Management incrementally: enable only the modules you need today and add more later.
+You can add User Management to a new IdentityServer deployment or integrate it into an existing one. All modules (profiles, authentication, membership) are registered automatically when you call `AddUserManagement()`.
 
 ## Authentication methods
 
