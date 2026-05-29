@@ -1,6 +1,7 @@
 ---
 title: "Licensing"
 description: "Details about Duende IdentityServer and BFF licensing requirements, editions, configuration options, and trial mode functionality."
+date: 2026-05-29
 sidebar:
   order: 1
 tableOfContents:
@@ -85,37 +86,51 @@ you can use our [redistributable license](https://duendesoftware.com/products/id
 
 ### License Validation and Logging
 
-The license is validated at startup and during runtime. All license validation is
-self-contained and does not leave the host. There are no outbound network calls related
-to license validation.
+All license validation happens at runtime and is self-contained. It does not leave the host,
+and there are no outbound network calls related to license validation.
 
 #### Startup Validation
 
-At startup, IdentityServer first checks for a license. If there is no license configured,
-IdentityServer logs a warning indicating that a license is required in a production
-deployment and enters [Trial Mode](#trial-mode).
+IdentityServer loads and parses the license key at startup. If the key is present but invalid,
+an error is logged at that point. Beyond that, no further checks happen at startup.
+IdentityServer does not compare your configuration against the license at startup; that all happens at runtime,
+when features are actively used.
 
-Next, assuming a license is configured, IdentityServer compares its configuration to the
-license. If there are discrepancies between the license and the configuration,
-IdentityServer will write log messages indicating the nature of the problem.
+:::note[IdentityServer 7 and earlier]
+In v7 and earlier, IdentityServer performed validation checks at startup. If no license was configured,
+it logged a warning and entered [Trial Mode](#trial-mode). If a license was configured, it compared the license
+against the current configuration and logged any discrepancies it found.
+:::
 
 #### Runtime Validation
 
-Most common licensing issues, such as expiration of the license or configuring more
-clients than are included in the license do not prevent IdentityServer from functioning. We
-trust our customers, and we don't want a simple oversight to cause an outage. However, some
-features will be disabled at runtime if your license does not include them, including:
+IdentityServer never blocks or disables features at runtime based on licensing. A licensing oversight
+should never cause an outage. The runtime validator only logs; it does not prevent IdentityServer from functioning.
 
-- [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
-- [Demonstrating Proof-of-Possession (DPoP)](/identityserver/tokens/pop.md)
-- [Resource Isolation](/identityserver/fundamentals/resources/isolation.md)
-- [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md)
-- [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.md)
-- [Client Initiated Backchannel Authentication (CIBA)](/identityserver/ui/ciba.md)
+The following features are validated at runtime. If you use one of them without the
+required license entitlement, IdentityServer logs a warning (rate-limited to once every
+5 minutes per feature):
 
-Again, the absence of a license is permitted for development and testing, and therefore
-does not disable any of these features. Similarly, using an expired license that includes
-those features does not cause those features to be disabled.
+* [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
+* [Demonstrating Proof-of-Possession (DPoP)](/identityserver/tokens/pop.md)
+* [Resource Isolation](/identityserver/fundamentals/resources/isolation/index.md)
+* [Client Initiated Backchannel Authentication (CIBA)](/identityserver/ui/ciba.md)
+* [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.md)
+* [Automatic Key Management](/identityserver/fundamentals/key-management.md)
+* [Financial-Grade Security and Conformance Report](/identityserver/diagnostics/conformance-report.md)
+* [SAML IdP and SAML Service Provider](/identityserver/saml/index.md)
+* [User Management](/identityserver/usermanagement/index.mdx)
+
+For quantized limits like client count and issuer count, IdentityServer logs a warning
+when you exceed your licensed limit but stay within the grace threshold. If you exceed
+the grace threshold, it logs an error instead. An expired license also results in an
+error being logged.
+
+:::note[IdentityServer 7 and earlier]
+In IdentityServer 7 and earlier, some features were actually disabled at runtime when
+the license did not include them. The features that could be disabled were: Server Side
+Sessions, DPoP, Resource Isolation, PAR, Dynamic Identity Providers, and CIBA.
+:::
 
 :::tip
 When rolling over to a renewed license, you can configure the new license before the old
@@ -127,12 +142,33 @@ license before the old one lapses.
 
 #### Trial Mode
 
-Using IdentityServer without a license is considered Trial Mode. In Trial Mode, all
-enterprise features are enabled. Trial Mode is limited to 500 protocol requests. This
-includes all HTTP requests that IdentityServer itself handles, such as requests for the
-discovery, authorize, and token endpoints. UI requests, such as the login page, are not
-included in this limit. Beginning in IdentityServer 7.1, IdentityServer will log a warning
-when the trial mode threshold is exceeded:
+Running IdentityServer without a license is perfectly fine for development, testing, and personal projects.
+There is no request limit and no automatic shutdown. All features remain available. The only difference you
+will notice is that IdentityServer logs a warning when you use a licensed feature without a license configured:
+
+```text
+{FeatureName} is being used but no Duende license is configured.
+Please start a conversation with us: https://duende.link/l/contact
+```
+
+These warnings are rate-limited to once per five minutes per feature, so they won't flood your logs.
+You can silence them entirely by configuring a license key, even in non-production environments.
+
+:::note
+When running non-production environments (development, test, or QA) without a license key, you can use your
+production license key to suppress the warnings. IdentityServer is [free](#trial-mode) for development, testing,
+and personal projects, and using your production license in these environments is fully supported.
+
+If you have feedback on trial mode, or specific use cases where you prefer other options, please 
+[open a community discussion](https://github.com/DuendeSoftware/community/discussions).
+:::
+
+:::note[IdentityServer 7 and earlier]
+In IdentityServer 7 and earlier, running without a license was called Trial Mode and was limited to 500 protocol requests.
+This included all HTTP requests that IdentityServer itself handled, such as requests for the discovery, authorize,
+and token endpoints. UI requests, such as the login page, were not included in this limit.
+
+Beginning in IdentityServer 7.1, IdentityServer logged a warning when the trial mode threshold was exceeded:
 
 ```text
 You are using IdentityServer in trial mode and have exceeded the trial 
@@ -140,37 +176,34 @@ threshold of 500 requests handled by IdentityServer. In a future version,
 you will need to restart the server or configure a license key to continue testing.
 ```
 
-In a future version, IdentityServer will shut down at that time instead.
-
-:::note
-When operating non-production environments, such as development, test, or QA, without a valid license key,
-you may run into this trial mode limitation.
-
-To prevent your non-production IdentityServer from shutting down in the future, you can use your
-production license key. IdentityServer is [free](#trial-mode) for development, testing and personal projects,
-and we support using your production license in these environments when trial mode is not sufficient.
-
-If you have feedback on trial mode, or specific use cases where you'd prefer other options,
-please [open a community discussion](https://github.com/DuendeSoftware/community/discussions).
+This limit is not currently being enforced.
 :::
 
 #### Redistribution
 
-We understand that when IdentityServer is redistributed, log messages from the licensing
-system are not likely to be very useful to your redistribution customers. For that reason,
-in a redistribution the severity of log messages from the license system is turned all the
-way down to the trace level.
+If you want to redistribute Duende IdentityServer to your customers as part of a product,
+you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).
 
-We also appreciate that it might be cumbersome to deploy updated licenses in this scenario,
-especially if the deployment of your software does not coincide with the duration of the
-IdentityServer license. In that situation, we ask that you update the license key at the next
-deployment of your software to your redistribution customers. Of course, you are always responsible
-for ensuring that your license is renewed.
+It can be cumbersome to deploy updated licenses in redistribution scenarios,
+especially if your deployment cycle does not coincide with the duration of your IdentityServer license.
+In that situation, update the license key at the next deployment to your redistribution customers.
+You are always responsible for ensuring your license is renewed.
 
 #### Log Severity
 
-The severity of the log messages described above depend on the nature of the message and the type of
-license.
+The severity of log messages depends on the nature of the message. All messages are rate-limited to once per 5 minutes per feature or SKU.
+
+| Type of message                                   | Severity      |
+|---------------------------------------------------|---------------|
+| Feature used, no license configured               | Warning       |
+| Feature used, not covered by license              | Warning       |
+| Quantized limit exceeded (within grace threshold) | Warning       |
+| Quantized limit exceeded (beyond grace threshold) | Error         |
+| License expired                                   | Error         |
+| License valid                                     | Informational |
+
+:::note[IdentityServer 7 and earlier]
+In IdentityServer 7 and earlier, log severity depended on both the nature of the message and the type of license.
 
 | Type of Message               | Standard License | Redistribution License (development*) | Redistribution License (production*) |
 |-------------------------------|------------------|---------------------------------------|--------------------------------------|
@@ -181,6 +214,7 @@ license.
 | Runtime, violations           | Error            | Error                                 | Trace                                |
 
 \* as determined by `IHostEnvironment.IsDevelopment()`
+:::
 
 ## BFF Security Framework
 
@@ -228,7 +262,7 @@ and not fall back to trial mode.
 
 #### BFF Trial Mode
 
-Using BFF without a license is considered Trial Mode. Whenrunning in Trial Mode, you will see the following
+Using BFF without a license is considered Trial Mode. When running in Trial Mode, you will see the following
 error logged on startup:
 
 ```text

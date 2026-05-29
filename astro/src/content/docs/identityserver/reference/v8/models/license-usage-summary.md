@@ -25,13 +25,13 @@ IdentityServer registers `LicenseInformation` as a singleton automatically. You 
 
 ### Properties
 
-* **`CompanyName`** (`string?`) -- company name from the license.
-* **`ContactInfo`** (`string?`) -- contact information from the license.
-* **`SerialNumber`** (`int?`) -- serial number of the license.
-* **`IssuedAt`** (`DateTimeOffset?`) -- date and time when the license was issued.
-* **`Expiration`** (`DateTimeOffset?`) -- date and time when the license expires.
-* **`IsConfigured`** (`bool`) -- `true` if a license was loaded and parsed successfully. Use this to check whether a license is present before displaying license details.
-* **`EntitledSkus`** (`IReadOnlyCollection<string>`) -- SKU identifiers entitled by the license.
+* **`CompanyName`** (`string?`): Company name from the license.
+* **`ContactInfo`** (`string?`): Contact information from the license.
+* **`SerialNumber`** (`int?`): Serial number of the license.
+* **`IssuedAt`** (`DateTimeOffset?`): Date and time when the license was issued.
+* **`Expiration`** (`DateTimeOffset?`): Date and time when the license expires.
+* **`IsConfigured`** (`bool`): `true` if a license was loaded and parsed successfully. Use this to check whether a license is present before displaying license details.
+* **`EntitledSkus`** (`IReadOnlyCollection<string>`): SKU identifiers entitled by the license.
 
 ### Inject LicenseInformation
 
