@@ -489,7 +489,7 @@ attributes.Set(AttributeCode.Create("email_verified"), true);
 
 ## Self-Service Profile Operations
 
-`IUserProfileSelfService` exposes the operations that an authenticated user performs on their own profile.
+`IUserProfileSelfService` exposes the operations that an authenticated user performs on their own profile. You can inject it directly or access it via `IUserSelfService.Profiles`.
 
 ### `IUserProfileSelfService`
 
@@ -580,7 +580,7 @@ var updated = await profileService.TryUpdateAsync(
 
 ## Administrative Profile Operations
 
-`IUserProfileAdmin` provides the same read and create operations as the self-service interface, intended for back-end administrative code that manages profiles on behalf of users.
+`IUserProfileAdmin` provides the same read and create operations as the self-service interface, intended for back-end administrative code that manages profiles on behalf of users. You can inject it directly or access it via `IUserAdmin.Profiles`.
 
 ### `IUserProfileAdmin`
 

@@ -223,7 +223,7 @@ This is the core of the migration: reading each `IdentityUser` and its claims, t
 The key decisions:
 
 * **`SubjectId`**: use `UserSubjectId.Create(user.Id)` to carry the existing GUID across as-is. This preserves any existing tokens or references that use the subject ID.
-* **`ProfileAttributes`**: map email, phone, username, and claims to profile attributes using the schema. The ASP.NET Identity `UserName` column maps to a `preferred_username` attribute.
+* **`ProfileAttributes`**: map email, phone, username, and claims to profile attributes using the schema. The ASP.NET Identity `UserName` column maps to the SCIM `userName` attribute.
 * **`Password`**: wrap the raw base64 hash using `AspNetIdentityPasswordHashAlgorithm.CreateImportData`.
 
 Add a helper method that takes an `IdentityUser` and its claims and returns a `UserImportRecord`:
@@ -233,12 +233,14 @@ Add a helper method that takes an `IdentityUser` and its claims and returns a `U
 using Duende.Storage.EntityAttributeValue;
 using Duende.UserManagement;
 using Duende.UserManagement.Authentication.Otp;
+using Duende.UserManagement.Authentication.Passkeys;
 using Duende.UserManagement.Import;
 using Microsoft.AspNetCore.Identity;
 
 static UserImportRecord MapUser(
     IdentityUser user,
     IReadOnlyList<IdentityUserClaim<string>> claims,
+    IReadOnlyList<PasskeyData> passkeys,
     IReadOnlyAttributeSchema schema)
 {
     var attrs = new AttributeValueCollection(schema);
@@ -260,10 +262,10 @@ static UserImportRecord MapUser(
             attrs.Set(emailCode, emailList);
     }
 
-    // Username as a profile attribute (preferred_username)
+    // Username as a SCIM attribute
     if (!string.IsNullOrEmpty(user.UserName))
     {
-        var userNameCode = AttributeCode.Create("preferred_username");
+        var userNameCode = AttributeCode.Create("userName");
         if (schema.AttributeDefinitions.ContainsKey(userNameCode))
             attrs.Set(userNameCode, user.UserName);
     }
@@ -313,6 +315,48 @@ static UserImportRecord MapUser(
         otpAddresses.Add(new OtpAddress(OtpChannel.Email, emailAddress));
     }
 
+    // Address as a complex attribute from claims
+    var addressProps = new Dictionary<string, object>();
+    foreach (var claim in claims)
+    {
+        switch (claim.ClaimType)
+        {
+            case "street_address": addressProps["streetAddress"] = claim.ClaimValue; break;
+            case "locality":      addressProps["locality"]       = claim.ClaimValue; break;
+            case "region":        addressProps["region"]         = claim.ClaimValue; break;
+            case "postal_code":   addressProps["postalCode"]     = claim.ClaimValue; break;
+            case "country":       addressProps["country"]        = claim.ClaimValue; break;
+        }
+    }
+    if (addressProps.Count > 0)
+    {
+        addressProps.TryAdd("primary", false);
+        IReadOnlyList<object> addressList = [(IReadOnlyDictionary<string, object>)addressProps];
+        var addressCode = AttributeCode.Create("addresses");
+        if (schema.AttributeDefinitions.ContainsKey(addressCode))
+            attrs.Set(addressCode, addressList);
+    }
+
+    // Passkeys
+    var passkeyImports = passkeys
+        .Select(p => new PasskeyImport
+        {
+            CredentialId = p.CredentialId,
+            PublicKeyCose = p.PublicKey,
+            Algorithm = p.Algorithm,
+            SignCount = p.SignCount,
+            BackupEligible = p.IsBackupEligible,
+            BackedUp = p.IsBackedUp,
+            Aaguid = p.Aaguid,
+            Name = p.Name ?? "Imported passkey"
+        })
+        .ToList();
+
+    // Set active status
+    var activeCode = AttributeCode.Create("active");
+    if (schema.AttributeDefinitions.ContainsKey(activeCode))
+        attrs.Set(activeCode, true);
+
     return new UserImportRecord
     {
         SubjectId = UserSubjectId.Create(user.Id),
@@ -320,7 +364,8 @@ static UserImportRecord MapUser(
         Authenticators = new AuthenticatorImport
         {
             Password = password,
-            OtpAddresses = otpAddresses.Count > 0 ? otpAddresses : null
+            OtpAddresses = otpAddresses.Count > 0 ? otpAddresses : null,
+            Passkeys = passkeyImports.Count > 0 ? passkeyImports : null
         }
     };
 }
@@ -334,9 +379,21 @@ static string? MapClaimToAttribute(string claimType) => claimType switch
     "locale"             => "locale",
     "timezone"           => "timezone",
     // given_name, family_name, middle_name are handled as the complex "name" attribute
+    // street_address, locality, region, postal_code, country are handled as the complex "addresses" attribute
     // phone_number is handled separately below if needed
     _ => null
 };
+
+// Data class for passkey credentials read from the source database
+record PasskeyData(
+    byte[] CredentialId,
+    byte[] PublicKey,
+    int Algorithm,
+    uint SignCount,
+    bool IsBackupEligible,
+    bool IsBackedUp,
+    Guid Aaguid,
+    string? Name);
 ```
 
 Notice that `given_name`, `family_name`, and `middle_name` are not mapped by `MapClaimToAttribute`
@@ -505,10 +562,15 @@ The table below shows how common claim types map to User Management attribute co
 | `locale`                    | `locale`                       | Simple string attribute                     |
 | `timezone`                  | `timezone`                     | Simple string attribute                     |
 | `phone_number`              | `phoneNumbers` (complex list)  | Multi-valued complex attribute              |
+| `street_address`            | `addresses.streetAddress`      | Assembled into the `addresses` complex attribute |
+| `locality`                  | `addresses.locality`           | Assembled into the `addresses` complex attribute |
+| `region`                    | `addresses.region`             | Assembled into the `addresses` complex attribute |
+| `postal_code`               | `addresses.postalCode`         | Assembled into the `addresses` complex attribute |
+| `country`                   | `addresses.country`            | Assembled into the `addresses` complex attribute |
 
 The `name`, `emails`, `phoneNumbers`, and `addresses` attributes are multi-valued complex types.
 You cannot set them with a plain string: you need to build a dictionary or list of dictionaries and pass it to `collection.Set`.
-The `MapUser` helper above shows how to do this for `name` and `emails`.
+The `MapUser` helper above shows how to do this for `name`, `emails`, and `addresses`.
 
 For phone numbers, the pattern is the same as for emails:
 
@@ -537,6 +599,33 @@ if (phoneClaim is not null)
 The attribute codes and their types depend on the schema you have configured in User Management. 
 The `schema.AttributeDefinitions.ContainsKey(code)` check in the mapping code guards against trying to set an attribute that
 does not exist in your schema, which would cause an import failure.
+
+## Importing Passkeys
+
+If your ASP.NET Identity database stores passkey (WebAuthn/FIDO2) credentials, you can import them alongside passwords and profile data. Each passkey is represented by a `PasskeyImport` object:
+
+```csharp
+new PasskeyImport
+{
+    CredentialId = credentialIdBytes,    // The raw credential ID (byte[])
+    PublicKeyCose = publicKeyBytes,      // COSE-encoded public key (byte[])
+    Algorithm = -7,                     // COSE algorithm identifier (e.g., -7 for ES256, -257 for RS256)
+    SignCount = 0,                      // The current signature counter
+    BackupEligible = true,             // Whether the credential can be backed up
+    BackedUp = false,                  // Whether the credential is currently backed up
+    Aaguid = Guid.Empty,              // The authenticator's AAGUID (or Guid.Empty if unknown)
+    Name = "Imported passkey"          // A human-readable name for the credential
+};
+```
+
+The `Algorithm` field is the COSE algorithm identifier from the credential's public key. Common values:
+* `-7` — ES256 (ECDSA with P-256 and SHA-256)
+* `-257` — RS256 (RSASSA-PKCS1-v1_5 with SHA-256)
+* `-8` — EdDSA
+
+If your source database stores the COSE public key directly, you can extract the algorithm from key label 3 in the COSE key map. If you only know the key type, use the appropriate default (most WebAuthn implementations use ES256).
+
+Add the passkeys list to `AuthenticatorImport.Passkeys` in the import record. The `MapUser` helper above shows this pattern.
 
 ## Running the migration
 

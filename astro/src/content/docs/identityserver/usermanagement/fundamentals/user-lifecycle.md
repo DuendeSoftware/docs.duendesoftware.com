@@ -11,13 +11,12 @@ User Management exposes two service interfaces for managing user accounts: `IUse
 
 ## `IUserSelfService`
 
-`IUserSelfService` provides operations that users perform on their own accounts. Inject this interface into your application services to allow users to deregister, and to access profile and authenticator self-service operations.
+`IUserSelfService` provides operations that users perform on their own accounts. Inject this interface into your application services to allow users to deregister.
 
 ```csharp
 public interface IUserSelfService
 {
     Task<bool> TryDeregisterAsync(UserSubjectId subjectId, Ct ct);
-
     IUserProfileSelfService Profiles { get; }
     IUserAuthenticatorsSelfService Authenticators { get; }
 }
@@ -27,18 +26,20 @@ public interface IUserSelfService
 
 * **`TryDeregisterAsync`**: Permanently removes the user identified by `subjectId` and all associated data. Returns `false` if the user does not exist.
 
-### Sub-services
+### Properties
 
-* **`Profiles`**: provides access to `IUserProfileSelfService` for reading and updating the user's own profile attributes.
-* **`Authenticators`**: provides access to `IUserAuthenticatorsSelfService` for managing the user's own authenticators (passwords, passkeys, OTP addresses, TOTP, external authenticators).
-
-You can inject `IUserSelfService` alone and reach profile and authenticator operations through these properties, instead of injecting each sub-service separately.
+* **`Profiles`**: Provides access to `IUserProfileSelfService` for profile operations (get, update, register).
+* **`Authenticators`**: Provides access to `IUserAuthenticatorsSelfService` for authenticator management (OTP, TOTP, passkeys, passwords, recovery codes).
 
 ### Usage
 
 ```csharp
 // Deregister the user
 var deregistered = await userSelfService.TryDeregisterAsync(subjectId, ct);
+
+// Access sub-services through the parent interface
+var profile = await userSelfService.Profiles.TryGetAsync(subjectId, ct);
+var authenticators = await userSelfService.Authenticators.TryGetAsync(subjectId, ct);
 ```
 
 ## `IUserAdmin`
@@ -49,10 +50,9 @@ var deregistered = await userSelfService.TryDeregisterAsync(subjectId, ct);
 public interface IUserAdmin
 {
     Task<bool> TryRemoveAsync(UserSubjectId subjectId, Ct ct);
-
+    IMembershipAdmin Membership { get; }
     IUserProfileAdmin Profiles { get; }
     IUserAuthenticatorsAdmin Authenticators { get; }
-    IMembershipAdmin Membership { get; }
 }
 ```
 
@@ -60,11 +60,11 @@ public interface IUserAdmin
 
 * **`TryRemoveAsync`**: Permanently removes the user identified by `subjectId` and all associated data. Returns `false` if the user does not exist.
 
-### Sub-services
+### Properties
 
-* **`Profiles`**: provides access to `IUserProfileAdmin` for reading, creating, and querying user profiles.
-* **`Authenticators`**: provides access to `IUserAuthenticatorsAdmin` for managing authenticators on behalf of users.
-* **`Membership`**: provides access to `IMembershipAdmin` for managing role and group assignments.
+* **`Membership`**: Provides access to `IMembershipAdmin` for membership administration.
+* **`Profiles`**: Provides access to `IUserProfileAdmin` for profile operations (get, add, update, query).
+* **`Authenticators`**: Provides access to `IUserAuthenticatorsAdmin` for authenticator management.
 
 ### Difference from `IUserSelfService`
 
@@ -72,7 +72,7 @@ public interface IUserAdmin
 
 ## `UserAuthenticators` Record
 
-`UserAuthenticators` is a read-only snapshot of all authenticators registered for a user. It is returned by `IUserAuthenticatorsSelfService` and `IUserAuthenticatorsAdmin` query methods.
+`UserAuthenticators` is a read-only snapshot of all authenticators registered for a user. It is returned by the `Authenticators` sub-service on `IUserSelfService` and `IUserAdmin` (i.e., `IUserAuthenticatorsSelfService` and `IUserAuthenticatorsAdmin`).
 
 ```csharp
 public sealed record UserAuthenticators
@@ -220,9 +220,9 @@ Understanding what Duende maintains internally versus what you can customize hel
 
 The following are implemented and maintained by Duende and updated with each release. You call these interfaces but do not implement them:
 
-* **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TryDeregisterAsync`), plus access to profile and authenticator self-service via `.Profiles` and `.Authenticators`
-* **`IUserAdmin`**: administrative lifecycle operations (`TryRemoveAsync`), plus access to profile, authenticator, and membership admin via `.Profiles`, `.Authenticators`, and `.Membership`
-* **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes)
+* **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TryDeregisterAsync`), with sub-services for profiles (`Profiles`) and authenticators (`Authenticators`)
+* **`IUserAdmin`**: administrative lifecycle operations (`TryRemoveAsync`), with sub-services for membership (`Membership`), profiles (`Profiles`), and authenticators (`Authenticators`)
+* **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes) — accessible directly or via the parent interfaces
 * **Core storage**: the underlying user store, credential storage, and session state are internal to Duende and not designed for replacement or override
 * **Authentication logic and lifecycle state machine**: the rules governing registration, login, MFA enrollment, and deregistration are managed internally and are not extensible
 
