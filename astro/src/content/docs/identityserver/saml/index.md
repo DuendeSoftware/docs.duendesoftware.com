@@ -26,8 +26,7 @@ SAML 2.0 support is useful when:
 * You are migrating from a legacy SSO system that uses SAML
 * Your organization has compliance or procurement requirements for SAML-based federation
 
-For new integrations, OpenID Connect is recommended. SAML 2.0 support is provided for
-interoperability with existing SAML-based systems.
+For new integrations, OpenID Connect is the better choice. SAML 2.0 is herefor when you need to work with existing SAML-based systems.
 
 If you are new to SAML 2.0 or want a refresher on the protocol's core building blocks, see [SAML 2.0 Concepts](/identityserver/saml/concepts.md) for an overview of assertions, bindings, metadata, Name Identifiers, and other key concepts before diving into configuration.
 
@@ -37,11 +36,11 @@ IdentityServer can also act as a SAML **Service Provider (SP)**, consuming asser
 
 For an overview of both roles (IdP and SP) and how they relate, see [IdentityServer as IdP and SP](/identityserver/saml/idp-and-sp.mdx). For step-by-step setup instructions, see [Configuring a SAML external provider](/identityserver/ui/login/saml-provider.md). If you have many SAML IdPs to manage, consider using [dynamic providers](/identityserver/ui/login/dynamicproviders.md#saml-providers) instead of static registration.
 
-The rest of the `saml/` section covers the IdP role: configuring IdentityServer to issue SAML assertions to your registered Service Providers.
+The rest of this section covers the IdP role: configuring IdentityServer to issue SAML assertions to your registered Service Providers.
 
 ## What's Included
 
-The SAML 2.0 IdP feature is a comprehensive implementation covering the full SP-initiated flow, logout, and a range of extensibility points. Key capabilities include:
+The SAML 2.0 IdP feature covers the full SP-initiated flow, logout, and plenty of extensibility points:
 
 * **SP-initiated SSO**: HTTP-Redirect and HTTP-POST bindings for authentication requests
 * **Single Logout (SLO)**: front-channel logout notifications to registered SPs, with session tracking and partial logout responses when not all SPs respond
@@ -53,7 +52,7 @@ The SAML 2.0 IdP feature is a comprehensive implementation covering the full SP-
 
 ## Quick Setup
 
-The following steps show the minimum configuration needed to get SAML 2.0 working. For a full reference of all options, see the pages in this section.
+The following steps show the minimum configuration to get SAML 2.0 working. For a full reference of all options, see the other pages in this section.
 
 ### 1. Register SAML Services
 
@@ -98,7 +97,7 @@ For production, use the EF Core store from `Duende.IdentityServer.EntityFramewor
 
 When a SAML `AuthnRequest` arrives, IdentityServer processes it and redirects to your login page with a `returnUrl`, just as it does for OIDC authorization requests. Your login page authenticates the user and redirects back. The framework handles the rest, regardless of whether the original request was OIDC or SAML.
 
-However, your login page does need one update for SAML support: the non-success path. If the user clicks "Cancel" or authentication is denied for another reason, your login page must call `DenyAuthenticationAsync` on `IIdentityServerInteractionService` so that IdentityServer can return the correct SAML error response to the SP. Without this, cancellation will not work for SAML flows. See [Denying Authentication](/identityserver/ui/login/context.md#denying-authentication) for implementation details.
+However, your login page does need one update for SAML support: the non-success path. If the user clicks "Cancel" or authentication is denied for another reason, your login page needs to call `DenyAuthenticationAsync` on `IIdentityServerInteractionService` so that IdentityServer can return the correct SAML error response to the SP. Without this, cancellation won't work for SAML flows. See [Denying Authentication](/identityserver/ui/login/context.md#denying-authentication) for implementation details.
 
 For advanced scenarios where your login UI needs access to SAML-specific request details (such as `RequestedAuthnContext` requirements), call `GetAuthenticationContextAsync` on `IIdentityServerInteractionService` and pattern-match on the result to access `SamlAuthenticationContext`. See [Extensibility](/identityserver/saml/extensibility.md) for details.
 

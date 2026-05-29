@@ -21,11 +21,11 @@ builder.Services.AddIdentityServer()
     .AddSaml();
 ```
 
-`AddSaml()` registers all SAML services and endpoints. It can be called with no arguments when all Service Provider configuration is managed via a store (the IdP's entity ID and other defaults are derived automatically). Pass an options callback to configure protocol-level settings explicitly.
+`AddSaml()` registers all SAML services and endpoints. You can call it with no arguments when all Service Provider configuration is managed via a store (the IdP's entity ID and other defaults are derived automatically). Pass an options callback to configure protocol-level settings explicitly.
 
 ## SamlOptions
 
-`SamlOptions` controls the global behavior and policy of the SAML 2.0 Identity Provider: how claims are mapped to SAML attributes, how assertions are signed, how NameIDs are resolved, and what tolerances apply to timestamps and request lifetimes.
+`SamlOptions` controls the global behavior of the SAML 2.0 Identity Provider: how claims map to SAML attributes, how assertions are signed, how NameIDs are resolved, and what tolerances apply to timestamps and request lifetimes.
 
 Access `SamlOptions` when calling `AddSaml()`:
 
@@ -116,9 +116,9 @@ Available options:
 
 ### Error Inspector Callbacks
 
-These three optional callbacks let you observe and react to errors that occur while IdentityServer parses or validates incoming SAML messages. They are particularly useful when you are debugging interoperability issues with a specific SP, because they give you access to the raw XML and the error details before IdentityServer returns a failure response.
+These three optional callbacks let you observe and react to errors that occur while IdentityServer parses or validates incoming SAML messages. They're particularly useful when debugging interoperability issues with a specific SP, because they give you access to the raw XML and error details before IdentityServer returns a failure response.
 
-None of these callbacks are required. When they are not set, IdentityServer handles errors using its default behavior.
+None of these are required. When not set, IdentityServer handles errors using its default behavior.
 
 * **`AuthnRequestErrorInspector`**
   A callback invoked when an error occurs while parsing or validating an incoming `AuthnRequest`. It receives the raw XML and the error details, so you can log the message, inspect the failure reason, or take corrective action on a per-SP basis. This is useful for diagnosing SP configuration problems such as malformed request signatures or unexpected XML structure.
@@ -415,7 +415,7 @@ builder.Services
 
 ## IdP-Initiated SSO
 
-IdP-initiated SSO is a flow where the Identity Provider sends a SAML assertion to a Service Provider without first receiving an `AuthnRequest`. This is commonly used in application portal pages (for example, a "My Apps" dashboard) where the user is already authenticated and clicks a tile to launch an SP application.
+IdP-initiated SSO is a flow where the Identity Provider sends a SAML assertion to a Service Provider without first receiving an `AuthnRequest`. This is commonly used in portal pages (for example, a "My Apps" dashboard) where the user is already authenticated and clicks a tile to launch an SP application.
 
 There is no built-in endpoint for IdP-initiated SSO. Instead, inject `IIdpInitiatedSsoService` into your own Razor Pages or controllers to generate and send the SAML response programmatically. See [`IIdpInitiatedSsoService`](/identityserver/saml/extensibility.md#iidpinitiatedssoservice) for usage details.
 

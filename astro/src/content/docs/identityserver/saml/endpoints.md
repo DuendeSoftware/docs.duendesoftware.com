@@ -101,7 +101,7 @@ sessions have responded by the time the logout flow completes, IdentityServer re
 logout status to the originating SP to indicate that some sessions may still be active.
 
 :::note
-SAML Single Logout is inherently complex: the process requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider the session terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout-slo) for more background.
+SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout-slo) for more background.
 :::
 
 ## Customizing Endpoint Paths

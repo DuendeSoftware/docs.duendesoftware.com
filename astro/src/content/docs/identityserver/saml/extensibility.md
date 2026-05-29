@@ -12,9 +12,9 @@ tableOfContents:
 
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
-IdentityServer's SAML 2.0 Identity Provider feature exposes several extensibility interfaces that
-you can implement to customize SAML behavior. All interfaces are registered in the service provider
-and can be replaced with custom implementations.
+IdentityServer's SAML 2.0 Identity Provider has several extensibility interfaces you can implement
+to customize behavior. They're all registered in the DI container and can be replaced with your own
+implementations.
 
 ---
 
@@ -26,8 +26,8 @@ alongside the standard authorization context. Your login UI can access this info
 result to `SamlAuthenticationContext`.
 
 For the happy path (user authenticates successfully), your existing login pages work with SAML
-without changes because IdentityServer redirects to your login page with a `returnUrl` regardless of
-protocol. However, for non-success paths (such as the user clicking a cancel button), your login page
+without changes, because IdentityServer redirects to your login page with a `returnUrl` regardless of
+protocol. For non-success paths though (such as the user clicking a cancel button), your login page
 needs to call `DenyAuthenticationAsync` on `IIdentityServerInteractionService` so that IdentityServer
 can return the appropriate SAML error response to the SP. See [Denying Authentication](/identityserver/ui/login/context.md#denying-authentication) for details.
 
@@ -68,7 +68,7 @@ if (context is SamlAuthenticationContext samlContext)
 
 ## ISaml2SsoInteractionResponseGenerator
 
-`ISaml2SsoInteractionResponseGenerator` determines what interaction (login or error) is required
+`ISaml2SsoInteractionResponseGenerator` determines what interaction (login or error) is needed
 during a SAML sign-in flow. After an `AuthnRequest` is received and validated, IdentityServer
 calls this interface to decide whether the user needs to be redirected to the login page or
 whether the flow can proceed directly to assertion generation.
@@ -96,7 +96,7 @@ to implement custom step-up authentication logic.
 Instead of redirecting the user to the login page, you can return a SAML error response directly
 to the SP by returning `Saml2InteractionResponse.Error(statusCode, subStatusCode)` from
 `ProcessInteractionAsync`. This is useful when you want to reject the SSO request
-programmatically. For example, when the SP is not permitted to request SSO at the current time
+programmatically, for example when the SP isn't permitted to request SSO at the current time
 and you want the SP to receive a SAML error response rather than a login redirect.
 
 `Saml2InteractionResponse` has three factory methods:
@@ -488,7 +488,7 @@ public class MyNameIdGenerator : ISamlNameIdGenerator
 
 `IIdpInitiatedSsoService` enables IdP-initiated SSO, a flow where the Identity Provider sends a
 SAML assertion to a Service Provider without first receiving an `AuthnRequest`. This is commonly
-used in application portal pages (for example, a "My Apps" dashboard) where the user is already
+used in portal pages (for example, a "My Apps" dashboard) where the user is already
 authenticated and clicks a tile to launch an SP application.
 
 Inject `IIdpInitiatedSsoService` into your own Razor Pages or controllers
@@ -797,9 +797,9 @@ public class MyAuthnRequestValidator : IAuthnRequestValidator
 ## ISamlSigninStateStore
 
 `ISamlSigninStateStore` persists SAML sign-in request state between the initial SSO request and
-the callback after the user has authenticated. Because SAML sign-in involves a redirect to the
-login UI and back, the original request context (SP entity ID, ACS URL, relay state, etc.) must
-be stored somewhere durable for the duration of the interaction.
+the callback after the user authenticates. Because SAML sign-in involves a redirect to the
+login UI and back, the original request context (SP entity ID, ACS URL, relay state, etc.) needs
+to be stored somewhere durable for the duration of the interaction.
 
 Several implementations are available:
 

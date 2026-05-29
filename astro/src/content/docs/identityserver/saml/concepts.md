@@ -9,7 +9,7 @@ sidebar:
 
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
-SAML 2.0 is an XML-based federation protocol widely used in enterprise, government, healthcare, and education environments. It predates OpenID Connect and is often found in legacy applications and organizations that adopted federated identity early. This page explains the core concepts you need to understand when working with SAML 2.0 federation. Where relevant, each section links to the corresponding IdentityServer [configuration](/identityserver/saml/configuration.md) so you can put these concepts into practice.
+SAML 2.0 is an XML-based federation protocol widely used in enterprise, government, healthcare, and education environments. It predates OpenID Connect and is often found in legacy applications and organizations that adopted federated identity early. This page covers the core concepts you need when working with SAML 2.0 federation. Where relevant, each section links to the corresponding IdentityServer [configuration](/identityserver/saml/configuration.md) so you can put these concepts into practice.
 
 ## Assertions
 
@@ -69,7 +69,7 @@ Duende IdentityServer can also act as a SAML Service Provider itself, consuming 
 
 ## Entity Identifiers
 
-Every participant in a SAML federation (both IdPs and SPs) has an entity identifier (also called entity ID). This is a globally unique name that identifies the entity across all interactions. According to the SAML specification, entity identifiers must be absolute URIs (typically HTTPS URLs), though they are used as identifiers and not necessarily as resolvable addresses.
+Every participant in a SAML federation (both IdPs and SPs) has an entity identifier (also called entity ID). This is a globally unique name that identifies the entity across all interactions. Entity identifiers are absolute URIs (typically HTTPS URLs), though they're used as identifiers, not necessarily as resolvable addresses.
 
 In IdentityServer, the IdP entity identifier defaults to `{host}/Saml2` and doubles as the URL where metadata is published (see [Metadata](#metadata)). You can customize it via `SamlOptions.EntityId` or `SamlOptions.EntityIdPath`.
 Each registered Service Provider has its own entity identifier set via `SamlServiceProvider.EntityId`.
@@ -91,7 +91,7 @@ IdentityServer supports two bindings:
 * **HTTP-Redirect**: the SAML message is deflated, Base64-encoded, and appended to the URL as a query parameter. This is the standard binding for `AuthnRequest` messages, which are typically small. However, URL length constraints make it unsuitable for large assertions with many attributes.
 * **HTTP-POST**: the SAML message is Base64-encoded and submitted in a hidden HTML form field that auto-submits to the destination. This handles larger payloads (such as assertions with many attributes) and keeps message content out of server access logs.
 
-The SAML specification also defines **HTTP-Artifact** binding, which sends a short reference token through the browser and resolves the full assertion via a back-channel SOAP call. IdentityServer does not currently support Artifact binding.
+The SAML specification also defines **HTTP-Artifact** binding, which sends a short reference token through the browser and resolves the full assertion via a back-channel SOAP call. IdentityServer doesn't currently support Artifact binding.
 
 You configure the binding per SP via the `Binding` property on each [`IndexedEndpoint`](/identityserver/saml/configuration.md#indexedendpoint) in `AssertionConsumerServiceUrls`:
 
@@ -112,7 +112,7 @@ The [`SamlBinding` enum](/identityserver/saml/configuration.md#samlbinding) defi
 
 ## Profiles
 
-SAML profiles are predefined recipes that combine assertions, protocol messages, and bindings into complete workflows for specific use cases. Following a profile is what makes SAML implementations interoperable. Without adhering to a profile, a system can produce syntactically valid SAML messages that no other implementation will accept.
+SAML profiles are predefined recipes that combine assertions, protocol messages, and bindings into complete workflows for specific use cases. Following a profile is what makes SAML implementations interoperable. Without it, a system can produce syntactically valid SAML messages that no other implementation will accept.
 
 The two profiles most relevant to IdentityServer are:
 
@@ -130,7 +130,7 @@ Common formats include:
 * **Persistent**: a stable, opaque identifier that remains the same for a given user-SP pair across all sessions. Useful when the SP needs to correlate the user over time without revealing the user's real identity.
 * **Transient**: a session-scoped, one-time identifier that changes with every SSO session. Useful when the SP does not need to recognize the user across sessions.
 
-IdentityServer supports `emailAddress` and `unspecified` NameID formats out of the box. Persistent and transient format support is not included in the initial release. For custom NameID generation, implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
+IdentityServer supports `emailAddress` and `unspecified` NameID formats out of the box. Persistent and transient formats are not included in the initial release. For custom NameID generation, implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
 
 Inbound `AuthnRequest` messages are validated against the formats configured in `SamlOptions.SupportedNameIdFormats`. Requests specifying an unsupported format are rejected. If you implement a custom NameID format via `ISamlNameIdGenerator`, add it to this list so that validation passes.
 
@@ -146,7 +146,7 @@ IdentityServer preserves RelayState automatically through the authentication flo
 
 SAML Single Logout (SLO) is a profile for coordinating session termination across an entire federation.
 
-When using SSO, a user establishes a session at the IdP and a separate local session at each SP they visit. Logging out of one application ends only that application's local session. Without SLO, the user still has active sessions at every other SP they visited. Ending the IdP session is particularly important: without it, users can immediately re-authenticate via SSO and bounce right back in. SLO solves this by letting a single logout action propagate to all participants in the federation.
+When using SSO, a user establishes a session at the IdP and a separate local session at each SP they visit. Logging out of one application ends only that application's local session. Without SLO, the user still has active sessions at every other SP they visited. Ending the IdP session is especially important: without it, users can immediately re-authenticate via SSO and bounce right back in. SLO solves this by letting a single logout action propagate to all participants in the federation.
 
 ### SP-Initiated SLO
 
@@ -185,7 +185,7 @@ The user must remain on the logout page while the iframes load. If the user navi
 
 ### Partial Logout
 
-Not all SPs may respond successfully. An SP may be unreachable, slow to respond, or the user may navigate away from the logout page before the sequence completes. IdentityServer tracks which SPs are expected to respond and can return a "partial logout" status when some SPs do not confirm. This is a normal outcome in real-world deployments, not an error condition.
+Not all SPs may respond successfully. An SP may be unreachable, slow to respond, or the user may navigate away from the logout page before everything completes. IdentityServer tracks which SPs are expected to respond and can return a "partial logout" status when some SPs don't confirm. This is a normal outcome in real-world deployments, not an error condition.
 
 ### Session Tracking
 

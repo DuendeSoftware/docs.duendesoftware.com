@@ -86,7 +86,7 @@ The EF Core store handles concurrent reads efficiently and integrates with EF Co
 
 ## Custom Store
 
-For deployments that need a store not covered by the built-in in-memory or EF Core implementations, implement `ISamlServiceProviderStore` backed by your own data store (e.g., a NoSQL database or external configuration service). Register your implementation using `AddSamlServiceProviderStore<T>()` on the IdentityServer builder.
+For deployments that need a store not covered by the built-in options, implement `ISamlServiceProviderStore` backed by your own data store (e.g., a NoSQL database or external configuration service). Register your implementation using `AddSamlServiceProviderStore<T>()` on the IdentityServer builder.
 
 Your implementation must handle concurrent reads efficiently. Consider adding a caching layer (e.g., `IMemoryCache`) in front of your database queries, since `FindByEntityIdAsync` is called on every SAML request.
 
@@ -161,7 +161,7 @@ The default validator (`DefaultSamlServiceProviderConfigurationValidator`) check
 * `ClockSkew` must be non-negative (if set).
 * `RequestMaxAge` must be positive (if set).
 
-If an SP fails validation, it is treated as if it does not exist: the store returns `null` and an `InvalidSamlServiceProviderConfigurationEvent` is raised. This means a misconfigured SP is silently rejected at runtime rather than causing an unhandled exception.
+If an SP fails validation, it's treated as if it doesn't exist: the store returns `null` and an `InvalidSamlServiceProviderConfigurationEvent` is raised. This means a misconfigured SP is silently rejected at runtime rather than causing an unhandled exception.
 
 You can replace the default validator with your own implementation. See [Extensibility: ISamlServiceProviderConfigurationValidator](/identityserver/saml/extensibility.md#isamlserviceproviderconfigurationvalidator) for details.
 
