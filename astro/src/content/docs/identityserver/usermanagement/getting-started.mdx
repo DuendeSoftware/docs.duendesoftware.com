@@ -508,7 +508,7 @@ After a successful OTP verification, User Management automatically creates a use
 :::
 
 :::tip
-If you need to access the full user record, for example to read additional OTP addresses or linked authenticators, inject `IUserAuthenticatorsSelfService` and call `TryGetAsync` with the subject ID.
+If you need to access the full user record, for example to read additional OTP addresses or linked authenticators, inject `IUserSelfService` and call `Authenticators.TryGetAsync` with the subject ID.
 See [OTP Authentication](/identityserver/usermanagement/authentication/otp.mdx) for details.
 :::
 

@@ -45,7 +45,7 @@ builder.Services
     .AddUserManagement();
 ```
 
-This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin` available for injection.
+This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin` available for injection. You can also access them as properties on `IUserSelfService.Profiles` and `IUserAdmin.Profiles` respectively (see [User Lifecycle](/identityserver/usermanagement/fundamentals/user-lifecycle.md)).
 
 :::note[Automatic profile provisioning]
 When a user signs in via OTP for the first time, User Management automatically creates a profile for them
