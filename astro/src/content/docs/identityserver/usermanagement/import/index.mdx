@@ -52,7 +52,7 @@ If you are moving from Duende IdentityServer with ASP.NET Identity to User Manag
 ASP.NET Identity stores user data across several tables. Here is how each concept maps to User Management's import types:
 
 * **`AspNetUsers.Id`** → `UserImportRecord.SubjectId` -- you can use the GUID string directly as the subject ID.
-* **`AspNetUsers.UserName`** → `UserImportRecord.UserName`
+* **`AspNetUsers.UserName`** → `UserImportRecord.ProfileAttributes` -- map to a `preferred_username` profile attribute using the schema (see below).
 * **`AspNetUsers.Email`, `PhoneNumber`, and other profile columns** → `UserImportRecord.ProfileAttributes` -- map each column to a profile attribute using the schema.
 * **`AspNetUsers.PasswordHash`** → `AuthenticatorImport.Password` -- requires a custom `IPasswordHashAlgorithm` to verify the ASP.NET Identity hash format. See [Migrating from ASP.NET Identity](/identityserver/usermanagement/import/aspnet-identity.mdx) for the format details and a complete implementation.
 * **`AspNetUserRoles` + `AspNetRoles`** → `MembershipImport.DirectRoles` -- create the roles first using `IRoleAdmin`, then reference them by ID during import.

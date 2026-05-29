@@ -308,11 +308,12 @@ After primary authentication (password or OTP), check whether the user has TOTP 
 
 ```csharp
 // After primary authentication
-public async Task<IActionResult> OnPostLogin(string username, string password, CancellationToken ct)
+public async Task<IActionResult> OnPostLogin(string email, string password, CancellationToken ct)
 {
     // Step 1: Verify primary credentials
     var result = await passwordAuth.TryAuthenticateAsync(
-        UserName.Create(username),
+        AttributeCode.Create("email"),
+        email,
         NonValidatedPassword.Create(password),
         ct);
 

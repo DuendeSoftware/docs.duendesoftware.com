@@ -25,7 +25,7 @@ For each record in the batch, the importer first ensures a root user record exis
 This record coordinates identity across all aspects and is created before any per-aspect work begins.
 Then, the importer runs up to three steps in order:
 
-1. **Profile**: creates or updates the user profile with the provided `SubjectId`, `UserName`, and `ProfileAttributes`.
+1. **Profile**: creates or updates the user profile with the provided `SubjectId` and `ProfileAttributes`.
 2. **Authenticator**: creates or updates authenticator data (passwords, passkeys, TOTP keys, OTP addresses, external providers, recovery codes).
 3. **Membership**: assigns the user to the specified groups and roles.
 
@@ -69,7 +69,6 @@ public class UserImportService(IUserImporter importer, IUserProfileAdmin profile
             new UserImportRecord
             {
                 SubjectId = new UserSubjectId("user-001"),
-                UserName = new UserName("alice@example.com"),
                 ProfileAttributes = aliceAttributes.Validate(),
                 Authenticators = new AuthenticatorImport
                 {
@@ -83,7 +82,6 @@ public class UserImportService(IUserImporter importer, IUserProfileAdmin profile
             new UserImportRecord
             {
                 SubjectId = new UserSubjectId("user-002"),
-                UserName = new UserName("bob@example.com"),
                 Authenticators = new AuthenticatorImport
                 {
                     ExternalAuthenticators = new[]
@@ -127,7 +125,6 @@ Each record describes a single user to import. Only `SubjectId` is required; all
 public sealed record UserImportRecord
 {
     public required UserSubjectId SubjectId { get; init; }
-    public UserName? UserName { get; init; }
     public ValidatedAttributeValueCollection? ProfileAttributes { get; init; }
     public AuthenticatorImport? Authenticators { get; init; }
     public MembershipImport? Memberships { get; init; }
@@ -135,8 +132,6 @@ public sealed record UserImportRecord
 ```
 
 You can provide any combination of `ProfileAttributes`, `Authenticators`, and `Memberships`.
-When `UserName` is set and a profile is created or overwritten, the system also sets the username on the user profile 
-and the authenticator record.
 
 ### `AuthenticatorImport`
 
@@ -264,7 +259,7 @@ data already exists, it raises a conflict. Rather than failing immediately, the 
 to an `IUserImportConflictResolver`. The resolver inspects the conflict (which record, which step, and why it conflicted)
 and returns a resolution: skip the step, overwrite the existing data, or retry the operation.
 
-This design keeps the import pipeline itself generic. The policy for handling duplicates, username collisions,
+This design keeps the import pipeline itself generic. The policy for handling duplicates, unique attribute collisions,
 and concurrency races lives in the resolver, which you can swap out without changing any import logic.
 
 ### Default behavior
@@ -314,14 +309,14 @@ public sealed record UserImportConflict
 
 ### `UserImportConflictReason` enum
 
-| Value                        | Meaning                                                                                                               |
-|------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| `ProfileAlreadyExists`       | A user profile with the same subject ID already exists.                                                               |
-| `ProfileUniqueKeyConflict`   | A unique attribute value (including username) on the incoming<br/>record already belongs to a different user profile. |
-| `AuthenticatorAlreadyExists` | Authenticators for the same subject ID already exist.                                                                 |
-| `AuthenticatorKeyConflict`   | The username is already claimed by a different user's authenticators.                                                 |
-| `ConcurrencyConflict`        | An optimistic concurrency conflict occurred.                                                                          |
-| `MembershipAlreadyExists`    | A membership record for the same subject ID already exists.                                                           |
+| Value                        | Meaning                                                                                          |
+|------------------------------|--------------------------------------------------------------------------------------------------|
+| `ProfileAlreadyExists`       | A user profile with the same subject ID already exists.                                          |
+| `ProfileUniqueKeyConflict`   | A unique attribute value on the incoming<br/>record already belongs to a different user profile. |
+| `AuthenticatorAlreadyExists` | Authenticators for the same subject ID already exist.                                            |
+| `AuthenticatorKeyConflict`   | A unique authenticator key is already claimed by a different user.                               |
+| `ConcurrencyConflict`        | An optimistic concurrency conflict occurred.                                                     |
+| `MembershipAlreadyExists`    | A membership record for the same subject ID already exists.                                      |
 
 ### `UserImportConflictResolution`
 

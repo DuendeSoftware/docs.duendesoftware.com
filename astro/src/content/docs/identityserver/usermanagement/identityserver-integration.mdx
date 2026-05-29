@@ -1,7 +1,7 @@
 ---
 title: "Enabling User Management in IdentityServer"
 description: "How to add User Management to IdentityServer, including user storage, authentication flows, claims mapping, and role-based authorization."
-date: 2025-05-26
+date: 2025-05-29
 sidebar:
   label: IdentityServer Integration
   order: 3
@@ -66,8 +66,11 @@ When IdentityServer calls `GetProfileDataAsync`, the `UserManagementProfileServi
 and maps it to claims:
 
 * **Profile attributes**: Each attribute's code becomes the claim type and its value becomes the claim value. Boolean attributes emit `"true"` or `"false"` with `ClaimValueTypes.Boolean`.
-* **`preferred_username`**: Emitted from the user's `UserName` property.
 * **`role`**: Emitted for every role assigned directly to the user and for every role inherited transitively through group membership. Duplicate roles (by role ID) are deduplicated before emission.
+
+:::note
+Standard claims such as `preferred_username` are not emitted automatically. To emit one, define a profile attribute whose attribute code matches the claim type (for example, `preferred_username`). The profile service will then include it like any other attribute claim.
+:::
 
 Only claims that match the requested scopes are issued. The `UserManagementProfileService`
 uses `context.AddRequestedClaims(claims)` internally, so IdentityServer's standard scope-to-claim filtering applies.
@@ -100,6 +103,12 @@ subclass with the service provider:
 * `GetProfileDataAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to intercept profile loading after the subject ID is parsed but before the user profile is fetched.
 * `GetProfileDataAsync(ProfileDataRequestContext context, UserProfile user, CancellationToken ct)` - override to customize how claims are built from the profile.
 * `GetRoleClaimsAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to customize how role claims are collected.
+
+The `Logger` property is available to subclasses as a protected property:
+
+```csharp
+protected ILogger<UserManagementProfileService> Logger { get; }
+```
 
 Register your subclass after calling `AddUserManagement()`:
 

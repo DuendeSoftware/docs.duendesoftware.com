@@ -7,7 +7,7 @@ sidebar:
   order: 2
 ---
 
-import { CardGrid, LinkCard, Tabs, TabItem, Aside, Steps } from "@astrojs/starlight/components";
+import { CardGrid, LinkCard, Tabs, TabItem, Steps } from "@astrojs/starlight/components";
 
 In this tutorial, you'll build a complete OTP (one-time password) login flow from scratch using Duende User Management on top of IdentityServer. By the end, you'll have a working ASP.NET Core Razor Pages app where IdentityServer handles authentication and users log in with their email address and a one-time code.
 
@@ -16,10 +16,10 @@ The tutorial is split into two phases:
 - **Phase 1** scaffolds IdentityServer with User Management wired in.
 - **Phase 2** builds the OTP login pages that drive the actual user experience.
 
-<Aside type="caution">
-  This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and single-server deployments, but not recommended for production at scale.
-  For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/identityserver/usermanagement/fundamentals/storage.md) for details.
-</Aside>
+:::caution
+This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and single-server deployments, but not recommended for production at scale.
+For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/identityserver/usermanagement/fundamentals/storage.md) for details.
+:::
 
 ## Prerequisites
 

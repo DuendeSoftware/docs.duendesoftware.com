@@ -22,7 +22,7 @@ If you have not set up User Management yet, see the [getting started guide](/ide
 
 ## How it works
 
-The import API accepts a list of `UserImportRecord` objects. Each record describes one user: their subject ID, username, profile attributes, password,
+The import API accepts a list of `UserImportRecord` objects. Each record describes one user: their subject ID, profile attributes, password,
 and any other authenticators. You call `IUserImporter.ImportAsync` with a batch of records, and the importer creates or updates each user independently. 
 A failure on one record does not affect the others.
 
@@ -223,8 +223,7 @@ This is the core of the migration: reading each `IdentityUser` and its claims, t
 The key decisions:
 
 * **`SubjectId`**: use `UserSubjectId.Create(user.Id)` to carry the existing GUID across as-is. This preserves any existing tokens or references that use the subject ID.
-* **`UserName`**: use `UserName.TryCreate(user.UserName, out var parsedUserName)` if the user has a username set.
-* **`ProfileAttributes`**: map email, phone, and claims to profile attributes using the schema.
+* **`ProfileAttributes`**: map email, phone, username, and claims to profile attributes using the schema. The ASP.NET Identity `UserName` column maps to a `preferred_username` attribute.
 * **`Password`**: wrap the raw base64 hash using `AspNetIdentityPasswordHashAlgorithm.CreateImportData`.
 
 Add a helper method that takes an `IdentityUser` and its claims and returns a `UserImportRecord`:
@@ -259,6 +258,14 @@ static UserImportRecord MapUser(
         var emailCode = AttributeCode.Create("emails");
         if (schema.AttributeDefinitions.ContainsKey(emailCode))
             attrs.Set(emailCode, emailList);
+    }
+
+    // Username as a profile attribute (preferred_username)
+    if (!string.IsNullOrEmpty(user.UserName))
+    {
+        var userNameCode = AttributeCode.Create("preferred_username");
+        if (schema.AttributeDefinitions.ContainsKey(userNameCode))
+            attrs.Set(userNameCode, user.UserName);
     }
 
     // Simple scalar claims mapped to profile attributes
@@ -306,18 +313,9 @@ static UserImportRecord MapUser(
         otpAddresses.Add(new OtpAddress(OtpChannel.Email, emailAddress));
     }
 
-    // Username
-    UserName? userName = null;
-    if (!string.IsNullOrEmpty(user.UserName) &&
-        Duende.UserManagement.UserName.TryCreate(user.UserName, out var parsedUserName))
-    {
-        userName = parsedUserName;
-    }
-
     return new UserImportRecord
     {
         SubjectId = UserSubjectId.Create(user.Id),
-        UserName = userName,
         ProfileAttributes = attrs.Count > 0 ? attrs.Validate() : null,
         Authenticators = new AuthenticatorImport
         {
@@ -568,7 +566,7 @@ as you need. Each run updates existing records in place. This is useful when you
 **Check the output.** After each run, look at the `Failed` count and the error messages. Common failure causes are:
 
 * An attribute code in your mapping does not exist in the schema -- add the attribute definition first.
-* A username is already claimed by a different subject ID -- this can happen if you have duplicate usernames in the source database.
+* A unique attribute value is already claimed by a different subject ID -- this can happen if you have duplicate email addresses or usernames in the source database.
 * A malformed password hash -- `AspNetIdentityPasswordHashAlgorithm` stores the raw base64 hash verbatim during import. If the hash starts with an unexpected version byte, verification will fail on the user's first login attempt. Those users will need to reset their password.
 
 ## Next steps

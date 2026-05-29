@@ -15,7 +15,6 @@ User Management provides a flexible, schema-driven profile system that lets you 
 public sealed record UserProfile
 {
     public UserSubjectId SubjectId { get; }
-    public UserName? UserName { get; }
     public IReadOnlyDictionary<AttributeCode, AttributeValue> Attributes { get; }
 }
 ```
@@ -391,24 +390,21 @@ await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVer
 public sealed record UserProfile
 {
     public UserSubjectId SubjectId { get; }
-    public UserName? UserName { get; }
     public IReadOnlyDictionary<AttributeCode, AttributeValue> Attributes { get; }
 }
 ```
 
 * `SubjectId`: The unique subject identifier for the user.
-* `UserName`: The user's login name, if one has been set.
 * `Attributes`: All stored attribute values keyed by `AttributeCode`.
 
 ### `UserProfileListItem`
 
-`UserProfileListItem` is a lightweight projection used in list query results. It carries the subject identifier, optional user name, and all schema attribute values as a plain string-keyed dictionary.
+`UserProfileListItem` is a lightweight projection used in list query results. It carries the subject identifier and all schema attribute values as a plain string-keyed dictionary.
 
 ```csharp
 public sealed record UserProfileListItem
 {
     public UserSubjectId SubjectId { get; }
-    public UserName? UserName { get; }
     public IReadOnlyDictionary<string, object> Attributes { get; }
 }
 ```
@@ -421,7 +417,6 @@ public sealed record UserProfileListItem
 public sealed record UserProfileAttributeProjection
 {
     public UserSubjectId SubjectId { get; }
-    public UserName? UserName { get; }
     public IReadOnlyDictionary<AttributeCode, AttributeValue> Attributes { get; }
 
     public AttributeValue this[AttributeCode code] { get; }
@@ -431,7 +426,6 @@ public sealed record UserProfileAttributeProjection
 ```
 
 * `SubjectId`: The user's subject identifier.
-* `UserName`: The user's username, if available.
 * `Attributes`: The projected attributes as a dictionary keyed by `AttributeCode`. Only the attributes requested in the query are present.
 * `this[AttributeCode]`: Gets an attribute value by code. Throws when the attribute is not present in the projection.
 * `Contains(AttributeCode)`: Returns `true` when the named attribute is present in the projection.
@@ -675,7 +669,7 @@ Filtering and sorting are not supported for profile queries; only pagination via
 
 * **`QueryAsync(QueryRequest, CancellationToken)`**: Returns a paged list of `UserProfile` records. Use `QueryRequest.Create(new DataRange(offset, limit))` to control pagination.
 
-* **`QueryAsync(QueryRequest, HashSet<AttributeCode>, CancellationToken)`**: Returns a paged list of `UserProfileAttributeProjection` records with only the specified attributes. This overload is useful for performance optimization when you only need a subset of attributes. The projection includes `SubjectId`, `UserName`, and the requested attributes.
+* **`QueryAsync(QueryRequest, HashSet<AttributeCode>, CancellationToken)`**: Returns a paged list of `UserProfileAttributeProjection` records with only the specified attributes. This overload is useful for performance optimization when you only need a subset of attributes. The projection includes `SubjectId` and the requested attributes.
 
 ### Querying All Profiles
 

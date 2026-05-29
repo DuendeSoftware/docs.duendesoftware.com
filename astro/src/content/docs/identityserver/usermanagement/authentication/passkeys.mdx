@@ -541,12 +541,15 @@ sequenceDiagram
     App-->>User: Signed in
 ```
 
+In code: (note an email address is used here to identify the user, this could also be a username or another attribute)
+
 ```csharp
 // After primary authentication succeeds, store the user ID for the second factor
-public async Task<IActionResult> OnPostLogin(string username, string password, CancellationToken ct)
+public async Task<IActionResult> OnPostLogin(string email, string password, CancellationToken ct)
 {
     var result = await passwordAuth.TryAuthenticateAsync(
-        UserName.Create(username),
+        AttributeCode.Create("email"),
+        email,
         NonValidatedPassword.Create(password),
         ct);
 

@@ -11,35 +11,22 @@ User Management exposes two service interfaces for managing user accounts: `IUse
 
 ## `IUserSelfService`
 
-`IUserSelfService` provides operations that users perform on their own accounts. Inject this interface into your application services to allow users to manage their username and deregister.
+`IUserSelfService` provides operations that users perform on their own accounts. Inject this interface into your application services to allow users to deregister.
 
 ```csharp
 public interface IUserSelfService
 {
-    Task<bool> TrySetUserNameAsync(UserSubjectId subjectId, UserName userName, Ct ct);
-
-    Task<bool> TryRemoveUserNameAsync(UserSubjectId subjectId, Ct ct);
-
     Task<bool> TryDeregisterAsync(UserSubjectId subjectId, Ct ct);
 }
 ```
 
 ### Methods
 
-* **`TrySetUserNameAsync`**: Assigns a username to the user identified by `subjectId`. Returns `false` if the username is already taken or the user does not exist.
-* **`TryRemoveUserNameAsync`**: Removes the username from the user identified by `subjectId`. Returns `false` if the user does not exist or has no username set.
 * **`TryDeregisterAsync`**: Permanently removes the user identified by `subjectId` and all associated data. Returns `false` if the user does not exist.
 
 ### Usage
 
 ```csharp
-// Set a username
-var userName = UserName.Create("jane.doe");
-var success = await userSelfService.TrySetUserNameAsync(subjectId, userName, ct);
-
-// Remove a username
-var removed = await userSelfService.TryRemoveUserNameAsync(subjectId, ct);
-
 // Deregister the user
 var deregistered = await userSelfService.TryDeregisterAsync(subjectId, ct);
 ```
@@ -51,23 +38,17 @@ var deregistered = await userSelfService.TryDeregisterAsync(subjectId, ct);
 ```csharp
 public interface IUserAdmin
 {
-    Task<bool> TrySetUserNameAsync(UserSubjectId subjectId, UserName userName, Ct ct);
-
-    Task<bool> TryRemoveUserNameAsync(UserSubjectId subjectId, Ct ct);
-
     Task<bool> TryRemoveAsync(UserSubjectId subjectId, Ct ct);
 }
 ```
 
 ### Methods
 
-* **`TrySetUserNameAsync`**: Assigns a username to the user identified by `subjectId`. Returns `false` if the username is already taken or the user does not exist.
-* **`TryRemoveUserNameAsync`**: Removes the username from the user identified by `subjectId`. Returns `false` if the user does not exist or has no username set.
 * **`TryRemoveAsync`**: Permanently removes the user identified by `subjectId` and all associated data. Returns `false` if the user does not exist.
 
-### Difference From `IUserSelfService`
+### Difference from `IUserSelfService`
 
-`IUserAdmin` and `IUserSelfService` expose the same username operations. The key difference is `TryRemoveAsync` (admin) versus `TryDeregisterAsync` (self-service). Both permanently delete the user, but the naming reflects the actor: an administrator removing a user versus a user deregistering themselves. Apply appropriate authorization to each interface in your application.
+`IUserAdmin` and `IUserSelfService` are similar in functionality. The key difference is in the actor; an admin role vs. self-service. Apply appropriate authorization to each interface in your application.
 
 ## `UserAuthenticators` Record
 
@@ -83,7 +64,6 @@ public sealed record UserAuthenticators
     public IReadOnlyCollection<UserPasskey> Passkeys { get; }
     public int RecoveryCodeCount { get; }
     public bool HasPassword { get; }
-    public UserName? UserName { get; }
 }
 ```
 
@@ -98,7 +78,6 @@ public sealed record UserAuthenticators
 | `Passkeys`               | `IReadOnlyCollection<UserPasskey>`           | Registered passkeys, each with a credential ID, display name, and creation timestamp                                                          |
 | `RecoveryCodeCount`      | `int`                                        | Number of unused recovery codes remaining                                                                                                     |
 | `HasPassword`            | `bool`                                       | Whether the user has a password set                                                                                                           |
-| `UserName`               | `UserName?`                                  | The user's username, or `null` if no username has been assigned                                                                               |
 
 ### Usage
 
@@ -136,21 +115,6 @@ var newId = UserSubjectId.New();
 
 // Access the underlying string value
 string value = subjectId.Value;
-```
-
-### `UserName`
-
-A validated username string. Whitespace is trimmed automatically. Maximum length is 320 characters (to accommodate email addresses used as usernames).
-
-```csharp
-// Create: throws FormatException on invalid input
-var userName = UserName.Create("jane.doe");
-
-// TryCreate: returns false on invalid input
-if (UserName.TryCreate("jane.doe", out var result))
-{
-    // result is valid here
-}
 ```
 
 ### `OtpAddress`
@@ -236,8 +200,8 @@ Understanding what Duende maintains internally versus what you can customize hel
 
 The following are implemented and maintained by Duende and updated with each release. You call these interfaces but do not implement them:
 
-* **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TrySetUserNameAsync`, `TryRemoveUserNameAsync`, `TryDeregisterAsync`)
-* **`IUserAdmin`**: administrative lifecycle operations (`TrySetUserNameAsync`, `TryRemoveUserNameAsync`, `TryRemoveAsync`)
+* **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TryDeregisterAsync`)
+* **`IUserAdmin`**: administrative lifecycle operations (`TryRemoveAsync`)
 * **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes)
 * **Core storage**: the underlying user store, credential storage, and session state are internal to Duende and not designed for replacement or override
 * **Authentication logic and lifecycle state machine**: the rules governing registration, login, MFA enrollment, and deregistration are managed internally and are not extensible
@@ -276,5 +240,3 @@ The subject identifier value objects follow the [RFC 9493](https://www.rfc-edito
 * `PhoneNumber`: validated phone number in E.164 format (max 15 digits)
 
 These are all `record` types. There is no inheritance between them: they are independent types that share the `ISubjectId` contract.
-
-`UserName` is a related value object (max 320 characters) but does not implement `ISubjectId`.
