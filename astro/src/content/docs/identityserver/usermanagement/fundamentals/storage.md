@@ -74,7 +74,7 @@ dotnet add package Duende.Storage.PostgreSQL
 Configure User Management to use PostgreSQL storage:
 
 ```csharp title="Program.cs"
-using Duende.Storage;
+using Duende.Storage.Schema;
 using Duende.Storage.PostgreSql;
 using Npgsql;
 
@@ -160,7 +160,7 @@ If your application needs more than one store instance (for example, in a multi-
 Call `CreateIfNotExistsAsync` once on startup to create the schema, tables, and indexes. The operation is idempotent and uses advisory locks to prevent concurrent initialization:
 
 ```csharp title="Program.cs"
-using Duende.Storage;
+using Duende.Storage.Schema;
 
 using var scope = app.Services.CreateScope();
 await scope.ServiceProvider
@@ -173,7 +173,7 @@ await scope.ServiceProvider
 Check schema compatibility before the application starts accepting traffic:
 
 ```csharp title="Program.cs"
-using Duende.Storage;
+using Duende.Storage.Schema;
 
 using var scope = app.Services.CreateScope();
 var schema = scope.ServiceProvider.GetRequiredService<IDatabaseSchema>();
@@ -209,7 +209,7 @@ dotnet add package Duende.Storage.SqlServer
 Configure User Management to use SQL Server storage:
 
 ```csharp title="Program.cs"
-using Duende.Storage;
+using Duende.Storage.Schema;
 using Duende.Storage.MsSql;
 using Microsoft.Data.SqlClient;
 
@@ -307,7 +307,7 @@ If your application needs more than one store instance (for example, in a multi-
 Call `CreateIfNotExistsAsync` once on startup to create the schema, tables, and indexes. The operation is idempotent and uses application locks to prevent concurrent initialization:
 
 ```csharp title="Program.cs"
-using Duende.Storage;
+using Duende.Storage.Schema;
 
 using var scope = app.Services.CreateScope();
 await scope.ServiceProvider
@@ -320,7 +320,7 @@ await scope.ServiceProvider
 Check schema compatibility before the application starts accepting traffic:
 
 ```csharp title="Program.cs"
-using Duende.Storage;
+using Duende.Storage.Schema;
 
 using var scope = app.Services.CreateScope();
 var schema = scope.ServiceProvider.GetRequiredService<IDatabaseSchema>();

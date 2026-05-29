@@ -149,7 +149,6 @@ if (result.IsSuccess)
 ### Querying Roles
 
 ```csharp
-using Duende.Storage;
 using Duende.Storage.Querying;
 using Duende.UserManagement.Membership;
 

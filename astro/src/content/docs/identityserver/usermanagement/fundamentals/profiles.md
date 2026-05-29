@@ -674,7 +674,6 @@ Filtering and sorting are not supported for profile queries; only pagination via
 ### Querying All Profiles
 
 ```csharp
-using Duende.Storage;
 using Duende.Storage.Querying;
 using Duende.UserManagement.Profiles;
 
@@ -690,7 +689,6 @@ foreach (var profile in result.Items)
 ### Querying Profiles with Attribute Projection
 
 ```csharp
-using Duende.Storage;
 using Duende.Storage.EntityAttributeValue;
 using Duende.Storage.Querying;
 using Duende.UserManagement.Profiles;
