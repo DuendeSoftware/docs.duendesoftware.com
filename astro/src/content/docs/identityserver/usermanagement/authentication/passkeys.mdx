@@ -572,6 +572,102 @@ public async Task<IActionResult> OnPostLogin(string email, string password, Canc
 }
 ```
 
+## Customizing Sign-In Behavior
+
+After a successful passkey authentication ceremony, User Management signs the user in and returns a JSON response to the client. The `IPasskeySignInHandler` interface controls how this sign-in happens. You can replace the default implementation to customize claims, session properties, or integrate with an external session system.
+
+### IPasskeySignInHandler
+
+```csharp
+// IPasskeySignInHandler.cs
+public interface IPasskeySignInHandler
+{
+    Task<IResult> SignInAsync(
+        HttpContext context,
+        UserAuthenticators user,
+        bool userVerified,
+        bool backedUp,
+        CancellationToken ct);
+}
+```
+
+The parameters provide everything you need to establish the session:
+
+* `context` - the current HTTP context for issuing cookies or interacting with authentication middleware.
+* `user` - the authenticated user's authenticator information, including their `SubjectId` and registered OTP addresses.
+* `userVerified` - whether the authenticator performed user verification (biometric or PIN) during the ceremony.
+* `backedUp` - whether the passkey credential is backed up (synced across devices).
+* `ct` - cancellation token.
+
+Your implementation must return an `IResult` that writes the HTTP response. Use `PasskeyCompleteAuthenticationResult` to return the standard JSON response after signing in:
+
+```csharp
+return new PasskeyCompleteAuthenticationResult(userVerified, backedUp);
+```
+
+### Default behavior
+
+The built-in handler creates a `ClaimsPrincipal` with the user's subject ID, authentication method (`passkey`), authentication time, and email (if available), then calls `HttpContext.SignInAsync` with an 8-hour persistent cookie.
+
+When using the IdentityServer integration, the sign-in handler is automatically configured for proper session management. You do not need to register anything extra.
+
+### Custom implementation
+
+Register your own handler to customize the sign-in behavior. Because the default is registered with `TryAddScoped`, your registration takes priority:
+
+```csharp
+builder.Services.AddScoped<IPasskeySignInHandler, MyPasskeySignInHandler>();
+```
+
+Example: adding custom claims and adjusting session lifetime:
+
+```csharp
+using System.Security.Claims;
+using Duende.UserManagement.Authentication;
+using Duende.UserManagement.Authentication.Passkeys;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+
+public class MyPasskeySignInHandler : IPasskeySignInHandler
+{
+    public async Task<IResult> SignInAsync(
+        HttpContext context,
+        UserAuthenticators user,
+        bool userVerified,
+        bool backedUp,
+        CancellationToken ct)
+    {
+        var claims = new List<Claim>
+        {
+            new Claim("sub", user.SubjectId.Value),
+            new Claim("amr", "passkey"),
+            new Claim("auth_time", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
+        };
+
+        // Add custom claims based on ceremony results
+        if (userVerified)
+        {
+            claims.Add(new Claim("user_verified", "true"));
+        }
+
+        var identity = new ClaimsIdentity(claims, "passkey");
+        var principal = new ClaimsPrincipal(identity);
+
+        var properties = new AuthenticationProperties
+        {
+            IsPersistent = true,
+            ExpiresUtc = DateTimeOffset.UtcNow.AddHours(4),
+            IssuedUtc = DateTimeOffset.UtcNow,
+            AllowRefresh = true
+        };
+
+        await context.SignInAsync(principal, properties);
+
+        return new PasskeyCompleteAuthenticationResult(userVerified, backedUp);
+    }
+}
+```
+
 ## Passkey Management UI
 
 ### Registering a New Passkey
