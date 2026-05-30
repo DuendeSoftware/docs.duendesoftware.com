@@ -241,18 +241,17 @@ initiates SLO, it creates a logout session that tracks which SPs are expected to
 records their responses as they arrive. This state must survive across multiple HTTP requests (one
 per SP notification).
 
-**This store is optional.** If no implementation is registered, IdentityServer still sends SLO
-notifications to each SP, but it cannot track their responses. Without a store, the SLO flow
-completes without waiting for or recording SP `LogoutResponse` messages. You should register an
-implementation whenever you need reliable SLO response tracking.
+**In-memory (default):** An in-memory implementation is registered automatically. This works for
+development and single-server deployments, but state is lost on restart and isn't shared across
+instances.
 
-**EF Core (automatic):** When you call `AddOperationalStore()` on the IdentityServer builder,
+**EF Core (recommended for production):** When you call `AddOperationalStore()` on the IdentityServer builder,
 IdentityServer automatically registers an EF Core-backed implementation. No additional configuration
-is needed. This is the recommended approach for production deployments.
+is needed.
 
 **Custom implementation:** You can register your own implementation using the `AddSamlLogoutSessionStore<T>()` extension
 method on the IdentityServer builder. Use this when you need a specific persistence backend such as
-Redis or DynamoDB, or when you are not using the EF operational store.
+Redis or DynamoDB, or when you're not using the EF operational store.
 
 Expired logout sessions are removed automatically by `TokenCleanupService`. The lifetime of each
 session is controlled by `LogoutSessionLifetime` in `SamlOptions` (see
@@ -297,13 +296,10 @@ to an `ExpectedSpLogout` record. That record holds the SP's entity ID and, once 
 
 ### When to Use
 
-Register an `ISamlLogoutSessionStore` implementation when:
+Replace the default in-memory store when:
 
-* You want SLO response tracking to work (without a store, notifications are sent but responses are
-  not tracked).
-* You are running multiple server instances and need logout session state to be shared across them
-  without using the EF operational store.
-* You want to store logout session state in a specific distributed cache (Redis, etc.) or database.
+* You're running multiple server instances and need logout session state shared across them.
+* You want to use a specific distributed cache (Redis, etc.) or database.
 * You need custom TTL or cleanup behavior for in-flight SLO sessions.
 
 ### Registration
