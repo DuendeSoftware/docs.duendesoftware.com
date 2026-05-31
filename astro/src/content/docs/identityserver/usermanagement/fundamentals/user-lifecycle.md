@@ -234,7 +234,7 @@ The following extension points are designed for you to implement or configure:
 
 | Extension point           | Interface                 | Purpose                                                                                                    |
 |---------------------------|---------------------------|------------------------------------------------------------------------------------------------------------|
-| OTP delivery              | `IOtpSender`              | Implement to send one-time password codes via your preferred channel (email, SMS, push notification, etc.) |
+| OTP delivery              | `IOtpDispatcher`          | Implement to deliver one-time password codes via your preferred channel (email, SMS, push notification, etc.) |
 | Password validation       | `IPasswordValidator`      | Implement custom password strength or policy rules beyond the built-in defaults                            |
 | Custom profile attributes | `IUserProfileSchemaAdmin` | Add application-specific attributes to the user profile schema                                             |
 

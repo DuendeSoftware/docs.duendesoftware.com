@@ -48,7 +48,7 @@ Once you have IdentityServer set up, adding User Management takes a single call 
         {
             options.Authentication(configure =>
             {
-                configure.UseSmtpOtpSender(x => builder.Configuration.GetSection("Smtp").Bind(x));
+                configure.UseSmtpOtpDispatcher(x => builder.Configuration.GetSection("Smtp").Bind(x));
             });
             options.AddPostgreSqlStore();
         });

@@ -1,17 +1,17 @@
 ---
-title: SMTP OTP Sender Reference
-description: Reference for the SmtpOtpSender, including configuration options, template placeholders, and security best practices for email-based one-time password delivery.
+title: SMTP OTP Dispatcher Reference
+description: Reference for the SmtpOtpDispatcher, including configuration options, template placeholders, and security best practices for email-based one-time password delivery.
 date: 2026-04-29
 sidebar:
-  label: SMTP OTP Sender
+  label: SMTP OTP Dispatcher
   order: 2
 ---
 
-The `SmtpOtpSender` delivers one-time passwords (OTPs) via email using SMTP. It includes a built-in default template with security warnings and supports fully customizable plain text, HTML, and subject templates.
+The `SmtpOtpDispatcher` delivers one-time passwords (OTPs) via email using SMTP. It includes a built-in default template with security warnings and supports fully customizable plain text, HTML, and subject templates.
 
 ## Registration
 
-Register the SMTP One-Time Password (OTP) sender using `UseSmtpOtpSender` on the authentication builder:
+Register the SMTP One-Time Password (OTP) dispatcher using `UseSmtpOtpDispatcher` on the authentication builder:
 
 ```csharp title="Program.cs"
 using Duende.IdentityServer;
@@ -20,7 +20,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .Authentication(auth => auth.UseSmtpOtpSender(options =>
+        .Authentication(auth => auth.UseSmtpOtpDispatcher(options =>
         {
             options.Host = "smtp.example.com";
             options.Port = 587;
@@ -31,9 +31,9 @@ builder.Services
     );
 ```
 
-## `SmtpOtpSenderOptions`
+## `SmtpOtpDispatcherOptions`
 
-All properties on `SmtpOtpSenderOptions` are configured via the `Action<SmtpOtpSenderOptions>` delegate passed to `UseSmtpOtpSender`.
+All properties on `SmtpOtpDispatcherOptions` are configured via the `Action<SmtpOtpDispatcherOptions>` delegate passed to `UseSmtpOtpDispatcher`.
 
 | Property            | Type      | Required | Default | Description                                                                                                                                                                                                                                                    |
 |---------------------|-----------|----------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -79,9 +79,9 @@ All three template properties (`PlainTextTemplate`, `HtmlTemplate`, `SubjectTemp
 | Placeholder        | Description                                                                                      | Example Value     |
 |--------------------|--------------------------------------------------------------------------------------------------|-------------------|
 | `{Code}`           | The OTP code, formatted with hyphens between groups.                                             | `123-456`         |
-| `{FromName}`       | The configured sender name (`SmtpOtpSenderOptions.FromName`).                                    | `MyApp`           |
+| `{FromName}`       | The configured sender name (`SmtpOtpDispatcherOptions.FromName`).                                    | `MyApp`           |
 | `{ExpiresMinutes}` | The number of minutes until the code expires, as a whole number.                                 | `5`               |
-| `{Domain}`         | The configured domain (`SmtpOtpSenderOptions.Domain`), or `"our official website"` when not set. | `app.example.com` |
+| `{Domain}`         | The configured domain (`SmtpOtpDispatcherOptions.Domain`), or `"our official website"` when not set. | `app.example.com` |
 
 Note: `SubjectTemplate` only supports `{FromName}` and `{Code}`.
 
@@ -95,7 +95,7 @@ using Duende.IdentityServer;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .Authentication(auth => auth.UseSmtpOtpSender(options =>
+        .Authentication(auth => auth.UseSmtpOtpDispatcher(options =>
         {
             options.Host = "smtp.example.com";
             options.Port = 587;
@@ -133,7 +133,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .Authentication(auth => auth.UseSmtpOtpSender(options =>
+        .Authentication(auth => auth.UseSmtpOtpDispatcher(options =>
         {
             options.Host = "smtp.example.com";
             options.Port = 587;
@@ -200,7 +200,7 @@ using Duende.UserManagement;
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(um => um
-        .Authentication(auth => auth.UseSmtpOtpSender(options =>
+        .Authentication(auth => auth.UseSmtpOtpDispatcher(options =>
         {
             builder.Configuration.GetSection("Smtp").Bind(options);
             options.EnableSsl = true;

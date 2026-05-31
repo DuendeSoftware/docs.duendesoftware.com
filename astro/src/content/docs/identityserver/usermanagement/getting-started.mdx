@@ -108,16 +108,16 @@ Open `Program.cs` and replace its contents with the following. The key call is `
   <TabItem label="Console sender (development)">
     The console sender prints OTP codes to the terminal, useful during local development without any mail infrastructure.
 
-    User Management does not include a console-based OTP sender. Implement `IOtpSender` to write codes to the console. Create `ConsoleOtpSender.cs`:
+    User Management does not include a console-based OTP dispatcher. Implement `IOtpDispatcher` to write codes to the console. Create `ConsoleOtpDispatcher.cs`:
 
-    ```csharp title="ConsoleOtpSender.cs"
+    ```csharp title="ConsoleOtpDispatcher.cs"
     using Duende.UserManagement.Authentication.Otp;
 
-    public class ConsoleOtpSender : IOtpSender
+    public class ConsoleOtpDispatcher : IOtpDispatcher
     {
-        public bool CanSend(OtpAddress address) => true;
+        public bool CanDispatch(OtpAddress address) => true;
 
-        public Task SendAsync(OtpAddress address, PlainTextOtp otp, TimeSpan expiresAfter, CancellationToken ct)
+        public Task DispatchAsync(OtpAddress address, PlainTextOtp otp, TimeSpan expiresAfter, CancellationToken ct)
         {
             Console.WriteLine($"OTP for {address}: {otp.Text}");
             return Task.CompletedTask;
@@ -158,7 +158,7 @@ Open `Program.cs` and replace its contents with the following. The key call is `
             });
         });
 
-    builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
+    builder.Services.AddSingleton<IOtpDispatcher, ConsoleOtpDispatcher>();
 
     builder.Services.AddDataProtection()
         .SetApplicationName("OtpIdentityServerGettingStarted");
@@ -217,7 +217,7 @@ Open `Program.cs` and replace its contents with the following. The key call is `
         {
             options.Authentication(configure =>
             {
-                configure.UseSmtpOtpSender(x =>
+                configure.UseSmtpOtpDispatcher(x =>
                     builder.Configuration.GetSection("Smtp").Bind(x));
             });
             options.AddSqliteStore(o =>
