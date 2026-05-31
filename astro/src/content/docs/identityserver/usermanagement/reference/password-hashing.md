@@ -161,3 +161,32 @@ builder.Services.AddSingleton<IPasswordHashAlgorithm, LegacyMd5PasswordHashAlgor
 ```
 
 Once all users have logged in at least once, their hashes will have been migrated to the preferred algorithm. At that point the legacy registration can be removed.
+
+## PasswordHashAlgorithms Service
+
+The `PasswordHashAlgorithms` class (in `Duende.UserManagement.Authentication`) is available from DI and provides access to the registered algorithms and the preferred algorithm. This is useful in import scenarios where you need to hash passwords using the preferred algorithm rather than storing a legacy hash verbatim.
+
+```csharp
+using Duende.UserManagement.Authentication;
+
+public class MyImportService(PasswordHashAlgorithms hashAlgorithms)
+{
+    public HashedPasswordData HashNewPassword(string plainTextPassword)
+    {
+        // Use the preferred algorithm to hash a password during import
+        return hashAlgorithms.Preferred.Hash(plainTextPassword);
+    }
+}
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Preferred` | `IPasswordHashAlgorithm` | The preferred algorithm (as configured in `PasswordOptions.PreferredHashAlgorithm`). Use this for hashing new passwords during import. |
+| `All` | `IReadOnlyList<IPasswordHashAlgorithm>` | All registered algorithms, including legacy ones used only for verification. |
+
+This is particularly useful when importing users from a system where you have access to the plaintext passwords (for example, during a live migration or from a CSV export). Rather than storing the source hash and implementing a custom `IPasswordHashAlgorithm`, you can hash directly with the preferred algorithm:
+
+```csharp
+var hashedData = hashAlgorithms.Preferred.Hash(plaintextPassword);
+var passwordImport = new PasswordImport(hashedData);
+```
