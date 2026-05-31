@@ -413,7 +413,91 @@ The JavaScript helper handles:
 * Calling the begin/complete endpoints
 * Invoking `navigator.credentials.create()` and `navigator.credentials.get()`
 * Encoding and decoding Base64URL values required by the WebAuthn API
-* Routing requests to the correct endpoint URLs (injected at build time from `PasskeysRouteOptions`)
+* Error handling with user-friendly messages for common WebAuthn errors (`NotAllowedError`, `NotSupportedError`)
+
+### Functions
+
+The helper exposes three functions:
+
+#### `registerPasskey(name, callbacks)`
+
+Registers a new passkey for the current (authenticated) user. The user must already be signed in.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | `string` | Optional user-friendly name for the passkey (max 255 characters) |
+| `callbacks.onStart` | `Function` | Called when registration begins |
+| `callbacks.onWaitingForAuthenticator` | `Function` | Called when waiting for user interaction with the authenticator |
+| `callbacks.onSuccess` | `Function` | Called with the result object (`{credentialId}`) on success |
+| `callbacks.onError` | `Function` | Called with an error message string on failure |
+
+```javascript
+registerPasskey("My laptop", {
+  onStart: () => showSpinner(),
+  onWaitingForAuthenticator: () => showMessage("Touch your security key or use biometrics..."),
+  onSuccess: (result) => showMessage(`Passkey registered: ${result.credentialId}`),
+  onError: (message) => showError(message)
+});
+```
+
+Internally, `registerPasskey` calls `/passkeys/register/begin` to get the challenge and options, invokes `navigator.credentials.create()`, and posts the attestation to `/passkeys/register/complete`.
+
+#### `authenticateWithPasskey(callbacks)`
+
+Authenticates with a second-factor passkey (for MFA flows where the user is already partially authenticated). Unlike `registerPasskey` and `authenticateWithDiscoverablePasskey`, this function does **not** call the completion endpoint itself. Instead, it passes the assertion payload to `onSuccess`, and your application is responsible for submitting it to your own completion endpoint and promoting the session.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `callbacks.onStart` | `Function` | Called when authentication begins |
+| `callbacks.onWaitingForAuthenticator` | `Function` | Called when waiting for user interaction |
+| `callbacks.onSuccess` | `Function` | Called with the complete request payload to submit to your endpoint |
+| `callbacks.onError` | `Function` | Called with an error message string on failure |
+
+```javascript
+authenticateWithPasskey({
+  onStart: () => showSpinner(),
+  onWaitingForAuthenticator: () => showMessage("Touch your security key..."),
+  onSuccess: async (payload) => {
+    // Submit the assertion to your application's completion endpoint
+    const response = await fetch('/account/mfa/passkey/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (response.ok) {
+      window.location.href = '/dashboard';
+    }
+  },
+  onError: (message) => showError(message)
+});
+```
+
+Internally, `authenticateWithPasskey` calls `/passkeys/authenticate/begin` to get the challenge, invokes `navigator.credentials.get()` scoped to the user's registered credentials, and passes the raw assertion result to your callback.
+
+#### `authenticateWithDiscoverablePasskey(callbacks)`
+
+Authenticates with a discoverable (usernameless) passkey. The user does not need to enter a username — the authenticator presents stored credentials for the relying party.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `callbacks.onStart` | `Function` | Called when authentication begins |
+| `callbacks.onWaitingForAuthenticator` | `Function` | Called when waiting for user interaction |
+| `callbacks.onSuccess` | `Function` | Called with success result (`{userVerified, backedUp}`) |
+| `callbacks.onError` | `Function` | Called with an error message string on failure |
+
+```javascript
+authenticateWithDiscoverablePasskey({
+  onStart: () => showSpinner(),
+  onWaitingForAuthenticator: () => showMessage("Select a passkey..."),
+  onSuccess: (result) => {
+    // User is now authenticated - redirect or update UI
+    window.location.href = '/dashboard';
+  },
+  onError: (message) => showError(message)
+});
+```
+
+Internally, `authenticateWithDiscoverablePasskey` calls `/passkeys/authenticate/discoverable/begin`, invokes `navigator.credentials.get()` with an empty `allowCredentials` list, and posts the assertion to `/passkeys/authenticate/complete`.
 
 ## Second-Factor Passkey Authentication
 
