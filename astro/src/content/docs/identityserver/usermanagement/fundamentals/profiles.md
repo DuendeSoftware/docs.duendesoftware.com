@@ -593,14 +593,14 @@ public interface IUserProfileAdmin
 
     Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
 
-    Task<UserProfile?> TryGetAsync(AttributeCode attributeCode, object value, Ct ct);
+    Task<UserProfile?> TryGetAsync(AttributeCode uniqueAttributeCode, object value, Ct ct);
 }
 ```
 
 * `GetSchemaAsync`: Returns the current attribute schema, identical to the self-service variant.
 * `TryAddAsync`: Creates a new profile for the given subject. Returns the created `UserProfile` on success, or `null` if a profile already exists.
 * `TryGetAsync(UserSubjectId, Ct)`: Retrieves a profile by subject identifier.
-* `TryGetAsync(AttributeCode, object, Ct)`: Retrieves a profile by matching an attribute value. This overload is useful for looking up a user by a unique attribute such as `employee_id` or `email`. Returns `null` when no matching profile is found.
+* `TryGetAsync(AttributeCode, object, Ct)`: Retrieves a profile by matching a unique attribute value. The attribute must have `IsUnique` set to `true` in its `AttributeDefinition`, because the lookup relies on the unique index for efficient matching. Returns `null` when no matching profile is found.
 
 ### Creating a Profile (Admin)
 
