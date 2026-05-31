@@ -476,7 +476,7 @@ Internally, `authenticateWithPasskey` calls `/passkeys/authenticate/begin` to ge
 
 #### `authenticateWithDiscoverablePasskey(callbacks)`
 
-Authenticates with a discoverable (usernameless) passkey. The user does not need to enter a username — the authenticator presents stored credentials for the relying party.
+Authenticates with a discoverable (usernameless) passkey. The user does not need to enter a username: the authenticator presents stored credentials for the relying party.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -693,7 +693,7 @@ return new PasskeyCompleteAuthenticationResult(userVerified, backedUp);
 
 The built-in handler creates a `ClaimsPrincipal` with the user's subject ID, authentication method (`passkey`), authentication time, and email (if available), then calls `HttpContext.SignInAsync` with an 8-hour persistent cookie.
 
-When using the IdentityServer integration, the sign-in handler is automatically configured for proper session management. You do not need to register anything extra.
+When using the IdentityServer integration, the sign-in handler is automatically configured for proper session management. You don't need to register anything extra.
 
 ### Custom implementation
 

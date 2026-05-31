@@ -11,7 +11,7 @@ User Management exposes two service interfaces for managing user accounts: `IUse
 
 ## `IUserSelfService`
 
-`IUserSelfService` provides operations that users perform on their own accounts. Inject this interface into your application services to allow users to deregister.
+`IUserSelfService` is what you inject when a user needs to manage their own account. It handles deregistration directly and exposes profile and authenticator operations as sub-service properties, so you don't need to inject each one separately.
 
 ```csharp
 public interface IUserSelfService
@@ -28,8 +28,8 @@ public interface IUserSelfService
 
 ### Properties
 
-* **`Profiles`**: Provides access to `IUserProfileSelfService` for profile operations (get, update, register).
-* **`Authenticators`**: Provides access to `IUserAuthenticatorsSelfService` for authenticator management (OTP, TOTP, passkeys, passwords, recovery codes).
+* **`Profiles`**: Provides access to `IUserProfileSelfService` for reading and updating the user's profile.
+* **`Authenticators`**: Provides access to `IUserAuthenticatorsSelfService` for managing OTP, TOTP, passkeys, passwords, and recovery codes.
 
 ### Usage
 
@@ -44,7 +44,7 @@ var authenticators = await userSelfService.Authenticators.TryGetAsync(subjectId,
 
 ## `IUserAdmin`
 
-`IUserAdmin` provides administrative operations for managing user accounts. Inject this interface into admin interfaces or background jobs that need to manage users on their behalf.
+`IUserAdmin` is the administrative counterpart. Inject it into admin interfaces or background jobs that manage users on their behalf.
 
 ```csharp
 public interface IUserAdmin
@@ -62,13 +62,13 @@ public interface IUserAdmin
 
 ### Properties
 
-* **`Membership`**: Provides access to `IMembershipAdmin` for membership administration.
-* **`Profiles`**: Provides access to `IUserProfileAdmin` for profile operations (get, add, update, query).
-* **`Authenticators`**: Provides access to `IUserAuthenticatorsAdmin` for authenticator management.
+* **`Membership`**: Provides access to `IMembershipAdmin` for role and group assignment.
+* **`Profiles`**: Provides access to `IUserProfileAdmin` for reading, creating, and querying profiles.
+* **`Authenticators`**: Provides access to `IUserAuthenticatorsAdmin` for managing authenticators on behalf of users.
 
 ### Difference from `IUserSelfService`
 
-`IUserAdmin` and `IUserSelfService` are similar in functionality. The key difference is in the actor; an admin role vs. self-service. Apply appropriate authorization to each interface in your application.
+`IUserAdmin` and `IUserSelfService` expose similar capabilities. The difference is who the actor is: admin code managing users on their behalf vs. users managing their own accounts. Apply appropriate authorization to each in your application.
 
 ## `UserAuthenticators` Record
 
@@ -214,35 +214,35 @@ if (OpaqueSubjectId.TryCreate("1234567890", out var result))
 
 ## Extensibility and Maintenance Boundaries
 
-Understanding what Duende maintains internally versus what you can customize helps you build integrations correctly and avoid reimplementing functionality that is already provided.
+Knowing what Duende maintains versus what you can customize helps you build integrations correctly and avoid reimplementing things that already exist.
 
 ### Maintained by Duende (internal)
 
-The following are implemented and maintained by Duende and updated with each release. You call these interfaces but do not implement them:
+These are implemented and maintained by Duende and updated with each release. You call these interfaces but don't implement them:
 
 * **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TryDeregisterAsync`), with sub-services for profiles (`Profiles`) and authenticators (`Authenticators`)
 * **`IUserAdmin`**: administrative lifecycle operations (`TryRemoveAsync`), with sub-services for membership (`Membership`), profiles (`Profiles`), and authenticators (`Authenticators`)
-* **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes) — accessible directly or via the parent interfaces
+* **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes), accessible directly or via the parent interfaces
 * **Core storage**: the underlying user store, credential storage, and session state are internal to Duende and not designed for replacement or override
 * **Authentication logic and lifecycle state machine**: the rules governing registration, login, MFA enrollment, and deregistration are managed internally and are not extensible
 
-You do not need to implement any of these; inject them where needed and call their methods.
+You don't need to implement any of these. Inject them where needed and call their methods.
 
-### Extensible by developers
+### Extensibility for Developers
 
-The following extension points are designed for you to implement or configure:
+These extension points are designed for you to implement or configure:
 
-| Extension point           | Interface                 | Purpose                                                                                                    |
-|---------------------------|---------------------------|------------------------------------------------------------------------------------------------------------|
+| Extension point           | Interface                 | Purpose                                                                                                       |
+|---------------------------|---------------------------|---------------------------------------------------------------------------------------------------------------|
 | OTP delivery              | `IOtpDispatcher`          | Implement to deliver one-time password codes via your preferred channel (email, SMS, push notification, etc.) |
-| Password validation       | `IPasswordValidator`      | Implement custom password strength or policy rules beyond the built-in defaults                            |
-| Custom profile attributes | `IUserProfileSchemaAdmin` | Add application-specific attributes to the user profile schema                                             |
+| Password validation       | `IPasswordValidator`      | Implement custom password strength or policy rules beyond the built-in defaults                               |
+| Custom profile attributes | `IUserProfileSchemaAdmin` | Add application-specific attributes to the user profile schema                                                |
 
-These interfaces are registered with the service provider. Provide your own implementation during application startup to override the default behavior.
+Register your implementation with the service provider at startup to override the default behavior.
 
-### Not extensible
+### Not Extensible
 
-The following are internal to Duende and are not designed for override or extension:
+The following are internal to Duende and not designed for override or extension:
 
 * Core user storage and the database schema backing it
 * The authentication and credential verification logic

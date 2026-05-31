@@ -442,7 +442,7 @@ public sealed class AttributeValueCollection : IEnumerable<AttributeValue>
 
     public int Count { get; }
 
-    // Typed setters — validate code exists in schema and value matches declared type
+    // Typed setters - validate code exists in schema and value matches declared type
     public void Set(AttributeCode code, string value);
     public void Set(AttributeCode code, bool value);
     public void Set(AttributeCode code, int value);
@@ -452,7 +452,7 @@ public sealed class AttributeValueCollection : IEnumerable<AttributeValue>
     public void Set(AttributeCode code, IReadOnlyDictionary<string, object> value);
     public void Set(AttributeCode code, IReadOnlyList<object> value);
 
-    // Try variants — return false with error list instead of throwing
+    // Try variants - return false with error list instead of throwing
     public bool TrySet(AttributeCode code, string value, out IReadOnlyList<string>? errors);
     // ... (overloads for bool, int, decimal, DateOnly, DateTimeOffset, complex, list)
 
@@ -464,7 +464,7 @@ public sealed class AttributeValueCollection : IEnumerable<AttributeValue>
     public bool TryGet(AttributeCode code, out AttributeValue attribute);
     public AttributeValue this[AttributeCode code] { get; }
 
-    // Validation — produces the immutable type required by persist methods
+    // Validation - produces the immutable type required by persist methods
     public ValidatedAttributeValueCollection Validate();
     public bool TryValidate(out ValidatedAttributeValueCollection? validated, out IReadOnlyList<string>? errors);
 }

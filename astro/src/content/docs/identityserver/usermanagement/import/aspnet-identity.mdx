@@ -619,9 +619,9 @@ new PasskeyImport
 ```
 
 The `Algorithm` field is the COSE algorithm identifier from the credential's public key. Common values:
-* `-7` — ES256 (ECDSA with P-256 and SHA-256)
-* `-257` — RS256 (RSASSA-PKCS1-v1_5 with SHA-256)
-* `-8` — EdDSA
+* `-7` - ES256 (ECDSA with P-256 and SHA-256)
+* `-257` - RS256 (RSASSA-PKCS1-v1_5 with SHA-256)
+* `-8` - EdDSA
 
 If your source database stores the COSE public key directly, you can extract the algorithm from key label 3 in the COSE key map. If you only know the key type, use the appropriate default (most WebAuthn implementations use ES256).
 

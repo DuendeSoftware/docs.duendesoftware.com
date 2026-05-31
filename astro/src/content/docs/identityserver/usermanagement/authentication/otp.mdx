@@ -332,7 +332,7 @@ and return `OtpAuthenticationResult.Failure.Instance` for unknown addresses.
 
 ### Managing OTP Addresses
 
-Users can have multiple OTP addresses (e.g., both an email and a phone number). Adding an address requires verification — the user must prove they control the address by responding to an OTP challenge. Use `IOtpSender` to send the OTP, then `TryAddOtpAddressAsync` to verify and persist:
+Users can have multiple OTP addresses (e.g., both an email and a phone number). Adding an address requires verification: the user must prove they control the address by responding to an OTP challenge. Use `IOtpSender` to send the OTP, then `TryAddOtpAddressAsync` to verify and persist:
 
 ```csharp
 // Step 1: Send an OTP to the new address
