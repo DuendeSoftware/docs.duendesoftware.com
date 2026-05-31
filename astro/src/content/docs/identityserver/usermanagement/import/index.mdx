@@ -39,6 +39,24 @@ preferred algorithm. The user notices nothing. This means you need a registered 
 understands your source system's hash format.  See [Password Hashing Algorithms](/identityserver/usermanagement/reference/password-hashing.md)
 for how to implement and register one.
 
+If you have multiple hash algorithms registered and need to determine which one is the preferred algorithm (the one used to hash new passwords), inject `PasswordHashAlgorithms` from `Duende.UserManagement.Authentication`:
+
+```csharp
+using Duende.UserManagement.Authentication;
+
+public class MyImportService(PasswordHashAlgorithms hashAlgorithms)
+{
+    public PasswordImport HashPlaintextPassword(string plaintextPassword)
+    {
+        // Hash with the preferred algorithm (e.g., PBKDF2-SHA512)
+        var hashedData = hashAlgorithms.Preferred.Hash(plaintextPassword);
+        return new PasswordImport(hashedData);
+    }
+}
+```
+
+This is useful when importing from a source where you have access to plaintext passwords (for example, a CSV export or a live migration). Rather than storing the source hash verbatim and implementing a custom `IPasswordHashAlgorithm`, you can hash directly with the preferred algorithm.
+
 A few things to sort out before you start:
 
 * **Groups and roles must exist first.** `MembershipImport` references groups and roles by ID. If a referenced group or role does not exist at import time, the record fails. Create them before you run the import.
