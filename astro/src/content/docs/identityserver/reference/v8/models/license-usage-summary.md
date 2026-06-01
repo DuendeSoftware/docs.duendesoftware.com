@@ -78,7 +78,7 @@ during the lifetime of an active .NET application for self-auditing purposes.
 
 * **`FeaturesUsed`**
 
-  A `string` collection of features used since the IdentityServer instance started.
+  A `string` collection of human-readable feature names used since the IdentityServer instance started.
 
 ### Register LicenseUsageSummary services
 
