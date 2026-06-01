@@ -17,12 +17,36 @@ if (!banner) {
   )
 }
 
+{banner && (
+  <script>
+    function initBanner() {
+      const banner = document.querySelector('.sl-banner');
+      if (!banner) return;
+      // Move banner to the top of <body>
+      document.body.prepend(banner);
+      // Set CSS variable for offset
+      function update() {
+        document.documentElement.style.setProperty('--sl-banner-height', banner.offsetHeight + 'px');
+      }
+      update();
+      window.addEventListener('resize', update);
+    }
+    initBanner();
+    document.addEventListener('astro:after-swap', initBanner);
+  </script>
+)}
+
 <style>
   .sl-banner {
     --__sl-banner-text: var(
       --sl-color-banner-text,
       var(--sl-color-text-invert)
     );
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: calc(var(--sl-z-index-navbar) + 1);
     padding: 12px 24px;
     background-color: var(--sl-color-banner-bg, var(--sl-color-bg-accent));
     color: var(--__sl-banner-text);
@@ -33,5 +57,23 @@ if (!banner) {
   }
   .sl-banner :global(a) {
     color: var(--__sl-banner-text);
+  }
+</style>
+
+<style is:global>
+  :root {
+    --sl-banner-height: 0px;
+  }
+  .header {
+    top: var(--sl-banner-height) !important;
+  }
+  .sidebar-pane {
+    top: calc(var(--sl-nav-height) + var(--sl-banner-height)) !important;
+  }
+  .main-frame {
+    padding-top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height) + var(--sl-banner-height)) !important;
+  }
+  .right-sidebar {
+    padding-top: calc(var(--sl-nav-height) + var(--sl-banner-height)) !important;
   }
 </style>
