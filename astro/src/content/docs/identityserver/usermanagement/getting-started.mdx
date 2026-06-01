@@ -131,7 +131,7 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     using Duende.IdentityServer;
     using Duende.Storage.Schema;
     using Duende.Storage.Sqlite;
-    using Duende.UserManagement.Authentication.Otp;
+    using Duende.UserManagement;
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -195,6 +195,8 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     using Duende.IdentityServer;
     using Duende.Storage.Schema;
     using Duende.Storage.Sqlite;
+    using Duende.UserManagement;
+    using Duende.UserManagement.Authentication;
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -326,7 +328,7 @@ With IdentityServer running, you now need the Razor Pages that handle the actual
 
    namespace OtpIdentityServer.Pages.Account;
 
-   public class LoginModel(IOtpAuthenticator otpAuthenticator) : PageModel
+   public class LoginModel(IOtpSender otpSender) : PageModel
    {
        [BindProperty]
        public InputModel Input { get; set; } = new();
@@ -353,24 +355,26 @@ With IdentityServer running, you now need the Razor Pages that handle the actual
                return Page();
            }
 
-           var result = await otpAuthenticator.TrySendOtpAsync(
-               new OtpAddress(OtpChannel.Email, email),
-               HttpContext.RequestAborted);
+        var result = await otpSender.TrySendOtpAsync(
+            new OtpAddress(OtpChannel.Email, email),
+            HttpContext.RequestAborted);
 
-           if (result is null || !result.Sent)
-           {
-               var message = "Failed to send one-time password.";
-               if (result?.SendingBlockedUntilUtc is DateTimeOffset blockedUntil && blockedUntil > DateTimeOffset.UtcNow)
-               {
-                   var blockedFor = blockedUntil - DateTimeOffset.UtcNow;
-                   message = $"Too many attempts. Try again in {Math.Ceiling(blockedFor.TotalSeconds)} second(s).";
-               }
-               ModelState.AddModelError(string.Empty, message);
-               return Page();
-           }
+        if (result is SendOtpResult.Sent sentResult)
+        {
+            TempData["OtpToken"] = sentResult.Token.Value.ToString();
+            return RedirectToPage("/EnterOtp");
+        }
+        
+        if (result is SendOtpResult.Blocked blocked)
+        {
+            var blockedFor = blocked.SendingBlockedUntilUtc - DateTimeOffset.UtcNow;
+            var blockedMessage = $"Too many attempts. Try again in {Math.Ceiling(blockedFor.TotalSeconds)} second(s).";
+            ModelState.AddModelError(string.Empty, blockedMessage);
+            return Page();
+        }
 
-           TempData["OtpToken"] = result.Token.Value.ToString();
-           return RedirectToPage("/Account/EnterOtp");
+        ModelState.AddModelError(string.Empty, "Failed to send one-time password.");
+        return Page();
        }
    }
    ```
