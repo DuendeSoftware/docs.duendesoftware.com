@@ -7,8 +7,6 @@ sidebar:
   order: 5
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
-
 SAML 2.0 is an XML-based federation protocol widely used in enterprise, government, healthcare, and education environments. It predates OpenID Connect and is often found in legacy applications and organizations that adopted federated identity early. This page covers the core concepts you need when working with SAML 2.0 federation. Where relevant, each section links to the corresponding IdentityServer [configuration](/identityserver/saml/configuration.md) so you can put these concepts into practice.
 
 ## Assertions
@@ -130,7 +128,7 @@ Common formats include:
 * **Persistent**: a stable, opaque identifier that remains the same for a given user-SP pair across all sessions. Useful when the SP needs to correlate the user over time without revealing the user's real identity.
 * **Transient**: a session-scoped, one-time identifier that changes with every SSO session. Useful when the SP does not need to recognize the user across sessions.
 
-IdentityServer supports `emailAddress` and `unspecified` NameID formats out of the box. Persistent and transient formats are not included in the initial release. For custom NameID generation, implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
+IdentityServer supports `emailAddress` and `unspecified` NameID formats out of the box. For other formats (persistent, transient, or custom), implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
 
 Inbound `AuthnRequest` messages are validated against the formats configured in `SamlOptions.SupportedNameIdFormats`. Requests specifying an unsupported format are rejected. If you implement a custom NameID format via `ISamlNameIdGenerator`, add it to this list so that validation passes.
 

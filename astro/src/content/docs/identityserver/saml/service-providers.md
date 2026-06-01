@@ -7,8 +7,6 @@ sidebar:
   order: 20
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
-
 IdentityServer needs to know which SAML 2.0 Service Providers (SPs) are allowed to request
 authentication. The SAML plugin provides the `ISamlServiceProviderStore` interface: a read-only lookup called on every incoming SAML request to resolve SP configuration by entity ID.
 

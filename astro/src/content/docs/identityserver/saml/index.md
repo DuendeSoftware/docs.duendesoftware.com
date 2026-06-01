@@ -7,8 +7,6 @@ sidebar:
   order: 1
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
-
 :::note
 This feature is part of the [Duende IdentityServer Standard (add-on), Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
@@ -45,7 +43,7 @@ The SAML 2.0 IdP feature covers the full SP-initiated flow, logout, and plenty o
 * **SP-initiated SSO**: HTTP-Redirect and HTTP-POST bindings for authentication requests
 * **Single Logout (SLO)**: front-channel logout notifications to registered SPs, with session tracking and partial logout responses when not all SPs respond
 * **Assertion signing**: per-SP configuration of signing algorithms
-* **NameID format support**: email and unspecified formats (persistent planned for a future release)
+* **NameID format support**: email and unspecified formats out of the box, with extensibility for custom formats
 * **AuthnContext class mapping**: maps OIDC `acr`/`amr` values to SAML AuthnContext class URIs
 * **Per-SP claim mappings**: transform and filter claims before they are included in assertions
 * **Extensibility interfaces**: customize NameID generation, response generation, metadata, and more
