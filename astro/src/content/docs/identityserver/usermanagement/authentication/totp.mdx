@@ -71,16 +71,16 @@ TOTP authentication operates as a two-phase flow.
 
 ## Key Interfaces
 
-### ITotpAuth
+### ITotpAuthenticator
 
-`ITotpAuth` is the primary interface for verifying TOTP codes during login:
+`ITotpAuthenticator` is the primary interface for verifying TOTP codes during login:
 
 ```csharp
-public interface ITotpAuth
+public interface ITotpAuthenticator
 {
     Task<bool> TryAuthenticateAsync(
         UserSubjectId subjectId,
-        TotpAuthenticatorName authenticatorName,
+        TotpDeviceName deviceName,
         PlainTextTotp totp,
         Ct ct);
 }
@@ -88,21 +88,21 @@ public interface ITotpAuth
 
 ### IUserAuthenticatorsSelfService TOTP Methods
 
-`IUserAuthenticatorsSelfService` manages TOTP authenticator registration and recovery codes:
+`IUserAuthenticatorsSelfService` manages TOTP device registration and recovery codes:
 
 ```csharp
-// Add a TOTP authenticator (enables 2FA)
-Task<bool> TryAddTotpAuthenticatorAsync(
+// Add a TOTP device (enables 2FA)
+Task<bool> TryAddTotpDeviceAsync(
     UserSubjectId subjectId,
-    TotpAuthenticatorName authenticatorName,
+    TotpDeviceName deviceName,
     PlainBytesTotpKey key,
     PlainTextTotp totp,
     Ct ct);
 
-// Remove a TOTP authenticator (disables 2FA)
-Task<bool> TryRemoveTotpAuthenticatorAsync(
+// Remove a TOTP device (disables 2FA)
+Task<bool> TryRemoveTotpDeviceAsync(
     UserSubjectId subjectId,
-    TotpAuthenticatorName authenticatorName,
+    TotpDeviceName deviceName,
     Ct ct);
 
 // Generate recovery codes (invalidates any existing codes)
@@ -152,21 +152,21 @@ public record PlainTextTotp
 }
 ```
 
-### TotpAuthenticatorName
+### TotpDeviceName
 
-Identifies a specific TOTP authenticator registered to a user. Multiple authenticators per user are supported:
+Identifies a specific TOTP device registered to a user. Multiple devices per user are supported:
 
 ```csharp
-public record TotpAuthenticatorName
+public record TotpDeviceName
 {
-    // The default authenticator name ("Default")
-    public static TotpAuthenticatorName Default { get; }
+    // The default device name ("Default")
+    public static TotpDeviceName Default { get; }
 
-    // Create an authenticator name, throwing on invalid input
-    public static TotpAuthenticatorName Create(string input);
+    // Create a device name, throwing on invalid input
+    public static TotpDeviceName Create(string input);
 
-    // Try to parse an authenticator name without throwing
-    public static bool TryCreate(string? input, [NotNullWhen(true)] out TotpAuthenticatorName? result);
+    // Try to parse a device name without throwing
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out TotpDeviceName? result);
 }
 ```
 
@@ -221,7 +221,7 @@ sequenceDiagram
     App-->>User: Display QR code
     User->>User: Scan QR code with authenticator app
     User->>App: Enter verification code
-    App->>UserManagement: TryAddTotpAuthenticatorAsync(subjectId, name, key, code)
+    App->>UserManagement: TryAddTotpDeviceAsync(subjectId, name, key, code)
     UserManagement-->>App: Success
     App->>UserManagement: TryCreateRecoveryCodesAsync()
     UserManagement-->>App: Recovery codes
@@ -236,7 +236,7 @@ public async Task<IActionResult> OnGetSetup(CancellationToken ct)
     var authenticators = await userAuthenticatorsSelfService.TryGetAsync(userId, ct);
 
     // Redirect if TOTP is already enabled
-    if (authenticators?.TotpAuthenticatorNames.Count > 0)
+    if (authenticators?.TotpDeviceNames.Count > 0)
     {
         return RedirectToPage("/Manage2FA");
     }
@@ -279,10 +279,10 @@ public async Task<IActionResult> OnPostVerify(string code, CancellationToken ct)
         return Error("Invalid code format.");
     }
 
-    // Register the TOTP authenticator (this also verifies the code)
-    var success = await userAuthenticatorsSelfService.TryAddTotpAuthenticatorAsync(
+    // Register the TOTP device (this also verifies the code)
+    var success = await userAuthenticatorsSelfService.TryAddTotpDeviceAsync(
         userId,
-        TotpAuthenticatorName.Default,
+        TotpDeviceName.Default,
         key,
         totp,
         ct);
@@ -325,7 +325,7 @@ public async Task<IActionResult> OnPostLogin(string email, string password, Canc
     // Step 2: Check if TOTP is enabled
     var authenticators = await userAuthenticatorsSelfService.TryGetAsync(success.UserSubjectId, ct);
 
-    if (authenticators?.TotpAuthenticatorNames.Count > 0)
+    if (authenticators?.TotpDeviceNames.Count > 0)
     {
         // Store intermediate authentication state
         authenticationStateService.Store(new AuthenticationState
@@ -359,7 +359,7 @@ public async Task<IActionResult> OnPostVerifyTotp(string code, CancellationToken
 
     var success = await totpAuth.TryAuthenticateAsync(
         authState.UserId,
-        TotpAuthenticatorName.Default,
+        TotpDeviceName.Default,
         totp,
         ct);
 
@@ -390,12 +390,12 @@ public async Task<IActionResult> OnPostDisable2FA(CancellationToken ct)
         return Error("User not found.");
     }
 
-    // Remove all registered TOTP authenticators
-    foreach (var authenticatorName in authenticators.TotpAuthenticatorNames)
+    // Remove all registered TOTP devices
+    foreach (var deviceName in authenticators.TotpDeviceNames)
     {
-        await userAuthenticatorsSelfService.TryRemoveTotpAuthenticatorAsync(
+        await userAuthenticatorsSelfService.TryRemoveTotpDeviceAsync(
             userId,
-            authenticatorName,
+            deviceName,
             ct);
     }
 
@@ -434,10 +434,10 @@ Use `IUserAuthenticatorsSelfService.TryGetAsync` to inspect a user's TOTP config
 var authenticators = await userAuthenticatorsSelfService.TryGetAsync(userId, ct);
 
 // Check if TOTP is enabled
-bool has2FA = authenticators?.TotpAuthenticatorNames.Count > 0;
+bool has2FA = authenticators?.TotpDeviceNames.Count > 0;
 
 // List registered authenticator names
-foreach (var name in authenticators?.TotpAuthenticatorNames ?? [])
+foreach (var name in authenticators?.TotpDeviceNames ?? [])
 {
     Console.WriteLine($"Authenticator: {name}");
 }

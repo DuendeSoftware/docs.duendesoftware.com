@@ -32,7 +32,7 @@ sequenceDiagram
     participant UserManagement as User Management
 
     User->>App: Enable TOTP authenticator
-    App->>UserManagement: TryAddTotpAuthenticatorAsync()
+    App->>UserManagement: TryAddTotpDeviceAsync()
     UserManagement-->>App: Success
     App->>UserManagement: TryCreateRecoveryCodesAsync()
     UserManagement-->>App: Plain-text codes (shown once)
@@ -61,12 +61,12 @@ sequenceDiagram
 
 ## Key Interfaces
 
-### IRecoveryCodeAuth
+### IRecoveryCodeAuthenticator
 
-`IRecoveryCodeAuth` is the primary interface for verifying and consuming recovery codes during authentication:
+`IRecoveryCodeAuthenticator` is the primary interface for verifying and consuming recovery codes during authentication:
 
 ```csharp
-public interface IRecoveryCodeAuth
+public interface IRecoveryCodeAuthenticator
 {
     Task<bool> TryAuthenticateAsync(
         UserSubjectId subjectId,
@@ -130,9 +130,9 @@ public async Task<IActionResult> OnPostEnableTotpAsync(string verificationCode)
 {
     var subjectId = GetCurrentUserId();
 
-    var success = await userAuthenticatorsSelfService.TryAddTotpAuthenticatorAsync(
+    var success = await userAuthenticatorsSelfService.TryAddTotpDeviceAsync(
         subjectId,
-        TotpAuthenticatorName.Default,
+        TotpDeviceName.Default,
         totpKey,
         PlainTextTotp.Create(verificationCode),
         ct);
@@ -222,7 +222,7 @@ public async Task<IActionResult> OnPostRegenerateCodesAsync()
     var user = await userSelfService.TryGetUserAsync(subjectId, ct);
 
     // Verify 2FA is enabled before generating codes
-    if (user.TotpAuthenticatorNames.Count == 0)
+    if (user.TotpDeviceNames.Count == 0)
     {
         return Error("Two-factor authentication is not enabled");
     }
@@ -257,7 +257,7 @@ public async Task<IActionResult> OnGetAsync()
     var subjectId = GetCurrentUserId();
     var user = await userSelfService.TryGetUserAsync(subjectId, ct);
 
-    if (user.TotpAuthenticatorNames.Count == 0)
+    if (user.TotpDeviceNames.Count == 0)
     {
         return RedirectToPage("/EnableAuthenticator");
     }

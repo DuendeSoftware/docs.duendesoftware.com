@@ -84,9 +84,9 @@ public class UserImportService(IUserImporter importer, IUserProfileAdmin profile
                 SubjectId = new UserSubjectId("user-002"),
                 Authenticators = new AuthenticatorImport
                 {
-                    ExternalAuthenticators = new[]
+                    ExternalAuthenticatorAddresses = new[]
                     {
-                        new ExternalAuthenticator(
+                        new ExternalAuthenticatorAddress(
                             Provider: "google",
                             ProviderSubjectId: "google-sub-abc123"
                         ),
@@ -143,10 +143,10 @@ types you are migrating.
 public sealed record AuthenticatorImport
 {
     public IReadOnlyCollection<OtpAddress>? OtpAddresses { get; init; }
-    public IReadOnlyCollection<ExternalAuthenticator>? ExternalAuthenticators { get; init; }
+    public IReadOnlyCollection<ExternalAuthenticatorAddress>? ExternalAuthenticatorAddresses { get; init; }
     public IReadOnlyCollection<PasskeyImport>? Passkeys { get; init; }
     public PasswordImport? Password { get; init; }
-    public IReadOnlyCollection<TotpImport>? TotpAuthenticators { get; init; }
+    public IReadOnlyCollection<TotpDeviceImport>? TotpAuthenticators { get; init; }
     public IReadOnlyCollection<PlainTextRecoveryCode>? RecoveryCodes { get; init; }
 }
 ```
@@ -163,14 +163,14 @@ it using the `IPasswordHashAlgorithm` registered for the stored algorithm ID. On
 the password is transparently re-hashed using the current preferred algorithm, so users are migrated to the new hashing
 scheme without any disruption.
 
-#### `TotpImport`
+#### `TotpDeviceImport`
 
 ```csharp
-// TotpImport.cs
-public sealed record TotpImport(TotpAuthenticatorName Name, PlainBytesTotpKey Key);
+// TotpDeviceImport.cs
+public sealed record TotpDeviceImport(TotpDeviceName Name, PlainBytesTotpKey Key);
 ```
 
-`TotpImport` carries the raw TOTP secret key from the source system. Provide the key as a `PlainBytesTotpKey`
+`TotpDeviceImport` carries the raw TOTP secret key from the source system. Provide the key as a `PlainBytesTotpKey`
 and a display name for the authenticator.
 
 #### `PasskeyImport`

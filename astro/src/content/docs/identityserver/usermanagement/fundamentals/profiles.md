@@ -49,7 +49,7 @@ This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSche
 
 :::note[Automatic profile provisioning]
 When a user signs in via OTP for the first time, User Management automatically creates a profile for them
-and sets the email attribute from their OTP address. You do not need to call `IUserProfileSelfService.TryRegisterAsync`
+and sets the email attribute from their OTP address. You do not need to call `IUserProfileSelfService.TryCreateAsync`
 manually for OTP-authenticated users.
 
 If you want to skip automatic profile provisioning, you can provide a custom `IOtpAuthenticator` implementation.
@@ -268,7 +268,7 @@ attributes.Set(
         ["country"] = "US"
     });
 
-var profile = await selfService.TryRegisterAsync(subjectId, attributes.Validate(), ct);
+var profile = await selfService.TryCreateAsync(subjectId, attributes.Validate(), ct);
 ```
 
 For nested complex types, nest dictionaries:
@@ -472,7 +472,7 @@ public sealed class AttributeValueCollection : IEnumerable<AttributeValue>
 
 ### `ValidatedAttributeValueCollection`
 
-`ValidatedAttributeValueCollection` is an immutable collection that guarantees all required attributes are present and all values conform to the schema. Persist methods (`TryAddAsync`, `TryUpdateAsync`, `TryRegisterAsync`) accept only this type, enforcing correctness at compile time.
+`ValidatedAttributeValueCollection` is an immutable collection that guarantees all required attributes are present and all values conform to the schema. Persist methods (`TryAddAsync`, `TryUpdateAsync`, `TryCreateAsync`) accept only this type, enforcing correctness at compile time.
 
 Obtain an instance by calling `Validate()` or `TryValidate()` on an `AttributeValueCollection`. Use `ValidatedAttributeValueCollection.Empty` when no attributes are needed.
 
@@ -498,7 +498,7 @@ public interface IUserProfileSelfService
 {
     Task<IReadOnlyAttributeSchema> GetSchemaAsync(Ct ct);
 
-    Task<UserProfile?> TryRegisterAsync(UserSubjectId subjectId, ValidatedAttributeValueCollection attributes, Ct ct);
+    Task<UserProfile?> TryCreateAsync(UserSubjectId subjectId, ValidatedAttributeValueCollection attributes, Ct ct);
 
     Task<UserProfile?> TryGetAsync(UserSubjectId subjectId, Ct ct);
 
@@ -507,7 +507,7 @@ public interface IUserProfileSelfService
 ```
 
 * `GetSchemaAsync`: Returns the current attribute schema. Pass the returned `IReadOnlyAttributeSchema` to the `AttributeValueCollection` constructor so attribute values are validated against their declared types.
-* `TryRegisterAsync`: Creates a new profile for the given subject with the supplied attributes. Returns the created `UserProfile` on success, or `null` if a profile already exists for that subject.
+* `TryCreateAsync`: Creates a new profile for the given subject with the supplied attributes. Returns the created `UserProfile` on success, or `null` if a profile already exists for that subject.
 * `TryGetAsync`: Retrieves the profile for the given subject. Returns `null` when no profile exists.
 * `TryUpdateAsync`: Replaces the attributes of an existing profile. Returns the updated `UserProfile` on success, or `null` when the profile does not exist or a concurrent update conflict occurs.
 
@@ -534,7 +534,7 @@ public class RegistrationService(IUserProfileSelfService profileService)
         attributes.Set(AttributeCode.Create("family_name"), familyName);
         attributes.Set(AttributeCode.Create("email"), email);
 
-        return await profileService.TryRegisterAsync(
+        return await profileService.TryCreateAsync(
             UserSubjectId.Create(subjectId), attributes.Validate(), ct);
     }
 }
@@ -776,7 +776,7 @@ public class OnboardingHandler(IUserProfileSelfService profileService)
         attributes.Set(AttributeCode.Create("email"), email);
         attributes.Set(AttributeCode.Create("email_verified"), false);
 
-        return await profileService.TryRegisterAsync(
+        return await profileService.TryCreateAsync(
             UserSubjectId.Create(subjectId), attributes.Validate(), ct);
     }
 }

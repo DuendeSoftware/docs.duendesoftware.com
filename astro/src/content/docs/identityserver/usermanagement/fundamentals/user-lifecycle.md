@@ -16,7 +16,7 @@ User Management exposes two service interfaces for managing user accounts: `IUse
 ```csharp
 public interface IUserSelfService
 {
-    Task<bool> TryDeregisterAsync(UserSubjectId subjectId, Ct ct);
+    Task<bool> TryDeleteAsync(UserSubjectId subjectId, Ct ct);
     IUserProfileSelfService Profiles { get; }
     IUserAuthenticatorsSelfService Authenticators { get; }
 }
@@ -24,7 +24,7 @@ public interface IUserSelfService
 
 ### Methods
 
-* **`TryDeregisterAsync`**: Permanently removes the user identified by `subjectId` and all associated data. Returns `false` if the user does not exist.
+* **`TryDeleteAsync`**: Permanently removes the user identified by `subjectId` and all associated data. Returns `false` if the user does not exist.
 
 ### Properties
 
@@ -35,7 +35,7 @@ public interface IUserSelfService
 
 ```csharp
 // Deregister the user
-var deregistered = await userSelfService.TryDeregisterAsync(subjectId, ct);
+var deregistered = await userSelfService.TryDeleteAsync(subjectId, ct);
 
 // Access sub-services through the parent interface
 var profile = await userSelfService.Profiles.TryGetAsync(subjectId, ct);
@@ -79,8 +79,8 @@ public sealed record UserAuthenticators
 {
     public UserSubjectId SubjectId { get; }
     public IReadOnlyCollection<OtpAddress> OtpAddresses { get; }
-    public IReadOnlyCollection<ExternalAuthenticator> ExternalAuthenticators { get; }
-    public IReadOnlyCollection<TotpAuthenticatorName> TotpAuthenticatorNames { get; }
+    public IReadOnlyCollection<ExternalAuthenticatorAddress> ExternalAuthenticatorAddresses { get; }
+    public IReadOnlyCollection<TotpDeviceName> TotpDeviceNames { get; }
     public IReadOnlyCollection<UserPasskey> Passkeys { get; }
     public int RecoveryCodeCount { get; }
     public bool HasPassword { get; }
@@ -93,8 +93,8 @@ public sealed record UserAuthenticators
 |--------------------------|----------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | `SubjectId`              | `UserSubjectId`                              | The unique identifier of the user                                                                                                             |
 | `OtpAddresses`           | `IReadOnlyCollection<OtpAddress>`            | Email addresses and phone numbers registered for One-Time Password (OTP) delivery                                                             |
-| `ExternalAuthenticators` | `IReadOnlyCollection<ExternalAuthenticator>` | External identity providers linked to this account (for example, Google, GitHub)                                                              |
-| `TotpAuthenticatorNames` | `IReadOnlyCollection<TotpAuthenticatorName>` | Names of registered Time-Based One-Time Password (TOTP) authenticators; a non-empty collection indicates two-factor authentication is enabled |
+| `ExternalAuthenticatorAddresses` | `IReadOnlyCollection<ExternalAuthenticatorAddress>` | External identity providers linked to this account (for example, Google, GitHub)                                                              |
+| `TotpDeviceNames` | `IReadOnlyCollection<TotpDeviceName>` | Names of registered Time-Based One-Time Password (TOTP) authenticators; a non-empty collection indicates two-factor authentication is enabled |
 | `Passkeys`               | `IReadOnlyCollection<UserPasskey>`           | Registered passkeys, each with a credential ID, display name, and creation timestamp                                                          |
 | `RecoveryCodeCount`      | `int`                                        | Number of unused recovery codes remaining                                                                                                     |
 | `HasPassword`            | `bool`                                       | Whether the user has a password set                                                                                                           |
@@ -107,7 +107,7 @@ var authenticators = await userAuthenticatorsSelfService.TryGetAsync(subjectId, 
 if (authenticators is not null)
 {
     // Check whether two-factor authentication is enabled
-    var hasTwoFactor = authenticators.TotpAuthenticatorNames.Count > 0
+    var hasTwoFactor = authenticators.TotpDeviceNames.Count > 0
         || authenticators.Passkeys.Count > 0;
 
     // Check remaining recovery codes
@@ -180,16 +180,16 @@ if (PhoneNumber.TryCreate("+12025550100", out var result))
 }
 ```
 
-### `ExternalAuthenticatorName`
+### `ExternalAuthenticatorAddressName`
 
 The name of an external identity provider (for example, `"Google"` or `"GitHub"`). Whitespace is trimmed automatically. Maximum length is 255 characters.
 
 ```csharp
 // Create: throws FormatException on invalid input
-var name = ExternalAuthenticatorName.Create("Google");
+var name = ExternalAuthenticatorAddressName.Create("Google");
 
 // TryCreate: returns false on invalid input
-if (ExternalAuthenticatorName.TryCreate("Google", out var result))
+if (ExternalAuthenticatorAddressName.TryCreate("Google", out var result))
 {
     // result is valid here
 }
@@ -220,7 +220,7 @@ Knowing what Duende maintains versus what you can customize helps you build inte
 
 These are implemented and maintained by Duende and updated with each release. You call these interfaces but don't implement them:
 
-* **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TryDeregisterAsync`), with sub-services for profiles (`Profiles`) and authenticators (`Authenticators`)
+* **`IUserSelfService`**: lifecycle operations users perform on their own accounts (`TryDeleteAsync`), with sub-services for profiles (`Profiles`) and authenticators (`Authenticators`)
 * **`IUserAdmin`**: administrative lifecycle operations (`TryRemoveAsync`), with sub-services for membership (`Membership`), profiles (`Profiles`), and authenticators (`Authenticators`)
 * **`IUserAuthenticatorsSelfService` / `IUserAuthenticatorsAdmin`**: authenticator management (OTP addresses, TOTP, passkeys, recovery codes), accessible directly or via the parent interfaces
 * **Core storage**: the underlying user store, credential storage, and session state are internal to Duende and not designed for replacement or override

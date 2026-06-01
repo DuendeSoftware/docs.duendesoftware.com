@@ -90,14 +90,14 @@ sequenceDiagram
 public interface IOtpAuthenticator
 {
     // Generate and send an OTP code to the given address
-    Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, CancellationToken ct);
+    Task<SendOtpResult> SendOtpAsync(OtpAddress address, CancellationToken ct);
 
     // Verify an OTP code; returns an OtpAuthenticationResult discriminated union
     Task<OtpAuthenticationResult> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, CancellationToken ct);
 }
 ```
 
-`TrySendOtpAsync` returns a `SendOtpResult` that carries the token and expiry information when the code was sent, or rate-limit information when sending was blocked.
+`SendOtpAsync` returns a `SendOtpResult` discriminated union indicating one of three outcomes: the code was sent successfully, sending was blocked by rate limiting, or saving the OTP failed.
 
 `TryAuthenticateAsync` returns an `OtpAuthenticationResult`, which is a discriminated union with two subtypes:
 * `OtpAuthenticationResult.Success` (containing the `Address` and the `UserSubjectId`)
@@ -141,17 +141,21 @@ public record PlainTextOtp
 }
 ```
 
-`SendOtpResult` - The result of a send attempt:
+`SendOtpResult` - A discriminated union representing the outcome of a send attempt:
 
 ```csharp
-public sealed record SendOtpResult
+public abstract record SendOtpResult
 {
-    public bool Sent { get; }                        // True when the code was sent
-    public OtpToken? Token { get; }                  // Set when Sent is true
-    public TimeSpan? ExpiresAfter { get; }           // Set when Sent is true
-    public DateTimeOffset? ExpiresAtUtc { get; }     // Set when Sent is true
-    public TimeSpan SendingBlockedFor { get; }       // How long until sending is allowed again
-    public DateTimeOffset SendingBlockedUntilUtc { get; }
+    // The OTP was dispatched successfully
+    public sealed record Sent(OtpToken Token, TimeSpan ExpiresAfter, DateTimeOffset ExpiresAtUtc)
+        : SendOtpResult;
+
+    // Sending was blocked by rate limiting
+    public sealed record Blocked(TimeSpan SendingBlockedFor, DateTimeOffset SendingBlockedUntilUtc)
+        : SendOtpResult;
+
+    // The OTP could not be persisted (storage failure)
+    public sealed record SaveFailed : SendOtpResult;
 }
 ```
 
@@ -171,7 +175,7 @@ public interface IUserAuthenticatorsSelfService
 }
 ```
 
-`TryAddOtpAddressAsync` verifies the OTP before persisting the address. The caller must first send an OTP using `IOtpSender.TrySendOtpAsync`, then pass the OTP code and token back for verification. This ensures the user actually controls the address being added.
+`TryAddOtpAddressAsync` verifies the OTP before persisting the address. The caller must first send an OTP using `IOtpSender.SendOtpAsync`, then pass the OTP code and token back for verification. This ensures the user actually controls the address being added.
 
 ## Configuration
 
@@ -237,7 +241,7 @@ builder.Services
 ```csharp
 public interface IOtpSender
 {
-    Task<SendOtpResult?> TrySendOtpAsync(OtpAddress address, Ct ct);
+    Task<SendOtpResult> SendOtpAsync(OtpAddress address, Ct ct);
 }
 ```
 
@@ -260,16 +264,16 @@ The following example shows a two-step OTP login using Razor Pages. Inject `IOtp
 
        var address = new OtpAddress(OtpChannel.Email, emailAddress);
 
-       var result = await otpAuthenticator.TrySendOtpAsync(
-           address,
-           HttpContext.RequestAborted);
+       var result = await otpAuthenticator.SendOtpAsync(
+            address,
+            HttpContext.RequestAborted);
 
-       if (result == null || !result.Sent)
-           return Error("Failed to send verification code. Please try again later.");
+        if (result is not SendOtpResult.Sent sent)
+            return Error("Failed to send verification code. Please try again later.");
 
-       // Store the token and address in an encrypted cookie for the verify step
-       StoreCookie("otp_token", result.Token.Value.ToString());
-       StoreCookie("otp_email", email);
+        // Store the token and address in an encrypted cookie for the verify step
+        StoreCookie("otp_token", sent.Token.ToString());
+        StoreCookie("otp_email", email);
 
        return RedirectToPage("/Verify");
    }
@@ -314,7 +318,7 @@ The following example shows a two-step OTP login using Razor Pages. Inject `IOtp
 When a user authenticates via OTP for the first time, User Management automatically creates a `UserAuthenticators` record
 and a user profile. The profile is initialized with the email attribute from the OTP address. You do not need a separate sign-up flow.
 
-`TryRegisterAsync` on `IUserAuthenticatorsSelfService` is still available for programmatic registration scenarios,
+`TryCreateAsync` on `IUserAuthenticatorsSelfService` is still available for programmatic registration scenarios,
 such as importing users from an external system or linking an external authenticator to an existing account.
 
 :::note[Skipping auto-registration]
@@ -337,12 +341,12 @@ Users can have multiple OTP addresses (e.g., both an email and a phone number). 
 ```csharp
 // Step 1: Send an OTP to the new address
 var phoneAddress = new OtpAddress(OtpChannel.Sms, PhoneNumber.Create("+15551234567"));
-var sendResult = await otpSender.TrySendOtpAsync(phoneAddress, HttpContext.RequestAborted);
+var sendResult = await otpSender.SendOtpAsync(phoneAddress, HttpContext.RequestAborted);
 
-if (sendResult is null || !sendResult.Sent)
+if (sendResult is not SendOtpResult.Sent sent)
     return Error("Failed to send verification code.");
 
-// Store sendResult.Token for the verification step (e.g., in a cookie or session)
+// Store sent.Token for the verification step (e.g., in a cookie or session)
 
 // Step 2: After the user enters the OTP code, verify and add the address
 await userAuthenticatorsSelfService.TryAddOtpAddressAsync(
@@ -362,22 +366,24 @@ To replace an address (e.g., after an email change), remove the old address and 
 
 ### Handling Rate Limiting
 
-User Management enforces a minimum interval between OTP sends. When sending is blocked, `SendOtpResult.Sent` is `false` and `SendingBlockedUntilUtc` indicates when the user may request a new code:
+User Management enforces a minimum interval between OTP sends. When sending is blocked, `SendOtpAsync` returns a `SendOtpResult.Blocked` that indicates when the user may request a new code:
 
 ```csharp
-var result = await otpAuthenticator.TrySendOtpAsync(address, HttpContext.RequestAborted);
+var result = await otpAuthenticator.SendOtpAsync(address, HttpContext.RequestAborted);
 
-if (result == null)
-    return Error("OTP send failed unexpectedly");
-
-if (!result.Sent)
+switch (result)
 {
-    var retryAt = result.SendingBlockedUntilUtc.ToLocalTime();
-    return Error($"Please wait until {retryAt:t} before requesting a new code.");
-}
+    case SendOtpResult.Sent sent:
+        StoreCookie("otp_token", sent.Token.ToString());
+        break;
 
-// result.Sent == true; proceed with storing the token
-StoreCookie("otp_token", result.Token.Value.ToString());
+    case SendOtpResult.Blocked blocked:
+        var retryAt = blocked.SendingBlockedUntilUtc.ToLocalTime();
+        return Error($"Please wait until {retryAt:t} before requesting a new code.");
+
+    case SendOtpResult.SaveFailed:
+        return Error("OTP send failed unexpectedly. Please try again.");
+}
 ```
 
 ## Security

@@ -78,12 +78,13 @@ uses `context.AddRequestedClaims(claims)` internally, so IdentityServer's standa
 ## Fallback Behavior
 
 All User Management modules (profiles, authentication, membership) are registered automatically when you call `AddUserManagement()`. 
-However, the `UserManagementProfileService` is designed to degrade gracefully if a module's services are not available in the service provider:
+The `UserManagementProfileService` constructor requires `IUserProfileAdmin`, `IUserAuthenticatorsAdmin`, and `IMembershipAdmin`. These are all registered by `AddUserManagement()`, so no additional configuration is needed in normal usage.
+
+If a module's services are not available in the service provider (for example, in testing scenarios with a partial setup):
 
 * **Profiles not available** (no `IUserProfileAdmin`): The profile service falls back to passing through the claims from the authentication session's subject principal. `IsActiveAsync` treats the user as always active. This matches the behavior of IdentityServer's built-in `DefaultProfileService`.
+* **Authenticators not available** (no `IUserAuthenticatorsAdmin`): The active-user check skips the authenticator requirement and only verifies that the profile exists.
 * **Membership not available** (no `IMembershipAdmin`): Role claim resolution is skipped entirely. No `role` claims are emitted.
-
-This is primarily relevant if you subclass `UserManagementProfileService` or use it in testing scenarios with a partial service provider setup.
 
 ## Subject ID Requirements
 
@@ -91,8 +92,7 @@ The `sub` claim in the token must be a non-empty string (up to 200 characters) t
 The `UserManagementProfileService` converts it using `UserSubjectId.TryCreate`. If parsing fails, no claims are issued and a warning
 is logged.
 
-`IsActiveAsync` returns `true` when the user profile exists and `false` otherwise, which causes IdentityServer to
-reject tokens for deleted or missing users.
+`IsActiveAsync` returns `true` when the user profile exists **and** the user has at least one registered authenticator (password, passkey, external login, or OTP address). A user whose profile exists but has no authenticators is treated as inactive, which causes IdentityServer to reject tokens for that user. Users who have been deleted or never existed also return `false`.
 
 ## Customization
 
@@ -103,6 +103,7 @@ subclass with the service provider:
 * `GetProfileDataAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to intercept profile loading after the subject ID is parsed but before the user profile is fetched.
 * `GetProfileDataAsync(ProfileDataRequestContext context, UserProfile user, CancellationToken ct)` - override to customize how claims are built from the profile.
 * `GetRoleClaimsAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to customize how role claims are collected.
+* `IsUserActiveAsync(UserSubjectId subjectId, CancellationToken ct)` - override to customize the active-user check. The default implementation verifies that the user's profile exists and that at least one authenticator is registered. Return `false` to force IdentityServer to reject tokens for the user.
 
 The `Logger` property is available to subclasses as a protected property:
 

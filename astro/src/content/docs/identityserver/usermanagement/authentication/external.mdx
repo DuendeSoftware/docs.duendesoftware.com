@@ -79,15 +79,15 @@ External authentication follows the OAuth 2.0 Authorization Code Flow with PKCE:
 ```csharp
 public interface IUserAuthenticatorsSelfService
 {
-    // Register a new user with an external authenticator
-    Task<UserAuthenticators?> TryRegisterAsync(
+    // Create a new user with an external authenticator
+    Task<UserAuthenticators?> TryCreateAsync(
         UserSubjectId subjectId,
-        ExternalAuthenticator authenticator,
+        ExternalAuthenticatorAddress authenticator,
         Ct ct);
 
     // Look up a user by their external authenticator
     Task<UserAuthenticators?> TryGetAsync(
-        ExternalAuthenticator authenticator,
+        ExternalAuthenticatorAddress authenticator,
         Ct ct);
 
     // Look up a user by their subject ID
@@ -96,15 +96,15 @@ public interface IUserAuthenticatorsSelfService
         Ct ct);
 
     // Add a single external authenticator to an existing user
-    Task<bool> TryAddExternalAuthenticatorAsync(
+    Task<bool> TryAddExternalAuthenticatorAddressAsync(
         UserSubjectId subjectId,
-        ExternalAuthenticator authenticator,
+        ExternalAuthenticatorAddress authenticator,
         Ct ct);
 
     // Remove a single external authenticator from a user
-    Task<bool> TryRemoveExternalAuthenticatorAsync(
+    Task<bool> TryRemoveExternalAuthenticatorAddressAsync(
         UserSubjectId subjectId,
-        ExternalAuthenticator authenticator,
+        ExternalAuthenticatorAddress authenticator,
         Ct ct);
 }
 ```
@@ -117,38 +117,38 @@ public interface IUserAuthenticatorsSelfService
 public interface IUserAuthenticatorsAdmin
 {
     // Add multiple external authenticators to a user
-    Task<bool> TryAddExternalAuthenticatorsAsync(
+    Task<bool> TryAddExternalAuthenticatorAddressesAsync(
         UserSubjectId subjectId,
-        IEnumerable<ExternalAuthenticator> authenticators,
+        IEnumerable<ExternalAuthenticatorAddress> authenticators,
         Ct ct);
 
     // Remove multiple external authenticators from a user
-    Task<bool> TryRemoveExternalAuthenticatorsAsync(
+    Task<bool> TryRemoveExternalAuthenticatorAddressesAsync(
         UserSubjectId subjectId,
-        IEnumerable<ExternalAuthenticator> authenticators,
+        IEnumerable<ExternalAuthenticatorAddress> authenticators,
         Ct ct);
 }
 ```
 
 ### Supporting Types
 
-`ExternalAuthenticator` - Represents a linked external account:
+`ExternalAuthenticatorAddress` - Represents a linked external account:
 
 ```csharp
-public sealed record ExternalAuthenticator(
-    ExternalAuthenticatorName Name,    // Provider name (e.g., "Google")
-    SubjectId SubjectId                // Provider's subject identifier
+public sealed record ExternalAuthenticatorAddress(
+    ExternalAuthenticatorAddressName Name, // Provider name (e.g., "Google")
+    SubjectId SubjectId                    // Provider's subject identifier
 );
 ```
 
-`ExternalAuthenticatorName` - Identifies the external provider:
+`ExternalAuthenticatorAddressName` - Identifies the external provider:
 
 ```csharp
-public record ExternalAuthenticatorName
+public record ExternalAuthenticatorAddressName
 {
     // Typically matches the ASP.NET Core authentication scheme name
-    public static ExternalAuthenticatorName Create(string input);
-    public static bool TryCreate(string? input, [NotNullWhen(true)] out ExternalAuthenticatorName? result);
+    public static ExternalAuthenticatorAddressName Create(string input);
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out ExternalAuthenticatorAddressName? result);
 }
 ```
 
@@ -158,7 +158,7 @@ public record ExternalAuthenticatorName
 public sealed record UserAuthenticators
 {
     public UserSubjectId SubjectId { get; }
-    public IReadOnlyCollection<ExternalAuthenticator> ExternalAuthenticators { get; }
+    public IReadOnlyCollection<ExternalAuthenticatorAddress> ExternalAuthenticatorAddresses { get; }
     public bool HasPassword { get; }
     // ... other authenticator collections
 }
@@ -265,10 +265,10 @@ public static async Task HandleExternalAuthentication(TicketReceivedContext cont
         .GetRequiredService<IUserProfileSelfService>();
 
     // Build the external authenticator from the incoming principal
-    var externalAuthenticatorName = ExternalAuthenticatorName.Create(context.Scheme.Name);
+    var externalAuthenticatorName = ExternalAuthenticatorAddressName.Create(context.Scheme.Name);
     var sub = principal.FindFirst(JwtClaimTypes.Subject)
         ?? throw new InvalidOperationException("No subject claim from provider");
-    var authenticator = new ExternalAuthenticator(
+    var authenticator = new ExternalAuthenticatorAddress(
         externalAuthenticatorName, OpaqueSubjectId.Create(sub.Value));
 
     // Look up an existing user by this external authenticator
@@ -278,7 +278,7 @@ public static async Task HandleExternalAuthentication(TicketReceivedContext cont
         : null;
 
     // If no existing user, auto-register
-    authenticators ??= await authenticatorsSelfService.TryRegisterAsync(
+    authenticators ??= await authenticatorsSelfService.TryCreateAsync(
         UserSubjectId.New(), authenticator, ct: ct);
 
     if (authenticators is null)
@@ -292,7 +292,7 @@ public static async Task HandleExternalAuthentication(TicketReceivedContext cont
         var attributes = new AttributeValueCollection(schema);
         attributes.Set(UserAttributes.Name.Name, name);
 
-        profile = await profileSelfService.TryRegisterAsync(
+        profile = await profileSelfService.TryCreateAsync(
             authenticators.SubjectId, attributes.Validate(), ct);
 
         if (profile is null)
@@ -345,11 +345,11 @@ public static async Task HandleAddAuthenticator(TicketReceivedContext context)
     var userIdString = context.Properties.Items["user_id"]!;
     var userId = UserSubjectId.Create(userIdString);
 
-    var providerName = ExternalAuthenticatorName.Create(context.Scheme.Name);
+    var providerName = ExternalAuthenticatorAddressName.Create(context.Scheme.Name);
     var providerSubject = OpaqueSubjectId.Create(
         context.Principal.FindFirst(JwtClaimTypes.Subject)!.Value);
 
-    var authenticator = new ExternalAuthenticator(providerName, providerSubject);
+    var authenticator = new ExternalAuthenticatorAddress(providerName, providerSubject);
 
     var userAuthenticatorsSelfService = context.HttpContext.RequestServices
         .GetRequiredService<IUserAuthenticatorsSelfService>();
@@ -363,7 +363,7 @@ public static async Task HandleAddAuthenticator(TicketReceivedContext context)
         throw new Exception("This external account is already linked to another user");
 
     // Link the authenticator to the current user
-    await userAuthenticatorsSelfService.TryAddExternalAuthenticatorAsync(
+    await userAuthenticatorsSelfService.TryAddExternalAuthenticatorAddressAsync(
         userId,
         authenticator,
         context.HttpContext.RequestAborted);
@@ -391,14 +391,14 @@ public async Task<IActionResult> OnPostRemoveAuthenticator(
         return Error("User not found");
 
     // Prevent removing the last authentication method
-    if (user.ExternalAuthenticators.Count <= 1 && !user.HasPassword)
+    if (user.ExternalAuthenticatorAddresses.Count <= 1 && !user.HasPassword)
         return Error("Cannot remove the last authentication method");
 
-    var authenticator = new ExternalAuthenticator(
-        ExternalAuthenticatorName.Create(providerName),
+    var authenticator = new ExternalAuthenticatorAddress(
+        ExternalAuthenticatorAddressName.Create(providerName),
         OpaqueSubjectId.Create(providerSubject));
 
-    var removed = await userAuthenticatorsSelfService.TryRemoveExternalAuthenticatorAsync(
+    var removed = await userAuthenticatorsSelfService.TryRemoveExternalAuthenticatorAddressAsync(
         userId,
         authenticator,
         ct);

@@ -258,7 +258,7 @@ switch (result)
     case PasswordAuthenticationResult.Success success:
         // Check if user has 2FA enabled
         var user = await userSelfService.TryGetUser(success.UserSubjectId, ct);
-        if (user?.TotpAuthenticatorNames.Count > 0)
+        if (user?.TotpDeviceNames.Count > 0)
         {
             // Require TOTP verification
             return RedirectToPage("/LoginWith2FA");
