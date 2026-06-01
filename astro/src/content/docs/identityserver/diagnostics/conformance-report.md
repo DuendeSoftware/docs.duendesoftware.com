@@ -22,7 +22,7 @@ generating an HTML report accessible via a protected endpoint.
 Install the NuGet package:
 
 ```bash title="Terminal"
-dotnet add package Duende.IdentityServer.ConformanceReport --prerelease
+dotnet add package Duende.IdentityServer.ConformanceReport
 ```
 
 ## Setup

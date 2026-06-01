@@ -3,15 +3,13 @@ title: "IdentityServer4 to Duende IdentityServer v8.0"
 sidebar:
   order: 139
   label: IdentityServer4 → v8.0
+redirect_from:
+  - /identityserver/upgrades/identityserver4-to-duende-identityserver-v7/
 ---
 
 import { Code } from "@astrojs/starlight/components";
 import { Steps } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
-
-:::note[Prerelease version]
-IdentityServer v8.0 is currently a prerelease version.
-:::
 
 This upgrade guide covers upgrading from IdentityServer4 to Duende IdentityServer v8.0.
 IdentityServer4 reached its end of life (EOL) on December 13, 2022. It is strongly advised to migrate to Duende IdentityServer.
@@ -383,14 +381,14 @@ Update the IdentityServer4 dependencies in your IdentityServer host project to D
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="IdentityServer4" Version="4.1.2" />
-+ <PackageReference Include="Duende.IdentityServer" Version="8.0.0-*" />
++ <PackageReference Include="Duende.IdentityServer" Version="8.0.0" />
 ```
 
 You'll need to make a similar change for all IdentityServer4 packages, including `IdentityServer4.EntityFramework` and `IdentityServer4.AspNetIdentity`. For example:
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
-+ <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="8.0.0-*" />
++ <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="8.0.0" />
 ```
 
 The IdentityModel package was renamed to Duende IdentityModel and needs updating if you reference it directly:

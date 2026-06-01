@@ -100,11 +100,11 @@ namespace IdentityServerHost
             string identityServerRecommendation;
             if (identityServerVersion.Major < 4)
             {
-                identityServerRecommendation = "Upgrade to IdentityServer4 4.x will be needed prior to being able to upgrade to Duende IdentityServer, as outlined at <a href=\"https://docs.duendesoftware.com/identityserver/upgrades/identityserver4-to-duende-identityserver-v7/#identityserver4-v3x-to-identityserver-v4x\" target=\"_blank\">IdentityServer4 v3.x to v4.x</a>.";
+                identityServerRecommendation = "Upgrade to IdentityServer4 4.x will be needed prior to being able to upgrade to Duende IdentityServer, as outlined at <a href=\"https://docs.duendesoftware.com/identityserver/upgrades/identityserver4-to-duende-identityserver-v8/#identityserver4-v3x-to-identityserver-v4x\" target=\"_blank\">IdentityServer4 v3.x to v4.x</a>.";
             }
             else
             {
-                identityServerRecommendation = "Migration to Duende.IdentityServer can be done as described here <a href=\"https://docs.duendesoftware.com/identityserver/upgrades/identityserver4-to-duende-identityserver-v7/#identityserver4-v4x-to-duende-identityserver\" target=\"_blank\">IdentityServer4 v4.x to Duende IdentityServer</a>.";
+                identityServerRecommendation = "Migration to Duende.IdentityServer can be done as described here <a href=\"https://docs.duendesoftware.com/identityserver/upgrades/identityserver4-to-duende-identityserver-v8/#identityserver4-v4x-to-duende-identityserver\" target=\"_blank\">IdentityServer4 v4.x to Duende IdentityServer</a>.";
             }
             table.AppendLine(DataRow("IdentityServer4 version", identityServerVersion.ToString(), identityServerRecommendation));
             jsonData.Add(new KeyValuePair<string, string>("identityServerVersion", identityServerVersion.ToString()));
@@ -148,7 +148,7 @@ namespace IdentityServerHost
                     signingCredentialKeyId = signingCredentials.Kid;
                 }
             }
-            var signingCredentialKeyRecommendation = "<a href=\"https://docs.duendesoftware.com/identityserver/upgrades/identityserver4-to-duende-identityserver-v7/#step-6-migrate-signing-keys\" target=\"_blank\">Migrate Signing Keys (optional)</a>";
+            var signingCredentialKeyRecommendation = "<a href=\"https://docs.duendesoftware.com/identityserver/upgrades/identityserver4-to-duende-identityserver-v8/#step-6-migrate-signing-keys\" target=\"_blank\">Migrate Signing Keys (optional)</a>";
             table.AppendLine(DataRow("Signing credential key id", signingCredentialKeyId, signingCredentialKeyRecommendation));
             jsonData.Add(new KeyValuePair<string, string>("signingCredentialKeyId", signingCredentialKeyId));
 
@@ -167,7 +167,7 @@ namespace IdentityServerHost
             var dataProtectionApplicationDiscriminatorRecommendation = "";
             if (dataProtectionApplicationDiscriminator == "(not set)" || string.IsNullOrEmpty(dataProtectionApplicationDiscriminator) || dataProtectionApplicationDiscriminator.Contains("/") || dataProtectionApplicationDiscriminator.Contains("\\"))
             {
-                dataProtectionApplicationDiscriminatorRecommendation = "<a href=\"https://docs.duendesoftware.com/identityserver/upgrades/identityserver4-to-duende-identityserver-v7/#step-7-verify-data-protection-configuration\" target=\"_blank\">Verify Data Protection Configuration</a>";
+                dataProtectionApplicationDiscriminatorRecommendation = "<a href=\"https://docs.duendesoftware.com/identityserver/upgrades/identityserver4-to-duende-identityserver-v8/#step-7-verify-data-protection-configuration\" target=\"_blank\">Verify Data Protection Configuration</a>";
             }
             table.AppendLine(DataRow("Data protection application name", dataProtectionApplicationDiscriminator, dataProtectionApplicationDiscriminatorRecommendation));
             jsonData.Add(new KeyValuePair<string, string>("dataProtectionApplicationDiscriminator", dataProtectionApplicationDiscriminator));

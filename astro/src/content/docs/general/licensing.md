@@ -41,7 +41,7 @@ There are three license editions which include different [features](https://duen
 
 The Lite edition includes the core OIDC and OAuth protocol implementation. This is an
 economical option that is a good fit for organizations with basic needs. It's also a great
-choice if you have an aging [IdentityServer4 implementation that needs to be updated](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx)
+choice if you have an aging [IdentityServer4 implementation that needs to be updated](/identityserver/upgrades/identityserver4-to-duende-identityserver-v8.mdx)
 and licensed. The Lite edition includes all the features that were part of
 IdentityServer4, along with support for the latest .NET releases, improved observability
 through [OpenTelemetry support](/identityserver/diagnostics/otel.md), and years of bug fixes and enhancements.

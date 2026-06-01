@@ -17,10 +17,6 @@ Migrations.
 
 ## Upgrading to v8.0
 
-:::note[Prerelease version]
-IdentityServer v8.0 is currently a prerelease version.
-:::
-
 * [**IdentityServer v7.4 to v8.0**](/identityserver/upgrades/v7_4-to-v8_0.md)
 * [**IdentityServer4 to Duende IdentityServer v8**](/identityserver/upgrades/identityserver4-to-duende-identityserver-v8.mdx)
 
@@ -38,9 +34,6 @@ IdentityServer v8.0 is currently a prerelease version.
   - _`IdentityModel`_ package renamed to _`Duende.IdentityModel`_ which may require code updates to referenced namespaces
     and types.
   - `ClientConfigurationStore` now uses `IConfigurationDbContext`.
-
-* [**IdentityServer4 to Duende IdentityServer v7**](/identityserver/upgrades/identityserver4-to-duende-identityserver-v7.mdx)
-
 
 ### Upgrading from version 6 to version 7
 
