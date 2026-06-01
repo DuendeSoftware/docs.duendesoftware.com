@@ -320,7 +320,7 @@ Controls what elements are signed in SAML responses:
 
 ### SamlEndpointType
 
-`SamlEndpointType` is a class that pairs a URL location with a SAML binding. It is used as the element type of `SamlServiceProvider.SingleLogoutServiceUrls` to describe where the SP's SLO service lives and which HTTP binding it accepts.
+`SamlEndpointType` is a record that pairs a URL location with a SAML binding. It is used as the element type of `SamlServiceProvider.SingleLogoutServiceUrls` to describe where the SP's SLO service lives and which HTTP binding it accepts.
 
 ```csharp
 new SamlServiceProvider

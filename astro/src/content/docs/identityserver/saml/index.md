@@ -24,7 +24,7 @@ SAML 2.0 support is useful when:
 * You are migrating from a legacy SSO system that uses SAML
 * Your organization has compliance or procurement requirements for SAML-based federation
 
-For new integrations, OpenID Connect is the better choice. SAML 2.0 is herefor when you need to work with existing SAML-based systems.
+For new integrations, OpenID Connect is the better choice. SAML 2.0 is provided for when you need to work with existing SAML-based systems.
 
 If you are new to SAML 2.0 or want a refresher on the protocol's core building blocks, see [SAML 2.0 Concepts](/identityserver/saml/concepts.md) for an overview of assertions, bindings, metadata, Name Identifiers, and other key concepts before diving into configuration.
 
