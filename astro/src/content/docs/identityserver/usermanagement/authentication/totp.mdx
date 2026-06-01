@@ -167,6 +167,7 @@ public record TotpDeviceName
 
     // Try to parse a device name without throwing
     public static bool TryCreate(string? input, [NotNullWhen(true)] out TotpDeviceName? result);
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out TotpDeviceName? result, [NotNullWhen(false)] out IReadOnlyList<string>? errors);
 }
 ```
 

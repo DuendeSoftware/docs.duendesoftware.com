@@ -84,31 +84,43 @@ sequenceDiagram
 
 ### IOtpAuthenticator Interface
 
-`IOtpAuthenticator` is the primary interface for OTP send and verify operations:
+`IOtpAuthenticator` is the primary interface to verify operations:
 
 ```csharp
 public interface IOtpAuthenticator
 {
-    // Generate and send an OTP code to the given address
-    Task<SendOtpResult> SendOtpAsync(OtpAddress address, CancellationToken ct);
-
     // Verify an OTP code; returns an OtpAuthenticationResult discriminated union
     Task<OtpAuthenticationResult> TryAuthenticateAsync(PlainTextOtp otp, OtpToken token, CancellationToken ct);
 }
 ```
 
-`SendOtpAsync` returns a `SendOtpResult` discriminated union indicating one of three outcomes: the code was sent successfully, sending was blocked by rate limiting, or saving the OTP failed.
-
 `TryAuthenticateAsync` returns an `OtpAuthenticationResult`, which is a discriminated union with two subtypes:
 * `OtpAuthenticationResult.Success` (containing the `Address` and the `UserSubjectId`)
 * `OtpAuthenticationResult.Failure` on failure
+
+### IOtpSender Interface
+
+`IOtpSender` is the primary interface for send OTP operations:
+
+```csharp
+public interface IOtpSender
+{
+    // Generate and send an OTP code to the given address
+    Task<SendOtpResult> TrySendOtpAsync(OtpAddress address, CancellationToken ct);
+}
+```
+
+`TrySendOtpAsync` returns a `SendOtpResult` discriminated union indicating one of three outcomes:
+* `SendOtpResult.Sent` the code was sent successfully
+* `SendOtpResult.Blocked` sending was blocked by rate limiting
+* `SendOtpResult.SaveFailed` persisting the OTP failed
 
 ### Supporting Types
 
 `OtpAddress` - Combines a channel and a subject identifier (e.g., an email address):
 
 ```csharp
-public sealed record OtpAddress(OtpChannel Channel, SubjectId SubjectId);
+public sealed record OtpAddress(OtpChannel Channel, ISubjectId SubjectId);
 ```
 
 `OtpChannel` - The delivery mechanism:
@@ -127,6 +139,9 @@ public record OtpChannel
 public record OtpToken
 {
     public static OtpToken Create(string input);
+    public static OtpToken? CreateOrDefault(string? value);
+    public static bool TryCreate(string? s, [NotNullWhen(true)] out OtpToken? result);
+    public static bool TryCreate(string? s, [NotNullWhen(true)] out OtpToken? result, [NotNullWhen(false)] out IReadOnlyList<string>? errors);
     public override string ToString();
 }
 ```
@@ -137,7 +152,9 @@ public record OtpToken
 public record PlainTextOtp
 {
     public static PlainTextOtp Create(string value);
-    public static bool TryCreate(string? input, [NotNullWhen(true)] out PlainTextOtp? result);
+    public static PlainTextOtp? CreateOrDefault(string? value);
+    public static bool TryCreate(string? s, [NotNullWhen(true)] out PlainTextOtp? result);
+    public static bool TryCreate(string? s, [NotNullWhen(true)] out PlainTextOtp? result, [NotNullWhen(false)] out IReadOnlyList<string>? errors);
 }
 ```
 
@@ -147,12 +164,16 @@ public record PlainTextOtp
 public abstract record SendOtpResult
 {
     // The OTP was dispatched successfully
-    public sealed record Sent(OtpToken Token, TimeSpan ExpiresAfter, DateTimeOffset ExpiresAtUtc)
-        : SendOtpResult;
+    internal sealed record Sent : SendOtpResult
+    {
+        internal Sent(OtpToken token, TimeSpan expiresAfter, DateTimeOffset expiresAtUtc, TimeSpan sendingBlockedFor, DateTimeOffset sendingBlockedUntilUtc){...}
+    }
 
     // Sending was blocked by rate limiting
-    public sealed record Blocked(TimeSpan SendingBlockedFor, DateTimeOffset SendingBlockedUntilUtc)
-        : SendOtpResult;
+    public sealed record Blocked : SendOtpResult
+    {
+        internal Blocked(TimeSpan sendingBlockedFor, DateTimeOffset sendingBlockedUntilUtc){...}
+    }
 
     // The OTP could not be persisted (storage failure)
     public sealed record SaveFailed : SendOtpResult;
@@ -189,8 +210,8 @@ using Duende.UserManagement;
 
 builder.Services
     .AddIdentityServer()
-    .AddUserManagement(um => um
-        .Authentication(auth =>
+    .AddUserManagement(um => 
+        um.Authentication(auth =>
         {
             auth.UseSmtpOtpDispatcher(options =>
             {
@@ -241,7 +262,7 @@ builder.Services
 ```csharp
 public interface IOtpSender
 {
-    Task<SendOtpResult> SendOtpAsync(OtpAddress address, Ct ct);
+    Task<SendOtpResult> TrySendOtpAsync(OtpAddress address, Ct ct);
 }
 ```
 
@@ -341,7 +362,7 @@ Users can have multiple OTP addresses (e.g., both an email and a phone number). 
 ```csharp
 // Step 1: Send an OTP to the new address
 var phoneAddress = new OtpAddress(OtpChannel.Sms, PhoneNumber.Create("+15551234567"));
-var sendResult = await otpSender.SendOtpAsync(phoneAddress, HttpContext.RequestAborted);
+var sendResult = await otpSender.TrySendOtpAsync(phoneAddress, HttpContext.RequestAborted);
 
 if (sendResult is not SendOtpResult.Sent sent)
     return Error("Failed to send verification code.");

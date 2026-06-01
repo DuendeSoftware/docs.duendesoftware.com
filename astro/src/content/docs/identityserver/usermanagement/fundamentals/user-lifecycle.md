@@ -180,16 +180,16 @@ if (PhoneNumber.TryCreate("+12025550100", out var result))
 }
 ```
 
-### `ExternalAuthenticatorAddressName`
+### `ExternalAuthenticatorName`
 
 The name of an external identity provider (for example, `"Google"` or `"GitHub"`). Whitespace is trimmed automatically. Maximum length is 255 characters.
 
 ```csharp
 // Create: throws FormatException on invalid input
-var name = ExternalAuthenticatorAddressName.Create("Google");
+var name = ExternalAuthenticatorName.Create("Google");
 
 // TryCreate: returns false on invalid input
-if (ExternalAuthenticatorAddressName.TryCreate("Google", out var result))
+if (ExternalAuthenticatorName.TryCreate("Google", out var result))
 {
     // result is valid here
 }
