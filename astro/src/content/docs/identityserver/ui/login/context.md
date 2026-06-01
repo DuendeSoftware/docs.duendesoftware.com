@@ -65,6 +65,10 @@ was denied. The available values are:
 * `InteractionError.LoginRequired`: The user could not be authenticated.
 * `InteractionError.InteractionRequired`: Additional interaction is required but cannot be
   performed.
+* `InteractionError.AccountSelectionRequired`: The user must select an account.
+* `InteractionError.ConsentRequired`: Consent was required, but not granted.
+* `InteractionError.TemporarilyUnavailable`: The request could not be processed.
+* `InteractionError.UnmetAuthenticationRequirements`: The user did not meet authentication requirements.
 
 You can also pass an optional `errorDescription` string for additional context:
 
