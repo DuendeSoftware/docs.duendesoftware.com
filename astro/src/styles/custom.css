@@ -30,6 +30,7 @@
   --duende-color-sand-dark: #d8d5b9;
   --duende-color-sand-light: #f3f2e9;
   --duende-color-green: #61fb92;
+  --duende-color-green-300: #baffd0;
 
   --sl-nav-height: 6em;
   --sl-nav-pad-y: 2em;
@@ -75,7 +76,7 @@
   }
 
   /* Banner */
-  --sl-color-banner-text: #212121;
+  --sl-color-banner-text: var(--sl-color-black);
   --sl-color-banner-bg: var(--duende-color-green);
 
   /* Navbar icons */
@@ -166,6 +167,10 @@
 
   --sl-color-bg: var(--duende-color-sand-light);
   --sl-color-bg-nav: var(--sl-color-black);
+
+  /* Banner */
+  --sl-color-banner-text: var(--sl-color-white);
+  --sl-color-banner-bg: var(--duende-color-green-300);
 
   /* Sidebar */
   --sl-color-bg-sidebar: var(--duende-color-sand-light);

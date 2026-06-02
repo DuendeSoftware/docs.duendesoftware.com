@@ -1,6 +1,7 @@
 ---
 title: "DPoP Proof Validator"
 description: Documentation for the IDPoPProofValidator interface which validates Demonstrating Proof of Possession (DPoP) tokens to ensure secure binding between access tokens and client key pairs.
+date: 2026-05-27
 sidebar:
   label: DPoP Proof
   order: 40
@@ -44,6 +45,10 @@ Models the information used to validate a DPoP proof token.
 - **`Url`**
 
   The HTTP URL to validate in the DPoP proof.
+  
+  <span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span> The URL comparison follows [RFC 9449 section 4.3 step 9](https://datatracker.ietf.org/doc/html/rfc9449#section-4.3):
+  query and fragment components are ignored, scheme and host are compared case-insensitively, and the path is
+  compared case-sensitively. Default port normalization per RFC 3986 is also applied.
 
 - **`Method`**
 

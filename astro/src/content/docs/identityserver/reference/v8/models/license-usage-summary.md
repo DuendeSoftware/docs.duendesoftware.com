@@ -1,30 +1,72 @@
 ---
-title: "License Usage Summary"
-description: "Reference documentation for the LicenseUsageSummary class which provides detailed information about clients, issuers, and features used in Duende IdentityServer for self-auditing and license compliance."
-date: 2025-01-07T12:00:00+02:00
+title: "License Information and Usage"
+description: "Reference documentation for LicenseInformation and LicenseUsageSummary, which provide license details and usage metrics for self-auditing and license compliance in Duende IdentityServer."
+date: 2026-05-28
 sidebar:
+  label: "License and Usage"
   order: 90
-  badge:
-    text: v7.1
-    variant: tip
 redirect_from:
   - /identityserver/v5/reference/models/license_usage_summary/
   - /identityserver/v6/reference/models/license_usage_summary/
   - /identityserver/reference/models/license-usage-summary/
 ---
 
+## Duende.IdentityServer.Licensing.LicenseInformation
+
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
+
+The `LicenseInformation` class exposes details about the configured license.
+
+:::note
+An equivalent class named `IdentityServerLicense` exists in Duende IdentityServer v7.
+:::
+
+IdentityServer registers `LicenseInformation` as a singleton automatically. You do not need any additional setup to use it.
+
+### Properties
+
+* **`CompanyName`** (`string?`): Company name from the license.
+* **`ContactInfo`** (`string?`): Contact information from the license.
+* **`SerialNumber`** (`int?`): Serial number of the license.
+* **`IssuedAt`** (`DateTimeOffset?`): Date and time when the license was issued.
+* **`Expiration`** (`DateTimeOffset?`): Date and time when the license expires.
+* **`IsConfigured`** (`bool`): `true` if a license was loaded and parsed successfully. Use this to check whether a license is present before displaying license details.
+* **`EntitledSkus`** (`IReadOnlyCollection<string>`): SKU identifiers entitled by the license.
+
+### Inject LicenseInformation
+
+Because `LicenseInformation` is registered in DI automatically, you can inject it directly into your classes:
+
+```csharp
+// MyPage.cshtml.cs
+public class MyPage(LicenseInformation license) : PageModel
+{
+    public void OnGet()
+    {
+        if (license.IsConfigured)
+        {
+            // display license.SerialNumber, license.Expiration, etc.
+        }
+    }
+}
+```
+
+---
+
 ## Duende.IdentityServer.Licensing.LicenseUsageSummary
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 7.1</span>
+The `LicenseUsageSummary` class lets you get a detailed summary of clients, issuers, and features used 
+during the lifetime of an active .NET application for self-auditing purposes.
 
-The `LicenseUsageSummary` class allows developers to get a
-detailed summary of clients, issuers, and features used
-during the lifetime of an active .NET application for self-auditing
-purposes.
+### Properties
 
-* **`LicenseEdition`**
+* **`EntitledSkus`** <span data-shb-badge data-shb-badge-variant="default">v8.0+</span>
 
-  Indicates the current IdentityServer instance's license edition.
+  A `string` collection of SKU identifiers entitled by the configured license.
+
+* **`LicenseEdition`** <span data-shb-badge data-shb-badge-variant="default">v7.1+</span>
+
+  A `string` indicating the edition.
 
 * **`ClientsUsed`**
 
@@ -36,12 +78,12 @@ purposes.
 
 * **`FeaturesUsed`**
 
-  A `string` collection of features has been used since the IdentityServer instance ran.
+  A `string` collection of human-readable feature names used since the IdentityServer instance started.
 
-## Register LicenseUsageSummary Services
+### Register LicenseUsageSummary services
 
-To make the `LicenseUsageSummary` class available in your application, you'll need to make sure it is registered in the service collection at startup.
-You can do this by calling the `AddLicenseSummary()` extension method when registering IdentityServer:
+To make `LicenseUsageSummary` available in your application, call the `AddLicenseSummary()` extension method
+when registering IdentityServer:
 
 ```csharp
 // Program.cs
@@ -49,48 +91,42 @@ builder.Services.AddIdentityServer()
     .AddLicenseSummary();
 ```
 
-## Using LicenseUsageSummary with .NET Lifetime Events
+### Use LicenseUsageSummary with .NET lifetime events
 
-In .NET, an [`IHost`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime)
-implementation allows developers to subscribe to application
-lifetime events, including **Application Started**, **Application Stopped**,
-and **Application Stopping**. IdentityServer tracks usage metrics internally
-and that information may be accessed by developers at any time during the application's lifetime
-from the application's service collection using the following code snippet.
+The [`IHost`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.hosting.ihostapplicationlifetime) interface lets you subscribe to application lifetime events, including **Application Started**,
+**Application Stopped**, and **Application Stopping**. IdentityServer tracks usage metrics internally, and you can
+access that information at any time during the application's lifetime from the service collection:
 
 ```csharp
 // from a valid services scope
 app.Services.GetRequiredService<LicenseUsageSummary>();
 ```
 
-For self-auditing purposes, we recommend using the `IHost` lifetime event `ApplicationStopping` as shown
-in the example below.
+For self-auditing purposes, we recommend using the `ApplicationStopping` lifetime event:
 
-Note, `LicenseUsageSummary` is *`read-only`*.
+Note: `LicenseUsageSummary` is read-only.
 
 ```csharp
 app.Lifetime.ApplicationStopping.Register(() =>
 {
-  var usage = app.Services.GetRequiredService<LicenseUsageSummary>();
-  // Todo: Substitue a different logging mechanism
-  Console.Write(Summary(usage));
+    var usage = app.Services.GetRequiredService<LicenseUsageSummary>();
+    // Substitute a different logging mechanism as needed
+    Console.Write(Summary(usage));
 });
 ```
 
-Developers may also use common dependency injection techniques
-such as property or constructor injection.
+You can also inject `LicenseUsageSummary` using standard dependency injection:
 
 ```csharp
-// An ASP.NET Core MVC Controller
+// An ASP.NET Core MVC controller
 public class MyController : Controller
 {
     public MyController(LicenseUsageSummary summary)
     {
-        // use the summary information    
+        // use the summary information
     }
 }
 ```
 
-Developers can use the license usage summary to determine if their organization is
-within their current licensing tier or if they need to make adjustments to
-stay within compliance of [Duende licensing terms](https://duendesoftware.com/products/identityserver).
+Use the license usage summary to check whether your organization is within its current licensing allowance,
+or needs to make adjustments to stay within the [Duende licensing terms](https://duendesoftware.com/products/identityserver).

@@ -1,7 +1,7 @@
 ---
 title: "OpenTelemetry"
 description: Documentation for OpenTelemetry integration in IdentityServer, covering metrics, traces and logs collection for monitoring and diagnostics
-date: 2020-09-10T08:22:12+02:00
+date: 2026-05-20
 sidebar:
   order: 50
 redirect_from:
@@ -26,7 +26,8 @@ especially in highly distributed systems.
 
 ## OpenTelemetry Signals
 
-OpenTelemetry signals are the information collected and processed to describe the internal activity of the system. The most common signals are traces, metrics, and logs.
+OpenTelemetry signals are the information collected and processed to describe the internal activity of the system.
+The most common signals are traces, metrics, and logs.
 
 .NET 8+ comes with first class support for OpenTelemetry. IdentityServer emits traces, metrics, and logs you can collect.
 
@@ -304,6 +305,57 @@ multiple actual tokens (id_token, access token, refresh token).
 | grant_type             | The grant type used                                              |
 | authorize_request_type | The authorize request type, if information about it is available |
 | error                  | Error label on errors                                            |
+
+#### Telemetry.Metrics.Counters.SamlSso :badge[v8.0]
+
+Counter name: `tokenservice.saml.sso`
+
+Number of SAML SSO attempts, both successful and failed. On success, the counter is tagged with
+the service provider entity ID and the SAML binding used. On failure, the binding tag is replaced
+with an error code so you can quickly see what went wrong without flooding your metrics system with
+high-cardinality data.
+
+On success:
+
+| Tag          | Description                                                                           |
+|--------------|---------------------------------------------------------------------------------------|
+| sp_entity_id | The entity ID of the service provider                                                 |
+| binding      | The SAML binding used (for example, `urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST`) |
+
+On failure:
+
+| Tag          | Description                           |
+|--------------|---------------------------------------|
+| sp_entity_id | The entity ID of the service provider |
+| error        | Bounded error code (see below)        |
+
+The `error` tag uses a bounded set of values to prevent cardinality explosion in your metrics backend:
+
+`invalid`, `unknown`, `sp_not_found`, `sp_disabled`, `invalid_acs_url`, `access_denied`, `interaction_error`
+
+#### Telemetry.Metrics.Counters.SamlSlo
+
+Counter name: `tokenservice.saml.slo`
+
+Number of SAML Single Logout (SLO) attempts, both successful and failed. Like the SSO counter,
+error codes are kept to a bounded set to keep your metrics cardinality under control.
+
+On success:
+
+| Tag          | Description                           |
+|--------------|---------------------------------------|
+| sp_entity_id | The entity ID of the service provider |
+
+On failure:
+
+| Tag          | Description                           |
+|--------------|---------------------------------------|
+| sp_entity_id | The entity ID of the service provider |
+| error        | Bounded error code (see below)        |
+
+The `error` tag uses a bounded set of values to prevent cardinality explosion in your metrics backend:
+
+`invalid`, `unknown`, `sp_not_found`, `sp_disabled`, `invalid_acs_url`, `access_denied`, `partial_logout`, `interaction_error`
 
 ### Metrics In The UI
 
