@@ -1,0 +1,38 @@
+---
+title: "Identity Provider Store"
+description: Documentation for the IIdentityProviderStore interface which dynamically loads identity provider configurations for external authentication.
+sidebar:
+  label: Identity Provider
+  order: 36
+redirect_from:
+  - /identityserver/v7/reference/stores/idp_store/
+---
+
+#### Duende.IdentityServer.Stores.IIdentityProviderStore
+
+Used to dynamically load [identity provider configuration](/identityserver/reference/v7/models/idp.md).
+
+```csharp
+/// <summary>
+/// Interface to model storage of identity providers.
+/// </summary>
+public interface IIdentityProviderStore
+{
+    /// <summary>
+    /// Gets all identity providers name.
+    /// </summary>
+    Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync(CancellationToken ct);
+
+    /// <summary>
+    /// Gets the identity provider by scheme name.
+    /// </summary>
+    /// <param name="scheme"></param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns></returns>
+    Task<IdentityProvider?> GetBySchemeAsync(string scheme, CancellationToken ct);
+}
+```
+
+The `IdentityProvider` is intended to be a base class to model arbitrary identity providers.
+The default implementation included in _Duende IdentityServer_ will return a derived class for OpenID Connect providers,
+via the `OidcProvider` class.

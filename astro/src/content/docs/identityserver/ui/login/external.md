@@ -37,8 +37,11 @@ Connect, SAML2-P, or WS-Federation).
 To ease integration with external providers, it is recommended to use an authentication handler for ASP.NET Core that
 implements the corresponding protocol used by the provider.
 
-:::tip[Third-party ASP.NET Core authentication handlers]
-Many third-party authentication handlers are available as part of ASP.NET Core. You might need to find others
+:::tip[ASP.NET Core authentication handlers]
+IdentityServer includes a built-in SAML 2.0 Service Provider (SP) handler for logging in via a SAML 2.0 identity provider.
+See [SAML SP login](/identityserver/ui/login/saml-provider.md) for details.
+
+In addition, many third-party authentication handlers are available as part of ASP.NET Core. You might need to find others
 (both commercial and free) for things like SAML2-P and other social login systems not provided by ASP.NET Core.
 
 Find a non-exhaustive list of available [ASP.NET Core authentication handlers](#third-party-aspnet-core-authentication-handlers)
@@ -340,6 +343,7 @@ In this section, find a non-exhaustive list of first-party and third-party ASP.N
 | [Facebook / Meta](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins)                                                                                                             | Part of .NET         |
 | [Microsoft Account](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins)                                                                                                          | Part of .NET         |
 | [Twitter / X](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins)                                                                                                                  | Part of .NET         |
+| [Duende SAML 2.0 Service Provider (SP)](/identityserver/ui/login/saml-provider.md)                                                                                                                                          | Duende               |
 | [Entra ID / Microsoft Account / ...](https://www.nuget.org/packages/Microsoft.Identity.Web)                                                                                                                                 | Microsoft            |
 | [Google](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins)                                                                                                                        | Google               |
 | [Sustainsys Saml2](https://sustainsys.com/sustainsyssaml2-libraries)                                                                                                                                                        | Open-source          |

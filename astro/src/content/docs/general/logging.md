@@ -108,7 +108,7 @@ You can then control log levels via `appsettings.json`. This approach allows you
 }
 ```
 
-## Troubleshooting Specific Products
+## Troubleshooting Specific Products and Components
 
 If you are debugging a specific component, you can target its namespace to reduce noise.
 
@@ -116,6 +116,7 @@ If you are debugging a specific component, you can target its namespace to reduc
 |-----------------------------|--------------------------------|
 | **IdentityServer**          | `Duende.IdentityServer`        |
 | **BFF**                     | `Duende.Bff`                   |
+| **User Management**         | `Duende.UserManagement`        |
 | **Access Token Management** | `Duende.AccessTokenManagement` |
 
 Example `appsettings.json` for debugging only BFF interactions:

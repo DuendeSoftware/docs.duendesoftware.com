@@ -60,7 +60,7 @@ IdentityServer always uses the `"idsrv.external"` scheme here, available in the 
 ### Check Session Cookie
 
 IdentityServer session management requires a separate cookie to monitor the session state without sending the large authentication cookie.
-The [User Session Service](/identityserver/reference/services/user-session-service.md) manages this cookie.
+The [User Session Service](/identityserver/reference/v8/services/user-session-service.md) manages this cookie.
 
 - **Default Name:** `"idsrv.session"` (Constant: `IdentityServerConstants.DefaultCheckSessionCookieName`).
 

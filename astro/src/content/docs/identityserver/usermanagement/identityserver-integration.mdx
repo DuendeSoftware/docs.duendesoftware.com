@@ -1,0 +1,124 @@
+---
+title: "Enabling User Management in IdentityServer"
+description: "How to add User Management to IdentityServer, including user storage, authentication flows, claims mapping, and role-based authorization."
+date: 2025-05-29
+sidebar:
+  label: IdentityServer Integration
+  order: 3
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+The `Duende.UserManagement.IdentityServer8` package is what you add to your IdentityServer project to enable User Management.
+It wires up user storage, authentication flows, and claims mapping through a single `AddUserManagement()` call on the IdentityServer builder.
+Under the hood, it registers an `IProfileService` implementation that maps user profile attributes to OIDC claims and emits role claims
+(both direct and transitive, deduplicated).
+
+## Setup
+
+Once you have IdentityServer set up, adding User Management takes a single call on the builder.
+
+<Steps>
+
+1. **Add the NuGet package**
+
+    ```bash title="Terminal"
+    dotnet add package Duende.UserManagement.IdentityServer8
+    ```
+
+2. **Call `AddUserManagement()` on the IdentityServer builder**
+
+    The configure delegate is where you enable features and configure storage. This registers both the User Management
+    services and the `UserManagementProfileService` implementation of `IProfileService`.
+
+    ```csharp
+    // Program.cs
+    using Duende.IdentityServer;
+
+    builder.Services
+        .AddIdentityServer(options =>
+        {
+            options.UserInteraction.LoginUrl = "/Account/Login";
+            options.UserInteraction.LogoutUrl = "/Account/Logout";
+        })
+        .AddInMemoryIdentityResources(Config.IdentityResources)
+        .AddInMemoryApiScopes(Config.ApiScopes)
+        .AddInMemoryClients(Config.Clients)
+        .AddUserManagement(options =>
+        {
+            options.Authentication(configure =>
+            {
+                configure.UseSmtpOtpDispatcher(x => builder.Configuration.GetSection("Smtp").Bind(x));
+            });
+            options.AddPostgreSqlStore();
+        });
+    ```
+
+    :::tip
+    You do not need to call `AddUserManagement()` separately on `IServiceCollection`.
+    The extension method on `IIdentityServerBuilder` handles both registrations.
+    :::
+</Steps>
+
+## Claims Mapping
+
+When IdentityServer calls `GetProfileDataAsync`, the `UserManagementProfileService` loads the user's profile
+and maps it to claims:
+
+* **Profile attributes**: Each attribute's code becomes the claim type and its value becomes the claim value. Boolean attributes emit `"true"` or `"false"` with `ClaimValueTypes.Boolean`.
+* **`role`**: Emitted for every role assigned directly to the user and for every role inherited transitively through group membership. Duplicate roles (by role ID) are deduplicated before emission.
+
+:::note
+Standard claims such as `preferred_username` are not emitted automatically. To emit one, define a profile attribute whose attribute code matches the claim type (for example, `preferred_username`). The profile service will then include it like any other attribute claim.
+:::
+
+Only claims that match the requested scopes are issued. The `UserManagementProfileService`
+uses `context.AddRequestedClaims(claims)` internally, so IdentityServer's standard scope-to-claim filtering applies.
+
+## Fallback Behavior
+
+All User Management modules (profiles, authentication, membership) are registered automatically when you call `AddUserManagement()`. 
+The `UserManagementProfileService` constructor requires `IUserProfileAdmin`, `IUserAuthenticatorsAdmin`, and `IMembershipAdmin`. These are all registered by `AddUserManagement()`, so no additional configuration is needed in normal usage.
+
+If a module's services are not available in the service provider (for example, in testing scenarios with a partial setup):
+
+* **Profiles not available** (no `IUserProfileAdmin`): The profile service falls back to passing through the claims from the authentication session's subject principal. `IsActiveAsync` treats the user as always active. This matches the behavior of IdentityServer's built-in `DefaultProfileService`.
+* **Authenticators not available** (no `IUserAuthenticatorsAdmin`): The active-user check skips the authenticator requirement and only verifies that the profile exists.
+* **Membership not available** (no `IMembershipAdmin`): Role claim resolution is skipped entirely. No `role` claims are emitted.
+
+## Subject ID Requirements
+
+The `sub` claim in the token must be a non-empty string (up to 200 characters) that can be parsed as a `UserSubjectId`.
+The `UserManagementProfileService` converts it using `UserSubjectId.TryCreate`. If parsing fails, no claims are issued and a warning
+is logged.
+
+`IsActiveAsync` returns `true` when the user profile exists **and** the user has at least one registered authenticator (password, passkey, external login, or OTP address). A user whose profile exists but has no authenticators is treated as inactive, which causes IdentityServer to reject tokens for that user. Users who have been deleted or never existed also return `false`.
+
+## Customization
+
+`UserManagementProfileService` is a public class with virtual methods you can override by subclassing it and registering your
+subclass with the service provider:
+
+* `FindUserAsync(UserSubjectId subjectId, CancellationToken ct)` - override to customize how the user profile is loaded.
+* `GetProfileDataAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to intercept profile loading after the subject ID is parsed but before the user profile is fetched.
+* `GetProfileDataAsync(ProfileDataRequestContext context, UserProfile user, CancellationToken ct)` - override to customize how claims are built from the profile.
+* `GetRoleClaimsAsync(ProfileDataRequestContext context, UserSubjectId subjectId, CancellationToken ct)` - override to customize how role claims are collected.
+* `IsUserActiveAsync(UserSubjectId subjectId, CancellationToken ct)` - override to customize the active-user check. The default implementation verifies that the user's profile exists and that at least one authenticator is registered. Return `false` to force IdentityServer to reject tokens for the user.
+
+The `Logger` property is available to subclasses as a protected property:
+
+```csharp
+protected ILogger<UserManagementProfileService> Logger { get; }
+```
+
+Register your subclass after calling `AddUserManagement()`:
+
+```csharp
+// Program.cs
+using Duende.IdentityServer;
+
+builder.Services
+    .AddIdentityServer(...)
+    .AddUserManagement(options => { ... })
+    .AddProfileService<CustomProfileService>();
+```

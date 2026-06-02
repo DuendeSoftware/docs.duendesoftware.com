@@ -20,7 +20,7 @@ configured.
 ## Client-based CORS Configuration
 
 One approach to configuring CORS is to use the `AllowedCorsOrigins` collection on
-the [client configuration](/identityserver/reference/models/client.md#authentication--session-management).
+the [client configuration](/identityserver/reference/v8/models/client.md#authentication--session-management).
 Add the origin of the client to the collection and the default configuration in IdentityServer will consult these
 values to allow cross-origin calls from the origins.
 
@@ -99,4 +99,4 @@ IdentityServer registers its own `ICorsPolicyProvider` to handle its internal en
 1.  **Register your `ICorsPolicyProvider` first:** Register your custom provider in `ConfigureServices` *before* calling `AddIdentityServer`.
 2.  **The Decorator Pattern:** IdentityServer automatically detects your provider and wraps it. It will consult your provider first; if your provider doesn't handle the request, IdentityServer will then apply its own logic.
 
-Note that while ASP.NET Core manages the middleware, IdentityServer uses an internal service called [`ICorsPolicyService`](/identityserver/reference/stores/cors-policy-service.md) to decide which origins are allowed to access its specific endpoints. If you prefer to use the ASP.NET Core CORS Policy programming model for everything, you will need to provide a custom `ICorsPolicyService` implementation that bridges your ASP.NET Core settings to IdentityServer's endpoints.
+Note that while ASP.NET Core manages the middleware, IdentityServer uses an internal service called [`ICorsPolicyService`](/identityserver/reference/v8/stores/cors-policy-service.md) to decide which origins are allowed to access its specific endpoints. If you prefer to use the ASP.NET Core CORS Policy programming model for everything, you will need to provide a custom `ICorsPolicyService` implementation that bridges your ASP.NET Core settings to IdentityServer's endpoints.

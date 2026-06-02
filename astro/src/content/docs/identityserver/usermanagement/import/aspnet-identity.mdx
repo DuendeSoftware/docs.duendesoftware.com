@@ -1,0 +1,667 @@
+---
+title: "Migrating from ASP.NET Identity"
+description: Step-by-step guide to migrating users from an ASP.NET Identity database into Duende User Management using a hosted service and the IUserImporter API.
+date: 2025-05-22
+sidebar:
+  label: "From ASP.NET Identity"
+  order: 2
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+You have a working application with real users. Passwords are stored, sessions are active, and everything runs. Now you want to adopt Duende User Management
+without losing a single account or forcing anyone to reset their password.
+
+This guide walks you through building a hosted service that reads users from your existing ASP.NET Identity database and imports them into User Management.
+The approach: query the source database directly, map each user to a `UserImportRecord`, and call `IUserImporter.ImportAsync`.
+
+When the migration is done, your users log in exactly as before. They will not notice anything changed.
+
+Before you start, you need two things: an existing ASP.NET Identity database with users to migrate, and a target IdentityServer application that already has User Management configured.
+If you have not set up User Management yet, see the [getting started guide](/identityserver/usermanagement/getting-started.mdx) first.
+
+## How it works
+
+The import API accepts a list of `UserImportRecord` objects. Each record describes one user: their subject ID, profile attributes, password,
+and any other authenticators. You call `IUserImporter.ImportAsync` with a batch of records, and the importer creates or updates each user independently. 
+A failure on one record does not affect the others.
+
+The import is idempotent by default for new users. If you run it a second time, existing records are skipped rather than duplicated. 
+If you want re-runs to overwrite existing data (useful when fixing source data and re-importing), you can register a custom conflict resolver
+(see [Conflict Resolution](/identityserver/usermanagement/import/reference.md#conflict-resolution) for details).
+
+Passwords carry over without any disruption. ASP.NET Identity uses a proprietary binary format for its hashes. You store the hash as-is during import,
+and register a custom `IPasswordHashAlgorithm` that knows how to verify it. On the first successful login after migration, User Management transparently
+re-hashes the password with its preferred algorithm. The user types their password, it works, and the hash is silently upgraded in the background.
+
+## Set Up The Migration
+
+Your IdentityServer application already has `AddIdentityServer().AddUserManagement(...)` configured. You do not need a separate project. Instead, you add the migration as a hosted service that runs once on startup, imports the users, and then stops.
+
+Add the packages needed to read the source ASP.NET Identity database:
+
+```bash
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+```
+
+:::note
+The example code assumes the source database is PostgreSQL. Replace `Npgsql.EntityFrameworkCore.PostgreSQL` with the Entity Framework Core provider for your source database.
+:::
+
+In your existing `Program.cs`, register the source database context and the hosted service:
+
+```csharp
+// In your existing Program.cs, add the source database context
+var sourceConnectionString = builder.Configuration.GetConnectionString("Source")!;
+builder.Services.AddDbContext<SourceIdentityDbContext>(options =>
+    options.UseNpgsql(sourceConnectionString));
+
+// Register the migration as a hosted service
+builder.Services.AddHostedService<AspNetIdentityMigrationService>();
+
+// Register an overwrite resolver so re-runs update existing records
+builder.Services.AddSingleton<IUserImportConflictResolver, OverwriteConflictResolver>();
+```
+
+Your User Management registration already includes the custom `AspNetIdentityPasswordHashAlgorithm` password hash algorithm. Make sure it includes:
+
+```csharp
+using Duende.IdentityServer;
+
+builder.Services.AddIdentityServer()
+    .AddUserManagement(users =>
+    {
+        users.Authentication(auth =>
+        {
+            auth.AddPasswordHashAlgorithm<AspNetIdentityPasswordHashAlgorithm>();
+        });
+    });
+```
+
+Add the source connection string to `appsettings.json`:
+
+```json
+// appsettings.json
+{
+  "ConnectionStrings": {
+    "Source": "Host=localhost;Database=identity_db;Username=postgres;Password=..."
+  }
+}
+```
+
+## Connect to Your ASP.NET Identity Database
+
+You need a minimal `DbContext` that points at the source database. You are reading data directly, not using `UserManager`.
+
+```csharp
+// SourceIdentityDbContext.cs
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+public sealed class SourceIdentityDbContext(DbContextOptions<SourceIdentityDbContext> options)
+    : IdentityDbContext<IdentityUser>(options)
+{
+}
+```
+
+If your source app uses a custom `ApplicationUser` class, substitute it for `IdentityUser` here.
+The important tables are `AspNetUsers` and `AspNetUserClaims`, which `IdentityDbContext` maps for you automatically.
+
+## ASP.NET Identity Password Hash Format
+
+The `PasswordHash` column in the `AspNetUsers` table contains a base64-encoded blob. The first byte identifies the format version:
+
+* `0x00` -- V2 format (ASP.NET Identity 2.x): 1 byte version + 16 bytes salt + 32 bytes PBKDF2-SHA1 hash (1000 iterations)
+* `0x01` -- V3 format (ASP.NET Core Identity 3.x and later): 1 byte version + 4 bytes PRF (big-endian) + 4 bytes iteration count (big-endian) + 4 bytes salt length (big-endian) + N bytes salt + M bytes PBKDF2 hash output
+
+PRF values for V3: 0 = SHA1, 1 = SHA256, 2 = SHA512.
+
+For more detail on the ASP.NET Core Identity password hasher internals, see the [ASP.NET Identity `PasswordHasher` source on GitHub](https://github.com/dotnet/aspnetcore/blob/main/src/Identity/Extensions.Core/src/PasswordHasher.cs).
+
+## Register the Password Hash Algorithm
+
+ASP.NET Identity stores passwords as base64-encoded binary blobs. User Management does not know how to verify these out of the box,
+so you need to register a custom `IPasswordHashAlgorithm` that handles them.
+
+Add this class to your project:
+
+```csharp
+// AspNetIdentityPasswordHashAlgorithm.cs
+using System.Buffers.Binary;
+using System.Security.Cryptography;
+using Duende.UserManagement.Authentication.Passwords;
+
+public sealed class AspNetIdentityPasswordHashAlgorithm : IPasswordHashAlgorithm
+{
+    public const string Id = "aspnet-identity";
+    private const string ParamBlob = "blob";
+
+    public string AlgorithmId => Id;
+
+    // Never produce new hashes in this format -- only verify imported ones.
+    public HashedPasswordData Hash(string password) =>
+        throw new NotSupportedException(
+            "This algorithm is for verifying imported hashes only.");
+
+    public bool Verify(string password, HashedPasswordData data)
+    {
+        if (!data.Parameters.TryGetValue(ParamBlob, out var blob))
+            return false;
+
+        byte[] bytes;
+        try { bytes = Convert.FromBase64String(blob); }
+        catch (FormatException) { return false; }
+
+        if (bytes.Length == 0) return false;
+
+        return bytes[0] switch
+        {
+            0x00 => VerifyV2(password, bytes),
+            0x01 => VerifyV3(password, bytes),
+            _ => false
+        };
+    }
+
+    // Always true: on first login, the password is re-hashed with the preferred algorithm.
+    public bool NeedsRehash(HashedPasswordData data) => true;
+
+    public static HashedPasswordData CreateImportData(string aspNetPasswordHash) =>
+        new(Id, [], [], new Dictionary<string, string> { [ParamBlob] = aspNetPasswordHash });
+
+    // V2: 0x00 || salt (16 bytes) || PBKDF2-SHA1 hash (32 bytes), 1000 iterations
+    private static bool VerifyV2(string password, byte[] bytes)
+    {
+        if (bytes.Length != 49) return false;
+        var salt = bytes.AsSpan(1, 16);
+        var stored = bytes.AsSpan(17, 32);
+        var derived = Rfc2898DeriveBytes.Pbkdf2(password, salt, 1000, HashAlgorithmName.SHA1, 32);
+        return CryptographicOperations.FixedTimeEquals(derived, stored);
+    }
+
+    // V3: 0x01 || PRF (4 BE) || iterations (4 BE) || saltLen (4 BE) || salt || hash
+    private static bool VerifyV3(string password, byte[] bytes)
+    {
+        if (bytes.Length < 13) return false;
+        var prf = BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(1, 4));
+        var iterations = (int)BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(5, 4));
+        var saltLen = (int)BinaryPrimitives.ReadUInt32BigEndian(bytes.AsSpan(9, 4));
+        if (iterations == 0 || saltLen == 0 || bytes.Length <= 13 + saltLen) return false;
+
+        var salt = bytes.AsSpan(13, saltLen);
+        var stored = bytes.AsSpan(13 + saltLen);
+        var hashAlg = prf switch
+        {
+            0 => HashAlgorithmName.SHA1,
+            1 => HashAlgorithmName.SHA256,
+            2 => HashAlgorithmName.SHA512,
+            _ => default
+        };
+        if (hashAlg == default) return false;
+
+        var derived = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashAlg, stored.Length);
+        return CryptographicOperations.FixedTimeEquals(derived, stored);
+    }
+}
+```
+
+Rather than parsing the hash at import time, the recommended approach is to store the raw base64 blob verbatim and verify it at login time
+using this custom `IPasswordHashAlgorithm`. This handles both V2 and V3 hashes, and transparently re-hashes the password with your preferred
+algorithm on the user's first successful login.
+
+Use `AspNetIdentityPasswordHashAlgorithm.CreateImportData(user.PasswordHash)` to wrap the raw hash during import,
+and register the algorithm with `auth.AddPasswordHashAlgorithm<AspNetIdentityPasswordHashAlgorithm>()` in your User Management setup.
+
+See [Password Hashing Algorithms](/identityserver/usermanagement/reference/password-hashing.md) for a full walkthrough of implementing and registering
+a custom algorithm, including a complete example of a read-only legacy algorithm.
+
+## Map Users to User Management
+
+This is the core of the migration: reading each `IdentityUser` and its claims, then producing a `UserImportRecord`.
+
+The key decisions:
+
+* **`SubjectId`**: use `UserSubjectId.Create(user.Id)` to carry the existing GUID across as-is. This preserves any existing tokens or references that use the subject ID.
+* **`ProfileAttributes`**: map email, phone, username, and claims to profile attributes using the schema. The ASP.NET Identity `UserName` column maps to the SCIM `userName` attribute.
+* **`Password`**: wrap the raw base64 hash using `AspNetIdentityPasswordHashAlgorithm.CreateImportData`.
+
+Add a helper method that takes an `IdentityUser` and its claims and returns a `UserImportRecord`:
+
+```csharp
+// MigrationHelpers.cs
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement;
+using Duende.UserManagement.Authentication.Otp;
+using Duende.UserManagement.Authentication.Passkeys;
+using Duende.UserManagement.Import;
+using Microsoft.AspNetCore.Identity;
+
+static UserImportRecord MapUser(
+    IdentityUser user,
+    IReadOnlyList<IdentityUserClaim<string>> claims,
+    IReadOnlyList<PasskeyData> passkeys,
+    IReadOnlyAttributeSchema schema)
+{
+    var attrs = new AttributeValueCollection(schema);
+
+    // Email as a multi-valued complex attribute
+    if (!string.IsNullOrEmpty(user.Email))
+    {
+        IReadOnlyList<object> emailList =
+        [
+            (IReadOnlyDictionary<string, object>)new Dictionary<string, object>
+            {
+                ["value"] = user.Email,
+                ["type"] = "work",
+                ["primary"] = true
+            }
+        ];
+        var emailCode = AttributeCode.Create("emails");
+        if (schema.AttributeDefinitions.ContainsKey(emailCode))
+            attrs.Set(emailCode, emailList);
+    }
+
+    // Username as a SCIM attribute
+    if (!string.IsNullOrEmpty(user.UserName))
+    {
+        var userNameCode = AttributeCode.Create("userName");
+        if (schema.AttributeDefinitions.ContainsKey(userNameCode))
+            attrs.Set(userNameCode, user.UserName);
+    }
+
+    // Simple scalar claims mapped to profile attributes
+    foreach (var claim in claims)
+    {
+        var attrName = MapClaimToAttribute(claim.ClaimType);
+        if (attrName is null) continue;
+
+        var code = AttributeCode.Create(attrName);
+        if (schema.AttributeDefinitions.ContainsKey(code))
+            attrs.Set(code, claim.ClaimValue);
+    }
+
+    // Name as a complex attribute built from given_name / family_name / middle_name claims
+    var nameProps = new Dictionary<string, object>();
+    foreach (var claim in claims)
+    {
+        switch (claim.ClaimType)
+        {
+            case "given_name":   nameProps["givenName"]   = claim.ClaimValue; break;
+            case "family_name":  nameProps["familyName"]  = claim.ClaimValue; break;
+            case "middle_name":  nameProps["middleName"]  = claim.ClaimValue; break;
+        }
+    }
+    if (nameProps.Count > 0)
+    {
+        var nameCode = AttributeCode.Create("name");
+        if (schema.AttributeDefinitions.ContainsKey(nameCode))
+            attrs.Set(nameCode, (IReadOnlyDictionary<string, object>)nameProps);
+    }
+
+    // Password
+    PasswordImport? password = null;
+    if (!string.IsNullOrEmpty(user.PasswordHash))
+    {
+        password = new PasswordImport(
+            AspNetIdentityPasswordHashAlgorithm.CreateImportData(user.PasswordHash));
+    }
+
+    // OTP email address (for email-based one-time passwords)
+    var otpAddresses = new List<OtpAddress>();
+    if (!string.IsNullOrEmpty(user.Email) &&
+        EmailAddress.TryCreate(user.Email, out var emailAddress))
+    {
+        otpAddresses.Add(new OtpAddress(OtpChannel.Email, emailAddress));
+    }
+
+    // Address as a complex attribute from claims
+    var addressProps = new Dictionary<string, object>();
+    foreach (var claim in claims)
+    {
+        switch (claim.ClaimType)
+        {
+            case "street_address": addressProps["streetAddress"] = claim.ClaimValue; break;
+            case "locality":      addressProps["locality"]       = claim.ClaimValue; break;
+            case "region":        addressProps["region"]         = claim.ClaimValue; break;
+            case "postal_code":   addressProps["postalCode"]     = claim.ClaimValue; break;
+            case "country":       addressProps["country"]        = claim.ClaimValue; break;
+        }
+    }
+    if (addressProps.Count > 0)
+    {
+        addressProps.TryAdd("primary", false);
+        IReadOnlyList<object> addressList = [(IReadOnlyDictionary<string, object>)addressProps];
+        var addressCode = AttributeCode.Create("addresses");
+        if (schema.AttributeDefinitions.ContainsKey(addressCode))
+            attrs.Set(addressCode, addressList);
+    }
+
+    // Passkeys
+    var passkeyImports = passkeys
+        .Select(p => new PasskeyImport
+        {
+            CredentialId = p.CredentialId,
+            PublicKeyCose = p.PublicKey,
+            Algorithm = p.Algorithm,
+            SignCount = p.SignCount,
+            BackupEligible = p.IsBackupEligible,
+            BackedUp = p.IsBackedUp,
+            Aaguid = p.Aaguid,
+            Name = p.Name ?? "Imported passkey"
+        })
+        .ToList();
+
+    // Set active status
+    var activeCode = AttributeCode.Create("active");
+    if (schema.AttributeDefinitions.ContainsKey(activeCode))
+        attrs.Set(activeCode, true);
+
+    return new UserImportRecord
+    {
+        SubjectId = UserSubjectId.Create(user.Id),
+        ProfileAttributes = attrs.Count > 0 ? attrs.Validate() : null,
+        Authenticators = new AuthenticatorImport
+        {
+            Password = password,
+            OtpAddresses = otpAddresses.Count > 0 ? otpAddresses : null,
+            Passkeys = passkeyImports.Count > 0 ? passkeyImports : null
+        }
+    };
+}
+
+static string? MapClaimToAttribute(string claimType) => claimType switch
+{
+    "display_name"       => "displayName",
+    "title"              => "title",
+    "user_type"          => "userType",
+    "preferred_language" => "preferredLanguage",
+    "locale"             => "locale",
+    "timezone"           => "timezone",
+    // given_name, family_name, middle_name are handled as the complex "name" attribute
+    // street_address, locality, region, postal_code, country are handled as the complex "addresses" attribute
+    // phone_number is handled separately below if needed
+    _ => null
+};
+
+// Data class for passkey credentials read from the source database
+record PasskeyData(
+    byte[] CredentialId,
+    byte[] PublicKey,
+    int Algorithm,
+    uint SignCount,
+    bool IsBackupEligible,
+    bool IsBackedUp,
+    Guid Aaguid,
+    string? Name);
+```
+
+Notice that `given_name`, `family_name`, and `middle_name` are not mapped by `MapClaimToAttribute`
+They are assembled into the complex `name` attribute instead, because User Management stores name components
+as a structured object rather than flat strings.
+
+## Run the Import
+
+Now wire everything together in a hosted service. The service runs once on application startup, imports the users, and completes:
+
+```csharp
+// AspNetIdentityMigrationService.cs
+using Duende.Storage.Schema;
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement;
+using Duende.UserManagement.Import;
+using Duende.UserManagement.Profiles;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
+public class AspNetIdentityMigrationService : IHostedService
+{
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<AspNetIdentityMigrationService> _logger;
+
+    public AspNetIdentityMigrationService(
+        IServiceProvider serviceProvider,
+        ILogger<AspNetIdentityMigrationService> logger)
+    {
+        _serviceProvider = serviceProvider;
+        _logger = logger;
+    }
+
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var sp = scope.ServiceProvider;
+
+        // Ensure the User Management schema exists in the target database.
+        await sp.GetRequiredService<IDatabaseSchema>().CreateIfNotExistsAsync(cancellationToken);
+
+        var sourceDb = sp.GetRequiredService<SourceIdentityDbContext>();
+        var importer = sp.GetRequiredService<IUserImporter>();
+        var profileAdmin = sp.GetRequiredService<IUserProfileAdmin>();
+
+        var schema = await profileAdmin.GetSchemaAsync(cancellationToken);
+
+        // Load all users and their claims from the source database
+        var users = await sourceDb.Users
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        var claimsByUser = await sourceDb.UserClaims
+            .AsNoTracking()
+            .GroupBy(c => c.UserId)
+            .ToDictionaryAsync(
+                g => g.Key,
+                g => (IReadOnlyList<IdentityUserClaim<string>>)g.ToList(),
+                cancellationToken);
+
+        _logger.LogInformation("Found {UserCount} users to migrate.", users.Count);
+
+        const int batchSize = 100;
+        var totalCreated = 0;
+        var totalUpdated = 0;
+        var totalFailed = 0;
+
+        for (var i = 0; i < users.Count; i += batchSize)
+        {
+            var batch = users
+                .Skip(i)
+                .Take(batchSize)
+                .Select(u =>
+                {
+                    var claims = claimsByUser.GetValueOrDefault(u.Id, []);
+                    return MapUser(u, claims, schema);
+                })
+                .ToList();
+
+            var result = await importer.ImportAsync(batch, cancellationToken);
+            totalCreated += result.CreatedCount;
+            totalUpdated += result.UpdatedCount;
+            totalFailed += result.FailedCount;
+
+            foreach (var r in result.Results.Where(r => r.Status == UserImportStatus.Failed))
+            {
+                _logger.LogWarning("FAILED {SubjectId}: {Error}", r.SubjectId, r.Error);
+            }
+
+            _logger.LogInformation(
+                "Batch {BatchNumber}: created={Created}, updated={Updated}, failed={Failed}",
+                i / batchSize + 1, result.CreatedCount, result.UpdatedCount, result.FailedCount);
+        }
+
+        _logger.LogInformation(
+            "Migration complete. Created: {Created}, Updated: {Updated}, Failed: {Failed}",
+            totalCreated, totalUpdated, totalFailed);
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+}
+```
+
+## Register the Conflict Resolver
+
+By default, re-running the import skips records that already exist. For a migration you may want to re-run after fixing source data,
+so register a resolver that overwrites existing records:
+
+```csharp
+// OverwriteConflictResolver.cs
+using Duende.UserManagement.Import;
+
+public sealed class OverwriteConflictResolver : IUserImportConflictResolver
+{
+    public Task<UserImportConflictResolution> ResolveAsync(
+        UserImportConflict conflict,
+        CancellationToken ct)
+    {
+        UserImportConflictResolution resolution = conflict.Reason switch
+        {
+            UserImportConflictReason.ConcurrencyConflict =>
+                new UserImportConflictResolution.Retry(),
+            _ =>
+                new UserImportConflictResolution.Overwrite(conflict.Record.SubjectId)
+        };
+        return Task.FromResult(resolution);
+    }
+}
+```
+
+This resolver overwrites any existing profile or authenticator data for the same subject ID, and retries on concurrency conflicts.
+Register it in your `Program.cs` alongside the other service registrations:
+
+```csharp
+using Duende.IdentityServer;
+
+builder.Services.AddIdentityServer()
+    .AddUserManagement(users =>
+    {
+        users.Authentication(auth =>
+        {
+            auth.AddPasswordHashAlgorithm<AspNetIdentityPasswordHashAlgorithm>();
+        });
+    });
+```
+
+## Mapping Claims to Profile Attributes
+
+ASP.NET Identity stores extra user data as claims in the `AspNetUserClaims` table.
+The claim type is a string key, and the claim value is the data. User Management stores profile data as typed attributes with a schema.
+
+The table below shows how common claim types map to User Management attribute codes:
+
+| ASP.NET Identity claim type | User Management attribute code | Notes                                       |
+|-----------------------------|--------------------------------|---------------------------------------------|
+| `given_name`                | `name.givenName` (complex)     | Assembled into the `name` complex attribute |
+| `family_name`               | `name.familyName` (complex)    | Assembled into the `name` complex attribute |
+| `middle_name`               | `name.middleName` (complex)    | Assembled into the `name` complex attribute |
+| `display_name`              | `displayName`                  | Simple string attribute                     |
+| `title`                     | `title`                        | Simple string attribute                     |
+| `user_type`                 | `userType`                     | Simple string attribute                     |
+| `preferred_language`        | `preferredLanguage`            | Simple string attribute                     |
+| `locale`                    | `locale`                       | Simple string attribute                     |
+| `timezone`                  | `timezone`                     | Simple string attribute                     |
+| `phone_number`              | `phoneNumbers` (complex list)  | Multi-valued complex attribute              |
+| `street_address`            | `addresses.streetAddress`      | Assembled into the `addresses` complex attribute |
+| `locality`                  | `addresses.locality`           | Assembled into the `addresses` complex attribute |
+| `region`                    | `addresses.region`             | Assembled into the `addresses` complex attribute |
+| `postal_code`               | `addresses.postalCode`         | Assembled into the `addresses` complex attribute |
+| `country`                   | `addresses.country`            | Assembled into the `addresses` complex attribute |
+
+The `name`, `emails`, `phoneNumbers`, and `addresses` attributes are multi-valued complex types.
+You cannot set them with a plain string: you need to build a dictionary or list of dictionaries and pass it to `collection.Set`.
+The `MapUser` helper above shows how to do this for `name`, `emails`, and `addresses`.
+
+For phone numbers, the pattern is the same as for emails:
+
+```csharp
+var phoneClaim = claims.FirstOrDefault(c => c.ClaimType == "phone_number");
+if (phoneClaim is not null)
+{
+    IReadOnlyList<object> phoneList =
+    [
+        (IReadOnlyDictionary<string, object>)new Dictionary<string, object>
+        {
+            ["value"] = phoneClaim.ClaimValue,
+            ["type"] = "work",
+            ["primary"] = false
+        }
+    ];
+    
+    var phoneCode = AttributeCode.Create("phoneNumbers");
+    if (schema.AttributeDefinitions.ContainsKey(phoneCode))
+    {
+        attrs.Set(phoneCode, phoneList);
+    }
+}
+```
+
+The attribute codes and their types depend on the schema you have configured in User Management. 
+The `schema.AttributeDefinitions.ContainsKey(code)` check in the mapping code guards against trying to set an attribute that
+does not exist in your schema, which would cause an import failure.
+
+## Importing Passkeys
+
+If your ASP.NET Identity database stores passkey (WebAuthn/FIDO2) credentials, you can import them alongside passwords and profile data. Each passkey is represented by a `PasskeyImport` object:
+
+```csharp
+new PasskeyImport
+{
+    CredentialId = credentialIdBytes,    // The raw credential ID (byte[])
+    PublicKeyCose = publicKeyBytes,      // COSE-encoded public key (byte[])
+    Algorithm = -7,                     // COSE algorithm identifier (e.g., -7 for ES256, -257 for RS256)
+    SignCount = 0,                      // The current signature counter
+    BackupEligible = true,             // Whether the credential can be backed up
+    BackedUp = false,                  // Whether the credential is currently backed up
+    Aaguid = Guid.Empty,              // The authenticator's AAGUID (or Guid.Empty if unknown)
+    Name = "Imported passkey"          // A human-readable name for the credential
+};
+```
+
+The `Algorithm` field is the COSE algorithm identifier from the credential's public key. Common values:
+* `-7` - ES256 (ECDSA with P-256 and SHA-256)
+* `-257` - RS256 (RSASSA-PKCS1-v1_5 with SHA-256)
+* `-8` - EdDSA
+
+If your source database stores the COSE public key directly, you can extract the algorithm from key label 3 in the COSE key map. If you only know the key type, use the appropriate default (most WebAuthn implementations use ES256).
+
+Add the passkeys list to `AuthenticatorImport.Passkeys` in the import record. The `MapUser` helper above shows this pattern.
+
+## Running the migration
+
+**Test with a small batch first.** Before migrating all users, limit the query to 10 or 20 records and verify the results:
+
+```csharp
+var users = await sourceDb.Users
+    .AsNoTracking()
+    .Take(10)  // remove this line for the full migration
+    .ToListAsync(cancellationToken);
+```
+
+Check that:
+
+* Passwords verify correctly by logging in as one of the migrated users.
+* Profile attributes land in the right fields in the User Management admin UI.
+* The subject IDs match what you expect.
+
+Once you are satisfied, remove the `Take(10)` and deploy the application. The hosted service runs the full migration on startup. After the migration completes, remove the `AddHostedService<AspNetIdentityMigrationService>()` registration so it does not run again on subsequent deployments.
+
+**Run against staging first.** Deploy to a staging environment and run the full migration there
+before touching production. This gives you a chance to catch mapping errors without any risk to live users.
+
+**The import is idempotent.** With the `OverwriteConflictResolver` registered, you can re-run the migration as many times
+as you need. Each run updates existing records in place. This is useful when you discover a mapping bug and need to fix and re-import.
+
+**Check the output.** After each run, look at the `Failed` count and the error messages. Common failure causes are:
+
+* An attribute code in your mapping does not exist in the schema -- add the attribute definition first.
+* A unique attribute value is already claimed by a different subject ID -- this can happen if you have duplicate email addresses or usernames in the source database.
+* A malformed password hash -- `AspNetIdentityPasswordHashAlgorithm` stores the raw base64 hash verbatim during import. If the hash starts with an unexpected version byte, verification will fail on the user's first login attempt. Those users will need to reset their password.
+
+## Next steps
+
+<CardGrid>
+  <LinkCard title="Getting started" href="/identityserver/usermanagement/getting-started" description="Set up User Management in your target application if you have not already." />
+  <LinkCard title="Conflict resolution" href="/identityserver/usermanagement/import/reference#conflict-resolution" description="Control what happens when an imported record collides with existing data." />
+  <LinkCard title="Batch processing" href="/identityserver/usermanagement/import/#batch-processing" description="Chunk large datasets, track progress, and resume after failures." />
+</CardGrid>

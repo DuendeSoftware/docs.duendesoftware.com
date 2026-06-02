@@ -1,7 +1,7 @@
 ---
 title: "Proof-of-Possession Access Tokens"
 description: "Documentation for Proof-of-Possession (PoP) tokens, which enhance security by cryptographically binding tokens to clients, including both Mutual TLS and DPoP implementations."
-date: 2020-09-10T08:22:12+02:00
+date: 2026-05-27
 sidebar:
   label: Proof-of-Possession
   order: 100
@@ -157,7 +157,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 attacks by making it difficult for attackers to use stolen tokens.
 
 :::note
-This feature is part of the [Duende IdentityServer Enterprise Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 DPoP specifies how to bind
@@ -191,12 +191,26 @@ For example is can be dynamically created when the client starts up, and can be 
 The main constraint is that it must be stored for as long as the client uses any access tokens (and possibly refresh
 tokens) that they are bound to.
 
+#### URL Matching (`htu` Claim) :badge[v8.0]
+
+When validating the `htu` claim in a DPoP proof token, IdentityServer follows
+[RFC 9449 section 4.3 step 9](https://datatracker.ietf.org/doc/html/rfc9449#section-4.3).
+The comparison between the request URL and the `htu` value:
+
+* Ignores query string and fragment components
+* Compares scheme and host case-insensitively
+* Compares the path case-sensitively
+* Normalizes default ports (e.g. port 443 for HTTPS) per [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-6.2.3)
+
+This means a proof token with an `htu` of `https://example.com/api/resource` will match a request to 
+`https://example.com/api/resource?page=1`, but not `https://example.com/API/resource`.
+
 #### Enabling DPoP In IdentityServer
 
 DPoP is something a client can use dynamically with no configuration in IdentityServer, but you can configure it as
 required.
-This is a per-client [setting](/identityserver/reference/models/client.md#dpop) in your IdentityServer.
-There are additional client and [global](/identityserver/reference/options.md#dpop) DPoP settings to control the
+This is a per-client [setting](/identityserver/reference/v8/models/client.md#dpop) in your IdentityServer.
+There are additional client and [global](/identityserver/reference/v8/options.md#dpop) DPoP settings to control the
 behavior.
 
 ```csharp

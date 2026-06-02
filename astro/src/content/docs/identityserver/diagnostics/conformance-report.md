@@ -1,6 +1,6 @@
 ---
-title: "Conformance Report"
-description: How to install, configure, and use the IdentityServer conformance report to assess OAuth 2.1 and FAPI 2.0 compliance.
+title: "Financial-Grade Security and Conformance Report"
+description: How to install, configure, and use the IdentityServer Financial-Grade Security and Conformance report to assess OAuth 2.1 and FAPI 2.0 compliance.
 date: 2026-03-02
 sidebar:
   label: Conformance Report
@@ -10,7 +10,7 @@ sidebar:
     variant: tip
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0 (prerelease)</span>
+<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
 Part of Financial-Grade Security and Conformance, the conformance report assesses your IdentityServer
 deployment against [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1) and
@@ -22,12 +22,12 @@ generating an HTML report accessible via a protected endpoint.
 Install the NuGet package:
 
 ```bash title="Terminal"
-dotnet add package Duende.IdentityServer.ConformanceReport --prerelease
+dotnet add package Duende.IdentityServer.ConformanceReport
 ```
 
 ## Setup
 
-### 1. Register the Conformance Report
+### 1. Register the Financial-Grade Security and Conformance Report
 
 Call `AddConformanceReport()` on the IdentityServer builder:
 
@@ -42,7 +42,7 @@ builder.Services.AddIdentityServer()
 
 ### 2. Map the Endpoint
 
-Add the conformance report endpoint to your middleware pipeline:
+Add the Financial-Grade Security and Conformance report endpoint to your middleware pipeline:
 
 ```csharp
 // Program.cs
@@ -57,7 +57,7 @@ The endpoint requires an authenticated user by default (see [Authorization](#aut
 
 ## Configuration Options
 
-`ConformanceReportOptions` controls the conformance report feature:
+`ConformanceReportOptions` controls the Financial-Grade Security and Conformance report feature:
 
 * **`Enabled`**
   Enable or disable the conformance report endpoint. Defaults to `false`.

@@ -1,6 +1,6 @@
 label: "SAML 2.0"
 collapsed: true
-order: 11
+order: 12
 badge:
   text: v8.0
   variant: tip

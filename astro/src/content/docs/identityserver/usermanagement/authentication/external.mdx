@@ -1,0 +1,442 @@
+---
+title: External Authentication Flow
+description: How to implement external (federated/social) authentication in Duende User Management, including provider configuration, user provisioning, and managing linked external authenticators.
+date: 2026-04-29
+sidebar:
+  label: External Authentication
+  order: 5
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+External authentication delegates sign-in to trusted third-party identity providers using OAuth 2.0 and OpenID Connect. Users authenticate with a provider they already trust (e.g. Google, Microsoft, a corporate IdP), and your application receives a verified identity without ever handling a password.
+
+:::note[Code examples]
+The code examples on this page use ASP.NET Core Razor Pages (`PageModel`, `IActionResult`, `OnPost*` handler methods). The same patterns apply equally to **MVC controllers** (use action methods returning `IActionResult`) or **minimal API endpoints** (use route handler delegates). The Duende User Management interfaces are framework-agnostic.
+:::
+
+## When to Use External Authentication
+
+**Strongly recommended for:**
+
+* Consumer applications where users expect social login options.
+* Public-facing apps where reducing registration friction is a priority.
+* B2C platforms where a lower barrier to entry increases conversion.
+
+**Good for:**
+
+* Internal tools using corporate SSO (Azure AD, Okta).
+* Developer platforms where GitHub login is a natural fit.
+* Applications that offer external authentication alongside other methods.
+
+**Not ideal for:**
+
+* Applications with strict privacy requirements that cannot depend on external services.
+* Offline scenarios where network connectivity cannot be assumed.
+
+## Comparison With Other Authentication Flows
+
+| Aspect              | External Auth              | Password               | One-Time Password (OTP)                                      |
+|---------------------|----------------------------|------------------------|--------------------------------------------------------------|
+| **User Memory**     | Nothing to remember        | Must remember password | Nothing to remember                                          |
+| **Offline Support** | No                         | Yes                    | No                                                           |
+| **Security**        | Provider-dependent         | Strength-dependent     | Channel-dependent                                            |
+| **User Friction**   | Click button               | Type password          | Retrieve OTP from email, SMS or other channel and type/paste |
+| **Infrastructure**  | External identity provider | Password hashing       | Email, SMS or other channel provider                         |
+
+For a full comparison that includes passkeys and TOTP, see the [Authentication Overview](/identityserver/usermanagement/authentication/overview.mdx).
+
+## How It Works
+
+External authentication follows the OAuth 2.0 Authorization Code Flow with PKCE:
+
+<Steps>
+1. **User initiates login** - User clicks "Sign in with Google" (or other provider).
+
+2. **Authorization request** - Application redirects user to the provider's authorization endpoint.
+
+3. **User authenticates** - User signs in at the provider (if not already authenticated).
+
+4. **Consent** - User grants permission for the application to access their profile.
+
+5. **Authorization code** - Provider redirects back with an authorization code.
+
+6. **Token exchange** - Application exchanges the code for an ID token and access token.
+
+7. **Claim extraction** - Application validates the ID token and extracts user claims (`sub`, `email`, `name`, etc.).
+
+8. **User provisioning** - Application finds an existing user or creates a new account, optionally prompting the user for further details and/or confirmation before doing or so.
+
+9. **Session establishment** - A local authentication session is created.
+</Steps>
+
+## Key Components
+
+### IUserAuthenticatorsSelfService Interface
+
+`IUserAuthenticatorsSelfService` handles user lookup, registration, and external authenticator management:
+
+```csharp
+public interface IUserAuthenticatorsSelfService
+{
+    // Look up a user by their subject ID
+    Task<UserAuthenticators?> TryGetAsync(
+        UserSubjectId subjectId,
+        Ct ct);
+
+    // Add a single external authenticator to an existing user
+    Task<bool> TryAddExternalAuthenticatorAddressAsync(
+        UserSubjectId subjectId,
+        ExternalAuthenticatorAddress authenticator,
+        Ct ct);
+
+    // Remove a single external authenticator from a user
+    Task<bool> TryRemoveExternalAuthenticatorAddressAsync(
+        UserSubjectId subjectId,
+        ExternalAuthenticatorAddress authenticator,
+        Ct ct);
+}
+```
+
+### IUserAuthenticatorsAdmin Interface
+
+`IUserAuthenticatorsAdmin` provides bulk administrative operations for external authenticators:
+
+```csharp
+public interface IUserAuthenticatorsAdmin
+{
+    // Add multiple external authenticators to a user
+    Task<bool> TryAddExternalAuthenticatorAddressesAsync(
+        UserSubjectId subjectId,
+        IEnumerable<ExternalAuthenticatorAddress> authenticators,
+        Ct ct);
+
+    // Remove multiple external authenticators from a user
+    Task<bool> TryRemoveExternalAuthenticatorAddressesAsync(
+        UserSubjectId subjectId,
+        IEnumerable<ExternalAuthenticatorAddress> authenticators,
+        Ct ct);
+}
+```
+
+### Supporting Types
+
+`ExternalAuthenticatorAddress` - Represents a linked external account:
+
+```csharp
+public sealed record ExternalAuthenticatorAddress(
+    ExternalAuthenticatorName Name, // Provider name (e.g., "Google")
+    ISubjectId SubjectId            // Provider's subject identifier
+);
+```
+
+`ExternalAuthenticatorName` - Identifies the external provider:
+
+```csharp
+public record ExternalAuthenticatorName
+{
+    // Typically matches the ASP.NET Core authentication scheme name
+    public static ExternalAuthenticatorName Create(string input);
+    public static ExternalAuthenticatorName? CreateOrDefault(string? input);
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out ExternalAuthenticatorName? result);
+    public static bool TryCreate(string? input, [NotNullWhen(true)] out ExternalAuthenticatorName? result, [NotNullWhen(false)] out IReadOnlyList<string>? errors);
+}
+```
+
+`UserAuthenticators` - Returned by lookup and registration methods; contains the user's full authenticator state:
+
+```csharp
+public sealed record UserAuthenticators
+{
+    public UserSubjectId SubjectId { get; }
+    public IReadOnlyCollection<ExternalAuthenticatorAddress> ExternalAuthenticatorAddresses { get; }
+    public bool HasPassword { get; }
+    // ... other authenticator collections
+}
+```
+
+## Configuration
+
+### Adding An OpenID Connect Provider
+
+Register an external provider using ASP.NET Core's `AddOpenIdConnect` extension. Hook into `OnTicketReceived` to run your user provisioning logic after a successful authentication.
+
+Install the required NuGet package:
+* [`Microsoft.AspNetCore.Authentication.OpenIdConnect`](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OpenIdConnect) for OpenID Connect providers (Google, Microsoft, Okta, etc.)
+* [`Microsoft.AspNetCore.Authentication.OAuth`](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OAuth) for generic OAuth 2.0 providers (GitHub, etc.)
+
+```csharp title="Program.cs"
+builder.Services.AddAuthentication()
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddOpenIdConnect("Google", "Sign in with Google", options =>
+    {
+        options.Authority = "https://accounts.google.com/";
+        options.ClientId = "your-client-id.apps.googleusercontent.com";
+        options.ClientSecret = "your-client-secret";
+        options.CallbackPath = "/signin-google";
+
+        // Authorization Code Flow with PKCE
+        options.ResponseType = "code";
+        options.UsePkce = true;
+
+        // Request the claims you need
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
+
+        options.GetClaimsFromUserInfoEndpoint = true;
+        options.MapInboundClaims = false;
+
+        options.Events.OnTicketReceived = async context =>
+        {
+            await HandleExternalAuthentication(context);
+        };
+    });
+```
+
+### Provider-Specific Configurations
+
+Each provider has its own developer console where you register your application and obtain credentials. Refer to the official documentation for setup instructions:
+
+* **Google**: [Google Identity: OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect)
+* **Microsoft / Azure AD**: [Microsoft Entra identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/)
+* **GitHub**: [Authorizing OAuth Apps](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
+
+:::note
+These are just a few examples. Any OAuth 2.0 or OpenID Connect provider can be used with User Management. For a broader list of third-party authentication providers and configuration guidance, see the [IdentityServer login documentation](/identityserver/ui/login/index.md).
+:::
+
+#### Google
+
+Force account selection on every login:
+
+```csharp
+.AddOpenIdConnect("Google", options =>
+{
+    options.Authority = "https://accounts.google.com/";
+    options.ClientId = "xxx.apps.googleusercontent.com";
+
+    options.Events.OnRedirectToIdentityProvider = context =>
+    {
+        context.ProtocolMessage.SetParameter("prompt", "select_account");
+        return Task.CompletedTask;
+    };
+});
+```
+
+#### Microsoft (Azure AD)
+
+```csharp
+.AddOpenIdConnect("Microsoft", options =>
+{
+    options.Authority = "https://login.microsoftonline.com/common/v2.0";
+    options.ClientId = "your-app-id";
+    options.ClientSecret = "your-client-secret";
+
+    options.Scope.Add("email");
+    options.Scope.Add("profile");
+});
+```
+
+## Implementation Patterns
+
+### Handling External Authentication
+
+The `OnTicketReceived` event fires after the provider has authenticated the user. Use it to find or auto-register the user in your system and replace the incoming principal with a local identity:
+
+```csharp
+public static async Task HandleExternalAuthentication(TicketReceivedContext context)
+{
+    var ct = context.HttpContext.RequestAborted;
+    var principal = context.Principal ?? throw new InvalidOperationException("No principal");
+    var authenticatorsSelfService = context.HttpContext.RequestServices
+        .GetRequiredService<IUserAuthenticatorsSelfService>();
+    var profileSelfService = context.HttpContext.RequestServices
+        .GetRequiredService<IUserProfileSelfService>();
+
+    // Build the external authenticator from the incoming principal
+    var externalAuthenticatorName = ExternalAuthenticatorName.Create(context.Scheme.Name);
+    var sub = principal.FindFirst(JwtClaimTypes.Subject)
+        ?? throw new InvalidOperationException("No subject claim from provider");
+    var authenticator = new ExternalAuthenticatorAddress(
+        externalAuthenticatorName, OpaqueSubjectId.Create(sub.Value));
+
+    // Look up an existing user by this external authenticator
+    var authenticators = await authenticatorsSelfService.TryGetAsync(authenticator, ct);
+    var profile = authenticators is not null
+        ? await profileSelfService.TryGetAsync(authenticators.SubjectId, ct)
+        : null;
+
+    // If no existing user, auto-register
+    authenticators ??= await authenticatorsSelfService.TryCreateAsync(
+        UserSubjectId.New(), authenticator, ct: ct);
+
+    if (authenticators is null)
+        throw new InvalidOperationException("Could not register user");
+
+    // Create a profile if one doesn't exist yet
+    if (profile is null)
+    {
+        var schema = await profileSelfService.GetSchemaAsync(ct);
+        var name = principal.FindFirstValue(JwtClaimTypes.Name) ?? string.Empty;
+        var attributes = new AttributeValueCollection(schema);
+        attributes.Set(UserAttributes.Name.Name, name);
+
+        profile = await profileSelfService.TryCreateAsync(
+            authenticators.SubjectId, attributes.Validate(), ct);
+
+        if (profile is null)
+            throw new InvalidOperationException("Could not register user profile");
+    }
+
+    // Replace the incoming principal with a local claims identity
+    var claims = new Claim[]
+    {
+        new(JwtClaimTypes.Subject, profile.SubjectId.Value),
+        new(JwtClaimTypes.Name,
+            (string?)profile.Attributes.GetValueOrDefault(UserAttributes.Name.Name)?.UntypedValue ?? "")
+    };
+
+    context.Principal = new ClaimsPrincipal(
+        new ClaimsIdentity(claims, context.Scheme.Name));
+}
+```
+
+### Adding An External Authenticator
+
+Allow signed-in users to link additional external accounts. Start a challenge with the target provider, then handle the callback to add the authenticator to the existing user:
+
+```csharp
+// Initiate the "link account" flow
+public IActionResult OnPostAddAuthenticator(string provider)
+{
+    var properties = new AuthenticationProperties
+    {
+        RedirectUri = "/account/manage",
+        Items =
+        {
+            ["user_id"] = GetCurrentUserId().ToString(),
+            ["action"] = "add_authenticator"
+        }
+    };
+
+    return Challenge(properties, provider);
+}
+
+// Handle the callback
+public static async Task HandleAddAuthenticator(TicketReceivedContext context)
+{
+    if (!context.Properties.Items.TryGetValue("action", out var action)
+        || action != "add_authenticator")
+    {
+        return; // Not an "add authenticator" flow
+    }
+
+    var userIdString = context.Properties.Items["user_id"]!;
+    var userId = UserSubjectId.Create(userIdString);
+
+    var providerName = ExternalAuthenticatorName.Create(context.Scheme.Name);
+    var providerSubject = OpaqueSubjectId.Create(
+        context.Principal.FindFirst(JwtClaimTypes.Subject)!.Value);
+
+    var authenticatorAddress = new ExternalAuthenticatorAddress(providerName, providerSubject);
+
+    var userAuthenticatorsSelfService = context.HttpContext.RequestServices
+        .GetRequiredService<IUserAuthenticatorsSelfService>();
+
+    // Ensure this external account is not already linked to a different user
+    var existingUser = await userAuthenticatorsSelfService.TryGetAsync(
+        userId,
+        context.HttpContext.RequestAborted);
+
+    if (existingUser != null && existingUser.SubjectId != userId)
+        throw new Exception("This external account is already linked to another user");
+
+    // Link the authenticator to the current user
+    await userAuthenticatorsSelfService.TryAddExternalAuthenticatorAddressAsync(
+        userId,
+        authenticatorAddress,
+        context.HttpContext.RequestAborted);
+}
+```
+
+### Removing An External Authenticator
+
+Always verify that the user retains at least one authentication method before removing an external authenticator:
+
+```csharp
+public async Task<IActionResult> OnPostRemoveAuthenticator(
+    string providerName,
+    string providerSubject,
+    CancellationToken ct)
+{
+    var userId = GetCurrentUserId();
+
+    var userAuthenticatorsSelfService = HttpContext.RequestServices
+        .GetRequiredService<IUserAuthenticatorsSelfService>();
+
+    var user = await userAuthenticatorsSelfService.TryGetAsync(userId, ct);
+
+    if (user == null)
+        return Error("User not found");
+
+    // Prevent removing the last authentication method
+    if (user.ExternalAuthenticatorAddresses.Count <= 1 && !user.HasPassword)
+        return Error("Cannot remove the last authentication method");
+
+    var authenticatorAddress = new ExternalAuthenticatorAddress(
+        ExternalAuthenticatorName.Create(providerName),
+        OpaqueSubjectId.Create(providerSubject));
+
+    var removed = await userAuthenticatorsSelfService.TryRemoveExternalAuthenticatorAddressAsync(
+        userId,
+        authenticatorAddress,
+        ct);
+
+    return removed ? Success("Authenticator removed") : Error("Authenticator not found");
+}
+```
+
+## Security Characteristics
+
+### OAuth 2.0 Protections
+
+* **State parameter** - Prevents CSRF attacks; automatically managed by ASP.NET Core.
+* **PKCE** - Prevents authorization code interception; mandatory for public clients and recommended for all clients.
+* **Token validation** - The ID token is validated for signature, issuer, audience, and expiration before any user data is trusted.
+
+### Authenticator Uniqueness
+
+Each external authenticator (provider + subject ID pair) can only be linked to one user. Before linking an account, check whether it is already associated with a different user to prevent account takeover:
+
+```csharp
+var existingUser = await userAuthenticatorsSelfService.TryGetAsync(
+    authenticatorAddress,
+    ct);
+
+if (existingUser != null && existingUser.SubjectId != currentUserId)
+    return Error("This account is already linked to another user");
+```
+
+## Security
+
+When you delegate authentication to an external provider, you are trading one set of problems for another. You no longer store credentials, which is good. But you are now trusting a third party's security posture, and the OAuth/OpenID Connect protocol has enough moving parts that misconfiguration is easy.
+
+### What ASP.NET Core Does for You
+
+ASP.NET Core's OAuth middleware handles the protocol-level protections: a cryptographically random `state` parameter on every flow to prevent CSRF on the callback, strict `redirect_uri` validation (no wildcards), full ID token validation including issuer, audience, expiry, and signature, and PKCE to prevent authorization code interception.
+
+### What User Management Does for You
+
+User Management handles the user lifecycle after the protocol completes: looking up users by their external authenticator, auto-registering new users, linking and unlinking external accounts, and ensuring that an external identity cannot be linked to multiple local accounts simultaneously.
+
+### What You Need to Think About
+
+The most common mistake is using the email address from the external provider as the stable user identifier. Email addresses can be reassigned; a provider can give the same email to a different user after an account is deleted. Use the `sub` claim (subject identifier) instead; it is stable and unique per provider.
+
+Be careful with account linking flows. If a user can link a new external provider to their account without being authenticated first, an attacker can pre-link their own identity to an account they do not yet control, then wait for the victim to trigger the link. Require authentication before linking.
+
+Every external provider you add is a new trust boundary. If Google's OAuth is compromised, every user who logs in with Google is affected. Be deliberate about which providers you integrate, and monitor for unexpected changes to a user's linked authenticators. A sudden change can be a sign of account takeover.
+
+For cross-cutting security topics (data protection key persistence and throttling configuration) see [Security Considerations](/identityserver/usermanagement/fundamentals/security.md).

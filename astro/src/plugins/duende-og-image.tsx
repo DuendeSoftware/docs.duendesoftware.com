@@ -4,13 +4,16 @@ const { twj } = await import("tw-to-css");
 import fs from "node:fs";
 import path from "node:path";
 
-const filePath = path.join(
+const bgPath = path.join(process.cwd(), "src", "assets", "duende-og-bg.png");
+const bgBase64 = `data:image/png;base64,${fs.readFileSync(bgPath).toString("base64")}`;
+
+const logoPath = path.join(
   process.cwd(),
   "src",
   "assets",
-  "duende-og-bg-2.png",
+  "duende-logo.svg",
 );
-const imageBase64 = `data:image/png;base64,${fs.readFileSync(filePath).toString("base64")}`;
+const logoBase64 = `data:image/svg+xml;base64,${fs.readFileSync(logoPath).toString("base64")}`;
 
 export async function duendeOpenGraphImage({
   title,
@@ -47,7 +50,17 @@ export async function duendeOpenGraphImage({
             ...twj("absolute inset-0 w-full h-full"),
             ...{ objectFit: "cover" },
           }}
-          src={imageBase64}
+          src={bgBase64}
+        />
+        <img
+          alt="Duende Software"
+          style={{
+            position: "absolute",
+            top: "80px",
+            left: "80px",
+            height: "40px",
+          }}
+          src={logoBase64}
         />
         <div
           style={twj(
@@ -55,12 +68,19 @@ export async function duendeOpenGraphImage({
           )}
         >
           {category && (
-            <div style={twj("text-2xl italic font-bold text-gray-500 mt-4")}>
+            <div style={twj("text-2xl italic font-bold text-black mt-4")}>
               {category}
             </div>
           )}
-          <h1 style={twj("text-[70px] text-bold text-white")}>{title}</h1>
-          <div style={twj("text-3xl text-bold mb-3 text-white")}>
+          <h1
+            style={{
+              ...twj("text-[70px] font-bold text-black"),
+              fontFamily: "GT Canon",
+            }}
+          >
+            {title}
+          </h1>
+          <div style={twj("text-3xl font-bold mb-3 text-black")}>
             {description}
           </div>
         </div>

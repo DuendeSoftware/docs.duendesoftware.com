@@ -79,10 +79,10 @@ the login workflow. Such hint can come in many forms:
 * The client application can give a hint to the gateway via a custom protocol parameter of IdentityServer's built-in
   support for the `idp` parameter on `acr_values`. In some cases, the client already knows the appropriate authentication
   method. For example, when your customers access your software via a customer-specific URL
-  (see [here](/identityserver/reference/endpoints/authorize.md#optional-parameters)), you can present a subset of
+  (see [here](/identityserver/reference/v8/endpoints/authorize.md#optional-parameters)), you can present a subset of
   available authentication methods to the user, or even redirect to a single option.
 * You restrict the available authentication methods per client in the client configuration using the
-  `IdentityProviderRestrictions` property (see [here](/identityserver/reference/models/client.md#authentication--session-management)).
+  `IdentityProviderRestrictions` property (see [here](/identityserver/reference/v8/models/client.md#authentication--session-management)).
 
 Every system has unique requirements. Always start by designing the desired user experience, then select and combine
 the appropriate HRD strategies to implement your required flow.
