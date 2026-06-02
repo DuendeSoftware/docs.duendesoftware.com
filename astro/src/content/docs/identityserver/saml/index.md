@@ -8,7 +8,7 @@ sidebar:
 ---
 
 :::note
-This feature is part of the [Duende IdentityServer Standard (add-on), Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard (add-on), Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 IdentityServer can act as a **SAML 2.0 Identity Provider (IdP)**, issuing SAML assertions to
