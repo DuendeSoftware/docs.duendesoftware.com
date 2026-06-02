@@ -132,6 +132,8 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     using Duende.Storage.Schema;
     using Duende.Storage.Sqlite;
     using Duende.UserManagement;
+    using Duende.UserManagement.Authentication.Otp;
+    using Microsoft.AspNetCore.DataProtection;
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -169,7 +171,7 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     {
         await scope.ServiceProvider
             .GetRequiredService<IDatabaseSchema>()
-            .CreateIfNotExistsAsync(CancellationToken.None);
+            .MigrateAsync(CancellationToken.None);
     }
 
     if (!app.Environment.IsDevelopment())
@@ -197,6 +199,7 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     using Duende.Storage.Sqlite;
     using Duende.UserManagement;
     using Duende.UserManagement.Authentication;
+    using Microsoft.AspNetCore.DataProtection;
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -237,7 +240,7 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     {
         await scope.ServiceProvider
             .GetRequiredService<IDatabaseSchema>()
-            .CreateIfNotExistsAsync(CancellationToken.None);
+            .MigrateAsync(CancellationToken.None);
     }
 
     if (!app.Environment.IsDevelopment())
@@ -279,7 +282,7 @@ A few things to note about this setup:
 
 - Storage is configured **inside** `AddUserManagement` using `options.AddSqliteStore(...)`, not as a separate top-level call.
 - `app.UseIdentityServer()` replaces the standalone `app.UseAuthentication()` call. IdentityServer sets up authentication for you.
-- The database migration runs at startup using `IDatabaseSchema.CreateIfNotExistsAsync`. This creates the SQLite file and schema on first run.
+- The database migration runs at startup using `IDatabaseSchema.MigrateAsync`. This creates the SQLite file and schema on first run.
 
 :::tip
 For production environments, configure [ASP.NET Core Data Protection](/general/data-protection.md) to persist encryption keys across restarts, for example using Azure Key Vault, Redis, or a shared file system.
@@ -362,7 +365,7 @@ With IdentityServer running, you now need the Razor Pages that handle the actual
         if (result is SendOtpResult.Sent sentResult)
         {
             TempData["OtpToken"] = sentResult.Token.Value.ToString();
-            return RedirectToPage("/EnterOtp");
+            return RedirectToPage("/Account/EnterOtp");
         }
         
         if (result is SendOtpResult.Blocked blocked)
@@ -483,7 +486,8 @@ You can configure OTP expiry, code length, and rate-limiting behavior through th
 
            var claims = new List<Claim>
            {
-               new(ClaimTypes.Name, otpSuccess.Address.Value),
+               new("sub", otpSuccess.UserSubjectId.ToString()!),
+               new(ClaimTypes.Name, otpSuccess.Address.SubjectId.ToString()!),
            };
 
            var identity = new ClaimsIdentity(claims, "otp");
@@ -540,7 +544,7 @@ See [OTP Authentication](/identityserver/usermanagement/authentication/otp.mdx) 
    {
        public async Task<IActionResult> OnPostAsync(string? logoutId)
        {
-           var context = await interaction.GetLogoutContextAsync(logoutId);
+           var context = await interaction.GetLogoutContextAsync(logoutId, HttpContext.RequestAborted);
 
            await HttpContext.SignOutAsync(
                Duende.IdentityServer.IdentityServerConstants.DefaultCookieAuthenticationScheme);
@@ -607,10 +611,14 @@ See [OTP Authentication](/identityserver/usermanagement/authentication/otp.mdx) 
 1. Start the application:
 
    ```bash title="Terminal"
-   dotnet run
+   dotnet run --launch-profile https
    ```
 
-2. Open your browser and navigate to `https://localhost:5001` (or the URL shown in the terminal).
+2. Open your browser and navigate to `https://localhost:7083` (or the URL shown in the terminal).
+
+   :::note
+   IdentityServer requires HTTPS because its session cookies use `SameSite=None`, which browsers only accept on secure connections. Always use the `https` launch profile during development.
+   :::
 
 3. You are redirected to `/Account/Login`. Enter your email address and click **Send one-time password**.
 
