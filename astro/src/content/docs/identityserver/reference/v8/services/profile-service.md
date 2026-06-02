@@ -1,7 +1,7 @@
 ---
 title: "Profile Service"
 description: Documentation for the IProfileService interface which encapsulates retrieval of user claims and determines if users are active for token issuance.
-date: 2020-09-10T08:22:12+02:00
+date: 2026-05-27
 sidebar:
   label: Profile
   order: 40
@@ -89,6 +89,14 @@ Models the request for user claims and is the vehicle to return those claims. It
   The list of claims that will be returned. This is expected to be populated by the custom `IProfileService`
   implementation.
 
+* **`SamlAttributes`**
+
+  A list of `SamlAttribute` objects to include directly in SAML assertions, bypassing the standard claim-to-attribute mapping.
+  Use this when you need full control over the SAML attribute name, format, or values.
+  
+  Any claims added to `IssuedClaims` are also carried over to the assertion by running through the
+  [claim mapping](/identityserver/saml/configuration.md#default-claim-mappings) translation layer.
+
 * **`AddRequestedClaims`**
 
   Extension method on the `ProfileDataRequestContext` to populate the `IssuedClaims`, but first filters the claims based
@@ -108,9 +116,22 @@ Models the request to determine if the user is currently allowed to obtain token
 
 * **`Caller`**
 
-  An identifier for the context in which the claims are being requested (e.g. an identity token, an access token, or the
-  user info endpoint). The constant `IdentityServerConstants.ProfileIsActiveCallers` contains the different constant
-  values.
+  An identifier for the context in which the claims are being requested.
+  The constant `IdentityServerConstants.ProfileIsActiveCallers` contains the possible values:
+
+  | Constant                                       | When it is used                                                                                  |
+  |------------------------------------------------|--------------------------------------------------------------------------------------------------|
+  | `AuthorizeEndpoint`                            | During an authorize request (interactive login)                                                  |
+  | `AuthorizationCodeValidation`                  | When an authorization code is exchanged for tokens                                               |
+  | `AccessTokenValidation`                        | When an access token is validated (e.g. at the introspection endpoint)                           |
+  | `IdentityTokenValidation`                      | When an identity token is validated                                                              |
+  | `ResourceOwnerValidation`                      | During a resource owner password grant                                                           |
+  | `ExtensionGrantValidation`                     | During an extension grant                                                                        |
+  | `RefreshTokenValidation`                       | When a refresh token is used                                                                     |
+  | `UserInfoRequestValidation`                    | When the user info endpoint is called                                                            |
+  | `DeviceCodeValidation`                         | When a device code is polled                                                                     |
+  | `BackchannelAuthenticationRequestIdValidation` | When a CIBA request is polled                                                                    |
+  | `SamlSsoEndpoint`                              | During a [SAML SSO request](/identityserver/saml/endpoints.md#profile-active-check) :badge[v8.0] |
 
 * **`IsActive`**
 

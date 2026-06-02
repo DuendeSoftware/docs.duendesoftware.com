@@ -129,7 +129,7 @@ A couple of compilation errors and required changes you may encounter:
     ```
 
 * The `IIdentityServerInteractionService.GetAllUserConsentsAsync` method was renamed to `IIdentityServerInteractionService.GetAllUserGrantsAsync`
-* `ConsentResponse.Denied` was removed. Use the `DenyAuthorizationAsync` instead:
+* `ConsentResponse.Denied` was removed. Use `DenyAuthenticationAsync` instead:
 
   ```diff lang="csharp" title="*.cs"
   - await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);

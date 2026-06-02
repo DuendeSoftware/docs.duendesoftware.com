@@ -43,12 +43,32 @@ The URL for the end session endpoint is available via discovery.
 GET /connect/endsession?id_token_hint=...&post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A7017%2Findex.html
 ```
 
+## `id_token_hint` Validation
+
+When a user is authenticated and an `id_token_hint` is provided, IdentityServer validates the hint against 
+the current session using `ValidateIdTokenHintAsync` on `EndSessionRequestValidator`.
+
+The default behavior uses a **sid-first** matching strategy:
+
+* If the `id_token_hint` contains a `sid` claim and the current session has a session ID, those two values are compared directly.
+* If no `sid` claim is present in the token, IdentityServer falls back to comparing the `sub` claim in the hint against the authenticated user's subject ID.
+
+There are three possible outcomes from this validation:
+
+* **The hint matches the session** - logout proceeds normally and the user is signed out without any extra prompts (assuming no other reason to show the prompt exists).
+* **The hint does not match** - the request is rejected and logout does not proceed.
+* **The match is uncertain (`RequiresConfirmation`)** - logout proceeds, but `ShowSignoutPrompt` is set to `true` so the logout UI shows a confirmation prompt to the user before completing sign-out.
+
+You can customize this validation logic by subclassing `EndSessionRequestValidator`.
+See the [End Session Request Validator reference](/identityserver/reference/v8/validators/end-session-request-validator.md) for details.
+
 ## .NET Client Library
 
 You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically create end
 sessions request URLs from .NET code.
 
 ```csharp
+// Program.cs
 var ru = new RequestUrl("https://demo.duendesoftware.com/connect/end_session");
 
 var url = ru.CreateEndSessionUrl(
