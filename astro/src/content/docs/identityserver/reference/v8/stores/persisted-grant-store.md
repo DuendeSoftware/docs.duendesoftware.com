@@ -41,11 +41,11 @@ data access for your environment and usage.
 
 | name                                                                                              | description                                                   |
 | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| Task StoreAsync(PersistedGrant grant, CancellationToken ct);                                      | Stores a grant.                                               |
-| Task<PersistedGrant?> GetAsync(string key, CancellationToken ct);                                 | Retrieves a grant by its key.                                 |
-| Task<IReadOnlyCollection<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter, CancellationToken ct); | Retrieves all grants that fulfill the conditions of a filter. |
-| Task RemoveAsync(string key, CancellationToken ct);                                               | Removes a grant by key.                                       |
-| Task RemoveAllAsync(PersistedGrantFilter filter, CancellationToken ct);                           | Removes all grants that fulfill the conditions of a filter.   |
+| `Task StoreAsync(PersistedGrant grant, CancellationToken ct)`                                      | Stores a grant.                                               |
+| `Task<PersistedGrant?> GetAsync(string key, CancellationToken ct)`                                 | Retrieves a grant by its key.                                 |
+| `Task<IReadOnlyCollection<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter, CancellationToken ct)` | Retrieves all grants that fulfill the conditions of a filter. |
+| `Task RemoveAsync(string key, CancellationToken ct)`                                               | Removes a grant by key.                                       |
+| `Task RemoveAllAsync(PersistedGrantFilter filter, CancellationToken ct)`                           | Removes all grants that fulfill the conditions of a filter.   |
 
 ### Duende.IdentityServer.Models.PersistedGrant
 
@@ -53,16 +53,16 @@ data access for your environment and usage.
 
 | name                   | description                                                                                                                  |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| string Key             | A string that uniquely identifies the grant.                                                                                 |
-| string Type            | A string that specifies the type of grant. The possible values are constants in the `PersistedGrantTypes` class (see below). |
-| string SubjectId       | The identifier of the subject that granted authorization.                                                                    |
-| string SessionId       | The identifier of the session where the grant was made, if applicable.                                                       |
-| string ClientId        | The identifier of the client that was granted authorization.                                                                 |
-| string Description     | The description the user assigned to the device being authorized.                                                            |
-| DateTime CreationTime  | The time the grant was created.                                                                                              |
-| DateTime? Expiration   | The time that the grant expires.                                                                                             |
-| DateTime? ConsumedTime | The time that the grant was consumed.                                                                                        |
-| string Data            | A serialized and data protected representation of the grant.                                                                 |
+| `string Key`             | A string that uniquely identifies the grant.                                                                                 |
+| `string Type`            | A string that specifies the type of grant. The possible values are constants in the `PersistedGrantTypes` class (see below). |
+| `string SubjectId`       | The identifier of the subject that granted authorization.                                                                    |
+| `string SessionId`       | The identifier of the session where the grant was made, if applicable.                                                       |
+| `string ClientId`        | The identifier of the client that was granted authorization.                                                                 |
+| `string Description`     | The description the user assigned to the device being authorized.                                                            |
+| `DateTime CreationTime`  | The time the grant was created.                                                                                              |
+| `DateTime? Expiration`   | The time that the grant expires.                                                                                             |
+| `DateTime? ConsumedTime` | The time that the grant was consumed.                                                                                        |
+| `string Data`            | A serialized and data protected representation of the grant.                                                                 |
 
 #### Key Property
 
