@@ -73,7 +73,15 @@ if (!banner) {
   .main-frame {
     padding-top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height) + var(--sl-banner-height)) !important;
   }
-  .right-sidebar {
-    padding-top: calc(var(--sl-nav-height) + var(--sl-banner-height)) !important;
+  @media (min-width: 72rem) {
+    .right-sidebar {
+      padding-top: calc(var(--sl-nav-height) + var(--sl-banner-height)) !important;
+    }
+  }
+  starlight-menu-button button {
+    top: calc(var(--sl-banner-height) + (var(--sl-nav-height) - var(--sl-menu-button-size)) / 2) !important;
+  }
+  mobile-starlight-toc nav {
+    top: calc(var(--sl-nav-height) + var(--sl-banner-height) - 1px) !important;
   }
 </style>
