@@ -111,6 +111,16 @@
     border-radius: 0;
   }
 
+  /* Card */
+  .card {
+    border-radius: 12px;
+    padding: 24px;
+    background-color: var(--sl-color-gray-5);
+    border-color: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+    box-shadow: none;
+  }
+
   /* Link card */
   .sl-link-card, .pagination-links a {
     border-radius: 12px;
@@ -241,6 +251,16 @@
     border-left: 2px solid var(--sl-color-accent);
     margin-left: -2px;
     border-radius: 0;
+  }
+
+  /* Card */
+  .card {
+    border-radius: 12px;
+    padding: 24px;
+    background-color: var(--sl-color-black);
+    border-color: var(--sl-color-black);
+    color: var(--sl-color-gray-1);
+    box-shadow: none;
   }
 
   /* Link card */
@@ -500,12 +520,6 @@ h1 {
 iframe {
   aspect-ratio: 16/9;
   width: 100%;
-}
-
-.card {
-  border-radius: 12px;
-  padding: 24px;
-  border-color: var(--sl-color-black);
 }
 
 .hero > img {
