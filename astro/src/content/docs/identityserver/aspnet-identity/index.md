@@ -10,14 +10,21 @@ redirect_from:
   - /identityserver/v7/aspnet_identity/
 ---
 
-
 An ASP.NET Identity-based implementation is provided for managing the identity database for users of IdentityServer.
 This implementation implements the extensibility points in IdentityServer needed to load identity data for your users to
 emit claims into tokens.
 
-To use this library, ensure that you have the NuGet package for the ASP.NET Identity integration.
-It is called `Duende.IdentityServer.AspNetIdentity`.
-You can install it with:
+:::tip[Duende User Management]
+<span data-shb-badge data-shb-badge-variant="default">Added in v8</span>
+
+If you are starting a new project or want a more modern user management solution,
+consider [Duende User Management](/identityserver/usermanagement/identityserver-integration.mdx) as an alternative to ASP.NET Identity.
+It provides built-in support for passwordless authentication (OTP, passkeys), profile attribute management,
+and role-based authorization.
+:::
+
+To use the ASP.NET Identity-based implementation, ensure that you have the NuGet package for the ASP.NET Identity integration.
+It is called `Duende.IdentityServer.AspNetIdentity`:
 
 ```bash title=Terminal
 dotnet add package Duende.IdentityServer.AspNetIdentity
@@ -63,6 +70,19 @@ our `ProfileService<TUser>` and override `IsUserActiveAsync(TUser user)` to chec
 
 ## Template
 
-Alternatively, you can use the `duende-is-aspid` [template](/identityserver/overview/packaging.mdx#templates) to create a starter
+You can use the `duende-is-aspid` [template](/identityserver/overview/packaging.mdx#templates) to create a starter
 IdentityServer host project configured to use ASP.NET Identity. See
 the [Quickstart Documentation](/identityserver/quickstarts/5-aspnetid.md) for a detailed walkthrough.
+
+## User Management Pages
+
+The IdentityServer templates only include pages necessary for the authentication flow (login, logout,
+consent, error). User management pages, such as forgot password, password reset, or two-factor
+authentication setup, are not part of the IdentityServer templates because they are specific to your
+user store implementation.
+
+Since ASP.NET Core Identity provides built-in support for these features, you can add them to your
+IdentityServer host by [scaffolding Identity into your project](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/scaffold-identity).
+This gives you ready-made pages for password reset, email confirmation, two-factor authentication,
+and more — all integrated with the ASP.NET Core Identity user store you've already configured.
+

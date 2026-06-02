@@ -206,7 +206,9 @@ public static IEnumerable<Client> Get()
   don't accidentally collide with user claims.
 
 * **`PairWiseSubjectSalt`**
+
   Salt value used in pair-wise subjectId generation for users of this client.
+  Currently not implemented.
 
 ## Refresh Token
 

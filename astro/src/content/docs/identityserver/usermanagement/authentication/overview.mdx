@@ -1,0 +1,300 @@
+---
+title: Authentication Flows Overview
+description: An overview of the authentication flows supported by Duende User Management, including OTP, TOTP, passwords, external providers, passkeys, and recovery codes, with guidance on choosing the right flow for your application.
+date: 2026-04-29
+sidebar:
+  label: Overview
+  order: 1
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Duende User Management supports multiple authentication flows, each suited to different use cases and security requirements. This page summarizes all available flows and helps you pick the right one.
+
+## Available Flows
+
+### OTP (One-Time Password)
+
+Passwordless authentication using temporary codes sent via email or SMS.
+
+**Key Characteristics:**
+
+* No password storage required
+* Code sent to the user's registered email address or phone number
+* Time-limited verification codes
+* Auto-registration on first login
+
+**Best For:**
+
+* Consumer applications wanting a passwordless experience
+* Quick user onboarding
+* Applications with email or SMS delivery infrastructure
+* Low-friction authentication
+
+<LinkCard title="OTP Authentication" href="/identityserver/usermanagement/authentication/otp" description="Implement passwordless login via email or SMS one-time codes." />
+
+---
+
+### TOTP (Time-Based One-Time Password)
+
+Two-factor authentication using authenticator apps that generate time-based codes.
+
+**Key Characteristics:**
+
+* Works with any RFC 6238-compliant authenticator app, including [Microsoft Authenticator](https://www.microsoft.com/en-us/security/mobile-authenticator-app), [Google Authenticator](https://support.google.com/accounts/answer/1066447), [Authy](https://authy.com/), and [1Password](https://1password.com/features/authenticator/)
+* Offline code generation; no network required at authentication time
+* 30-second rotating codes
+* Typically paired with recovery codes as a backup
+
+**Best For:**
+
+* High-security applications
+* Adding a second factor on top of password authentication
+* Applications requiring Multi-Factor Authentication (MFA) compliance
+* User accounts containing sensitive data
+
+<LinkCard title="TOTP Authentication" href="/identityserver/usermanagement/authentication/totp" description="Add a second factor using authenticator apps and time-based codes." />
+
+---
+
+### Passwords
+
+Traditional username and password authentication.
+
+**Key Characteristics:**
+
+* Users create and manage their own passwords
+* Password hashing and secure storage
+* Configurable password complexity requirements
+* Foundation for adding two-factor authentication
+
+**Best For:**
+
+* Enterprise applications
+* Regulated industries
+* Applications requiring offline authentication
+* Scenarios where external providers are not suitable
+
+<LinkCard title="Password Authentication" href="/identityserver/usermanagement/authentication/passwords" description="Implement traditional username and password login with PBKDF2 hashing and configurable complexity rules." />
+
+---
+
+### External Authentication
+
+Federated authentication using external identity providers (social login, enterprise SSO).
+
+**Key Characteristics:**
+
+* OAuth 2.0 / OpenID Connect integration
+* No password storage in your application
+* Auto-registration from external provider profiles
+* Multiple external authenticators per user
+
+**Best For:**
+
+* Consumer-facing applications
+* Social or collaborative platforms
+* Reducing password management burden
+* Using established identity providers (Google, Microsoft, etc.)
+
+<LinkCard title="External Authentication" href="/identityserver/usermanagement/authentication/external" description="Federate login with external identity providers using OAuth 2.0 and OpenID Connect." />
+
+---
+
+### Passkeys (WebAuthn / FIDO2)
+
+Phishing-resistant, device-bound authentication using the FIDO2/WebAuthn standard.
+
+**Key Characteristics:**
+
+* Cryptographic key pair stored on the user's device
+* Phishing-resistant by design; credentials are bound to the origin
+* Supports biometric and hardware security key authenticators
+* No shared secrets transmitted over the network
+
+**Best For:**
+
+* Highest-security applications
+* Applications targeting phishing-resistant authentication
+* Modern consumer and enterprise applications
+* Compliance scenarios requiring strong authentication
+
+<LinkCard title="Passkeys Authentication" href="/identityserver/usermanagement/authentication/passkeys" description="Implement phishing-resistant WebAuthn/FIDO2 authentication with biometrics or hardware keys." />
+
+---
+
+### Recovery Codes
+
+Backup authentication using single-use codes generated when two-factor authentication is enabled.
+
+**Key Characteristics:**
+
+* Single-use codes for account recovery
+* Generated when Two-Factor Authentication (2FA) is first enabled
+* Cryptographically secure
+* Alternative when the primary 2FA method is unavailable
+
+**Best For:**
+
+* Backup for TOTP authentication
+* Account recovery scenarios
+* Device loss or replacement
+* Emergency access
+
+<LinkCard title="Recovery Codes" href="/identityserver/usermanagement/authentication/recovery-codes" description="Generate and use single-use backup codes for account recovery when the primary 2FA method is unavailable." />
+
+---
+
+## Flow Comparison
+
+| Flow               | Requires Password | User Experience          | Security Level |   Network Required    |
+|--------------------|:-----------------:|--------------------------|:--------------:|:---------------------:|
+| **OTP**            |        No         | Simple, passwordless     |     Medium     | Yes (to receive code) |
+| **TOTP**           |       Yes*        | Two-step                 |      High      |          No           |
+| **Passwords**      |        Yes        | Traditional              |     Medium     |          No           |
+| **External**       |        No         | Familiar (social/SSO)    |  Medium-High   |    Yes (for auth)     |
+| **Passkeys**       |        No         | Biometric / hardware key |   Very High    |          No           |
+| **Recovery Codes** |        No         | Emergency only           |     Medium     |          No           |
+
+\* TOTP is typically used as a second factor on top of password authentication.
+
+## Choosing an Authentication Method
+
+### OTP vs Password vs External Authentication
+
+| Aspect              | OTP                   | Password               | External Auth              |
+|---------------------|-----------------------|------------------------|----------------------------|
+| **User Memory**     | Nothing to remember   | Must remember password | Nothing to remember        |
+| **Offline Support** | No                    | Yes                    | No                         |
+| **Security**        | Channel-dependent     | Strength-dependent     | Provider-dependent         |
+| **User Friction**   | Check email or SMS    | Type password          | Click button               |
+| **Infrastructure**  | Email or SMS provider | Password hashing       | External identity provider |
+
+### TOTP vs SMS as a Second Factor
+
+| Aspect                  | TOTP                       | SMS                  |
+|-------------------------|----------------------------|----------------------|
+| **Security**            | High                       | Medium               |
+| **Offline**             | Yes                        | No                   |
+| **Phishing resistance** | High                       | Low                  |
+| **SIM swapping**        | Not vulnerable             | Vulnerable           |
+| **Cost**                | Free                       | SMS costs            |
+| **Setup**               | Requires authenticator app | Works with any phone |
+
+## Choosing a Flow
+
+### For Consumer Applications
+
+**Recommended: External + Optional TOTP**
+
+* Users sign in with familiar social accounts (Google, Microsoft, etc.)
+* Optional TOTP for users wanting extra security
+* Minimal friction for new users
+
+**Alternative: OTP**
+
+* Fully passwordless experience
+* Simple email-based login
+* No external provider dependencies
+
+### For Enterprise Applications
+
+**Recommended: Password + TOTP**
+
+* Traditional password authentication users expect
+* Mandatory TOTP for compliance requirements
+* Recovery codes for account recovery
+
+**Alternative: External (OpenID Connect (OIDC))**
+
+* Integrate with a corporate identity provider
+* Single sign-on experience
+* Centralized access management
+
+### For High-Security Applications
+
+**Recommended: Passkeys**
+
+* Phishing-resistant by design
+* No shared secrets
+* Pair with TOTP as a fallback and recovery codes for emergency access
+
+**Alternative: Password + Mandatory TOTP**
+
+* Strong two-factor authentication
+* Recovery codes for emergency access
+* Audit-friendly authentication trail
+
+### For Quick Prototypes and MVPs
+
+**Recommended: OTP or External**
+
+* Fast to implement
+* No password management needed
+* Good user experience out of the box
+
+## Combining Multiple Flows
+
+User Management lets you combine multiple flows in a single application. A common pattern is OTP for initial registration, TOTP as an optional second factor, and recovery codes as a backup.
+
+:::tip
+Flows can be combined. For example, you can allow users to sign in with an external provider and then require TOTP for sensitive operations.
+:::
+
+### Password + TOTP (Most Common)
+
+Authenticate with a password first, then check whether the user has a TOTP authenticator enrolled. Passwords can also expire; when they do, `TryAuthenticateAsync` returns `PasswordAuthenticationResult.Expired` so you can redirect the user to a password-change page. See the [passwords page](./passwords.mdx) for details on configuring expiry.
+
+```csharp
+// Primary authentication with password
+var result = await passwordAuth.TryAuthenticateAsync(
+    AttributeCode.Create("email"),
+    email,
+    NonValidatedPassword.Create(password),
+    ct);
+
+switch (result)
+{
+    case PasswordAuthenticationResult.Success success:
+        // Check if user has 2FA enabled
+        var user = await userSelfService.TryGetUser(success.UserSubjectId, ct);
+        if (user?.TotpDeviceNames.Count > 0)
+        {
+            // Require TOTP verification
+            return RedirectToPage("/LoginWith2FA");
+        }
+        break;
+
+    case PasswordAuthenticationResult.Expired expired:
+        // The user's password has expired; redirect them to set a new one
+        return RedirectToPage("/ChangePassword", new { userId = expired.UserSubjectId });
+
+    default:
+        // Authentication failed
+        return;
+}
+```
+
+### Progressive Authentication
+
+Upgrade authentication strength based on the sensitivity of the requested action:
+
+```csharp
+// Allow basic actions with OTP
+if (User.FindFirst("amr")?.Value == "otp")
+{
+    // Basic authenticated actions
+}
+
+// Require TOTP for sensitive actions
+if (User.FindFirst("amr")?.Value == "mfa")
+{
+    // High-security actions
+}
+```
+
+## Security Considerations
+
+Security considerations for each flow are covered on their respective pages. For cross-cutting topics (data protection key persistence, password hashing parameters, and throttling configuration) see the dedicated page:
+
+<LinkCard title="Security Considerations" href="/identityserver/usermanagement/fundamentals/security" description="Data protection, password hashing parameters, throttling configuration, and passkey option reference." />

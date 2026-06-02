@@ -74,13 +74,13 @@ export async function duendeOpenGraphImage({
           )}
           <h1
             style={{
-              ...twj("text-[70px] text-bold text-black"),
+              ...twj("text-[70px] font-bold text-black"),
               fontFamily: "GT Canon",
             }}
           >
             {title}
           </h1>
-          <div style={twj("text-3xl text-bold mb-3 text-black")}>
+          <div style={twj("text-3xl font-bold mb-3 text-black")}>
             {description}
           </div>
         </div>

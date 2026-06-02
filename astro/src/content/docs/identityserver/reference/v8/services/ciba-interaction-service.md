@@ -27,7 +27,7 @@ All async methods accept a `CancellationToken ct` parameter.
 
 * **`GetLoginRequestByInternalIdAsync(string id, CancellationToken ct)`**
 
-  Returns the [BackchannelUserLoginRequest](/identityserver/reference/v8/models/ciba-login-request) object for the id.
+  Returns the [BackchannelUserLoginRequest](/identityserver/reference/v8/models/ciba-login-request.md) object for the id.
 
 * **`CompleteLoginRequestAsync(CompleteBackchannelLoginRequest completionRequest, CancellationToken ct)`**
 
