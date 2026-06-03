@@ -432,4 +432,6 @@ new SamlServiceProvider
 IdP-initiated SSO requires the Service Provider to accept unsolicited SAML responses from the IdP. Only enable it for SPs that explicitly support and require this flow.
 :::
 
+For a working example, see the [SAML 2.0 IdP-Initiated sample](/identityserver/samples/saml.mdx).
+
 
