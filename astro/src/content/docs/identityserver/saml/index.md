@@ -112,3 +112,7 @@ SAML 2.0 endpoints are registered under the `/Saml2` path prefix:
 | Logout Callback   | `/Saml2/SLO/Callback`   |
 
 See [SAML Endpoints](/identityserver/saml/endpoints.md) for full details.
+
+## Samples
+
+For working end-to-end examples of SAML in IdentityServer, see the [SAML samples](/identityserver/samples/saml.mdx).

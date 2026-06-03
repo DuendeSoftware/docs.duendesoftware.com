@@ -35,7 +35,7 @@ public interface ISamlServiceProviderStore
 
 ## In-Memory Store (Development / Testing)
 
-The in-memory store is the simplest way to register SPs. It is configured at startup with a static list of `SamlServiceProvider` objects and is ideal for development, testing, and demos.
+The in-memory store is the simplest way to register SPs. It is configured at startup with a static list of `SamlServiceProvider` objects and is ideal for development, testing, and demos. For a working example, see the [SAML 2.0 Basic sample](/identityserver/samples/saml.mdx).
 
 Register the in-memory store using the IdentityServer builder:
 
