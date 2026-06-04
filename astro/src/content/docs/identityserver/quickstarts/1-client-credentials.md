@@ -27,10 +27,10 @@ client ID and secret and then use the token to gain access to the API.
 ## Source Code
 
 Finished source code for each quickstart in this series is available in the
-[Samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts) repository, and a reference
+[Samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Quickstarts) repository, and a reference
 implementation of
 this quickstart is
-available [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials).
+available [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Quickstarts/1_ClientCredentials).
 
 ## Video
 
@@ -151,7 +151,7 @@ public static IEnumerable<ApiScope> ApiScopes =>
 ```
 
 See the full
-file [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/IdentityServer/Config.cs).
+file [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Quickstarts/1_ClientCredentials/src/IdentityServer/Config.cs).
 
 :::note
 In production, it is important to give your API a useful name and display name.
@@ -196,7 +196,7 @@ public static IEnumerable<Client> Clients =>
 ```
 
 Again, see the full file
-[here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/IdentityServer/Config.cs).
+[here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Quickstarts/1_ClientCredentials/src/IdentityServer/Config.cs).
 
 Clients can be configured with many options. Your minimal machine-to-machine
 client here contains:
@@ -210,7 +210,7 @@ client here contains:
 ### Configuring IdentityServer
 
 The scope and client definitions are loaded in
-[HostingExtensions.cs](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/IdentityServer/HostingExtensions.cs).
+[HostingExtensions.cs](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Quickstarts/1_ClientCredentials/src/IdentityServer/HostingExtensions.cs).
 The template created a ConfigureServices method there that is already loading
 the scopes and clients. You can take a look to see how it is done. Note that the
 template adds a few things that are not used in this quickstart. Here's the
@@ -330,7 +330,7 @@ through the eyes of the API.
 
 Configure the API to run on `https://localhost:6001` only. You can do this by
 editing the
-[launchSettings.json](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/Api/Properties/launchSettings.json)
+[launchSettings.json](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Quickstarts/1_ClientCredentials/src/Api/Properties/launchSettings.json)
 file in the `src/Api/Properties` directory. Change these settings for the `https` profile:
 
 ```json
@@ -457,7 +457,7 @@ return 0;
 ```
 
 The completed `Program.cs` file can be
-found [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts/1_ClientCredentials/src/Client/Program.cs).
+found [here](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Quickstarts/1_ClientCredentials/src/Client/Program.cs).
 
 To test the flow, start the IdentityServer and API projects. Once they are
 running, run the Client project.
