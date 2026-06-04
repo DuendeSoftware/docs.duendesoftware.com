@@ -26,8 +26,8 @@ the absolute basics and become more complex - it is recommended you do them in o
 * adding support for EntityFramework based configuration
 * adding support for ASP.NET Identity
 
-Every quickstart has a reference solution - you can find the code in
-the [samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v7/Quickstarts) folder.
+Every quickstart has a reference solution. You can find the code in
+the [samples](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Quickstarts) folder.
 
 ## Preparation
 
