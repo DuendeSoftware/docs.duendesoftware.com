@@ -10,8 +10,8 @@ redirect_from:
   - /identityserver/v7/fundamentals/clients/
 ---
 
-[Clients](/identityserver/overview/terminology.md#client) represent applications that can request tokens from your
-IdentityServer.
+[Clients](/identityserver/overview/terminology.md#client), or [connected applications](/general/glossary.mdx#connected-application),
+represent applications that can request tokens from your IdentityServer.
 
 The details vary, but you typically define the following common settings for a client:
 
