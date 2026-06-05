@@ -288,7 +288,7 @@ builder.Services.AddBff()
     * **`ChunkSize`** — Max size of diagnostic data log message chunks in bytes. Defaults to *8160 bytes* (8 KB minus 32 bytes for log message formatting overhead).
 
 
-# BFF Blazor Server Options
+## BFF Blazor Server Options
 
 In the Blazor Server, you configure the `BffBlazorServerOptions` by using the `AddBlazorServer` method. 
 
@@ -307,7 +307,7 @@ The following options are available:
     BffServerAuthenticationStateProvider to the /bff/user endpoint. Defaults to 5000
     ms.
 
-# BFF Blazor Client Options
+## BFF Blazor Client Options
 
 In WASM, you configure the `BffBlazorClientOptions` using the `AddBffBlazorClient` method:
 
@@ -347,7 +347,7 @@ The following options are available:
     ms.
 
 
-# Proxy Servers and Load Balancers :badge[v4.0]
+## Proxy Servers and Load Balancers :badge[v4.0]
 
 When your BFF is hosted behind another reverse proxy or load balancer, you'll want to use `X-Forwarded-*` headers. 
 
