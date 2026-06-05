@@ -79,10 +79,10 @@ app.UseStaticFiles(new StaticFileOptions
         var path = ctx.File.Name;
         var requestPath = ctx.Context.Request.Path.Value ?? "";
 
-        // Pagefind assets (pagefind folder) - cache for 1 hour
+        // Pagefind assets (pagefind folder) - short cache + background revalidation
         if (requestPath.Contains("/pagefind/"))
         {
-            ctx.Context.Response.Headers.CacheControl = "public, max-age=3600";
+            ctx.Context.Response.Headers.CacheControl = "public, max-age=300, stale-while-revalidate=3600";
             return;
         }
 
