@@ -1,0 +1,41 @@
+---
+title: "User Management"
+description: "Sample demonstrating a complete IdentityServer v8 implementation using Duende User Management with multiple authentication methods, profile management, and ASP.NET Identity migration."
+date: 2026-06-02
+sidebar:
+  order: 48
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+This section contains a sample demonstrating [Duende User Management](/identityserver/usermanagement/index.mdx) with IdentityServer.
+User Management is a user store and authentication platform that ships as a NuGet package and replaces ASP.NET Identity for IdentityServer scenarios.
+
+### User Management Sample
+
+This sample demonstrates a full IdentityServer deployment using Duende User Management for user storage and authentication.
+It covers multiple authentication methods working together in a single application, orchestrated by .NET Aspire.
+
+**Authentication methods demonstrated:**
+
+- **Email OTP**: enter email, receive a code via SMTP, verify, and sign in (unknown emails are auto-registered)
+- **Password + TOTP 2FA**: email/password login with time-based one-time password as a second factor
+- **Passkeys**: after first OTP login, users are prompted to register a passkey for future passwordless sign-in
+- **Passkey as second factor**: after password verification, users can tap a passkey instead of entering a TOTP code
+- **Google external login**: OAuth callback creates or links a local profile automatically
+
+**Additional features:**
+
+- **User profile management** using a schema-driven attribute model (extensible attributes rather than a fixed user table)
+- **ASP.NET Identity migration**: the Admin Import page demonstrates bulk-importing users from an existing ASP.NET Identity database, including password hash compatibility, claims-to-attributes mapping, and deterministic subject ID generation
+- **Second factor state management**: encrypted cookies coordinate the 2FA flow between password verification and TOTP/passkey completion
+
+The sample uses .NET Aspire to orchestrate IdentityServer, a client application, and Mailpit (for local email testing)
+in a single `dotnet run` command.
+
+<LinkCard
+  description="GitHub Repository for the User Management Sample"
+  href="https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v8/UserManagement"
+  title="User Management Sample"
+  target="_blank"
+/>
