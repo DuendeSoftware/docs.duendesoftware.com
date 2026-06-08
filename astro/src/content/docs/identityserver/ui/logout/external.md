@@ -68,7 +68,7 @@ public async Task<IActionResult> Logout(string logoutId)
     var idp = User.FindFirst("idp").Value;
     if (idp != IdentityServerConstants.LocalIdentityProvider)
     {
-        logoutId = logoutId ?? await _interaction.CreateLogoutContextAsync();
+        logoutId = logoutId ?? await _interaction.CreateLogoutContextAsync(HttpContext.RequestAborted);
         string url = Url.Action("Logout", new { logoutId = logoutId });
 
         return SignOut(new AuthenticationProperties { RedirectUri = url }, idp);

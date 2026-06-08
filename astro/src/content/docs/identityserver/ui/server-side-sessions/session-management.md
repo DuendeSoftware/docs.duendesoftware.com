@@ -46,7 +46,7 @@ var userSessions = await _sessionManagementService.QuerySessionsAsync(new Sessio
     CountRequested = 10,
     SubjectId = "12345",
     DisplayName = "Bob",
-});
+}, HttpContext.RequestAborted);
 ```
 
 The results returned contains the matching users' session data, and paging information (depending on if the store and backing database supports certain features such as total count and current page number).
@@ -58,14 +58,14 @@ This paging information contains a `ResultsToken` and allows subsequent requests
 var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
 {
     CountRequested = 10,
-});
+}, HttpContext.RequestAborted);
 
 // this requests the next page relative to the previous results
 userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
 {
     ResultsToken = userSessions.ResultsToken,
     CountRequested = 10,
-});
+}, HttpContext.RequestAborted);
 
 // this requests the prior page relative to the previous results
 userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
@@ -73,7 +73,7 @@ userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQue
     ResultsToken = userSessions.ResultsToken,
     RequestPriorResults = true,
     CountRequested = 10,
-});
+}, HttpContext.RequestAborted);
 ```
 
 
@@ -90,7 +90,7 @@ An example to revoke everything for current sessions for subject id `12345` migh
 ```csharp
 await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
     SubjectId = "12345"
-});
+}, HttpContext.RequestAborted);
 ```
 
 Or to just revoke all refresh tokens for current sessions for subject id `12345` might be:
@@ -102,7 +102,7 @@ await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext {
     RemoveServerSideSession = false,
     RevokeConsents = false,
     SendBackchannelLogoutNotification = false,
-});
+}, HttpContext.RequestAborted);
 ```
 
 Internally this uses the `IServerSideTicketStore`, `IPersistedGrantStore` and `IBackChannelLogoutService` features from IdentityServer.

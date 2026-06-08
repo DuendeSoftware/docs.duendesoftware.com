@@ -59,7 +59,7 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
     // register for urn:ietf:params:oauth:grant-type:token-exchange
     public string GrantType => OidcConstants.GrantTypes.TokenExchange;
 
-    public async Task ValidateAsync(ExtensionGrantValidationContext context)
+    public async Task ValidateAsync(ExtensionGrantValidationContext context, CancellationToken cancellationToken)
     {
         // default response is error
         context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest);
@@ -89,7 +89,7 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
         }
 
         // validate the incoming access token with the built-in token validator
-        var validationResult = await _validator.ValidateAccessTokenAsync(subjectToken);
+        var validationResult = await _validator.ValidateAccessTokenAsync(subjectToken, cancellationToken);
         if (validationResult.IsError)
         {
             return;
@@ -213,7 +213,7 @@ profile service emits the `act` claim if the token request is in the context of 
 ```csharp
 public class ProfileService : IProfileService
 {
-    public override async Task GetProfileDataAsync(ProfileDataRequestContext context)
+    public override async Task GetProfileDataAsync(ProfileDataRequestContext context, CancellationToken cancellationToken)
     {
         // add actor claim if needed
         if (context.Subject.GetAuthenticationMethod() == OidcConstants.GrantTypes.TokenExchange)
