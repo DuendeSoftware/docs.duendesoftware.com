@@ -46,9 +46,8 @@ public class CustomRedirectWriter : AuthorizeInteractionPageHttpWriter
     public CustomRedirectWriter(
         IdentityServerOptions options,
         IServerUrls urls,
-        IUiLocalesService localesService,
-        IAuthorizationParametersMessageStore? authorizationParametersMessageStore = null)
-        : base(options, urls, localesService, authorizationParametersMessageStore)
+        IUiLocalesService localesService)
+        : base(options, urls, localesService)
     {
     }
 

@@ -29,7 +29,7 @@ The following example emits additional claims and changes the token lifetime on-
 ```csharp
 public class TransactionScopeTokenRequestValidator : ICustomTokenRequestValidator
 {
-    public Task ValidateAsync(CustomTokenRequestValidationContext context)
+    public Task ValidateAsync(CustomTokenRequestValidationContext context, CancellationToken cancellationToken)
     {
         var transaction = context
                 .Result

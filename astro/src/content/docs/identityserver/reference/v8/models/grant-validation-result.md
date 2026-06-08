@@ -22,7 +22,7 @@ and message, e.g.:
 ```csharp
 public class ExtensionGrantValidator : IExtensionGrantValidator
 {
-    public Task ValidateAsync(ExtensionGrantValidationContext context)
+    public Task ValidateAsync(ExtensionGrantValidationContext context, CancellationToken cancellationToken)
     {
         // some validation steps 
 

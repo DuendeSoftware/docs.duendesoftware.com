@@ -42,11 +42,11 @@ public async Task<IActionResult> Login(LoginInputModel model)
     {
         // issue authentication cookie with subject ID and username
         var user = _users.FindByUsername(model.Username);
-        await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username));
+        await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username), HttpContext.RequestAborted);
     }
     else
     {
-        await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials"));
+        await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials"), HttpContext.RequestAborted);
     }
 }
 ```
@@ -70,7 +70,7 @@ public class SeqEventSink : IEventSink
             .CreateLogger();
     }
 
-    public Task PersistAsync(Event evt)
+    public Task PersistAsync(Event evt, CancellationToken cancellationToken)
     {
         if (evt.EventType == EventTypes.Success ||
             evt.EventType == EventTypes.Information)

@@ -92,7 +92,7 @@ Your login UI can read this from the [authorization context](/identityserver/ui/
 challenge accordingly:
 
 ```csharp
-var context = await interaction.GetAuthorizationContextAsync(returnUrl);
+var context = await interaction.GetAuthorizationContextAsync(returnUrl, HttpContext.RequestAborted);
 
 if (context?.AcrValues.Contains("mfa") == true)
 {
