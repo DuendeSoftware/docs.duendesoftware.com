@@ -1,7 +1,7 @@
 ---
 title: Extension Grants
 description: "A guide to implementing OAuth extension grants in IdentityServer for non-standard token issuance scenarios, with a focus on token exchange for impersonation and delegation using the IExtensionGrantValidator interface."
-date: 2020-09-10T08:20:20+02:00
+date: 2026-06-08
 sidebar:
   label: Extension Grants
   order: 40
@@ -19,11 +19,11 @@ OAuth defines an extensibility point called extension grants.
 
 Extension grants allow adding support for non-standard token issuance scenarios, e.g.
 
-* token transformation
+* Token transformation
     * SAML to JWT, or Windows to JWT
-    * delegation or impersonation
-* federation
-* encapsulating custom input parameters
+    * Delegation or impersonation
+* Federation
+* Encapsulating custom input parameters
 
 You can add support for additional grant types by implementing the [IExtensionGrantValidator](/identityserver/reference/v8/validators/extension-grant-validator.md) interface.
 
@@ -37,12 +37,12 @@ You can leverage the extension grant feature to implement your preferred token e
 
 Some of the logic is boilerplate:
 
-* read and validate incoming protocol parameters
-* validate incoming token
-  * using the built-in token validator if the token was issued by the same token service
-  * using a token type specific library if the token is coming from a trusted (but different) token service
-* read contents of token to apply custom logic/authorization if needed
-* create response
+* Read and validate incoming protocol parameters
+* Validate incoming token
+  * Using the built-in token validator if the token was issued by the same token service
+  * Using a token type specific library if the token is coming from a trusted (but different) token service
+* Read contents of token to apply custom logic/authorization if needed
+* Create response
 
 Here's a simple implementation of the above steps:
 
@@ -59,7 +59,7 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
     // register for urn:ietf:params:oauth:grant-type:token-exchange
     public string GrantType => OidcConstants.GrantTypes.TokenExchange;
 
-    public async Task ValidateAsync(ExtensionGrantValidationContext context)
+    public async Task ValidateAsync(ExtensionGrantValidationContext context, CancellationToken cancellationToken)
     {
         // default response is error
         context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest);
@@ -89,7 +89,7 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
         }
 
         // validate the incoming access token with the built-in token validator
-        var validationResult = await _validator.ValidateAccessTokenAsync(subjectToken);
+        var validationResult = await _validator.ValidateAccessTokenAsync(subjectToken, null, cancellationToken);
         if (validationResult.IsError)
         {
             return;
@@ -106,7 +106,7 @@ public class TokenExchangeGrantValidator : IExtensionGrantValidator
 }
 ```
 
-You then register your grant validator with DI:
+You then register your grant validator with the service provider:
 
 ```csharp
 // Program.cs
@@ -232,4 +232,4 @@ public class ProfileService : IProfileService
 }
 ```
 
-See [here](/identityserver/samples/tokens.mdx) for the full source code.
+See [here](/identityserver/samples/tokens.mdx) for the full sample source code.
