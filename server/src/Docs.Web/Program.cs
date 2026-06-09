@@ -46,11 +46,11 @@ else
 
 app.MapDefaultEndpoints();
 
-// Lowercase URL redirect — normalize casing for case-insensitive static file serving
-app.UseMiddleware<LowercaseUrlMiddleware>();
-
 // Redirect middleware — match old URLs to new destinations (301 permanent)
 app.UseMiddleware<RedirectMiddleware>();
+
+// Lowercase URL redirect — normalize casing for case-insensitive static file serving
+app.UseMiddleware<LowercaseUrlMiddleware>();
 
 // Enable response compression
 app.UseResponseCompression();
