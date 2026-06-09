@@ -9,6 +9,7 @@ public class LowercaseUrlMiddleware : IMiddleware
     public Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var path = context.Request.Path.Value;
+        var lowercasePath = path?.ToLowerInvariant();
 
         if (!string.IsNullOrEmpty(path) &&
             !path.StartsWith("/health", StringComparison.OrdinalIgnoreCase) &&
@@ -26,11 +27,11 @@ public class LowercaseUrlMiddleware : IMiddleware
             !path.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) &&
             !path.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) &&
             !path.EndsWith(".ico", StringComparison.OrdinalIgnoreCase) &&
-            path != path.ToLowerInvariant())
+            path != lowercasePath)
         {
             var queryString = context.Request.QueryString.HasValue ? context.Request.QueryString.Value : "";
             context.Response.StatusCode = 301;
-            context.Response.Headers.Location = $"{path.ToLowerInvariant()}{queryString}";
+            context.Response.Headers.Location = $"{lowercasePath}{queryString}";
             return Task.CompletedTask;
         }
 
