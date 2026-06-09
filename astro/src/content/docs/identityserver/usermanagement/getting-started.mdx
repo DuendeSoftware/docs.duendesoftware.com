@@ -102,7 +102,10 @@ For a full explanation of clients, resources, and scopes, see the [IdentityServe
 
 ### Configure Services
 
-Open `Program.cs` and replace its contents with the following. The key call is `.AddIdentityServer(...).AddUserManagement(...)`: User Management is registered as an extension on the IdentityServer builder, not as a separate top-level service.
+The key call in the code below is `.AddIdentityServer(...).AddUserManagement(...)`: User Management is registered as an extension on the
+IdentityServer builder, not as a separate top-level service.
+
+In our application, we can make use of the built-in SMTP dispatcher for sending OTP codes, or use a console-based sender for purpose of this sample.
 
 <Tabs syncKey="umgsOtpSender">
   <TabItem label="Console sender (development)">
@@ -125,20 +128,19 @@ Open `Program.cs` and replace its contents with the following. The key call is `
     }
     ```
 
-    Then configure `Program.cs`:
+    Then open `Program.cs` and replace its contents with the following:
 
     ```csharp title="Program.cs"
     using Duende.IdentityServer;
     using Duende.Storage.Schema;
     using Duende.Storage.Sqlite;
-    using Duende.UserManagement;
     using Duende.UserManagement.Authentication.Otp;
     using Microsoft.AspNetCore.DataProtection;
-
+    
     var builder = WebApplication.CreateBuilder(args);
-
+    
     builder.Services.AddRazorPages();
-
+        
     builder.Services
         .AddIdentityServer(options =>
         {
@@ -159,52 +161,56 @@ Open `Program.cs` and replace its contents with the following. The key call is `
                 o.ConnectionString = "Data Source=usermanagement.db";
             });
         });
-
+    
     builder.Services.AddSingleton<IOtpDispatcher, ConsoleOtpDispatcher>();
-
+    
     builder.Services.AddDataProtection()
         .SetApplicationName("OtpIdentityServerGettingStarted");
-
+    
     var app = builder.Build();
-
+    
     using (var scope = app.Services.CreateScope())
     {
         await scope.ServiceProvider
             .GetRequiredService<IDatabaseSchema>()
             .MigrateAsync(CancellationToken.None);
     }
-
+    
+    // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Error");
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
-
+    
     app.UseHttpsRedirection();
+    
     app.UseRouting();
-    app.UseIdentityServer();
+    
     app.UseAuthorization();
+    
     app.MapStaticAssets();
-    app.MapRazorPages().WithStaticAssets();
-
+    app.MapRazorPages()
+        .WithStaticAssets();
+    
     app.Run();
     ```
   </TabItem>
   <TabItem label="SMTP sender">
-    The SMTP sender delivers OTP codes by email. Bind the `Smtp` configuration section to the sender options:
+    The SMTP sender delivers OTP codes by email. Bind the `Smtp` configuration section to the sender options. Replace the contents of `Program.cs`:
 
     ```csharp title="Program.cs"
     using Duende.IdentityServer;
     using Duende.Storage.Schema;
     using Duende.Storage.Sqlite;
-    using Duende.UserManagement;
-    using Duende.UserManagement.Authentication;
+    using Duende.UserManagement.Authentication.Otp;
     using Microsoft.AspNetCore.DataProtection;
-
+    
     var builder = WebApplication.CreateBuilder(args);
-
+    
     builder.Services.AddRazorPages();
-
+    
     builder.Services
         .AddIdentityServer(options =>
         {
@@ -230,32 +236,37 @@ Open `Program.cs` and replace its contents with the following. The key call is `
                 o.ConnectionString = "Data Source=usermanagement.db";
             });
         });
-
+        
     builder.Services.AddDataProtection()
         .SetApplicationName("OtpIdentityServerGettingStarted");
-
+    
     var app = builder.Build();
-
+    
     using (var scope = app.Services.CreateScope())
     {
         await scope.ServiceProvider
             .GetRequiredService<IDatabaseSchema>()
             .MigrateAsync(CancellationToken.None);
     }
-
+    
+    // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Error");
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
-
+    
     app.UseHttpsRedirection();
+    
     app.UseRouting();
-    app.UseIdentityServer();
+    
     app.UseAuthorization();
+    
     app.MapStaticAssets();
-    app.MapRazorPages().WithStaticAssets();
-
+    app.MapRazorPages()
+        .WithStaticAssets();
+    
     app.Run();
     ```
 
