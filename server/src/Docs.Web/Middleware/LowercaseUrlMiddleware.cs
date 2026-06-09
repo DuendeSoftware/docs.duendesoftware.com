@@ -11,8 +11,21 @@ public class LowercaseUrlMiddleware : IMiddleware
         var path = context.Request.Path.Value;
 
         if (!string.IsNullOrEmpty(path) &&
-            !path.StartsWith("/health") &&
-            !path.StartsWith("/alive") &&
+            !path.StartsWith("/health", StringComparison.OrdinalIgnoreCase) &&
+            !path.StartsWith("/alive", StringComparison.OrdinalIgnoreCase) &&
+            !path.StartsWith("/_astro", StringComparison.OrdinalIgnoreCase) &&
+            !path.StartsWith("/favicon", StringComparison.OrdinalIgnoreCase) &&
+            !path.StartsWith("/license", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".js", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".css", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".woff", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".woff2", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".svg", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".png", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) &&
+            !path.EndsWith(".ico", StringComparison.OrdinalIgnoreCase) &&
             path != path.ToLowerInvariant())
         {
             var queryString = context.Request.QueryString.HasValue ? context.Request.QueryString.Value : "";
