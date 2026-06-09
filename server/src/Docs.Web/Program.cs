@@ -10,6 +10,7 @@ builder.AddServiceDefaults();
 builder.Services.AddResponseCompression();
 
 // Custom middlewares
+builder.Services.AddTransient<LowercaseUrlMiddleware>();
 builder.Services.AddTransient<MarkdownContentNegotationMiddleware>();
 builder.Services.AddTransient<TrailingSlashMiddleware>();
 builder.Services.AddTransient<NotFoundMiddleware>();
@@ -44,6 +45,9 @@ else
 }
 
 app.MapDefaultEndpoints();
+
+// Lowercase URL redirect — normalize casing for case-insensitive static file serving
+app.UseMiddleware<LowercaseUrlMiddleware>();
 
 // Redirect middleware — match old URLs to new destinations (301 permanent)
 app.UseMiddleware<RedirectMiddleware>();
