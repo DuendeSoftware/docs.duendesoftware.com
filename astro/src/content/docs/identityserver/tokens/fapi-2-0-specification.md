@@ -14,6 +14,10 @@ The [FAPI 2.0 Security Profile](https://openid.net/specs/fapi-security-profile-2
 
 Duende IdentityServer implements the FAPI 2.0 BCP features so you can build, deploy, and maintain a FAPI 2.0 Security profile as part of your overall security posture. Let's discuss those features and how to enable them.
 
+:::tip[Financial-Grade Security and Conformance Report]
+Want to verify your FAPI 2.0 compliance? The [conformance report](/identityserver/diagnostics/conformance-report.md) analyzes your server and client configuration and highlights what needs attention.
+:::
+
 ## FAPI 2.0 Required Features
 
 To be considered a FAPI 2.0 compliant implementation, your implementation must enable features that provide a heightened security level for your applications. The list of requirements can be found in the specification, but are listed here as well:
@@ -46,7 +50,8 @@ builder.Services.AddIdentityServer(opt =>
     {
         opt.KeyManagement.KeyPath = "/tmp/keys";
     }
-    opt.KeyManagement.SigningAlgorithms.Add(new SigningAlgorithmOptions(SecurityAlgorithms.RsaSsaPssSha256));
+    opt.KeyManagement.SigningAlgorithms.Add(
+        new SigningAlgorithmOptions(SecurityAlgorithms.RsaSsaPssSha256));
 
     opt.DPoP.SupportedDPoPSigningAlgorithms = [
         SecurityAlgorithms.RsaSsaPssSha256,
