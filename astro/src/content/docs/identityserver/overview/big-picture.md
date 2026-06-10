@@ -133,18 +133,23 @@ flowchart LR
 
     subgraph ASPNET["ASP.NET Core Request Pipeline"]
         direction TB
-        YC@{ icon: "material-symbols:code-rounded", label: "Your Code", shape: icon }
-        IS@{ icon: "material-symbols:security-rounded", label: "IdentityServer Middleware", shape: icon }
+        subgraph IS[" "]
+            is_space@{ icon: "material-symbols:security-rounded", label: "IdentityServer Middleware", shape: icon }
+        end
+        subgraph YC[" "]
+            yc_space@{ icon: "material-symbols:code-rounded", label: "Your Code", shape: icon }
+        end
     end
 
-    login --> ASPNET
-    logout --> ASPNET
-    more --> ASPNET
-    authorize --> ASPNET
-    token --> ASPNET
-    discovery --> ASPNET
+    login --> YC
+    logout --> YC
+    more --> YC
+    authorize --> IS
+    token --> IS
+    discovery --> IS
 
-    style ASPNET stroke:#212121,stroke-width:1px
+    style YC stroke:#74acfb,stroke-width:2px
+    style IS stroke:#61fb92,stroke-width:2px
 ```
 
 The hosting application can be as complex as you want, but we typically recommend to keep the attack surface as small as
