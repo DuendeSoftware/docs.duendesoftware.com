@@ -71,6 +71,40 @@ Beginning in v6.3, IdentityServer sets the `typ` header of the logout token to `
 version of the specification. The [`LogoutTokenJwtType` option](/identityserver/reference/v8/options.md#main) can override
 this behavior.
 
+##### Sending Back-channel Logout Notifications Through A Proxy
+
+When there is a proxy between IdentityServer and the client application, there are extra steps to ensure the back-channel notification goes through the proxy to make it to the client. IdentityServer needs to know the proxy address to send the back-channel notification to, and the proxy will need its own proxy-specific logic to forward the notification to the client. On the IdentityServer side, there are two built-in options for setting the proxy address.
+
+One option is to set the `Client.BackChannelLogoutUri` property on the Client object to the proxy logout address. This is done for each `Client` object.
+
+```csharp
+new Client
+{
+   ...
+   BackChannelLogoutUri = "https://my-proxy:44300/my-app-logout"
+}
+```
+
+The other option is to override the underlying `HttpClient` used by IdentityServer for the back-channel notifications. This is done by loading the named `HttpClient` using the `IdentityServerConstants.HttpClients.BackChannelLogoutHttpClient` constant, and changing its proxy settings. This will affect all back-channel notifications.
+
+```csharp
+builder.Services.AddHttpClient(IdentityServerConstants.HttpClients.BackChannelLogoutHttpClient)
+   .ConfigurePrimaryHttpMessageHandler(() =>
+   {
+       var proxy = new WebProxy
+       {
+           Address = new Uri("https://my-proxy:44300/my-app-logout"),
+           BypassProxyOnLocal = false
+       };
+
+       return new HttpClientHandler
+       {
+           Proxy = proxy,
+           UseProxy = true
+       };
+   });
+```
+
 ### Browser-based JavaScript Clients
 
 There is nothing special you need to do to notify these clients that the user has signed out.
