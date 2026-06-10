@@ -29,8 +29,12 @@
 
   --duende-color-sand-dark: #d8d5b9;
   --duende-color-sand-light: #f3f2e9;
-  --duende-color-green: #61fb92;
+
   --duende-color-green-300: #baffd0;
+  --duende-color-green-500: #61fb92;
+  --duende-color-green-800: #329551;
+  --duende-color-green-900: #246b3a;
+  --duende-color-green: var(--duende-color-green-500);
 
   --sl-nav-height: 6em;
   --sl-nav-pad-y: 2em;
@@ -348,8 +352,19 @@ h1 {
 .mermaid .node polygon,
 .mermaid .node path {
     fill: var(--sl-color-accent-low) !important;
-    stroke: var(--sl-color-accent) !important;
+    stroke: var(--duende-color-green-800) !important;
     stroke-width: 1.5px;
+}
+
+/* Icon shapes (material-symbols icons in flowcharts) —
+   Mermaid sets inline style="color: #9370DB" on the icon <g>,
+   and the SVG path uses fill="currentColor" */
+:root[data-theme="light"] .mermaid .icon-shape > g[style] {
+    color: var(--duende-color-green-800) !important;
+}
+
+.mermaid .icon-shape > g[style] {
+    color: var(--duende-color-green) !important;
 }
 
 .mermaid .node .label,
@@ -362,14 +377,14 @@ h1 {
 
 .mermaid .edgePath .path,
 .mermaid .flowchart-link {
-    stroke: var(--sl-color-accent) !important;
+    stroke: var(--duende-color-green-800) !important;
     stroke-width: 1.5px;
 }
 
 .mermaid .arrowheadPath,
 .mermaid marker path {
-    fill: var(--sl-color-accent) !important;
-    stroke: var(--sl-color-accent) !important;
+    fill: var(--duende-color-green-800) !important;
+    stroke: var(--duende-color-green-800) !important;
 }
 
 .mermaid .cluster rect {
@@ -397,12 +412,12 @@ h1 {
     stroke: var(--sl-color-red-high) !important;
 }
 
-/* Decision diamonds — accent pop (dark only) */
+/* Decision diamonds */
 .mermaid .node.decision rect,
 .mermaid .node.default.decision polygon,
 .mermaid .node polygon[style] {
     fill: var(--sl-color-accent-low) !important;
-    stroke: var(--sl-color-accent) !important;
+    stroke: var(--duende-color-green-800) !important;
 }
 
 /* Styled nodes — preserve semantic green in dark mode (must follow generic polygon[style]) */
@@ -422,7 +437,7 @@ h1 {
 
 .mermaid .actor {
     fill: var(--sl-color-accent-low) !important;
-    stroke: var(--sl-color-accent) !important;
+    stroke: var(--duende-color-green-800) !important;
     stroke-width: 1.5px;
 }
 
@@ -434,7 +449,7 @@ h1 {
 .mermaid .actor-man circle,
 .mermaid .actor-man line {
     fill: var(--sl-color-accent-low) !important;
-    stroke: var(--sl-color-accent) !important;
+    stroke: var(--duende-color-green-800) !important;
 }
 
 .mermaid text.actor,
@@ -448,7 +463,7 @@ h1 {
 
 .mermaid .messageLine0,
 .mermaid .messageLine1 {
-    stroke: var(--sl-color-accent) !important;
+    stroke: var(--duende-color-green-800) !important;
     stroke-width: 1.5px;
 }
 
@@ -463,15 +478,15 @@ h1 {
 .mermaid #arrowhead path,
 .mermaid #crosshead path,
 .mermaid .arrowMarkerPath {
-    fill: var(--sl-color-accent) !important;
-    stroke: var(--sl-color-accent) !important;
+    fill: var(--duende-color-green-800) !important;
+    stroke: var(--duende-color-green-800) !important;
 }
 
 .mermaid .activation0,
 .mermaid .activation1,
 .mermaid .activation2 {
-    fill: var(--sl-color-accent) !important;
-    stroke: var(--sl-color-accent) !important;
+    fill: var(--duende-color-green-800) !important;
+    stroke: var(--duende-color-green-800) !important;
 }
 
 .mermaid .loopLine {
@@ -481,7 +496,7 @@ h1 {
 
 .mermaid .loopText,
 .mermaid .loopText tspan {
-    fill: var(--sl-color-accent) !important;
+    fill: var(--duende-color-green-800) !important;
 }
 
 .mermaid .labelBox {
@@ -496,7 +511,7 @@ h1 {
 
 .mermaid .note {
     fill: var(--sl-color-accent-low) !important;
-    stroke: var(--sl-color-accent) !important;
+    stroke: var(--duende-color-green-800) !important;
 }
 
 .mermaid .noteText,
