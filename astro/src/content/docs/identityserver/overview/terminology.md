@@ -12,7 +12,20 @@ redirect_from:
 
 The specs, documentation and object model use a certain terminology that you should be aware of.
 
-![a basic diagrams showing the relationship between users, clients, identityserver, and resources](images/terminology.svg)
+```mermaid
+---
+title: Key Roles & Relationships
+---
+flowchart LR
+    Users@{ icon: "material-symbols:person-rounded", label: "Users", shape: icon }
+    IS@{ icon: "material-symbols:assured-workload-rounded", label: "Duende IdentityServer", shape: icon }
+    Clients@{ icon: "material-symbols:computer-rounded", label: "Clients", shape: icon }
+    Resources@{ icon: "material-symbols:api-rounded", label: "Resources", shape: icon }
+
+    Users --> Clients
+    Clients <-->|"authenticate users & request resource access"| IS
+    Clients --> Resources
+```
 
 ## Duende IdentityServer
 

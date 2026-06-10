@@ -56,9 +56,18 @@ export default defineConfig({
   integrations: [
     mermaid({
       // Default theme: 'default', 'dark', 'forest', 'neutral', 'base'
-      theme: "forest",
+      theme: "default",
       autoTheme: true,
-      enableLog: false
+      enableLog: false,
+      iconPacks: [
+        {
+          name: "material-symbols",
+          loader: () =>
+            fetch("https://unpkg.com/@iconify-json/material-symbols@1/icons.json").then(
+              (res) => res.json()
+            ),
+        },
+      ],
     }),
     contributorMapping({
       include: ["src/content/docs/**"],

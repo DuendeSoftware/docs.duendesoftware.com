@@ -48,7 +48,38 @@ It is very important that you understand how it works when building the login pa
 Recall the diagram showing the relationship of your custom UI pages and the IdentityServer middleware in your
 IdentityServer host application:
 
-![middleware diagram](../overview/images/middleware.svg)
+```mermaid
+---
+title: ASP.NET Core Middleware Configuration
+---
+flowchart LR
+    login@{ icon: "material-symbols:login-rounded", label: "login", shape: icon }
+    logout@{ icon: "material-symbols:logout-rounded", label: "logout", shape: icon }
+    more@{ icon: "material-symbols:pending", label: "more...", shape: icon }
+    authorize@{ icon: "material-symbols:verified-user-rounded", label: "authorize", shape: icon }
+    token@{ icon: "material-symbols:key-rounded", label: "token", shape: icon }
+    discovery@{ icon: "material-symbols:travel-explore-rounded", label: "discovery", shape: icon }
+
+    subgraph ASPNET["ASP.NET Core Request Pipeline"]
+        direction TB
+        subgraph IS[" "]
+            is_space@{ icon: "material-symbols:security-rounded", label: "IdentityServer Middleware", shape: icon }
+        end
+        subgraph YC[" "]
+            yc_space@{ icon: "material-symbols:code-rounded", label: "Your Code", shape: icon }
+        end
+    end
+
+    login --> YC
+    logout --> YC
+    more --> YC
+    authorize --> IS
+    token --> IS
+    discovery --> IS
+
+    style YC stroke:#74acfb,stroke-width:2px
+    style IS stroke:#61fb92,stroke-width:2px
+```
 
 When your IdentityServer receives an authorize request, it will inspect it for a current authentication session for a
 user. This authentication session is based on ASP.NET Core's authentication system and is ultimately determined by a

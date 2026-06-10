@@ -12,7 +12,28 @@ redirect_from:
 
 Most modern applications look more or less like this:
 
-![an architecture diagram for modern applications with clients and services](images/application-architecture.svg)
+```mermaid
+---
+title: Modern Application Architecture
+---
+flowchart LR
+    Browser@{ icon: "material-symbols:tabs-rounded", label: "Browser", shape: icon }
+    NativeApp@{ icon: "material-symbols:phone-android-rounded", label: "Native App", shape: icon }
+    ServerApp@{ icon: "material-symbols:computer-rounded", label: "Server / App", shape: icon }
+    Backend@{ icon: "material-symbols:storage-rounded", label: "Backend", shape: icon }
+    API_main@{ icon: "material-symbols:api-rounded", label: "API", shape: icon }
+    API_top@{ icon: "material-symbols:api-rounded", label: "API", shape: icon }
+    API_tail@{ icon: "material-symbols:api-rounded", label: "API", shape: icon }
+
+    Browser --> Backend
+    Browser --> API_main
+    Backend --> API_top
+    Backend --> API_main
+    NativeApp --> API_main
+    ServerApp --> API_main
+    API_main --> API_tail
+```
+
 
 The most common interactions are:
 
@@ -31,7 +52,27 @@ across those applications and endpoints.
 
 Restructuring the application to support a security token service leads to the following architecture and protocols:
 
-![an architecture diagram showing where OAuth 2.0 is used](images/protocols.svg)
+```mermaid
+---
+title: Protocols Used Within Architecture
+---
+flowchart LR
+    Browser@{ icon: "material-symbols:tabs-rounded", label: "Browser (OIDC)", shape: icon }
+    NativeApp@{ icon: "material-symbols:phone-android-rounded", label: "Native App (OIDC)", shape: icon }
+    ServerApp@{ icon: "material-symbols:computer-rounded", label: "Server / App", shape: icon }
+    Backend@{ icon: "material-symbols:storage-rounded", label: "Backend", shape: icon }
+    API_main@{ icon: "material-symbols:api-rounded", label: "API", shape: icon }
+    API_top@{ icon: "material-symbols:api-rounded", label: "API", shape: icon }
+    API_tail@{ icon: "material-symbols:api-rounded", label: "API", shape: icon }
+
+    Browser -- OIDC --> Backend
+    Browser -- OAUTH --> API_main
+    Backend -- OAUTH --> API_top
+    Backend -- OAUTH --> API_main
+    NativeApp -- OAUTH --> API_main
+    ServerApp -- OAUTH --> API_main
+    API_main -- OAUTH --> API_tail
+```
 
 Such a design divides security concerns into two parts:
 
@@ -78,7 +119,38 @@ depending on your needs)
 and add the IdentityServer middleware to that application. The middleware adds the necessary protocol heads to the
 application so that clients can talk to it using those standard protocols.
 
-![IdentityServer middleware diagram and its relationship in the ASP.NET Core pipeline](images/middleware.svg)
+```mermaid
+---
+title: ASP.NET Core Middleware Configuration
+---
+flowchart LR
+    login@{ icon: "material-symbols:login-rounded", label: "login", shape: icon }
+    logout@{ icon: "material-symbols:logout-rounded", label: "logout", shape: icon }
+    more@{ icon: "material-symbols:pending", label: "more...", shape: icon }
+    authorize@{ icon: "material-symbols:verified-user-rounded", label: "authorize", shape: icon }
+    token@{ icon: "material-symbols:key-rounded", label: "token", shape: icon }
+    discovery@{ icon: "material-symbols:travel-explore-rounded", label: "discovery", shape: icon }
+
+    subgraph ASPNET["ASP.NET Core Request Pipeline"]
+        direction TB
+        subgraph IS[" "]
+            is_space@{ icon: "material-symbols:security-rounded", label: "IdentityServer Middleware", shape: icon }
+        end
+        subgraph YC[" "]
+            yc_space@{ icon: "material-symbols:code-rounded", label: "Your Code", shape: icon }
+        end
+    end
+
+    login --> YC
+    logout --> YC
+    more --> YC
+    authorize --> IS
+    token --> IS
+    discovery --> IS
+
+    style YC stroke:#74acfb,stroke-width:2px
+    style IS stroke:#61fb92,stroke-width:2px
+```
 
 The hosting application can be as complex as you want, but we typically recommend to keep the attack surface as small as
 possible by including
