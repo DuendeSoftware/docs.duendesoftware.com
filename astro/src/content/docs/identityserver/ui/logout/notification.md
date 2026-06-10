@@ -91,10 +91,11 @@ The other option is to override the underlying `HttpClient` used by IdentityServ
 builder.Services.AddHttpClient(IdentityServerConstants.HttpClients.BackChannelLogoutHttpClient)
    .ConfigurePrimaryHttpMessageHandler(() =>
    {
-       var proxy = new WebProxy
-       {
-           Address = new Uri("https://my-proxy:44300/my-app-logout"),
-           BypassProxyOnLocal = false
+        var proxy = new WebProxy
+        {
+            Address = new Uri("https://my-proxy:44300"),
+            BypassProxyOnLocal = false
+        };
        };
 
        return new HttpClientHandler
