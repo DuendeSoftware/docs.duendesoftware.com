@@ -282,3 +282,91 @@ app.MapReverseProxy(proxyApp =>
     proxyApp.UseAntiforgeryCheck();
 });
 ```
+
+## Custom Access Token Retriever
+
+You can specify a custom [`IAccessTokenRetriever`](/bff/extensibility/tokens.md#per-route-customized-token-retrieval) on
+YARP routes and clusters. This allows you to customize how access tokens are obtained for proxied requests — for
+example, to perform token exchange for delegation or impersonation scenarios.
+
+### Code Configuration
+
+A custom retriever can be set at the **route level** or the **cluster level**. Route-level retrievers take precedence
+over cluster-level retrievers.
+
+Use the `WithAccessTokenRetriever<T>()` extension method on a `RouteConfig`:
+
+```csharp
+// Route-level retriever
+new RouteConfig()
+{
+    RouteId = "impersonation",
+    ClusterId = "cluster1",
+
+    Match = new RouteMatch
+    {
+        Path = "/api/impersonation/{**catch-all}"
+    }
+}.WithAccessToken(RequiredTokenType.User)
+ .WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>()
+ .WithAntiforgeryCheck()
+```
+
+Or `ClusterConfig`:
+
+```csharp
+// Cluster-level retriever (applies to all routes using this cluster)
+new ClusterConfig()
+{
+    ClusterId = "cluster-with-impersonation",
+    Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
+    {
+        { "destination1", new() { Address = "https://api.example.com" } },
+    }
+}.WithAccessTokenRetriever<ImpersonationAccessTokenRetriever>()
+```
+
+### JSON Configuration
+
+Use the `Duende.Bff.Yarp.AccessTokenRetriever` metadata key with an assembly-qualified type name:
+
+```json
+{
+  "ReverseProxy": {
+    "Routes": {
+      "impersonation": {
+        "ClusterId": "cluster1",
+        "Match": {
+          "Path": "/api/impersonation/{**catch-all}"
+        },
+        "Metadata": {
+          "Duende.Bff.Yarp.TokenType": "User",
+          "Duende.Bff.Yarp.AntiforgeryCheck": "true",
+          "Duende.Bff.Yarp.AccessTokenRetriever": "MyApp.ImpersonationAccessTokenRetriever, MyApp"
+        }
+      }
+    },
+    "Clusters": {
+      "cluster-with-impersonation": {
+        "Destinations": {
+          "destination1": {
+            "Address": "https://api.example.com"
+          }
+        },
+        "Metadata": {
+          "Duende.Bff.Yarp.AccessTokenRetriever": "MyApp.ImpersonationAccessTokenRetriever, MyApp"
+        }
+      }
+    }
+  }
+}
+```
+
+### Precedence
+
+When a retriever is specified on both the route and the cluster, the **route-level retriever takes precedence**. This
+allows you to set a default retriever on a cluster and override it for specific routes.
+
+:::note
+The custom retriever type must implement `IAccessTokenRetriever` and be registered in the service collection.
+:::
