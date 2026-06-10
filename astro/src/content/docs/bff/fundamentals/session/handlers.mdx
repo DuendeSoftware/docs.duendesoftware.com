@@ -151,7 +151,7 @@ The cookie handler is responsible for establishing the session and manage authen
 Things to consider:
 
 * determine the session lifetime and if the session lifetime should be sliding or absolute
-* it is recommended to use a cookie name [prefix](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-4.1.3) if compatible with your application
+* it is recommended to use a cookie name [prefix](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-4.1.3) if compatible with your application. The BFF validates at startup that cookies using the `__Host-` or `__Secure-` prefix are configured consistently with [RFC 6265bis](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-4.1.3) requirements (e.g., `__Host-` requires `SecurePolicy` set to `Always` or `SameAsRequest`, no `Domain`, and `Path` set to `"/"`)
 * use the highest available `SameSite` mode that is compatible with your application, e.g. `strict`, but at least `lax`
 
 ```csharp
