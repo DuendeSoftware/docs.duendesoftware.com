@@ -42,7 +42,7 @@ When a user needs access to a protected application, they authenticate at the Id
 
 The Service Provider (SP) is the application the user wants to access. It corresponds to an OIDC client. Rather than managing credentials itself, it delegates authentication to the IdP and relies on the assertions it receives.
 
-To authenticate the user, the SP redirects with user's browser to the Idp with an `AuthnRequest`. After the IdP authenticates the user and returns an assertion, the SP validates the signature, checks the conditions, extracts identity and attributes, and establishes a local session. The SP never handles the user's credentials. It trusts the IdP because the two parties have established a federation agreement where trust is backed by cryptographic keys.
+To authenticate the user, the SP redirects the user's browser to the IdP with an `AuthnRequest`. After the IdP authenticates the user and returns an assertion, the SP validates the signature, checks the conditions, extracts identity and attributes, and establishes a local session. The SP never handles the user's credentials. It trusts the IdP because the two parties have established a federation agreement where trust is backed by cryptographic keys.
 
 ```mermaid
 sequenceDiagram
@@ -89,7 +89,7 @@ IdentityServer supports two bindings:
 * **HTTP Redirect**: the SAML message is included as a query string parameter in a GET request. This is the standard binding for `AuthnRequest` messages, which are typically small. To fit the XML into a query string parameter, the data is compressed using the deflate algorithm. Even with compression, the URL length constraints make it unsuitable for responses.
 * **HTTP POST**: the SAML message is submitted in a hidden HTML form field that auto-submits to the destination. This handles larger payloads (such as assertions with many attributes) and keeps message content out of browser history, server access logs etc where request URLs are typically stored.
 
-The SAML specification also defines **HTTP Artifact** and binding, which sends a short reference token through the browser and resolves the full assertion via a back-channel SOAP call. IdentityServer doesn't currently support Artifact binding.
+The SAML specification also defines **HTTP Artifact** binding, which sends a short reference token through the browser and resolves the full assertion via a back-channel SOAP call. IdentityServer doesn't currently support Artifact binding.
 
 You configure the binding per SP via the `Binding` property on each [`IndexedEndpoint`](/identityserver/saml/configuration.md#indexedendpoint) in `AssertionConsumerServiceUrls`:
 
@@ -123,7 +123,7 @@ Common formats include:
 
 * **emailAddress**: the user's email address. Human-readable and easy to work with, but it is not a persistent (permanent) identifier and it can be reused by different users over time.
 * **Unspecified**: leaves the format to the IdP's discretion. In IdentityServer, this uses the user's `sub` claim value. While using the `sub` is a persistent (i.e. permanent) identifier, it does not fulfill the per-SP anonymization requirements and thus IdentityServer presents it as `unspecified` format.
-* **Persistent**: a stable, opaque identifier that remains the same for a given user for each Idp-SP pair across all sessions. Useful when the SP needs to correlate the user over time without revealing the user's real identity.
+* **Persistent**: a stable, opaque identifier that remains the same for a given user for each IdP-SP pair across all sessions. Useful when the SP needs to correlate the user over time without revealing the user's real identity.
 * **Transient**: a session-scoped, one-time identifier that changes with every SSO session. Useful when the SP does not need to recognize the user across sessions.
 
 IdentityServer supports using the `sub` claim with the `unspecified` NameID formats and the `emailAddress` format out of the box. For other formats (persistent, transient, or custom), implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
@@ -132,15 +132,15 @@ Inbound `AuthnRequest` messages are validated against the formats configured in 
 
 ## RelayState
 
-RelayState is an opaque string parameter that an SP may include in its `AuthnRequest`. IdentityServer echoes it back unchanged together with the SAML response after authentication completes. SPs typically use it to keep state across the redirect to the Idp. The RelayState corresponds to the state parameter in OIDC.
+RelayState is an opaque string parameter that an SP may include in its `AuthnRequest`. IdentityServer echoes it back unchanged together with the SAML response after authentication completes. SPs typically use it to keep state across the redirect to the IdP. The RelayState corresponds to the state parameter in OIDC.
 
 IdentityServer preserves RelayState automatically through the authentication flow. The maximum permitted length is controlled by `SamlOptions.MaxRelayStateLength` (default: `80` bytes, which is the limit set by the SAML specification). See [SamlOptions](/identityserver/saml/configuration.md#samloptions).
 
 ## Single Logout (SLO)
 
-SAML Single Logout (SLO) is a profile for coordinating session termination across a set of SPs and and Idp. IdentityServer supports integrated single logout across SAML SPs and OIDC clients.
+SAML Single Logout (SLO) is a profile for coordinating session termination across a set of SPs and an IdP. IdentityServer supports integrated single logout across SAML SPs and OIDC clients.
 
-When using SSO, a user establishes a session at the IdP and a separate local session at each SP they visit. Logging out of one application ends only that application's local session. Without SLO, the user still has active sessions at the Idp and every other SP used in the session. Ending the IdP session is especially important: without it, users can immediately re-authenticate via SSO and bounce right back in. SLO solves this by letting a single logout action propagate to all participants in the session.
+When using SSO, a user establishes a session at the IdP and a separate local session at each SP they visit. Logging out of one application ends only that application's local session. Without SLO, the user still has active sessions at the IdP and every other SP used in the session. Ending the IdP session is especially important: without it, users can immediately re-authenticate via SSO and bounce right back in. SLO solves this by letting a single logout action propagate to all participants in the session.
 
 ### SP-Initiated SLO
 

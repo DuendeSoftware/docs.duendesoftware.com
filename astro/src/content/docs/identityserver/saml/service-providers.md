@@ -10,7 +10,7 @@ sidebar:
 IdentityServer needs to know which SAML 2.0 Service Providers (SPs) are allowed to request
 authentication. The SAML plugin provides the `ISamlServiceProviderStore` interface: a read-only lookup called on every incoming SAML request to resolve SP configuration by entity ID.
 
-For simple deployments, you configure SPs at startup using the in-memory store. For more advanced setups where configuration changes more frequuently, you implement a store backed by a database or configuration service. The `Duende.IdentityServer.EntityFramework.Stores` package contains an implementation of a database store.
+For simple deployments, you configure SPs at startup using the in-memory store. For more advanced setups where configuration changes more frequently, you implement a store backed by a database or configuration service. The `Duende.IdentityServer.EntityFramework.Stores` package contains an implementation of a database store.
 
 ## ISamlServiceProviderStore
 

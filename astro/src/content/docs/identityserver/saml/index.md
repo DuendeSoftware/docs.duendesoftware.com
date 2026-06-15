@@ -22,7 +22,7 @@ SAML 2.0 support is useful when:
 * You need to integrate with enterprise SaaS applications that require SAML (e.g., Salesforce,
   Workday, ServiceNow)
 * You are migrating from a legacy SSO system that uses SAML
-* Your organization has compliance or procurement requirements for usin SAML
+* Your organization has compliance or procurement requirements for using SAML
 
 For new integrations, OpenID Connect is the better choice. SAML 2.0 is provided for when you need to work with existing SAML-based systems.
 

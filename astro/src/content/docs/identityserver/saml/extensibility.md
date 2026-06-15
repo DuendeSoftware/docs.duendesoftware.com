@@ -218,7 +218,7 @@ public interface ISaml2SloResponseGenerator
 
 ### When to Use
 
-Override `ISaml2SloResponseGenerator` if you are not using the built in EF based operational store. The in-memory version is only suitable for development/test scenarios and not for production.
+Override `ISaml2SloResponseGenerator` if you are not using the built-in EF-based operational store. The in-memory version is only suitable for development/test scenarios and not for production.
 
 ### Registration
 
@@ -485,9 +485,9 @@ to generate and send the SAML response programmatically. Because this flow bypas
 SP-initiated request, the caller is responsible for anti-forgery protection.
 
 :::caution
-Even with proper CSRF protection on the entry point of the flow, Idp-initiated sign in is still exposed to CSRF on the SP. This is a problem with the SAML 2.0 standard, there is no way to implement Idp-initiated sign on with proper CSRF protection.
+Even with proper CSRF protection on the entry point of the flow, IdP-initiated sign-in is still exposed to CSRF on the SP. This is a problem with the SAML 2.0 standard: there is no way to implement IdP-initiated sign-in with proper CSRF protection.
 
-A better approach is to mimic the third party initiated login flow used by OIDC: Create an endpoint on the SP that responds with a redirect to the Idp, including an `AuthnRequest`.
+A better approach is to mimic the third-party initiated login flow used by OIDC: create an endpoint on the SP that responds with a redirect to the IdP, including an `AuthnRequest`.
 :::
 
 ```csharp

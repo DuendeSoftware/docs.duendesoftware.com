@@ -114,7 +114,7 @@ Available options:
 
 ### Error Inspector Callbacks
 
-These three optional callbacks let you observe and react to errors that occur while IdentityServer parses or validates incoming SAML messages. They're particularly useful when debugging interoperability issues with a specific SP, because they give you access to the raw XML and error details before IdentityServer returns a failure response. The inspector may suppress errors or even fix errors by inspecing the XML node and setting the corresponding value in the parsed object. A common example of supression is that while the SAML specification requires absolute URIs for all identifiers, many deployments do use simple strings. This is an error that can be safely suppressed if needed.
+These three optional callbacks let you observe and react to errors that occur while IdentityServer parses or validates incoming SAML messages. They're particularly useful when debugging interoperability issues with a specific SP, because they give you access to the raw XML and error details before IdentityServer returns a failure response. The inspector may suppress or even fix errors by inspecting the XML node and setting the corresponding value in the parsed object. A common example of suppression is that while the SAML specification requires absolute URIs for all identifiers, many deployments use simple strings. This is an error that can be safely suppressed if needed.
 
 None of these are required. When not set, IdentityServer handles errors using its default behavior.
 
@@ -224,7 +224,7 @@ Available options:
   ```csharp
   AssertionConsumerServiceUrls = 
   [
-      new())
+      new()
       {
           Location = "https://sp.example.com/saml/acs",
           Binding = SamlBinding.HttpPost,
@@ -293,7 +293,7 @@ Available options:
 
 SAML bindings define how messages travel over HTTP. HTTP Redirect encodes the message into the URL query string, which works well for small messages such as `AuthnRequest` but is limited by URL length constraints. HTTP POST encodes the message in a hidden HTML form field and submits it automatically, making it the right choice for larger payloads (such as assertions with many attributes) and for keeping message content out of server access logs. See [Bindings](/identityserver/saml/concepts.md#bindings) for a deeper explanation.
 
-`SamlBinding` is used in on `SamlEndpointType` (for each entry in `SingleLogoutServiceUrls`) and on the derived `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`).
+`SamlBinding` is used on `SamlEndpointType` (for each entry in `SingleLogoutServiceUrls`) and on the derived `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`).
 
 | Value          | Description                                                                           |
 |----------------|---------------------------------------------------------------------------------------|
@@ -426,9 +426,9 @@ new SamlServiceProvider
 :::caution
 IdP-initiated SSO is inheritly vulnerable to Cross Site Request Forgery (CSRF). This is a property of the protocol, there is no way to enable or implement it without exposing CSRF risk.
 
-A better approach is to mimic the third party initiated login flow used by OIDC: Create an endpoint on the SP that responds with a redirect to the Idp, including an `AuthnRequest`.
+A better approach is to mimic the third-party initiated login flow used by OIDC: create an endpoint on the SP that responds with a redirect to the IdP, including an `AuthnRequest`.
 
-Only enable Idp-initiated SSO after careful security considerations and only for SPs that require this flow.
+Only enable IdP-initiated SSO after careful security considerations and only for SPs that require this flow.
 :::
 
 For a working example, see the [SAML 2.0 IdP-Initiated sample](/identityserver/samples/saml.mdx).
