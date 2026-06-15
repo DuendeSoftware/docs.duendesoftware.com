@@ -68,8 +68,7 @@ if (context is SamlAuthenticationContext samlContext)
 
 `ISaml2SsoInteractionResponseGenerator` determines what interaction (login or error) is needed
 during a SAML sign-in flow. After an `AuthnRequest` is received and validated, IdentityServer
-calls this interface to decide whether the user needs to be redirected to the login page or
-whether the flow can proceed directly to assertion generation.
+calls `ProcessInteractionAsync` to decide whether the user needs to be redirected to the login page or whether the flow can proceed directly to assertion generation.
 
 The default implementation handles standard login flows. Override it when you need custom step-up
 authentication logic or any other non-standard interaction decision.
@@ -219,9 +218,7 @@ public interface ISaml2SloResponseGenerator
 
 ### When to Use
 
-Override `ISaml2SloResponseGenerator` when you need to customize the final `LogoutResponse` sent
-to the initiating SP, for example to include custom status details or to change how partial logout
-is reported.
+Override `ISaml2SloResponseGenerator` if you are not using the built in EF based operational store. The in-memory version is only suitable for development/test scenarios and not for production.
 
 ### Registration
 
@@ -409,9 +406,7 @@ assertions sent to Service Providers. The `NameID` identifies the subject of the
 (typically the authenticated user) in a format the SP understands. It is called during assertion
 generation, after the user has authenticated and the requested `NameID` format has been resolved.
 
-The default implementation handles the most common formats: email address and unspecified.
-Register a custom implementation to support additional `NameID` formats or to derive the `NameID`
-value from non-standard claims.
+The default implementation handles email address and unspecified (using the `sub` values as the identifier). Register a custom implementation to support additional `NameID` formats or to derive the `NameID` value from non-standard claims.
 
 ```csharp
 // ISamlNameIdGenerator.cs
@@ -487,8 +482,13 @@ authenticated and clicks a tile to launch an SP application.
 
 Inject `IIdpInitiatedSsoService` into your own Razor Pages or controllers
 to generate and send the SAML response programmatically. Because this flow bypasses the normal
-SP-initiated request, the caller is responsible for anti-forgery protection (for example, ensuring
-the request originates from a legitimate authenticated session).
+SP-initiated request, the caller is responsible for anti-forgery protection.
+
+:::caution
+Even with proper CSRF protection on the entry point of the flow, Idp-initiated sign in is still exposed to CSRF on the SP. This is a problem with the SAML 2.0 standard, there is no way to implement Idp-initiated sign on with proper CSRF protection.
+
+A better approach is to mimic the third party initiated login flow used by OIDC: Create an endpoint on the SP that responds with a redirect to the Idp, including an `AuthnRequest`.
+:::
 
 ```csharp
 // IIdpInitiatedSsoService.cs
@@ -619,7 +619,7 @@ self-signed X.509 container automatically.
 Override `ISamlSigningService` when:
 
 * Your signing certificate is stored in an external system such as Azure Key Vault or a hardware
-  security module (HSM) and cannot be loaded as a standard `X509SecurityKey`.
+  security module (HSM).
 * You need to rotate the SAML signing certificate independently of the IdentityServer signing key
   configuration.
 * You need to return a different certificate for SAML signing than the one used for OIDC token
@@ -646,13 +646,12 @@ builder.Services.AddIdentityServer()
 
 `ISaml2MetadataResponseGenerator` generates the IdP metadata document served at the
 `/Saml2` endpoint. SAML metadata describes the IdP's capabilities, endpoints, and signing
-keys to Service Providers and federation operators. SPs typically fetch this document during
-initial configuration to establish trust.
+keys to Service Providers and federation operators. SPs capable of loading metadata loads this 
+regularly to get up to date configuration, including the public keys required for signature 
+validation.
 
 The default implementation produces a standards-compliant metadata document from the configured
-`SamlOptions` and signing keys. Override this interface to add custom metadata elements such as
-organization information, contact details, additional key descriptors, or federation-specific
-extensions required by specific SPs or federation operators.
+`SamlOptions` and signing keys.
 
 ```csharp
 // ISaml2MetadataResponseGenerator.cs
@@ -671,7 +670,6 @@ public interface ISaml2MetadataResponseGenerator
 
 Override `ISaml2MetadataResponseGenerator` when:
 
-* You need to include organization or contact information in the metadata document.
 * A federation operator or SP requires custom metadata extensions.
 * You need to advertise additional key descriptors or endpoint bindings.
 

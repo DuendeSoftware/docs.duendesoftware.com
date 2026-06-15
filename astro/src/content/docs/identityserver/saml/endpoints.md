@@ -36,16 +36,13 @@ for onboarding new Service Providers into a federation. See [Metadata](/identity
 Share this URL with Service Providers during SP configuration so they can automatically import
 IdP settings.
 
-In the `IDPSSODescriptor`, `SingleLogoutService` elements appear before `NameIDFormat` elements, matching the ordering 
-required by the SAML metadata schema.
-
 ## Sign-in Endpoint
 
 **Path**: `/Saml2/SSO`  
 **Methods**: GET, POST
 
 The entry point for SP-initiated SSO. The Service Provider redirects the user to this endpoint
-with a SAML `AuthnRequest` message (encoded using the HTTP-Redirect or HTTP-POST binding).
+with a SAML `AuthnRequest` message (encoded using the HTTP Redirect or HTTP POST binding).
 
 IdentityServer validates the `AuthnRequest`, authenticates the user (redirecting to the login page
 if needed), and then continues to the Sign-in Callback endpoint.
@@ -99,7 +96,7 @@ sessions have responded by the time the logout flow completes, IdentityServer re
 logout status to the originating SP to indicate that some sessions may still be active.
 
 :::note
-SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. Many deployments supplement SLO with short session lifetimes as a simpler fallback. See [Single Logout](/identityserver/saml/concepts.md#single-logout-slo) for more background.
+SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. See [Single Logout](/identityserver/saml/concepts.md#single-logout-slo) for more background.
 :::
 
 ## Customizing Endpoint Paths

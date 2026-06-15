@@ -22,11 +22,11 @@ SAML 2.0 support is useful when:
 * You need to integrate with enterprise SaaS applications that require SAML (e.g., Salesforce,
   Workday, ServiceNow)
 * You are migrating from a legacy SSO system that uses SAML
-* Your organization has compliance or procurement requirements for SAML-based federation
+* Your organization has compliance or procurement requirements for usin SAML
 
 For new integrations, OpenID Connect is the better choice. SAML 2.0 is provided for when you need to work with existing SAML-based systems.
 
-If you are new to SAML 2.0 or want a refresher on the protocol's core building blocks, see [SAML 2.0 Concepts](/identityserver/saml/concepts.md) for an overview of assertions, bindings, metadata, Name Identifiers, and other key concepts before diving into configuration.
+If you are new to SAML 2.0 or want a refresher on the protocol's core building blocks, see [SAML 2.0 Concepts](/identityserver/saml/concepts.md) for an overview of assertions, bindings, metadata, name identifiers, and other key concepts before diving into configuration.
 
 ## SAML as an External Provider
 
@@ -40,10 +40,10 @@ The rest of this section covers the IdP role: configuring IdentityServer to issu
 
 The SAML 2.0 IdP feature covers the full SP-initiated flow, logout, and plenty of extensibility points:
 
-* **SP-initiated SSO**: HTTP-Redirect and HTTP-POST bindings for authentication requests
+* **SP-initiated SSO**: HTTP Redirect and HTTP POST bindings for authentication requests
 * **Single Logout (SLO)**: front-channel logout notifications to registered SPs, with session tracking and partial logout responses when not all SPs respond
 * **Assertion signing**: per-SP configuration of signing algorithms
-* **NameID format support**: email and unspecified formats out of the box, with extensibility for custom formats
+* **NameID format support**: email and using IdentityServer's `sub` (unspecified format) out of the box, with extensibility for custom formats
 * **AuthnContext class mapping**: maps OIDC `acr`/`amr` values to SAML AuthnContext class URIs
 * **Per-SP claim mappings**: transform and filter claims before they are included in assertions
 * **Extensibility interfaces**: customize NameID generation, response generation, metadata, and more
@@ -69,24 +69,24 @@ Register Service Providers using the in-memory store for development, the EF Cor
 ```csharp
 builder.Services.AddIdentityServer()
     .AddSaml()
-    .AddInMemorySamlServiceProviders(new[]
-    {
-        new SamlServiceProvider
+    .AddInMemorySamlServiceProviders(
+    [
+        new()
         {
             EntityId = "https://sp.example.com",
             DisplayName = "Example SP",
-            AssertionConsumerServiceUrls = new List<IndexedEndpoint>
-            {
-                new IndexedEndpoint
+            AssertionConsumerServiceUrls =
+            [
+                new()
                 {
                     Location = "https://sp.example.com/acs",
                     Binding = SamlBinding.HttpPost,
                     Index = 0,
                     IsDefault = true
                 }
-            }
+            ]
         }
-    });
+    ]);
 ```
 
 For production, use the EF Core store from `Duende.IdentityServer.EntityFramework.Stores` to persist SP configuration in your database. See [Service Providers](/identityserver/saml/service-providers.md) for all storage options.

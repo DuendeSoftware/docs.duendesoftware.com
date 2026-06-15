@@ -10,7 +10,7 @@ sidebar:
 IdentityServer needs to know which SAML 2.0 Service Providers (SPs) are allowed to request
 authentication. The SAML plugin provides the `ISamlServiceProviderStore` interface: a read-only lookup called on every incoming SAML request to resolve SP configuration by entity ID.
 
-For simple deployments, you configure SPs at startup using the in-memory store. For production systems, you implement a custom store backed by a database or configuration service.
+For simple deployments, you configure SPs at startup using the in-memory store. For more advanced setups where configuration changes more frequuently, you implement a store backed by a database or configuration service. The `Duende.IdentityServer.EntityFramework.Stores` package contains an implementation of a database store.
 
 ## ISamlServiceProviderStore
 
@@ -18,7 +18,7 @@ For simple deployments, you configure SPs at startup using the in-memory store. 
 
 This interface is used for read-only lookup during request processing. Your store implementation should be optimized for fast, concurrent reads (e.g., backed by a cache or an indexed database query).
 
-`GetAllSamlServiceProvidersAsync` is used for bulk operations such as metadata generation or cache warming. It returns all registered SPs as an async stream.
+`GetAllSamlServiceProvidersAsync` is used for bulk operations such as cache warming. It returns all registered SPs as an async stream.
 
 ```csharp
 // ISamlServiceProviderStore.cs
@@ -33,9 +33,9 @@ public interface ISamlServiceProviderStore
 
 `GetAllSamlServiceProvidersAsync` returns all registered SPs as an `IAsyncEnumerable<SamlServiceProvider>`, allowing callers to stream results without loading all SPs into memory at once.
 
-## In-Memory Store (Development / Testing)
+## In-Memory Store
 
-The in-memory store is the simplest way to register SPs. It is configured at startup with a static list of `SamlServiceProvider` objects and is ideal for development, testing, and demos. For a working example, see the [SAML 2.0 Basic sample](/identityserver/samples/saml.mdx).
+The in-memory store is the simplest way to register SPs. It is configured at startup with a static list of `SamlServiceProvider` objects and is ideal for development, testing and smaller deployments. For a working example, see the [SAML 2.0 Basic sample](/identityserver/samples/saml.mdx).
 
 Register the in-memory store using the IdentityServer builder:
 
@@ -43,27 +43,29 @@ Register the in-memory store using the IdentityServer builder:
 // Program.cs
 builder.Services.AddIdentityServer()
     .AddSaml()
-    .AddInMemorySamlServiceProviders(new[]
-    {
-        new SamlServiceProvider
+    .AddInMemorySamlServiceProviders(
+    [
+        new()
         {
             EntityId = "https://sp.example.com",
             DisplayName = "Example SP",
-            AssertionConsumerServiceUrls = new List<IndexedEndpoint>
-            {
-                new IndexedEndpoint
+            AssertionConsumerServiceUrls =
+            [
+                new()
                 {
                     Location = "https://sp.example.com/acs",
                     Binding = SamlBinding.HttpPost,
                     Index = 0,
                     IsDefault = true
                 }
-            }
+            ]
         }
-    });
+        
+    ]
+    );
 ```
 
-## Entity Framework Core Store (Production)
+## Entity Framework Core Store
 
 For production deployments, IdentityServer ships an EF Core-backed implementation of `ISamlServiceProviderStore` in the `Duende.IdentityServer.EntityFramework.Stores` package. This stores SP configuration in your database alongside other IdentityServer operational and configuration data.
 
@@ -153,7 +155,7 @@ The default validator (`DefaultSamlServiceProviderConfigurationValidator`) check
 
 * `EntityId` is required.
 * At least one Assertion Consumer Service URL is required.
-* All ACS URLs must use `SamlBinding.HttpPost`. HTTP-Redirect is not supported for SAML Response delivery.
+* All ACS URLs must use `SamlBinding.HttpPost`. HTTP Redirect is not supported for SAML Response delivery.
 * At least one `AllowedScopes` entry is required.
 * `AssertionLifetime` must be positive (if set).
 * `ClockSkew` must be non-negative (if set).
@@ -209,38 +211,41 @@ new SamlServiceProvider
     Enabled = true,
 
     // Assertion Consumer Service
-    AssertionConsumerServiceUrls = new List<IndexedEndpoint>
-    {
-        new IndexedEndpoint
+    AssertionConsumerServiceUrls =
+    [
+        new()
         {
             Location = "https://sp.example.com/acs",
             Binding = SamlBinding.HttpPost,
             Index = 0,
             IsDefault = true
         }
-    },
+    ],
 
     // Single Logout Service
-    SingleLogoutServiceUrls = [new SamlEndpointType
-    {
-        Location = "https://sp.example.com/saml/slo",
-        Binding = SamlBinding.HttpRedirect,
-    }],
+    SingleLogoutServiceUrls = 
+    [
+        new()
+        {
+            Location = "https://sp.example.com/saml/slo",
+            Binding = SamlBinding.HttpRedirect,
+        }
+    ],
 
     // Signing
     SigningBehavior = SamlSigningBehavior.SignAssertion,
     RequireSignedAuthnRequests = true, // bool?: null falls back to global SamlOptions.WantAuthnRequestsSigned
-    Certificates = new List<ServiceProviderCertificate>
-    {
-        new ServiceProviderCertificate
+    Certificates = 
+    [
+        new()
         {
             Certificate = myCertificate,
             Use = KeyUse.Signing
         }
-    },
+    ],
 
     // NameID
-    DefaultNameIdFormat = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+    DefaultNameIdFormat = SamlConstants.NameIdentifierFormats.Unspecified,
 
     // Claims
     ClaimMappings = new Dictionary<string, string>
