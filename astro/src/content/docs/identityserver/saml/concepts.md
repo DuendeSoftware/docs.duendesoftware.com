@@ -11,9 +11,9 @@ SAML 2.0 is an XML-based federation protocol widely used in enterprise, governme
 
 ## Assertions
 
-An assertion is the central data structure in SAML. It is an XML document that carries information about a user from the Identity Provider to the Service Provider. The assertion, the response, or both, can be digitally signed but aren't always.
+An assertion is the central data structure in SAML. It is an XML element that carries information about a user from the Identity Provider to the Service Provider. The assertion and/or the enclosing response must be digitally signed to proof that it is from the issuer and has not been tampered with.
 
-Think of it as the SAML equivalent of an ID token in OpenID Connect.
+The Assertion corresponds to the ID token in OpenID Connect.
 
 An assertion contains three key parts:
 
@@ -40,9 +40,9 @@ When a user needs access to a protected application, they authenticate at the Id
 
 ## Service Provider
 
-The Service Provider (SP) is the application the user wants to access. Rather than managing credentials itself, it delegates authentication to the IdP and relies on the assertions it receives.
+The Service Provider (SP) is the application the user wants to access. It corresponds to an OIDC client. Rather than managing credentials itself, it delegates authentication to the IdP and relies on the assertions it receives.
 
-When an unauthenticated user arrives, the SP sends an `AuthnRequest` to the IdP. After the IdP authenticates the user and returns an assertion, the SP validates the signature, checks the conditions, extracts identity and attributes, and establishes a local session. The SP never handles the user's credentials. It trusts the IdP because the two parties have established a federation agreement backed by exchanged metadata and certificates.
+To authenticate the user, the SP redirects the user's browser to the IdP with an `AuthnRequest`. After the IdP authenticates the user and returns an assertion, the SP validates the signature, checks the conditions, extracts identity and attributes, and establishes a local session. The SP never handles the user's credentials. It trusts the IdP because the two parties have established a federation agreement where trust is backed by cryptographic keys.
 
 ```mermaid
 sequenceDiagram
@@ -74,7 +74,7 @@ Each registered Service Provider has its own entity identifier set via `SamlServ
 
 ## Metadata
 
-SAML metadata is an XML document that describes an entity's capabilities: its endpoints, supported bindings, and the certificates it uses for signing and encryption. Both IdPs and SPs publish metadata documents.
+SAML metadata is an XML document that describes an entity's capabilities: its endpoints, supported bindings, and the certificates it uses for signing and encryption. Both IdPs and SPs can publish metadata documents.
 
 Metadata makes federation scalable. Instead of manually exchanging certificates and endpoint URLs out-of-band, parties import each other's metadata and configure trust automatically.
 
@@ -82,69 +82,65 @@ IdentityServer publishes its IdP metadata at the entity ID URL (a well-known loc
 
 ## Bindings
 
-SAML bindings define how SAML messages physically travel over HTTP. The protocol payload (the XML message) is the same regardless of binding; the binding determines the transport mechanism.
+SAML bindings define how SAML messages are encoded in an HTTP request. The protocol payload (the XML message) is the same regardless of binding; the binding determines the transport mechanism.
 
 IdentityServer supports two bindings:
 
-* **HTTP-Redirect**: the SAML message is deflated, Base64-encoded, and appended to the URL as a query parameter. This is the standard binding for `AuthnRequest` messages, which are typically small. However, URL length constraints make it unsuitable for large assertions with many attributes.
-* **HTTP-POST**: the SAML message is Base64-encoded and submitted in a hidden HTML form field that auto-submits to the destination. This handles larger payloads (such as assertions with many attributes) and keeps message content out of server access logs.
+* **HTTP Redirect**: the SAML message is included as a query string parameter in a GET request. This is the standard binding for `AuthnRequest` messages, which are typically small. To fit the XML into a query string parameter, the data is compressed using the deflate algorithm. Even with compression, the URL length constraints make it unsuitable for responses.
+* **HTTP POST**: the SAML message is submitted in a hidden HTML form field that auto-submits to the destination. This handles larger payloads (such as assertions with many attributes) and keeps message content out of browser history, server access logs etc where request URLs are typically stored.
 
-The SAML specification also defines **HTTP-Artifact** binding, which sends a short reference token through the browser and resolves the full assertion via a back-channel SOAP call. IdentityServer doesn't currently support Artifact binding.
+The SAML specification also defines **HTTP Artifact** binding, which sends a short reference token through the browser and resolves the full assertion via a back-channel SOAP call. IdentityServer doesn't currently support Artifact binding.
 
 You configure the binding per SP via the `Binding` property on each [`IndexedEndpoint`](/identityserver/saml/configuration.md#indexedendpoint) in `AssertionConsumerServiceUrls`:
 
 ```csharp
-AssertionConsumerServiceUrls = new List<IndexedEndpoint>
-{
-    new IndexedEndpoint
+AssertionConsumerServiceUrls =
+[
+    new()
     {
         Location = "https://sp.example.com/saml/acs",
         Binding = SamlBinding.HttpPost,
         Index = 0,
         IsDefault = true
     }
-}
+]
 ```
 
 The [`SamlBinding` enum](/identityserver/saml/configuration.md#samlbinding) defines the available binding values.
 
 ## Profiles
 
-SAML profiles are predefined recipes that combine assertions, protocol messages, and bindings into complete workflows for specific use cases. Following a profile is what makes SAML implementations interoperable. Without it, a system can produce syntactically valid SAML messages that no other implementation will accept.
-
-The two profiles most relevant to IdentityServer are:
+SAML profiles are predefined recipes that combine assertions, protocol messages, and bindings into complete workflows for specific use cases. The two profiles that IdentityServer supports are:
 
 * **Web Browser SSO Profile**: defines the exact sequence of redirects, requests, assertions, and validations for browser-based single sign-on. IdentityServer's [sign-in endpoints](/identityserver/saml/endpoints.md#sign-in-endpoint) implement this profile.
 * **Single Logout Profile**: coordinates session termination across all SPs in a federation when a user logs out. See [Single Logout](#single-logout-slo) below.
 
 ## Name Identifiers
 
-The Name Identifier (NameID) is the value inside an assertion that identifies the user to the Service Provider. The NameID format determines the type of identifier used and how stable it is across sessions.
+The Name Identifier (NameID) is the value inside an assertion that identifies the user to the Service Provider. The NameID corresponds to the `sub` claim in OIDC. The NameID format determines the type of identifier used and how stable it is across sessions.
 
 Common formats include:
 
-* **emailAddress**: the user's email address. Human-readable and easy to work with, but it exposes personally identifiable information (PII) and couples the identifier to a value that can change.
-* **Unspecified**: leaves the format to the IdP's discretion. In IdentityServer, this uses the user's `sub` claim value.
-* **Persistent**: a stable, opaque identifier that remains the same for a given user-SP pair across all sessions. Useful when the SP needs to correlate the user over time without revealing the user's real identity.
+* **emailAddress**: the user's email address. Human-readable and easy to work with, but it is not a persistent (permanent) identifier and it can be reused by different users over time.
+* **Unspecified**: leaves the format to the IdP's discretion. In IdentityServer, this uses the user's `sub` claim value. While using the `sub` is a persistent (i.e. permanent) identifier, it does not fulfill the per-SP anonymization requirements and thus IdentityServer presents it as `unspecified` format.
+* **Persistent**: a stable, opaque identifier that remains the same for a given user for each IdP-SP pair across all sessions. Useful when the SP needs to correlate the user over time without revealing the user's real identity.
 * **Transient**: a session-scoped, one-time identifier that changes with every SSO session. Useful when the SP does not need to recognize the user across sessions.
 
-IdentityServer supports `emailAddress` and `unspecified` NameID formats out of the box. For other formats (persistent, transient, or custom), implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
+IdentityServer supports using the `sub` claim with the `unspecified` NameID formats and the `emailAddress` format out of the box. For other formats (persistent, transient, or custom), implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
 
-Inbound `AuthnRequest` messages are validated against the formats configured in `SamlOptions.SupportedNameIdFormats`. Requests specifying an unsupported format are rejected. If you implement a custom NameID format via `ISamlNameIdGenerator`, add it to this list so that validation passes.
+Inbound `AuthnRequest` messages are validated against the formats configured in `SamlOptions.SupportedNameIdFormats`. Requests specifying an unsupported format are rejected. If you implement a custom NameID format via `ISamlNameIdGenerator`, add it to this list to pass validation.
 
 ## RelayState
 
-RelayState is an opaque string parameter that an SP includes in its `AuthnRequest`. IdentityServer echoes it back unchanged in the SAML response after authentication completes, and the SP uses it to resume the user's original request.
+RelayState is an opaque string parameter that an SP may include in its `AuthnRequest`. IdentityServer echoes it back unchanged together with the SAML response after authentication completes. SPs typically use it to keep state across the redirect to the IdP. The RelayState corresponds to the state parameter in OIDC.
 
-The most common use of RelayState is deep linking: the SP encodes the URL the user originally requested (before the SSO redirect) into RelayState, so after authentication it can redirect the user directly to that page rather than to the application's home page. Without RelayState, every SSO flow deposits the user at the same landing page regardless of where they were trying to go.
-
-IdentityServer preserves RelayState automatically through the authentication flow. The maximum permitted length is controlled by `SamlOptions.MaxRelayStateLength` (default: `80` bytes, which is the limit recommended by the SAML specification). See [SamlOptions](/identityserver/saml/configuration.md#samloptions).
+IdentityServer preserves RelayState automatically through the authentication flow. The maximum permitted length is controlled by `SamlOptions.MaxRelayStateLength` (default: `80` bytes, which is the limit set by the SAML specification). See [SamlOptions](/identityserver/saml/configuration.md#samloptions).
 
 ## Single Logout (SLO)
 
-SAML Single Logout (SLO) is a profile for coordinating session termination across an entire federation.
+SAML Single Logout (SLO) is a profile for coordinating session termination across a set of SPs and an IdP. IdentityServer supports integrated single logout across SAML SPs and OIDC clients.
 
-When using SSO, a user establishes a session at the IdP and a separate local session at each SP they visit. Logging out of one application ends only that application's local session. Without SLO, the user still has active sessions at every other SP they visited. Ending the IdP session is especially important: without it, users can immediately re-authenticate via SSO and bounce right back in. SLO solves this by letting a single logout action propagate to all participants in the federation.
+When using SSO, a user establishes a session at the IdP and a separate local session at each SP they visit. Logging out of one application ends only that application's local session. Without SLO, the user still has active sessions at the IdP and every other SP used in the session. Ending the IdP session is especially important: without it, users can immediately re-authenticate via SSO and bounce right back in. SLO solves this by letting a single logout action propagate to all participants in the session.
 
 ### SP-Initiated SLO
 
@@ -171,11 +167,13 @@ sequenceDiagram
 
 ### IdP-Initiated SLO
 
-Any session participant can initiate logout. When the IdP initiates (for example, due to a session timeout or an administrative action), it sends `LogoutRequest` messages directly to all SPs with active sessions for that user. There is no originating SP to return a final `LogoutResponse` to.
+Any session participant can initiate logout. When the IdP initiates (for example, due to a
+session timeout or an administrative action), it sends `LogoutRequest` messages directly to all
+SPs with active sessions for that user. There is no originating SP to return a final `LogoutResponse` to.
 
 ### Front-Channel Logout
 
-The SAML specification mandates a redirect chain for front-channel logout, where the browser is redirected sequentially to each SP's SLO endpoint. IdentityServer deliberately deviates from this approach and instead uses iframes (the same mechanism used for OIDC front-channel logout). This keeps SAML and OIDC SPs compatible within the same session and is more resilient: a single unresponsive SP does not block logout at other SPs.
+The SAML specification mandates a redirect chain for front-channel logout, where the browser is redirected sequentially to each SP's SLO endpoint. IdentityServer deliberately deviates from this approach and instead uses iframes (the same mechanism used for OIDC front-channel logout). This is more resilient: a single unresponsive SP does not block logout of other SPs and the user does not risk ending up stuck on a non-responsive SP.
 
 Only the `HttpRedirect` binding is supported for SLO. HTTP-Redirect works with session cookies that use `SameSite=Lax`, while HTTP-POST would require `SameSite=None` which introduces security concerns in cross-site iframe scenarios.
 

@@ -70,7 +70,7 @@ Available options:
   When `true`, the IdP requires all AuthnRequests to be signed. Defaults to `true`.
 
 * **`RequireSignedLogoutResponses`**
-  When `true`, IdentityServer requires LogoutResponse messages from SPs to be signed or delivered over TLS.
+  When `true`, IdentityServer requires LogoutResponse messages from SPs to be signed.
   Defaults to `true`, per SAML 2.0 Profiles §4.4.4. Individual SPs can override this via `SamlServiceProvider.RequireSignedLogoutResponses`.
 
 * **`DefaultClaimMappings`**
@@ -79,7 +79,7 @@ Available options:
 * **`SupportedNameIdFormats`**
   Supported NameID formats advertised by the IdP. Defaults to `[ EmailAddress, Unspecified ]`.
 
-  The NameID format determines how the user is identified to the SP. **emailAddress** uses the user's email claim and is human-readable but exposes PII. **Unspecified** uses the user's `sub` claim value. Inbound AuthnRequests are validated against the formats configured here; requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
+  The NameID format determines how the user is identified to the SP. **emailAddress** uses the user's email claim and is human-readable but is considered a good identifier. **Unspecified** uses the user's `sub` claim value. Inbound AuthnRequests are validated against the formats configured here; requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
 
 * **`DefaultClockSkew`**
   Clock skew tolerance for validating SAML message timestamps. Defaults to 5 minutes.
@@ -97,10 +97,10 @@ Available options:
 * **`MaxRelayStateLength`**
   Maximum length (in UTF-8 bytes) of the RelayState parameter. Defaults to 80.
 
-  RelayState is an opaque string that an SP includes in its `AuthnRequest` to preserve application state across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can keep state that it needs for processing after authentication. The SAML specification mandates that RelayState MUST NOT exceed 80 bytes in length; this limit enforces that requirement. See [`RelayState`](/identityserver/saml/concepts.md#relaystate) for more context.
+  RelayState is an opaque string that an SP may include in its `AuthnRequest` to preserve application state across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can keep state that it needs for processing after authentication. The SAML specification mandates that RelayState MUST NOT exceed 80 bytes in length; this limit enforces that requirement. See [`RelayState`](/identityserver/saml/concepts.md#relaystate) for more context.
 
 * **`DefaultAuthnContextMappings`**
-  Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML URI.
+  Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML identifier (a URI).
   
   Default mappings include `pwd` → `urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport` and `external` → `urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified`. 
   
@@ -114,18 +114,18 @@ Available options:
 
 ### Error Inspector Callbacks
 
-These three optional callbacks let you observe and react to errors that occur while IdentityServer parses or validates incoming SAML messages. They're particularly useful when debugging interoperability issues with a specific SP, because they give you access to the raw XML and error details before IdentityServer returns a failure response.
+These three optional callbacks let you observe and react to errors that occur while IdentityServer parses or validates incoming SAML messages. They're particularly useful when debugging interoperability issues with a specific SP, because they give you access to the raw XML and error details before IdentityServer returns a failure response. The inspector may suppress or even fix errors by inspecting the XML node and setting the corresponding value in the parsed object. A common example of suppression is that while the SAML specification requires absolute URIs for all identifiers, many deployments use simple strings. This is an error that can be safely suppressed if needed.
 
 None of these are required. When not set, IdentityServer handles errors using its default behavior.
 
 * **`AuthnRequestErrorInspector`**
-  A callback invoked when an error occurs while parsing or validating an incoming `AuthnRequest`. It receives the raw XML and the error details, so you can log the message, inspect the failure reason, or take corrective action on a per-SP basis. This is useful for diagnosing SP configuration problems such as malformed request signatures or unexpected XML structure.
+  A callback invoked when an error occurs while parsing or validating an incoming `AuthnRequest`.
 
 * **`LogoutRequestErrorInspector`**
-  A callback invoked when an error occurs while parsing or validating an incoming `LogoutRequest`. It works the same way as `AuthnRequestErrorInspector` but applies to SLO flows. Use it to investigate cases where an SP's logout request is rejected unexpectedly.
+  A callback invoked when an error occurs while parsing or validating an incoming `LogoutRequest`.
 
 * **`LogoutResponseErrorInspector`**
-  A callback invoked when an error occurs while processing an incoming `LogoutResponse` from an SP during Single Logout (SLO). It lets you handle cases where an SP returns a malformed or unexpected response, for example to log the raw XML for later analysis or to suppress the error for a known non-compliant SP.
+  A callback invoked when an error occurs while processing an incoming `LogoutResponse` from an SP during Single Logout (SLO).
 
 ### Default Claim Mappings
 
@@ -153,7 +153,9 @@ Claim selection and attribute naming are two separate steps. You select which cl
   How long consumers (Service Providers and federation tools) should cache the metadata document before re-fetching it. This value is included as the `cacheDuration` attribute in the metadata XML. Defaults to 12 hours.
 
 * **`ExpiryDuration`** (`TimeSpan`)
-  How long the metadata document is considered valid. This value is used to compute the `validUntil` attribute in the metadata XML. After this time, consumers should treat the metadata as stale and re-fetch it. Defaults to 5 days.
+  How long the metadata document is considered valid. This value is used to compute the `validUntil` attribute in the metadata XML. After this time, consumers should discard any cached metadata. Defaults to 5 days.
+
+  Using `CacheDuration` and `ExpiryDuration` together improves stability. With the default values, a consumer should refresh every 12 hours, but if the refresh fails, it can still continue using the cached metadata for up to 5 days.
 
 ```csharp
 // Program.cs
@@ -173,11 +175,11 @@ builder.Services.AddIdentityServer()
 |-------------------------------|-----------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                                                                                                   |
 | `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SSO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. |
-| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates).                                                                                        |
+| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates). This is an internal endpoint that is not visible in the metadata document.             |
 | `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses).                                                                              |
 | `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SLO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. |
-| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow).                                                                                       |
-| `StateIdParameterName`        | `string`              | `"samlStateId"`            | Query string parameter name used to pass the SAML sign-in state identifier through the return URL.                                                    |
+| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow). This is an internal endpoint that is not visible in the metadata document.            |
+| `StateIdParameterName`        | `string`              | `"samlStateId"`            | Query string parameter name used to pass the SAML sign-in state identifier through the return URL in the redirect to the login page.                  |
 
 
 ```csharp
@@ -220,44 +222,37 @@ Available options:
   ACS endpoints where SAML responses will be delivered. At least one is required. Each entry is an `IndexedEndpoint` that specifies the URL, binding, ordering index, and whether it is the default endpoint. See [`IndexedEndpoint`](#indexedendpoint) below.
 
   ```csharp
-  AssertionConsumerServiceUrls = new List<IndexedEndpoint>
-  {
-      new IndexedEndpoint
+  AssertionConsumerServiceUrls = 
+  [
+      new()
       {
           Location = "https://sp.example.com/saml/acs",
           Binding = SamlBinding.HttpPost,
           Index = 0,
           IsDefault = true
       }
-  }
+  ]
   ```
 
 * **`SingleLogoutServiceUrls`** (`ICollection<SamlEndpointType>`)
-  The SP's Single Logout Service endpoints. Each entry is a `SamlEndpointType` that pairs a `Location` (URL) with a `Binding` (SamlBinding). You can configure multiple endpoints for different bindings. Currently only HTTP-Redirect is supported for SLO. Required for SLO support. Defaults to an empty collection. See [`SamlEndpointType`](#samlendpointtype) below.
+  The SP's Single Logout Service endpoints. Each entry is a `SamlEndpointType` that pairs a `Location` (URL) with a `Binding` (SamlBinding). You can configure multiple endpoints for different bindings. Currently only HTTP Redirect is supported for SLO. Required for SLO support. Defaults to an empty collection. See [`SamlEndpointType`](#samlendpointtype) below.
 
   ```csharp
-  SingleLogoutServiceUrls = new List<SamlEndpointType>
-  {
-      new SamlEndpointType
+  SingleLogoutServiceUrls = 
+  [
+      new()
       {
           Location = "https://sp.example.com/saml/slo",
           Binding = SamlBinding.HttpRedirect,
       }
-  }
-  ```
-
-  Use the `GetSingleLogoutServiceEndpoint(SamlBinding binding)` helper method to retrieve the endpoint for a specific binding:
-
-  ```csharp
-  var sloEndpoint = sp.GetSingleLogoutServiceEndpoint(SamlBinding.HttpRedirect);
+  ]
   ```
 
 * **`RequireSignedAuthnRequests`** (`bool?`)
   When `true`, unsigned AuthnRequests from this SP are rejected. When `null`, falls back to the global `SamlOptions.WantAuthnRequestsSigned` default. Defaults to `null`.
 
 * **`RequireSignedLogoutResponses`** (`bool?`)
-  Per-SP override for whether LogoutResponse messages must be signed or delivered over TLS. 
-  When `null`, falls back to `SamlOptions.RequireSignedLogoutResponses`. Defaults to `null`.
+  Per-SP override for whether LogoutResponse messages must be signed. When `null`, falls back to `SamlOptions.RequireSignedLogoutResponses`. Defaults to `null`.
 
 * **`Certificates`** (`ICollection<ServiceProviderCertificate>?`)
   Certificates associated with this SP, with use annotations indicating whether each certificate is used for signature verification, encryption, or both. See [`ServiceProviderCertificate`](#serviceprovidercertificate) below. Defaults to `null`.
@@ -296,26 +291,26 @@ Available options:
 
 ### SamlBinding
 
-SAML bindings define how messages travel over HTTP. HTTP-Redirect encodes the message into the URL query string, which works well for small messages such as `AuthnRequest` but is limited by URL length constraints. HTTP-POST encodes the message in a hidden HTML form field and submits it automatically, making it the right choice for larger payloads (such as assertions with many attributes) and for keeping message content out of server access logs. See [Bindings](/identityserver/saml/concepts.md#bindings) for a deeper explanation.
+SAML bindings define how messages travel over HTTP. HTTP Redirect encodes the message into the URL query string, which works well for small messages such as `AuthnRequest` but is limited by URL length constraints. HTTP POST encodes the message in a hidden HTML form field and submits it automatically, making it the right choice for larger payloads (such as assertions with many attributes) and for keeping message content out of server access logs. See [Bindings](/identityserver/saml/concepts.md#bindings) for a deeper explanation.
 
-`SamlBinding` is used in two places: on `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`) and on `SamlEndpointType` (for each entry in `SingleLogoutServiceUrls`).
+`SamlBinding` is used on `SamlEndpointType` (for each entry in `SingleLogoutServiceUrls`) and on the derived `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`).
 
 | Value          | Description                                                                           |
 |----------------|---------------------------------------------------------------------------------------|
-| `HttpRedirect` | HTTP-Redirect binding. The SAML message is URL-encoded and sent as a query parameter. |
-| `HttpPost`     | HTTP-POST binding. The SAML message is Base64-encoded and sent in an HTML form.       |
+| `HttpRedirect` | HTTP Redirect binding. The SAML message is sent as a query parameter. |
+| `HttpPost`     | HTTP POST binding. The SAML message is sent in an HTML form.       |
 
 ### SamlSigningBehavior
 
-SAML assertions and responses are typically signed with the IdP's private key to prove their authenticity and prevent tampering. The signing behavior controls which XML elements carry a digital signature. `SignAssertion` is the recommended choice for most deployments: it signs the assertion element independently of the response envelope, which lets the SP verify the assertion regardless of how it was transported. See [Assertions](/identityserver/saml/concepts.md#assertions) for background on why signing matters.
+SAML assertions and/or responses are signed with the IdP's private key to prove their authenticity and prevent tampering. The signing behavior controls which XML elements carry a digital signature. `SignResponse` is the recommended choice for most deployments: it signs the  response, providing integrity protection to the entire SAML message. See [Assertions](/identityserver/saml/concepts.md#assertions) for background on why signing matters.
 
 Controls what elements are signed in SAML responses:
 
 | Value           | Description                                                                           |
 |-----------------|---------------------------------------------------------------------------------------|
 | `DoNotSign`     | No signing. For testing only. Do not use in production.                               |
-| `SignResponse`  | Signs the entire SAML `<Response>` element.                                           |
-| `SignAssertion` | Signs the `<Assertion>` element inside the response. **Recommended.**                 |
+| `SignResponse`  | Signs the entire SAML `<Response>` element. **Recommended.**                          |
+| `SignAssertion` | Signs the `<Assertion>` element inside the response.                                  |
 | `SignBoth`      | Signs both the `<Response>` and the `<Assertion>`. Maximum security, larger messages. |
 
 ### SamlEndpointType
@@ -326,14 +321,14 @@ Controls what elements are signed in SAML responses:
 new SamlServiceProvider
 {
     // ...
-    SingleLogoutServiceUrls = new List<SamlEndpointType>
-    {
+    SingleLogoutServiceUrls =
+    [
         new SamlEndpointType
         {
             Location = "https://sp.example.com/saml/slo",
             Binding = SamlBinding.HttpRedirect,
         }
-    }
+    ]
 }
 ```
 
@@ -351,15 +346,15 @@ Properties:
 Properties:
 
 * **`Location`** (`string`): The ACS URL where SAML responses are delivered.
-* **`Binding`** (`SamlBinding`): The HTTP binding the ACS endpoint uses. Must be `SamlBinding.HttpPost`. HTTP-Redirect is not supported for SAML Response delivery.
-* **`Index`** (`int`): Integer index used to order multiple ACS endpoints. Lower values take precedence.
-* **`IsDefault`** (`bool?`): When `true`, this endpoint is the default ACS. When multiple endpoints are registered, exactly one should be marked as default.
+* **`Binding`** (`SamlBinding`): The HTTP binding the endpoint uses. Must be `SamlBinding.HttpPost` for the ACS endpoint. HTTP Redirect is not supported for SAML Response delivery.
+* **`Index`** (`int`): Integer index used to order multiple endpoints. Lower values take precedence.
+* **`IsDefault`** (`bool?`): When `true`, this endpoint is the default endpoint of its kind. When multiple endpoints are registered, exactly one should be marked as default.
 
 Example:
 
 ```csharp
-AssertionConsumerServiceUrls = new List<IndexedEndpoint>
-{
+AssertionConsumerServiceUrls = 
+[
     new IndexedEndpoint
     {
         Location = "https://sp.example.com/saml/acs",
@@ -367,7 +362,7 @@ AssertionConsumerServiceUrls = new List<IndexedEndpoint>
         Index = 0,
         IsDefault = true
     }
-}
+]
 ```
 
 ### ServiceProviderCertificate
@@ -429,7 +424,11 @@ new SamlServiceProvider
 ```
 
 :::caution
-IdP-initiated SSO requires the Service Provider to accept unsolicited SAML responses from the IdP. Only enable it for SPs that explicitly support and require this flow.
+IdP-initiated SSO is inheritly vulnerable to Cross Site Request Forgery (CSRF). This is a property of the protocol, there is no way to enable or implement it without exposing CSRF risk.
+
+A better approach is to mimic the third-party initiated login flow used by OIDC: create an endpoint on the SP that responds with a redirect to the IdP, including an `AuthnRequest`.
+
+Only enable IdP-initiated SSO after careful security considerations and only for SPs that require this flow.
 :::
 
 For a working example, see the [SAML 2.0 IdP-Initiated sample](/identityserver/samples/saml.mdx).
