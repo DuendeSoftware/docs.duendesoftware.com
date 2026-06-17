@@ -1,0 +1,47 @@
+diff --git a/node_modules/astro-mermaid/astro-mermaid-integration.d.ts b/node_modules/astro-mermaid/astro-mermaid-integration.d.ts
+index d38280a..f33681d 100644
+--- a/node_modules/astro-mermaid/astro-mermaid-integration.d.ts
++++ b/node_modules/astro-mermaid/astro-mermaid-integration.d.ts
+@@ -12,6 +12,11 @@ export interface IconPack {
+    */
+   url?: string;
+ 
++  /**
++   * Icons JSON
++   */
++  icons?: Any;
++
+   /**
+    * Legacy: loader function whose source is inspected for a fetch() URL.
+    * Prefer using the `url` property instead for safer serialization.
+diff --git a/node_modules/astro-mermaid/astro-mermaid-integration.js b/node_modules/astro-mermaid/astro-mermaid-integration.js
+index ca43c7e..945b549 100644
+--- a/node_modules/astro-mermaid/astro-mermaid-integration.js
++++ b/node_modules/astro-mermaid/astro-mermaid-integration.js
+@@ -300,9 +300,13 @@ export default function astroMermaid(options = {}) {
+             );
+             return null;
+           }
++          if (pack.icons) {
++            // JSON icons
++            return { name: pack.name, icons: pack.icons };
++          }
+           throw new Error(
+             `astro-mermaid: iconPack "${pack.name}" must have a "url" string ` +
+-            `or a "loader" function`
++            `"icons" JSON, or a "loader" function`
+           );
+         }).filter(Boolean);
+ 
+@@ -333,8 +337,10 @@ async function loadMermaid() {
+       log('Registering', iconPacks.length, 'icon packs');
+       const packs = iconPacks.map(pack => ({
+         name: pack.name,
+-        loader: () => fetch(pack.url).then(res => res.json())
++        ...(pack.url && { loader: () => fetch(pack.url).then(res => res.json()) }),
++        ...(pack.icons && { icons: pack.icons })
+       }));
++      log('Registering', packs, 'icon packs');
+       await mermaid.registerIconPacks(packs);
+     }
+ 

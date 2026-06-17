@@ -12,6 +12,7 @@ import opengraphImages from "astro-opengraph-images";
 import rehypeExternalLinks from "rehype-external-links";
 import wawoff from "wawoff2";
 import * as fs from "node:fs";
+import { icons as materialSymbols } from "@iconify-json/material-symbols";
 
 // don't convert to path aliases, it doesn't work here
 // https://github.com/withastro/astro/issues/9782
@@ -62,10 +63,7 @@ export default defineConfig({
       iconPacks: [
         {
           name: "material-symbols",
-          loader: () =>
-            fetch("https://unpkg.com/@iconify-json/material-symbols@1/icons.json").then(
-              (res) => res.json()
-            ),
+          icons: materialSymbols
         },
       ],
     }),
