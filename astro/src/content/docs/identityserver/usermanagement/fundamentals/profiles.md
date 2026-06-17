@@ -323,6 +323,33 @@ foreach (var item in phones)
 }
 ```
 
+### Updating an Attribute
+
+To update an existing attribute value, you must read the profile back first. You can then create a new `AttributeValueCollection` from the `profile.Attributes.Values` collection, and make updates atributes.
+Make sure to store the updated attribute values using `IProfileSelfService.TryUpdateAsync()`.
+
+```csharp
+if (await profileSelfService.TryGetAsync(subjectId, HttpContext.RequestAborted) != null)
+{
+    // Pass in profile.Attributes.Values to build an updated AttributeValueCollection
+    var updatedAttributes = new AttributeValueCollection(schema, profile.Attributes.Values);
+    updatedAttributes.Set(UserAttributes.Name, Name);
+    updatedAttributes.Set(UserAttributes.FavoriteDinosaur, FavoriteDinosaur);
+
+    // Validate AttributeValueCollection
+    if (!updatedAttributes.TryValidate(out var validatedUpdatedAttributes, out var errors))
+    {
+        // handle validation errors
+    }
+
+    // Store AttributeValueCollection
+    if (await profileSelfService.TryUpdateAsync(profile.SubjectId, validatedUpdatedAttributes, HttpContext.RequestAborted) is null)
+    {
+        // handle errors updating profile
+    }
+}
+```
+
 ### Removing an Attribute Definition
 
 ```csharp
