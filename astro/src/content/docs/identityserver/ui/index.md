@@ -36,7 +36,7 @@ flowchart LR
     subgraph ASPNET["ASP.NET Core Request Pipeline"]
         direction TB
         subgraph IS[" "]
-            is_space@{ icon: "material-symbols:security-rounded", label: "IdentityServer Middleware", shape: icon }
+            is_space@{ icon: "material-symbols:assured-workload-rounded", label: "IdentityServer Middleware", shape: icon }
         end
         subgraph YC[" "]
             yc_space@{ icon: "material-symbols:code-rounded", label: "Your Code", shape: icon }
