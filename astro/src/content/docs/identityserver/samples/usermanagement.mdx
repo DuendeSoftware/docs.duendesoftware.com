@@ -50,3 +50,25 @@ in a single `dotnet run` command.
   title="User Management Sample"
   target="_blank"
 />
+
+### Password Registration Sample
+
+This sample demonstrates Duende User Management functionality for passwords. It validates an OTP sent to a user's email for initial authentication, then allows the user to set a password. It also includes Forgot Password functionality for resetting a password after validating an OTP.
+
+**Concepts demonstrated:**
+
+- **Password Configuration**: Password length, and complexity through the [PasswordOptions configuration](/identityserver/usermanagement/authentication/passwords#configuration).
+- **Custom Password Validator**: An [IPasswordValidator](/identityserver/usermanagement/authentication/passwords#custom-password-validation) with custom logic to block passwords in a hard coded list.
+- **Unique Custom Attributes**: A unique `Duende.Storage.EntityAttributeValue.AttributeDefinition` for the user's email address to tie the sign-in password to the email address.
+- **Custom Attribute Data**: Allows the user to edit custom profile data stored in attributes through the /Account page.
+
+
+The sample uses .NET Aspire to orchestrate IdentityServer, and Mailpit (for local email testing)
+in a single `dotnet run` command.
+
+<LinkCard
+  description="GitHub Repository for the User Management Sample"
+  href="https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v8/UserManagement/PasswordRegistration"
+  title="User Management Sample"
+  target="_blank"
+/>
