@@ -27,15 +27,24 @@ Most of the samples include both their own IdentityServer implementation and the
 The [_Basics_](/identityserver/samples/basics.mdx) samples use a [shared IdentityServer implementation](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/IdentityServerHost).
 Some samples use our public [demo instance of IdentityServer](https://demo.duendesoftware.com/).
 
-## Aspire
-For your convenience, many samples also have an *Aspire AppHost* project included. For these there's no need to run or debug projects in the solution individually anymore. Start the AppHost and everything will start in the right order.
-Where possible, projects also set up health points and telemetry for the Aspire dashboard. The code for that is located in the *Aspire.ServiceDefaults* assembly which is referenced by all relevant projects.
-When there's a database involved you'll find a database icon in the Aspire dashboard to create the database and run the migrations.
+### Aspire
 
-## Package Management
-The samples for IdentityServer also use *package management*. Individual project files still contain references to NuGet packages, but you won't find version numbers in project files. These are located in the file Directory.Packages.props. Each IdentityServer and BFF version directory has one. The *SDK version for Aspire* is centrally located in the global.json file in the repo root.
+To simplify local development, many samples include an *Aspire host* project. This eliminates the need to run or debug individual projects manually, and provides a better experience running the samples.
 
-Note that because of this, samples will only run correctly when the entire repository is cloned.
+* Launching the `AppHost` project makes sure all projects are started in the correct order
+* Relevant projects reference the `Aspire.ServiceDefaults` project, which automatically configures health endpoints and telemetry for the Aspire dashboard.
+* If a sample includes a database, you can use the database icon directly inside the Aspire dashboard to create the database and run migrations.
+
+### Package Management
+
+These samples use **Central Package Management**. While individual project files still reference NuGet packages, they do not contain version numbers. Instead, dependency versions are managed in two places:
+
+* **NuGet Packages:** Managed via the `Directory.Packages.props` file located in each IdentityServer and BFF version directory.
+* **Aspire SDK:** Centrally defined in the `global.json` file at the repository root.
+
+:::note[Always clone the full samples repository]
+Because of this centralized structure, samples will only compile and run correctly if the entire repository is cloned. Downloading individual project folders will result in build errors.
+:::
 
 ## Feedback
 
