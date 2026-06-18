@@ -27,6 +27,16 @@ Most of the samples include both their own IdentityServer implementation and the
 The [_Basics_](/identityserver/samples/basics.mdx) samples use a [shared IdentityServer implementation](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/IdentityServerHost).
 Some samples use our public [demo instance of IdentityServer](https://demo.duendesoftware.com/).
 
+## Aspire
+For your convenience, many samples also have an *Aspire AppHost* project included. For these there's no need to run or debug projects in the solution individually anymore. Start the AppHost and everything will start in the right order.
+Where possible, projects also set up health points and telemetry for the Aspire dashboard. The code for that is located in the *Aspire.ServiceDefaults* assembly which is referenced by all relevant projects.
+When there's a database involved you'll find a database icon in the Aspire dashboard to create the database and run the migrations.
+
+## Package Management
+The samples for IdentityServer also use *package management*. Individual project files still contain references to NuGet packages, but you won't find version numbers in project files. These are located in the file Directory.Packages.props. Each IdentityServer and BFF version directory has one. The *SDK version for Aspire* is centrally located in the global.json file in the repo root.
+
+Note that because of this, samples will only run correctly when the entire repository is cloned.
+
 ## Feedback
 
 You can [join the Duende developer community](https://github.com/DuendeSoftware/community/discussions) if you are looking for a particular sample and can't find it here.
