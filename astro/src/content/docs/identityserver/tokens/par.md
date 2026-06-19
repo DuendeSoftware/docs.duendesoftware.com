@@ -35,11 +35,12 @@ care, and in other industries with high security requirements.
 ## Licensing
 
 :::note
-This feature is part of the [Duende IdentityServer Business (legacy), Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Business (legacy), Enterprise (legacy), Lite, Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
-In the Starter edition, PAR requests will not be processed and instead log errors. If you have a starter edition license, you should disable the
-`EnablePushedAuthorizationEndpoint` flag so that discovery indicates that your IdentityServer does not support PAR:
+In the Duende IdentityServer Starter (legacy) edition, PAR requests will not be processed and instead log errors. 
+If you have a starter edition license, you should disable the `EnablePushedAuthorizationEndpoint` flag so that discovery 
+indicates that your IdentityServer does not support PAR:
 
 ```csharp
 // Program.cs

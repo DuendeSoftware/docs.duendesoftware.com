@@ -11,8 +11,12 @@ redirect_from:
   - /identityserver/v7/tokens/jar/
 ---
 
+:::note
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+:::
+
 Instead of providing the parameters for an authorize request as individual query string key/value pairs, you can package them up in signed JWTs.
-This makes the parameters tamperproof and you can authenticate the client already on the front-channel.
+This makes the parameters tamperproof, and you can authenticate the client already on the front-channel.
 
 :::note
 See [here](/identityserver/samples/basics.mdx#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
