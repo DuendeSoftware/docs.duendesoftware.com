@@ -1,4 +1,5 @@
 import { defineConfig, fontProviders } from "astro/config";
+import { unified } from "@astrojs/markdown-remark";
 import mermaid from "astro-mermaid";
 import starlight from "@astrojs/starlight";
 import starlightLinksValidator from "starlight-links-validator";
@@ -240,41 +241,41 @@ export default defineConfig({
       sidebar: [
         {
           label: "General Information",
-          autogenerate: { directory: "general" },
+          items: [{ autogenerate: { directory: "general" } }],
         },
         {
           label: "IdentityServer",
-          autogenerate: { directory: "identityserver" },
           collapsed: true,
+          items: [{ autogenerate: { directory: "identityserver" } }],
         },
         {
           label: "BFF Security Framework",
-          autogenerate: { directory: "bff" },
           collapsed: true,
+          items: [{ autogenerate: { directory: "bff" } }],
         },
         {
           label: "Access Token Management",
           badge: "oss",
-          autogenerate: { directory: "accesstokenmanagement" },
           collapsed: true,
+          items: [{ autogenerate: { directory: "accesstokenmanagement" } }],
         },
         {
           label: "IdentityModel",
           badge: "oss",
-          autogenerate: { directory: "identitymodel" },
           collapsed: true,
+          items: [{ autogenerate: { directory: "identitymodel" } }],
         },
         {
           label: "IdentityModel.OidcClient",
           badge: "oss",
-          autogenerate: { directory: "identitymodel-oidcclient" },
           collapsed: true,
+          items: [{ autogenerate: { directory: "identitymodel-oidcclient" } }],
         },
         {
           label: "Introspection for ASP.NET Core",
           badge: "oss",
-          autogenerate: { directory: "introspection" },
           collapsed: true,
+          items: [{ autogenerate: { directory: "introspection" } }],
         },
       ],
     }),
@@ -310,26 +311,28 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [[removeMarkdownExtensions, { ignoreRelativeLinks: true }]],
-    rehypePlugins: [
-      [
-        rehypeAstroRelativeMarkdownLinks,
-        {
-          trailingSlash: "always",
-          collections: {
-            docs: {
-              base: false,
+    processor: unified({
+      remarkPlugins: [[removeMarkdownExtensions, { ignoreRelativeLinks: true }]],
+      rehypePlugins: [
+        [
+          rehypeAstroRelativeMarkdownLinks,
+          {
+            trailingSlash: "always",
+            collections: {
+              docs: {
+                base: false,
+              },
             },
           },
-        },
+        ],
+        [
+          rehypeExternalLinks,
+          {
+            target: "_blank",
+            rel: ["noopener", "noreferrer"],
+          },
+        ],
       ],
-      [
-        rehypeExternalLinks,
-        {
-          target: "_blank",
-          rel: ["noopener", "noreferrer"],
-        },
-      ],
-    ],
+    }),
   },
 });

@@ -1,0 +1,133 @@
+diff --git a/node_modules/starlight-giscus/components/Comments.astro b/node_modules/starlight-giscus/components/Comments.astro
+index 992871d..58cce52 100644
+--- a/node_modules/starlight-giscus/components/Comments.astro
++++ b/node_modules/starlight-giscus/components/Comments.astro
+@@ -55,67 +55,67 @@ const giscus = entry.data.giscus ?? true;
+                 </script>
+             </div>
+         </giscus-comments>
++    )
++}
++
++<script>
++    class GiscusComments extends HTMLElement {
++        constructor() {
++            super();
++
++            const theme = JSON.parse(this.dataset.theme!);
++            const element = this.dataset.element || 'starlight-theme-select';
++            const darkTheme = theme.dark || 'dark';
++            const lightTheme = theme.light || 'light';
++            const preferredTheme = theme.auto || 'preferred_color_scheme';
++            const prefersDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
++
++            const getThemeValue = () => {
++                const palette = localStorage.getItem('starlight-theme');
+                 
+-        <script>
+-            class GiscusComments extends HTMLElement {
+-                constructor() {
+-                    super();
+-
+-                    const theme = JSON.parse(this.dataset.theme!)
+-                    const element = this.dataset.element || 'starlight-theme-select'
+-                    const darkTheme = theme.dark || 'dark';
+-                    const lightTheme = theme.light || 'light';
+-                    const preferredTheme = theme.auto || 'preferred_color_scheme';
+-                    const prefersDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+-
+-                    const getThemeValue = () => {
+-                        const palette = localStorage.getItem('starlight-theme');
+-                        
+-                        return palette === 'dark'
+-                            ? darkTheme
+-                            : (palette === 'light' ? lightTheme : preferredTheme);
+-                    }
+-
+-                    function sendThemeToGiscus(theme: string) {
+-                        const frame: HTMLIFrameElement | null = document.querySelector('iframe.giscus-frame');
+-
+-                        if (!frame) return;
+-
+-                        frame.contentWindow?.postMessage(
+-                            { giscus: { setConfig: { theme } } },
+-                            'https://giscus.app'
+-                        );
+-                    }
+-
+-                    function setGiscusTheme() {
+-                        sendThemeToGiscus(getThemeValue());
+-                    }
+-
+-                    function handleGiscusMessage(event: MessageEvent) {
+-                        if (event.origin !== 'https://giscus.app') return;
+-                        if (!(typeof event.data === 'object' && event.data.giscus)) return;
+-
+-                        setGiscusTheme();
+-                    }
+-
+-                    window.addEventListener('message', handleGiscusMessage);
+-                    prefersDarkQuery.addEventListener('change', () =>
+-                        sendThemeToGiscus(prefersDarkQuery.matches ? darkTheme : lightTheme)
+-                    );
+-
+-                    const attachThemeSelect = () => {
+-                        document.querySelector(element)?.addEventListener('change', setGiscusTheme);
+-                    };
+-
+-                    if (document.readyState === 'loading') {
+-                        document.addEventListener('DOMContentLoaded', attachThemeSelect);
+-                    } else {
+-                        attachThemeSelect();
+-                    }
+-                }
++                return palette === 'dark'
++                    ? darkTheme
++                    : (palette === 'light' ? lightTheme : preferredTheme);
+             }
+ 
+-            customElements.define('giscus-comments', GiscusComments);
+-        </script>
+-    )
+-}
++            function sendThemeToGiscus(theme: string) {
++                const frame: HTMLIFrameElement | null = document.querySelector('iframe.giscus-frame');
++
++                if (!frame) return;
++
++                frame.contentWindow?.postMessage(
++                    { giscus: { setConfig: { theme } } },
++                    'https://giscus.app'
++                );
++            }
++
++            function setGiscusTheme() {
++                sendThemeToGiscus(getThemeValue());
++            }
++
++            function handleGiscusMessage(event: MessageEvent) {
++                if (event.origin !== 'https://giscus.app') return;
++                if (!(typeof event.data === 'object' && event.data.giscus)) return;
++
++                setGiscusTheme();
++            }
++
++            window.addEventListener('message', handleGiscusMessage);
++            prefersDarkQuery.addEventListener('change', () =>
++                sendThemeToGiscus(prefersDarkQuery.matches ? darkTheme : lightTheme)
++            );
++
++            const attachThemeSelect = () => {
++                document.querySelector(element)?.addEventListener('change', setGiscusTheme);
++            };
++
++            if (document.readyState === 'loading') {
++                document.addEventListener('DOMContentLoaded', attachThemeSelect);
++            } else {
++                attachThemeSelect();
++            }
++        }
++    }
++
++    customElements.define('giscus-comments', GiscusComments);
++</script>
