@@ -62,6 +62,10 @@ The client must then use the same client certificate to call the APIs, and your 
 
 If the access token would leak, it cannot be replayed without having access to the additional private key of the X.509 client certificate.
 
+:::note
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+:::
+
 ### Combine TLS Proof-of-possession With Other Authentication Methods
 
 It is not mandatory to authenticate your clients with a client certificate to get the benefit of proof-of-possession. You can combine this feature with an arbitrary client authentication method - or even no client authentication at all (e.g. for public mobile/native clients).
@@ -157,7 +161,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 attacks by making it difficult for attackers to use stolen tokens.
 
 :::note
-This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Lite, Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
 DPoP specifies how to bind
