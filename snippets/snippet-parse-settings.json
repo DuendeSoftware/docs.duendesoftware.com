@@ -1,0 +1,8 @@
+{
+    "rootDirectory": "D:/GitHub/DuendeSoftware/docs.duendesoftware.com/snippets/",
+    "excludedDirectoryNames": [
+        "enablment-code"
+    ],
+    "reduceIndentation": true,
+    "outputSnippetsDirectory": "D:/GitHub/DuendeSoftware/docs.duendesoftware.com/snippets"
+}
