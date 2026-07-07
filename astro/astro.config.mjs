@@ -151,7 +151,7 @@ export default defineConfig({
           errorOnLocalLinks: false
         }),
       ],
-      title: "Duende Software Docs",
+      title: "Duende Docs",
       favicon: "/favicon.png",
       head: [
         // Favicon ICO fallback for older browsers
