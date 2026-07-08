@@ -1,0 +1,256 @@
+---
+title: OAuth 2.0 Introspection Events
+description: Handle authentication pipeline events in the OAuth 2.0 token introspection handler, including token validation, client assertions, and request customization.
+sidebar:
+  label: Events
+  order: 3
+---
+
+The `OAuth2IntrospectionEvents` class exposes four `Func` delegates that let you hook into the introspection handler's
+authentication pipeline. Each delegate receives a typed context object that carries the relevant data for that stage.
+
+You configure events when registering the handler:
+
+```csharp
+// Program.cs
+builder.Services.AddAuthentication(OAuth2IntrospectionDefaults.AuthenticationScheme)
+    .AddOAuth2Introspection(options =>
+    {
+        options.Authority = "https://demo.duendesoftware.com";
+        options.ClientId = "api";
+        options.ClientSecret = "secret";
+
+        options.Events = new OAuth2IntrospectionEvents
+        {
+            OnTokenValidated = context =>
+            {
+                // custom logic here
+                return Task.CompletedTask;
+            }
+        };
+    });
+```
+
+## Events Reference
+
+| Event | Context Class | Triggered When |
+|---|---|---|
+| `OnTokenValidated` | `TokenValidatedContext` | Token passes validation; a `ClaimsIdentity` has been generated |
+| `OnAuthenticationFailed` | `AuthenticationFailedContext` | An exception is thrown during request processing |
+| `OnUpdateClientAssertion` | `UpdateClientAssertionContext` | The handler needs to refresh the client assertion |
+| `OnSendingRequest` | `SendingRequestContext` | An introspection request is about to be sent to the endpoint |
+
+---
+
+## OnTokenValidated
+
+**Context:** `TokenValidatedContext`
+
+Invoked after the introspection endpoint returns an active token and a `ClaimsIdentity` has been generated.
+Use this event to add, remove, or transform claims before the identity is set on the HTTP context.
+
+### Context Properties
+
+| Property | Type | Description |
+|---|---|---|
+| `SecurityToken` | `string` | The raw token that was introspected |
+| `Principal` | `ClaimsPrincipal` | The generated principal (set or replace to modify identity) |
+| `Properties` | `AuthenticationProperties` | Authentication properties for the current request |
+
+### Example: Adding Custom Claims
+
+```csharp
+options.Events = new OAuth2IntrospectionEvents
+{
+    OnTokenValidated = context =>
+    {
+        var claims = new List<Claim>
+        {
+            new Claim("app_version", "2.0"),
+        };
+
+        var appIdentity = new ClaimsIdentity(claims);
+        context.Principal!.AddIdentity(appIdentity);
+
+        return Task.CompletedTask;
+    }
+};
+```
+
+### Example: Enriching Claims from a Database
+
+```csharp
+options.Events = new OAuth2IntrospectionEvents
+{
+    OnTokenValidated = async context =>
+    {
+        var userService = context.HttpContext.RequestServices
+            .GetRequiredService<IUserService>();
+
+        var subject = context.Principal!.FindFirst("sub")?.Value;
+        if (subject is not null)
+        {
+            var roles = await userService.GetRolesAsync(subject);
+            var claims = roles.Select(r => new Claim(ClaimTypes.Role, r));
+            context.Principal.AddIdentity(new ClaimsIdentity(claims));
+        }
+    }
+};
+```
+
+---
+
+## OnAuthenticationFailed
+
+**Context:** `AuthenticationFailedContext`
+
+Invoked when an exception is thrown during request processing. The exception will be re-thrown after this event
+unless you call `context.HandleResponse()` to suppress it.
+
+### Context Properties
+
+| Property | Type | Description |
+|---|---|---|
+| `Error` | `string` | A description of the error that occurred |
+| `Exception` | `Exception` | The exception that was thrown |
+
+### Example: Logging Authentication Failures
+
+```csharp
+options.Events = new OAuth2IntrospectionEvents
+{
+    OnAuthenticationFailed = context =>
+    {
+        var logger = context.HttpContext.RequestServices
+            .GetRequiredService<ILogger<Program>>();
+
+        logger.LogWarning(
+            context.Exception,
+            "Token introspection authentication failed: {Error}",
+            context.Error);
+
+        return Task.CompletedTask;
+    }
+};
+```
+
+### Example: Suppressing Specific Errors
+
+```csharp
+options.Events = new OAuth2IntrospectionEvents
+{
+    OnAuthenticationFailed = context =>
+    {
+        // Gracefully handle transient connectivity errors
+        // instead of throwing an exception to the caller
+        if (context.Exception is HttpRequestException)
+        {
+            context.NoResult();
+        }
+
+        return Task.CompletedTask;
+    }
+};
+```
+
+---
+
+## OnUpdateClientAssertion
+
+**Context:** `UpdateClientAssertionContext`
+
+Invoked when the introspection handler needs to authenticate to the introspection endpoint using a
+[JWT client assertion](https://www.rfc-editor.org/rfc/rfc7523) rather than a shared secret.
+Use this event to generate and rotate short-lived signed JWTs for client authentication.
+
+:::tip
+This event is only required when you are using private key JWT client authentication instead of a `ClientSecret`.
+If you use a `ClientSecret`, you do not need to handle this event.
+:::
+
+### Context Properties
+
+| Property | Type | Description |
+|---|---|---|
+| `ClientAssertion` | `ClientAssertion` | Set this to provide the assertion JWT and its type |
+| `ClientAssertionExpirationTime` | `DateTime` | Set the expiry so the handler knows when to refresh |
+
+### Example: JWT Client Assertion
+
+```csharp
+options.Events = new OAuth2IntrospectionEvents
+{
+    OnUpdateClientAssertion = context =>
+    {
+        var keyService = context.HttpContext.RequestServices
+            .GetRequiredService<IClientAssertionSigningKeyService>();
+
+        var now = DateTime.UtcNow;
+        var expiry = now.AddMinutes(5);
+
+        var token = keyService.CreateSignedJwt(
+            issuer: context.Options.ClientId,
+            audience: context.Options.IntrospectionEndpoint ?? context.Options.Authority,
+            expiry: expiry);
+
+        context.ClientAssertion = new ClientAssertion
+        {
+            Type = OidcConstants.ClientAssertionTypes.JwtBearer,
+            Value = token,
+        };
+        context.ClientAssertionExpirationTime = expiry;
+
+        return Task.CompletedTask;
+    }
+};
+```
+
+---
+
+## OnSendingRequest
+
+**Context:** `SendingRequestContext`
+
+Invoked immediately before the `TokenIntrospectionRequest` is sent to the introspection endpoint.
+Use this event to inspect or modify the outgoing request, for example to add custom parameters.
+
+### Context Properties
+
+| Property | Type | Description |
+|---|---|---|
+| `TokenIntrospectionRequest` | `TokenIntrospectionRequest` | The request object that will be sent to the endpoint |
+
+### Example: Adding Custom Request Parameters
+
+```csharp
+options.Events = new OAuth2IntrospectionEvents
+{
+    OnSendingRequest = context =>
+    {
+        // Add extra parameters to the introspection request
+        context.TokenIntrospectionRequest.Parameters.Add(
+            "resource", "https://api.example.com");
+
+        return Task.CompletedTask;
+    }
+};
+```
+
+### Example: Logging Outbound Requests
+
+```csharp
+options.Events = new OAuth2IntrospectionEvents
+{
+    OnSendingRequest = context =>
+    {
+        var logger = context.HttpContext.RequestServices
+            .GetRequiredService<ILogger<Program>>();
+
+        logger.LogDebug(
+            "Sending introspection request to {Address}",
+            context.TokenIntrospectionRequest.Address);
+
+        return Task.CompletedTask;
+    }
+};
+```

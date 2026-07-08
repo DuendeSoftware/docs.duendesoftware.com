@@ -1,0 +1,226 @@
+---
+title: Troubleshooting
+description: Diagnose and fix common problems with the OAuth 2.0 token introspection handler — 401 responses, empty claims, discovery errors, JWT skipping, and more.
+sidebar:
+  label: Troubleshooting
+  order: 90
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+This page covers the most common problems encountered when using the
+`Duende.AspNetCore.Authentication.OAuth2Introspection` handler. Each scenario is described in
+**symptom → cause → solution** format.
+
+---
+
+### Symptom: 401 Unauthorized on Every Request
+
+**Cause:** The most common causes are:
+
+- `Authority` or `IntrospectionEndpoint` is incorrect or unreachable
+- `ClientId` / `ClientSecret` do not match what the authorization server expects
+- The token is being sent by the client in a format the handler is not configured to read
+- The authorization server and application clocks are significantly out of sync (clock skew)
+
+**Solution:**
+
+Verify basic connectivity first. The handler issues an HTTP POST to the introspection endpoint with the
+client credentials and the token. Check that the endpoint URL is correct and that the credentials match
+the authorization server's configuration:
+
+```csharp
+options.Authority = "https://idp.example.com";  // must be reachable from the server
+// OR set IntrospectionEndpoint directly to skip discovery:
+options.IntrospectionEndpoint = "https://idp.example.com/connect/introspect";
+
+options.ClientId = "api1";          // must match exactly
+options.ClientSecret = "api1secret"; // must match exactly
+```
+
+If the token is sent in a non-default location (e.g., query string instead of `Authorization` header),
+configure the `TokenRetriever`. See [Extensibility — Token Retrieval](/introspection/extensibility/#token-retrieval).
+
+For clock skew, ensure your servers are synchronized via NTP. If you control the authorization server,
+you can also relax the `clockSkew` setting on its JWT validation if the introspection endpoint applies
+token lifetime checks server-side.
+
+---
+
+### Symptom: Token Introspection Succeeds but Claims Are Empty
+
+**Cause:** The introspection endpoint returns `"active": true` but includes no claim properties in the
+response, or the claim types in the response do not match what ASP.NET Core uses internally.
+
+**Solution:**
+
+First, verify that your authorization server returns claims with the token response. Make a raw HTTP call
+to the introspection endpoint and inspect the JSON response.
+
+If claims are present but not visible in `User.Claims`, the most likely cause is a `NameClaimType` or
+`RoleClaimType` mismatch. The handler uses `"name"` and `"role"` by default, but your authorization server
+may issue `"preferred_username"` or `ClaimTypes.Name` (`"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"`):
+
+```csharp
+// Match the claim type names your authorization server sends
+options.NameClaimType = "preferred_username"; // default: "name"
+options.RoleClaimType = ClaimTypes.Role;      // default: "role"
+```
+
+---
+
+### Symptom: Performance Degradation Under Load
+
+**Cause:** The handler is not caching introspection results, or the `CacheDuration` is too short relative
+to your token lifetimes. With caching disabled or very short, every authenticated request results in a
+round-trip to the authorization server.
+
+**Solution:**
+
+Ensure caching is not accidentally disabled via `SetCacheEntryFlags`:
+
+```csharp
+// Verify this is NOT set to disable caching
+// options.SetCacheEntryFlags = HybridCacheEntryFlags.DisableLocalCache | HybridCacheEntryFlags.DisableDistributedCache;
+
+// Default is HybridCacheEntryFlags.None — both caches are active
+// Tune CacheDuration relative to your token lifetime
+options.CacheDuration = TimeSpan.FromMinutes(5); // default
+```
+
+For production deployments with multiple application instances, add a distributed cache backend so the
+L2 cache is shared:
+
+```csharp
+// Add Redis as the distributed cache backend (or SQL Server, etc.)
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+});
+// HybridCache picks up the IDistributedCache automatically
+builder.Services.AddHybridCache();
+```
+
+See [Extensibility — Cache Behavior](/introspection/extensibility/#controlling-cache-behavior-with-setcacheentryflags) for
+details on all caching options.
+
+---
+
+### Symptom: Discovery Errors — `Unable to obtain configuration` or `IDX20803`
+
+**Cause:** When using `Authority`, the handler performs an OpenID Connect discovery request to
+`{Authority}/.well-known/openid-configuration`. This fails if:
+
+- The authority URL is wrong or has a trailing slash mismatch
+- The authorization server does not serve a discovery document
+- HTTPS certificate validation fails (common in development with self-signed certs)
+- The discovery document does not include an `introspection_endpoint` claim
+
+**Solution:**
+
+If you know the introspection endpoint URL directly, bypass discovery entirely by setting
+`IntrospectionEndpoint` instead of `Authority`:
+
+```csharp
+options.IntrospectionEndpoint = "https://localhost:5001/connect/introspect";
+```
+
+In development, you can relax the discovery policy to allow HTTP or self-signed certificates:
+
+```csharp
+options.DiscoveryPolicy = new DiscoveryPolicy
+{
+    RequireHttps = false,           // allow HTTP in development
+    ValidateIssuerName = false,     // allow issuer name mismatch
+};
+```
+
+:::caution
+Never set `RequireHttps = false` in production. This exposes your application to man-in-the-middle attacks.
+Use proper HTTPS certificates in all non-development environments.
+:::
+
+---
+
+### Symptom: JWT Tokens Are Not Being Introspected
+
+**Cause:** When `SkipTokensWithDots = true`, the handler skips any token that contains a dot (`.`).
+Since JWTs have the format `header.payload.signature`, they are skipped and the request is treated as
+unauthenticated.
+
+**Solution:**
+
+The default value of `SkipTokensWithDots` is `false`, meaning JWTs are introspected like any other token.
+If you have explicitly set it to `true` to handle a mixed environment, and now need to introspect JWTs,
+set it back to `false`:
+
+```csharp
+options.SkipTokensWithDots = false; // default — introspect both opaque and JWT tokens
+```
+
+If you intentionally want to skip JWTs (because your API validates them locally with JWT bearer auth)
+and only introspect opaque tokens, the `true` setting is correct. Ensure your JWT scheme is also
+registered and configured with the correct authority so JWT tokens are handled by that scheme instead.
+
+---
+
+### Symptom: Proxy or Network Errors When Calling the Introspection Endpoint
+
+**Cause:** The application host cannot reach the introspection endpoint directly. This is common in
+environments where outbound HTTP from the application server must go through a corporate proxy.
+
+**Solution:**
+
+Configure the backchannel HTTP client used by the introspection handler. Use
+`OAuth2IntrospectionDefaults.BackChannelHttpClientName` as the named client key:
+
+```csharp
+using Duende.AspNetCore.Authentication.OAuth2Introspection;
+
+builder.Services
+    .AddHttpClient(OAuth2IntrospectionDefaults.BackChannelHttpClientName)
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        UseProxy = true,
+        Proxy = new WebProxy("http://proxy.corp.example.com:8080", bypassOnLocal: true),
+    });
+```
+
+You can also use this to add retry policies, timeout configuration, or custom delegating handlers — for
+example, using Polly for resilience:
+
+```csharp
+builder.Services
+    .AddHttpClient(OAuth2IntrospectionDefaults.BackChannelHttpClientName)
+    .AddStandardResilienceHandler(); // requires Microsoft.Extensions.Http.Resilience
+```
+
+See [Configuration — Backchannel HTTP Client](/introspection/#configuring-the-backchannel-http-client) for
+the full setup example.
+
+---
+
+## See Also
+
+<CardGrid>
+  <LinkCard
+    href="/introspection/options/"
+    title="Options"
+    description="Full options reference for OAuth2IntrospectionOptions."
+  />
+  <LinkCard
+    href="/introspection/events/"
+    title="Events"
+    description="Hook into validation events during token introspection."
+  />
+  <LinkCard
+    href="/introspection/extensibility/"
+    title="Extensibility"
+    description="Custom caching and token retrieval strategies."
+  />
+  <LinkCard
+    href="https://datatracker.ietf.org/doc/html/rfc7662"
+    title="RFC 7662"
+    description="OAuth 2.0 Token Introspection specification."
+  />
+</CardGrid>
