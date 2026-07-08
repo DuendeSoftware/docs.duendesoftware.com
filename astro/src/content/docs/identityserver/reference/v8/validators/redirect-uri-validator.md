@@ -8,6 +8,7 @@ redirect_from:
   - /identityserver/v5/reference/validators/redirect_uri_validator/
   - /identityserver/v6/reference/validators/redirect_uri_validator/
   - /identityserver/reference/validators/redirect-uri-validator/
+  - /identityserver/reference/v8/validators/redirect_uri_validator/
 ---
 
 #### Duende.IdentityServer.Validation.IRedirectUriValidator

@@ -18,23 +18,23 @@ MVC controllers for the user interface of IdentityServer.
 
 ## IDeviceFlowInteractionService APIs
 
-* **`GetAuthorizationContextAsync`**
+* **`GetAuthorizationContextAsync(string userCode)`**
 
   Returns the `DeviceFlowAuthorizationRequest` based on the `userCode` passed to the login or consent pages.
 
-* **`DeviceFlowInteractionResult`**
+* **`HandleRequestAsync(string userCode, ConsentResponse consent)`**
 
   Completes device authorization for the given `userCode`.
 
 ## DeviceFlowAuthorizationRequest
 
-* **`ClientId`**
+* **`Client`**
 
-  The client identifier that initiated the request.
+  The client that initiated the device authorization request.
 
-* **`ScopesRequested`**
+* **`ValidatedResources`**
 
-  The scopes requested from the authorization request.
+  The validated resources (scopes and resource indicators) requested by the client.
 
 ## DeviceFlowInteractionResult
 
@@ -42,6 +42,14 @@ MVC controllers for the user interface of IdentityServer.
 
   Specifies if the authorization request errored.
 
+* **`IsAccessDenied`**
+
+  Gets or sets a value indicating whether the user denied access.
+
 * **`ErrorDescription`**
 
   Error description upon failure.
+
+* **`Failure(string errorDescription = null)`** *(static method)*
+
+  Creates a `DeviceFlowInteractionResult` indicating failure with an optional error description.

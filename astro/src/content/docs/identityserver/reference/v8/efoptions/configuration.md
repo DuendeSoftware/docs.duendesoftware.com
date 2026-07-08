@@ -85,3 +85,14 @@ Identity provider related tables:
 
 * **`IdentityProvider`**
 
+SAML Service Provider related tables:
+
+* **`SamlServiceProvider`**
+* **`SamlAssertionConsumerService`**
+* **`SamlSingleLogoutService`**
+* **`SamlCertificate`**
+* **`SamlClaimMapping`**
+* **`SamlAuthnContextMapping`**
+* **`SamlAllowedScope`**
+* **`SamlRequestedClaimType`**
+
