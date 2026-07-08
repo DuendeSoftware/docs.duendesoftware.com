@@ -21,8 +21,9 @@ public interface ISecretParser
     /// Tries to find a secret on the context that can be used for authentication
     /// </summary>
     /// <param name="context">The HTTP context.</param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns>A parsed secret</returns>
-    Task<ParsedSecret> ParseAsync(HttpContext context);
+    Task<ParsedSecret> ParseAsync(HttpContext context, CancellationToken ct);
 
     /// <summary>
     /// Returns the authentication method name that this parser implements
@@ -89,7 +90,7 @@ The parsed secret is forwarded to the registered secret validator. The validator
 property to determine if this secret is something that can be validated by that validator instance. If yes, it will know
 how to cast the `Credential` object into a format that is understood.
 
-#### Duende.IdentityServer.Validation.ISecretParser
+#### Duende.IdentityServer.Validation.ISecretValidator
 
 Validates a parsed secret.
 
@@ -99,9 +100,11 @@ public interface ISecretValidator
     /// <summary>Validates a secret</summary>
     /// <param name="secrets">The stored secrets.</param>
     /// <param name="parsedSecret">The received secret.</param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns>A validation result</returns>
     Task<SecretValidationResult> ValidateAsync(
       IEnumerable<Secret> secrets,
-      ParsedSecret parsedSecret);
+      ParsedSecret parsedSecret,
+      CancellationToken ct);
 }
 ```
