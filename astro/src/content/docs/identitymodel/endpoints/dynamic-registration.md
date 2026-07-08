@@ -35,7 +35,7 @@ specification. If you want to add custom parameters, it is recommended
 to derive from this class and add your own properties.
 :::
 
-The response is of type `RegistrationResponse` and has properties for
+The response is of type `DynamicClientRegistrationResponse` and has properties for
 the standard response parameters. You also have access to the raw
 response and to a parsed JSON document (via the `Raw` and `Json`
 properties).

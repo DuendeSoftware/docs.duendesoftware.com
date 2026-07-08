@@ -61,6 +61,7 @@ endpoint - it has support the most common parameters:
 /// <param name="maxAge">The max age.</param>
 /// <param name="uiLocales">The ui locales.</param>
 /// <param name="idTokenHint">The id_token hint.</param>
+/// <param name="requestUri">The request_uri for PAR.</param>
 /// <param name="extra">Extra parameters.</param>
 /// <returns></returns>
 public static string CreateAuthorizeUrl(this RequestUrl request,
@@ -80,7 +81,8 @@ public static string CreateAuthorizeUrl(this RequestUrl request,
     int? maxAge = null,
     string uiLocales = null,
     string idTokenHint = null,
-    object extra = null)
+    string requestUri = null,
+    Parameters extra = null)
 { ... }
 ```
 
@@ -97,9 +99,7 @@ var url = ru.CreateAuthorizeUrl(
     scope: "openid");
 ```
 :::note
-The *extra* parameter can either be a string dictionary or an arbitrary
-other type with properties. In both cases the values will be serialized
-as keys/values.
+The *extra* parameter is of type `Parameters`, which can be constructed from a dictionary or populated with key-value pairs.
 :::
 
 ## EndSession Endpoint
@@ -121,13 +121,11 @@ public static string CreateEndSessionUrl(this RequestUrl request,
     string idTokenHint = null,
     string postLogoutRedirectUri = null,
     string state = null,
-    object extra = null)
+    Parameters extra = null)
 { ... }
 ```
 
 
 :::note
-The *extra* parameter can either be a string dictionary or an arbitrary
-other type with properties. In both cases the values will be serialized
-as keys/values.
+The *extra* parameter is of type `Parameters`, which can be constructed from a dictionary or populated with key-value pairs.
 :::
