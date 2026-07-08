@@ -7,6 +7,9 @@ using System.Text.Json.Serialization;
 
 //1. Load settings
 var parseSettingsPath = "D:/GitHub/DuendeSoftware/docs.duendesoftware.com/snippets/snippet-parse-settings.json";
+var parseSettingsRoot = Path.GetDirectoryName(parseSettingsPath)!;
+Directory.SetCurrentDirectory(parseSettingsRoot);
+
 var jsonSettings = new JsonSerializerOptions()
 {
     AllowTrailingCommas = true,
@@ -49,32 +52,16 @@ foreach (var dir in dirs)
 Console.WriteLine(allRegionInfos.Count);
 
 //4. Write out files -- single file for all snippets, one file per snippet
-var metadataFilePath = $"{parseSettings.OutputSnippetsDirectory}/{SnippetsMetadata.FileName}";
-var snippetsDirectory = $"{parseSettings.OutputSnippetsDirectory}/{Snippet.DirectoryName}";
-if (Directory.Exists(snippetsDirectory))
-{
-    Directory.Delete(snippetsDirectory, recursive: true);
-}
-Directory.CreateDirectory(snippetsDirectory);
-
-var snippetsList = new List<Snippet>();
-var snippetMetadatasList = new List<SnippetsMetadata.SnippetMetadata>();
+var outputFilePath = $"{parseSettings.OutputSnippetsDirectory}/{SnippetsOutput.FileName}";
+var outputSnippetsList = new List<SnippetsOutput.Snippet>();
 
 foreach (var regionInfo in allRegionInfos)
 {
-    var snippet = new Snippet(Id: regionInfo.RegionName, Language: "csharp", CodeBase64: regionInfo.CodeBase64);
-    snippetsList.Add(snippet);
-
-    var relativeFilePath = $"{Snippet.DirectoryName}/{snippet.Id}.json";
-    var fullFilePath = $"{parseSettings.OutputSnippetsDirectory}/{relativeFilePath}";
-    var snippetJson = JsonSerializer.Serialize(snippet, jsonSettings);
-    File.WriteAllText(fullFilePath, snippetJson);
-
-    var snippetMetadata = new SnippetsMetadata.SnippetMetadata(Id: snippet.Id, RelativeFilePath: $"{Snippet.DirectoryName}/{snippet.Id}.json");
-    snippetMetadatasList.Add(snippetMetadata);
+    var snippet = new SnippetsOutput.Snippet(Id: regionInfo.RegionName, Language: "csharp", CodeBase64: regionInfo.CodeBase64);
+    outputSnippetsList.Add(snippet);
 }
 
-var snippetsMetadata = new SnippetsMetadata(Snippets: snippetMetadatasList.ToImmutableArray());
-var snippetsMetadataJson = JsonSerializer.Serialize(snippetsMetadata, jsonSettings);
+var snippetsOutput = new SnippetsOutput(Snippets: outputSnippetsList.ToImmutableArray());
+var snippetsOutputJson = JsonSerializer.Serialize(snippetsOutput, jsonSettings);
 
-File.WriteAllText(metadataFilePath, snippetsMetadataJson);
+File.WriteAllText(outputFilePath, snippetsOutputJson);

@@ -19,6 +19,7 @@ import { icons as materialSymbols } from "@iconify-json/material-symbols";
 // https://github.com/withastro/astro/issues/9782
 import { duendeOpenGraphImage } from "./src/plugins/duende-og-image.js";
 import removeMarkdownExtensions from "./src/plugins/remove-markdown-extensions.js";
+import codeSnippetImporter from "./src/plugins/code-snippet-importer.js";
 import staticRedirects from "./src/plugins/static-redirects.js";
 import markdownOutput from "./src/plugins/markdown-output.js";
 import contributorMapping from "./src/plugins/contributor-mapping.js";
@@ -312,7 +313,7 @@ export default defineConfig({
   ],
   markdown: {
     processor: unified({
-      remarkPlugins: [[removeMarkdownExtensions, { ignoreRelativeLinks: true }]],
+      remarkPlugins: [[removeMarkdownExtensions, { ignoreRelativeLinks: true }], [codeSnippetImporter, {snippetsFiles: ["../snippets/snippets.json", "https://raw.githubusercontent.com/ProgrammerAL/scratchpad-public/refs/heads/main/code-snippets/snippets.json"]}]],
       rehypePlugins: [
         [
           rehypeAstroRelativeMarkdownLinks,
