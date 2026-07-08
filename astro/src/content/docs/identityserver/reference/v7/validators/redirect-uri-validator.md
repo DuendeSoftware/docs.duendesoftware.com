@@ -6,6 +6,7 @@ sidebar:
   order: 30
 redirect_from:
   - /identityserver/v7/reference/validators/redirect_uri_validator/
+  - /identityserver/reference/v7/validators/redirect_uri_validator/ 
 ---
 
 #### Duende.IdentityServer.Validation.IRedirectUriValidator
