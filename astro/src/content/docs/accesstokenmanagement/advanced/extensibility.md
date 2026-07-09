@@ -116,7 +116,7 @@ In multi-tenant applications, different tenants often require different paramete
 
 The `ITokenRequestCustomizer` provides a clean way to handle these variations without needing separate `HttpClient` configurations for each tenant.
 
-The following example demonstrates a multi-tenant scenario where the customizer extracts the tenant identifier from the HTTP request and applies tenant-specific token parameters:
+The following example demonstrates a multi-tenant scenario where the customizer extracts the tenant identifier from the HTTP request context and applies tenant-specific token parameters:
 
 ```csharp
 // MultiTenantTokenRequestCustomizer.cs
@@ -125,13 +125,15 @@ public class MultiTenantTokenRequestCustomizer(
     ITenantConfigurationStore tenantConfigStore) : ITokenRequestCustomizer
 {
     public async Task<TokenRequestParameters> Customize(
-        HttpRequestMessage httpRequest,
+        HttpRequestContext httpRequestContext,
         TokenRequestParameters baseParameters,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
-        // Extract tenant identifier from the request
+        // Extract tenant identifier from the request context
+        // HttpRequestContext provides access to the HttpRequestMessage
         // This could come from a header, subdomain, or route parameter
-        var tenantId = await tenantResolver.GetTenantIdAsync(httpRequest, cancellationToken);
+        var tenantId = await tenantResolver.GetTenantIdAsync(
+            httpRequestContext.HttpRequestMessage, cancellationToken);
         
         // Get tenant-specific configuration
         var tenantConfig = await tenantConfigStore.GetConfigurationAsync(tenantId, cancellationToken);
@@ -201,3 +203,272 @@ Beyond multi-tenancy, `ITokenRequestCustomizer` can be used for:
 - Dynamically setting scopes based on the target API endpoint
 - Adding audience or resource parameters based on request headers or route data
 - Implementing per-request token parameter logic without changing the core retrieval flow
+
+## Principal Transformation After Token Refresh
+
+After a token refresh, you can update the user's claims before the authentication session is re-issued. The `TransformPrincipalAfterRefreshAsync` delegate transforms the `ClaimsPrincipal` after a successful token refresh.
+
+```csharp
+public delegate Task<ClaimsPrincipal> TransformPrincipalAfterRefreshAsync(
+    ClaimsPrincipal principal, 
+    CancellationToken ct);
+```
+
+### Use Cases
+
+- **Refreshing claims from the identity provider**: Fetch updated claims from the userinfo endpoint after token refresh
+- **Updating role or permission claims**: Update roles or permissions that changed between token refreshes
+- **Adding computed claims**: Add claims based on external data sources that may have changed
+
+### Example: Updating Claims After Refresh
+
+```csharp
+// Program.cs
+builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
+{
+    // Configure other options...
+});
+
+// Register the principal transformation
+builder.Services.AddSingleton<TransformPrincipalAfterRefreshAsync>(
+    async (principal, ct) =>
+    {
+        // Create a new identity with the existing claims
+        var identity = (ClaimsIdentity)principal.Identity!;
+        
+        // Example: Fetch updated roles from a service
+        var roleService = // resolve from somewhere or capture in closure
+        var currentRoles = await roleService.GetRolesForUserAsync(
+            principal.FindFirstValue("sub"), ct);
+        
+        // Remove old role claims and add new ones
+        var existingRoleClaims = identity.FindAll("role").ToList();
+        foreach (var claim in existingRoleClaims)
+        {
+            identity.RemoveClaim(claim);
+        }
+        
+        foreach (var role in currentRoles)
+        {
+            identity.AddClaim(new Claim("role", role));
+        }
+        
+        return principal;
+    });
+```
+
+:::tip[When to use TransformPrincipalAfterRefreshAsync]
+Use this delegate when claims need to be synchronized with external systems during token refresh. For static claim transformations that happen at login time, use `IClaimsTransformation` instead.
+:::
+
+## User Accessor
+
+The `IUserAccessor` interface provides access to the current user's `ClaimsPrincipal`. Use this to access the current user outside of an HTTP request context, such as in background services or message handlers.
+
+```csharp
+public interface IUserAccessor
+{
+    /// <summary>
+    /// Gets the current user's ClaimsPrincipal
+    /// </summary>
+    Task<ClaimsPrincipal> GetCurrentUserAsync(CancellationToken ct = default);
+}
+```
+
+### Custom User Accessor Example
+
+The default implementation uses `IHttpContextAccessor`. For scenarios where you need to access the user from a different context (e.g., a background job with a captured user identity), implement a custom `IUserAccessor`:
+
+```csharp
+public class BackgroundJobUserAccessor : IUserAccessor
+{
+    private readonly AsyncLocal<ClaimsPrincipal?> _currentUser = new();
+
+    public void SetUser(ClaimsPrincipal user)
+    {
+        _currentUser.Value = user;
+    }
+
+    public Task<ClaimsPrincipal> GetCurrentUserAsync(CancellationToken ct = default)
+    {
+        return Task.FromResult(_currentUser.Value 
+            ?? throw new InvalidOperationException("No user context available"));
+    }
+}
+```
+
+Register your custom accessor:
+
+```csharp
+// Program.cs
+builder.Services.AddSingleton<BackgroundJobUserAccessor>();
+builder.Services.AddSingleton<IUserAccessor>(sp => sp.GetRequiredService<BackgroundJobUserAccessor>());
+```
+
+## Token Refresh Concurrency Control
+
+The `IUserTokenRequestConcurrencyControl` interface provides synchronization for token refresh operations. This prevents the "thundering herd" problem where multiple concurrent requests all attempt to refresh the same token simultaneously.
+
+```csharp
+public interface IUserTokenRequestConcurrencyControl
+{
+    /// <summary>
+    /// Executes a token retrieval operation with concurrency control.
+    /// If multiple requests attempt to refresh the same token concurrently,
+    /// only one will execute the refresh and others will wait for the result.
+    /// </summary>
+    Task<TokenResult<UserToken>> ExecuteWithConcurrencyControlAsync(
+        UserRefreshToken key,
+        Func<Task<TokenResult<UserToken>>> tokenRetriever,
+        CancellationToken ct = default);
+}
+```
+
+### Custom Concurrency Control
+
+The default implementation uses in-memory locking, which works for single-server deployments. For distributed scenarios (multiple servers), implement a custom version using distributed locking:
+
+```csharp
+public class DistributedTokenConcurrencyControl : IUserTokenRequestConcurrencyControl
+{
+    private readonly IDistributedLockProvider _lockProvider;
+
+    public DistributedTokenConcurrencyControl(IDistributedLockProvider lockProvider)
+    {
+        _lockProvider = lockProvider;
+    }
+
+    public async Task<TokenResult<UserToken>> ExecuteWithConcurrencyControlAsync(
+        UserRefreshToken key,
+        Func<Task<TokenResult<UserToken>>> tokenRetriever,
+        CancellationToken ct = default)
+    {
+        // Create a lock key based on the refresh token hash
+        var lockKey = $"token-refresh:{key.RefreshToken.ToString().GetHashCode()}";
+        
+        await using var handle = await _lockProvider.AcquireLockAsync(
+            lockKey, 
+            timeout: TimeSpan.FromSeconds(30), 
+            ct);
+        
+        // Execute the token retrieval while holding the lock
+        return await tokenRetriever();
+    }
+}
+```
+
+## Token Endpoint Operations
+
+The `IOpenIdConnectUserTokenEndpoint` interface provides low-level access to token endpoint operations. Use this for testing, mocking, or custom token refresh logic.
+
+```csharp
+public interface IOpenIdConnectUserTokenEndpoint
+{
+    /// <summary>
+    /// Refreshes an access token using a refresh token
+    /// </summary>
+    Task<TokenResult<UserToken>> RefreshAccessTokenAsync(
+        UserRefreshToken userToken,
+        UserTokenRequestParameters parameters,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Revokes a refresh token at the identity provider
+    /// </summary>
+    Task RevokeRefreshTokenAsync(
+        UserRefreshToken userToken,
+        UserTokenRequestParameters parameters,
+        CancellationToken ct = default);
+}
+```
+
+### Testing with Mock Token Endpoint
+
+```csharp
+public class MockUserTokenEndpoint : IOpenIdConnectUserTokenEndpoint
+{
+    public Task<TokenResult<UserToken>> RefreshAccessTokenAsync(
+        UserRefreshToken userToken,
+        UserTokenRequestParameters parameters,
+        CancellationToken ct = default)
+    {
+        // Return a test token for integration testing
+        var token = new UserToken
+        {
+            AccessToken = AccessToken.Parse("test-access-token"),
+            RefreshToken = RefreshToken.Parse("test-refresh-token"),
+            Expiration = DateTimeOffset.UtcNow.AddHours(1)
+        };
+        
+        return Task.FromResult(TokenResult.Success(token));
+    }
+
+    public Task RevokeRefreshTokenAsync(
+        UserRefreshToken userToken,
+        UserTokenRequestParameters parameters,
+        CancellationToken ct = default)
+    {
+        // No-op for testing
+        return Task.CompletedTask;
+    }
+}
+```
+
+## OpenID Connect Configuration Service
+
+The `IOpenIdConnectConfigurationService` interface extracts configuration from the registered OpenID Connect authentication handler. Use this to access OIDC configuration for custom token operations.
+
+```csharp
+public interface IOpenIdConnectConfigurationService
+{
+    /// <summary>
+    /// Gets the OpenID Connect configuration for the specified scheme
+    /// </summary>
+    Task<OpenIdConnectClientConfiguration> GetOpenIdConnectConfigurationAsync(
+        Scheme? schemeName = default,
+        CancellationToken ct = default);
+}
+```
+
+The returned `OpenIdConnectClientConfiguration` contains:
+
+| Property | Description |
+|----------|-------------|
+| `TokenEndpoint` | The token endpoint URI |
+| `RevocationEndpoint` | The revocation endpoint URI |
+| `ClientId` | The configured client ID |
+| `ClientSecret` | The configured client secret (if any) |
+| `HttpClient` | The `HttpClient` configured for the OIDC handler |
+| `Scheme` | The authentication scheme name |
+
+### Example: Accessing OIDC Configuration
+
+```csharp
+public class CustomTokenService
+{
+    private readonly IOpenIdConnectConfigurationService _configService;
+
+    public CustomTokenService(IOpenIdConnectConfigurationService configService)
+    {
+        _configService = configService;
+    }
+
+    public async Task<string> GetTokenEndpointAsync(CancellationToken ct)
+    {
+        var config = await _configService.GetOpenIdConnectConfigurationAsync(ct: ct);
+        return config.TokenEndpoint.ToString();
+    }
+}
+```
+
+:::tip[Extensibility Summary]
+| Interface | Purpose |
+|-----------|---------|
+| `ITokenRetriever` | Replace entire token acquisition logic |
+| `ITokenRequestCustomizer` | Modify token request parameters per-request |
+| `TransformPrincipalAfterRefreshAsync` | Transform claims after token refresh |
+| `IUserAccessor` | Access current user outside HTTP context |
+| `IUserTokenRequestConcurrencyControl` | Control concurrent token refresh |
+| `IOpenIdConnectUserTokenEndpoint` | Low-level token endpoint operations |
+| `IOpenIdConnectConfigurationService` | Access OIDC handler configuration |
+:::
