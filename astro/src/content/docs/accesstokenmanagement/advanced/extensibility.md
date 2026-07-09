@@ -231,30 +231,31 @@ builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
 
 // Register the principal transformation
 builder.Services.AddSingleton<TransformPrincipalAfterRefreshAsync>(
-    async (principal, ct) =>
-    {
-        // Create a new identity with the existing claims
-        var identity = (ClaimsIdentity)principal.Identity!;
-        
-        // Example: Fetch updated roles from a service
-        var roleService = // resolve from somewhere or capture in closure
-        var currentRoles = await roleService.GetRolesForUserAsync(
-            principal.FindFirstValue("sub"), ct);
-        
-        // Remove old role claims and add new ones
-        var existingRoleClaims = identity.FindAll("role").ToList();
-        foreach (var claim in existingRoleClaims)
+    serviceProvider =>
+        async (principal, ct) =>
         {
-            identity.RemoveClaim(claim);
-        }
+            // Create a new identity with the existing claims
+            var identity = (ClaimsIdentity)principal.Identity!;
         
-        foreach (var role in currentRoles)
-        {
-            identity.AddClaim(new Claim("role", role));
-        }
+            // Example: Fetch updated roles from a service
+            var roleService = serviceProvider.GetRequiredService<ICustomUserRoleService>();
+            var currentRoles = await roleService.GetRolesForUserAsync(
+                principal.FindFirstValue("sub"), ct);
         
-        return principal;
-    });
+            // Remove old role claims and add new ones
+            var existingRoleClaims = identity.FindAll("role").ToList();
+            foreach (var claim in existingRoleClaims)
+            {
+                identity.RemoveClaim(claim);
+            }
+        
+            foreach (var role in currentRoles)
+            {
+                identity.AddClaim(new Claim("role", role));
+            }
+        
+            return principal;
+        });
 ```
 
 :::tip[When to use TransformPrincipalAfterRefreshAsync]
