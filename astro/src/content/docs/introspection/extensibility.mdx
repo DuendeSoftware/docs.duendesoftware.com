@@ -13,7 +13,7 @@ how introspection results are cached, and how the handler is registered when you
 
 ## Token Retrieval
 
-By default the handler reads the bearer token from the `Authorization` header using `TokenRetrieval.FromAuthorizationHeader()`.
+By default, the handler reads the bearer token from the `Authorization` header using `TokenRetrieval.FromAuthorizationHeader()`.
 You can change this by assigning a different strategy to `OAuth2IntrospectionOptions.TokenRetriever`.
 
 The `TokenRetrieval` helper class provides two built-in strategies:
@@ -43,7 +43,7 @@ options.TokenRetriever = TokenRetrieval.FromQueryString("token");
 
 ### Custom Token Retrieval
 
-For scenarios where neither built-in strategy applies — for example, reading a token from a cookie or a custom header —
+For scenarios where neither built-in strategy applies, for example, when reading a token from a cookie or a custom header,
 you can assign any `Func<HttpRequest, string?>` delegate:
 
 ```csharp

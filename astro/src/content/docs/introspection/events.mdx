@@ -105,7 +105,7 @@ options.Events = new OAuth2IntrospectionEvents
 **Context:** `AuthenticationFailedContext`
 
 Invoked when an exception is thrown during request processing. The exception will be re-thrown after this event
-unless you call `context.HandleResponse()` to suppress it.
+unless you suppress it by calling `context.Fail()`, `context.NoResult()`, or `context.Success()`.
 
 ### Context Properties
 
