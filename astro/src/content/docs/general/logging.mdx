@@ -9,7 +9,7 @@ sidebar:
 import LogLevelSpectrum from '~/components/LogLevelSpectrum.astro';
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-All Duende Software products (IdentityServer, Backend for Frontend (BFF), Access Token Management, etc.) use the standard logging facilities provided by ASP.NET Core (`Microsoft.Extensions.Logging`).
+All Duende Software products ([IdentityServer](/identityserver/), [Backend for Frontend (BFF)](/bff/), [Access Token Management](/accesstokenmanagement/), etc.) use the standard logging facilities provided by ASP.NET Core (`Microsoft.Extensions.Logging`).
 This means they integrate seamlessly with whatever logging provider you choose for your application.
 
 This guide provides general instructions for setting up logging that apply to all our products.
@@ -31,7 +31,7 @@ Scroll down for detailed guidance on what each level means, who it affects, and 
 
 **Meaning:** Extremely detailed diagnostic information intended for developers debugging complex, hard-to-reproduce issues.
 
-**Customer impact:** None directly — Trace is never enabled in production under normal circumstances.
+**Customer impact:** None directly. Trace is never enabled in production under normal circumstances.
 
 **Action:**
 1. Do **not** enable in production unless Duende Support explicitly requests it.
@@ -49,9 +49,9 @@ Scroll down for detailed guidance on what each level means, who it affects, and 
 
 ### Debug
 
-**Meaning:** Internal flow details — why decisions were made, which code paths were taken (e.g., policy evaluation, token validation steps).
+**Meaning:** Internal flow details: why decisions were made, which code paths were taken (e.g., policy evaluation, token validation steps).
 
-**Customer impact:** None directly — Debug is for developer understanding, not user-facing operations.
+**Customer impact:** None directly. Debug is for developer understanding, not user-facing operations.
 
 **Action:**
 1. Enable during local development or staging to understand application behavior.
@@ -68,12 +68,12 @@ Scroll down for detailed guidance on what each level means, who it affects, and 
 
 ### Information
 
-**Meaning:** High-level events that track the normal flow of the application — requests starting, tokens issued, sessions created.
+**Meaning:** High-level events that track the normal flow of the application: requests starting, tokens issued, sessions created.
 
 **Customer impact:** Minimal. These are expected events. Absence of expected Information logs may indicate a problem.
 
 **Action:**
-1. No immediate action required — this is normal operational noise.
+1. No immediate action required. This is normal operational noise.
 2. Use Information logs for auditing user activity and correlating requests by ID.
 3. This is often the recommended default level for production.
 
@@ -93,7 +93,7 @@ Scroll down for detailed guidance on what each level means, who it affects, and 
 
 **Action:**
 1. Review the warning message and context (correlation ID, client ID, user).
-2. Check if the warning is recurring or isolated — recurring warnings deserve prompt attention.
+2. Check if the warning is recurring or isolated. Recurring warnings deserve prompt attention.
 3. Common causes: invalid client configuration, deprecated settings, transient infrastructure issues.
 4. If in doubt, open a support ticket with Duende.
 
@@ -134,7 +134,7 @@ Scroll down for detailed guidance on what each level means, who it affects, and 
 
 **Action:**
 1. **Act immediately.** Page your on-call team.
-2. Check startup logs — Critical events often occur at startup (missing signing key, missing store implementation).
+2. Check startup logs. Critical events often occur at startup (missing signing key, missing store implementation).
 3. Verify database connectivity and key material availability.
 4. Review deployment changes made immediately before the issue started.
 5. Contact [Duende Support](https://duendesoftware.com/support) with your logs if the cause is unclear.
@@ -153,12 +153,12 @@ Use this table as a quick reference for which log levels to enable in each envir
 
 | Level | Development | Staging | Production |
 |-------|-------------|---------|------------|
-| **Trace** | ✅ Only for targeted debugging | ❌ Do not enable | ❌ Never — extreme circumstances only |
+| **Trace** | ✅ Only for targeted debugging | ❌ Do not enable | ❌ Never (extreme circumstances only) |
 | **Debug** | ✅ Recommended default | ⚠️ Temporarily, for active investigations | ❌ Disable |
 | **Information** | ✅ | ✅ | ✅ Often the recommended default |
 | **Warning** | ✅ | ✅ | ✅ Minimum recommended level |
 | **Error** | ✅ | ✅ | ✅ Always enabled |
-| **Critical** | ✅ | ✅ | ✅ Always enabled — configure alerting |
+| **Critical** | ✅ | ✅ | ✅ Always enabled (configure alerting) |
 
 :::tip
 In production, set your minimum log level to `Warning` to reduce volume while still capturing actionable events.
@@ -273,7 +273,7 @@ Each Duende product has its own logging page with product-specific configuration
   <LinkCard
     title="User Management Logging"
     href="/identityserver/usermanagement/logging"
-    description="Log categories by feature area — passwords, passkeys, OTP, TOTP, profiles, and more."
+    description="Log categories by feature area: passwords, passkeys, OTP, TOTP, profiles, and more."
   />
   <LinkCard
     title="Access Token Management Logging"
