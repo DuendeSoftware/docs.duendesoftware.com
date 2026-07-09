@@ -73,7 +73,7 @@ when your ASP.NET Core application lives behind a proxy or requires specific HTT
 
 ```csharp
 // Program.cs
-builder.Services.AddHttpClient(OAuth2IntrospectionDefaults.BackchannelHttpClientName)
+builder.Services.AddHttpClient(OAuth2IntrospectionDefaults.BackChannelHttpClientName)
     .AddHttpMessageHandler(() =>
     {
         // Configure client/handler for the back channel HTTP Client here
@@ -84,6 +84,31 @@ builder.Services.AddHttpClient(OAuth2IntrospectionDefaults.BackchannelHttpClient
         };
     });
 ```
+
+## Learn More
+
+<CardGrid>
+  <LinkCard
+    href="/introspection/options/"
+    title="Options"
+    description="Full reference for all OAuth2IntrospectionOptions properties."
+  />
+  <LinkCard
+    href="/introspection/events/"
+    title="Events"
+    description="Hook into token validation, client assertion, and request events."
+  />
+  <LinkCard
+    href="/introspection/extensibility/"
+    title="Extensibility"
+    description="Custom token retrieval, cache key generation, and multi-scheme setup."
+  />
+  <LinkCard
+    href="/introspection/troubleshooting/"
+    title="Troubleshooting"
+    description="Diagnose 401 errors, empty claims, discovery failures, and more."
+  />
+</CardGrid>
 
 ## License and Feedback
 
