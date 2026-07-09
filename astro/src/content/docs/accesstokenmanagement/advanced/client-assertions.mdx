@@ -35,7 +35,9 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
     : IClientAssertionService
 {
     public Task<ClientAssertion?> GetClientAssertionAsync(
-    ClientCredentialsClientName? clientName = null, TokenRequestParameters? parameters = null)
+        ClientCredentialsClientName? clientName = null, 
+        TokenRequestParameters? parameters = null,
+        CancellationToken ct = default)
     {
         if (clientName == "invoice")
         {
@@ -54,7 +56,7 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
                 Claims = new Dictionary<string, object>
                 {
                     { JwtClaimTypes.JwtId, Guid.NewGuid().ToString() },
-                    { JwtClaimTypes.Subject, options.ClientId.ToString()! },
+                    { JwtClaimTypes.Subject, options1.ClientId.ToString()! },
                     { JwtClaimTypes.IssuedAt, DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
                 },
 
