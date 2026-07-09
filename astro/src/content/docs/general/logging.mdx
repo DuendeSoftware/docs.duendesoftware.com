@@ -1,0 +1,288 @@
+---
+title: "Logging Fundamentals"
+description: "General guidance on configuring logging for Duende Software products using Microsoft.Extensions.Logging and Serilog."
+date: 2026-01-19
+sidebar:
+  order: 10
+---
+
+import LogLevelSpectrum from '~/components/LogLevelSpectrum.astro';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+
+All Duende Software products (IdentityServer, Backend for Frontend (BFF), Access Token Management, etc.) use the standard logging facilities provided by ASP.NET Core (`Microsoft.Extensions.Logging`).
+This means they integrate seamlessly with whatever logging provider you choose for your application.
+
+This guide provides general instructions for setting up logging that apply to all our products.
+
+:::danger[Sensitive data in logs]
+**`Trace` and `Debug` logs may contain sensitive information**, including token values, token hashes, and personally identifiable information (PII).
+Never enable these levels in production unless you are actively diagnosing an issue under controlled conditions and have taken steps to secure your log output.
+:::
+
+## Log Levels
+
+We follow the [standard Microsoft guidelines for log levels](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging#log-level). The spectrum below shows where each level sits on the operational urgency scale, with a quick action guide for each.
+
+<LogLevelSpectrum />
+
+Scroll down for detailed guidance on what each level means, who it affects, and what you should do when you see it.
+
+### Trace
+
+**Meaning:** Extremely detailed diagnostic information intended for developers debugging complex, hard-to-reproduce issues.
+
+**Customer impact:** None directly — Trace is never enabled in production under normal circumstances.
+
+**Action:**
+1. Do **not** enable in production unless Duende Support explicitly requests it.
+2. If you must enable it, use a scoped namespace (e.g., `Duende.IdentityServer`) to limit output.
+3. Secure and rotate your logs immediately after capturing diagnostics.
+4. Disable as soon as the issue is diagnosed.
+
+**Example:**
+```
+[Trace] Duende.IdentityServer.Validation.TokenValidator
+  Validating JWT token: eyJhbGciOiJSUzI1NiIs...
+```
+
+---
+
+### Debug
+
+**Meaning:** Internal flow details — why decisions were made, which code paths were taken (e.g., policy evaluation, token validation steps).
+
+**Customer impact:** None directly — Debug is for developer understanding, not user-facing operations.
+
+**Action:**
+1. Enable during local development or staging to understand application behavior.
+2. Use `appsettings.Development.json` to isolate Debug logging from production config.
+3. Disable before deploying to production, or set an expiry reminder.
+
+**Example:**
+```
+[Debug] Duende.IdentityServer.ResponseHandling.AuthorizeResponseGenerator
+  Creating authorization code response for client 'spa-app'
+```
+
+---
+
+### Information
+
+**Meaning:** High-level events that track the normal flow of the application — requests starting, tokens issued, sessions created.
+
+**Customer impact:** Minimal. These are expected events. Absence of expected Information logs may indicate a problem.
+
+**Action:**
+1. No immediate action required — this is normal operational noise.
+2. Use Information logs for auditing user activity and correlating requests by ID.
+3. This is often the recommended default level for production.
+
+**Example:**
+```
+[Information] Duende.IdentityServer.Hosting.IdentityServerMiddleware
+  Invoking IdentityServer endpoint: /connect/token (TokenEndpoint)
+```
+
+---
+
+### Warning
+
+**Meaning:** Unexpected events that did not stop the application, but may indicate misconfiguration, an edge case, or degraded behavior.
+
+**Customer impact:** Possible. Some users may be experiencing issues. Investigate to confirm impact.
+
+**Action:**
+1. Review the warning message and context (correlation ID, client ID, user).
+2. Check if the warning is recurring or isolated — recurring warnings deserve prompt attention.
+3. Common causes: invalid client configuration, deprecated settings, transient infrastructure issues.
+4. If in doubt, open a support ticket with Duende.
+
+**Example:**
+```
+[Warning] Duende.IdentityServer.Validation.ClientSecretValidator
+  Client secret validation failed for client 'legacy-app'
+```
+
+---
+
+### Error
+
+**Meaning:** An operation failed and could not recover. An exception was thrown and not handled gracefully.
+
+**Customer impact:** Likely. A user request probably failed. Investigate promptly.
+
+**Action:**
+1. Check the full stack trace in your log sink.
+2. Correlate with the request ID or user subject ID to identify scope.
+3. Determine if the error is recurring or isolated.
+4. If recurring: escalate to your team and open a Duende Support ticket if needed.
+5. Check whether downstream dependencies (database, external IdP) are healthy.
+
+**Example:**
+```
+[Error] Duende.IdentityServer.Validation.TokenRequestValidator
+  Failed validation of token request: invalid_grant
+```
+
+---
+
+### Critical
+
+**Meaning:** A catastrophic failure that requires immediate attention. The system may be partially or fully unable to function.
+
+**Customer impact:** High. Users are likely unable to authenticate or obtain tokens.
+
+**Action:**
+1. **Act immediately.** Page your on-call team.
+2. Check startup logs — Critical events often occur at startup (missing signing key, missing store implementation).
+3. Verify database connectivity and key material availability.
+4. Review deployment changes made immediately before the issue started.
+5. Contact [Duende Support](https://duendesoftware.com/support) with your logs if the cause is unclear.
+
+**Example:**
+```
+[Critical] Duende.IdentityServer.Startup
+  No signing key material found. IdentityServer cannot issue tokens.
+```
+
+---
+
+## Environment Configuration
+
+Use this table as a quick reference for which log levels to enable in each environment:
+
+| Level | Development | Staging | Production |
+|-------|-------------|---------|------------|
+| **Trace** | ✅ Only for targeted debugging | ❌ Do not enable | ❌ Never — extreme circumstances only |
+| **Debug** | ✅ Recommended default | ⚠️ Temporarily, for active investigations | ❌ Disable |
+| **Information** | ✅ | ✅ | ✅ Often the recommended default |
+| **Warning** | ✅ | ✅ | ✅ Minimum recommended level |
+| **Error** | ✅ | ✅ | ✅ Always enabled |
+| **Critical** | ✅ | ✅ | ✅ Always enabled — configure alerting |
+
+:::tip
+In production, set your minimum log level to `Warning` to reduce volume while still capturing actionable events.
+Drop to `Information` when investigating a reported issue, and back to `Warning` when resolved.
+:::
+
+## Setup for Microsoft.Extensions.Logging
+
+This is the default logging provider for ASP.NET Core. If you haven't configured a third-party logger, this is what you are using.
+
+You can configure log levels in your `appsettings.json` file. To get detailed logs from Duende products, you often want to set the `Duende` namespace (or specific sub-namespaces) to `Debug`.
+
+```json
+// appsettings.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information",
+      // Enable Debug logs for all Duende products
+      "Duende": "Debug"
+    }
+  }
+}
+```
+
+## Setup for Serilog
+
+[Serilog](https://serilog.net) is a popular structured logging library for .NET. We highly recommend it for its flexibility and rich sink ecosystem (Console, File, Seq, Elasticsearch, etc.).
+
+### 1. Installation
+
+Install the necessary packages:
+
+```bash
+dotnet add package Serilog.AspNetCore
+```
+
+### 2. Configuration In `Program.cs`
+
+Configure Serilog early in your application startup to capture all logs, including startup errors.
+
+```csharp
+// Program.cs
+using Serilog;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+    .Enrich.FromLogContext()
+    .ReadFrom.Configuration(ctx.Configuration));
+
+var app = builder.Build();
+
+app.UseSerilogRequestLogging(); // Optional: cleaner HTTP request logging
+
+// ... rest of your pipeline
+```
+
+### 3. Configuration In `appsettings.json`
+
+You can then control log levels via `appsettings.json`. This approach allows you to change log levels without recompiling your code.
+
+```json
+{
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information",
+        "System": "Warning",
+        // Enable detailed logging for Duende products
+        "Duende": "Debug"
+      }
+    }
+  }
+}
+```
+
+## Troubleshooting Specific Products and Components
+
+If you are debugging a specific component, you can target its namespace to reduce noise.
+
+| Product                     | Namespace                      |
+|-----------------------------|--------------------------------|
+| **IdentityServer**          | `Duende.IdentityServer`        |
+| **BFF**                     | `Duende.Bff`                   |
+| **User Management**         | `Duende.UserManagement`        |
+| **Access Token Management** | `Duende.AccessTokenManagement` |
+
+Example `appsettings.json` for debugging only BFF interactions:
+
+```json
+"Duende.Bff": "Debug",
+"Duende.IdentityServer": "Information"
+```
+
+## Product-Specific Guides
+
+Each Duende product has its own logging page with product-specific configuration namespaces, key events to watch for, and advanced topics.
+
+<CardGrid>
+  <LinkCard
+    title="IdentityServer Logging"
+    href="/identityserver/diagnostics/logging"
+    description="Exception filtering, OpenTelemetry integration, and key events for IdentityServer."
+  />
+  <LinkCard
+    title="User Management Logging"
+    href="/identityserver/usermanagement/logging"
+    description="Log categories by feature area — passwords, passkeys, OTP, TOTP, profiles, and more."
+  />
+  <LinkCard
+    title="Access Token Management Logging"
+    href="/accesstokenmanagement/advanced/logging"
+    description="Configuring log output for the Access Token Management library."
+  />
+  <LinkCard
+    title="OidcClient Logging"
+    href="/identitymodel-oidcclient/logging"
+    description="Wiring up ILoggerFactory to OidcClient for native and mobile app diagnostics."
+  />
+</CardGrid>

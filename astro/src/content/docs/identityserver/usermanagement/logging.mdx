@@ -7,11 +7,18 @@ sidebar:
   order: 10
 ---
 
+import { LinkCard } from '@astrojs/starlight/components';
+
 Duende User Management uses the standard logging facilities provided by ASP.NET Core
 (`Microsoft.Extensions.Logging`). You don't need any extra configuration to get rich logging out of the box.
 
-For general information on setting up logging, configuring Serilog, and understanding log levels
-across all Duende products, see the [Logging Fundamentals](/general/logging.md) guide.
+For log level definitions, environment guidance, and actionable next steps for each level, see the [Logging Fundamentals](/general/logging) guide.
+
+<LinkCard
+  title="Logging Fundamentals"
+  href="/general/logging"
+  description="Log level definitions, environment configuration table, and the log level anxiety spectrum."
+/>
 
 ## Configuration
 
@@ -60,17 +67,10 @@ you can target that sub-category:
 }
 ```
 
-## Log Levels
-
-User Management follows the standard Microsoft guidelines for log levels:
-
-* **Information** -- General flow events like authentication attempts starting, succeeding, or failing. Also covers user profile operations, group/role management, and import progress.
-* **Warning** -- Unexpected situations that don't stop the application but may need investigation. For example, failing to clean up a consumed passkey challenge, or authentication throttling kicking in.
-* **Error** -- Failures that could not be handled gracefully. For example, a passkey registration that failed to persist, or an optimistic concurrency conflict that could not be resolved on retry.
-
 :::note
-In production, you typically want to keep logging at `Warning` or higher to avoid excessive log volume.
+In production, keep logging at `Warning` or higher to avoid excessive log volume.
 Drop to `Information` or `Debug` only when actively troubleshooting.
+For definitions of each log level and guidance on what to do when you see one, see [Logging Fundamentals](/general/logging).
 :::
 
 ## What Gets Logged
