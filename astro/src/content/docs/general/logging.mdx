@@ -153,12 +153,12 @@ Use this table as a quick reference for which log levels to enable in each envir
 
 | Level | Development | Staging | Production |
 |-------|-------------|---------|------------|
-| **Trace** | ✅ Only for targeted debugging | ❌ Do not enable | ❌ Never (extreme circumstances only) |
-| **Debug** | ✅ Recommended default | ⚠️ Temporarily, for active investigations | ❌ Disable |
-| **Information** | ✅ | ✅ | ✅ Often the recommended default |
-| **Warning** | ✅ | ✅ | ✅ Minimum recommended level |
-| **Error** | ✅ | ✅ | ✅ Always enabled |
-| **Critical** | ✅ | ✅ | ✅ Always enabled (configure alerting) |
+| **Trace** | ⚠️ Temporarily, for active investigations | ❌ Disable | ❌ Disable (Enable under extreme circumstances only) |
+| **Debug** | ✅ Recommended | ⚠️ Temporarily, for active investigations | ❌ Disable |
+| **Information** | ✅ | ✅ Recommended | ⚠️ Temporarily, for active investigations |
+| **Warning** | ✅ | ✅ | ✅ Recommended |
+| **Error** | ✅ | ✅ | ✅ |
+| **Critical** | ✅ | ✅ | ✅ (with alerts) |
 
 :::tip
 In production, set your minimum log level to `Warning` to reduce volume while still capturing actionable events.
