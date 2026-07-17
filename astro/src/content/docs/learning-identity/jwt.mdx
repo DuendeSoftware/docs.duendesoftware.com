@@ -1,0 +1,104 @@
+---
+title: JWTs
+description: Overview of what a JWT is and how it can used.
+sidebar:
+  label: JWTs
+  order: 100
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+JSON Web Tokens (JWTs) are strings which contain information about a subject. The subject is typically a user, but is the identity for any system that needs to prove itself to other systems, like an API making a call to another API. The JWT is generated after the subject authenticates with the system by entering their username/password, or authenticating any other way.
+
+The IETF's [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519) is the official standard for JWTs.
+
+```text
+eyJhbGciOiJSUzI1NiIsImtpZCI6IkNEMzFENUE3NzVBQkI4MTU0REFGODRCMEEwMzM5MUMxIiwieDV0IjoiZGJLb1RyTDV6M0U4elR3UmdFbHlYc0tFbTcwIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2RlbW8uZHVlbmRlc29mdHdhcmUuY29tIiwibmJmIjoxNzg0MjMzMDU4LCJpYXQiOjE3ODQyMzMwNTgsImV4cCI6MTc4NDIzNjY1OCwiYXVkIjoiYXBpIiwic2NvcGUiOlsiYXBpIl0sImNsaWVudF9pZCI6Im0ybSIsImp0aSI6IkVDMjgwOTkwMkQ3NjIxRjYzNTBCMTU0NDBCNjFGRENBIn0.Q9ULRZ7sIN2HQ_7mzdS2JHqNQeD8duor6z6aUZIO3JwKK1iuRamahCiOXnQLxX7CJd0hnnP6b1K5ivXpAWhuwVSJcAbobyyKs1ihzcTxCvQPurEYDzQYWm_oIMgL5LI4uIUop7k9N2odHTZakustt97yVFDHWV0Zm9MMrTbf6kj-LnohPZlvv7YuByj9KlPZbD88n58hxYeK3_u3xdPpuHIoJWQT-RKzH_hd-WAN4ZkI5Tx4x8riuR9jsQRu2SsdSjGcR-cTwUHimlSaoaz8bhx5v-gr-8WGAWn7JVwA8ieBeLDiHyBmJz52W1qipO67aif7Sb-ky2TjnwvqYglgMg
+```
+
+## Reading JWTs
+
+JWTs are formatted using the JSON Web Structure (JWS) format defined in [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515). This means they are formatted into three sections (Header, Payload, Signature), separated by a dot. Each section is a self-contained, Base64 URL Encoded, JSON value.
+
+> Note: Encoded does not mean encrypted. Anyone can decode a JWT and read the plaintext values. The JWT is Base64 URL Encoded to make transmitting the string between services simple by avoiding characters that can be problematic on the web, like spaces and quotes.
+
+For an example, the JWT value `eyAiaGVhZGVyIiA6ICJ0aGUtaGVhZGVyIiB9LnsgInBheWxvYWQiIDogInRoZS1wYXlsb2FkIiB9LnsgInNpZ25hdHVyZSIgOiAidGhlLXNpZ25hdHVyZSIgfQ==` translates to `{ "header": "the-header"}.{"payload":"the-payload"}.{"signature": "the-signature"}`.
+
+Many libraries exist to parse a JWT in a variety of programming languages. If you want to make a JWT string human readable, you can use a JWT Decoder like the one at [Duende's demo site](https://demo.duendesoftware.com/jwt-decoder).
+
+### Generating a JWT with code
+
+If it helps you to visualize a JWT in terms of code, the below pseudocode describes shows what steps would need to be taken:
+
+```
+//Create the Header and Payload JSON strings
+var header = "{ "alg": "HS256", "typ": "JWT" }";
+var payload = "{"sub":"user@email.com"}";
+
+//URL Base64 URL Encode the Header and Payload values
+var headerBase64 = Base64Encode(header);
+var payloadBase64 = Base64Encode(payload);
+
+//Generate the signature
+// Create the value, sign it with the algorithm mentioned in the header, then Base64 URL Encode it
+var signature = $"{headerBase64}.{payloadBase64}";
+var signingSecret = LoadSigningSecretFromSomewhere();
+var signedSignature = SignWithHmacSha256(signature, signingSecret);
+var signedSignatureBase64 = Base64Encode(signedSignature);
+
+var jwt = $"{headerBase64}.{payloadBase64}.{signedSignatureBase64}";
+print(jwt);
+```
+
+### Header
+
+The header, also called JSON Object Signing and Encryption Header (JOSE Header), contains properties describing what cryptographic operations were performed to sign the Payload of the JWT. The example below shows that the HS256 algorithm was used to sign the Payload.
+
+```json
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+```
+
+### Payload
+
+The payload section of the JWT contains the Claims for the subject, which the information about the identity. This is includes a number of Registered Claim Names, a set of claims that have a known meaning. They are defined in [JWT's RFC](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1). 
+
+#### Registered Claim Names
+
+Some examples of Registered Claim Names are:
+- `sub`: The subject the JWT is for. This can be any string that uniquely identifies the subject, like an email address or GUID.
+- `iat`: The date/time ths JWT was issues. The value is the number of seconds since January 1, 1970. 
+- `exp`: The date/time the JWT expires. Systems receiving a JWT should not trust one after its expiration time has passed. The value is the number of seconds since January 1, 1970. 
+
+The full set of Registered Claim Names are listed in the [JWT RFC](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1).
+
+#### Custom Claims
+
+An identity system can add any number of claims it wants. Some systems will add everything it knows about the subject, others will limit them to the system that will use the JWT.
+
+#### Real Example
+
+The below example shows a payload with a mix of claims. The `sub` and `exp` are registered claims, and the rest are custom claims used by the consuming application.
+
+```json
+{
+  "sub": "user@example.com",
+  "exp": 1300819380,
+  "client_id": "my-frontend",
+  "scope": [
+    "admin"
+    "orders:read",
+    "inventory:read"
+    "inventory:write"
+  ]
+}
+```
+
+> Note: A JWT may contain every claim for a user, making the transmitted string very large. Conversely it can contain a minimum amount of information about the subject in case the token is leaked. The amount of information contained in the JWT is up to the service generating it.
+
+### Signature
+
+The signature is used by any system that receives the JWT to validate it and ensure it was not tampered with since it was created. 
+
