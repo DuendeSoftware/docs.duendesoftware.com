@@ -1,0 +1,380 @@
+---
+title: OIDC Client Logging
+description: Learn how to configure and customize logging in OidcClient using Microsoft.Extensions.Logging.ILogger
+sidebar:
+  label: Logging
+  order: 4
+redirect_from:
+  - /foss/identitymodel.oidcclient/logging/
+---
+
+import { LinkCard } from '@astrojs/starlight/components';
+import LogLevel from '~/components/LogLevel.astro';
+
+`OidcClient` logs errors, warnings, and diagnostic information using
+`Microsoft.Extensions.Logging.ILogger`, the standard .NET logging library.
+
+For log level definitions, environment guidance, and actionable next steps for each level, see the [Logging Fundamentals](/general/logging) guide.
+
+<LinkCard
+  title="Logging Fundamentals"
+  href="/general/logging"
+  description="Log level definitions, environment configuration table, and the log level anxiety spectrum."
+/>
+
+## Configuration
+
+### Wiring Up a Logger Factory
+
+`OidcClient` does not use the ASP.NET Core dependency injection container directly — instead, you configure it by setting the `LoggerFactory` property on `OidcClientOptions`. This gives you full control over logging in native app, mobile, and console scenarios.
+
+```csharp {9,17}
+// Program.cs
+using Duende.IdentityModel;
+using Duende.IdentityModel.OidcClient;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddSingleton(svc =>
+{
+    var loggerFactory = svc.GetRequiredService<ILoggerFactory>();
+    var options = new OidcClientOptions
+    {
+        Authority = "https://demo.duendesoftware.com",
+        ClientId = "interactive.public",
+        Scope = "openid profile email offline_access",
+        RedirectUri = "app://localhost/",
+        PostLogoutRedirectUri = "app://localhost/",
+        LoggerFactory = loggerFactory
+    };
+    return new OidcClient(options);
+});
+
+var app = builder.Build();
+var client = app.Services.GetService<OidcClient>();
+```
+
+You can use any logging framework that integrates with `ILoggerFactory`, such as [Serilog](https://github.com/serilog/serilog-extensions-hosting).
+
+### Log Level Configuration
+
+`OidcClient` emits logs at `Trace`, `Debug`, `Information`, and `Error` levels. To control log output, set the `Duende.IdentityModel.OidcClient` namespace in your `appsettings.json`:
+
+```json
+// appsettings.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information",
+      "Duende.IdentityModel.OidcClient": "Error"
+    }
+  }
+}
+```
+
+## What Gets Logged
+
+OidcClient emits structured log messages across several functional areas. Each message includes contextual parameters for effective filtering and troubleshooting.
+
+### Login Flow
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>LoginAsync</td>
+      <td>Beginning the login method</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Information" /></td>
+      <td>Starting authentication request.</td>
+      <td>Login flow initiated</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Information" /></td>
+      <td>Authentication request success.</td>
+      <td>Login completed successfully</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>PrepareLoginAsync</td>
+      <td>Preparing login state for manual flow</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>CreateAuthorizeStateAsync</td>
+      <td>Creating PKCE and state parameters</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>The IdentityProvider contains a pushed authorization request endpoint. Automatically pushing authorization parameters. Use DisablePushedAuthorization to opt out.</td>
+      <td>PAR endpoint detected and being used</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>Failed to push authorization parameters</td>
+      <td>PAR request failed</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>CreateAuthorizeUrl</td>
+      <td>Building the authorization URL</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>CreateAuthorizeParameters</td>
+      <td>Assembling authorize request parameters</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>AuthorizeAsync</td>
+      <td>Starting browser-based authorization</td>
+    </tr>
+  </tbody>
+</table>
+
+### Response Processing
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>ProcessResponseAsync</td>
+      <td>Beginning response processing</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Information" /></td>
+      <td>Processing response.</td>
+      <td>Handling authorization response</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Authorize response: `{Response}`</td>
+      <td>Raw authorization response data</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>ProcessCodeFlowResponseAsync</td>
+      <td>Processing authorization code flow</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>RedeemCodeAsync</td>
+      <td>Exchanging code for tokens</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>ValidateTokenResponse</td>
+      <td>Validating token endpoint response</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>`{Error}`</td>
+      <td>Authorization or token response error</td>
+    </tr>
+  </tbody>
+</table>
+
+### Discovery Document
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>EnsureProviderInformation</td>
+      <td>Checking provider configuration</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Skipping refresh of discovery document.</td>
+      <td>Reusing cached discovery document</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Successfully loaded discovery document</td>
+      <td>Discovery document retrieved</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Loaded keyset from `{JwksUri}`</td>
+      <td>JSON Web Key Set location</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Keyset contains the following kids: `{Kids}`</td>
+      <td>Available signing key IDs</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>Error loading discovery document: `{ErrorType}` - `{Error}`</td>
+      <td>Discovery document retrieval failed</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>Issuer name is missing in provider information</td>
+      <td>Invalid provider configuration</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>Authorize endpoint is missing in provider information</td>
+      <td>Invalid provider configuration</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>Token endpoint is missing in provider information</td>
+      <td>Invalid provider configuration</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>Key set is missing in provider information</td>
+      <td>Invalid provider configuration (when required)</td>
+    </tr>
+  </tbody>
+</table>
+
+### UserInfo
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>GetUserInfoAsync</td>
+      <td>Starting userinfo request</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>Error contacting userinfo endpoint: `{Error}`</td>
+      <td>Userinfo request failed</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>sub claim is missing from userinfo endpoint</td>
+      <td>Userinfo response missing required claim</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>sub claim from userinfo endpoint is different than sub claim from identity token.</td>
+      <td>Subject mismatch between tokens</td>
+    </tr>
+  </tbody>
+</table>
+
+### Token Refresh
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>RefreshTokenAsync</td>
+      <td>Starting token refresh</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Error" /></td>
+      <td>Failed on RefreshTokensAsync: `{Error}` - `{Description}`</td>
+      <td>Automatic token refresh failed (RefreshTokenDelegatingHandler)</td>
+    </tr>
+  </tbody>
+</table>
+
+### Logout
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>CreateEndSessionUrl</td>
+      <td>Building the end session URL</td>
+    </tr>
+  </tbody>
+</table>
+
+### Claims Processing
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>ProcessClaims</td>
+      <td>Merging claims from tokens and userinfo</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Claim: `{Type}`: `{Value}`</td>
+      <td>Individual claim being processed</td>
+    </tr>
+  </tbody>
+</table>
+
+### Configuration
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>Effective options:</td>
+      <td>Followed by serialized OidcClientOptions</td>
+    </tr>
+  </tbody>
+</table>
+
+:::tip[Sensitive Data]
+At `Trace` level, the full `OidcClientOptions` configuration is serialized to logs, which can help diagnose configuration issues. Be cautious with `Trace` logging in production as it may expose sensitive configuration details.
+:::
