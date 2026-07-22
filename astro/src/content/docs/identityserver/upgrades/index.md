@@ -19,6 +19,7 @@ Migrations.
 
 * [**IdentityServer v7.4 to v8.0**](/identityserver/upgrades/v7_4-to-v8_0.md)
 * [**IdentityServer4 to Duende IdentityServer v8**](/identityserver/upgrades/identityserver4-to-duende-identityserver-v8.mdx)
+* [**Rock Solid Knowledge SAML to Duende IdentityServer**](/identityserver/upgrades/rsk-saml-to-duende-identityserver.md) - Migrate from the Rock Solid Knowledge (RSK) SAML addon to Duende IdentityServer v8+ built-in SAML support.
 
 ## Upgrading to v7.0
 
