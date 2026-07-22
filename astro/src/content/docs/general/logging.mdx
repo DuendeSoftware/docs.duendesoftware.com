@@ -34,7 +34,7 @@ Scroll down for detailed guidance on what each level means, who it affects, and 
 **Customer impact:** None directly. Trace is never enabled in production under normal circumstances.
 
 **Action:**
-1. Do **not** enable in production unless Duende Support explicitly requests it.
+1. Do **not** enable in production unless [Duende Support](/general/support-and-issues/) explicitly requests it.
 2. If you must enable it, use a scoped namespace (e.g., `Duende.IdentityServer`) to limit output.
 3. Secure and rotate your logs immediately after capturing diagnostics.
 4. Disable as soon as the issue is diagnosed.
@@ -115,7 +115,7 @@ Scroll down for detailed guidance on what each level means, who it affects, and 
 1. Check the full stack trace in your log sink.
 2. Correlate with the request ID or user subject ID to identify scope.
 3. Determine if the error is recurring or isolated.
-4. If recurring: escalate to your team and open a Duende Support ticket if needed.
+4. If recurring: escalate to your team and open a [Duende Support](/general/support-and-issues/) ticket if needed.
 5. Check whether downstream dependencies (database, external IdP) are healthy.
 
 **Example:**
@@ -137,7 +137,7 @@ Scroll down for detailed guidance on what each level means, who it affects, and 
 2. Check startup logs. Critical events often occur at startup (missing signing key, missing store implementation).
 3. Verify database connectivity and key material availability.
 4. Review deployment changes made immediately before the issue started.
-5. Contact [Duende Support](https://duendesoftware.com/support) with your logs if the cause is unclear.
+5. Contact [Duende Support](/general/support-and-issues/) with your logs if the cause is unclear.
 
 **Example:**
 ```
