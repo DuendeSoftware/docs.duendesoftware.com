@@ -90,7 +90,7 @@ Available options:
 * **`DefaultSigningBehavior`**
   Default signing behavior for SAML responses. Defaults to `SignAssertion`.
 
-  The default is `SignAssertion` for backward compatibility with existing deployments and SPs that expect only the assertion to be signed. For new deployments, `SignResponse` is recommended because it signs the entire SAML response — including the assertion — providing integrity protection over the full message. See [`SamlSigningBehavior`](#samlsigningbehavior) for details on each option.
+  The default is `SignAssertion` for backward compatibility with existing deployments and SPs that expect only the assertion to be signed. For new deployments, `SignResponse` is recommended because it signs the entire SAML response (including the assertion), providing integrity protection over the full message. See [`SamlSigningBehavior`](#samlsigningbehavior) for details on each option.
 
   :::note
   SAML signing requires an X509 certificate. When you use automatic key management or `AddDeveloperSigningCredential()` (which provide RSA keys without a certificate), IdentityServer automatically generates an X509 container that wraps your existing RSA key material. You do not need to create or provide a certificate manually.
