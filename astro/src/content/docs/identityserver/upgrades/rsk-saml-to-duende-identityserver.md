@@ -12,9 +12,7 @@ This guide covers migrating from Rock Solid Knowledge (RSK) SAML (`Rsk.Saml.Duen
 
 This guide walks through migrating from **Rock Solid Knowledge (RSK) SAML** (`Rsk.Saml.DuendeIdentityServer`) to **Duende IdentityServer v8+** with built-in SAML support.
 
-## Overview
-
-### What Changed
+## What Changed
 
 | Aspect       | RSK SAML                                   | Duende SAML (v8+)                                |
 |--------------|--------------------------------------------|--------------------------------------------------|
@@ -27,14 +25,16 @@ This guide walks through migrating from **Rock Solid Knowledge (RSK) SAML** (`Rs
 | SLO Endpoint | `/saml/slo`                                | `/Saml2/SLO`                                     |
 | Metadata     | `/saml/metadata`                           | `/Saml2`                                         |
 
-### Why Migrate?
+## Why Migrate?
 
 - **Unified licensing**: One Duende license covers all features; SAML included in Advanced/Custom or available as Standard add-on
 - **Built-in support**: No separate package dependency to manage
 - **Consistent updates**: SAML features ship with core IdentityServer releases
 - **Better integration**: Tighter coupling with IdentityServer's core services
 
-## Prerequisites
+## Migration Guide
+
+### Prerequisites
 
 Before migrating, ensure:
 
@@ -43,7 +43,7 @@ Before migrating, ensure:
 3. **Backup**: Export your current SAML Service Provider (SP) configurations
 4. **Test Environment**: Set up a test environment before production migration
 
-## Step 1: Update Target Framework
+### Step 1: Update Target Framework
 
 Duende IdentityServer v8+ requires .NET 10:
 
@@ -52,7 +52,7 @@ Duende IdentityServer v8+ requires .NET 10:
 + <TargetFramework>net10.0</TargetFramework>
 ```
 
-## Step 2: Replace NuGet Packages
+### Step 2: Replace NuGet Packages
 
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="Duende.IdentityServer" Version="7.4.3" />
@@ -61,7 +61,7 @@ Duende IdentityServer v8+ requires .NET 10:
 + <!-- No separate SAML package needed! -->
 ```
 
-## Step 3: Update Namespaces
+### Step 3: Update Namespaces
 
 ```diff lang="csharp" title="*.cs"
 - using Rsk.Saml;
@@ -74,7 +74,7 @@ Duende IdentityServer v8+ requires .NET 10:
 + using Duende.IdentityServer.Saml.Models;
 ```
 
-## Step 4: Update Service Registration
+### Step 4: Update Service Registration
 
 **Before (RSK):**
 
@@ -105,7 +105,7 @@ builder.Services.AddIdentityServer()
     });
 ```
 
-## Step 5: Remove SAML Middleware
+### Step 5: Remove SAML Middleware
 
 ```diff lang="csharp" title="Program.cs"
 - app.UseIdentityServer()
@@ -115,11 +115,11 @@ builder.Services.AddIdentityServer()
 
 Forgetting to remove `.UseIdentityServerSamlPlugin()` will cause a compilation error.
 
-## Step 6: Migrate Service Provider Configuration
+### Step 6: Migrate Service Provider Configuration
 
 This is the most complex part. See [Service Provider Configuration Changes](#service-provider-configuration) for the full before/after comparison.
 
-## Step 7: Migrate Data (if using database stores)
+### Step 7: Migrate Data (if using database stores)
 
 :::note[Database Migration]
 If your Service Provider configurations are stored in a database, you will need to migrate that data to Duende's new SAML tables. The [v7.4 to v8.0 upgrade guide](/identityserver/upgrades/v7_4-to-v8_0.md#step-3-update-database-schema) documents the new table schemas. Plan your data migration strategy accordingly.
