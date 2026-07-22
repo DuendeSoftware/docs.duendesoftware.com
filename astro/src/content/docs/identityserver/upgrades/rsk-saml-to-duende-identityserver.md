@@ -311,11 +311,13 @@ new IndexedEndpoint
 }
 ```
 
-### SLO Binding Must Be HttpRedirect
+### SLO Only Supports HttpRedirect
 
-Unlike ACS endpoints, Single Logout (SLO) endpoints must use `SamlBinding.HttpRedirect`. HTTP-POST is not supported for SLO because it would require `SameSite=None` cookies, which introduces security concerns in cross-site iframe scenarios.
+Single Logout (SLO) endpoints only support `SamlBinding.HttpRedirect`. Unlike ACS binding validation, this is **not checked at configuration time**. If you configure `HttpPost` for SLO, the configuration will load successfully, but SLO notifications will be **silently skipped** for that Service Provider at runtime.
 
-If your RSK configuration used `HttpPost` for SLO, you must change it:
+This happens because the SLO notification service specifically looks for an `HttpRedirect` endpoint. If none is found, it logs a debug message ("UnsupportedBinding") and skips the Service Provider without throwing an error.
+
+If your RSK configuration used `HttpPost` for SLO, change it to `HttpRedirect`:
 
 ```diff lang="csharp"
 - new Service(SamlConstants.BindingTypes.HttpPost, "https://sp.example.com/Saml2/Logout")
@@ -426,7 +428,7 @@ Change your ACS endpoint binding to `SamlBinding.HttpPost`. HTTP-Redirect cannot
 ### SSO Works but SLO Fails
 
 1. Verify `SingleLogoutServiceUrls` is configured
-2. Ensure SLO binding is `SamlBinding.HttpRedirect` (HTTP-POST is not supported)
+2. Ensure SLO binding is `SamlBinding.HttpRedirect` — if you configured `HttpPost`, SLO notifications will be silently skipped (check debug logs for "UnsupportedBinding")
 3. Check that the Service Provider and IdP agree on the binding
 4. Ensure session management is properly configured
 
