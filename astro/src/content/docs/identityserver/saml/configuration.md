@@ -90,6 +90,8 @@ Available options:
 * **`DefaultSigningBehavior`**
   Default signing behavior for SAML responses. Defaults to `SignAssertion`.
 
+  The default is `SignAssertion` for backward compatibility with existing deployments and SPs that expect only the assertion to be signed. For new deployments, `SignResponse` is recommended because it signs the entire SAML response (including the assertion), providing integrity protection over the full message. See [`SamlSigningBehavior`](#samlsigningbehavior) for details on each option.
+
   :::note
   SAML signing requires an X509 certificate. When you use automatic key management or `AddDeveloperSigningCredential()` (which provide RSA keys without a certificate), IdentityServer automatically generates an X509 container that wraps your existing RSA key material. You do not need to create or provide a certificate manually.
   :::
@@ -171,15 +173,15 @@ builder.Services.AddIdentityServer()
 
 `SamlEndpointOptions` configures the URL paths and supported bindings for all SAML protocol endpoints. Access it via `SamlOptions.Endpoints`.
 
-| Property                      | Type                  | Default                    | Description                                                                                                                                           |
-|-------------------------------|-----------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                                                                                                   |
-| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SSO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. |
-| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates). This is an internal endpoint that is not visible in the metadata document.             |
-| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses).                                                                              |
-| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SLO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. |
-| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow). This is an internal endpoint that is not visible in the metadata document.            |
-| `StateIdParameterName`        | `string`              | `"samlStateId"`            | Query string parameter name used to pass the SAML sign-in state identifier through the return URL in the redirect to the login page.                  |
+| Property                      | Type                  | Default                    | Description                                                                                                                                                                                                                                                             |
+|-------------------------------|-----------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                                                                                                                                                                                                                     |
+| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SSO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests.                                                                                                                   |
+| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates). This is an internal endpoint that is not visible in the metadata document.                                                                                                                               |
+| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses).                                                                                                                                                                                                |
+| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SLO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. Note: SP-side SLO endpoints (`SamlServiceProvider.SingleLogoutServiceUrls`) currently only support HTTP Redirect. |
+| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow). This is an internal endpoint that is not visible in the metadata document.                                                                                                                              |
+| `StateIdParameterName`        | `string`              | `"samlStateId"`            | Query string parameter name used to pass the SAML sign-in state identifier through the return URL in the redirect to the login page.                                                                                                                                    |
 
 
 ```csharp
@@ -295,10 +297,10 @@ SAML bindings define how messages travel over HTTP. HTTP Redirect encodes the me
 
 `SamlBinding` is used on `SamlEndpointType` (for each entry in `SingleLogoutServiceUrls`) and on the derived `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`).
 
-| Value          | Description                                                                           |
-|----------------|---------------------------------------------------------------------------------------|
+| Value          | Description                                                           |
+|----------------|-----------------------------------------------------------------------|
 | `HttpRedirect` | HTTP Redirect binding. The SAML message is sent as a query parameter. |
-| `HttpPost`     | HTTP POST binding. The SAML message is sent in an HTML form.       |
+| `HttpPost`     | HTTP POST binding. The SAML message is sent in an HTML form.          |
 
 ### SamlSigningBehavior
 
@@ -424,7 +426,8 @@ new SamlServiceProvider
 ```
 
 :::caution
-IdP-initiated SSO is inheritly vulnerable to Cross Site Request Forgery (CSRF). This is a property of the protocol, there is no way to enable or implement it without exposing CSRF risk.
+IdP-initiated SSO is inherently vulnerable to Cross-Site Request Forgery (CSRF). This is a property of the protocol, 
+there is no way to enable or implement it without exposing CSRF risk.
 
 A better approach is to mimic the third-party initiated login flow used by OIDC: create an endpoint on the SP that responds with a redirect to the IdP, including an `AuthnRequest`.
 

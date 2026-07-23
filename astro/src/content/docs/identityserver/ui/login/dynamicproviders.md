@@ -245,7 +245,7 @@ SAML dynamic providers use the `SamlProvider` model, which extends `IdentityProv
 * `IdpEntityId` (`string?`, default `null`) — The entity ID of the remote SAML Identity Provider.
 * `SingleSignOnServiceUrl` (`string?`, default `null`) — The URL of the IdP's SSO endpoint.
 * `SingleLogoutServiceUrl` (`string?`, default `null`) — The URL of the IdP's SLO endpoint. When `null`, outbound logout is disabled.
-* `SigningCertificateBase64` (`string?`, default `null`) — Base64-encoded X.509 certificate for validating IdP signatures.
+* `SigningCertificateBase64` (`string?`, default `null`) — Base64-encoded X.509 certificate for validating IdP signatures. This is singular because each dynamic provider record represents one IdP configuration. For key rollover with dynamic providers, update the record with the new certificate. In contrast, the [static SAML provider](/identityserver/ui/login/saml-provider) uses `SigningCertificatesBase64` (a list) to support multiple certificates simultaneously during rollover periods.
 * `BindingType` (`string`, default `"redirect"`) — The SAML binding type (`"redirect"` or `"post"`).
 * `SpEntityId` (`string?`, default `null`) — The entity ID of your application (the SP). When `null`, derived from the IdentityServer issuer.
 * `AllowUnsolicitedAuthnResponse` (`bool`, default `false`) — Whether to accept IdP-initiated (unsolicited) responses.
