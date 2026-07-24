@@ -434,7 +434,7 @@ ASP.NET Core service provider. A default implementation is available to do that 
 idsvrBuilder.AddMutualTlsSecretValidators();
 ```
 
-Then add client secret of type `SecretTypes.X509CertificateName` (for PKI-based scenarios)
+Then add a client secret of type `SecretTypes.X509CertificateName` (for PKI-based scenarios)
 or `SecretTypes.X509CertificateThumbprint` (for self-issued certificates) to the client you want to authenticate.
 
 For example:
