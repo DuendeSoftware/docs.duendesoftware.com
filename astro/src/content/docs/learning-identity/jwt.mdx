@@ -8,13 +8,9 @@ sidebar:
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
-JSON Web Tokens (JWTs) are strings which contain information about a subject. The subject is typically a user, but is the identity for any system that needs to prove itself to other systems, like an API making a call to another API. The JWT is generated after the subject authenticates with the system by entering their username/password, or authenticating any other way.
+JSON Web Tokens (JWTs) are JSON formatted strings which contain information about a subject. The subject is typically a user, but is the identity for any system that needs to prove itself to other systems, like when an API calls another API during machine-to-machine communication. The JWT is generated after the subject authenticates with the system by entering their username/password, or authenticating any other way.
 
 The IETF's [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519) is the official standard for JWTs.
-
-```text
-eyJhbGciOiJSUzI1NiIsImtpZCI6IkNEMzFENUE3NzVBQkI4MTU0REFGODRCMEEwMzM5MUMxIiwieDV0IjoiZGJLb1RyTDV6M0U4elR3UmdFbHlYc0tFbTcwIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2RlbW8uZHVlbmRlc29mdHdhcmUuY29tIiwibmJmIjoxNzg0MjMzMDU4LCJpYXQiOjE3ODQyMzMwNTgsImV4cCI6MTc4NDIzNjY1OCwiYXVkIjoiYXBpIiwic2NvcGUiOlsiYXBpIl0sImNsaWVudF9pZCI6Im0ybSIsImp0aSI6IkVDMjgwOTkwMkQ3NjIxRjYzNTBCMTU0NDBCNjFGRENBIn0.Q9ULRZ7sIN2HQ_7mzdS2JHqNQeD8duor6z6aUZIO3JwKK1iuRamahCiOXnQLxX7CJd0hnnP6b1K5ivXpAWhuwVSJcAbobyyKs1ihzcTxCvQPurEYDzQYWm_oIMgL5LI4uIUop7k9N2odHTZakustt97yVFDHWV0Zm9MMrTbf6kj-LnohPZlvv7YuByj9KlPZbD88n58hxYeK3_u3xdPpuHIoJWQT-RKzH_hd-WAN4ZkI5Tx4x8riuR9jsQRu2SsdSjGcR-cTwUHimlSaoaz8bhx5v-gr-8WGAWn7JVwA8ieBeLDiHyBmJz52W1qipO67aif7Sb-ky2TjnwvqYglgMg
-```
 
 ## Reading JWTs
 
@@ -28,14 +24,14 @@ Many libraries exist to parse a JWT in a variety of programming languages. If yo
 
 ### Generating a JWT with code
 
-If it helps you to visualize a JWT in terms of code, the below pseudocode describes shows what steps would need to be taken:
+If it helps to visualize the process of generating a JWT in terms of code, the below pseudocode describes shows what steps are taken to generate one:
 
 ```
 //Create the Header and Payload JSON strings
 var header = "{ "alg": "HS256", "typ": "JWT" }";
 var payload = "{"sub":"user@email.com"}";
 
-//URL Base64 URL Encode the Header and Payload values
+//Base64 URL Encode the Header and Payload values
 var headerBase64 = Base64Encode(header);
 var payloadBase64 = Base64Encode(payload);
 
@@ -50,9 +46,14 @@ var jwt = $"{headerBase64}.{payloadBase64}.{signedSignatureBase64}";
 print(jwt);
 ```
 
+With the output looking something like:
+```text
+eyJhbGciOiJSUzI1NiIsImtpZCI6IkNEMzFENUE3NzVBQkI4MTU0REFGODRCMEEwMzM5MUMxIiwieDV0IjoiZGJLb1RyTDV6M0U4elR3UmdFbHlYc0tFbTcwIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2RlbW8uZHVlbmRlc29mdHdhcmUuY29tIiwibmJmIjoxNzg0MjMzMDU4LCJpYXQiOjE3ODQyMzMwNTgsImV4cCI6MTc4NDIzNjY1OCwiYXVkIjoiYXBpIiwic2NvcGUiOlsiYXBpIl0sImNsaWVudF9pZCI6Im0ybSIsImp0aSI6IkVDMjgwOTkwMkQ3NjIxRjYzNTBCMTU0NDBCNjFGRENBIn0.Q9ULRZ7sIN2HQ_7mzdS2JHqNQeD8duor6z6aUZIO3JwKK1iuRamahCiOXnQLxX7CJd0hnnP6b1K5ivXpAWhuwVSJcAbobyyKs1ihzcTxCvQPurEYDzQYWm_oIMgL5LI4uIUop7k9N2odHTZakustt97yVFDHWV0Zm9MMrTbf6kj-LnohPZlvv7YuByj9KlPZbD88n58hxYeK3_u3xdPpuHIoJWQT-RKzH_hd-WAN4ZkI5Tx4x8riuR9jsQRu2SsdSjGcR-cTwUHimlSaoaz8bhx5v-gr-8WGAWn7JVwA8ieBeLDiHyBmJz52W1qipO67aif7Sb-ky2TjnwvqYglgMg
+```
+
 ### Header
 
-The header, also called JSON Object Signing and Encryption Header (JOSE Header), contains properties describing what cryptographic operations were performed to sign the Payload of the JWT. The example below shows that the HS256 algorithm was used to sign the Payload.
+The header, also called the JSON Object Signing and Encryption Header (JOSE Header), contains properties describing what cryptographic operations were performed to sign the Payload of the JWT. The example below shows that the HS256 algorithm was used to sign the Payload.
 
 ```json
 {
@@ -63,22 +64,22 @@ The header, also called JSON Object Signing and Encryption Header (JOSE Header),
 
 ### Payload
 
-The payload section of the JWT contains the Claims for the subject, which the information about the identity. This is includes a number of Registered Claim Names, a set of claims that have a known meaning. They are defined in [JWT's RFC](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1). 
+The payload section of the JWT contains the Claims for the subject, which is information about the identity. This includes custom claims that are specific to your applications, and a number of Registered Claim Names, a set of claims with known meanings.
 
 #### Registered Claim Names
 
 Some examples of Registered Claim Names are:
 - `sub`: The subject the JWT is for. This can be any string that uniquely identifies the subject, like an email address or GUID.
-- `iat`: The date/time ths JWT was issues. The value is the number of seconds since January 1, 1970. 
+- `iat`: The date/time the JWT was issued. The value is the number of seconds since January 1, 1970. 
 - `exp`: The date/time the JWT expires. Systems receiving a JWT should not trust one after its expiration time has passed. The value is the number of seconds since January 1, 1970. 
 
 The full set of Registered Claim Names are listed in the [JWT RFC](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1).
 
 #### Custom Claims
 
-An identity system can add any number of claims it wants. Some systems will add everything it knows about the subject, others will limit them to the system that will use the JWT.
+An identity system can add any number of claims it wants. Some systems will add everything it knows about the subject, others will scope them only to the system that will use the JWT.
 
-#### Real Example
+#### Real World Example
 
 The below example shows a payload with a mix of claims. The `sub` and `exp` are registered claims, and the rest are custom claims used by the consuming application.
 
@@ -87,6 +88,7 @@ The below example shows a payload with a mix of claims. The `sub` and `exp` are 
   "sub": "user@example.com",
   "exp": 1300819380,
   "client_id": "my-frontend",
+  "": "",
   "scope": [
     "admin"
     "orders:read",
@@ -96,9 +98,9 @@ The below example shows a payload with a mix of claims. The `sub` and `exp` are 
 }
 ```
 
-> Note: A JWT may contain every claim for a user, making the transmitted string very large. Conversely it can contain a minimum amount of information about the subject in case the token is leaked. The amount of information contained in the JWT is up to the service generating it.
+> Note: A JWT may contain every claim for a user, making the transmitted string very large. Conversely it can contain a minimum amount of information about the subject. The amount of information contained in the JWT is determined by the service generating it.
 
 ### Signature
 
-The signature is used by any system that receives the JWT to validate it and ensure it was not tampered with since it was created. 
+The signature is used to verify the JWT has not been tampered with since it was created. Because the token is an arbitrary string, the Signature adds trust that the JWT is the same value that it was when it was generated by the source of truth.
 
