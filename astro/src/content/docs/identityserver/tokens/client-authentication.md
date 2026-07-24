@@ -478,7 +478,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 });
 ```
 
-Specifying this domain name however triggers an additional authentication step in the [MutualTlsEndpointMiddleware][1], 
+Using mTLS however triggers an additional authentication step in the [MutualTlsEndpointMiddleware][1], 
 calling `httpContext.AuthenticateAsync()` with the configured client certificate authentication scheme name.
 By default, this scheme name is `"Certificate"`, but you can override this when configuring the mTLS options:
 
