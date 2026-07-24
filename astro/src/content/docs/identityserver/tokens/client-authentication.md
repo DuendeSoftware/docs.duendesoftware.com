@@ -474,7 +474,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
     options.MutualTls.Enabled = true;
     
     // Only exposes the MTLS endpoints on the mtls subdomain of your IdentityServer host.
-    options.DomainName = "mtls"; 
+    options.MutualTls.DomainName = "mtls"; 
 });
 ```
 
@@ -487,8 +487,8 @@ By default, this scheme name is `"Certificate"`, but you can override this when 
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;
-    options.DomainName = "mtls";
-    options.ClientCertificateAuthenticationScheme = "Certificate";
+    options.MutualTls.DomainName = "mtls";
+    options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
 });
 ```
 
@@ -499,8 +499,8 @@ In addition, you need to also configure client certificate authentication in ASP
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;
-    options.DomainName = "mtls";
-    options.ClientCertificateAuthenticationScheme = "Certificate";
+    options.MutualTls.DomainName = "mtls";
+    options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
 });
 
 builder.Services.AddAuthentication()
