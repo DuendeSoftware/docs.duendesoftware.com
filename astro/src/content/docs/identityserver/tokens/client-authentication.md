@@ -434,7 +434,7 @@ ASP.NET Core service provider. A default implementation is available to do that 
 idsvrBuilder.AddMutualTlsSecretValidators();
 ```
 
-Then add client secret of type `SecretTypes.X509CertificateName` (for PKI-based scenarios)
+Then add a client secret of type `SecretTypes.X509CertificateName` (for PKI-based scenarios)
 or `SecretTypes.X509CertificateThumbprint` (for self-issued certificates) to the client you want to authenticate.
 
 For example:
@@ -474,11 +474,11 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
     options.MutualTls.Enabled = true;
     
     // Only exposes the MTLS endpoints on the mtls subdomain of your IdentityServer host.
-    options.DomainName = "mtls"; 
+    options.MutualTls.DomainName = "mtls"; 
 });
 ```
 
-Specifying this domain name however triggers an additional authentication step in the [MutualTlsEndpointMiddleware][1], 
+Using mTLS however triggers an additional authentication step in the [MutualTlsEndpointMiddleware][1], 
 calling `httpContext.AuthenticateAsync()` with the configured client certificate authentication scheme name.
 By default, this scheme name is `"Certificate"`, but you can override this when configuring the mTLS options:
 
@@ -487,8 +487,8 @@ By default, this scheme name is `"Certificate"`, but you can override this when 
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;
-    options.DomainName = "mtls";
-    options.ClientCertificateAuthenticationScheme = "Certificate";
+    options.MutualTls.DomainName = "mtls";
+    options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
 });
 ```
 
@@ -499,8 +499,8 @@ In addition, you need to also configure client certificate authentication in ASP
 var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.MutualTls.Enabled = true;
-    options.DomainName = "mtls";
-    options.ClientCertificateAuthenticationScheme = "Certificate";
+    options.MutualTls.DomainName = "mtls";
+    options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
 });
 
 builder.Services.AddAuthentication()
