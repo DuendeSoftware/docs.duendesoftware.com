@@ -1,0 +1,35 @@
+---
+// LogLevel.astro
+// Renders a log level name with the appropriate color from the spectrum
+// Uses mode-aware colors for optimal contrast in light and dark themes
+
+interface Props {
+  level: 'Trace' | 'Debug' | 'Information' | 'Warning' | 'Error' | 'Critical';
+}
+
+const { level } = Astro.props;
+---
+
+<span class={`log-level log-level--${level.toLowerCase()}`}>{level}</span>
+
+<style>
+  .log-level {
+    font-weight: 600;
+  }
+  
+  /* Light mode (high contrast for white backgrounds) */
+  .log-level--trace       { color: #57606a; }
+  .log-level--debug       { color: #0550ae; }
+  .log-level--information { color: #0e6d6d; }
+  .log-level--warning     { color: #9a6700; }
+  .log-level--error       { color: #bc4c00; }
+  .log-level--critical    { color: #cf222e; }
+  
+  /* Dark mode (brighter for dark backgrounds) */
+  :global([data-theme='dark']) .log-level--trace       { color: #8b949e; }
+  :global([data-theme='dark']) .log-level--debug       { color: #58a6ff; }
+  :global([data-theme='dark']) .log-level--information { color: #3dbfbf; }
+  :global([data-theme='dark']) .log-level--warning     { color: #d29922; }
+  :global([data-theme='dark']) .log-level--error       { color: #f0883e; }
+  :global([data-theme='dark']) .log-level--critical    { color: #f85149; }
+</style>

@@ -1,6 +1,6 @@
 ---
 title: "Supported Specifications"
-description: "A comprehensive list of supported OpenID Connect and OAuth 2.x specifications implemented in Duende IdentityServer"
+description: "A comprehensive list of supported OpenID Connect, OAuth 2.x and SAML specifications implemented in Duende IdentityServer"
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Specifications
@@ -12,10 +12,6 @@ redirect_from:
 ---
 
 Duende IdentityServer implements the following specifications:
-
-:::note
-Some specifications are only available in the [Duende IdentityServer Business or Enterprise Edition](https://duendesoftware.com/products/identityserver).
-:::
 
 ## OpenID Connect
 
@@ -56,3 +52,7 @@ Some specifications are only available in the [Duende IdentityServer Business or
   DPoP ([RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449))
 * JSON Web Token (JWT) Response for OAuth Token Introspection ([RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html))
 * OAuth 2.0 Authorization Server Metadata ([RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414))
+
+## SAML
+
+* Security Assertion Markup Language (SAML) v2.0 (https://www.oasis-open.org/standard/saml/)
