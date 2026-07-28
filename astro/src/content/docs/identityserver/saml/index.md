@@ -11,6 +11,10 @@ sidebar:
 This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard (add-on), Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
+:::tip[Migrating from Rock Solid Knowledge SAML?]
+If you're upgrading from the Rock Solid Knowledge (RSK) SAML addon (`Rsk.Saml.DuendeIdentityServer`) to Duende IdentityServer's built-in SAML support, see the dedicated [RSK SAML Migration Guide](/identityserver/upgrades/rsk-saml-to-duende-identityserver.md).
+:::
+
 IdentityServer can act as a **SAML 2.0 Identity Provider (IdP)**, issuing SAML assertions to
 Service Providers (SPs). This enables integration with enterprise applications and legacy systems
 that use the SAML 2.0 protocol rather than OAuth 2.0 / OpenID Connect.
