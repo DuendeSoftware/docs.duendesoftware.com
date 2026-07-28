@@ -9,9 +9,14 @@ sidebar:
 
 import { Tabs, TabItem, LinkCard } from "@astrojs/starlight/components";
 
-This guide covers the infrastructure side of mTLS: generating certificates for local development, configuring reverse proxies in production, and loading certificates from secure stores in the .NET ecosystem.
+Mutual TLS support in Duende IdentityServer enables two distinct security features:
 
-For IdentityServer client registration, secret types, and mTLS option configuration, see [Client Authentication](/identityserver/tokens/client-authentication.md#mutual-tls-client-certificates).
+1. **Client authentication** — Clients present an X.509 certificate to authenticate to IdentityServer endpoints (instead of or in addition to client secrets)
+2. **Sender-constrained tokens** — Access tokens are cryptographically bound to the client's certificate, preventing token theft and replay
+
+Both features are defined in [RFC 8705: OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens](https://tools.ietf.org/html/rfc8705).
+
+This guide covers the infrastructure side: generating certificates for local development, configuring reverse proxies in production, and loading certificates from secure stores. For IdentityServer client registration and options, see [Client Authentication](/identityserver/tokens/client-authentication.md#mutual-tls-client-certificates). For API-side token validation, see [Proof-of-Possession](/identityserver/tokens/pop.md).
 
 ---
 
@@ -103,7 +108,7 @@ This produces `localhost+2.pem` and `localhost+2-key.pem` in the current directo
 mkcert -client -pkcs12 localhost
 ```
 
-This produces `localhost-client.p12`. Reference this file path when constructing the `X509Certificate2` for the [.NET client](/identityserver/tokens/client-authentication.md#net-client-library-1).
+This produces `localhost-client.p12`. Reference this file path when constructing the `X509Certificate2` for the [.NET client](/identityserver/tokens/client-authentication.md#net-client-library-2).
 
 ### 4. Configure the Hosts File
 
@@ -179,6 +184,10 @@ builder.Services.AddAuthentication()
 ## Production Deployment Patterns
 
 In production, a reverse proxy (IIS, Nginx, or Apache) handles TLS termination and **forwards the client certificate** to Kestrel via a request header. This separates certificate negotiation from the application tier and supports load-balanced deployments.
+
+:::caution[Prevent Header Spoofing]
+When forwarding certificates via an HTTP header, ensure the reverse proxy **overwrites/strips** the header from incoming requests and that only trusted proxies can reach Kestrel directly.
+:::
 
 ### Certificate Forwarding in ASP.NET Core
 
@@ -356,8 +365,7 @@ Import the certificate using `certlm.msc` (Local Machine Certificates MMC snap-i
 Import-PfxCertificate `
     -FilePath client.p12 `
     -CertStoreLocation Cert:\LocalMachine\My `
-    -Password (ConvertTo-SecureString "password" -AsPlainText -Force)
-```
+    -Password (Read-Host -Prompt "PFX password (leave blank if none)" -AsSecureString)
 
 Then wire it into Kestrel or an outbound HTTP handler:
 
@@ -398,7 +406,7 @@ async Task<X509Certificate2> LoadFromKeyVaultAsync(string vaultUri, string certN
     // - Developer credentials locally (Visual Studio, Azure CLI, etc.)
     var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
 
-    KeyVaultSecret secret = await client.GetSecretAsync(certName);
+    KeyVaultSecret secret = (await client.GetSecretAsync(certName)).Value;
 
     byte[] certBytes = Convert.FromBase64String(secret.Value);
     return new X509Certificate2(
@@ -452,3 +460,53 @@ Replace `TokenAuthMethodInfo` with [AppRole](https://developer.hashicorp.com/vau
 
   </TabItem>
 </Tabs>
+
+---
+
+## mTLS Endpoint Strategies
+
+IdentityServer can expose mTLS endpoints using three different URL strategies. Configure the strategy via `MutualTls.DomainName`:
+
+| Strategy | `DomainName` Value | Example Endpoint |
+|----------|-------------------|------------------|
+| **Path-based** | `null` or empty | `https://identity.example.com/connect/mtls/token` |
+| **Sub-domain** | `"mtls"` | `https://mtls.identity.example.com/connect/token` |
+| **Separate domain** | `"identity-mtls.example.com"` | `https://identity-mtls.example.com/connect/token` |
+
+```csharp
+// Path-based (default) — mTLS endpoints under /connect/mtls/*
+options.MutualTls.DomainName = null;
+
+// Sub-domain — mTLS endpoints on mtls.{yourdomain}
+options.MutualTls.DomainName = "mtls";
+
+// Separate domain — mTLS endpoints on a completely different domain
+options.MutualTls.DomainName = "identity-mtls.example.com";
+```
+
+### Discovery Document
+
+IdentityServer publishes the mTLS endpoint URLs in the discovery document under `mtls_endpoint_aliases`. Clients should use these aliases when mTLS is required:
+
+```csharp
+var disco = await client.GetDiscoveryDocumentAsync("https://identity.example.com");
+
+// Use the mTLS token endpoint alias
+var tokenEndpoint = disco.MtlsEndpointAliases?.TokenEndpoint 
+    ?? disco.TokenEndpoint;
+```
+
+The discovery document will include an `mtls_endpoint_aliases` section like:
+
+```json
+{
+  "issuer": "https://identity.example.com",
+  "token_endpoint": "https://identity.example.com/connect/token",
+  "mtls_endpoint_aliases": {
+    "token_endpoint": "https://mtls.identity.example.com/connect/token",
+    "revocation_endpoint": "https://mtls.identity.example.com/connect/revocation",
+    "introspection_endpoint": "https://mtls.identity.example.com/connect/introspect",
+    "device_authorization_endpoint": "https://mtls.identity.example.com/connect/deviceauthorization"
+  }
+}
+```
