@@ -18,11 +18,9 @@ Both features are defined in [RFC 8705: OAuth 2.0 Mutual-TLS Client Authenticati
 
 This guide covers the infrastructure side: generating certificates for local development, configuring reverse proxies in production, and loading certificates from secure stores. For IdentityServer client registration and options, see [Client Authentication](/identityserver/tokens/client-authentication.md#mutual-tls-client-certificates). For API-side token validation, see [Proof-of-Possession](/identityserver/tokens/pop.md).
 
----
-
 ## Local Development Setup
 
-The recommended tool for local mTLS development is [mkcert](https://github.com/FiloSottile/mkcert), a cross-platform utility that creates locally trusted certificates backed by a private CA installed on your machine. Unlike the certificates bundled with samples (which use publicly known private keys), `mkcert` generates certificates whose private keys never leave your machine.
+The recommended tool for local mTLS development is [`mkcert`](https://github.com/FiloSottile/mkcert), a cross-platform utility that creates locally trusted certificates backed by a private CA installed on your machine. Unlike the certificates bundled with samples (which use publicly known private keys), `mkcert` generates certificates whose private keys never leave your machine.
 
 ### 1. Install mkcert
 
@@ -94,7 +92,7 @@ Never commit the `rootCA-key.pem` file (found in the directory reported by `mkce
 
 ### 3. Generate Certificates
 
-**Server certificate** for the IdentityServer and API hostnames:
+You will need a **server certificate** for the IdentityServer and API hostnames:
 
 ```bash
 mkcert localhost mtls.localhost api.localhost
@@ -102,7 +100,7 @@ mkcert localhost mtls.localhost api.localhost
 
 This produces `localhost+2.pem` and `localhost+2-key.pem` in the current directory. Reference these files in your Kestrel HTTPS configuration.
 
-**Client certificate** in PKCS#12 format (used by the client application):
+Next, generate a **client certificate** in PKCS#12 format (used by the client application):
 
 ```bash
 mkcert -client -pkcs12 localhost
@@ -178,8 +176,6 @@ builder.Services.AddAuthentication()
   href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/MTLS"
   target="_blank"
 />
-
----
 
 ## Production Deployment Patterns
 
@@ -329,11 +325,9 @@ For the full SSL configuration reference, see the [mod_ssl documentation](https:
   </TabItem>
 </Tabs>
 
----
-
 ## Certificate Loading Strategies
 
-In production, certificates must be loaded from a secure store — not from disk paths in application configuration. The following examples show how to load a certificate programmatically for use with Kestrel or an outbound `HttpClient`.
+In production, certificates must be loaded from a secure store, not from disk paths in application configuration. The following examples show how to load a certificate programmatically for use with Kestrel or an outbound `HttpClient`.
 
 <Tabs>
   <TabItem label="Windows Certificate Store">

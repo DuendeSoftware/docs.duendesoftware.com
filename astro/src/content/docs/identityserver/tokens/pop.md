@@ -67,7 +67,7 @@ This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard
 :::
 
 :::note
-For development environment setup (mkcert, hosts file, Kestrel configuration) and production deployment patterns, see the [mTLS Setup Guide](/identityserver/tokens/mtls-setup/).
+For development environment setup (`mkcert`, hosts file, Kestrel configuration) and production deployment patterns, see the [mTLS Setup Guide](/identityserver/tokens/mtls-setup.mdx).
 :::
 
 ### Combine TLS Proof-of-possession With Other Authentication Methods
