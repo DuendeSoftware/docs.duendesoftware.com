@@ -66,6 +66,10 @@ If the access token would leak, it cannot be replayed without having access to t
 This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
 :::
 
+:::note
+For development environment setup (`mkcert`, hosts file, Kestrel configuration) and production deployment patterns, see the [mTLS Setup Guide](/identityserver/tokens/mtls-setup.mdx).
+:::
+
 ### Combine TLS Proof-of-possession With Other Authentication Methods
 
 It is not mandatory to authenticate your clients with a client certificate to get the benefit of proof-of-possession. You can combine this feature with an arbitrary client authentication method - or even no client authentication at all (e.g. for public mobile/native clients).
