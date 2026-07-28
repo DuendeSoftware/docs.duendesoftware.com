@@ -14,12 +14,12 @@ This guide walks through migrating from **Rock Solid Knowledge (RSK) SAML** (`Rs
 
 ## What Changed
 
-| Aspect       | RSK SAML 2.0 (SAML2P)                                   | Duende SAML                                |
-|--------------|--------------------------------------------|--------------------------------------------------|
-| Package      | `Rsk.Saml.DuendeIdentityServer` (separate) | Built into `Duende.IdentityServer`               |
-| License      | Separate RSK SAML license                  | Included in Advanced/Custom; add-on for Standard |
-| Registration | `.AddSamlPlugin()`                         | `.AddSaml()`                                     |
-| Middleware   | `.UseIdentityServerSamlPlugin()` required  | Not needed                                       |
+| Aspect       | RSK SAML 2.0 (SAML2P)                      | Duende SAML                                                                              |
+|--------------|--------------------------------------------|------------------------------------------------------------------------------------------|
+| Package      | `Rsk.Saml.DuendeIdentityServer` (separate) | Built into `Duende.IdentityServer`                                                       |
+| License      | Separate RSK SAML license                  | Included in Advanced/Custom; add-on for Standard                                         |
+| Registration | `.AddSamlPlugin()`                         | `.AddSaml()`                                                                             |
+| Middleware   | `.UseIdentityServerSamlPlugin()` required  | Not needed                                                                               |
 | SSO Endpoint | `/saml/sso`                                | `/Saml2/SSO` ([configurable](/identityserver/saml/configuration.md#samlendpointoptions)) |
 | SLO Endpoint | `/saml/slo`                                | `/Saml2/SLO` ([configurable](/identityserver/saml/configuration.md#samlendpointoptions)) |
 | Metadata     | `/saml/metadata`                           | `/Saml2` ([configurable](/identityserver/saml/configuration.md#samlendpointoptions))     |
@@ -50,7 +50,7 @@ Duende IdentityServer includes all necessary SAML infrastructure. Make sure to u
 ```diff lang="xml" title=".csproj"
 - <PackageReference Include="Duende.IdentityServer" Version="7.4.3" />
 - <PackageReference Include="Rsk.Saml.DuendeIdentityServer" Version="11.0.0" />
-+ <PackageReference Include="Duende.IdentityServer" Version="8.0.0" />
++ <PackageReference Include="Duende.IdentityServer" Version="8.0.*" />
 + <!-- No separate SAML package needed! -->
 ```
 
@@ -167,6 +167,15 @@ Duende uses two different endpoint types:
 - **`SamlEndpointType`**: For SLO endpoints. A simpler type with just `Location` and `Binding`.
 
 ## Service Provider Configuration
+
+Each SAML Service Provider registered with your IdP must be migrated from the RSK `ServiceProvider` model to Duende's `SamlServiceProvider` model. The overall structure is similar, but there are key differences:
+
+- **New required property**: `AllowedScopes` must be set (see [Breaking Changes](#allowedscopes-is-required))
+- **Endpoint types changed**: RSK used a single `Service` class; Duende uses `IndexedEndpoint` for ACS and `SamlEndpointType` for SLO
+- **Signing behavior**: Changed from boolean (`SignAssertions`) to enum (`SigningBehavior`)
+- **New optional properties**: `DisplayName` and `Enabled` for better SP management
+
+See the [Service Provider Model](#service-provider-model) mapping table for a complete property-by-property comparison. The examples below show a full before/after comparison.
 
 ### RSK Service Provider (Before)
 
