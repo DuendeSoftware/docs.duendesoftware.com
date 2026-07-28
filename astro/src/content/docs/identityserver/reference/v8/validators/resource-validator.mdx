@@ -1,0 +1,239 @@
+---
+title: "Resource Validator"
+description: "Reference documentation for IResourceValidator, which validates whether requested scopes and resources are valid and allowed for a given client."
+sidebar:
+  label: Resource Validator
+  order: 80
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+The `IResourceValidator` interface validates whether the scopes and resources requested in an authorization or token request are valid and permitted for the requesting client. The default implementation checks against your configured `ApiScope`, `ApiResource`, and `IdentityResource` definitions. Custom implementations enable dynamic validation based on external systems, tenant context, or runtime business rules.
+
+## When to Use
+
+Use a custom resource validator when:
+- Resource/scope availability varies by tenant in a multi-tenant system
+- Scope authorization depends on external services or databases
+- You need to enforce business rules beyond static client configuration
+- Scopes are created dynamically and not stored in IdentityServer configuration
+
+## Interface
+
+#### Duende.IdentityServer.Validation.IResourceValidator
+
+```csharp
+/// <summary>
+/// Validates requested resources (scopes and resource indicators)
+/// </summary>
+public interface IResourceValidator
+{
+    /// <summary>
+    /// Validates the requested resources for the client.
+    /// </summary>
+    /// <param name="request">The resource validation request.</param>
+    /// <param name="ct">The cancellation token.</param>
+    Task<ResourceValidationResult> ValidateRequestedResourcesAsync(
+        ResourceValidationRequest request, 
+        CancellationToken ct);
+}
+```
+
+### ValidateRequestedResourcesAsync
+
+Validates the requested scopes against the client's permissions and your resource configuration. Returns a `ResourceValidationResult` containing:
+
+- **`Succeeded`** — `true` if scopes are valid and no invalid scopes/indicators
+- **`Resources`** — The validated `Resources` object with:
+  - `IdentityResources` — Matched identity resources (e.g., `openid`, `profile`)
+  - `ApiResources` — Matched API resources
+  - `ApiScopes` — Matched API scopes
+  - `OfflineAccess` — Whether `offline_access` was requested
+- **`ParsedScopes`** — The `ParsedScopeValue` objects from the scope parser
+- **`RawScopeValues`** — The original scope strings
+- **`InvalidScopes`** — Scopes that failed validation
+- **`InvalidResourceIndicators`** — Resource indicators that failed validation
+
+### ResourceValidationRequest
+
+The request object provides:
+
+| Member | Description |
+|--------|-------------|
+| `Client` | The requesting client |
+| `Scopes` | The raw scope values (`IEnumerable<string>`) |
+| `ResourceIndicators` | Resource indicators from the request (RFC 8707) |
+
+## Default Behavior
+
+The `DefaultResourceValidator`:
+1. Looks up each parsed scope in configured `IdentityResources`, `ApiScopes`, and checks for `offline_access`
+2. Verifies the client is allowed to request each scope via `Client.AllowedScopes`
+3. Resolves `ApiResources` associated with the requested `ApiScopes`
+4. Returns invalid scopes that don't match configuration or aren't allowed for the client
+
+## Common Scenarios
+
+### Multi-Tenant Resource Validation
+
+Validate scopes against tenant-specific configuration:
+
+```csharp
+public class TenantResourceValidator : IResourceValidator
+{
+    private readonly IResourceValidator _inner;
+    private readonly ITenantService _tenantService;
+    
+    public TenantResourceValidator(
+        DefaultResourceValidator inner,
+        ITenantService tenantService)
+    {
+        _inner = inner;
+        _tenantService = tenantService;
+    }
+    
+    public async Task<ResourceValidationResult> ValidateRequestedResourcesAsync(
+        ResourceValidationRequest request,
+        CancellationToken ct)
+    {
+        // First, run default validation
+        var result = await _inner.ValidateRequestedResourcesAsync(request, ct);
+        
+        // Then apply tenant-specific restrictions
+        var tenantId = GetTenantFromClient(request.Client);
+        var tenantScopes = await _tenantService.GetAllowedScopesAsync(tenantId, ct);
+        
+        // Filter to only tenant-allowed scopes
+        var disallowed = result.Resources.ApiScopes
+            .Where(s => !tenantScopes.Contains(s.Name))
+            .Select(s => s.Name)
+            .ToList();
+        
+        foreach (var scope in disallowed)
+        {
+            result.InvalidScopes.Add(scope);
+            result.Resources.ApiScopes.Remove(
+                result.Resources.ApiScopes.First(s => s.Name == scope));
+        }
+        
+        return result;
+    }
+}
+```
+
+### Dynamic Scope Authorization
+
+Validate parameterized scopes against external authorization:
+
+```csharp
+public class DynamicResourceValidator : IResourceValidator
+{
+    private readonly DefaultResourceValidator _inner;
+    private readonly IAuthorizationService _authz;
+    
+    public DynamicResourceValidator(
+        DefaultResourceValidator inner,
+        IAuthorizationService authz)
+    {
+        _inner = inner;
+        _authz = authz;
+    }
+    
+    public async Task<ResourceValidationResult> ValidateRequestedResourcesAsync(
+        ResourceValidationRequest request,
+        CancellationToken ct)
+    {
+        var result = await _inner.ValidateRequestedResourcesAsync(request, ct);
+        
+        // Validate parameterized scopes against external authorization
+        foreach (var scope in result.ParsedScopes.Where(s => s.ParsedParameter != null))
+        {
+            var allowed = await _authz.IsClientAuthorizedForResourceAsync(
+                request.Client.ClientId,
+                scope.ParsedName,
+                scope.ParsedParameter,
+                ct);
+            
+            if (!allowed)
+            {
+                result.InvalidScopes.Add(scope.RawValue);
+            }
+        }
+        
+        return result;
+    }
+}
+```
+
+### Transaction-Scoped Validation
+
+Validate that transaction IDs exist and are accessible:
+
+```csharp
+public class TransactionResourceValidator : IResourceValidator
+{
+    private readonly DefaultResourceValidator _inner;
+    private readonly ITransactionRepository _transactions;
+    
+    public TransactionResourceValidator(
+        DefaultResourceValidator inner,
+        ITransactionRepository transactions)
+    {
+        _inner = inner;
+        _transactions = transactions;
+    }
+    
+    public async Task<ResourceValidationResult> ValidateRequestedResourcesAsync(
+        ResourceValidationRequest request,
+        CancellationToken ct)
+    {
+        var result = await _inner.ValidateRequestedResourcesAsync(request, ct);
+        
+        // Validate transaction scope parameters
+        var txScopes = result.ParsedScopes
+            .Where(s => s.ParsedName == "transaction" && s.ParsedParameter != null);
+        
+        foreach (var scope in txScopes)
+        {
+            var exists = await _transactions.ExistsAsync(scope.ParsedParameter, ct);
+            if (!exists)
+            {
+                result.InvalidScopes.Add(scope.RawValue);
+            }
+        }
+        
+        return result;
+    }
+}
+```
+
+## Registration
+
+Register your custom resource validator in `ConfigureServices`:
+
+```csharp
+builder.Services.AddIdentityServer()
+    .AddResourceValidator<TenantResourceValidator>();
+```
+
+When decorating the default validator, register it explicitly:
+
+```csharp
+builder.Services.AddTransient<DefaultResourceValidator>();
+builder.Services.AddIdentityServer()
+    .AddResourceValidator<TenantResourceValidator>();
+```
+
+## See Also
+
+<LinkCard
+  title="Scope Parser"
+  href="/identityserver/reference/v8/parsers/scope-parser/"
+  description="Parse parameterized scopes before validation"
+/>
+
+<LinkCard
+  title="API Scopes"
+  href="/identityserver/fundamentals/resources/api-scopes/"
+  description="Define and configure API scopes"
+/>

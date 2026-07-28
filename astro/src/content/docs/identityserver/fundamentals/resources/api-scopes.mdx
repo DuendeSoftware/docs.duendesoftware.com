@@ -10,6 +10,8 @@ redirect_from:
   - /identityserver/v7/fundamentals/resources/api_scopes/
 ---
 
+import { LinkCard } from "@astrojs/starlight/components";
+
 Designing your API surface can be a complicated task. Duende IdentityServer provides a couple of primitives to help you
 with that.
 
@@ -120,11 +122,19 @@ claim in the `issuer_name/resources` format. If you need more control of the aud
 ### Parameterized Scopes
 
 Sometimes scopes have a certain structure, e.g. a scope name with an additional parameter: `transaction:id` or
-`read_patient:patientid`.
+`read_patient:patientid`. This pattern is useful when:
+
+- **Transaction-scoped access** — Tokens bound to a specific transaction, order, or workflow
+- **Multi-tenant systems** — Scopes that encode tenant context like `tenant:acme:read`
+- **Resource-specific permissions** — Access to a particular document, patient record, or account
 
 In this case you would create a scope without the parameter part and assign that name to a client, but in addition
 provide some logic to parse the structure
-of the scope at runtime using the `IScopeParser` interface or by deriving from our default implementation, e.g.:
+of the scope at runtime using the `IScopeParser` interface or by deriving from our default implementation.
+
+#### Implementing a Scope Parser
+
+Create a custom parser by extending `DefaultScopeParser`:
 
 ```csharp
 public class ParameterizedScopeParser : DefaultScopeParser
@@ -168,6 +178,15 @@ public class ParameterizedScopeParser : DefaultScopeParser
 }
 ```
 
+Register your parser in `ConfigureServices`:
+
+```csharp
+builder.Services.AddIdentityServer()
+    .AddScopeParser<ParameterizedScopeParser>();
+```
+
+#### Accessing Parsed Values
+
 You then have access to the parsed value throughout the pipeline, e.g. in the profile service:
 
 ```csharp
@@ -183,3 +202,19 @@ public class HostProfileService : IProfileService
     }
 }
 ```
+
+#### Validating Dynamic Scopes
+
+When using parameterized scopes, you may also want to customize how scopes are validated. For example, you might verify that a transaction ID exists, or that the client is authorized for a specific tenant. Use `IResourceValidator` to add this validation logic.
+
+<LinkCard
+  title="Scope Parser Reference"
+  href="/identityserver/reference/v8/parsers/scope-parser/"
+  description="Full API reference for IScopeParser with additional scenarios"
+/>
+
+<LinkCard
+  title="Resource Validator Reference"
+  href="/identityserver/reference/v8/validators/resource-validator/"
+  description="Validate parameterized scopes against external systems"
+/>

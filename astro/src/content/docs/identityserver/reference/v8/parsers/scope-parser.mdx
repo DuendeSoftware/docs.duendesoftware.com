@@ -1,0 +1,190 @@
+---
+title: "Scope Parser"
+description: "Reference documentation for IScopeParser, which parses raw scope strings from authorization and token requests into structured ParsedScopeValue objects."
+sidebar:
+  label: Scope Parser
+  order: 10
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+The `IScopeParser` interface is responsible for parsing the raw `scope` parameter from OAuth/OIDC requests into individual, structured scope values. While the default implementation treats scopes as simple space-delimited strings, custom implementations enable **parameterized scopes** — scopes that carry dynamic data like transaction IDs, tenant identifiers, or resource-specific parameters.
+
+## When to Use
+
+Use a custom scope parser when:
+- Scopes carry runtime parameters (e.g., `transaction:abc123`, `tenant:acme`)
+- You need to validate scope structure before further processing
+- Scope values follow a convention that requires extraction of embedded data
+
+## Interface
+
+#### Duende.IdentityServer.Validation.IScopeParser
+
+```csharp
+/// <summary>
+/// Allows parsing raw scopes values into structured scope values.
+/// </summary>
+public interface IScopeParser
+{
+    /// <summary>
+    /// Parses the requested scopes.
+    /// </summary>
+    ParsedScopesResult ParseScopeValues(IEnumerable<string> scopeValues);
+}
+```
+
+### ParseScopeValues
+
+Receives the scope values as a collection (already split from the space-delimited request parameter) and returns a `ParsedScopesResult` containing:
+
+- **`ParsedScopes`** — A collection of `ParsedScopeValue` objects, each with:
+  - `RawValue` — The original scope string segment
+  - `ParsedName` — The scope name (e.g., `"transaction"`)
+  - `ParsedParameter` — The extracted parameter, if any (e.g., `"123"`)
+- **`Errors`** — Any parsing errors encountered
+- **`Succeeded`** — Whether parsing completed without errors
+
+## Default Implementation
+
+The `DefaultScopeParser` iterates over the scope values and creates a `ParsedScopeValue` for each. Override the virtual `ParseScopeValue` method to add custom parsing logic for parameterized scopes:
+
+```csharp
+public class ParameterizedScopeParser : DefaultScopeParser
+{
+    public ParameterizedScopeParser(ILogger<DefaultScopeParser> logger) : base(logger)
+    { }
+
+    public override void ParseScopeValue(ParseScopeContext scopeContext)
+    {
+        // Custom parsing logic here
+        // Call base.ParseScopeValue(scopeContext) for standard scopes
+    }
+}
+```
+
+### DefaultScopeParser.ParseScopeContext
+
+The `ParseScopeContext` is a nested class within `DefaultScopeParser` that provides:
+
+| Member | Description |
+|--------|-------------|
+| `RawValue` | The original scope string being parsed |
+| `ParsedName` | The parsed scope name (read after `SetParsedValues`) |
+| `ParsedParameter` | The parsed parameter value (read after `SetParsedValues`) |
+| `Error` | The error message if parsing failed |
+| `Ignore` | Whether this scope should be excluded from results |
+| `Succeeded` | `true` if not ignored and no error |
+| `SetParsedValues(name, parameter)` | Sets the parsed scope name and parameter |
+| `SetIgnore()` | Marks this scope to be excluded from results |
+| `SetError(message)` | Marks this scope as invalid with an error message |
+
+## Common Scenarios
+
+### Transaction or Resource IDs
+
+Scopes like `transaction:abc123` or `document:read:456` embed resource identifiers:
+
+```csharp
+public override void ParseScopeValue(ParseScopeContext scopeContext)
+{
+    const string prefix = "transaction:";
+    
+    if (scopeContext.RawValue.StartsWith(prefix))
+    {
+        var parameter = scopeContext.RawValue.Substring(prefix.Length);
+        if (!string.IsNullOrEmpty(parameter))
+        {
+            scopeContext.SetParsedValues("transaction", parameter);
+            return;
+        }
+        scopeContext.SetError("transaction scope requires a parameter");
+        return;
+    }
+    
+    base.ParseScopeValue(scopeContext);
+}
+```
+
+Access the parsed parameter downstream in your `IProfileService`:
+
+```csharp
+var txScope = context.RequestedResources.ParsedScopes
+    .FirstOrDefault(x => x.ParsedName == "transaction");
+
+if (txScope?.ParsedParameter != null)
+{
+    context.IssuedClaims.Add(new Claim("transaction_id", txScope.ParsedParameter));
+}
+```
+
+### Multi-Tenant Scopes
+
+Encode tenant context in scopes like `tenant:acme:read` or `api.acme.read`:
+
+```csharp
+public override void ParseScopeValue(ParseScopeContext scopeContext)
+{
+    // Pattern: tenant:{tenant_id}:{permission}
+    if (scopeContext.RawValue.StartsWith("tenant:"))
+    {
+        var parts = scopeContext.RawValue.Split(':', 3);
+        if (parts.Length == 3)
+        {
+            // Store as "tenant:{permission}" with tenant ID as parameter
+            scopeContext.SetParsedValues($"tenant:{parts[2]}", parts[1]);
+            return;
+        }
+    }
+    
+    base.ParseScopeValue(scopeContext);
+}
+```
+
+### Dynamic Scope Validation
+
+Reject malformed or unauthorized scope patterns early:
+
+```csharp
+public override void ParseScopeValue(ParseScopeContext scopeContext)
+{
+    // Reject scopes with invalid characters
+    if (scopeContext.RawValue.Contains("..") || scopeContext.RawValue.Contains("//"))
+    {
+        scopeContext.SetError("Invalid scope format");
+        return;
+    }
+    
+    // Ignore internal/debug scopes in production
+    if (scopeContext.RawValue.StartsWith("debug:"))
+    {
+        scopeContext.SetIgnore();
+        return;
+    }
+    
+    base.ParseScopeValue(scopeContext);
+}
+```
+
+## Registration
+
+Register your custom scope parser in `ConfigureServices`:
+
+```csharp
+builder.Services.AddIdentityServer()
+    .AddScopeParser<ParameterizedScopeParser>();
+```
+
+## See Also
+
+<LinkCard
+  title="API Scopes"
+  href="/identityserver/fundamentals/resources/api-scopes/"
+  description="Learn about defining and using API scopes for access control"
+/>
+
+<LinkCard
+  title="Resource Validator"
+  href="/identityserver/reference/v8/validators/resource-validator/"
+  description="Validate whether requested scopes are allowed for a client"
+/>
