@@ -913,7 +913,7 @@ public class CustomDistributedSamlSigninStateStore : ISamlSigninStateStore
 ```
 
 :::tip
-The example above uses `JsonSerializer` directly for simplicity. For production use, consider injecting [`ISamlSigninStateSerializer`](#isamlsigninstateserializer) instead, which provides the same serialization logic used by the built-in EF Core store and handles any custom `Extensions` content correctly.
+The example above uses `JsonSerializer` directly for simplicity. For production use, consider injecting [`ISamlSigninStateSerializer`](#isamlsigninstateserializer) instead, which provides the same serialization logic used by the built-in EF Core store. Note that the default serializer ignores the `Extensions` property — if you need to persist custom extension data, you'll need to implement a custom serializer.
 :::
 
 ---
