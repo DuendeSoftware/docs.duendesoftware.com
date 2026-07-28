@@ -250,7 +250,7 @@ instances.
 IdentityServer automatically registers an EF Core-backed implementation. No additional configuration
 is needed.
 
-**Custom implementation:** Register your own implementation directly in the DI container before calling `AddSaml()`. Use this when you need a specific persistence backend such as
+**Custom implementation:** Register your own implementation in the DI container. Use this when you need a specific persistence backend such as
 Redis or DynamoDB, or when you're not using the EF operational store.
 
 Expired logout sessions are removed automatically by `TokenCleanupService`. The lifetime of each
@@ -810,7 +810,7 @@ Several implementations are available:
   `Duende.IdentityServer.EntityFramework`. Use this for production. The operational store
   registration replaces the in-memory fallback. No extra configuration is needed.
 * **Custom**: register your own implementation for a specific persistence backend (Redis,
-  DynamoDB, etc.) by adding it to the service collection before calling `AddSaml()`.
+  DynamoDB, etc.) in the DI container.
 
 State is retained after a successful callback to allow browser retries (for example, if the user
 navigates back). The `TokenCleanupService` automatically removes expired sign-in state entries
@@ -989,8 +989,7 @@ conventions on EntityIds, restrict which scopes are allowed, or apply business-s
 
 ### Registration
 
-The default is registered with `TryAddScoped`, so register your implementation as a scoped service
-before calling `AddSaml()`:
+The default is registered with `TryAddScoped`, so your implementation takes precedence when registered as a scoped service:
 
 ```csharp
 // Program.cs
