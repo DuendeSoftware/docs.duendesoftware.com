@@ -20,9 +20,9 @@ This guide walks through migrating from **Rock Solid Knowledge (RSK) SAML** (`Rs
 | License      | Separate RSK SAML license                  | Included in Advanced/Custom; add-on for Standard |
 | Registration | `.AddSamlPlugin()`                         | `.AddSaml()`                                     |
 | Middleware   | `.UseIdentityServerSamlPlugin()` required  | Not needed                                       |
-| SSO Endpoint | `/saml/sso`                                | `/Saml2/SSO`                                     |
-| SLO Endpoint | `/saml/slo`                                | `/Saml2/SLO`                                     |
-| Metadata     | `/saml/metadata`                           | `/Saml2`                                         |
+| SSO Endpoint | `/saml/sso`                                | `/Saml2/SSO` ([configurable](/identityserver/saml/configuration.md#samlendpointoptions)) |
+| SLO Endpoint | `/saml/slo`                                | `/Saml2/SLO` ([configurable](/identityserver/saml/configuration.md#samlendpointoptions)) |
+| Metadata     | `/saml/metadata`                           | `/Saml2` ([configurable](/identityserver/saml/configuration.md#samlendpointoptions))     |
 
 
 ## Migration Guide
@@ -33,8 +33,7 @@ Before migrating, ensure:
 
 1. **Duende License with SAML support**: [see IdentityServer pricing page](https://duendesoftware.com/products/identityserver)
 2. **.NET 10 SDK**: Duende v8+ requires .NET 10
-3. **Backup**: Export your current SAML Service Provider (SP) configurations
-4. **Test Environment**: Set up a test environment before production migration
+3. **Test Environment**: Set up a test environment before production migration
 
 ### Step 1: Update Target Framework
 
@@ -330,7 +329,12 @@ If your RSK configuration used `HttpPost` for SLO, change it to `HttpRedirect`:
 | `/saml/slo`      | `/Saml2/SLO` |
 | `/saml/metadata` | `/Saml2`     |
 
-Update any Service Providers that have hardcoded these URLs.
+These paths are [configurable via `SamlOptions.Endpoints`](/identityserver/saml/configuration.md#samlendpointoptions). You have two options:
+
+1. **Update external Service Providers** to use the new Duende endpoint paths
+2. **Configure Duende to use the legacy RSK paths** — this is useful when you have external SPs that you don't control or cannot easily update
+
+If not all integrations are under your control, configuring IdentityServer to use the legacy paths may be the simpler approach.
 
 ### Signing Behavior Changed from Bool to Enum
 
@@ -340,11 +344,11 @@ Update any Service Providers that have hardcoded these URLs.
 + SigningBehavior = SamlSigningBehavior.SignAssertion
 ```
 
-Available values: `SignAssertion`, `SignResponse`, `SignBoth`, `DoNotSign`
+Available values: `SignAssertion`, `SignResponse`, `SignBoth`, `DoNotSign`. See [SAML Configuration](/identityserver/saml/configuration.md) for details.
 
 ### License Configuration Changed
 
-RSK SAML had its own license. Duende uses a single license key:
+RSK SAML had its own license. Duende uses a single license key. See the [licensing documentation](/general/licensing.md#license-key) for configuration options.
 
 ```diff lang="csharp" title="Program.cs"
 - .AddSamlPlugin(options =>
@@ -358,9 +362,9 @@ RSK SAML had its own license. Duende uses a single license key:
 + });
 ```
 
-### Property Naming Changes
+### Property Naming Differences
 
-Watch for subtle naming differences:
+Watch for these subtle naming differences when translating RSK code to Duende:
 
 - `ClaimsMapping` → `ClaimMappings` (plural)
 - `AllowIdpInitiatedSso` → `AllowIdpInitiated` (shorter)
@@ -383,9 +387,13 @@ After migration, verify:
 
 ### Quick Metadata Test
 
+Verify the metadata endpoint returns valid SAML metadata:
+
 ```bash title="Terminal"
 curl -k https://localhost:5001/Saml2
 ```
+
+You should receive an XML document starting with `<EntityDescriptor>` containing your IdP's entity ID, signing certificates, and endpoint locations. If you've [configured custom endpoint paths](/identityserver/saml/configuration.md#samlendpointoptions), adjust the URL accordingly.
 
 ## Troubleshooting
 
@@ -428,7 +436,7 @@ Change your ACS endpoint binding to `SamlBinding.HttpPost`. HTTP-Redirect cannot
 
 ## Related Resources
 
-- [SAML 2.0 Identity Provider Documentation](/identityserver/saml/)
+- [SAML 2.0 Identity Provider Documentation](/identityserver/saml/index.md)
 - [SAML Service Provider Configuration](/identityserver/saml/service-providers.md)
 - [SAML Endpoints Reference](/identityserver/saml/endpoints.md)
 - [v7.4 to v8.0 Upgrade Guide](/identityserver/upgrades/v7_4-to-v8_0.md)
