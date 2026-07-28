@@ -41,16 +41,16 @@ public interface IResourceValidator
 
 Validates the requested scopes against the client's permissions and your resource configuration. Returns a `ResourceValidationResult` containing:
 
-- **`Succeeded`** — `true` if scopes are valid and no invalid scopes/indicators
-- **`Resources`** — The validated `Resources` object with:
-  - `IdentityResources` — Matched identity resources (e.g., `openid`, `profile`)
-  - `ApiResources` — Matched API resources
-  - `ApiScopes` — Matched API scopes
-  - `OfflineAccess` — Whether `offline_access` was requested
-- **`ParsedScopes`** — The `ParsedScopeValue` objects from the scope parser
-- **`RawScopeValues`** — The original scope strings
-- **`InvalidScopes`** — Scopes that failed validation
-- **`InvalidResourceIndicators`** — Resource indicators that failed validation
+- **`Succeeded`** - `true` if scopes are valid and no invalid scopes/indicators
+- **`Resources`** - The validated `Resources` object with:
+  - `IdentityResources` - Matched identity resources (e.g., `openid`, `profile`)
+  - `ApiResources` - Matched API resources
+  - `ApiScopes` - Matched API scopes
+  - `OfflineAccess` - Whether `offline_access` was requested
+- **`ParsedScopes`** - The `ParsedScopeValue` objects from the scope parser
+- **`RawScopeValues`** - The original scope strings
+- **`InvalidScopes`** - Scopes that failed validation
+- **`InvalidResourceIndicators`** - Resource indicators that failed validation
 
 ### ResourceValidationRequest
 

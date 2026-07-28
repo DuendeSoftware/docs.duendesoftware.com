@@ -8,7 +8,7 @@ sidebar:
 
 import { LinkCard } from "@astrojs/starlight/components";
 
-The `IScopeParser` interface is responsible for parsing the raw `scope` parameter from OAuth/OIDC requests into individual, structured scope values. While the default implementation treats scopes as simple space-delimited strings, custom implementations enable **parameterized scopes** — scopes that carry dynamic data like transaction IDs, tenant identifiers, or resource-specific parameters.
+The `IScopeParser` interface is responsible for parsing the raw `scope` parameter from OAuth/OIDC requests into individual, structured scope values. While the default implementation treats scopes as simple space-delimited strings, custom implementations enable **parameterized scopes** - scopes that carry dynamic data like transaction IDs, tenant identifiers, or resource-specific parameters.
 
 ## When to Use
 
@@ -38,12 +38,12 @@ public interface IScopeParser
 
 Receives the scope values as a collection (already split from the space-delimited request parameter) and returns a `ParsedScopesResult` containing:
 
-- **`ParsedScopes`** — A collection of `ParsedScopeValue` objects, each with:
-  - `RawValue` — The original scope string segment
-  - `ParsedName` — The scope name (e.g., `"transaction"`)
-  - `ParsedParameter` — The extracted parameter, if any (e.g., `"123"`)
-- **`Errors`** — Any parsing errors encountered
-- **`Succeeded`** — Whether parsing completed without errors
+- **`ParsedScopes`** - A collection of `ParsedScopeValue` objects, each with:
+  - `RawValue` - The original scope string segment
+  - `ParsedName` - The scope name (e.g., `"transaction"`)
+  - `ParsedParameter` - The extracted parameter, if any (e.g., `"123"`)
+- **`Errors`** - Any parsing errors encountered
+- **`Succeeded`** - Whether parsing completed without errors
 
 ## Default Implementation
 

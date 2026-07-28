@@ -124,9 +124,9 @@ claim in the `issuer_name/resources` format. If you need more control of the aud
 Sometimes scopes have a certain structure, e.g. a scope name with an additional parameter: `transaction:id` or
 `read_patient:patientid`. This pattern is useful when:
 
-- **Transaction-scoped access** — Tokens bound to a specific transaction, order, or workflow
-- **Multi-tenant systems** — Scopes that encode tenant context like `tenant:acme:read`
-- **Resource-specific permissions** — Access to a particular document, patient record, or account
+- **Transaction-scoped access** - Tokens bound to a specific transaction, order, or workflow
+- **Multi-tenant systems** - Scopes that encode tenant context like `tenant:acme:read`
+- **Resource-specific permissions** - Access to a particular document, patient record, or account
 
 In this case you would create a scope without the parameter part and assign that name to a client, but in addition
 provide some logic to parse the structure
