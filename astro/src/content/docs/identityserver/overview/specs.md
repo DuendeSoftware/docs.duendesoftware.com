@@ -56,3 +56,7 @@ Duende IdentityServer implements the following specifications:
 ## SAML
 
 * Security Assertion Markup Language (SAML) v2.0 (https://www.oasis-open.org/standard/saml/)
+  * SAML Core 2.0 (Assertions, Protocols, Bindings)
+  * SAML Profiles 2.0 (Web Browser SSO, Single Logout)
+  * SAML Bindings 2.0 (HTTP-Redirect, HTTP-POST)
+  * SAML Metadata 2.0 (EntityDescriptor,  IDPSSODescriptor)
