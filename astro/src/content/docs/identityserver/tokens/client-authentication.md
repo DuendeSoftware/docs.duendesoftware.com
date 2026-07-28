@@ -417,7 +417,7 @@ is used.
 Clients can use an X.509 client certificate as an authentication mechanism to endpoints in your IdentityServer.
 
 :::note
-For development environment setup (`mkcert` workflow, hosts file), production deployment patterns (IIS, Nginx, Apache with Kestrel), and certificate loading strategies (Windows Certificate Store, Azure Key Vault, HashiCorp Vault), see the [mTLS Setup Guide](/identityserver/tokens/mtls-setup/).
+For development environment setup (`mkcert` workflow, hosts file), production deployment patterns (IIS, Nginx, Apache with Kestrel), and certificate loading strategies (Windows Certificate Store, Azure Key Vault, HashiCorp Vault), see the [mTLS Setup Guide](/identityserver/tokens/mtls-setup.mdx).
 :::
 
 For this you need to associate a client certificate with a client in your IdentityServer and enable MTLS support on the
