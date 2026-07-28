@@ -7,7 +7,7 @@ sidebar:
   order: 145
 ---
 
-import { Tabs, TabItem, LinkCard } from "@astrojs/starlight/components";
+import { Tabs, TabItem, LinkCard, Steps } from "@astrojs/starlight/components";
 
 Mutual TLS support in Duende IdentityServer enables two distinct security features:
 
@@ -22,153 +22,158 @@ This guide covers the infrastructure side: generating certificates for local dev
 
 The recommended tool for local mTLS development is [`mkcert`](https://github.com/FiloSottile/mkcert), a cross-platform utility that creates locally trusted certificates backed by a private CA installed on your machine. Unlike the certificates bundled with samples (which use publicly known private keys), `mkcert` generates certificates whose private keys never leave your machine.
 
-### 1. Install mkcert
+<Steps>
 
-<Tabs>
-  <TabItem label="Windows">
+1. **Install mkcert**
 
-Install via WinGet:
+   {/* prettier-ignore */}
+   <Tabs syncKey="os">
+     <TabItem label="Windows">
+       Install via WinGet:
 
-```powershell
-winget install FiloSottile.mkcert
-```
+       ```powershell
+       winget install FiloSottile.mkcert
+       ```
 
-Or via Chocolatey:
+       Or via Chocolatey:
 
-```powershell
-choco install mkcert
-```
+       ```powershell
+       choco install mkcert
+       ```
 
-  </TabItem>
-  <TabItem label="macOS">
+     </TabItem>
+     <TabItem label="macOS">
+       ```bash
+       brew install mkcert
+       ```
 
-```bash
-brew install mkcert
-```
+       If you use Firefox, also install NSS tools:
 
-If you use Firefox, also install NSS tools:
+       ```bash
+       brew install nss
+       ```
 
-```bash
-brew install nss
-```
+     </TabItem>
+     <TabItem label="Linux">
+       Install NSS tools (required for browser and Firefox trust):
 
-  </TabItem>
-  <TabItem label="Linux">
+       ```bash
+       sudo apt install libnss3-tools
+       ```
 
-Install NSS tools (required for browser and Firefox trust):
+       Then download the latest `mkcert` binary for your architecture from the [mkcert releases page](https://github.com/FiloSottile/mkcert/releases), place it on your `PATH`, and mark it executable:
 
-```bash
-sudo apt install libnss3-tools
-```
+       ```bash
+       sudo install mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+       ```
 
-Then download the latest `mkcert` binary for your architecture from the [mkcert releases page](https://github.com/FiloSottile/mkcert/releases), place it on your `PATH`, and mark it executable:
+     </TabItem>
+   </Tabs>
 
-```bash
-sudo install mkcert-v*-linux-amd64 /usr/local/bin/mkcert
-```
+2. **Create a Local Certificate Authority**
 
-  </TabItem>
-</Tabs>
+   Install a local CA that will sign your development certificates:
 
-### 2. Create a Local Certificate Authority
+   ```bash
+   mkcert -install
+   ```
 
-Install a local CA that will sign your development certificates:
+   This adds the CA to your OS trust store (and browser trust stores where supported). Certificates signed by this CA are treated as trusted on your machine.
 
-```bash
-mkcert -install
-```
+   :::caution[Remove the CA When Done]
+   The local CA installed by `mkcert -install` trusts **all** certificates it signs for TLS connections on your machine. When you no longer need the mTLS development environment, remove it:
 
-This adds the CA to your OS trust store (and browser trust stores where supported). Certificates signed by this CA are treated as trusted on your machine.
+   ```bash
+   mkcert -uninstall
+   ```
 
-:::caution[Remove the CA When Done]
-The local CA installed by `mkcert -install` trusts **all** certificates it signs for TLS connections on your machine. When you no longer need the mTLS development environment, remove it:
+   Never commit the `rootCA-key.pem` file (found in the directory reported by `mkcert -CAROOT`) to source control or copy it to other machines.
+   :::
 
-```bash
-mkcert -uninstall
-```
+3. **Generate Certificates**
 
-Never commit the `rootCA-key.pem` file (found in the directory reported by `mkcert -CAROOT`) to source control or copy it to other machines.
-:::
+   You will need a **server certificate** for the IdentityServer and API hostnames:
 
-### 3. Generate Certificates
+   ```bash
+   mkcert localhost mtls.localhost api.localhost
+   ```
 
-You will need a **server certificate** for the IdentityServer and API hostnames:
+   This produces `localhost+2.pem` and `localhost+2-key.pem` in the current directory. Reference these files in your Kestrel HTTPS configuration.
 
-```bash
-mkcert localhost mtls.localhost api.localhost
-```
+   Next, generate a **client certificate** in PKCS#12 format (used by the client application):
 
-This produces `localhost+2.pem` and `localhost+2-key.pem` in the current directory. Reference these files in your Kestrel HTTPS configuration.
+   ```bash
+   mkcert -client -pkcs12 localhost
+   ```
 
-Next, generate a **client certificate** in PKCS#12 format (used by the client application):
+   This produces `localhost-client.p12`. Reference this file path when constructing the `X509Certificate2` for the [.NET client](/identityserver/tokens/client-authentication.md#net-client-library-2).
 
-```bash
-mkcert -client -pkcs12 localhost
-```
+4. **Configure the Hosts File**
 
-This produces `localhost-client.p12`. Reference this file path when constructing the `X509Certificate2` for the [.NET client](/identityserver/tokens/client-authentication.md#net-client-library-2).
+   The mTLS sample uses `mtls.localhost` and `api.localhost` as hostnames. Add them to your hosts file so they resolve to `127.0.0.1`:
 
-### 4. Configure the Hosts File
+   :::tip[.NET 10+ Localhost Subdomains]
+   In .NET 10 and later, Kestrel automatically resolves `*.localhost` subdomains when binding to `localhost`. If you're running on .NET 10+, you may be able to skip the hosts file configuration entirely.
+   :::
 
-The mTLS sample uses `mtls.localhost` and `api.localhost` as hostnames. Add them to your hosts file so they resolve to `127.0.0.1`:
+   {/* prettier-ignore */}
+   <Tabs syncKey="os">
+     <TabItem label="Windows">
+       Open `C:\Windows\System32\drivers\etc\hosts` as Administrator and add:
 
-<Tabs>
-  <TabItem label="Windows">
+       ```
+       127.0.0.1  mtls.localhost
+       127.0.0.1  api.localhost
+       ```
 
-Open `C:\Windows\System32\drivers\etc\hosts` as Administrator and add:
+     </TabItem>
+     <TabItem label="macOS / Linux">
+       Open `/etc/hosts` with `sudo` and add:
 
-```
-127.0.0.1  mtls.localhost
-127.0.0.1  api.localhost
-```
+       ```
+       127.0.0.1  mtls.localhost
+       127.0.0.1  api.localhost
+       ```
 
-  </TabItem>
-  <TabItem label="macOS / Linux">
+     </TabItem>
+   </Tabs>
 
-Open `/etc/hosts` with `sudo` and add:
+5. **Configure Kestrel**
 
-```
-127.0.0.1  mtls.localhost
-127.0.0.1  api.localhost
-```
+   Kestrel must be configured to accept client certificates before ASP.NET Core's certificate authentication middleware can validate them. Use `AllowCertificate` mode so that client certificates are accepted but not required on every connection — IdentityServer's mTLS middleware enforces the requirement on the mTLS endpoint specifically.
 
-  </TabItem>
-</Tabs>
+   ```csharp
+   // Program.cs
+   builder.WebHost.ConfigureKestrel(serverOptions =>
+   {
+       serverOptions.ConfigureHttpsDefaults(httpsOptions =>
+       {
+           httpsOptions.ClientCertificateMode = ClientCertificateMode.AllowCertificate;
+       });
+   });
+   ```
 
-### 5. Configure Kestrel
+   Then configure the IdentityServer mTLS options and ASP.NET Core certificate authentication:
 
-Kestrel must be configured to accept client certificates before ASP.NET Core's certificate authentication middleware can validate them. Use `AllowCertificate` mode so that client certificates are accepted but not required on every connection — IdentityServer's mTLS middleware enforces the requirement on the mTLS endpoint specifically.
+   ```csharp
+   // Program.cs
+   builder.Services.AddIdentityServer(options =>
+   {
+       options.MutualTls.Enabled = true;
+       options.MutualTls.DomainName = "mtls"; // serves mTLS endpoints at mtls.localhost
+       options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
+   })
+   .AddMutualTlsSecretValidators();
 
-```csharp
-// Program.cs
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ConfigureHttpsDefaults(httpsOptions =>
-    {
-        httpsOptions.ClientCertificateMode = ClientCertificateMode.AllowCertificate;
-    });
-});
-```
+   builder.Services.AddAuthentication()
+       .AddCertificate("Certificate", options =>
+       {
+           // Use CertificateTypes.All or CertificateTypes.Chained in production
+           options.AllowedCertificateTypes = CertificateTypes.SelfSigned;
+       });
+   ```
 
-Then configure the IdentityServer mTLS options and ASP.NET Core certificate authentication:
-
-```csharp
-// Program.cs
-builder.Services.AddIdentityServer(options =>
-{
-    options.MutualTls.Enabled = true;
-    options.MutualTls.DomainName = "mtls"; // serves mTLS endpoints at mtls.localhost
-    options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
-})
-.AddMutualTlsSecretValidators();
-
-builder.Services.AddAuthentication()
-    .AddCertificate("Certificate", options =>
-    {
-        // Use CertificateTypes.All or CertificateTypes.Chained in production
-        options.AllowedCertificateTypes = CertificateTypes.SelfSigned;
-    });
-```
+</Steps>
 
 <LinkCard
   title="Mutual TLS Using Kestrel Sample"
@@ -454,8 +459,6 @@ Replace `TokenAuthMethodInfo` with [AppRole](https://developer.hashicorp.com/vau
 
   </TabItem>
 </Tabs>
-
----
 
 ## mTLS Endpoint Strategies
 
