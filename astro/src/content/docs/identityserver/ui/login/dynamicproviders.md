@@ -248,7 +248,9 @@ SAML dynamic providers use the `SamlProvider` model, which extends `IdentityProv
 * `SigningCertificateBase64` (`string?`, default `null`) — Base64-encoded X.509 certificate for validating IdP signatures. This is singular because each dynamic provider record represents one IdP configuration. For key rollover with dynamic providers, update the record with the new certificate. In contrast, the [static SAML provider](/identityserver/ui/login/saml-provider) uses `SigningCertificatesBase64` (a list) to support multiple certificates simultaneously during rollover periods.
 * `BindingType` (`string`, default `"redirect"`) — The SAML binding type (`"redirect"` or `"post"`).
 * `SpEntityId` (`string?`, default `null`) — The entity ID of your application (the SP). When `null`, derived from the IdentityServer issuer.
-* `AllowUnsolicitedAuthnResponse` (`bool`, default `false`) — Whether to accept IdP-initiated (unsolicited) responses.
+* `AllowUnsolicitedAuthnResponse` (`bool`, default `false`) — Whether to accept IdP-initiated (unsolicited) responses. When `true`, also set `IdpInitiatedCallbackUrl`.
+* `IdpInitiatedCallbackUrl` (`string?`, default `null`) — The URL to redirect to after processing an IdP-initiated (unsolicited) response. Required when `AllowUnsolicitedAuthnResponse` is `true`. Must be a relative path or absolute URL with http/https scheme.
+* `MaxRelayStateLength` (`int`, default `1024`) — Maximum length (in bytes) of SAML RelayState to persist in authentication properties. Values exceeding this limit are not surfaced.
 * `WantAssertionsSigned` (`bool`, default `true`) — Whether assertions from the IdP must be signed.
 * `OutboundSigningAlgorithm` (`string`, default RSA-SHA256) — The XML signature algorithm for outbound requests.
 * `SpSigningCertificateBase64` (`string?`, default `null`) — Base64-encoded PKCS#12 certificate (with private key) that your SP uses to sign outbound SAML messages such as `AuthnRequest` and `LogoutResponse`. Set this when the remote IdP requires signed requests or when you use single logout.
@@ -272,6 +274,10 @@ builder.Services.AddIdentityServer()
             IdpEntityId = "https://adfs.corporate.example.com",
             SingleSignOnServiceUrl = "https://adfs.corporate.example.com/adfs/ls/",
             SigningCertificateBase64 = "<base64-encoded certificate>",
+            
+            // Optional: Enable IdP-initiated SSO
+            AllowUnsolicitedAuthnResponse = true,
+            IdpInitiatedCallbackUrl = "/ExternalLogin/Callback"
         }
     });
 ```
