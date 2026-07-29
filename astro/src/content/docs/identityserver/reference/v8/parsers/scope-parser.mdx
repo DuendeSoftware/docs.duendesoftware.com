@@ -83,7 +83,7 @@ The `ParseScopeContext` is a nested class within `DefaultScopeParser` that provi
 
 ### Transaction or Resource IDs
 
-Scopes like `transaction:abc123` or `document:read:456` embed resource identifiers:
+Scopes like `transaction:abc123` embed resource identifiers (adapt this pattern for other conventions such as `document:read:456`):
 
 ```csharp
 public override void ParseScopeValue(ParseScopeContext scopeContext)
