@@ -24,9 +24,10 @@ with trial mode available for development and testing.
 
 ## IdentityServer
 
-Duende IdentityServer requires a license for production use, with three editions available (Starter, Business, and
-Enterprise) that offer various features based on organizational needs. A [community edition](https://duendesoftware.com/products/communityedition/)
-is available as well.
+Duende IdentityServer requires a license for production use, with plans available that offer various features based on organizational needs. A [community edition](https://duendesoftware.com/products/communityedition/)
+is also available.
+
+For some longer-term customers, we still honor customers continuing on our previous Starter, Business and Enterprise licenses. 
 
 :::note[Free for development]
 IdentityServer is [free](#trial-mode) for development, testing and personal projects, but production use
