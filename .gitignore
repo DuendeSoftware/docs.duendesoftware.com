@@ -33,6 +33,7 @@ astro/src/data/contributors.json
 opencode.json
 .idea/**/copilot.data.migration.*.xml
 .idea/
+.playwright-mcp/
 
 # .NET
 *.user

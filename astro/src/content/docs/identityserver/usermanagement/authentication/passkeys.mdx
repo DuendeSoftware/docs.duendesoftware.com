@@ -7,6 +7,8 @@ sidebar:
   order: 6
 ---
 
+import { Steps } from "@astrojs/starlight/components";
+
 
 
 Passkeys provide phishing-resistant, passwordless authentication using the WebAuthn/FIDO2 standard. Authentication can use biometrics (fingerprint, face recognition), a device PIN, or a hardware security key. Credentials are cryptographically bound to the origin, so they cannot be used on a different site.
@@ -55,18 +57,22 @@ WebAuthn calls its two main protocol flows *ceremonies*. The **registration cere
 
 ### Registration Ceremony
 
+<Steps>
 1. **User initiates passkey creation** - From account settings or during sign-up
 2. **Challenge generation** - The server generates a cryptographic challenge
 3. **Authenticator interaction** - The user's device creates a public/private key pair
 4. **Credential storage** - The public key and credential ID are stored server-side
 5. **Private key retention** - The private key never leaves the user's device
+</Steps>
 
 ### Authentication Ceremony
 
+<Steps>
 1. **Challenge generation** - The server generates a cryptographic challenge
 2. **Authenticator interaction** - The user's device signs the challenge with the private key
 3. **Signature verification** - The server verifies the signature using the stored public key
 4. **Session establishment** - Authentication is complete
+</Steps>
 
 ### Discoverable Credentials
 
@@ -333,10 +339,12 @@ The endpoints implement the WebAuthn ceremony protocol:
 
 **Registration:**
 
+<Steps>
 1. Client calls `POST /passkeys/register/begin` - receives a `challengeId` and `PublicKeyCredentialCreationOptions`
 2. Client passes the options to `navigator.credentials.create()`
 3. Client calls `POST /passkeys/register/complete` with the `challengeId` and the authenticator's attestation response
 4. Server validates the attestation and stores the credential
+</Steps>
 
 Here's how the registration ceremony flows between the browser, your application, and User Management:
 
@@ -361,10 +369,12 @@ sequenceDiagram
 
 **Authentication (discoverable):**
 
+<Steps>
 1. Client calls `POST /passkeys/authenticate/discoverable/begin` - receives a `challengeId` and `PublicKeyCredentialRequestOptions`
 2. Client passes the options to `navigator.credentials.get()`
 3. Client calls `POST /passkeys/authenticate/complete` with the `challengeId` and the authenticator's assertion response
 4. Server validates the assertion, looks up the user, and signs them in
+</Steps>
 
 The discoverable authentication ceremony lets users sign in without entering a username first:
 
@@ -598,11 +608,13 @@ builder.Services
 
 ### Second-Factor Flow
 
+<Steps>
 1. **Primary authentication** - User signs in with password, OTP, or another first factor
 2. **State storage** - Store the user's `UserSubjectId` in session or a temporary store
 3. **Passkey challenge** - Client calls `POST /passkeys/authenticate/begin`; the resolver retrieves the user and the server returns a challenge scoped to that user's passkeys
 4. **Authenticator interaction** - Client calls `navigator.credentials.get()` with the challenge
 5. **Completion** - Client calls `POST /passkeys/authenticate/complete`; the server validates the assertion and signs the user in
+</Steps>
 
 When passkeys are used as a second factor, the flow looks like this:
 

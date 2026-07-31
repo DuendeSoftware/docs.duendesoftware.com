@@ -8,7 +8,7 @@ sidebar:
     text: v4
     variant: tip
 ---
-import { Code, Steps } from "@astrojs/starlight/components";
+import { Code, Steps, CardGrid, LinkCard } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 Duende.BFF (Backend for Frontend) supports multiple frontends in a single BFF host. This is useful for scenarios where
@@ -201,9 +201,35 @@ this scenario.
 
 ## See Also
 
-- [Single Frontend Getting Started](/bff/getting-started/single-frontend/) — Simpler BFF setup for one frontend
-- [Multi-Frontend Fundamentals](/bff/fundamentals/multi-frontend/) — Deep-dive into multi-frontend configuration
-- [Remote APIs](/bff/fundamentals/apis/remote/) — Proxying calls to upstream services
-- [YARP Integration](/bff/fundamentals/apis/yarp/) — Advanced proxy configuration
-- [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) — Persisting sessions in production
-- [Access Token Management](/accesstokenmanagement/) — Token lifecycle managed by BFF
+<CardGrid>
+  <LinkCard
+    href="/bff/getting-started/single-frontend/"
+    title="Single Frontend Getting Started"
+    description="Simpler BFF setup for one frontend."
+  />
+  <LinkCard
+    href="/bff/fundamentals/multi-frontend/"
+    title="Multi-Frontend Fundamentals"
+    description="Deep-dive into multi-frontend configuration."
+  />
+  <LinkCard
+    href="/bff/fundamentals/apis/remote/"
+    title="Remote APIs"
+    description="Proxying calls to upstream services."
+  />
+  <LinkCard
+    href="/bff/fundamentals/apis/yarp/"
+    title="YARP Integration"
+    description="Advanced proxy configuration."
+  />
+  <LinkCard
+    href="/bff/fundamentals/session/server-side-sessions/"
+    title="Server-Side Sessions"
+    description="Persisting sessions in production."
+  />
+  <LinkCard
+    href="/accesstokenmanagement/"
+    title="Access Token Management"
+    description="Token lifecycle managed by BFF."
+  />
+</CardGrid>

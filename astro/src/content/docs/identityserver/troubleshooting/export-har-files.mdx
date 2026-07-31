@@ -7,6 +7,8 @@ sidebar:
   order: 16
 ---
 
+import { Tabs, TabItem, Steps } from "@astrojs/starlight/components";
+
 [HTTP Archive (HAR)](https://en.wikipedia.org/wiki/HAR_(file_format)) files are logs of network interactions made by a web browser. They contain headers, request bodies, response payloads, and even sensitive information like cookie values sent and received for each interaction.
 
 :::caution[Do not share sensitive information]
@@ -30,35 +32,42 @@ Because HAR files are traces of all network interactions within the browser, the
 
 Generating a HAR file involves steps using your web browser and its associated developer tools. The browser-specific steps outlined below are all similar to each other. Other browsers will have similar steps.
 
-### Google Chrome
-
-1. Open the browser dev tools <https://developer.chrome.com/docs/devtools/open>.
-1. In the dev tools, click on the Settings icon. Under the Network category, enable "Allow to generate HAR with sensitive data".
-1. In the dev tools, navigate to the Network tab and enable the "Preserve log" checkbox.
-1. In the browser, visit the page(s) and perform the steps that trigger the issue.
-1. In the Network tab of the dev tools, click the down arrow and select the "Export HAR (with sensitive data)..." option to export the HAR file and save it locally.
-
-### Safari
-
-1. Enable the Web Inspector, and open it <https://developer.apple.com/documentation/safari-developer-tools/enabling-developer-features>.
-1. In the Web Inspector in the Developer menu, navigate to the Network tab. Click the "Filter" button and enable "Preserve Log".
-1. In the browser, visit the page(s) and perform the steps that trigger the issue.
-1. In the Web Inspector, click "Export" to export the HAR file and save it locally.
-
-### Firefox
-
-1. Open the browser dev tools <https://firefox-source-docs.mozilla.org/devtools-user>.
-1. In the dev tools, navigate to the Network tab, click the Network Settings icon, and enable "Persist Logs".
-1. In the browser, visit the page(s) and perform the steps that trigger the issue.
-1. In the Network tab of the dev tools, click the Network Settings icon, and select "Save All As Har" to save it locally.
-
-### Microsoft Edge
-
-1. Open the browser dev tools <https://learn.microsoft.com/en-us/microsoft-edge/devtools/overview>.
-1. In the dev tools, click on the ellipsis icon, then select "Settings". Under the Network category, enable "Allow to generate HAR with sensitive data".
-1. In the dev tools, navigate to the Network tab and enable the "Preserve log" checkbox.
-1. In the browser, visit the page(s) and perform the steps that trigger the issue.
-1. In the Network tab of the dev tools, click the down arrow and select the "Export HAR (with sensitive data)..." option to export the HAR file and save it locally.
+<Tabs>
+  <TabItem label="Google Chrome">
+    <Steps>
+      1. Open the [browser dev tools](https://developer.chrome.com/docs/devtools/open).
+      1. In the dev tools, click on the Settings icon. Under the Network category, enable "Allow to generate HAR with sensitive data".
+      1. In the dev tools, navigate to the Network tab and enable the "Preserve log" checkbox.
+      1. In the browser, visit the page(s) and perform the steps that trigger the issue.
+      1. In the Network tab of the dev tools, click the down arrow and select the "Export HAR (with sensitive data)..." option to export the HAR file and save it locally.
+    </Steps>
+  </TabItem>
+  <TabItem label="Safari">
+    <Steps>
+      1. [Enable the Web Inspector, and open it](https://developer.apple.com/documentation/safari-developer-tools/enabling-developer-features).
+      1. In the Web Inspector in the Developer menu, navigate to the Network tab. Click the "Filter" button and enable "Preserve Log".
+      1. In the browser, visit the page(s) and perform the steps that trigger the issue.
+      1. In the Web Inspector, click "Export" to export the HAR file and save it locally.
+    </Steps>
+  </TabItem>
+  <TabItem label="Firefox">
+    <Steps>
+      1. Open the [browser dev tools](https://firefox-source-docs.mozilla.org/devtools-user).
+      1. In the dev tools, navigate to the Network tab, click the Network Settings icon, and enable "Persist Logs".
+      1. In the browser, visit the page(s) and perform the steps that trigger the issue.
+      1. In the Network tab of the dev tools, click the Network Settings icon, and select "Save All As Har" to save it locally.
+    </Steps>
+  </TabItem>
+  <TabItem label="Microsoft Edge">
+    <Steps>
+      1. Open the [browser dev tools](https://learn.microsoft.com/en-us/microsoft-edge/devtools/overview).
+      1. In the dev tools, click on the ellipsis icon, then select "Settings". Under the Network category, enable "Allow to generate HAR with sensitive data".
+      1. In the dev tools, navigate to the Network tab and enable the "Preserve log" checkbox.
+      1. In the browser, visit the page(s) and perform the steps that trigger the issue.
+      1. In the Network tab of the dev tools, click the down arrow and select the "Export HAR (with sensitive data)..." option to export the HAR file and save it locally.
+    </Steps>
+  </TabItem>
+</Tabs>
 
 ## Viewing A HAR File
 
@@ -72,7 +81,9 @@ Before sharing your HAR file with anyone, you should remove any sensitive data. 
 
 If you would like to practice with a small sample, you can login to the Duende Demo Server and generate a HAR file from those interactions.
 
-1. In your browser, navigate to <https://demo.duendesoftware.com/Account/Login>.
-1. With your browser and dev tools open, the log being preserved, and the ability to export a HAR file with sensitive data, login to the site using one of the built-in users.
-1. Export the HAR file with sensitive data.
-1. Explore the HAR file JSON with a text editor or import it into your browser dev tools.
+<Steps>
+  1. In your browser, navigate to the [Duende Demo Server login page](https://demo.duendesoftware.com/Account/Login).
+  1. With your browser and dev tools open, the log being preserved, and the ability to export a HAR file with sensitive data, login to the site using one of the built-in users.
+  1. Export the HAR file with sensitive data.
+  1. Explore the HAR file JSON with a text editor or import it into your browser dev tools.
+</Steps>
