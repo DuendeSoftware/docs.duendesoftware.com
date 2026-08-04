@@ -1,5 +1,5 @@
 ---
-title: "Issuer"
+title: "Issuer Claim"
 description: "Overview of the issuer claim in a JWT and how IdentityServer can serve different iss claims."
 date: 2026-08-03T08:22:12+02:00
 sidebar:
@@ -8,20 +8,18 @@ sidebar:
 
 ## Issuer Claim
 
-JWT [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1) defines the Issuer Claim `iss`, which identifies the principal that issued the JWT. The claim holds the unique identifier for the Authorization Server. When a service receives a JWT, it should verify that the JWT came from the expected Authorization Server, and it does so using the `iss` claim.
+JWT [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1) defines the Issuer Claim `iss`, which identifies the principal that issued the JWT. The claim holds the unique identifier for the Authorization Server. When a service receives a JWT, it should verify that the JWT came from the expected Authorization Server. It does so using the `iss` claim.
 
-IdentityServer inserts the `iss` claim value using the origin IdentityServer is hosted from. If [mTLS](/identityserver/tokens/mtls-setup.mdx) is configured with a valid domain name, that domain name will also be included in the output `iss` claim. You can choose to override this dynamic behavior by setting a static value for the `IssuerUri` property in [IdentityServer Options](/identityserver/reference/v8/options).
+IdentityServer inserts the `iss` claim value using the origin IdentityServer is hosted from. If [mTLS](/identityserver/tokens/mtls-setup.mdx) is configured with a valid domain name, part of that domain will also be included. You can choose to override this dynamic behavior by setting a static value for the `IssuerUri` property in [IdentityServer Options](/identityserver/reference/v8/options).
 
-## Duende IdentityServer Multi-Issuer
+## Multi-Issuer
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
+The IdentityServer Multi-Issuer feature allows a single IdentityServer to respond with different `iss` claim values depending on the domains it hosts.
 
-The Multi-Issuer feature allows a single IdentityServer to respond with different `iss` claim values depending on the host that issued the request. 
-
-Imagine the IdentityServer instance is hosted over 3 different domains like `auth.dailyreader.example`, `auth.streamwave.example`, and `auth.podvault.example`. Users will be able to sign-in across all three domains with the same credentials, but the result token only works for the APIs accepting tokens from the target issuer. For example, if the backend API only allows tokens with the issuer `auth.dailyreader.example`, a user will not be able to use their token from `auth.streamwave.example` against it. Even though their credentials work across all three domains, the token is limited to the one issuer.
+Imagine a single IdentityServer instance is hosted over 3 different domains like `auth.dailyreader.example`, `auth.streamwave.example`, and `auth.podvault.example`. If that instance of IdentityServer was developed to allow users to sign-in across all three domains with the same credentials, the result token still only works for the APIs accepting tokens from the target issuer. For example, if the backend API only allows tokens with the issuer `auth.dailyreader.example`, a user's token with `iss` claim `auth.streamwave.example` will not be accepted. Even though their credentials work across all three domains, the token is limited to the one issuer.
 
 If you set a static value for the `IssuerUri` property in [IdentityServer Options](/identityserver/reference/v8/options), the Multi-Issuer feature will not be enabled because the returned `iss` claim will always be the value you set.
 
 :::caution
-Multi-Issuer does not mean IdentityServer can self-host itself across different domains to separate data across different tenants.
+Multi-Issuer does not mean IdentityServer can self-host itself across different domains to separate data across different tenants. You must setup that infrastructure yourself.
 :::
