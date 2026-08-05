@@ -3,6 +3,7 @@ title: FAPI 2.0
 description: Overview of the FAPI 2.0 implementation in Duende IdentityServer 7.3+
 sidebar:
   label: FAPI 2.0
+  order: 220
   badge:
     text: v7.3
     variant: tip
