@@ -10,7 +10,7 @@ sidebar:
 
 JWT [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1) defines the Issuer Claim `iss`, which identifies the principal that issued the JWT. The claim holds the unique identifier for the Authorization Server. When a service receives a JWT, it should verify that the JWT came from the expected Authorization Server. It does so using the `iss` claim.
 
-IdentityServer inserts the `iss` claim value using the origin IdentityServer is hosted from. If [mTLS](/identityserver/tokens/mtls-setup.mdx) is configured with a valid domain name, part of that domain will also be included. You can choose to override this dynamic behavior by setting a static value for the `IssuerUri` property in [IdentityServer Options](/identityserver/reference/v8/options).
+IdentityServer inserts the `iss` claim value using the origin IdentityServer is hosted from by default. You can change this behavior by setting the `IssuerUri` property in [IdentityServer Options](/identityserver/reference/v8/options).
 
 ## Multi-Issuer
 
