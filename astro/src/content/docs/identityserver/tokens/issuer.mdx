@@ -14,7 +14,7 @@ IdentityServer inserts the `iss` claim value using the origin IdentityServer is 
 
 ## Multi-Issuer
 
-The IdentityServer Multi-Issuer feature allows a single IdentityServer to respond with different `iss` claim values depending on the domains it hosts.
+Duende IdentityServer can respond with different `iss` claim values depending on the domains it hosts.
 
 Imagine a single IdentityServer instance is hosted over 3 different domains like `auth.dailyreader.example`, `auth.streamwave.example`, and `auth.podvault.example`. If that instance of IdentityServer was developed to allow users to sign-in across all three domains with the same credentials, the result token still only works for the APIs accepting tokens from the target issuer. For example, if the backend API only allows tokens with the issuer `auth.dailyreader.example`, a user's token with `iss` claim `auth.streamwave.example` will not be accepted. Even though their credentials work across all three domains, the token is limited to the one issuer.
 
