@@ -1,0 +1,349 @@
+---
+title: "Connecting an MCP Server and Client with DCR"
+description: "Learn how to build a secure MCP server that protects requests using Duende IdentityServer and allows any client to dynamically connect."
+date: 2026-08-07T01:00:00+00:00
+sidebar:
+  order: 16
+---
+
+import { Code } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+Duende IdentityServer contains the [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr) feature which allows an application to add clients at runtime instead of requiring you to statically create them on startup with code, or loading them from persistent storage. This 
+ 
+:::warning
+Each client that dynamically that connects to IdentityServer using DCR counts towards the Client Ids allowed in your license.
+:::
+
+## Setting Up The Projects
+
+We will create 3 projects. An IdentityServer project, an MCP API, and a client which will make requests to the MCP.
+
+```console
+mkdir mcp-quickstart
+cd mcp-quickstart
+```
+
+### Create the IdentityServer Project
+
+The IdentityServer project needs to be configured to use DCR to allow clients at runtime. The below steps disable the static clients and adds DCR. Add a new Duende IdentityServer InMemory project to its own directory inside the `mcp-quickstart` directory you created above.
+
+```console
+dotnet new duende-is-inmem --name "McpQuickStart.IdentityServer"
+```
+
+#### Add NuGet Packages
+
+Add the latest versions of the `Duende.IdentityServer` and `Duende.IdentityServer.Configuration` NuGet packages to the project. The `.csproj` file should look like the below.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Duende.IdentityServer" version="8.0.2"/>
+        <PackageReference Include="Duende.IdentityServer.Configuration" Version="8.0.2"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    </ItemGroup>
+</Project>
+```
+
+#### Configure API Resources and Scopes
+
+No clients are statically added to IdentityServer on startup. However IdentityServer still needs to know what API Scopes and Resources will be accessing it at runtime. To enable this, edit the `Config.cs` file to look like this:
+
+```csharp
+public static class Config
+{
+   public static IEnumerable<IdentityResource> IdentityResources =>
+   [
+       new IdentityResources.OpenId(),
+       new IdentityResources.Profile()
+   ];
+
+   public static IEnumerable<ApiResource> ApiResources =>
+   [
+       new("https://localhost:7141", "MCP Server")
+       {
+           Scopes = { "mcp:tools" }
+       }
+   ];
+
+   public static IEnumerable<ApiScope> ApiScopes =>
+   [
+       new("mcp:tools")
+   ];
+}
+```
+
+#### Configure IdentityServer Services
+
+When configuring services for IdentityServer, 
+
+1. The DiscoveryDocument registration endpoint must be set to `RegistrationEndpointMode.Inferred`.
+1. Add the API Scopes from `Config.cs`.
+1. Add the API Resources from `Config.cs`.
+1. Store the dynamically added clients. For this quickstart, keep them in memory.
+
+When you are done, the code would look like this:
+
+```csharp
+using Duende.IdentityServer.Configuration;
+using Duende.IdentityServer.Configuration.Validation.DynamicClientRegistration;
+...
+
+var isBuilder = builder.Services.AddIdentityServer(options =>
+    {
+        // this will add the default dynamic client registration endpoint to the discovery/metadatada documents
+        options.Discovery.DynamicClientRegistration.RegistrationEndpointMode = RegistrationEndpointMode.Inferred;
+    })
+    .AddTestUsers(TestUsers.Users)
+    .AddLicenseSummary();
+
+// in-memory, code config
+isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);
+isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
+// since this will use DCR, we do not need any pre-configured clients
+isBuilder.AddInMemoryClients([]);
+isBuilder.AddInMemoryApiResources(Config.ApiResources);
+
+builder.Services.AddIdentityServerConfiguration(_ => { })
+    // in memory is being used here to keep the quickstart simple. in a real scenario, a persistent storage
+    // mechanism is needed for client registrations to persist across application restarts
+    .AddInMemoryClientConfigurationStore();
+```
+
+#### Hard Code Application Url
+
+For this quickstart, we are using known URLs for each application. Force the project to self-host at `https://localhost:5001`. The `/Properties/launchSettings.json` file should look like:
+
+```json
+{
+  "profiles": {
+    "https": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5001"
+    }
+  }
+}
+```
+
+### Create the MCP Server Project
+
+The MCP Server project we create will be an ASP.NET Web API that returns weather data. Start by adding a new Web API project project to its own directory inside the `mcp-quickstart` directory you created above.
+
+```console
+dotnet new webapi --name "McpQuickStart.McpServer"
+```
+
+#### Add NuGet Packages
+
+Add the latest versions of the `Microsoft.AspNetCore.Authentication.JwtBearer` and `ModelContextProtocol.AspNetCore` NuGet packages to the project. The `.csproj` file should look like the below.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10"  />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.1.0" />
+  </ItemGroup>
+</Project>
+```
+
+#### Configure MCP Tools
+
+Create a new directory called `McpTools` and add a `WeatherTools` C# file. This will be the API called by our clients. The code for the file is below.
+
+```csharp
+using System.ComponentModel;
+using System.Globalization;
+using System.Text.Json;
+using ModelContextProtocol;
+using ModelContextProtocol.Server;
+
+namespace McpQuickStart.McpServer.McpTools;
+
+[McpServerToolType]
+public sealed class WeatherTools
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public WeatherTools(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
+    [McpServerTool, Description("Get weather alerts for a US state.")]
+    public async Task<string> GetAlerts(
+        [Description("The US state to get alerts for. Use the 2 letter abbreviation for the state (e.g. NY).")] string state)
+    {
+        var client = _httpClientFactory.CreateClient("WeatherApi");
+        using var jsonDocument = await client.GetFromJsonAsync<JsonDocument>($"/alerts/active/area/{state}")
+            ?? throw new McpException("No JSON returned from alerts endpoint");
+
+        var alerts = jsonDocument.RootElement.GetProperty("features").EnumerateArray();
+
+        if (!alerts.Any())
+        {
+            return "No active alerts for this state.";
+        }
+
+        return string.Join("\n--\n", alerts.Select(alert =>
+        {
+            JsonElement properties = alert.GetProperty("properties");
+            return $"""
+                    Event: {properties.GetProperty("event").GetString()}
+                    Area: {properties.GetProperty("areaDesc").GetString()}
+                    Severity: {properties.GetProperty("severity").GetString()}
+                    Description: {properties.GetProperty("description").GetString()}
+                    Instruction: {properties.GetProperty("instruction").GetString()}
+                    """;
+        }));
+    }
+
+    [McpServerTool, Description("Get weather forecast for a location.")]
+    public async Task<string> GetForecast(
+        [Description("Latitude of the location.")] double latitude,
+        [Description("Longitude of the location.")] double longitude)
+    {
+        var client = _httpClientFactory.CreateClient("WeatherApi");
+        var pointUrl = string.Create(CultureInfo.InvariantCulture, $"/points/{latitude},{longitude}");
+
+        using var locationDocument = await client.GetFromJsonAsync<JsonDocument>(pointUrl);
+        var forecastUrl = locationDocument?.RootElement.GetProperty("properties").GetProperty("forecast").GetString()
+            ?? throw new McpException($"No forecast URL provided by {client.BaseAddress}points/{latitude},{longitude}");
+
+        using var forecastDocument = await client.GetFromJsonAsync<JsonDocument>(forecastUrl);
+        var periods = forecastDocument?.RootElement.GetProperty("properties").GetProperty("periods").EnumerateArray()
+            ?? throw new McpException("No JSON returned from forecast endpoint");
+
+        return string.Join("\n---\n", periods.Select(period => $"""
+                {period.GetProperty("name").GetString()}
+                Temperature: {period.GetProperty("temperature").GetInt32()}°F
+                Wind: {period.GetProperty("windSpeed").GetString()} {period.GetProperty("windDirection").GetString()}
+                Forecast: {period.GetProperty("detailedForecast").GetString()}
+                """));
+    }
+}
+```
+
+#### Configure MCP Services
+
+Inside the `Program.cs` file, configure the application to host an MCP Server. This is done by:
+
+1. Calling `.AddMcp()`, then configuring the resource metadata clients will be able to access.
+1. Added the endpoint for the `WeatherTools` type to the MCP Server by calling `.AddMcpServer().WithTools<WeatherTools>()`.
+
+The full code for `Program.cs` looks like:
+
+```csharp
+using System.Net.Http.Headers;
+using McpQuickStart.McpServer.McpTools;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using ModelContextProtocol.AspNetCore.Authentication;
+
+var builder = WebApplication.CreateBuilder(args);
+
+var mcpServerUrl = "https://localhost:7141";
+var inMemoryOAuthServerUrl = "https://localhost:5001";
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.Authority = inMemoryOAuthServerUrl;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidAudience = mcpServerUrl,
+            ValidIssuer = inMemoryOAuthServerUrl,
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+    })
+    .AddMcp(options =>
+    {
+        options.ResourceMetadata = new()
+        {
+            Resource = mcpServerUrl,
+            ResourceDocumentation = "https://docs.example/api/weather",
+            AuthorizationServers = { inMemoryOAuthServerUrl },
+            ScopesSupported = ["mcp:tools"]
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddMcpServer()
+    .WithTools<WeatherTools>()
+    .WithHttpTransport();
+
+builder.Services.AddHttpClient("WeatherApi", client =>
+{
+    client.BaseAddress = new Uri("https://api.weather.gov");
+    client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("weather-tool", "1.0"));
+});
+
+var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapMcp().RequireAuthorization();
+
+app.Run();
+```
+
+#### Hard Code Application Url
+
+For this quickstart, we are using known URLs for each application. Force the project to self-host at `https://localhost:7141`. The `/Properties/launchSettings.json` file should look like:
+
+```json
+{
+  "profiles": {
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:7141",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+```
+
+### Create the Client Console Application
+
+The MCP Server can be accessed by any client through HTTP requests. For this quickstart create a simple Console application that will register itself with the MCP server and make a request. Add the new project to its own directory inside the `mcp-quickstart` directory you created above.
+
+```console
+dotnet new console --name "McpQuickStart.Client"
+```
+
+
+
+## Source Code
+
+The finished source code is available in the Samples repository, and a reference implementation of this quickstart is available [here](/identityserver/samples/mcp-server).
