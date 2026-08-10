@@ -9,15 +9,15 @@ sidebar:
 import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-Duende IdentityServer contains the [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr) feature which allows an application to add clients at runtime instead of requiring you to statically create them on startup with code, or loading them from persistent storage. This 
- 
-:::warning
+Duende IdentityServer contains the [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr) feature which allows an application to add clients at runtime instead of requiring you to statically create them on startup with code, or loading them from persistent storage. This quickstart will show you how to create an MCP server that dynamically adds clients at runtime to connect to Duende IdentityServer.
+
+:::caution
 Each client that dynamically that connects to IdentityServer using DCR counts towards the Client Ids allowed in your license.
 :::
 
 ## Setting Up The Projects
 
-We will create 3 projects. An IdentityServer project, an MCP API, and a client which will make requests to the MCP.
+We will create 3 projects. An IdentityServer project, an MCP Server, and a console client which will make requests to the MCP. We'll start by creating a directory to store the 3 projects.
 
 ```console
 mkdir mcp-quickstart
@@ -82,39 +82,96 @@ public static class Config
 
 #### Configure IdentityServer Services
 
-When configuring services for IdentityServer, 
+When configuring services for IdentityServer: 
 
 1. The DiscoveryDocument registration endpoint must be set to `RegistrationEndpointMode.Inferred`.
 1. Add the API Scopes from `Config.cs`.
 1. Add the API Resources from `Config.cs`.
 1. Store the dynamically added clients. For this quickstart, keep them in memory.
 
-When you are done, the code would look like this:
+When you are done, the code for the `ConfigureServices()` method inside `HostingExtensions.cs` will look like this:
 
 ```csharp
-using Duende.IdentityServer.Configuration;
-using Duende.IdentityServer.Configuration.Validation.DynamicClientRegistration;
-...
+public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
+{
+    builder.Services.AddRazorPages();
 
-var isBuilder = builder.Services.AddIdentityServer(options =>
+    var isBuilder = builder.Services.AddIdentityServer(options =>
     {
         // this will add the default dynamic client registration endpoint to the discovery/metadatada documents
         options.Discovery.DynamicClientRegistration.RegistrationEndpointMode = RegistrationEndpointMode.Inferred;
     })
-    .AddTestUsers(TestUsers.Users)
-    .AddLicenseSummary();
+        .AddTestUsers(TestUsers.Users)
+        .AddLicenseSummary();
 
-// in-memory, code config
-isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);
-isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
-// since this will use DCR, we do not need any pre-configured clients
-isBuilder.AddInMemoryClients([]);
-isBuilder.AddInMemoryApiResources(Config.ApiResources);
+    // in-memory, code config
+    isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);
+    isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
+    // since this will use DCR, we do not need any pre-configured clients
+    isBuilder.AddInMemoryClients([]);
+    isBuilder.AddInMemoryApiResources(Config.ApiResources);
 
-builder.Services.AddIdentityServerConfiguration(_ => { })
-    // in memory is being used here to keep the quickstart simple. in a real scenario, a persistent storage
-    // mechanism is needed for client registrations to persist across application restarts
-    .AddInMemoryClientConfigurationStore();
+    builder.Services.AddIdentityServerConfiguration(_ => { })
+        // in memory is being used here to keep the demo simple. in a real scenario, a persistent storage
+        // mechanism is needed for client registrations to persist across application restarts
+        .AddInMemoryClientConfigurationStore();
+
+    builder.Services.AddAuthentication()
+        .AddOpenIdConnect("oidc", "Sign-in with demo.duendesoftware.com", options =>
+        {
+            options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+            options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+            options.SaveTokens = true;
+
+            options.Authority = "https://demo.duendesoftware.com";
+            options.ClientId = "interactive.confidential";
+            options.ClientSecret = "secret";
+            options.ResponseType = "code";
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                NameClaimType = "name",
+                RoleClaimType = "role"
+            };
+        });
+
+    // Add `.PersistKeysTo…()` and `.ProtectKeysWith…()` calls
+    // See more at https://docs.duendesoftware.com/general/data-protection
+    builder.Services.AddDataProtection()
+        .SetApplicationName("IdentityServer");
+
+    return builder.Build();
+}
+```
+#### Configure IdentityServer Pipeline
+
+The IdentityServer middleware pipeline needs to be configured to add clients dynamically. This is done with a call to `app.MapDynamicClientRegistration();` inside the `ConfigurePipeline()` method inside `HostingExtensions.cs`.
+
+Your `ConfigurePipeline()` method should look like this:
+
+```csharp
+public static WebApplication ConfigurePipeline(this WebApplication app)
+{
+    _ = app.UseSerilogRequestLogging();
+
+    if (app.Environment.IsDevelopment())
+    {
+        _ = app.UseDeveloperExceptionPage();
+    }
+
+    _ = app.UseStaticFiles();
+    _ = app.UseRouting();
+    _ = app.UseIdentityServer();
+    _ = app.UseAuthorization();
+
+    _ = app.MapRazorPages()
+        .RequireAuthorization();
+
+    //Add this line
+    _ = app.MapDynamicClientRegistration();
+
+    return app;
+}
 ```
 
 #### Hard Code Application Url
@@ -138,7 +195,7 @@ For this quickstart, we are using known URLs for each application. Force the pro
 
 ### Create the MCP Server Project
 
-The MCP Server project we create will be an ASP.NET Web API that returns weather data. Start by adding a new Web API project project to its own directory inside the `mcp-quickstart` directory you created above.
+The MCP Server project we create will be an ASP.NET Web API that returns weather data. Start by adding a new Web API project to its own directory inside `mcp-quickstart` you created above.
 
 ```console
 dotnet new webapi --name "McpQuickStart.McpServer"
@@ -166,7 +223,7 @@ Add the latest versions of the `Microsoft.AspNetCore.Authentication.JwtBearer` a
 
 #### Configure MCP Tools
 
-Create a new directory called `McpTools` and add a `WeatherTools` C# file. This will be the API called by our clients. The code for the file is below.
+Create a new directory called `McpTools` and add a `WeatherTools.cs` C# file. This will be the API called by our clients. The code for the file is below.
 
 ```csharp
 using System.ComponentModel;
@@ -336,12 +393,202 @@ For this quickstart, we are using known URLs for each application. Force the pro
 
 ### Create the Client Console Application
 
-The MCP Server can be accessed by any client through HTTP requests. For this quickstart create a simple Console application that will register itself with the MCP server and make a request. Add the new project to its own directory inside the `mcp-quickstart` directory you created above.
+The MCP Server can be accessed by any client through HTTP requests. For this quickstart, we create a simple console application that will register itself with the MCP server and make a request. Add the new project to its own directory inside the `mcp-quickstart` directory you created above.
 
 ```console
 dotnet new console --name "McpQuickStart.Client"
 ```
 
+#### Add NuGet Packages
+
+Add the latest versions of the `Microsoft.AspNetCore.Authentication.JwtBearer` and `ModelContextProtocol.AspNetCore` NuGet packages to the project. The `.csproj` file should look like the below.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" Version="2.1.0" />
+  </ItemGroup>
+</Project>
+```
+
+#### Implement the Client
+
+The console client will need to:
+
+1. Use the `ModelContextProtocol` NuGet package to create an `HttpClientTransport` object to communicate with the MCP Server.
+1. Include a `RedirectUri` back to itself after the user signs in.
+1. After user sign-in completes, make a call to the MCP Server using the `get_alerts` tool implemented by the MCP Server and output its response.
+
+The code for the entire console application is:
+
+```csharp
+using System.Diagnostics;
+using System.Net;
+using System.Text;
+using System.Web;
+
+using ModelContextProtocol.Authentication;
+using ModelContextProtocol.Client;
+using ModelContextProtocol.Protocol;
+
+var mcpServerUrl = "https://localhost:7141";
+
+Console.WriteLine("Protected MCP Client");
+Console.WriteLine($"Connecting to server at {mcpServerUrl}...");
+Console.WriteLine();
+
+var httpClient = new HttpClient();
+
+var transport = new HttpClientTransport(new HttpClientTransportOptions
+{
+    Endpoint = new Uri(mcpServerUrl),
+    Name = "Weather MCP Client",
+    OAuth = new ClientOAuthOptions
+    {
+        RedirectUri = new Uri("http://localhost:1179/callback"),
+        AuthorizationCallbackHandler = HandleAuthorizationUrlAsync,
+        DynamicClientRegistration = new DynamicClientRegistrationOptions
+        {
+            ClientName = "ProtectedMcpClient"
+        },
+        Scopes = ["mcp:tools"],
+    },
+}, httpClient);
+
+var client = await McpClient.CreateAsync(transport);
+
+var tools = await client.ListToolsAsync();
+if (tools.Count == 0)
+{
+    Console.WriteLine("No tools available on the server.");
+    return;
+}
+
+Console.WriteLine($"Found {tools.Count} tools on the server.");
+Console.WriteLine();
+
+
+if (tools.Any(t => t.Name == "get_alerts"))
+{
+    Console.WriteLine("Calling get_alerts tool...");
+
+    var result = await client.CallToolAsync("get_alerts", new Dictionary<string, object?> { ["state"] = "NY" });
+
+    Console.WriteLine("Result: " + ((TextContentBlock)result.Content[0]).Text);
+    Console.WriteLine();
+}
+
+/// Handles the OAuth authorization URL by starting a local HTTP server and opening a browser.
+/// This implementation demonstrates how SDK consumers can provide their own authorization flow.
+/// </summary>
+/// <param name="authorizationUrl">The authorization URL to open in the browser.</param>
+/// <param name="redirectUri">The redirect URI where the authorization code will be sent.</param>
+/// <param name="cancellationToken">The cancellation token.</param>
+/// <returns>The authorization code extracted from the callback, or null if the operation failed.</returns>
+// static async Task<string?> HandleAuthorizationUrlAsync(Uri authorizationUrl, Uri redirectUri, CancellationToken cancellationToken)
+static async Task<AuthorizationResult?> HandleAuthorizationUrlAsync(AuthorizationCallbackContext authContext, CancellationToken cancellationToken)
+{
+    Console.WriteLine("Starting OAuth authorization flow...");
+    Console.WriteLine($"Opening browser to: {authContext.AuthorizationUri}");
+
+    var listenerPrefix = authContext.RedirectUri.GetLeftPart(UriPartial.Authority);
+    if (!listenerPrefix.EndsWith("/")) listenerPrefix += "/";
+
+    using var listener = new HttpListener();
+    listener.Prefixes.Add(listenerPrefix);
+
+    try
+    {
+        listener.Start();
+        Console.WriteLine($"Listening for OAuth callback on: {listenerPrefix}");
+
+        OpenBrowser(authContext.AuthorizationUri);
+
+        var context = await listener.GetContextAsync();
+        var query = HttpUtility.ParseQueryString(context.Request.Url?.Query ?? string.Empty);
+        var code = query["code"];
+        var state = query["state"];
+        var iss = query["iss"];
+        var error = query["error"];
+
+        string responseHtml = "<html><body><h1>Authentication complete</h1><p>You can close this window now.</p></body></html>";
+        byte[] buffer = Encoding.UTF8.GetBytes(responseHtml);
+        context.Response.ContentLength64 = buffer.Length;
+        context.Response.ContentType = "text/html";
+        context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+        context.Response.Close();
+
+        if (!string.IsNullOrEmpty(error))
+        {
+            Console.WriteLine($"Auth error: {error}");
+            return null;
+        }
+
+        if (string.IsNullOrEmpty(code))
+        {
+            Console.WriteLine("No authorization code received");
+            return null;
+        }
+
+        Console.WriteLine("Authorization code received successfully.");
+        return new AuthorizationResult
+        {
+            Code = code,
+            State = state,
+            Iss = iss
+        };
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error getting auth code: {ex.Message}");
+        return null;
+    }
+    finally
+    {
+        if (listener.IsListening) listener.Stop();
+    }
+}
+
+/// <summary>
+/// Opens the specified URL in the default browser.
+/// </summary>
+/// <param name="url">The URL to open.</param>
+static void OpenBrowser(Uri url)
+{
+    // Validate the URI scheme - only allow safe protocols
+    if (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps)
+    {
+        Console.WriteLine($"Error: Only HTTP and HTTPS URLs are allowed.");
+        return;
+    }
+
+    try
+    {
+        var psi = new ProcessStartInfo
+        {
+            FileName = url.ToString(),
+            UseShellExecute = true
+        };
+        Process.Start(psi);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error opening browser: {ex.Message}");
+        Console.WriteLine($"Please manually open this URL: {url}");
+    }
+}
+```
+
+### Run the Samples
+
+Start the IdentityServer and MCP Server applications, then run the console client. When prompted to sign in for the console client, use username `bob` with password `bob` to sign in. The console will output the response from the MCP Server after it self-registers.
 
 
 ## Source Code
