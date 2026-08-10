@@ -4,7 +4,7 @@ description: Details of the SAML 2.0 protocol endpoints registered by IdentitySe
 date: 2026-05-21
 sidebar:
   label: Endpoints
-  order: 30
+  order: 31
 ---
 
 When SAML 2.0 support is enabled via `AddSaml()`, IdentityServer registers the following SAML

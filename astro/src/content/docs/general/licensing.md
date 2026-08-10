@@ -127,7 +127,7 @@ instead.
 
 * [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
 * [Automatic Key Management](/identityserver/fundamentals/key-management.md)
-* [SAML IdP and SAML Service Provider](/identityserver/saml/index.md)
+* [SAML IdP and SAML Service Provider](/identityserver/saml/index.mdx)
 
 :::note
 When developing, you may use your production license key in _any_

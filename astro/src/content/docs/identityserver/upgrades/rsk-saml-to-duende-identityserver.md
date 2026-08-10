@@ -445,7 +445,7 @@ Change your ACS endpoint binding to `SamlBinding.HttpPost`. HTTP-Redirect cannot
 
 ## Related Resources
 
-- [SAML 2.0 Identity Provider Documentation](/identityserver/saml/index.md)
+- [SAML 2.0 Identity Provider Documentation](/identityserver/saml/index.mdx)
 - [SAML Service Provider Configuration](/identityserver/saml/service-providers.md)
 - [SAML Endpoints Reference](/identityserver/saml/endpoints.md)
 - [v7.4 to v8.0 Upgrade Guide](/identityserver/upgrades/v7_4-to-v8_0.md)
