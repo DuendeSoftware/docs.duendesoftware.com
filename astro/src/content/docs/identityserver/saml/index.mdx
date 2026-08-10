@@ -1,18 +1,37 @@
 ---
-title: Identity Provider and Service Provider
-description: Learn about the two SAML roles IdentityServer can play, acting as an Identity Provider (IdP) or a Service Provider (SP), and when to use each.
+title: "SAML 2.0"
+description: Overview of IdentityServer's SAML 2.0 support, including Identity Provider (IdP) and Service Provider (SP) roles.
 date: 2026-05-15
 sidebar:
-  label: IdP and SP
-  order: 2
+  label: Overview
+  order: 1
+redirect_from:
+  - /identityserver/saml/idp-and-sp/
 ---
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
-IdentityServer can participate in SAML 2.0 in two distinct roles: as an Identity Provider, or as a Service Provider.
+:::note
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard (add-on), Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+:::
+
+IdentityServer can participate in SAML 2.0 in two distinct roles: as a **SAML 2.0 Identity Provider (IdP)**,
+issuing SAML assertions to other Service Providers (SPs), or as a Service Provider.
 Understanding which role you need determines which part of the documentation to follow.
 
 Most deployments use one role or the other, but both can be active at the same time.
+
+## When to Use SAML 2.0
+
+SAML 2.0 support is useful when:
+
+* You need to integrate with enterprise SaaS applications that require SAML (e.g., Salesforce, Workday, ServiceNow)
+* You are migrating from a legacy SSO system that uses SAML
+* Your organization has compliance or procurement requirements for using SAML
+
+For new integrations, OpenID Connect is the better choice. SAML 2.0 is provided for when you need to work with existing SAML-based systems.
+
+If you are new to SAML 2.0 or want a refresher on the protocol's core building blocks, see [SAML 2.0 Concepts](/identityserver/saml/concepts.md) for an overview of assertions, bindings, metadata, name identifiers, and other key concepts before diving into configuration.
 
 ## Acting as an Identity Provider
 
@@ -34,7 +53,7 @@ is a consumer of SAML, not a producer.
 
 <CardGrid>
   <LinkCard
-    href="/identityserver/saml/"
+    href="/identityserver/saml/identity-provider/"
     title="SAML Identity Provider"
     description="Configure IdentityServer to issue SAML assertions to Service Providers."
   />

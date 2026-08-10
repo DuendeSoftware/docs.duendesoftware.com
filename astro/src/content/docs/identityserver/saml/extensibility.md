@@ -4,7 +4,7 @@ description: Extensibility interfaces for customizing SAML 2.0 Identity Provider
 date: 2026-05-25
 sidebar:
   label: Extensibility
-  order: 40
+  order: 32
 tableOfContents:
   minHeadingLevel: 2
   maxHeadingLevel: 2

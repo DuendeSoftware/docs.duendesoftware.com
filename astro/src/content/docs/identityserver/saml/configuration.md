@@ -4,7 +4,7 @@ description: Configuration options and models for the SAML 2.0 Identity Provider
 date: 2026-05-28
 sidebar:
   label: Configuration
-  order: 10
+  order: 30
 ---
 
 This page documents the configuration options and models for the SAML 2.0 Identity Provider feature.

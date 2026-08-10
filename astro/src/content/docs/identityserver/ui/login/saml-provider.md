@@ -18,6 +18,10 @@ This page covers **static** registration of a SAML 2.0 external provider using `
 
 For the general external provider workflow (triggering authentication, handling callbacks, and managing cookies), see [Integrating with External Providers](/identityserver/ui/login/external.md).
 
+:::tip[Migrating from Rock Solid Knowledge SAML?]
+If you're upgrading from the Rock Solid Knowledge (RSK) SAML addon (`Rsk.Saml.DuendeIdentityServer`) to Duende IdentityServer's built-in SAML support, see the dedicated [RSK SAML Migration Guide](/identityserver/upgrades/rsk-saml-to-duende-identityserver.md).
+:::
+
 ## Registering a SAML 2.0 External Provider
 
 Call the `AddSamlServiceProvider()` extension method on the `AuthenticationBuilder`, just as you would register an OpenID Connect or other external provider:
