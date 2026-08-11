@@ -1,6 +1,6 @@
 ---
-title: "Connecting an MCP Server and Client with DCR"
-description: "Learn how to build a secure MCP server that protects requests using Duende IdentityServer and allows any client to dynamically connect."
+title: "Securing an MCP Server with IdentityServer"
+description: "Learn how to protect an MCP server with Duende IdentityServer so AI clients can securely connect using OAuth and Dynamic Client Registration."
 date: 2026-08-07T01:00:00+00:00
 sidebar:
   order: 16
@@ -9,15 +9,15 @@ sidebar:
 import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-Duende IdentityServer contains the [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr) feature which allows an application to add clients at runtime instead of requiring you to statically create them on startup with code, or loading them from persistent storage. This quickstart will show you how to create an MCP server that dynamically adds clients at runtime to connect to Duende IdentityServer.
+AI agents and tools increasingly communicate via the Model Context Protocol (MCP). This quickstart shows how to secure an MCP server with Duende IdentityServer, using [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr.mdx) so any compliant client can connect without being pre-configured.
 
-:::caution
+:::note
 Each client that dynamically connects to IdentityServer using DCR counts towards the Client Ids allowed in your license.
 :::
 
 ## Setting Up The Projects
 
-We will create 3 projects. An IdentityServer project, an MCP Server, and a console client which will make requests to the MCP. We'll start by creating a directory to store the 3 projects.
+We will create 3 projects. An IdentityServer project, an MCP Server, and a console client which will make requests to the MCP server. We'll start by creating a directory to store the 3 projects.
 
 ```console
 mkdir mcp-quickstart
@@ -54,9 +54,10 @@ Add the latest versions of the `Duende.IdentityServer` and `Duende.IdentityServe
 
 #### Configure API Resources and Scopes
 
-No clients are statically added to IdentityServer on startup. However IdentityServer still needs to know what API Scopes and Resources will be accessing it at runtime. To enable this, edit the `Config.cs` file to look like this:
+IdentityServer will need to know what API Scopes and Resources will be required at runtime. To enable this, edit the `Config.cs` file to look like this:
 
 ```csharp
+// Config.cs
 public static class Config
 {
    public static IEnumerable<IdentityResource> IdentityResources =>
@@ -80,11 +81,13 @@ public static class Config
 }
 ```
 
+Note the configuration does not include any client registrations. MCP clients will dynamically register with IdentityServer when needed.
+
 #### Configure IdentityServer Services
 
 When configuring services for IdentityServer: 
 
-1. The DiscoveryDocument registration endpoint must be set to `RegistrationEndpointMode.Inferred`.
+1. The `DiscoveryDocument` registration endpoint must be configured so that the registration endpoint is made visible, and the URL for it is inferred. You can do this by setting `options.Discovery.DynamicClientRegistration.RegistrationEndpointMode` to `RegistrationEndpointMode.Inferred`.
 1. Add the API Scopes from `Config.cs`.
 1. Add the API Resources from `Config.cs`.
 1. Store the dynamically added clients. For this quickstart, keep them in memory.
@@ -107,7 +110,9 @@ public static WebApplication ConfigureServices(this WebApplicationBuilder builde
     // in-memory, code config
     isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);
     isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
+
     // since this will use DCR, we do not need any pre-configured clients
+    // note that DCR can be combined with statically configured clients, so you can mix and match
     isBuilder.AddInMemoryClients([]);
     isBuilder.AddInMemoryApiResources(Config.ApiResources);
 
@@ -167,7 +172,7 @@ public static WebApplication ConfigurePipeline(this WebApplication app)
     _ = app.MapRazorPages()
         .RequireAuthorization();
 
-    //Add this line
+    // add this line
     _ = app.MapDynamicClientRegistration();
 
     return app;
@@ -195,7 +200,7 @@ For this quickstart, we are using known URLs for each application. Force the pro
 
 ### Create the MCP Server Project
 
-The MCP Server project we create will be an ASP.NET Web API that returns weather data. Start by adding a new Web API project to its own directory inside `mcp-quickstart` you created above.
+The MCP Server project we create will return weather data. Start by adding a new ASP.NET Web API project to its own directory inside `mcp-quickstart` you created above.
 
 ```console
 dotnet new webapi --name "McpQuickStart.McpServer"
@@ -223,9 +228,10 @@ Add the latest versions of the `Microsoft.AspNetCore.Authentication.JwtBearer` a
 
 #### Configure MCP Tools
 
-Create a new directory called `McpTools` and add a `WeatherTools.cs` C# file. This will be the API called by our clients. The code for the file is below.
+Create a new directory called `McpTools` and add a `WeatherTools.cs` C# file. This will be the MCP server definition that an AI agent or an MCP client can consume. The code for the file is below.
 
 ```csharp
+// WeatherTools.cs
 using System.ComponentModel;
 using System.Globalization;
 using System.Text.Json;
@@ -303,11 +309,12 @@ public sealed class WeatherTools
 Inside the `Program.cs` file, configure the application to host an MCP Server. This is done by:
 
 1. Calling `.AddMcp()`, then configuring the resource metadata clients will be able to access.
-1. Added the endpoint for the `WeatherTools` type to the MCP Server by calling `.AddMcpServer().WithTools<WeatherTools>()`.
+1. Registering the `WeatherTools` type as MCP tools the server should expose, by calling `.AddMcpServer().WithTools<WeatherTools>()`.
 
 The full code for `Program.cs` looks like:
 
 ```csharp
+// Program.cs
 using System.Net.Http.Headers;
 using McpQuickStart.McpServer.McpTools;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -393,7 +400,7 @@ For this quickstart, we are using known URLs for each application. Force the pro
 
 ### Create the Client Console Application
 
-The MCP Server can be accessed by any client through HTTP requests. For this quickstart, we create a simple console application that will register itself with the MCP server and make a request. Add the new project to its own directory inside the `mcp-quickstart` directory you created above.
+The MCP server can be accessed by any client through HTTP requests. For this quickstart, we create a simple console application that will register itself with IdentityServer and make an authenticated request to the MCP server. Add the new project to its own directory inside the `mcp-quickstart` directory you created above.
 
 ```console
 dotnet new console --name "McpQuickStart.Client"
@@ -429,6 +436,7 @@ The console client will need to:
 The code for the entire console application is:
 
 ```csharp
+// Program.cs
 using System.Diagnostics;
 using System.Net;
 using System.Text;
