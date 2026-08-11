@@ -188,11 +188,11 @@ public static WebApplication ConfigurePipeline(this WebApplication app)
 }
 ```
 
-#### Hard Code Application Url
+#### Update Launch Url For Local Development
 
 For this quickstart, we are using known URLs for each application. Force the project to self-host at `https://localhost:5001`. The `/Properties/launchSettings.json` file should look like:
 
-```json
+```json {9} title="~/mcp-quickstart/McpQuickStart.IdentityServer/Properties/launchSettings.json"
 {
   "profiles": {
     "https": {
@@ -387,11 +387,11 @@ app.MapMcp().RequireAuthorization();
 app.Run();
 ```
 
-#### Hard Code Application Url
+#### Update Launch Url For Local Development
 
 For this quickstart, we are using known URLs for each application. Force the project to self-host at `https://localhost:7141`. The `/Properties/launchSettings.json` file should look like:
 
-```json
+```json {7} title="~/mcp-quickstart/McpQuickStart.McpServer/Properties/launchSettings.json"
 {
   "profiles": {
     "https": {
