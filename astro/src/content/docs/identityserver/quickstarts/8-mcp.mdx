@@ -1,6 +1,6 @@
 ---
 title: "Securing an MCP Server with IdentityServer"
-description: "Learn how to protect an MCP server with Duende IdentityServer so AI clients can securely connect using OAuth and Dynamic Client Registration."
+description: "Learn how to protect an MCP Server with Duende IdentityServer so AI clients can securely connect using OAuth and Dynamic Client Registration."
 date: 2026-08-07T01:00:00+00:00
 sidebar:
   order: 16
@@ -9,15 +9,27 @@ sidebar:
 import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-AI agents and tools increasingly communicate via the Model Context Protocol (MCP). This quickstart shows how to secure an MCP server with Duende IdentityServer, using [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr.mdx) so any compliant client can connect without being pre-configured.
+AI agents and tools increasingly communicate via the Model Context Protocol (MCP). This quickstart shows how to secure an MCP Server with Duende IdentityServer, using [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr.mdx) so any compliant client can connect without being pre-configured.
 
 :::note
 Each client that dynamically connects to IdentityServer using DCR counts towards the Client Ids allowed in your license.
 :::
 
-## Setting Up The Projects
+## Quickstart Applications
 
-We will create 3 projects. An IdentityServer project, an MCP Server, and a console client which will make requests to the MCP server. We'll start by creating a directory to store the 3 projects.
+We will create 3 projects. An IdentityServer project, an MCP Server, and a console client which will make requests to the MCP Server (but sign in using IdentityServer).
+
+```mermaid
+architecture-beta
+    service mcpServer(server)[MCP Server]
+    service client(server)[Client]
+    service is(server)[IdentityServer]
+
+    is:L -- R:mcpServer
+    mcpServer:R -- L:client
+```
+
+We'll start by creating a directory to store the 3 projects.
 
 ```console
 mkdir mcp-quickstart
@@ -228,7 +240,7 @@ Add the latest versions of the `Microsoft.AspNetCore.Authentication.JwtBearer` a
 
 #### Configure MCP Tools
 
-Create a new directory called `McpTools` and add a `WeatherTools.cs` C# file. This will be the MCP server definition that an AI agent or an MCP client can consume. The code for the file is below.
+Create a new directory called `McpTools` and add a `WeatherTools.cs` C# file. This will be the MCP Server definition that an AI agent or an MCP client can consume. The code for the file is below.
 
 ```csharp
 // WeatherTools.cs
@@ -400,7 +412,7 @@ For this quickstart, we are using known URLs for each application. Force the pro
 
 ### Create the Client Console Application
 
-The MCP server can be accessed by any client through HTTP requests. For this quickstart, we create a simple console application that will register itself with IdentityServer and make an authenticated request to the MCP server. Add the new project to its own directory inside the `mcp-quickstart` directory you created above.
+The MCP Server can be accessed by any client through HTTP requests. For this quickstart, we create a simple console application that will register itself with IdentityServer and make an authenticated request to the MCP server. Add the new project to its own directory inside the `mcp-quickstart` directory you created above.
 
 ```console
 dotnet new console --name "McpQuickStart.Client"
@@ -564,10 +576,6 @@ static async Task<AuthorizationResult?> HandleAuthorizationUrlAsync(Authorizatio
     }
 }
 
-/// <summary>
-/// Opens the specified URL in the default browser.
-/// </summary>
-/// <param name="url">The URL to open.</param>
 static void OpenBrowser(Uri url)
 {
     // Validate the URI scheme - only allow safe protocols
