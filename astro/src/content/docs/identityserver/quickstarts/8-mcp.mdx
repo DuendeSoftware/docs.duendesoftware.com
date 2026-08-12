@@ -66,7 +66,7 @@ Add the latest versions of the `Duende.IdentityServer` and `Duende.IdentityServe
 
 #### Configure API Resources and Scopes
 
-IdentityServer will need to know what API Scopes and Resources will be required at runtime. To enable this, edit the `Config.cs` file to look like this:
+IdentityServer will need to know what API Scopes and Resources will be required at runtime. We will only configure a single scope, `mcp:tools`, which will be used to allow the client to access the tool hosted by the MCP Server connected application. To enable this, edit the `Config.cs` file to look like this:
 
 ```csharp
 // ~/mcp-quickstart/McpQuickStart.IdentityServer/Config.cs
@@ -317,7 +317,7 @@ public sealed class WeatherTools
 
 Inside the `Program.cs` file, configure the application to host an MCP Server. This is done by:
 
-1. Calling `.AddMcp()`, then configuring the resource metadata clients will be able to access.
+1. Calling `.AddMcp()`, then configuring the resource metadata clients will be able to access. The `ScopesSupported = ["mcp:tools"]` property states the client will only be able to request the `mcp:tools` scope from IdentityServer when the user signs in.
 1. Registering the `WeatherTools` type as MCP tools the server should expose, by calling `.AddMcpServer().WithTools<WeatherTools>()`.
 
 The full code for `Program.cs` looks like:
@@ -441,6 +441,8 @@ The console client will need to:
 1. Use the `ModelContextProtocol` NuGet package to create an `HttpClientTransport` object to communicate with the MCP Server.
 1. Include a `RedirectUri` back to itself after the user signs in.
 1. After user sign-in completes, make a call to the MCP Server using the `get_alerts` tool implemented by the MCP Server and output its response.
+
+When creating the `HttpClientTransport` object, the `new ClientOAuthOptions()` initializer needs to set the `RedirectUri` and `Scopes` properties. The `RedirectUri` is the local endpoint this console client expects a redirect to after the user signs in. Once the OAuth flow completes, IdentityServer needs to know where to redirect the user back to, and the `RedirectUri` property tells it to redirect back to this client application. The `Scopes` property uses the single scope we have configured for the clients. It was configured in IdentityServer and the MCP Server was configured to use that scope. When this client signs in, it will request and receive a token with this scope.
 
 The code for the entire console application is:
 
@@ -595,6 +597,59 @@ static void OpenBrowser(Uri url)
 
 Start the IdentityServer and MCP Server applications, then run the console client. When prompted to sign in for the console client, use username `bob` with password `bob` to sign in. The console will output the response from the MCP Server after it self-registers.
 
+
+#### Samples Output
+
+```text
+Protected MCP Client
+Connecting to server at https://localhost:7141...
+
+Starting OAuth authorization flow...
+Opening browser to: https://localhost:5001/connect/authorize?client_id=AZwWIaA8ApNcB5jptVQrSaNO4hF-nbRtBz19QnKEGOI&redirect_uri=http%3a%2f%2flocalhost%3a1279%2fcallback&response_type=code&code_challenge=mfZCS1wY7EHZwUkIb50SD6dmzReczXjyDMC_GFKEHvM&code_challenge_method=S256&state=EAx8LsLDnK0gVNY8Oxw8wF0Jv6TPCu9-YlyHL7XfFHE&resource=https%3a%2f%2flocalhost%3a7141&scope=mcp%3atools+offline_access
+Listening for OAuth callback on: http://localhost:1279/
+Authorization code received successfully.
+Found 2 tools on the server.
+
+Calling get_alerts tool...
+Result: Event: Coastal Flood Statement
+Area: Southern Queens; Southern Nassau
+Severity: Minor
+Description: * WHAT...Up to one half foot of inundation above ground level
+expected in vulnerable areas near the waterfront and shoreline.
+
+* WHERE...Southern Queens and Southern Nassau Counties.
+
+* WHEN...This evening.
+
+* IMPACTS...Brief minor flooding of the most vulnerable locations near the
+waterfront and shoreline.
+
+* ADDITIONAL DETAILS...Additional rounds of localized minor
+flooding are likely with the Wednesday Night and Thursday Night
+high tides. Minor coastal flooding could be a bit more
+widespread with the Wednesday night high tide.
+Instruction: Do not drive through flooded roadways.
+--
+Event: Coastal Flood Statement
+Area: Southern Fairfield; Southern Westchester
+Severity: Minor
+Description: * WHAT...Up to one half foot of inundation above ground level
+expected in vulnerable areas near the waterfront and shoreline.
+
+* WHERE...In Connecticut, Southern Fairfield County. In New
+York, Southern Westchester County.
+
+* WHEN...This evening.
+
+* IMPACTS...Brief minor flooding of the most vulnerable locations near the
+waterfront and shoreline
+
+* ADDITIONAL DETAILS...Additional rounds of localized minor
+flooding are likely with the Wednesday Night and Thursday Night
+high tides. Minor coastal flooding could be a bit more
+widespread with the Wednesday night high tide.
+Instruction: Do not drive through flooded roadways.
+```
 
 ## Source Code
 
