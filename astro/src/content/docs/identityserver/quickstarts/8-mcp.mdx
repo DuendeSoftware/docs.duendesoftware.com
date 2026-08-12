@@ -38,7 +38,7 @@ cd mcp-quickstart
 
 ### Create the IdentityServer Project
 
-The IdentityServer project needs to be configured to use DCR to allow clients at runtime. The below steps disable the static clients and adds DCR. Add a new Duende IdentityServer InMemory project to its own directory inside the `mcp-quickstart` directory you created above.
+The IdentityServer project needs to be configured to use DCR to allow clients at runtime. The below steps disable the static clients and adds DCR. Create a new Duende IdentityServer InMemory project to its own directory inside the `mcp-quickstart` directory you created above.
 
 ```console
 dotnet new duende-is-inmem --name "McpQuickStart.IdentityServer"
@@ -66,7 +66,7 @@ Add the latest versions of the `Duende.IdentityServer` and `Duende.IdentityServe
 
 #### Configure API Resources and Scopes
 
-IdentityServer will need to know what API Scopes and Resources will be required at runtime. We will only configure a single scope, `mcp:tools`, which will be used to allow the client to access the tool hosted by the MCP Server connected application. To enable this, edit the `Config.cs` file to look like this:
+IdentityServer will need to know what API Scopes and Resources will be required at runtime. We will only configure a single scope, `mcp:tools`, which will be used to allow the client to access the tool hosted by the MCP Server connected application. The scope is tied to an `ApiResource` object specific to the MCP Server, meaning the client will receive a token that says the `mcp:tools` scope can only be used by the MCP Server. For more information, see [Resource Isolation](/identityserver/fundamentals/resources/isolation). To enable this, edit the `Config.cs` file to look like this:
 
 ```csharp
 // ~/mcp-quickstart/McpQuickStart.IdentityServer/Config.cs
@@ -322,7 +322,7 @@ Inside the `Program.cs` file, configure the application to host an MCP Server. T
 
 The full code for `Program.cs` looks like:
 
-```csharp
+```csharp {31-40}
 // ~/mcp-quickstart/McpQuickStart.McpServer/Program.cs
 using System.Net.Http.Headers;
 using McpQuickStart.McpServer.McpTools;
@@ -598,7 +598,7 @@ static void OpenBrowser(Uri url)
 Start the IdentityServer and MCP Server applications, then run the console client. When prompted to sign in for the console client, use username `bob` with password `bob` to sign in. The console will output the response from the MCP Server after it self-registers.
 
 
-#### Samples Output
+#### Sample Client Output
 
 ```text
 Protected MCP Client
