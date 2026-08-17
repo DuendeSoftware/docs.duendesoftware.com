@@ -277,6 +277,11 @@ export default defineConfig({
           collapsed: true,
           items: [{ autogenerate: { directory: "introspection" } }],
         },
+        {
+          label: "Learning Identity",
+          collapsed: true,
+          items: [{ autogenerate: { directory: "learning-identity" } }],
+        },
       ],
     }),
     redirectFrom({
