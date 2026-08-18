@@ -7,6 +7,7 @@ sidebar:
 redirect_from:
   - /identityserver/v7/reference/models/api_resource/
   - /identityserver/v7/reference/models/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Models.ApiResource

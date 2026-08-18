@@ -6,6 +6,7 @@ sidebar:
   order: 100
 redirect_from:
   - /identityserver/v7/reference/stores/server_side_sessions/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Stores.IServerSideSessionStore

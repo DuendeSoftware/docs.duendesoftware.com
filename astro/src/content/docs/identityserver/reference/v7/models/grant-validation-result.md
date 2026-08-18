@@ -6,6 +6,7 @@ sidebar:
   order: 45
 redirect_from:
   - /identityserver/v7/reference/models/grant_validation_result/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Validation.GrantValidationResult

@@ -6,6 +6,7 @@ sidebar:
   order: 110
 redirect_from:
   - /identityserver/v7/reference/stores/pushed_authorization_request_store/
+pagefind: false
 ---
 
 The pushed authorization request store is responsible for creating, retrieving, and

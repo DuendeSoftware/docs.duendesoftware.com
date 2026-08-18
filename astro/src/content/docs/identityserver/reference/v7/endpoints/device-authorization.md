@@ -7,6 +7,7 @@ sidebar:
   order: 9
 redirect_from:
   - /identityserver/v7/reference/endpoints/device_authorization/
+pagefind: false
 ---
 
 The device authorization endpoint can be used to request device and user codes.

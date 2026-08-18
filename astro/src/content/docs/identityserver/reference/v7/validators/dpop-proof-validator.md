@@ -6,6 +6,7 @@ sidebar:
   order: 40
 redirect_from:
   - /identityserver/v7/reference/validators/dpop_proof_validator/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Validation.IDPoPProofValidator

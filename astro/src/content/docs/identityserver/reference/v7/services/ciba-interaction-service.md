@@ -6,6 +6,7 @@ sidebar:
   order: 80
 redirect_from:
   - /identityserver/v7/reference/services/ciba_interaction_service/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Services.IBackchannelAuthenticationInteractionService

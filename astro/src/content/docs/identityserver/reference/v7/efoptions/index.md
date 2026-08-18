@@ -6,6 +6,7 @@ sidebar:
   order: 1
 redirect_from:
   - /identityserver/v7/reference/efoptions/
+pagefind: false
 ---
 
 If using the [Entity Framework Core store implementation](/identityserver/data/ef.md), you might need to configure those specific options.

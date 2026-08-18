@@ -5,6 +5,7 @@ sidebar:
   order: 20
 redirect_from:
   - /identityserver/v7/configuration/dcr/reference/processing/
+pagefind: false
 ---
 
 The page explains the `IDynamicClientRegistrationRequestProcessor` contract, its default implementation (

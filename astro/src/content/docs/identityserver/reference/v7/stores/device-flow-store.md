@@ -6,6 +6,7 @@ sidebar:
   order: 43
 redirect_from:
   - /identityserver/v7/reference/stores/device_flow_store/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Stores.IDeviceFlowStore

@@ -7,6 +7,7 @@ sidebar:
   order: 1
 redirect_from:
   - /identityserver/v7/reference/stores/
+pagefind: false
 ---
 
 Stores in IdentityServer are the persistence layer abstractions responsible for managing various types of data needed

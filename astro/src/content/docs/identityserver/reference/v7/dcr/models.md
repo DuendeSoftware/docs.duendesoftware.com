@@ -5,6 +5,7 @@ sidebar:
   order: 50
 redirect_from:
   - /identityserver/v7/configuration/dcr/reference/models/
+pagefind: false
 ---
 
 ## DynamicClientRegistrationRequest

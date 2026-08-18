@@ -6,6 +6,7 @@ sidebar:
   order: 80
 redirect_from:
   - /identityserver/v7/reference/validators/extension_grant_validator/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Validation.IExtensionGrantValidator

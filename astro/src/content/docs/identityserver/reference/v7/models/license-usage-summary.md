@@ -9,6 +9,7 @@ sidebar:
     variant: tip
 redirect_from:
   - /identityserver/v7/reference/models/license_usage_summary/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Licensing.LicenseUsageSummary

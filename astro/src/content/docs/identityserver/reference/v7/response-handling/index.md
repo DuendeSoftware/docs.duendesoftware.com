@@ -6,6 +6,7 @@ sidebar:
   label: Overview
 redirect_from:
   - /identityserver/v7/reference/response_handling/
+pagefind: false
 ---
 
 IdentityServer's endpoints follow a pattern of abstraction in which a response generator uses a validated input model to produce a response model. The response model is a type that represents the data that will be returned from the endpoint. The response model is then wrapped in a result model, which is a type that facilitates serialization by an implementation of `IHttpResponseWriter`.

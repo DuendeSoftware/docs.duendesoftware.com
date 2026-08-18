@@ -5,6 +5,7 @@ sidebar:
   order: 10
 redirect_from:
   - /identityserver/v7/reference/efoptions/operational/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.EntityFramework.Options.OperationalStoreOptions

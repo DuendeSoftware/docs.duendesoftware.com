@@ -6,6 +6,7 @@ sidebar:
   order: 20
 redirect_from:
   - /identityserver/v7/reference/models/identity_resource/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Models.IdentityResource

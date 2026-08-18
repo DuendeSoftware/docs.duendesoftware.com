@@ -8,6 +8,7 @@ sidebar:
 redirect_from:
   - /identityserver/v7/reference/endpoints/authorize/
   - /identityserver/v7/reference/endpoints/
+pagefind: false
 ---
 
 The authorize endpoint can be used to request tokens or authorization codes via the browser.
