@@ -13,7 +13,7 @@ redirect_from:
 
 This endpoint allows revoking access tokens (reference tokens only) and refresh tokens. It implements the token revocation specification [(RFC 7009)](https://tools.ietf.org/html/rfc7009).
 
-Note that revocation only applies to reference tokens: JWTs are stateless and not persisted in the operational store by default, so there is no revocation state for the server to track.
+Note that revocation only applies to reference tokens: JWTs are stateless and not persisted in the operational store by default, so there is no revocation state that the server can track and deactivate.
 
 * **`token`**
 
