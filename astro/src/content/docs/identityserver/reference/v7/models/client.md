@@ -6,6 +6,7 @@ sidebar:
   order: 35
 redirect_from:
   - /identityserver/v7/reference/models/client/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Models.Client

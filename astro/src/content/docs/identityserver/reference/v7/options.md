@@ -7,6 +7,7 @@ sidebar:
 redirect_from:
   - /identityserver/v7/reference/options/
   - /identityserver/v7/reference/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Configuration.IdentityServerOptions

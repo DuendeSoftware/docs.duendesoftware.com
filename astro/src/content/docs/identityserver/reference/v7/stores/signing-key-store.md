@@ -6,6 +6,7 @@ sidebar:
   order: 90
 redirect_from:
   - /identityserver/v7/reference/stores/signing_key_store/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Stores.ISigningKeyStore

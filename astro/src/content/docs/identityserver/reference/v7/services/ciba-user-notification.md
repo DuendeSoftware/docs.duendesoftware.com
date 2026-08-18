@@ -6,6 +6,7 @@ sidebar:
   order: 90
 redirect_from:
   - /identityserver/v7/reference/services/ciba_user_notification/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Services.IBackchannelAuthenticationUserNotificationService

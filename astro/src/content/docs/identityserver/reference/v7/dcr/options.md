@@ -5,6 +5,7 @@ sidebar:
   order: 60
 redirect_from:
   - /identityserver/v7/configuration/dcr/reference/options/
+pagefind: false
 ---
 
 The page describes the `IdentityServerConfigurationOptions` class, which provides top-level configuration options for

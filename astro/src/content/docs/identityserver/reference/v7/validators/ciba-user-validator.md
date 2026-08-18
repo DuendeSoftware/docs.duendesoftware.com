@@ -6,6 +6,7 @@ sidebar:
   order: 30
 redirect_from:
   - /identityserver/v7/reference/validators/ciba_user_validator/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Validation.IBackchannelAuthenticationUserValidator

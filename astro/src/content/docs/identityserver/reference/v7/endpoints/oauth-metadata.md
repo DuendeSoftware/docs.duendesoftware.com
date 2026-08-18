@@ -5,6 +5,7 @@ date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: OAuth Metadata
   order: 2
+pagefind: false
 ---
 
 The [OAuth Metadata Endpoint](https://www.rfc-editor.org/rfc/rfc8414.html) is a standardized way to retrieve metadata

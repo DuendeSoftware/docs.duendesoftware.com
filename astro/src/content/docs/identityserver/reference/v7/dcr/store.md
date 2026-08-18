@@ -5,6 +5,7 @@ sidebar:
   order: 30
 redirect_from:
   - /identityserver/v7/configuration/dcr/reference/store/
+pagefind: false
 ---
 
 ## IClientConfigurationStore

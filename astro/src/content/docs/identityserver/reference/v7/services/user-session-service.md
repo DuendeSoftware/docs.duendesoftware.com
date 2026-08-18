@@ -7,6 +7,7 @@ sidebar:
 redirect_from:
   - /identityserver/v7/reference/services/user_sesion_service/
   - /identityserver/v7/reference/services/user_session_service/
+pagefind: false
 ---
 
 The `IUserSession` interface is the contract for a service that manages the user's session and tracks the clients that

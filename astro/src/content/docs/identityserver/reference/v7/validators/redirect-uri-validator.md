@@ -7,6 +7,7 @@ sidebar:
 redirect_from:
   - /identityserver/v7/reference/validators/redirect_uri_validator/
   - /identityserver/v7/reference/services/redirect_uri_validator/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Validation.IRedirectUriValidator

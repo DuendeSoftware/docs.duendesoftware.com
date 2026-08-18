@@ -7,6 +7,7 @@ sidebar:
 redirect_from:
   - /identityserver/v7/reference/validators/
   - /identityserver/v7/reference/validators/custom_authorize_request_validator/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Validation.ICustomAuthorizeRequestValidator

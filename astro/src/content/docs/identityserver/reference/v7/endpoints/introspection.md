@@ -7,6 +7,7 @@ sidebar:
   order: 6
 redirect_from:
   - /identityserver/v7/reference/endpoints/introspection/
+pagefind: false
 ---
 
 The introspection endpoint is an implementation of [RFC 7662](https://tools.ietf.org/html/rfc7662).

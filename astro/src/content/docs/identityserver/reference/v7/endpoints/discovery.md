@@ -7,6 +7,7 @@ sidebar:
   order: 1
 redirect_from:
   - /identityserver/v7/reference/endpoints/discovery/
+pagefind: false
 ---
 
 The [discovery endpoint](https://openid.net/specs/openid-connect-discovery-1_0.html) can be used to retrieve metadata

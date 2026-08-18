@@ -6,6 +6,7 @@ sidebar:
   order: 70
 redirect_from:
   - /identityserver/v7/reference/models/secrets/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Validation.ISecretParser

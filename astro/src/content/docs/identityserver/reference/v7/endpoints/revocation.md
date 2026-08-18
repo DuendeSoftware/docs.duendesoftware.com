@@ -7,6 +7,7 @@ sidebar:
   order: 7
 redirect_from:
   - /identityserver/v7/reference/endpoints/revocation/
+pagefind: false
 ---
 
 This endpoint allows revoking access tokens (reference tokens only) and refresh token.

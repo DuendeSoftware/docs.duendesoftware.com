@@ -6,6 +6,7 @@ sidebar:
   order: 42
 redirect_from:
   - /identityserver/v7/reference/stores/persisted_grant_store/
+pagefind: false
 ---
 
 The `IPersistedGrantStore` interface is the contract for a service that stores,

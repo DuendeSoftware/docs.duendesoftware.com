@@ -7,6 +7,7 @@ sidebar:
   order: 65
 redirect_from:
   - /identityserver/v7/reference/services/device_flow_interaction_service/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Services.IDeviceFlowInteractionService

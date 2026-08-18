@@ -6,6 +6,7 @@ sidebar:
   order: 25
 redirect_from:
   - /identityserver/v7/reference/models/api_scope/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Models.ApiScope
