@@ -313,7 +313,14 @@ export default defineConfig({
   ],
   markdown: {
     processor: unified({
-      remarkPlugins: [[removeMarkdownExtensions, { ignoreRelativeLinks: true }], [codeSnippetImporter, {snippetsFiles: ["../snippets/snippets.json", "https://raw.githubusercontent.com/ProgrammerAL/scratchpad-public/refs/heads/main/code-snippets/snippets.json"]}]],
+      remarkPlugins: [
+        [
+          removeMarkdownExtensions,
+          { ignoreRelativeLinks: true }
+        ],
+        [
+          codeSnippetImporter,
+          { snippetsFiles: ["../snippets/snippets.json", "https://raw.githubusercontent.com/ProgrammerAL/scratchpad-public/refs/heads/main/code-snippets/snippets.json"] }]],
       rehypePlugins: [
         [
           rehypeAstroRelativeMarkdownLinks,
