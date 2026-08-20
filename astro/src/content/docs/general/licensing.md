@@ -171,9 +171,13 @@ Key points:
 If you see the following error in IdentityServer v7, you have likely configured a license key issued for v8:
 
 ```text
-Error validating the Duende software license key - You do not have a valid license key for the Duende software. This is allowed for development and testing scenarios. If you are running in production, you are required to have a licensed version.
+Error validating the Duende software license key - You do not have a valid license key
+for the Duende software. This is allowed for development and testing scenarios. If you
+are running in production, you are required to have a licensed version.
 
-IDX10503: Signature validation failed. Token does not have a kid. Keys tried: "[PIl of type System.Text.StringBuilder' is hidden. For more details, see https://aka.ms/ldentityModel/PIl.
+IDX10503: Signature validation failed. Token does not have a kid.
+Keys tried: "[PIl of type System.Text.StringBuilder' is hidden.
+For more details, see https://aka.ms/ldentityModel/PIl.
 ```
 
 Please [contact our sales team](https://duendesoftware.com/contact/sales) to request an updated license file, and make sure to communicate your version of IdentityServer.
