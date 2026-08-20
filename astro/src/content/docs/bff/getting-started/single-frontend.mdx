@@ -5,7 +5,7 @@ sidebar:
   order: 10
   label: "Single Frontend"
 ---
-import { Code, Steps } from "@astrojs/starlight/components";
+import { Code, Steps, CardGrid, LinkCard } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 Duende.BFF (Backend for Frontend) is a library that helps you build secure, modern web applications by acting as a security gateway between your frontend and backend APIs. This guide will walk you through setting up a simple BFF application with a single frontend.
@@ -461,10 +461,40 @@ setInterval(async () => {
 
 ## See Also
 
-- [Multiple Frontends](/bff/getting-started/multi-frontend/) — Serve several SPAs from the same BFF host
-- [Blazor Applications](/bff/getting-started/blazor/) — BFF setup for Blazor Server and WASM
-- [Local APIs](/bff/fundamentals/apis/local/) — Full reference for embedded API endpoints and CSRF protection
-- [Remote APIs](/bff/fundamentals/apis/remote/) — Direct forwarding to upstream services
-- [Token Management](/bff/fundamentals/tokens/) — How BFF handles access token refresh automatically
-- [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) — Persistent session configuration
-- [Access Token Management](/accesstokenmanagement/) — The underlying token lifecycle library used by BFF
+<CardGrid>
+  <LinkCard
+    href="/bff/getting-started/multi-frontend/"
+    title="Multiple Frontends"
+    description="Serve several SPAs from the same BFF host."
+  />
+  <LinkCard
+    href="/bff/getting-started/blazor/"
+    title="Blazor Applications"
+    description="BFF setup for Blazor Server and WASM."
+  />
+  <LinkCard
+    href="/bff/fundamentals/apis/local/"
+    title="Local APIs"
+    description="Full reference for embedded API endpoints and CSRF protection."
+  />
+  <LinkCard
+    href="/bff/fundamentals/apis/remote/"
+    title="Remote APIs"
+    description="Direct forwarding to upstream services."
+  />
+  <LinkCard
+    href="/bff/fundamentals/tokens/"
+    title="Token Management"
+    description="How BFF handles access token refresh automatically."
+  />
+  <LinkCard
+    href="/bff/fundamentals/session/server-side-sessions/"
+    title="Server-Side Sessions"
+    description="Persistent session configuration."
+  />
+  <LinkCard
+    href="/accesstokenmanagement/"
+    title="Access Token Management"
+    description="The underlying token lifecycle library used by BFF."
+  />
+</CardGrid>

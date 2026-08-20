@@ -7,6 +7,7 @@ sidebar:
   order: 8
 redirect_from:
   - /identityserver/v7/reference/endpoints/end_session/
+pagefind: false
 ---
 
 The end session endpoint can be used to trigger single sign-out in the browser (

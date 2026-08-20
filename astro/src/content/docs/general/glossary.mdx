@@ -14,7 +14,9 @@ import { LinkCard, CardGrid, Badge } from "@astrojs/starlight/components";
 The glossary below provides definitions and explanations of commonly used terms and features within the security and
 identity management domain. Explore each term to gain a deeper understanding of its functionality and relevance.
 
-## Client
+## Fundamentals
+
+### Client
 
 A client is a piece of software that requests tokens from your IdentityServer - either for authenticating a user (
 requesting an identity token) or for accessing a resource (requesting an access token). A client must be first
@@ -29,7 +31,7 @@ processes, etc.
   title="Documentation"
 />
 
-## Connected Application
+### Connected Application
 
 A connected application is any application or service registered with your Duende IdentityServer instance that relies
 on it for identity, access, or federation. Each connected application has a unique registration that defines how it 
@@ -42,7 +44,13 @@ Connected applications fall into four categories:
 3.  Third-party API consumer that requires a client ID and client secret, typically in a SaaS situation or B2B situation.
 4.  SAML Service Providers use SAML 2.0 to establish federated trust with IdentityServer acting as the Identity Provider (IdP), enabling single sign-on for applications that rely on SAML-based authentication.
 
-## Core Protocols
+### Subject ID
+
+A Subject ID (`sub`) is a stable, unique identifier assigned to a user within the system. It is analogous to, and typically maps directly to, the `sub` claim in OpenID Connect tokens. The Subject ID remains constant across sessions and should be used as the canonical reference to a user rather than mutable attributes such as username or email address.
+
+## Protocols
+
+### Core Protocols
 
 **License: <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
@@ -74,7 +82,7 @@ Here's what's included:
 
 For the majority of .NET applications, core protocols handle every scenario: users log in, APIs validate tokens, machines talk to machines, and sessions end cleanly.
 
-## Extended Protocols
+### Extended Protocols
 
 **License: <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
@@ -91,7 +99,107 @@ Extended protocols address requirements that go beyond typical web and API scena
 
 These protocols solve real problems, but they're problems that surface in specific business contexts rather than in every project.
 
-## Automatic Key Management
+### Pushed Authorization Requests
+
+**License: <Badge text="Business (legacy)" />, <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+Implementation of [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html). Provides a more secure way to start a
+browser-based token/authentication request.
+
+<LinkCard
+  description="Learn more about Pushed Authorization Requests"
+  href="/identityserver/tokens/par"
+  title="Documentation"
+/>
+
+### Dynamic Client Registration
+
+**License: <Badge text="Business (legacy)" />, <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register
+clients and their configuration.
+
+<LinkCard
+  description="Learn more about Dynamic Client Registration"
+  href="/identityserver/configuration"
+  title="Documentation"
+/>
+
+### Client-Initiated Backchannel Authentication (CIBA)
+
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+Duende IdentityServer supports the Client-Initiated Backchannel Authentication Flow (also known as CIBA).
+This allows a user to log in with a higher security device (e.g. their mobile phone) than the device on which they are
+using an application (e.g. a public kiosk).
+CIBA is one of the requirements to support the Financal-grade API compliance.
+
+<CardGrid>
+  <LinkCard
+    description="Client-Initiated Backchannel Authentication post"
+    href="https://duendesoftware.com/blog/20220107-ciba"
+    title="More Details"
+    target="_blank"
+  />
+  <LinkCard
+    description="Learn more about CIBA"
+    href="/identityserver/ui/ciba/"
+    title="Documentation"
+  />
+</CardGrid>
+
+### Proof-of-Possession At The Application Layer / DPoP
+
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This
+mechanism allows for the detection of replay attacks with access and refresh tokens.
+
+<LinkCard
+  description="Learn more about Proof-of-Possession"
+  href="/identityserver/tokens/pop/"
+  title="Documentation"
+/>
+
+### SAML 2.0 Identity Provider
+
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard (add-on)" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+
+IdentityServer can act as a SAML 2.0 Identity Provider (IdP), issuing SAML assertions to Service Providers (SPs) that
+use the SAML 2.0 protocol rather than OAuth 2.0 / OpenID Connect. This is useful for integrating with enterprise SaaS
+applications (e.g. Salesforce, ServiceNow) or legacy SSO systems that require SAML-based federation.
+
+<LinkCard
+  description="Learn more about SAML 2.0 Identity Provider support"
+  href="/identityserver/saml/"
+  title="Documentation"
+/>
+
+### Financial-Grade Security and Conformance (FAPI 2.0)
+
+**License: <Badge text="Standard (add-on)" />, <Badge text="Advanced (add-on)" />, <Badge text="Custom (add-on)" />**
+
+The [Financial-grade API (FAPI) 2.0 Security Profile](https://openid.net/specs/fapi-security-profile-2_0-final.html) is
+an API security profile based on OAuth 2.0 designed to protect APIs in high-value scenarios such as e-health and
+e-government. Duende IdentityServer implements the FAPI 2.0 best current practice features and includes a built-in
+conformance report that assesses your server and client configuration against OAuth 2.1 and FAPI 2.0 specifications.
+
+<CardGrid>
+  <LinkCard
+    description="Learn more about FAPI 2.0 compliance"
+    href="/identityserver/tokens/fapi-2-0-specification/"
+    title="Documentation"
+  />
+  <LinkCard
+    description="Assess your configuration against FAPI 2.0"
+    href="/identityserver/diagnostics/conformance-report/"
+    title="Conformance Report"
+  />
+</CardGrid>
+
+## Features
+
+### Automatic Key Management
 
 **License: <Badge text="Business (legacy)" />, <Badge text="Enterprise (legacy)" />, <Badge text="Standard (add-on)" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
@@ -112,7 +220,7 @@ handling this key material, including storage and rotation.
   />
 </CardGrid>
 
-## Server-side Session Management
+### Server-side Session Management
 
 **License: <Badge text="Business (legacy)" />, <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
@@ -138,7 +246,7 @@ server-side sessions enables more architectural features in your IdentityServer,
   />
 </CardGrid>
 
-## BFF Security Framework
+### BFF Security Framework
 
 **License: <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
@@ -159,33 +267,7 @@ browser-based frontends (e.g. SPAs or Blazor WASM applications) with ASP.NET Cor
   />
 </CardGrid>
 
-## Dynamic Client Registration
-
-**License: <Badge text="Business (legacy)" />, <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
-
-Implementation of [RFC 8707](https://tools.ietf.org/html/rfc8707). Provides a standards-based endpoint to register
-clients and their configuration.
-
-<LinkCard
-  description="Learn more about Dynamic Client Registration"
-  href="/identityserver/configuration"
-  title="Documentation"
-/>
-
-## Pushed Authorization Requests
-
-**License: <Badge text="Business (legacy)" />, <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
-
-Implementation of [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html). Provides a more secure way to start a
-browser-based token/authentication request.
-
-<LinkCard
-  description="Learn more about Pushed Authorization Requests"
-  href="/identityserver/tokens/par"
-  title="Documentation"
-/>
-
-## Dynamic Authentication Providers
+### Dynamic Authentication Providers
 
 **License: <Badge text="Enterprise (legacy)" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
@@ -206,7 +288,7 @@ This is designed to address the performance concern and allowing changes to the 
   />
 </CardGrid>
 
-## Resource Isolation
+### Resource Isolation
 
 **License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
@@ -228,93 +310,63 @@ boundary.
   />
 </CardGrid>
 
-## Client-Initiated Backchannel Authentication (CIBA)
+## Authentication
 
-**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+### FIDO2
 
-Duende IdentityServer supports the Client-Initiated Backchannel Authentication Flow (also known as CIBA).
-This allows a user to log in with a higher security device (e.g. their mobile phone) than the device on which they are
-using an application (e.g. a public kiosk).
-CIBA is one of the requirements to support the Financal-grade API compliance.
+FIDO2 is the FIDO Alliance's umbrella standard for strong, passwordless authentication. It encompasses two specifications: **WebAuthn** (the browser/platform API) and **CTAP** (Client to Authenticator Protocol, which defines how authenticators such as hardware security keys communicate with a platform). FIDO2 credentials are based on public-key cryptography and are phishing-resistant by design.
 
-<CardGrid>
-  <LinkCard
-    description="Client-Initiated Backchannel Authentication post"
-    href="https://duendesoftware.com/blog/20220107-ciba"
-    title="More Details"
-    target="_blank"
-  />
-  <LinkCard
-    description="Learn more about CIBA"
-    href="/identityserver/ui/ciba/"
-    title="Documentation"
-  />
-</CardGrid>
+### MFA (Multi-Factor Authentication)
 
-## Proof-of-Possession At The Application Layer / DPoP
+Multi-Factor Authentication requires a user to present two or more independent verification factors before being granted access. Factors are typically categorized as something you *know* (e.g. a password or PIN), something you *have* (e.g. a TOTP authenticator app or hardware key), and something you *are* (e.g. a biometric). Requiring multiple factors significantly reduces the risk of account compromise from stolen credentials.
 
-**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+### OTP (One-Time Password)
 
-A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This
-mechanism allows for the detection of replay attacks with access and refresh tokens.
+A One-Time Password is a temporary, single-use code delivered out-of-band (typically via email or SMS) that authenticates a user without requiring a traditional password. Because each code is valid for only a short window and cannot be reused, OTPs provide a simple form of passwordless or second-factor authentication.
 
-<LinkCard
-  description="Learn more about Proof-of-Possession"
-  href="/identityserver/tokens/pop/"
-  title="Documentation"
-/>
+### Passkey
 
-## SAML 2.0 Identity Provider
+A passkey is a FIDO2 credential that replaces a traditional password. It is bound to a specific device (or synced across a user's devices via a platform credential manager) and is unlocked locally using biometrics or a PIN. The private key never leaves the device, making passkeys resistant to phishing and server-side credential theft.
 
-**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard (add-on)" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+### Recovery Code
 
-IdentityServer can act as a SAML 2.0 Identity Provider (IdP), issuing SAML assertions to Service Providers (SPs) that
-use the SAML 2.0 protocol rather than OAuth 2.0 / OpenID Connect. This is useful for integrating with enterprise SaaS
-applications (e.g. Salesforce, ServiceNow) or legacy SSO systems that require SAML-based federation.
+A recovery code is a one-time backup code generated at enrollment time and stored securely by the user. It can be used to regain account access when primary authenticators (such as a TOTP app or passkey device) are unavailable. Each code is valid for a single use only.
 
-<LinkCard
-  description="Learn more about SAML 2.0 Identity Provider support"
-  href="/identityserver/saml/"
-  title="Documentation"
-/>
+### TOTP (Time-Based One-Time Password)
 
-## Financial-Grade Security and Conformance (FAPI 2.0)
+A Time-Based One-Time Password is a short-lived numeric code generated by an authenticator app (e.g. Google Authenticator, Microsoft Authenticator) according to [RFC 6238](https://www.rfc-editor.org/rfc/rfc6238). The code is derived from a shared secret and the current time, and is typically valid for 30 seconds. TOTP is widely used as a second factor in MFA flows.
 
-**License: <Badge text="Standard (add-on)" />, <Badge text="Advanced (add-on)" />, <Badge text="Custom (add-on)" />**
+### WebAuthn (Web Authentication)
 
-The [Financial-grade API (FAPI) 2.0 Security Profile](https://openid.net/specs/fapi-security-profile-2_0-final.html) is
-an API security profile based on OAuth 2.0 designed to protect APIs in high-value scenarios such as e-health and
-e-government. Duende IdentityServer implements the FAPI 2.0 best current practice features and includes a built-in
-conformance report that assesses your server and client configuration against OAuth 2.1 and FAPI 2.0 specifications.
+WebAuthn is the [W3C Web Authentication standard](https://www.w3.org/TR/webauthn/) that defines a browser API for creating and using public-key credentials. It is the web-facing component of FIDO2. Relying parties (web applications) use WebAuthn to register and authenticate users with device-bound or synced credentials (passkeys), hardware security keys, or platform authenticators, all without transmitting a password.
 
-<CardGrid>
-  <LinkCard
-    description="Learn more about FAPI 2.0 compliance"
-    href="/identityserver/tokens/fapi-2-0-specification/"
-    title="Documentation"
-  />
-  <LinkCard
-    description="Assess your configuration against FAPI 2.0"
-    href="/identityserver/diagnostics/conformance-report/"
-    title="Conformance Report"
-  />
-</CardGrid>
+## User Management
 
-## Single Deployment
+### User Management - Licensed Users
+
+The total of unique identity records stored in Duende User Management, identified by User Management user ID per billing period.
+
+### Space (User Management)
+
+In Duende User Management, a *space* is the fundamental isolation unit. Each space has its own isolated user store, configuration, and authentication settings. This enables deployments where users, roles, and groups in one space are completely separated from those in another. A typical use case is supporting multiple tenants in a single deployment.
+
+## Deployment and Licensing
+
+### Single Deployment
 
 A single deployment acts as a single OpenID Connect / OAuth authority hosted at a single URL. It can consist of multiple
 physical or virtual nodes for load-balancing or fail-over purposes.
 
-## Multiple Deployments
+### Multiple Deployments
 
 Can be either completely independent single deployments, or a single deployment that acts as multiple authorities.
 
-## Multiple Authorities
+### Multiple Authorities
 
 A single logical deployment that acts as multiple logical token services on multiple URLs or host names (e.g. for
 branding, isolation or multi-tenancy reasons).
 
-## Redistribution
+### Redistribution
 
 Redistribution occurs when you bundle Duende IdentityServer as an integrated component of a product or service that you
 sell, lease, or provide to third parties.
@@ -324,67 +376,43 @@ solution that customers host on their own local or cloud infrastructure.
 
 Each customer installation of IdentityServer is considered a separate redistribution.
 
-## User Management - Licensed Users
+## Support
 
-The total of unique identity records stored in Duende User Management, identified by User Management user ID per billing period.
-
-## FIDO2
-
-FIDO2 is the FIDO Alliance's umbrella standard for strong, passwordless authentication. It encompasses two specifications: **WebAuthn** (the browser/platform API) and **CTAP** (Client to Authenticator Protocol, which defines how authenticators such as hardware security keys communicate with a platform). FIDO2 credentials are based on public-key cryptography and are phishing-resistant by design.
-
-## MFA (Multi-Factor Authentication)
-
-Multi-Factor Authentication requires a user to present two or more independent verification factors before being granted access. Factors are typically categorized as something you *know* (e.g. a password or PIN), something you *have* (e.g. a TOTP authenticator app or hardware key), and something you *are* (e.g. a biometric). Requiring multiple factors significantly reduces the risk of account compromise from stolen credentials.
-
-## OTP (One-Time Password)
-
-A One-Time Password is a temporary, single-use code delivered out-of-band (typically via email or SMS) that authenticates a user without requiring a traditional password. Because each code is valid for only a short window and cannot be reused, OTPs provide a simple form of passwordless or second-factor authentication.
-
-## Passkey
-
-A passkey is a FIDO2 credential that replaces a traditional password. It is bound to a specific device (or synced across a user's devices via a platform credential manager) and is unlocked locally using biometrics or a PIN. The private key never leaves the device, making passkeys resistant to phishing and server-side credential theft.
-
-## Recovery Code
-
-A recovery code is a one-time backup code generated at enrollment time and stored securely by the user. It can be used to regain account access when primary authenticators (such as a TOTP app or passkey device) are unavailable. Each code is valid for a single use only.
-
-## Space (User Management)
-
-In Duende User Management, a *space* is the fundamental isolation unit. Each space has its own isolated user store, configuration, and authentication settings. This enables deployments where users, roles, and groups in one space are completely separated from those in another. A typical use case is supporting multiple tenants in a single deployment.
-
-## Subject ID
-
-A Subject ID (`sub`) is a stable, unique identifier assigned to a user within the system. It is analogous to, and typically maps directly to, the `sub` claim in OpenID Connect tokens. The Subject ID remains constant across sessions and should be used as the canonical reference to a user rather than mutable attributes such as username or email address.
-
-## TOTP (Time-Based One-Time Password)
-
-A Time-Based One-Time Password is a short-lived numeric code generated by an authenticator app (e.g. Google Authenticator, Microsoft Authenticator) according to [RFC 6238](https://www.rfc-editor.org/rfc/rfc6238). The code is derived from a shared secret and the current time, and is typically valid for 30 seconds. TOTP is widely used as a second factor in MFA flows.
-
-## WebAuthn (Web Authentication)
-
-WebAuthn is the [W3C Web Authentication standard](https://www.w3.org/TR/webauthn/) that defines a browser API for creating and using public-key credentials. It is the web-facing component of FIDO2. Relying parties (web applications) use WebAuthn to register and authenticate users with device-bound or synced credentials (passkeys), hardware security keys, or platform authenticators, all without transmitting a password.
-
-## Standard Developer Support
+### Standard Developer Support
 
 Online [developer community forum](https://github.com/DuendeSoftware/community/discussions) for Duende Software product
 issues and bugs.
 
-<LinkCard
-  description="Learn more about the Duende Developer Community"
-  href="https://github.com/DuendeSoftware/community/discussions"
-  title="Duende Developer Community"
-  _target="_blank"
-/>
+<CardGrid>
+  <LinkCard
+    description="Learn more about the Duende Developer Community"
+    href="https://github.com/DuendeSoftware/community/discussions"
+    title="Duende Developer Community"
+    target="_blank"
+  />
+  <LinkCard
+    description="Learn more about support options"
+    href="/general/support-and-issues/#support"
+    title="Support Options"
+  />
+</CardGrid>
 
-## Priority / Premium Developer Support
+### Priority / Premium Developer Support
 
 **License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 Helpdesk system with guaranteed response time for Duende Software product issues and bugs.
 
-<LinkCard
-  description="Download the Priority Support License PDF"
-  href="https://duendesoftware.com/license/PrioritySupportLicense.pdf"
-  title="More Details"
-  _target="_blank"
-/>
+<CardGrid>
+  <LinkCard
+    description="Download the Priority Support License PDF"
+    href="https://duendesoftware.com/license/PrioritySupportLicense.pdf"
+    title="More Details"
+    target="_blank"
+  />
+  <LinkCard
+    description="Learn more about support options"
+    href="/general/support-and-issues/#support"
+    title="Support Options"
+  />
+</CardGrid>

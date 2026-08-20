@@ -5,6 +5,7 @@ sidebar:
   order: 40
 redirect_from:
   - /identityserver/v7/configuration/dcr/reference/response/
+pagefind: false
 ---
 
 ## IDynamicClientRegistrationResponseGenerator

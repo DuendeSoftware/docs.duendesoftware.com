@@ -6,6 +6,7 @@ sidebar:
   order: 36
 redirect_from:
   - /identityserver/v7/reference/stores/cors_policy_service/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Stores.ICorsPolicyService

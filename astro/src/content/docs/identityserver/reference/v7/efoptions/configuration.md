@@ -5,6 +5,7 @@ sidebar:
   order: 20
 redirect_from:
   - /identityserver/v7/reference/efoptions/configuration/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions

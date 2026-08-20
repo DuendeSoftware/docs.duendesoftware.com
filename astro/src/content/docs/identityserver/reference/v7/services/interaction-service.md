@@ -7,6 +7,7 @@ sidebar:
   order: 60
 redirect_from:
   - /identityserver/v7/reference/services/interaction_service/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Services.IIdentityServerInteractionService

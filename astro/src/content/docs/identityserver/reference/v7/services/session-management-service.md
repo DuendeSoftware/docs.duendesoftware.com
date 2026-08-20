@@ -6,6 +6,7 @@ sidebar:
   order: 57
 redirect_from:
   - /identityserver/v7/reference/services/session_management_service/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Services.ISessionManagementService

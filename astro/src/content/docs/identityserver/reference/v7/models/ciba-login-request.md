@@ -5,6 +5,7 @@ sidebar:
   order: 80
 redirect_from:
   - /identityserver/v7/reference/models/ciba_login_request/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Models.BackchannelUserLoginRequest

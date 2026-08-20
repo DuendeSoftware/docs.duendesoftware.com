@@ -1,0 +1,96 @@
+---
+title: "Logging"
+description: "Documentation for logging configuration and usage in Duende IdentityServer, including log levels and Serilog setup"
+date: 2020-09-10T08:22:12+02:00
+sidebar:
+  order: 10
+redirect_from:
+  - /identityserver/v5/diagnostics/logging/
+  - /identityserver/v6/diagnostics/logging/
+  - /identityserver/v7/diagnostics/logging/
+---
+
+import { LinkCard } from '@astrojs/starlight/components';
+
+Duende IdentityServer uses the standard logging facilities provided by ASP.NET Core. You don't need to do any extra configuration to benefit from rich logging functionality.
+
+For log level definitions, environment guidance, and actionable next steps for each level, see the [Logging Fundamentals](/general/logging) guide.
+
+<LinkCard
+  title="Logging Fundamentals"
+  href="/general/logging"
+  description="Log level definitions, environment configuration table, and the log level anxiety spectrum."
+/>
+
+## Configuration
+
+Logs are written under the `Duende.IdentityServer` category. To enable detailed logging for IdentityServer, set that namespace in your `appsettings.json`:
+
+```json
+// appsettings.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Duende.IdentityServer": "Debug"
+    }
+  }
+}
+```
+
+:::note
+In production, logging can produce significant volume. It is recommended to default to `Warning` level and drop to `Information` or `Debug` only when actively investigating an issue.
+For high-level production instrumentation, see the [Events](/identityserver/diagnostics/events) system.
+:::
+
+### Filtering Exceptions
+
+The `LoggingOptions` class allows you to filter out exceptions that could lead to log bloat. For example, `OperationCanceledException` is extremely common in web applications (clients frequently abort HTTP requests) and is excluded by default.
+
+```csharp
+/// <summary>
+/// Called when the IdentityServer middleware detects an unhandled exception, and is used to determine if the exception is logged.
+/// Returns true to emit the log, false to suppress.
+/// </summary>
+public Func<HttpContext, Exception, bool> UnhandledExceptionLoggingFilter = (context, exception) =>
+{
+    var result = !(context.RequestAborted.IsCancellationRequested && exception is OperationCanceledException);
+    return result;
+};
+```
+
+To apply custom filtering, set the `UnhandledExceptionLoggingFilter` property on `LoggingOptions`:
+
+```csharp
+var isBuilder = builder.Services.AddIdentityServer(options =>
+    {
+        options.Logging.UnhandledExceptionLoggingFilter =
+            (ctx, ex) => {
+                if (ctx.User is { Identity.Name: "Jeff" })
+                {
+                    // Oh Jeff...
+                    return false;
+                }
+
+                if (ex.Message.Contains("Oops"))
+                {
+                    // ignore this exception
+                    return false;
+                }
+
+                // this is a real exception
+                return true;
+            };
+    })
+    .AddTestUsers(TestUsers.Users)
+    .AddLicenseSummary();
+```
+
+Returning `true` emits the log; returning `false` suppresses it.
+
+
+## Advanced Topics
+
+### OpenTelemetry
+
+Logs written to the standard `ILogger` system in .NET 8+ can be exported to OpenTelemetry traces at runtime. This helps visualize when a log statement occurred in relation to the entire request. Logs are augmented with trace IDs and correlated with traces. See [Logs in OpenTelemetry](/identityserver/diagnostics/otel#logs) for setup details.

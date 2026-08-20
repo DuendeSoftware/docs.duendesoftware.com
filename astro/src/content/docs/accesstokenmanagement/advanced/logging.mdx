@@ -1,0 +1,420 @@
+---
+title: "Logging"
+description: "Documentation for logging configuration and usage in Duende Access Token Management, including log levels and Serilog setup"
+date: 2026-01-19
+sidebar:
+  order: 50
+---
+
+import { LinkCard } from '@astrojs/starlight/components';
+import LogLevel from '~/components/LogLevel.astro';
+
+Duende Access Token Management uses the standard logging facilities provided by ASP.NET Core. You generally do not need to perform any extra configuration, as it will use the logging provider you have already configured for your application.
+
+For log level definitions, environment guidance, and actionable next steps for each level, see the [Logging Fundamentals](/general/logging) guide.
+
+<LinkCard
+  title="Logging Fundamentals"
+  href="/general/logging"
+  description="Log level definitions, environment configuration table, and the log level anxiety spectrum."
+/>
+
+## Configuration
+
+Logs are written under the `Duende.AccessTokenManagement` category. To control log output for Access Token Management specifically, set that namespace in your `appsettings.json`:
+
+```json
+// appsettings.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Duende.AccessTokenManagement": "Debug"
+    }
+  }
+}
+```
+
+:::tip
+The Microsoft [logging documentation](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging) has a good introduction to the built-in logging providers and how to configure them.
+:::
+
+## What Gets Logged
+
+Access Token Management emits structured log messages across several functional areas. Each message includes contextual parameters (client ID, URL, error details, etc.) for effective filtering and troubleshooting.
+
+### User Token Acquisition
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Cannot authenticate scheme: `{Scheme}` to acquire user access token</td>
+      <td>Authentication failed for the specified scheme</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Authentication result properties are null for scheme: `{Scheme}` after authentication</td>
+      <td>Successful authentication but no token properties returned</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Failed to get a UserToken because no tokens found in cookie properties</td>
+      <td>`SaveTokens` must be enabled for automatic token refresh</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Starting user token acquisition</td>
+      <td>Beginning the user token retrieval process</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Cannot retrieve token: No active user</td>
+      <td>No authenticated user context available</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Cannot retrieve token: No token data found in user token store for user `{User}`</td>
+      <td>User exists but has no stored tokens</td>
+    </tr>
+  </tbody>
+</table>
+
+### Token Refresh
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>No refresh token found in user token store for user `{User}` / resource `{Resource}`. Returning current access token</td>
+      <td>No refresh token available; returning existing access token</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>No access token found in user token store for user `{User}` / resource `{Resource}`. Trying to refresh</td>
+      <td>Missing access token; attempting refresh</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Token for user `{User}` will be refreshed. Expiration: `{Expiration}`, ForceRenewal: `{ForceRenewal}`</td>
+      <td>Token refresh triggered by expiration or explicit force</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>Refreshing access token using refresh token: hash=`{TokenHash}`</td>
+      <td>Executing refresh token grant (token hashed for security)</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Sending Refresh token request to: `{Url}`</td>
+      <td>HTTP request to token endpoint</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Returning refreshed token for user: `{User}`</td>
+      <td>Refresh succeeded</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Returning current token for user: `{User}`</td>
+      <td>Using cached token (still valid)</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Error refreshing access token. Error = `{Error}`, Description: `{ErrorDescription}`</td>
+      <td>Refresh failed with OAuth error</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Information" /></td>
+      <td>Access Token of type `{TokenType}` refreshed with expiration: `{Expiration}`</td>
+      <td>Successful refresh with new expiration</td>
+    </tr>
+  </tbody>
+</table>
+
+### Token Revocation
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>Revoking refresh token: hash=`{TokenHash}`</td>
+      <td>Starting revocation (token hashed)</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Sending Token revocation request to: `{Url}`</td>
+      <td>HTTP request to revocation endpoint</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Error revoking refresh token. Error = `{Error}`</td>
+      <td>Revocation failed</td>
+    </tr>
+  </tbody>
+</table>
+
+### Client Credentials
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Requesting client credentials access token at endpoint: `{Url}`</td>
+      <td>Starting client credentials grant</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Information" /></td>
+      <td>Client Credentials token of type `{TokenType}` for Client: `{ClientName}` retrieved with expiration `{Expiration}`</td>
+      <td>Token successfully obtained</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Error requesting access token for client `{ClientName}`. Error = `{Error}`, Description: `{ErrorDescription}`</td>
+      <td>Token request failed</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Caching access token for client: `{ClientName}`. Expiration: `{Expiration}`</td>
+      <td>Storing token in cache</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Cache hit for obtaining access token for client: `{ClientName}`</td>
+      <td>Using cached token</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Cache miss while retrieving access token for client: `{ClientName}`</td>
+      <td>No cached token; fetching new one</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Will not cache token result with error for `{ClientName}`. Error = `{Error}`, Description: `{ErrorDescription}`</td>
+      <td>Skipping cache for failed token</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>An exception has occurred while reading ClientCredentialsToken value from the cache for client `{ClientName}`</td>
+      <td>Cache read error; falling back to fetch</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Error trying to set token in cache for client `{ClientName}`</td>
+      <td>Cache write failed</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Error parsing cached access token for client `{ClientName}`</td>
+      <td>Cached value was corrupted</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Failed to obtain token from cache for client `{ClientName}` using cacheKey `{CacheKey}`. Will obtain new token</td>
+      <td>Cache retrieval failed; fetching new token</td>
+    </tr>
+  </tbody>
+</table>
+
+### Request Handler
+
+These messages are emitted by `AccessTokenRequestHandler` when sending HTTP requests with tokens:
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Sending Access token of type `{TokenType}` to endpoint: `{Url}`</td>
+      <td>Attaching token to outgoing request</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Failed to obtain an access token while sending the request. Error: `{Error}`, ErrorDescription `{ErrorDescription}`</td>
+      <td>Could not get token; request sent without authentication</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>While sending a request, received UnAuthorized after acquiring a new access token</td>
+      <td>Fresh token was rejected by the resource server</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Token not accepted while sending request. Retrying with new access token</td>
+      <td>401 response triggered token refresh and retry</td>
+    </tr>
+  </tbody>
+</table>
+
+### DPoP (Demonstrating Proof-of-Possession)
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Creating DPoP proof token for token request</td>
+      <td>Generating DPoP proof for token endpoint</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Sending DPoP proof token in request to endpoint: `{Url}`</td>
+      <td>Attaching DPoP proof to request</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>Failed to create DPoP proof token for request to endpoint: `{Url}`</td>
+      <td>DPoP proof generation failed; falling back to Bearer</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>The authorization server has supplied a new nonce on a successful response</td>
+      <td>Server-provided nonce stored for future requests</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>DPoP nonce error: `{Error}`. Retrying using new nonce</td>
+      <td>Retrying with server-provided nonce</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Debug" /></td>
+      <td>DPoP error `{Error}` during token refresh. Retrying with server nonce</td>
+      <td>Nonce error during refresh; retrying</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Failed to get DPoP Nonce because server didn't respond with ok. StatusCode was: `{StatusCode}`</td>
+      <td>Nonce request failed</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>Cache hit for DPoP nonce for URL: `{Url}`, method: `{Method}`</td>
+      <td>Using cached nonce</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>Writing DPoP nonce to Cache for URL: `{Url}`, method: `{Method}`. Expiration: `{Expiration}`</td>
+      <td>Storing nonce in cache</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Trace" /></td>
+      <td>Cache miss for DPoP nonce for URL: `{Url}`, method: `{Method}`</td>
+      <td>No cached nonce available</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Failed to parse the cached Nonce `{Value}` for URL: `{Url}`, method: `{Method}`. Error: `{Error}`</td>
+      <td>Cached nonce was invalid</td>
+    </tr>
+  </tbody>
+</table>
+
+### Key Parsing
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Failed to parse JsonWebKey</td>
+      <td>JWK parsing failed</td>
+    </tr>
+    <tr>
+      <td><LogLevel level="Warning" /></td>
+      <td>Failed to create thumbprint from JSON web key</td>
+      <td>Could not compute key thumbprint</td>
+    </tr>
+  </tbody>
+</table>
+
+## OpenTelemetry Integration
+
+Access Token Management supports [OpenTelemetry](https://opentelemetry.io/) for distributed tracing and metrics collection.
+
+### Tracing
+
+The library emits traces under the activity source `Duende.AccessTokenManagement`. Add this to your OpenTelemetry configuration:
+
+```csharp
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing
+        .AddSource("Duende.AccessTokenManagement")
+        // ... other sources
+    );
+```
+
+**Activity spans:**
+
+| Name | Description |
+|------|-------------|
+| `Duende.AccessTokenManagement.AcquiringToken` | Wraps the entire token acquisition operation |
+
+### Metrics
+
+Metrics are exposed under the meter `Duende.AccessTokenManagement`:
+
+```csharp
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(metrics => metrics
+        .AddMeter("Duende.AccessTokenManagement")
+        // ... other meters
+    );
+```
+
+**Available counters:**
+
+| Counter | Description | Tags |
+|---------|-------------|------|
+| `access_token_used` | Number of times an access token was used | `ClientId`, `TokenType` |
+| `token_retrieved` | Number of times a token was retrieved from the token endpoint | `ClientId`, `TokenType` |
+| `token_retrieval_failed` | Number of times token retrieval failed | `ClientId`, `TokenType`, `Error` |
+| `token_send_retry` | Number of times a token was rejected and retried | `ClientId` |
+| `dpop_nonce_error_retry` | Number of times a DPoP nonce error triggered a retry | `ClientId`, `Error` |
+
+The `TokenType` tag distinguishes between `ClientCredentials` and `User` token flows.

@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 The client library for the [OAuth 2.0 device
-flow](https://tools.ietf.org/html/rfc7662) device authorization is
+flow](https://tools.ietf.org/html/rfc8628) device authorization is
 provided as an extension method for `HttpClient`.
 
 The following code sends a device authorization request:

@@ -168,6 +168,10 @@ The following events are raised by SAML components:
 
   Raised when validation of an incoming SAML logout request fails.
 
+* **`InvalidSamlServiceProviderConfigurationEvent`**
+
+  Raised when a SAML Service Provider's configuration fails runtime validation (performed by [`ISamlServiceProviderConfigurationValidator`](/identityserver/saml/extensibility#isamlserviceproviderconfigurationvalidator)). Includes the SP's `EntityId` and `DisplayName`.
+
 ### Custom events
 
 You can create your own events and emit them via our infrastructure.

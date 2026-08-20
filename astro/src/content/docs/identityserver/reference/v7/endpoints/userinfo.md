@@ -7,6 +7,7 @@ sidebar:
   order: 5
 redirect_from:
   - /identityserver/v7/reference/endpoints/userinfo/
+pagefind: false
 ---
 
 The UserInfo endpoint can be used to retrieve claims about a user (

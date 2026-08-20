@@ -4,7 +4,7 @@ description: Extensibility interfaces for customizing SAML 2.0 Identity Provider
 date: 2026-05-25
 sidebar:
   label: Extensibility
-  order: 40
+  order: 32
 tableOfContents:
   minHeadingLevel: 2
   maxHeadingLevel: 2
@@ -218,7 +218,13 @@ public interface ISaml2SloResponseGenerator
 
 ### When to Use
 
-Override `ISaml2SloResponseGenerator` if you are not using the built-in EF-based operational store. The in-memory version is only suitable for development/test scenarios and not for production.
+Override `ISaml2SloResponseGenerator` to customize the SAML `LogoutResponse` XML that IdentityServer sends back to the SP that initiated the SLO flow. Common reasons include:
+
+- Changing the response status code or sub-status codes based on custom business logic
+- Adding SAML extensions to the `LogoutResponse` element
+- Altering how partial-logout scenarios are reported (e.g., always returning success even when some SPs failed to respond)
+
+This interface controls **response generation**, not persistence. To customize how logout session state is stored, see [`ISamlLogoutSessionStore`](#isamllogoutsessionstore).
 
 ### Registration
 
@@ -244,8 +250,7 @@ instances.
 IdentityServer automatically registers an EF Core-backed implementation. No additional configuration
 is needed.
 
-**Custom implementation:** You can register your own implementation using the `AddSamlLogoutSessionStore<T>()` extension
-method on the IdentityServer builder. Use this when you need a specific persistence backend such as
+**Custom implementation:** Register your own implementation in the DI container. Use this when you need a specific persistence backend such as
 Redis or DynamoDB, or when you're not using the EF operational store.
 
 Expired logout sessions are removed automatically by `TokenCleanupService`. The lifetime of each
@@ -303,9 +308,9 @@ You can register your custom store at startup:
 
 ```csharp
 // Program.cs
+builder.Services.AddScoped<ISamlLogoutSessionStore, CustomDistributedSamlLogoutSessionStore>();
 builder.Services.AddIdentityServer()
-    .AddSaml()
-    .AddSamlLogoutSessionStore<CustomDistributedSamlLogoutSessionStore>();
+    .AddSaml();
 ```
 
 ---
@@ -600,6 +605,7 @@ public interface ISamlSigningService
 {
     Task<X509Certificate2> GetSigningCertificateAsync(CancellationToken ct);
     Task<string> GetSigningCertificateBase64Async(CancellationToken ct);
+    Task<IReadOnlyList<X509Certificate2>> GetAllSigningCertificatesAsync(CancellationToken ct);
 }
 ```
 
@@ -608,6 +614,9 @@ public interface ISamlSigningService
   the credential is not an X.509 certificate or RSA key, or if the certificate has no private key.
 * `GetSigningCertificateBase64Async` - returns the base64-encoded DER representation of the
   certificate, used when embedding the certificate in SAML metadata key descriptors.
+* `GetAllSigningCertificatesAsync` - returns all available signing certificates, including any
+  previously rotated keys that are still valid. Used by the metadata generator to publish multiple
+  key descriptors, allowing Service Providers to validate signatures during key rollover periods.
 
 The default implementation derives the certificate from IdentityServer's configured signing keys.
 When the active signing key is an `X509SecurityKey`, it uses the certificate directly. When the
@@ -801,7 +810,7 @@ Several implementations are available:
   `Duende.IdentityServer.EntityFramework`. Use this for production. The operational store
   registration replaces the in-memory fallback. No extra configuration is needed.
 * **Custom**: register your own implementation for a specific persistence backend (Redis,
-  DynamoDB, etc.) by adding it to the service collection before calling `AddSaml()`.
+  DynamoDB, etc.) in the DI container.
 
 State is retained after a successful callback to allow browser retries (for example, if the user
 navigates back). The `TokenCleanupService` automatically removes expired sign-in state entries
@@ -903,6 +912,43 @@ public class CustomDistributedSamlSigninStateStore : ISamlSigninStateStore
 }
 ```
 
+:::tip
+The example above uses `JsonSerializer` directly for simplicity. For production use, consider injecting [`ISamlSigninStateSerializer`](#isamlsigninstateserializer) instead, which provides the same serialization logic used by the built-in EF Core store. Note that the default serializer ignores the `Extensions` property — if you need to persist custom extension data, you'll need to implement a custom serializer.
+:::
+
+---
+
+## ISamlSigninStateSerializer
+
+`ISamlSigninStateSerializer` handles serialization and deserialization of `SamlAuthenticationState` for persistence. The default implementation is used by the Entity Framework Core store, but you can replace it to customize how SAML authentication state is serialized — for example, to support custom `Extensions` content or to use a different serialization format.
+
+```csharp
+// ISamlSigninStateSerializer.cs
+public interface ISamlSigninStateSerializer
+{
+    string Serialize(SamlAuthenticationState state);
+    SamlAuthenticationState Deserialize(string serializedState);
+}
+```
+
+* `Serialize`: converts a `SamlAuthenticationState` instance to a string representation for storage.
+* `Deserialize`: reconstructs a `SamlAuthenticationState` from its stored string representation.
+
+### When to Use
+
+Override `ISamlSigninStateSerializer` when:
+
+- You need to persist custom data stored in the `Extensions` property of `SamlAuthenticationState` and the default JSON serialization doesn't handle it correctly.
+- You want to use a different serialization format (e.g., binary, MessagePack) for performance or size reasons.
+- You're building a custom `ISamlSigninStateStore` and want to reuse the same serialization logic as the built-in EF store rather than writing your own.
+
+### Registration
+
+```csharp
+// Program.cs
+builder.Services.AddSingleton<ISamlSigninStateSerializer, CustomSamlSigninStateSerializer>();
+```
+
 ---
 
 ## ISamlServiceProviderConfigurationValidator
@@ -943,8 +989,7 @@ conventions on EntityIds, restrict which scopes are allowed, or apply business-s
 
 ### Registration
 
-The default is registered with `TryAddScoped`, so register your implementation as a scoped service
-before calling `AddSaml()`:
+The default is registered with `TryAddScoped`, so your implementation takes precedence when registered as a scoped service:
 
 ```csharp
 // Program.cs

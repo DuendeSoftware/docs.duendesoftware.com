@@ -15,7 +15,7 @@ Models the information to initiate a user login request for [CIBA](/identityserv
 
 * **`InternalId`**
 
-  Ihe identifier of the request in the store.
+  The identifier of the request in the store.
 
 * **`Subject`**
 
@@ -48,3 +48,7 @@ Models the information to initiate a user login request for [CIBA](/identityserv
 * **`ValidatedResources`**
 
   The validated resources (i.e. scopes) used in the request.
+
+* **`Properties`**
+
+  A dictionary of custom properties associated with this request. These properties are by default copied from the validated custom request parameters.

@@ -74,6 +74,11 @@ public class BrowserResult : Result
 }
 ```
 
+The `BrowserResult` class inherits from `Result`, which provides error handling properties:
+- `IsError` - Indicates whether the browser interaction resulted in an error
+- `Error` - The error code if an error occurred
+- `ErrorDescription` - A human-readable description of the error
+
 :::note[Browser is platform-specific]
 The `IBrowser` implementation is specific to the platform and environment and must be provided by the
 host application. For example, a Windows-specific implementation will not work within a macOS, iOS, Android, or Linux environment.
@@ -103,7 +108,68 @@ Once the `IBrowser` is configured, the `LoginAsync` method can be invoked to sta
 var result = await client.LoginAsync();
 ```
 
-Setting the `Browser` property reduces the need to process browser respones and to handle the `BrowserResult` directly. When using this automatic mode, the `LoginAsync` method will return a
-[`LoginResult`](https://github.com/DuendeSoftware/foss/blob/19370c6d4820a684d41d1d40b8192ee8b873b8f0/identity-model-oidc-client/src/IdentityModel.OidcClient/LoginResult.cs) which will contain a `ClaimsPrincipal` with the user's claims along with the `IdentityToken` and `AccessToken`.
+## Customizing the Login Request
 
+You can customize the login behavior by passing a `LoginRequest` object to `LoginAsync`:
+
+```csharp
+var result = await client.LoginAsync(new LoginRequest
+{
+    BrowserDisplayMode = DisplayMode.Hidden,
+    BrowserTimeout = 30,
+    FrontChannelExtraParameters = new Parameters
+    {
+        { "acr_values", "mfa" },
+        { "login_hint", "user@example.com" }
+    }
+});
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `BrowserDisplayMode` | `DisplayMode` | Controls browser visibility (`Visible` or `Hidden`) |
+| `BrowserTimeout` | `int` | Timeout in seconds for the browser interaction |
+| `FrontChannelExtraParameters` | `Parameters` | Extra parameters for the authorization endpoint |
+| `BackChannelExtraParameters` | `Parameters` | Extra parameters for the token endpoint |
+
+Setting the `Browser` property reduces the need to process browser respones and to handle the `BrowserResult` directly. When using this automatic mode, the `LoginAsync` method will return a
+[`LoginResult`](https://github.com/DuendeSoftware/foss/blob/main/identity-model-oidc-client/src/IdentityModel.OidcClient/LoginResult.cs) which will contain a `ClaimsPrincipal` with the user's claims along with the `IdentityToken` and `AccessToken`.
+
+## LoginResult Properties
+
+The `LoginResult` class inherits from `Result` (providing `IsError`, `Error`, `ErrorDescription`) and exposes the following properties:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `User` | `ClaimsPrincipal` | The authenticated user's claims principal |
+| `AccessToken` | `string` | The access token for calling protected APIs |
+| `IdentityToken` | `string` | The identity token containing user claims |
+| `RefreshToken` | `string` | The refresh token (if requested via `offline_access` scope) |
+| `AccessTokenExpiration` | `DateTimeOffset` | When the access token expires |
+| `AuthenticationTime` | `DateTimeOffset?` | When the user authenticated at the IdP |
+| `RefreshTokenHandler` | `DelegatingHandler` | Pre-configured handler for automatic token refresh |
+| `TokenResponse` | `TokenResponse` | The raw token endpoint response |
+
+### Example Usage
+
+```csharp
+var result = await client.LoginAsync();
+
+if (result.IsError)
+{
+    Console.WriteLine($"Error: {result.Error} - {result.ErrorDescription}");
+    return;
+}
+
+// Access user claims
+var name = result.User.FindFirst("name")?.Value;
+Console.WriteLine($"Hello, {name}!");
+
+// Use access token for API calls
+var apiClient = new HttpClient();
+apiClient.SetBearerToken(result.AccessToken);
+
+// Or use the pre-configured refresh handler for automatic token refresh
+var apiClientWithRefresh = new HttpClient(result.RefreshTokenHandler);
+```
 

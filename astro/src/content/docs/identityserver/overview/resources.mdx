@@ -13,7 +13,15 @@ redirect_from:
   - /identityserver/v7/overview/resources/
 ---
 
-import { LinkCard } from "@astrojs/starlight/components";
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+
+import oauthGoodParts from "~/assets/resources/oauth-good-parts.jpg";
+import securingSpas from "~/assets/resources/securing-spas-bff.jpg";
+import tokenMgmt from "~/assets/resources/automated-token-mgmt.jpg";
+import aspnetAuth from "~/assets/resources/aspnet-auth-intro.jpg";
+import externalProviders1 from "~/assets/resources/external-providers-1.jpg";
+import externalProviders2 from "~/assets/resources/external-providers-2.jpg";
+import authzModern from "~/assets/resources/authz-modern-apps.jpg";
 
 ## Demo Server
 
@@ -32,17 +40,70 @@ On the main page you can find instructions on how to configure your client and h
 
 ## OAuth and OIDC Fundamentals
 
-- [OAuth the good Parts (video from NDC Porto 2022)](https://www.youtube.com/watch?v=Ps8ep-glDfc)
-- [Securing SPAs and Blazor Applications using the BFF (video from NDC Porto 2022)](https://www.youtube.com/watch?v=xzRhabmlc8M)
-- [Automated OAuth Access Token Management for .NET Workers and ASP.NET Web Applications](https://www.youtube.com/watch?v=zr-LAYg5BCE)
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+  <figure style="margin: 0;">
+    <a href="https://www.youtube.com/watch?v=Ps8ep-glDfc" target="_blank">
+      <img src={oauthGoodParts.src} alt="OAuth the Good Parts" style="border-radius: 8px; width: 100%;" />
+    </a>
+    <figcaption style="margin-top: 0.5rem; font-weight: 600;"><a href="https://www.youtube.com/watch?v=Ps8ep-glDfc" target="_blank">OAuth the Good Parts</a></figcaption>
+    <small>July 2022 — NDC Porto</small>
+  </figure>
+  <figure style="margin: 0;">
+    <a href="https://www.youtube.com/watch?v=xzRhabmlc8M" target="_blank">
+      <img src={securingSpas.src} alt="Securing SPAs and Blazor with BFF" style="border-radius: 8px; width: 100%;" />
+    </a>
+    <figcaption style="margin-top: 0.5rem; font-weight: 600;"><a href="https://www.youtube.com/watch?v=xzRhabmlc8M" target="_blank">Securing SPAs and Blazor with BFF</a></figcaption>
+    <small>July 2022 — NDC Porto</small>
+  </figure>
+  <figure style="margin: 0;">
+    <a href="https://www.youtube.com/watch?v=zr-LAYg5BCE" target="_blank">
+      <img src={tokenMgmt.src} alt="Automated OAuth Token Management" style="border-radius: 8px; width: 100%;" />
+    </a>
+    <figcaption style="margin-top: 0.5rem; font-weight: 600;"><a href="https://www.youtube.com/watch?v=zr-LAYg5BCE" target="_blank">Automated OAuth Token Management</a></figcaption>
+    <small>November 2022 — .NET Workers and ASP.NET Web Apps</small>
+  </figure>
+</div>
 
 ## ASP.NET Security
 
-- [Introduction to ASP.NET Core Authentication and Authorization](https://www.youtube.com/watch?v=02Yh3sxzAYI)
-- [ASP.NET Cookie Authentication Documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie)
-- [Supporting External Authentication Providers Part 1](https://www.youtube.com/watch?v=HH_tw7dFhpg)
-- [Supporting External Authentication Providers Part 2](https://www.youtube.com/watch?v=daeVaU5CmPw)
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+  <figure style="margin: 0;">
+    <a href="https://www.youtube.com/watch?v=02Yh3sxzAYI" target="_blank">
+      <img src={aspnetAuth.src} alt="ASP.NET Core Authentication & Authorization" style="border-radius: 8px; width: 100%;" />
+    </a>
+    <figcaption style="margin-top: 0.5rem; font-weight: 600;"><a href="https://www.youtube.com/watch?v=02Yh3sxzAYI" target="_blank">ASP.NET Core Authentication & Authorization</a></figcaption>
+    <small>October 2022 — Introduction</small>
+  </figure>
+  <figure style="margin: 0;">
+    <a href="https://www.youtube.com/watch?v=HH_tw7dFhpg" target="_blank">
+      <img src={externalProviders1.src} alt="External Authentication Providers Part 1" style="border-radius: 8px; width: 100%;" />
+    </a>
+    <figcaption style="margin-top: 0.5rem; font-weight: 600;"><a href="https://www.youtube.com/watch?v=HH_tw7dFhpg" target="_blank">External Authentication Providers (Part 1)</a></figcaption>
+    <small>November 2022</small>
+  </figure>
+  <figure style="margin: 0;">
+    <a href="https://www.youtube.com/watch?v=daeVaU5CmPw" target="_blank">
+      <img src={externalProviders2.src} alt="External Authentication Providers Part 2" style="border-radius: 8px; width: 100%;" />
+    </a>
+    <figcaption style="margin-top: 0.5rem; font-weight: 600;"><a href="https://www.youtube.com/watch?v=daeVaU5CmPw" target="_blank">External Authentication Providers (Part 2)</a></figcaption>
+    <small>November 2022</small>
+  </figure>
+</div>
+
+<LinkCard
+  href="https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie"
+  title="ASP.NET Cookie Authentication"
+  description="Microsoft documentation."
+/>
 
 ## End-User Authorization
 
-- [Authorization for Modern Applications (video from DevConf 2018)](https://www.youtube.com/watch?v=Dlrf85NTuAU)
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+  <figure style="margin: 0;">
+    <a href="https://www.youtube.com/watch?v=Dlrf85NTuAU" target="_blank">
+      <img src={authzModern.src} alt="Authorization for Modern Applications" style="border-radius: 8px; width: 100%;" />
+    </a>
+    <figcaption style="margin-top: 0.5rem; font-weight: 600;"><a href="https://www.youtube.com/watch?v=Dlrf85NTuAU" target="_blank">Authorization for Modern Applications</a></figcaption>
+    <small>October 2018 — DevConf</small>
+  </figure>
+</div>

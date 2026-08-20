@@ -1,0 +1,79 @@
+---
+title: Duende IdentityModel OIDC Client Samples
+description: A collection of sample applications demonstrating how to use IdentityModel.OidcClient with various platforms and UI frameworks.
+sidebar:
+  label: Samples
+  order: 5
+redirect_from:
+  - /foss/identitymodel.oidcclient/samples/
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Samples of IdentityModel.OidcClient are available [on
+GitHub](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples). Our samples
+show how to use an OidcClient with a variety of platforms and UI tools.
+
+<CardGrid>
+  <LinkCard
+    href="https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/Maui"
+    title=".NET MAUI"
+    description="Mobile and desktop app using .NET MAUI."
+  />
+  <LinkCard
+    href="https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/Wpf"
+    title="WPF with System Browser"
+    description="WPF app using the system browser for login."
+  />
+  <LinkCard
+    href="https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/WpfWebView2"
+    title="WPF with Embedded Browser"
+    description="WPF app using an embedded WebView2 browser."
+  />
+  <LinkCard
+    href="https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/WinFormsWebView2"
+    title="WinForms with Embedded Browser"
+    description="WinForms app using an embedded WebView2 browser."
+  />
+  <LinkCard
+    href="https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/NetCoreConsoleClient"
+    title="Cross-Platform Console"
+    description="Console app using Kestrel for processing the callback."
+  />
+  <LinkCard
+    href="https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/HttpSysConsoleClient"
+    title="Windows Console (HttpListener)"
+    description="Console app using HttpListener (HTTP.sys wrapper)."
+  />
+  <LinkCard
+    href="https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/WindowsConsoleSystemBrowser"
+    title="Windows Console (Custom URI Schemes)"
+    description="Console app using custom URI schemes."
+  />
+</CardGrid>
+
+All samples use a [demo instance of Duende IdentityServer](https://demo.duendesoftware.com)
+as their OIDC Provider. You can see its [source code on GitHub](https://github.com/DuendeSoftware/demo.duendesoftware.com).
+
+You can log in with *alice/alice* or *bob/bob*
+
+## Additional Samples
+
+<CardGrid>
+  <LinkCard
+    href="https://github.com/peterhorsley/Unity3D.Authentication.Example"
+    title="Unity3D"
+    description="Community sample for Unity3D authentication."
+  />
+</CardGrid>
+
+## No Longer Maintained
+
+These samples are no longer maintained because their underlying technology is no
+longer supported.
+
+- [UWP](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/uwp/Uwp)
+- [Xamarin](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/xamarin/XamarinAndroidClient)
+- [Xamarin Forms](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/xamarin/XamarinForms)
+- [Xamarin iOS - AuthenticationServices](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/xamarin/iOS_AuthenticationServices)
+- [Xamarin iOS - SafariServices](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/archived/xamarin/iOS_SafariServices)

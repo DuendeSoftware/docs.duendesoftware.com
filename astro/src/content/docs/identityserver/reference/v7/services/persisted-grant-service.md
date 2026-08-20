@@ -6,6 +6,7 @@ sidebar:
   order: 43
 redirect_from:
   - /identityserver/v7/reference/services/persisted_grant_service/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Services.IPersistedGrantService

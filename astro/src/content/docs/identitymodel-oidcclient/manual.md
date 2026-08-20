@@ -36,6 +36,15 @@ var client = new OidcClient(options);
 var state = await client.PrepareLoginAsync();
 ```
 
+The `state` object is of type `AuthorizeState` and contains everything you need to perform the browser interaction:
+
+| Property | Description |
+|----------|-------------|
+| `StartUrl` | The fully-formed authorization URL to navigate the browser to |
+| `State` | The state parameter for CSRF protection (must match on callback) |
+| `CodeVerifier` | The PKCE code verifier (needed for token exchange) |
+| `RedirectUri` | The redirect URI where the browser will return |
+
 When the browser work is done, `OidcClient` can take over to process the
 response, get the access/refresh tokens, contact userinfo endpoint
 etc.:
@@ -47,4 +56,4 @@ var result = await client.ProcessResponseAsync(data, state);
 When using this manual mode, and processing the response, the `ProcessResponseAsync` method will return a
 [`LoginResult`][login-result-cs] which will contain a `ClaimsPrincipal` with the user's claims along with the `IdentityToken` and `AccessToken`.
 
-[login-result-cs]: https://github.com/DuendeSoftware/foss/blob/19370c6d4820a684d41d1d40b8192ee8b873b8f0/identity-model-oidc-client/src/IdentityModel.OidcClient/LoginResult.cs
+[login-result-cs]: https://github.com/DuendeSoftware/foss/blob/main/identity-model-oidc-client/src/IdentityModel.OidcClient/LoginResult.cs

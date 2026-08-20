@@ -6,6 +6,7 @@ sidebar:
 redirect_from:
   - /identityserver/v7/configuration/dcr/reference/validation/
   - /identityserver/v7/configuration/dcr/reference/
+pagefind: false
 ---
 
 ## IDynamicClientRegistrationValidator

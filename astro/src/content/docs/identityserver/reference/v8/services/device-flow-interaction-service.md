@@ -32,13 +32,13 @@ All async methods accept a `CancellationToken ct` parameter.
 
 ## DeviceFlowAuthorizationRequest
 
-* **`ClientId`**
+* **`Client`**
 
-  The client identifier that initiated the request.
+  The client that initiated the device authorization request.
 
-* **`ScopesRequested`**
+* **`ValidatedResources`**
 
-  The scopes requested from the authorization request.
+  The validated resources (scopes and resource indicators) requested by the client.
 
 ## DeviceFlowInteractionResult
 
@@ -46,6 +46,14 @@ All async methods accept a `CancellationToken ct` parameter.
 
   Specifies if the authorization request errored.
 
+* **`IsAccessDenied`**
+
+  Gets or sets a value indicating whether the user denied access.
+
 * **`ErrorDescription`**
 
   Error description upon failure.
+
+* **`Failure(string errorDescription = null)`** *(static method)*
+
+  Creates a `DeviceFlowInteractionResult` indicating failure with an optional error description.

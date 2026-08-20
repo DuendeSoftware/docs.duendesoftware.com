@@ -24,9 +24,10 @@ with trial mode available for development and testing.
 
 ## IdentityServer
 
-Duende IdentityServer requires a license for production use, with three editions available (Starter, Business, and
-Enterprise) that offer various features based on organizational needs. A [community edition](https://duendesoftware.com/products/communityedition/)
-is available as well.
+Duende IdentityServer requires a license for production use, with plans available that offer various features based on organizational needs. A [community edition](https://duendesoftware.com/products/communityedition/)
+is also available.
+
+For some longer-term customers, we still honor customers continuing on our previous Starter, Business and Enterprise licenses. 
 
 :::note[Free for development]
 IdentityServer is [free](#trial-mode) for development, testing and personal projects, but production use
@@ -104,22 +105,34 @@ against the current configuration and logged any discrepancies it found.
 
 #### Runtime Validation
 
-IdentityServer never blocks or disables features at runtime based on licensing. A licensing oversight
-should never cause an outage. The runtime validator only logs; it does not prevent IdentityServer from functioning.
+IdentityServer validates feature usage based on licensing at runtime. To avoid unnecessary downtime, 
+the runtime validator prefers to log a message. It will only throw an exception for certain features.
 
 The following features are validated at runtime. If you use one of them without the
 required license entitlement, IdentityServer logs a warning (rate-limited to once every
 5 minutes per feature):
 
-* [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
 * [Demonstrating Proof-of-Possession (DPoP)](/identityserver/tokens/pop.md)
 * [Resource Isolation](/identityserver/fundamentals/resources/isolation/index.md)
 * [Client Initiated Backchannel Authentication (CIBA)](/identityserver/ui/ciba.md)
 * [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.md)
-* [Automatic Key Management](/identityserver/fundamentals/key-management.md)
 * [Financial-Grade Security and Conformance Report](/identityserver/diagnostics/conformance-report.md)
-* [SAML IdP and SAML Service Provider](/identityserver/saml/index.md)
 * [User Management](/identityserver/usermanagement/index.mdx)
+
+Some features do require a license with the proper entitlement(s). If you use one of the following features
+without the required license entitlement, IdentityServer throws an exception during startup validation. 
+This only applies when a license is present. If you do not have a license configured because you are 
+developing locally, or IdentityServer is deployed to a non-production environment, a log message will be output
+instead.
+
+* [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
+* [Automatic Key Management](/identityserver/fundamentals/key-management.md)
+* [SAML IdP and SAML Service Provider](/identityserver/saml/index.mdx)
+
+:::note
+When developing, you may use your production license key in _any_
+environment as [detailed below](#using-a-license-in-non-production-environments).
+:::
 
 For quantized limits like client count and issuer count, IdentityServer logs a warning
 when you exceed your licensed limit but stay within the grace threshold. If you exceed
@@ -153,15 +166,6 @@ Please start a conversation with us: https://duende.link/l/contact
 
 These warnings are rate-limited to once per five minutes per feature, so they won't flood your logs.
 You can silence them entirely by configuring a license key, even in non-production environments.
-
-:::note
-When running non-production environments (development, test, or QA) without a license key, you can use your
-production license key to suppress the warnings. IdentityServer is [free](#trial-mode) for development, testing,
-and personal projects, and using your production license in these environments is fully supported.
-
-If you have feedback on trial mode, or specific use cases where you prefer other options, please 
-[open a community discussion](https://github.com/DuendeSoftware/community/discussions).
-:::
 
 :::note[IdentityServer 7 and earlier]
 In IdentityServer 7 and earlier, running without a license was called Trial Mode and was limited to 500 protocol requests.
@@ -215,6 +219,19 @@ In IdentityServer 7 and earlier, log severity depended on both the nature of the
 
 \* as determined by `IHostEnvironment.IsDevelopment()`
 :::
+
+#### Using a License in Non-Production Environments
+
+When running in non-production environments (development, test, QA, or anywhere else) without a license key, you can use your
+production license key to suppress the warnings. IdentityServer is [free](#trial-mode) for development, testing,
+and personal projects. Using your production license in these environments is fully supported.
+
+Using the production license key in non-production environments can also help ensure that a feature is not accidentally being used
+when the license does not allow for it. For example, if attempting to use the Server-Side Sessions feature but the production license 
+does not have the entitlement for it, an exception will be seen in the lower environments before reaching production.
+
+If you have feedback on trial mode, or specific use cases where you prefer other options, please 
+[open a community discussion](https://github.com/DuendeSoftware/community/discussions).
 
 ## BFF Security Framework
 

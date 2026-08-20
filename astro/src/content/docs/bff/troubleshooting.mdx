@@ -5,11 +5,13 @@ sidebar:
   order: 90
 ---
 
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
 This page covers the most common problems encountered when building and operating a Duende BFF application. Each scenario is described in **symptom → cause → solution** format.
 
 ---
 
-### Symptom: Anti-Forgery Token Validation Failures — `401 Unauthorized` with missing `X-CSRF` header
+### Anti-Forgery Token Validation Failures
 
 **Cause:** The BFF enforces the presence of a custom `X-CSRF: 1` header on all API endpoints decorated with `.AsBffApiEndpoint()`. Requests that do not include this header are rejected.
 
@@ -41,7 +43,7 @@ If `UseBff()` is placed after `UseAuthorization()`, anti-forgery enforcement is 
 
 ---
 
-### Symptom: CORS Errors With BFF Endpoints — failed `OPTIONS` preflight on `/bff/user` or API endpoints
+### CORS Errors With BFF Endpoints
 
 **Cause:** The BFF and the SPA are on different origins. CORS errors here are usually a sign that the BFF and frontend are not being served from the same origin, which defeats part of the BFF pattern's security model.
 
@@ -71,7 +73,7 @@ Whenever possible, serve the SPA's `index.html` from the BFF host itself. This m
 
 ---
 
-### Symptom: Session Expiration Causing Silent Failures — SPA stops receiving data, `401` with no user-facing error
+### Session Expiration Causing Silent Failures
 
 **Cause:** The BFF session (stored in the authentication cookie) has expired. BFF API endpoints return `401` instead of a redirect when the session expires, so the SPA must handle this explicitly.
 
@@ -102,7 +104,7 @@ Also consider:
 
 ---
 
-### Symptom: YARP Proxy Misconfiguration — proxied requests return `404`, missing token, or bypass anti-forgery
+### YARP Proxy Misconfiguration
 
 **Cause:** Common YARP configuration mistakes include:
 - Missing `UseAntiforgeryCheck()` in the `MapReverseProxy` pipeline.
@@ -141,7 +143,7 @@ A typo in a YARP metadata key fails silently — no token is attached and no ant
 
 ---
 
-### Symptom: Blazor WASM — Token Not Available in Components, exception or null when calling `GetUserAccessTokenAsync`
+### Blazor WASM — Token Not Available in Components
 
 **Cause:** In Blazor WASM, `HttpContext` is not available. Access tokens are managed server-side by the BFF host and must never be exposed to client-side components.
 
@@ -164,7 +166,7 @@ Never attempt to retrieve an access token in a Blazor WASM component and pass it
 
 ---
 
-### Symptom: Silent Login Failures — `prompt=none` fails in Safari/Firefox, users unexpectedly logged out
+### Silent Login Failures
 
 **Cause:** Modern browsers block third-party cookies. The `prompt=none` / silent renew flow in traditional SPAs relies on an iframe that sends a cookie to the identity provider — this breaks when third-party cookies are blocked.
 
@@ -185,7 +187,7 @@ See [Third-Party Cookies](/bff/architecture/third-party-cookies/) for a deeper d
 
 ---
 
-### Symptom: 302 Redirect Instead of 401 on API Endpoints — SPA receives HTML instead of JSON
+### 302 Redirect Instead of 401 on API Endpoints
 
 **Cause:** The API endpoint is not marked as a BFF API endpoint, so ASP.NET Core's default challenge behavior (302 redirect) applies instead of BFF's 401 response.
 
@@ -209,7 +211,7 @@ This instructs the BFF middleware to return `401` for unauthenticated requests r
 
 ---
 
-### Symptom: Cookie Size Exceeding Browser Limits — users with many roles cannot log in, cookie silently dropped
+### Cookie Size Exceeding Browser Limits
 
 **Cause:** All claims are stored in the authentication cookie by default. Large numbers of claims (e.g., from many roles or large identity tokens) can cause the cookie to exceed the 4KB browser limit. ASP.NET Core chunks cookies, but excessively large sessions still cause issues.
 
@@ -243,11 +245,45 @@ Server-side sessions are recommended for all production BFF deployments, regardl
 
 ## See Also
 
-- [Getting Started: Single Frontend](/bff/getting-started/single-frontend/) — Correct initial setup
-- [Getting Started: Blazor](/bff/getting-started/blazor/) — Blazor-specific configuration
-- [Local APIs](/bff/fundamentals/apis/local/) — CSRF protection for embedded API endpoints
-- [YARP Integration](/bff/fundamentals/apis/yarp/) — Advanced proxy configuration
-- [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) — Production session persistence
-- [Token Management](/bff/fundamentals/tokens/) — Access token refresh and revocation
-- [Third-Party Cookies](/bff/architecture/third-party-cookies/) — Browser cookie restrictions and BFF
-- [Access Token Management](/accesstokenmanagement/) — The underlying token lifecycle library
+<CardGrid>
+  <LinkCard
+    href="/bff/getting-started/single-frontend/"
+    title="Getting Started: Single Frontend"
+    description="Correct initial setup."
+  />
+  <LinkCard
+    href="/bff/getting-started/blazor/"
+    title="Getting Started: Blazor"
+    description="Blazor-specific configuration."
+  />
+  <LinkCard
+    href="/bff/fundamentals/apis/local/"
+    title="Local APIs"
+    description="CSRF protection for embedded API endpoints."
+  />
+  <LinkCard
+    href="/bff/fundamentals/apis/yarp/"
+    title="YARP Integration"
+    description="Advanced proxy configuration."
+  />
+  <LinkCard
+    href="/bff/fundamentals/session/server-side-sessions/"
+    title="Server-Side Sessions"
+    description="Production session persistence."
+  />
+  <LinkCard
+    href="/bff/fundamentals/tokens/"
+    title="Token Management"
+    description="Access token refresh and revocation."
+  />
+  <LinkCard
+    href="/bff/architecture/third-party-cookies/"
+    title="Third-Party Cookies"
+    description="Browser cookie restrictions and BFF."
+  />
+  <LinkCard
+    href="/accesstokenmanagement/"
+    title="Access Token Management"
+    description="The underlying token lifecycle library."
+  />
+</CardGrid>

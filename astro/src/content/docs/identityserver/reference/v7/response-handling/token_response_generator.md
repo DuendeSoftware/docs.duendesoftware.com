@@ -5,6 +5,7 @@ sidebar:
   order: 20
 redirect_from:
   - /identityserver/v7/reference/response_handling/token_response_generator/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.ResponseHandling.ITokenResponseGenerator

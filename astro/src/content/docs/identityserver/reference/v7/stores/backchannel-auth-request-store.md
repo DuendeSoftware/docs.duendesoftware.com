@@ -6,6 +6,7 @@ sidebar:
   order: 80
 redirect_from:
   - /identityserver/v7/reference/stores/backchannel_auth_request_store/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Stores.IBackChannelAuthenticationRequestStore

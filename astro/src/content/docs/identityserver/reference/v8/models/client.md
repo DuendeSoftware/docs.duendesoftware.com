@@ -1,7 +1,7 @@
 ---
 title: "Client"
 description: "Reference documentation for the Client class which models an OpenID Connect or OAuth 2.0 client in Duende IdentityServer, including configuration for authentication, tokens, consent, refresh tokens, and advanced features."
-date: 2020-09-10T08:22:12+02:00
+date: 2026-08-18T08:22:12+02:00
 sidebar:
   order: 35
 redirect_from:
@@ -176,6 +176,7 @@ public static IEnumerable<Client> Get()
 * **`AllowedIdentityTokenSigningAlgorithms`**
 
   List of allowed signing algorithms for identity token. If empty, will use the server default signing algorithm.
+  See [`ApiResource`](/identityserver/fundamentals/resources/api-resources.md#setting-a-signing-algorithm) if you also want to control the access token signature algorithm.
 
 * **`AccessTokenLifetime`**
 

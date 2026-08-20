@@ -6,6 +6,7 @@ sidebar:
   order: 32
 redirect_from:
   - /identityserver/v7/reference/stores/resource_store/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Stores.IResourceStore

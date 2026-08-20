@@ -6,6 +6,7 @@ sidebar:
   order: 50
 redirect_from:
   - /identityserver/v7/reference/services/refresh_token_service/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Services.IRefreshTokenService

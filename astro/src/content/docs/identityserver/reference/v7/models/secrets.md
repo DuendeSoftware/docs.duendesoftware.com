@@ -6,6 +6,7 @@ sidebar:
   order: 70
 redirect_from:
   - /identityserver/v7/reference/models/secrets/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Validation.ISecretParser
@@ -87,7 +88,7 @@ The parsed secret is forwarded to the registered secret validator. The validator
 property to determine if this secret is something that can be validated by that validator instance. If yes, it will know
 how to cast the `Credential` object into a format that is understood.
 
-#### Duende.IdentityServer.Validation.ISecretParser
+#### Duende.IdentityServer.Validation.ISecretValidator
 
 Validates a parsed secret.
 

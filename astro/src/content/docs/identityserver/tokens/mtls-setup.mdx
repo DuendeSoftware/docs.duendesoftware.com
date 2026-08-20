@@ -1,0 +1,509 @@
+---
+title: "mTLS Setup Guide"
+description: "A practical guide for setting up Mutual TLS (mTLS) with Duende IdentityServer in local development and production, covering mkcert certificate generation, reverse proxy configuration for IIS, Nginx, and Apache, and certificate loading from Windows Certificate Store, Azure Key Vault, and HashiCorp Vault."
+date: 2026-07-28
+sidebar:
+  label: mTLS Setup Guide
+  order: 145
+---
+
+import { Tabs, TabItem, LinkCard, Steps } from "@astrojs/starlight/components";
+
+Mutual TLS support in Duende IdentityServer enables two distinct security features:
+
+1. **Client authentication** — Clients present an X.509 certificate to authenticate to IdentityServer endpoints (instead of or in addition to client secrets)
+2. **Sender-constrained tokens** — Access tokens are cryptographically bound to the client's certificate, preventing token theft and replay
+
+Both features are defined in [RFC 8705: OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens](https://tools.ietf.org/html/rfc8705).
+
+This guide covers the infrastructure side: generating certificates for local development, configuring reverse proxies in production, and loading certificates from secure stores. For IdentityServer client registration and options, see [Client Authentication](/identityserver/tokens/client-authentication.md#mutual-tls-client-certificates). For API-side token validation, see [Proof-of-Possession](/identityserver/tokens/pop.md).
+
+## Local Development Setup
+
+The recommended tool for local mTLS development is [`mkcert`](https://github.com/FiloSottile/mkcert), a cross-platform utility that creates locally trusted certificates backed by a private CA installed on your machine. Unlike the certificates bundled with samples (which use publicly known private keys), `mkcert` generates certificates whose private keys never leave your machine.
+
+<Steps>
+
+1. **Install mkcert**
+
+   {/* prettier-ignore */}
+   <Tabs syncKey="os">
+     <TabItem label="Windows">
+       Install via WinGet:
+
+       ```powershell
+       winget install FiloSottile.mkcert
+       ```
+
+       Or via Chocolatey:
+
+       ```powershell
+       choco install mkcert
+       ```
+
+     </TabItem>
+     <TabItem label="macOS">
+       ```bash
+       brew install mkcert
+       ```
+
+       If you use Firefox, also install NSS tools:
+
+       ```bash
+       brew install nss
+       ```
+
+     </TabItem>
+     <TabItem label="Linux">
+       Install NSS tools (required for browser and Firefox trust):
+
+       ```bash
+       sudo apt install libnss3-tools
+       ```
+
+       Then download the latest `mkcert` binary for your architecture from the [mkcert releases page](https://github.com/FiloSottile/mkcert/releases), place it on your `PATH`, and mark it executable:
+
+       ```bash
+       sudo install mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+       ```
+
+     </TabItem>
+   </Tabs>
+
+2. **Create a Local Certificate Authority**
+
+   Install a local CA that will sign your development certificates:
+
+   ```bash
+   mkcert -install
+   ```
+
+   This adds the CA to your OS trust store (and browser trust stores where supported). Certificates signed by this CA are treated as trusted on your machine.
+
+   :::caution[Remove the CA When Done]
+   The local CA installed by `mkcert -install` trusts **all** certificates it signs for TLS connections on your machine. When you no longer need the mTLS development environment, remove it:
+
+   ```bash
+   mkcert -uninstall
+   ```
+
+   Never commit the `rootCA-key.pem` file (found in the directory reported by `mkcert -CAROOT`) to source control or copy it to other machines.
+   :::
+
+3. **Generate Certificates**
+
+   You will need a **server certificate** for the IdentityServer and API hostnames:
+
+   ```bash
+   mkcert localhost mtls.localhost api.localhost
+   ```
+
+   This produces `localhost+2.pem` and `localhost+2-key.pem` in the current directory. Reference these files in your Kestrel HTTPS configuration.
+
+   Next, generate a **client certificate** in PKCS#12 format (used by the client application):
+
+   ```bash
+   mkcert -client -pkcs12 localhost
+   ```
+
+   This produces `localhost-client.p12`. Reference this file path when constructing the `X509Certificate2` for the [.NET client](/identityserver/tokens/client-authentication.md#net-client-library-2).
+
+4. **Configure the Hosts File**
+
+   The mTLS sample uses `mtls.localhost` and `api.localhost` as hostnames. Add them to your hosts file so they resolve to `127.0.0.1`:
+
+   :::tip[.NET 10+ Localhost Subdomains]
+   In .NET 10 and later, Kestrel automatically resolves `*.localhost` subdomains when binding to `localhost`. If you're running on .NET 10+, you may be able to skip the hosts file configuration entirely.
+   :::
+
+   {/* prettier-ignore */}
+   <Tabs syncKey="os">
+     <TabItem label="Windows">
+       Open `C:\Windows\System32\drivers\etc\hosts` as Administrator and add:
+
+       ```
+       127.0.0.1  mtls.localhost
+       127.0.0.1  api.localhost
+       ```
+
+     </TabItem>
+     <TabItem label="macOS / Linux">
+       Open `/etc/hosts` with `sudo` and add:
+
+       ```
+       127.0.0.1  mtls.localhost
+       127.0.0.1  api.localhost
+       ```
+
+     </TabItem>
+   </Tabs>
+
+5. **Configure Kestrel**
+
+   Kestrel must be configured to accept client certificates before ASP.NET Core's certificate authentication middleware can validate them. Use `AllowCertificate` mode so that client certificates are accepted but not required on every connection — IdentityServer's mTLS middleware enforces the requirement on the mTLS endpoint specifically.
+
+   ```csharp
+   // Program.cs
+   builder.WebHost.ConfigureKestrel(serverOptions =>
+   {
+       serverOptions.ConfigureHttpsDefaults(httpsOptions =>
+       {
+           httpsOptions.ClientCertificateMode = ClientCertificateMode.AllowCertificate;
+       });
+   });
+   ```
+
+   Then configure the IdentityServer mTLS options and ASP.NET Core certificate authentication:
+
+   ```csharp
+   // Program.cs
+   builder.Services.AddIdentityServer(options =>
+   {
+       options.MutualTls.Enabled = true;
+       options.MutualTls.DomainName = "mtls"; // serves mTLS endpoints at mtls.localhost
+       options.MutualTls.ClientCertificateAuthenticationScheme = "Certificate";
+   })
+   .AddMutualTlsSecretValidators();
+
+   builder.Services.AddAuthentication()
+       .AddCertificate("Certificate", options =>
+       {
+           // Use CertificateTypes.All or CertificateTypes.Chained in production
+           options.AllowedCertificateTypes = CertificateTypes.SelfSigned;
+       });
+   ```
+
+</Steps>
+
+<LinkCard
+  title="Mutual TLS Using Kestrel Sample"
+  description="Full working sample demonstrating mTLS client authentication and proof-of-possession API access."
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/MTLS"
+  target="_blank"
+/>
+
+## Production Deployment Patterns
+
+In production, a reverse proxy (IIS, Nginx, or Apache) handles TLS termination and **forwards the client certificate** to Kestrel via a request header. This separates certificate negotiation from the application tier and supports load-balanced deployments.
+
+:::caution[Prevent Header Spoofing]
+When forwarding certificates via an HTTP header, ensure the reverse proxy **overwrites/strips** the header from incoming requests and that only trusted proxies can reach Kestrel directly.
+:::
+
+### Certificate Forwarding in ASP.NET Core
+
+When running behind a reverse proxy, configure Kestrel to skip TLS-level certificate negotiation and instead read the forwarded certificate from a request header:
+
+```csharp
+// Program.cs
+
+// Tell Kestrel not to negotiate a client cert at the TLS layer
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ConfigureHttpsDefaults(httpsOptions =>
+    {
+        httpsOptions.ClientCertificateMode = ClientCertificateMode.NoCertificate;
+    });
+});
+
+// Read the client certificate from the forwarded header instead
+builder.Services.AddCertificateForwarding(options =>
+{
+    // Must match the header name your reverse proxy sends (see configs below)
+    options.CertificateHeader = "X-SSL-CERT";
+
+    options.HeaderConverter = headerValue =>
+    {
+        if (string.IsNullOrWhiteSpace(headerValue))
+            return null;
+
+        // Reverse proxies typically URL-encode the PEM data
+        var certPem = Uri.UnescapeDataString(headerValue);
+        return X509Certificate2.CreateFromPem(certPem);
+    };
+});
+```
+
+Register the middleware in the pipeline **before** `UseAuthentication`:
+
+```csharp
+app.UseCertificateForwarding();
+app.UseAuthentication();
+app.UseAuthorization();
+```
+
+Also update `AddCertificate` to accept chained certificates from a real CA in production:
+
+```csharp
+builder.Services.AddAuthentication()
+    .AddCertificate("Certificate", options =>
+    {
+        options.AllowedCertificateTypes = CertificateTypes.Chained;
+    });
+```
+
+### Reverse Proxy Configuration
+
+<Tabs>
+  <TabItem label="IIS">
+
+1. Open **IIS Manager** → select the mTLS site → **SSL Settings**.
+2. Set **Client Certificates** to **Require**.
+3. Install the [Application Request Routing (ARR)](https://www.iis.net/downloads/microsoft/application-request-routing) module to enable IIS as a reverse proxy.
+4. Configure ARR to forward requests to Kestrel. ARR automatically includes the client certificate in the `X-ARR-ClientCert` header when proxying to the backend.
+5. Update the `CertificateHeader` in your ASP.NET Core certificate forwarding configuration to match:
+
+```csharp
+builder.Services.AddCertificateForwarding(options =>
+{
+    options.CertificateHeader = "X-ARR-ClientCert";
+
+    options.HeaderConverter = headerValue =>
+    {
+        if (string.IsNullOrWhiteSpace(headerValue))
+            return null;
+
+        // ARR sends the certificate as a base64-encoded DER blob
+        byte[] certBytes = Convert.FromBase64String(headerValue);
+        return new X509Certificate2(certBytes);
+    };
+});
+```
+
+For full IIS hosting guidance, see [Host ASP.NET Core on Windows with IIS](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/) and [Configure certificate authentication](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/certauth) on Microsoft Learn.
+
+  </TabItem>
+  <TabItem label="Nginx">
+
+Configure `ssl_verify_client` and pass the URL-encoded client certificate to Kestrel via the `X-SSL-CERT` header:
+
+```nginx
+server {
+    listen              443 ssl;
+    server_name         mtls.yourdomain.com;
+
+    ssl_certificate        /etc/ssl/certs/server.crt;
+    ssl_certificate_key    /etc/ssl/private/server.key;
+    ssl_client_certificate /etc/ssl/certs/ca.crt;
+    ssl_verify_client      on;
+
+    location / {
+        proxy_pass         https://localhost:5001;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto https;
+        # $ssl_client_escaped_cert is URL-encoded — matches the HeaderConverter above
+        proxy_set_header   X-SSL-CERT        $ssl_client_escaped_cert;
+    }
+}
+```
+
+For the full SSL configuration reference, see the [ngx_http_ssl_module documentation](https://nginx.org/en/docs/http/ngx_http_ssl_module.html).
+
+  </TabItem>
+  <TabItem label="Apache">
+
+Enable `mod_ssl`, `mod_proxy`, `mod_proxy_http`, and `mod_headers`. Configure SSL client verification and forward the certificate in a request header:
+
+```apache
+<VirtualHost *:443>
+    ServerName mtls.yourdomain.com
+
+    SSLEngine               on
+    SSLCertificateFile      /etc/ssl/certs/server.crt
+    SSLCertificateKeyFile   /etc/ssl/private/server.key
+    SSLCACertificateFile    /etc/ssl/certs/ca.crt
+    SSLVerifyClient         require
+    SSLVerifyDepth          2
+    SSLOptions              +ExportCertData
+
+    # Forward the PEM-encoded client certificate
+    RequestHeader set X-SSL-CERT "%{SSL_CLIENT_CERT}s"
+
+    ProxyPreserveHost On
+    ProxyPass        / https://localhost:5001/
+    ProxyPassReverse / https://localhost:5001/
+</VirtualHost>
+```
+
+For the full SSL configuration reference, see the [mod_ssl documentation](https://httpd.apache.org/docs/current/mod/mod_ssl.html).
+
+  </TabItem>
+</Tabs>
+
+## Certificate Loading Strategies
+
+In production, certificates must be loaded from a secure store, not from disk paths in application configuration. The following examples show how to load a certificate programmatically for use with Kestrel or an outbound `HttpClient`.
+
+<Tabs>
+  <TabItem label="Windows Certificate Store">
+
+Use `X509Store` to load a certificate by thumbprint from the local machine store:
+
+```csharp
+X509Certificate2 LoadFromStore(string thumbprint)
+{
+    using var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+    store.Open(OpenFlags.ReadOnly);
+
+    var results = store.Certificates.Find(
+        X509FindType.FindByThumbprint,
+        thumbprint,
+        validOnly: true);
+
+    if (results.Count == 0)
+        throw new InvalidOperationException(
+            $"Certificate with thumbprint '{thumbprint}' not found in LocalMachine\\My.");
+
+    return results[0];
+}
+```
+
+Import the certificate using `certlm.msc` (Local Machine Certificates MMC snap-in) or PowerShell:
+
+```powershell
+Import-PfxCertificate `
+    -FilePath client.p12 `
+    -CertStoreLocation Cert:\LocalMachine\My `
+    -Password (Read-Host -Prompt "PFX password (leave blank if none)" -AsSecureString)
+
+Then wire it into Kestrel or an outbound HTTP handler:
+
+```csharp
+var cert = LoadFromStore(configuration["Mtls:Thumbprint"]);
+
+// Kestrel server certificate
+builder.WebHost.ConfigureKestrel(o =>
+    o.ConfigureHttpsDefaults(h => h.ServerCertificate = cert));
+
+// Outbound mTLS client
+var handler = new SocketsHttpHandler();
+handler.SslOptions.ClientCertificates = new X509CertificateCollection { cert };
+var httpClient = new HttpClient(handler);
+```
+
+  </TabItem>
+  <TabItem label="Azure Key Vault">
+
+Install the required packages:
+
+```bash
+dotnet add package Azure.Security.KeyVault.Secrets
+dotnet add package Azure.Identity
+```
+
+Key Vault stores the PKCS#12 bundle (certificate + private key) as a **secret** under the same name as the certificate object. Retrieve it via `SecretClient`:
+
+```csharp
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using System.Security.Cryptography.X509Certificates;
+
+async Task<X509Certificate2> LoadFromKeyVaultAsync(string vaultUri, string certName)
+{
+    // DefaultAzureCredential automatically picks up:
+    // - Managed identity when running in Azure (AKS, App Service, Container Apps)
+    // - Developer credentials locally (Visual Studio, Azure CLI, etc.)
+    var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
+
+    KeyVaultSecret secret = (await client.GetSecretAsync(certName)).Value;
+
+    byte[] certBytes = Convert.FromBase64String(secret.Value);
+    return new X509Certificate2(
+        certBytes,
+        (string?)null,
+        X509KeyStorageFlags.EphemeralKeySet);
+}
+```
+
+:::note[Permissions]
+Assign the application's managed identity the **Key Vault Secrets User** role on the Key Vault. No connection strings or secrets need to appear in application configuration.
+:::
+
+  </TabItem>
+  <TabItem label="HashiCorp Vault">
+
+Install [VaultSharp](https://www.nuget.org/packages/VaultSharp):
+
+```bash
+dotnet add package VaultSharp
+```
+
+Issue a certificate from Vault's [PKI secrets engine](https://developer.hashicorp.com/vault/docs/secrets/pki):
+
+```csharp
+using VaultSharp;
+using VaultSharp.V1.AuthMethods.Token;
+using System.Security.Cryptography.X509Certificates;
+
+async Task<X509Certificate2> LoadFromVaultAsync(
+    string vaultAddress, string token, string pkiMount, string roleName)
+{
+    var settings = new VaultClientSettings(
+        vaultAddress,
+        new TokenAuthMethodInfo(token));
+    var client = new VaultClient(settings);
+
+    var result = await client.V1.Secrets.PKI.GetCredentialsAsync(
+        pkiRoleName: roleName,
+        pkiBackendMountPoint: pkiMount);
+
+    return X509Certificate2.CreateFromPem(
+        result.Data.CertificateContent,
+        result.Data.PrivateKeyContent);
+}
+```
+
+:::note[Production Authentication]
+Replace `TokenAuthMethodInfo` with [AppRole](https://developer.hashicorp.com/vault/docs/auth/approle) or [Kubernetes auth](https://developer.hashicorp.com/vault/docs/auth/kubernetes) in production. Avoid embedding static Vault tokens in application configuration.
+:::
+
+  </TabItem>
+</Tabs>
+
+## mTLS Endpoint Strategies
+
+IdentityServer can expose mTLS endpoints using three different URL strategies. Configure the strategy via `MutualTls.DomainName`:
+
+| Strategy | `DomainName` Value | Example Endpoint |
+|----------|-------------------|------------------|
+| **Path-based** | `null` or empty | `https://identity.example.com/connect/mtls/token` |
+| **Sub-domain** | `"mtls"` | `https://mtls.identity.example.com/connect/token` |
+| **Separate domain** | `"identity-mtls.example.com"` | `https://identity-mtls.example.com/connect/token` |
+
+```csharp
+// Path-based (default) — mTLS endpoints under /connect/mtls/*
+options.MutualTls.DomainName = null;
+
+// Sub-domain — mTLS endpoints on mtls.{yourdomain}
+options.MutualTls.DomainName = "mtls";
+
+// Separate domain — mTLS endpoints on a completely different domain
+options.MutualTls.DomainName = "identity-mtls.example.com";
+```
+
+### Discovery Document
+
+IdentityServer publishes the mTLS endpoint URLs in the discovery document under `mtls_endpoint_aliases`. Clients should use these aliases when mTLS is required:
+
+```csharp
+var disco = await client.GetDiscoveryDocumentAsync("https://identity.example.com");
+
+// Use the mTLS token endpoint alias
+var tokenEndpoint = disco.MtlsEndpointAliases?.TokenEndpoint 
+    ?? disco.TokenEndpoint;
+```
+
+The discovery document will include an `mtls_endpoint_aliases` section like:
+
+```json
+{
+  "issuer": "https://identity.example.com",
+  "token_endpoint": "https://identity.example.com/connect/token",
+  "mtls_endpoint_aliases": {
+    "token_endpoint": "https://mtls.identity.example.com/connect/token",
+    "revocation_endpoint": "https://mtls.identity.example.com/connect/revocation",
+    "introspection_endpoint": "https://mtls.identity.example.com/connect/introspect",
+    "device_authorization_endpoint": "https://mtls.identity.example.com/connect/deviceauthorization"
+  }
+}
+```

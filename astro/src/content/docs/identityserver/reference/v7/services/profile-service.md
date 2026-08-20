@@ -8,6 +8,7 @@ sidebar:
 redirect_from:
   - /identityserver/v7/reference/services/
   - /identityserver/v7/reference/services/profile_service/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Services.IProfileService

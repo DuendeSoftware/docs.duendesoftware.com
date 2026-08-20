@@ -6,6 +6,7 @@ sidebar:
   order: 20
 redirect_from:
   - /identityserver/v7/reference/validators/custom_token_request_validator/
+pagefind: false
 ---
 
 #### Duende.IdentityServer.Validation.ICustomTokenRequestValidator

@@ -4,7 +4,7 @@ description: "How to register and manage SAML 2.0 Service Providers using ISamlS
 date: 2026-05-21
 sidebar:
   label: Service Providers
-  order: 20
+  order: 200
 ---
 
 IdentityServer needs to know which SAML 2.0 Service Providers (SPs) are allowed to request

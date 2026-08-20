@@ -6,6 +6,7 @@ sidebar:
   order: 50
 redirect_from:
   - /identityserver/v7/reference/services/token_creation_service/
+pagefind: false
 ---
 
 IdentityServer uses an `ITokenCreationService` which is responsible for the creation

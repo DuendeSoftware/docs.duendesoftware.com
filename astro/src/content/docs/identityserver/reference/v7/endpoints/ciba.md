@@ -6,6 +6,7 @@ sidebar:
   order: 10
 redirect_from:
   - /identityserver/v7/reference/endpoints/ciba/
+pagefind: false
 ---
 
 The backchannel authentication endpoint is used by a client to initiate a [CIBA](/identityserver/ui/ciba.md) request.

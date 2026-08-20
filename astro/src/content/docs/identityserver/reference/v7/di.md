@@ -7,6 +7,7 @@ sidebar:
   order: 20
 redirect_from:
   - /identityserver/v7/reference/di/
+pagefind: false
 ---
 
 `AddIdentityServer` return a builder object that provides many extension methods to add IdentityServer specific services

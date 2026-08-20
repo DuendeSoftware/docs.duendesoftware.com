@@ -3,38 +3,13 @@ title: "SAML 2.0 Identity Provider"
 description: Overview of IdentityServer's SAML 2.0 Identity Provider support for issuing SAML assertions to enterprise Service Providers.
 date: 2026-05-15
 sidebar:
-  label: Overview
-  order: 1
+  label: Identity Provider
+  order: 20
 ---
-
-:::note
-This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard (add-on), Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
-:::
 
 IdentityServer can act as a **SAML 2.0 Identity Provider (IdP)**, issuing SAML assertions to
 Service Providers (SPs). This enables integration with enterprise applications and legacy systems
 that use the SAML 2.0 protocol rather than OAuth 2.0 / OpenID Connect.
-
-## When to Use SAML 2.0
-
-SAML 2.0 support is useful when:
-
-* You need to integrate with enterprise SaaS applications that require SAML (e.g., Salesforce,
-  Workday, ServiceNow)
-* You are migrating from a legacy SSO system that uses SAML
-* Your organization has compliance or procurement requirements for using SAML
-
-For new integrations, OpenID Connect is the better choice. SAML 2.0 is provided for when you need to work with existing SAML-based systems.
-
-If you are new to SAML 2.0 or want a refresher on the protocol's core building blocks, see [SAML 2.0 Concepts](/identityserver/saml/concepts.md) for an overview of assertions, bindings, metadata, name identifiers, and other key concepts before diving into configuration.
-
-## SAML as an External Provider
-
-IdentityServer can also act as a SAML **Service Provider (SP)**, consuming assertions from an external SAML IdP. This lets you use a third-party SAML IdP as an upstream identity source, the same way you might use Google or Entra ID as an external OIDC provider.
-
-For an overview of both roles (IdP and SP) and how they relate, see [IdentityServer as IdP and SP](/identityserver/saml/idp-and-sp.mdx). For step-by-step setup instructions, see [Configuring a SAML external provider](/identityserver/ui/login/saml-provider.md). If you have many SAML IdPs to manage, consider using [dynamic providers](/identityserver/ui/login/dynamicproviders.md#saml-providers) instead of static registration.
-
-The rest of this section covers the IdP role: configuring IdentityServer to issue SAML assertions to your registered Service Providers.
 
 ## What's Included
 

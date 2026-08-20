@@ -7,6 +7,7 @@ sidebar:
   order: 4
 redirect_from:
   - /identityserver/v7/reference/endpoints/token/
+pagefind: false
 ---
 
 The token endpoint can be used to programmatically request tokens.

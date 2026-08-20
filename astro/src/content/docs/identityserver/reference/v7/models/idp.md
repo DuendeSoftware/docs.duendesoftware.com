@@ -6,6 +6,7 @@ sidebar:
   order: 35
 redirect_from:
   - /identityserver/v7/reference/models/idp/
+pagefind: false
 ---
 
 ## Duende.IdentityServer.Models.OidcProvider

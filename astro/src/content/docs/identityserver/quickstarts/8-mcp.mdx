@@ -1,0 +1,656 @@
+---
+title: "Securing an MCP Server with IdentityServer"
+description: "Learn how to protect an MCP Server with Duende IdentityServer so AI clients can securely connect using OAuth and Dynamic Client Registration."
+date: 2026-08-07T01:00:00+00:00
+sidebar:
+  order: 16
+---
+
+import { Code } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+AI agents and tools increasingly communicate via the Model Context Protocol (MCP). This quickstart shows how to secure an MCP Server with Duende IdentityServer, using [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr.mdx) so any compliant client can connect without being pre-configured.
+
+:::note
+Each client that dynamically connects to IdentityServer using DCR counts towards the Client Ids allowed in your license.
+:::
+
+## Quickstart Applications
+
+We will create 3 projects. An IdentityServer project, an MCP Server, and a console client which will make requests to the MCP Server (but sign in using IdentityServer).
+
+```mermaid
+architecture-beta
+    service mcpServer(server)[MCP Server]
+    service client(server)[Client]
+    service is(server)[IdentityServer]
+
+    is:L -- R:mcpServer
+    mcpServer:R -- L:client
+```
+
+We'll start by creating a directory to store the 3 projects.
+
+```console
+mkdir mcp-quickstart
+cd mcp-quickstart
+```
+
+### Create the IdentityServer Project
+
+The IdentityServer project needs to be configured to use DCR to allow clients at runtime. The below steps disable the static clients and adds DCR. Create a new Duende IdentityServer InMemory project to its own directory inside the `mcp-quickstart` directory you created above.
+
+```console
+dotnet new duende-is-inmem --name "McpQuickStart.IdentityServer"
+```
+
+#### Add NuGet Packages
+
+Add the latest versions of the `Duende.IdentityServer` and `Duende.IdentityServer.Configuration` NuGet packages to the project. The `.csproj` file should look like the below.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Duende.IdentityServer" version="8.0.2"/>
+        <PackageReference Include="Duende.IdentityServer.Configuration" Version="8.0.2"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    </ItemGroup>
+</Project>
+```
+
+#### Configure API Resources and Scopes
+
+IdentityServer will need to know what API Scopes and Resources will be required at runtime. We will only configure a single scope, `mcp:tools`, which will be used to allow the client to access the tool hosted by the MCP Server connected application. The scope is tied to an `ApiResource` object specific to the MCP Server, meaning the client will receive a token that says the `mcp:tools` scope can only be used by the MCP Server. For more information, see [Resource Isolation](/identityserver/fundamentals/resources/isolation). To enable this, edit the `Config.cs` file to look like this:
+
+```csharp
+// ~/mcp-quickstart/McpQuickStart.IdentityServer/Config.cs
+public static class Config
+{
+   public static IEnumerable<IdentityResource> IdentityResources =>
+   [
+       new IdentityResources.OpenId(),
+       new IdentityResources.Profile()
+   ];
+
+   public static IEnumerable<ApiResource> ApiResources =>
+   [
+       new("https://localhost:7141", "MCP Server")
+       {
+           Scopes = { "mcp:tools" }
+       }
+   ];
+
+   public static IEnumerable<ApiScope> ApiScopes =>
+   [
+       new("mcp:tools")
+   ];
+}
+```
+
+Note the configuration does not include any client registrations. MCP clients will dynamically register with IdentityServer when needed.
+
+#### Configure IdentityServer Services
+
+When configuring services for IdentityServer: 
+
+1. The `DiscoveryDocument` registration endpoint must be configured so that the registration endpoint is made visible, and the URL for it is inferred. You can do this by setting `options.Discovery.DynamicClientRegistration.RegistrationEndpointMode` to `RegistrationEndpointMode.Inferred`.
+1. Add the API Scopes from `Config.cs`.
+1. Add the API Resources from `Config.cs`.
+1. Store the dynamically added clients. For this quickstart, keep them in memory.
+
+When you are done, the code for the `ConfigureServices()` method inside `HostingExtensions.cs` will look like this:
+
+```csharp
+// ~/mcp-quickstart/McpQuickStart.IdentityServer/HostingExtensions.cs
+public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
+{
+    builder.Services.AddRazorPages();
+
+    var isBuilder = builder.Services.AddIdentityServer(options =>
+    {
+        // add the default dynamic client registration endpoint to the discovery/metadatada documents
+        options.Discovery.DynamicClientRegistration.RegistrationEndpointMode = RegistrationEndpointMode.Inferred;
+    })
+        .AddTestUsers(TestUsers.Users)
+        .AddLicenseSummary();
+
+    // in-memory, code config
+    isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);
+    isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
+
+    // note we're not adding static clients, they will be added dynamically at runtime through DCR
+    isBuilder.AddInMemoryClients([]);
+    isBuilder.AddInMemoryApiResources(Config.ApiResources);
+
+    builder.Services.AddIdentityServerConfiguration(_ => { })
+        // in memory client store only used for sample
+        .AddInMemoryClientConfigurationStore();
+
+    builder.Services.AddAuthentication()
+        .AddOpenIdConnect("oidc", "Sign-in with demo.duendesoftware.com", options =>
+        {
+            options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+            options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+            options.SaveTokens = true;
+
+            options.Authority = "https://demo.duendesoftware.com";
+            options.ClientId = "interactive.confidential";
+            options.ClientSecret = "secret";
+            options.ResponseType = "code";
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                NameClaimType = "name",
+                RoleClaimType = "role"
+            };
+        });
+
+    // Add `.PersistKeysTo…()` and `.ProtectKeysWith…()` calls
+    // See more at https://docs.duendesoftware.com/general/data-protection
+    builder.Services.AddDataProtection()
+        .SetApplicationName("IdentityServer");
+
+    return builder.Build();
+}
+```
+#### Map DCR in the IdentityServer Pipeline
+
+The IdentityServer middleware pipeline needs to be able to add clients dynamically. This is done with the `MapDynamicClientRegistration()` method from the `Duende.IdentityServer.Configuration` NuGet package. Add the line `app.MapDynamicClientRegistration();` inside the `ConfigurePipeline()` method. Afterwards, your `ConfigurePipeline()` method should look like:
+
+```csharp {19}
+// ~/mcp-quickstart/McpQuickStart.IdentityServer/HostingExtensions.cs
+public static WebApplication ConfigurePipeline(this WebApplication app)
+{
+    _ = app.UseSerilogRequestLogging();
+
+    if (app.Environment.IsDevelopment())
+    {
+        _ = app.UseDeveloperExceptionPage();
+    }
+
+    _ = app.UseStaticFiles();
+    _ = app.UseRouting();
+    _ = app.UseIdentityServer();
+    _ = app.UseAuthorization();
+
+    _ = app.MapRazorPages()
+        .RequireAuthorization();
+
+    _ = app.MapDynamicClientRegistration();
+
+    return app;
+}
+```
+
+#### Update Launch Url For Local Development
+
+For this quickstart, we are using known URLs for each application. Force the project to self-host at `https://localhost:5001`. The `/Properties/launchSettings.json` file should look like:
+
+```json {9} title="~/mcp-quickstart/McpQuickStart.IdentityServer/Properties/launchSettings.json"
+{
+  "profiles": {
+    "https": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5001"
+    }
+  }
+}
+```
+
+### Create the MCP Server Project
+
+The MCP Server project we create will return weather data. Start by adding a new ASP.NET Web API project to its own directory inside `mcp-quickstart` you created above.
+
+```console
+dotnet new webapi --name "McpQuickStart.McpServer"
+```
+
+#### Add NuGet Packages
+
+Add the latest versions of the `Microsoft.AspNetCore.Authentication.JwtBearer` and `ModelContextProtocol.AspNetCore` NuGet packages to the project. The `.csproj` file should look like the below.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10"  />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.1.0" />
+  </ItemGroup>
+</Project>
+```
+
+#### Configure MCP Tools
+
+Create a new directory called `McpTools` and add a `WeatherTools.cs` C# file. This will be the MCP Server definition that an AI agent or an MCP client can consume. The code for the file is below.
+
+```csharp
+// ~/mcp-quickstart/McpQuickStart.McpServer/McpTools/WeatherTools.cs
+using System.ComponentModel;
+using System.Globalization;
+using System.Text.Json;
+using ModelContextProtocol;
+using ModelContextProtocol.Server;
+
+namespace McpQuickStart.McpServer.McpTools;
+
+[McpServerToolType]
+public sealed class WeatherTools
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public WeatherTools(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
+    [McpServerTool, Description("Get weather alerts for a US state.")]
+    public async Task<string> GetAlerts(
+        [Description("The US state to get alerts for. Use the 2 letter abbreviation for the state (e.g. NY).")] string state)
+    {
+        var client = _httpClientFactory.CreateClient("WeatherApi");
+        using var jsonDocument = await client.GetFromJsonAsync<JsonDocument>($"/alerts/active/area/{state}")
+            ?? throw new McpException("No JSON returned from alerts endpoint");
+
+        var alerts = jsonDocument.RootElement.GetProperty("features").EnumerateArray();
+
+        if (!alerts.Any())
+        {
+            return "No active alerts for this state.";
+        }
+
+        return string.Join("\n--\n", alerts.Select(alert =>
+        {
+            JsonElement properties = alert.GetProperty("properties");
+            return $"""
+                    Event: {properties.GetProperty("event").GetString()}
+                    Area: {properties.GetProperty("areaDesc").GetString()}
+                    Severity: {properties.GetProperty("severity").GetString()}
+                    Description: {properties.GetProperty("description").GetString()}
+                    Instruction: {properties.GetProperty("instruction").GetString()}
+                    """;
+        }));
+    }
+
+    [McpServerTool, Description("Get weather forecast for a location.")]
+    public async Task<string> GetForecast(
+        [Description("Latitude of the location.")] double latitude,
+        [Description("Longitude of the location.")] double longitude)
+    {
+        var client = _httpClientFactory.CreateClient("WeatherApi");
+        var pointUrl = string.Create(CultureInfo.InvariantCulture, $"/points/{latitude},{longitude}");
+
+        using var locationDocument = await client.GetFromJsonAsync<JsonDocument>(pointUrl);
+        var forecastUrl = locationDocument?.RootElement.GetProperty("properties").GetProperty("forecast").GetString()
+            ?? throw new McpException($"No forecast URL provided by {client.BaseAddress}points/{latitude},{longitude}");
+
+        using var forecastDocument = await client.GetFromJsonAsync<JsonDocument>(forecastUrl);
+        var periods = forecastDocument?.RootElement.GetProperty("properties").GetProperty("periods").EnumerateArray()
+            ?? throw new McpException("No JSON returned from forecast endpoint");
+
+        return string.Join("\n---\n", periods.Select(period => $"""
+                {period.GetProperty("name").GetString()}
+                Temperature: {period.GetProperty("temperature").GetInt32()}°F
+                Wind: {period.GetProperty("windSpeed").GetString()} {period.GetProperty("windDirection").GetString()}
+                Forecast: {period.GetProperty("detailedForecast").GetString()}
+                """));
+    }
+}
+```
+
+#### Configure MCP Services
+
+Inside the `Program.cs` file, configure the application to host an MCP Server. This is done by:
+
+1. Calling `.AddMcp()`, then configuring the resource metadata clients will be able to access. The `ScopesSupported = ["mcp:tools"]` property states the client will only be able to request the `mcp:tools` scope from IdentityServer when the user signs in.
+1. Registering the `WeatherTools` type as MCP tools the server should expose, by calling `.AddMcpServer().WithTools<WeatherTools>()`.
+
+The full code for `Program.cs` looks like:
+
+```csharp {31-40}
+// ~/mcp-quickstart/McpQuickStart.McpServer/Program.cs
+using System.Net.Http.Headers;
+using McpQuickStart.McpServer.McpTools;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using ModelContextProtocol.AspNetCore.Authentication;
+
+var builder = WebApplication.CreateBuilder(args);
+
+var mcpServerUrl = "https://localhost:7141";
+var inMemoryOAuthServerUrl = "https://localhost:5001";
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.Authority = inMemoryOAuthServerUrl;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidAudience = mcpServerUrl,
+            ValidIssuer = inMemoryOAuthServerUrl,
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+    })
+    .AddMcp(options =>
+    {
+        options.ResourceMetadata = new()
+        {
+            Resource = mcpServerUrl,
+            ResourceDocumentation = "https://docs.example/api/weather",
+            AuthorizationServers = { inMemoryOAuthServerUrl },
+            ScopesSupported = ["mcp:tools"]
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddMcpServer()
+    .WithTools<WeatherTools>()
+    .WithHttpTransport();
+
+builder.Services.AddHttpClient("WeatherApi", client =>
+{
+    client.BaseAddress = new Uri("https://api.weather.gov");
+    client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("weather-tool", "1.0"));
+});
+
+var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapMcp().RequireAuthorization();
+
+app.Run();
+```
+
+#### Update Launch Url For Local Development
+
+For this quickstart, we are using known URLs for each application. Force the project to self-host at `https://localhost:7141`. The `/Properties/launchSettings.json` file should look like:
+
+```json {7} title="~/mcp-quickstart/McpQuickStart.McpServer/Properties/launchSettings.json"
+{
+  "profiles": {
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:7141",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+```
+
+### Create the Client Console Application
+
+The MCP Server can be accessed by any client through HTTP requests. For this quickstart, we create a simple console application that will register itself with IdentityServer and make an authenticated request to the MCP server. Add the new project to its own directory inside the `mcp-quickstart` directory you created above.
+
+```console
+dotnet new console --name "McpQuickStart.Client"
+```
+
+#### Add NuGet Packages
+
+Add the latest versions of the `Microsoft.AspNetCore.Authentication.JwtBearer` and `ModelContextProtocol.AspNetCore` NuGet packages to the project. The `.csproj` file should look like the below.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" Version="2.1.0" />
+  </ItemGroup>
+</Project>
+```
+
+#### Implement the Client
+
+The console client will need to:
+
+1. Use the `ModelContextProtocol` NuGet package to create an `HttpClientTransport` object to communicate with the MCP Server.
+1. Include a `RedirectUri` back to itself after the user signs in.
+1. After user sign-in completes, make a call to the MCP Server using the `get_alerts` tool implemented by the MCP Server and output its response.
+
+When creating the `HttpClientTransport` object, the `new ClientOAuthOptions()` initializer needs to set the `RedirectUri` and `Scopes` properties. The `RedirectUri` is the local endpoint this console client expects a redirect to after the user signs in. Once the OAuth flow completes, IdentityServer needs to know where to redirect the user back to, and the `RedirectUri` property tells it to redirect back to this client application. The `Scopes` property uses the single scope we have configured for the clients. It was configured in IdentityServer and the MCP Server was configured to use that scope. When this client signs in, it will request and receive a token with this scope.
+
+The code for the entire console application is:
+
+```csharp
+// ~/mcp-quickstart/McpQuickStart.Client/Program.cs
+using System.Diagnostics;
+using System.Net;
+using System.Text;
+using System.Web;
+
+using ModelContextProtocol.Authentication;
+using ModelContextProtocol.Client;
+using ModelContextProtocol.Protocol;
+
+var mcpServerUrl = "https://localhost:7141";
+
+Console.WriteLine("Protected MCP Client");
+Console.WriteLine($"Connecting to server at {mcpServerUrl}...");
+Console.WriteLine();
+
+var httpClient = new HttpClient();
+
+var transport = new HttpClientTransport(new HttpClientTransportOptions
+{
+    Endpoint = new Uri(mcpServerUrl),
+    Name = "Weather MCP Client",
+    OAuth = new ClientOAuthOptions
+    {
+        RedirectUri = new Uri("http://localhost:1179/callback"),
+        AuthorizationCallbackHandler = HandleAuthorizationUrlAsync,
+        DynamicClientRegistration = new DynamicClientRegistrationOptions
+        {
+            ClientName = "ProtectedMcpClient"
+        },
+        Scopes = ["mcp:tools"],
+    },
+}, httpClient);
+
+var client = await McpClient.CreateAsync(transport);
+
+var tools = await client.ListToolsAsync();
+if (tools.Count == 0)
+{
+    Console.WriteLine("No tools available on the server.");
+    return;
+}
+
+Console.WriteLine($"Found {tools.Count} tools on the server.");
+Console.WriteLine();
+
+
+if (tools.Any(t => t.Name == "get_alerts"))
+{
+    Console.WriteLine("Calling get_alerts tool...");
+
+    var result = await client.CallToolAsync("get_alerts", new Dictionary<string, object?> { ["state"] = "NY" });
+
+    Console.WriteLine("Result: " + ((TextContentBlock)result.Content[0]).Text);
+    Console.WriteLine();
+}
+
+static async Task<AuthorizationResult?> HandleAuthorizationUrlAsync(AuthorizationCallbackContext authContext, CancellationToken cancellationToken)
+{
+    Console.WriteLine("Starting OAuth authorization flow...");
+    Console.WriteLine($"Opening browser to: {authContext.AuthorizationUri}");
+
+    var listenerPrefix = authContext.RedirectUri.GetLeftPart(UriPartial.Authority);
+    if (!listenerPrefix.EndsWith("/")) listenerPrefix += "/";
+
+    using var listener = new HttpListener();
+    listener.Prefixes.Add(listenerPrefix);
+
+    try
+    {
+        listener.Start();
+        Console.WriteLine($"Listening for OAuth callback on: {listenerPrefix}");
+
+        OpenBrowser(authContext.AuthorizationUri);
+
+        var context = await listener.GetContextAsync();
+        var query = HttpUtility.ParseQueryString(context.Request.Url?.Query ?? string.Empty);
+        var code = query["code"];
+        var state = query["state"];
+        var iss = query["iss"];
+        var error = query["error"];
+
+        string responseHtml = "<html><body><h1>Authentication complete</h1><p>You can close this window now.</p></body></html>";
+        byte[] buffer = Encoding.UTF8.GetBytes(responseHtml);
+        context.Response.ContentLength64 = buffer.Length;
+        context.Response.ContentType = "text/html";
+        context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+        context.Response.Close();
+
+        if (!string.IsNullOrEmpty(error))
+        {
+            Console.WriteLine($"Auth error: {error}");
+            return null;
+        }
+
+        if (string.IsNullOrEmpty(code))
+        {
+            Console.WriteLine("No authorization code received");
+            return null;
+        }
+
+        Console.WriteLine("Authorization code received successfully.");
+        return new AuthorizationResult
+        {
+            Code = code,
+            State = state,
+            Iss = iss
+        };
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error getting auth code: {ex.Message}");
+        return null;
+    }
+    finally
+    {
+        if (listener.IsListening) listener.Stop();
+    }
+}
+
+static void OpenBrowser(Uri url)
+{
+    // Validate the URI scheme - only allow safe protocols
+    if (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps)
+    {
+        Console.WriteLine($"Error: Only HTTP and HTTPS URLs are allowed.");
+        return;
+    }
+
+    try
+    {
+        var psi = new ProcessStartInfo
+        {
+            FileName = url.ToString(),
+            UseShellExecute = true
+        };
+        Process.Start(psi);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error opening browser: {ex.Message}");
+        Console.WriteLine($"Please manually open this URL: {url}");
+    }
+}
+```
+
+### Run the Samples
+
+Start the IdentityServer and MCP Server applications, then run the console client. When prompted to sign in for the console client, use username `bob` with password `bob` to sign in. The console will output the response from the MCP Server after it self-registers.
+
+
+#### Sample Client Output
+
+```text
+Protected MCP Client
+Connecting to server at https://localhost:7141...
+
+Starting OAuth authorization flow...
+Opening browser to: https://localhost:5001/connect/authorize?client_id=AZwWIaA8ApNcB5jptVQrSaNO4hF-nbRtBz19QnKEGOI&redirect_uri=http%3a%2f%2flocalhost%3a1279%2fcallback&response_type=code&code_challenge=mfZCS1wY7EHZwUkIb50SD6dmzReczXjyDMC_GFKEHvM&code_challenge_method=S256&state=EAx8LsLDnK0gVNY8Oxw8wF0Jv6TPCu9-YlyHL7XfFHE&resource=https%3a%2f%2flocalhost%3a7141&scope=mcp%3atools+offline_access
+Listening for OAuth callback on: http://localhost:1279/
+Authorization code received successfully.
+Found 2 tools on the server.
+
+Calling get_alerts tool...
+Result: Event: Coastal Flood Statement
+Area: Southern Queens; Southern Nassau
+Severity: Minor
+Description: * WHAT...Up to one half foot of inundation above ground level
+expected in vulnerable areas near the waterfront and shoreline.
+
+* WHERE...Southern Queens and Southern Nassau Counties.
+
+* WHEN...This evening.
+
+* IMPACTS...Brief minor flooding of the most vulnerable locations near the
+waterfront and shoreline.
+
+* ADDITIONAL DETAILS...Additional rounds of localized minor
+flooding are likely with the Wednesday Night and Thursday Night
+high tides. Minor coastal flooding could be a bit more
+widespread with the Wednesday night high tide.
+Instruction: Do not drive through flooded roadways.
+--
+Event: Coastal Flood Statement
+Area: Southern Fairfield; Southern Westchester
+Severity: Minor
+Description: * WHAT...Up to one half foot of inundation above ground level
+expected in vulnerable areas near the waterfront and shoreline.
+
+* WHERE...In Connecticut, Southern Fairfield County. In New
+York, Southern Westchester County.
+
+* WHEN...This evening.
+
+* IMPACTS...Brief minor flooding of the most vulnerable locations near the
+waterfront and shoreline
+
+* ADDITIONAL DETAILS...Additional rounds of localized minor
+flooding are likely with the Wednesday Night and Thursday Night
+high tides. Minor coastal flooding could be a bit more
+widespread with the Wednesday night high tide.
+Instruction: Do not drive through flooded roadways.
+```
+
+## Source Code
+
+The finished source code is available in the Samples repository, and a reference implementation of this quickstart is available [here](/identityserver/samples/mcp-server).

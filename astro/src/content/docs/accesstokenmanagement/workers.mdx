@@ -185,7 +185,7 @@ public class WorkerHttpClient : BackgroundService
 }
 ```
 
-:::note[Default resiliency handler in BFF v4]
+:::note[Default resiliency handler in v4]
 When you use `AddClientCredentialsHttpClient`, the configured HTTP client will include a resiliency message handler which
 automatically retries the HTTP request in case of a `401 Unauthorized` response.
 
@@ -252,6 +252,35 @@ If you want to use access tokens in a different way or have more advanced needs 
     `WasSuccessful()`. Alternatively, as you see in the example, you can call the `.GetToken()` which will throw if the token couldn't be retrieved. 
 
     You can customize some of the per-request parameters by passing in an instance of `TokenRequestParameters`. This allows forcing a fresh token request (even if a cached token would exist) and also allows setting a per-request scope, resource and client assertion.
+
+    ### Error Handling with TokenResult
+
+    The `TokenResult<T>` type provides multiple ways to handle token acquisition failures:
+
+      <Code
+          lang="csharp"
+          title="TokenResultErrorHandling.cs"
+          code={`// Option 1: Using .GetToken() - throws on failure (best for simple cases)
+var token = await tokenManager
+    .GetAccessTokenAsync(clientName, ct: stoppingToken)
+    .GetToken();
+
+// Option 2: Using .Succeeded property (best for custom error handling)
+var result = await tokenManager.GetAccessTokenAsync(clientName, ct: stoppingToken);
+if (!result.Succeeded)
+{
+    _logger.LogError("Token request failed: {Error} - {ErrorDescription}", 
+        result.FailedResult.Error, 
+        result.FailedResult.ErrorDescription);
+    return;
+}
+var token = result.Token;
+
+// Option 3: Using WasSuccessful with out parameter
+if (result.WasSuccessful(out var successToken))
+{
+    client.SetBearerToken(successToken.AccessToken.ToString());
+}`}/>
 
   </TabItem>
   <TabItem label="V3">

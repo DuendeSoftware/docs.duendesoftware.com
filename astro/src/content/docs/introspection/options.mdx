@@ -46,7 +46,7 @@ Specifies the shared secret of the introspection client.
 Specifies how the client credentials are sent to the introspection endpoint. The default is `ClientCredentialStyle.PostBody`, which sends the credentials in the body of the request.
 You can also set this to `ClientCredentialStyle.AuthorizationHeader` to send the credentials in the `Authorization` header as a Basic authentication scheme.
 
-* **`ClientCredentialStyle `**
+* **`AuthorizationHeaderStyle`**
 
 Specifies how the authorization header is formatted when used. The default is `BasicAuthenticationHeaderStyle.Rfc2617`, which formats the header according to the [original basic authentication spec](https://tools.ietf.org/html/rfc2617#section-2).
 You can also set this to `BasicAuthenticationHeaderStyle.Rfc6749`, which formats the header according to [RFC 6749](https://tools.ietf.org/html/rfc6749#section-2.3.1).
@@ -113,41 +113,5 @@ Gets or sets the `OAuth2IntrospectionEvents` instance used to handle authenticat
 
 ## Events
 
-The `OAuth2IntrospectionEvents` class allows you to handle various events during the authentication process.
-You can override methods to customize the behavior of the authentication handler, or set custom logic for specific events like `OnTokenValidated`, `OnAuthenticationFailed`, etc.
-
-* **`OnTokenValidated`**
-
-This event is triggered when the token has been successfully validated. You can use this to add additional claims or perform custom logic after the token validation.
-
-* **`OnAuthenticationFailed`**
-
-This event is triggered when exceptions are thrown during request processing. The exceptions will be re-thrown after this event unless suppressed.
-
-* **`OnTokenValidated`**
-
-This event is triggered after the security token has passed validation and a `ClaimsIdentity` has been generated.
-
-* **`OnUpdateClientAssertion`**
-
-This event is triggered when client assertion need to be updated.
-
-* **`OnSendingRequest`**
-
-This event is triggered when sending the token introspection request.
-
-* **`AuthenticationFailed`**
-
-Invoked if exceptions are thrown during request processing. The exceptions will be re-thrown after this event unless suppressed.
-
-* **`TokenValidated`**
-
-Invoked after the security token has passed validation and a ClaimsIdentity has been generated.
-
-* **`UpdateClientAssertion`**
-
-Invoked when client assertion need to be updated.
-
-* **`SendingRequest`**
-
-Invoked when sending the token introspection request.
+The `Events` property accepts an `OAuth2IntrospectionEvents` instance that lets you hook into the authentication pipeline.
+See the [Events](/introspection/events/) page for a full reference, including context class properties and code examples for each event.

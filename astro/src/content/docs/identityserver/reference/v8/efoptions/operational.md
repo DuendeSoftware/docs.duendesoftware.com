@@ -52,10 +52,14 @@ Settings that affect the database schema and table names.
 * **`DeviceFlowCodes`**
 * **`Keys`**
 * **`ServerSideSessions`**
+* **`PushedAuthorizationRequests`**
+* **`SamlSigninStates`**
+* **`SamlLogoutSessions`**
+* **`SamlLogoutSessionRequestIndices`**
 
 ### Persisted Grants Cleanup
 
-Settings that affect the background cleanup of expired entries (tokens) from the persisted grants table.
+Settings that affect the background cleanup of expired entries from the operational store. Cleanup includes persisted grants, device codes, pushed authorization requests, SAML signin states, and SAML logout sessions.
 
 * **`EnableTokenCleanup`**
 
@@ -68,6 +72,10 @@ Settings that affect the background cleanup of expired entries (tokens) from the
 
   Gets or sets a value indicating whether consumed tokens will be included in the automatic clean up.
   Defaults to `false`.
+
+* **`ConsumedTokenCleanupDelay`**
+
+  Gets or sets the consumed token cleanup delay (in seconds). The default is `0`. This delay is the amount of time that must elapse before tokens marked as consumed can be deleted. Note that only refresh tokens with OneTimeOnly usage can be marked as consumed.
 
 * **`TokenCleanupInterval`**
 
