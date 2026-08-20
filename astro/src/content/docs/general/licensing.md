@@ -168,7 +168,7 @@ Key points:
 - **Add-ons require a v8 key**: To use add-ons like [SAML](/identityserver/saml/index.mdx) or [Duende User Management](/identityserver/usermanagement/index.mdx) in production on IdentityServer v8, a license key in the new v8 format is required.
 - **v8 keys are not backwards-compatible**: A license key issued for v8 cannot be used with IdentityServer v7 or earlier.
 
-If you see the following error in IdentityServer v7, you have likely configured a license key issued for v8:
+If you use a license issued for IdentityServer v8 in IdentityServer v7, you may see the following error logged:
 
 ```text
 Error validating the Duende software license key - You do not have a valid license key
