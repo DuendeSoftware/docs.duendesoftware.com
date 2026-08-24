@@ -30,7 +30,7 @@ sensitive artifacts (like tokens) in JavaScript reachable locations, **this styl
 is not recommended**. 
 
 As the ["OAuth 2.0 for Browser-Based Apps" IETF/OAuth working group BCP
-document](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps)
+document](https://www.rfc-editor.org/info/rfc10017/)
 says:
 >there is no browser API that allows to store tokens in a completely secure way. 
 
