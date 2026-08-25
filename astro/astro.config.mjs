@@ -64,7 +64,7 @@ export default defineConfig({
       iconPacks: [
         {
           name: "material-symbols",
-          icons: materialSymbols
+          icons: materialSymbols,
         },
       ],
     }),
@@ -148,7 +148,7 @@ export default defineConfig({
           errorOnFallbackPages: false,
           errorOnInconsistentLocale: true,
           errorOnRelativeLinks: false,
-          errorOnLocalLinks: false
+          errorOnLocalLinks: false,
         }),
       ],
       title: "Duende Docs",
@@ -175,8 +175,17 @@ export default defineConfig({
           attrs: {
             id: "hs-script-loader",
             src: "https://js.hs-scripts.com/47428297.js",
-            "is:inline": true,
             defer: true,
+            async: true,
+          },
+        },
+        // Ahrefs
+        {
+          tag: "script",
+          attrs: {
+            id: "ahrefs-script-loader",
+            "data-key": "PPGvkEFhR5WtJM7gT/XqAg",
+            src: "https://analytics.ahrefs.com/analytics.js",
             async: true,
           },
         },
@@ -185,7 +194,7 @@ export default defineConfig({
           tag: "link",
           attrs: {
             rel: "alternate",
-            type: "text/markdown"
+            type: "text/markdown",
           },
         },
       ],
@@ -301,7 +310,7 @@ export default defineConfig({
             style: "normal",
             data: await wawoff.decompress(
               fs.readFileSync(
-                "src/assets/fonts/GT-Canon-M-Standard-Semibold.woff2"
+                "src/assets/fonts/GT-Canon-M-Standard-Semibold.woff2",
               ),
             ),
           },
@@ -312,7 +321,9 @@ export default defineConfig({
   ],
   markdown: {
     processor: unified({
-      remarkPlugins: [[removeMarkdownExtensions, { ignoreRelativeLinks: true }]],
+      remarkPlugins: [
+        [removeMarkdownExtensions, { ignoreRelativeLinks: true }],
+      ],
       rehypePlugins: [
         [
           rehypeAstroRelativeMarkdownLinks,
