@@ -13,7 +13,7 @@ redirect_from:
 
 Stores in IdentityServer are the persistence layer abstractions responsible for managing various types of data needed
 for the authentication and authorization processes. They provide interfaces to store and retrieve configuration and
-operational data.
+operational data. All store interfaces live in the `Duende.IdentityServer.Stores` namespace.
 
 ## Configuration Stores
 
@@ -25,14 +25,23 @@ Configuration stores manage the relatively static data that defines how Identity
 | [IResourceStore](/identityserver/reference/v8/stores/resource-store.md) | API resources, API scopes, and identity resources |
 | [IIdentityProviderStore](/identityserver/reference/v8/stores/idp-store.md) | Dynamic external identity providers |
 | [ICorsPolicyService](/identityserver/reference/v8/stores/cors-policy-service.md) | CORS origin validation for clients |
+| `IConnectedApplicationStore` | Read-only unified access to all registered applications across protocols (OIDC clients and SAML service providers) |
+| [ISamlServiceProviderStore](/identityserver/reference/v8/stores/saml-service-provider-store.md) | SAML Service Provider configuration retrieval by entity ID (used when SAML is enabled) |
 
 ## Operational Stores
 
-Operational stores manage transient, runtime data that supports active authentication flows:
+Operational stores manage transient, runtime data that supports active authentication flows. Several higher-level
+interfaces (`IAuthorizationCodeStore`, `IRefreshTokenStore`, `IReferenceTokenStore`, `IUserConsentStore`) are
+backed by `IPersistedGrantStore` by default. Replacing `IPersistedGrantStore` is usually sufficient, but each
+can be replaced individually for finer-grained control.
 
 | Store | Purpose |
 |-------|---------|
-| [IPersistedGrantStore](/identityserver/reference/v8/stores/persisted-grant-store.md) | Authorization codes, refresh tokens, reference tokens, and user consent |
+| [IPersistedGrantStore](/identityserver/reference/v8/stores/persisted-grant-store.md) | Authorization codes, refresh tokens, reference tokens, and user consent (the primary operational store) |
+| `IAuthorizationCodeStore` | Authorization codes issued during the Authorization Code flow (backed by `IPersistedGrantStore` by default) |
+| `IRefreshTokenStore` | Refresh tokens, including rotation/update semantics (backed by `IPersistedGrantStore` by default) |
+| `IReferenceTokenStore` | Reference tokens used when clients receive opaque handles instead of JWTs (backed by `IPersistedGrantStore` by default) |
+| `IUserConsentStore` | Remembered user consent decisions per subject/client pair (backed by `IPersistedGrantStore` by default) |
 | [IDeviceFlowStore](/identityserver/reference/v8/stores/device-flow-store.md) | Device authorization grant data |
 | [IBackChannelAuthenticationRequestStore](/identityserver/reference/v8/stores/backchannel-auth-request-store.md) | CIBA authentication requests |
 | [IPushedAuthorizationRequestStore](/identityserver/reference/v8/stores/pushed-authorization-request-store.md) | Pushed Authorization Requests (PAR) |
@@ -59,4 +68,4 @@ builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources);
 ```
 
-For production environments, use the [Entity Framework Core integration](/identityserver/data/ef.md) or implement custom stores using your preferred database technology.
+For production environments, use the [Entity Framework Core integration](/identityserver/data/providers/entityframework-core.md) or implement custom stores using your preferred database technology.

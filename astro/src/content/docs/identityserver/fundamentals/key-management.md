@@ -125,7 +125,7 @@ vault of some kind), or use one of the two implementations of the
 `ISigningKeyStore` that we provide:
 
 - the default `FileSystemKeyStore`, which writes keys to the file system.
-- the [EntityFramework operational store](/identityserver/data/ef.md#operational-store) which writes keys to a database
+- the [EntityFramework operational store](/identityserver/data/providers/entityframework-core.md#operational-store) which writes keys to a database
   using
   EntityFramework.
 

@@ -43,7 +43,7 @@ Several convenience methods are provided for registering custom stores:
 
   Registers a custom `IIdentityProviderStore` implementation.
 
-The [in-memory configuration stores](/identityserver/data/configuration.md#in-memory-stores) can be registered in DI
+The [in-memory configuration stores](/identityserver/data/providers/in-memory.md) can be registered in DI
 with the following extension methods.
 
 - **`AddInMemoryClients`**

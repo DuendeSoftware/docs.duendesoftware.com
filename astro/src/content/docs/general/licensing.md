@@ -117,7 +117,7 @@ required license entitlement, IdentityServer logs a warning (rate-limited to onc
 * [Client Initiated Backchannel Authentication (CIBA)](/identityserver/ui/ciba.md)
 * [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.md)
 * [Financial-Grade Security and Conformance Report](/identityserver/diagnostics/conformance-report.md)
-* [User Management](/identityserver/usermanagement/index.mdx)
+* [User Management](/identityserver/identity/user-management/index.mdx)
 
 Some features do require a license with the proper entitlement(s). If you use one of the following features
 without the required license entitlement, IdentityServer throws an exception during startup validation. 
@@ -165,7 +165,7 @@ With Duende IdentityServer v8, a new license key file format was introduced. The
 Key points:
 
 - **No new purchase required for v8**: If you have an active license from a previous version, the older key format works with IdentityServer v8. No new subscription or purchase is necessary.
-- **Add-ons require a v8 key**: To use add-ons like [SAML](/identityserver/saml/index.mdx) or [Duende User Management](/identityserver/usermanagement/index.mdx) in production on IdentityServer v8, a license key in the new v8 format is required.
+- **Add-ons require a v8 key**: To use add-ons like [SAML](/identityserver/saml/index.mdx) or [Duende User Management](/identityserver/identity/user-management/index.mdx) in production on IdentityServer v8, a license key in the new v8 format is required.
 - **v8 keys are not backwards-compatible**: A license key issued for v8 cannot be used with IdentityServer v7 or earlier.
 
 If you use a license issued for IdentityServer v8 in IdentityServer v7, you may see the following error logged:

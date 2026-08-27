@@ -8,12 +8,12 @@ sidebar:
 
 import { LinkCard } from "@astrojs/starlight/components";
 
-This section contains a sample demonstrating [Duende User Management](/identityserver/usermanagement/index.mdx) with IdentityServer.
+This section contains a sample demonstrating [Duende User Management](/identityserver/identity/user-management/index.mdx) with IdentityServer.
 User Management is a user store and authentication platform that ships as a NuGet package and replaces ASP.NET Identity for IdentityServer scenarios.
 
 ### User Management Getting Started Sample
 
-This sample contains the finished source code for the [Getting Started with User Management tutorial](/identityserver/usermanagement/getting-started.mdx).
+This sample contains the finished source code for the [Getting Started with User Management tutorial](/identityserver/identity/user-management/getting-started.mdx).
 
 <LinkCard
   description="GitHub Repository for the User Management Getting Started Sample"
@@ -57,8 +57,8 @@ This sample demonstrates Duende User Management functionality for passwords. It 
 
 **Concepts demonstrated:**
 
-- **Password Configuration**: Password length and complexity through the [PasswordOptions configuration](/identityserver/usermanagement/authentication/passwords#configuration).
-- **Custom Password Validator**: An [IPasswordValidator](/identityserver/usermanagement/authentication/passwords#custom-password-validation) with custom logic to block passwords in a hard-coded list.
+- **Password Configuration**: Password length and complexity through the [PasswordOptions configuration](/identityserver/identity/user-management/authentication/passwords#configuration).
+- **Custom Password Validator**: An [IPasswordValidator](/identityserver/identity/user-management/authentication/passwords#custom-password-validation) with custom logic to block passwords in a hard-coded list.
 - **Unique Custom Attributes**: A unique `Duende.Storage.EntityAttributeValue.AttributeDefinition` for the user's email address to tie the sign-in password to the email address.
 - **Custom Attribute Data**: Allows the user to edit custom profile data stored in attributes through the /Account page.
 

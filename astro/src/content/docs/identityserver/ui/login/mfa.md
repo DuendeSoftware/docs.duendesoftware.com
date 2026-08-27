@@ -16,7 +16,7 @@ experience, including MFA, to the hosting application's login UI.
 
 ## MFA with Duende User Management
 
-[Duende User Management](/identityserver/usermanagement/index.mdx) provides production-ready MFA building blocks that integrate 
+[Duende User Management](/identityserver/identity/user-management/index.mdx) provides production-ready MFA building blocks that integrate 
 directly with IdentityServer. The library handles the cryptographic operations, credential storage, verification logic, 
 and rate limiting. You provide the UI.
 
@@ -65,15 +65,15 @@ public class LoginModel(
 
 For detailed implementation guides, see:
 
-- [Authentication Flows Overview](/identityserver/usermanagement/authentication/overview.mdx): choosing the right combination of methods
-- [TOTP Authentication](/identityserver/usermanagement/authentication/totp.mdx): setup, verification, and recovery codes
-- [Passkey Authentication](/identityserver/usermanagement/authentication/passkeys.mdx): WebAuthn ceremonies and second-factor configuration
-- [OTP Authentication](/identityserver/usermanagement/authentication/otp.mdx): passwordless codes via email or SMS
-- [Recovery Codes](/identityserver/usermanagement/authentication/recovery-codes.mdx): backup access when the primary second factor is unavailable
+- [Authentication Flows Overview](/identityserver/identity/user-management/authentication/overview.mdx): choosing the right combination of methods
+- [TOTP Authentication](/identityserver/identity/user-management/authentication/totp.mdx): setup, verification, and recovery codes
+- [Passkey Authentication](/identityserver/identity/user-management/authentication/passkeys.mdx): WebAuthn ceremonies and second-factor configuration
+- [OTP Authentication](/identityserver/identity/user-management/authentication/otp.mdx): passwordless codes via email or SMS
+- [Recovery Codes](/identityserver/identity/user-management/authentication/recovery-codes.mdx): backup access when the primary second factor is unavailable
 
 ## MFA with ASP.NET Core Identity
 
-If you are using [ASP.NET Core Identity](/identityserver/aspnet-identity/index.md) as your user store, it provides its 
+If you are using [ASP.NET Core Identity](/identityserver/identity/aspnet-identity/index.md) as your user store, it provides its 
 own [MFA support](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-enable-qrcodes) including 
 TOTP with authenticator apps.
 Microsoft's [general MFA guidelines](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/mfa) cover 

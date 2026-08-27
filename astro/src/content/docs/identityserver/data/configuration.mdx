@@ -155,13 +155,4 @@ Further customization of the cache is possible:
 
 ## In-Memory Stores
 
-The various [in-memory configuration APIs](/identityserver/reference/v8/di.md#configuration-stores) allow for configuring
-IdentityServer from an in-memory list of the various configuration objects.
-These in-memory collections can be hard-coded in the hosting application, or could be loaded dynamically from a
-configuration file or a database.
-By design, though, these collections are only created when the hosting application is starting up.
-
-Use of these configuration APIs are designed for use when prototyping, developing, and/or testing where it is not
-necessary to dynamically consult database at runtime for the configuration data.
-This style of configuration might also be appropriate for production scenarios if the configuration rarely changes, or
-it is not inconvenient to require restarting the application if the value must be changed.
+IdentityServer includes in-memory store implementations for configuration data that are useful during development and testing. For full details, see [In-Memory Stores](/identityserver/data/providers/in-memory.md).

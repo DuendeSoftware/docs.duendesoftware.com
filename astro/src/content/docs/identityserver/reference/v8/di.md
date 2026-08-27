@@ -66,7 +66,7 @@ Several convenience methods are provided for registering custom stores:
   Registers a custom `IPushedAuthorizationRequestStore` implementation for persisting Pushed Authorization Requests
   (PAR). Replace the default in-memory store with a durable implementation for production use.
 
-The [in-memory configuration stores](/identityserver/data/configuration.md#in-memory-stores) can be registered in DI
+The [in-memory configuration stores](/identityserver/data/providers/in-memory.md) can be registered in DI
 with the following extension methods.
 
 * **`AddInMemoryClients`**
