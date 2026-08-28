@@ -1,0 +1,89 @@
+---
+title: ASP.NET Identity Integration
+description: Guide to integrating ASP.NET Identity with IdentityServer for user management, including setup instructions and configuration options
+sidebar:
+  label: Overview
+  order: 1
+redirect_from:
+  - /identityserver/v5/aspnet_identity/
+  - /identityserver/v6/aspnet_identity/
+  - /identityserver/v7/aspnet_identity/
+  - /identityserver/aspnet-identity/
+---
+
+An ASP.NET Identity-based implementation is provided for managing the identity database for users of IdentityServer.
+This implementation implements the extensibility points in IdentityServer needed to load identity data for your users to
+emit claims into tokens.
+
+:::tip[Duende User Management]
+<span data-shb-badge data-shb-badge-variant="default">Added in v8</span>
+
+If you are starting a new project or want a more modern user management solution,
+consider [Duende User Management](/identityserver/identity/user-management/identityserver-integration.mdx) as an alternative to ASP.NET Identity.
+It provides built-in support for passwordless authentication (OTP, passkeys), profile attribute management,
+and role-based authorization.
+:::
+
+To use the ASP.NET Identity-based implementation, ensure that you have the NuGet package for the ASP.NET Identity integration.
+It is called `Duende.IdentityServer.AspNetIdentity`:
+
+```bash title=Terminal
+dotnet add package Duende.IdentityServer.AspNetIdentity
+```
+
+Next, configure ASP.NET Identity normally in your IdentityServer host with the standard calls to `AddIdentity` and any
+other related configuration.
+
+Then in your `Program.cs`, use the `AddAspNetIdentity` extension method after the call to `AddIdentityServer`:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddIdentityServer()
+    .AddAspNetIdentity<ApplicationUser>();
+```
+
+`AddAspNetIdentity` requires as a generic parameter the class that models your user for ASP.NET Identity (and the same
+one passed to `AddIdentity` to configure ASP.NET Identity).
+This configures IdentityServer to use the ASP.NET Identity implementations
+of [IUserClaimsPrincipalFactory](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.iuserclaimsprincipalfactory-1)
+to convert the user data into claims, `IResourceOwnerPasswordValidator` to support
+the [password grant type](/identityserver/tokens/password-grant.md), and `IProfileService`, which uses the
+`IUserClaimsPrincipalFactory` to add [claims](/identityserver/fundamentals/claims.md) to tokens.
+It also configures some of ASP.NET Identity's options for use with IdentityServer (such as claim types to use and
+authentication cookie settings).
+
+If you need to use your own implementation of `IUserClaimsPrincipalFactory`, then that is supported. Our implementation
+of the `IUserClaimsPrincipalFactory` will use the decorator pattern to encapsulate yours. For this to work correctly,
+ensure that your implementation is registered in the ASP.NET Core service provider before calling the IdentityServer
+`AddAspNetIdentity` extension method.
+
+The `IUserProfileService` interface has two methods that IdentityServer uses to interact with the user store. The
+profile service added for ASP.NET Identity implements `GetProfileDataAsync` by invoking the
+`IUserClaimsPrincipalFactory` implementation registered in the dependency injection container. The other method on
+`IProfileService` is `IsActiveAsync`, which is used in various places in IdentityServer to validate that the user is (
+still) active. There is no built-in concept in ASP.NET Identity to inactive users, so our implementation is hard-coded
+to return `true`. If you extend the ASP.NET Identity user with enabled/disabled functionality, you should derive from
+our `ProfileService<TUser>` and override `IsUserActiveAsync(TUser user)` to check your custom enabled/disabled flags.
+
+## Template
+
+You can use the `duende-is-aspid` [template](/identityserver/overview/packaging.mdx#templates) to create a starter
+IdentityServer host project configured to use ASP.NET Identity. See
+the [Quickstart Documentation](/identityserver/quickstarts/5-aspnetid.md) for a detailed walkthrough.
+
+## User Management Pages
+
+The IdentityServer templates only include pages necessary for the authentication flow (login, logout,
+consent, error). User management pages, such as forgot password, password reset, or two-factor
+authentication setup, are not part of the IdentityServer templates because they are specific to your
+user store implementation.
+
+Since ASP.NET Core Identity provides built-in support for these features, you can add them to your
+IdentityServer host by [scaffolding Identity into your project](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/scaffold-identity).
+This gives you ready-made pages for password reset, email confirmation, two-factor authentication,
+and more, all integrated with the ASP.NET Core Identity user store you've already configured.
+

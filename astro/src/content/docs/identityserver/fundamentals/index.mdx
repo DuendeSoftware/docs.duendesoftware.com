@@ -1,0 +1,52 @@
+---
+title: Fundamentals
+description: An overview of what you need to bring to Duende IdentityServer — UI, data stores, and identity and profile storage — and the ready-made options available for each.
+sidebar:
+  label: Overview
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Duende IdentityServer implements the OpenID Connect, OAuth and SAML protocol layers: issuing tokens, managing clients and scopes, and enforcing authorization policies. To do this, it needs three things that you bring:
+
+## User Interface
+
+IdentityServer has no built-in UI. It relies on pages you provide for login, logout, consent, and error handling. This keeps you in full control of the user experience: credential types, visual design, multi-factor flows, and any additional pages (registration, password reset, etc.) are all yours to build.
+
+Ready-made UI is available via the [IdentityServer templates](/identityserver/overview/packaging.mdx#templates), which give you a working starting point that you can customize completely. See [User Interface](/identityserver/ui/index.md) for full coverage of login, logout, consent, and more.
+
+## Data Stores
+
+IdentityServer needs two kinds of persistent data:
+
+- **Configuration data**: clients, resources, and identity providers. Defines what your IdentityServer deployment supports.
+- **Operational data**: tokens, authorization codes, grants, and sessions. Generated at runtime during authentication flows.
+
+All data access is behind store interfaces, so you can use any database. Ready-made providers are available, or you can implement the interfaces yourself. See [Data Stores & Persistence](/identityserver/data/index.mdx) for the full details.
+
+## Identity & Profile Management
+
+IdentityServer needs to know who your users are and what claims to include in their tokens. It does not have a built-in user database; you connect it to yours via the `IProfileService` interface.
+
+Ready-made integrations are available for [User Management](/identityserver/identity/user-management/index.mdx) and [ASP.NET Identity](/identityserver/identity/aspnet-identity/index.md), or you can [implement `IProfileService`](/identityserver/identity/custom.md) yourself to connect to any user store.
+
+---
+
+<CardGrid>
+  <LinkCard
+    href="/identityserver/ui/"
+    title="User Interface"
+    description="Build login, logout, consent, and error pages. Start from the templates or build your own."
+  />
+  <LinkCard
+    href="/identityserver/data/"
+    title="Data Stores"
+    description="Choose a provider for configuration and operational data: Entity Framework Core, in-memory, or custom."
+  />
+  <LinkCard
+    href="/identityserver/identity/"
+    title="Identity & Profile Management"
+    description="Connect IdentityServer to your user store via User Management, ASP.NET Identity, or a custom IProfileService."
+  />
+</CardGrid>

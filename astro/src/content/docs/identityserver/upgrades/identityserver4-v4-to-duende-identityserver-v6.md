@@ -96,7 +96,7 @@ If in `ConfigureServices` in your `Startup.cs` you were previously using `AddDev
 
 ## Step 5: Update Database Schema (if needed)
 
-If you are using a [database](/identityserver/data/index.md) for your configuration and operational data, then there are database schema updates.
+If you are using a [database](/identityserver/data/index.mdx) for your configuration and operational data, then there are database schema updates.
 These include:
 
 * A new `Keys` table for the automatic key management feature in the operational database.

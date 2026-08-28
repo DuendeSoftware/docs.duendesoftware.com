@@ -50,6 +50,7 @@ builder.Services.AddTransient<IDeviceFlowStore, YourCustomDeviceFlowStore>();
 ```
 
 ### Grant Expiration and Consumption
+
 The presence of the record in the store without a `ConsumedTime` and while still within the `Expiration` represents the validity of the grant.
 Setting either of these two values, or removing the record from the store effectively revokes the grant.
 
@@ -60,6 +61,7 @@ or to be used in risk assessment and threat mitigation scenarios (where suspicio
 For refresh tokens, this sort of custom logic would be performed in the [IRefreshTokenService](/identityserver/reference/v8/services/refresh-token-service.md).
 
 ### Grant Data
+
 The `Data` property of the model contains the authoritative copy of the values in the store. This data is protected at rest using the ASP.NET Data Protection API. Except for `ConsumedTime`, the other properties of the model should be treated as read-only.
 
 ### Persisted Grant Service
@@ -72,6 +74,7 @@ It abstracts and aggregates the different grant types into one concept, and allo
 The [automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management) feature in Duende IdentityServer requires a store to persist keys that are dynamically created.
 
 ### Signing Key Store
+
 By default, the file system is used, but the storage of these keys is abstracted behind an extensible store interface.
 The [ISigningKeyStore](/identityserver/reference/v8/stores/signing-key-store.md) is that storage interface.
 
@@ -87,12 +90,14 @@ builder.Services.AddIdentityServer()
 ```
 
 ### Key Lifecycle
+
 When keys are required, `LoadKeysAsync` will be called to load them all from the store.
 They are then cached automatically for some amount of time based on [configuration](/identityserver/reference/v8/options.md#key-management).
 Periodically a new key will be created, and `StoreKeyAsync` will be used to persist the new key.
 Once a key is past its retirement, `DeleteKeyAsync` will be used to purge the key from the store.
 
 ### Serialized Key
+
 The [SerializedKey](/identityserver/reference/v8/stores/signing-key-store.md#serializedkey) is the model that contains the key data to persist.
 
 It is expected that the `Id` is the unique identifier for the key in the store. The `Data` property is the main payload of the key and contains a copy of all the other values. Some of the properties affect how the `Data` is processed (e.g. `DataProtected`), and the other properties are considered read-only and thus can't be changed to affect the behavior (e.g. changing the `Created` value will not affect the key lifetime, nor will changing `Algorithm` change which signing algorithm the key is used for).
@@ -136,11 +141,10 @@ builder.Services.AddIdentityServer()
 
 ### EntityFramework Store Implementation
 
-An EntityFramework Core implementation of the server-side session store is included in the [Entity Framework Integration](/identityserver/data/ef.md#operational-store) operational store.
+An EntityFramework Core implementation of the server-side session store is included in the [Entity Framework Integration](/identityserver/data/providers/entityframework-core.md#operational-store) operational store.
 
 When using the EntityFramework Core operational store, it will be necessary to indicate that server-side sessions need to be used with the call to the `AddServerSideSessions` fluent API.
 For example:
-
 
 ```csharp
 // Program.cs

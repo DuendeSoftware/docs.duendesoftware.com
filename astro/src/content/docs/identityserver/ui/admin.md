@@ -20,7 +20,7 @@ IdentityServer supports in-memory configuration, where clients, resources, scope
 This approach is valuable, as configuration can be maintained and linked from a specific commit in source control, and deployed as a single unit with IdentityServer.
 
 The downside of this approach is that to change configuration, the application will have to be restarted or redeployed.
-To allow for dynamic configuration changes, you can [store configuration in a database](/identityserver/data/ef.md).
+To allow for dynamic configuration changes, you can [store configuration in a database](/identityserver/data/providers/entityframework-core.md).
 
 ## Build Your Own Admin UI
 

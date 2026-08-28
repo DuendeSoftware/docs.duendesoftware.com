@@ -41,7 +41,7 @@ Dynamic identity providers require a store for the configuration data.
 There are two store implementations provided by Duende IdentityServer:
 
 * An in-memory store
-* A store backed by a database (using [Entity Framework Core](/identityserver/data/ef.md))
+* A store backed by a database (using [Entity Framework Core](/identityserver/data/providers/entityframework-core.md))
 
 You could also implement your own store based on the [`IIdentityProviderStore` interface](/identityserver/reference/v8/stores/idp-store.md).
 
@@ -49,7 +49,7 @@ You could also implement your own store based on the [`IIdentityProviderStore` i
 Like other configuration data in IdentityServer, by default the dynamic provider configuration is loaded from the store
 on every request unless caching is enabled.
 If you use a custom store, there is an [extension method to enable caching](/identityserver/data/configuration.md#caching-configuration-data).
-If you use the EF stores, there is a general helper [to enable caching for all configuration data](/identityserver/data/ef.md#enabling-caching-for-configuration-store).
+If you use the EF stores, there is a general helper [to enable caching for all configuration data](/identityserver/data/providers/entityframework-core.md#enabling-caching-for-configuration-store).
 :::
 
 The identity provider store only provides an interface to query dynamic providers and does not provide any methods to add, update, or delete identity providers.

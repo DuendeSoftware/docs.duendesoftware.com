@@ -198,7 +198,7 @@ builder.Services.AddAuthentication()
     });
 ```
 
-Learn more about [ASP.NET Identity and its relationship to Duende IdentityServer](/identityserver/aspnet-identity/index.md).
+Learn more about [ASP.NET Identity and its relationship to Duende IdentityServer](/identityserver/identity/aspnet-identity/index.md).
 
 ## Handling The Callback
 

@@ -21,8 +21,12 @@ You have the ability to control the entire user experience while Duende Identity
 the security protocol (OpenID Connect and OAuth).
 
 :::note
-While you can use any custom user database or identity management library for your users, we
-provide [integration support](/identityserver/aspnet-identity/index.md) for ASP.NET Identity.
+While you can use any custom user database or identity management library for your users, IdentityServer provides
+three ready-made options. See [Identity & Profile Management](/identityserver/identity/index.mdx) for the full overview.
+
+- [Duende User Management](/identityserver/identity/user-management/index.mdx) — first-party, passwordless-first user store with OTP, TOTP, passkeys, roles, and groups. Added in v8.
+- [ASP.NET Identity](/identityserver/identity/aspnet-identity/index.md) — integration with the standard ASP.NET Core Identity stack.
+- [Custom via IProfileService](/identityserver/identity/custom.md) — implement the interface yourself to connect to any user database or store.
 :::
 
 ## Authorization Endpoint And Login Page Workflow

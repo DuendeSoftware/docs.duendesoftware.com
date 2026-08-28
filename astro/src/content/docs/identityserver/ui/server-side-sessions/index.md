@@ -51,7 +51,7 @@ builder.Services.AddIdentityServer()
 ```
 
 By default, the store for the server-side sessions will just be kept in-memory.
-For production scenarios you will want to configure a durable store either by using our [EntityFramework Core implementation](/identityserver/data/ef.md#operational-store),
+For production scenarios you will want to configure a durable store either by using our [EntityFramework Core implementation](/identityserver/data/providers/entityframework-core.md#operational-store),
 or you can [implement the store yourself](/identityserver/reference/v8/stores/server-side-sessions.md).
 
 :::note
@@ -92,7 +92,7 @@ builder.Services.AddIdentityServer(options => {
 
 The [`IServerSideSessionStore`](/identityserver/reference/v8/stores/server-side-sessions.md) is the abstraction for storing the server-side session.
 
-An EntityFramework Core implementation is already provided as part of our [operational store](/identityserver/data/ef.md#operational-store), but you can implement
+An EntityFramework Core implementation is already provided as part of our [operational store](/identityserver/data/providers/entityframework-core.md#operational-store), but you can implement
 the [interface](/identityserver/reference/v8/stores/server-side-sessions.md) yourself for other backing implementations.
 
 :::caution[Prefer `GetSessionsAsync` over `QuerySessionsAsync`]

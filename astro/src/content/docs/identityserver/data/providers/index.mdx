@@ -1,0 +1,29 @@
+---
+title: Storage Providers
+description: Overview of the available storage provider options for Duende IdentityServer configuration and operational data.
+sidebar:
+  label: Overview
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Duende IdentityServer abstracts data access behind store interfaces. You choose which provider backs those interfaces.
+
+<CardGrid>
+  <LinkCard
+    href="/identityserver/data/providers/entityframework-core/"
+    title="Entity Framework Core"
+    description="Use any EF Core-supported database (SQL Server, PostgreSQL, SQLite, and more) for durable, production-ready storage."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/in-memory/"
+    title="In-Memory"
+    description="Keep all data in application memory. Ideal for development, testing, and simple scenarios where durability is not required."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/custom/"
+    title="Custom"
+    description="Implement the store interfaces yourself to use any database, storage backend, or data access technology."
+  />
+</CardGrid>

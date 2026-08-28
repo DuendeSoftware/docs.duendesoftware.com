@@ -1,0 +1,31 @@
+---
+title: Identity & Profile Management
+description: Overview of the options for providing user identity and profile data to Duende IdentityServer, including User Management, ASP.NET Identity, and custom IProfileService implementations.
+sidebar:
+  label: Overview
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Duende IdentityServer needs a source for user identity and profile data: the information used to authenticate users and populate claims in tokens. You choose which implementation backs this.
+
+The following options are available, presented from most to least full-featured:
+
+<CardGrid>
+  <LinkCard
+    href="/identityserver/identity/user-management/"
+    title="User Management"
+    description="First-party, passwordless-first user store supporting OTP, TOTP, passkeys, external providers, roles, groups, and full lifecycle management."
+  />
+  <LinkCard
+    href="/identityserver/identity/aspnet-identity/"
+    title="ASP.NET Identity"
+    description="Integrate IdentityServer with ASP.NET Core Identity for established, well-known user management using the standard Microsoft identity stack."
+  />
+  <LinkCard
+    href="/identityserver/identity/custom/"
+    title="Custom"
+    description="Implement IProfileService directly to connect IdentityServer to any user database or store. Also the extension point for customizing claims with any provider."
+  />
+</CardGrid>

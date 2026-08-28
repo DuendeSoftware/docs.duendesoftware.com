@@ -118,7 +118,7 @@ create a new ASP.NET Core Web application which will host the Configuration API.
     The `AddClientConfigurationStore()` extension method registers the built-in
     implementation of the `IClientConfigurationStore` interface with the service
     provider. Make sure to also configure the connection string to the
-    [configuration store](/identityserver/data/ef.md#configuration-store-support):
+    [configuration store](/identityserver/data/providers/entityframework-core.md#configuration-store-support):
 
     <Code code={dbConfigurationSnippet} lang="csharp" title="Program.cs" mark={[3]} />
 
@@ -172,7 +172,7 @@ and configure the store implementation.
     The `AddClientConfigurationStore()` extension method registers the built-in
     implementation of the `IClientConfigurationStore` interface with the service
     provider. Make sure to also configure the connection string to the
-    [configuration store](/identityserver/data/ef.md#configuration-store-support) if
+    [configuration store](/identityserver/data/providers/entityframework-core.md#configuration-store-support) if
     you haven't already as part of your IdentityServer host:
 
     <Code code={dbConfigurationSnippet} lang="csharp" title="Program.cs" mark={[3]} />
