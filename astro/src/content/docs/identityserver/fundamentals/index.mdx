@@ -1,6 +1,6 @@
 ---
 title: Fundamentals
-description: An overview of what you need to bring to Duende IdentityServer — UI, data stores, and identity and profile storage — and the ready-made options available for each.
+description: An overview of the building blocks of Duende IdentityServer, including core concepts (clients, resources, claims, keys, hosting) and what you provide (UI, data stores, identity management).
 sidebar:
   label: Overview
   order: 1
@@ -8,15 +8,69 @@ sidebar:
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
-Duende IdentityServer implements the OpenID Connect, OAuth and SAML protocol layers: issuing tokens, managing clients and scopes, and enforcing authorization policies. To do this, it needs three things that you bring:
+Duende IdentityServer implements the OpenID Connect, OAuth and SAML protocol layers: issuing tokens, managing clients and scopes, and enforcing authorization policies. This section covers everything fundamental to working with IdentityServer, from the core concepts you need to understand to the components you provide.
 
-## User Interface
+## Core concepts
+
+These are the core concepts you'll work with when configuring and running IdentityServer:
+
+* **Clients** — A client is any application that requests tokens from IdentityServer, whether a web app, SPA, mobile app, API, or backend service. Each client is registered with an allowed set of scopes, grant types, and redirect URIs. See [Clients](/identityserver/fundamentals/clients.md).
+* **Resources** — Resources model what your system protects. Identity resources represent user claims (like profile or email), API scopes define logical permission boundaries, and API resources group scopes for audience-based access control. See [Resources](/identityserver/fundamentals/resources/index.md).
+* **Claims** — Claims are name-value pairs that describe a user or client. They flow through tokens and are the primary way downstream applications learn about the authenticated entity. Understanding how claims are requested, issued, and transformed is central to working with IdentityServer. See [Claims](/identityserver/fundamentals/claims.md) and [Claims Lifecycle](/identityserver/fundamentals/claims-lifecycle.mdx).
+* **Users** — Users are the people who authenticate through IdentityServer. How users are modeled, stored, and resolved into claims depends on your identity management choice. See [Users](/identityserver/fundamentals/users.md).
+* **Key Management** — IdentityServer uses cryptographic keys to sign tokens. Key management covers how signing keys are created, rotated, and stored, which is critical for production deployments. See [Key Management](/identityserver/fundamentals/key-management.md).
+* **Hosting** — IdentityServer runs as middleware in an ASP.NET Core application. Hosting covers how to configure the host, set up endpoints, and prepare for production deployment. See [Hosting](/identityserver/fundamentals/hosting.md).
+* **Events** — IdentityServer raises events for key operations like token issuance, login, and errors. These are useful for auditing, monitoring, and diagnostics. See [Events](/identityserver/fundamentals/openid-connect-events.md).
+
+<CardGrid>
+  <LinkCard
+    href="/identityserver/fundamentals/clients/"
+    title="Clients"
+    description="Register and configure applications that request tokens from IdentityServer."
+  />
+  <LinkCard
+    href="/identityserver/fundamentals/resources/"
+    title="Resources"
+    description="Model what your system protects: identity resources, API scopes, and API resources."
+  />
+  <LinkCard
+    href="/identityserver/fundamentals/claims/"
+    title="Claims"
+    description="Understand how claims are requested, issued, and transformed in tokens."
+  />
+  <LinkCard
+    href="/identityserver/fundamentals/users/"
+    title="Users"
+    description="How users are modeled and resolved into claims."
+  />
+  <LinkCard
+    href="/identityserver/fundamentals/key-management/"
+    title="Key Management"
+    description="Create, rotate, and store the cryptographic keys that sign your tokens."
+  />
+  <LinkCard
+    href="/identityserver/fundamentals/hosting/"
+    title="Hosting"
+    description="Configure and deploy IdentityServer as ASP.NET Core middleware."
+  />
+  <LinkCard
+    href="/identityserver/fundamentals/openid-connect-events/"
+    title="Events"
+    description="Audit, monitor, and diagnose with IdentityServer's event system."
+  />
+</CardGrid>
+
+## What you provide
+
+IdentityServer handles protocols, but it relies on you for three things: a user interface, data storage, and identity management.
+
+### User Interface
 
 IdentityServer has no built-in UI. It relies on pages you provide for login, logout, consent, and error handling. This keeps you in full control of the user experience: credential types, visual design, multi-factor flows, and any additional pages (registration, password reset, etc.) are all yours to build.
 
 Ready-made UI is available via the [IdentityServer templates](/identityserver/overview/packaging.mdx#templates), which give you a working starting point that you can customize completely. See [User Interface](/identityserver/ui/index.md) for full coverage of login, logout, consent, and more.
 
-## Data Stores
+### Data Stores
 
 IdentityServer needs two kinds of persistent data:
 
@@ -25,13 +79,11 @@ IdentityServer needs two kinds of persistent data:
 
 All data access is behind store interfaces, so you can use any database. Ready-made providers are available, or you can implement the interfaces yourself. See [Data Stores & Persistence](/identityserver/data/index.mdx) for the full details.
 
-## Identity & Profile Management
+### Identity & Profile Management
 
 IdentityServer needs to know who your users are and what claims to include in their tokens. It does not have a built-in user database; you connect it to yours via the `IProfileService` interface.
 
 Ready-made integrations are available for [User Management](/identityserver/identity/user-management/index.mdx) and [ASP.NET Identity](/identityserver/identity/aspnet-identity/index.md), or you can [implement `IProfileService`](/identityserver/identity/custom.md) yourself to connect to any user store.
-
----
 
 <CardGrid>
   <LinkCard
