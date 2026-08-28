@@ -32,6 +32,10 @@ builder.Services.AddBff()
 
 The default implementation stores the session in-memory. This is useful for testing, but for production you typically want a more robust storage mechanism. We provide an implementation of the session store built with EntityFramework (EF) that can be used with any database with an EF provider (e.g. Microsoft SQL Server). You can also use a custom store. See [extensibility](/bff/extensibility/sessions.mdx#user-session-store) for more information.
 
+:::note[In-memory store limitations]
+Even with the in-memory store, tokens (including refresh tokens) are never placed in the cookie. The cookie always contains only the session ID. However, the in-memory store does not survive process restarts and is not shared across instances. Sessions will be lost when the process restarts or when traffic is routed to a different instance in a load-balanced deployment. It is recommended to use a persistent store in multi-node BFF deployments.
+:::
+
 ## Using Entity Framework for the Server-Side Session Store
 
 To use the EF session store, install the `Duende.BFF.EntityFramework` NuGet package:
