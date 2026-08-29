@@ -24,7 +24,7 @@ with trial mode available for development and testing.
 
 ## IdentityServer
 
-Duende IdentityServer requires a license for production use, with plans available that offer various features based on organizational needs. A [community edition](https://duendesoftware.com/products/communityedition/)
+Duende IdentityServer requires a [paid license](https://duendesoftware.com/products/identityserver) for production use, with plans available that offer various features based on organizational needs. A [community edition](https://duendesoftware.com/products/communityedition/)
 is also available.
 
 For some longer-term customers, we still honor customers continuing on our previous Starter, Business and Enterprise licenses. 
@@ -157,10 +157,10 @@ license before the old one lapses.
 
 With Duende IdentityServer v8, a new license key file format was introduced. The following table shows which license key formats are compatible with which versions of IdentityServer:
 
-| License key issued for | Used with IdentityServer v7 | Used with IdentityServer v8 |
-|------------------------|-----------------------------|-----------------------------|
-| v7 (or earlier)        | ✅ Works                     | ✅ Works (no add-on support) |
-| v8                     | ❌ Does not work             | ✅ Works (full support)      |
+| License key issued for | Used with IdentityServer v7 or BFF | Used with IdentityServer v8 |
+|------------------------|------------------------------------|-----------------------------|
+| v7 (or earlier)        | ✅ Works                            | ✅ Works (no add-on support) |
+| v8                     | ❌ Does not work                    | ✅ Works (full support)      |
 
 Key points:
 
@@ -168,7 +168,7 @@ Key points:
 - **Add-ons require a v8 key**: To use add-ons like [SAML](/identityserver/saml/index.mdx) or [Duende User Management](/identityserver/identity/user-management/index.mdx) in production on IdentityServer v8, a license key in the new v8 format is required.
 - **v8 keys are not backwards-compatible**: A license key issued for v8 cannot be used with IdentityServer v7 or earlier.
 
-If you use a license issued for IdentityServer v8 in IdentityServer v7, you may see the following error logged:
+If you use a license issued for IdentityServer v8 in IdentityServer v7 or BFF, you may see the following error logged:
 
 ```text
 Error validating the Duende software license key - You do not have a valid license key
