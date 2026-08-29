@@ -55,6 +55,38 @@ an [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeo
 
 The `ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout` flag enables this behavior, and it is on by default.
 
+### Session Renewal on Client Sign-in
+
+When server-side sessions are enabled, the session cookie expiration can be extended beyond the originally configured
+lifetime. This happens because IdentityServer calls `SignInAsync` whenever the session's client list needs to be
+updated, for example when a user signs into an additional client application. The `SignInAsync` call re-issues the
+authentication cookie, which resets the expiration timer.
+
+This is different from the behavior without server-side sessions, where the cookie expiration is set once at login
+and does not change when the user signs into additional clients.
+
+If you need to enforce an absolute session duration regardless of client sign-in activity, you can configure
+[`UserSsoLifetime`](/identityserver/reference/v8/models/client.md#authentication--session-management) on the client.
+This setting forces the user to re-authenticate interactively after the specified number of seconds, even if they
+have an active IdentityServer session. Combined with
+[`AbsoluteRefreshTokenLifetime`](/identityserver/reference/v8/models/client.md#refresh-token) and setting
+`RefreshTokenExpiration` to `TokenExpiration.Absolute`, you can align the refresh token expiration with the session
+duration.
+
+For example, to enforce a 12-hour absolute session and token lifetime on a client:
+
+```csharp
+new Client
+{
+    ClientId = "interactive.confidential",
+    // other settings...
+
+    UserSsoLifetime = (int)TimeSpan.FromHours(12).TotalSeconds,
+    AbsoluteRefreshTokenLifetime = (int)TimeSpan.FromHours(12).TotalSeconds,
+    RefreshTokenExpiration = TokenExpiration.Absolute
+}
+```
+
 ### Configuring Server-Side Session Lifetime
 
 If you need to change the default lifetime of server-side sessions, there are two ways to do so, depending on whether
