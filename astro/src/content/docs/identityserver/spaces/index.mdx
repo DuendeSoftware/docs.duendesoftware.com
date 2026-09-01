@@ -1,0 +1,69 @@
+---
+title: "IdentityServer Spaces"
+description: "Use Spaces to isolate IdentityServer configuration and operational data in one deployment"
+date: 2026-09-01
+sidebar:
+  label: "Overview"
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+A space is an isolated IdentityServer environment within one application deployment. Each space has its own configuration
+and operational data, while the application shares the same process, code, and database infrastructure.
+
+Use Spaces when you need to host multiple security domains without operating a separate IdentityServer deployment for
+each one. Examples include software-as-a-service tenants, regional environments, or independently administered business
+units.
+
+## Storage Isolation
+
+Spaces build on the pooled storage model in
+[`Duende.Storage`](/identityserver/data/providers/duende-storage/index.mdx). Each space maps to a storage pool. IdentityServer
+resolves the current space at the start of a request and routes all subsequent store operations to that pool.
+
+The management pool stores space definitions. Pool `0` is the default space, and each configured space normally receives
+a separate positive pool ID. Moving a space to another pool changes which data it sees, so treat pool assignments as
+security boundaries rather than display metadata.
+
+## Request Resolution
+
+A space can match an incoming request by:
+
+* Origin, such as `https://tenant.example.com`
+* Path segment, such as `/acme` under the default `/t` prefix
+* Both origin and path
+
+Origin claims take precedence so a path cannot route a request away from a space that owns the host. With the default
+prefix, a space whose path is `/acme` receives requests under `/t/acme`. Middleware moves `/t/acme` to `PathBase` before
+ASP.NET Core routing, leaving the remaining path for IdentityServer endpoints.
+
+Requests that explicitly use the space path prefix but do not match a space receive `404 Not Found`. By default, other
+unmatched requests also receive `404 Not Found`; you can opt into the default space with `FallbackToDefault`.
+
+:::caution
+Only enable `FallbackToDefault` when serving an unmatched host or path from the default space is an intentional part of
+your isolation model. A strict `404 Not Found` response is safer for multi-tenant deployments.
+:::
+
+## Operational Considerations
+
+Spaces isolate persisted data, but they do not automatically isolate every process-level dependency. Review signing
+credentials, ASP.NET Core Data Protection, external caches, telemetry, rate limits, and custom services to decide whether
+they also need space-aware configuration.
+
+Your administration system must authorize operators for the specific spaces they manage. Never trust a space identifier
+supplied by a client without allowing the resolution middleware to validate it against a configured match pattern.
+
+<CardGrid>
+  <LinkCard
+    href="/identityserver/spaces/getting-started/"
+    title="Getting Started"
+    description="Configure storage, add space resolution, and create an initial space."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/"
+    title="Duende.Storage"
+    description="Understand the storage provider and its preview status."
+  />
+</CardGrid>

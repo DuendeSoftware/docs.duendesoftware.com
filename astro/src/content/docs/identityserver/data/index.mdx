@@ -1,6 +1,7 @@
 ---
 title: Data Stores and Persistence
 description: Overview of IdentityServer data stores types, including configuration and operational data, and their implementation options
+date: 2026-09-01
 sidebar:
   label: Overview
   order: 1
@@ -22,11 +23,12 @@ to access the data it needs at runtime when processing requests. You can impleme
 or choose one of the built-in providers.
 
 :::note
-Given that data stores abstract the details of the data stored, strictly speaking, IdentityServer does not know or
-understand where the data is actually being stored. As such, there is no built-in administrative tool to populate or manage this data.
+Store interfaces abstract where data is stored, so IdentityServer's protocol engine does not directly administer it.
+The preview [Duende.Storage provider](/identityserver/data/providers/duende-storage/index.mdx) includes configuration
+administration APIs that you can use to build a management experience.
 
-There are third-party options (both commercial and FOSS) that provide an administrative UI for managing the data when
-using the EntityFramework Core implementations. See [Admin UI](/identityserver/ui/admin.md) for details.
+Third-party options, both commercial and free and open source software (FOSS), provide administrative UIs for the Entity
+Framework Core implementations. See [Admin UI](/identityserver/ui/admin.md) for details.
 :::
 
 <CardGrid>
@@ -43,6 +45,6 @@ using the EntityFramework Core implementations. See [Admin UI](/identityserver/u
   <LinkCard
     href="/identityserver/data/providers/"
     title="Storage Providers"
-    description="Choose how and where your data is stored: Entity Framework Core, in-memory, or a custom implementation."
+    description="Choose how and where your data is stored: Duende.Storage, Entity Framework Core, in-memory, or a custom implementation."
   />
 </CardGrid>

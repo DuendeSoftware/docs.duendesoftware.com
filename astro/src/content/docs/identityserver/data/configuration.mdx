@@ -1,6 +1,7 @@
 ---
 title: Configuration Data
 description: "Documentation about configuration data models and stores in Duende IdentityServer, including client, resource, and identity provider stores"
+date: 2026-09-01
 sidebar:
   order: 10
 redirect_from:
@@ -26,6 +27,10 @@ The stores used in Duende IdentityServer are:
 * [Resource store](/identityserver/reference/v8/stores/resource-store.md) for `IdentityResource`, `ApiResource`, and
   `ApiScope` data.
 * [Identity Provider store](/identityserver/reference/v8/stores/idp-store.md) for `IdentityProvider` data.
+
+Choose a provider to implement these interfaces. The [storage provider overview](/identityserver/data/providers/index.mdx)
+compares in-memory, Entity Framework Core, `Duende.Storage`, and custom implementations. The preview `Duende.Storage`
+provider also supplies [configuration administration APIs](/identityserver/data/providers/duende-storage/admin-apis.md).
 
 ## Registering Custom Stores
 

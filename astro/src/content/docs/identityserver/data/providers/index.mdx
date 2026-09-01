@@ -1,6 +1,7 @@
 ---
 title: Storage Providers
 description: Overview of the available storage provider options for Duende IdentityServer configuration and operational data.
+date: 2026-09-01
 sidebar:
   label: Overview
   order: 1
@@ -22,8 +23,28 @@ Duende IdentityServer abstracts data access behind store interfaces. You choose 
     description="Keep all data in application memory. Ideal for development, testing, and simple scenarios where durability is not required."
   />
   <LinkCard
+    href="/identityserver/data/providers/duende-storage/"
+    title="Duende.Storage (Preview)"
+    description="Use Duende's portable storage layer, configuration administration APIs, extensible schemas, and Spaces support."
+  />
+  <LinkCard
     href="/identityserver/data/providers/custom/"
     title="Custom"
     description="Implement the store interfaces yourself to use any database, storage backend, or data access technology."
   />
 </CardGrid>
+
+Configuration and operational data have different lifecycles. You can choose one provider for both, or combine providers when
+your deployment needs different behavior for each kind of data.
+
+| Provider | How It Works | Choose It When |
+| --- | --- | --- |
+| [In-memory](/identityserver/data/providers/in-memory.md) | Keeps data in the IdentityServer process. | You are developing, testing, or can redeploy whenever configuration changes. Do not use it for production operational data. |
+| [Entity Framework Core](/identityserver/data/providers/entityframework-core.md) | Maps IdentityServer entities to relational tables through Entity Framework Core. | Your team already uses EF Core and wants direct control over its contexts, mappings, and migrations. |
+| [Duende.Storage](/identityserver/data/providers/duende-storage/index.mdx) | Stores versioned entities through a common relational storage layer and supplies administration APIs. | You need runtime configuration management, extensible configuration data, or [Spaces](/identityserver/spaces/index.mdx), without building every store yourself. |
+| [Custom](/identityserver/data/providers/custom.md) | Replaces IdentityServer store interfaces with your implementations. | You need a database or data-access pattern that the built-in providers do not support. |
+
+`Duende.Storage` was introduced to give Duende products a shared persistence model. It separates IdentityServer's store
+interfaces from database-specific implementations, supplies consistent querying and optimistic concurrency, and supports
+isolated storage pools. The existing providers remain supported and may be a better fit when you prefer their simpler or
+more direct model.

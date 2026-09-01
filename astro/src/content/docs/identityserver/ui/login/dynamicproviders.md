@@ -1,7 +1,7 @@
 ---
 title: "Dynamic Providers"
 description: "Documentation for IdentityServer's Dynamic Identity Providers feature, which enables configuring external authentication providers from a store at runtime without performance penalties or application recompilation."
-date: 2026-05-28
+date: 2026-09-01
 sidebar:
   label: Dynamic Providers
   order: 65
@@ -38,10 +38,11 @@ You can also add [custom authentication handlers](#custom-authentication-handler
 ## Store And Configuration Data
 
 Dynamic identity providers require a store for the configuration data.
-There are two store implementations provided by Duende IdentityServer:
+Duende IdentityServer provides these store implementations:
 
 * An in-memory store
 * A store backed by a database (using [Entity Framework Core](/identityserver/data/providers/entityframework-core.md))
+* The preview [`Duende.Storage` configuration provider](/identityserver/data/providers/duende-storage/configuration-storage.md)
 
 You could also implement your own store based on the [`IIdentityProviderStore` interface](/identityserver/reference/v8/stores/idp-store.md).
 
@@ -52,8 +53,10 @@ If you use a custom store, there is an [extension method to enable caching](/ide
 If you use the EF stores, there is a general helper [to enable caching for all configuration data](/identityserver/data/providers/entityframework-core.md#enabling-caching-for-configuration-store).
 :::
 
-The identity provider store only provides an interface to query dynamic providers and does not provide any methods to add, update, or delete identity providers.
-For custom store implementations, this means you'll need to implement a mechanism for populating the store with identity providers.
+The identity provider store only provides an interface to query dynamic providers. Entity Framework Core and custom
+implementations need a separate mechanism for adding, updating, or deleting them. `Duende.Storage` includes an
+[`IIdentityProviderAdmin`](/identityserver/data/providers/duende-storage/admin-apis.md#dynamic-identity-provider)
+implementation for those operations.
 
 ## OIDC Providers
 
