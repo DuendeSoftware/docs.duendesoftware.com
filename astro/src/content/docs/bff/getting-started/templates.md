@@ -1,6 +1,6 @@
 ---
 title: Getting Started - Templates
-description: A guide on how to install the BFF project templates.
+description: Install and use Duende BFF project templates for .NET. Quickly scaffold BFF applications with remote APIs, local APIs, or Blazor using dotnet new commands.
 sidebar:
   order: 200
   label: "Templates"
