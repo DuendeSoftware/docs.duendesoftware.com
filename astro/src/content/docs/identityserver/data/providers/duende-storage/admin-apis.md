@@ -1,6 +1,6 @@
 ---
 title: "Configuration Admin APIs"
-description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende.Storage admin APIs"
+description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende Storage admin APIs"
 date: 2026-09-01
 sidebar:
   label: "Admin APIs"
@@ -9,7 +9,7 @@ sidebar:
 
 :::caution[Preview documentation]
 This page describes preview packages and APIs that are subject to change. Start with the
-[Duende.Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
+[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
 :::
 
 [`AddConfigurationStorage`](/identityserver/data/providers/duende-storage/configuration-storage.md) registers

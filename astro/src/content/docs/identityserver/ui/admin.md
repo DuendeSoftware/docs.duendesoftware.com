@@ -32,7 +32,7 @@ You may want to consider reducing the number of available options in this UI, to
 For example, you may want to limit the options to only those that are relevant to your production environment, and not support editing all the various protocol, client, and resource options.
 A limited subset of the available options may be enough.
 
-The [`Duende.Storage` configuration administration APIs](/identityserver/data/providers/duende-storage/admin-apis.md)
+The [Duende Storage configuration administration APIs](/identityserver/data/providers/duende-storage/admin-apis.md)
 provide create, read, update, query and delete operations for clients, resources and dynamic providers. You can use these
 service APIs behind your own authorized UI without writing directly to storage tables.
 

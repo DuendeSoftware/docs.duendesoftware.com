@@ -1,6 +1,6 @@
 ---
-title: "Duende.Storage Configuration Storage"
-description: "Set up Duende.Storage as the persistence provider for IdentityServer clients, API scopes, API resources, identity resources and dynamic identity providers"
+title: "Duende Storage Configuration Storage"
+description: "Set up Duende Storage as the persistence provider for IdentityServer clients, API scopes, API resources, identity resources and dynamic identity providers"
 date: 2026-09-01
 sidebar:
   label: "Configuration Storage"
@@ -9,13 +9,13 @@ sidebar:
 
 :::caution[Preview documentation]
 This page describes preview packages and APIs that are subject to change. Start with the
-[Duende.Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
+[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
 :::
 
 Configuration storage persists the data that defines how IdentityServer behaves: clients, API scopes, API resources,
 identity resources, dynamic identity providers, SAML service providers and CORS origins.
 
-## Install Duende.Storage NuGet Packages
+## Install Duende Storage NuGet Packages
 
 Install the IdentityServer preview and one database provider. This example uses SQLite:
 
@@ -29,7 +29,7 @@ The packages are available from the
 [Duende.IdentityServer](https://www.nuget.org/packages/Duende.IdentityServer) and
 [Duende.Storage.Sqlite](https://www.nuget.org/packages/Duende.Storage.Sqlite) NuGet Gallery pages.
 
-## Register Duende.Storage for Configuration Data
+## Register Duende Storage for Configuration Data
 
 Register one database provider before adding the IdentityServer storage adapters:
 
@@ -79,7 +79,7 @@ It also registers the
 `IDatabaseSchema.MigrateAsync` creates or upgrades the common Duende storage schema. In production, run migrations as a
 controlled deployment step so that multiple application instances do not attempt the same migration concurrently.
 
-## Supported Databases for Duende.Storage
+## Supported Databases for Duende Storage
 
 The [Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx#supported-databases) lists the
 published database packages and registration methods. Replace the SQLite package and `AddSqliteStore` call with the

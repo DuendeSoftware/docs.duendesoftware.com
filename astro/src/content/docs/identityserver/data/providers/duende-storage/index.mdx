@@ -1,6 +1,6 @@
 ---
 title: "Duende Storage"
-description: "Duende.Storage is a persistence layer for IdentityServer that provides configuration admin APIs, extensible schemas and multi-database support"
+description: "Duende Storage is a persistence layer for IdentityServer that provides configuration admin APIs, extensible schemas and multi-database support"
 date: 2026-09-01
 sidebar:
   label: "Overview"
@@ -10,30 +10,30 @@ sidebar:
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
 :::caution[Preview documentation]
-`Duende.Storage` and the documentation in this section are previews. APIs, packages, database schemas and behavior are
+Duende Storage and the documentation in this section are previews. APIs, packages, database schemas and behavior are
 subject to change before general availability.
 :::
 
-`Duende.Storage` is a relational persistence layer shared by Duende products. IdentityServer adapters connect its
+Duende Storage is a relational persistence layer shared by Duende products. IdentityServer adapters connect its
 [configuration](/identityserver/data/configuration.mdx) and [operational](/identityserver/data/operational.md) store
 interfaces to the storage layer, so IdentityServer continues to use the same abstractions during protocol processing.
 
-## How Duende.Storage Works
+## How Duende Storage Works
 
 The provider has four parts:
 
-1. A database-specific package connects `Duende.Storage` to SQL Server, PostgreSQL, Oracle or SQLite.
+1. A database-specific package connects Duende Storage to SQL Server, PostgreSQL, Oracle or SQLite.
 2. The storage layer persists entities with versioning, indexing and expiration support.
 3. IdentityServer adapters implement its configuration and operational store interfaces.
 4. Optional administration APIs and schemas let your application manage and extend configuration data.
 
 Configuration and operational storage are independent. You can enable either one or both. You can also combine
-`Duende.Storage` with another provider. When both use `Duende.Storage`, they share the configured database provider and
+Duende Storage with another provider. When both use Duende Storage, they share the configured database provider and
 schema.
 
-## Why Use Duende.Storage?
+## Why Use Duende Storage?
 
-Choose `Duende.Storage` when you need one or more of these capabilities:
+Choose Duende Storage when you need one or more of these capabilities:
 
 * Configuration administration through supported service APIs, without writing directly to database tables.
 * Schema-validated custom properties on clients and resources.

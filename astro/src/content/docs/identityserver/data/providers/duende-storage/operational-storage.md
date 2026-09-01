@@ -1,6 +1,6 @@
 ---
-title: "Duende.Storage Operational Storage"
-description: "Persist IdentityServer grants, device codes, server-side sessions and signing keys with the Duende.Storage operational provider"
+title: "Duende Storage Operational Storage"
+description: "Persist IdentityServer grants, device codes, server-side sessions and signing keys with the Duende Storage operational provider"
 date: 2026-09-01
 sidebar:
   label: "Operational Storage"
@@ -9,17 +9,17 @@ sidebar:
 
 :::caution[Preview documentation]
 This page describes preview packages and APIs that are subject to change. Start with the
-[Duende.Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
+[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
 :::
 
 Operational storage holds short-lived and security-sensitive state generated while IdentityServer processes protocol
 requests. This includes persisted grants, device codes, pushed authorization requests, server-side sessions, signing
 keys and SAML request state.
 
-## Register Duende.Storage for Operational Data
+## Register Duende Storage for Operational Data
 
 First register a database provider as shown in
-[Configuration Storage](/identityserver/data/providers/duende-storage/configuration-storage.md#register-duendestorage-for-configuration-data).
+[Configuration Storage](/identityserver/data/providers/duende-storage/configuration-storage.md#register-duende-storage-for-configuration-data).
 Then add the operational adapters:
 
 ```csharp
@@ -67,7 +67,7 @@ var identityServer = builder.Services
 ```
 
 Run the `IDatabaseSchema` migration described in the
-[configuration setup](/identityserver/data/providers/duende-storage/configuration-storage.md#register-duendestorage-for-configuration-data)
+[configuration setup](/identityserver/data/providers/duende-storage/configuration-storage.md#register-duende-storage-for-configuration-data)
 before the application starts serving requests.
 
 Operational records contain tokens, grants, session data and signing material. Restrict database access, encrypt

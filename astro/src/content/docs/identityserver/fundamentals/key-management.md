@@ -127,7 +127,7 @@ vault of some kind) or use one of the implementations of the
 * The default `FileSystemKeyStore`, which writes keys to the file system.
 * The [Entity Framework operational store](/identityserver/data/providers/entityframework-core.md#operational-store),
   which writes keys to a database using Entity Framework Core.
-* The [`Duende.Storage` operational provider](/identityserver/data/providers/duende-storage/operational-storage.md),
+* The [Duende Storage operational provider](/identityserver/data/providers/duende-storage/operational-storage.md),
   which writes keys through the common Duende storage layer.
 
 The default `FileSystemKeyStore` writes keys to the `KeyPath` directory

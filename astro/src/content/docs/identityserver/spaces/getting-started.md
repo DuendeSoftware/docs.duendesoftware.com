@@ -7,7 +7,7 @@ sidebar:
   order: 10
 ---
 
-Spaces require [`Duende.Storage`](/identityserver/data/providers/duende-storage/index.mdx) for their management data and
+Spaces require [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) for their management data and
 isolated storage pools.
 
 ## Install Duende.MultiSpace Packages

@@ -19,7 +19,7 @@ units.
 ## How Spaces Isolate Data
 
 Spaces build on the pooled storage model in
-[`Duende.Storage`](/identityserver/data/providers/duende-storage/index.mdx). Each space maps to a storage pool, a logical
+[Duende Storage](/identityserver/data/providers/duende-storage/index.mdx). Each space maps to a storage pool, a logical
 partition within the same database identified by a numeric pool ID. This isolates all configuration and operational data
 for that space. IdentityServer resolves the current space at the start of a request and routes all subsequent store
 operations to that pool.
@@ -71,7 +71,7 @@ supplied by a client without allowing the resolution middleware to validate it a
   />
   <LinkCard
     href="/identityserver/data/providers/duende-storage/"
-    title="Duende.Storage"
+    title="Duende Storage"
     description="Understand the storage provider and its preview status."
   />
 </CardGrid>

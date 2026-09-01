@@ -1,6 +1,6 @@
 ---
 title: "Data Extension Schemas"
-description: "Define and validate custom properties on IdentityServer clients, resources and identity providers using Duende.Storage data extension schemas"
+description: "Define and validate custom properties on IdentityServer clients, resources and identity providers using Duende Storage data extension schemas"
 date: 2026-09-01
 sidebar:
   label: "Schemas"
@@ -9,7 +9,7 @@ sidebar:
 
 :::caution[Preview documentation]
 This page describes preview packages and APIs that are subject to change. Start with the
-[Duende.Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
+[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
 :::
 
 Data extension schemas let you add typed properties to configuration entities without changing the Duende storage
