@@ -23,7 +23,7 @@ dotnet add package Duende.MultiSpace --prerelease
 
 See the [Duende.MultiSpace](https://www.nuget.org/packages/Duende.MultiSpace) NuGet Gallery page for package versions.
 
-## Configure Services
+## Configure IdentityServer with Spaces
 
 Register the database provider, Spaces and the IdentityServer stores:
 
@@ -115,7 +115,7 @@ Always query existing spaces before creating them. Run provisioning from one dep
 instances racing between the query and create operations.
 :::
 
-## Add The Middleware
+## Add Space Resolution Middleware
 
 Space resolution must run before ASP.NET Core routing because path-based matches rewrite `PathBase` and `Path`:
 
