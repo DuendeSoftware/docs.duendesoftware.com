@@ -1,5 +1,5 @@
 ---
-title: Federal Information Processing Standard (FIPS) compliance
+title: FIPS 140-2 Compliance in IdentityServer
 description: Explains Duende IdentityServer Federal Information Processing Standard (FIPS) compliance.
 date: 2025-10-09-10T08:20:20+02:00
 sidebar:
