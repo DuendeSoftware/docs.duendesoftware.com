@@ -22,6 +22,16 @@ IdentityServer supports extensions on:
 - API resources
 - API scopes
 - Identity resources
+- Dynamic identity providers
+- SAML service providers
+
+:::note[SAML Service Provider Extensions Are Admin-Only]
+SAML service provider extended properties are validated, stored, and returned through `ISamlServiceProviderAdmin`, but
+they are not projected onto the runtime `SamlServiceProvider` model returned by `ISamlServiceProviderStore`. This is a
+deliberate difference from the other configuration types: SAML service providers had no existing runtime `Properties`
+dictionary or backward-compatibility contract to preserve. Use these extensions as administration metadata, not as input
+to SAML protocol processing.
+:::
 
 ## In-Memory Or Storage-Backed Schemas
 
@@ -80,8 +90,9 @@ builder.Services
         [ClientDataExtensions.Schema]);
 ```
 
-`SchemaId.Client`, `SchemaId.ApiResource`, `SchemaId.ApiScope`, and `SchemaId.IdentityResource` select the entity type to
-extend. Only register one schema for each ID.
+`SchemaId.Client`, `SchemaId.ApiResource`, `SchemaId.ApiScope`, `SchemaId.IdentityResource`, and
+`SchemaId.SamlServiceProvider` select the entity type to extend. Dynamic identity providers use a type-specific ID, such
+as `SchemaId.IdentityProvider("oidc")`. Only register one schema for each ID.
 
 ## Set Extended Properties
 
