@@ -1,6 +1,6 @@
 ---
 title: Getting started
-description: A collection of getting started guides to start with the BFF
+description: Get started with Duende BFF Security Framework. Choose from single frontend, multi-frontend, or Blazor quickstart guides to secure your browser-based applications.
 sidebar:
   order: 1
   label: Overview
