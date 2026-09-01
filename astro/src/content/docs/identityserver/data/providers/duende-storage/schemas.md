@@ -1,6 +1,6 @@
 ---
 title: "Data Extension Schemas"
-description: "Add schema-validated custom properties to Duende.Storage-backed IdentityServer configuration"
+description: "Define and validate custom properties on IdentityServer clients, resources and identity providers using Duende.Storage data extension schemas"
 date: 2026-09-01
 sidebar:
   label: "Schemas"
@@ -13,20 +13,20 @@ This page describes preview packages and APIs that are subject to change. Start 
 :::
 
 Data extension schemas let you add typed properties to configuration entities without changing the Duende storage
-database schema. Values remain part of the entity, while schema metadata defines their type, validation, queryability, and
+database schema. Values remain part of the entity, while schema metadata defines their type, validation, queryability and
 display information.
 
 IdentityServer supports extensions on:
 
-- Clients
-- API resources
-- API scopes
-- Identity resources
-- Dynamic identity providers
-- SAML service providers
+* Clients
+* API resources
+* API scopes
+* Identity resources
+* Dynamic identity providers
+* SAML service providers
 
 :::note[SAML Service Provider Extensions Are Admin-Only]
-SAML service provider extended properties are validated, stored, and returned through `ISamlServiceProviderAdmin`, but
+SAML service provider extended properties are validated, stored and returned through `ISamlServiceProviderAdmin`, but
 they are not projected onto the runtime `SamlServiceProvider` model returned by `ISamlServiceProviderStore`. This is a
 deliberate difference from the other configuration types: SAML service providers had no existing runtime `Properties`
 dictionary or backward-compatibility contract to preserve. Use these extensions as administration metadata, not as input
@@ -37,7 +37,7 @@ to SAML protocol processing.
 
 | Schema Store   | Choose It When                                                                                                  |
 | -------------- | --------------------------------------------------------------------------------------------------------------- |
-| In-memory      | Schema definitions live with application code, change through deployments, and must be identical on every node. |
+| In-memory      | Schema definitions live with application code, change through deployments and must be identical on every node. |
 | Storage-backed | An administration system must create or change schemas at runtime without redeploying IdentityServer.           |
 
 In-memory schemas are often the safer starting point. They keep schema changes in source control and release review, while
@@ -90,7 +90,7 @@ builder.Services
         [ClientDataExtensions.Schema]);
 ```
 
-`SchemaId.Client`, `SchemaId.ApiResource`, `SchemaId.ApiScope`, `SchemaId.IdentityResource`, and
+`SchemaId.Client`, `SchemaId.ApiResource`, `SchemaId.ApiScope`, `SchemaId.IdentityResource` and
 `SchemaId.SamlServiceProvider` select the entity type to extend. Dynamic identity providers use a type-specific ID, such
 as `SchemaId.IdentityProvider("oidc")`. Only register one schema for each ID.
 
@@ -117,9 +117,9 @@ var client = new CreateClient
 var result = await clientAdmin.CreateAsync(client, ct);
 ```
 
-The admin API rejects unknown properties, values of the wrong type, missing required properties, and duplicate values for
+The admin API rejects unknown properties, values of the wrong type, missing required properties and duplicate values for
 attributes marked as unique. Set `IsQueryable` only for values that your administration experience must filter or sort;
 queryable fields require additional database indexing and storage.
 
 Treat schema changes like contract changes. Adding an optional property is usually compatible. Renaming or removing a
-property, changing its type, or making it required can invalidate existing entities and older application versions.
+property, changing its type or making it required can invalidate existing entities and older application versions.

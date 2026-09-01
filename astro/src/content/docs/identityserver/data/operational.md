@@ -144,7 +144,7 @@ builder.Services.AddIdentityServer()
 
 An EntityFramework Core implementation of the server-side session store is included in the [Entity Framework Integration](/identityserver/data/providers/entityframework-core.md#operational-store) operational store.
 
-The preview [`Duende.Storage` operational provider](/identityserver/data/providers/duende-storage/operational-storage.md)
+The [`Duende.Storage` operational provider](/identityserver/data/providers/duende-storage/operational-storage.md)
 also implements the server-side session store and the other operational stores.
 
 When using the EntityFramework Core operational store, it will be necessary to indicate that server-side sessions need to be used with the call to the `AddServerSideSessions` fluent API.

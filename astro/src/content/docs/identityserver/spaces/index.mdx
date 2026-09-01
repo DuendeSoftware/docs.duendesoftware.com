@@ -1,6 +1,6 @@
 ---
 title: "IdentityServer Spaces"
-description: "Use Spaces to isolate IdentityServer configuration and operational data in one deployment"
+description: "Run multiple isolated IdentityServer security domains in a single deployment using Spaces with per-tenant configuration and operational data"
 date: 2026-09-01
 sidebar:
   label: "Overview"
@@ -10,23 +10,25 @@ sidebar:
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
 A space is an isolated IdentityServer environment within one application deployment. Each space has its own configuration
-and operational data, while the application shares the same process, code, and database infrastructure.
+and operational data, while the application shares the same process, code and database infrastructure.
 
 Use Spaces when you need to host multiple security domains without operating a separate IdentityServer deployment for
-each one. Examples include software-as-a-service tenants, regional environments, or independently administered business
+each one. Examples include software-as-a-service tenants, regional environments or independently administered business
 units.
 
-## Storage Isolation
+## How Spaces Isolate Data
 
 Spaces build on the pooled storage model in
-[`Duende.Storage`](/identityserver/data/providers/duende-storage/index.mdx). Each space maps to a storage pool. IdentityServer
-resolves the current space at the start of a request and routes all subsequent store operations to that pool.
+[`Duende.Storage`](/identityserver/data/providers/duende-storage/index.mdx). Each space maps to a storage pool, a logical
+partition within the same database identified by a numeric pool ID. This isolates all configuration and operational data
+for that space. IdentityServer resolves the current space at the start of a request and routes all subsequent store
+operations to that pool.
 
 The management pool stores space definitions. Pool `0` is the default space, and each configured space normally receives
 a separate positive pool ID. Moving a space to another pool changes which data it sees, so treat pool assignments as
 security boundaries rather than display metadata.
 
-## Request Resolution
+## How Spaces Resolve Incoming Requests
 
 A space can match an incoming request by:
 
@@ -46,11 +48,17 @@ Only enable `FallbackToDefault` when serving an unmatched host or path from the 
 your isolation model. A strict `404 Not Found` response is safer for multi-tenant deployments.
 :::
 
-## Operational Considerations
+## What Spaces Does Not Isolate
 
+:::caution[Spaces Do Not Isolate Process-Level Dependencies]
 Spaces isolate persisted data, but they do not automatically isolate every process-level dependency. Review signing
-credentials, ASP.NET Core Data Protection, external caches, telemetry, rate limits, and custom services to decide whether
+credentials, ASP.NET Core Data Protection, external caches, telemetry, rate limits and custom services to decide whether
 they also need space-aware configuration.
+
+For example, sharing signing credentials reduces cryptographic separation between spaces. Token validation still checks
+the issuer, audience and other constraints, but each space should use deliberately scoped credentials when your security
+model requires independent trust boundaries.
+:::
 
 Your administration system must authorize operators for the specific spaces they manage. Never trust a space identifier
 supplied by a client without allowing the resolution middleware to validate it against a configured match pattern.
@@ -59,7 +67,7 @@ supplied by a client without allowing the resolution middleware to validate it a
   <LinkCard
     href="/identityserver/spaces/getting-started/"
     title="Getting Started"
-    description="Configure storage, add space resolution, and create an initial space."
+    description="Configure storage, add space resolution and create an initial space."
   />
   <LinkCard
     href="/identityserver/data/providers/duende-storage/"

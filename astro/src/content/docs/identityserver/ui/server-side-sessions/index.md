@@ -54,7 +54,7 @@ builder.Services.AddIdentityServer()
 By default, the store for the server-side sessions will just be kept in-memory.
 For production scenarios, configure a durable store by using the
 [Entity Framework Core implementation](/identityserver/data/providers/entityframework-core.md#operational-store), the
-preview [`Duende.Storage` operational provider](/identityserver/data/providers/duende-storage/operational-storage.md), or
+[`Duende.Storage` operational provider](/identityserver/data/providers/duende-storage/operational-storage.md) or
 [your own implementation](/identityserver/reference/v8/stores/server-side-sessions.md).
 
 :::note

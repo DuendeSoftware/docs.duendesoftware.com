@@ -1,6 +1,6 @@
 ---
 title: "Getting Started With Spaces"
-description: "Configure Duende.MultiSpace, request resolution, and an initial IdentityServer space"
+description: "Step-by-step guide to installing Duende.MultiSpace, configuring space resolution by origin or path and creating your first IdentityServer space"
 date: 2026-09-01
 sidebar:
   label: "Getting Started"
@@ -10,7 +10,7 @@ sidebar:
 Spaces require [`Duende.Storage`](/identityserver/data/providers/duende-storage/index.mdx) for their management data and
 isolated storage pools.
 
-## Install The Packages
+## Install Duende.MultiSpace Packages
 
 This example uses SQLite:
 
@@ -25,7 +25,7 @@ See the [Duende.MultiSpace](https://www.nuget.org/packages/Duende.MultiSpace) Nu
 
 ## Configure Services
 
-Register the database provider, Spaces, and the IdentityServer stores:
+Register the database provider, Spaces and the IdentityServer stores:
 
 ```csharp
 // Program.cs
@@ -52,6 +52,7 @@ builder.Services.Configure<MultiSpaceOptions>(options =>
 
 builder.Services
     .AddIdentityServer()
+    .AddServerSideSessions()
     .AddConfigurationStorage()
     .AddOperationalStorage();
 
@@ -67,39 +68,52 @@ The current preview storage bootstrap API is named `AddStorageInternal` and may 
 
 ## Create A Space
 
-Use `ISpaceAdmin` from a trusted provisioning or administration path:
+Use `ISpaceAdmin` from a trusted provisioning or administration path. Query by name before creating the space:
 
 ```csharp
 // Program.cs
+using Duende.Storage.Querying;
+
 var spaces = app.Services.GetRequiredService<ISpaceAdmin>();
 
-var result = await spaces.CreateAsync(
-    new CreateSpaceConfiguration
-    {
-        Name = "Acme",
-        MatchPatterns =
-        [
-            new SpaceMatchPattern
-            {
-                Origin = "https://login.example.com",
-                Path = "/acme"
-            }
-        ]
-    },
+var existing = await spaces.QueryAsync(
+    QueryRequest.Create<SpaceFilter, SpaceSortField>(
+        new SpaceFilter { Name = "Acme" }),
     CancellationToken.None);
 
-if (!result.IsSuccess)
+if (!existing.Items.Any(space =>
+    string.Equals(space.Name, "Acme", StringComparison.Ordinal)))
 {
-    throw new InvalidOperationException(
-        $"Could not create the Acme space: {result.Errors}");
+    var result = await spaces.CreateAsync(
+        new CreateSpaceConfiguration
+        {
+            Name = "Acme",
+            MatchPatterns =
+            [
+                new SpaceMatchPattern
+                {
+                    Origin = "https://login.example.com",
+                    Path = "/acme"
+                }
+            ]
+        },
+        CancellationToken.None);
+
+    if (!result.IsSuccess)
+    {
+        throw new InvalidOperationException(
+            $"Could not create the Acme space: {result.Errors}");
+    }
 }
 ```
 
-This pattern requires both the origin and path to match. A request to
+The `Acme` space created in this example requires both the origin and path to match. A request to
 `https://login.example.com/t/acme/.well-known/openid-configuration` resolves to the Acme pool.
 
-In a production application, make provisioning idempotent by querying existing spaces before creating them. Do not run
-unconditional creation on every application instance.
+:::tip[Make Provisioning Idempotent]
+Always query existing spaces before creating them. Run provisioning from one deployment process to avoid concurrent
+instances racing between the query and create operations.
+:::
 
 ## Add The Middleware
 
@@ -120,10 +134,16 @@ If another middleware reads tenant-specific data, place it after `UseMultiSpaceR
 
 ## Choose Match Patterns
 
-- Use origin matching when each space has a dedicated host name.
-- Use path matching when spaces share a host. The default `/t` prefix keeps space paths separate from ordinary routes.
-- Use both when a space must be constrained to a specific host and path.
+* Use origin matching when each space has a dedicated host name.
+* Use path matching when spaces share a host. The default `/t` prefix keeps space paths separate from ordinary routes.
+* Use both when a space must be constrained to a specific host and path.
 
 Origins must include the scheme and host, plus the port when it is not the scheme default. Configure forwarded headers
 correctly when a trusted reverse proxy terminates Transport Layer Security (TLS), so IdentityServer resolves the public
 origin rather than an internal proxy address.
+
+## Before Deployment
+
+Review [what Spaces does not isolate](/identityserver/spaces/index.mdx#what-spaces-does-not-isolate) before deploying.
+Confirm whether signing credentials, Data Protection, caches, telemetry, rate limits and custom services require
+space-aware configuration.

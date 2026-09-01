@@ -1,3 +1,6 @@
 label: "Spaces"
 collapsed: false
-order: 7.5
+order: 11
+badge:
+  text: preview
+  variant: caution

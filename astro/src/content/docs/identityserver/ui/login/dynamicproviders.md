@@ -42,7 +42,7 @@ Duende IdentityServer provides these store implementations:
 
 * An in-memory store
 * A store backed by a database (using [Entity Framework Core](/identityserver/data/providers/entityframework-core.md))
-* The preview [`Duende.Storage` configuration provider](/identityserver/data/providers/duende-storage/configuration-storage.md)
+* The [`Duende.Storage` configuration provider](/identityserver/data/providers/duende-storage/configuration-storage.md)
 
 You could also implement your own store based on the [`IIdentityProviderStore` interface](/identityserver/reference/v8/stores/idp-store.md).
 
@@ -54,7 +54,7 @@ If you use the EF stores, there is a general helper [to enable caching for all c
 :::
 
 The identity provider store only provides an interface to query dynamic providers. Entity Framework Core and custom
-implementations need a separate mechanism for adding, updating, or deleting them. `Duende.Storage` includes an
+implementations need a separate mechanism for adding, updating or deleting them. `Duende.Storage` includes an
 [`IIdentityProviderAdmin`](/identityserver/data/providers/duende-storage/admin-apis.md#dynamic-identity-provider)
 implementation for those operations.
 

@@ -1,3 +1,6 @@
-label: "Duende.Storage"
+label: "Duende Storage"
 collapsed: false
-order: 30
+order: 10
+badge:
+  text: preview
+  variant: caution

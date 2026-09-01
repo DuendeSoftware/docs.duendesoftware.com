@@ -1,6 +1,6 @@
 ---
 title: "Configuration Admin APIs"
-description: "Create and manage IdentityServer configuration with the preview Duende.Storage administration APIs"
+description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende.Storage admin APIs"
 date: 2026-09-01
 sidebar:
   label: "Admin APIs"
@@ -15,10 +15,10 @@ This page describes preview packages and APIs that are subject to change. Start 
 [`AddConfigurationStorage`](/identityserver/data/providers/duende-storage/configuration-storage.md) registers
 administration services alongside the stores that IdentityServer uses at runtime. These are .NET service APIs, not
 preconfigured HTTP endpoints. You decide how to expose them through a protected administration application, command-line
-tool, or deployment process.
+tool or deployment process.
 
 Never expose an administration API without authentication and authorization. Keep it on a trusted network where possible,
-require a dedicated administrative policy, validate anti-forgery protections for browser clients, and audit changes.
+require a dedicated administrative policy, validate anti-forgery protections for browser clients and audit changes.
 
 ## Available Services
 
@@ -26,12 +26,12 @@ require a dedicated administrative policy, validate anti-forgery protections for
 | --------------------------- | ---------------------------------------------------------- |
 | `IClientAdmin`              | OpenID Connect and OAuth clients, including client secrets |
 | `IApiScopeAdmin`            | API scopes                                                 |
-| `IApiResourceAdmin`         | API resources, scope relationships, and API secrets        |
+| `IApiResourceAdmin`         | API resources, scope relationships and API secrets         |
 | `IIdentityResourceAdmin`    | Identity resources                                         |
 | `IIdentityProviderAdmin`    | Dynamic identity providers                                 |
 | `ISamlServiceProviderAdmin` | SAML service providers                                     |
 
-Each service supports create, get, update, query, and delete operations. Resolve the service from a dependency injection
+Each service supports create, get, update, query and delete operations. Resolve the service from a dependency injection
 scope, such as an authorized endpoint or a scoped application service.
 
 ## Create Configuration
@@ -119,6 +119,8 @@ static Task<SaveResult<Guid>> CreateClient(
             [
                 new CreateClientSecret
                 {
+                    // Replace this with a secret from a secure source,
+                    // such as Azure Key Vault.
                     PlaintextValue = "replace-with-a-secret-from-a-secure-source"
                 }
             ]
@@ -138,6 +140,7 @@ using Duende.IdentityServer.Admin.IdentityProviders;
 
 static Task<SaveResult<Guid>> CreateIdentityProvider(
     IIdentityProviderAdmin admin,
+    string clientSecret,
     CancellationToken ct) =>
     admin.CreateAsync(
         new IdentityProviderConfiguration
@@ -148,14 +151,15 @@ static Task<SaveResult<Guid>> CreateIdentityProvider(
             Properties = new Dictionary<string, string>
             {
                 ["Authority"] = "https://login.example.com",
-                ["ClientId"] = "identityserver"
+                ["ClientId"] = "identityserver",
+                ["ClientSecret"] = clientSecret
             }
         },
         ct);
 ```
 
-Register the corresponding dynamic provider type and supply all protocol-specific properties it requires. IdentityServer
-validates the configuration before storing it.
+Register the corresponding dynamic provider type and supply all protocol-specific properties it requires. Read
+`clientSecret` from a secure source, such as Azure Key Vault. IdentityServer validates the configuration before storing it.
 
 ### SAML Service Provider
 
@@ -189,7 +193,7 @@ static Task<SaveResult<Guid>> CreateSamlServiceProvider(
 
 ## Handle Results And Updates
 
-Create, update, and delete operations return `SaveResult<TId>`. Check `IsSuccess` before using `Id` or `Version`; failed
+Create, update and delete operations return `SaveResult<TId>`. Check `IsSuccess` before using `Id` or `Version`; failed
 results contain structured `Errors`. Get operations return `GetResult<T>`, whose `Found` property tells you whether `Item`
 and `Version` are available.
 
@@ -197,6 +201,7 @@ Updates require the version returned by the preceding create or get operation:
 
 ```csharp
 // ConfigurationAdmin.cs
+// ID returned by a previous CreateAsync or QueryAsync call.
 var scopeId = new Guid("0198f3a4-5760-7000-8000-000000000001");
 var current = await apiScopes.GetAsync(scopeId, ct);
 
@@ -220,7 +225,42 @@ if (!updated.IsSuccess)
 ```
 
 This optimistic concurrency check prevents one administrator from silently overwriting another administrator's changes.
-Handle validation, duplicate-name, not-found, and version-conflict errors explicitly in your administration interface.
+Handle validation, duplicate-name, not-found and version-conflict errors explicitly in your administration interface.
+
+## Query And Delete Configuration
+
+Use `QueryAsync` to list entities. The result contains the current page and pagination metadata:
+
+```csharp
+// ConfigurationAdmin.cs
+using Duende.IdentityServer.Admin.ApiScopes;
+using Duende.Storage.Querying;
+
+var request = QueryRequest.Create<ApiScopeFilter, ApiScopeSortField>(
+    new ApiScopeFilter { Name = "inventory" });
+
+var page = await apiScopes.QueryAsync(request, ct);
+
+foreach (var scope in page.Items)
+{
+    Console.WriteLine($"{scope.Id}: {scope.Name}");
+}
+```
+
+Filters can use contains matching, so compare a returned business identifier exactly when you need one specific entity.
+Use the continuation tokens on `QueryResult<T>` to retrieve additional pages.
+
+Delete an entity by its storage ID:
+
+```csharp
+// ConfigurationAdmin.cs
+var deleted = await apiScopes.DeleteAsync(scopeId, ct);
+
+if (!deleted.IsSuccess)
+{
+    throw new InvalidOperationException(deleted.Errors.ToString());
+}
+```
 
 For custom fields on clients and resources, configure
 [data extension schemas](/identityserver/data/providers/duende-storage/schemas.md).
