@@ -1,6 +1,6 @@
 ---
 title: "Securing an MCP Server with IdentityServer"
-description: "Learn how to protect an MCP Server with Duende IdentityServer so AI clients can securely connect using OAuth and Dynamic Client Registration."
+description: "Learn how to protect an MCP Server with Duende IdentityServer and connect an MCP client using OAuth and Dynamic Client Registration."
 date: 2026-08-07T01:00:00+00:00
 sidebar:
   order: 16
@@ -9,15 +9,15 @@ sidebar:
 import { Code } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-AI agents and tools increasingly communicate via the Model Context Protocol (MCP). This quickstart shows how to secure an MCP Server with Duende IdentityServer, using [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr.mdx) so any compliant client can connect without being pre-configured.
+AI agents and tools increasingly communicate via the Model Context Protocol (MCP). This quickstart secures an MCP server with Duende IdentityServer and connects a client using [Dynamic Client Registration (DCR)](/identityserver/configuration/dcr.mdx). The client registers itself, so you do not need to configure it in advance.
 
 :::note
-Each client that dynamically connects to IdentityServer using DCR counts towards the Client Ids allowed in your license.
+This quickstart uses DCR with IdentityServer v8. See [AI & MCP](/identityserver/ai/index.mdx) for more registration guidance and other client-registration options.
 :::
 
 ## Quickstart Applications
 
-We will create 3 projects. An IdentityServer project, an MCP Server, and a console client which will make requests to the MCP Server (but sign in using IdentityServer).
+We'll create three projects: an IdentityServer host, an MCP server, and a console client. The client calls the MCP server but signs in through IdentityServer.
 
 ```mermaid
 architecture-beta
@@ -605,8 +605,8 @@ Protected MCP Client
 Connecting to server at https://localhost:7141...
 
 Starting OAuth authorization flow...
-Opening browser to: https://localhost:5001/connect/authorize?client_id=AZwWIaA8ApNcB5jptVQrSaNO4hF-nbRtBz19QnKEGOI&redirect_uri=http%3a%2f%2flocalhost%3a1279%2fcallback&response_type=code&code_challenge=mfZCS1wY7EHZwUkIb50SD6dmzReczXjyDMC_GFKEHvM&code_challenge_method=S256&state=EAx8LsLDnK0gVNY8Oxw8wF0Jv6TPCu9-YlyHL7XfFHE&resource=https%3a%2f%2flocalhost%3a7141&scope=mcp%3atools+offline_access
-Listening for OAuth callback on: http://localhost:1279/
+Opening browser to: https://localhost:5001/connect/authorize?client_id=AZwWIaA8ApNcB5jptVQrSaNO4hF-nbRtBz19QnKEGOI&redirect_uri=http%3a%2f%2flocalhost%3a1179%2fcallback&response_type=code&code_challenge=mfZCS1wY7EHZwUkIb50SD6dmzReczXjyDMC_GFKEHvM&code_challenge_method=S256&state=EAx8LsLDnK0gVNY8Oxw8wF0Jv6TPCu9-YlyHL7XfFHE&resource=https%3a%2f%2flocalhost%3a7141&scope=mcp%3atools+offline_access
+Listening for OAuth callback on: http://localhost:1179/
 Authorization code received successfully.
 Found 2 tools on the server.
 

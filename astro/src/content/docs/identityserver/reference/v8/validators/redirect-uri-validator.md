@@ -22,6 +22,10 @@ that the `post_logout_redirect_uri` is permitted.
 The default implementation performs an exact string match against the URIs registered on the client. Override 
 this interface to apply custom matching logic, such as wildcard or pattern-based URI validation.
 
+Desktop and command-line clients that receive OAuth callbacks on ephemeral loopback ports can use the built-in AppAuth
+validator instead. See [OAuth Redirect URIs For Desktop And CLI MCP Clients](/identityserver/ai/desktop-cli-redirect-uris.md)
+for its registration and matching rules.
+
 ```csharp
 /// <summary>
 /// Validates redirect URIs and post-logout redirect URIs submitted in authorization and end-session requests.
@@ -96,6 +100,7 @@ builder.Services.AddIdentityServer()
 This example allows redirect URIs that match a registered pattern with a wildcard subdomain:
 
 ```csharp
+// CustomRedirectUriValidator.cs
 public class WildcardRedirectUriValidator : IRedirectUriValidator
 {
     public Task<bool> IsRedirectUriValidAsync(RedirectUriValidationContext context, CancellationToken ct)
@@ -107,11 +112,15 @@ public class WildcardRedirectUriValidator : IRedirectUriValidator
             if (registeredUri.StartsWith("https://*."))
             {
                 // Extract the domain pattern (e.g., "*.example.com")
-                var pattern = registeredUri.Substring("https://".Length);
-                var domain = pattern.Substring(2); // Remove "*."
-                
-                if (requestedUri.Host.EndsWith(domain) && 
-                    requestedUri.Scheme == "https")
+                var pattern = new Uri("https://" + registeredUri.Substring("https://*.".Length));
+                var domain = pattern.Host;
+                 
+                if (requestedUri.Host.EndsWith("." + domain, StringComparison.OrdinalIgnoreCase) &&
+                    requestedUri.Scheme == Uri.UriSchemeHttps &&
+                    requestedUri.Port == pattern.Port &&
+                    requestedUri.AbsolutePath == pattern.AbsolutePath &&
+                    requestedUri.Query == pattern.Query &&
+                    string.IsNullOrEmpty(requestedUri.Fragment))
                 {
                     return Task.FromResult(true);
                 }
