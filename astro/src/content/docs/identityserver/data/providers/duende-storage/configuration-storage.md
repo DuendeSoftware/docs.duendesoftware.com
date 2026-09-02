@@ -88,6 +88,14 @@ provider for your database.
 SQL Server, PostgreSQL and Oracle use their provider-native connection factory or data source registrations. Keep
 credentials outside source control and use your deployment platform's secret store.
 
+:::caution[Protect Configuration Data]
+Dedicated client and API resource secrets are stored as one-way hashes. Other configuration values that IdentityServer
+must recover at runtime, including dynamic identity-provider secrets, are not field-encrypted by Duende Storage. Protect
+the database, its connections and its backups. See the
+[configuration admin API guidance](/identityserver/data/providers/duende-storage/admin-apis.md#dynamic-identity-provider)
+for details.
+:::
+
 To persist runtime data as well, add
 [`AddOperationalStorage`](/identityserver/data/providers/duende-storage/operational-storage.md) to the same
 `IIdentityServerBuilder`.

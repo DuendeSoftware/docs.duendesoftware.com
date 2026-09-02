@@ -29,10 +29,12 @@ Register the database provider, Spaces and the IdentityServer stores:
 
 ```csharp
 // Program.cs
+using System.Net;
 using Duende.MultiSpace;
 using Duende.Storage.Internal;
 using Duende.Storage.Schema;
 using Duende.Storage.Sqlite;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +50,15 @@ builder.Services.Configure<MultiSpaceOptions>(options =>
 {
     options.SpacePathPrefix = "/t";
     options.FallbackToDefault = false;
+});
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedHost |
+        ForwardedHeaders.XForwardedProto;
+    options.KnownProxies.Add(IPAddress.Parse("203.0.113.42"));
+    options.ForwardLimit = 1;
 });
 
 builder.Services
@@ -117,10 +128,12 @@ instances racing between the query and create operations.
 
 ## Add Space Resolution Middleware
 
-Space resolution must run before ASP.NET Core routing because path-based matches rewrite `PathBase` and `Path`:
+Forwarded headers must run before space resolution so the resolver sees the public scheme and host. Space resolution must
+then run before ASP.NET Core routing because path-based matches rewrite `PathBase` and `Path`:
 
 ```csharp
 // Program.cs
+app.UseForwardedHeaders();
 app.UseMultiSpaceResolution();
 app.UseRouting();
 
@@ -132,15 +145,18 @@ app.Run();
 If another middleware reads tenant-specific data, place it after `UseMultiSpaceResolution`. You can inject
 `ISpaceContextAccessor` into scoped services and call `GetSpaceId()` after resolution.
 
+Replace `203.0.113.42` with your proxy's address or configure an appropriate trusted network. Only accept forwarded
+headers from expected proxies or networks. An untrusted forwarded host or protocol can otherwise influence which security
+boundary the request selects. See [Proxy Servers and Load Balancers](/identityserver/deployment/index.md#proxy-servers-and-load-balancers)
+for more configuration options.
+
 ## Choose Match Patterns
 
 * Use origin matching when each space has a dedicated host name.
 * Use path matching when spaces share a host. The default `/t` prefix keeps space paths separate from ordinary routes.
 * Use both when a space must be constrained to a specific host and path.
 
-Origins must include the scheme and host, plus the port when it is not the scheme default. Configure forwarded headers
-correctly when a trusted reverse proxy terminates Transport Layer Security (TLS), so IdentityServer resolves the public
-origin rather than an internal proxy address.
+Origins must include the scheme and host, plus the port when it is not the scheme default.
 
 ## Before Deployment
 

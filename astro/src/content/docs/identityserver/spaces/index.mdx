@@ -24,9 +24,22 @@ partition within the same database identified by a numeric pool ID. This isolate
 for that space. IdentityServer resolves the current space at the start of a request and routes all subsequent store
 operations to that pool.
 
-The management pool stores space definitions. Pool `0` is the default space, and each configured space normally receives
-a separate positive pool ID. Moving a space to another pool changes which data it sees, so treat pool assignments as
-security boundaries rather than display metadata.
+The reserved management pool is separate from every pool that holds IdentityServer data. It stores each space definition,
+including its matching rules and assigned data pool. The default space uses data pool `0`, while configured spaces normally
+use positive pool IDs. Normal IdentityServer requests never use the management pool as their data pool.
+
+```mermaid
+flowchart LR
+    admin["ISpaceAdmin"] --> management["Reserved management pool"]
+    management --> definitionA["Space A definition"]
+    management --> definitionB["Space B definition"]
+    default["Default space"] --> pool0["Data pool 0"]
+    definitionA --> pool1["Data pool 1"]
+    definitionB --> pool2["Data pool 2"]
+```
+
+Use `ISpaceAdmin` from a protected administration path to create spaces or change their pool assignments. Moving a space
+to another pool changes which data it sees, so authorize and audit these operations as changes to a security boundary.
 
 ## How Spaces Resolve Incoming Requests
 
@@ -47,6 +60,19 @@ unmatched requests also receive `404 Not Found`; you can opt into the default sp
 Only enable `FallbackToDefault` when serving an unmatched host or path from the default space is an intentional part of
 your isolation model. A strict `404 Not Found` response is safer for multi-tenant deployments.
 :::
+
+## UI and Application Services
+
+Spaces use the same login, consent, logout and error page implementations. Space resolution runs before ASP.NET Core
+routing and path-based resolution moves the matched prefix into `PathBase`. The shared UI routes therefore run within the
+resolved space and read that space's configuration and operational stores.
+
+Spaces do not add per-space UI code or branding. To vary UI behavior, inject `ISpaceContextAccessor` into a scoped UI
+service, read the resolved `SpaceId` and load your own space-aware settings. Apply the same pattern to custom services that
+need space-specific behavior.
+
+User databases and other application-level services are not made space-aware automatically. You must isolate or partition
+them separately when users, profile data, email delivery or other dependencies belong to a specific space.
 
 ## What Spaces Does Not Isolate
 

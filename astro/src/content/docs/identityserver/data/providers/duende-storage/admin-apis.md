@@ -161,6 +161,15 @@ static Task<SaveResult<Guid>> CreateIdentityProvider(
 Register the corresponding dynamic provider type and supply all protocol-specific properties it requires. Read
 `clientSecret` from a secure source, such as Azure Key Vault. IdentityServer validates the configuration before storing it.
 
+:::caution[Protect Recoverable Identity Provider Secrets]
+Client and API resource secrets accepted by their dedicated admin APIs are one-way hashed before storage. Dynamic identity
+provider properties are different: IdentityServer needs the original values at runtime, so a property such as
+`ClientSecret` is stored in the entity payload without hashing or Duende Storage field-level encryption.
+
+Use encrypted database connections, database encryption at rest, restricted database access and protected backups. Do not
+grant direct read access to the configuration store as a substitute for an authorized administration API.
+:::
+
 ### SAML Service Provider
 
 ```csharp
