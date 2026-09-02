@@ -170,6 +170,10 @@ Some optional features rely on ASP.NET Core distributed caching:
 
 In order to work in a multi-server environment, this needs to be set up correctly. Please consult the Microsoft [documentation](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed) for more details.
 
+## Rate Limiting
+
+Duende IdentityServer does not include built-in rate limiting, and most deployments do not need it. Excessive requests are usually caused by a client misconfiguration, such as a missing token cache or a retry loop, so fixing the client is the right first step. When you do need to throttle traffic, for example on public-facing or multi-tenant deployments or when you do not have control over client applications, see [Rate Limiting Duende IdentityServer Endpoints](/identityserver/deployment/rate-limiting.md) for options at the network layer, in ASP.NET Core middleware, and in a custom token request validator.
+
 ## Health Checks
 
 You can use ASP.NET's [health checks](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks) to monitor the health of your IdentityServer deployment. Health checks can contain arbitrary logic to test various conditions of a system. One common strategy for checking the health of IdentityServer is to make discovery requests. Successful discovery responses indicate not just that the IdentityServer host is running and able to receive requests and generate responses, but also that it was able to communicate with the configuration store.
