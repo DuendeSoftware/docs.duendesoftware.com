@@ -66,8 +66,8 @@ var identityServer = builder.Services
     .AddOperationalStorage();
 ```
 
-Run the `IDatabaseSchema` migration described in the
-[configuration setup](/identityserver/data/providers/duende-storage/configuration-storage.md#register-duende-storage-for-configuration-data)
+Deploy the database schema as described in
+[Configuration Storage](/identityserver/data/providers/duende-storage/configuration-storage.md#deploy-the-database-schema)
 before the application starts serving requests.
 
 Operational records contain tokens, grants, session data and signing material. Restrict database access, encrypt
