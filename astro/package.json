@@ -66,7 +66,7 @@
     "typescript": "^5.9.3"
   },
   "volta": {
-    "node": "24.0.0"
+    "node": "24.20.0"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,
