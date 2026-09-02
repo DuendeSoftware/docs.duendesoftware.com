@@ -213,6 +213,33 @@ an `AllowedTokenSigningAlgorithm` property to override the default on a per
 resource and client basis.
 :::
 
+### Using The Same Signing Keys For OIDC And SAML
+
+When SAML is enabled, IdentityServer uses the same signing credentials for OIDC tokens and SAML messages. This gives both
+protocols one rotation schedule and one key store. The active key signs new JWTs and SAML messages, while current and
+recently rotated public keys are published through the OIDC JWKS endpoint and SAML IdP metadata during rollover.
+
+SAML metadata requires X.509 certificates. Automatic Key Management creates RSA keys by default, and the SAML component
+automatically wraps those managed RSA keys in self-signed X.509 certificates that contain the RSA public key. You do not
+need to set `UseX509Certificate` just to enable SAML. These generated certificates are containers for signing-key
+material, not PKI identity certificates. Service Providers should establish trust from the IdP metadata and refresh it
+during rotation rather than rely on the certificate subject or validity dates.
+
+If you use Static Key Management, configure an X.509 signing certificate with a private key. SAML cannot automatically
+wrap a manually registered raw RSA key, including one registered by `AddDeveloperSigningCredential()`.
+
+:::caution
+The default SAML signing service supports RSA signing credentials. `UseX509Certificate` is not supported for EC keys.
+Use a custom [`ISamlSigningService`](/identityserver/saml/extensibility.md#isamlsigningservice) if SAML needs a different
+certificate, an independent rotation schedule, or integration with an external key system.
+:::
+
+`PropagationTime` determines how long a new managed key is published before IdentityServer starts using it. Set this
+long enough for every Service Provider to refresh the IdP metadata. `RetentionDuration` keeps the previous certificate in
+metadata while Service Providers may still be validating SAML messages signed with the previous key and previously
+issued OIDC tokens remain valid. Service Providers that use a statically configured certificate must be updated as part
+of every rotation.
+
 ## Static Key Management
 
 Instead of using [Automatic Key Management](#automatic-key-management), IdentityServer's signing keys can be set
