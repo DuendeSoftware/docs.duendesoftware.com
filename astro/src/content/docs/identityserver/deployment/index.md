@@ -41,6 +41,21 @@ Microsoft publishes extensive [advice and documentation](https://docs.microsoft.
 Our experience has been that these topics are very important. Some of our most common support requests are related to [Data Protection](/general/data-protection.md#data-protection-keys) and [Load Balancing](#proxy-servers-and-load-balancers), so we strongly encourage you to review those pages, along with the rest of this chapter before deploying IdentityServer to production.
 :::
 
+## Production Deployment Checklist
+
+This checklist is a short summary of the detailed deployment guidance on this page. Before deploying IdentityServer to production, confirm that:
+
+* **HTTPS and proxy settings are correct.** Configure forwarded headers before IdentityServer and verify that the discovery document publishes the public HTTPS issuer. See [Proxy Servers and Load Balancers](#proxy-servers-and-load-balancers).
+* **Data Protection keys use durable, shared storage.** Protect the keys at rest and set an explicit application name. See [ASP.NET Core Data Protection](#aspnet-core-data-protection).
+* **Signing keys are protected and shared by every instance.** Define how keys will be rotated, use [Automatic Key Management](/identityserver/fundamentals/key-management.md#automatic-key-management) when it is available for your edition, and choose a [shared key store](/identityserver/fundamentals/key-management.md#key-storage) for load-balanced deployments.
+* **Configuration and operational data use production stores.** Do not rely on in-memory stores for state that must survive restarts or be shared between instances. See [IdentityServer Data Stores](#identityserver-data-stores).
+* **Database changes are part of the deployment process.** Apply schema changes before the new application version starts, and enable [operational-store cleanup](/identityserver/data/providers/entityframework-core.md#operational-store) so expired grants and pushed authorization requests do not accumulate.
+* **Every instance can access the same shared state.** Configure shared operational data, signing keys, Data Protection keys, and any feature-specific [distributed caches](#distributed-caching).
+* **CORS allows only the required client origins.** Configure explicit origins for browser-based clients and check the middleware order when combining IdentityServer and ASP.NET Core policies. See [CORS](/identityserver/tokens/cors.md).
+* **Token and session lifetimes match your threat model.** Review [access-token and refresh-token settings](/identityserver/reference/v8/models/client.md#token) and keep [server-side session lifetimes](/identityserver/ui/server-side-sessions/session-expiration.mdx) consistent with them.
+* **Diagnostics are ready before traffic arrives.** Configure appropriate [logging](/identityserver/diagnostics/logging.mdx), collect [OpenTelemetry](/identityserver/diagnostics/otel.md) signals, enable the [events](/identityserver/diagnostics/events.md) you need, and expose [health checks](#health-checks).
+* **Traffic controls match the deployment risk.** Most deployments do not need application-level throttling, but public or multi-tenant deployments should assess [rate limiting](#rate-limiting).
+
 ## Proxy Servers and Load Balancers
 
 In typical deployments, your IdentityServer will be hosted behind a load balancer or reverse proxy. These and other network appliances often obscure information about the request before it reaches the host. Some of the behavior of IdentityServer and the ASP.NET authentication handlers depend on that information, most notably the scheme (HTTP vs HTTPS) of the request and the originating client IP address.
