@@ -108,6 +108,12 @@ builder.Services
     .AddIdentityServer()
     .AddConfigurationStorage()
     .AddStorageDataExtensionSchemas();
+
+// ...
+
+await app.Services
+    .GetRequiredService<IDatabaseSchema>()
+    .MigrateAsync(CancellationToken.None);
 ```
 
 After the database migration has completed, provision the schema through `ISchemaAdmin`:
