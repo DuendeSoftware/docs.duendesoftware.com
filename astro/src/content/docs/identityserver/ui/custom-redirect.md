@@ -1,6 +1,6 @@
 ---
-title: "Customizing authorize interaction redirects"
-description: "How to subclass AuthorizeInteractionPageHttpWriter to customize how IdentityServer redirects users to login, consent, and other interaction pages."
+title: "Customizing IdentityServer Interaction Redirects"
+description: "How to route users to registration with prompt=create and customize IdentityServer redirects to login, consent, and other interaction pages."
 date: 2026-05-08
 sidebar:
   label: "Custom redirect writer"
@@ -16,7 +16,7 @@ You might want to customize this behavior to:
 * Append a custom query parameter to the interaction page URL (for example, a tenant identifier or a UI hint).
 * Change the redirect status code or add extra response headers.
 
-## How it works
+## How IdentityServer Interaction Redirects Work
 
 `AuthorizeInteractionPageHttpWriter` implements `IHttpResponseWriter<AuthorizeInteractionPageResult>` and exposes three virtual methods you can override independently:
 
@@ -28,7 +28,7 @@ You might want to customize this behavior to:
 
 The default `WriteHttpResponse` implementation calls all three in sequence. You only need to override the method that covers the behavior you want to change.
 
-## Example: appending a custom query parameter
+## How To Append A Custom Query Parameter
 
 The example below adds a `ui_hint` query parameter to every redirect URL so the interaction page can adjust its appearance based on the originating client.
 
@@ -71,7 +71,7 @@ public class CustomRedirectWriter : AuthorizeInteractionPageHttpWriter
 }
 ```
 
-## Example: setting a cookie before the redirect
+## How To Set A Cookie Before The Redirect
 
 Override `WriteResponseAsync` when you need to write response headers or cookies in addition to the redirect itself.
 
@@ -92,7 +92,7 @@ protected override Task WriteResponseAsync(HttpContext context, string redirectU
 }
 ```
 
-## Registering your writer
+## How To Register A Custom Redirect Writer
 
 Register your subclass using `AddHttpWriter<TResult, TWriter>()` in your IdentityServer setup:
 
@@ -108,3 +108,94 @@ This replaces the default `AuthorizeInteractionPageHttpWriter` for `AuthorizeInt
 The return URL built by `BuildReturnUrlAsync` points back into the authorize endpoint. Validate it using the [interaction service](/identityserver/reference/v8/services/interaction-service.md)
 before following it in your interaction page to guard against open-redirect attacks.
 :::
+
+## How To Start User Registration With `prompt=create`
+
+The [Initiating User Registration via OpenID Connect](https://openid.net/specs/openid-connect-prompt-create-1_0.html)
+specification defines `prompt=create` as a standard way for a client to ask the OpenID Provider to show its registration
+UI. The client does not need to know the URL of that page.
+
+Add this configuration to `Program.cs` in the **IdentityServer host**. The URL identifies the registration page served by
+IdentityServer:
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer(options =>
+{
+    options.UserInteraction.CreateAccountUrl = "/Account/Register";
+});
+```
+
+IdentityServer now adds `create` to `prompt_values_supported` in its discovery document. An authorization request with
+`prompt=create` is redirected to `/Account/Register` with a `returnUrl` query parameter. If `CreateAccountUrl` is not
+configured, IdentityServer ignores `prompt=create` and does not advertise it in discovery.
+
+:::note
+`prompt=create` must be the only `prompt` value in the authorization request. It cannot be combined with `login`,
+`consent`, `select_account`, or `none`.
+:::
+
+### Start Registration From An ASP.NET Core Client
+
+This code runs in the **ASP.NET Core client application**, not the IdentityServer host. It assumes the client has an
+OpenID Connect authentication scheme named `oidc`. The `/register` endpoint starts a registration challenge without
+changing regular login challenges:
+
+```csharp
+// Program.cs
+app.MapGet("/register", () =>
+{
+    var properties = new OpenIdConnectChallengeProperties
+    {
+        Prompt = "create",
+        RedirectUri = "/"
+    };
+
+    return Results.Challenge(properties, ["oidc"]);
+});
+```
+
+When a user visits `/register`, the OpenID Connect handler sends an authorization request with `prompt=create` to
+IdentityServer. IdentityServer then redirects the browser to its configured registration page.
+
+`RedirectUri` is the local path in the client application to visit after the OpenID Connect flow completes. The
+protocol redirect URI used by the OpenID Connect handler must still match the client's configuration in IdentityServer.
+
+### Continue The Authorization Flow After Registration
+
+This code runs in the **IdentityServer host**, in the Razor Page handler for the `/Account/Register` page configured
+above. The registration page receives the same `returnUrl` pattern used by the login and consent pages. Use
+`IIdentityServerInteractionService` to load the authorization context, create and sign in the user, then return to the
+authorization flow. `CreateUserAsync` and `Input` represent your own validated user-registration code:
+
+```csharp
+// Register.cshtml.cs
+public async Task<IActionResult> OnPostAsync(string returnUrl)
+{
+    var context = await _interaction.GetAuthorizationContextAsync(
+        returnUrl,
+        HttpContext.RequestAborted);
+
+    if (context is null)
+    {
+        return BadRequest();
+    }
+
+    var user = await CreateUserAsync(Input);
+
+    // Only sign in after any required email confirmation, account approval,
+    // or MFA enrollment has completed.
+    await HttpContext.SignInAsync(new IdentityServerUser(user.SubjectId));
+
+    return Redirect(returnUrl);
+}
+```
+
+`GetAuthorizationContextAsync` returns `null` for an invalid return URL, so the context check prevents an open redirect.
+Razor Pages protects POST handlers with antiforgery validation by default; add equivalent CSRF protection if you adapt
+this flow to another endpoint type.
+
+In production, finish any required email confirmation, account approval, or MFA enrollment before calling `SignInAsync`.
+Preserve the `returnUrl` through those steps and only continue the authorization flow after the account is ready to sign
+in. Your registration code should also handle an existing username or email address without revealing whether an account
+already exists. The client should consider registration complete only after the OpenID Connect flow returns successfully.
