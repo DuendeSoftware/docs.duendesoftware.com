@@ -36,10 +36,12 @@ A signing key is trusted by every client and API that accepts tokens from your I
 compromised, an attacker can create tokens that those applications may trust. Regular rotation limits how long one key
 remains in active use and makes emergency replacement a process you have already exercised.
 
+:::caution
 Rotation must not invalidate tokens that are still in use. Publish a new public key before using it to sign tokens, and
 keep the retired public key available until tokens signed with it have expired. Automatic Key Management handles this
 overlap for you. If you manage keys yourself, follow the [phased manual rotation](#solution-2-phased-rotation) process
 described below.
+:::
 
 ## Automatic Key Management
 
