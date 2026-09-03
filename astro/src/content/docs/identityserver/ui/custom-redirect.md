@@ -195,6 +195,15 @@ public async Task<IActionResult> OnPostAsync(string returnUrl)
 Razor Pages protects POST handlers with antiforgery validation by default; add equivalent CSRF protection if you adapt
 this flow to another endpoint type.
 
+:::note
+This flow uses the OpenID Connect-specific `GetAuthorizationContextAsync` rather than the protocol-agnostic
+`GetAuthenticationContextAsync`. `prompt=create` is defined only by OpenID Connect and has no SAML equivalent, so the
+registration page always runs under an OpenID Connect authorization request and the returned context is always an
+`AuthorizationRequest`. Both methods share the same return URL validation, so the null check guards against open
+redirects identically. Using `GetAuthorizationContextAsync` here matches IdentityServer's built-in `Account/Create`
+page and the quickstart templates.
+:::
+
 In production, finish any required email confirmation, account approval, or MFA enrollment before calling `SignInAsync`.
 Preserve the `returnUrl` through those steps and only continue the authorization flow after the account is ready to sign
 in. Your registration code should also handle an existing username or email address without revealing whether an account
