@@ -24,6 +24,7 @@ You can send events to structured logging stores such as
 
 Events are not enabled by default. Choose which event types to raise when you call `AddIdentityServer`:
 
+```csharp
 // Program.cs
 builder.Services.AddIdentityServer(options =>
 {
