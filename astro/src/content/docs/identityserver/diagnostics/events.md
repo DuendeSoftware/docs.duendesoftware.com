@@ -24,7 +24,6 @@ You can send events to structured logging stores such as
 
 Events are not enabled by default. Choose which event types to raise when you call `AddIdentityServer`:
 
-
 // Program.cs
 builder.Services.AddIdentityServer(options =>
 {
@@ -67,7 +66,7 @@ operations. An audit trail commonly records:
 * Consent grants and denials
 * Custom events for application-specific security decisions
 
-Enabling events does not create a complete audit system by itself. You must decide where to store them, how long to
+Enabling events does not create a complete audit system by itself. You must decide where to store raised events, how long to
 retain them, and who can access them. For an audit trail, send events to a dedicated append-only or tamper-resistant
 store rather than relying only on general application logs.
 
