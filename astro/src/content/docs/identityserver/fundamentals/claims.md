@@ -88,7 +88,7 @@ were not requested. The default profile service uses this filtering behavior too
 IdentityServer builds the requested claim types from the resources in the authorization request:
 
 1. The client requests a scope or resource.
-2. IdentityServer resolves the matching resources. Identity resources supply claims for identity tokens and userinfo;
+2. IdentityServer resolves the matching resources. Identity resources supply claims for identity tokens and the `userinfo` endpoint;
    API scopes and API resources supply claims for access tokens.
 3. The relevant `UserClaims` collections become `RequestedClaimTypes`.
 4. `AddRequestedClaims` adds only matching claims to `IssuedClaims`.
@@ -117,13 +117,13 @@ public static Client Client => new()
 ```
 
 The client must request `department_info`. The profile service will then see `department` in `RequestedClaimTypes`, and
-`AddRequestedClaims` can include it in the appropriate token or userinfo response.
+`AddRequestedClaims` can include it in the appropriate token or `userinfo` endpoint's response.
 
 :::note
 When an authorization request produces both an identity token and an access token, IdentityServer keeps the identity
 token small by default and makes most identity claims available from the
-[userinfo endpoint](/identityserver/reference/v8/endpoints/userinfo.md). If a claim is configured correctly but is not in
-the identity token, check userinfo before changing the profile service. See the
+[`userinfo` endpoint](/identityserver/reference/v8/endpoints/userinfo.md). If a claim is configured correctly but is not in
+the identity token, check the `userinfo` endpoint before changing the profile service. See the
 [Claims Lifecycle](/identityserver/fundamentals/claims-lifecycle.mdx) page for the full flow.
 :::
 
