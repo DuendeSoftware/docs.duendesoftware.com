@@ -1,5 +1,5 @@
 ---
-title: "Testing Duende IdentityServer"
+title: "Integration Testing with Duende IdentityServer"
 description: "How to write integration tests for authentication and authorization against an in-process Duende IdentityServer using WebApplicationFactory and xUnit."
 date: 2026-09-02T08:00:00+02:00
 sidebar:
@@ -181,6 +181,10 @@ public async Task Custom_client_can_request_token()
     Assert.False(response.IsError);
 }
 ```
+
+:::note
+Keep in mind that when running tests in parallel, concurrent changes to the `Config` static class collections may not be desired, as tests may influence each other. If this is the case, you will want to update the test infrastructure to work with specific collections per test, rather than rely on the source of a static class.
+:::
 
 ### Access IdentityServer Services
 
