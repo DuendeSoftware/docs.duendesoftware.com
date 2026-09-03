@@ -507,3 +507,141 @@ The discovery document will include an `mtls_endpoint_aliases` section like:
   }
 }
 ```
+
+## ASP.NET Core OpenID Connect Clients
+
+An interactive ASP.NET Core web application uses mTLS for the same two reasons as any other client: to authenticate the client with a certificate instead of a shared secret, and/or to obtain [certificate-bound (sender-constrained) access tokens](/identityserver/tokens/pop.md). What differs is how you wire it up.
+
+The [.NET client examples](/identityserver/tokens/client-authentication.md#net-client-library-2) use [Duende IdentityModel](/identitymodel/index.mdx) to request tokens directly, and they read the mTLS token endpoint from `disco.MtlsEndpointAliases` themselves. An interactive web application is different: the OpenID Connect handler makes its **back-channel** calls for you. It handles authorization code redemption and, on .NET 9 and later, the [pushed authorization request](/identityserver/tokens/par.md). To use mTLS from such a client, you need to do two things:
+
+1. Present the client certificate on the handler's back-channel HTTP calls.
+2. Point the handler's endpoints at the `mtls_endpoint_aliases` published in discovery.
+
+### Presenting the Client Certificate
+
+Configure the OpenID Connect handler's `BackchannelHttpHandler` with a `SocketsHttpHandler` that carries the client certificate. This certificate is then used for authorization code redemption, refresh, and userinfo calls:
+
+```csharp
+// Program.cs
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "cookies";
+    options.DefaultChallengeScheme = "oidc";
+})
+.AddCookie("cookies")
+.AddOpenIdConnect("oidc", options =>
+{
+    options.Authority = "https://identity.example.com";
+    options.ClientId = "confidential.client";
+    // No client secret: the client certificate authenticates the client
+
+    // Load the certificate using one of the approaches from
+    // "Certificate Loading Strategies" above (Key Vault, cert store, etc.)
+    var cert = LoadFromStore(builder.Configuration["Mtls:Thumbprint"]);
+
+    // Present the client certificate on every back-channel call
+    options.BackchannelHttpHandler = new SocketsHttpHandler
+    {
+        SslOptions = new SslClientAuthenticationOptions
+        {
+            ClientCertificates = new X509CertificateCollection { cert }
+        }
+    };
+
+    // Rewrite endpoints to their mTLS aliases (see below)
+    options.ConfigurationManager = new MtlsConfigurationManager(
+        $"{options.Authority}/.well-known/openid-configuration",
+        new OpenIdConnectConfigurationRetriever(),
+        new HttpDocumentRetriever(new HttpClient()));
+});
+```
+
+### Applying the mTLS Endpoint Aliases
+
+The ASP.NET Core OpenID Connect handler reads the standard endpoints from discovery but does **not** understand the `mtls_endpoint_aliases` element. Without intervention it would call `token_endpoint` (the non-mTLS endpoint) instead of the mTLS alias, and client authentication would fail.
+
+Wrap the standard configuration manager so that, after loading discovery, it overwrites the relevant endpoints with their `mtls_endpoint_aliases` values.
+
+On .NET 9 and later, the OpenID Connect handler automatically uses [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md) when IdentityServer advertises support for them. The PAR request is a back-channel, client-authenticated call, so it must target the mTLS endpoint as well, which is why the configuration manager rewrites `pushed_authorization_request_endpoint` alongside the token endpoint.
+
+```csharp
+using System.Text.Json;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+
+/// <summary>
+/// Wraps the standard OpenID Connect configuration manager to apply
+/// mtls_endpoint_aliases from the discovery document.
+/// </summary>
+internal sealed class MtlsConfigurationManager
+    : IConfigurationManager<OpenIdConnectConfiguration>
+{
+    private readonly ConfigurationManager<OpenIdConnectConfiguration> _inner;
+    private readonly string _metadataAddress;
+    private readonly IDocumentRetriever _docRetriever;
+
+    private static readonly Dictionary<string, Action<OpenIdConnectConfiguration, string>> EndpointSetters = new()
+    {
+        ["token_endpoint"] = (c, v) => c.TokenEndpoint = v,
+        ["introspection_endpoint"] = (c, v) => c.IntrospectionEndpoint = v,
+        ["device_authorization_endpoint"] = (c, v) => c.DeviceAuthorizationEndpoint = v,
+        ["pushed_authorization_request_endpoint"] = (c, v) => c.PushedAuthorizationRequestEndpoint = v,
+    };
+
+    // OpenIdConnectConfiguration doesn't have a dedicated RevocationEndpoint property,
+    // so revocation_endpoint from mtls_endpoint_aliases is stored as additional data.
+    private static readonly string[] AdditionalEndpointKeys = ["revocation_endpoint"];
+
+    public MtlsConfigurationManager(
+        string metadataAddress,
+        OpenIdConnectConfigurationRetriever retriever,
+        IDocumentRetriever docRetriever)
+    {
+        _metadataAddress = metadataAddress;
+        _docRetriever = docRetriever;
+        _inner = new ConfigurationManager<OpenIdConnectConfiguration>(
+            metadataAddress, retriever, docRetriever);
+    }
+
+    public async Task<OpenIdConnectConfiguration> GetConfigurationAsync(CancellationToken cancel)
+    {
+        var config = await _inner.GetConfigurationAsync(cancel);
+
+        var json = await _docRetriever.GetDocumentAsync(_metadataAddress, cancel);
+        using var doc = JsonDocument.Parse(json);
+
+        if (!doc.RootElement.TryGetProperty("mtls_endpoint_aliases", out var aliases))
+        {
+            return config;
+        }
+
+        foreach (var (key, setter) in EndpointSetters)
+        {
+            if (aliases.TryGetProperty(key, out var value))
+            {
+                setter(config, value.GetString()!);
+            }
+        }
+
+        foreach (var key in AdditionalEndpointKeys)
+        {
+            if (aliases.TryGetProperty(key, out var value))
+            {
+                config.AdditionalData[key] = value.GetString()!;
+            }
+        }
+
+        return config;
+    }
+
+    public void RequestRefresh() => _inner.RequestRefresh();
+}
+```
+
+With both pieces in place, the OpenID Connect handler authenticates to IdentityServer using the client certificate and targets the correct mTLS endpoints.
+
+<LinkCard
+  title="Client Authentication"
+  description="Register mTLS client secrets (certificate name or thumbprint) and compare client secrets, private key JWT, and mutual TLS."
+  href="/identityserver/tokens/client-authentication.md#mutual-tls-client-certificates"
+/>
