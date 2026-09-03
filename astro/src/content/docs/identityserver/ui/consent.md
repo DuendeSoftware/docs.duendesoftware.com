@@ -92,7 +92,7 @@ new ApiScope("orders.read", "View your orders")
 
 Use `DisplayName` and `Description` values that explain what the application will receive or be able to do. Ask for the
 smallest set of scopes the client needs. If a user declines an optional scope, the flow can still succeed, but the
-resulting tokens and userinfo response will not contain data or permissions associated with that scope. See
+resulting tokens and `userinfo` endpoint's response will not contain data or permissions associated with that scope. See
 [Controlling Claims In IdentityServer Tokens](/identityserver/fundamentals/claims.md) for how scopes control claims.
 
 Once the user has provided consent, the consent page must inform your IdentityServer of the consent, and then the
