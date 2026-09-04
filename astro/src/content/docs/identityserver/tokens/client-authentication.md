@@ -273,13 +273,13 @@ You can use the [Microsoft JWT library](https://www.nuget.org/packages/System.Id
 Web Tokens.
 
 ```csharp
-private static string CreateClientToken(SigningCredentials credential, string clientId, string tokenEndpoint)
+private static string CreateClientToken(SigningCredentials credential, string clientId, string issuer)
 {
     var now = DateTime.UtcNow;
 
     var token = new JwtSecurityToken(
         clientId,
-        tokenEndpoint,
+        issuer, // audience: the authorization server's issuer identifier
         new List<Claim>()
         {
             new Claim(JwtClaimTypes.JwtId, Guid.NewGuid().ToString()),
@@ -290,6 +290,10 @@ private static string CreateClientToken(SigningCredentials credential, string cl
         now.AddMinutes(1),
         credential
     );
+
+    // Mark this JWT as a client authentication token so the authorization server
+    // applies strict audience validation (see "Strict Audience Validation" below).
+    token.Header[JwtClaimTypes.TokenType] = "client-authentication+jwt";
 
     var tokenHandler = new JwtSecurityTokenHandler();
     return tokenHandler.WriteToken(token);
@@ -309,7 +313,7 @@ static async Task<TokenResponse> RequestTokenAsync(SigningCredentials credential
     var disco = await client.GetDiscoveryDocumentAsync("https://demo.duendesoftware.com");
     if (disco.IsError) throw new Exception(disco.Error);
 
-    var clientToken = CreateClientToken(credential, "private.key.jwt", disco.TokenEndpoint);
+    var clientToken = CreateClientToken(credential, "private.key.jwt", disco.Issuer);
 
     var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
     {
