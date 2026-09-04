@@ -1,8 +1,9 @@
 ---
-title: "Events"
-description: Documentation about IdentityServer's event system for structured logging and monitoring of important operations
+title: "IdentityServer Events And Audit Logging"
+description: "How to configure IdentityServer events and send structured authentication, token, consent, and security events to an audit store."
 date: 2026-05-20
 sidebar:
+  label: Events
   order: 20
 redirect_from:
   - /identityserver/v5/diagnostics/events/
@@ -10,18 +11,18 @@ redirect_from:
   - /identityserver/v7/diagnostics/events/
 ---
 
-While logging is more low level "printf" style - events represent higher level information about certain operations in
-IdentityServer.
-Events are structured data and include event IDs, success/failure information, categories and details.
-This makes it easy to query and analyze them and extract useful information that can be used for further processing.
+[Logs](/identityserver/diagnostics/logging.mdx) describe low-level application activity. Events describe higher-level
+operations in IdentityServer, such as user login, client authentication, token issuance, consent, and token revocation.
+Events are structured data with event IDs, success or failure information, categories, and details, which makes them
+easier to query and process than application logs.
 
-Events work great with structured logging stores
-like [ELK](https://www.elastic.co/webinars/introduction-elk-stack), [Seq](https://getseq.net)
-or [Splunk](https://www.splunk.com/).
+You can send events to structured logging stores such as
+[ELK](https://www.elastic.co/webinars/introduction-elk-stack), [Seq](https://getseq.net), or
+[Splunk](https://www.splunk.com/).
 
-### Emitting events
+## How To Configure IdentityServer Events
 
-Events are not turned on by default - but can be globally configured when `AddIdentityServer` is called, e.g.:
+Events are not enabled by default. Choose which event types to raise when you call `AddIdentityServer`:
 
 ```csharp
 // Program.cs
@@ -30,12 +31,16 @@ builder.Services.AddIdentityServer(options =>
     options.Events.RaiseSuccessEvents = true;
     options.Events.RaiseFailureEvents = true;
     options.Events.RaiseErrorEvents = true;
+    options.Events.RaiseInformationEvents = true;
 });
 ```
 
-To emit an event use the `IEventService` from the ASP.NET Core service provider and call the `RaiseAsync` method, e.g.:
+IdentityServer raises protocol events itself. Events for user-interface actions, such as a successful or failed login,
+must be raised by your UI code because that code belongs to your application. Inject `IEventService` and call
+`RaiseAsync`:
 
-```csharp
+```csharp {8,12}
+// LoginController.cs
 public async Task<IActionResult> Login(LoginInputModel model)
 {
     if (_users.ValidateCredentials(model.Username, model.Password))
@@ -51,14 +56,36 @@ public async Task<IActionResult> Login(LoginInputModel model)
 }
 ```
 
-### Custom sinks
+## When To Use Events For Audit Logging
 
-Our default event sink will serialize the event class to JSON and forward it to the ASP.NET Core logging system.
-If you want to connect to a custom event store, implement the `IEventSink` interface and register it with the ASP.NET Core service provider.
+Use logs to diagnose application behavior. Use events when you need a smaller, structured record of security-relevant
+operations. An audit trail commonly records:
+
+* Successful and failed user logins
+* Client and API authentication
+* Token issuance, revocation, and introspection
+* Consent grants and denials
+* Custom events for application-specific security decisions
+
+Enabling events does not create a complete audit system by itself. You must decide where to store raised events, how long to
+retain them, and who can access them. For an audit trail, send events to a dedicated append-only or tamper-resistant
+store rather than relying only on general application logs.
+
+Built-in events can include usernames, subject IDs, display names, client IDs, scopes, redirect URIs, and local and
+remote IP addresses. Treat this data as personal or security-sensitive information when you set access and retention
+policies for the audit store. Issued token values are obfuscated, so full tokens are not written to events. Custom events
+and sinks should not add secrets, full tokens, or personal data that the audit trail does not need.
+
+## How To Store Events In An Audit System
+
+The default event sink serializes each event to JSON and forwards it to the ASP.NET Core logging system. To send events
+to an audit database, SIEM, or another store, implement
+[`IEventSink`](/identityserver/reference/v8/services/event-sink.md) and register it with the ASP.NET Core service provider.
 
 The following example uses [Seq](https://getseq.net) to emit events:
 
 ```csharp
+// SeqEventSink.cs
 public class SeqEventSink : IEventSink
 {
     private readonly Logger _log;
@@ -93,9 +120,25 @@ public class SeqEventSink : IEventSink
 }
 ```
 
-Add the `Serilog.Sinks.Seq` package to your host to make the above code work.
+Add the `Serilog.Sinks.Seq` package to your host, then register the sink:
 
-## Built-in events
+```shell
+dotnet add package Serilog.Sinks.Seq
+```
+
+```csharp
+// Program.cs
+builder.Services.AddTransient<IEventSink, SeqEventSink>();
+```
+
+`IEventService` sends each event to one `IEventSink`. Registering a custom sink replaces the default sink, so events are
+no longer forwarded to the standard ASP.NET Core logger unless your custom sink does that too.
+
+Your sink controls the reliability and retention of the audit trail. In production, account for temporary failures in
+the destination, restrict write and delete access, and monitor the sink so dropped events do not go unnoticed. If you
+need events in both the default logger and a dedicated audit store, implement that fan-out in your sink.
+
+## Built-In IdentityServer Events
 
 The following events are defined in IdentityServer:
 
@@ -172,26 +215,29 @@ The following events are raised by SAML components:
 
   Raised when a SAML Service Provider's configuration fails runtime validation (performed by [`ISamlServiceProviderConfigurationValidator`](/identityserver/saml/extensibility#isamlserviceproviderconfigurationvalidator)). Includes the SP's `EntityId` and `DisplayName`.
 
-### Custom events
+## How To Create Custom IdentityServer Events
 
-You can create your own events and emit them via our infrastructure.
+You can create your own events and emit them through the same event pipeline.
 
-You need to derive from our base `Event` class which injects contextual information like activity ID, timestamp, etc.
-Your derived class can then add arbitrary data fields specific to the event context::
+Derive from the `Event` base class, which adds contextual information such as the activity ID and timestamp. Choose an
+event ID that does not conflict with the [built-in events](#built-in-identityserver-events), then add the fields your
+application needs:
 
 ```csharp
-public class UserLoginFailureEvent : Event
+// AccountLockedEvent.cs
+public class AccountLockedEvent : Event
 {
-    public UserLoginFailureEvent(string username, string error)
+    private const int AccountLockedEventId = 9000;
+
+    public AccountLockedEvent(string subjectId)
         : base(EventCategories.Authentication,
-                "User Login Failure",
-                EventTypes.Failure, 
-                EventIds.UserLoginFailure,
-                error)
+                "Account Locked",
+                EventTypes.Information,
+                AccountLockedEventId)
     {
-        Username = username;
+        SubjectId = subjectId;
     }
 
-    public string Username { get; set; }
+    public string SubjectId { get; set; }
 }
 ```

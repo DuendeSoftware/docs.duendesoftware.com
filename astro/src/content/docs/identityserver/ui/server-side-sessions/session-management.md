@@ -1,7 +1,8 @@
 ---
-title: "Session Management"
-description: "Documentation on using the ISessionManagementService to query and terminate user sessions in IdentityServer, including revoking tokens and sending back-channel logout notifications."
+title: "Managing Server-Side Sessions"
+description: "How to add custom session metadata, query and terminate server-side sessions, revoke tokens, and send back-channel logout notifications in IdentityServer."
 sidebar:
+  label: Session Management
   order: 2
 redirect_from:
   - /identityserver/v5/ui/server_side_sessions/session_management/
@@ -41,6 +42,7 @@ You can optionally filter on a user's claims mentioned above (subject identifier
 For example:
 
 ```csharp
+// Sessions.cshtml.cs
 var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
 {
     CountRequested = 10,
@@ -54,6 +56,7 @@ The results returned contains the matching users' session data, and paging infor
 This paging information contains a `ResultsToken` and allows subsequent requests for next or previous pages (set `RequestPriorResults` to true for the previous page, otherwise the next page is assumed):
 
 ```csharp
+// Sessions.cshtml.cs
 // this requests the first page
 var userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
 {
@@ -76,8 +79,82 @@ userSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQue
 }, HttpContext.RequestAborted);
 ```
 
+## How To Add Custom Session Metadata
 
-### Terminating Sessions
+The server-side session stores the user's `AuthenticationTicket`, including claims and the string values in
+`AuthenticationProperties.Items`. Use `Items` for data that describes a specific sign-in, such as a device name,
+authentication method, or region. This data stays inside IdentityServer and is not issued to clients as claims.
+
+When using the standard IdentityServer UI, add the values to the `AuthenticationProperties` passed to `SignInAsync`:
+
+```csharp
+// Login.cshtml.cs
+var properties = new AuthenticationProperties();
+properties.Items["device_name"] = "Work laptop";
+properties.Items["region"] = "eu-west";
+
+var identityServerUser = new IdentityServerUser(user.SubjectId)
+{
+    DisplayName = user.Username
+};
+
+await HttpContext.SignInAsync(identityServerUser, properties);
+```
+
+When using ASP.NET Identity, pass the same properties to `SignInManager.SignInWithClaimsAsync`:
+
+```csharp
+// Login.cshtml.cs
+var properties = new AuthenticationProperties();
+properties.Items["device_name"] = "Work laptop";
+properties.Items["region"] = "eu-west";
+
+await _signInManager.SignInWithClaimsAsync(
+    user,
+    properties,
+    additionalClaims: []);
+```
+
+If your login flow calls another `SignInManager` method, such as `PasswordSignInAsync`, use a custom `SignInManager`
+and add the metadata in an override of `SignInWithClaimsAsync` so it is applied consistently to every sign-in.
+
+:::caution
+Session metadata is protected at rest with [ASP.NET Core Data Protection](/general/data-protection.md#data-protection-keys),
+but it is still available to IdentityServer and session administration code. Do not store secrets, tokens, or data the
+session does not need. Keep values small because the complete authentication ticket must be serialized and loaded when
+the session is used. Treat metadata as informational, especially when a value came from the user or request. Do not use
+it as the only input to an authorization decision.
+:::
+
+## Reading Custom Session Metadata
+
+`QuerySessionsAsync` returns a `UserSession` for each matching session. Its `AuthenticationTicket` contains the
+`AuthenticationProperties.Items` values saved at sign-in:
+
+```csharp
+// Sessions.cshtml.cs
+var result = await _sessionManagementService.QuerySessionsAsync(
+    new SessionQuery { SubjectId = "12345" },
+    HttpContext.RequestAborted);
+
+foreach (var session in result.Results)
+{
+    session.AuthenticationTicket.Properties.Items.TryGetValue(
+        "device_name",
+        out var deviceName);
+
+    // Use deviceName in authorized session management or audit tooling.
+}
+```
+
+Custom metadata is not indexed by the built-in session store, so you cannot filter `SessionQuery` by these values. Query
+by subject ID, session ID, or display name first, then inspect the returned authentication tickets.
+
+Use claims for identity data that must be evaluated by IdentityServer or issued to clients. Use session metadata for
+values that belong to one sign-in, and keep durable profile data in your user store.
+
+
+## Terminating Sessions
 
 To terminate session(s) for a user, use the `RemoveSessionsAsync` API.
 This accepts a `RemoveSessionsContext` which can filter on the subject and/or the session identifier to terminate.
@@ -88,6 +165,7 @@ There is also a list of client identifiers to control which clients are affected
 An example to revoke everything for current sessions for subject id `12345` might be:
 
 ```csharp
+// Sessions.cshtml.cs
 await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
     SubjectId = "12345"
 }, HttpContext.RequestAborted);
@@ -96,6 +174,7 @@ await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext {
 Or to just revoke all refresh tokens for current sessions for subject id `12345` might be:
 
 ```csharp
+// Sessions.cshtml.cs
 await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
     SubjectId = "12345",
     RevokeTokens = true,
