@@ -1,0 +1,6 @@
+label: "Duende Storage"
+collapsed: false
+order: 10
+badge:
+  text: preview
+  variant: caution

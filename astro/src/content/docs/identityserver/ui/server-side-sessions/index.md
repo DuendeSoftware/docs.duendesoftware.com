@@ -1,6 +1,7 @@
 ---
 title: "Overview"
 description: "An introduction to IdentityServer's server-side sessions feature, which stores authentication state on the server rather than in cookies for improved manageability and security."
+date: 2026-09-01
 sidebar:
   order: 1
 redirect_from:
@@ -51,8 +52,10 @@ builder.Services.AddIdentityServer()
 ```
 
 By default, the store for the server-side sessions will just be kept in-memory.
-For production scenarios you will want to configure a durable store either by using our [EntityFramework Core implementation](/identityserver/data/providers/entityframework-core.md#operational-store),
-or you can [implement the store yourself](/identityserver/reference/v8/stores/server-side-sessions.md).
+For production scenarios, configure a durable store by using the
+[Entity Framework Core implementation](/identityserver/data/providers/entityframework-core.md#operational-store), the
+[Duende Storage operational provider](/identityserver/data/providers/duende-storage/operational-storage.md) or
+[your own implementation](/identityserver/reference/v8/stores/server-side-sessions.md).
 
 :::note
 Order is important in the ASP.NET Core service provider.
@@ -92,8 +95,10 @@ builder.Services.AddIdentityServer(options => {
 
 The [`IServerSideSessionStore`](/identityserver/reference/v8/stores/server-side-sessions.md) is the abstraction for storing the server-side session.
 
-An EntityFramework Core implementation is already provided as part of our [operational store](/identityserver/data/providers/entityframework-core.md#operational-store), but you can implement
-the [interface](/identityserver/reference/v8/stores/server-side-sessions.md) yourself for other backing implementations.
+Entity Framework Core and the preview
+[Duende Storage operational provider](/identityserver/data/providers/duende-storage/operational-storage.md) include
+implementations. You can also implement the
+[`IServerSideSessionStore` interface](/identityserver/reference/v8/stores/server-side-sessions.md) for another backend.
 
 :::caution[Prefer `GetSessionsAsync` over `QuerySessionsAsync`]
 When listing sessions, prefer `GetSessionsAsync` over `QuerySessionsAsync`.

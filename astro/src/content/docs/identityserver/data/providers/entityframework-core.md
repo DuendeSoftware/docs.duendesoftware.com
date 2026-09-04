@@ -159,3 +159,7 @@ Using EF migrations is one possible approach to this.
 If you do wish to use migrations, then see the [EF quickstart](/identityserver/quickstarts/4-entity-framework.md) for samples on how to get started, or consult the Microsoft [documentation on EF migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/index).
 
 We publish a [sample app](https://github.com/DuendeSoftware/products/tree/main/identity-server/migrations/IdentityServerDb) that we use internally for creating databases to test the latest database schema (this is SQL Server specific).
+
+If you plan to replace this provider with the preview Duende Storage provider, follow the
+[migration guidance](/identityserver/data/providers/duende-storage/migrating-from-ef-core.md). The providers use different
+schemas and persistence models, so the change requires a planned data transfer and cutover.
