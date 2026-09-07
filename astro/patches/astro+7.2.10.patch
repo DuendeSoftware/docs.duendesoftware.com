@@ -1,5 +1,5 @@
 diff --git a/node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js b/node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js
-index 0f22881..41cd9ef 100644
+index 734b456..2e3eb06 100644
 --- a/node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js
 +++ b/node_modules/astro/dist/assets/utils/vendor/image-size/types/svg.js
 @@ -72,7 +72,7 @@ function calculateByViewbox(attrs, viewbox) {

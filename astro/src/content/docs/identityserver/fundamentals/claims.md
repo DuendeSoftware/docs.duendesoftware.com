@@ -1,8 +1,9 @@
 ---
-title: "Claims"
-description: Learn about how IdentityServer emits and manages claims for users and clients, including claim emission strategies and serialization
+title: "Controlling Claims In IdentityServer Tokens"
+description: "How IdentityServer selects, filters, and serializes user and client claims for identity tokens, access tokens, and the userinfo endpoint."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
+  label: Claims
   order: 45
 redirect_from:
   - /identityserver/v5/fundamentals/claims/
@@ -60,6 +61,7 @@ requested and approved claims. The intent is that your profile service can retri
 claim data based on what was requested by the client. For example:
 
 ```csharp
+// SampleProfileService.cs
 public class SampleProfileService : DefaultProfileService
 {
     public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -77,6 +79,61 @@ public class SampleProfileService : DefaultProfileService
 }
 ```
 
+#### Why Is A User Claim Missing From The Token?
+
+A claim on `HttpContext.User` or `ProfileDataRequestContext.Subject` is not automatically included in a token.
+`AddRequestedClaims` compares each claim type with `ProfileDataRequestContext.RequestedClaimTypes` and drops claims that
+were not requested. The default profile service uses this filtering behavior too.
+
+IdentityServer builds the requested claim types from the resources in the authorization request:
+
+1. The client requests a scope or resource.
+2. IdentityServer resolves the matching resources. Identity resources supply claims for identity tokens and the `userinfo` endpoint;
+   API scopes and API resources supply claims for access tokens.
+3. The relevant `UserClaims` collections become `RequestedClaimTypes`.
+4. `AddRequestedClaims` adds only matching claims to `IssuedClaims`.
+
+For example, adding a `department` claim to the signed-in user is not enough. The IdentityServer host must define a
+resource containing that claim, allow the client to request it, and receive the matching scope in the authorization
+request:
+
+```csharp
+// Config.cs in the IdentityServer host
+public static IEnumerable<IdentityResource> IdentityResources =>
+[
+    new IdentityResources.OpenId(),
+    new IdentityResource(
+        name: "department_info",
+        userClaims: ["department"],
+        displayName: "Your department")
+];
+
+public static Client Client => new()
+{
+    ClientId = "web",
+    // ... other client settings
+    AllowedScopes = { "openid", "department_info" }
+};
+```
+
+The client must request `department_info`. The profile service will then see `department` in `RequestedClaimTypes`, and
+`AddRequestedClaims` can include it in the appropriate token or `userinfo` endpoint's response.
+
+:::note
+When an authorization request produces both an identity token and an access token, IdentityServer keeps the identity
+token small by default and makes most identity claims available from the
+[`userinfo` endpoint](/identityserver/reference/v8/endpoints/userinfo.md). If a claim is configured correctly but is not in
+the identity token, check the `userinfo` endpoint before changing the profile service. See the
+[Claims Lifecycle](/identityserver/fundamentals/claims-lifecycle.mdx) page for the full flow.
+:::
+
+If a claim is still missing, enable debug logging for `Duende.IdentityServer`. The default profile service logs the
+requested claim types and the claim types it issued. Before bypassing `AddRequestedClaims`, check the resource's
+`UserClaims`, the client's `AllowedScopes`, and the scopes in the request.
+
+Adding a claim directly to `IssuedClaims` bypasses this filter. Do that only when the claim must be sent regardless of
+the requested scopes, and make sure it does not expose data to a client that should not receive it.
+
 #### Always Emit Claims
 
 We generally recommend emitting claims based on the requested claim types, as that respects the scopes and resources
@@ -86,6 +143,7 @@ that are needed in most scenarios, they can be added by directly updating the `c
 example:
 
 ```csharp
+// SampleProfileService.cs
 public class SampleProfileService : DefaultProfileService
 {
     public virtual async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -126,6 +184,7 @@ meaning that each client can have its own unique set of client claims. The follo
 is associated with a certain customer in your system:
 
 ```csharp
+// Config.cs in the IdentityServer host
 var client = new Client
 {
     ClientId = "client",

@@ -199,6 +199,7 @@ export default defineConfig({
         },
       ],
       logo: {
+        alt: "Duende Software",
         light: "./src/assets/duende-logo.svg",
         dark: "./src/assets/duende-logo-dark.svg",
         replacesTitle: true,

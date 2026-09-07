@@ -559,6 +559,10 @@ summary {
   flex-direction: row-reverse;
   justify-content: start;
   padding: 0.25rem;
+
+  .large {
+    font-size: var(--sl-text-sm);
+  }
 }
 
 /* hubspot forms */

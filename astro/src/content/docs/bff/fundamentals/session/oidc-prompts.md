@@ -1,6 +1,6 @@
 ---
 title: "OpenID Connect Prompts"
-description: "OpenID Connect prompt support in Duende BFF V4"  
+description: "Learn how to use OpenID Connect prompt parameters (login, consent, select_account, none) in Duende BFF v4 for step-up authentication and enhanced security flows."  
 date: 2024-06-11T08:22:12+02:00
 sidebar:
   label: "OIDC Prompts"

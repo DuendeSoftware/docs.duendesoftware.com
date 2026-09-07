@@ -1,6 +1,6 @@
 ---
 title: "BFF Multi-Frontend Configuration"
-description: Documentation for managing BFF multi-frontend configuration
+description: Configure Duende BFF multi-frontend settings via IConfiguration with dynamic reloading support. Define OIDC, cookie, and API settings for each frontend.
 sidebar:
   order: 3
   label: "Configuration"
