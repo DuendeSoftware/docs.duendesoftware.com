@@ -15,48 +15,53 @@ Duende IdentityServer implements the following specifications:
 
 ## OpenID Connect
 
-* OpenID Connect Core 1.0 ([spec](https://openid.net/specs/openid-connect-core-1_0.html))
-* OpenID Connect Discovery 1.0 ([spec](https://openid.net/specs/openid-connect-discovery-1_0.html))
-* OpenID Connect RP-Initiated Logout 1.0 ([spec](https://openid.net/specs/openid-connect-rpinitiated-1_0.html))
-* OpenID Connect Session Management 1.0 ([spec](https://openid.net/specs/openid-connect-session-1_0.html))
-* OpenID Connect Front-Channel Logout 1.0 ([spec](https://openid.net/specs/openid-connect-frontchannel-1_0.html))
-* OpenID Connect Back-Channel Logout 1.0 ([spec](https://openid.net/specs/openid-connect-backchannel-1_0.html))
-* Multiple Response Types ([spec](https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html))
-* Form Post Response Mode ([spec](https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html))
-* Enterprise Edition: OpenID Connect Client-Initiated Backchannel Authentication (CIBA) ([spec](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html))
-* FAPI 2.0 Security Profile ([spec](https://openid.net/specs/fapi-security-profile-2_0-final.html))
+| Specification                                                     | Reference                                                                                         |
+|-------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| OpenID Connect Core 1.0                                           | [Spec](https://openid.net/specs/openid-connect-core-1_0.html)                                     |
+| OpenID Connect Discovery 1.0                                      | [Spec](https://openid.net/specs/openid-connect-discovery-1_0.html)                                |
+| OpenID Connect RP-Initiated Logout 1.0                            | [Spec](https://openid.net/specs/openid-connect-rpinitiated-1_0.html)                              |
+| OpenID Connect Session Management 1.0                             | [Spec](https://openid.net/specs/openid-connect-session-1_0.html)                                  |
+| OpenID Connect Front-Channel Logout 1.0                           | [Spec](https://openid.net/specs/openid-connect-frontchannel-1_0.html)                             |
+| OpenID Connect Back-Channel Logout 1.0                            | [Spec](https://openid.net/specs/openid-connect-backchannel-1_0.html)                              |
+| Multiple Response Types                                           | [Spec](https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html)                        |
+| Form Post Response Mode                                           | [Spec](https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html)                        |
+| OpenID Connect Client-Initiated Backchannel Authentication (CIBA) | [Spec](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) |
+| FAPI 2.0 Security Profile                                         | [Spec](https://openid.net/specs/fapi-security-profile-2_0-final.html)                             |
 
 ## OAuth 2.x
 
-* OAuth 2.0 ([RFC 6749](https://tools.ietf.org/html/rfc6749))
-* OAuth 2.0 Bearer Token Usage ([RFC 6750](https://tools.ietf.org/html/rfc6750))
-* JSON Web Token ([RFC 7519](https://tools.ietf.org/html/rfc7519))
-* OAuth 2.0 Token Revocation ([RFC 7009](https://tools.ietf.org/html/rfc7009))
-* OAuth 2.0 Token Introspection ([RFC 7662](https://tools.ietf.org/html/rfc7662))
-* Proof Key for Code Exchange by OAuth Public Clients ([RFC 7636](https://tools.ietf.org/html/rfc7636))
-* OAuth 2.0 JSON Web Tokens for Client Authentication ([RFC 7523](https://tools.ietf.org/html/rfc7523))
-* OAuth 2.0 Device Authorization Grant ([RFC 8628](https://tools.ietf.org/html/rfc8628))
-* Proof-of-Possession Key Semantics for JSON Web Tokens ([RFC 7800](https://tools.ietf.org/html/rfc7800))
-* OAuth 2.0 Mutual TLS Client Authentication and Certificate-Bound Access
-  Tokens ([RFC 8705](https://tools.ietf.org/html/rfc8705))
-* OAuth 2.0 Token Exchange ([RFC 8693](https://tools.ietf.org/html/rfc8693))
-* JWT Secured Authorization Request / JAR ([RFC 9101](https://datatracker.ietf.org/doc/html/rfc9101))
-* JWT Profile for OAuth 2.0 Access Tokens ([RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068))
-* OAuth 2.0 Authorization Server Issuer Identifier in Authorization
-  Response ([RFC 9207](https://datatracker.ietf.org/doc/html/rfc9207))
-* OAuth 2.0 Step-up Authentication Challenge Protocol ([RFC 9470](https://datatracker.ietf.org/doc/html/rfc9470))
-* Business (legacy), Enterprise (legacy), Standard, Advanced, and Custom Edition: OAuth 2.0 Dynamic Client Registration Protocol ([RFC 7591](https://www.rfc-editor.org/rfc/rfc7591))
-* Business (legacy), Enterprise (legacy), Standard, Advanced, and Custom Edition: OAuth 2.0 Pushed Authorization Requests ([RFC 9126](https://www.rfc-editor.org/rfc/rfc9126))
-* Enterprise (legacy), Standard, Advanced, and Custom Edition: Resource Indicators for OAuth 2.0 ([RFC 8707](https://tools.ietf.org/html/rfc8707))
-* Enterprise (legacy), Standard, Advanced, and Custom Edition: OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer /
-  DPoP ([RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449))
-* JSON Web Token (JWT) Response for OAuth Token Introspection ([RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html))
-* OAuth 2.0 Authorization Server Metadata ([RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414))
+| Specification                                                                    | Reference                                                 |
+|----------------------------------------------------------------------------------|-----------------------------------------------------------|
+| OAuth 2.0                                                                        | [RFC 6749](https://tools.ietf.org/html/rfc6749)           |
+| OAuth 2.0 Bearer Token Usage                                                     | [RFC 6750](https://tools.ietf.org/html/rfc6750)           |
+| JSON Web Token (JWT)                                                             | [RFC 7519](https://tools.ietf.org/html/rfc7519)           |
+| OAuth 2.0 Token Revocation                                                       | [RFC 7009](https://tools.ietf.org/html/rfc7009)           |
+| OAuth 2.0 Token Introspection                                                    | [RFC 7662](https://tools.ietf.org/html/rfc7662)           |
+| Proof Key for Code Exchange by OAuth Public Clients (PKCE)                       | [RFC 7636](https://tools.ietf.org/html/rfc7636)           |
+| Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants | [RFC 7521](https://tools.ietf.org/html/rfc7521)           |
+| OAuth 2.0 JSON Web Tokens for Client Authentication                              | [RFC 7523](https://tools.ietf.org/html/rfc7523)           |
+| OAuth 2.0 Device Authorization Grant                                             | [RFC 8628](https://tools.ietf.org/html/rfc8628)           |
+| Proof-of-Possession Key Semantics for JSON Web Tokens                            | [RFC 7800](https://tools.ietf.org/html/rfc7800)           |
+| OAuth 2.0 Mutual TLS Client Authentication and Certificate-Bound Access Tokens   | [RFC 8705](https://tools.ietf.org/html/rfc8705)           |
+| OAuth 2.0 Token Exchange                                                         | [RFC 8693](https://tools.ietf.org/html/rfc8693)           |
+| JWT Secured Authorization Request (JAR)                                          | [RFC 9101](https://datatracker.ietf.org/doc/html/rfc9101) |
+| JWT Profile for OAuth 2.0 Access Tokens                                          | [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068) |
+| OAuth 2.0 Authorization Server Issuer Identifier in Authorization Response       | [RFC 9207](https://datatracker.ietf.org/doc/html/rfc9207) |
+| OAuth 2.0 Step-up Authentication Challenge Protocol                              | [RFC 9470](https://datatracker.ietf.org/doc/html/rfc9470) |
+| OAuth 2.0 Dynamic Client Registration Protocol                                   | [RFC 7591](https://www.rfc-editor.org/rfc/rfc7591)        |
+| OAuth 2.0 Pushed Authorization Requests                                          | [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126)        |
+| Resource Indicators for OAuth 2.0                                                | [RFC 8707](https://tools.ietf.org/html/rfc8707)           |
+| OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer (DPoP)      | [RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449) |
+| JSON Web Token (JWT) Response for OAuth Token Introspection                      | [RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html)   |
+| OAuth 2.0 Authorization Server Metadata                                          | [RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414) |
 
 ## SAML
 
-* Security Assertion Markup Language (SAML) v2.0 (https://www.oasis-open.org/standard/saml/)
-  * SAML Core 2.0 (Assertions, Protocols, Bindings)
-  * SAML Profiles 2.0 (Web Browser SSO, Single Logout)
-  * SAML Bindings 2.0 (HTTP-Redirect, HTTP-POST)
-  * SAML Metadata 2.0 (EntityDescriptor,  IDPSSODescriptor)
+Support for [Security Assertion Markup Language (SAML) v2.0](https://www.oasis-open.org/standard/saml/):
+
+| Specification                                              | Reference                                                   |
+|------------------------------------------------------------|-------------------------------------------------------------|
+| SAML Core 2.0 (Assertions, Protocols, Bindings)            | [OASIS SAML 2.0](https://www.oasis-open.org/standard/saml/) |
+| SAML Profiles 2.0 (Web Browser SSO, Single Logout)         | [OASIS SAML 2.0](https://www.oasis-open.org/standard/saml/) |
+| SAML Bindings 2.0 (HTTP-Redirect, HTTP-POST)               | [OASIS SAML 2.0](https://www.oasis-open.org/standard/saml/) |
+| SAML Metadata 2.0 (`EntityDescriptor`, `IDPSSODescriptor`) | [OASIS SAML 2.0](https://www.oasis-open.org/standard/saml/) |
