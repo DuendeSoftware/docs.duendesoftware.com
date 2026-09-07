@@ -106,3 +106,25 @@ additional identity data.
 An access token allows access to an API resource. Clients request access tokens and forward them to the API.
 Access tokens contain information about the client and the user (if present).
 APIs use that information to authorize access to their data and functionality.
+
+## Multi-Issuer
+
+Duende IdentityServer can respond with different issuer (`iss`) claim values depending on the
+host it is served from. This *multi-issuer* capability is built in and lets a single instance
+present multiple issuer identities. It changes only the `iss` claim and does not separate
+configuration or operational data between tenants. See the
+[Issuer Claim](/identityserver/tokens/issuer.md#multi-issuer) documentation for details.
+
+## Multi-Tenancy
+
+Hosting multiple isolated security domains (tenants) from a single IdentityServer deployment.
+Duende delivers multi-tenancy through [Spaces](/identityserver/spaces/index.mdx), a licensed
+add-on that isolates each tenant's configuration and operational data. 
+
+## Space
+
+A *space* is an isolated environment within a single deployment. In IdentityServer
+[Spaces](/identityserver/spaces/index.mdx), each space has its own configuration and operational
+data mapped to a storage pool, while sharing the same process, code, and database
+infrastructure. In Duende User Management, a space is likewise the fundamental isolation unit
+for users, roles, and groups.
