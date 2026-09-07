@@ -39,7 +39,7 @@ Duende IdentityServer implements the following specifications:
 | OAuth 2.0 Token Introspection                                                    | [RFC 7662](https://tools.ietf.org/html/rfc7662)           |
 | Proof Key for Code Exchange by OAuth Public Clients (PKCE)                       | [RFC 7636](https://tools.ietf.org/html/rfc7636)           |
 | Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants | [RFC 7521](https://tools.ietf.org/html/rfc7521)           |
-| OAuth 2.0 JSON Web Tokens for Client Authentication                              | [RFC 7523](https://tools.ietf.org/html/rfc7523)           |
+| OAuth 2.0 JSON Web Tokens for Client Authentication                              | [RFC 7523](https://tools.ietf.org/html/rfc7523) and [RFC 7523bis](https://www.ietf.org/archive/id/draft-ietf-oauth-rfc7523bis-11.html) |
 | OAuth 2.0 Device Authorization Grant                                             | [RFC 8628](https://tools.ietf.org/html/rfc8628)           |
 | Proof-of-Possession Key Semantics for JSON Web Tokens                            | [RFC 7800](https://tools.ietf.org/html/rfc7800)           |
 | OAuth 2.0 Mutual TLS Client Authentication and Certificate-Bound Access Tokens   | [RFC 8705](https://tools.ietf.org/html/rfc8705)           |
