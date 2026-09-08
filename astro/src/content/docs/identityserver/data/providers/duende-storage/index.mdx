@@ -27,11 +27,12 @@ The provider has four parts:
 3. IdentityServer adapters implement its configuration and operational store interfaces.
 4. Optional administration APIs and schemas let your application manage and extend configuration data.
 
-Configuration and operational storage are registered together by a single call, and they share the configured database
-provider and schema. To use a different provider for one specific store, call an explicit store registration such as
-`AddInMemoryClients()` or `AddInMemoryPersistedGrants()` afterward; it replaces only that store's Duende Storage-backed
-registration and leaves the rest of the Duende Storage wiring in place. You can also combine Duende Storage with another
-provider this way.
+:::note[One Registration for Configuration and Operational Storage]
+`AddStorage(...)` registers configuration and operational storage together against one database provider and schema. To
+replace one specific store, call an explicit registration such as `AddInMemoryClients()` or
+`AddInMemoryPersistedGrants()` after `AddStorage(...)`. The later registration replaces only that store and leaves the
+rest of the Duende Storage wiring in place.
+:::
 
 ## Why Use Duende Storage?
 
@@ -62,14 +63,9 @@ Choose the package that matches your database:
 
 <CardGrid>
   <LinkCard
-    href="/identityserver/data/providers/duende-storage/configuration-storage/"
-    title="Configuration Storage"
-    description="Persist clients, resources and identity providers."
-  />
-  <LinkCard
-    href="/identityserver/data/providers/duende-storage/operational-storage/"
-    title="Operational Storage"
-    description="Persist grants, device codes, sessions, signing keys and runtime state."
+    href="/identityserver/data/providers/duende-storage/getting-started/"
+    title="Getting Started"
+    description="Configure storage for IdentityServer configuration and operational data."
   />
   <LinkCard
     href="/identityserver/data/providers/duende-storage/admin-apis/"

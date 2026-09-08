@@ -42,7 +42,7 @@ Duende IdentityServer provides these store implementations:
 
 * An in-memory store
 * A store backed by a database (using [Entity Framework Core](/identityserver/data/providers/entityframework-core.md))
-* The [Duende Storage configuration provider](/identityserver/data/providers/duende-storage/configuration-storage.md)
+* The [Duende Storage provider](/identityserver/data/providers/duende-storage/getting-started.md#configuration-stores)
 
 You could also implement your own store based on the [`IIdentityProviderStore` interface](/identityserver/reference/v8/stores/idp-store.md).
 

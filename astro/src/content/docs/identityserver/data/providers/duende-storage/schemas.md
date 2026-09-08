@@ -99,7 +99,7 @@ builder.Services
 ## Create a Storage-Backed Schema
 
 First configure a database provider and run `IDatabaseSchema.MigrateAsync` as described in
-[Configuration Storage](/identityserver/data/providers/duende-storage/configuration-storage.md#register-duende-storage-for-configuration-data).
+[Getting Started](/identityserver/data/providers/duende-storage/getting-started.md#register-duende-storage).
 Then register the storage-backed schema services:
 
 ```csharp

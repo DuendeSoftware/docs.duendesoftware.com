@@ -24,7 +24,7 @@ Configuration data includes clients, API scopes, API resources, identity resourc
 service providers and CORS origins.
 
 1. Back up the Entity Framework Core database and record the current IdentityServer and package versions.
-2. [Deploy the Duende Storage database schema](/identityserver/data/providers/duende-storage/configuration-storage.md#deploy-the-database-schema) with a separate
+2. [Deploy the Duende Storage database schema](/identityserver/data/providers/duende-storage/getting-started.md#deploy-the-database-schema) with a separate
    connection string or schema.
 3. Export configuration through the Entity Framework Core contexts and map it to the models accepted by the
    [configuration admin APIs](/identityserver/data/providers/duende-storage/admin-apis.md).
@@ -40,7 +40,7 @@ Provision the original secret from a secure source when it is available or rotat
 
 Dynamic identity-provider secrets are recoverable configuration values. Transfer them only through a protected migration
 process and apply the
-[configuration data protection guidance](/identityserver/data/providers/duende-storage/configuration-storage.md#protect-configuration-data).
+[stored data protection guidance](/identityserver/data/providers/duende-storage/getting-started.md#protect-stored-data).
 :::
 
 Use the administration APIs rather than writing Duende Storage records directly. They apply validation, relationship

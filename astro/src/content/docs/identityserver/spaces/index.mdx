@@ -71,8 +71,18 @@ Spaces do not add per-space UI code or branding. To vary UI behavior, inject `IS
 service, read the resolved `SpaceId` and load your own space-aware settings. Apply the same pattern to custom services that
 need space-specific behavior.
 
-User databases and other application-level services are not made space-aware automatically. You must isolate or partition
-them separately when users, profile data, email delivery or other dependencies belong to a specific space.
+User databases and other application-level services are not made space-aware automatically unless they use the shared
+`IStorageFactory`. You must isolate or partition them separately when users, profile data, email delivery or other
+dependencies belong to a specific space.
+
+:::note[Duende User Management]
+[Duende User Management](/identityserver/identity/user-management/index.mdx) uses the same storage factory as
+IdentityServer. When Spaces is enabled, User Management data is routed to the resolved space's pool by default. This
+isolates user profiles, authenticators, roles and groups per space.
+
+If users must be shared across spaces, use a deliberately separate user directory architecture rather than the default
+[space-aware User Management storage](/identityserver/data/providers/duende-storage/getting-started.md#use-duende-user-management).
+:::
 
 ## What Spaces Does Not Isolate
 

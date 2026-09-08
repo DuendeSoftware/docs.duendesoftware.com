@@ -12,7 +12,7 @@ This page describes preview packages and APIs that are subject to change. Start 
 [Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
 :::
 
-[`AddStorage`](/identityserver/data/providers/duende-storage/configuration-storage.md) registers
+[`AddStorage`](/identityserver/data/providers/duende-storage/getting-started.md#register-duende-storage) registers
 administration services alongside the stores that IdentityServer uses at runtime. These are .NET service APIs, not
 preconfigured HTTP endpoints. You decide how to expose them through a protected administration application, command-line
 tool or deployment process.

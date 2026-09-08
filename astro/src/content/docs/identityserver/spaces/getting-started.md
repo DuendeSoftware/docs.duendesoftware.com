@@ -16,12 +16,26 @@ This example uses SQLite:
 
 ```bash
 # Terminal
-dotnet add package Duende.IdentityServer --version 8.1.0-preview.3
-dotnet add package Duende.Storage.Sqlite --version 2.0.0-preview.2
-dotnet add package Duende.Spaces --version 1.0.0-preview.2
+dotnet add package Duende.IdentityServer --prerelease
+dotnet add package Duende.Storage.Sqlite --prerelease
+dotnet add package Duende.Spaces --prerelease
 ```
 
 See the [Duende.Spaces](https://www.nuget.org/packages/Duende.Spaces) NuGet Gallery page for package versions.
+
+## Add a Connection String
+
+Add a connection string for the SQLite database:
+
+```json title="appsettings.json"
+{
+  "ConnectionStrings": {
+    "IdentityServer": "Data Source=identityserver.db"
+  }
+}
+```
+
+Keep production credentials out of source control and load them from your deployment platform's secret store.
 
 ## Configure IdentityServer with Spaces
 
@@ -149,9 +163,9 @@ for more configuration options.
 
 ## Choose Match Patterns
 
-* Use origin matching when each space has a dedicated host name.
-* Use path matching when spaces share a host. The default `/t` prefix keeps space paths separate from ordinary routes.
-* Use both when a space must be constrained to a specific host and path.
+- Use origin matching when each space has a dedicated host name.
+- Use path matching when spaces share a host. The default `/t` prefix keeps space paths separate from ordinary routes.
+- Use both when a space must be constrained to a specific host and path.
 
 Origins must include the scheme and host, plus the port when it is not the scheme default.
 
