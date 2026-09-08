@@ -46,7 +46,7 @@ configuration values can still be managed dynamically through the
 
 Storage-backed schemas register `ISchemaAdmin` as well as `ISchemaStore`. They are more dynamic, but your administration
 system must coordinate schema compatibility with all running application versions. Use
-`AddStorageDataExtensionSchemas()` when you intentionally need that model.
+`AddDynamicSchemas()` when you intentionally need that model.
 
 ## Define a Schema
 
@@ -91,7 +91,7 @@ Register the schema when configuring IdentityServer:
 // Program.cs
 builder.Services
     .AddIdentityServer()
-    .AddConfigurationStorage()
+    .AddStorage(storage => storage.AddSqliteStore(/* ... */))
     .AddInMemoryDataExtensionSchemas(
         [ClientDataExtensions.Schema]);
 ```
@@ -106,8 +106,8 @@ Then register the storage-backed schema services:
 // Program.cs
 builder.Services
     .AddIdentityServer()
-    .AddConfigurationStorage()
-    .AddStorageDataExtensionSchemas();
+    .AddStorage(storage => storage.AddSqliteStore(/* ... */))
+    .AddDynamicSchemas();
 
 // ...
 

@@ -27,9 +27,11 @@ The provider has four parts:
 3. IdentityServer adapters implement its configuration and operational store interfaces.
 4. Optional administration APIs and schemas let your application manage and extend configuration data.
 
-Configuration and operational storage are independent. You can enable either one or both. You can also combine
-Duende Storage with another provider. When both use Duende Storage, they share the configured database provider and
-schema.
+Configuration and operational storage are registered together by a single call, and they share the configured database
+provider and schema. To use a different provider for one specific store, call an explicit store registration such as
+`AddInMemoryClients()` or `AddInMemoryPersistedGrants()` afterward; it replaces only that store's Duende Storage-backed
+registration and leaves the rest of the Duende Storage wiring in place. You can also combine Duende Storage with another
+provider this way.
 
 ## Why Use Duende Storage?
 

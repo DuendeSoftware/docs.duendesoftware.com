@@ -31,7 +31,7 @@ service providers and CORS origins.
 4. Import API scopes and identity resources before API resources and clients that reference them.
 5. Compare business identifiers, relationships and counts between both stores.
 6. Stop configuration writes, perform a final import and switch the IdentityServer registration to
-   `AddConfigurationStorage()`.
+   `AddStorage(...)`.
 
 :::caution[Plan Secret Rotation]
 Entity Framework Core stores client and API resource secrets as one-way hashes. The Duende Storage admin APIs accept

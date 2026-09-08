@@ -31,26 +31,26 @@ The packages are available from the
 
 ## Register Duende Storage for Configuration Data
 
-Register one database provider before adding the IdentityServer storage adapters:
+Register a database provider, then call `AddStorage` on the `IIdentityServerBuilder`. `AddStorage` registers both
+configuration and operational stores in a single call, along with the shared pooled storage factory and supporting
+infrastructure:
 
 ```csharp
 // Program.cs
-using Duende.Storage.Internal;
+using Duende.IdentityServer;
 using Duende.Storage.Schema;
 using Duende.Storage.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddStorageInternal(storage =>
-    storage.AddSqliteStore(options =>
-        options.ConnectionString =
-            builder.Configuration.GetConnectionString("IdentityServer")
-            ?? throw new InvalidOperationException(
-                "IdentityServer connection string is missing.")));
-
 builder.Services
     .AddIdentityServer()
-    .AddConfigurationStorage();
+    .AddStorage(storage =>
+        storage.AddSqliteStore(options =>
+            options.ConnectionString =
+                builder.Configuration.GetConnectionString("IdentityServer")
+                ?? throw new InvalidOperationException(
+                    "IdentityServer connection string is missing.")));
 
 var app = builder.Build();
 
@@ -65,13 +65,12 @@ app.UseIdentityServer();
 app.Run();
 ```
 
-`AddStorageInternal` is the current preview bootstrap API. Its name and shape may change before general availability.
 Do not hide a missing connection string or continue startup after a migration failure.
 
 The example runs migrations from the application only in development. Do not give the production application schema
 creation permissions unless application-managed migrations are an intentional deployment choice.
 
-`AddConfigurationStorage` registers storage-backed implementations of:
+`AddStorage` registers storage-backed implementations of:
 
 * `IClientStore`
 * `IResourceStore`
@@ -79,7 +78,8 @@ creation permissions unless application-managed migrations are an intentional de
 * `ISamlServiceProviderStore`
 * `ICorsPolicyService`
 
-It also registers the
+It also registers
+[operational stores](/identityserver/data/providers/duende-storage/operational-storage.md) and the
 [configuration administration APIs](/identityserver/data/providers/duende-storage/admin-apis.md).
 
 ## Deploy the Database Schema
@@ -133,6 +133,6 @@ the database, its connections and its backups. See the
 for details.
 :::
 
-To persist runtime data as well, add
-[`AddOperationalStorage`](/identityserver/data/providers/duende-storage/operational-storage.md) to the same
-`IIdentityServerBuilder`.
+To persist runtime data, see
+[operational storage](/identityserver/data/providers/duende-storage/operational-storage.md); it is registered by the
+same `AddStorage` call above, with no separate registration step required.

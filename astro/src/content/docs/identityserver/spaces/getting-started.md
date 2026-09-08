@@ -1,6 +1,6 @@
 ---
 title: "Getting Started With Spaces"
-description: "Step-by-step guide to installing Duende.MultiSpace, configuring space resolution by origin or path and creating your first IdentityServer space"
+description: "Step-by-step guide to installing Duende.Spaces, configuring space resolution by origin or path and creating your first IdentityServer space"
 date: 2026-09-01
 sidebar:
   label: "Getting Started"
@@ -10,43 +10,47 @@ sidebar:
 Spaces require [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) for their management data and
 isolated storage pools.
 
-## Install Duende.MultiSpace Packages
+## Install Duende.Spaces Packages
 
 This example uses SQLite:
 
 ```bash
 # Terminal
-dotnet add package Duende.IdentityServer --prerelease
-dotnet add package Duende.Storage.Sqlite --prerelease
-dotnet add package Duende.MultiSpace --prerelease
+dotnet add package Duende.IdentityServer --version 8.1.0-preview.3
+dotnet add package Duende.Storage.Sqlite --version 2.0.0-preview.2
+dotnet add package Duende.Spaces --version 1.0.0-preview.2
 ```
 
-See the [Duende.MultiSpace](https://www.nuget.org/packages/Duende.MultiSpace) NuGet Gallery page for package versions.
+See the [Duende.Spaces](https://www.nuget.org/packages/Duende.Spaces) NuGet Gallery page for package versions.
 
 ## Configure IdentityServer with Spaces
 
-Register the database provider, Spaces and the IdentityServer stores:
+Register Spaces and the IdentityServer storage adapters. `AddStorage` registers both configuration and operational
+storage in one call:
 
 ```csharp
 // Program.cs
 using System.Net;
-using Duende.MultiSpace;
-using Duende.Storage.Internal;
+using Duende.IdentityServer;
+using Duende.Spaces;
 using Duende.Storage.Schema;
 using Duende.Storage.Sqlite;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddStorageInternal(storage =>
-    storage.AddSqliteStore(options =>
-        options.ConnectionString =
-            builder.Configuration.GetConnectionString("IdentityServer")
-            ?? throw new InvalidOperationException(
-                "IdentityServer connection string is missing.")));
+builder.Services
+    .AddIdentityServer()
+    .AddServerSideSessions()
+    .AddStorage(storage =>
+        storage.AddSqliteStore(options =>
+            options.ConnectionString =
+                builder.Configuration.GetConnectionString("IdentityServer")
+                ?? throw new InvalidOperationException(
+                    "IdentityServer connection string is missing.")));
 
-builder.Services.AddMultiSpace();
-builder.Services.Configure<MultiSpaceOptions>(options =>
+builder.Services.AddSpaces();
+builder.Services.Configure<SpacesOptions>(options =>
 {
     options.SpacePathPrefix = "/t";
     options.FallbackToDefault = false;
@@ -61,12 +65,6 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardLimit = 1;
 });
 
-builder.Services
-    .AddIdentityServer()
-    .AddServerSideSessions()
-    .AddConfigurationStorage()
-    .AddOperationalStorage();
-
 var app = builder.Build();
 
 await app.Services
@@ -75,7 +73,6 @@ await app.Services
 ```
 
 `FallbackToDefault` is already `false`; setting it explicitly makes the intended isolation behavior visible during review.
-The current preview storage bootstrap API is named `AddStorageInternal` and may change before general availability.
 
 ## Create A Space
 
@@ -134,7 +131,7 @@ then run before ASP.NET Core routing because path-based matches rewrite `PathBas
 ```csharp
 // Program.cs
 app.UseForwardedHeaders();
-app.UseMultiSpaceResolution();
+app.UseSpaceResolution();
 app.UseRouting();
 
 app.UseIdentityServer();
@@ -142,7 +139,7 @@ app.UseIdentityServer();
 app.Run();
 ```
 
-If another middleware reads tenant-specific data, place it after `UseMultiSpaceResolution`. You can inject
+If another middleware reads tenant-specific data, place it after `UseSpaceResolution`. You can inject
 `ISpaceContextAccessor` into scoped services and call `GetSpaceId()` after resolution.
 
 Replace `203.0.113.42` with your proxy's address or configure an appropriate trusted network. Only accept forwarded

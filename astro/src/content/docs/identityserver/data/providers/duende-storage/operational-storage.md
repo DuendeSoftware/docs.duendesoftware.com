@@ -20,11 +20,13 @@ keys and SAML request state.
 
 First register a database provider as shown in
 [Configuration Storage](/identityserver/data/providers/duende-storage/configuration-storage.md#register-duende-storage-for-configuration-data).
-Then add the operational adapters:
+`AddStorage` registers the operational adapters together with the configuration adapters in that same call:
 
 ```csharp
 // Program.cs
+using Duende.IdentityServer;
 using Duende.IdentityServer.Configuration;
+using Duende.Storage.Sqlite;
 
 builder.Services.Configure<StoragePurgeOptions>(options =>
 {
@@ -34,10 +36,15 @@ builder.Services.Configure<StoragePurgeOptions>(options =>
 
 builder.Services
     .AddIdentityServer()
-    .AddOperationalStorage();
+    .AddStorage(storage =>
+        storage.AddSqliteStore(options =>
+            options.ConnectionString =
+                builder.Configuration.GetConnectionString("IdentityServer")
+                ?? throw new InvalidOperationException(
+                    "IdentityServer connection string is missing.")));
 ```
 
-`AddOperationalStorage` registers implementations of:
+`AddStorage` registers implementations of:
 
 * `IPersistedGrantStore`
 * `IDeviceFlowStore`
@@ -54,16 +61,21 @@ The provider also adds a background purge service. Purging is enabled by default
 entities per batch and fuzzes its initial start time to reduce collisions between nodes. Configure `StoragePurgeOptions`
 to tune those values or set `EnablePurge` to `false` when an external job owns cleanup.
 
-## Combine Configuration and Operational Storage
+## Configuration and Operational Storage Share One Registration
 
-Both adapters can share one database provider:
+`AddStorage` always registers both configuration and operational adapters from the same database provider and schema;
+there is no separate operational-only registration step:
 
 ```csharp
 // Program.cs
 var identityServer = builder.Services
     .AddIdentityServer()
-    .AddConfigurationStorage()
-    .AddOperationalStorage();
+    .AddStorage(storage =>
+        storage.AddSqliteStore(options =>
+            options.ConnectionString =
+                builder.Configuration.GetConnectionString("IdentityServer")
+                ?? throw new InvalidOperationException(
+                    "IdentityServer connection string is missing.")));
 ```
 
 Deploy the database schema as described in
