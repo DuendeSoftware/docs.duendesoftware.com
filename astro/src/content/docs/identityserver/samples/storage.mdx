@@ -1,0 +1,34 @@
+---
+title: "Duende Storage"
+description: "Samples demonstrating IdentityServer configuration and operational data stored in Duende Storage and managed through the administration APIs."
+sidebar:
+  order: 56
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+This section contains samples demonstrating [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) with
+IdentityServer. Duende Storage persists IdentityServer configuration and operational data, and its administration APIs let
+your application manage and extend that configuration without writing directly to database tables.
+
+### Storage Sample
+
+This sample runs IdentityServer with configuration and operational data stored in a shared in-memory SQLite database
+through Duende Storage. It creates all IdentityServer configuration at startup through the administration APIs and
+registers a fixed in-memory schema for client extension properties. It demonstrates:
+
+* Defining a fixed client data-extension schema with a typed `allowed_region` attribute.
+* Creating scopes, identity resources, clients, secrets and extension-property values with the administration APIs.
+* Obtaining a client-credentials token from configuration loaded through Duende Storage.
+* Enforcing the `allowed_region` client extension property in a custom token-request validator.
+* Signing in a test user with authorization code and PKCE to create a storage-backed server-side session.
+* Searching stored clients with `IClientAdmin.QueryAsync` and inspecting stored sessions with `IServerSideSessionStore`.
+
+The in-memory database is reset whenever the process stops, so the sample seeds itself on every run.
+
+<LinkCard
+  description="GitHub Repository for the Duende Storage Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Storage"
+  title="Storage Sample"
+  target="_blank"
+/>

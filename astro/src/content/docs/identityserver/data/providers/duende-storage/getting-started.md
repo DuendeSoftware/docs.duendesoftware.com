@@ -230,3 +230,8 @@ pool by default.
 If users must be shared globally across spaces, do not rely on this default routing. Use a deliberately separate host or
 storage architecture for the shared user directory. The built-in integration does not provide a per-product switch that
 opts only User Management out of the current space pool.
+
+## Sample
+
+For a complete, runnable IdentityServer application that stores and administers configuration and operational data with
+Duende Storage, see the [Storage sample](/identityserver/samples/storage.mdx).
