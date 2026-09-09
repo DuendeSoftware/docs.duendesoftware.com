@@ -61,6 +61,13 @@ Only enable `FallbackToDefault` when serving an unmatched host or path from the 
 your isolation model. A strict `404 Not Found` response is safer for multi-tenant deployments.
 :::
 
+:::caution[Leave `IssuerUri` unset with Spaces]
+Spaces rely on IdentityServer inferring the issuer from each request's origin and path base, which is what gives every
+space its own `iss` claim. Leave `IssuerUri` unset so each space has its own issuer. Setting a fixed value makes every
+space return the same `issuer`/`iss`, although their data and normal OpenID Connect discovery endpoints remain separate.
+See [Multi-Issuer](/identityserver/tokens/issuer/#multi-issuer) for how issuer inference works.
+:::
+
 ## UI and Application Services
 
 Spaces use the same login, consent, logout and error page implementations. Space resolution runs before ASP.NET Core

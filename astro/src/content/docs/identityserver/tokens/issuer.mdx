@@ -23,3 +23,5 @@ If you configure the `IssuerUri` property in [IdentityServer Options](/identitys
 :::caution
 Multi-Issuer does not mean IdentityServer can self-host itself across different domains to separate data across different tenants. You must set up that infrastructure yourself.
 :::
+
+If you want isolated per-tenant environments (separate configuration and operational data, each with its own issuer) in a single deployment, see [Spaces](/identityserver/spaces/index.mdx). Spaces build on the same issuer inference, so leave `IssuerUri` unset when you use them.
