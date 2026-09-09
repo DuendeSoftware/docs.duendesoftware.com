@@ -76,8 +76,7 @@ This can be helpful when configuring IdentityServer in a multi-tenant scenario w
 identify the tenant.
 
 For a managed multi-tenant model where IdentityServer resolves each tenant and moves the matched
-path prefix into `PathBase` for you, see [Spaces](/identityserver/spaces/index.mdx#how-spaces-resolve-incoming-requests).
-Note this functionality is not available in Duende IdentityServer v7.
+path prefix into `PathBase` for you, see [Spaces](/identityserver/spaces/index.mdx#how-spaces-resolve-incoming-requests). Note this functionality requires Duende IdentityServer v8.
 
 ## .NET Client Library
 
