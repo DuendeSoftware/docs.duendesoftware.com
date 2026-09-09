@@ -30,7 +30,7 @@ Review documentation for Duende Software products (IdentityServer, BFF, etc.). F
 ## Linking Rules
 
 * Prefer internal links over external links.
-* Internal links must start at the content root (e.g. `/identityserver/troubleshooting/index.md`) and include the `.md` or `.mdx` extension.
+* Markdown internal links must start at the content root (e.g. `/identityserver/troubleshooting/index.md`) and include the `.md` or `.mdx` extension. Some Starlight components (for example, `LinkCard`) use route-style links instead, so follow the component's expected link format.
 * External links must use HTTPS.
 * Link relevant text: prefer `learn more about [improving sign-in]` over `click [here]`.
 * Long links (75+ chars) or repeated links should use markdown anchor syntax at the bottom of the file.
@@ -40,7 +40,7 @@ Review documentation for Duende Software products (IdentityServer, BFF, etc.). F
 
 * Use `*` for unordered lists, not `-`.
 * Use inline links `[text](url)` unless the link is repeated or very long.
-* Internal links must include the file extension (`.md` or `.mdx`).
+* Markdown internal links must include the file extension (`.md` or `.mdx`). Some Starlight components (for example, `LinkCard`) use route-style links instead.
 
 ## Code Blocks
 
