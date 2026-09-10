@@ -11,6 +11,17 @@ redirect_from:
 
 Duende User Management uses a document-based storage engine that stores entities as complete documents inside a relational database. Adding or removing properties on a document does not require a schema change, which eliminates the need for database migrations. Two production-ready storage adapters are available: PostgreSQL and SQL Server.
 
+:::note[Using IdentityServer Storage and Spaces]
+When the same host already registers Duende Storage through IdentityServer's
+[`AddStorage(...)`](/identityserver/data/providers/duende-storage/getting-started.md#register-duende-storage), User
+Management can reuse that provider and connection string. Do not register the same provider again inside
+`AddUserManagement(...)`.
+
+When [Spaces](/identityserver/spaces/index.mdx) is enabled, User Management data follows the resolved space pool by
+default. See [Use Duende User Management](/identityserver/data/providers/duende-storage/getting-started.md#use-duende-user-management)
+for the shared-user limitation.
+:::
+
 ## Document-Based Storage
 
 The storage engine uses a document-oriented approach within a relational database:
@@ -465,4 +476,3 @@ public class TenantAService([FromKeyedServices("tenant-a")] IPooledStore store)
 
 You can also resolve keyed services programmatically via `IServiceProvider.GetRequiredKeyedService<IPooledStore>("tenant-a")`,
 which is useful when the tenant key is determined at runtime (for example, from a request header or route value).
-

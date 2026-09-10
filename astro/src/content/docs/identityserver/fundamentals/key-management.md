@@ -138,13 +138,14 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 Automatic Key Management stores keys through the abstraction of the
 [`ISigningKeyStore`](/identityserver/data/operational.md#keys). You can implement this
 extensibility point to customize the storage of your keys (perhaps using a key
-vault of some kind), or use one of the two implementations of the
+vault of some kind) or use one of the implementations of the
 `ISigningKeyStore` that we provide:
 
-- the default `FileSystemKeyStore`, which writes keys to the file system.
-- the [EntityFramework operational store](/identityserver/data/providers/entityframework-core.md#operational-store) which writes keys to a database
-  using
-  EntityFramework.
+* The default `FileSystemKeyStore`, which writes keys to the file system.
+* The [Entity Framework operational store](/identityserver/data/providers/entityframework-core.md#operational-store),
+  which writes keys to a database using Entity Framework Core.
+* The [Duende Storage provider](/identityserver/data/providers/duende-storage/getting-started.md#operational-stores),
+  which writes keys through the common Duende storage layer.
 
 The default `FileSystemKeyStore` writes keys to the `KeyPath` directory
 configured in your IdentityServer host, which defaults to the directory
