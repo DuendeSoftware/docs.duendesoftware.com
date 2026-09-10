@@ -30,7 +30,7 @@ URL. The document names IdentityServer as an authorization server and lists the 
 client then reads IdentityServer's OAuth or OpenID Connect metadata to find its authorization and token endpoints.
 
 During authorization, the client sends the MCP server's canonical URI in the `resource` parameter. This value is called
-a resource indicator in RFC 8707. It tells IdentityServer which MCP server the token is for. Before running a tool, the
+a resource indicator in RFC 8707: it tells IdentityServer which MCP server the token is for. Before running a tool, the
 MCP server must validate the token's issuer, audience, signature, lifetime, and scopes.
 
 :::caution
@@ -45,8 +45,8 @@ them.
 
 ## How Do MCP Clients Register With IdentityServer?
 
-Before authorization, an MCP client needs a client ID. It can use an ID configured in advance, call a registration API,
-or use a URL that publishes its client metadata. The current MCP specification defines these three approaches:
+Before authorization, an MCP client needs a client ID. It can use a preconfigured client ID, call a registration API,
+or use a URL to publish its client metadata. The current MCP specification defines these three approaches:
 
 | Approach | How It Works With IdentityServer v8 |
 | --- | --- |
