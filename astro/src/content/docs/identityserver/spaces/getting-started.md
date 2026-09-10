@@ -174,3 +174,7 @@ Origins must include the scheme and host, plus the port when it is not the schem
 Review [what Spaces does not isolate](/identityserver/spaces/index.mdx#what-spaces-does-not-isolate) before deploying.
 Confirm whether signing credentials, Data Protection, caches, telemetry, rate limits and custom services require
 space-aware configuration.
+
+## Sample
+
+For a complete, runnable multi-space deployment, see the [Spaces sample](/identityserver/samples/spaces.mdx).

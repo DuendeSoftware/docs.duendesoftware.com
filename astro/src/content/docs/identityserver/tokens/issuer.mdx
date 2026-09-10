@@ -21,5 +21,5 @@ Imagine a single IdentityServer instance is hosted over 3 different domains like
 If you configure the `IssuerUri` property in [IdentityServer Options](/identityserver/reference/v8/options), Multi-Issuer will not be enabled: the returned `iss` claim will always contain the configured `IssuerUri` value.
 
 :::caution
-Multi-Issuer does not mean IdentityServer can self-host itself across different domains to separate data across different tenants. You must set up that infrastructure yourself.
+Multi-Issuer only varies the `iss` claim. To isolate configuration and operational data between tenants within a single deployment, use [Spaces](/identityserver/spaces/index.mdx).
 :::

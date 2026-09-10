@@ -75,6 +75,9 @@ And the discovery document will look like this:
 This can be helpful when configuring IdentityServer in a multi-tenant scenario where the base path is used to
 identify the tenant.
 
+For a managed multi-tenant model where IdentityServer resolves each tenant and moves the matched
+path prefix into `PathBase` for you, see [Spaces](/identityserver/spaces/index.mdx#how-spaces-resolve-incoming-requests). Note this functionality requires Duende IdentityServer v8.
+
 ## .NET Client Library
 
 You can use the [Duende IdentityModel](/identitymodel/index.mdx) client library to programmatically interact with

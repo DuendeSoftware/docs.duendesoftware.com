@@ -166,6 +166,8 @@ Using a custom schema name helps:
 
 :::tip[Multiple stores with keyed services]
 If your application needs more than one store instance (for example, in a multi-tenant setup where each tenant has its own database), see [Multiple Store Instances](#multiple-store-instances) below.
+
+To isolate IdentityServer's configuration and operational data across tenants using storage pools, see [Spaces](/identityserver/spaces/index.mdx).
 :::
 
 ### Schema Initialization

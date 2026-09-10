@@ -346,9 +346,16 @@ WebAuthn is the [W3C Web Authentication standard](https://www.w3.org/TR/webauthn
 
 The total of unique identity records stored in Duende User Management, identified by User Management user ID per billing period.
 
-### Space (User Management)
+### Space
 
-In Duende User Management, a *space* is the fundamental isolation unit. Each space has its own isolated user store, configuration, and authentication settings. This enables deployments where users, roles, and groups in one space are completely separated from those in another. A typical use case is supporting multiple tenants in a single deployment.
+A [space](/identityserver/spaces/index.mdx) is an isolation unit that separates the data of one security domain from another
+within a single deployment. Each space has its own configuration and operational data, mapped to a storage pool, while sharing
+the same process, code, and database infrastructure.
+
+In **Duende User Management**, each space has its own isolated user store, configuration, and authentication settings,
+so users, roles, and groups in one space are completely separated from those in another.
+
+A typical use case is supporting multiple tenants in a single deployment.
 
 ## Deployment and Licensing
 
@@ -365,6 +372,32 @@ Can be either completely independent single deployments, or a single deployment 
 
 A single logical deployment that acts as multiple logical token services on multiple URLs or host names (e.g. for
 branding, isolation or multi-tenancy reasons).
+
+### Multi-Issuer
+
+A built-in capability of Duende IdentityServer where a single instance responds with different
+issuer (`iss`) claim values depending on the host it is served from. It requires no add-on.
+Multi-issuer changes only the `iss` claim; it does not separate configuration or operational
+data between tenants. Use [Spaces](/identityserver/spaces/index.mdx) for data isolation.
+
+<LinkCard
+  description="Learn more about multi-issuer support"
+  href="/identityserver/tokens/issuer/#multi-issuer"
+  title="Documentation"
+/>
+
+### Multi-Tenancy
+
+Hosting multiple isolated security domains (tenants) from a single IdentityServer deployment.
+Duende delivers multi-tenancy through **[Spaces](/identityserver/spaces/index.mdx)**, a licensed
+add-on that gives each [space](#space) its own configuration and operational data via storage
+pools.
+
+<LinkCard
+  description="Learn more about IdentityServer Spaces"
+  href="/identityserver/spaces/"
+  title="Documentation"
+/>
 
 ### Redistribution
 

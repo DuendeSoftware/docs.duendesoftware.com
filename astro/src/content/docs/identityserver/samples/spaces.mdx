@@ -1,0 +1,31 @@
+---
+title: "Spaces"
+description: "Samples demonstrating multi-space IdentityServer deployments that isolate configuration and operational data per tenant using Spaces on top of Duende Storage."
+sidebar:
+  order: 55
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+This section contains samples demonstrating [Spaces](/identityserver/spaces/index.mdx) with IdentityServer.
+Spaces run multiple isolated security domains from a single deployment, giving each space its own configuration and
+operational data through storage pools provided by [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx).
+
+### Spaces Sample
+
+This sample shows how to host several isolated spaces in one IdentityServer application. It demonstrates:
+
+* Configuring IdentityServer with `AddSpaces` and the Duende Storage adapters.
+* Resolving the active space per request by origin, path segment or both.
+* Isolating each space's configuration and operational data in its own storage pool.
+* Managing space definitions through `ISpaceAdmin`.
+
+The sample includes an *Aspire host* project so all projects start in the correct order and the database can be created
+and migrated from the Aspire dashboard.
+
+<LinkCard
+  description="GitHub Repository for the Spaces Sample"
+  href="https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/Spaces"
+  title="Spaces Sample"
+  target="_blank"
+/>
