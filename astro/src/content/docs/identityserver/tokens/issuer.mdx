@@ -23,3 +23,5 @@ If you configure the `IssuerUri` property in [IdentityServer Options](/identitys
 :::caution
 Multi-Issuer only varies the `iss` claim. To isolate configuration and operational data between tenants within a single deployment, use [Spaces](/identityserver/spaces/index.mdx).
 :::
+
+If you want isolated per-tenant environments (separate configuration and operational data, each with its own issuer) in a single deployment, see [Spaces](/identityserver/spaces/index.mdx). Spaces build on the same issuer inference, so leave `IssuerUri` unset when you use them.

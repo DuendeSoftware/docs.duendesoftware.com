@@ -39,6 +39,8 @@ Top-level settings. Available directly on the `IdentityServerOptions` object.
 
   If you need to access IdentityServer on a different address from the expected issuer value, for example internally in a Kubernetes cluster, setting the issuer is a good practice. Note that when doing so, you will need to set the OpenID Connect metadata address manually in your client application to prevent the address derived from the authority from being used.
 
+  When using [Multi-Issuer](/identityserver/tokens/issuer/#multi-issuer) or [Spaces](/identityserver/spaces/index.mdx), leave this option unset so each domain or space keeps its own issuer. Setting a fixed value makes every domain or space return the same `issuer`/`iss`, although their data and normal OpenID Connect discovery endpoints remain separate.
+
 - **`LowerCaseIssuerUri`**
 
   Controls the casing of inferred `IssuerUri`s. When set to `false`, the original casing of the IssuerUri in requests is preserved. When set to `true`, the `IssuerUri` is converted to lowercase. Defaults to `true`.
