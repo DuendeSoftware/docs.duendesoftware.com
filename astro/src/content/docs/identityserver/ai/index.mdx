@@ -1,0 +1,99 @@
+---
+title: "Securing AI Agents And MCP Servers With IdentityServer"
+description: "How Duende IdentityServer secures HTTP-based Model Context Protocol servers and AI clients with OAuth, protected resource metadata, audience-bound tokens, and client registration."
+sidebar:
+  label: Overview
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+The Model Context Protocol (MCP) gives AI applications a standard way to call tools and retrieve data. When an MCP server
+uses HTTP, the [MCP authorization specification](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
+uses OAuth to protect that access. Duende IdentityServer can issue the access tokens used by MCP clients.
+
+Authorization is optional in MCP, but an HTTP-based MCP server that protects tools or data should follow the MCP
+authorization specification. The specification does not apply to local STDIO transports, which obtain credentials from
+the environment instead.
+
+## How Does IdentityServer Fit Into MCP Authorization?
+
+MCP authorization involves three parties:
+
+* The **MCP client** acts for a user or workload and requests access.
+* The **MCP server** hosts the protected tools or data and accepts access tokens.
+* **IdentityServer** authenticates the user and issues access tokens for the MCP server.
+
+The flow starts at the MCP server. It publishes
+[OAuth Protected Resource Metadata](https://www.rfc-editor.org/rfc/rfc9728.html), a small JSON document at a well-known
+URL. The document names IdentityServer as an authorization server and lists the scopes the MCP server uses. The MCP
+client then reads IdentityServer's OAuth or OpenID Connect metadata to find its authorization and token endpoints.
+
+During authorization, the client sends the MCP server's canonical URI in the `resource` parameter. This value is called
+a resource indicator in RFC 8707: it tells IdentityServer which MCP server the token is for. Before running a tool, the
+MCP server must validate the token's issuer, audience, signature, lifetime, and scopes.
+
+:::caution
+Do not accept a token issued for another API, and do not pass an incoming token through to another service. Model each
+MCP server as an [API resource](/identityserver/fundamentals/resources/api-resources.md) and use
+[resource isolation](/identityserver/fundamentals/resources/isolation/index.md) so tokens have the intended audience.
+:::
+
+The current MCP specification also requires PKCE for public clients and requires access tokens in the `Authorization`
+header, not in URLs. Use narrow scopes for tools and data, and request additional scopes only when an operation needs
+them.
+
+## How Do MCP Clients Register With IdentityServer?
+
+Before authorization, an MCP client needs a client ID. It can use a preconfigured client ID, call a registration API,
+or use a URL to publish its client metadata. The current MCP specification defines these three approaches:
+
+| Approach | How It Works With IdentityServer v8 |
+| --- | --- |
+| **Pre-registration** | Configure known clients before they connect. Use this when you control the clients or need to approve each one. |
+| **Dynamic Client Registration (DCR)** | The client calls IdentityServer's [DCR endpoint](/identityserver/configuration/dcr.mdx) to register itself. The current MCP specification retains DCR for compatibility but marks it deprecated in favor of Client ID Metadata Documents. |
+| **Client ID Metadata Documents (CIMD)** | The client uses an HTTPS URL as its client ID, and that URL returns its metadata. This is preferred by the current MCP specification. For IdentityServer v8 deployments, use pre-registration or DCR. |
+
+The [MCP quickstart](/identityserver/quickstarts/8-mcp.mdx) uses DCR to show a client registering at runtime with
+IdentityServer v8 and the MCP C# SDK. DCR is a compatibility option, not a requirement for every MCP client.
+
+:::caution
+Do not expose an unrestricted DCR endpoint. Apply an authorization policy, validate requested redirect URIs and scopes,
+and decide which clients your deployment will accept. See [DCR Authorization](/identityserver/configuration/dcr.mdx#authorization)
+for supported controls.
+:::
+
+## How Do You Get Started?
+
+Start with the existing quickstart for a complete IdentityServer, MCP server, and MCP client implementation. The sample
+uses protected resource metadata, Dynamic Client Registration, resource indicators, and scope-based authorization.
+
+<CardGrid>
+  <LinkCard
+    title="Secure An MCP Server"
+    description="Build the IdentityServer host, MCP server, and client step by step."
+    href="/identityserver/quickstarts/8-mcp/"
+  />
+  <LinkCard
+    title="MCP Server Sample"
+    description="Open the maintained end-to-end sample and finished source code."
+    href="/identityserver/samples/mcp-server/"
+  />
+  <LinkCard
+    title="MCP Client Sample"
+    description="See the client sample that discovers and calls protected MCP tools."
+    href="/identityserver/samples/clients/#model-context-protocol-mcp-client"
+  />
+  <LinkCard
+    title="Dynamic Client Registration"
+    description="Configure storage, endpoint authorization, validation, and DCR processing."
+    href="/identityserver/configuration/dcr/"
+  />
+</CardGrid>
+
+Desktop and command-line clients often receive the authorization response on an ephemeral local port. See
+[OAuth Redirect URIs For Desktop And CLI MCP Clients](/identityserver/ai/desktop-cli-redirect-uris.md) for the built-in
+IdentityServer validator and its limits.
+
+If you want an AI assistant to search Duende documentation rather than secure your own MCP server, see
+[AI Agent Skills And The Duende Documentation MCP Server](/general/ai-agent-tools.mdx).
