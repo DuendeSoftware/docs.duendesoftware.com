@@ -1,7 +1,7 @@
 ---
 title: "Signing Key Management And Rotation In IdentityServer"
 description: "How to create, store, rotate, and retire signing keys in IdentityServer using automatic or static key management."
-date: 2020-09-10T08:22:12+02:00
+date: 2026-10-13
 sidebar:
   label: Key Management
   order: 50
@@ -374,6 +374,17 @@ var certificate = CreateCertificate();
 store.Add(certificate);
 ```
 
+## Backing Up Signing Keys
+
+Back up signing keys so that you can restore service after data loss. With automatic key management, the keys in the
+[signing key store](/identityserver/data/operational.md#keys) are encrypted using ASP.NET Core Data Protection by
+default (see [Encryption Of Keys at Rest](#encryption-of-keys-at-rest)). A backup of the signing keys is therefore only
+usable together with the Data Protection keys that encrypted them, so back up and restore both together. See
+[ASP.NET Core Data Protection](/identityserver/deployment/index.md#aspnet-core-data-protection).
+
+With static keys, back up the key material (for example, the certificate and its private key) using the same protections
+as the original.
+
 ## Manual Key Rotation
 
 With automatic key management disabled, you will need to rotate your keys
@@ -481,6 +492,31 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 var newKey = LoadNewKeyFromVault();
 idsvrBuilder.AddSigningCredential(newKey, SecurityAlgorithms.RsaSha256);
 ```
+
+## Responding To A Key Compromise
+
+If you suspect a signing key has been exposed, rotate immediately rather than waiting for a normal rotation schedule:
+
+1. **Add a new signing key.** With automatic key management, create a new key and make it the active signing key. With
+   static keys, replace the credential passed to `AddSigningCredential` with the new key.
+2. **Stop every instance from signing with and publishing the compromised key.** Unlike a routine rotation, do not keep
+   the old key around as a validation key. See [Phased Rotation](#solution-2-phased-rotation) for the routine process
+   this deliberately skips.
+   - With automatic key management, delete or retire the key in the key store. Each instance caches keys from the store
+     for `KeyManagement.KeyCacheDuration` (24 hours by default, see
+     [Key Management options](/identityserver/reference/v8/options.md#key-management)), so restart every instance, or wait out the
+     cache duration, before assuming the key is gone.
+   - With static keys, remove the compromised key from `AddSigningCredential` and from any `AddValidationKey`
+     registration, then redeploy every instance.
+   - Confirm that the discovery document and JWKS endpoint of every instance no longer list the compromised `kid`.
+3. **Accept that tokens signed with the key become invalid.** Once the key is no longer published, APIs that refresh
+   their key material will reject tokens signed with it, and users may need to sign in again.
+4. **Revoke refresh tokens and grants.** Remove persisted grants that were issued before the compromise so they cannot
+   be used to obtain new tokens. See [Persisted Grants](/identityserver/data/operational.md#grants).
+5. **Notify relying parties.** Tell clients and APIs (including those that cache JWKS) to refresh their key material,
+   and update any Service Providers that use a statically configured certificate.
+
+Afterwards, investigate how the key was exposed and review where keys and Data Protection keys are stored.
 
 ## Migrating From Static Keys To Automatic Key Management
 
