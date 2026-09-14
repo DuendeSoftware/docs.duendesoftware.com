@@ -137,7 +137,9 @@ environment as [detailed below](#using-a-license-in-non-production-environments)
 For quantized limits like client count and issuer count, IdentityServer logs a warning
 when you exceed your licensed limit but stay within the grace threshold. If you exceed
 the grace threshold, it logs an error instead. An expired license also results in an
-error being logged.
+error being logged. User Management also has a licensed limit on users stored. 
+When adding a user past the licensed limit, a message will be logged. Note that the errors logged 
+do not stop IdentityServer from running.
 
 :::note[IdentityServer 7 and earlier]
 In IdentityServer 7 and earlier, some features were actually disabled at runtime when
