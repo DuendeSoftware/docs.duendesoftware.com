@@ -17,8 +17,7 @@ or in-place migration between them. Treat the change as a data transfer and appl
 production-like copy of your data before changing a live system.
 
 :::note[Migration is optional]
-The [Entity Framework Core provider](/identityserver/data/providers/entityframework-core.md) remains fully supported and
-is not being removed. Follow this guide only if you have deliberately chosen to adopt Duende Storage. If your application
+The [Entity Framework Core provider](/identityserver/data/providers/entityframework-core.md) remains fully supported. Follow this guide only if you have deliberately chosen to adopt Duende Storage. If your application
 already uses EF Core and you are satisfied with it, no action is required.
 :::
 

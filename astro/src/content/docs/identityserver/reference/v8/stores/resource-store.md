@@ -20,11 +20,10 @@ processing. It does not define *where* that data is stored. The same interface i
 you choose:
 
 * **[Entity Framework Core](/identityserver/data/providers/entityframework-core.md)** stores configuration in relational
-  tables such as `ApiResources`, `ApiScopes`, `ApiResourceScopes`, and their property tables. This is a fully supported
-  provider and is not being removed.
+  tables such as `ApiResources`, `ApiScopes`, `ApiResourceScopes`, and their property tables.
 * **[In-Memory](/identityserver/data/providers/in-memory.md)** loads configuration from objects registered at startup.
 * **[Duende Storage](/identityserver/data/providers/duende-storage/index.mdx)** (preview) persists configuration as
-  versioned documents. It is an opt-in alternative, not a replacement for the EF Core provider.
+  versioned documents. It is an opt-in alternative for the EF Core provider.
 * **[Custom](/identityserver/data/providers/custom.md)** implementations back the interface with any store you choose.
 
 Choosing a different provider does not change this interface or how the runtime consumes it.

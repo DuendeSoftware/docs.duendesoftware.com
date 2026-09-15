@@ -15,7 +15,7 @@ This page covers **User Management data** — user profiles, authenticators, rol
 IdentityServer stores its **configuration data** (clients, API scopes, API resources, and identity resources).
 IdentityServer configuration continues to use whichever provider you have configured, such as
 [Entity Framework Core](/identityserver/data/providers/entityframework-core.md) with its classic relational tables, or the
-preview [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) provider.
+[Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) provider.
 
 :::note[Using IdentityServer Storage and Spaces]
 When the same host already registers Duende Storage through IdentityServer's
