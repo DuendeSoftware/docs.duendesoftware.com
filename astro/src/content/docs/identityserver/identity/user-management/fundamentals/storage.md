@@ -11,6 +11,12 @@ redirect_from:
 
 Duende User Management uses a document-based storage engine that stores entities as complete documents inside a relational database. Adding or removing properties on a document does not require a schema change, which eliminates the need for database migrations. Two production-ready storage adapters are available: PostgreSQL and SQL Server.
 
+This page covers **User Management data** — user profiles, authenticators, roles, and groups. It does not govern how
+IdentityServer stores its **configuration data** (clients, API scopes, API resources, and identity resources).
+IdentityServer configuration continues to use whichever provider you have configured, such as
+[Entity Framework Core](/identityserver/data/providers/entityframework-core.md) with its classic relational tables, or the
+preview [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) provider.
+
 :::note[Using IdentityServer Storage and Spaces]
 When the same host already registers Duende Storage through IdentityServer's
 [`AddStorage(...)`](/identityserver/data/providers/duende-storage/getting-started.md#register-duende-storage), User

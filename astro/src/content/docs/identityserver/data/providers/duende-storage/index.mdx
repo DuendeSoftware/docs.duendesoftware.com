@@ -14,6 +14,14 @@ Duende Storage and the documentation in this section are previews. APIs, package
 subject to change before general availability.
 :::
 
+:::note[Duende Storage is opt-in and does not replace Entity Framework Core]
+Duende Storage is an additional, opt-in persistence option. It does **not** replace the
+[Entity Framework Core provider](/identityserver/data/providers/entityframework-core.md), and the classic EF Core schema
+(including the `ApiResources`, `ApiScopes`, `ApiResourceScopes`, and related property tables) remains fully supported.
+There are no plans to remove it. Existing deployments do not need to migrate; adopt Duende Storage only if you want the
+capabilities described below.
+:::
+
 Duende Storage is a relational persistence layer shared by Duende products. IdentityServer adapters connect its
 [configuration](/identityserver/data/configuration.mdx) and [operational](/identityserver/data/operational.md) store
 interfaces to the storage layer, so IdentityServer continues to use the same abstractions during protocol processing.
