@@ -218,12 +218,19 @@ This limit is not currently being enforced.
 #### Redistribution
 
 If you want to redistribute Duende IdentityServer to your customers as part of a product,
-you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).
+you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist). 
+This license allows your product to include Duende IdentityServer in a packaged product you publish, 
+and your customer installs within their own infrastructure. A current redistribution license is required to publish 
+any new or updated version of your software which includes Duende IdentityServer. If a redistribution license is expired, 
+Duende IdentityServer does not cease to work for your customer, however they will no longer be able to receive updated versions 
+of Duende IdentityServer from you, including security patches.
 
 It can be cumbersome to deploy updated licenses in redistribution scenarios,
 especially if your deployment cycle does not coincide with the duration of your IdentityServer license.
 In that situation, update the license key at the next deployment to your redistribution customers.
 You are always responsible for ensuring your license is renewed.
+
+
 
 #### Log Severity
 
