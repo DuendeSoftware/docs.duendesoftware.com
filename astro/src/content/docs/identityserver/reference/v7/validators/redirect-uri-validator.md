@@ -67,6 +67,7 @@ builder.Services.AddIdentityServer()
 This example allows redirect URIs that match a registered pattern with a wildcard subdomain:
 
 ```csharp
+// CustomRedirectUriValidator.cs
 public class WildcardRedirectUriValidator : IRedirectUriValidator
 {
     public Task<bool> IsRedirectUriValidAsync(string requestedUri, Client client)
@@ -78,10 +79,15 @@ public class WildcardRedirectUriValidator : IRedirectUriValidator
             if (registeredUri.StartsWith("https://*."))
             {
                 // Extract the domain pattern (e.g., "*.example.com")
-                var pattern = registeredUri.Substring("https://".Length);
-                var domain = pattern.Substring(2); // Remove "*."
-                
-                if (uri.Host.EndsWith(domain) && uri.Scheme == "https")
+                var pattern = new Uri("https://" + registeredUri.Substring("https://*.".Length));
+                var domain = pattern.Host;
+                 
+                if (uri.Host.EndsWith("." + domain, StringComparison.OrdinalIgnoreCase) &&
+                    uri.Scheme == Uri.UriSchemeHttps &&
+                    uri.Port == pattern.Port &&
+                    uri.AbsolutePath == pattern.AbsolutePath &&
+                    uri.Query == pattern.Query &&
+                    string.IsNullOrEmpty(uri.Fragment))
                 {
                     return Task.FromResult(true);
                 }
