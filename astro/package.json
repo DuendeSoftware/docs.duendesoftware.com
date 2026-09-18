@@ -39,7 +39,7 @@
     "gray-matter": "^4.0.3",
     "hast-util-to-text": "^4.0.2",
     "jsdom": "^30.0.1",
-    "mermaid": "^11.17.2",
+    "mermaid": "^12.0.0",
     "patch-package": "^8.0.1",
     "react": "^19.2.4",
     "rehype-external-links": "^3.0.0",

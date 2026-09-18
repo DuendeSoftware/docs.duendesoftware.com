@@ -272,6 +272,31 @@ does not have the entitlement for it, an exception will be seen in the lower env
 If you have feedback on trial mode, or specific use cases where you prefer other options, please 
 [open a community discussion](https://github.com/DuendeSoftware/community/discussions).
 
+### Clients
+
+Duende IdentityServer's license includes a number of allowed [Clients](/identityserver/fundamentals/clients), also called [connected applications](/general/glossary.mdx#connected-application), that represent applications which request tokens from your IdentityServer. Each client receives a unique client ID you define.
+
+```mermaid
+architecture-beta
+   
+    service publicWeb(server)[Public Website]
+    service adminWeb(server)[Admin Website]
+    service mobile(server)[Mobile App]
+    service bff(server)[BFF]
+
+    service api(server)[API]
+
+    service id(server)[Duende IdentityServer]
+
+    publicWeb:R --> L:id
+    adminWeb:R --> L:id
+    bff:R --> L:id
+    mobile:R --> L:id
+    api:R --> L:id
+
+    align column publicWeb adminWeb bff api mobile
+```
+
 ## BFF Security Framework
 
 The Duende BFF Security Framework requires a license for production use, with two editions available (Starter and
@@ -299,6 +324,7 @@ please [reach out to sales](https://duendesoftware.com/contact/sales).
 
 The BFF license is validated during runtime. All license validation is self-contained and does not leave the host.
 There are no outbound network calls related to license validation.
+
 
 #### BFF v3.1+ Runtime Validation
 
@@ -348,6 +374,26 @@ If you require a larger number of sessions, we support using your production lic
 when trial mode is not enough.
 :::
 
+### Frontends
+
+The BFF license includes a number of frontend clients that represent the frontend applications which will communicate with your BFF application. These are the logically deployed applications, not individual instances being used by your users.
+
+```mermaid
+architecture-beta
+      
+    service publicWeb(server)[Public Website]
+    service adminWeb(server)[Public Website]
+    service mobile(server)[Mobile App]
+
+    service bff(server)[BFF]
+
+    publicWeb:R --> L:bff
+    adminWeb:R --> L:bff
+    mobile:R --> L:bff
+
+    align column publicWeb adminWeb mobile
+
+```
 ## License Key
 
 The license key can be configured in one of three ways:
