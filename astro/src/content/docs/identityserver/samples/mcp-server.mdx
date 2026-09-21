@@ -1,18 +1,21 @@
 ---
-title: "AI and MCP Server and Client"
-description: "Samples demonstrating how IdentityServer fits in an AI architecture, including as the authorization server for MCP."
+title: "MCP Server And Client Sample"
+description: "A working sample that uses IdentityServer to authorize an MCP client and protect an HTTP-based MCP server."
 date: 2026-08-07
 sidebar:
+    label: MCP Server And Client
     order: 70
 ---
 
 import {LinkCard} from "@astrojs/starlight/components";
 
-This section contains samples on how to protect an MCP server with Duende IdentityServer. It uses [Dynamic Client Registration](/identityserver/configuration/dcr.mdx) so any MCP-compatible client can connect without pre-configuration."
+This sample shows how to protect an MCP server with Duende IdentityServer. It uses
+[Dynamic Client Registration](/identityserver/configuration/dcr.mdx) to register the client at runtime. See
+[AI & MCP](/identityserver/ai/index.mdx) for current MCP client-registration guidance.
 
 ### Demo Sample
 
-This sample contains the finished source code for the [MCP Server sample](/identityserver/quickstarts/8-mcp.mdx).
+The repository contains the finished source code for the [MCP quickstart](/identityserver/quickstarts/8-mcp.mdx).
 
 <LinkCard
     description="GitHub Repository for the MCP Server Demo"
