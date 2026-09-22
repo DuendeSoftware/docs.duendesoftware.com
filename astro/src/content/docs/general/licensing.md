@@ -300,6 +300,7 @@ please [reach out to sales](https://duendesoftware.com/contact/sales).
 The BFF license is validated during runtime. All license validation is self-contained and does not leave the host.
 There are no outbound network calls related to license validation.
 
+
 #### BFF v3.1+ Runtime Validation
 
 BFF v3.1 does not technically enforce the presence of a license key.
