@@ -51,6 +51,28 @@ in a single `dotnet run` command.
   target="_blank"
 />
 
+### Account Lockout Sample
+
+This standalone sample demonstrates how to implement full-account lockout policy on top of Duende User Management.
+It stores application-defined lockout state in custom user profile attributes and enforces the policy after OTP or passkey authentication succeeds, but before the application issues a session cookie.
+
+**Concepts demonstrated:**
+
+* **Temporary and indefinite lockout**: An administrator can lock an account for 15 minutes, 1 hour, a custom UTC expiry, or indefinitely, and can unlock it later.
+* **Post-authentication enforcement**: The sample does not disclose lockout state during an OTP request or before passkey verification, which avoids creating an account-enumeration signal.
+* **Alternative sign-in methods**: Users can sign in with email OTP or a discoverable passkey. OTP supports just-in-time registration for new email addresses.
+* **Administrative workflow**: An admin-only user list manages lockout state and prevents the signed-in administrator from locking their own account.
+* **.NET Aspire integration**: Aspire orchestrates the sample and Mailpit for local email testing, with structured logs, traces, and metrics available in the Aspire dashboard.
+
+The sample uses `admin@example.com` and `alice@example.com` as seeded identities. Sign in with OTP through Mailpit, then register a passkey to try both authentication paths.
+
+<LinkCard
+  description="GitHub Repository for the User Management Account Lockout Sample"
+  href="https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v8/UserManagement/AccountLockout"
+  title="User Management Account Lockout Sample"
+  target="_blank"
+/>
+
 ### Password Registration Sample
 
 This sample demonstrates Duende User Management functionality for passwords. It validates an OTP sent to a user's email for initial authentication, then allows the user to set a password. It also includes Forgot Password functionality for resetting a password after validating an OTP.
