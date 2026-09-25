@@ -49,15 +49,6 @@ builder.Services
 
 This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin` available for injection. You can also access them as properties on `IUserSelfService.Profiles` and `IUserAdmin.Profiles` respectively (see [User Lifecycle](/identityserver/identity/user-management/fundamentals/user-lifecycle.md)).
 
-:::note[Automatic profile provisioning]
-When a user signs in via OTP for the first time, User Management automatically creates a profile for them
-and sets the email attribute from their OTP address. You do not need to call `IUserProfileSelfService.TryCreateAsync`
-manually for OTP-authenticated users.
-
-If you want to skip automatic profile provisioning, you can provide a custom `IOtpAuthenticator` implementation.
-See [OTP Authentication](/identityserver/identity/user-management/authentication/otp.mdx) for details.
-:::
-
 ## Schema Management
 
 Before storing attributes you must define them in the schema. The schema is a dictionary of `AttributeCode` to `AttributeDefinition` pairs that describes every attribute the system accepts, its data type, and optional uniqueness constraints.
