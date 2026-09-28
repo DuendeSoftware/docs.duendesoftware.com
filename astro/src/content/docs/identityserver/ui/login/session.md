@@ -61,6 +61,7 @@ The claims are:
 * **`tenant`**: Tenant identifier the user is associated with (if needed). This is used to determine if a user must
   re-authenticate when clients make [authorization requests](/identityserver/reference/v8/endpoints/authorize.md) using the
   `acr_values` with a `tenant` value. If the user's tenant does not match the request, then they should re-authenticate.
+  See [Tenant Hints](/identityserver/ui/login/tenants.md) for details.
 
 While you can create the `ClaimsPrincipal` yourself, you can alternatively use IdentityServer extension methods and the
 `IdentityServerUser` class to make this easier:

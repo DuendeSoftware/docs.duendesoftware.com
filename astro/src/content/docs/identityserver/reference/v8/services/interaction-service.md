@@ -117,6 +117,7 @@ The above methods return various models.
 
   The tenant requested.
   This is provided via the "tenant:" prefix to the `acr_values` parameter on the authorize request.
+  See [Tenant Hints](/identityserver/ui/login/tenants.md) for an example.
 
 * **`LoginHint`**
 

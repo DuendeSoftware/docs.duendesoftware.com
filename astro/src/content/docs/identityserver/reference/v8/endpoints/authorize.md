@@ -128,7 +128,7 @@ see [here](https://openid.net/specs/openid-connect-core-1_0.html#authrequest).
 
     * **`tenant:name_of_tenant`**
 
-      can be used to pass a tenant name to the login UI
+      can be used to pass a tenant name to the login UI. See [Tenant Hints](/identityserver/ui/login/tenants.md) for details.
 
 * **`request`**
 

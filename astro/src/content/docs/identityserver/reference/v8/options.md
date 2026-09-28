@@ -74,7 +74,7 @@ Top-level settings. Available directly on the `IdentityServerOptions` object.
   Strictly validate JWT-secured authorization requests according to [RFC 9101](https://datatracker.ietf.org/doc/rfc9101/). When enabled, JWTs used to secure authorization requests must have the `typ` header value `oauth-authz-req+jwt` and JWT-secured authorization requests must have the HTTP `content-type` header value `application/oauth-authz-req+jwt`. This might break older OIDC conformant request objects. Defaults to `false`.
 
 - **`ValidateTenantOnAuthorization`**
-  Specifies if a user's `tenant` claim is compared to the tenant `acr_values` parameter value to determine if the login page is displayed. Defaults to `false`.
+  Specifies if a user's `tenant` claim is compared to the tenant `acr_values` parameter value to determine if the login page is displayed. Defaults to `false`. See [Tenant Hints](/identityserver/ui/login/tenants.md).
 
 - **`JwtValidationClockSkew`**
 
