@@ -56,6 +56,40 @@ public class CustomAuthorizeInteractionResponseGenerator : AuthorizeInteractionR
 }
 ```
 
+### Errors From The Interaction Response Generator
+
+A custom interaction response generator can also return an error by setting the `Error` (and optionally
+`ErrorDescription`) properties on the `InteractionResponse` it returns, for example instead of the `RedirectUrl` shown
+above:
+
+```csharp
+protected override async Task<InteractionResponse> ProcessLoginAsync(ValidatedAuthorizeRequest request)
+{
+    var result = await base.ProcessLoginAsync(request);
+
+    if (!result.IsLogin && !result.IsError)
+    {
+        if (UserRequiresStepUpAuthentication(request.Subject))
+        {
+            result = new InteractionResponse
+            {
+                Error = "unmet_authentication_requirements",
+                ErrorDescription = "The user must complete step-up authentication"
+            };
+        }
+    }
+
+    return result;
+}
+```
+
+`InteractionResponse.IsError` is computed from `Error != null`, so setting `Error` is enough to indicate an error
+response. The value assigned to `Error` is routed the same way as any other authorize endpoint error: if it is one of
+the safe codes (such as `login_required` or `access_denied`), it is sent back to the client's `redirect_uri`. Any
+other value, including a custom error string, causes the error page to be shown instead. See
+[Errors Returned To The Client](/identityserver/ui/error.md#errors-returned-to-the-client) for the full list of safe
+codes and how this routing decision is made.
+
 ### Custom Redirects
 
 When using custom redirect pages by setting the `RedirectUrl` on the `InteractionResponse`, IdentityServer will provide a `returnUrl` query parameter with the request (much like on the login page).
