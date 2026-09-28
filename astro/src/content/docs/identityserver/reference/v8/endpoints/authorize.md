@@ -124,7 +124,7 @@ see [here](https://openid.net/specs/openid-connect-core-1_0.html#authrequest).
     * **`idp:name_of_idp`**
 
       bypasses the login/home realm screen and forwards the user directly to the selected identity provider (if allowed
-      per client configuration)
+      per client configuration). See [Selecting an identity provider](/identityserver/ui/federation.md#selecting-an-identity-provider-from-the-client-idp-acr_values) for an example.
 
     * **`tenant:name_of_tenant`**
 

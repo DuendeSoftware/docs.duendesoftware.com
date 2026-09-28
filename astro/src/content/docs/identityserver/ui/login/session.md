@@ -57,7 +57,7 @@ The claims are:
   value defaults to `local` indicating that it was a local login. This is used to determine if a user must
   re-authenticate when clients make [authorization requests](/identityserver/reference/v8/endpoints/authorize.md) using the
   acr_values with an idp value, or the client has `IdentityProviderRestrictions`. If the user’s idp does not match the
-  request, then they should re-authenticate.
+  request, then they should re-authenticate. See [Selecting an identity provider](/identityserver/ui/federation.md#selecting-an-identity-provider-from-the-client-idp-acr_values) for an example.
 * **`tenant`**: Tenant identifier the user is associated with (if needed). This is used to determine if a user must
   re-authenticate when clients make [authorization requests](/identityserver/reference/v8/endpoints/authorize.md) using the
   `acr_values` with a `tenant` value. If the user's tenant does not match the request, then they should re-authenticate.
