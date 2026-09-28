@@ -10,7 +10,7 @@ redirect_from:
 ---
 
 Client notifications are essential for ensuring applications are informed about user sign-out events in a secure and
-efficient manner.
+efficient manner. For a broader look at everything that gets removed during logout, see [what gets cleaned up at logout](/identityserver/ui/logout/cleanup-overview.md).
 
 ## Notifying Clients That The User Has Signed Out
 

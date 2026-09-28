@@ -161,6 +161,7 @@ This accepts a `RemoveSessionsContext` which can filter on the subject and/or th
 It then also has flags for what to terminate or revoke.
 This allows deleting a user's session record in the store, any associated tokens or consents in the [operational database](/identityserver/data/operational.md#grants), and/or notifying any clients via [back-channel logout](/identityserver/ui/logout/notification.md#back-channel-server-side-clients) that the user's session has ended.
 There is also a list of client identifiers to control which clients are affected.
+See [what gets cleaned up at logout](/identityserver/ui/logout/cleanup-overview.md) for a comparison with the cleanup that happens during a normal logout.
 
 An example to revoke everything for current sessions for subject id `12345` might be:
 
