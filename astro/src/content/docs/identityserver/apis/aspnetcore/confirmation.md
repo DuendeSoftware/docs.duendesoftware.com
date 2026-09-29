@@ -138,7 +138,7 @@ developers, we've implemented these steps into an easy-to-use library.
 You can use the `Duende.AspNetCore.Authentication.JwtBearer` NuGet package to implement this validation.
 
 ```bash
-dotnet add package Duende.AspnetCore.Authentication.JwtBearer
+dotnet add package Duende.AspNetCore.Authentication.JwtBearer
 ```
 
 With this package, the configuration necessary in your startup can be as simple as this:
@@ -157,14 +157,17 @@ builder.Services.AddAuthentication("token")
 
 // extends the "token" scheme above with DPoP processing and validation
 builder.Services.ConfigureDPoPTokensForScheme("token");
+
+// cache used for DPoP proof replay detection
+builder.Services.AddKeyedHybridCache(ServiceProviderKeys.ProofTokenReplayHybridCache);
 ```
 
-You will also typically need a distributed cache, used to perform replay detection of DPoP
-proofs. `Duende.AspNetCore.Authentication.JwtBearer` relies on `IDistributedCache` for this,
-so you can supply the cache implementation of your choice. See the
-[Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-8.0)
-for more details on setting up distributed caches, along with many examples, including Redis, CosmosDB, and
-Sql Server.
+Replay detection of DPoP proofs is enabled by default, and uses a keyed `HybridCache` registration.
+When your API runs on multiple instances, also register a distributed cache (such as Redis) so `HybridCache` can use
+it as a second-level cache and replayed proofs are detected across instances.
+
+See [DPoP Validation Options](/identityserver/apis/aspnetcore/dpop-options.md) for all configuration options,
+including proof token expiration modes, server-issued nonces, and replay detection.
 
 A full sample [using the default in memory caching](https://github.com/DuendeSoftware/Samples/tree/main/IdentityServer/v8/DPoP)
 is available on GitHub.
