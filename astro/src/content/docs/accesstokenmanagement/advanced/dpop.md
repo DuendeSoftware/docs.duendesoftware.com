@@ -126,13 +126,13 @@ public class ConfigureJar(IRequestObjectSigner signer) : IPostConfigureOptions<O
         {
             await redirect(context);
 
-            if (options.PushedAuthorizationBehavior != PushedAuthorizationBehavior.Disable)
+            // Only sign here when PAR is not actually used. With the default UseIfAvailable behavior,
+            // the handler falls back to a regular redirect (and skips OnPushAuthorization) when the
+            // discovery document has no PAR endpoint, so the request must be signed here as well.
+            if (!await UsesPushedAuthorization(context.Options, context.HttpContext.RequestAborted))
             {
-                // parameters are signed in OnPushAuthorization instead
-                return;
+                SignRequest(context.ProtocolMessage, keepRedirectUri: true);
             }
-
-            SignRequest(context.ProtocolMessage, keepRedirectUri: true);
         };
 
         // With PAR (.NET 9+): sign all parameters (including dpop_jkt) first,
@@ -144,6 +144,27 @@ public class ConfigureJar(IRequestObjectSigner signer) : IPostConfigureOptions<O
 
             await push(context);
         };
+    }
+
+    // Mirrors the OpenID Connect handler: Disable never uses PAR, Require always does, and
+    // UseIfAvailable only uses PAR when the discovery document advertises a PAR endpoint.
+    private static async Task<bool> UsesPushedAuthorization(OpenIdConnectOptions options, CancellationToken cancellationToken)
+    {
+        switch (options.PushedAuthorizationBehavior)
+        {
+            case PushedAuthorizationBehavior.Disable:
+                return false;
+            case PushedAuthorizationBehavior.Require:
+                return true;
+            default:
+                var configuration = options.Configuration;
+                if (configuration == null && options.ConfigurationManager != null)
+                {
+                    configuration = await options.ConfigurationManager.GetConfigurationAsync(cancellationToken);
+                }
+
+                return !string.IsNullOrEmpty(configuration?.PushedAuthorizationRequestEndpoint);
+        }
     }
 
     private void SignRequest(OpenIdConnectMessage message, bool keepRedirectUri)
