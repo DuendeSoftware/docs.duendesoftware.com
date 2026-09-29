@@ -159,3 +159,22 @@ you vulnerable to these vulnerabilities: (CVE-2025-27370/CVE-2025-27371).
 :::
 
 For a complete working example, see the [WebClientAssertions sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/WebClientAssertions).
+
+## Client Assertions With OpenID Connect
+
+When using `AddOpenIdConnectAccessTokenManagement`, the same `IClientAssertionService` is used to authenticate the client
+for the requests Duende.AccessTokenManagement makes itself, such as refreshing and revoking user tokens. The client name
+passed to `GetClientAssertionAsync` is derived from the OpenID Connect scheme name.
+
+Duende.AccessTokenManagement also hooks into the ASP.NET Core OpenID Connect handler events and
+automatically adds the client assertion from your `IClientAssertionService` to the authorization code exchange and, on
+.NET 9 or newer, to the pushed authorization request (PAR).
+
+Signed authorization requests (JAR, [RFC 9101](https://datatracker.ietf.org/doc/html/rfc9101)) are not created by the
+library. If your client needs to send a `request` object, sign it in your own event handler, as shown in
+[Combining DPoP with custom OpenID Connect events](/accesstokenmanagement/advanced/dpop.md#combining-dpop-with-custom-openid-connect-events).
+
+:::caution
+The library relies on its own OpenID Connect event handlers. Always wrap existing event handlers instead of replacing them,
+and don't set `OpenIdConnectOptions.EventsType`, which replaces all of these handlers at runtime.
+:::
