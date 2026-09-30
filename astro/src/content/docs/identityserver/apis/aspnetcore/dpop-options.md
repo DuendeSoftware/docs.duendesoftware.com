@@ -113,35 +113,12 @@ The `ProofTokenExpirationMode` option accepts one of the following `DPoPProofExp
 Client libraries such as [Duende.AccessTokenManagement](/accesstokenmanagement/advanced/dpop.md) handle the nonce
 retry automatically.
 
-### Custom Nonce Validation
+### Nonces And Load Balancing
 
 The default nonce implementation encodes the issue time using ASP.NET Core
-[Data Protection](https://learn.microsoft.com/en-us/aspnet/core/security/data-protection/introduction). When you run
+[Data Protection](/general/data-protection.md). When you run
 multiple instances of your API behind a load balancer, make sure Data Protection keys are shared between instances,
 or nonces created by one instance will be rejected by another.
-
-To change how nonces are created and validated, implement `IDPoPNonceValidator` and register it before calling
-`ConfigureDPoPTokensForScheme`:
-
-```csharp
-public class CustomNonceValidator : IDPoPNonceValidator
-{
-    public string CreateNonce(DPoPProofValidationContext context)
-    {
-        // create and return a nonce value for the client
-    }
-
-    public NonceValidationResult ValidateNonce(DPoPProofValidationContext context, string? nonce)
-    {
-        // return NonceValidationResult.Valid, Missing, or Invalid
-    }
-}
-```
-
-```csharp
-builder.Services.AddTransient<IDPoPNonceValidator, CustomNonceValidator>();
-builder.Services.ConfigureDPoPTokensForScheme("token");
-```
 
 ## Replay Detection
 
