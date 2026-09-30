@@ -76,6 +76,129 @@ When using DPoP and `AddOpenIdConnectAccessTokenManagement`, this library will a
 
 Once the library has gotten a DPoP bound access token for the client, then if your application is using any of the `HttpClient` client factory helpers (e.g. `AddClientCredentialsHttpClient` or `AddUserAccessTokenHttpClient`) then those outbound HTTP requests will automatically include a DPoP proof token for the associated DPoP access token.
 
+## Combining DPoP With Custom OpenID Connect Events
+
+To support DPoP with `AddOpenIdConnectAccessTokenManagement`, the library registers an `IConfigureNamedOptions<OpenIdConnectOptions>`
+that hooks into the event handlers of the OpenID Connect authentication handler:
+
+| Event                          | Purpose                                                                                           |
+|--------------------------------|---------------------------------------------------------------------------------------------------|
+| `OnRedirectToIdentityProvider` | Adds the `dpop_jkt` parameter and stores the DPoP key in the authentication properties            |
+| `OnAuthorizationCodeReceived`  | Makes the DPoP key available for the code exchange, and adds the client assertion (if configured) |
+| `OnTokenValidated`             | Reserved for DPoP key handling                                                                    |
+| `OnPushAuthorization`          | Adds the client assertion to the pushed authorization request (.NET 9+)                           |
+
+The library wraps any handler that is already configured: your handler is invoked first, followed by the library's logic.
+Your own event handlers, for example to use [client assertions](/accesstokenmanagement/advanced/client-assertions.mdx)
+(`private_key_jwt`) or signed authorization requests (JAR), keep working as long as they don't remove the library's handlers:
+
+* **Wrap existing handlers instead of replacing them.** If you assign an event handler (or a new `OpenIdConnectEvents` instance)
+  after the library has configured its handlers, for example from an `IPostConfigureOptions<OpenIdConnectOptions>`, the DPoP
+  handlers are discarded. Capture the existing handler and invoke it from yours.
+* **Don't use `OpenIdConnectOptions.EventsType`.** When `EventsType` is set, ASP.NET Core resolves that type at runtime and
+  uses it *instead of* `OpenIdConnectOptions.Events`, which silently removes all handlers registered by the library. Assign
+  delegates to `options.Events` instead.
+
+When these handlers are removed, sign-in still succeeds, but the `dpop_jkt` parameter is no longer sent and the authorization
+code is not exchanged using the DPoP key.
+
+### Example: Client Assertions And JAR
+
+The following example signs the authorization request (JAR) and, when using pushed authorization requests (PAR), wraps the
+event handlers registered by Duende.AccessTokenManagement. Because it is registered as an `IPostConfigureOptions`, it runs
+after the library's configuration, so the ordering of the wrapped handlers can be controlled explicitly:
+
+```csharp
+// ConfigureJar.cs
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+
+public class ConfigureJar(IRequestObjectSigner signer) : IPostConfigureOptions<OpenIdConnectOptions>
+{
+    public void PostConfigure(string? name, OpenIdConnectOptions options)
+    {
+        if (name != "oidc") return;
+
+        // Without PAR: let the library add dpop_jkt first, then sign all parameters
+        var redirect = options.Events.OnRedirectToIdentityProvider;
+        options.Events.OnRedirectToIdentityProvider = async context =>
+        {
+            await redirect(context);
+
+            // Only sign here when PAR is not actually used. With the default UseIfAvailable behavior,
+            // the handler falls back to a regular redirect (and skips OnPushAuthorization) when the
+            // discovery document has no PAR endpoint, so the request must be signed here as well.
+            if (!await UsesPushedAuthorization(context.Options, context.HttpContext.RequestAborted))
+            {
+                SignRequest(context.ProtocolMessage, keepRedirectUri: true);
+            }
+        };
+
+        // With PAR (.NET 9+): sign all parameters (including dpop_jkt) first,
+        // then let the library add the client assertion
+        var push = options.Events.OnPushAuthorization;
+        options.Events.OnPushAuthorization = async context =>
+        {
+            SignRequest(context.ProtocolMessage, keepRedirectUri: false);
+
+            await push(context);
+        };
+    }
+
+    // Mirrors the OpenID Connect handler: Disable never uses PAR, Require always does, and
+    // UseIfAvailable only uses PAR when the discovery document advertises a PAR endpoint.
+    private static async Task<bool> UsesPushedAuthorization(OpenIdConnectOptions options, CancellationToken cancellationToken)
+    {
+        switch (options.PushedAuthorizationBehavior)
+        {
+            case PushedAuthorizationBehavior.Disable:
+                return false;
+            case PushedAuthorizationBehavior.Require:
+                return true;
+            default:
+                var configuration = options.Configuration;
+                if (configuration == null && options.ConfigurationManager != null)
+                {
+                    configuration = await options.ConfigurationManager.GetConfigurationAsync(cancellationToken);
+                }
+
+                return !string.IsNullOrEmpty(configuration?.PushedAuthorizationRequestEndpoint);
+        }
+    }
+
+    private void SignRequest(OpenIdConnectMessage message, bool keepRedirectUri)
+    {
+        var request = signer.Sign(message); // creates a signed JWT containing all parameters
+        var clientId = message.ClientId;
+        var redirectUri = message.RedirectUri;
+
+        message.Parameters.Clear();
+        message.ClientId = clientId;
+        if (keepRedirectUri)
+        {
+            message.RedirectUri = redirectUri;
+        }
+        message.SetParameter("request", request);
+    }
+}
+```
+
+Register `ConfigureJar` together with access token management and your `IClientAssertionService`:
+
+```csharp
+// Program.cs
+builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
+{
+    options.DPoPJsonWebKey = jwk;
+});
+builder.Services.AddTransient<IClientAssertionService, ClientAssertionService>();
+builder.Services.ConfigureOptions<ConfigureJar>();
+```
+
+The client assertions for the code exchange and pushed authorization request are added by the library using your
+`IClientAssertionService`. See [Client Assertions](/accesstokenmanagement/advanced/client-assertions.mdx#client-assertions-with-openid-connect).
+
 ## Considerations
 
 A point to keep in mind when using DPoP and `AddOpenIdConnectAccessTokenManagement` is that the DPoP proof key is created per user session. 
