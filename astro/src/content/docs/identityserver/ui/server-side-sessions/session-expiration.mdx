@@ -17,7 +17,7 @@ need to clean up the server-side session data.
 To remove these expired records, there is an automatic cleanup mechanism that periodically scans for expired
 sessions.
 When these records are cleaned up, you can optionally notify the client that the session has ended via back-channel
-logout.
+logout. See [what gets cleaned up at logout](/identityserver/ui/logout/cleanup-overview.md) for how this compares to cleanup during an explicit logout.
 
 ## Expiration Configuration
 
@@ -48,12 +48,15 @@ builder.Services.AddIdentityServer(options => {
 
 ### Back-channel Logout
 
-When the session cleanup job removes expired records, it will by default also
+When the session cleanup job removes expired records, it can also
 trigger [back-channel logout notifications](/identityserver/ui/logout/notification.md#back-channel-server-side-clients)
 to client applications participating in the session. You can use this mechanism to create
 an [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeout.md) that applies across all your client applications.
 
-The `ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout` flag enables this behavior, and it is on by default.
+The `ServerSideSessions.ExpiredSessionsTriggerBackchannelLogout` flag enables this behavior for all clients in the
+session. It is off by default, so you need to set it to `true` if you want expired sessions to trigger back-channel
+logout. Clients with a [coordinated token lifetime](/identityserver/ui/logout/session-cleanup.md#revoking-client-tokens-at-logout)
+are always notified when the session expires, regardless of this flag.
 
 ### Session Renewal on Client Sign-in
 

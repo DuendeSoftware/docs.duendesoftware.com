@@ -67,3 +67,36 @@ If at logout time you would like to have those tokens revoked, then this can be 
 `CoordinateLifetimeWithUserSession` property on
 the [client configuration](/identityserver/reference/v8/models/client.md#authentication--session-management), or globally
 on the [IdentityServer Authentication Options](/identityserver/reference/v8/options.md#authentication).
+
+When coordination is enabled for a client, IdentityServer removes that client's refresh tokens and reference access
+tokens for the session that is ending. JWT access tokens cannot be revoked and remain valid until they expire.
+
+`Authentication.CoordinateClientLifetimesWithUserSession` enables coordination for all clients. A client's own
+`CoordinateLifetimeWithUserSession` value takes precedence over the global option.
+
+Coordination does not require [server-side sessions](/identityserver/ui/server-side-sessions/index.md). Tokens are
+revoked whenever `HttpContext.SignOutAsync` is called for the cookie scheme. With server-side sessions enabled,
+tokens are also revoked when a session expires, and the client receives a back-channel logout notification. See
+[Sessions that end without an explicit logout](/identityserver/ui/logout/cleanup-overview.md#sessions-that-end-without-an-explicit-logout).
+
+The diagram below summarizes both paths:
+
+```mermaid
+flowchart TD
+    A[User logs out<br/>SignOutAsync] --> C{Client has coordinated<br/>token lifetime?}
+    B[Server-side session expires<br/><em>requires server-side sessions</em>] --> C2{Client has coordinated<br/>token lifetime?}
+    C -- Yes --> D[Refresh tokens and reference<br/>access tokens are revoked]
+    C -- No --> E[Tokens are kept until<br/>they expire or are revoked]
+    C2 -- Yes --> D2[Tokens are revoked and a<br/>back-channel logout notification is sent]
+    C2 -- No --> F{ExpiredSessionsTriggerBackchannelLogout<br/>enabled?}
+    F -- Yes --> G[Tokens are kept, a back-channel<br/>logout notification is sent]
+    F -- No --> H[Tokens are kept,<br/>no notification]
+```
+
+Coordination does not revoke consents. To remove consents or other persisted grants, use the
+[session management service](/identityserver/reference/v8/services/session-management-service.md)
+or the [persisted grant service](/identityserver/reference/v8/services/persisted-grant-service.md).
+
+A client can also revoke its own refresh tokens and reference access tokens by calling the
+[revocation endpoint](/identityserver/reference/v8/endpoints/revocation.md). For an overview of what remains after
+logout, see [What gets cleaned up at logout](/identityserver/ui/logout/cleanup-overview.md).

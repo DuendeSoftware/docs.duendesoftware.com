@@ -17,6 +17,8 @@ This is a potentially complicated process and involves these steps:
 * Notify all client applications that the user has signed out.
 * If the logout is client initiated, redirect the user back to the client.
 
+See [what gets cleaned up at logout](/identityserver/ui/logout/cleanup-overview.md) for a summary of the sessions, cookies, and tokens affected by these steps.
+
 When IdentityServer needs to show the logout page, it redirects the user to a configurable
 `LogoutUrl`.
 

@@ -13,7 +13,7 @@ redirect_from:
 
 When using reference tokens, Duende IdentityServer stores the contents of the token in
 the [persisted grant](/identityserver/data/operational.md#grants) store and issues a unique identifier for this token
-back to the client.
+back to the client. See [what gets cleaned up at logout](/identityserver/ui/logout/cleanup-overview.md) for details on when these tokens are removed.
 
 The consumer of the token must use the [introspection](/identityserver/reference/v8/endpoints/introspection.md) endpoint to
 validate the token.

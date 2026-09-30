@@ -14,6 +14,7 @@ redirect_from:
 Access tokens have finite lifetimes. If a client needs long-lived access to a
 resource, [refresh tokens](https://datatracker.ietf.org/doc/html/rfc6749#section-1.5) can be used to request a new
 access token. This can be done with an API call and does not require any user interaction or interruption.
+Refresh tokens are also part of [what gets cleaned up at logout](/identityserver/ui/logout/cleanup-overview.md).
 
 Since this is a privileged operation, the clients needs to be explicitly authorized to be able to use refresh tokens by
 setting the `AllowOfflineAccess` property to `true`. See

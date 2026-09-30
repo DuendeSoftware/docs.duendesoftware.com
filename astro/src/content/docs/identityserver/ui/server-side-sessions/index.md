@@ -26,7 +26,7 @@ IdentityServer provides a server-side session feature, which extends the ASP.NET
 maintain this state in a server-side store, rather than putting it all into the cookie itself.
 This implementation is specifically designed for IdentityServer to allow for more protocol related features, such as
 querying for active sessions based on subject id or session id, and revoking artifacts from protocol workflows as part
-of that session.
+of that session. See [what gets cleaned up at logout](/identityserver/ui/logout/cleanup-overview.md) to understand how these sessions are cleaned up when a user signs out.
 
 :::note
 This feature is part of the [Duende IdentityServer Business (legacy), Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).

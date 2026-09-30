@@ -775,8 +775,11 @@ Settings for [server-side sessions](/identityserver/ui/server-side-sessions/inde
 
 - **`ExpiredSessionsTriggerBackchannelLogout`**
 
-  If enabled, when server-side sessions are removed due to expiration, back-channel logout notifications will be sent.
+  If enabled, when server-side sessions are removed due to expiration, back-channel logout notifications will be sent
+  to all clients that participated in the session.
   This will, in effect, tie a user's session lifetime at a client to their session lifetime at IdentityServer. Defaults to false.
+  Clients with a [coordinated token lifetime](/identityserver/reference/v8/models/client.md#authentication--session-management)
+  are always sent a back-channel logout notification when the session expires, regardless of this setting.
 
 - **`FuzzExpiredSessionRemovalStart`**
 
