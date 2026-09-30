@@ -111,11 +111,13 @@ The above methods return various models.
   The external identity provider requested.
   This is used to bypass home realm discovery (HRD).
   This is provided via the "idp:" prefix to the `acr_values` parameter on the authorize request.
+  See [Selecting an identity provider](/identityserver/ui/federation.md#selecting-an-identity-provider-from-the-client-idp-acr_values) for an example.
 
 * **`Tenant`**
 
   The tenant requested.
   This is provided via the "tenant:" prefix to the `acr_values` parameter on the authorize request.
+  See [Tenant Hints](/identityserver/ui/login/tenants.md) for an example.
 
 * **`LoginHint`**
 

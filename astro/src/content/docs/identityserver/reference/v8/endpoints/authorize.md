@@ -127,11 +127,11 @@ Some errors are returned to the client's `redirect_uri`, while others are shown 
     * **`idp:name_of_idp`**
 
       bypasses the login/home realm screen and forwards the user directly to the selected identity provider (if allowed
-      per client configuration)
+      per client configuration). See [Selecting an identity provider](/identityserver/ui/federation.md#selecting-an-identity-provider-from-the-client-idp-acr_values) for an example.
 
     * **`tenant:name_of_tenant`**
 
-      can be used to pass a tenant name to the login UI
+      can be used to pass a tenant name to the login UI. See [Tenant Hints](/identityserver/ui/login/tenants.md) for details.
 
 * **`request`**
 

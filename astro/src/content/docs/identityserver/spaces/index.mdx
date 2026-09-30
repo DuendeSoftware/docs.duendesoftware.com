@@ -78,6 +78,10 @@ Spaces do not add per-space UI code or branding. To vary UI behavior, inject `IS
 service, read the resolved `SpaceId` and load your own space-aware settings. Apply the same pattern to custom services that
 need space-specific behavior.
 
+Space resolution is independent of the `tenant:` value clients can send in `acr_values`. That value is an untrusted,
+client-supplied hint that your login page can use within a space; it never selects a space. See
+[Tenant Hints](/identityserver/ui/login/tenants.md#tenant-hints-versus-spaces) for a comparison.
+
 User databases and other application-level services are not made space-aware automatically unless they use the shared
 `IStorageFactory`. You must isolate or partition them separately when users, profile data, email delivery or other
 dependencies belong to a specific space.

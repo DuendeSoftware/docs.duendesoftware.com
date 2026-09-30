@@ -75,7 +75,9 @@ To allow the user to be redirected to the external provider, there must be some 
 the handler.
 This can be done because you have provided the user with a button to click, or it could be due to inspecting some
 property of the [authorization context](/identityserver/ui/login/context.md), or it could be based on any
-other aspect of the request (e.g. such as the user entering their email).
+other aspect of the request (e.g. such as the user entering their email). See
+[Selecting an identity provider](/identityserver/ui/federation.md#selecting-an-identity-provider-from-the-client-idp-acr_values)
+for an example of triggering a specific external provider directly from the client via `acr_values`.
 
 :::note
 The process of determining which identity provider to use is called *Home Realm Discovery*, or `HRD` for short.
