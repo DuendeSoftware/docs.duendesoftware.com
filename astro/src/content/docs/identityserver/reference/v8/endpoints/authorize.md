@@ -20,6 +20,9 @@ This process typically involves authentication of the end-user and optionally co
 IdentityServer supports a subset of the OpenID Connect and OAuth 2.0 authorize request parameters. For a full list,
 see [here](https://openid.net/specs/openid-connect-core-1_0.html#authrequest).
 
+Some errors are returned to the client's `redirect_uri`, while others are shown on the error page. See
+[Errors Returned To The Client](/identityserver/ui/error.md#errors-returned-to-the-client) for details.
+
 ### Required Parameters
 
 * **`client_id`**
