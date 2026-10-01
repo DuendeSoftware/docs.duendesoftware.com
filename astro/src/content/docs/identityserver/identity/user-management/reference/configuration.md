@@ -99,7 +99,7 @@ Example (custom composition policy):
 }))
 ```
 
-Nonzero character-class minimums impose composition rules. See [PasswordOptions and upgrade guidance](/identityserver/identity/user-management/authentication/passwords.mdx#passwordoptions) before changing these defaults.
+Nonzero character-class minimums impose composition rules. See the [`PasswordOptions` guidance](/identityserver/identity/user-management/authentication/passwords.mdx#passwordoptions) before changing these defaults.
 
 ## `PasskeyOptions`
 
