@@ -160,7 +160,27 @@ public record PlainTextOtp
 }
 ```
 
-`SendOtpResult` reports whether a code was sent, sending was rate-limited, or storage failed. A successful result includes the token and expiry; a blocked result includes the time when sending may resume.
+`SendOtpResult` - A discriminated union representing the outcome of a send attempt:
+
+```csharp
+public abstract record SendOtpResult
+{
+    // The OTP was dispatched successfully
+    internal sealed record Sent : SendOtpResult
+    {
+        internal Sent(OtpToken token, TimeSpan expiresAfter, DateTimeOffset expiresAtUtc, TimeSpan sendingBlockedFor, DateTimeOffset sendingBlockedUntilUtc){...}
+    }
+
+    // Sending was blocked by rate limiting
+    public sealed record Blocked : SendOtpResult
+    {
+        internal Blocked(TimeSpan sendingBlockedFor, DateTimeOffset sendingBlockedUntilUtc){...}
+    }
+
+    // The OTP could not be persisted (storage failure)
+    public sealed record SaveFailed : SendOtpResult;
+}
+```
 
 ### IUserAuthenticatorsSelfService Interface
 
