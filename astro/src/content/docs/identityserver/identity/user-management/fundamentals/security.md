@@ -1,7 +1,7 @@
 ---
 title: Security Considerations
 description: Security best practices, rate limiting values, authentication throttling, passkey properties, and data protection guidance for Duende User Management.
-date: 2026-05-25
+date: 2026-10-01
 sidebar:
   label: Security Considerations
   order: 5
@@ -13,11 +13,11 @@ This page covers security best practices and design decisions in User Management
 
 ## Data Protection
 
-### Encryption at Rest
+### Credential Storage
 
-User Management encrypts sensitive user data using [ASP.NET Core Data Protection](/general/data-protection.md):
+User Management hashes one-time codes and encrypts TOTP secrets using [ASP.NET Core Data Protection](/general/data-protection.md):
 
-* **One-Time Password (OTP) codes**: Encrypted before storage, decrypted only during verification
+* **One-Time Password (OTP) codes**: Stored only as hashes and consumed on verification
 * **Time-Based One-Time Password (TOTP) secrets**: Stored encrypted, decrypted only for code generation and verification
 * **Recovery codes**: Hashed (not encrypted) using PBKDF2. They cannot be retrieved, only verified.
 
@@ -51,11 +51,11 @@ The default `PasswordOptions` enforces the following constraints:
 
 | Property     | Default      | Description                                      |
 |--------------|--------------|--------------------------------------------------|
-| `MinLength`  | `8`          | Minimum password length                          |
-| `MinLower`   | `2`          | Minimum lowercase characters                     |
-| `MinUpper`   | `2`          | Minimum uppercase characters                     |
-| `MinDigits`  | `2`          | Minimum numeric digit characters                 |
-| `MinSymbols` | `2`          | Minimum symbol characters                        |
+| `MinLength`  | `15`         | Minimum password length                          |
+| `MinLower`   | `0`          | Minimum lowercase characters                     |
+| `MinUpper`   | `0`          | Minimum uppercase characters                     |
+| `MinDigits`  | `0`          | Minimum numeric digit characters                 |
+| `MinSymbols` | `0`          | Minimum symbol characters                        |
 | `MaxLength`  | PBKDF2 limit | Maximum length based on HMAC-SHA-512 digest size |
 
 Override these defaults during registration:
@@ -69,8 +69,7 @@ builder.Services
     .AddUserManagement(um => um
         .Authentication(auth => auth.Configure(options =>
         {
-            options.Passwords.MinLength = 12;
-            options.Passwords.MinSymbols = 1;
+            options.Passwords.MinLength = 16;
         }))
     );
 ```
@@ -183,15 +182,15 @@ With this configuration, the first lockout blocks for 5 minutes, the second for 
 
 ### Rate Limiting
 
-User Management includes built-in rate limiting for OTP operations. The following values are verified from source (`OtpWorkflow.cs`):
+User Management includes built-in rate limiting for OTP operations:
 
 | Protection                | Value         | Purpose                     |
 |---------------------------|---------------|-----------------------------|
-| Max verification attempts | `5` per token | Prevents code brute-forcing |
+| Max verification attempts | `4` per code  | Prevents code brute-forcing |
 | Min time between sends    | `1 minute`    | Prevents request flooding   |
 | Code expiration           | `5 minutes`   | Limits the attack window    |
 
-These values are fixed in the OTP workflow and are not configurable. The OTP code is hashed using PBKDF2 before storage and verified using constant-time comparison.
+These values are fixed and are not configurable. The fifth and later submissions are rejected even if correct; a new code is required. The resend interval is cleared on successful verification. The OTP code is stored only as a hash and can be used once. See [OTP authentication and its rate-limiting limitation](/identityserver/identity/user-management/authentication/otp.mdx#nist-guidance-and-limitations).
 
 ### Delivery Channel Risks
 

@@ -1,7 +1,7 @@
 ---
 title: OTP Authentication Flow
 description: How to implement one-time password (OTP) authentication in Duende User Management, including code generation, delivery, verification, auto-registration, and OTP address management.
-date: 2026-05-19
+date: 2026-10-01
 sidebar:
   label: OTP Authentication
   order: 2
@@ -41,7 +41,7 @@ The OTP authentication flow has two main steps.
 <Steps>
 1. **User enters identifier** - The user provides their email address or phone number.
 
-2. **Code generation** - User Management generates a cryptographically secure random code (8 characters, alphanumeric base32 by default).
+2. **Code generation** - User Management generates a cryptographically secure random 8-character Crockford Base32 code.
 
 3. **Code delivery** - The code is sent to the user via the configured channel (email or SMS).
 
@@ -160,27 +160,7 @@ public record PlainTextOtp
 }
 ```
 
-`SendOtpResult` - A discriminated union representing the outcome of a send attempt:
-
-```csharp
-public abstract record SendOtpResult
-{
-    // The OTP was dispatched successfully
-    internal sealed record Sent : SendOtpResult
-    {
-        internal Sent(OtpToken token, TimeSpan expiresAfter, DateTimeOffset expiresAtUtc, TimeSpan sendingBlockedFor, DateTimeOffset sendingBlockedUntilUtc){...}
-    }
-
-    // Sending was blocked by rate limiting
-    public sealed record Blocked : SendOtpResult
-    {
-        internal Blocked(TimeSpan sendingBlockedFor, DateTimeOffset sendingBlockedUntilUtc){...}
-    }
-
-    // The OTP could not be persisted (storage failure)
-    public sealed record SaveFailed : SendOtpResult;
-}
-```
+`SendOtpResult` reports whether a code was sent, sending was rate-limited, or storage failed. A successful result includes the token and expiry; a blocked result includes the time when sending may resume.
 
 ### IUserAuthenticatorsSelfService Interface
 
@@ -411,15 +391,34 @@ switch (result)
 
 ## Security
 
-OTP is a good default for consumer applications: passwordless, and requires no app install. The trade-off is that its security depends entirely on the delivery channel. If someone can read your email or intercept your SMS, they can log in as you.
+The security of OTP authentication depends on the delivery channel. If someone can read your email or intercept your SMS, they can log in as you.
 
 ### What User Management Does for You
 
-The OTP workflow enforces limits that are not configurable but are deliberately conservative: a maximum of 5 verification attempts per token (a 6-digit code has a million possible values, so 5 guesses is not a meaningful attack surface), a minimum of 1 minute between sends to prevent flooding, and a 5-minute code expiry to limit the window during which an intercepted code is useful. Codes are stored as PBKDF2 hashes, so a stolen database row is useless to an attacker. Verification uses constant-time comparison to prevent timing-based enumeration.
+These defaults are fixed and cannot be configured:
+
+| Setting | Value |
+|---------|-------|
+| Code length | `8` characters |
+| Alphabet | Crockford Base32 digits and uppercase letters, excluding I, L, O, and U. Codes are alphanumeric, not numeric-only. |
+| Entropy | `40` bits |
+| Lifetime | `5` minutes |
+| Resend interval | `1` minute after a code is issued; cleared by successful verification |
+| Verification attempts | `4` per code. The fifth and later submissions are rejected even if correct; request a new code. |
+
+Codes are stored only as hashes and can be used once.
+
+### NIST Guidance and Limitations
+
+[NIST SP 800-63B-4 section 3.1.3.2](https://pages.nist.gov/800-63-4/sp800-63b/authenticators/#out-of-band-verifiers) requires out-of-band secrets to have at least six decimal digits (about 20 bits) or equivalent. Eight Crockford Base32 characters provide 40 bits, exceeding that minimum. The same section requires rate limiting for secrets below 64 bits.
+
+[Section 3.2.2](https://pages.nist.gov/800-63-4/sp800-63b/authenticators/#throttle) limits consecutive failed attempts on one authenticator to no more than 100 before disabling it. Four attempts per code is stricter for that code, but the count resets when a new code is issued. [Section 3.1.3.2](https://pages.nist.gov/800-63-4/sp800-63b/authenticators/#out-of-band-verifiers) requires the failure count to persist across new secrets. Account-level authentication throttling does not cover OTP verification, so User Management does not currently meet this requirement for OTP. If your deployment needs to meet it, you must enforce a persistent failure limit across newly issued codes.
+
+[Section 3.1.3.1](https://pages.nist.gov/800-63-4/sp800-63b/authenticators/#ooba) prohibits email as an out-of-band authenticator. Email OTP can still be used to confirm an email address, which NIST treats separately. Do not use the email channel as an authenticator if your deployment needs NIST-aligned out-of-band authentication. Conformance depends on the whole deployment, not just these defaults.
 
 ### What You Need to Think About
 
-The delivery channel is outside User Management's control. Email is generally more secure than SMS. SIM-swapping attacks, where an attacker convinces a carrier to transfer a phone number to a new SIM, are a real and documented threat. For sensitive applications, prefer email and consider adding a warning in your OTP email template asking users not to forward it. Users who auto-forward all email to a secondary account are effectively sharing their OTP codes with whoever controls that account.
+The delivery channel is outside User Management's control. SIM-swapping attacks, where an attacker convinces a carrier to transfer a phone number to a new SIM, are a real threat. Email can be forwarded or compromised too. Add a warning in your OTP template asking users not to share codes.
 
 OTP is a single factor. For high-value accounts, pair it with TOTP or a passkey. A user who can receive an OTP email is authenticated, but that is a lower bar than you might want for a financial application.
 
