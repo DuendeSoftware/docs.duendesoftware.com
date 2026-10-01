@@ -41,7 +41,7 @@ The OTP authentication flow has two main steps.
 <Steps>
 1. **User enters identifier** - The user provides their email address or phone number.
 
-2. **Code generation** - User Management generates a cryptographically secure random 8-character Crockford Base32 code.
+2. **Code generation** - User Management generates a cryptographically secure random 8-character [Crockford Base32](https://www.crockford.com/base32.html) code.
 
 3. **Code delivery** - The code is sent to the user via the configured channel (email or SMS).
 
@@ -426,7 +426,7 @@ These defaults are fixed and cannot be configured:
 | Resend interval | `1` minute after a code is issued; cleared by successful verification |
 | Verification attempts | `4` per code. The fifth and later submissions are rejected even if correct; request a new code. |
 
-Codes are stored only as hashes and can be used once.
+Codes are stored only as hashes, and can be used once.
 
 ### NIST Guidance and Limitations
 

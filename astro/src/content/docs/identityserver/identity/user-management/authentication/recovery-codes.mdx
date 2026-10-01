@@ -27,11 +27,9 @@ Recovery codes are a backup authentication method for when the primary two-facto
 
 When a user enables two-factor authentication (2FA), User Management generates 10 recovery codes by default, displays them once for the user to save securely, and stores only their hashes. Each code can be used once. You can change the number of codes per set with `RecoveryCodeOptions.Count`.
 
-New codes contain 13 Crockford Base32 characters, giving each code 65 bits of entropy. A cryptographically secure random number generator produces them. You can display them in groups for readability, for example `ABCDE-FGHJK-MNP`. When a user enters a code, hyphens are ignored and letters are case-insensitive; I and L are read as 1, and O is read as 0.
+Codes contain 13 Crockford Base32 characters, giving each code 65 bits of entropy. A cryptographically secure random number generator produces them. You can display them in groups for readability, for example `ABCDE-FGHJK-MNP`. When a user enters a code, hyphens are ignored and letters are case-insensitive; `I` and `L` are read as `1`, and `O` is read as `0`.
 
-[NIST SP 800-63B-4 section 4.2.1.1](https://pages.nist.gov/800-63-4/sp800-63b/events/#savedrecovery) requires saved recovery codes to contain at least 64 bits from an approved random bit generator. These are saved recovery codes because users store them at enrollment, not issued recovery codes sent at recovery time; the shorter minimum for issued codes does not apply. The new 65-bit length follows the saved-code minimum. Conformance depends on the whole deployment.
-
-Existing 10-character codes, including imported codes, continue to work until they are used or replaced. Generating a new set produces 13-character codes and replaces the old set. No migration is needed.
+[NIST SP 800-63B-4 section 4.2.1.1](https://pages.nist.gov/800-63-4/sp800-63b/events/#savedrecovery) requires saved recovery codes to contain at least 64 bits from an approved random bit generator. These are saved recovery codes because users store them at enrollment, not issued recovery codes sent at recovery time; the shorter minimum for issued codes does not apply. The 65-bit length follows the saved-code minimum. Conformance depends on the whole deployment.
 
 ```mermaid
 sequenceDiagram

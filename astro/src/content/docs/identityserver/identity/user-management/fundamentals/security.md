@@ -190,7 +190,7 @@ User Management includes built-in rate limiting for OTP operations:
 | Min time between sends    | `1 minute`    | Prevents request flooding   |
 | Code expiration           | `5 minutes`   | Limits the attack window    |
 
-These values are fixed and are not configurable. The fifth and later submissions are rejected even if correct; a new code is required. The resend interval is cleared on successful verification. The OTP code is stored only as a hash and can be used once. See [OTP authentication and its rate-limiting limitation](/identityserver/identity/user-management/authentication/otp.mdx#nist-guidance-and-limitations).
+These values are fixed and are not configurable. The fifth and later submissions are rejected even if correct, and a new code is required. The resend interval is cleared on successful verification. The OTP code is stored only as a hash and can be used once. See [OTP authentication and its rate-limiting limitation](/identityserver/identity/user-management/authentication/otp.mdx#nist-guidance-and-limitations).
 
 ### Delivery Channel Risks
 
