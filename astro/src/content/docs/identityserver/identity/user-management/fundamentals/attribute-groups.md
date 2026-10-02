@@ -1,6 +1,6 @@
 ---
 title: Attribute Groups and Ordering
-description: How to organize user profile attributes into groups and control their display order using IUserProfileSchemaAdmin in Duende User Management.
+description: How to organize user profile attributes into groups and control their display order in Duende User Management.
 date: 2026-05-15
 sidebar:
   label: Attribute Groups
@@ -51,90 +51,82 @@ Two properties on `AttributeDefinition` control how an attribute is placed withi
 * `AttributeGroupCode? GroupCode`: The group this attribute belongs to. `null` means the attribute is ungrouped and appears outside any group section.
 * `int Order`: Sort weight controlling the display position of this attribute within its group (or among ungrouped attributes). Lower values appear first.
 
-These properties are set when constructing an `AttributeDefinition` and can be updated by removing and re-adding the definition, or by calling `ReorderAttributesAsync` to adjust ordering without recreating definitions.
+These properties are set when constructing an `AttributeDefinition`. To change them, build a new `SchemaConfiguration` (or modify one read via `ISchemaAdmin`) with the updated definitions — there is no dedicated reorder operation. See [Schema management](/identityserver/identity/user-management/fundamentals/profiles.md#schema-management) for the `Extend` and get-modify-save patterns.
 
-## Managing Groups with `IUserProfileSchemaAdmin`
+## Managing Groups
 
-`IUserProfileSchemaAdmin` exposes five methods for working with groups and ordering.
+Groups are part of the `SchemaConfiguration.Groups` collection, alongside `AttributeDefinitions`. There is no dedicated API for adding, removing or reordering groups and attributes — you build the `ICollection<AttributeGroup>` and set each `AttributeDefinition.GroupCode`/`Order` as part of the schema you register, the same way you manage any other part of the schema:
 
-```csharp
-// IUserProfileSchemaAdmin.cs
-// Get all groups
-Task<IReadOnlyDictionary<AttributeGroupCode, AttributeGroup>> GetAllGroupsAsync(Ct ct);
-
-// Add a group
-Task<bool> TryAddGroupAsync(AttributeGroup group, Ct ct);
-
-// Remove a group
-Task<bool> TryRemoveGroupAsync(AttributeGroupCode name, Ct ct);
-
-// Reorder attributes within a group (pass null for ungrouped attributes)
-Task<bool> ReorderAttributesAsync(AttributeGroupCode? group, IReadOnlyList<AttributeCode> orderedCodes, Ct ct);
-
-// Reorder groups
-Task<bool> ReorderGroupsAsync(IReadOnlyList<AttributeGroupCode> orderedGroups, Ct ct);
-```
-
-* `GetAllGroupsAsync`: Returns all registered groups as a dictionary keyed by `AttributeGroupCode`. Returns an empty dictionary when no groups have been defined.
-* `TryAddGroupAsync`: Registers a new group. Returns `true` on success and `false` if a group with the same code already exists.
-* `TryRemoveGroupAsync`: Removes a group by code. Attributes that belonged to the removed group become ungrouped. Returns `true` whether or not the group existed.
-* `ReorderAttributesAsync`: Reassigns the `Order` values of attributes within the specified group based on the supplied list. Pass `null` as the group to reorder ungrouped attributes. Attributes not included in the list keep their current order and are appended after the listed ones.
-* `ReorderGroupsAsync`: Reassigns the `Order` values of groups based on the supplied list. Groups not included in the list keep their current order and are appended after the listed ones.
+* For an in-memory schema, include the groups and ordered definitions when you call `BuiltInSchemas.UserProfile.Extend(attributes, groups)` or construct a full `SchemaConfiguration`, and register it with `AddInMemoryDataExtensionSchemas`.
+* For a storage-backed schema, use the `ISchemaAdmin` get-modify-save pattern: read the current `SchemaConfiguration`, add to or reorder its `Groups` and `AttributeDefinitions` collections, then call `UpdateAsync` with the version from the read.
 
 ## Setting Up Groups
 
-The following example creates a group, adds attributes to it, and then reorders those attributes.
+The following example extends the built-in user profile with a `personal-info` group and two attributes assigned to it, in a chosen order.
 
 ```csharp
 // attribute-groups-setup.cs
 using Duende.Storage.EntityAttributeValue;
 using Duende.UserManagement.Profiles;
 
-// Create a group
-var group = new AttributeGroup(
+var personalInfo = new AttributeGroup(
     Code: AttributeGroupCode.Create("personal-info"),
     DisplayName: AttributeDisplayName.Create("Personal Information"),
     Description: null,
     Order: 0);
 
-await schemaAdmin.TryAddGroupAsync(group, ct);
-
-// Add attributes to the group
 var givenName = new AttributeDefinition
 {
-    Code = AttributeCode.Create("given_name"),
+    Code = AttributeCode.Create("given_name_2"),
     AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    GroupCode = AttributeGroupCode.Create("personal-info"),
-    Order = 0
+    GroupCode = personalInfo.Code,
+    Order = 1
 };
 
 var familyName = new AttributeDefinition
 {
-    Code = AttributeCode.Create("family_name"),
+    Code = AttributeCode.Create("family_name_2"),
     AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    GroupCode = AttributeGroupCode.Create("personal-info"),
-    Order = 1
+    GroupCode = personalInfo.Code,
+    Order = 0
 };
 
-await schemaAdmin.TryAddAttributeDefinitionAsync(givenName, ct);
-await schemaAdmin.TryAddAttributeDefinitionAsync(familyName, ct);
-
-// Reorder attributes within the group
-await schemaAdmin.ReorderAttributesAsync(
-    AttributeGroupCode.Create("personal-info"),
-    [AttributeCode.Create("family_name"), AttributeCode.Create("given_name")],
-    ct);
+var extended = BuiltInSchemas.UserProfile.Extend([givenName, familyName], [personalInfo]);
 ```
 
-After the `ReorderAttributesAsync` call, `family_name` will have `Order: 0` and `given_name` will have `Order: 1`,
-so when you build a UI you can use the field ordering and have family name appear before given name.
+```csharp title="Program.cs"
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(_ => { })
+    .AddInMemoryDataExtensionSchemas([extended]);
+```
+
+Because `familyName.Order` (`0`) is lower than `givenName.Order` (`1`), a UI that reads `schema.AttributeDefinitions` ordered by `Order` within the `personal-info` group renders family name before given name.
+
+To change ordering later for a storage-backed schema, read the schema with `ISchemaAdmin.GetAsync`, update the `Order` values on the definitions or groups you want to move, and call `UpdateAsync` with the returned version:
+
+```csharp
+var getResult = await schemaAdmin.GetAsync(SchemaId.UserProfile, ct);
+if (getResult.Found)
+{
+    var schema = getResult.Item;
+    foreach (var definition in schema.AttributeDefinitions)
+    {
+        if (definition.Code == AttributeCode.Create("given_name_2"))
+        {
+            // AttributeDefinition is a record; replace it in the collection with an updated copy.
+            schema.AttributeDefinitions.Remove(definition);
+            schema.AttributeDefinitions.Add(definition with { Order = 0 });
+            break;
+        }
+    }
+
+    await schemaAdmin.UpdateAsync(SchemaId.UserProfile, schema, getResult.Version!, ct);
+}
+```
 
 ## Notes on Ordering
 
-`Order` values do not need to be unique. When two attributes share the same `Order` value, the system applies a stable secondary sort to produce a consistent result.
+`Order` values do not need to be unique. When two attributes share the same `Order` value, apply your own stable secondary sort (for example, by code) when rendering a UI.
 
-`ReorderAttributesAsync` reassigns order values starting from `0` based on the position of each code in the supplied list. Attributes not included in the list keep their existing order values and are placed after all listed attributes.
-
-Passing `null` as the group to `ReorderAttributesAsync` targets ungrouped attributes, that is, attributes whose `GroupCode` is `null`.
-
-The same rules apply to `ReorderGroupsAsync`: groups not in the supplied list are appended after the listed ones in their existing relative order.
+Removing a group from the schema does not fail if attributes still reference it by `GroupCode` — treat that as an application-level validation concern when you build the replacement schema: either reassign those attributes' `GroupCode` to `null` or to another existing group before removing the group, so you don't end up with attributes pointing at a group that no longer exists.

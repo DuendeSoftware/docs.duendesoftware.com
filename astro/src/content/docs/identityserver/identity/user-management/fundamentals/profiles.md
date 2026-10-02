@@ -1,6 +1,6 @@
 ---
 title: User Profiles and Attributes
-description: How to store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfService, IUserProfileAdmin, and IUserProfileSchemaAdmin.
+description: How to store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfService, IUserProfileAdmin, and the BuiltInSchemas.UserProfile schema.
 date: 2026-05-19
 sidebar:
   label: User Profiles and Attributes
@@ -21,22 +21,22 @@ public sealed record UserProfile
 }
 ```
 
-All extensibility happens through the `Attributes` dictionary. You define which attributes exist by registering `AttributeDefinition` entries in the schema; the system then validates values against those definitions at write time.
+All extensibility happens through the `Attributes` dictionary. You define which attributes exist by registering a schema (a `SchemaConfiguration`); the system then validates values against that schema at write time.
 
-The system exposes three interfaces covering different access levels: self-service operations performed by the authenticated user, administrative operations performed by back-end code, and schema management for defining which attributes exist.
+The system exposes two interfaces covering different access levels: self-service operations performed by the authenticated user, and administrative operations performed by back-end code. Schema management — defining which attributes exist — is a separate concern, covered in [Schema management](#schema-management) below.
 
 ### Where to use these interfaces
 
-All three interfaces are registered with the service provider by `AddUserManagement()` and can be injected anywhere in your application:
+Both interfaces are registered with the service provider by `AddUserManagement(...)` and can be injected anywhere in your application:
 
 * **Razor Pages**: inject into page models to read or update the current user's profile.
 * **MVC controllers**: inject into controllers for profile endpoints.
 * **Backend services / hosted services**: inject into `IHostedService` implementations for background provisioning or migration tasks.
-* **Seed scripts / startup code**: inject `IUserProfileSchemaAdmin` into an `IHostedService` or a startup filter to initialize the schema before the application starts serving requests.
+* **Seed scripts / startup code**: register a schema with `AddInMemoryDataExtensionSchemas()` at startup, or, when using [storage-backed schemas](/identityserver/data/providers/duende-storage/schemas.md), inject `ISchemaAdmin` into an `IHostedService` to create or update the schema before the application starts serving requests.
 
 ## Registration
 
-Call `AddUserManagement()` on the IdentityServer builder to register all profile services:
+Call `AddUserManagement(...)` on the IdentityServer builder to register the profile services:
 
 ```csharp title="Program.cs"
 using Duende.IdentityServer;
@@ -44,42 +44,170 @@ using Duende.UserManagement;
 
 builder.Services
     .AddIdentityServer()
-    .AddUserManagement();
+    .AddUserManagement(_ => { });
 ```
 
-This makes `IUserProfileSelfService`, `IUserProfileAdmin`, and `IUserProfileSchemaAdmin` available for injection. You can also access them as properties on `IUserSelfService.Profiles` and `IUserAdmin.Profiles` respectively (see [User Lifecycle](/identityserver/identity/user-management/fundamentals/user-lifecycle.md)).
+This makes `IUserProfileSelfService` and `IUserProfileAdmin` available for injection. You can also access them as properties on `IUserSelfService.Profiles` and `IUserAdmin.Profiles` respectively (see [User Lifecycle](/identityserver/identity/user-management/fundamentals/user-lifecycle.md)). `AddUserManagement(...)` also registers the default profile schema, `BuiltInSchemas.UserProfile`; see [Schema management](#schema-management) below. Schema *administration* at runtime (`ISchemaAdmin`) is separate and requires `AddDynamicSchemas()` — see below.
 
-## Schema Management
+## Schema management
 
-Before storing attributes you must define them in the schema. The schema is a dictionary of `AttributeCode` to `AttributeDefinition` pairs that describes every attribute the system accepts, its data type, and optional uniqueness constraints.
+Before storing attributes you must define them in the schema. The schema is a `SchemaConfiguration` — a `SchemaId`, display metadata, and a collection of `AttributeDefinition`s (and optional `AttributeGroup`s) that describes every attribute the system accepts, its data type, and optional uniqueness constraints. Schema configuration is shared with the rest of the platform; see [Data Extension Schemas](/identityserver/data/providers/duende-storage/schemas.md) for the underlying model, `ISchemaAdmin`, and in-memory vs. storage-backed tradeoffs.
 
-### `IUserProfileSchemaAdmin`
+### The built-in profile schema
 
-`IUserProfileSchemaAdmin` is the interface for managing attribute definitions at runtime.
+`AddUserManagement(...)` registers a default profile schema, `BuiltInSchemas.UserProfile` (from `Duende.UserManagement.Profiles`), for `SchemaId.UserProfile`:
 
 ```csharp
-public interface IUserProfileSchemaAdmin
+// Duende.UserManagement.Profiles.BuiltInSchemasExtensions
+public static SchemaConfiguration UserProfile => new()
 {
-    Task<IReadOnlyDictionary<AttributeCode, AttributeDefinition>> GetAllAttributeDefinitionsAsync(Ct ct);
+    SchemaId = SchemaId.UserProfile,
+    DisplayName = "User Profile",
+    AttributeDefinitions =
+    [
+        OidcStandardAttributes.Email with { IsUnique = true, IsRequired = true },
+        OidcStandardAttributes.Name,
+        OidcStandardAttributes.GivenName,
+        OidcStandardAttributes.FamilyName
+    ]
+};
+```
 
-    Task<bool> TryAddAttributeDefinitionAsync(AttributeDefinition definition, Ct ct);
+Each access to `BuiltInSchemas.UserProfile` returns a new instance, so you can safely derive from it without mutating a shared default. With no further configuration, users register and log in by `email` and receive `email`, `name`, `given_name`, and `family_name` attributes.
 
-    Task<bool> TryRemoveAttributeDefinitionAsync(AttributeCode code, Ct ct);
+### Extending the built-in profile
+
+To add attributes to the default profile, derive a new schema with `Extend` and register it with `AddInMemoryDataExtensionSchemas`:
+
+```csharp title="Program.cs"
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement.Profiles;
+
+var department = new AttributeDefinition
+{
+    Code = AttributeCode.Create("department"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.String),
+    Description = AttributeDescription.Create("The department the user belongs to.")
+};
+
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(_ => { })
+    .AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(department)]);
+```
+
+`Extend` also has an overload that adds attribute groups at the same time:
+
+```csharp
+var extended = BuiltInSchemas.UserProfile.Extend([department], [personalInfoGroup]);
+```
+
+`Extend` returns a new `SchemaConfiguration` with the same `SchemaId`, `DisplayName`, `Description`, and `Version` as the original, plus the additional attributes and groups. It does not modify `BuiltInSchemas.UserProfile`. It throws `InvalidOperationException` if an attribute code (or group code) you pass already exists on the schema or is repeated in the arguments — register a full replacement schema instead to change an existing attribute or group.
+
+The call to `AddInMemoryDataExtensionSchemas` can come before or after `AddUserManagement(...)`; registration order does not matter. A schema with the same `SchemaId` as a built-in always wins over the built-in, regardless of call order. If you register more than one schema for the same `SchemaId`, the one registered last wins.
+
+### Replacing the built-in profile
+
+To replace the default profile entirely — for example, to log in by a custom attribute instead of `email` — register a full `SchemaConfiguration` that uses `SchemaId.UserProfile`:
+
+```csharp title="Program.cs"
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement.Profiles;
+
+var username = new AttributeDefinition
+{
+    Code = AttributeCode.Create("username"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.String),
+    IsUnique = true,
+    IsRequired = true
+};
+
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(_ => { })
+    .AddInMemoryDataExtensionSchemas([new SchemaConfiguration
+    {
+        SchemaId = SchemaId.UserProfile,
+        AttributeDefinitions = [username, department]
+    }]);
+```
+
+None of the built-in attributes (`email`, `name`, `given_name`, `family_name`) are present unless you add them back explicitly. Replacing the schema is also order-independent relative to `AddUserManagement(...)`.
+
+### Editing the schema at runtime
+
+`AddInMemoryDataExtensionSchemas` only registers schema singletons in memory; it does not provide `ISchemaAdmin`. To create, update, or query the profile schema at runtime, opt in to storage-backed schemas with `AddDynamicSchemas()`:
+
+```csharp title="Program.cs"
+builder.Services
+    .AddIdentityServer()
+    .AddStorage(storage => storage.AddSqlite(/* ... */))
+    .AddConfigurationStorage()
+    .AddOperationalStorage()
+    .AddDynamicSchemas()
+    .AddUserManagement(_ => { });
+```
+
+:::caution[In-memory schemas are not used in this mode]
+With `AddDynamicSchemas()`, in-memory schemas — including `BuiltInSchemas.UserProfile` and anything passed to `AddInMemoryDataExtensionSchemas` — are not used, and the built-in profile is **not** seeded into the database. `ISchemaAdmin.GetAsync(SchemaId.UserProfile, ct)` returns "not found" until you create the schema yourself.
+:::
+
+`ISchemaAdmin` (from `Duende.Storage.EntityAttributeValue`) is the interface for managing the schema at runtime:
+
+```csharp
+public interface ISchemaAdmin
+{
+    Task<SaveResult<SchemaId>> CreateAsync(SchemaConfiguration schema, CancellationToken ct);
+    Task<GetResult<SchemaConfiguration>> GetAsync(SchemaId schemaId, CancellationToken ct);
+    Task<SaveResult<SchemaId>> UpdateAsync(SchemaId schemaId, SchemaConfiguration schema, DataVersion expectedVersion, CancellationToken ct);
+    Task<SaveResult<SchemaId>> DeleteAsync(SchemaId schemaId, CancellationToken ct);
+    Task<QueryResult<SchemaSummary>> QueryAsync(CancellationToken ct);
 }
 ```
 
-* `GetAllAttributeDefinitionsAsync`: Returns all currently registered attribute definitions keyed by code. Returns an empty dictionary when no schema has been configured yet.
-* `TryAddAttributeDefinitionAsync`: Adds a new attribute definition to the schema. Returns `true` on success and `false` if the definition could not be added (for example, a definition with the same code already exists).
-* `TryRemoveAttributeDefinitionAsync`: Removes an attribute definition by code. Returns `true` whether or not the definition existed.
+The typical pattern is get-modify-save, using `GetResult<T>.Version` as the `expectedVersion` for optimistic concurrency on update:
 
-To organize attributes into groups and control their display order, see [Attribute groups and ordering](/identityserver/identity/user-management/fundamentals/attribute-groups.md).
+```csharp
+// SchemaSetup.cs
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement.Profiles;
+
+public class SchemaSetup(ISchemaAdmin schemaAdmin)
+{
+    public async Task RunAsync(CancellationToken ct)
+    {
+        var getResult = await schemaAdmin.GetAsync(SchemaId.UserProfile, ct);
+        var schema = getResult.Found
+            ? getResult.Item
+            : BuiltInSchemas.UserProfile;
+
+        schema.AttributeDefinitions.Add(new AttributeDefinition
+        {
+            Code = AttributeCode.Create("department"),
+            AttributeType = new ScalarAttributeType(ScalarDataType.String),
+            Description = AttributeDescription.Create("The department the user belongs to.")
+        });
+
+        var result = getResult.Found
+            ? await schemaAdmin.UpdateAsync(SchemaId.UserProfile, schema, getResult.Version!, ct)
+            : await schemaAdmin.CreateAsync(schema, ct);
+
+        if (!result.IsSuccess)
+        {
+            throw new InvalidOperationException(string.Join("; ", result.Errors));
+        }
+    }
+}
+```
+
+Starting from `BuiltInSchemas.UserProfile` when no schema exists yet is a choice, not a requirement — build any `SchemaConfiguration` you want for `SchemaId.UserProfile`.
 
 ### `AttributeDefinition`
 
 An `AttributeDefinition` describes a single attribute in the schema.
 
 ```csharp
-public sealed class AttributeDefinition
+public sealed record AttributeDefinition
 {
     public required AttributeCode Code { get; init; }
     public required AttributeType AttributeType { get; init; }
@@ -106,6 +234,8 @@ public sealed class AttributeDefinition
 * `Tags`: Optional string tags for grouping or filtering definitions.
 * `GroupCode`: The code of the group this attribute belongs to. `null` means the attribute is ungrouped.
 * `Order`: Sort weight within the group. Lower values appear first.
+
+To organize attributes into groups and control their display order, see [Attribute groups and ordering](/identityserver/identity/user-management/fundamentals/attribute-groups.md).
 
 ### Attribute Types
 
@@ -137,35 +267,28 @@ public enum ScalarDataType
 Value objects like `AttributeCode` and `AttributeGroupCode` support implicit conversion from `string`, so you can write `AttributeCode code = "department"` instead of `AttributeCode.Create("department")`. The examples in this documentation use the explicit `Create` method for clarity.
 :::
 
-The following example adds a custom `department` string attribute and a unique `employee_id` integer attribute to the schema:
+The following example defines a custom `department` string attribute and a unique `employee_id` integer attribute. Add them to the schema either at compile time with `Extend` (see [Extending the built-in profile](#extending-the-built-in-profile)), or at runtime through the `ISchemaAdmin` get-modify-save pattern shown above:
 
 ```csharp
 using Duende.Storage.EntityAttributeValue;
-using Duende.UserManagement.Profiles;
 
-public class ProfileSchemaInitializer(IUserProfileSchemaAdmin schemaAdmin)
+var department = new AttributeDefinition
 {
-    public async Task InitializeAsync(CancellationToken ct)
-    {
-        var department = new AttributeDefinition
-        {
-            Code = AttributeCode.Create("department"),
-            AttributeType = new ScalarAttributeType(ScalarDataType.String),
-            Description = AttributeDescription.Create("The department the user belongs to.")
-        };
+    Code = AttributeCode.Create("department"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.String),
+    Description = AttributeDescription.Create("The department the user belongs to.")
+};
 
-        var employeeId = new AttributeDefinition
-        {
-            Code = AttributeCode.Create("employee_id"),
-            AttributeType = new ScalarAttributeType(ScalarDataType.Integer),
-            Description = AttributeDescription.Create("The unique employee identifier."),
-            IsUnique = true
-        };
+var employeeId = new AttributeDefinition
+{
+    Code = AttributeCode.Create("employee_id"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.Integer),
+    Description = AttributeDescription.Create("The unique employee identifier."),
+    IsUnique = true
+};
 
-        await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct);
-        await schemaAdmin.TryAddAttributeDefinitionAsync(employeeId, ct);
-    }
-}
+// Compile-time: builder.AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(department, employeeId)]);
+// Runtime: add both to schema.AttributeDefinitions in the get-modify-save pattern, then Update/CreateAsync.
 ```
 
 ### Defining Complex Attributes
@@ -188,7 +311,7 @@ var address = new AttributeDefinition
     Description = AttributeDescription.Create("The user's postal address.")
 };
 
-await schemaAdmin.TryAddAttributeDefinitionAsync(address, ct);
+// Add to the schema with Extend(address) or via ISchemaAdmin, as shown above.
 ```
 
 Complex types can be nested. For example, an address with a geo-location sub-object:
@@ -221,7 +344,7 @@ var tags = new AttributeDefinition
     Description = AttributeDescription.Create("User tags.")
 };
 
-await schemaAdmin.TryAddAttributeDefinitionAsync(tags, ct);
+// Add to the schema with Extend(tags) or via ISchemaAdmin, as shown above.
 ```
 
 A list of complex objects (e.g., phone numbers with type and number):
@@ -239,7 +362,7 @@ var phoneNumbers = new AttributeDefinition
     Description = AttributeDescription.Create("Phone numbers for the user.")
 };
 
-await schemaAdmin.TryAddAttributeDefinitionAsync(phoneNumbers, ct);
+// Add to the schema with Extend(phoneNumbers) or via ISchemaAdmin, as shown above.
 ```
 
 ### Setting Complex and List Values
@@ -322,12 +445,12 @@ To update an existing attribute value, you must read the profile back first. You
 Make sure to store the updated attribute values using `IProfileSelfService.TryUpdateAsync()`.
 
 ```csharp
-if (await profileSelfService.TryGetAsync(subjectId, HttpContext.RequestAborted) != null)
+if (await profileSelfService.TryGetAsync(subjectId, HttpContext.RequestAborted) is { } profile)
 {
     // Pass in profile.Attributes.Values to build an updated AttributeValueCollection
-    var updatedAttributes = new AttributeValueCollection(schema, profile.Attributes.Values);
-    updatedAttributes.Set(UserAttributes.Name, Name);
-    updatedAttributes.Set(UserAttributes.FavoriteDinosaur, FavoriteDinosaur);
+    var updatedAttributes = new AttributeValueCollection(profile.Schema, profile.Attributes.Values);
+    updatedAttributes.Set(AttributeCode.Create("given_name"), givenName);
+    updatedAttributes.Set(AttributeCode.Create("department"), department);
 
     // Validate AttributeValueCollection
     if (!updatedAttributes.TryValidate(out var validatedUpdatedAttributes, out var errors))
@@ -336,30 +459,46 @@ if (await profileSelfService.TryGetAsync(subjectId, HttpContext.RequestAborted) 
     }
 
     // Store AttributeValueCollection
-    if (await profileSelfService.TryUpdateAsync(profile.SubjectId, validatedUpdatedAttributes, HttpContext.RequestAborted) is null)
+    if (await profileSelfService.TryUpdateAsync(profile.SubjectId, validatedUpdatedAttributes!, HttpContext.RequestAborted) is null)
     {
         // handle errors updating profile
     }
 }
 ```
 
-### Removing an Attribute Definition
+### Removing an Attribute
+
+Removing an attribute means registering a schema without it. With in-memory schemas, build the replacement `SchemaConfiguration` yourself (see [Replacing the built-in profile](#replacing-the-built-in-profile)) and omit the attribute. With storage-backed schemas, use the get-modify-save pattern and remove the definition from the `ICollection<AttributeDefinition>` before calling `UpdateAsync`:
 
 ```csharp
-await schemaAdmin.TryRemoveAttributeDefinitionAsync(
-    AttributeCode.Create("department"), ct);
+var getResult = await schemaAdmin.GetAsync(SchemaId.UserProfile, ct);
+if (getResult.Found)
+{
+    var schema = getResult.Item;
+    var toRemove = schema.AttributeDefinitions.Single(a => a.Code == AttributeCode.Create("department"));
+    schema.AttributeDefinitions.Remove(toRemove);
+
+    await schemaAdmin.UpdateAsync(SchemaId.UserProfile, schema, getResult.Version!, ct);
+}
 ```
+
+Removing a definition does **not** purge existing attribute values from stored profiles — values are not validated against the schema on read, only on write.
 
 ### Inspecting the Schema
 
 ```csharp
-var definitions = await schemaAdmin.GetAllAttributeDefinitionsAsync(ct);
+var getResult = await schemaAdmin.GetAsync(SchemaId.UserProfile, ct);
 
-foreach (var (name, definition) in definitions)
+if (getResult.Found)
 {
-    Console.WriteLine($"{name}: {definition.Description}");
+    foreach (var definition in getResult.Item.AttributeDefinitions)
+    {
+        Console.WriteLine($"{definition.Code}: {definition.Description}");
+    }
 }
 ```
+
+At runtime, `IUserProfileSelfService.GetSchemaAsync` and `IUserProfileAdmin.GetSchemaAsync` return the effective `IReadOnlyAttributeSchema` (see [Data Types](#data-types) below) rather than the raw `SchemaConfiguration`.
 
 ## OIDC Standard Attributes
 
@@ -393,12 +532,22 @@ Each member maps to the corresponding OpenID Connect (OIDC) claim name (for exam
 
 ### Adding OIDC Standard Attributes to the Schema
 
+Use `OidcStandardAttributes` members anywhere an `AttributeDefinition` is expected — for example, with `Extend`:
+
 ```csharp
-await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.GivenName, ct);
-await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.FamilyName, ct);
-await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.Email, ct);
-await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVerified, ct);
+builder.AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(
+    OidcStandardAttributes.MiddleName,
+    OidcStandardAttributes.Nickname)]);
 ```
+
+Or add them to a `SchemaConfiguration` you manage through `ISchemaAdmin`:
+
+```csharp
+schema.AttributeDefinitions.Add(OidcStandardAttributes.MiddleName);
+schema.AttributeDefinitions.Add(OidcStandardAttributes.Nickname);
+```
+
+`BuiltInSchemas.UserProfile` already includes `OidcStandardAttributes.Email` (with `IsUnique` and `IsRequired` overridden to `true`), `Name`, `GivenName`, and `FamilyName` — adding them again with `Extend` throws `InvalidOperationException` because their codes already exist.
 
 ## Data Types
 
@@ -410,12 +559,26 @@ await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVer
 public sealed record UserProfile
 {
     public UserSubjectId SubjectId { get; }
+    public IReadOnlyAttributeSchema Schema { get; }
     public IReadOnlyDictionary<AttributeCode, AttributeValue> Attributes { get; }
+    public AttributeValueCollection ToUpdate();
 }
 ```
 
 * `SubjectId`: The unique subject identifier for the user.
+* `Schema`: The current `IReadOnlyAttributeSchema`, read when the profile was loaded. Stored values are not revalidated on read, so after a schema change some values may no longer match it. Use it to build further updates without a separate call to `GetSchemaAsync`.
 * `Attributes`: All stored attribute values keyed by `AttributeCode`.
+* `ToUpdate()`: Returns a new, mutable `AttributeValueCollection` initialized from `Schema` and the profile's current `Attributes` — a convenient starting point for a read-modify-write update:
+
+```csharp
+var profile = await profileSelfService.TryGetAsync(subjectId, ct);
+if (profile is not null)
+{
+    var update = profile.ToUpdate();
+    update.Set(AttributeCode.Create("department"), "Engineering");
+    await profileSelfService.TryUpdateAsync(subjectId, update.Validate(), ct);
+}
+```
 
 ### `UserProfileListItem`
 
@@ -757,25 +920,20 @@ using Duende.Storage.EntityAttributeValue;
 using Duende.UserManagement;
 using Duende.UserManagement.Profiles;
 
-// 1. Add OIDC standard attributes and a custom attribute to the schema.
-public class SchemaSetup(IUserProfileSchemaAdmin schemaAdmin)
+// 1. Extend the built-in profile with OIDC standard attributes and a custom attribute.
+//    Register this with AddInMemoryDataExtensionSchemas before or after AddUserManagement(...).
+public static class ProfileSchema
 {
-    public async Task RunAsync(CancellationToken ct)
+    public static readonly AttributeDefinition Department = new()
     {
-        await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.GivenName, ct);
-        await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.FamilyName, ct);
-        await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.Email, ct);
-        await schemaAdmin.TryAddAttributeDefinitionAsync(OidcStandardAttributes.EmailVerified, ct);
+        Code = AttributeCode.Create("department"),
+        AttributeType = new ScalarAttributeType(ScalarDataType.String),
+        Description = AttributeDescription.Create("The department the user belongs to.")
+    };
 
-        var department = new AttributeDefinition
-        {
-            Code = AttributeCode.Create("department"),
-            AttributeType = new ScalarAttributeType(ScalarDataType.String),
-            Description = AttributeDescription.Create("The department the user belongs to.")
-        };
-
-        await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct);
-    }
+    public static readonly SchemaConfiguration Schema = BuiltInSchemas.UserProfile.Extend(
+        OidcStandardAttributes.EmailVerified,
+        Department);
 }
 
 // 2. Register a new user profile (self-service, called after authentication).
@@ -820,4 +978,11 @@ public class ProfileReader(IUserProfileSelfService profileService)
         }
     }
 }
+```
+
+```csharp title="Program.cs"
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(_ => { })
+    .AddInMemoryDataExtensionSchemas([ProfileSchema.Schema]);
 ```

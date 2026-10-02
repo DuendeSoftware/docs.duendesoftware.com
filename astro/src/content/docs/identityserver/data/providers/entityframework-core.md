@@ -48,6 +48,12 @@ builder.Services.AddIdentityServer()
     });
 ```
 
+:::note[IdentityServer 8.1 preview]
+Starting with IdentityServer 8.1.0-preview.4, this method is named `AddEntityFrameworkConfigurationStore`, so it can't
+be confused with the [Duende Storage](/identityserver/data/providers/duende-storage/getting-started.md) registration
+methods. `AddConfigurationStore` still works but is marked obsolete.
+:::
+
 To configure the configuration store, use the `ConfigurationStoreOptions` options object passed to the configuration callback.
 
 ### ConfigurationStoreOptions
@@ -113,6 +119,11 @@ builder.Services.AddIdentityServer()
         options.TokenCleanupInterval = 3600; // interval in seconds (default is 3600)
     });
 ```
+
+:::note[IdentityServer 8.1 preview]
+Starting with IdentityServer 8.1.0-preview.4, this method is named `AddEntityFrameworkOperationalStore`.
+`AddOperationalStore` still works but is marked obsolete.
+:::
 
 To configure the operational store, use the `OperationalStoreOptions` options object passed to the configuration callback.
 

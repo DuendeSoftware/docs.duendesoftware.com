@@ -438,7 +438,9 @@ public class AspNetIdentityMigrationService : IHostedService
         var sp = scope.ServiceProvider;
 
         // Ensure the User Management schema exists in the target database.
-        await sp.GetRequiredService<IDatabaseSchema>().CreateIfNotExistsAsync(cancellationToken);
+        var storageInstanceSchema = await sp.GetRequiredService<IStorageInstanceSchemaFactory>()
+            .GetStorageInstanceSchema(cancellationToken);
+        await storageInstanceSchema.MigrateAsync(cancellationToken);
 
         var sourceDb = sp.GetRequiredService<SourceIdentityDbContext>();
         var importer = sp.GetRequiredService<IUserImporter>();
