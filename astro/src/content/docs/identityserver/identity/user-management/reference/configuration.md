@@ -1,7 +1,7 @@
 ---
 title: Configuration Reference
 description: Complete reference for all configuration options in Duende User Management, including authentication, passwords, passkeys, TOTP, throttling, and endpoint routing.
-date: 2026-05-25
+date: 2026-10-01
 sidebar:
   label: Configuration Reference
   order: 1
@@ -24,7 +24,7 @@ builder.Services
     .AddUserManagement(um => um
         .Authentication(auth => auth.Configure(options =>
         {
-            options.Passwords.MinLength = 10;
+            options.Passwords.MinLength = 15;
             options.Passkeys.RelyingPartyName = "My Application";
             options.Passkeys.AllowedOrigins = ["https://app.example.com"];
             options.Throttling.MaxFailedAttempts = 3;
@@ -76,17 +76,17 @@ Controls the built-in password complexity validator. Accessed via `UserAuthentic
 
 | Property                 | Type     | Default    | Description                                                                                                                                 |
 |--------------------------|----------|------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| `MinLength`              | `int`    | `8`        | Minimum required password length in characters.                                                                                             |
+| `MinLength`              | `int`    | `15`       | Minimum required password length in characters.                                                                                             |
 | `MaxLength`              | `int`    | `64`       | Maximum allowed password length. Capped at 64 characters (512 bits) to avoid PBKDF2 pre-hashing vulnerabilities with SHA-512.               |
-| `MinLower`               | `int`    | `2`        | Minimum number of lowercase letters required.                                                                                               |
-| `MinUpper`               | `int`    | `2`        | Minimum number of uppercase letters required.                                                                                               |
-| `MinDigits`              | `int`    | `2`        | Minimum number of numeric digit characters required.                                                                                        |
-| `MinSymbols`             | `int`    | `2`        | Minimum number of symbol characters required.                                                                                               |
+| `MinLower`               | `int`    | `0`        | Minimum number of lowercase letters required.                                                                                               |
+| `MinUpper`               | `int`    | `0`        | Minimum number of uppercase letters required.                                                                                               |
+| `MinDigits`              | `int`    | `0`        | Minimum number of numeric digit characters required.                                                                                        |
+| `MinSymbols`             | `int`    | `0`        | Minimum number of symbol characters required.                                                                                               |
 | `HistoryCount`           | `int`    | `0`        | Number of previous passwords to remember and reject on change or reset; `0` disables history.                                               |
 | `MaxAgeDays`             | `int?`   | `null`     | Maximum password age in days before the password is considered expired; `null` disables expiration.                                         |
 | `PreferredHashAlgorithm` | `string` | `"pbkdf2"` | Algorithm used when hashing new passwords; see [Password Hashing Algorithms](/identityserver/identity/user-management/reference/password-hashing.md). |
 
-Example (relaxed password policy):
+Example (custom composition policy):
 
 ```csharp title="Program.cs"
 .Authentication(auth => auth.Configure(options =>
@@ -98,6 +98,8 @@ Example (relaxed password policy):
     options.Passwords.MinSymbols = 0;
 }))
 ```
+
+Nonzero character-class minimums impose composition rules. See the [`PasswordOptions` guidance](/identityserver/identity/user-management/authentication/passwords.mdx#passwordoptions) before changing these defaults.
 
 ## `PasskeyOptions`
 

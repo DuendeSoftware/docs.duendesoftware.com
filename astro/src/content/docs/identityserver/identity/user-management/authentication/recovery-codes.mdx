@@ -1,7 +1,7 @@
 ---
 title: Recovery Code Authentication
 description: How to implement recovery code authentication as a backup two-factor authentication method using Duende User Management, including code generation, authentication, and regeneration.
-date: 2026-04-29
+date: 2026-10-01
 sidebar:
   label: Recovery Codes
   order: 7
@@ -25,7 +25,11 @@ Recovery codes are a backup authentication method for when the primary two-facto
 
 ### Generation Flow
 
-When a user enables 2FA, the system generates a set of recovery codes (typically 10), displays them once for the user to save securely, and stores only their hashes. Codes remain valid until used or regenerated.
+When a user enables two-factor authentication (2FA), User Management generates 10 recovery codes by default, displays them once for the user to save securely, and stores only their hashes. Each code can be used once. You can change the number of codes per set with `RecoveryCodeOptions.Count`.
+
+Codes contain 13 Crockford Base32 characters, giving each code 65 bits of entropy. A cryptographically secure random number generator produces them. You can display them in groups for readability, for example `ABCDE-FGHJK-MNP`. When a user enters a code, hyphens are ignored and letters are case-insensitive; `I` and `L` are read as `1`, and `O` is read as `0`.
+
+[NIST SP 800-63B-4 section 4.2.1.1](https://pages.nist.gov/800-63-4/sp800-63b/events/#savedrecovery) requires saved recovery codes to contain at least 64 bits from an approved random bit generator. These are saved recovery codes because users store them at enrollment, not issued recovery codes sent at recovery time; the shorter minimum for issued codes does not apply. The 65-bit length follows the saved-code minimum. Conformance depends on the whole deployment.
 
 ```mermaid
 sequenceDiagram
@@ -105,7 +109,7 @@ public record PlainTextRecoveryCode
     // Create or throw on invalid input
     public static PlainTextRecoveryCode Create(string input);
 
-    // Format into groups for display, e.g. ["7e8a", "9b2c", "4d1f"]
+    // Format into groups for display
     public IReadOnlyCollection<string> ToTextGroups();
 }
 ```
@@ -321,7 +325,7 @@ Recovery codes are the safety net for two-factor authentication. They exist for 
 
 ### What User Management Does for You
 
-Codes are hashed with PBKDF2 before storage, so a stolen database row cannot be used to recover the plaintext. Each code is single-use and invalidated immediately on successful verification. Codes are generated with a cryptographically secure random number generator using Base32 Crockford encoding for readability and case-insensitivity.
+Codes are hashed with PBKDF2 before storage, so a stolen database row cannot be used to recover the plaintext. Each code is single-use and invalidated immediately on successful verification. Codes are generated with a cryptographically secure random number generator using Crockford Base32 encoding for readability and case-insensitivity.
 
 ### What You Need to Think About
 

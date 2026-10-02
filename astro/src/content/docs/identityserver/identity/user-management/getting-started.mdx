@@ -1,7 +1,7 @@
 ---
 title: Getting Started with User Management
 description: Build a complete OTP (one-time password) login flow from scratch using Duende User Management with IdentityServer as the foundation.
-date: 2026-05-22
+date: 2026-10-01
 sidebar:
   label: Getting Started
   order: 2
@@ -402,7 +402,7 @@ With IdentityServer running, you now need the Razor Pages that handle the actual
 When the form is submitted, `IOtpAuthenticator.TrySendOtpAsync` sends a one-time password to the provided email address and returns a result containing the OTP token. If sending succeeds, the token is stored in `TempData` so the next page can verify the code the user enters. If sending is blocked due to rate limiting, a descriptive error is shown instead.
 
 :::note
-You can configure OTP expiry, code length, and rate-limiting behavior through the `OtpAuthenticatorOptions`. See the [OTP authentication docs](/identityserver/identity/user-management/authentication/otp.mdx) for all available options.
+OTP code length, expiry, and verification limits are fixed. See the [OTP authentication defaults and limitations](/identityserver/identity/user-management/authentication/otp.mdx#security) before using codes for sign-in.
 :::
 
 ### Add an OTP Verification Page
@@ -681,7 +681,7 @@ See [OTP Authentication](/identityserver/identity/user-management/authentication
   <LinkCard
     title="OTP customization"
     href="/identityserver/identity/user-management/authentication/otp"
-    description="Configure code length, expiry, rate limiting, and custom OTP senders."
+    description="Understand fixed code defaults and configure a custom OTP sender."
   />
   <LinkCard
     title="User profiles"
