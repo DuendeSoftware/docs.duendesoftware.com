@@ -202,7 +202,7 @@ Endpoint settings, including flags to disable individual endpoints and support f
   Enables the pushed authorization endpoint. Defaults to true.
 
 - **`EnableJwtRequestUri`**
-  Enables the `request_uri` parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the request_uri parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).
+  Enables the `request_uri` parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the request_uri parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)). Before enabling it, see [protecting against SSRF](/identityserver/tokens/jar.mdx#protecting-against-ssrf).
 
 ## Discovery
 

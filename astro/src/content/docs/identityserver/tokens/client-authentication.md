@@ -247,7 +247,7 @@ var client = new Client
 ```
 
 :::note
-You can share the same key for client authentication and [signed authorize requests](/identityserver/tokens/jar.md).
+You can share the same key for client authentication and [signed authorize requests](/identityserver/tokens/jar.mdx).
 :::
 
 ### Authentication Using A Private Key JWT
