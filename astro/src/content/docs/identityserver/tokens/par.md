@@ -27,6 +27,10 @@ Pushing the authorization parameters also keeps request URLs short. Authorize pa
 more complex OAuth and OIDC features, and URLs that are long cause issues in many browsers and networking
 infrastructure.
 
+PAR is also a safer alternative to [passing request JWTs by reference](/identityserver/tokens/jar.mdx#passing-request-jwts-by-reference)
+using the `request_uri` parameter, because IdentityServer does not need to fetch the request from a URL provided by the
+client.
+
 The use of PAR is encouraged by the [FAPI working group](https://openid.net/wg/fapi/) within the OpenID Foundation. For
 example, [the FAPI2.0 Security Profile](https://openid.bitbucket.io/fapi/fapi-2_0-security-profile.html) requires the
 use of PAR. This security profile is used by many of the groups working on open banking (primarily in Europe), in health
