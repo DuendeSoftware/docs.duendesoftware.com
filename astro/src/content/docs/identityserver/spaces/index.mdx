@@ -40,6 +40,9 @@ flowchart LR
 
 Use `ISpaceAdmin` from a protected administration path to create spaces or change their pool assignments. Moving a space
 to another pool changes which data it sees, so authorize and audit these operations as changes to a security boundary.
+Deleting a space is a soft delete: its pool's data is blocked from reads and writes but retained, and `ISpaceAdmin.UndeleteAsync`
+can restore the space and its matching rules later. Reserve pool reassignment and deletion for break-glass or deliberate
+deprovisioning procedures.
 
 ## How Spaces Resolve Incoming Requests
 

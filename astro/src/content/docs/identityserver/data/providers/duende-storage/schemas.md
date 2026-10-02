@@ -46,7 +46,9 @@ configuration values can still be managed dynamically through the
 
 Storage-backed schemas register `ISchemaAdmin` as well as `ISchemaStore`. They are more dynamic, but your administration
 system must coordinate schema compatibility with all running application versions. Use
-`AddDynamicSchemas()` when you intentionally need that model.
+`AddDynamicSchemas()` when you intentionally need that model. Pass a `StorageInstanceId` to
+`AddDynamicSchemas(storageInstanceId)` to store schemas in a non-default instance; see
+[Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md).
 
 ## Define a Schema
 
@@ -91,14 +93,14 @@ Register the schema when configuring IdentityServer:
 // Program.cs
 builder.Services
     .AddIdentityServer()
-    .AddStorage(storage => storage.AddSqliteStore(/* ... */))
+    .AddStorage(storage => storage.AddSqlite(/* ... */))
     .AddInMemoryDataExtensionSchemas(
         [ClientDataExtensions.Schema]);
 ```
 
 ## Create a Storage-Backed Schema
 
-First configure a database provider and run `IDatabaseSchema.MigrateAsync` as described in
+First configure a database provider and run `IStorageInstanceSchema.MigrateAsync` as described in
 [Getting Started](/identityserver/data/providers/duende-storage/getting-started.md#register-duende-storage).
 Then register the storage-backed schema services:
 
@@ -106,13 +108,13 @@ Then register the storage-backed schema services:
 // Program.cs
 builder.Services
     .AddIdentityServer()
-    .AddStorage(storage => storage.AddSqliteStore(/* ... */))
+    .AddStorage(storage => storage.AddSqlite(/* ... */))
     .AddDynamicSchemas();
 
 // ...
 
 await app.Services
-    .GetRequiredService<IDatabaseSchema>()
+    .GetRequiredService<IStorageInstanceSchema>()
     .MigrateAsync(CancellationToken.None);
 ```
 

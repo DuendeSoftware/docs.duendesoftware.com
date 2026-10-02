@@ -15,9 +15,13 @@ This page describes preview packages and APIs that are subject to change. Start 
 [Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
 :::
 
-`AddStorage(...)` registers Duende Storage for both
-[configuration data](/identityserver/data/configuration.mdx) and
-[operational data](/identityserver/data/operational.md). Both store families use the same database provider and schema.
+`AddStorage(...)` selects a database provider for a storage instance.
+[`AddConfigurationStorage()`](/identityserver/data/configuration.mdx) and
+[`AddOperationalStorage()`](/identityserver/data/operational.md) then route IdentityServer's configuration and
+operational data to an instance and register the matching stores. By default, all three target the same, default
+instance, so a typical application uses one database. See
+[Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md) to route
+categories to separate databases.
 
 ## Install Duende Storage NuGet Packages
 
@@ -51,7 +55,8 @@ load them from your deployment platform's secret store.
 
 ## Register Duende Storage
 
-Call `AddStorage(...)` on the `IIdentityServerBuilder` and register one database provider:
+Call `AddStorage(...)` on the `IIdentityServerBuilder` to select a database provider for the default storage instance,
+then call `AddConfigurationStorage()` and `AddOperationalStorage()` to route configuration and operational data to it:
 
 ```csharp
 // Program.cs
@@ -64,18 +69,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddIdentityServer()
     .AddStorage(storage =>
-        storage.AddSqliteStore(options =>
+        storage.AddSqlite(options =>
             options.ConnectionString =
                 builder.Configuration.GetConnectionString("IdentityServer")
                 ?? throw new InvalidOperationException(
-                    "IdentityServer connection string is missing.")));
+                    "IdentityServer connection string is missing.")))
+    .AddConfigurationStorage()
+    .AddOperationalStorage();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     await app.Services
-        .GetRequiredService<IDatabaseSchema>()
+        .GetRequiredService<IStorageInstanceSchema>()
         .MigrateAsync(CancellationToken.None);
 }
 
@@ -90,7 +97,7 @@ creation permissions unless application-managed migrations are an intentional de
 
 ### Configuration Stores
 
-`AddStorage(...)` registers storage-backed implementations of:
+`AddConfigurationStorage()` registers storage-backed implementations of:
 
 - `IClientStore`
 - `IResourceStore`
@@ -103,7 +110,7 @@ It also registers the
 
 ### Operational Stores
 
-`AddStorage(...)` also registers:
+`AddOperationalStorage()` also registers:
 
 - `IPersistedGrantStore`
 - `IDeviceFlowStore`
@@ -116,9 +123,9 @@ It also registers the
 Call [`AddServerSideSessions`](/identityserver/ui/server-side-sessions/index.md) separately when you want IdentityServer to
 use server-side sessions.
 
-The provider adds a background purge service. Purging is enabled by default, runs hourly, deletes `100` expired entities
-per batch and fuzzes its initial start time to reduce collisions between nodes. Configure `StoragePurgeOptions` before
-calling `AddStorage(...)` to tune those values:
+The provider adds a background purge service that runs against every registered storage instance. Purging is enabled by
+default, runs hourly, deletes `100` expired entities per batch and fuzzes its initial start time to reduce collisions
+between nodes. Configure `StoragePurgeOptions` before calling `AddOperationalStorage()` to tune those values:
 
 ```csharp
 // Program.cs
@@ -135,15 +142,18 @@ Set `EnablePurge` to `false` when an external job owns cleanup.
 
 ### Override an Individual Store
 
-Call an explicit store registration after `AddStorage(...)` to replace only that store. For example:
+Call an explicit store registration after `AddConfigurationStorage()`/`AddOperationalStorage()` to replace only that
+store. For example:
 
 ```csharp
 // Program.cs
 builder.Services
     .AddIdentityServer()
     .AddStorage(storage =>
-        storage.AddSqliteStore(options =>
+        storage.AddSqlite(options =>
             options.ConnectionString = connectionString))
+    .AddConfigurationStorage()
+    .AddOperationalStorage()
     .AddInMemoryClients(clients);
 ```
 
@@ -152,7 +162,7 @@ Duende Storage.
 
 ## Deploy the Database Schema
 
-`IDatabaseSchema.MigrateAsync` creates or upgrades the common Duende Storage schema. It requires permissions to create and
+`IStorageInstanceSchema.MigrateAsync` creates or upgrades the common Duende Storage schema. It requires permissions to create and
 alter database objects. In production, run migrations as a controlled deployment step before application instances start.
 The runtime application identity can then use narrower data access permissions.
 
@@ -176,7 +186,7 @@ permissions to the application.
 On first use, the CLI downloads the matching `Duende.Storage.CliPlugin` package from NuGet and caches it. Pre-populate the
 package cache when a deployment agent cannot access NuGet.
 
-The preview CLI does not currently support Oracle migrations. For Oracle, use `IDatabaseSchema.BuildMigrationScript` from
+The preview CLI does not currently support Oracle migrations. For Oracle, use `IStorageInstanceSchema.BuildMigrationScript` from
 a restricted deployment utility to generate SQL for review and application by your database administrator.
 
 Run only one migration process at a time. After applying a migration, `MigrateAsync` verifies that the database matches the
@@ -185,7 +195,7 @@ expected schema and fails when it finds discrepancies.
 ## Supported Databases
 
 The [Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx#supported-databases) lists the
-published database packages and registration methods. Replace the SQLite package and `AddSqliteStore` call with the
+published database packages and registration methods. Replace the SQLite package and `AddSqlite` call with the
 provider for your database.
 
 SQL Server, PostgreSQL and Oracle use their provider-native connection factory or data source registrations. Keep
@@ -207,16 +217,19 @@ connections and backups and avoid logging stored payloads or secrets.
 ## Use Duende User Management
 
 [Duende User Management](/identityserver/identity/user-management/index.mdx) uses the same Duende Storage abstractions as
-IdentityServer. When `AddStorage(...)` has already registered the provider, call `AddUserManagement(...)` without
-registering the same provider a second time:
+IdentityServer. When `AddStorage(...)` has already registered a provider for the default instance, call
+`AddUserManagement(...)` without registering the same provider a second time: it maps the `user-management` data category
+to that instance and reuses its database.
 
 ```csharp
 // Program.cs
 builder.Services
     .AddIdentityServer()
     .AddStorage(storage =>
-        storage.AddSqliteStore(options =>
+        storage.AddSqlite(options =>
             options.ConnectionString = connectionString))
+    .AddConfigurationStorage()
+    .AddOperationalStorage()
     .AddUserManagement(_ => { });
 ```
 
@@ -230,6 +243,9 @@ pool by default.
 If users must be shared globally across spaces, do not rely on this default routing. Use a deliberately separate host or
 storage architecture for the shared user directory. The built-in integration does not provide a per-product switch that
 opts only User Management out of the current space pool.
+
+To store IdentityServer and User Management data in separate databases instead of sharing one, see
+[Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md).
 
 ## Sample
 

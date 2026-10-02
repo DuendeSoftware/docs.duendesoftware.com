@@ -51,11 +51,11 @@ The default `PasswordOptions` enforces the following constraints:
 
 | Property     | Default      | Description                                      |
 |--------------|--------------|--------------------------------------------------|
-| `MinLength`  | `8`          | Minimum password length                          |
-| `MinLower`   | `2`          | Minimum lowercase characters                     |
-| `MinUpper`   | `2`          | Minimum uppercase characters                     |
-| `MinDigits`  | `2`          | Minimum numeric digit characters                 |
-| `MinSymbols` | `2`          | Minimum symbol characters                        |
+| `MinLength`  | `15`         | Minimum password length                          |
+| `MinLower`   | `0`          | Minimum lowercase characters                     |
+| `MinUpper`   | `0`          | Minimum uppercase characters                     |
+| `MinDigits`  | `0`          | Minimum numeric digit characters                 |
+| `MinSymbols` | `0`          | Minimum symbol characters                        |
 | `MaxLength`  | PBKDF2 limit | Maximum length based on HMAC-SHA-512 digest size |
 
 Override these defaults during registration:
@@ -69,7 +69,7 @@ builder.Services
     .AddUserManagement(um => um
         .Authentication(auth => auth.Configure(options =>
         {
-            options.Passwords.MinLength = 12;
+            options.Passwords.MinLength = 20;
             options.Passwords.MinSymbols = 1;
         }))
     );
@@ -230,7 +230,7 @@ Passkey behavior is controlled by `PasskeyOptions`, accessible via `UserAuthenti
 
 | Property                          | Default                   | Description                                                                                            |
 |-----------------------------------|---------------------------|--------------------------------------------------------------------------------------------------------|
-| `ChallengeSize`                   | `32` bytes (256 bits)     | Size of the server-generated challenge                                                                 |
+| `ChallengeSize`                   | `32` bytes (256 bits)     | Size of the server-generated challenge. Must be at least 16 bytes.                                     |
 | `ChallengeTimeout`                | `300` seconds (5 minutes) | Maximum validity period for a passkey challenge                                                        |
 | `UserVerificationRequirement`     | `"preferred"`             | Whether user verification (PIN, biometric) is required during authentication                           |
 | `AttestationConveyancePreference` | `"none"`                  | Whether the authenticator must provide an attestation statement during registration                    |

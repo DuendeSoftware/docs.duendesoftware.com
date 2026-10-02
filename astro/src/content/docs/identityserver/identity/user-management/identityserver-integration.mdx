@@ -36,6 +36,12 @@ Once you have IdentityServer set up, adding User Management takes a single call 
     ```csharp
     // Program.cs
     using Duende.IdentityServer;
+    using Duende.Storage.PostgreSql;
+    using Npgsql;
+
+    builder.Services
+        .AddSingleton(new NpgsqlDataSourceBuilder(
+            builder.Configuration.GetConnectionString("pgsql")!).Build());
 
     builder.Services
         .AddIdentityServer(options =>
@@ -46,15 +52,17 @@ Once you have IdentityServer set up, adding User Management takes a single call 
         .AddInMemoryIdentityResources(Config.IdentityResources)
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients)
+        .AddStorage(storage => storage.AddPostgreSql())
         .AddUserManagement(options =>
         {
             options.Authentication(configure =>
             {
                 configure.UseSmtpOtpDispatcher(x => builder.Configuration.GetSection("Smtp").Bind(x));
             });
-            options.AddPostgreSqlStore();
         });
     ```
+
+    `AddStorage(...)` registers the database provider for the default storage instance, and `AddUserManagement(...)` maps User Management's data to it. See [Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.md) for how to give User Management its own, separate database.
 
     :::tip
     You do not need to call `AddUserManagement()` separately on `IServiceCollection`.

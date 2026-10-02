@@ -35,11 +35,14 @@ The provider has four parts:
 3. IdentityServer adapters implement its configuration and operational store interfaces.
 4. Optional administration APIs and schemas let your application manage and extend configuration data.
 
-:::note[One Registration for Configuration and Operational Storage]
-`AddStorage(...)` registers configuration and operational storage together against one database provider and schema. To
-replace one specific store, call an explicit registration such as `AddInMemoryClients()` or
-`AddInMemoryPersistedGrants()` after `AddStorage(...)`. The later registration replaces only that store and leaves the
-rest of the Duende Storage wiring in place.
+:::note[Provider Selection Is Separate from Data Wiring]
+`AddStorage(...)` only selects a database provider for a storage instance; it does not store any IdentityServer data by
+itself. Call `AddConfigurationStorage()` and `AddOperationalStorage()` to route configuration and operational data to
+that instance. Both default to the same instance, so most applications use one database, but each category can target a
+different instance. See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md)
+for that setup. To replace one specific store, call an explicit registration such as `AddInMemoryClients()` or
+`AddInMemoryPersistedGrants()` after `AddConfigurationStorage()`/`AddOperationalStorage()`. The later registration
+replaces only that store and leaves the rest of the Duende Storage wiring in place.
 :::
 
 ## Why Use Duende Storage?
@@ -62,12 +65,12 @@ approach matches your requirements.
 
 Choose the package that matches your database:
 
-| Database   | Package                                                                                 | Registration         |
-| ---------- | --------------------------------------------------------------------------------------- | -------------------- |
-| SQL Server | [`Duende.Storage.MsSql`](https://www.nuget.org/packages/Duende.Storage.MsSql)           | `AddMsSqlStore`      |
-| PostgreSQL | [`Duende.Storage.PostgreSql`](https://www.nuget.org/packages/Duende.Storage.PostgreSql) | `AddPostgreSqlStore` |
-| Oracle     | [`Duende.Storage.Oracle`](https://www.nuget.org/packages/Duende.Storage.Oracle)         | `AddOracleStore`     |
-| SQLite     | [`Duende.Storage.Sqlite`](https://www.nuget.org/packages/Duende.Storage.Sqlite)         | `AddSqliteStore`     |
+| Database   | Package                                                                                 | Registration    |
+| ---------- | --------------------------------------------------------------------------------------- | ---------------- |
+| SQL Server | [`Duende.Storage.MsSql`](https://www.nuget.org/packages/Duende.Storage.MsSql)           | `AddMsSql`      |
+| PostgreSQL | [`Duende.Storage.PostgreSql`](https://www.nuget.org/packages/Duende.Storage.PostgreSql) | `AddPostgreSql` |
+| Oracle     | [`Duende.Storage.Oracle`](https://www.nuget.org/packages/Duende.Storage.Oracle)         | `AddOracle`     |
+| SQLite     | [`Duende.Storage.Sqlite`](https://www.nuget.org/packages/Duende.Storage.Sqlite)         | `AddSqlite`     |
 
 <CardGrid>
   <LinkCard
@@ -79,6 +82,11 @@ Choose the package that matches your database:
     href="/identityserver/data/providers/duende-storage/admin-apis/"
     title="Configuration Admin APIs"
     description="Create and manage configuration through dependency-injected services."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/multiple-storage-instances/"
+    title="Multiple Storage Instances"
+    description="Route configuration, operational and other product data to separate databases."
   />
   <LinkCard
     href="/identityserver/data/providers/duende-storage/schemas/"

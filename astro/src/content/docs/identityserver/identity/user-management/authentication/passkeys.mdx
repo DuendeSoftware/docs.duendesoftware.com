@@ -190,7 +190,7 @@ All `PasskeyOptions` properties and their defaults:
 | `AttestationConveyancePreference` | `string`                 | `"none"`      | Whether attestation statements are requested                       |
 | `AuthenticatorAttachment`         | `string?`                | `null`        | Restrict to `"platform"` or `"cross-platform"` authenticators      |
 | `ResidentKeyRequirement`          | `string`                 | `"preferred"` | Whether discoverable credentials are required                      |
-| `ChallengeSize`                   | `int`                    | `32`          | Challenge size in bytes                                            |
+| `ChallengeSize`                   | `int`                    | `32`          | Challenge size in bytes. Must be at least 16 bytes.             |
 | `ChallengeTimeout`                | `TimeSpan`               | 5 minutes     | How long a challenge remains valid                                 |
 | `SupportedAlgorithms`             | `IReadOnlyList<int>`     | `[]` (all)    | COSE algorithm identifiers, in preference order                    |
 
@@ -220,6 +220,7 @@ Task<bool> TryAddPasskeyAsync(
 * `Aaguid` - Authenticator AAGUID (identifies the authenticator model)
 * `CreatedAt` - Registration timestamp
 * `Name` - Display name for the credential
+* `Transports` - Optional client-reported transport hints (for example `"usb"`, `"nfc"`, `"internal"`, `"hybrid"`) from the authenticator's `getTransports()`. These guide browser UI and are not verified authenticator properties; pass `null` if unavailable.
 
 Returns `true` if the credential was stored successfully, `false` if the user was not found or the credential already exists.
 

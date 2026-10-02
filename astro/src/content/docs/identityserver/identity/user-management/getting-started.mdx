@@ -159,13 +159,11 @@ In our application, we can make use of the built-in SMTP dispatcher for sending 
         .AddInMemoryIdentityResources(Config.IdentityResources)
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients)
-        .AddUserManagement(options =>
+        .AddStorage(storage => storage.AddSqlite(o =>
         {
-            options.AddSqliteStore(o =>
-            {
-                o.ConnectionString = "Data Source=usermanagement.db";
-            });
-        });
+            o.ConnectionString = "Data Source=usermanagement.db";
+        }))
+        .AddUserManagement(options => { });
     
     builder.Services.AddSingleton<IOtpDispatcher, ConsoleOtpDispatcher>();
     
@@ -176,9 +174,9 @@ In our application, we can make use of the built-in SMTP dispatcher for sending 
     
     using (var scope = app.Services.CreateScope())
     {
-        await scope.ServiceProvider
-            .GetRequiredService<IDatabaseSchema>()
-            .MigrateAsync(CancellationToken.None);
+        var schemaFactory = scope.ServiceProvider.GetRequiredService<IStorageInstanceSchemaFactory>();
+        var schema = await schemaFactory.GetStorageInstanceSchema(CancellationToken.None);
+        await schema.MigrateAsync(CancellationToken.None);
     }
     
     // Configure the HTTP request pipeline.
@@ -229,16 +227,16 @@ In our application, we can make use of the built-in SMTP dispatcher for sending 
         .AddInMemoryIdentityResources(Config.IdentityResources)
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients)
+        .AddStorage(storage => storage.AddSqlite(o =>
+        {
+            o.ConnectionString = "Data Source=usermanagement.db";
+        }))
         .AddUserManagement(options =>
         {
             options.Authentication(configure =>
             {
                 configure.UseSmtpOtpDispatcher(x =>
                     builder.Configuration.GetSection("Smtp").Bind(x));
-            });
-            options.AddSqliteStore(o =>
-            {
-                o.ConnectionString = "Data Source=usermanagement.db";
             });
         });
         
@@ -249,9 +247,9 @@ In our application, we can make use of the built-in SMTP dispatcher for sending 
     
     using (var scope = app.Services.CreateScope())
     {
-        await scope.ServiceProvider
-            .GetRequiredService<IDatabaseSchema>()
-            .MigrateAsync(CancellationToken.None);
+        var schemaFactory = scope.ServiceProvider.GetRequiredService<IStorageInstanceSchemaFactory>();
+        var schema = await schemaFactory.GetStorageInstanceSchema(CancellationToken.None);
+        await schema.MigrateAsync(CancellationToken.None);
     }
     
     // Configure the HTTP request pipeline.
@@ -296,9 +294,9 @@ In our application, we can make use of the built-in SMTP dispatcher for sending 
 
 A few things to note about this setup:
 
-- Storage is configured **inside** `AddUserManagement` using `options.AddSqliteStore(...)`, not as a separate top-level call.
+- Storage is registered as a separate top-level call, `AddStorage(...)`, on the IdentityServer builder. `AddUserManagement()` then maps its data to that storage instance; by default, both share the same database (`StorageInstanceId.Default`). See [Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.md) for how to give User Management its own database.
 - `app.UseIdentityServer()` replaces the standalone `app.UseAuthentication()` call. IdentityServer sets up authentication for you.
-- The database migration runs at startup using `IDatabaseSchema.MigrateAsync`. This creates the SQLite file and schema on first run.
+- The database migration runs at startup using `IStorageInstanceSchemaFactory.GetStorageInstanceSchema` and `IStorageInstanceSchema.MigrateAsync`. This creates the SQLite file and schema on first run.
 
 :::tip
 For production environments, configure [ASP.NET Core Data Protection](/general/data-protection.md) to persist encryption keys across restarts, for example using Azure Key Vault, Redis, or a shared file system.
