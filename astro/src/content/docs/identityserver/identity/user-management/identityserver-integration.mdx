@@ -12,7 +12,7 @@ redirect_from:
 import { Steps } from "@astrojs/starlight/components";
 
 The `Duende.UserManagement.IdentityServer8` package is what you add to your IdentityServer project to enable User Management.
-It wires up user storage, authentication flows, and claims mapping through a single `AddUserManagement()` call on the IdentityServer builder.
+It wires up user storage, authentication flows, and claims mapping through a single `AddUserManagement(...)` call on the IdentityServer builder.
 Under the hood, it registers an `IProfileService` implementation that maps user profile attributes to OIDC claims and emits role claims
 (both direct and transitive, deduplicated).
 
@@ -28,7 +28,7 @@ Once you have IdentityServer set up, adding User Management takes a single call 
     dotnet add package Duende.UserManagement.IdentityServer8
     ```
 
-2. **Call `AddUserManagement()` on the IdentityServer builder**
+2. **Call `AddUserManagement(...)` on the IdentityServer builder**
 
     The configure delegate is where you enable features and configure storage. This registers both the User Management
     services and the `UserManagementProfileService` implementation of `IProfileService`.
@@ -65,7 +65,7 @@ Once you have IdentityServer set up, adding User Management takes a single call 
     `AddStorage(...)` registers the database provider for the default storage instance, and `AddUserManagement(...)` maps User Management's data to it. See [Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.md) for how to give User Management its own, separate database.
 
     :::tip
-    You do not need to call `AddUserManagement()` separately on `IServiceCollection`.
+    You do not need to call `AddUserManagement(...)` separately on `IServiceCollection`.
     The extension method on `IIdentityServerBuilder` handles both registrations.
     :::
 </Steps>
@@ -87,8 +87,8 @@ uses `context.AddRequestedClaims(claims)` internally, so IdentityServer's standa
 
 ## Fallback Behavior
 
-All User Management modules (profiles, authentication, membership) are registered automatically when you call `AddUserManagement()`. 
-The `UserManagementProfileService` constructor requires `IUserProfileAdmin`, `IUserAuthenticatorsAdmin`, and `IMembershipAdmin`. These are all registered by `AddUserManagement()`, so no additional configuration is needed in normal usage.
+All User Management modules (profiles, authentication, membership) are registered automatically when you call `AddUserManagement(...)`. 
+The `UserManagementProfileService` constructor requires `IUserProfileAdmin`, `IUserAuthenticatorsAdmin`, and `IMembershipAdmin`. These are all registered by `AddUserManagement(...)`, so no additional configuration is needed in normal usage.
 
 If a module's services are not available in the service provider (for example, in testing scenarios with a partial setup):
 
@@ -121,7 +121,7 @@ The `Logger` property is available to subclasses as a protected property:
 protected ILogger<UserManagementProfileService> Logger { get; }
 ```
 
-Register your subclass after calling `AddUserManagement()`:
+Register your subclass after calling `AddUserManagement(...)`:
 
 ```csharp
 // Program.cs

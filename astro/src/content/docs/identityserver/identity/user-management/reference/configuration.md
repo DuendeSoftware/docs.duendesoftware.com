@@ -287,7 +287,7 @@ This changes all passkey endpoints to use `/auth/webauthn` as the base, so regis
 
 ## Membership Module
 
-The membership module provides administrative services for managing users, roles, and groups within your application. It is registered automatically by `AddUserManagement()` when your application needs to programmatically create or modify users, assign roles, or manage group membership from server-side code (for example, in admin UIs or API endpoints).
+The membership module provides administrative services for managing users, roles, and groups within your application. It is registered automatically by `AddUserManagement(...)` when your application needs to programmatically create or modify users, assign roles, or manage group membership from server-side code (for example, in admin UIs or API endpoints).
 
 The following services are registered automatically with the service provider:
 

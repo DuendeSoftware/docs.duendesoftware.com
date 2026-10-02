@@ -32,7 +32,7 @@ anything. You still need to tell each product which instance to use. Selecting a
 instance — in the same call or a later one, including one made by another product — throws an
 `InvalidOperationException`.
 
-By default, `AddUserManagement()` stores its data in `StorageInstanceId.Default`, alongside whatever IdentityServer
+By default, `AddUserManagement(...)` stores its data in `StorageInstanceId.Default`, alongside whatever IdentityServer
 data you have routed there:
 
 ```csharp title="Program.cs"
