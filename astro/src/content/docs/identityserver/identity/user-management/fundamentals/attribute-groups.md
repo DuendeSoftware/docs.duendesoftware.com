@@ -62,36 +62,38 @@ Groups are part of the `SchemaConfiguration.Groups` collection, alongside `Attri
 
 ## Setting Up Groups
 
-The following example extends the built-in user profile with a `personal-info` group and two attributes assigned to it, in a chosen order.
+The following example extends the built-in user profile with a `work-info` group and two new attributes assigned to it, in a chosen order.
+
+The example adds new attributes rather than grouping existing ones: the built-in profile already defines `email`, `name`, `given_name` and `family_name`, and `Extend(...)` throws an `InvalidOperationException` if an attribute code already exists in the schema. To put built-in attributes in a group, register a full replacement schema instead (see [Profiles](/identityserver/identity/user-management/fundamentals/profiles.md)).
 
 ```csharp
 // attribute-groups-setup.cs
 using Duende.Storage.EntityAttributeValue;
 using Duende.UserManagement.Profiles;
 
-var personalInfo = new AttributeGroup(
-    Code: AttributeGroupCode.Create("personal-info"),
-    DisplayName: AttributeDisplayName.Create("Personal Information"),
+var workInfo = new AttributeGroup(
+    Code: AttributeGroupCode.Create("work-info"),
+    DisplayName: AttributeDisplayName.Create("Work Information"),
     Description: null,
     Order: 0);
 
-var givenName = new AttributeDefinition
+var jobTitle = new AttributeDefinition
 {
-    Code = AttributeCode.Create("given_name_2"),
+    Code = AttributeCode.Create("job_title"),
     AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    GroupCode = personalInfo.Code,
+    GroupCode = workInfo.Code,
     Order = 1
 };
 
-var familyName = new AttributeDefinition
+var department = new AttributeDefinition
 {
-    Code = AttributeCode.Create("family_name_2"),
+    Code = AttributeCode.Create("department"),
     AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    GroupCode = personalInfo.Code,
+    GroupCode = workInfo.Code,
     Order = 0
 };
 
-var extended = BuiltInSchemas.UserProfile.Extend([givenName, familyName], [personalInfo]);
+var extended = BuiltInSchemas.UserProfile.Extend([jobTitle, department], [workInfo]);
 ```
 
 ```csharp title="Program.cs"
@@ -101,7 +103,7 @@ builder.Services
     .AddInMemoryDataExtensionSchemas([extended]);
 ```
 
-Because `familyName.Order` (`0`) is lower than `givenName.Order` (`1`), a UI that reads `schema.AttributeDefinitions` ordered by `Order` within the `personal-info` group renders family name before given name.
+Because `department.Order` (`0`) is lower than `jobTitle.Order` (`1`), a UI that reads `schema.AttributeDefinitions` ordered by `Order` within the `work-info` group renders department before job title.
 
 To change ordering later for a storage-backed schema, read the schema with `ISchemaAdmin.GetAsync`, update the `Order` values on the definitions or groups you want to move, and call `UpdateAsync` with the returned version:
 
@@ -112,7 +114,7 @@ if (getResult.Found)
     var schema = getResult.Item;
     foreach (var definition in schema.AttributeDefinitions)
     {
-        if (definition.Code == AttributeCode.Create("given_name_2"))
+        if (definition.Code == AttributeCode.Create("job_title"))
         {
             // AttributeDefinition is a record; replace it in the collection with an updated copy.
             schema.AttributeDefinitions.Remove(definition);

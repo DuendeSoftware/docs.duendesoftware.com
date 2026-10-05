@@ -294,7 +294,7 @@ In our application, we can make use of the built-in SMTP dispatcher for sending 
 
 A few things to note about this setup:
 
-- Storage is registered as a separate top-level call, `AddStorage(...)`, on the IdentityServer builder. `AddUserManagement(...)` then maps its data to that storage instance; by default, both share the same database (`StorageInstanceId.Default`). See [Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.md) for how to give User Management its own database.
+- Storage is registered as a separate top-level call, `AddStorage(...)`, on the IdentityServer builder. `AddUserManagement(...)` then maps its data to that storage instance; by default, both share the same database (`StorageInstanceId.Default`). See [Using A Dedicated Database For User Management](/identityserver/identity/user-management/fundamentals/storage.md#using-a-dedicated-database-for-user-management) for how to store User Management data in a separate database.
 - `app.UseIdentityServer()` replaces the standalone `app.UseAuthentication()` call. IdentityServer sets up authentication for you.
 - The database migration runs at startup using `IStorageInstanceSchemaFactory.GetStorageInstanceSchema` and `IStorageInstanceSchema.MigrateAsync`. This creates the SQLite file and schema on first run.
 

@@ -35,14 +35,16 @@ The provider has four parts:
 3. IdentityServer adapters implement its configuration and operational store interfaces.
 4. Optional administration APIs and schemas let your application manage and extend configuration data.
 
-:::note[Provider Selection Is Separate from Data Wiring]
-`AddStorage(...)` only selects a database provider for a storage instance; it does not store any IdentityServer data by
+:::note[Choosing a Database Is Separate from Choosing What to Store in It]
+`AddStorage(...)` only selects a database provider for a storage instance; it does not enable storing IdentityServer data by
 itself. Call `AddConfigurationStorage()` and `AddOperationalStorage()` to route configuration and operational data to
-that instance. Both default to the same instance, so most applications use one database, but each category can target a
-different instance. See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md)
+that instance.
+
+Both configuration and operational stores default to the same storage instance and thus,
+one shared database, but each category can target a different instance. See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md)
 for that setup. To replace one specific store, call an explicit registration such as `AddInMemoryClients()` or
 `AddInMemoryPersistedGrants()` after `AddConfigurationStorage()`/`AddOperationalStorage()`. The later registration
-replaces only that store and leaves the rest of the Duende Storage wiring in place.
+replaces only that store and leaves the rest of the Duende Storage setup in place.
 :::
 
 ## Why Use Duende Storage?

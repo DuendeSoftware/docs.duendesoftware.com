@@ -51,11 +51,11 @@ The default `PasswordOptions` enforces the following constraints:
 
 | Property     | Default      | Description                                      |
 |--------------|--------------|--------------------------------------------------|
-| `MinLength`  | `15`         | Minimum password length                          |
-| `MinLower`   | `0`          | Minimum lowercase characters                     |
-| `MinUpper`   | `0`          | Minimum uppercase characters                     |
-| `MinDigits`  | `0`          | Minimum numeric digit characters                 |
-| `MinSymbols` | `0`          | Minimum symbol characters                        |
+| `MinLength`  | `8`          | Minimum password length                          |
+| `MinLower`   | `2`          | Minimum lowercase characters                     |
+| `MinUpper`   | `2`          | Minimum uppercase characters                     |
+| `MinDigits`  | `2`          | Minimum numeric digit characters                 |
+| `MinSymbols` | `2`          | Minimum symbol characters                        |
 | `MaxLength`  | PBKDF2 limit | Maximum length based on HMAC-SHA-512 digest size |
 
 Override these defaults during registration:
@@ -69,7 +69,7 @@ builder.Services
     .AddUserManagement(um => um
         .Authentication(auth => auth.Configure(options =>
         {
-            options.Passwords.MinLength = 20;
+            options.Passwords.MinLength = 12;
             options.Passwords.MinSymbols = 1;
         }))
     );

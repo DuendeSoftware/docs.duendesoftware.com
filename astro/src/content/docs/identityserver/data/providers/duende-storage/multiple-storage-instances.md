@@ -103,9 +103,9 @@ instance, as shown above.
 
 ## Cross-Product Example: IdentityServer, User Management and Spaces
 
-Each Duende product maps its own categories, so you can give each product — or even each kind of data within a
-product — its own database. For example, keep IdentityServer's configuration and Spaces' management data together, route
-IdentityServer's operational data to its own database, and give User Management a dedicated database:
+Each Duende product maps its own categories, so you can give each product (or even each kind of data within a
+product) its own database. For example, keep IdentityServer's configuration and Spaces' management data together, route
+IdentityServer's operational data to a separate database, and use a dedicated database for User Management:
 
 ```csharp
 // Program.cs

@@ -1,6 +1,6 @@
 ---
 title: Storage Configuration
-description: How to configure PostgreSQL or SQL Server storage for Duende User Management, including giving User Management its own database, package installation, connection strings, schema names, schema initialization, and version checks.
+description: How to configure PostgreSQL or SQL Server storage for Duende User Management, including using a dedicated database for User Management, package installation, connection strings, schema names, schema initialization, and version checks.
 date: 2026-10-02
 sidebar:
   label: Storage Configuration
@@ -29,8 +29,7 @@ IdentityServer maps configuration and operational data when you call `AddConfigu
 
 This split means `AddStorage(...)` only selects a database provider and connection; it does not, by itself, store
 anything. You still need to tell each product which instance to use. Selecting a second provider for the same
-instance — in the same call or a later one, including one made by another product — throws an
-`InvalidOperationException`.
+instance throws an `InvalidOperationException`.
 
 By default, `AddUserManagement(...)` stores its data in `StorageInstanceId.Default`, alongside whatever IdentityServer
 data you have routed there:
@@ -55,7 +54,7 @@ builder.Services
 Here, clients, API scopes, persisted grants, and User Management's users, profiles, and authenticators all live in
 the same PostgreSQL database.
 
-## Give User Management Its Own Database
+## Using A Dedicated Database For User Management
 
 For larger deployments, or when User Management's write volume (OTP challenges, passkey ceremonies, authentication
 attempts) would compete with IdentityServer's configuration and operational workloads, register a second storage
@@ -82,7 +81,7 @@ builder.Services
     .AddStorage(storage => storage.AddPostgreSql())
     .AddConfigurationStorage()
     .AddOperationalStorage()
-    // User Management gets its own database, in its own instance.
+    // User Management uses a dedicated database, registered as its own instance.
     .AddStorage(userManagementInstance, storage => storage.AddPostgreSql(
         sp => sp.GetRequiredKeyedService<NpgsqlDataSource>(userManagementInstance.Value)))
     .AddUserManagement(userManagementInstance, um => { /* ... */ });
@@ -252,8 +251,8 @@ Using a custom schema name helps:
 * Isolate User Management tables from other application data.
 * Support multiple storage instances in the same server.
 
-:::tip[Giving User Management its own database]
-If you want User Management's data in a separate database from IdentityServer's configuration and operational data (for example, to isolate write load or manage permissions separately), see [Give User Management Its Own Database](#give-user-management-its-own-database) above.
+:::tip[Using a dedicated database for User Management]
+If you want User Management's data in a separate database from IdentityServer's configuration and operational data (for example, to isolate write load or manage permissions separately), see [Using A Dedicated Database For User Management](#using-a-dedicated-database-for-user-management) above.
 :::
 
 ### Schema Initialization
@@ -411,8 +410,8 @@ Using a custom schema name helps:
 * Isolate User Management tables from other application data.
 * Manage permissions at the schema level.
 
-:::tip[Giving User Management its own database]
-If you want User Management's data in a separate database from IdentityServer's configuration and operational data, see [Give User Management Its Own Database](#give-user-management-its-own-database) above.
+:::tip[Using a dedicated database for User Management]
+If you want User Management's data in a separate database from IdentityServer's configuration and operational data, see [Using A Dedicated Database For User Management](#using-a-dedicated-database-for-user-management) above.
 :::
 
 ### Schema Initialization
