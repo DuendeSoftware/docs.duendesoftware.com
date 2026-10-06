@@ -1,6 +1,6 @@
 ---
 title: User Interaction
-description: "Overview of IdentityServer's user interaction architecture, explaining how the UI is separated from the core engine to enable customization of login, logout, consent, and error pages for various authentication scenarios."
+description: "Overview of IdentityServer's UI architecture, explaining how the UI is decoupled from the core engine to customize login, logout, consent, and errors."
 sidebar:
   label: Overview
   order: 1

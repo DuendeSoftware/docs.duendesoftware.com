@@ -1,6 +1,6 @@
 ---
 title: "Windows Authentication"
-description: "Guide to implementing Windows authentication in IdentityServer using various approaches including IIS hosting, HTTP.SYS hosting, and the Negotiate authentication handler, with detailed configuration instructions and code examples."
+description: "Implement Windows authentication in IdentityServer using IIS hosting, HTTP.SYS, or the Negotiate handler, with configuration steps and code examples."
 sidebar:
   order: 70
 redirect_from:

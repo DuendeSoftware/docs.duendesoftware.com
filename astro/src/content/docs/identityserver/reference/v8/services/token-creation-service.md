@@ -1,6 +1,6 @@
 ---
 title: "Token Creation Service"
-description: Documentation for the ITokenCreationService interface which is responsible for creating security tokens by converting Token models into JWTs with customization options.
+description: "Reference for the ITokenCreationService interface, responsible for creating security tokens by converting Token models into signed JWTs."
 sidebar:
   label: Token Creation
   order: 50

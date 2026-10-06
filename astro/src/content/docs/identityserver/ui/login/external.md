@@ -1,6 +1,6 @@
 ---
 title: "Integrating with External Providers"
-description: "Guide to integrating external identity providers with IdentityServer, including registration of authentication handlers, triggering authentication flows, and processing callbacks from social or corporate login systems."
+description: "Integrate external identity providers with IdentityServer, configure authentication handlers, trigger login flows, and process external callbacks."
 sidebar:
   label: External Providers
   order: 60

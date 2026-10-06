@@ -1,6 +1,6 @@
 ---
 title: "Session Cleanup and Logout"
-description: "Guide to correctly ending a session in IdentityServer, including removing authentication cookies, handling external logins, and revoking client tokens during logout."
+description: "End user sessions cleanly in IdentityServer by removing authentication cookies, revoking tokens, and signing out of external identity providers."
 sidebar:
   label: End Sessions
   order: 20

@@ -1,6 +1,6 @@
 ---
 title: "Proof-of-Possession Access Tokens"
-description: "Documentation for Proof-of-Possession (PoP) tokens, which enhance security by cryptographically binding tokens to clients, including both Mutual TLS and DPoP implementations."
+description: "Secure access tokens with Proof-of-Possession (PoP) by cryptographically binding tokens to clients using Mutual TLS or DPoP in Duende IdentityServer."
 date: 2026-05-27
 sidebar:
   label: Proof-of-Possession

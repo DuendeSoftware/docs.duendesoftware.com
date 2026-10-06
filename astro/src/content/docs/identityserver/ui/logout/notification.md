@@ -1,6 +1,6 @@
 ---
 title: "Client Notifications"
-description: "Comprehensive guide to client notification mechanisms in IdentityServer, covering front-channel, back-channel, and JavaScript-based approaches for informing applications about user sign-out events."
+description: "Notify client applications about sign-out events in IdentityServer using front-channel logout, back-channel logout, and JavaScript notifications."
 sidebar:
   order: 50
 redirect_from:

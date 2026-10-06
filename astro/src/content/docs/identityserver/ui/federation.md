@@ -1,6 +1,6 @@
 ---
 title: "Federation Gateway"
-description: "Guide to implementing federation in IdentityServer, allowing it to act as a gateway that offers multiple external authentication providers while shielding client applications from authentication complexities, including home realm discovery (HRD) and selecting a provider via acr_values idp."
+description: "Implement a federation gateway in IdentityServer to connect multiple external identity providers, handle home realm discovery, and simplify client auth."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 6

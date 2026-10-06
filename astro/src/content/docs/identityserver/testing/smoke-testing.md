@@ -1,6 +1,6 @@
 ---
 title: "Smoke Testing a Login Flow"
-description: "How to smoke test the interactive login flow of a deployed Duende IdentityServer from plain .NET, using a cookie-aware HttpClient and AngleSharp instead of a headless browser."
+description: "Smoke test interactive login flows in Duende IdentityServer from .NET using a cookie-aware HttpClient and AngleSharp without a headless browser."
 date: 2026-09-02T08:00:00+02:00
 sidebar:
   label: Smoke Testing

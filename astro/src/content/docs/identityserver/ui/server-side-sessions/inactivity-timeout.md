@@ -1,6 +1,6 @@
 ---
 title: "Inactivity Timeout"
-description: "A guide to implementing system-wide inactivity timeout in IdentityServer using server-side sessions to coordinate user activity tracking and session termination across all applications."
+description: "Implement system-wide inactivity timeout in IdentityServer with server-side sessions to track user activity and terminate inactive sessions."
 sidebar:
   order: 3
 redirect_from:

@@ -1,6 +1,6 @@
 ---
 title: "User Session Service"
-description: Documentation for the IUserSession interface which manages user sessions and tracks participating client applications for authentication and logout coordination.
+description: "Reference for the IUserSession interface managing user authentication sessions and tracking client applications for logout coordination."
 sidebar:
   label: User Session
   order: 55

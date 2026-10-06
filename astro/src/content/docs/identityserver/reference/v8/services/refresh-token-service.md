@@ -1,6 +1,6 @@
 ---
 title: "Refresh Token Service"
-description: Documentation for the IRefreshTokenService interface which handles validation, creation, and updating of refresh tokens with customization options for handling consumed tokens.
+description: "Reference for the IRefreshTokenService interface, handling creation, validation, and lifecycle customization of OAuth refresh tokens in IdentityServer."
 sidebar:
   label: Refresh Token
   order: 50

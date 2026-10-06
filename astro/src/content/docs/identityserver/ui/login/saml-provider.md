@@ -1,6 +1,6 @@
 ---
 title: "SAML 2.0 External Provider"
-description: "Guide to registering a SAML 2.0 identity provider as an external authentication scheme in IdentityServer using AddSamlServiceProvider(), covering configuration options, validation, and when to use static vs. dynamic provider registration."
+description: "Register a SAML 2.0 identity provider as an external authentication scheme in IdentityServer using AddSamlServiceProvider(), with static or dynamic setup."
 date: 2026-05-15
 sidebar:
   label: "SAML 2.0 Provider"

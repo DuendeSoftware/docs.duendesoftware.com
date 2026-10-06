@@ -1,6 +1,6 @@
 ---
 title: IdentityServer Deployment
-description: Comprehensive guide covering key aspects of deploying IdentityServer including proxy configuration, data protection, data stores, caching, and health monitoring.
+description: "Deploy Duende IdentityServer into production, covering reverse proxies, ASP.NET Data Protection, persistent stores, caching, and health checks."
 date: 2020-09-10T08:20:20+02:00
 sidebar:
   label: Overview

@@ -1,6 +1,6 @@
 ---
 title: "DPoP Proof Validator"
-description: Documentation for the IDPoPProofValidator interface which validates Demonstrating Proof of Possession (DPoP) tokens to ensure secure binding between access tokens and client key pairs.
+description: "Reference for the IDPoPProofValidator interface validating DPoP tokens to ensure cryptographic binding between access tokens and client key pairs."
 sidebar:
   label: DPoP Proof
   order: 40
