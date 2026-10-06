@@ -55,12 +55,8 @@ store, have access to, or process any of our customers' data or their customers'
 ## Vulnerability Management Process
 
 * Potential security vulnerabilities can be responsibly disclosed via
-  our [contact form](https://duendesoftware.com/contact/general).
-    * We guarantee to reply within two US business days.
-* All licenses include a security notification service.
-    * Whenever a medium severity or higher security vulnerability has been confirmed and fixed, customers will get a
-      private update prior to public release.
-* We will publish an official advisory
+  our [contact form](https://duendesoftware.com/contact/general) (we reply within two US business days)
+* We will publish an official advisory when validated
 
 ## Dependencies
 
