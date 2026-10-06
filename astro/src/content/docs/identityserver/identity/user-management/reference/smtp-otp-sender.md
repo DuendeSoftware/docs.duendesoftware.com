@@ -1,7 +1,7 @@
 ---
 title: SMTP OTP Dispatcher Reference
 description: Reference for the SmtpOtpDispatcher, including configuration options, template placeholders, and security best practices for email-based one-time password delivery.
-date: 2026-04-29
+date: 2026-10-01
 sidebar:
   label: SMTP OTP Dispatcher
   order: 2
@@ -62,7 +62,7 @@ MyApp confirmation code
 **Body:**
 
 ```text
-123-456 is your MyApp confirmation code (expires after 5 minute(s))
+ABCD-EFGH is your MyApp confirmation code (expires after 5 minute(s))
 
 IMPORTANT SECURITY INFORMATION:
 - You should only use this code if you requested it
@@ -80,7 +80,7 @@ All three template properties (`PlainTextTemplate`, `HtmlTemplate`, `SubjectTemp
 
 | Placeholder        | Description                                                                                      | Example Value     |
 |--------------------|--------------------------------------------------------------------------------------------------|-------------------|
-| `{Code}`           | The OTP code, formatted with hyphens between groups.                                             | `123-456`         |
+| `{Code}`           | The OTP code, formatted with hyphens between groups.                                             | `ABCD-EFGH`       |
 | `{FromName}`       | The configured sender name (`SmtpOtpDispatcherOptions.FromName`).                                    | `MyApp`           |
 | `{ExpiresMinutes}` | The number of minutes until the code expires, as a whole number.                                 | `5`               |
 | `{Domain}`         | The configured domain (`SmtpOtpDispatcherOptions.Domain`), or `"our official website"` when not set. | `app.example.com` |
