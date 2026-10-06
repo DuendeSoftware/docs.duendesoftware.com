@@ -50,17 +50,18 @@ through [OpenTelemetry support](/identityserver/diagnostics/otel.md), and years 
 #### Standard Edition
 
 The Standard edition adds additional features that go beyond the core protocol support
-included in the Starter edition. This is a popular license because it adds the most
+included in the Lite edition. This is a popular license because it adds the most
 commonly needed tools and features outside a basic protocol implementation. Feature
 highlights include resource isolation, the OpenId Connect CIBA flow support,
-and server side sessions.
+and server side sessions. [Automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management)
+is available for the Standard edition as an add-on.
 
 #### Advanced Edition
 
 Finally, the Advanced edition includes everything in the Standard edition and adds
 support for features that are typically used by enterprises with particularly complex
 architectures or that handle particularly sensitive data. Highlights include
-automatic key management, SAML, and priority developer support.
+automatic key management (included), SAML, and priority developer support.
 
 This is the best option when you have a specific threat model or architectural
 need for these features.
