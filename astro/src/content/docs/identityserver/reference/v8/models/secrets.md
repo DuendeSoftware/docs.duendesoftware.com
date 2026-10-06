@@ -1,6 +1,6 @@
 ---
 title: "Secrets"
-description: "Reference documentation for secret handling in Duende IdentityServer, including the ISecretParser interface for extracting secrets from HTTP requests, the ParsedSecret class, and the ISecretValidator interface."
+description: "Reference for secret handling in Duende IdentityServer, covering ISecretParser, ParsedSecret, and ISecretValidator for client and API secret validation."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 70

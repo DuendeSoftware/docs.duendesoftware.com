@@ -1,6 +1,6 @@
 ---
 title: Extension Grants
-description: "A guide to implementing OAuth extension grants in IdentityServer for non-standard token issuance scenarios, with a focus on token exchange for impersonation and delegation using the IExtensionGrantValidator interface."
+description: "Implement OAuth extension grants in IdentityServer for token exchange, delegation, and impersonation using the IExtensionGrantValidator interface."
 date: 2026-06-08
 sidebar:
   label: Extension Grants

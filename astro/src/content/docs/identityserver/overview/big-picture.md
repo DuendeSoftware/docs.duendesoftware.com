@@ -1,6 +1,6 @@
 ---
 title: "The Big Picture"
-description: "An overview of modern application architecture patterns and how OpenID Connect and OAuth 2.0 protocols implemented by IdentityServer solve authentication and API access challenges"
+description: "Learn how OpenID Connect and OAuth 2.0 with Duende IdentityServer secure modern application architectures and solve authentication challenges."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 1

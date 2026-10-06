@@ -1,6 +1,6 @@
 ---
 title: "Backchannel Authentication User Validator"
-description: Documentation for the IBackchannelAuthenticationUserValidator interface which is used to validate request hints and identify the user for CIBA authentication requests.
+description: "Reference for the IBackchannelAuthenticationUserValidator interface used to validate request hints and identify users for CIBA authentication requests."
 sidebar:
   label: Backchannel Authentication User
   order: 30

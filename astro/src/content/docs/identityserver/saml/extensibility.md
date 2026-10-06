@@ -1,6 +1,6 @@
 ---
 title: "SAML Extensibility"
-description: Extensibility interfaces for customizing SAML 2.0 Identity Provider behavior, including NameID generation, SSO response generation, metadata, AuthnRequest validation, interaction, logout, and sign-in state storage.
+description: "Extensibility interfaces for SAML 2.0 IdP in IdentityServer, covering NameID generation, SSO response creation, metadata, and AuthnRequest validation."
 date: 2026-05-25
 sidebar:
   label: Extensibility

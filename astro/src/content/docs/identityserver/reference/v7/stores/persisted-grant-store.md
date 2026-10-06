@@ -1,6 +1,6 @@
 ---
 title: "Persisted Grant Store"
-description: Documentation for the IPersistedGrantStore interface which manages storage and retrieval of authorization grants such as refresh tokens, reference tokens, and user consent.
+description: "Reference for the IPersistedGrantStore interface managing storage and retrieval of grants, refresh tokens, reference tokens, and user consent."
 sidebar:
   label: Persisted Grant
   order: 42

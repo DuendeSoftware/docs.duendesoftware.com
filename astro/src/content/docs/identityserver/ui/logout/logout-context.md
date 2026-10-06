@@ -1,6 +1,6 @@
 ---
 title: "Logout Context"
-description: "Guide to accessing and using the LogoutRequest context in IdentityServer, which provides essential information for implementing proper logout workflows across different initiation scenarios."
+description: "Access and use LogoutRequest context in IdentityServer to handle post-logout redirects, client notifications, and custom sign-out workflows."
 sidebar:
   order: 10
 redirect_from:

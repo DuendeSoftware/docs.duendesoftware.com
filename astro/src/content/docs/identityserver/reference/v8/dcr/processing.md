@@ -1,6 +1,6 @@
 ---
 title: "Request Processing"
-description: "Understand how dynamic client registration requests are processed, including client ID and secret generation, through the IDynamicClientRegistrationRequestProcessor contract and its default implementation."
+description: "Learn how dynamic client registration requests are processed in IdentityServer v8 via IDynamicClientRegistrationRequestProcessor."
 sidebar:
   order: 20
 redirect_from:

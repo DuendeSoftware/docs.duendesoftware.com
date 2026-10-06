@@ -1,6 +1,6 @@
 ---
 title: "Grant Validation Result"
-description: "Reference documentation for the GrantValidationResult class which models the outcome of grant validation for extension grants and resource owner password grants in Duende IdentityServer."
+description: "Reference for the GrantValidationResult class modeling grant validation outcomes for extension and resource owner password grants in IdentityServer."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 45

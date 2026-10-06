@@ -1,6 +1,6 @@
 ---
 title: "License Information and Usage"
-description: "Reference documentation for LicenseInformation and LicenseUsageSummary, which provide license details and usage metrics for self-auditing and license compliance in Duende IdentityServer."
+description: "Reference for LicenseInformation and LicenseUsageSummary, providing licensing details and usage metrics for compliance in Duende IdentityServer."
 date: 2026-05-28
 sidebar:
   label: "License and Usage"

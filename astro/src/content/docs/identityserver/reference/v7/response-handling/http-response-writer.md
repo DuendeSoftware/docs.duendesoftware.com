@@ -1,6 +1,6 @@
 ---
 title: "IHttpResponseWriter"
-description: Documentation for the IHttpResponseWriter interface, a low-level abstraction for customizing serialization, encoding, and HTTP headers in protocol endpoint responses.
+description: "Reference for the IHttpResponseWriter interface, customizing serialization, encoding, and HTTP headers in IdentityServer protocol endpoint responses."
 sidebar:
   order: 100
 redirect_from:

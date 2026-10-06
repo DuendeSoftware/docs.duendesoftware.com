@@ -1,6 +1,6 @@
 ---
 title: "Token Service"
-description: Documentation for the ITokenService interface which is responsible for building the Token model for identity tokens and access tokens before they are signed and serialized.
+description: "Reference for the ITokenService interface, responsible for building Token models for identity and access tokens before signing and serialization."
 sidebar:
   label: Token Service
   order: 48

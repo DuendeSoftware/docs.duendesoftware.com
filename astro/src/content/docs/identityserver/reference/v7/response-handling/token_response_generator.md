@@ -1,6 +1,6 @@
 ---
 title: "Token Response Generator"
-description: Documentation for the ITokenResponseGenerator interface and its implementation, which generates responses to valid token endpoint requests with customization options for different token flows.
+description: "Reference for the ITokenResponseGenerator interface, generating responses to valid token endpoint requests across various OAuth and OIDC flows."
 sidebar:
   order: 20
 redirect_from:

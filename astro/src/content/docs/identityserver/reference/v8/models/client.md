@@ -1,6 +1,6 @@
 ---
 title: "Client"
-description: "Reference documentation for the Client class which models an OpenID Connect or OAuth 2.0 client in Duende IdentityServer, including configuration for authentication, tokens, consent, refresh tokens, and advanced features."
+description: "Reference for the Client class in Duende IdentityServer v8, modeling OpenID Connect and OAuth 2.0 clients, tokens, consent, and authentication settings."
 date: 2026-08-18T08:22:12+02:00
 sidebar:
   order: 35

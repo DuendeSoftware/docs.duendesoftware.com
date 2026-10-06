@@ -1,6 +1,6 @@
 ---
 title: User Profiles and Attributes
-description: How to store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfService, IUserProfileAdmin, and IUserProfileSchemaAdmin.
+description: "Store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfService and profile administration APIs."
 date: 2026-05-19
 sidebar:
   label: User Profiles and Attributes

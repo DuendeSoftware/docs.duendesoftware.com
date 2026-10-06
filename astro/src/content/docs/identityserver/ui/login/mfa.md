@@ -1,6 +1,6 @@
 ---
 title: "Multi-Factor Authentication"
-description: "Overview of multi-factor authentication (MFA) options in IdentityServer, including Duende User Management's built-in TOTP, passkeys, and OTP support, as well as ASP.NET Core Identity and federation scenarios."
+description: "Explore multi-factor authentication (MFA) in IdentityServer, including TOTP, passkeys, OTP, ASP.NET Core Identity, and external provider federation."
 sidebar:
   order: 50
 redirect_from:
