@@ -19,7 +19,7 @@ and is commonly known as the `private_key_jwt` or `client_secret_jwt`
 authentication methods defined in
 [OpenID Connect Core §9](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication).
 
-### Client secret vs client assertion
+### Client Secret vs Client Assertion
 
 | Aspect             | Client secret                               | Client assertion                       |
 |--------------------|---------------------------------------------|----------------------------------------|

@@ -10,7 +10,7 @@ redirect_from:
   - /foss/identitymodel/utils/base64/
 ---
 
-## What is Base64 URL encoding?
+## What is Base64 URL Encoding?
 
 **Base64 URL encoding** (Base64URL) is a URL-safe variant of standard Base64 defined in
 [RFC 4648 §5](https://tools.ietf.org/html/rfc4648#section-5). It replaces the two characters that are unsafe in URLs and
@@ -18,7 +18,7 @@ HTTP headers, replacing `+` and `/` with `-` and `_`, and omits the `=` padding.
 place
 directly in a URL, query string, or HTTP header without additional percent-encoding.
 
-## Base64 vs Base64 URL encoding
+## Base64 vs Base64 URL Encoding
 
 | Aspect                 | Standard Base64            | Base64 URL (Base64URL)   |
 |------------------------|----------------------------|--------------------------|
