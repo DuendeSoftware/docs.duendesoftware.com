@@ -14,18 +14,19 @@ redirect_from:
 
 **Base64 URL encoding** (Base64URL) is a URL-safe variant of standard Base64 defined in
 [RFC 4648 §5](https://tools.ietf.org/html/rfc4648#section-5). It replaces the two characters that are unsafe in URLs and
-HTTP headers — `+` and `/` — with `-` and `_`, and omits the `=` padding. This makes the encoded value safe to place
+HTTP headers, replacing `+` and `/` with `-` and `_`, and omits the `=` padding. This makes the encoded value safe to
+place
 directly in a URL, query string, or HTTP header without additional percent-encoding.
 
-### Base64 vs Base64 URL encoding
+## Base64 vs Base64 URL encoding
 
-| Aspect | Standard Base64 | Base64 URL (Base64URL) |
-| --- | --- | --- |
-| Character for index 62 | `+` | `-` |
-| Character for index 63 | `/` | `_` |
-| Padding | `=` appended | Padding omitted |
-| URL / header safe | No (requires escaping) | Yes |
-| Typical use | Email, generic binary data | JWTs, URLs, HTTP headers |
+| Aspect                 | Standard Base64            | Base64 URL (Base64URL)   |
+|------------------------|----------------------------|--------------------------|
+| Character for index 62 | `+`                        | `-`                      |
+| Character for index 63 | `/`                        | `_`                      |
+| Padding                | `=` appended               | Padding omitted          |
+| URL / header safe      | No (requires escaping)     | Yes                      |
+| Typical use            | Email, generic binary data | JWTs, URLs, HTTP headers |
 
 JWT serialization involves transforming the three core components of a JWT (Header, Payload, Signature) into a single,
 compact, URL-safe string. Base64 URL encoding is used instead of
