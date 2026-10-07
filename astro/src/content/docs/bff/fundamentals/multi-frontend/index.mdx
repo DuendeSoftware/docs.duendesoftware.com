@@ -25,6 +25,12 @@ To overcome this issue, a single BFF instance can support multiple frontends. Ea
 Adding additional frontends to the BFF has very little impact on the performance on the BFF itself, but keep in mind
 that the traffic for all the frontends is proxied through the BFF. 
 
+:::note[Licensing]
+Your BFF license includes a limited number of front-ends. Each frontend that uses its own OpenID Connect client registration also counts as a separate
+[Connected Application](/general/glossary.mdx#connected-application) in your IdentityServer license.
+See [licensing](/general/licensing.md#bff-security-framework) for details.
+:::
+
 ## Authentication Configuration
 
 When you use multiple frontends, you can't rely on [manual authentication configuration](/bff/fundamentals/session/handlers.mdx#manually-configuring-authentication).

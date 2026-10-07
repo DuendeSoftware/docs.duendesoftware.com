@@ -81,10 +81,37 @@ automatic signing key management.
 The (legacy) Enterprise edition includes everything in the Business edition and adds
 resource isolation, the OpenId Connect CIBA flow, and dynamic federation.
 
+### Connected Applications
+
+Duende IdentityServer licenses measure usage in **Connected Applications**. Previously, this licensing unit was
+referred to as "client IDs"; the term "client ID" is still used in technical OpenID Connect and OAuth
+contexts such as [client configuration](/identityserver/fundamentals/clients.md).
+
+See the [glossary](/general/glossary.mdx#connected-application) for the full definition of a Connected Application.
+
+Each separate registration or configuration counts as a separate Connected Application, including when the same application
+is registered under multiple protocols. For example:
+
+| Scenario                                                                          | Connected Applications                                   |
+|-----------------------------------------------------------------------------------|--------------------------------------------------|
+| One client with many redirect URIs, grant types, or scopes                        | 1                                                |
+| Two SAML Service Providers                                                        | 2                                                |
+| The same application registered with both OIDC and SAML                           | 2                                                |
+| A machine-to-machine client registered for client credentials                     | 1 per registration, regardless of machine count  |
+| A BFF serving two frontends that each have their own client                       | 2                                                |
+| Clients created through [Dynamic Client Registration](/identityserver/configuration/dcr.mdx) | 1 per distinct registered client |
+| IdentityServer acting as a SAML or OIDC client of external IdPs via [dynamic providers](/identityserver/ui/login/dynamicproviders.md) | Not counted as Connected Applications (covered by the dynamic identity provider licensing) |
+
+:::note[Going beyond your plan limits]
+Many of the limits in your license, such as the number of Connected Applications, can be lifted to unlimited with an add-on.
+Check the [pricing page](https://duendesoftware.com/products/identityserver) for the available options.
+:::
+
 ### Redistribution
 
 If you want to redistribute Duende IdentityServer to your customers as part of a product,
 you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist).
+See [Redistribution options](#redistribution-options) below for details.
 
 ### License Validation and Logging
 
@@ -135,10 +162,11 @@ When developing, you may use your production license key in _any_
 environment as [detailed below](#using-a-license-in-non-production-environments).
 :::
 
-For quantized limits like client count and issuer count, IdentityServer logs a warning
+For quantized limits like Connected Application count and issuer count, IdentityServer logs a warning
 when you exceed your licensed limit but stay within the grace threshold. If you exceed
 the grace threshold, it logs an error instead. An expired license also results in an
-error being logged. User Management also has a licensed limit on users stored. 
+error being logged. Log messages and diagnostics APIs may use the term "client", for example `LicenseUsageSummary.ClientsUsed`.
+These count toward your Connected Applications. User Management also has a licensed limit on users stored.
 When adding a user past the licensed limit, a message will be logged. Note that the errors logged 
 do not stop IdentityServer from running.
 
@@ -231,7 +259,14 @@ especially if your deployment cycle does not coincide with the duration of your 
 In that situation, update the license key at the next deployment to your redistribution customers.
 You are always responsible for ensuring your license is renewed.
 
+##### Redistribution options
 
+Redistribution licenses are based on the number of Connected Applications. Many limits, including the number of
+Connected Applications, can be lifted to unlimited. Note that this does not include unlimited deployments to your customers.
+[Duende User Management](/identityserver/identity/user-management/index.mdx) and the
+[BFF Security Framework](#bff-security-framework) are also available to redistribution customers.
+
+Check the [redistribution pricing page](https://duendesoftware.com/products/identityserverredist) for the available options.
 
 #### Log Severity
 
@@ -275,8 +310,10 @@ If you have feedback on trial mode, or specific use cases where you prefer other
 
 ## BFF Security Framework
 
-The Duende BFF Security Framework requires a license for production use, with two editions available (Starter and
-Enterprise) that offer various features based on organizational needs.
+The Duende BFF Security Framework requires a [license](https://duendesoftware.com/products/bff) for production use.
+BFF is included in the Lite, Standard, and Advanced plans, which offer various features based on organizational needs.
+
+For some longer-term customers, we still honor customers continuing on our previous Starter and Enterprise BFF licenses.
 
 :::note[Trial mode]
 Duende BFF has a [limited trial mode](#bff-trial-mode) for development and testing. For small organizations or personal
@@ -287,20 +324,28 @@ a [license](https://duendesoftware.com/products/bff) is required.
 ### Editions
 
 BFF is a library designed to enhance the security of browser-based applications by moving authentication flows
-to the server side. The Duende BFF Security Framework requires a license for production use, and is available in
-two editions that [include different functionality](https://duendesoftware.com/products/bff) based on organizational
-needs.
+to the server side.
+
+The BFF license limits the number of front-ends. Check the [pricing page](https://duendesoftware.com/products/bff) for available options.
+
+#### Starter Edition (legacy)
+
+The (legacy) Starter edition is limited in the number of front-ends it can serve.
+
+#### Enterprise Edition (legacy)
+
+The (legacy) Enterprise edition removes the front-end limit of the Starter edition.
 
 ### Redistribution
 
 If you want to redistribute Duende BFF to your customers as part of a product,
-please [reach out to sales](https://duendesoftware.com/contact/sales).
+please [reach out to sales](https://duendesoftware.com/contact/sales). BFF is available for
+[redistribution licenses](#redistribution-options).
 
 ### License Validation and Logging
 
 The BFF license is validated during runtime. All license validation is self-contained and does not leave the host.
 There are no outbound network calls related to license validation.
-
 
 #### BFF v3.1+ Runtime Validation
 

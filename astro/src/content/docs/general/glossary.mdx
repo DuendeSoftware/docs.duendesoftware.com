@@ -31,9 +31,9 @@ processes, etc.
   title="Documentation"
 />
 
-The below chart explains what does and does not count as a IdentityServer Client:
+The below chart explains what does and does not count as a [Connected Application](#connected-application) for licensing purposes:
 
-| Component / Scenario | Counts as a Client? | Description |
+| Component / Scenario | Counts as a Connected Application? | Description |
 |:---------------------|:--------------------|:------------|
 | **Interactive Web Application** | ✅ Yes | Web apps (e.g., ASP.NET Core MVC, Razor Pages, Blazor Server) that authenticate users and request tokens. |
 | **Single-Page Application (SPA)** | ✅ Yes | Browser-based apps (e.g., React, Angular, Vue) registered directly to obtain tokens. |
@@ -45,21 +45,32 @@ The below chart explains what does and does not count as a IdentityServer Client
 | **SAML Service Provider** | ✅ Yes | SAML relying party applications federated with IdentityServer. |
 | **Protected API / Resource Server** | ❌ No | APIs that only validate access tokens and do not request tokens themselves. |
 | **Scaled Instances / Replicas** | ❌ No | Multiple load-balanced instances or containers sharing the same client registration. |
-| **End Users / Human Accounts** | ❌ No | Individual user logins and accounts are not clients. |
+| **End Users / Human Accounts** | ❌ No | Individual user logins and accounts are not Connected Applications. |
 | **External Identity Providers** | ❌ No | Upstream identity providers (e.g., Google, Microsoft Entra ID) used for federated user login. |
 
 ### Connected Application
 
-A connected application is any application or service registered with your Duende IdentityServer instance that relies
-on it for identity, access, or federation. Each connected application has a unique registration that defines how it 
-interacts with IdentityServer and what it is allowed to do.
+A Connected Application is the unit used to measure usage for [licensing](/general/licensing.md#connected-applications).
+It is any application or service registered with your Duende IdentityServer instance that relies on it for identity,
+access, or federation. Each Connected Application has a unique registration that defines how it interacts with IdentityServer
+and what it is allowed to do.
 
-Connected applications fall into four categories:
+:::note
+Connected Applications were previously referred to as "client IDs" in licensing terms. In technical OpenID Connect and OAuth
+contexts, such as client configuration and token requests, the client ID remains the identifier of a [client](#client).
+:::
 
-1.  Interactive applications use OpenID Connect (OIDC) to authenticate users and obtain tokens. These include web applications, native mobile or desktop applications, and SPAs, each identified by its own [Client ID](/general/glossary.mdx#client).
-2.  Machine-to-machine clients request access tokens without user interaction, typically using the client credentials grant. Background services, APIs calling other APIs, and MCP clients are common examples.
-3.  Third-party API consumer that requires a client ID and client secret, typically in a SaaS situation or B2B situation.
-4.  SAML Service Providers use SAML 2.0 to establish federated trust with IdentityServer acting as the Identity Provider (IdP), enabling single sign-on for applications that rely on SAML-based authentication.
+Each of the following counts as one Connected Application:
+
+1.  A unique OAuth 2.0 client, such as an interactive web application, native mobile or desktop application, or SPA, each identified by its own [Client ID](/general/glossary.mdx#client), or a machine-to-machine client that requests access tokens without user interaction (for example using the client credentials grant). Background services, APIs calling other APIs, and MCP clients are common examples.
+2.  A unique OpenID Connect relying party.
+3.  A third-party API consumer that requires a client ID and client secret, typically in a SaaS or B2B situation.
+4.  A unique SAML 2.0 Service Provider (identified by its entity ID) for which IdentityServer acts as the Identity Provider (IdP).
+5.  A unique relying party using any other federation or single sign-on protocol, such as WS-Federation.
+
+Every separate registration or configuration counts as a separate Connected Application, including when the same application is
+registered under multiple protocols (for example, once with OIDC and once with SAML). A single client with multiple redirect
+URIs, grant types, or scopes is still one Connected Application.
 
 ### Subject ID
 
@@ -433,6 +444,8 @@ Redistribution typically applies to Independent Software Vendors (ISVs) who ship
 solution that customers host on their own local or cloud infrastructure.
 
 Each customer installation of IdentityServer is considered a separate redistribution.
+
+See [Redistribution](/general/licensing.md#redistribution) for details on redistribution licenses.
 
 ## Support
 

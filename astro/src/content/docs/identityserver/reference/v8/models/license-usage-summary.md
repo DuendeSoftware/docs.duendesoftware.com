@@ -55,7 +55,7 @@ public class MyPage(LicenseInformation license) : PageModel
 
 ## Duende.IdentityServer.Licensing.LicenseUsageSummary
 
-The `LicenseUsageSummary` class lets you get a detailed summary of clients, issuers, and features used 
+The `LicenseUsageSummary` class lets you get a detailed summary of clients (counted as Connected Applications), issuers, and features used 
 during the lifetime of an active .NET application for self-auditing purposes.
 
 ### Properties
@@ -70,7 +70,7 @@ during the lifetime of an active .NET application for self-auditing purposes.
 
 * **`ClientsUsed`**
 
-  A `string` collection of clients used with the current IdentityServer instance.
+  A `string` collection of clients used with the current IdentityServer instance. Each entry counts toward your licensed number of Connected Applications.
 
 * **`IssuersUsed`**
 
