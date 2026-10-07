@@ -1,6 +1,6 @@
 ---
 title: "YARP extensions"
-description: Integration of Duende.BFF with Microsoft's YARP reverse proxy, including token management and anti-forgery protection features.
+description: Integration of Duende.BFF with Microsoft's YARP reverse proxy, including token management, anti-forgery protection, and cookie header removal.
 sidebar:
   order: 30
 redirect_from:
@@ -282,6 +282,95 @@ app.MapReverseProxy(proxyApp =>
     proxyApp.UseAntiforgeryCheck();
 });
 ```
+
+## Cookie Header Removal
+
+The BFF removes the `Cookie` request header from every request it proxies through YARP. This applies to all routes,
+with or without token metadata, whether you configure YARP with `AddYarpConfig` (4.x) or with
+`AddReverseProxy().AddBffExtensions()`.
+
+The browser sends the BFF session cookie with every request to the BFF. A remote API should authenticate the call with
+an access token, which the BFF attaches on routes with token metadata, not with the browser's cookies. Forwarding the
+session cookie would hand the user's BFF session to the remote API, and to anything that logs or inspects its traffic,
+which could then use the cookie to call the BFF as that user. The [direct HTTP forwarder](/bff/fundamentals/apis/remote.mdx) (`MapRemoteBffApiEndpoint`) has always
+removed the header, and YARP routes now behave the same way.
+
+:::note[Changed in 2.2.1, 2.3.1, 3.0.1, 3.1.1, 4.0.4, 4.1.3, 4.2.1, and 4.3.1]
+Earlier versions forwarded the inbound `Cookie` header unchanged to the remote API on YARP routes. If one of your
+remote APIs relied on receiving cookies through YARP, it no longer receives them after you upgrade. See
+[forwarding cookies](#forwarding-cookies) to restore the old behavior.
+:::
+
+### Forwarding Cookies
+
+If your remote APIs need the browser's cookies, turn off the removal with the
+[`RemoveCookieHeaderFromYarpRequests`](/bff/fundamentals/options.md#apis) option:
+
+```csharp
+// Program.cs
+builder.Services.AddBff(options =>
+{
+    // WARNING: forwards the browser's cookies, including the
+    // BFF session cookie, to every API proxied through YARP
+    options.RemoveCookieHeaderFromYarpRequests = false;
+});
+```
+
+This setting applies to every YARP route. Once you turn it off, use standard YARP transforms to remove the header on
+each route that doesn't need cookies. In configuration, add a `RequestHeaderRemove` transform to the route:
+
+```json
+{
+  "ReverseProxy": {
+    "Routes": {
+      "todos": {
+        "ClusterId": "cluster1",
+        "Match": {
+          "Path": "/todos/{**catch-all}"
+        },
+        "Metadata": {
+          "Duende.Bff.Yarp.TokenType": "User"
+        },
+        "Transforms": [
+          { "RequestHeaderRemove": "Cookie" }
+        ]
+      }
+    }
+  }
+}
+```
+
+In code, call YARP's `WithTransformRequestHeaderRemove` extension method on the route:
+
+```csharp
+yarpBuilder.LoadFromMemory(
+    new[]
+    {
+        new RouteConfig()
+        {
+            RouteId = "todos",
+            ClusterId = "cluster1",
+
+            Match = new RouteMatch
+            {
+                Path = "/todos/{**catch-all}"
+            }
+        }.WithAccessToken(RequiredTokenType.User)
+         .WithTransformRequestHeaderRemove("Cookie")
+    },
+    // rest omitted
+);
+```
+
+### Transform Order
+
+The BFF removes the `Cookie` header after YARP copies the request headers and after the transforms configured on the
+route have run. While removal is on, a route transform that sets a `Cookie` header has no effect.
+
+Transforms and transform providers that you register after calling `AddBffExtensions`, for example with
+`.AddTransforms(...)` on the `IReverseProxyBuilder` that `AddBffExtensions` or `AddYarpConfig` returns, run later. They
+can still set a `Cookie` header on the outgoing request. This is intentional, so you can send a specific cookie to a
+specific API. Make sure transforms like these don't copy the browser's cookies back onto the request.
 
 ## Custom Access Token Retriever
 

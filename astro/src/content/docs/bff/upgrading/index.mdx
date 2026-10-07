@@ -29,3 +29,15 @@ Upgrading to a new Duende.BFF version is done by updating the NuGet package and 
     description="View the package on NuGet.org."
   />
 </CardGrid>
+
+## Behavior Changes In Patch Releases
+
+Some patch releases change a default to fix a security issue. Check the changes below when you update to a newer patch version, and test the affected routes.
+
+### YARP Routes No Longer Forward The Cookie Header
+
+This change applies to 2.2.1, 2.3.1, 3.0.1, 3.1.1, 4.0.4, 4.1.3, 4.2.1, and 4.3.1.
+
+Routes proxied through the BFF YARP integration (`AddYarpConfig` in 4.x, or `AddReverseProxy().AddBffExtensions()` with `MapReverseProxy` or `MapBffReverseProxy`) used to forward the inbound `Cookie` header, including the BFF session cookie, to the remote API. This happened on every route, including routes that attach an access token. The BFF now removes the `Cookie` header on all YARP routes, as `MapRemoteBffApiEndpoint` already did.
+
+If one of your remote APIs relies on receiving cookies through YARP, set the new `BffOptions.RemoveCookieHeaderFromYarpRequests` option to `false`, and use YARP transforms to control cookie forwarding per route. Learn more about [cookie header removal and how to opt out](/bff/fundamentals/apis/yarp.md#cookie-header-removal).

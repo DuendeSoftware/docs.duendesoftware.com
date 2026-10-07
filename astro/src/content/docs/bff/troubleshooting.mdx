@@ -143,6 +143,16 @@ A typo in a YARP metadata key fails silently — no token is attached and no ant
 
 ---
 
+### Remote API No Longer Receives Cookies Through YARP
+
+**Cause:** Starting with Duende.BFF 2.2.1, 2.3.1, 3.0.1, 3.1.1, 4.0.4, 4.1.3, 4.2.1, and 4.3.1, the BFF removes the `Cookie` request header from every request it proxies through YARP. This keeps the BFF session cookie away from your remote APIs.
+
+**Solution:**
+
+Authenticate calls to the remote API with the access token the BFF attaches, rather than with cookies. If the API does need the browser's cookies, set `RemoveCookieHeaderFromYarpRequests` to `false` and remove the header with a YARP transform on every route that doesn't need it. See [cookie header removal](/bff/fundamentals/apis/yarp.md#cookie-header-removal) for details.
+
+---
+
 ### Blazor WASM — Token Not Available in Components
 
 **Cause:** In Blazor WASM, `HttpContext` is not available. Access tokens are managed server-side by the BFF host and must never be exposed to client-side components.

@@ -272,6 +272,17 @@ builder.Services.AddBff()
 * **`DisableAntiForgeryCheck`** (added in V4)
     A delegate that determines if the anti-forgery check should be disabled for a given request. The default is not to disable anti-forgery checks.
 
+* **`RemoveCookieHeaderFromYarpRequests`** (added in 2.2.1, 2.3.1, 3.0.1, 3.1.1, 4.0.4, 4.1.3, 4.2.1, and 4.3.1)
+
+    Specifies if the BFF removes the `Cookie` request header from requests it proxies through the
+    [YARP integration](/bff/fundamentals/apis/yarp.md#cookie-header-removal), on every route, with or without
+    `Duende.Bff.Yarp.TokenType` metadata. This keeps the browser's cookies, including the BFF session cookie, away
+    from your remote APIs. Defaults to `true`.
+
+    Setting this to `false` forwards the browser's cookies to every API proxied through YARP. If you do that, remove
+    the header yourself on each route that doesn't need cookies. In 2.x and 3.x, `BffOptions` is in the `Duende.Bff`
+    namespace. In 4.x, it's in `Duende.Bff.Configuration`.
+
 ## CDN / Static Assets
 
 * **`IndexHtmlDefaultCacheDuration`** (added in V4)
