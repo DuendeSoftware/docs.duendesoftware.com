@@ -191,7 +191,7 @@ this scenario.
          );
      ```
 
-   This allows each frontend to have its own set of proxied remote APIs.
+   This allows each frontend to have its own set of proxied remote APIs. Your frontend must send the anti-forgery header (`X-CSRF: 1`) on every call to these APIs, or the BFF returns `401`. See [anti-forgery protection for remote APIs](/bff/fundamentals/multi-frontend/index.mdx#anti-forgery-protection-for-remote-apis).
 
 6. **Server Side Sessions**
 

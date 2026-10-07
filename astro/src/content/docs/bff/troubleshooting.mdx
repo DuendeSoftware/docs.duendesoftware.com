@@ -13,7 +13,7 @@ This page covers the most common problems encountered when building and operatin
 
 ### Anti-Forgery Token Validation Failures
 
-**Cause:** The BFF enforces the presence of a custom `X-CSRF: 1` header on all API endpoints decorated with `.AsBffApiEndpoint()`. Requests that do not include this header are rejected.
+**Cause:** The BFF enforces the presence of a custom `X-CSRF: 1` header on all API endpoints decorated with `.AsBffApiEndpoint()`. Requests that do not include this header are rejected. The same applies to remote APIs defined on a frontend with `WithRemoteApis` or in the frontend configuration, starting with 4.0.4, 4.1.3, 4.2.1, and 4.3.1. For those, the BFF returns `401` and logs a warning about the failed anti-forgery check.
 
 **Solution:**
 

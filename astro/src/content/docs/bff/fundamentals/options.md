@@ -271,6 +271,8 @@ builder.Services.AddBff()
 
 * **`DisableAntiForgeryCheck`** (added in V4)
     A delegate that determines if the anti-forgery check should be disabled for a given request. The default is not to disable anti-forgery checks.
+    Starting with 4.0.4, 4.1.3, 4.2.1, and 4.3.1, this delegate also applies to the anti-forgery check on
+    [remote APIs defined on a frontend](/bff/fundamentals/multi-frontend/index.mdx#anti-forgery-protection-for-remote-apis).
 
 * **`RemoveCookieHeaderFromYarpRequests`** (added in 2.2.1, 2.3.1, 3.0.1, 3.1.1, 4.0.4, 4.1.3, 4.2.1, and 4.3.1)
 
