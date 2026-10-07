@@ -195,7 +195,7 @@ You can use ASP.NET Core's [health checks](https://learn.microsoft.com/en-us/asp
 These health checks can be used by load balancers, orchestrators, and other infrastructure to determine whether your IdentityServer is healthy and able to serve requests.
 Health checks can contain arbitrary logic to test the dependencies of your IdentityServer implementation, such as the configuration store, signing key store, and operational data store, to confirm that they are available and functioning correctly.
 
-The de-facto health check to implement, simply reports that IdentityServer is ready for action. This health check does not verify external dependencies are available, but confirms that the IdentityServer 
+A good health check to implement, is one that reports IdentityServer is ready for action. This health check does not verify external dependencies are available, but confirms that the IdentityServer 
 middleware is up and running, and that it can respond to requests. The following example code creates such a health check:
 
 ```csharp {5,10}
@@ -238,7 +238,10 @@ var app = builder.Build();
 app.MapHealthChecks("/health/live", new() { Predicate = _ => false });
 app.MapHealthChecks("/health/ready", new() { Predicate = x => x.Tags.Contains("ready") });
 ```
+
 This sample code creates two health check endpoints: `/health/live` for the liveness probe, and `/health/ready` for the readiness probe. 
+Liveness probes are used to determine if the application is running, while readiness probes are used to determine if the application is ready to serve requests.
+
 The liveness probe uses a predicate that always returns `false` to prevent running any of the registered health checks: this probe simply confirms that the IdentityServer middleware is running. 
 The readiness probe uses a predicate that filters the registered health checks to only include those with the `ready` tag, which in this case are the health checks for the configuration and operational DbContexts.
 
