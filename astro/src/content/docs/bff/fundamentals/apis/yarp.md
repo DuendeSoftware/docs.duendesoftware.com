@@ -295,9 +295,9 @@ session cookie would hand the user's BFF session to the remote API, and to anyth
 which could then use the cookie to call the BFF as that user. The [direct HTTP forwarder](/bff/fundamentals/apis/remote.mdx) (`MapRemoteBffApiEndpoint`) has always
 removed the header, and YARP routes now behave the same way.
 
-:::note[Changed in 2.2.1, 2.3.1, 3.0.1, 3.1.1, 4.0.4, 4.1.3, 4.2.1, and 4.3.1]
+:::note
 Earlier versions forwarded the inbound `Cookie` header unchanged to the remote API on YARP routes. If one of your
-remote APIs relied on receiving cookies through YARP, it no longer receives them after you upgrade. See
+remote APIs relied on receiving cookies through YARP, see
 [forwarding cookies](#forwarding-cookies) to restore the old behavior.
 :::
 
