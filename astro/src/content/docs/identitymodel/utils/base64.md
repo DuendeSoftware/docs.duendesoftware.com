@@ -1,6 +1,7 @@
 ---
 title: Base64 URL Encoding
 date: 2025-11-12
+lastmod: 2026-10-07
 description: Documentation for Base64 URL encoding and decoding utilities in Duende IdentityModel, used for JWT token serialization
 sidebar:
   label: Base64 URL Encoding
@@ -9,8 +10,25 @@ redirect_from:
   - /foss/identitymodel/utils/base64/
 ---
 
+## What is Base64 URL encoding?
+
+**Base64 URL encoding** (Base64URL) is a URL-safe variant of standard Base64 defined in
+[RFC 4648 §5](https://tools.ietf.org/html/rfc4648#section-5). It replaces the two characters that are unsafe in URLs and
+HTTP headers — `+` and `/` — with `-` and `_`, and omits the `=` padding. This makes the encoded value safe to place
+directly in a URL, query string, or HTTP header without additional percent-encoding.
+
+### Base64 vs Base64 URL encoding
+
+| Aspect | Standard Base64 | Base64 URL (Base64URL) |
+| --- | --- | --- |
+| Character for index 62 | `+` | `-` |
+| Character for index 63 | `/` | `_` |
+| Padding | `=` appended | Padding omitted |
+| URL / header safe | No (requires escaping) | Yes |
+| Typical use | Email, generic binary data | JWTs, URLs, HTTP headers |
+
 JWT serialization involves transforming the three core components of a JWT (Header, Payload, Signature) into a single,
-compact, URL-safe string. [Base64 URL encoding](https://tools.ietf.org/html/rfc4648#section-5) is used instead of
+compact, URL-safe string. Base64 URL encoding is used instead of
 standard Base64 because it doesn't include characters like `+`, `/`, or `=`, making it safe to use directly in URLs and
 HTTP headers without requiring further encoding.
 

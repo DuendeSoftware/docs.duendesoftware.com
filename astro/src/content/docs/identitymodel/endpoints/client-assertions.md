@@ -1,12 +1,16 @@
 ---
 title: Client Assertions
+date: 2025-11-12
+lastmod: 2026-10-07
 description: How to use client assertions (private_key_jwt / client_secret_jwt) for client authentication in protocol requests.
 sidebar:
   order: 8
   label: Client Assertions
 ---
 
-Client assertions are an alternative to client secrets for authenticating
+## What is a client assertion?
+
+**Client assertions** are an alternative to client secrets for authenticating
 confidential clients at token endpoints. Instead of sending a shared secret,
 the client creates a signed JWT (or SAML assertion) and includes it in the
 request. This is defined in
@@ -14,6 +18,16 @@ request. This is defined in
 and is commonly known as the `private_key_jwt` or `client_secret_jwt`
 authentication methods defined in
 [OpenID Connect Core §9](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication).
+
+### Client secret vs client assertion
+
+| Aspect | Client secret | Client assertion |
+| --- | --- | --- |
+| Credential sent | Shared secret value | Signed JWT (not the key itself) |
+| Secret on the wire | Yes, on every request | No; only a signature is transmitted |
+| Methods | `client_secret_basic`, `client_secret_post` | `private_key_jwt`, `client_secret_jwt` |
+| Replay protection | None inherent | `jti` + `exp` limit reuse |
+| Best for | Simple confidential clients | Higher-security and DPoP scenarios |
 
 All protocol request types that derive from `ProtocolRequest` expose two
 properties for setting client assertions: `ClientAssertion` and
