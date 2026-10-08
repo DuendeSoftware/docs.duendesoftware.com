@@ -1,0 +1,154 @@
+---
+title: "Signed Authorize Requests"
+description: "Package authorization parameters in signed JWTs using JWT Secured Authorization Request (JAR) for tamperproof requests in Duende IdentityServer."
+date: 2026-10-02
+sidebar:
+  label: "Signed Requests"
+  order: 150
+redirect_from:
+  - /identityserver/v5/tokens/jar/
+  - /identityserver/v6/tokens/jar/
+  - /identityserver/v7/tokens/jar/
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+:::note
+This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+:::
+
+Instead of providing the parameters for an authorize request as individual query string key/value pairs, you can package them up in signed JWTs.
+This makes the parameters tamperproof, and you can authenticate the client already on the front-channel.
+
+:::note
+See [here](/identityserver/samples/basics.mdx#mvc-client-with-jar-and-jwt-based-authentication) for a sample for using signed authorize requests (and JWT-based authentication) in ASP.NET Core.
+:::
+
+You can either transmit them by value or by reference to the authorize endpoint - see the [spec](https://openid.net/specs/openid-connect-core-1_0.html#jwtrequests) for more details.
+
+Duende IdentityServer requires the request JWTs to be signed. We support X509 certificates and JSON web keys, e.g.:
+
+```csharp
+var client = new Client
+{
+    ClientId = "foo",
+
+    // set this to true to accept signed requests only
+    RequireRequestObject = true,
+
+    ClientSecrets = 
+    {
+        new Secret
+        {
+            // X509 cert base64-encoded
+            Type = IdentityServerConstants.SecretTypes.X509CertificateBase64,
+            Value = Convert.ToBase64String(cert.Export(X509ContentType.Cert))
+        },
+        new Secret
+        {
+            // RSA key as JWK
+            Type = IdentityServerConstants.SecretTypes.JsonWebKey,
+            Value = "{'e':'AQAB','kid':'...','kty':'RSA','n':'...'}"
+        }
+    }
+}
+```
+
+## Passing Request JWTs By Reference
+If the `request_uri` parameter is used, IdentityServer will make an outgoing HTTP call to fetch the JWT from the specified URL.
+
+:::caution
+Request URI processing is disabled by default. When enabled, anyone who knows a client ID can make IdentityServer request a URL of their choice, before the user signs in. Use [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md) instead where possible, and see [protecting against SSRF](#protecting-against-ssrf) before you enable it.
+:::
+
+{/* prettier-ignore */}
+<Steps>
+
+1.  **Enable request URIs**
+
+    Enable request URI processing on the [Endpoints](/identityserver/reference/v8/options.md#endpoints) on the `IdentityServerOptions`:
+
+    ```csharp
+    // Program.cs
+    var idsvrBuilder = builder.Services
+        .AddIdentityServer(options =>
+        {
+            options.Endpoints.EnableJwtRequestUri = true;
+        });
+    ```
+
+2.  **Configure the HTTP client**
+
+    You can customize the HTTP client used for this outgoing connection, e.g. to set a timeout and limit the size of the response:
+
+    ```csharp
+    // Program.cs
+    idsvrBuilder.AddJwtRequestUriHttpClient(client =>
+    {
+        // defaults to 10 seconds
+        client.Timeout = TimeSpan.FromSeconds(5);
+
+        // request objects are small, stop reading after 64 KB
+        client.MaxResponseContentBufferSize = 64 * 1024;
+    });
+    ```
+
+    Do not add retries to this HTTP client. The caller controls the URL, so retries only increase the number of outgoing requests.
+
+3.  **Block requests to your internal network**
+
+    Add an HTTP handler that blocks requests to non-public IP addresses, as described in [protecting against SSRF](#protecting-against-ssrf).
+
+</Steps>
+
+## Protecting Against SSRF
+IdentityServer typically runs inside your network, where it can reach services that are not reachable from the internet, such as databases, internal APIs, and the cloud metadata endpoint at `169.254.169.254`. With request URIs enabled, a caller can make IdentityServer send requests to these services. This is called Server-Side Request Forgery (SSRF).
+
+The caller does not see the response, but the error returned by IdentityServer reveals whether a host and port exist on your network. See the security considerations in [RFC 9101 section 10.4](https://www.rfc-editor.org/rfc/rfc9101.html#section-10.4) for more details.
+
+:::tip
+[PAR](/identityserver/tokens/par.md) avoids this risk. With PAR, the client sends the authorize parameters to IdentityServer over the back channel, and IdentityServer never fetches a URL provided by the caller.
+:::
+
+To protect against SSRF, use an HTTP handler that refuses to connect to non-public IP addresses, such as loopback, private network, and link-local addresses. The [idunno.Security.Ssrf](https://www.nuget.org/packages/idunno.Security.Ssrf) library provides such a handler:
+
+```bash
+dotnet add package idunno.Security.Ssrf
+```
+
+```csharp {9-10}
+// Program.cs
+using idunno.Security;
+
+idsvrBuilder.AddJwtRequestUriHttpClient(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(5);
+    client.MaxResponseContentBufferSize = 64 * 1024;
+})
+    .ConfigurePrimaryHttpMessageHandler(() =>
+        SsrfSocketsHttpHandlerFactory.Create());
+```
+
+The handler validates the IP address when the connection is opened, and connects to the validated address. By default, it only allows `https` URLs, does not follow redirects, and does not use a proxy. See the [idunno.Security.Ssrf documentation](https://ssrf.idunno.dev/) for its configuration options.
+
+:::caution[Validating the URL is not enough]
+A `DelegatingHandler` that only validates the request URL does not protect against SSRF:
+
+* A host name such as `localhost` passes a check for IP addresses, but resolves to a loopback address
+* Redirects are followed by the primary handler, so a `DelegatingHandler` does not see the redirect target
+* The host name can resolve to a different address when the connection is opened (DNS rebinding)
+
+Validate the IP address when the connection is opened, as idunno.Security.Ssrf does.
+:::
+
+When you enable request URIs, we also recommend that you:
+
+* Keep the handler's defaults that only allow `https` request URIs, as required by [RFC 9101 section 5.2](https://www.rfc-editor.org/rfc/rfc9101.html#section-5.2), and that disable redirects and proxies
+* Exclude this HTTP client from retries that apply to all HTTP clients, such as the .NET Aspire service defaults
+* Restrict outgoing network traffic from your IdentityServer hosts, and protect cloud metadata endpoints (for example, by requiring [IMDSv2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html) on AWS)
+
+## Accessing The Request Object Data
+You can access the validated data from the request object in two ways:
+
+* Wherever you have access to the `ValidatedAuthorizeRequest`, the `RequestObjectValues` dictionary holds the values.
+* In the UI code you can call `IIdentityServerInteractionService.GetAuthorizationContextAsync`, the resulting [AuthorizationRequest](/identityserver/reference/v8/services/interaction-service.md#authorizationrequest) object contains the `RequestObjectValues` dictionary as well.

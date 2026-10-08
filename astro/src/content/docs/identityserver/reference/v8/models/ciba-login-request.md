@@ -1,6 +1,6 @@
 ---
 title: "Backchannel User Login Request"
-description: "Reference documentation for the BackchannelUserLoginRequest class which models the information needed to initiate a user login request for Client Initiated Backchannel Authentication (CIBA)."
+description: "Reference documentation for BackchannelUserLoginRequest, modeling parameters needed to initiate user login in CIBA flows with Duende IdentityServer."
 sidebar:
   order: 80
 redirect_from:

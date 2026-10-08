@@ -1,6 +1,6 @@
 ---
 title: "Redirecting Back To The Client"
-description: "Guide to safely redirecting users back to client applications after login in IdentityServer, using the returnUrl parameter while protecting against open-redirect attacks and maintaining state throughout the authentication workflow."
+description: "Safely redirect users back to client applications after login in IdentityServer using returnUrl while protecting against open-redirect attacks."
 sidebar:
   label: Redirects
   order: 30

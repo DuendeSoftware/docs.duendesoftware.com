@@ -1,6 +1,6 @@
 ---
 title: "OAuth Metadata Endpoint"
-description: "Learn about the OAuth metadata endpoint that provides information about your IdentityServer configuration, including issuer name, key material, and supported scopes."
+description: "Learn how the OAuth 2.0 metadata endpoint publishes IdentityServer configuration, including issuer URI, signing keys, and supported scopes."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: OAuth Metadata

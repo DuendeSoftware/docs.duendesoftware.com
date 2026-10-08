@@ -1,6 +1,6 @@
 ---
 title: SMTP OTP Dispatcher Reference
-description: Reference for the SmtpOtpDispatcher, including configuration options, template placeholders, and security best practices for email-based one-time password delivery.
+description: "Reference for SmtpOtpDispatcher, covering configuration options, email templates, and security practices for email one-time password delivery."
 date: 2026-04-29
 sidebar:
   label: SMTP OTP Dispatcher

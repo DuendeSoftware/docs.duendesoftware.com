@@ -1,6 +1,6 @@
 ---
 title: Password Hashing Algorithms
-description: How to configure, extend, and migrate password hashing algorithms in Duende User Management, including the IPasswordHashAlgorithm interface, transparent re-hashing, and custom algorithm registration.
+description: "Configure and migrate password hashing algorithms in Duende User Management using IPasswordHashAlgorithm, with transparent password upgrades."
 sidebar:
   label: Password Hashing Algorithms
   order: 3

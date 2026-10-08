@@ -1,6 +1,6 @@
 ---
 title: "Client Authentication"
-description: "A comprehensive guide to client authentication methods in Duende IdentityServer, including shared secrets, private key JWTs, and mutual TLS client certificates, with implementation examples and security considerations."
+description: "Guide to client authentication in Duende IdentityServer, covering shared secrets, private key JWTs, and mutual TLS client certificates with examples."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: Client Authentication
@@ -247,7 +247,7 @@ var client = new Client
 ```
 
 :::note
-You can share the same key for client authentication and [signed authorize requests](/identityserver/tokens/jar.md).
+You can share the same key for client authentication and [signed authorize requests](/identityserver/tokens/jar.mdx).
 :::
 
 ### Authentication Using A Private Key JWT

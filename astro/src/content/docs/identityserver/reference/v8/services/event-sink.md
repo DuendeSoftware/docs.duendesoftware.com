@@ -1,6 +1,6 @@
 ---
 title: "Event Sink"
-description: Documentation for the IEventSink interface which handles the persistence or forwarding of IdentityServer events to external systems such as logging frameworks, audit databases, or SIEM solutions.
+description: "Reference for the IEventSink interface to persist or forward IdentityServer events to logging frameworks, audit databases, or SIEM systems."
 sidebar:
   label: Event Sink
   order: 70

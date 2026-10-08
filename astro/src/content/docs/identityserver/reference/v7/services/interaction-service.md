@@ -1,6 +1,6 @@
 ---
 title: "IdentityServer Interaction Service"
-description: Documentation for the IIdentityServerInteractionService interface which provides services for user interfaces to communicate with IdentityServer for authorization, consent, logout, and other user interactions.
+description: "Reference for the IIdentityServerInteractionService interface used by custom UIs to handle authorization, consent, logout, and error interactions."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   label: IdentityServer Interaction

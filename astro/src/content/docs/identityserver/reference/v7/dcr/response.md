@@ -1,6 +1,6 @@
 ---
 title: "Response Generation"
-description: "Reference documentation for dynamic client registration response generation, including interfaces and implementations for handling HTTP responses in the registration process."
+description: "Reference for Dynamic Client Registration response generation in IdentityServer v7, covering interfaces and custom HTTP response implementations."
 sidebar:
   order: 40
 redirect_from:

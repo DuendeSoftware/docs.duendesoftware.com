@@ -1,6 +1,6 @@
 ---
 title: IdentityServer Deployment
-description: Comprehensive guide covering key aspects of deploying IdentityServer including proxy configuration, data protection, data stores, caching, and health monitoring.
+description: "Deploy Duende IdentityServer into production, covering reverse proxies, ASP.NET Data Protection, persistent stores, caching, and health checks."
 date: 2020-09-10T08:20:20+02:00
 sidebar:
   label: Overview
@@ -191,86 +191,58 @@ Duende IdentityServer does not include built-in rate limiting, and most deployme
 
 ## Health Checks
 
-You can use ASP.NET's [health checks](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks) to monitor the health of your IdentityServer deployment. Health checks can contain arbitrary logic to test various conditions of a system. One common strategy for checking the health of IdentityServer is to make discovery requests. Successful discovery responses indicate not just that the IdentityServer host is running and able to receive requests and generate responses, but also that it was able to communicate with the configuration store.
+You can use ASP.NET Core's [health checks](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks) to advertise the health of your IdentityServer deployment. 
+These health checks can be used by load balancers, orchestrators, and other infrastructure to determine whether your IdentityServer is healthy and able to serve requests.
+Health checks can contain arbitrary logic to test the dependencies of your IdentityServer implementation, such as the configuration store, signing key store, and operational data store, to confirm that they are available and functioning correctly.
 
-The following example code creates a health check that makes requests to the discovery endpoint. It finds the discovery endpoint's handler by name, which requires IdentityServer `v6.3`.
+A good health check to implement, is one that reports IdentityServer is ready for action. This health check does not verify external dependencies are available, but confirms that the IdentityServer 
+middleware is up and running, and that it can respond to requests. The following example code creates such a health check:
 
-```csharp
-public class DiscoveryHealthCheck : IHealthCheck
-{
-    private readonly IEnumerable<Hosting.Endpoint> _endpoints;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+```csharp {5,10}
+// Program.cs
+var builder = WebApplication.CreateBuilder(args);
 
-    public DiscoveryHealthCheck(IEnumerable<Hosting.Endpoint> endpoints, IHttpContextAccessor httpContextAccessor)
-    {
-        _endpoints = endpoints;
-        _httpContextAccessor = httpContextAccessor;
-    }
+// Register the health check services
+builder.Services.AddHealthChecks();
 
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            var endpoint = _endpoints.FirstOrDefault(x => x.Name == IdentityServerConstants.EndpointNames.Discovery);
-            if (endpoint != null)
-            {
-                var handler = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService(endpoint.Handler) as IEndpointHandler;
-                if (handler != null)
-                {
-                    var result = await handler.ProcessAsync(_httpContextAccessor.HttpContext);
-                    if (result is DiscoveryDocumentResult)
-                    {
-                        return HealthCheckResult.Healthy();
-                    }
-                }
-            }
-        }
-        catch
-        {
-        }
-        
-        return new HealthCheckResult(context.Registration.FailureStatus);
-    }
-}
+var app = builder.Build();
+
+// Map the health check endpoint
+app.MapHealthChecks("/health/live");
 ```
 
-Another health check that you can perform is to request the public keys that IdentityServer uses to sign tokens - the JWKS (JSON Web Key Set). Doing so demonstrates that IdentityServer is able to communicate with the signing key store, a critical dependency. The following example code creates such a health check. Just as with the previous health check, it finds the endpoint's handler by name, which requires IdentityServer `v6.3`.
+If you're deploying your IdentityServer solution as a Docker image, you can use the `HEALTHCHECK` instruction in your Dockerfile 
+to configure a health check for the container. The following example uses the `curl` command to request the `/health/live` endpoint 
+and returns a non-zero exit code if the request fails.
 
-```csharp
-public class DiscoveryKeysHealthCheck : IHealthCheck
-{
-    private readonly IEnumerable<Hosting.Endpoint> _endpoints;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public DiscoveryKeysHealthCheck(IEnumerable<Hosting.Endpoint> endpoints, IHttpContextAccessor httpContextAccessor)
-    {
-        _endpoints = endpoints;
-        _httpContextAccessor = httpContextAccessor;
-    }
-
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            var endpoint = _endpoints.FirstOrDefault(x => x.Name == IdentityServerConstants.EndpointNames.Jwks);
-            if (endpoint != null)
-            {
-                var handler = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService(endpoint.Handler) as IEndpointHandler;
-                if (handler != null)
-                {
-                    var result = await handler.ProcessAsync(_httpContextAccessor.HttpContext);
-                    if (result is JsonWebKeysResult)
-                    {
-                        return HealthCheckResult.Healthy();
-                    }
-                }
-            }
-        }
-        catch
-        {
-        }
-
-        return new HealthCheckResult(context.Registration.FailureStatus);
-    }
-}
+```dockerfile title="Dockerfile"
+# Add the health check instruction
+HEALTHCHECK CMD curl --fail http://localhost:5000/health/live || exit 1
 ```
+
+You can also add health checks to verify the availability of database services, for example by using EF Core's health check extension methods. 
+The following example adds a health check for both the [configurational and operational DbContexts](/identityserver/data/index.mdx):
+
+```csharp {5-7,12-13}
+// Program.cs
+var builder = WebApplication.CreateBuilder(args);
+
+// Register the health check services, including checks for the configuration and operational DbContexts
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ConfigurationDbContext>(tags: ["db", "ready"]);
+    .AddDbContextCheck<PersistedGrantDbContext>(tags: ["db", "ready"]);
+
+var app = builder.Build();
+
+// Map the health check endpoints
+app.MapHealthChecks("/health/live", new() { Predicate = _ => false });
+app.MapHealthChecks("/health/ready", new() { Predicate = x => x.Tags.Contains("ready") });
+```
+
+This sample code creates two health check endpoints: `/health/live` for the liveness probe, and `/health/ready` for the readiness probe. 
+Liveness probes are used to determine if the application is running, while readiness probes are used to determine if the application is ready to serve requests.
+
+The liveness probe uses a predicate that always returns `false` to prevent running any of the registered health checks: this probe simply confirms that the IdentityServer middleware is running. 
+The readiness probe uses a predicate that filters the registered health checks to only include those with the `ready` tag, which in this case are the health checks for the configuration and operational DbContexts.
+
+Using tags, you can create multiple health check endpoints that check different aspects of your IdentityServer deployment, allowing you to monitor the health of your application and its dependencies in a flexible way.

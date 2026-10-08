@@ -1,7 +1,7 @@
 ---
 title: Storage Configuration
-description: How to configure PostgreSQL or SQL Server storage for Duende User Management, including using a dedicated database for User Management, package installation, connection strings, schema names, schema initialization, and version checks.
-date: 2026-10-02
+description: "Configure PostgreSQL or SQL Server storage for Duende User Management, including packages, connection strings, schema management, and migrations."
+date: 2026-04-29
 sidebar:
   label: Storage Configuration
   order: 4

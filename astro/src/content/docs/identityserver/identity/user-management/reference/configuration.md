@@ -1,6 +1,6 @@
 ---
 title: Configuration Reference
-description: Complete reference for all configuration options in Duende User Management, including authentication, passwords, passkeys, TOTP, throttling, and endpoint routing.
+description: "Configuration options reference for Duende User Management, including passwords, passkeys, TOTP, rate limiting, and endpoint routing."
 date: 2026-05-25
 sidebar:
   label: Configuration Reference

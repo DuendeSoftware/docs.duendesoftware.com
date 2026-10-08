@@ -1,6 +1,6 @@
 ---
 title: "IdentityServer Options"
-description: Documentation of all configuration options in Duende IdentityServer, including settings for key management, endpoints, authentication, events, logging, CORS, Content Security Policy, device flow, mutual TLS, dynamic providers, CIBA, server-side sessions, validation and other core features.
+description: "Configuration options reference for Duende IdentityServer v8, covering keys, endpoints, authentication, events, logging, CORS, CSP, sessions, and mTLS."
 sidebar:
   label: Options
   order: 10
@@ -258,7 +258,7 @@ Endpoint settings, including flags to disable individual endpoints and support f
   Enables the OAuth 2.0 authorization server metadata endpoint (`/.well-known/oauth-authorization-server`). Defaults to true.
 
 - **`EnableJwtRequestUri`**
-  Enables the `request_uri` parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the `request_uri` parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)).
+  Enables the `request_uri` parameter for JWT-Secured Authorization Requests. This allows the JWT to be passed by reference. Disabled by default, due to the security implications of enabling the `request_uri` parameter (see [RFC 9101 section 10.4](https://datatracker.ietf.org/doc/rfc9101/)). Before enabling it, see [protecting against SSRF](/identityserver/tokens/jar.mdx#protecting-against-ssrf).
 
 ## Discovery
 

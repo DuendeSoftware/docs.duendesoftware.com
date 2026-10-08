@@ -1,6 +1,6 @@
 ---
 title: "What Gets Cleaned Up At Logout: Sessions, Cookies And Tokens"
-description: "An overview of everything that logout, session management, and token revocation can affect at sign-out: the IdentityServer cookie, server-side sessions, external provider sessions, client application sessions, refresh tokens, reference tokens, and back-channel logout."
+description: "Overview of what sign-out affects: IdentityServer cookies, server-side sessions, external IdP sessions, client apps, refresh tokens, and revoke flows."
 sidebar:
   label: "Cleanup Overview"
   order: 15

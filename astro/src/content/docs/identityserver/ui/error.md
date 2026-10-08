@@ -1,6 +1,6 @@
 ---
 title: "Error"
-description: "Documentation for implementing the error page in IdentityServer, covering authorize endpoint error handling and which errors are returned to the client versus shown on the error page."
+description: "Implement custom error pages in IdentityServer, covering authorize endpoint error handling and client error responses vs. user-facing error views."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
   order: 3

@@ -1,6 +1,6 @@
 ---
 title: "Session Management Service"
-description: Documentation for the ISessionManagementService interface which provides administrative features to query and terminate server-side sessions, including associated tokens and consents.
+description: "Reference for the ISessionManagementService interface to administratively query and terminate server-side sessions, associated tokens, and consents."
 sidebar:
   label: Session Management
   order: 57

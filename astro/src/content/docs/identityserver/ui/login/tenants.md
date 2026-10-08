@@ -1,6 +1,6 @@
 ---
 title: "Passing A Tenant With acr_values"
-description: "Learn how clients can pass a tenant hint to IdentityServer using the tenant: prefix in acr_values, how to read it on the login page, and how to re-authenticate users when the tenant changes."
+description: "Pass tenant hints to IdentityServer using acr_values with tenant:, read tenant context on the login page, and re-authenticate when tenants change."
 sidebar:
   label: "Tenant Hints"
   order: 45

@@ -1,6 +1,6 @@
 ---
 title: "End Session Request Validator"
-description: Reference for the EndSessionRequestValidator class and how to subclass it to customize id_token_hint validation during RP-Initiated Logout (end session) requests.
+description: "Reference for EndSessionRequestValidator and how to customize id_token_hint validation during RP-Initiated Logout requests in IdentityServer."
 date: 2026-05-22
 sidebar:
   label: End Session Validator

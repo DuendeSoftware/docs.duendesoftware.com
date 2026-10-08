@@ -1,6 +1,6 @@
 ---
 title: "Redirect URI Validator"
-description: Documentation for the IRedirectUriValidator interface which validates redirect URIs and post-logout redirect URIs submitted in authorization and end-session requests.
+description: "Reference for the IRedirectUriValidator interface to validate redirect and post-logout redirect URIs in authorization and end-session requests."
 sidebar:
   label: Redirect URI
   order: 30

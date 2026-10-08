@@ -1,6 +1,6 @@
 ---
 title: "Rock Solid Knowledge SAML to Duende IdentityServer SAML"
-description: "Step-by-step guide to migrate from Rock Solid Knowledge (RSK) SAML (Rsk.Saml.DuendeIdentityServer) to Duende IdentityServer built-in SAML 2.0 Identity Provider support."
+description: "Migrate from Rock Solid Knowledge (RSK) SAML to Duende IdentityServer's built-in SAML 2.0 Identity Provider with this step-by-step guide."
 sidebar:
   order: 138
   label: RSK SAML → Duende SAML

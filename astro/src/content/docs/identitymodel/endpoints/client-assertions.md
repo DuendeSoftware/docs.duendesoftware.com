@@ -1,19 +1,33 @@
 ---
 title: Client Assertions
+date: 2025-11-12
+lastmod: 2026-10-07
 description: How to use client assertions (private_key_jwt / client_secret_jwt) for client authentication in protocol requests.
 sidebar:
   order: 8
   label: Client Assertions
 ---
 
-Client assertions are an alternative to client secrets for authenticating
+## What is a client assertion?
+
+**Client assertions** are an alternative to client secrets for authenticating
 confidential clients at token endpoints. Instead of sending a shared secret,
 the client creates a signed JWT (or SAML assertion) and includes it in the
 request. This is defined in
-[RFC 7523 — JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication](https://datatracker.ietf.org/doc/html/rfc7523)
+[RFC 7523: JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication](https://datatracker.ietf.org/doc/html/rfc7523)
 and is commonly known as the `private_key_jwt` or `client_secret_jwt`
 authentication methods defined in
 [OpenID Connect Core §9](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication).
+
+### Client Secret vs Client Assertion
+
+| Aspect             | Client secret                               | Client assertion                       |
+|--------------------|---------------------------------------------|----------------------------------------|
+| Credential sent    | Shared secret value                         | Signed JWT (not the key itself)        |
+| Secret on the wire | Yes, on every request                       | No; only a signature is transmitted    |
+| Methods            | `client_secret_basic`, `client_secret_post` | `private_key_jwt`, `client_secret_jwt` |
+| Replay protection  | None inherent                               | `jti` + `exp` limit reuse              |
+| Best for           | Simple confidential clients                 | Higher-security and DPoP scenarios     |
 
 All protocol request types that derive from `ProtocolRequest` expose two
 properties for setting client assertions: `ClientAssertion` and
@@ -53,10 +67,10 @@ both are combined with a `ClientId`.
 
 *Added in `Duende.IdentityModel` 7.2.0*
 
-The `ClientAssertionFactory` property accepts a `Func<Task<ClientAssertion>>`
-— a factory function that creates a **fresh** `ClientAssertion` on demand. This
-was introduced to support scenarios where a protocol request may need to be
-**retried**, and each attempt requires a new assertion with unique `jti` and
+The `ClientAssertionFactory` property accepts a `Func<Task<ClientAssertion>>`,
+a factory function that creates a **fresh** `ClientAssertion` on demand. This
+was introduced to support scenarios where a protocol request may need to be **retried**, and each attempt requires a new
+assertion with unique `jti` and
 `iat` claims.
 
 The primary motivating scenario is **DPoP** (Demonstrating Proof of Possession).
@@ -104,9 +118,9 @@ on the underlying requests it creates.
 
 When `ClientAssertionFactory` is set, it is used during both:
 
-- **Pushed Authorization Requests (PAR)** — the factory is invoked to produce a
+- **Pushed Authorization Requests (PAR):** the factory is invoked to produce a
   fresh assertion for the PAR endpoint request.
-- **Token requests** — the factory is invoked again to produce a fresh assertion
+- **Token requests:** the factory is invoked again to produce a fresh assertion
   for the token endpoint request.
 
 This ensures each request carries its own unique assertion, which is essential
