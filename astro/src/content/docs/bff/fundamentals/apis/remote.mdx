@@ -104,6 +104,12 @@ x-csrf: 1
 
 The value of the header is not important, but its presence, combined with the cookie requirement, triggers a CORS preflight request for cross-origin calls. This effectively isolates the caller to the same origin as the backend, providing a robust security guarantee. 
 
+Remote APIs that you define on a frontend with `WithRemoteApis`, or in the frontend configuration, require the header too. See [anti-forgery protection for remote APIs](/bff/fundamentals/multi-frontend/index.mdx#anti-forgery-protection-for-remote-apis).
+
+#### Cookie header
+
+The BFF removes the browser's `Cookie` header before it forwards a request to a remote API. The remote API authenticates the call with the access token that the BFF attaches, so the BFF session cookie never needs to leave the BFF. Routes proxied through the [YARP integration](/bff/fundamentals/apis/yarp.md#cookie-header-removal) remove the header too.
+
 #### Require authorization
 
 The `MapRemoteBffApiEndpoint` method returns the appropriate type to integrate with the ASP.NET Core authorization system. You can attach authorization policies to remote endpoints using the `WithAccessToken` extension method, just as you would for a standard ASP.NET core endpoint created with `MapGet`. The authorization middleware will then enforce that policy before forwarding requests on that route to the remote endpoint.

@@ -73,6 +73,9 @@ The configuration supports dynamic reloading (so any new frontend added / remove
 
 ### RemoteApiConfiguration JSON Properties
 
+Calls to these remote APIs must include the anti-forgery header (`X-CSRF: 1` by default), or the BFF returns `401`.
+See [anti-forgery protection for remote APIs](/bff/fundamentals/multi-frontend/index.mdx#anti-forgery-protection-for-remote-apis).
+
 - `pathMatch`
   String. The local path that will be used to access the remote API.  
   Example: `"/api/user-token"`

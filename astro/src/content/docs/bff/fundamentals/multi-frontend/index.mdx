@@ -166,6 +166,27 @@ var frontend = new BffFrontend(BffFrontendName.Parse("frontend1"))
 
 See the topic on [Token Management](/bff/fundamentals/tokens.md) for more information about the various token management options. 
 
+### Anti-forgery Protection For Remote APIs
+
+Every call to a frontend's remote APIs must include the anti-forgery header, `X-CSRF: 1` by default. This applies to
+remote APIs you add with `WithRemoteApis` and to remote APIs loaded from [configuration](/bff/fundamentals/multi-frontend/configuration.md)
+(`Frontends:<name>:RemoteApis`). The header is what protects these calls against Cross-Site Request Forgery (CSRF):
+browsers won't let another site send a custom header to the BFF without a CORS preflight, so a malicious page can't
+make the BFF call your API with the user's access token.
+
+The BFF checks the header once it has matched the request to a remote API, before it attaches an access token or
+forwards anything. If the header is missing, the BFF returns `401` and logs a warning. The header name and value come
+from the `AntiForgeryHeaderName` and `AntiForgeryHeaderValue` [options](/bff/fundamentals/options.md#apis).
+
+There's no per-API opt-out like `SkipAntiforgery()` on `MapRemoteBffApiEndpoint`. If you protect against CSRF with
+another mechanism and need to skip the check for some requests, use the `BffOptions.DisableAntiForgeryCheck` delegate,
+which this check respects.
+
+:::note
+Earlier 4.x versions forwarded requests to a frontend's remote APIs, with an access token attached, without checking
+the anti-forgery header. If your frontend doesn't send the header on these calls yet, the calls will fail with a `401` status code.
+:::
+
 ## Handling SPA Static Assets
 
 BFF can be configured to handle the static file assets that are typically used when developing Single-Page Application (SPA)-based app. 
