@@ -39,8 +39,8 @@ Keep production credentials out of source control and load them from your deploy
 
 ## Configure IdentityServer with Spaces
 
-Register Spaces and the IdentityServer storage adapters. `AddStorage` registers both configuration and operational
-storage in one call:
+Register Spaces and the IdentityServer storage adapters. `AddStorage` selects the database provider;
+`AddConfigurationStorage()` and `AddOperationalStorage()` route configuration and operational data to it:
 
 ```csharp
 // Program.cs
@@ -57,11 +57,13 @@ builder.Services
     .AddIdentityServer()
     .AddServerSideSessions()
     .AddStorage(storage =>
-        storage.AddSqliteStore(options =>
+        storage.AddSqlite(options =>
             options.ConnectionString =
                 builder.Configuration.GetConnectionString("IdentityServer")
                 ?? throw new InvalidOperationException(
-                    "IdentityServer connection string is missing.")));
+                    "IdentityServer connection string is missing.")))
+    .AddConfigurationStorage()
+    .AddOperationalStorage();
 
 builder.Services.AddSpaces();
 builder.Services.Configure<SpacesOptions>(options =>
@@ -82,7 +84,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 var app = builder.Build();
 
 await app.Services
-    .GetRequiredService<IDatabaseSchema>()
+    .GetRequiredService<IStorageInstanceSchema>()
     .MigrateAsync(CancellationToken.None);
 ```
 
@@ -174,6 +176,11 @@ Origins must include the scheme and host, plus the port when it is not the schem
 Review [what Spaces does not isolate](/identityserver/spaces/index.mdx#what-spaces-does-not-isolate) before deploying.
 Confirm whether signing credentials, Data Protection, caches, telemetry, rate limits and custom services require
 space-aware configuration.
+
+Spaces management data and every space's pool share the default Duende Storage instance unless you map them elsewhere.
+See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md) to route
+IdentityServer's configuration or operational data, or User Management's data, to a separate database from Spaces
+management data.
 
 ## Sample
 

@@ -233,6 +233,18 @@ builder.Services.ConfigureOptions<CustomOidcConfigureOptions>();
 
 IdentityServer includes built-in support for dynamic SAML 2.0 providers via `AddSamlDynamicProvider()`. This registers the SAML SP authentication handler for use with the dynamic provider infrastructure, so you can manage SAML IdPs from a store at runtime.
 
+:::caution[AddSamlDynamicProvider() is required for idp:saml extended properties]
+`AddSamlDynamicProvider()` also registers the built-in `idp:saml` data extension schema (`BuiltInSchemas.SamlProvider`) with
+the in-memory schema store that `AddStorage` sets up. If you create SAML identity providers through `IIdentityProviderAdmin`
+with `ExtendedProperties`, call `AddSamlDynamicProvider()` so that schema is registered — otherwise the extended properties
+cannot be validated. The same applies to OIDC dynamic providers and `AddOidcDynamicProvider()`.
+
+This registration only reaches the default in-memory schema store. If you call `AddDynamicSchemas()`, schemas are served
+from the database instead, and the in-memory `idp:saml`/`idp:oidc` schemas registered by these calls are not used — create
+the schema in the database yourself through `ISchemaAdmin`. See
+[Data Extension Schemas — Built-in Schemas](/identityserver/data/providers/duende-storage/schemas.md#built-in-schemas).
+:::
+
 ### Registration
 
 To enable SAML dynamic providers, call `AddSamlDynamicProvider()` on the IdentityServer builder:

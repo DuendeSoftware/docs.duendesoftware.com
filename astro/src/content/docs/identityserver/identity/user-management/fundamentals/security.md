@@ -230,7 +230,7 @@ Passkey behavior is controlled by `PasskeyOptions`, accessible via `UserAuthenti
 
 | Property                          | Default                   | Description                                                                                            |
 |-----------------------------------|---------------------------|--------------------------------------------------------------------------------------------------------|
-| `ChallengeSize`                   | `32` bytes (256 bits)     | Size of the server-generated challenge                                                                 |
+| `ChallengeSize`                   | `32` bytes (256 bits)     | Size of the server-generated challenge. Must be at least 16 bytes.                                     |
 | `ChallengeTimeout`                | `300` seconds (5 minutes) | Maximum validity period for a passkey challenge                                                        |
 | `UserVerificationRequirement`     | `"preferred"`             | Whether user verification (PIN, biometric) is required during authentication                           |
 | `AttestationConveyancePreference` | `"none"`                  | Whether the authenticator must provide an attestation statement during registration                    |
