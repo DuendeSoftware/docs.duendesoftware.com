@@ -1,0 +1,155 @@
+---
+title: "Databases Supported by Duende Storage"
+description: "Compare the databases Duende Storage supports and learn how registration, schema deployment and connection strings work across all of them"
+date: 2026-10-12
+sidebar:
+  label: "Overview"
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+:::caution[Preview documentation]
+Duende Storage and the documentation in this section are previews. APIs, packages, database schemas and behavior are
+subject to change before general availability.
+:::
+
+Duende Storage supports SQL Server, PostgreSQL, Oracle and SQLite. This page compares the four, explains how provider
+registration and schema deployment work the same way across all of them, and links to each provider's page for
+connection strings, custom schemas and provider-specific notes.
+
+## Choose a Database
+
+| Database                                                        | Package                                                                                 | Registration method | Connection object you register | Schema option | CLI `--provider` value | Intended use |
+| ----------------------------------------------------------------| ---------------------------------------------------------------------------------------| -------------------- | ------------------------------- | -------------- | ----------------------- | ------------- |
+| [SQL Server](/identityserver/data/providers/duende-storage/databases/sql-server.md)     | [`Duende.Storage.MsSql`](https://www.nuget.org/packages/Duende.Storage.MsSql)           | `AddMsSql`           | `CreateSqlConnection` factory   | `SchemaName`    | `mssql`                 | Production |
+| [PostgreSQL](/identityserver/data/providers/duende-storage/databases/postgresql.md)     | [`Duende.Storage.PostgreSql`](https://www.nuget.org/packages/Duende.Storage.PostgreSql) | `AddPostgreSql`      | `NpgsqlDataSource`              | `SchemaName`    | `postgresql`            | Production |
+| [Oracle](/identityserver/data/providers/duende-storage/databases/oracle.md)             | [`Duende.Storage.Oracle`](https://www.nuget.org/packages/Duende.Storage.Oracle)         | `AddOracle`          | `CreateOracleConnection` factory | `SchemaName`   | Not supported yet ([run migrations without the CLI](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli)) | Production |
+| [SQLite](/identityserver/data/providers/duende-storage/databases/sqlite.md)             | [`Duende.Storage.Sqlite`](https://www.nuget.org/packages/Duende.Storage.Sqlite)         | `AddSqlite`          | A connection string             | None            | `sqlite`                | Automated tests and local development only |
+
+SQL Server, PostgreSQL and Oracle are all production-ready; Duende Storage doesn't recommend one over another. Choose
+the database that fits your team's operations and hosting environment. SQLite has no production use: use it for
+automated tests and local development only.
+
+## How Provider Registration Works
+
+Every provider follows the same registration shape, so this section covers it once instead of repeating it on each
+provider page.
+
+* `AddStorage(...)` selects exactly one database provider for a storage instance. Calling it with a second provider
+  for the same instance throws an `InvalidOperationException`.
+* For SQL Server, PostgreSQL and Oracle, your application owns the connection factory or data source: a
+  `CreateSqlConnection` or `CreateOracleConnection` delegate, or an `NpgsqlDataSource`. You control credentials,
+  token providers and pooling settings on it. Duende Storage never disposes an object you registered this way.
+* The default-instance overloads (for example `AddMsSql(Action<MsSqlStorageEngineOptions>)`) resolve that object
+  unkeyed from dependency injection, and only work for the default storage instance. Named instances must use the
+  resolver overload (for example `AddMsSql(Func<IServiceProvider, CreateSqlConnection> resolver, ...)`), which
+  resolves the object however you configure it, including from a keyed registration. See
+  [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md) for how to
+  register and migrate more than one storage instance.
+
+## Create and Upgrade the Schema
+
+Duende Storage separates two kinds of schema change:
+
+* Document-level changes, such as adding a custom property to a client or resource, need no migration. The
+  [data extension schemas](/identityserver/data/providers/duende-storage/schemas.md) validate documents, not database
+  tables.
+* The fixed set of storage tables (entities, indexes, the outbox, and the schema version itself) is created and
+  upgraded by Duende Storage's own migrations, through the APIs below.
+
+`IStorageInstanceSchema` gives you those migration operations for a storage instance:
+
+* `MigrateAsync(ct)` creates the schema if it doesn't exist, upgrades it if it's behind, or does nothing if it's
+  already current. It then calls `VerifySchemaAsync` and throws an `InvalidOperationException` if verification finds
+  errors.
+* `CheckVersionAsync(ct)` returns a `CheckSchemaVersionResult` with `CurrentVersion`, `RequiredVersion` and
+  `IsCompatible` (true only when the two versions are equal), so you can fail fast before `MigrateAsync` instead of
+  discovering a mismatch at request time:
+
+  ```csharp
+  // Program.cs
+  using Duende.Storage.Schema;
+
+  var schema = app.Services.GetRequiredService<IStorageInstanceSchema>();
+  var versionCheck = await schema.CheckVersionAsync(CancellationToken.None);
+
+  if (!versionCheck.IsCompatible)
+  {
+      throw new InvalidOperationException(
+          $"Database schema version {versionCheck.CurrentVersion} does not match the " +
+          $"required version {versionCheck.RequiredVersion}.");
+  }
+  ```
+
+  A `CurrentVersion` greater than `RequiredVersion` means a newer version of Duende Storage already migrated the
+  database: this application's version is older than the schema, and `IsCompatible` is false. Upgrade the
+  application to a version that expects the current schema instead of trying to downgrade the schema.
+* `VerifySchemaAsync(ct)` checks that every table, index and other object the current schema version expects is
+  present, without changing anything.
+* `BuildMigrationScript(DatabaseSchemaVersion fromVersion)` returns the SQL for the given starting version without
+  opening a database connection. Pass `DatabaseSchemaVersion.Zero` for the full script from an empty database.
+
+`app.Services.GetRequiredService<IStorageInstanceSchema>()` resolves the default storage instance only. For a named
+instance, use `IStorageInstanceSchemaFactory.GetStorageInstanceSchema(storageInstanceId, ct)` to resolve its schema,
+as shown in [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md).
+
+:::caution[Run exactly one migration process at a time]
+No provider protects against concurrent migrations. Run one migration process before your app instances start,
+preferably with the [Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md). Calling `MigrateAsync`
+at startup, as the [getting started](/identityserver/data/providers/duende-storage/getting-started.md) walkthrough
+does, is convenient for local development, but in production it risks two app instances migrating the same database
+at the same time during a rolling deployment.
+:::
+
+## Keep Connection Strings Secret
+
+Don't commit connection strings or store them in plain configuration files. Options that keep secrets out of source
+control and shell history include:
+
+* Environment variables, for example `ConnectionStrings__IdentityServer`, which `IConfiguration` binds automatically.
+* Azure Key Vault or another vault-backed configuration provider.
+* `dotnet user-secrets` for local development.
+* A passwordless or managed-identity connection, where the driver supports one, so no password needs to be stored at
+  all.
+
+For the Duende CLI, prefer the `DUENDE_STORAGE_CONNECTION_STRING` environment variable over `--connection-string`, so
+the connection string doesn't appear in shell history or process listings.
+
+## Connection Pooling
+
+The SQL Server, PostgreSQL and Oracle drivers all pool connections by default and expose pool-sizing keywords on the
+connection string or connection object you register: `Min Pool Size`/`Max Pool Size` for SQL Server, `Minimum Pool
+Size`/`Maximum Pool Size` for PostgreSQL, and `Min Pool Size`/`Max Pool Size` for Oracle. Tune these on the connection
+string; see each provider's page for the keywords it supports. SQLite is for automated tests and local development
+only, so connection pooling isn't a concern there.
+
+## Next Steps
+
+<CardGrid>
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/databases/sql-server/"
+    title="SQL Server"
+    description="Install, register and configure Duende Storage with SQL Server."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/databases/postgresql/"
+    title="PostgreSQL"
+    description="Install, register and configure Duende Storage with PostgreSQL."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/databases/oracle/"
+    title="Oracle"
+    description="Install and register Duende Storage with Oracle, including schema deployment without the CLI."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/databases/sqlite/"
+    title="SQLite"
+    description="Use SQLite for automated tests and local development."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/duende-cli/"
+    title="Duende CLI Reference"
+    description="Install the CLI and run duende storage migrate against any supported provider."
+  />
+</CardGrid>
