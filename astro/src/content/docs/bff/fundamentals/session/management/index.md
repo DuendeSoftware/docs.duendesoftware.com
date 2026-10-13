@@ -56,7 +56,7 @@ app.UseBffOpenIdCallbacks();
 
 `UseBffPostProcessing` adds all BFF management endpoints and handlers for proxying `index.html`. You can also map each endpoint individually by calling the various `MapBffManagementXxxEndpoint` methods, for example `endpoints.MapBffManagementLoginEndpoint()`.
 
-The following pages describe the default behavior of the management endpoints. See the [extensibility](/bff/extensibility) section for information about how to customize the behavior of the endpoints.
+The following pages describe the default behavior of the management endpoints. See the [extensibility](/bff/extensibility/index.mdx) section for information about how to customize the behavior of the endpoints.
 
 :::note
 In V3 and below, only the method `MapBffManagementEndpoints` exists. 

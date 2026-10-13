@@ -20,7 +20,7 @@ By the end of this guide you will have an ASP.NET Core host that:
 :::note[Prerequisites]
 - .NET 8.0 SDK or later
 - A frontend application (e.g., React, Angular, Vue, or plain JavaScript)
-- An OpenID Connect-compatible identity provider (e.g., [Duende IdentityServer](/identityserver/), Auth0, Azure AD)
+- An OpenID Connect-compatible identity provider (e.g., [Duende IdentityServer](/identityserver/index.mdx), Auth0, Azure AD)
 :::
 
 :::note[BFF v4 default frontend]
@@ -28,7 +28,7 @@ Duende.BFF V4 introduced a new way of configuring the BFF, which automatically c
 
 When in single frontend mode, an implicit default frontend is automatically registered. This ensures all the management routes and OpenID Connect-handling routes are available for your frontend.
 
-When you call `.AddFrontend()` to add a new frontend, the system switches to multi-frontend mode. If you wish to have a default frontend in multi-frontend mode, you'll need to explicitly add it. See [multi-frontend support](/bff/fundamentals/multi-frontend/) for more information on this topic.
+When you call `.AddFrontend()` to add a new frontend, the system switches to multi-frontend mode. If you wish to have a default frontend in multi-frontend mode, you'll need to explicitly add it. See [multi-frontend support](/bff/fundamentals/multi-frontend/index.mdx) for more information on this topic.
 :::
 
 ## Setting Up A BFF project
@@ -187,7 +187,7 @@ When you call `.AddFrontend()` to add a new frontend, the system switches to mul
    It's important to mark up the APIs with .AsBffApiEndpoint(), because this adds CSRF protection. 
 
    :::tip
-   Always call `.AsBffApiEndpoint()` on your local API routes. Without it, the `X-CSRF` header is not enforced and your endpoints are vulnerable to CSRF attacks. See [Local APIs](/bff/fundamentals/apis/local/) for details.
+   Always call `.AsBffApiEndpoint()` on your local API routes. Without it, the `X-CSRF` header is not enforced and your endpoints are vulnerable to CSRF attacks. See [Local APIs](/bff/fundamentals/apis/local.mdx) for details.
    :::
 
    {/* prettier-ignore */}
@@ -246,7 +246,7 @@ When you call `.AddFrontend()` to add a new frontend, the system switches to mul
    The BFF extends the capabilities of [Yarp](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/yarp/getting-started?view=aspnetcore-9.0) in order to achieve this. 
 
    :::tip
-   For a comparison of local vs. remote vs. YARP-based APIs, see the [API Overview](/bff/fundamentals/apis/).
+   For a comparison of local vs. remote vs. YARP-based APIs, see the [API Overview](/bff/fundamentals/apis/index.md).
    :::
 
    ```bash title="Terminal"

@@ -15,7 +15,7 @@ redirect_from:
 <span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
 The `ISamlServiceProviderStore` interface is the contract for a service that retrieves
-[SAML 2.0 Service Provider](/identityserver/saml/service-providers/) configuration by entity identifier.
+[SAML 2.0 Service Provider](/identityserver/saml/service-providers.md) configuration by entity identifier.
 It is part of the SAML 2.0 Identity Provider feature that was added in v8.0.
 
 #### Duende.IdentityServer.Stores.ISamlServiceProviderStore
@@ -44,4 +44,4 @@ public interface ISamlServiceProviderStore
 ```
 
 For full details on the `SamlServiceProvider` model and how to register service providers,
-see the [SAML Service Providers](/identityserver/saml/service-providers/) page.
+see the [SAML Service Providers](/identityserver/saml/service-providers.md) page.

@@ -144,5 +144,5 @@ var req = new Request("/bff/user?slide=false", {
 
 ## Customize This Endpoint
 
-To add custom logic, enrich user claims, or change the claims returned by this endpoint, see [User Endpoint Extensibility](/bff/extensibility/management/user/).
+To add custom logic, enrich user claims, or change the claims returned by this endpoint, see [User Endpoint Extensibility](/bff/extensibility/management/user.mdx).
 

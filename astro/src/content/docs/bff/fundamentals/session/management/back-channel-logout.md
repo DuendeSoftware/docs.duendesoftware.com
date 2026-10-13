@@ -45,4 +45,4 @@ by setting the `BackchannelLogoutAllUserSessions` [option](/bff/fundamentals/opt
 
 ## Customize This Endpoint
 
-To add custom request processing logic or customize session revocation behavior, see [Back-Channel Logout Endpoint Extensibility](/bff/extensibility/management/back-channel-logout/).
+To add custom request processing logic or customize session revocation behavior, see [Back-Channel Logout Endpoint Extensibility](/bff/extensibility/management/back-channel-logout.mdx).

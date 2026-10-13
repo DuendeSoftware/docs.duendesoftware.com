@@ -88,7 +88,7 @@ namespace Sample.Pages.Account
 }
 ```
 
-When IdentityServer redirects to the [LoginUrl](/identityserver/ui/login), the user should arrive at this
+When IdentityServer redirects to the [LoginUrl](/identityserver/ui/login/index.md), the user should arrive at this
 page. If you're using the default urls, then this page should be created at the
 path: ~/Pages/Account/Login.cshtml, which allows it to be loaded from the
 browser at the "/Account/Login" path. 

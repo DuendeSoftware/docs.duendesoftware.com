@@ -23,4 +23,4 @@ To use the diagnostics endpoint, make a `GET` request to `/bff/diagnostics`. Typ
 
 ## Customize This Endpoint
 
-To add custom logic to the diagnostics endpoint, see [Diagnostics Endpoint Extensibility](/bff/extensibility/management/diagnostics/).
+To add custom logic to the diagnostics endpoint, see [Diagnostics Endpoint Extensibility](/bff/extensibility/management/diagnostics.mdx).

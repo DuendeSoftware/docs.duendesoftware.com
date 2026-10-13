@@ -20,7 +20,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 This quickstart walks you through how to create a BFF Blazor application. The source code for this quickstart is available on [GitHub](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/BlazorAutoRendering).
 
 :::note[Version]
-This guide targets **Duende BFF v4**. If you are still on v3, expand the v3 tabs in each step below. See the [v3 → v4 upgrade guide](/bff/upgrading/bff-v3-to-v4/) when you are ready to migrate.
+This guide targets **Duende BFF v4**. If you are still on v3, expand the v3 tabs in each step below. See the [v3 → v4 upgrade guide](/bff/upgrading/bff-v3-to-v4.md) when you are ready to migrate.
 :::
 
 ## What You'll Build
@@ -30,7 +30,7 @@ By the end of this guide you will have a Blazor application (Server + WASM) that
 :::note[Prerequisites]
 - .NET 8.0 SDK or later
 - Familiarity with Blazor's hosting models (Server vs. WASM)
-- An OpenID Connect-compatible identity provider (e.g., [Duende IdentityServer](/identityserver/), Auth0, Azure AD)
+- An OpenID Connect-compatible identity provider (e.g., [Duende IdentityServer](/identityserver/index.mdx), Auth0, Azure AD)
 :::
 
 ## Creating the project structure
@@ -512,7 +512,7 @@ See the [Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/
 </Steps>
 
 :::caution[Token availability in Blazor components]
-Access tokens are managed server-side by the BFF host and are never available in Blazor WASM components directly. Always use `AddLocalApiHttpClient<T>()` to create HTTP clients that route through the BFF host — never try to retrieve or pass tokens to client-side components. See the [Troubleshooting guide](/bff/troubleshooting/) if tokens appear unavailable.
+Access tokens are managed server-side by the BFF host and are never available in Blazor WASM components directly. Always use `AddLocalApiHttpClient<T>()` to create HTTP clients that route through the BFF host — never try to retrieve or pass tokens to client-side components. See the [Troubleshooting guide](/bff/troubleshooting.mdx) if tokens appear unavailable.
 :::
 
 ## See Also

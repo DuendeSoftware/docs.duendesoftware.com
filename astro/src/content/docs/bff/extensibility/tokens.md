@@ -32,7 +32,7 @@ builder.Services.AddHttpClient(
 ```
 
 :::note
-You can also supply client assertions to the token management library. See this [sample](/bff/samples) for JWT-based client authentication.
+You can also supply client assertions to the token management library. See this [sample](/bff/samples/index.mdx) for JWT-based client authentication.
 :::
 
 ### Custom Token Storage

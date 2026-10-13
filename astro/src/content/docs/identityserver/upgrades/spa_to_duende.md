@@ -69,9 +69,9 @@ It makes sense to secure APIs with access tokens when those APIs need to be acce
 This would be an example of a shared API.
 But very often, an API that is co-hosted with a SPA front end really only exists to support the UI and won't expect to be invoked by any other application.
 In this case, it might be overkill to design this "local" API to require an access token.
-Also, there are a [variety of factors that make is undesirable](/bff) (and sometimes impossible) for code running in the browser to fully manage tokens obtained from the OIDC/OAuth protocol.
+Also, there are a [variety of factors that make is undesirable](/bff/index.mdx) (and sometimes impossible) for code running in the browser to fully manage tokens obtained from the OIDC/OAuth protocol.
 
-Thus, one additional improvement to the architecture presented so far would be to introduce the [BFF pattern](/bff/architecture).
+Thus, one additional improvement to the architecture presented so far would be to introduce the [BFF pattern](/bff/architecture/index.mdx).
 
 The BFF pattern changes the credential used from the SPA to the backend to instead use a cookie (much like the cookie used in IdentityServer).
 This would allow securing calls to a "local" API that is co-hosted in the backend. 
@@ -87,7 +87,7 @@ The picture below illustrates:
 
 **Step 4b:** If a remote API needs to be invoked, then the access token associated with the user's authentication session can be used. This access token is only available on the server. It can be used from the local API invoking a remote API, or a reverse proxy can be setup in the SPA host (e.g. using Microsoft's YARP) to allow more of a pass-through style so the SPA code can invoke the remote API without manual coding to pass along the access token.
 
-The [Duende BFF Security Framework](/bff) makes this architecture easy to implement.
+The [Duende BFF Security Framework](/bff/index.mdx) makes this architecture easy to implement.
 
 ## Migrating
 

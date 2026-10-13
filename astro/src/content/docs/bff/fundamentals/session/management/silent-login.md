@@ -63,4 +63,4 @@ window.addEventListener("message", e => {
 
 ## Customize This Endpoint
 
-To add custom logic to the silent login endpoint, see [Silent Login Endpoint Extensibility](/bff/extensibility/management/silent-login/).
+To add custom logic to the silent login endpoint, see [Silent Login Endpoint Extensibility](/bff/extensibility/management/silent-login.mdx).

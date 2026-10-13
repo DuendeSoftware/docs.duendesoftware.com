@@ -29,7 +29,7 @@ Given that the access token has a finite lifetime, you typically want to
 
 ASP.NET Core has built-in facilities that can help you with some of those tasks
 (like caching or sessions), but there is still quite some work left to do.
-[Duende.AccessTokenManagement](/accesstokenmanagement)
+[Duende.AccessTokenManagement](/accesstokenmanagement/index.mdx)
 can help. It provides abstractions for storing tokens, automatic refresh of expired tokens, etc.
 
 ## Requesting A Refresh Token

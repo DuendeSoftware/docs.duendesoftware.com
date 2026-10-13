@@ -35,7 +35,7 @@ Also verify that:
 - `app.UseBff()` appears **after** `app.UseRouting()` and `app.UseAuthentication()`, and **before** `app.UseAuthorization()` in your middleware pipeline.
 - The endpoint is decorated with `.AsBffApiEndpoint()` (Minimal API) or `[BffApi]` / `.AsBffApiEndpoint()` at mapping time (MVC).
 
-See [Middleware Pipeline](/bff/fundamentals/middleware-pipeline/) for the canonical order and a table of common mistakes.
+See [Middleware Pipeline](/bff/fundamentals/middleware-pipeline.mdx) for the canonical order and a table of common mistakes.
 
 :::caution
 If `UseBff()` is placed after `UseAuthorization()`, anti-forgery enforcement is silently disabled with no error. Always verify middleware order.
@@ -68,7 +68,7 @@ app.UseCors("SpaPolicy");
 ```
 
 :::tip
-Whenever possible, serve the SPA's `index.html` from the BFF host itself. This makes the frontend and backend same-origin and eliminates CORS complexity entirely. See [UI Hosting](/bff/architecture/ui-hosting/) for options.
+Whenever possible, serve the SPA's `index.html` from the BFF host itself. This makes the frontend and backend same-origin and eliminates CORS complexity entirely. See [UI Hosting](/bff/architecture/ui-hosting.md) for options.
 :::
 
 ---
@@ -100,7 +100,7 @@ async function bffFetch(url, options = {}) {
 Also consider:
 - Polling `/bff/user` periodically to detect session expiry proactively.
 - Configuring absolute and sliding session lifetimes on the cookie handler to match your requirements.
-- Using [server-side sessions](/bff/fundamentals/session/server-side-sessions/) to enable server-initiated session termination.
+- Using [server-side sessions](/bff/fundamentals/session/server-side-sessions.mdx) to enable server-initiated session termination.
 
 ---
 
@@ -193,7 +193,7 @@ options.Scope.Add("offline_access"); // Required for refresh tokens
 options.SaveTokens = true;           // Required to store tokens in the session
 ```
 
-See [Third-Party Cookies](/bff/architecture/third-party-cookies/) for a deeper discussion of how browser cookie restrictions affect authentication flows.
+See [Third-Party Cookies](/bff/architecture/third-party-cookies.md) for a deeper discussion of how browser cookie restrictions affect authentication flows.
 
 ---
 
@@ -227,7 +227,7 @@ This instructs the BFF middleware to return `401` for unauthenticated requests r
 
 **Solution:**
 
-Switch to [server-side sessions](/bff/fundamentals/session/server-side-sessions/). The browser cookie then only holds a session ID (a small opaque value), and all claims are stored in the server-side session store:
+Switch to [server-side sessions](/bff/fundamentals/session/server-side-sessions.mdx). The browser cookie then only holds a session ID (a small opaque value), and all claims are stored in the server-side session store:
 
 ```csharp
 builder.Services.AddBff()
@@ -248,7 +248,7 @@ options.Scope.Add("profile");
 ```
 
 :::tip
-Server-side sessions are recommended for all production BFF deployments, regardless of claim volume. They also enable server-initiated logout and better session visibility. See [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) for setup instructions.
+Server-side sessions are recommended for all production BFF deployments, regardless of claim volume. They also enable server-initiated logout and better session visibility. See [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions.mdx) for setup instructions.
 :::
 
 ---

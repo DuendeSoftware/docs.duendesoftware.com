@@ -88,7 +88,7 @@ requires. No special configuration is needed in IdentityServer for this scenario
 ## Requesting MFA from Clients
 
 Clients can signal that MFA is required using the `acr_values` parameter in the authorization request. 
-Your login UI can read this from the [authorization context](/identityserver/ui/login/context) and enforce a second-factor 
+Your login UI can read this from the [authorization context](/identityserver/ui/login/context.md) and enforce a second-factor 
 challenge accordingly:
 
 ```csharp

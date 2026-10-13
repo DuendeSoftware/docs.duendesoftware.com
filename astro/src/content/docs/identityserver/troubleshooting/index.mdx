@@ -327,7 +327,7 @@ services.AddAuthentication()
 
 ### Use Server-side Sessions
 
-You can use [server-side sessions][2] to store the
+You can use [server-side sessions](/identityserver/ui/server-side-sessions/index.md) to store the
 user's session data in a data store instead of in the cookie. This will greatly reduce the size of the cookie while allowing you to store more data in the session.
 
 :::note
@@ -384,7 +384,7 @@ When using the `AddCookie` method to configure the cookie authentication handler
 to resolve a service and its dependencies for `ITicketStore`.
 
 To work around this limitation, you can create a custom `IPostConfigureOptions<CookieAuthenticationOptions>` implementation
-like we did for [Server-Side Sessions][2], which uses [a shim][3] to inject an `IHttpContextAccessor` into the actual `ITicketStore` service.
+like we did for [Server-Side Sessions](/identityserver/ui/server-side-sessions/index.md), which uses [a shim](https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Configuration/DependencyInjection/PostConfigureApplicationCookieTicketStore.cs) to inject an `IHttpContextAccessor` into the actual `ITicketStore` service.
 :::
 
 ## URL and Query String Size Limits and Management
@@ -521,11 +521,7 @@ When loading a certificate containing both a public and private key in .NET, the
 - User keys are stored in the current user's roaming profile folder but this time in a different location: `%AppData%\Microsoft\Crypto\RSA`
 
 If you don't explicitly use the `X509KeyStorageFlags.MachineKeySet` flag value, the default behavior is to use `X509KeyStorageFlags.DefaultKeySet`.
-According to the [.NET documentation][1], this means: _The default key set is used. **The user key set is usually the default**_.
+According to the [.NET documentation](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags), this means: _The default key set is used. **The user key set is usually the default**_.
 
 When an application runs without an active user profile, any private key material stored in a user profile can't be accessed.
 Even loading a certificate can fail, since the load operation could attempt to store the private key material in the user profile.
-
-[1]: https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags
-[2]: /identityserver/ui/server-side-sessions
-[3]: https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Configuration/DependencyInjection/PostConfigureApplicationCookieTicketStore.cs

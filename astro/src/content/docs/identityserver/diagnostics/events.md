@@ -213,7 +213,7 @@ The following events are raised by SAML components:
 
 * **`InvalidSamlServiceProviderConfigurationEvent`**
 
-  Raised when a SAML Service Provider's configuration fails runtime validation (performed by [`ISamlServiceProviderConfigurationValidator`](/identityserver/saml/extensibility#isamlserviceproviderconfigurationvalidator)). Includes the SP's `EntityId` and `DisplayName`.
+  Raised when a SAML Service Provider's configuration fails runtime validation (performed by [`ISamlServiceProviderConfigurationValidator`](/identityserver/saml/extensibility.md#isamlserviceproviderconfigurationvalidator)). Includes the SP's `EntityId` and `DisplayName`.
 
 ## How To Create Custom IdentityServer Events
 

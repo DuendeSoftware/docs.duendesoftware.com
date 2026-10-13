@@ -66,7 +66,7 @@ Add the latest versions of the `Duende.IdentityServer` and `Duende.IdentityServe
 
 #### Configure API Resources and Scopes
 
-IdentityServer will need to know what API Scopes and Resources will be required at runtime. We will only configure a single scope, `mcp:tools`, which will be used to allow the client to access the tool hosted by the MCP Server connected application. The scope is tied to an `ApiResource` object specific to the MCP Server, meaning the client will receive a token that says the `mcp:tools` scope can only be used by the MCP Server. For more information, see [Resource Isolation](/identityserver/fundamentals/resources/isolation). To enable this, edit the `Config.cs` file to look like this:
+IdentityServer will need to know what API Scopes and Resources will be required at runtime. We will only configure a single scope, `mcp:tools`, which will be used to allow the client to access the tool hosted by the MCP Server connected application. The scope is tied to an `ApiResource` object specific to the MCP Server, meaning the client will receive a token that says the `mcp:tools` scope can only be used by the MCP Server. For more information, see [Resource Isolation](/identityserver/fundamentals/resources/isolation/index.md). To enable this, edit the `Config.cs` file to look like this:
 
 ```csharp
 // ~/mcp-quickstart/McpQuickStart.IdentityServer/Config.cs
@@ -653,4 +653,4 @@ Instruction: Do not drive through flooded roadways.
 
 ## Source Code
 
-The finished source code is available in the Samples repository, and a reference implementation of this quickstart is available [here](/identityserver/samples/mcp-server).
+The finished source code is available in the Samples repository, and a reference implementation of this quickstart is available [here](/identityserver/samples/mcp-server.mdx).

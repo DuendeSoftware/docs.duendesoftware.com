@@ -61,7 +61,7 @@ value set.
 #### Implementing Back-channel Logout In .NET Applications
 
 .NET does not have native support for back-channel logout notification.
-We do [provide a sample](/identityserver/samples), though.
+We do [provide a sample](/identityserver/samples/index.mdx), though.
 Alternatively, if you are using our BFF framework, back-channel logout
 is [already implemented](/bff/fundamentals/session/management/back-channel-logout.md) for you.
 

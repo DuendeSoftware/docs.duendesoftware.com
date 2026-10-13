@@ -39,7 +39,7 @@ options.ClientSecret = "api1secret"; // must match exactly
 ```
 
 If the token is sent in a non-default location (e.g., query string instead of `Authorization` header),
-configure the `TokenRetriever`. See [Extensibility — Token Retrieval](/introspection/extensibility/#token-retrieval).
+configure the `TokenRetriever`. See [Extensibility — Token Retrieval](/introspection/extensibility.mdx#token-retrieval).
 
 For clock skew, ensure your servers are synchronized via NTP. If you control the authorization server,
 you can also relax the `clockSkew` setting on its JWT validation if the introspection endpoint applies
@@ -101,7 +101,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddHybridCache();
 ```
 
-See [Extensibility — Cache Behavior](/introspection/extensibility/#controlling-cache-behavior-with-setcacheentryflags) for
+See [Extensibility — Cache Behavior](/introspection/extensibility.mdx#controlling-cache-behavior-with-setcacheentryflags) for
 details on all caching options.
 
 ---
@@ -195,7 +195,7 @@ builder.Services
     .AddStandardResilienceHandler(); // requires Microsoft.Extensions.Http.Resilience
 ```
 
-See [Configuration — Backchannel HTTP Client](/introspection/#configuring-the-backchannel-http-client) for
+See [Configuration — Backchannel HTTP Client](/introspection/index.mdx#configuring-the-backchannel-http-client) for
 the full setup example.
 
 ---

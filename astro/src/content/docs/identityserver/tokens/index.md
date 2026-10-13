@@ -56,7 +56,7 @@ This data is solely for the client application (the `aud` claim) that initiated 
 See the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html#idtoken) for more information on identity tokens.
 
 ### Access Token
-An access token is a data structure that allows a client to access a resource (e.g. an API - see the [protecting APIs](/identityserver/apis) section for more details).
+An access token is a data structure that allows a client to access a resource (e.g. an API - see the [protecting APIs](/identityserver/apis/index.md) section for more details).
 
 The data associated with an access token typically includes the client ID, the requested scopes, an expiration time, and user information in case of an interactive application. Access tokens come in two flavours: JSON Web Tokens (JWT) or reference tokens.
 

@@ -20,7 +20,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer();
 
 :::note
 Many of the fundamental configuration settings can be set on the options. See the
-`[IdentityServerOptions](/identityserver/reference/v7/options)` reference for more details.
+`[IdentityServerOptions](/identityserver/reference/v7/options.md)` reference for more details.
 :::
 
 ## Configuration Stores

@@ -105,5 +105,5 @@ the protocol response and redirect to the client application.
 In addition to the login page, there are other pages that Duende IdentityServer expects (e.g. logout, error, consent),
 and you could implement custom pages as well (e.g. register, forgot password, etc.).
 Details about building these pages, and coverage of additional topics are in the
-[User Interaction](/identityserver/ui)
+[User Interaction](/identityserver/ui/index.md)
 section of this documentation.

@@ -95,10 +95,10 @@ This will invalidate the refresh token at the token service.
 
 ## See Also
 
-- [Access Token Management](/accesstokenmanagement/) — The `Duende.AccessTokenManagement` library that powers BFF token refresh
-- [User Token Management](/accesstokenmanagement/web-apps/) — Detailed user token lifecycle documentation
-- [Client Credential Tokens](/accesstokenmanagement/workers/) — Machine-to-machine token management
-- [IdentityServer Refresh Tokens](/identityserver/tokens/refresh/) — Configuring refresh token rotation and reuse
-- [IdentityServer Client Configuration](/identityserver/configuration/dcr/) — Setting up confidential BFF clients
-- [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) — Where tokens are stored server-side
+- [Access Token Management](/accesstokenmanagement/index.mdx) — The `Duende.AccessTokenManagement` library that powers BFF token refresh
+- [User Token Management](/accesstokenmanagement/web-apps.mdx) — Detailed user token lifecycle documentation
+- [Client Credential Tokens](/accesstokenmanagement/workers.mdx) — Machine-to-machine token management
+- [IdentityServer Refresh Tokens](/identityserver/tokens/refresh.md) — Configuring refresh token rotation and reuse
+- [IdentityServer Client Configuration](/identityserver/configuration/dcr.mdx) — Setting up confidential BFF clients
+- [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions.mdx) — Where tokens are stored server-side
 

@@ -35,4 +35,4 @@ window.location = "/login?returnUrl=/logged-in";
 
 ## Customize This Endpoint
 
-To add custom logic before or after the login endpoint processes a request, see [Login Endpoint Extensibility](/bff/extensibility/management/login/).
+To add custom logic before or after the login endpoint processes a request, see [Login Endpoint Extensibility](/bff/extensibility/management/login.mdx).

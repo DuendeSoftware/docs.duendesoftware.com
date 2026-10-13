@@ -64,8 +64,8 @@ dotnet new duende-bff-localapi
 
 Many frontend applications require a build process, which complicates the use of the static file middleware at
 development time. Visual Studio includes SPA templates that start up a SPA and proxy requests to it during development.
-Samples of Duende.BFF that take this approach using [React](/bff/samples#reactjs-frontend)
-and [Angular](/bff/samples#angular-frontend) are available.
+Samples of Duende.BFF that take this approach using [React](/bff/samples/index.mdx#reactjs-frontend)
+and [Angular](/bff/samples/index.mdx#angular-frontend) are available.
 
 Microsoft's templates are easy-to-use at dev time from Visual Studio. They allow you to run the solution, and the
 template proxies requests to the front end for you. At deploy time, that proxy is removed and the static assets of the
@@ -119,7 +119,7 @@ In order for this architecture to work, the following things are needed:
   to [declare that it should send credentials](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#sending_a_request_with_credentials_included)
   using the *credentials: "include"* option.
 
-A sample of this approach is [available](/bff/samples#separate-host-for-ui).
+A sample of this approach is [available](/bff/samples/index.mdx#separate-host-for-ui).
 
 ### Serve The Index Page From The BFF Host
 

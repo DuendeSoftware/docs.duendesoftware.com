@@ -21,7 +21,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer();
 
 :::note
 Many of the fundamental configuration settings can be set on the options. See the
-`[IdentityServerOptions](/identityserver/reference/v8/options)` reference for more details.
+`[IdentityServerOptions](/identityserver/reference/v8/options.md)` reference for more details.
 :::
 
 ## Configuration Stores
@@ -278,7 +278,7 @@ The following are convenient to add additional features to your IdentityServer.
 
 ## SAML 2.0 :badge[v8.0]
 
-Extension methods for configuring [SAML 2.0 Identity Provider](/identityserver/saml/) support. Added in `v8.0`.
+Extension methods for configuring [SAML 2.0 Identity Provider](/identityserver/saml/index.mdx) support. Added in `v8.0`.
 
 * **`AddSaml`**
 
@@ -295,7 +295,7 @@ Extension methods for configuring [SAML 2.0 Identity Provider](/identityserver/s
 
 ### SAML 2.0 Service Provider (External Authentication) :badge[v8.0]
 
-Extension method on `AuthenticationBuilder` for registering a [SAML 2.0 external provider](/identityserver/saml/) as a static authentication scheme.
+Extension method on `AuthenticationBuilder` for registering a [SAML 2.0 external provider](/identityserver/saml/index.mdx) as a static authentication scheme.
 
 * **`AddSamlServiceProvider`**
 

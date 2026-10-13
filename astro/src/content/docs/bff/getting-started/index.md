@@ -6,7 +6,7 @@ sidebar:
   label: Overview
 ---
 
-Currently, the most recent version is v4. If you're upgrading from a previous version, please check our [upgrade guides](/bff/upgrading).
+Currently, the most recent version is v4. If you're upgrading from a previous version, please check our [upgrade guides](/bff/upgrading/index.mdx).
 
 If you're starting a new BFF project, consider the following startup guides:
 

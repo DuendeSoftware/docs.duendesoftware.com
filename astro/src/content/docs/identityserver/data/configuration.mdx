@@ -13,7 +13,7 @@ redirect_from:
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Configuration data models the information for [Clients](/identityserver/fundamentals/clients.md)
-and [Resources](/identityserver/fundamentals/resources).
+and [Resources](/identityserver/fundamentals/resources/index.md).
 
 ## Stores
 
@@ -56,7 +56,7 @@ same data.
 <Tabs syncKey="isVersion">
 <TabItem label="v8.0+">
 
-Duende IdentityServer provides [convenience methods](/identityserver/reference/v8/di#caching-configuration-data) to
+Duende IdentityServer provides [convenience methods](/identityserver/reference/v8/di.md#caching-configuration-data) to
 enable caching data from the various stores.
 The caching implementation is built on Microsoft's [`HybridCache`](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid) from the `Microsoft.Extensions.Caching.Hybrid` package, registered as a [keyed service](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection#keyed-services) under `ServiceProviderKeys.ConfigurationStoreCache`. For example:
 
@@ -83,7 +83,7 @@ builder.Services.AddIdentityServer()
 ```
 
 The duration of the data in the default cache is configurable on
-the [`IdentityServerOptions`](/identityserver/reference/v8/options#caching).
+the [`IdentityServerOptions`](/identityserver/reference/v8/options.md#caching).
 For example:
 
 ```csharp
@@ -128,7 +128,7 @@ builder.Services.AddIdentityServer()
 ```
 
 The duration of the data in the default cache is configurable on
-the [`IdentityServerOptions`](/identityserver/reference/v8/options#caching).
+the [`IdentityServerOptions`](/identityserver/reference/v8/options.md#caching).
 For example:
 
 ```csharp

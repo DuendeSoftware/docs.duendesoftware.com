@@ -18,7 +18,7 @@ You can configure the consent requirement per client. By default, no consent is 
 changed via the `RequireConsent` [setting](/identityserver/reference/v8/models/client.md#consent-screen).
 :::
 
-Consent is used to allow an end user to grant a client access to [resources](/identityserver/fundamentals/resources).
+Consent is used to allow an end user to grant a client access to [resources](/identityserver/fundamentals/resources/index.md).
 
 ## When Does IdentityServer Ask For Consent?
 
