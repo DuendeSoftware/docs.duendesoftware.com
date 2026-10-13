@@ -379,8 +379,12 @@ store.Add(certificate);
 Back up signing keys so that you can restore service after data loss. With automatic key management, the keys in the
 [signing key store](/identityserver/data/operational.md#keys) are encrypted using ASP.NET Core Data Protection by
 default (see [Encryption Of Keys at Rest](#encryption-of-keys-at-rest)). A backup of the signing keys is therefore only
-usable together with the Data Protection keys that encrypted them, so back up and restore both together. See
-[ASP.NET Core Data Protection](/identityserver/deployment/index.md#aspnet-core-data-protection).
+usable together with the Data Protection keys that encrypted them, so back up and restore both together. A restored
+Data Protection key ring is only readable when the restored application uses the same application name
+(`SetApplicationName`) and has access to whatever protects the key ring at rest, such as the certificate or external
+key used with `ProtectKeysWithCertificate` or `ProtectKeysWithAzureKeyVault`. Include those in your recovery plan. See
+[ASP.NET Core Data Protection](/identityserver/deployment/index.md#aspnet-core-data-protection) and
+[Data Protection](/general/data-protection.md).
 
 With static keys, back up the key material (for example, the certificate and its private key) using the same protections
 as the original.
@@ -502,17 +506,19 @@ If you suspect a signing key has been exposed, rotate immediately rather than wa
 2. **Stop every instance from signing with and publishing the compromised key.** Unlike a routine rotation, do not keep
    the old key around as a validation key. See [Phased Rotation](#solution-2-phased-rotation) for the routine process
    this deliberately skips.
-   - With automatic key management, delete or retire the key in the key store. Each instance caches keys from the store
-     for `KeyManagement.KeyCacheDuration` (24 hours by default, see
-     [Key Management options](/identityserver/reference/v8/options.md#key-management)), so restart every instance, or wait out the
-     cache duration, before assuming the key is gone.
-   - With static keys, remove the compromised key from `AddSigningCredential` and from any `AddValidationKey`
+   * With automatic key management, delete the compromised key from the key store. Don't just retire it: retired keys
+     stay published in discovery for `RetentionDuration`. Each instance also caches keys from the store for
+     `KeyManagement.KeyCacheDuration` (see [Key Management options](/identityserver/reference/v8/options.md#key-management)),
+     so restart every instance after deleting the key rather than waiting for the cache to expire.
+   * With static keys, remove the compromised key from `AddSigningCredential` and from any `AddValidationKey`
      registration, then redeploy every instance.
-   - Confirm that the discovery document and JWKS endpoint of every instance no longer list the compromised `kid`.
+   * Confirm that the JWKS document of every instance (the `jwks_uri` advertised in discovery) no longer lists the
+     compromised `kid`.
 3. **Accept that tokens signed with the key become invalid.** Once the key is no longer published, APIs that refresh
    their key material will reject tokens signed with it, and users may need to sign in again.
-4. **Revoke refresh tokens and grants.** Remove persisted grants that were issued before the compromise so they cannot
-   be used to obtain new tokens. See [Persisted Grants](/identityserver/data/operational.md#grants).
+4. **Revoke refresh tokens and grants.** Remove persisted grants that were issued before the compromised key was
+   removed from every instance, so grants issued during the exposure window can't be used to obtain new tokens. If you
+   don't know when the exposure started or ended, revoke all active grants. See [Persisted Grants](/identityserver/data/operational.md#grants).
 5. **Notify relying parties.** Tell clients and APIs (including those that cache JWKS) to refresh their key material,
    and update any Service Providers that use a statically configured certificate.
 
