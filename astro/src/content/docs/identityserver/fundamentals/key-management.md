@@ -276,14 +276,20 @@ How you integrate one depends on how the key is exposed:
 
 As an alternative to a custom `SignatureProvider`, you can subclass `DefaultTokenCreationService` and override
 `CreateJwtAsync`. This lets you build the JWT yourself and call the KMS SDK's async signing API, instead of blocking
-inside a synchronous `SignatureProvider`.
+inside a synchronous `SignatureProvider`. All JWTs IdentityServer issues, including access tokens, identity tokens,
+and JWT introspection responses, are created through `ITokenCreationService`.
 
-The example below uses Azure Key Vault's `CryptographyClient` from the
-[Azure.Security.KeyVault.Keys](https://www.nuget.org/packages/Azure.Security.KeyVault.Keys) package:
+The example below uses Azure Key Vault, with the
+[Azure.Security.KeyVault.Keys](https://www.nuget.org/packages/Azure.Security.KeyVault.Keys) and
+[Azure.Identity](https://www.nuget.org/packages/Azure.Identity) packages:
 
 ```bash
 dotnet add package Azure.Security.KeyVault.Keys
+dotnet add package Azure.Identity
 ```
+
+The token creation service takes the algorithm and key ID from the registered signing credential, so the JWT header
+always matches what IdentityServer publishes in its discovery document:
 
 ```csharp
 // KeyVaultTokenCreationService.cs
@@ -306,40 +312,69 @@ public class KeyVaultTokenCreationService(
     protected override async Task<string> CreateJwtAsync(Token token, string payload,
         Dictionary<string, object> headerElements, CancellationToken ct)
     {
-        headerElements["alg"] = "RS256";
-        headerElements["kid"] = "<your-key-id>";
+        var credential = await Keys.GetSigningCredentialsAsync(token.AllowedSigningAlgorithms, ct);
+
+        headerElements["alg"] = credential.Algorithm;
+        headerElements["kid"] = credential.Key.KeyId;
 
         var header = Base64UrlEncoder.Encode(JsonSerializer.Serialize(headerElements));
         var body = Base64UrlEncoder.Encode(payload);
         var signingInput = $"{header}.{body}";
 
         var result = await crypto.SignDataAsync(
-            SignatureAlgorithm.RS256, Encoding.UTF8.GetBytes(signingInput), ct);
+            new SignatureAlgorithm(credential.Algorithm), Encoding.UTF8.GetBytes(signingInput), ct);
 
         return $"{signingInput}.{Base64UrlEncoder.Encode(result.Signature)}";
     }
 }
 ```
 
-Register the service after calling `AddIdentityServer`:
+IdentityServer still needs a signing credential: it uses the credential's algorithm to compute hashes such as
+`at_hash` and `c_hash` in identity tokens, and to populate `id_token_signing_alg_values_supported` in discovery.
+Register the KMS key's public key as the signing credential (the private key stays in the KMS), and disable automatic
+key management so its keys are not used alongside the KMS key:
 
 ```csharp
 // Program.cs
+using System.Security.Cryptography;
+using Azure.Identity;
+using Azure.Security.KeyVault.Keys;
+using Azure.Security.KeyVault.Keys.Cryptography;
+using Duende.IdentityServer.Services;
+using Microsoft.IdentityModel.Tokens;
+
+var azureCredential = new DefaultAzureCredential();
+var keyClient = new KeyClient(new Uri("https://<your-vault>.vault.azure.net/"), azureCredential);
+KeyVaultKey kmsKey = await keyClient.GetKeyAsync("<your-key-name>");
+
+var publicKey = new RsaSecurityKey(kmsKey.Key.ToRSA(includePrivateParameters: false))
+{
+    KeyId = kmsKey.Properties.Version
+};
+
+builder.Services.AddIdentityServer(options => options.KeyManagement.Enabled = false)
+    .AddSigningCredential(new SigningCredentials(publicKey, SecurityAlgorithms.RsaSha256));
+
+builder.Services.AddSingleton(new CryptographyClient(kmsKey.Id, azureCredential));
 builder.Services.AddTransient<ITokenCreationService, KeyVaultTokenCreationService>();
 ```
 
 :::note
-In IdentityServer v7, the `DefaultTokenCreationService` constructor takes an `IClock` instead of a `TimeProvider`, and
-`CreateJwtAsync` does not have a `CancellationToken` parameter.
+In IdentityServer v7, the `DefaultTokenCreationService` constructor takes an `IClock` instead of a `TimeProvider`,
+`CreateJwtAsync` does not have a `CancellationToken` parameter, and `IKeyMaterialService.GetSigningCredentialsAsync`
+takes only the allowed algorithms.
 :::
 
 When you take this approach, keep in mind:
 
-* IdentityServer still needs the public key to publish in its discovery document. Register it with
-  [`AddValidationKey`](/identityserver/reference/v8/di.md#signing-keys) and make sure its key ID matches the `kid` you
-  set in the JWT header.
-* Key rotation is your responsibility. Publish the new public key ahead of time, and keep the old one until tokens
+* Register the public key with `AddSigningCredential`, not only `AddValidationKey`. Without a signing credential,
+  issuing identity tokens fails and discovery omits the supported signing algorithms. `AddSigningCredential` also
+  publishes the public key in the JWKS document.
+* Key rotation is your responsibility. Publish the new public key ahead of time with
+  [`AddValidationKey`](/identityserver/reference/v8/di.md#signing-keys), and keep the old one published until tokens
   signed with it have expired.
+* SAML signing does not go through `ITokenCreationService`. It reads the signing credential directly and requires a
+  private key, so this approach does not cover SAML responses.
 * Each token now requires a network call to the KMS, so factor its latency, rate limits, and availability into your
   design.
 
