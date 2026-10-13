@@ -62,7 +62,7 @@ You can use [Direct Forwarding](remote.mdx) for most scenarios. If you have more
 
 ## See Also
 
-- [Token Management](/bff/fundamentals/tokens/) — How BFF attaches access tokens to outgoing API calls
-- [Access Token Management](/accesstokenmanagement/) — The underlying token lifecycle library
-- [IdentityServer API Resources](/identityserver/fundamentals/resources/api-resources/) — Configuring scopes for your APIs
+- [Token Management](/bff/fundamentals/tokens.md) — How BFF attaches access tokens to outgoing API calls
+- [Access Token Management](/accesstokenmanagement/index.mdx) — The underlying token lifecycle library
+- [IdentityServer API Resources](/identityserver/fundamentals/resources/api-resources.md) — Configuring scopes for your APIs
 

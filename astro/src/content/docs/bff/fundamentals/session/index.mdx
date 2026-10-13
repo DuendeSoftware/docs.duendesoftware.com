@@ -75,7 +75,7 @@ Tokens stored in the session are managed automatically:
 2. **Refresh token** — Stored server-side (in the session). Revoked automatically at logout.
 3. **ID token** — Used during logout to send a `id_token_hint` to the identity provider.
 
-See [Token Management](/bff/fundamentals/tokens/) for how to access tokens programmatically.
+See [Token Management](/bff/fundamentals/tokens.md) for how to access tokens programmatically.
 
 ## Management Endpoints
 
@@ -94,15 +94,15 @@ The BFF exposes several HTTP endpoints for managing the user's session. These en
 
 | Page | Description |
 |------|-------------|
-| [Authentication Handlers](/bff/fundamentals/session/handlers/) | OIDC and cookie handler configuration |
-| [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) | Persistent session storage with Entity Framework or custom stores |
-| [OIDC Prompts](/bff/fundamentals/session/oidc-prompts/) | Controlling interactive vs. silent authentication |
-| [Login Endpoint](/bff/fundamentals/session/management/login/) | How to trigger login from the frontend |
-| [Logout Endpoint](/bff/fundamentals/session/management/logout/) | How to trigger logout and CSRF protection |
-| [User Endpoint](/bff/fundamentals/session/management/user/) | Reading user claims and session state |
-| [Back-Channel Logout](/bff/fundamentals/session/management/back-channel-logout/) | Server-initiated session termination |
-| [Silent Login](/bff/fundamentals/session/management/silent-login/) | Non-interactive login (deprecated) |
-| [Diagnostics](/bff/fundamentals/session/management/diagnostics/) | Development-time token inspection |
+| [Authentication Handlers](/bff/fundamentals/session/handlers.mdx) | OIDC and cookie handler configuration |
+| [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions.mdx) | Persistent session storage with Entity Framework or custom stores |
+| [OIDC Prompts](/bff/fundamentals/session/oidc-prompts.md) | Controlling interactive vs. silent authentication |
+| [Login Endpoint](/bff/fundamentals/session/management/login.md) | How to trigger login from the frontend |
+| [Logout Endpoint](/bff/fundamentals/session/management/logout.md) | How to trigger logout and CSRF protection |
+| [User Endpoint](/bff/fundamentals/session/management/user.md) | Reading user claims and session state |
+| [Back-Channel Logout](/bff/fundamentals/session/management/back-channel-logout.md) | Server-initiated session termination |
+| [Silent Login](/bff/fundamentals/session/management/silent-login.md) | Non-interactive login (deprecated) |
+| [Diagnostics](/bff/fundamentals/session/management/diagnostics.md) | Development-time token inspection |
 
 ## See Also
 

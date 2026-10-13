@@ -32,5 +32,5 @@ If the user has a refresh token, the logout endpoint can revoke it. This is enab
 
 ## Customize This Endpoint
 
-To add custom logic before or after the logout endpoint processes a request, see [Logout Endpoint Extensibility](/bff/extensibility/management/logout/).
+To add custom logic before or after the logout endpoint processes a request, see [Logout Endpoint Extensibility](/bff/extensibility/management/logout.mdx).
 

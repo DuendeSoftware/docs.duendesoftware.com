@@ -210,7 +210,7 @@ need to set the `AlwaysSendClientClaims` property on the client definition.
 ### Setting Client Claims Dynamically
 
 If you want to set client claims dynamically, you could either do that at client load time (via a
-client [store](/identityserver/data) implementation), or using
+client [store](/identityserver/data/index.mdx) implementation), or using
 a [custom token request validator](/identityserver/tokens/dynamic-validation.md).
 
 ## Claim Serialization

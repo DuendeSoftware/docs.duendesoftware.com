@@ -6,7 +6,7 @@ sidebar:
   order: 9
 ---
 
-This page provides a complete reference for all `OidcClientOptions` properties. For a quick start, see [Automatic Mode](/identitymodel-oidcclient/automatic/) or [Manual Mode](/identitymodel-oidcclient/manual/).
+This page provides a complete reference for all `OidcClientOptions` properties. For a quick start, see [Automatic Mode](/identitymodel-oidcclient/automatic.md) or [Manual Mode](/identitymodel-oidcclient/manual.md).
 
 ## Required Properties
 
@@ -145,7 +145,7 @@ options.Resource = new[] { "urn:api:resource1", "urn:api:resource2" };
 |----------|------|-------------|
 | `LoggerFactory` | `ILoggerFactory` | Logger factory for diagnostic logging |
 
-See [Logging](/identitymodel-oidcclient/logging/) for details.
+See [Logging](/identitymodel-oidcclient/logging.mdx) for details.
 
 ## Validation Policy
 

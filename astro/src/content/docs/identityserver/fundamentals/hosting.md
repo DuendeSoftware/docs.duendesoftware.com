@@ -45,7 +45,7 @@ var idsvrBuilder = builder.Services.AddIdentityServer()
 ```
 
 The above is using the in-memory stores, but we also support EntityFramework-based implementations and custom stores.
-See [here](/identityserver/data) for more information.
+See [here](/identityserver/data/index.mdx) for more information.
 
 :::note
 The `AddIdentityServer` extensions method also adds the required authentication services (it calls `AddAuthentication` internally).

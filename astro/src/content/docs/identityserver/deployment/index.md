@@ -110,7 +110,7 @@ Duende IdentityServer makes extensive use of
 ASP.NET's [data protection](https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/) feature. It is
 crucial that you configure data protection correctly before you start using your IdentityServer in production.
 
-The recommended practices for setting up and using ASP.NET Core Data Protection for Duende IdentityServer are the same as for other server-side products, like BFF. See the [general ASP.NET Core Data Protection page](/general/data-protection).
+The recommended practices for setting up and using ASP.NET Core Data Protection for Duende IdentityServer are the same as for other server-side products, like BFF. See the [general ASP.NET Core Data Protection page](/general/data-protection.md).
 
 ### ASP.NET Data Protection Keys and IdentityServer Signing Keys
 
@@ -160,7 +160,7 @@ For certain operations, IdentityServer needs a persistence store to keep state, 
 
 You can either use a traditional database for storing operational data, or use a cache with persistence features like Redis.
 
-Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](/identityserver/data) section for more information.
+Duende IdentityServer includes storage implementations for above data using EntityFramework, and you can build your own. See the [data stores](/identityserver/data/index.mdx) section for more information.
 
 ### IdentityServer Features Using Data Protection
 

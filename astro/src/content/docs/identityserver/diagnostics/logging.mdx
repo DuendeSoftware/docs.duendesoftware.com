@@ -14,7 +14,7 @@ import { LinkCard } from '@astrojs/starlight/components';
 
 Duende IdentityServer uses the standard logging facilities provided by ASP.NET Core. You don't need to do any extra configuration to benefit from rich logging functionality.
 
-For log level definitions, environment guidance, and actionable next steps for each level, see the [Logging Fundamentals](/general/logging) guide.
+For log level definitions, environment guidance, and actionable next steps for each level, see the [Logging Fundamentals](/general/logging.mdx) guide.
 
 <LinkCard
   title="Logging Fundamentals"
@@ -40,7 +40,7 @@ Logs are written under the `Duende.IdentityServer` category. To enable detailed 
 
 :::note
 In production, logging can produce significant volume. It is recommended to default to `Warning` level and drop to `Information` or `Debug` only when actively investigating an issue.
-For high-level production instrumentation, see the [Events](/identityserver/diagnostics/events) system.
+For high-level production instrumentation, see the [Events](/identityserver/diagnostics/events.md) system.
 :::
 
 ### Filtering Exceptions
@@ -93,4 +93,4 @@ Returning `true` emits the log; returning `false` suppresses it.
 
 ### OpenTelemetry
 
-Logs written to the standard `ILogger` system in .NET 8+ can be exported to OpenTelemetry traces at runtime. This helps visualize when a log statement occurred in relation to the entire request. Logs are augmented with trace IDs and correlated with traces. See [Logs in OpenTelemetry](/identityserver/diagnostics/otel#logs) for setup details.
+Logs written to the standard `ILogger` system in .NET 8+ can be exported to OpenTelemetry traces at runtime. This helps visualize when a log statement occurred in relation to the entire request. Logs are augmented with trace IDs and correlated with traces. See [Logs in OpenTelemetry](/identityserver/diagnostics/otel.md#logs) for setup details.

@@ -8,7 +8,7 @@ sidebar:
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
-This page covers the production-specific concerns you need to address before deploying a BFF host. For middleware pipeline order, see [Middleware Pipeline](/bff/fundamentals/middleware-pipeline/).
+This page covers the production-specific concerns you need to address before deploying a BFF host. For middleware pipeline order, see [Middleware Pipeline](/bff/fundamentals/middleware-pipeline.mdx).
 
 ## Load Balancing and Sticky Sessions
 
@@ -33,7 +33,7 @@ builder.Services.AddDataProtection()
 :::caution[Do not use in-memory keys in production]
 The default in-memory key ring is regenerated on every restart. Any existing sessions are invalidated when the process restarts or when traffic is routed to a new instance.
 
-See also: [Data Protection](/general/data-protection/)
+See also: [Data Protection](/general/data-protection.md)
 :::
 
 ### Server-Side Sessions (Recommended for Multi-Instance)
@@ -98,7 +98,7 @@ builder.Services.AddAuthentication()
 Setting a broad cookie domain (`.example.com`) means the cookie is sent to all subdomains, including any you don't control. Only use this when architecturally required, and ensure all subdomains are trusted.
 :::
 
-For split-host deployments (frontend on `app.example.com`, BFF on `bff.example.com`), you will need to set the cookie domain AND configure CORS. See [Separate Host for UI](/bff/architecture/ui-hosting/) and the [SplitHosts sample](/bff/samples/).
+For split-host deployments (frontend on `app.example.com`, BFF on `bff.example.com`), you will need to set the cookie domain AND configure CORS. See [Separate Host for UI](/bff/architecture/ui-hosting.md) and the [SplitHosts sample](/bff/samples/index.mdx).
 
 ## Reverse Proxy Configuration
 
@@ -123,7 +123,7 @@ Without this, `HttpContext.Request.Scheme` will be `http` even when the client u
 
 ## Monitoring and Alerting
 
-BFF emits OpenTelemetry metrics and traces. See [Diagnostics](/bff/diagnostics/) for the full list of metric names and activity sources.
+BFF emits OpenTelemetry metrics and traces. See [Diagnostics](/bff/diagnostics/index.mdx) for the full list of metric names and activity sources.
 
 ### Key Metrics to Alert On
 

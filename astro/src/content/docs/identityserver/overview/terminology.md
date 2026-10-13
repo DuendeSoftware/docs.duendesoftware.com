@@ -84,7 +84,7 @@ phones. Logically these instances are still a single client.
 
 ## Resources
 
-[Resources](/identityserver/fundamentals/resources) are something you want to protect with your IdentityServer -
+[Resources](/identityserver/fundamentals/resources/index.md) are something you want to protect with your IdentityServer -
 either identity data of your users, or APIs.
 
 Every resource has a unique name - and clients use this name to specify to which resources they want to get access to.

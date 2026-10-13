@@ -32,17 +32,17 @@ flowchart LR
     Frontend <--> Backend
 ```
 
-For a detailed architecture diagram and explanation, see the [Architecture overview](/bff/architecture/).
+For a detailed architecture diagram and explanation, see the [Architecture overview](/bff/architecture/index.mdx).
 
 ## Where to Go Next
 
 | Topic | Description |
 |-------|-------------|
-| [Rendering Modes & BFF](/bff/fundamentals/blazor/rendering-modes/) | Which Blazor rendering modes work with BFF and why |
-| [Data Access Patterns](/bff/fundamentals/blazor/data-access/) | How to securely call APIs from Blazor components |
-| [Getting Started: Blazor](/bff/getting-started/blazor/) | Step-by-step setup guide for a Blazor BFF app |
-| [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions/) | Persistent session storage for Blazor apps |
-| [Token Management](/bff/fundamentals/tokens/) | How BFF manages access tokens for Blazor |
+| [Rendering Modes & BFF](/bff/fundamentals/blazor/rendering-modes.mdx) | Which Blazor rendering modes work with BFF and why |
+| [Data Access Patterns](/bff/fundamentals/blazor/data-access.mdx) | How to securely call APIs from Blazor components |
+| [Getting Started: Blazor](/bff/getting-started/blazor.mdx) | Step-by-step setup guide for a Blazor BFF app |
+| [Server-Side Sessions](/bff/fundamentals/session/server-side-sessions.mdx) | Persistent session storage for Blazor apps |
+| [Token Management](/bff/fundamentals/tokens.md) | How BFF manages access tokens for Blazor |
 
 ## See Also
 

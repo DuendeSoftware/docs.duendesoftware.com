@@ -10,7 +10,7 @@ redirect_from:
   - /identityserver/v7/ui/logout/external/
 ---
 
-When a user is [logging out](/identityserver/ui/logout), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.
+When a user is [logging out](/identityserver/ui/logout/index.md), and they have used an external identity provider to sign-in then it is likely that they should be redirected to also sign-out of the external provider.
 Not all external providers support sign-out, as it depends on the protocol and features they support.
 
 Don't forget that your logout page still needs to complete all the other steps to properly sign the user out.

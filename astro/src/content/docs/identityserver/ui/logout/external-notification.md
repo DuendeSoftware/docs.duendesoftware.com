@@ -19,7 +19,7 @@ Not all external identity providers support federated sign-out, but those that d
 clients that the user has signed out.
 This notification usually comes in the form of a request in an `<iframe>` from the external identity provider's "logged
 out" page.
-IdentityServer must then notify all of its clients (as discussed [here](/identityserver/ui/logout)), also typically in the form of a
+IdentityServer must then notify all of its clients (as discussed [here](/identityserver/ui/logout/index.md)), also typically in the form of a
 request in an `<iframe>` (i.e. via Front-Channel Logout) from within the external identity provider's `<iframe>`.
 
 :::note
@@ -28,7 +28,7 @@ external identity provider. When using an OpenID Connect identity provider, this
 front-channel logout URI.
 :::
 
-What makes federated sign-out a special case (when compared to a normal [logout](/identityserver/ui/logout)) is that the federated
+What makes federated sign-out a special case (when compared to a normal [logout](/identityserver/ui/logout/index.md)) is that the federated
 sign-out request is not to the normal sign-out endpoint in IdentityServer.
 In fact, each external IdentityProvider will have a different endpoint into your IdentityServer host.
 This is due to that fact that each external identity provider might use a different protocol, and each middleware
@@ -43,6 +43,6 @@ federated sign-out.
 Fortunately IdentityServer already contains this code.
 When requests come into IdentityServer and invoke the handlers for external authentication providers, IdentityServer
 detects if these are federated sign-out requests and if they are it will automatically render the same `<iframe>`
-as [described here for logout](/identityserver/ui/logout).
+as [described here for logout](/identityserver/ui/logout/index.md).
 
 In short, federated sign-out is automatically supported.

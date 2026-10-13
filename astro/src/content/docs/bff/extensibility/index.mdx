@@ -21,9 +21,9 @@ Duende.BFF is designed to be extended at multiple layers. Most production applic
 | Area | What You Can Customize | Detail Page |
 |------|------------------------|-------------|
 | **Management Endpoints** | Login, logout, user info, back-channel logout, diagnostics, silent login processing | [Management Endpoints](#management-endpoints) |
-| **Session Store** | Where server-side session data is persisted (custom database, cache, etc.) | [Session Management](/bff/extensibility/sessions/) |
-| **HTTP Forwarder** | Custom HTTP clients, request/response transformations for proxied calls | [HTTP Forwarder](/bff/extensibility/http-forwarder/) |
-| **Token Management** | Token storage backend, per-route token retrieval (delegation, impersonation) | [Token Management](/bff/extensibility/tokens/) |
+| **Session Store** | Where server-side session data is persisted (custom database, cache, etc.) | [Session Management](/bff/extensibility/sessions.mdx) |
+| **HTTP Forwarder** | Custom HTTP clients, request/response transformations for proxied calls | [HTTP Forwarder](/bff/extensibility/http-forwarder.mdx) |
+| **Token Management** | Token storage backend, per-route token retrieval (delegation, impersonation) | [Token Management](/bff/extensibility/tokens.md) |
 
 ## Management Endpoints
 
@@ -31,12 +31,12 @@ Each BFF management endpoint has a corresponding interface that you can implemen
 
 | Endpoint | Default Path | Interface (v4) | Interface (v3) | Detail |
 |----------|-------------|----------------|----------------|--------|
-| Login | `/bff/login` | `ILoginEndpoint` | `ILoginService` | [Login Extensibility](/bff/extensibility/management/login/) |
-| Logout | `/bff/logout` | `ILogoutEndpoint` | `ILogoutService` | [Logout Extensibility](/bff/extensibility/management/logout/) |
-| User | `/bff/user` | `IUserEndpoint` | `IUserService` | [User Extensibility](/bff/extensibility/management/user/) |
-| Silent Login | `/bff/silent-login` | `ISilentLoginEndpoint` | `ISilentLoginService` | [Silent Login Extensibility](/bff/extensibility/management/silent-login/) |
-| Back-Channel Logout | `/bff/backchannel` | `IBackchannelLogoutEndpoint` | `IBackchannelLogoutService` | [Back-Channel Logout Extensibility](/bff/extensibility/management/back-channel-logout/) |
-| Diagnostics | `/bff/diagnostics` | `IDiagnosticsEndpoint` | `IDiagnosticsService` | [Diagnostics Extensibility](/bff/extensibility/management/diagnostics/) |
+| Login | `/bff/login` | `ILoginEndpoint` | `ILoginService` | [Login Extensibility](/bff/extensibility/management/login.mdx) |
+| Logout | `/bff/logout` | `ILogoutEndpoint` | `ILogoutService` | [Logout Extensibility](/bff/extensibility/management/logout.mdx) |
+| User | `/bff/user` | `IUserEndpoint` | `IUserService` | [User Extensibility](/bff/extensibility/management/user.mdx) |
+| Silent Login | `/bff/silent-login` | `ISilentLoginEndpoint` | `ISilentLoginService` | [Silent Login Extensibility](/bff/extensibility/management/silent-login.mdx) |
+| Back-Channel Logout | `/bff/backchannel` | `IBackchannelLogoutEndpoint` | `IBackchannelLogoutService` | [Back-Channel Logout Extensibility](/bff/extensibility/management/back-channel-logout.mdx) |
+| Diagnostics | `/bff/diagnostics` | `IDiagnosticsEndpoint` | `IDiagnosticsService` | [Diagnostics Extensibility](/bff/extensibility/management/diagnostics.mdx) |
 
 ### General Pattern (v4)
 
@@ -64,7 +64,7 @@ builder.Services.AddBff()
     .AddServerSideSessions<MyCustomSessionStore>();
 ```
 
-See [Session Management Extensibility](/bff/extensibility/sessions/) for the full interface and implementation guidance.
+See [Session Management Extensibility](/bff/extensibility/sessions.mdx) for the full interface and implementation guidance.
 
 ## HTTP Forwarder
 
@@ -73,7 +73,7 @@ When using `MapRemoteBffApiEndpoint`, BFF uses a default HTTP client and a defau
 - **The HTTP client** — implement `IForwarderHttpClientFactory` to use a proxy, custom certificates, etc.
 - **Request/response transformations** — add custom headers, modify paths, or replace the default transformer entirely.
 
-See [HTTP Forwarder Extensibility](/bff/extensibility/http-forwarder/) for details.
+See [HTTP Forwarder Extensibility](/bff/extensibility/http-forwarder.mdx) for details.
 
 ## Token Management
 
@@ -88,7 +88,7 @@ app.MapRemoteBffApiEndpoint("/api/delegated", new Uri("https://api.example.com")
     .WithAccessTokenRetriever<DelegationTokenRetriever>();
 ```
 
-See [Token Management Extensibility](/bff/extensibility/tokens/) for details.
+See [Token Management Extensibility](/bff/extensibility/tokens.md) for details.
 
 ## See Also
 

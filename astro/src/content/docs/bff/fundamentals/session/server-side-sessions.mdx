@@ -110,7 +110,7 @@ Abandoned sessions will remain in the store unless something removes the stale e
     })
     .AddServerSideSessions();`}/>
 
-    This requires an implementation of [`IUserSessionStoreCleanup`](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
+    This requires an implementation of [`IUserSessionStoreCleanup`](/bff/extensibility/sessions.mdx#user-session-store-cleanup) in the ASP.NET Core service provider.
 
     If using Entity Framework Core, then the `IUserSessionStoreCleanup` implementation is provided for you when you use `AddEntityFrameworkServerSideSessions`.
     You can then add the `SessionCleanupBackgroundProcess`:
@@ -147,7 +147,7 @@ builder.Services.AddBff()
     })
     .AddServerSideSessions();`}/>
 
-    This requires an implementation of [`IUserSessionStoreCleanup`](/bff/extensibility/sessions#user-session-store-cleanup) in the ASP.NET Core service provider.
+    This requires an implementation of [`IUserSessionStoreCleanup`](/bff/extensibility/sessions.mdx#user-session-store-cleanup) in the ASP.NET Core service provider.
 
     If using Entity Framework Core, then the `IUserSessionStoreCleanup` implementation is provided for you when you use `AddEntityFrameworkServerSideSessions`.
     Just enable session cleanup:

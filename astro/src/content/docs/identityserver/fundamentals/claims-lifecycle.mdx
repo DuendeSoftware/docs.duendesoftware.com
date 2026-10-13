@@ -11,7 +11,7 @@ import { Badge, CardGrid, LinkCard, Tabs, TabItem } from "@astrojs/starlight/com
 Understanding where claims live at each step of a protocol flow is essential for configuring IdentityServer correctly. This page provides sequence diagrams for each major flow, showing:
 
 - **Where** claims are stored (session cookie, persisted grants DB, tokens, client cookie, API context)
-- **When** the [Profile Service](/identityserver/reference/v8/services/profile-service/) is invoked
+- **When** the [Profile Service](/identityserver/reference/v8/services/profile-service.md) is invoked
 - **How** configuration options change claim placement
 
 ## Claim Locations
@@ -87,7 +87,7 @@ sequenceDiagram
     Note over C: Client cookie stores id_token claims<br/>No userinfo call needed
 ```
 
-**Configuration:** Set `AlwaysIncludeUserClaimsInIdToken = true` on the [Client](/identityserver/reference/v8/models/client/) to enable this behavior.
+**Configuration:** Set `AlwaysIncludeUserClaimsInIdToken = true` on the [Client](/identityserver/reference/v8/models/client.md) to enable this behavior.
 
 **When to use:** When your client doesn't want to make an extra HTTP call to userinfo, or when you need claims immediately available at sign-in without a round-trip.
 
@@ -142,7 +142,7 @@ sequenceDiagram
     IS-->>C: New access_token with CURRENT claims<br/>(+ new refresh_token if rotated)
 ```
 
-Set `UpdateAccessTokenClaimsOnRefresh = true` on the [Client](/identityserver/reference/v8/models/client/) to enable this.
+Set `UpdateAccessTokenClaimsOnRefresh = true` on the [Client](/identityserver/reference/v8/models/client.md) to enable this.
 
 **Trade-off:** This adds a Profile Service call on every refresh, which may increase load on your user store.
 
