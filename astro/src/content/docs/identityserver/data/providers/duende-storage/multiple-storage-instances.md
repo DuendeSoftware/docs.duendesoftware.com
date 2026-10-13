@@ -174,5 +174,5 @@ bring its data into scope for both.
 Each storage instance has its own schema and is migrated independently. Running `IStorageInstanceSchema.MigrateAsync` only
 migrates the default instance. Resolve and migrate every other instance explicitly with
 `IStorageInstanceSchemaFactory.GetStorageInstanceSchema(storageInstanceId, ct)`, as shown in the examples above. The
-[Duende CLI](/identityserver/data/providers/duende-storage/getting-started.md#deploy-the-database-schema) migrates one
+[Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate) migrates one
 connection string at a time, so run it once per instance's connection string in a multi-instance deployment.

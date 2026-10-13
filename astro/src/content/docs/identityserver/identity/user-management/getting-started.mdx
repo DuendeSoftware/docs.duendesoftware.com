@@ -1,7 +1,7 @@
 ---
 title: Getting Started with User Management
 description: Build a complete OTP (one-time password) login flow from scratch using Duende User Management with IdentityServer as the foundation.
-date: 2026-10-01
+date: 2026-10-21
 sidebar:
   label: Getting Started
   order: 2
@@ -22,8 +22,8 @@ The tutorial is split into two phases:
 - **Phase 2** builds the OTP login pages that drive the actual user experience.
 
 :::caution
-This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and single-server deployments, but not recommended for production at scale.
-For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/identityserver/identity/user-management/fundamentals/storage.md) for details.
+This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and testing, but production deployments need a different database.
+For production setup of each provider, see [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx).
 :::
 
 ## Prerequisites
@@ -57,15 +57,16 @@ dotnet add package Duende.Storage.Sqlite
 
 `Duende.IdentityServer` is the core IdentityServer package. `Duende.UserManagement.IdentityServer8` adds the User Management integration on top of it. The storage package provides the backing store for user data.
 
-Three storage adapters are available:
+Four storage adapters are available; see [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx) for details:
 
 | Package                     | Database   | Notes                                                                                                                     |
-|-----------------------------|------------|---------------------------------------------------------------------------------------------------------------------------|
-| `Duende.Storage.Postgresql` | PostgreSQL | Recommended for production. Requires an `NpgsqlDataSource` registered in DI.                                              |
-| `Duende.Storage.Mssql`      | SQL Server | Production-ready for Microsoft/Windows environments.                                                                      |
-| `Duende.Storage.Sqlite`     | SQLite     | File-based storage for local development. Also supports an in-memory mode (`Data Source=:memory:`) for automated testing. |
+|------------------------------|------------|-----------------------------------------------------------------------------------------------------------------------------|
+| `Duende.Storage.PostgreSql`  | PostgreSQL | Production database. Requires an `NpgsqlDataSource` registered in DI.                                                       |
+| `Duende.Storage.MsSql`       | SQL Server | Production database for Microsoft/Windows environments.                                                                     |
+| `Duende.Storage.Oracle`      | Oracle     | Production database for Oracle environments.                                                                                |
+| `Duende.Storage.Sqlite`      | SQLite     | Local development and automated tests (in-memory with `AddSqliteInMemory()`).                                               |
 
-This tutorial uses SQLite for simplicity. For production configuration and setup of each provider, see the [Storage documentation](/identityserver/identity/user-management/fundamentals/storage.md).
+This tutorial uses SQLite for simplicity. For production configuration and setup of each provider, see [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx).
 
 ### Add an IdentityServer Config File
 
@@ -674,7 +675,7 @@ See [OTP Authentication](/identityserver/identity/user-management/authentication
   <LinkCard
     title="Storage options"
     href="/identityserver/identity/user-management/fundamentals/storage"
-    description="Switch to PostgreSQL or SQL Server, or configure separate stores for different data categories."
+    description="Choose a storage instance for User Management data, or configure separate stores for different data categories."
   />
   <LinkCard
     title="OTP customization"
