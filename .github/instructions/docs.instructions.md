@@ -54,6 +54,12 @@ Review documentation for Duende Software products (IdentityServer, BFF, etc.). F
 * Avoid excessive indentation in code blocks; use column 0 unless indentation is needed to nest under lists or MDX components.
 * Mention NuGet packages with `dotnet add package ...` in a `bash` block and link to the NuGet Gallery.
 
+### Badges
+
+* In .mdx pages, import and use the `Badge` component to display version badges or other labels. For example: `<Badge text="v8.0" />`.
+* In .md pages, use the `<span data-shb-badge>` HTML element to display version badges or other labels. For example: `<span data-shb-badge data-shb-badge-variant="default">v8.0</span>`.
+* Headers can also include badges. The "starlight-heading-badges" plugin enables a shorthand syntax for this. For example, `### SAML Events :badge[v8.0]` will render a badge next to the header. This works both in Markdown and MDX pages. The `:badge` syntax can be used multiple times in a header to show multiple badges.
+
 ## Redirects
 
 * When a page is moved, check that `redirect_from` frontmatter is present with the old path.
