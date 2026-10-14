@@ -156,6 +156,12 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Values should also be back-ticked, especially HTTP Status codes like `404` or `401`.
 * Avoid excessive indentation in code blocks; use column 0 unless indentation is needed to nest under lists or MDX components.
 
+### Badges
+
+* In .mdx pages, import and use the `Badge` component to display version badges or other labels. For example: `<Badge text="v8.0" />`.
+* In .md pages, use the `<span data-shb-badge>` HTML element to display version badges or other labels. For example: `<span data-shb-badge data-shb-badge-variant="default">v8.0</span>`.
+* Headers can also include badges. The "starlight-heading-badges" plugin enables a shorthand syntax for this. For example, `### SAML Events :badge[v8.0]` will render a badge next to the header. This works both in Markdown and MDX pages. The `:badge` syntax can be used multiple times in a header to show multiple badges.
+
 ### Frontmatter Rules
 
 * Always have a `title` property to set the page title.
