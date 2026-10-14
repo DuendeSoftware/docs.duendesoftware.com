@@ -73,9 +73,10 @@ Models the request for user claims and is the vehicle to return those claims. It
         - If there's no grant context (e.g. when the user info endpoint is called) the claims in the access token will
           be used.
 
-* **`Client`**
+* **`Application`** <span data-shb-badge data-shb-badge-variant="default">v8.0</span>
 
-  The `Client` for which the claims are being requested.
+  The `IConnectedApplication` (an OIDC `Client` or a SAML `SamlServiceProvider`) for which the claims are being
+  requested. Replaces the `Client` property from v7.
 
 * **`RequestedClaimTypes`**
 
@@ -113,9 +114,10 @@ Models the request to determine if the user is currently allowed to obtain token
 
   The `ClaimsPrincipal` modeling the user.
 
-* **`Client`**
+* **`Application`** <span data-shb-badge data-shb-badge-variant="default">v8.0</span>
 
-  The `Client` for which the claims are being requested.
+  The `IConnectedApplication` (an OIDC `Client` or a SAML `SamlServiceProvider`) for which the active check is
+  performed. Replaces the `Client` property from v7.
 
 * **`Caller`**
 
@@ -134,7 +136,7 @@ Models the request to determine if the user is currently allowed to obtain token
   | `UserInfoRequestValidation`                    | When the user info endpoint is called                                                            |
   | `DeviceCodeValidation`                         | When a device code is polled                                                                     |
   | `BackchannelAuthenticationRequestIdValidation` | When a CIBA request is polled                                                                    |
-  | `SamlSsoEndpoint`                              | During a [SAML SSO request](/identityserver/saml/endpoints.md#profile-active-check) :badge[v8.0] |
+  | `SamlSsoEndpoint`                              | During a [SAML SSO request](/identityserver/saml/endpoints.md#profile-active-check) <span data-shb-badge data-shb-badge-variant="default">Added in v8.0</span> |
 
 * **`IsActive`**
 
