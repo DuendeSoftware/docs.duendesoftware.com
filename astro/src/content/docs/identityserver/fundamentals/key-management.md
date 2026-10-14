@@ -314,6 +314,7 @@ public class KeyVaultTokenCreationService(
     {
         var credential = await Keys.GetSigningCredentialsAsync(token.AllowedSigningAlgorithms, ct);
 
+        headerElements.TryAdd("typ", "JWT");
         headerElements["alg"] = credential.Algorithm;
         headerElements["kid"] = credential.Key.KeyId;
 
