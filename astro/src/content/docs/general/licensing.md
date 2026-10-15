@@ -166,7 +166,7 @@ For quantized limits like Connected Application count and issuer count, Identity
 when you exceed your licensed limit but stay within the grace threshold. If you exceed
 the grace threshold, it logs an error instead. An expired license also results in an
 error being logged. Log messages and diagnostics APIs may use the term "client", for example `LicenseUsageSummary.ClientsUsed`.
-These count toward your Connected Applications. User Management also has a licensed limit on users stored.
+These count toward your Connected Applications. User Management also has a licensed limit on unique identities stored.
 When adding a user past the licensed limit, a message will be logged. Note that the errors logged 
 do not stop IdentityServer from running.
 
