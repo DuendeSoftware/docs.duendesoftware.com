@@ -261,8 +261,10 @@ You are always responsible for ensuring your license is renewed.
 
 ##### Redistribution options
 
-Redistribution licenses are based on the number of Connected Applications. Many limits, including the number of
-Connected Applications, can be lifted to unlimited. Note that this does not include unlimited deployments to your customers.
+Redistribution licenses are based on features, the number of Connected Applications, and the number of IdentityServer
+instances you deploy to your end customers. Many limits, including the number of Connected Applications, can be lifted
+to unlimited. Unlimited Connected Applications does not mean unlimited redistributions: the number of installations
+you ship to your own customers is licensed separately.
 [Duende User Management](/identityserver/identity/user-management/index.mdx) and the
 [BFF Security Framework](#bff-security-framework) are also available to redistribution customers.
 
