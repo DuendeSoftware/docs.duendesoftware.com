@@ -322,38 +322,93 @@ public interface IUserTokenRequestConcurrencyControl
         UserRefreshToken key,
         Func<Task<TokenResult<UserToken>>> tokenRetriever,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Executes a token retrieval operation with concurrency control,
+    /// taking the token request parameters into account.
+    /// By default, calls the method above and ignores the parameters.
+    /// </summary>
+    Task<TokenResult<UserToken>> ExecuteWithConcurrencyControlAsync(
+        UserRefreshToken key,
+        UserTokenRequestParameters parameters,
+        Func<Task<TokenResult<UserToken>>> tokenRetriever,
+        CancellationToken ct = default);
 }
 ```
 
+<span data-shb-badge data-shb-badge-variant="default">Added in 4.3</span> Duende.AccessTokenManagement calls the overload that receives the `UserTokenRequestParameters`.
+Concurrent requests that use the same refresh token but different parameters, for example a different `Resource` or `Scope`, result in different access tokens.
+The default implementation only lets requests share a refresh when they would send the same token request: the same refresh token and DPoP key, resource, scope, challenge and sign-in scheme, caller-supplied client assertion, and additional parameters.
+Requests with different parameters each get their own token.
+
+The overload with parameters is a default interface method, so existing implementations that only implement the original method keep compiling and behave as before.
+They can't tell requests for different resources or scopes apart, though. Implement the overload with parameters to take them into account.
+
+:::caution[Rotating refresh tokens]
+Requests with different parameters are sent to the token endpoint at the same time, with the same refresh token.
+That works when refresh tokens can be reused, which is the default in IdentityServer (`RefreshTokenUsage` set to `ReUse`).
+Combining different parameters, such as [resource isolation](/identityserver/fundamentals/resources/api-resources.md#resource-isolation), with one-time-use [rotating refresh tokens](/identityserver/tokens/refresh.md#rotation) isn't supported: the second request presents a refresh token that has already been redeemed.
+:::
+
 ### Custom Concurrency Control
 
-The default implementation uses in-memory locking, which works for single-server deployments. For distributed scenarios (multiple servers), implement a custom version using distributed locking:
+The default implementation uses in-memory locking, which works for single-server deployments. For distributed scenarios (multiple servers), implement a custom version using distributed locking.
+Implement the overload with parameters, and build the lock key from the parameters as well as the refresh token, so requests for a different resource or scope don't wait for each other's lock:
 
 ```csharp
-public class DistributedTokenConcurrencyControl : IUserTokenRequestConcurrencyControl
-{
-    private readonly IDistributedLockProvider _lockProvider;
+// DistributedTokenConcurrencyControl.cs
+using System.Security.Cryptography;
+using System.Text;
+using Duende.AccessTokenManagement;
+using Duende.AccessTokenManagement.OpenIdConnect;
 
-    public DistributedTokenConcurrencyControl(IDistributedLockProvider lockProvider)
-    {
-        _lockProvider = lockProvider;
-    }
+public class DistributedTokenConcurrencyControl(IDistributedLockProvider lockProvider)
+    : IUserTokenRequestConcurrencyControl
+{
+    // Required by the interface. Duende.AccessTokenManagement calls the overload below.
+    public Task<TokenResult<UserToken>> ExecuteWithConcurrencyControlAsync(
+        UserRefreshToken key,
+        Func<Task<TokenResult<UserToken>>> tokenRetriever,
+        CancellationToken ct = default) =>
+        ExecuteWithConcurrencyControlAsync(key, new UserTokenRequestParameters(), tokenRetriever, ct);
 
     public async Task<TokenResult<UserToken>> ExecuteWithConcurrencyControlAsync(
         UserRefreshToken key,
+        UserTokenRequestParameters parameters,
         Func<Task<TokenResult<UserToken>>> tokenRetriever,
         CancellationToken ct = default)
     {
-        // Create a lock key based on the refresh token hash
-        var lockKey = $"token-refresh:{key.RefreshToken.ToString().GetHashCode()}";
-        
-        await using var handle = await _lockProvider.AcquireLockAsync(
-            lockKey, 
-            timeout: TimeSpan.FromSeconds(30), 
+        await using var handle = await lockProvider.AcquireLockAsync(
+            BuildLockKey(key, parameters),
+            timeout: TimeSpan.FromSeconds(30),
             ct);
-        
+
         // Execute the token retrieval while holding the lock
         return await tokenRetriever();
+    }
+
+    // Everything that is sent to the token endpoint and can change the token that comes back
+    private static string BuildLockKey(UserRefreshToken key, UserTokenRequestParameters parameters)
+    {
+        string?[] values =
+        [
+            key.RefreshToken.ToString(),
+            key.DPoPProofKey?.ToString(),
+            parameters.Resource?.ToString(),
+            parameters.Scope?.ToString(),
+            parameters.ChallengeScheme?.ToString(),
+            parameters.SignInScheme?.ToString(),
+            parameters.Assertion?.Type,
+            parameters.Assertion?.Value,
+            .. parameters.Parameters.SelectMany(p => new[] { p.Key, p.Value }),
+        ];
+
+        // Length-prefix each value, so different combinations can't produce the same key
+        var raw = string.Concat(values.Select(v => v is null ? "-|" : $"{v.Length}:{v}|"));
+
+        // A hash is the same on every server, and the lock key doesn't hold the tokens
+        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
+        return $"token-refresh:{Convert.ToHexString(hash)}";
     }
 }
 ```
