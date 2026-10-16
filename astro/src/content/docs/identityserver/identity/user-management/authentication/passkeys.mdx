@@ -1,7 +1,7 @@
 ---
 title: Passkey Authentication
 description: "Implement passkey (WebAuthn/FIDO2) authentication with Duende User Management, covering credential storage, endpoints, MFA, and client helpers."
-date: 2026-04-29
+date: 2026-10-16
 sidebar:
   label: Passkey Authentication
   order: 6
@@ -190,7 +190,7 @@ All `PasskeyOptions` properties and their defaults:
 | `AttestationConveyancePreference` | `string`                 | `"none"`      | Whether attestation statements are requested                       |
 | `AuthenticatorAttachment`         | `string?`                | `null`        | Restrict to `"platform"` or `"cross-platform"` authenticators      |
 | `ResidentKeyRequirement`          | `string`                 | `"preferred"` | Whether discoverable credentials are required                      |
-| `ChallengeSize`                   | `int`                    | `32`          | Challenge size in bytes. Must be at least 16 bytes.             |
+| `ChallengeSize`                   | `int`                    | `32`          | Challenge size in bytes. Must be at least 16 bytes; smaller values fail options validation at host startup. |
 | `ChallengeTimeout`                | `TimeSpan`               | 5 minutes     | How long a challenge remains valid                                 |
 | `SupportedAlgorithms`             | `IReadOnlyList<int>`     | `[]` (all)    | COSE algorithm identifiers, in preference order                    |
 
@@ -973,3 +973,124 @@ public class MyAttestationTrustPolicy : IAttestationTrustPolicy
 :::tip
 `AAGUID` values for well-known authenticators are published by the FIDO Alliance in the [FIDO Metadata Service](https://fidoalliance.org/metadata/). You can use the metadata service to look up AAGUIDs for specific authenticator models and build your allowlist from there.
 :::
+
+## Custom Signature Verifiers
+
+Each WebAuthn credential signs its registration and authentication ceremonies using a COSE algorithm identifier. User Management ships verifiers for the common algorithms (ES256, ES384, ES512, RS256, RS384, RS512, PS256, PS384, PS512, and RS1), but you can add a verifier for an algorithm that is not built in by implementing `ISignatureVerifier`.
+
+### ISignatureVerifier
+
+```csharp
+// ISignatureVerifier.cs
+namespace Duende.UserManagement.Authentication.Passkeys;
+
+public interface ISignatureVerifier
+{
+    int Algorithm { get; }
+
+    bool VerifySignature(byte[] publicKeyCbor, byte[] data, byte[]? signature);
+}
+```
+
+* `Algorithm` - the COSE algorithm identifier this verifier handles (see [IANA COSE Algorithms](https://www.iana.org/assignments/cose/cose.xhtml#algorithms))
+* `VerifySignature` - verifies `signature` over `data` using the COSE-encoded public key in `publicKeyCbor`. `data` is the exact signed payload before algorithm-specific hashing: for authentication assertions and packed attestation this is `authenticatorData || clientDataHash`, and for TPM attestation it is `certInfo`. The method should return `false` on failure rather than throwing.
+
+Each COSE algorithm must have exactly one registered verifier. Registering a duplicate, including an attempt to replace a built-in algorithm, fails options validation at host startup. Verifiers are resolved once and reused for the lifetime of the application, so implementations must be thread-safe and should be registered as singletons.
+
+### Registering a Custom Signature Verifier
+
+Register your verifier using `AddPasskeySignatureVerifier<T>()` on the authentication builder:
+
+```csharp title="Program.cs"
+using Duende.IdentityServer;
+using Duende.UserManagement;
+using Duende.UserManagement.Authentication;
+
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .Authentication(auth =>
+        {
+            auth.AddPasskeySignatureVerifier<Ed25519SignatureVerifier>();
+        })
+    );
+```
+
+## Custom Attestation Format Validators
+
+During the registration ceremony, the authenticator optionally sends an attestation statement that proves its provenance. User Management validates the common formats (`"none"`, `"packed"`, and `"tpm"`) out of the box. To support an additional format, implement `IAttestationFormatValidator`.
+
+### IAttestationFormatValidator
+
+```csharp
+// IAttestationFormatValidator.cs
+namespace Duende.UserManagement.Authentication.Passkeys;
+
+public interface IAttestationFormatValidator
+{
+    string Format { get; }
+
+    ValueTask<AttestationValidationResult> ValidateAsync(AttestationContext context, CancellationToken ct);
+}
+```
+
+* `Format` - the attestation format this validator handles (for example `"android-key"`). Must be a fixed, non-empty value.
+* `ValidateAsync` - inspects the `AttestationContext` and returns an `AttestationValidationResult`.
+
+`AttestationContext` carries the data needed to validate the statement:
+
+```csharp
+// AttestationContext.cs
+public sealed record AttestationContext(
+    IReadOnlyDictionary<string, object?> AttStmt,
+    IReadOnlyCollection<byte> AuthData,
+    IReadOnlyCollection<byte> ClientDataHash,
+    IReadOnlyCollection<byte> CredentialPublicKeyCbor);
+```
+
+* `AttStmt` - the attestation statement, decoded from CBOR. Text strings are `string`, byte strings are `byte[]`, integers are `long`, booleans are `bool`, arrays are `object?[]`, and maps are `Dictionary<string, object?>`, applied recursively.
+* `AuthData` - the raw authenticator data bytes.
+* `ClientDataHash` - the SHA-256 hash of the client data JSON.
+* `CredentialPublicKeyCbor` - the credential's public key, COSE-encoded, for verifying the attestation signature against the registered key.
+
+`ValidateAsync` returns an `AttestationValidationResult`, either success with an optional certificate chain or a failure with a reason:
+
+```csharp
+// AttestationValidationResult.cs
+public abstract record AttestationValidationResult
+{
+    public sealed record Success(IReadOnlyList<byte[]>? CertificateChain) : AttestationValidationResult;
+
+    public sealed record Failure(AttestationValidationError Error, string ErrorDescription) : AttestationValidationResult;
+}
+```
+
+`AttestationValidationError` enumerates the reasons a validator can report:
+
+* `InvalidAttestationStatement` - the attestation statement is malformed
+* `AlgorithmMismatch` - the algorithm in the statement does not match the credential key
+* `UnsupportedAlgorithm` - the algorithm is not supported
+* `SignatureVerificationFailed` - the attestation signature could not be verified
+* `InvalidCertificate` - a certificate in the attestation chain is invalid
+* `AaguidMismatch` - the certificate AAGUID does not match the authenticator data
+
+Implementations must use a fixed, non-empty `Format` and be resolvable from the root service provider. They are retained by the singleton authentication options validator, so scoped dependencies are not supported, and constructors and format lookup must not depend directly or indirectly on `UserAuthenticationOptions`, to avoid circular validation.
+
+### Registering a Custom Attestation Format Validator
+
+Register your validator using `AddAttestationFormatValidator<T>()` on the authentication builder. Registering a duplicate format, including an attempt to replace a built-in format, or a validator with a blank `Format`, fails options validation at host startup:
+
+```csharp title="Program.cs"
+using Duende.IdentityServer;
+using Duende.UserManagement;
+using Duende.UserManagement.Authentication;
+
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .Authentication(auth =>
+        {
+            auth.AddAttestationFormatValidator<AndroidKeyAttestationFormatValidator>();
+        })
+    );
+```

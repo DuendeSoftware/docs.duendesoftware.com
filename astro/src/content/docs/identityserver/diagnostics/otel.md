@@ -1,7 +1,7 @@
 ---
 title: "OpenTelemetry"
 description: Documentation for OpenTelemetry integration in IdentityServer, covering metrics, traces and logs collection for monitoring and diagnostics
-date: 2026-05-20
+date: 2026-10-16
 sidebar:
   order: 50
 redirect_from:
@@ -460,6 +460,26 @@ The `Microsoft.AspNetCore.Identity` meter provides the following metrics:
   * Number of remembered two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_remembered`)
   * Number of forgotten two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_forgotten`)
 
+### Duende Storage Metrics
+
+:::tip
+Added in Duende Storage 2.0.0-preview.6
+:::
+
+When IdentityServer, User Management or Spaces data is stored in [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx),
+Duende Storage emits its own metrics from the meter named `Duende.Storage`. Collect them with `AddMeter("Duende.Storage")`.
+
+* Counter `duende.storage.operation.count` — number of storage operations.
+* Histogram `duende.storage.operation.duration` — duration of storage operations.
+
+Both instruments are tagged with:
+
+* `duende.storage.operation` — the operation, for example `create`, `read`, `update`, `delete`, `query` or `batch`.
+* `db.system` — the database provider: `sqlite`, `mssql`, `postgresql`, `oracle` or `in_memory`.
+* `duende.storage.entity_type` — the entity type involved, when the operation has one.
+* `duende.storage.result` — `success` or `error`.
+* `error.type` — the exception type name, on error.
+
 ## Traces
 
 :::tip
@@ -511,6 +531,17 @@ You can select which information you are interested in by selectively listening 
 * *`IdentityServerConstants.Tracing.Validation`*
 
   More detailed tracing related to validation
+
+### Duende Storage Traces
+
+:::tip
+Added in Duende Storage 2.0.0-preview.6
+:::
+
+Duende Storage emits its own traces from the activity source named `Duende.Storage`. Collect them with
+`AddSource("Duende.Storage")`. Spans cover storage operations such as `Store.Create`, `Store.Read`, `Store.Update`,
+`Store.Delete`, `QueryStore.Query` and `QueryStore.QueryFields`, tagged with `db.system`, `duende.storage.operation`,
+and, when applicable, `duende.storage.entity_type` and `error.type`.
 
 ## OpenTelemetry From 3rd Party Logging Frameworks
 
