@@ -1,6 +1,7 @@
 ---
 title: "Entity Framework Core Integration"
 description: "Documentation for using Entity Framework with IdentityServer to store configuration and operational data in any EF-supported database"
+date: 2026-10-16
 sidebar:
   label: "Entity Framework Core"
   order: 20
@@ -13,6 +14,13 @@ redirect_from:
 
 An EntityFramework-based implementation is provided for the configuration and operational data extensibility points in IdentityServer.
 The use of EntityFramework allows any EF-supported database to be used with this library.
+
+:::caution[IdentityServer 8.1 preview]
+The Entity Framework stores keep one database for all [Spaces](/identityserver/spaces/index.mdx), so they can't be used
+together with Spaces. Starting with IdentityServer 8.1.0-preview.6, a host that calls `AddEntityFrameworkConfigurationStore`
+or `AddEntityFrameworkOperationalStore` together with `AddSpaces` fails at startup with an `OptionsValidationException`.
+Use [Duende Storage](/identityserver/data/providers/duende-storage/getting-started.md) instead when you need Spaces.
+:::
 
 The features provided by this library are broken down into two main areas: configuration store and operational store support.
 These two different areas can be used independently or together, based upon the needs of the hosting application.

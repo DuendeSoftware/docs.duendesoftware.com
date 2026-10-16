@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with Duende Storage"
 description: "Configure Duende Storage for IdentityServer configuration and operational data"
-date: 2026-09-08
+date: 2026-10-16
 sidebar:
   label: "Getting Started"
   order: 10
@@ -140,6 +140,9 @@ builder.Services.Configure<StoragePurgeOptions>(options =>
 
 Set `EnablePurge` to `false` when an external job owns cleanup.
 
+The purge service waits on the registered `TimeProvider`, like the outbox processor. If you replace `TimeProvider`, for
+example with a fake clock in integration tests, it drives the purge schedule too.
+
 ### Override an Individual Store
 
 Call an explicit store registration after `AddConfigurationStorage()`/`AddOperationalStorage()` to replace only that
@@ -167,8 +170,8 @@ alter database objects. In production, run migrations as a controlled deployment
 The runtime application identity can then use narrower data access permissions.
 
 The preview [Duende CLI](https://www.nuget.org/packages/Duende.Cli) can inspect the current schema, generate migration SQL
-or apply pending migrations for SQL Server, PostgreSQL and SQLite. Install it and run it from a restored project that
-references Duende Storage so it detects the matching plugin version:
+or apply pending migrations for SQL Server, PostgreSQL, Oracle and SQLite. Install it and run it from a restored project
+that references Duende Storage so it detects the matching plugin version:
 
 ```powershell
 # Terminal
@@ -179,15 +182,13 @@ duende storage migrate --provider mssql --dry-run
 duende storage migrate --provider mssql
 ```
 
-Use `postgresql` or `sqlite` for the other supported CLI providers. Add `--schema` when you use a non-default SQL Server or
-PostgreSQL schema. The `--dry-run` output can be reviewed and applied by a database administrator instead of granting DDL
-permissions to the application.
+Use `postgresql`, `oracle` or `sqlite` for the other supported CLI providers. Add `--schema` when you use a non-default
+SQL Server, PostgreSQL or Oracle schema; without `--schema`, Oracle migrates into the connecting user's current schema. The
+`--dry-run` output can be reviewed and applied by a database administrator instead of granting DDL permissions to the
+application.
 
 On first use, the CLI downloads the matching `Duende.Storage.CliPlugin` package from NuGet and caches it. Pre-populate the
 package cache when a deployment agent cannot access NuGet.
-
-The preview CLI does not currently support Oracle migrations. For Oracle, use `IStorageInstanceSchema.BuildMigrationScript` from
-a restricted deployment utility to generate SQL for review and application by your database administrator.
 
 Run only one migration process at a time. After applying a migration, `MigrateAsync` verifies that the database matches the
 expected schema and fails when it finds discrepancies.

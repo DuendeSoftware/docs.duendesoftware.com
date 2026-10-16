@@ -1,7 +1,7 @@
 ---
 title: Configuration Reference
 description: "Configuration options reference for Duende User Management, including passwords, passkeys, TOTP, rate limiting, and endpoint routing."
-date: 2026-05-25
+date: 2026-10-16
 sidebar:
   label: Configuration Reference
   order: 1
@@ -108,7 +108,7 @@ Controls WebAuthn/passkey registration and authentication behavior. Accessed via
 | `RelyingPartyName`                | `string`                 | Assembly name | Human-readable display name of the relying party shown to the user during registration. Does not affect security.                                                                           |
 | `ServerDomain`                    | `string?`                | `null`        | The effective domain used as the WebAuthn Relying Party ID. Set explicitly to share passkeys across subdomains (e.g. `"example.com"` for `auth.example.com` and `app.example.com`).         |
 | `AllowedOrigins`                  | `IReadOnlyList<string>?` | `null`        | Required. One or more fully-qualified origins (scheme + host + optional port) permitted to use passkeys. The `clientDataJSON.origin` from the authenticator is validated against this list. |
-| `ChallengeSize`                   | `int`                    | `32`          | Size of the WebAuthn challenge in bytes (256 bits). Must be at least 16 bytes; smaller values throw `ArgumentOutOfRangeException`.                                                         |
+| `ChallengeSize`                   | `int`                    | `32`          | Size of the WebAuthn challenge in bytes (256 bits). Must be at least 16 bytes; smaller values fail options validation at host startup.                                                         |
 | `ChallengeTimeout`                | `TimeSpan`               | `00:05:00`    | Maximum lifetime of a passkey challenge. Challenges are single-use and rejected after this duration.                                                                                        |
 | `UserVerificationRequirement`     | `string`                 | `"preferred"` | User verification requirement for authentication. See [User Verification Values](#user-verification-values).                                                                                |
 | `AttestationConveyancePreference` | `string`                 | `"none"`      | Attestation conveyance preference for credential creation. See [Attestation Conveyance Values](#attestation-conveyance-values).                                                             |
