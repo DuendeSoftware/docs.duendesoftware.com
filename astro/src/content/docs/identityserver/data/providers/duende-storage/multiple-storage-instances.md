@@ -1,7 +1,7 @@
 ---
 title: "Multiple Storage Instances"
 description: "Route IdentityServer configuration, operational and other product data to separate Duende Storage databases"
-date: 2026-10-02
+date: 2026-10-23
 sidebar:
   label: "Multiple Instances"
   order: 15
@@ -133,9 +133,8 @@ builder.Services
     .AddStorage(userManagementInstanceId, storage =>
         storage.AddSqlite(options =>
             options.ConnectionString = builder.Configuration.GetConnectionString("UserManagement")!))
-    .AddUserManagement(userManagementInstanceId, _ => { });
-
-builder.Services.AddSpaces();
+    .AddUserManagement(userManagementInstanceId, _ => { })
+    .AddSpaces(_ => { });
 
 var app = builder.Build();
 

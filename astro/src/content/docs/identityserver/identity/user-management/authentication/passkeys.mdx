@@ -1,7 +1,7 @@
 ---
 title: Passkey Authentication
 description: "Implement passkey (WebAuthn/FIDO2) authentication with Duende User Management, covering credential storage, endpoints, MFA, and client helpers."
-date: 2026-10-14
+date: 2026-10-23
 sidebar:
   label: Passkey Authentication
   order: 6
@@ -1004,6 +1004,15 @@ The builder registers validators as transient, but they are resolved from the ro
 In `AttStmt`, CBOR text strings map to `string`, byte strings to `byte[]`, integers to `long`, and booleans to `bool`. Arrays map to `object?[]`, and maps to `Dictionary<string, object?>` with text keys. These mappings apply recursively. Null and skipped unsupported values are represented as `null`.
 
 Validation returns either `AttestationValidationResult.Success`, containing the DER-encoded certificate chain if present, or `AttestationValidationResult.Failure`, containing an `AttestationValidationError` and description. The chain's first entry is the attestation certificate. Formats without certificates return a null chain.
+
+`AttestationValidationError` has the following values:
+
+* `InvalidAttestationStatement` - the attestation statement is malformed
+* `AlgorithmMismatch` - the algorithm in the statement does not match the credential key
+* `UnsupportedAlgorithm` - the algorithm is not supported
+* `SignatureVerificationFailed` - the attestation signature could not be verified
+* `InvalidCertificate` - a certificate in the attestation chain is invalid
+* `AaguidMismatch` - the certificate AAGUID does not match the authenticator data
 
 Format validation checks the attestation statement; it does not establish whether the authenticator is trusted. A successful result passes the certificate chain to the separate [attestation trust policy](#attestation-trust-policies) stage. Adding a format validator does not change attestation conveyance preferences or replace trust policies.
 

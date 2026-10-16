@@ -1,7 +1,7 @@
 ---
 title: "IdentityServer Spaces"
 description: "Run multiple isolated IdentityServer security domains in a single deployment using Spaces with per-tenant configuration and operational data"
-date: 2026-09-01
+date: 2026-10-23
 sidebar:
   label: "Overview"
   order: 1
@@ -100,15 +100,24 @@ If users must be shared across spaces, use a deliberately separate user director
 
 ## What Spaces Does Not Isolate
 
-:::caution[Spaces Do Not Isolate Process-Level Dependencies]
-Spaces isolate persisted data, but they do not automatically isolate every process-level dependency. Review signing
-credentials, ASP.NET Core Data Protection, external caches, telemetry, rate limits and custom services to decide whether
+:::caution[Spaces Do Not Isolate Every Process-Level Dependency]
+Spaces isolate persisted data and, by default, [ASP.NET Core Data Protection](/general/data-protection.md) and keyed
+`HybridCache` entries created through `IHybridCacheFactory`. They do not automatically isolate every process-level
+dependency. Review signing credentials, external caches, telemetry, rate limits and custom services to decide whether
 they also need space-aware configuration.
 
 For example, sharing signing credentials reduces cryptographic separation between spaces. Token validation still checks
 the issuer, audience and other constraints, but each space should use deliberately scoped credentials when your security
-model requires independent trust boundaries.
+model requires independent trust boundaries. IdentityServer protects its own signing keys through the unpartitioned
+Data Protection provider, so they remain valid across every space even when `PartitionDataProtection` is enabled.
 :::
+
+By default, Spaces partitions Data Protection by space: `SpacesOptions.PartitionDataProtection` is `true`, and a
+protector obtained from the app's `IDataProtectionProvider` binds to the space resolved at the time you call `Protect`
+or `Unprotect`. Data that must be shared across every space, such as IdentityServer's signing keys, uses
+`IUnpartitionedDataProtectionSource.GetUnpartitioned()` (or the `GetUnpartitioned()` extension on
+`IDataProtectionProvider`/`IDataProtector`) to opt out of partitioning for that specific protector. See
+[Data Protection](/general/data-protection.md) for more on how providers and protectors work.
 
 Your administration system must authorize operators for the specific spaces they manage. Never trust a space identifier
 supplied by a client without allowing the resolution middleware to validate it against a configured match pattern.

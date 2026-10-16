@@ -1,7 +1,7 @@
 ---
 title: "Getting Started With Spaces"
 description: "Step-by-step guide to installing Duende.Spaces, configuring space resolution by origin or path and creating your first IdentityServer space"
-date: 2026-09-01
+date: 2026-10-23
 sidebar:
   label: "Getting Started"
   order: 10
@@ -40,7 +40,15 @@ Keep production credentials out of source control and load them from your deploy
 ## Configure IdentityServer with Spaces
 
 Register Spaces and the IdentityServer storage adapters. `AddStorage` selects the database provider;
-`AddConfigurationStorage()` and `AddOperationalStorage()` route configuration and operational data to it:
+`AddConfigurationStorage()` and `AddOperationalStorage()` route configuration and operational data to it. Add Spaces
+with the `AddSpaces` extension on `IIdentityServerBuilder`:
+
+:::caution[Spaces requires the Duende Storage adapters]
+Spaces keeps data per space through the Duende Storage pools. The IdentityServer Entity Framework stores keep one
+database for all spaces, so combining `AddSpaces` with `AddEntityFrameworkConfigurationStore` or
+`AddEntityFrameworkOperationalStore` fails at startup with an `OptionsValidationException`, regardless of the order
+you add them in. Use `AddConfigurationStorage()` and `AddOperationalStorage()` instead, as shown below.
+:::
 
 ```csharp
 // Program.cs
@@ -63,14 +71,12 @@ builder.Services
                 ?? throw new InvalidOperationException(
                     "IdentityServer connection string is missing.")))
     .AddConfigurationStorage()
-    .AddOperationalStorage();
-
-builder.Services.AddSpaces();
-builder.Services.Configure<SpacesOptions>(options =>
-{
-    options.SpacePathPrefix = "/t";
-    options.FallbackToDefault = false;
-});
+    .AddOperationalStorage()
+    .AddSpaces(options =>
+    {
+        options.SpacePathPrefix = "/t";
+        options.FallbackToDefault = false;
+    });
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -176,6 +182,18 @@ Origins must include the scheme and host, plus the port when it is not the schem
 Review [what Spaces does not isolate](/identityserver/spaces/index.mdx#what-spaces-does-not-isolate) before deploying.
 Confirm whether signing credentials, Data Protection, caches, telemetry, rate limits and custom services require
 space-aware configuration.
+
+Spaces partitions [ASP.NET Core Data Protection](/general/data-protection.md) by space by default
+(`SpacesOptions.PartitionDataProtection`, default `true`): a protector created from the app's `IDataProtectionProvider`
+binds to the space resolved when you call `Protect` or `Unprotect`, so a value protected in one space can't be
+unprotected in another. IdentityServer's own signing key protection stays global across spaces because it calls
+`GetUnpartitioned()` on the provider. Use `GetUnpartitioned()` yourself for data that must be readable from every
+space; see [Data Protection](/general/data-protection.md) for background on providers and protectors.
+
+Spaces registers its own keyed `HybridCache` under `SpacesServiceProviderKeys.SpacesCache` instead of registering or
+sharing the app's default `HybridCache`. If your app already relies on an unkeyed `HybridCache` for its own caching,
+call `AddHybridCache()` yourself; Spaces no longer does this for you. Entries created through `IHybridCacheFactory`
+are automatically partitioned by the resolved space, so callers don't need to build space-aware cache keys themselves.
 
 Spaces management data and every space's pool share the default Duende Storage instance unless you map them elsewhere.
 See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md) to route

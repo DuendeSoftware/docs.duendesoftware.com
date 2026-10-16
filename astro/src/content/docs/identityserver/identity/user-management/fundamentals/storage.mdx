@@ -1,7 +1,7 @@
 ---
 title: Storage Configuration
 description: "Choose a database and storage instance for Duende User Management data, and keep its schema migrated."
-date: 2026-10-19
+date: 2026-10-23
 sidebar:
   label: Storage Configuration
   order: 4
@@ -220,10 +220,9 @@ await schema.MigrateAsync(CancellationToken.None);
 Calling `MigrateAsync()` at application startup, as shown above, is convenient for development, but production
 deployments should run migrations as a separate step.
 <Version since="8.1">
-For SQL Server and PostgreSQL, run migrations as a deployment step with the
+For SQL Server, PostgreSQL, and Oracle, run migrations as a deployment step with the
 [Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate), once per connection
-string. The CLI does not support Oracle yet. For Oracle, use the
-[deployment console or DBA-script approach](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli).
+string.
 </Version>
 <Version until="8.1">
 In production, use deployment tooling to run `MigrateAsync` as a single step before application instances start, once
