@@ -1,7 +1,7 @@
 ---
 title: "Duende Storage"
 description: "Duende Storage is a persistence layer for IdentityServer that provides configuration admin APIs, extensible schemas and multi-database support"
-date: 2026-09-01
+date: 2026-10-12
 sidebar:
   label: "Overview"
   order: 1
@@ -65,20 +65,28 @@ approach matches your requirements.
 
 ## Supported Databases
 
-Choose the package that matches your database:
-
-| Database   | Package                                                                                 | Registration    |
-| ---------- | --------------------------------------------------------------------------------------- | ---------------- |
-| SQL Server | [`Duende.Storage.MsSql`](https://www.nuget.org/packages/Duende.Storage.MsSql)           | `AddMsSql`      |
-| PostgreSQL | [`Duende.Storage.PostgreSql`](https://www.nuget.org/packages/Duende.Storage.PostgreSql) | `AddPostgreSql` |
-| Oracle     | [`Duende.Storage.Oracle`](https://www.nuget.org/packages/Duende.Storage.Oracle)         | `AddOracle`     |
-| SQLite     | [`Duende.Storage.Sqlite`](https://www.nuget.org/packages/Duende.Storage.Sqlite)         | `AddSqlite`     |
+Duende Storage supports [SQL Server](/identityserver/data/providers/duende-storage/databases/sql-server.md),
+[PostgreSQL](/identityserver/data/providers/duende-storage/databases/postgresql.md),
+[Oracle](/identityserver/data/providers/duende-storage/databases/oracle.md), and
+[SQLite](/identityserver/data/providers/duende-storage/databases/sqlite.md) (SQLite for automated tests and local
+development only). See the [databases overview](/identityserver/data/providers/duende-storage/databases/index.mdx)
+for packages, registration, and connection strings.
 
 <CardGrid>
   <LinkCard
     href="/identityserver/data/providers/duende-storage/getting-started/"
     title="Getting Started"
     description="Configure storage for IdentityServer configuration and operational data."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/databases/"
+    title="Databases"
+    description="Compare packages, registration, and connection strings for every supported database."
+  />
+  <LinkCard
+    href="/identityserver/data/providers/duende-storage/duende-cli/"
+    title="Duende CLI"
+    description="Deploy and manage database schemas with the Duende CLI."
   />
   <LinkCard
     href="/identityserver/data/providers/duende-storage/admin-apis/"
