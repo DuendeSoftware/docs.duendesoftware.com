@@ -28,6 +28,9 @@ You can pass in some global options when registering token management in the ASP
   the scope parameter.
 * `ClientCredentialsResource` - same as previous, but for the resource parameter
 * `ClientCredentialStyle` - specifies how client credentials are transmitted to the OIDC provider
+* `MaxAccessTokenLength` <span data-shb-badge data-shb-badge-variant="default">v4.3</span> - the maximum length of a user access token (defaults to `AccessToken.MaxLength`, 32768 characters)
+* `MaxIdentityTokenLength` <span data-shb-badge data-shb-badge-variant="default">v4.3</span> - the maximum length of an identity token (defaults to `IdentityToken.MaxLength`, 32768 characters)
+* `MaxRefreshTokenLength` <span data-shb-badge data-shb-badge-variant="default">v4.3</span> - the maximum length of a refresh token (defaults to `RefreshToken.MaxLength`, 4096 characters)
 
 ```csharp
 // Program.cs
@@ -40,8 +43,19 @@ builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
     options.ClientCredentialsScope = Scope.Parse("api1 api2");
     options.ClientCredentialsResource = Resource.Parse("urn:resource");
     options.ClientCredentialStyle = ClientCredentialStyle.PostBody;  
+
+    options.MaxAccessTokenLength = 64 * 1024;
 });
 ```
+
+The maximum length options apply to tokens in a refresh response from the token endpoint, and to tokens read back from
+the authentication session. Raise them when your identity provider issues larger tokens, for example access tokens with
+many claims. A token over the limit makes token management throw an `InvalidOperationException` that names the option
+to increase. Each value must be greater than zero, or reading the options throws an `OptionsValidationException`.
+
+Larger tokens make the authentication cookie larger, because the default token store keeps tokens in the authentication
+session. Server or proxy header size limits can then reject requests. To keep the cookie small, store the session on the
+server with the cookie handler's `TicketStore` (see [Token Storage](#token-storage)).
 
 ## Per Request Parameters
 
@@ -223,6 +237,11 @@ public class DatabaseUserTokenStore : IUserTokenStore
     }
 }
 ```
+
+<span data-shb-badge data-shb-badge-variant="default">v4.3</span> `AccessToken.Parse` and `RefreshToken.Parse` reject tokens over the default maximum length. If you raised one of the
+maximum length options, pass the same limit to the `Parse(string value, int maxLength)` overload, for example
+`AccessToken.Parse(stored.AccessToken, options.MaxAccessTokenLength)`. `AccessToken`, `IdentityToken`, and `RefreshToken`
+also have a matching `TryParse` overload, and `IdentityToken` has `ParseOrDefault(string? value, int maxLength)`.
 
 Register your custom store in the service provider:
 
