@@ -226,7 +226,7 @@ public interface ISignatureVerifier
 }
 ```
 
-`Algorithm` identifies the COSE algorithm. `publicKeyCbor` contains the COSE-encoded public key, and `data` contains the exact signed payload before algorithm-specific hashing. For authentication assertions and Packed attestation, this is `authenticatorData || clientDataHash`; for TPM attestation, it is `certInfo`. Return `false` for invalid signatures or key data rather than throwing for normal validation failures.
+`Algorithm` identifies the COSE algorithm. `publicKeyCbor` contains the COSE-encoded public key, and `data` contains the exact signed payload before algorithm-specific hashing. For authentication assertions and Packed attestation, the payload consists of the authenticator data bytes followed by the SHA-256 hash of the client data JSON (`authenticatorData || clientDataHash`). For TPM attestation, the payload is `certInfo`. Return `false` for invalid signatures or key data rather than throwing for normal validation failures.
 
 `AddPasskeySignatureVerifier<TVerifier>()`, on the authentication builder, registers a singleton verifier. Registration is additive, not replacement: every algorithm must have exactly one verifier, including the built-ins. Duplicate algorithms cause options validation to fail at host startup with an error identifying the algorithm. This applies to builder registrations and direct dependency injection (DI) registrations before or after User Management registration, even when `SupportedAlgorithms` excludes the conflicting algorithm.
 
@@ -272,7 +272,17 @@ Returns `true` if the credential was stored successfully, `false` if the user wa
 
 ### Transport Hints
 
-A transport hint describes how a browser can communicate with the authenticator that holds a credential. For example, `"usb"`, `"nfc"`, and `"ble"` describe external connection methods, `"hybrid"` describes using a phone or other nearby device, and `"internal"` indicates a platform authenticator built into the device, such as Windows Hello. A credential can have multiple hints. During authentication, the browser can use these hints to guide authenticator discovery and offer relevant ways to use the credential, rather than trying every transport.
+A transport hint describes how a browser can communicate with the authenticator that holds a credential. Common hints include:
+
+| Hint | Meaning |
+|------|---------|
+| `usb` | An external authenticator connected over USB |
+| `nfc` | An external authenticator connected over near-field communication |
+| `ble` | An external authenticator connected over Bluetooth Low Energy |
+| `hybrid` | An authenticator reached through a nearby device, such as a phone |
+| `internal` | A platform authenticator built into the device, such as Windows Hello |
+
+A credential can have multiple hints. During authentication, the browser can use them to guide authenticator discovery and offer relevant ways to use the credential, rather than trying every transport.
 
 Transport hints work automatically, and there is no option to enable or tune them. The values come from the browser and authenticator, not from server configuration. The built-in JavaScript helper carries them through the known-user authentication flow:
 
@@ -687,7 +697,7 @@ builder.Services
 
 The completion handler calls `IPasskeyCeremonies.CompleteAuthenticationAsync`. It must require valid, unexpired first-factor state and compare the successful result's `UserSubjectId` with that state's subject before signing in. Protect the submission against cross-site request forgery, and use a validated local return URL. Do not use the discoverable sign-in completion endpoint as a substitute for this application-owned session promotion.
 
-If you store pending state in a protected cookie, include and enforce its expiry in the protected payload. Browser cookie expiry alone does not prevent a client from retaining and resubmitting the cookie. This state identifies the first-factor user; it is not a replacement for the server-side WebAuthn challenge store.
+If you store pending state in a protected cookie, include and enforce its expiry in the protected payload. Browser cookie expiry alone does not prevent a client from retaining and resubmitting the cookie. This state identifies the first-factor user and does not replace the server-side WebAuthn challenge store.
 
 When passkeys are used as a second factor, the flow looks like this:
 
