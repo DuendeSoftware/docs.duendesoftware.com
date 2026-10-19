@@ -1,7 +1,7 @@
 ---
 title: Configuration Reference
 description: "Configuration options reference for Duende User Management, including passwords, passkeys, TOTP, rate limiting, and endpoint routing."
-date: 2026-05-25
+date: 2026-10-14
 sidebar:
   label: Configuration Reference
   order: 1
@@ -136,13 +136,13 @@ Controls WebAuthn/passkey registration and authentication behavior. Accessed via
 | `RelyingPartyName`                | `string`                 | Assembly name | Human-readable display name of the relying party shown to the user during registration. Does not affect security.                                                                           |
 | `ServerDomain`                    | `string?`                | `null`        | The effective domain used as the WebAuthn Relying Party ID. Set explicitly to share passkeys across subdomains (e.g. `"example.com"` for `auth.example.com` and `app.example.com`).         |
 | `AllowedOrigins`                  | `IReadOnlyList<string>?` | `null`        | Required. One or more fully-qualified origins (scheme + host + optional port) permitted to use passkeys. The `clientDataJSON.origin` from the authenticator is validated against this list. |
-| `ChallengeSize`                   | `int`                    | `32`          | Size of the WebAuthn challenge in bytes (256 bits). Must be at least 16 bytes; smaller values throw `ArgumentOutOfRangeException`.                                                         |
+| `ChallengeSize`                   | `int`                    | `32`          | Size of the WebAuthn challenge in decoded random bytes. Must be at least 16; smaller values fail options validation at host startup. See [Challenge Length](/identityserver/identity/user-management/authentication/passkeys.mdx#challenge-length). |
 | `ChallengeTimeout`                | `TimeSpan`               | `00:05:00`    | Maximum lifetime of a passkey challenge. Challenges are single-use and rejected after this duration.                                                                                        |
 | `UserVerificationRequirement`     | `string`                 | `"preferred"` | User verification requirement for authentication. See [User Verification Values](#user-verification-values).                                                                                |
 | `AttestationConveyancePreference` | `string`                 | `"none"`      | Attestation conveyance preference for credential creation. See [Attestation Conveyance Values](#attestation-conveyance-values).                                                             |
 | `AuthenticatorAttachment`         | `string?`                | `null`        | Restricts the authenticator attachment modality. `null` allows any authenticator type. See [Authenticator Attachment Values](#authenticator-attachment-values).                             |
 | `ResidentKeyRequirement`          | `string`                 | `"preferred"` | Discoverable credential (resident key) requirement for registration. See [Resident Key Values](#resident-key-values).                                                                       |
-| `SupportedAlgorithms`             | `IReadOnlyList<int>`     | `[]`          | COSE algorithm identifiers to support, in preference order. An empty list accepts all algorithms supported by the library. Use `CoseAlgorithms` constants to specify values.                |
+| `SupportedAlgorithms`             | `IReadOnlyList<int>`     | `[]`          | COSE algorithms advertised for credential registration, in preference order. An empty list offers all registered verifiers; an explicit list offers only entries with verifiers and removes duplicates. Use `CoseAlgorithms` constants. See [Signature Verifier Extension](/identityserver/identity/user-management/authentication/passkeys.mdx#signature-verifier-extension) for ordering. |
 
 ### User Verification Values
 
