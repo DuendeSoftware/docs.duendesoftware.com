@@ -1,7 +1,7 @@
 ---
 title: "Oracle"
 description: "Install, register and configure Duende Storage with Oracle Database"
-date: 2026-10-12
+date: 2026-10-19
 sidebar:
   label: "Oracle"
   order: 30
@@ -50,10 +50,15 @@ Register the delegate as a singleton, not the connection itself.
 There's no parameterless `AddOracle()` overload. Call `AddOracle(_ => { })` even when you don't need to set any
 options, so Duende Storage knows to use the Oracle provider for this instance.
 
+A storage instance uses exactly one provider: registering a second provider for the same instance throws an
+`InvalidOperationException`. Your application owns the connection factory you register above; Duende Storage never
+disposes it. The overload shown here resolves it unkeyed from dependency injection and only works for the default
+storage instance. Named instances use the resolver overload instead, as shown in
+[Named Storage Instances](#named-storage-instances).
+
 ## Named Storage Instances
 
-The default-instance overload shown above resolves `CreateOracleConnection` unkeyed from dependency injection. For
-a named instance, register the delegate as a keyed service and use the resolver overload instead:
+For a named instance, register the delegate as a keyed service and use the resolver overload instead:
 
 ```csharp
 // Program.cs
@@ -85,7 +90,10 @@ on registering and migrating more than one instance.
 
 ## Connection Strings
 
-Development, against an Oracle Database Free container:
+### Development With a Container
+
+[Oracle Database Free](https://www.oracle.com/database/free/) is Oracle's free edition of Oracle Database, available
+as a container image you can run locally.
 
 ```text
 User Id=IDENTITYSERVER;Password=<dev-password>;Data Source=localhost:1521/FREEPDB1
@@ -94,13 +102,15 @@ User Id=IDENTITYSERVER;Password=<dev-password>;Data Source=localhost:1521/FREEPD
 Connect to the pluggable database (`FREEPDB1`), not the container's root (CDB) database. The root database can't
 create ordinary application users.
 
-Production, with an Easy Connect string and TLS:
+### Production With Easy Connect And TLS
 
 ```text
 User Id=identityserver_app;Password=<from-secret-store>;Data Source=tcps://oracle.example.com:1522/identityserver.example.com?wallet_location=/opt/oracle/wallet
 ```
 
-Production, with a wallet and a TNS alias instead of an inline connect descriptor:
+### Production With a Wallet
+
+Use a wallet and a TNS alias instead of an inline connect descriptor:
 
 ```text
 User Id=identityserver_app;Password=<from-secret-store>;Data Source=prod_high
@@ -145,7 +155,7 @@ exist".
 ## Create and Upgrade the Schema Without the CLI
 
 The Duende CLI's `storage migrate` command doesn't support Oracle yet; support is coming. Until then, deploy the
-Oracle schema with a small console application instead.
+Oracle schema with custom code instead, for example using a console application.
 
 ### Option A: Migrate from a Deployment Console App
 

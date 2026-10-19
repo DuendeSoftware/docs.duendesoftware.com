@@ -1,7 +1,7 @@
 ---
 title: "SQL Server"
 description: "Install, register and configure Duende Storage with SQL Server"
-date: 2026-10-12
+date: 2026-10-19
 sidebar:
   label: "SQL Server"
   order: 10
@@ -49,10 +49,15 @@ as a singleton, not the connection itself.
 There's no parameterless `AddMsSql()` overload. Call `AddMsSql(_ => { })` even when you don't need to set any
 options, so Duende Storage knows to use the SQL Server provider for this instance.
 
+A storage instance uses exactly one provider: registering a second provider for the same instance throws an
+`InvalidOperationException`. Your application owns the connection factory you register above; Duende Storage never
+disposes it. The overload shown here resolves it unkeyed from dependency injection and only works for the default
+storage instance. Named instances use the resolver overload instead, as shown in
+[Named Storage Instances](#named-storage-instances).
+
 ## Named Storage Instances
 
-The default-instance overload shown above resolves `CreateSqlConnection` unkeyed from dependency injection. For a
-named instance, register the delegate as a keyed service and use the resolver overload instead:
+For a named instance, register the delegate as a keyed service and use the resolver overload instead:
 
 ```csharp
 // Program.cs
@@ -84,25 +89,29 @@ registering and migrating more than one instance.
 
 ## Connection Strings
 
-Development, against a SQL Server container:
+### Development With a Container
 
 ```text
 Server=localhost,1433;Database=IdentityServer;User Id=sa;Password=<dev-password>;TrustServerCertificate=True
 ```
 
-Development, against LocalDB:
+### Development With LocalDB
 
 ```text
 Server=(localdb)\MSSQLLocalDB;Database=IdentityServer;Integrated Security=True
 ```
 
-Windows authentication, against a named instance:
+### Windows Authentication
+
+Against a named instance:
 
 ```text
 Server=sql-server\InstanceName;Database=IdentityServer;Integrated Security=True
 ```
 
-Production, with certificate validation turned on and a password supplied through a secret store:
+### Production
+
+With certificate validation turned on and a password supplied through a secret store:
 
 ```text
 Server=sql.example.com;Database=IdentityServer;User Id=identityserver_app;Password=<from-secret-store>;Encrypt=True;TrustServerCertificate=False
@@ -110,7 +119,9 @@ Server=sql.example.com;Database=IdentityServer;User Id=identityserver_app;Passwo
 
 Don't set `TrustServerCertificate=True` in production; it disables certificate validation for the connection.
 
-Production, passwordless with a managed identity (Azure SQL):
+### Production Without a Password
+
+Passwordless with a managed identity (Azure SQL):
 
 ```text
 Server=sql.example.database.windows.net;Database=IdentityServer;Authentication=Active Directory Managed Identity;Encrypt=True
@@ -118,6 +129,8 @@ Server=sql.example.database.windows.net;Database=IdentityServer;Authentication=A
 
 Use `Authentication=Active Directory Default` instead when the identity isn't a managed identity, for example during
 local development signed in with `az login`.
+
+### Connection String Keywords
 
 A few keywords worth knowing:
 

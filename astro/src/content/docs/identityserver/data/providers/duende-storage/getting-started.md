@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with Duende Storage"
 description: "Configure Duende Storage for IdentityServer configuration and operational data"
-date: 2026-10-12
+date: 2026-10-19
 sidebar:
   label: "Getting Started"
   order: 10
@@ -159,7 +159,13 @@ Duende Storage.
 
 ## Deploy the Database Schema
 
-Calling `IStorageInstanceSchema.MigrateAsync` from the application at startup, as shown above, is for development only.
+:::caution
+Calling `IStorageInstanceSchema.MigrateAsync` from the application at startup, as shown above, is intended for
+development purposes only. When several app instances start together, for example during scale-out or a rolling
+deployment, they can migrate the same database concurrently: no provider protects against that. A failed migration
+also blocks application startup.
+:::
+
 In production, run migrations as a single deployment step before application instances start, using the
 [Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md#install-the-duende-cli):
 

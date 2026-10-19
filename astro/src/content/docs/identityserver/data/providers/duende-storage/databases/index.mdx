@@ -1,7 +1,7 @@
 ---
 title: "Databases Supported by Duende Storage"
 description: "Compare the databases Duende Storage supports and learn how registration, schema deployment and connection strings work across all of them"
-date: 2026-10-12
+date: 2026-10-19
 sidebar:
   label: "Overview"
   order: 1
@@ -14,7 +14,7 @@ Duende Storage and the documentation in this section are previews. APIs, package
 subject to change before general availability.
 :::
 
-Duende Storage supports SQL Server, PostgreSQL, Oracle and SQLite. This page compares the four, explains how provider
+Duende Storage supports SQL Server, PostgreSQL, Oracle and SQLite. This page compares them, explains how provider
 registration and schema deployment work the same way across all of them, and links to each provider's page for
 connection strings, custom schemas and provider-specific notes.
 
@@ -27,14 +27,13 @@ connection strings, custom schemas and provider-specific notes.
 | [Oracle](/identityserver/data/providers/duende-storage/databases/oracle.md)             | [`Duende.Storage.Oracle`](https://www.nuget.org/packages/Duende.Storage.Oracle)         | `AddOracle`          | `CreateOracleConnection` factory | `SchemaName`   | Not supported yet ([run migrations without the CLI](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli)) | Production |
 | [SQLite](/identityserver/data/providers/duende-storage/databases/sqlite.md)             | [`Duende.Storage.Sqlite`](https://www.nuget.org/packages/Duende.Storage.Sqlite)         | `AddSqlite`          | A connection string             | None            | `sqlite`                | Automated tests and local development only |
 
-SQL Server, PostgreSQL and Oracle are all production-ready; Duende Storage doesn't recommend one over another. Choose
-the database that fits your team's operations and hosting environment. SQLite has no production use: use it for
-automated tests and local development only.
+Duende Storage doesn't recommend any particular database. Choose the database that fits your team's operations and
+hosting environment. SQL Server, PostgreSQL and Oracle are all production-ready; SQLite is well-suited for automated
+tests and local development only.
 
-## How Provider Registration Works
+## How To Register A Duende Storage Provider
 
-Every provider follows the same registration shape, so this section covers it once instead of repeating it on each
-provider page.
+Every provider follows the same registration shape:
 
 * `AddStorage(...)` selects exactly one database provider for a storage instance. Calling it with a second provider
   for the same instance throws an `InvalidOperationException`.
@@ -60,10 +59,10 @@ Duende Storage separates two kinds of schema change:
 
 `IStorageInstanceSchema` gives you those migration operations for a storage instance:
 
-* `MigrateAsync(ct)` creates the schema if it doesn't exist, upgrades it if it's behind, or does nothing if it's
+* `MigrateAsync()` creates the schema if it doesn't exist, upgrades it if it's behind, or does nothing if it's
   already current. It then calls `VerifySchemaAsync` and throws an `InvalidOperationException` if verification finds
   errors.
-* `CheckVersionAsync(ct)` returns a `CheckSchemaVersionResult` with `CurrentVersion`, `RequiredVersion` and
+* `CheckVersionAsync()` returns a `CheckSchemaVersionResult` with `CurrentVersion`, `RequiredVersion` and
   `IsCompatible` (true only when the two versions are equal), so you can fail fast before `MigrateAsync` instead of
   discovering a mismatch at request time:
 
@@ -82,17 +81,29 @@ Duende Storage separates two kinds of schema change:
   }
   ```
 
-  A `CurrentVersion` greater than `RequiredVersion` means a newer version of Duende Storage already migrated the
-  database: this application's version is older than the schema, and `IsCompatible` is false. Upgrade the
-  application to a version that expects the current schema instead of trying to downgrade the schema.
-* `VerifySchemaAsync(ct)` checks that every table, index and other object the current schema version expects is
+  A `CurrentVersion` and `RequiredVersion` only differ when `IsCompatible` is false, and an unreachable database
+  throws rather than returning a result with `IsCompatible` set to false:
+  * `CurrentVersion` of `0` means the database has never been migrated: run the migration.
+  * `CurrentVersion` less than `RequiredVersion` means the database is behind: run the migration.
+  * `CurrentVersion` greater than `RequiredVersion` means a newer version of Duende Storage already migrated the
+    database. Upgrade the application to a version that expects the current schema instead of trying to downgrade
+    the schema.
+* `VerifySchemaAsync()` checks that every table, index and other object the current schema version expects is
   present, without changing anything.
 * `BuildMigrationScript(DatabaseSchemaVersion fromVersion)` returns the SQL for the given starting version without
   opening a database connection. Pass `DatabaseSchemaVersion.Zero` for the full script from an empty database.
 
 `app.Services.GetRequiredService<IStorageInstanceSchema>()` resolves the default storage instance only. For a named
-instance, use `IStorageInstanceSchemaFactory.GetStorageInstanceSchema(storageInstanceId, ct)` to resolve its schema,
+instance, use `IStorageInstanceSchemaFactory.GetStorageInstanceSchema(storageInstanceId, cancellationToken)` to resolve its schema,
 as shown in [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md).
+
+### If a Migration Fails
+
+On SQL Server, PostgreSQL and SQLite, each version step runs inside a transaction, so a failed step rolls back and
+running the migration again resumes from the last completed version. On Oracle, DDL commits automatically, so a
+failed step can leave some objects already created; the migration scripts skip objects that already exist, so running
+the migration again is safe there too. After migrating, Duende Storage verifies the schema and throws if verification
+finds a mismatch.
 
 :::caution[Run exactly one migration process at a time]
 No provider protects against concurrent migrations. Run one migration process before your app instances start,

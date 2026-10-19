@@ -1,7 +1,7 @@
 ---
 title: Storage Configuration
 description: "Choose a database and storage instance for Duende User Management data, and keep its schema migrated."
-date: 2026-10-12
+date: 2026-10-19
 sidebar:
   label: Storage Configuration
   order: 4
@@ -14,7 +14,7 @@ Duende User Management stores users, authenticators, roles, and groups as docume
 complete documents, adding or removing properties on a user profile does not require a schema change. The storage
 tables themselves are still created and upgraded by Duende Storage migrations — see
 [Create and Upgrade the Schema](/identityserver/data/providers/duende-storage/databases/index.mdx#create-and-upgrade-the-schema).
-All four Duende Storage databases are supported; see
+All Duende Storage databases are supported. See
 [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx) for the full list.
 
 This page covers **User Management data** — user profiles, authenticators, roles, and groups. It does not govern how
@@ -147,6 +147,6 @@ await schema.MigrateAsync(CancellationToken.None);
 Calling `MigrateAsync()` at application startup, as shown above, is convenient for development, but production
 deployments should run migrations as a separate step. In production, run migrations as a deployment step with the
 [Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate), once per connection
-string. Run only one migration process at a time against a given database; running startup migration and the CLI
+string. Run only one migration process at a time against a given database. Running startup migration and the CLI
 concurrently against the same connection string is not supported.
 

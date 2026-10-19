@@ -1,7 +1,7 @@
 ---
 title: "SQLite"
 description: "Use SQLite with Duende Storage for local development and automated tests"
-date: 2026-10-12
+date: 2026-10-19
 sidebar:
   label: "SQLite"
   order: 40
@@ -12,7 +12,7 @@ This page describes preview packages and APIs that are subject to change. Start 
 [Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
 :::
 
-:::danger[Not for production]
+:::danger[Do not use SQLite in production]
 SQLite is for automated tests and local development only. Use
 [SQL Server](/identityserver/data/providers/duende-storage/databases/sql-server.md),
 [PostgreSQL](/identityserver/data/providers/duende-storage/databases/postgresql.md), or
@@ -180,6 +180,9 @@ dotnet add package Duende.IdentityServer --prerelease
 dotnet add package Duende.Storage.Sqlite --prerelease
 ```
 
+Each test in this example gets a new in-memory database, migrated in `InitializeAsync`, then stores and reads back a
+persisted grant through `IPersistedGrantStore`. `DisposeAsync` disposes the provider, which removes the database.
+
 ```csharp
 // PersistedGrantStoreTests.cs
 using Duende.IdentityServer;
@@ -237,6 +240,8 @@ public class PersistedGrantStoreTests : IAsyncLifetime
     public async ValueTask DisposeAsync() => await _serviceProvider.DisposeAsync();
 }
 ```
+
+Run `dotnet test` to run it. Reuse the same setup to test your own code that depends on IdentityServer's stores.
 
 ## Provider Notes
 

@@ -1,7 +1,7 @@
 ---
 title: "PostgreSQL"
 description: "Install, register and configure Duende Storage with PostgreSQL"
-date: 2026-10-12
+date: 2026-10-19
 sidebar:
   label: "PostgreSQL"
   order: 20
@@ -50,6 +50,12 @@ disposes it. Because you own it, you can configure it however your environment n
 `AddPostgreSql()` with no arguments works for the default storage instance only, where it resolves `NpgsqlDataSource`
 unkeyed from dependency injection.
 
+A storage instance uses exactly one provider: registering a second provider for the same instance throws an
+`InvalidOperationException`. Your application owns the `NpgsqlDataSource` you register above; Duende Storage never
+disposes it. The overload shown here resolves it unkeyed from dependency injection and only works for the default
+storage instance. Named instances use the resolver overload instead, as shown in
+[Named Storage Instances](#named-storage-instances).
+
 ## Named Storage Instances
 
 For a named instance, register the data source as a keyed service and use the resolver overload instead:
@@ -85,17 +91,21 @@ registering and migrating more than one instance.
 
 ## Connection Strings
 
-Development, against a PostgreSQL container:
+### Development With a Container
 
 ```text
 Host=localhost;Port=5432;Database=identityserver;Username=postgres;Password=<dev-password>
 ```
 
-Production, with certificate validation turned on and a password supplied through a secret store:
+### Production
+
+With certificate validation turned on and a password supplied through a secret store:
 
 ```text
 Host=db.example.com;Database=identityserver;Username=identityserver_app;Password=<from-secret-store>;SSL Mode=VerifyFull;Timeout=30
 ```
+
+### Connection String Keywords
 
 A few keywords worth knowing:
 
