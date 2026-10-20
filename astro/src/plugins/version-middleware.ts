@@ -4,7 +4,6 @@ import { getCollection } from "astro:content";
 import { products } from "virtual:dv-products";
 import {
   getProductVersions,
-  inRange,
   isPreviewPage,
   isUnfiltered,
   label,
@@ -65,14 +64,10 @@ function sidebarAttrs({ versions }: PageInfo) {
   return attrs;
 }
 
-const pagefindTag = (value: string): HeadTag => ({
-  tag: "meta",
-  attrs: { "data-pagefind-filter": "version[content]", content: value },
-});
-
-function pagefindFilterTags(product: string, all: string[], range?: Versions): HeadTag[] {
-  return all.filter((v) => inRange(v, range)).map((v) => pagefindTag(`${product}:${v}`));
-}
+// Search is intentionally unfiltered (latest and greatest). Next step: version-aware search. Emit
+// `data-pagefind-filter="version[content]"` tags again (one `{product}:{x.y}` per version a page applies to,
+// `*` for unfiltered pages) and filter results by the selected version. That needs a Search component override,
+// because Starlight's default Pagefind UI shows filters as a facet panel and doesn't expose the instance.
 
 async function versionHeadTags(entry: any, product: string): Promise<HeadTag[]> {
   const range = await pageVersions(entry);
@@ -92,7 +87,6 @@ async function versionHeadTags(entry: any, product: string): Promise<HeadTag[]> 
       attrs: { type: "application/json", id: "dv-versions" },
       content: JSON.stringify({ product, versions, preview, unsupported, latest, upgrades: products.find((p) => p.key === product)?.upgrades }),
     },
-    ...pagefindFilterTags(product, versions, range),
   ];
 }
 
@@ -121,7 +115,6 @@ export const onRequest = defineRouteMiddleware(async (context) => {
   const filePath = entry.filePath ?? "";
   const product = productOf(filePath);
   if (!product || isUnfiltered(filePath)) {
-    head.push(pagefindTag("*"));
     return;
   }
   head.push(...(await versionHeadTags(entry, product)));
