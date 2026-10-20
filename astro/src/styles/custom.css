@@ -694,6 +694,7 @@ summary {
 }
 .dv-dimmed { opacity: 0.5; }
 .dv-notice {
+  --sl-color-asides-text-accent: var(--sl-color-green-high);
   margin-bottom: 1rem;
   padding: 0.75rem 1rem;
   border: 1px solid var(--sl-color-green);
@@ -701,11 +702,13 @@ summary {
   background: var(--sl-color-green-low);
 }
 .dv-notice--caution {
+  --sl-color-asides-text-accent: var(--sl-color-orange-high);
   border-color: var(--sl-color-orange);
   background: var(--sl-color-orange-low);
 }
 .dv-notice p { margin: 0; }
-.dv-notice-title { font-weight: 600; color: var(--sl-color-orange-high); }
+.dv-notice a { color: var(--sl-color-asides-text-accent); }
+.dv-notice-title { font-weight: 600; color: var(--sl-color-asides-text-accent); }
 [hidden] { display: none !important; }
 html[data-dv-pending="latest"] .dv-version[data-until],
 html[data-dv-pending="latest"] a[data-until],
