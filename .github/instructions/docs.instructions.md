@@ -4,10 +4,6 @@ applyTo: "astro/src/content/**/*.{md,mdx}"
 
 # Documentation Review Guidelines
 
-## Purpose
-
-Review documentation for Duende Software products (IdentityServer, BFF, etc.). Focus on writing quality, accuracy, and consistency with the project's authoring standards.
-
 ## Writing Style
 
 * Tone: friendly, educational, patient — "a senior engineer sitting next to you helping with your homework."
@@ -30,7 +26,7 @@ Review documentation for Duende Software products (IdentityServer, BFF, etc.). F
 ## Linking Rules
 
 * Prefer internal links over external links.
-* Markdown internal links must start at the content root (e.g. `/identityserver/troubleshooting/index.md`) and include the `.md` or `.mdx` extension. Some Starlight components (for example, `LinkCard`) use route-style links instead, so follow the component's expected link format.
+* Markdown internal links must start at the content root (e.g. `/identityserver/troubleshooting/index.md`).
 * External links must use HTTPS.
 * Link relevant text: prefer `learn more about [improving sign-in]` over `click [here]`.
 * Long links (75+ chars) or repeated links should use markdown anchor syntax at the bottom of the file.
@@ -39,7 +35,7 @@ Review documentation for Duende Software products (IdentityServer, BFF, etc.). F
 ## Markdown Style
 
 * Use `*` for unordered lists, not `-`.
-* Use inline links `[text](url)` unless the link is repeated or very long.
+* Use inline links `[text](url)` unless repeated or very long.
 * Markdown internal links must include the file extension (`.md` or `.mdx`). Some Starlight components (for example, `LinkCard`) use route-style links instead.
 
 ## Code Blocks
@@ -54,11 +50,14 @@ Review documentation for Duende Software products (IdentityServer, BFF, etc.). F
 * Avoid excessive indentation in code blocks; use column 0 unless indentation is needed to nest under lists or MDX components.
 * Mention NuGet packages with `dotnet add package ...` in a `bash` block and link to the NuGet Gallery.
 
-### Badges
+### Badges and Versions
 
-* In .mdx pages, import and use the `Badge` component to display version badges or other labels. For example: `<Badge text="v8.0" />`.
-* In .md pages, use the `<span data-shb-badge>` HTML element to display version badges or other labels. For example: `<span data-shb-badge data-shb-badge-variant="default">v8.0</span>`.
-* Headers can also include badges. The "starlight-heading-badges" plugin enables a shorthand syntax for this. For example, `### SAML Events :badge[v8.0]` will render a badge next to the header. This works both in Markdown and MDX pages. The `:badge` syntax can be used multiple times in a header to show multiple badges.
+* Flag manual version badges (`<Badge text="v8.0" />`, `<span data-shb-badge>`, `:badge[v8.0]`). Use `versions` frontmatter (quoted "major.minor", e.g. `"8.0"`) or folder `_meta.yml` for pages, and `<Version since="8.0">` (`import Version from "~/components/Version.astro"`) for sections. Literal values only; `until` is exclusive.
+* `since`/`until` must be declared in `products` (astro.config.mjs). Preview pages need `preview: true`.
+* For non-version labels such as target frameworks (TFMs):
+  * In .mdx, import and use `Badge`: `<Badge text="Optional" />`.
+  * In .md, use `<span data-shb-badge data-shb-badge-variant="default">Optional</span>`.
+  * In headings, use the "starlight-heading-badges" shorthand: `### Title :badge[.NET 10]`. Works in Markdown and MDX, and can be used multiple times.
 
 ## Redirects
 

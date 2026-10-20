@@ -1,0 +1,89 @@
+---
+import { label as makeLabel } from "../utils/versions";
+
+interface Props {
+  since?: string;
+  until?: string;
+  /** Wraps cards without any visible caption (display: contents); the label stays as hidden text. */
+  inline?: boolean;
+  /** Injected by remark-version-product; falls back to the route. */
+  product?: string;
+}
+const { since, until, inline = false } = Astro.props;
+let product = Astro.props.product;
+if (!product) {
+  try {
+    product = (Astro.locals as any).starlightRoute?.id?.split("/")[0];
+  } catch {
+    product = Astro.url.pathname.replace(/^\//, "").split("/")[0];
+  }
+}
+product ??= "";
+const text = makeLabel(product, since, until);
+const caption = since && !until ? `Added in ${since}` : undefined;
+---
+
+{
+  inline ? (
+    <div class="dv-version dv-version--inline" data-product={product} data-since={since} data-until={until}>
+      <span class="sl-sr-only">{text}: </span>
+      <slot />
+    </div>
+  ) : (
+    <section class="dv-version" style={caption && `--dv-caption: ${JSON.stringify(caption)}; --dv-since: ${JSON.stringify(`${since}+`)}`} data-product={product} data-since={since} data-until={until}>
+      <p class="dv-version-label" data-caption={caption}>
+        <span class="sl-sr-only">{text}</span>
+      </p>
+      <slot />
+    </section>
+  )
+}
+
+<style is:global>
+  .dv-version { position: relative; margin-block: 1rem; }
+  .dv-version { --dv-tip: var(--sl-color-purple-high); }
+  .dv-version-label { margin: 0 0 0.25rem; font-size: 0.8rem; font-weight: 600; line-height: 1.4; color: var(--dv-tip); }
+  .dv-version-label[data-caption]::before { content: attr(data-caption); }
+  .dv-version:has(> .dv-version-label + :is(.sl-heading-wrapper, ul, ol)) > .dv-version-label { margin: 0; }
+  .dv-version:has(> .dv-version-label + :is(.sl-heading-wrapper, ul, ol)) > .dv-version-label::before { content: none; }
+  .dv-version > .dv-version-label + .sl-heading-wrapper :is(h2, h3, h4, h5, h6)::after {
+    content: var(--dv-caption);
+    display: inline-block;
+    vertical-align: middle;
+    margin-inline-start: 0.6rem;
+    padding: 0.05rem 0.45rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    color: var(--dv-tip);
+    background: var(--sl-color-purple-low);
+    border: 1px solid var(--dv-tip);
+    border-radius: 0.25rem;
+  }
+  .dv-version > .dv-version-label + :is(ul, ol) > li::after {
+    content: var(--dv-since);
+    display: inline-block;
+    vertical-align: middle;
+    margin-inline-start: 0.5rem;
+    padding: 0.05rem 0.45rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    color: var(--dv-tip);
+    background: var(--sl-color-purple-low);
+    border: 1px solid var(--dv-tip);
+    border-radius: 0.25rem;
+  }
+  .dv-version--inline { display: contents; margin: 0; }
+  .dv-version--inline[hidden] { display: none; }
+  .sl-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+</style>

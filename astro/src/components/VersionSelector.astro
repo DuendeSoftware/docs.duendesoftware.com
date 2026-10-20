@@ -1,0 +1,234 @@
+---
+import { products } from "virtual:dv-products";
+const productKeys = products.map((p) => p.key);
+---
+
+<script is:inline define:vars={{ productKeys }}>
+  // Hide versioned content until filtering ran (the default view hides only until-bounded content).
+  (function () {
+    try {
+      var seg = location.pathname.split("/").filter(Boolean);
+      var p = productKeys.filter(function (x) { return seg.indexOf(x) >= 0; })[0];
+      if (!p || /general|release-notes|upgrad/.test(location.pathname)) return;
+      var v = new URLSearchParams(location.search).get("version") || localStorage.getItem("dv-version:" + p);
+      document.documentElement.setAttribute("data-dv-pending", v && v !== "latest" ? "selected" : "latest");
+    } catch (e) {}
+  })();
+</script>
+
+<script>
+  type DvData = { product: string; versions: string[]; preview?: string[]; unsupported?: string[]; latest: string; upgrades?: string };
+
+  const html = document.documentElement;
+  const all = <T extends Element = HTMLElement>(selector: string, root: ParentNode = document) => [
+    ...root.querySelectorAll<T>(selector),
+  ];
+  const compare = (a: string, b: string) => {
+    const [aMajor, aMinor] = a.split(".").map(Number);
+    const [bMajor, bMinor] = b.split(".").map(Number);
+    return aMajor - bMajor || aMinor - bMinor;
+  };
+  type Visibility = (el: HTMLElement) => boolean;
+
+  const defaultVersion = ({ versions, latest }: DvData) => latest ?? versions[0];
+
+  function visibilityFor(selected: string, data: DvData): Visibility {
+    if (selected === defaultVersion(data)) {
+      const newest = data.versions[0];
+      return ({ dataset: { since, until } }) =>
+        (!since || compare(since, newest) <= 0) && (!until || compare(until, selected) > 0);
+    }
+    return ({ dataset: { since, until } }) =>
+      (!since || compare(selected, since) >= 0) && (!until || compare(selected, until) < 0);
+  }
+
+  const storageKey = (product: string) => "dv-version:" + product;
+
+  function initialSelection(data: DvData) {
+    const requested = new URL(location.href).searchParams.get("version");
+    const stored = localStorage.getItem(storageKey(data.product));
+    return [requested, stored].find((v) => v && data.versions.includes(v)) ?? defaultVersion(data);
+  }
+
+  function createChip({ versions, preview = [], unsupported = [] }: DvData, onChange: (version: string) => void) {
+    const chip = document.createElement("select");
+    chip.className = "dv-chip";
+    chip.setAttribute("aria-label", "Select version");
+    const optionLabel = (v: string) =>
+      preview.includes(v) ? `${v} (preview)` : unsupported.includes(v) ? `${v} (unsupported)` : v;
+    chip.innerHTML = versions.map((v) => `<option value="${v}">${optionLabel(v)}</option>`).join("");
+    chip.addEventListener("click", (e) => e.stopPropagation());
+    chip.addEventListener("keydown", (e) => e.stopPropagation());
+    chip.addEventListener("change", () => onChange(chip.value));
+    return chip;
+  }
+
+  function mountChip(product: string, chip: HTMLSelectElement) {
+    const group = all("ul.top-level > li > details").find((d) =>
+      all<HTMLAnchorElement>("a", d).some((a) => a.pathname.split("/").includes(product)),
+    );
+    const summary = group?.querySelector("summary");
+    if (!summary || summary.querySelector(".dv-chip")) return;
+    (summary.querySelector(".group-label") ?? summary).append(chip);
+  }
+
+  function filterSidebarLinks(isVisible: Visibility) {
+    const currentPath = location.pathname.replace(/\/$/, "");
+    for (const link of all<HTMLAnchorElement>("a[data-since], a[data-until]")) {
+      const outOfRange = !isVisible(link);
+      const isCurrent = link.pathname.replace(/\/$/, "") === currentPath;
+      link.closest("li")!.hidden = outOfRange && !isCurrent;
+      link.classList.toggle("dv-dimmed", outOfRange && isCurrent);
+    }
+  }
+
+  function hideEmptyGroups() {
+    for (const details of all("ul.top-level details").reverse()) {
+      const hasHidden = !!details.querySelector("li[hidden]");
+      const hasVisible = !!details.querySelector("li:not([hidden])");
+      details.closest("li")!.hidden = hasHidden && !hasVisible;
+    }
+  }
+
+  function showNotice(page: HTMLElement, { selected, fallback }: { selected: string; fallback?: string }, onReset: () => void) {
+    const pageLabel = page.dataset.label!;
+    const productName = pageLabel.split(/ (?=\d)| before/)[0];
+    const notice = document.createElement("aside");
+    notice.className = "dv-notice";
+    notice.setAttribute("role", "note");
+    notice.append(`This page applies to ${pageLabel}. You're viewing ${productName} ${selected}. `);
+    if (fallback) {
+      const link = document.createElement("a");
+      link.href = "#";
+      link.textContent = `Show ${fallback}`;
+      link.onclick = (e) => (e.preventDefault(), onReset());
+      notice.append(link);
+    }
+    document.querySelector(".sl-markdown-content")?.prepend(notice);
+  }
+
+  function showUnsupportedNotice(
+    { selected, fallback, upgrades }: { selected: string; fallback: string; upgrades?: string },
+    onSwitch: () => void,
+  ) {
+    const productName = document.querySelector<HTMLElement>('meta[name="dv-page"]')!.dataset.label!.split(/ (?=\d)| before/)[0];
+    const notice = document.createElement("aside");
+    notice.className = "dv-notice dv-notice--caution";
+    notice.setAttribute("role", "note");
+    notice.innerHTML = `<p class="dv-notice-title"><span aria-hidden="true">⚠</span> Unsupported version</p>`;
+    const docsLink = document.createElement("a");
+    docsLink.href = "#";
+    docsLink.textContent = `View the ${fallback} documentation`;
+    docsLink.onclick = (e) => (e.preventDefault(), onSwitch());
+    const upgradeLink = upgrades ? `, follow the <a href="${upgrades}">upgrade guide</a>,` : "";
+    const text = document.createElement("p");
+    text.append(`${productName} ${selected} is no longer supported. `, docsLink);
+    text.insertAdjacentHTML(
+      "beforeend",
+      `${upgradeLink} or read the <a href="/general/support-and-issues/#supported-versions">support policy</a>.`,
+    );
+    notice.append(text);
+    document.querySelector(".sl-markdown-content")?.prepend(notice);
+  }
+
+  function filterToc() {
+    for (const link of all<HTMLAnchorElement>("starlight-toc a[href^='#'], mobile-starlight-toc a[href^='#']")) {
+      const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+      const li = link.closest("li");
+      if (li) li.hidden = !!heading?.closest(".dv-version[hidden]");
+    }
+  }
+
+  function storeSelection(product: string, version: string, isDefault: boolean) {
+    if (isDefault) localStorage.removeItem(storageKey(product));
+    else localStorage.setItem(storageKey(product), version);
+  }
+
+  function persistSelection(product: string, version: string, isDefault: boolean, mode: "push" | "replace") {
+    storeSelection(product, version, isDefault);
+    const url = new URL(location.href);
+    if (isDefault) url.searchParams.delete("version");
+    else url.searchParams.set("version", version);
+    if (mode === "push") history.pushState(history.state, "", url);
+    else history.replaceState(history.state, "", url);
+  }
+
+  function setup() {
+    const raw = document.getElementById("dv-versions")?.textContent;
+    const page = document.querySelector<HTMLElement>('meta[name="dv-page"]');
+    if (!raw || !page) return;
+    const data = JSON.parse(raw) as DvData;
+    const { product, versions } = data;
+    if (versions.length < 2) return;
+    const fallback = defaultVersion(data);
+
+    let selected = initialSelection(data);
+    const chip = createChip(data, choose);
+    mountChip(product, chip);
+
+    function choose(version: string) {
+      if (version === selected) return;
+      selected = version;
+      persistSelection(product, version, version === fallback, "push");
+      show();
+    }
+
+    function show() {
+      apply();
+      document.dispatchEvent(new CustomEvent("dv-version-change", { detail: { product, version: selected } }));
+    }
+
+    function apply() {
+      const isVisible = visibilityFor(selected, data);
+      const isDefault = selected === fallback;
+      chip.value = selected;
+      const isUnsupported = !!data.unsupported?.includes(selected);
+      chip.classList.toggle("dv-chip--active", !isDefault);
+      chip.classList.toggle("dv-chip--unsupported", isUnsupported);
+      html.toggleAttribute("data-dv-hide-new", !isDefault);
+      for (const block of all(`.dv-version[data-product="${product}"]`)) block.hidden = !isVisible(block);
+      filterToc();
+      filterSidebarLinks(isVisible);
+      hideEmptyGroups();
+      document.querySelector(".dv-notice")?.remove();
+      for (const link of all<HTMLAnchorElement>("a[data-dv-select]")) {
+        link.hidden = link.dataset.dvSelect === selected;
+      }
+      const hasPreviewNotice = !!document.querySelector(".preview-notice");
+      if (!isVisible(page!) && !hasPreviewNotice) {
+        showNotice(page!, { selected, fallback: isDefault ? undefined : fallback }, () => choose(fallback));
+      } else if (isUnsupported && !hasPreviewNotice) {
+        showUnsupportedNotice({ selected, fallback, upgrades: data.upgrades }, () => choose(fallback));
+      }
+    }
+
+    document.addEventListener("click", (e) => {
+      const link = (e.target as Element).closest<HTMLAnchorElement>("a[data-dv-select]");
+      if (!link) return;
+      e.preventDefault();
+      choose(link.dataset.dvSelect!);
+    });
+
+    // Back/Forward: the URL entry decides; no param means the default view.
+    window.addEventListener("popstate", () => {
+      const requested = new URL(location.href).searchParams.get("version");
+      selected = requested && versions.includes(requested) ? requested : fallback;
+      storeSelection(product, selected, selected === fallback);
+      show();
+    });
+
+    apply();
+    persistSelection(product, selected, selected === fallback, "replace");
+  }
+
+  function init() {
+    try {
+      setup();
+    } finally {
+      html.removeAttribute("data-dv-pending");
+    }
+  }
+
+  init();
+  document.addEventListener("astro:page-load", init); // only fires with view transitions
+</script>

@@ -648,3 +648,47 @@ summary {
   border-color: var(--sl-color-accent);
   background-color: var(--sl-color-accent-low);
 }
+
+/* Version selector */
+.dv-chip {
+  margin-inline-start: 0.5rem;
+  padding: 0 0.35rem;
+  font: 0.7rem/1.5 var(--sl-font-mono);
+  color: var(--sl-color-gray-2);
+  background: transparent;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+.dv-chip--active {
+  color: var(--sl-color-green-high);
+  background: var(--sl-color-green-low);
+  border-color: var(--sl-color-green);
+}
+.dv-chip--unsupported {
+  color: var(--sl-color-orange-high);
+  background-color: var(--sl-color-orange-low);
+  border-color: var(--sl-color-orange);
+}
+.dv-dimmed { opacity: 0.5; }
+.dv-notice {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--sl-color-green);
+  border-radius: 0.25rem;
+  background: var(--sl-color-green-low);
+}
+.dv-notice--caution {
+  border-color: var(--sl-color-orange);
+  background: var(--sl-color-orange-low);
+}
+.dv-notice p { margin: 0; }
+.dv-notice-title { font-weight: 600; color: var(--sl-color-orange-high); }
+[hidden] { display: none !important; }
+html[data-dv-pending="latest"] .dv-version[data-until],
+html[data-dv-pending="latest"] a[data-until],
+html[data-dv-pending="selected"] .dv-version[data-since],
+html[data-dv-pending="selected"] .dv-version[data-until],
+html[data-dv-pending="selected"] a[data-since],
+html[data-dv-pending="selected"] a[data-until] { visibility: hidden; }
+html[data-dv-hide-new] .dv-new { display: none; }

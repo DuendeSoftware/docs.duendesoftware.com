@@ -22,6 +22,72 @@ import removeMarkdownExtensions from "./src/plugins/remove-markdown-extensions.j
 import staticRedirects from "./src/plugins/static-redirects.js";
 import markdownOutput from "./src/plugins/markdown-output.js";
 import contributorMapping from "./src/plugins/contributor-mapping.js";
+import remarkVersionProduct from "./src/plugins/remark-version-product.js";
+
+// Single declaration of the products: drives the sidebar and the version selector.
+// `versions`: newest first; the first non-preview entry is latest; every since/until
+// in the content must be listed (a build-time check is done for this).
+// `unsupported: true` marks end-of-support versions (label + notice); not combinable with `preview`.
+// `upgrades`: optional upgrade guide URL, linked from the unsupported-version notice.
+const products = [
+  {
+    key: "identityserver",
+    label: "IdentityServer",
+    shortName: "IdentityServer",
+    upgrades: "/identityserver/upgrades/",
+    versions: [
+      { version: "8.1", preview: true },
+      { version: "8.0" },
+      { version: "7.4" },
+      { version: "7.3" },
+      { version: "7.2" },
+      { version: "7.1" },
+      { version: "7.0" },
+      { version: "6.3", unsupported: true },
+      { version: "6.2", unsupported: true },
+      { version: "6.1", unsupported: true },
+      { version: "6.0", unsupported: true },
+      { version: "5.2", unsupported: true },
+      { version: "5.1", unsupported: true },
+      { version: "5.0", unsupported: true },
+    ],
+  },
+  { key: "bff", label: "BFF Security Framework", shortName: "BFF", upgrades: "/bff/upgrading/", versions: [
+    { version: "4.3" },
+    { version: "4.2" },
+    { version: "4.1" },
+    { version: "4.0" },
+    { version: "3.1" },
+    { version: "3.0" }
+  ] },
+  { key: "accesstokenmanagement", label: "Access Token Management", badge: "oss", versions: [
+    { version: "4.3" },
+    { version: "4.2" },
+    { version: "4.1" },
+    { version: "4.0" },
+    { version: "3.3" },
+    { version: "3.2" },
+    { version: "3.1" },
+    { version: "3.0" }
+  ] },
+  { key: "identitymodel", label: "IdentityModel", badge: "oss", versions: [
+    { version: "8.1" },
+    { version: "8.0" },
+    { version: "7.1" },
+    { version: "7.0" }
+  ] },
+  { key: "identitymodel-oidcclient", label: "IdentityModel.OidcClient", badge: "oss" },
+  { key: "introspection", label: "Introspection for ASP.NET Core", shortName: "Introspection", badge: "oss" },
+];
+
+const productsVirtualModule = () => ({
+  name: "dv-products",
+  resolveId: (id) => (id === "virtual:dv-products" ? "\0virtual:dv-products" : undefined),
+  load: (id) =>
+    id === "\0virtual:dv-products"
+      ? `export const products = ${JSON.stringify(products)};`
+      : undefined,
+});
 
 // https://astro.build/config
 const isDev = import.meta.env.DEV;
@@ -75,7 +141,10 @@ export default defineConfig({
     }),
     starlight({
       customCss: ["./src/styles/custom.css"],
-      routeMiddleware: ["./src/plugins/search-topic-middleware.ts"],
+      routeMiddleware: [
+        "./src/plugins/search-topic-middleware.ts",
+        "./src/plugins/version-middleware.ts",
+      ],
       plugins: [
         starlightLlmsTxt({
           pageSeparator: "\n-----\n",
@@ -247,46 +316,19 @@ export default defineConfig({
         Head: "./src/components/Head.astro",
         Pagination: "./src/components/Pagination.astro",
         PageSidebar: "./src/components/PageSidebar.astro",
+        MarkdownContent: "./src/components/MarkdownContent.astro",
       },
       sidebar: [
         {
           label: "General Information",
           items: [{ autogenerate: { directory: "general" } }],
         },
-        {
-          label: "IdentityServer",
+        ...products.map(({ key, label, badge }) => ({
+          label,
+          ...(badge && { badge }),
           collapsed: true,
-          items: [{ autogenerate: { directory: "identityserver" } }],
-        },
-        {
-          label: "BFF Security Framework",
-          collapsed: true,
-          items: [{ autogenerate: { directory: "bff" } }],
-        },
-        {
-          label: "Access Token Management",
-          badge: "oss",
-          collapsed: true,
-          items: [{ autogenerate: { directory: "accesstokenmanagement" } }],
-        },
-        {
-          label: "IdentityModel",
-          badge: "oss",
-          collapsed: true,
-          items: [{ autogenerate: { directory: "identitymodel" } }],
-        },
-        {
-          label: "IdentityModel.OidcClient",
-          badge: "oss",
-          collapsed: true,
-          items: [{ autogenerate: { directory: "identitymodel-oidcclient" } }],
-        },
-        {
-          label: "Introspection for ASP.NET Core",
-          badge: "oss",
-          collapsed: true,
-          items: [{ autogenerate: { directory: "introspection" } }],
-        },
+          items: [{ autogenerate: { directory: key } }],
+        })),
       ],
     }),
     redirectFrom({
@@ -320,9 +362,11 @@ export default defineConfig({
       render: duendeOpenGraphImage,
     }),
   ],
+  vite: { plugins: [productsVirtualModule()] },
   markdown: {
     processor: unified({
       remarkPlugins: [
+        remarkVersionProduct,
         [removeMarkdownExtensions, { ignoreRelativeLinks: true }],
       ],
       rehypePlugins: [
