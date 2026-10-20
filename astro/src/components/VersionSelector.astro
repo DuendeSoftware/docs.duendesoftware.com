@@ -107,6 +107,7 @@ const productKeys = products.map((p) => p.key);
     const productName = pageLabel.split(/ (?=\d)| before/)[0];
     const notice = document.createElement("aside");
     notice.className = "dv-notice";
+    notice.dataset.dvGenerated = "";
     notice.setAttribute("role", "note");
     notice.append(`This page applies to ${pageLabel}. You're viewing ${productName} ${selected}. `);
     if (fallback) {
@@ -126,6 +127,7 @@ const productKeys = products.map((p) => p.key);
     const productName = document.querySelector<HTMLElement>('meta[name="dv-page"]')!.dataset.label!.split(/ (?=\d)| before/)[0];
     const notice = document.createElement("aside");
     notice.className = "dv-notice dv-notice--caution";
+    notice.dataset.dvGenerated = "";
     notice.setAttribute("role", "note");
     notice.innerHTML = `<p class="dv-notice-title"><span aria-hidden="true">⚠</span> Unsupported version</p>`;
     const docsLink = document.createElement("a");
@@ -204,14 +206,15 @@ const productKeys = products.map((p) => p.key);
       filterToc();
       filterSidebarLinks(isVisible);
       hideEmptyGroups();
-      document.querySelector(".dv-notice")?.remove();
+      for (const notice of all("[data-dv-generated]")) notice.remove();
       for (const link of all<HTMLAnchorElement>("a[data-dv-select]")) {
         link.hidden = link.dataset.dvSelect === selected;
       }
       const hasPreviewNotice = !!document.querySelector(".preview-notice");
       if (!isVisible(page!) && !hasPreviewNotice) {
         showNotice(page!, { selected, fallback: isDefault ? undefined : fallback }, () => choose(fallback));
-      } else if (isUnsupported && !hasPreviewNotice) {
+      }
+      if (isUnsupported) {
         showUnsupportedNotice({ selected, fallback, upgrades: data.upgrades }, () => choose(fallback));
       }
     }
