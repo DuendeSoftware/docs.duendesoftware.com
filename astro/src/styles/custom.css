@@ -650,19 +650,41 @@ summary {
 }
 
 /* Version selector */
+.dv-version-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--sl-color-hairline-light);
+}
+.dv-version-select-label {
+  padding-inline: 0.5rem;
+  font-size: var(--sl-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
+.dv-version-select-slot { min-height: 2.25rem; }
 .dv-chip {
-  margin-inline-start: 0.5rem;
-  padding: 0 0.35rem;
-  font: 0.7rem/1.5 var(--sl-font-mono);
-  color: var(--sl-color-gray-2);
-  background: transparent;
-  border: 1px solid var(--sl-color-gray-4);
-  border-radius: 0.25rem;
+  --dv-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  appearance: none;
+  width: 100%;
+  padding: 0.4rem 2rem 0.4rem 0.625rem;
+  font: var(--sl-text-sm) var(--sl-font-mono);
+  color: var(--sl-color-white);
+  background: var(--sl-color-black) var(--dv-caret) no-repeat right 0.5rem center / 1rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
   cursor: pointer;
 }
+.dv-chip:hover { border-color: var(--sl-color-gray-3); }
+.dv-chip:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
 .dv-chip--active {
   color: var(--sl-color-green-high);
-  background: var(--sl-color-green-low);
+  background-color: var(--sl-color-green-low);
   border-color: var(--sl-color-green);
 }
 .dv-chip--unsupported {

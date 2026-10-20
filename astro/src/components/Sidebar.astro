@@ -1,0 +1,18 @@
+---
+import Default from "@astrojs/starlight/components/Sidebar.astro";
+import Topics from "starlight-sidebar-topics/components/Sidebar.astro";
+import { hasVersionChip } from "../utils/versions";
+
+const hasVersions = hasVersionChip(Astro.locals.starlightRoute.entry.filePath ?? "");
+---
+
+<Topics />
+{
+  hasVersions && (
+    <div class="dv-version-select">
+      <span class="dv-version-select-label">Version</span>
+      <div class="dv-version-select-slot" />
+    </div>
+  )
+}
+<Default><slot /></Default>

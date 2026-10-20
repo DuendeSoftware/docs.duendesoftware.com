@@ -30,6 +30,12 @@ export const isUnfiltered = (path: string) => {
   return p.startsWith("general/") || p.includes("release-notes") || p.includes("upgrad");
 };
 
+// True if the page gets a version chip: filtered page of a product declaring >= 2 versions.
+export const hasVersionChip = (path: string) => {
+  const product = productOf(path);
+  return !!product && !isUnfiltered(path) && (productByKey.get(product)?.versions?.length ?? 0) >= 2;
+};
+
 // Numeric major.minor comparison.
 const compare = (a: string, b: string) => {
   const [aMajor, aMinor] = a.split(".").map(Number);

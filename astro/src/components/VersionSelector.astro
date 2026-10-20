@@ -57,19 +57,14 @@ const productKeys = products.map((p) => p.key);
     const optionLabel = (v: string) =>
       preview.includes(v) ? `${v} (preview)` : unsupported.includes(v) ? `${v} (unsupported)` : v;
     chip.innerHTML = versions.map((v) => `<option value="${v}">${optionLabel(v)}</option>`).join("");
-    chip.addEventListener("click", (e) => e.stopPropagation());
-    chip.addEventListener("keydown", (e) => e.stopPropagation());
     chip.addEventListener("change", () => onChange(chip.value));
     return chip;
   }
 
-  function mountChip(product: string, chip: HTMLSelectElement) {
-    const group = all("ul.top-level > li > details").find((d) =>
-      all<HTMLAnchorElement>("a", d).some((a) => a.pathname.split("/").includes(product)),
-    );
-    const summary = group?.querySelector("summary");
-    if (!summary || summary.querySelector(".dv-chip")) return;
-    (summary.querySelector(".group-label") ?? summary).append(chip);
+  function mountChip(chip: HTMLSelectElement) {
+    const slot = document.querySelector(".dv-version-select-slot");
+    if (!slot || slot.querySelector(".dv-chip")) return;
+    slot.append(chip);
   }
 
   function filterSidebarLinks(isVisible: Visibility) {
@@ -156,15 +151,18 @@ const productKeys = products.map((p) => p.key);
   function setup() {
     const raw = document.getElementById("dv-versions")?.textContent;
     const page = document.querySelector<HTMLElement>('meta[name="dv-page"]');
-    if (!raw || !page) return;
-    const data = JSON.parse(raw) as DvData;
+    const data = raw && page ? (JSON.parse(raw) as DvData) : undefined;
+    if (!data || !page || data.versions.length < 2) {
+      // No chip will be mounted: never leave an empty "Version" label behind.
+      document.querySelector<HTMLElement>(".dv-version-select")?.remove();
+      return;
+    }
     const { product, versions } = data;
-    if (versions.length < 2) return;
     const fallback = defaultVersion(data);
 
     let selected = initialSelection(data);
     const chip = createChip(data, choose);
-    mountChip(product, chip);
+    mountChip(chip);
 
     function choose(version: string) {
       if (version === selected) return;

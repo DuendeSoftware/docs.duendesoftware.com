@@ -116,7 +116,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
     Object.assign(link.attrs, sidebarAttrs(page));
   });
 
-  for (const root of sidebar) hoistBadges(root, false);
+  for (const root of sidebar) hoistBadges(root, true);
 
   const filePath = entry.filePath ?? "";
   const product = productOf(filePath);

@@ -3,6 +3,7 @@ import { unified } from "@astrojs/markdown-remark";
 import mermaid from "astro-mermaid";
 import starlight from "@astrojs/starlight";
 import starlightLinksValidator from "starlight-links-validator";
+import starlightSidebarTopics from "starlight-sidebar-topics";
 import starlightAutoSidebar from "starlight-auto-sidebar";
 import starlightGiscus from "starlight-giscus";
 import redirectFrom from "astro-redirect-from";
@@ -60,7 +61,7 @@ const products = [
     { version: "3.1" },
     { version: "3.0" }
   ] },
-  { key: "accesstokenmanagement", label: "Access Token Management", badge: "oss", versions: [
+  { key: "accesstokenmanagement", label: "Access Token Management", versions: [
     { version: "4.3" },
     { version: "4.2" },
     { version: "4.1" },
@@ -70,14 +71,36 @@ const products = [
     { version: "3.1" },
     { version: "3.0" }
   ] },
-  { key: "identitymodel", label: "IdentityModel", badge: "oss", versions: [
+  { key: "identitymodel", label: "IdentityModel", versions: [
     { version: "8.1" },
     { version: "8.0" },
     { version: "7.1" },
     { version: "7.0" }
   ] },
-  { key: "identitymodel-oidcclient", label: "IdentityModel.OidcClient", badge: "oss" },
-  { key: "introspection", label: "Introspection for ASP.NET Core", shortName: "Introspection", badge: "oss" },
+  { key: "identitymodel-oidcclient", label: "IdentityModel.OidcClient" },
+  { key: "introspection", label: "ASP.NET Core Introspection", shortName: "Introspection" },
+];
+
+// Sidebar topics (top-of-sidebar switcher): General Information plus one per product.
+// The icons must match the product cards in src/content/docs/index.mdx.
+const productIcons = {
+  identityserver: "open-book",
+  bff: "window",
+  accesstokenmanagement: "clock",
+  identitymodel: "puzzle",
+  "identitymodel-oidcclient": "laptop",
+  introspection: "magnifier",
+};
+
+const topics = [
+  { label: "General Information", link: "/general/", icon: "information", items: [{ autogenerate: { directory: "general" } }] },
+  ...products.map(({ key, label, badge }) => ({
+    label,
+    link: `/${key}/`,
+    icon: productIcons[key],
+    ...(badge && { badge }),
+    items: [{ autogenerate: { directory: key } }],
+  })),
 ];
 
 const productsVirtualModule = () => ({
@@ -197,6 +220,9 @@ export default defineConfig({
             },
           ],
         }),
+        starlightSidebarTopics(
+          topics,
+        ),
         starlightHeadingBadges(),
         starlightAutoSidebar(),
         starlightGiscus({
@@ -317,19 +343,8 @@ export default defineConfig({
         Pagination: "./src/components/Pagination.astro",
         PageSidebar: "./src/components/PageSidebar.astro",
         MarkdownContent: "./src/components/MarkdownContent.astro",
+        Sidebar: "./src/components/Sidebar.astro",
       },
-      sidebar: [
-        {
-          label: "General Information",
-          items: [{ autogenerate: { directory: "general" } }],
-        },
-        ...products.map(({ key, label, badge }) => ({
-          label,
-          ...(badge && { badge }),
-          collapsed: true,
-          items: [{ autogenerate: { directory: key } }],
-        })),
-      ],
     }),
     redirectFrom({
       contentDir: "./src/content/docs",
