@@ -18,7 +18,7 @@ redirect_from:
 Encapsulates retrieval of user claims from a data source of your choice.
 See [here](/identityserver/samples/ui.mdx#custom-profile-service) for a sample.
 
-Two first-party implementations are available: the [ASP.NET Identity integration](/identityserver/identity/aspnet-identity/index.md)
+Two first-party implementations are available: the [ASP.NET Identity integration](/identityserver/identity/aspnet-identity/index.mdx)
 and the [Duende User Management integration](/identityserver/identity/user-management/identityserver-integration.mdx). You can also write your own implementation.
 
 ```csharp

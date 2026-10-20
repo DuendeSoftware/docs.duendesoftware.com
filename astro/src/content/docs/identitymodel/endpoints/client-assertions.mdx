@@ -8,6 +8,8 @@ sidebar:
   label: Client Assertions
 ---
 
+import Version from "~/components/Version.astro";
+
 ## What is a client assertion?
 
 **Client assertions** are an alternative to client secrets for authenticating
@@ -63,9 +65,9 @@ When using a client assertion, set `ClientCredentialStyle` to
 both are combined with a `ClientId`.
 :::
 
-## ClientAssertionFactory
+<Version since="8.0">
 
-*Added in `Duende.IdentityModel` 7.2.0*
+## ClientAssertionFactory
 
 The `ClientAssertionFactory` property accepts a `Func<Task<ClientAssertion>>`,
 a factory function that creates a **fresh** `ClientAssertion` on demand. This
@@ -125,3 +127,5 @@ When `ClientAssertionFactory` is set, it is used during both:
 
 This ensures each request carries its own unique assertion, which is essential
 when the authorization server enforces `jti` uniqueness across requests.
+
+</Version>

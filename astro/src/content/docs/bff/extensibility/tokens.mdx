@@ -13,6 +13,8 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/tokens/
 ---
 
+import Version from "~/components/Version.astro";
+
 The token management library does essentially two things:
 
 * stores access and refresh tokens in the current session
@@ -110,9 +112,13 @@ public interface IAccessTokenRetriever
 
 You can implement this interface yourself or extend the `DefaultAccessTokenRetriever`. 
 
+<Version since="4.0">
+
 :::note
 In Duende BFF v4, `DefaultAccessTokenRetriever` was made `internal`. If you need to customize token retrieval in v4, implement the `IAccessTokenRetriever` interface directly.
 :::
+
+</Version>
 
 The `AccessTokenResult` class represents the result of this operation. It is an abstract class with concrete implementations that represent successfully retrieving a bearer token (`BearerTokenResult`), successfully retrieving a DPoP token (`DPoPTokenResult`), failing to find an optional token (`NoAccessTokenResult`), which is not an error, and failure to retrieve a token (`AccessTokenRetrievalError`). Your implementation of GetAccessTokenAsync should return one of those types.
 

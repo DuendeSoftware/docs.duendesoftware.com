@@ -12,8 +12,9 @@ redirect_from:
   - /identityserver/v7/bff/extensibility/management/silent-login/
 ---
 
+import Version from "~/components/Version.astro";
+
 import { Aside, Code } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 The BFF silent login endpoint can be customized by implementing the `ISilentLoginEndpoint`.
 
@@ -32,8 +33,8 @@ See [Silent Login Endpoint](/bff/fundamentals/session/management/silent-login.md
 
 ## Request Processing
 
-<Tabs syncKey="bffVersion">
-    <TabItem label="V4">
+<Version since="4.0">
+
         You can customize the behavior of the silent login endpoint by implementing the `ProcessRequestAsync` method of the
         `ISilentLoginEndpoint` interface. The [default implementation][1]
         can serve as a starting point for your own implementation.
@@ -55,8 +56,11 @@ app.MapGet(bffOptions.SilentLoginPath, async (HttpContext context, CancellationT
     // Custom logic after calling the original endpoint implementation
 });
 `} />
-    </TabItem>
-    <TabItem label="V3">
+
+</Version>
+
+<Version until="4.0">
+
         `ProcessRequestAsync` is the top-level function called in the endpoint service `DefaultSilentLoginService`,
         and can be used to add arbitrary logic to the endpoint.
 
@@ -72,7 +76,7 @@ public override Task ProcessRequestAsync(HttpContext context, CancellationToken 
     return base.ProcessRequestAsync(context);
 }
             `}/>
-    </TabItem>
-</Tabs>
+
+</Version>
 
 [1]: https://github.com/DuendeSoftware/products/tree/releases/bff/4.0.x/bff/src/Bff/Endpoints/Internal/DefaultSilentLoginEndpoint.cs

@@ -182,7 +182,7 @@ make the BFF call your API with the user's access token.
 
 The BFF checks the header once it has matched the request to a remote API, before it attaches an access token or
 forwards anything. If the header is missing, the BFF returns `401` and logs a warning. The header name and value come
-from the `AntiForgeryHeaderName` and `AntiForgeryHeaderValue` [options](/bff/fundamentals/options.md#apis).
+from the `AntiForgeryHeaderName` and `AntiForgeryHeaderValue` [options](/bff/fundamentals/options.mdx#apis).
 
 There's no per-API opt-out like `SkipAntiforgery()` on `MapRemoteBffApiEndpoint`. If you protect against CSRF with
 another mechanism and need to skip the check for some requests, use the `BffOptions.DisableAntiForgeryCheck` delegate,
@@ -237,7 +237,7 @@ services.AddSingleton<IIndexHtmlTransformer, MyIndexHtmlTransformer>();
 ```
 
 The transformer is called after the `index.html` is fetched from the CDN and before it is cached. The cache duration
-is controlled by the [`IndexHtmlDefaultCacheDuration`](/bff/fundamentals/options.md#cdn--static-assets) option. 
+is controlled by the [`IndexHtmlDefaultCacheDuration`](/bff/fundamentals/options.mdx#cdn--static-assets) option. 
 
 ### Proxying All Static Assets 
 

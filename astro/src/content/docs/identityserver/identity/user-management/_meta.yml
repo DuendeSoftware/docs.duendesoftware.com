@@ -1,6 +1,5 @@
 label: "User Management"
 collapsed: true
 order: 10
-badge:
-  text: v8.0
-  variant: tip
+versions:
+  since: "8.0"

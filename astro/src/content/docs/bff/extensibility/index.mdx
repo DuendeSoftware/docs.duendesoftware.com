@@ -23,7 +23,7 @@ Duende.BFF is designed to be extended at multiple layers. Most production applic
 | **Management Endpoints** | Login, logout, user info, back-channel logout, diagnostics, silent login processing | [Management Endpoints](#management-endpoints) |
 | **Session Store** | Where server-side session data is persisted (custom database, cache, etc.) | [Session Management](/bff/extensibility/sessions.mdx) |
 | **HTTP Forwarder** | Custom HTTP clients, request/response transformations for proxied calls | [HTTP Forwarder](/bff/extensibility/http-forwarder.mdx) |
-| **Token Management** | Token storage backend, per-route token retrieval (delegation, impersonation) | [Token Management](/bff/extensibility/tokens.md) |
+| **Token Management** | Token storage backend, per-route token retrieval (delegation, impersonation) | [Token Management](/bff/extensibility/tokens.mdx) |
 
 ## Management Endpoints
 
@@ -88,7 +88,7 @@ app.MapRemoteBffApiEndpoint("/api/delegated", new Uri("https://api.example.com")
     .WithAccessTokenRetriever<DelegationTokenRetriever>();
 ```
 
-See [Token Management Extensibility](/bff/extensibility/tokens.md) for details.
+See [Token Management Extensibility](/bff/extensibility/tokens.mdx) for details.
 
 ## See Also
 

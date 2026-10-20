@@ -10,9 +10,10 @@ redirect_from:
   - /identityserver/v6/bff/session/server_side_sessions/
   - /identityserver/v7/bff/session/server_side_sessions/
 ---
+
+import Version from "~/components/Version.astro";
 import { Badge } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 By default, ASP.NET Core's cookie handler will store all user session data in a protected cookie. This works very well unless cookie size or revocation becomes an issue.
 
@@ -91,14 +92,9 @@ dotnet ef migrations add UserSessions -o Migrations -c SessionDbContext
 The project must also reference the `Duende.BFF.EntityFramework` NuGet package and the `Microsoft.EntityFrameworkCore.Design` NuGet package, along with a specific database provider and its corresponding configuration, including the connection string.
 
 ## Session Store Cleanup
-Added in v1.2.0.
-
 Abandoned sessions will remain in the store unless something removes the stale entries.
 
-{/* prettier-ignore */}
-<Tabs syncKey="bffVersion">
-  {/* prettier-ignore */}
-  <TabItem label="V4">
+<Version since="4.0">
 
     If you wish to have such sessions cleaned up periodically, then you can add the session cleanup host and configure the `SessionCleanupInterval` options:
 
@@ -119,7 +115,7 @@ Abandoned sessions will remain in the store unless something removes the stale e
           lang="csharp"
           title="Program.cs"
           code={`var cn = _configuration.GetConnectionString("db");
-            
+
 builder.Services.AddBff()
     .AddEntityFrameworkServerSideSessions(options => 
     {
@@ -133,8 +129,9 @@ builder.Services.AddBff()
     spin up a separate host that's responsible for background jobs such as this cleanup job.
     :::
 
-  </TabItem>
-  <TabItem label="V3">
+</Version>
+
+<Version until="4.0">
 
     If you wish to have such sessions cleaned up periodically, then you can configure the `EnableSessionCleanup` and `SessionCleanupInterval` options:
 
@@ -156,7 +153,7 @@ builder.Services.AddBff()
           lang="csharp"
           title="Program.cs"
           code={`var cn = _configuration.GetConnectionString("db");
-            
+
 builder.Services.AddBff(options =>
     {
         options.EnableSessionCleanup = true;
@@ -166,5 +163,4 @@ builder.Services.AddBff(options =>
         options.UseSqlServer(cn);        
     });`}/>
 
-  </TabItem>
-</Tabs>
+</Version>

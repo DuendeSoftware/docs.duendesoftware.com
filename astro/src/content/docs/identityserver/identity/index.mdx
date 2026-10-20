@@ -7,17 +7,20 @@ sidebar:
 ---
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 Duende IdentityServer needs a source for user identity and profile data: the information used to authenticate users and populate claims in tokens. You choose which implementation backs this.
 
 The following options are available, presented from most to least full-featured:
 
 <CardGrid>
-  <LinkCard
-    href="/identityserver/identity/user-management/"
-    title="User Management"
-    description="First-party, passwordless-first user store supporting OTP, TOTP, passkeys, external providers, roles, groups, and full lifecycle management."
-  />
+  <Version since="8.0" inline>
+    <LinkCard
+      href="/identityserver/identity/user-management/"
+      title="User Management"
+      description="First-party, passwordless-first user store supporting OTP, TOTP, passkeys, external providers, roles, groups, and full lifecycle management."
+    />
+  </Version>
   <LinkCard
     href="/identityserver/identity/aspnet-identity/"
     title="ASP.NET Identity"

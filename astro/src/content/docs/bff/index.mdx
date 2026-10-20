@@ -20,6 +20,8 @@ redirect_from:
   - /bff/v2/overview/
 ---
 
+import Version from "~/components/Version.astro";
+
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
 The Duende.BFF (Backend For Frontend) security framework packages the necessary components to secure browser-based
@@ -35,13 +37,22 @@ It offers the following functionality:
 - Protection from Token Extraction attacks
 - Built-in CSRF Attack protection
 - Server Side OAuth 2.0 Support
-- Multi-frontend support (Introduced in V4)
+<Version since="4.0">
+
+- Multi-frontend support
+
+</Version>
+
 - User Management APIs
 - Back-channel logout
 - Securing access to both local and external APIs by serving as a reverse proxy.
 - Server side Session State Management
 - Blazor Authentication State Management
-- Open Telemetry support (Introduced in V4)
+<Version since="4.0">
+
+- Open Telemetry support
+
+</Version>
 
 Duende.BFF is free for development, testing and personal projects, but production use requires a license. See [licensing](/general/licensing.md#bff-security-framework) for details, including front-end limits.
 

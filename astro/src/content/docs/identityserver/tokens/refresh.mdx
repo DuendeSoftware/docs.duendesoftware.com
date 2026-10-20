@@ -11,6 +11,8 @@ redirect_from:
   - /identityserver/v7/tokens/refresh/
 ---
 
+import Version from "~/components/Version.astro";
+
 Access tokens have finite lifetimes. If a client needs long-lived access to a
 resource, [refresh tokens](https://datatracker.ietf.org/doc/html/rfc6749#section-1.5) can be used to request a new
 access token. This can be done with an API call and does not require any user interaction or interruption.
@@ -140,9 +142,13 @@ if that token should be accepted, that is, allowed to be used to obtain an acces
 the `DefaultRefreshTokenService` rejects all consumed tokens, but your customized implementation could create a time
 window where consumed tokens can be used.
 
-New options added In 6.3 interact with this feature. The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUse`
+<Version since="6.3">
+
+New options interact with this feature. The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUse`
 flag will cause OneTime refresh tokens to be deleted on use, rather than marked as consumed. This flag will need to be
 disabled to allow a customized Refresh Token Service to use consumed tokens.
+
+</Version>
 
 Consumed tokens can be cleaned up by a background process, enabled with the existing
 `OperationalStoreOptions.EnableTokenCleanup` and `OperationalStoreOptions.RemoveConsumedTokens` flags. Starting in 6.3,

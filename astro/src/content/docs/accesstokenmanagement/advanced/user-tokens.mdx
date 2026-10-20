@@ -8,6 +8,8 @@ redirect_from:
   - /foss/accesstokenmanagement/advanced/user_tokens/
 ---
 
+import Version from "~/components/Version.astro";
+
 The most common way
 to use [access token management is for interactive web applications](/accesstokenmanagement/web-apps.mdx) -
 however, you may want to customize certain aspects of it. Here's what you can do.
@@ -28,9 +30,27 @@ You can pass in some global options when registering token management in the ASP
   the scope parameter.
 * `ClientCredentialsResource` - same as previous, but for the resource parameter
 * `ClientCredentialStyle` - specifies how client credentials are transmitted to the OIDC provider
-* `MaxAccessTokenLength` <span data-shb-badge data-shb-badge-variant="default">v4.3</span> - the maximum length of a user access token (defaults to `AccessToken.MaxLength`, 32768 characters)
-* `MaxIdentityTokenLength` <span data-shb-badge data-shb-badge-variant="default">v4.3</span> - the maximum length of an identity token (defaults to `IdentityToken.MaxLength`, 32768 characters)
-* `MaxRefreshTokenLength` <span data-shb-badge data-shb-badge-variant="default">v4.3</span> - the maximum length of a refresh token (defaults to `RefreshToken.MaxLength`, 4096 characters)
+
+<Version until="4.3">
+```csharp
+// Program.cs
+builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
+{
+    options.ChallengeScheme = Scheme.Parse("schemeName");
+    options.UseChallengeSchemeScopedTokens = false;
+    options.RefreshBeforeExpiration = TimeSpan.FromMinutes(2);
+
+    options.ClientCredentialsScope = Scope.Parse("api1 api2");
+    options.ClientCredentialsResource = Resource.Parse("urn:resource");
+    options.ClientCredentialStyle = ClientCredentialStyle.PostBody; 
+});
+```
+</Version>
+<Version since="4.3">
+
+* `MaxAccessTokenLength` - the maximum length of a user access token (defaults to `AccessToken.MaxLength`, 32768 characters)
+* `MaxIdentityTokenLength` - the maximum length of an identity token (defaults to `IdentityToken.MaxLength`, 32768 characters)
+* `MaxRefreshTokenLength` - the maximum length of a refresh token (defaults to `RefreshToken.MaxLength`, 4096 characters)
 
 ```csharp
 // Program.cs
@@ -56,6 +76,8 @@ to increase. Each value must be greater than zero, or reading the options throws
 Larger tokens make the authentication cookie larger, because the default token store keeps tokens in the authentication
 session. Server or proxy header size limits can then reject requests. To keep the cookie small, store the session on the
 server with the cookie handler's `TicketStore` (see [Token Storage](#token-storage)).
+
+</Version>
 
 ## Per Request Parameters
 
@@ -238,10 +260,14 @@ public class DatabaseUserTokenStore : IUserTokenStore
 }
 ```
 
-<span data-shb-badge data-shb-badge-variant="default">v4.3</span> `AccessToken.Parse` and `RefreshToken.Parse` reject tokens over the default maximum length. If you raised one of the
+<Version since="4.3">
+
+`AccessToken.Parse` and `RefreshToken.Parse` reject tokens over the default maximum length. If you raised one of the
 maximum length options, pass the same limit to the `Parse(string value, int maxLength)` overload, for example
 `AccessToken.Parse(stored.AccessToken, options.MaxAccessTokenLength)`. `AccessToken`, `IdentityToken`, and `RefreshToken`
 also have a matching `TryParse` overload, and `IdentityToken` has `ParseOrDefault(string? value, int maxLength)`.
+
+</Version>
 
 Register your custom store in the service provider:
 

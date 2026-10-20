@@ -24,7 +24,7 @@ to the UI/client are very brief - the logs always have all the details of what w
 OpenTelemetry is a standard way of emitting diagnostics information from a process and
 IdentityServer supports Traces (.NET Activities), Metrics and Logs.
 
-[Read More](/identityserver/diagnostics/otel.md)
+[Read More](/identityserver/diagnostics/otel.mdx)
 
 ## Events
 

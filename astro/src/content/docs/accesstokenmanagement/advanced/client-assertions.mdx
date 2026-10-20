@@ -8,7 +8,7 @@ redirect_from:
   - /foss/accesstokenmanagement/advanced/client_assertions/
 ---
 import { Code } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 If your token client is using a client assertion instead of a shared secret, you can provide the assertion in two ways:
 
@@ -17,10 +17,8 @@ If your token client is using a client assertion instead of a shared secret, you
 
 Here's a sample client assertion service using the Microsoft JWT library:
 
-{/* prettier-ignore */}
-<Tabs syncKey="atmVersion">
-  {/* prettier-ignore */}
-  <TabItem label="V4">
+<Version since="4.0">
+
       <Code
           lang="csharp"
           title="ClientAssertionService.cs"
@@ -84,8 +82,10 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
         throw new NotImplementedException();
     }
 }`}/>
-  </TabItem>
-  <TabItem label="V3">
+
+</Version>
+<Version until="4.0">
+
 
     <Code
         lang="csharp"
@@ -147,8 +147,8 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
         throw new NotImplementedException();
     }
 }`}/>
-    </TabItem>
-</Tabs>
+
+</Version>
 
 
 :::note

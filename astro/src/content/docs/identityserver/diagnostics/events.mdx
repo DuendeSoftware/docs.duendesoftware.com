@@ -11,6 +11,8 @@ redirect_from:
   - /identityserver/v7/diagnostics/events/
 ---
 
+import Version from "~/components/Version.astro";
+
 [Logs](/identityserver/diagnostics/logging.mdx) describe low-level application activity. Events describe higher-level
 operations in IdentityServer, such as user login, client authentication, token issuance, consent, and token revocation.
 Events are structured data with event IDs, success or failure information, categories, and details, which makes them
@@ -183,7 +185,9 @@ The following events are defined in IdentityServer:
 
   Gets raised for successful/failed device authorization requests.
 
-### SAML Events :badge[v8.0]
+<Version since="8.0">
+
+### SAML Events
 
 The following events are raised by SAML components:
 
@@ -214,6 +218,8 @@ The following events are raised by SAML components:
 * **`InvalidSamlServiceProviderConfigurationEvent`**
 
   Raised when a SAML Service Provider's configuration fails runtime validation (performed by [`ISamlServiceProviderConfigurationValidator`](/identityserver/saml/extensibility.md#isamlserviceproviderconfigurationvalidator)). Includes the SP's `EntityId` and `DisplayName`.
+
+</Version>
 
 ## How To Create Custom IdentityServer Events
 

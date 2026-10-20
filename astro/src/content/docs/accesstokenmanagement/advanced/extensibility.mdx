@@ -1,13 +1,14 @@
 ---
 title: Extensibility
 description: Learn how to extend and customize Duende.AccessTokenManagement, including custom token retrieval.
+versions:
+  since: "4.0"
 sidebar:
   label: Extensibility
   order: 50
-  badge:
-    text: v4.0
-    variant: tip
 ---
+
+import Version from "~/components/Version.astro";
 
 There are several extension points where you can customize the behavior of Duende.AccessTokenManagement.
 The extension model is designed to favor composition over inheritance, making it easier to customize and extend while maintaining the library's core functionality.
@@ -336,10 +337,14 @@ public interface IUserTokenRequestConcurrencyControl
 }
 ```
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 4.3</span> Duende.AccessTokenManagement calls the overload that receives the `UserTokenRequestParameters`.
+<Version since="4.3">
+
+Duende.AccessTokenManagement calls the overload that receives the `UserTokenRequestParameters`.
 Concurrent requests that use the same refresh token but different parameters, for example a different `Resource` or `Scope`, result in different access tokens.
 The default implementation only lets requests share a refresh when they would send the same token request: the same refresh token and DPoP key, resource, scope, challenge and sign-in scheme, caller-supplied client assertion, and additional parameters.
 Requests with different parameters each get their own token.
+
+</Version>
 
 The overload with parameters is a default interface method, so existing implementations that only implement the original method keep compiling and behave as before.
 They can't tell requests for different resources or scopes apart, though. Implement the overload with parameters to take them into account.

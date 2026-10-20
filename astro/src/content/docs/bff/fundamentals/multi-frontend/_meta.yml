@@ -1,6 +1,5 @@
 label: "Multiple Frontends"
 collapsed: true
 order: 120
-badge:
-  text: v4
-  variant: tip
+versions:
+  since: "4.0"

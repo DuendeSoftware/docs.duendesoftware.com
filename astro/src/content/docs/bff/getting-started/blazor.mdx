@@ -14,14 +14,13 @@ redirect_from:
   - /identityserver/v7/bff/samples/bff-blazor/
 ---
 
+import Version from "~/components/Version.astro";
+
 import { Code, Steps, CardGrid, LinkCard } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 This quickstart walks you through how to create a BFF Blazor application. The source code for this quickstart is available on [GitHub](https://github.com/DuendeSoftware/Samples/tree/main/BFF/v4/BlazorAutoRendering).
 
-:::note[Version]
-This guide targets **Duende BFF v4**. If you are still on v3, expand the v3 tabs in each step below. See the [v3 → v4 upgrade guide](/bff/upgrading/bff-v3-to-v4.md) when you are ready to migrate.
-:::
+See the [v3 → v4 upgrade guide](/bff/upgrading/bff-v3-to-v4.md) when you are ready to migrate.
 
 ## What You'll Build
 
@@ -59,146 +58,145 @@ By the end of this guide you will have a Blazor application (Server + WASM) that
 
    Then configure the application to use BFF. Add this to your services:
 
-   {/* prettier-ignore */}
-   <Tabs syncKey="bffVersion">
-     {/* prettier-ignore */}
-     <TabItem label="Duende BFF v4">
-       ```csharp
-       // BFF setup for Blazor
-       builder.Services.AddBff()
-           .ConfigureOpenIdConnect(options =>
-           {
-               options.Authority = "https://demo.duendesoftware.com";
-               options.ClientId = "interactive.confidential";
-               options.ClientSecret = "secret";
-               options.ResponseType = "code";
-               options.ResponseMode = "query";
+   <Version since="4.0">
 
-               options.GetClaimsFromUserInfoEndpoint = true;
-               options.SaveTokens = true;
-               options.MapInboundClaims = false;
+   ```csharp
+   // BFF setup for Blazor
+   builder.Services.AddBff()
+       .ConfigureOpenIdConnect(options =>
+       {
+           options.Authority = "https://demo.duendesoftware.com";
+           options.ClientId = "interactive.confidential";
+           options.ClientSecret = "secret";
+           options.ResponseType = "code";
+           options.ResponseMode = "query";
 
-               options.Scope.Clear();
-               options.Scope.Add("openid");
-               options.Scope.Add("profile");
-               options.Scope.Add("api");
-               options.Scope.Add("offline_access");
+           options.GetClaimsFromUserInfoEndpoint = true;
+           options.SaveTokens = true;
+           options.MapInboundClaims = false;
 
-               options.TokenValidationParameters.NameClaimType = "name";
-               options.TokenValidationParameters.RoleClaimType = "role";
-           })
-           .ConfigureCookies(options =>
-           {
-               // Because we use an identity server that's configured on a different site
-               // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
-               // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
-               // The user would have to refresh the page to get the cookie.
-               // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
-               options.Cookie.SameSite = SameSiteMode.Lax;
-           })
-           .AddServerSideSessions() // Add in-memory implementation of server-side sessions
-           .AddBlazorServer();
+           options.Scope.Clear();
+           options.Scope.Add("openid");
+           options.Scope.Add("profile");
+           options.Scope.Add("api");
+           options.Scope.Add("offline_access");
 
-       // Make sure authentication state is available to all components.
-       builder.Services.AddCascadingAuthenticationState();
+           options.TokenValidationParameters.NameClaimType = "name";
+           options.TokenValidationParameters.RoleClaimType = "role";
+       })
+       .ConfigureCookies(options =>
+       {
+           // Because we use an identity server that's configured on a different site
+           // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+           // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
+           // The user would have to refresh the page to get the cookie.
+           // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+           options.Cookie.SameSite = SameSiteMode.Lax;
+       })
+       .AddServerSideSessions() // Add in-memory implementation of server-side sessions
+       .AddBlazorServer();
 
-       builder.Services.AddAuthorization();
-       ```
+   // Make sure authentication state is available to all components.
+   builder.Services.AddCascadingAuthenticationState();
 
-     </TabItem>
-     {/* prettier-ignore */}
-     <TabItem label="Duende BFF v3">
-       ```csharp
-       // BFF setup for Blazor (v3)
-       builder.Services.AddBff()
-           .AddServerSideSessions() // Add in-memory implementation of server-side sessions
-           .AddBlazorServer();
+   builder.Services.AddAuthorization();
+   ```
 
-       // Configure the authentication
-       builder.Services
-           .AddAuthentication(options =>
-           {
-               options.DefaultScheme = "cookie";
-               options.DefaultChallengeScheme = "oidc";
-               options.DefaultSignOutScheme = "oidc";
-           })
-           .AddCookie("cookie", options =>
-           {
-               // Configure the cookie with __Host prefix for maximum security
-               options.Cookie.Name = "__Host-blazor";
+   </Version>
 
-               // Because we use an identity server that's configured on a different site
-               // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
-               // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
-               // The user would have to refresh the page to get the cookie.
-               // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
-               options.Cookie.SameSite = SameSiteMode.Lax;
-           })
-           .AddOpenIdConnect("oidc", options =>
-           {
-               options.Authority = "https://demo.duendesoftware.com";
-               options.ClientId = "interactive.confidential";
-               options.ClientSecret = "secret";
-               options.ResponseType = "code";
-               options.ResponseMode = "query";
+   <Version until="4.0">
 
-               options.GetClaimsFromUserInfoEndpoint = true;
-               options.SaveTokens = true;
-               options.MapInboundClaims = false;
+   ```csharp
+   // BFF setup for Blazor (v3)
+   builder.Services.AddBff()
+       .AddServerSideSessions() // Add in-memory implementation of server-side sessions
+       .AddBlazorServer();
 
-               options.Scope.Clear();
-               options.Scope.Add("openid");
-               options.Scope.Add("profile");
-               options.Scope.Add("api");
-               options.Scope.Add("offline_access");
+   // Configure the authentication
+   builder.Services
+       .AddAuthentication(options =>
+       {
+           options.DefaultScheme = "cookie";
+           options.DefaultChallengeScheme = "oidc";
+           options.DefaultSignOutScheme = "oidc";
+       })
+       .AddCookie("cookie", options =>
+       {
+           // Configure the cookie with __Host prefix for maximum security
+           options.Cookie.Name = "__Host-blazor";
 
-               options.TokenValidationParameters.NameClaimType = "name";
-               options.TokenValidationParameters.RoleClaimType = "role";
-           });
+           // Because we use an identity server that's configured on a different site
+           // (duendesoftware.com vs localhost), we need to configure the SameSite property to Lax.
+           // Setting it to Strict would cause the authentication cookie not to be sent after logging in.
+           // The user would have to refresh the page to get the cookie.
+           // Recommendation: Set it to 'strict' if your IDP is on the same site as your BFF.
+           options.Cookie.SameSite = SameSiteMode.Lax;
+       })
+       .AddOpenIdConnect("oidc", options =>
+       {
+           options.Authority = "https://demo.duendesoftware.com";
+           options.ClientId = "interactive.confidential";
+           options.ClientSecret = "secret";
+           options.ResponseType = "code";
+           options.ResponseMode = "query";
 
-       // Make sure authentication state is available to all components.
-       builder.Services.AddCascadingAuthenticationState();
+           options.GetClaimsFromUserInfoEndpoint = true;
+           options.SaveTokens = true;
+           options.MapInboundClaims = false;
 
-       builder.Services.AddAuthorization();
-       ```
-     </TabItem>
-   </Tabs>
+           options.Scope.Clear();
+           options.Scope.Add("openid");
+           options.Scope.Add("profile");
+           options.Scope.Add("api");
+           options.Scope.Add("offline_access");
+
+           options.TokenValidationParameters.NameClaimType = "name";
+           options.TokenValidationParameters.RoleClaimType = "role";
+       });
+
+   // Make sure authentication state is available to all components.
+   builder.Services.AddCascadingAuthenticationState();
+
+   builder.Services.AddAuthorization();
+   ```
+
+   </Version>
 
    To configure the web app pipeline, add the following after `builder.Build()`:
 
-   {/* prettier-ignore */}
-   <Tabs syncKey="bffVersion">
-     {/* prettier-ignore */}
-     <TabItem label="Duende BFF v4">
-       ```csharp
-       app.UseRouting();
-       app.UseAuthentication();
+   <Version since="4.0">
 
-       // Add the BFF middleware which performs anti-forgery protection
-       app.UseBff();
-       app.UseAuthorization();
-       app.UseAntiforgery();
+   ```csharp
+   app.UseRouting();
+   app.UseAuthentication();
 
-       // In v4, management endpoints (/bff/login, /bff/logout, etc.) are
-       // registered automatically — no call to MapBffManagementEndpoints() needed.
-       ```
-     </TabItem>
-     {/* prettier-ignore */}
-     <TabItem label="Duende BFF v3">
-       ```csharp
-       app.UseRouting();
-       app.UseAuthentication();
+   // Add the BFF middleware which performs anti-forgery protection
+   app.UseBff();
+   app.UseAuthorization();
+   app.UseAntiforgery();
 
-       // Add the BFF middleware which performs anti-forgery protection
-       app.UseBff();
-       app.UseAuthorization();
-       app.UseAntiforgery();
+   // In v4, management endpoints (/bff/login, /bff/logout, etc.) are
+   // registered automatically — no call to MapBffManagementEndpoints() needed.
+   ```
 
-       // In v3, management endpoints must be registered explicitly
-       app.MapBffManagementEndpoints();
-       ```
-     </TabItem>
-   </Tabs>
+   </Version>
+
+   <Version until="4.0">
+
+   ```csharp
+   app.UseRouting();
+   app.UseAuthentication();
+
+   // Add the BFF middleware which performs anti-forgery protection
+   app.UseBff();
+   app.UseAuthorization();
+   app.UseAntiforgery();
+
+   // In v3, management endpoints must be registered explicitly
+   app.MapBffManagementEndpoints();
+   ```
+
+   </Version>
 
 </Steps>
 

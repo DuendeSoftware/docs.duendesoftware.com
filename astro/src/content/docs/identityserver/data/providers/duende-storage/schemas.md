@@ -7,11 +7,6 @@ sidebar:
   order: 40
 ---
 
-:::caution[Preview documentation]
-This page describes preview packages and APIs that are subject to change. Start with the
-[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
-:::
-
 Data extension schemas let you add typed properties to configuration entities without changing the Duende storage
 database schema. Values remain part of the entity, while schema metadata defines their type, validation, queryability and
 display information.

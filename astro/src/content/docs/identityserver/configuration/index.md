@@ -8,11 +8,9 @@ redirect_from:
   - /identityserver/v5/configuration/
   - /identityserver/v6/configuration/
   - /identityserver/v7/configuration/
+versions:
+  since: "6.3"
 ---
-
-:::tip
-Added in Duende IdentityServer 6.3
-:::
 
 The Configuration API is a collection of endpoints that allow for management and configuration of an IdentityServer
 implementation. The Configuration API can be hosted either separately or within the IdentityServer implementation, and is

@@ -11,6 +11,7 @@ redirect_from:
 ---
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 Duende IdentityServer is a highly extensible, standards-compliant framework for implementing the OpenID Connect, OAuth 2.x and SAML protocols in .NET and ASP.NET Core. It offers deep flexibility for handling authentication, authorization, and token issuance and can be adapted to fit complex custom security scenarios.
 
@@ -35,21 +36,27 @@ Duende IdentityServer is a highly extensible, standards-compliant framework for 
     title="Fundamentals"
     description="Learn what you need to bring to IdentityServer: UI, data stores, and identity/profile storage — plus ready-made options for each."
   />
-  <LinkCard
-    href="/identityserver/identity/user-management/"
-    title="User Management"
-    description="Full user lifecycle management including authentication methods, profiles, roles, and groups."
-  />
-  <LinkCard
-    href="/identityserver/saml/"
-    title="SAML Support"
-    description="Act as both a SAML Identity Provider and Service Provider with full protocol support."
-  />
-  <LinkCard
-    href="/identityserver/tokens/fapi-2-0-specification/"
-    title="FAPI 2.0 & Conformance"
-    description="Financial-grade API security profile with certified conformance results and reporting."
-  />
+  <Version since="8.0" inline>
+    <LinkCard
+      href="/identityserver/identity/user-management/"
+      title="User Management"
+      description="Full user lifecycle management including authentication methods, profiles, roles, and groups."
+    />
+  </Version>
+  <Version since="8.0" inline>
+    <LinkCard
+      href="/identityserver/saml/"
+      title="SAML Support"
+      description="Act as both a SAML Identity Provider and Service Provider with full protocol support."
+    />
+  </Version>
+  <Version since="7.3" inline>
+    <LinkCard
+      href="/identityserver/tokens/fapi-2-0-specification/"
+      title="FAPI 2.0 & Conformance"
+      description="Financial-grade API security profile with certified conformance results and reporting."
+    />
+  </Version>
   <LinkCard
     href="/identityserver/ui/login/dynamicproviders/"
     title="Dynamic Providers"
@@ -60,11 +67,13 @@ Duende IdentityServer is a highly extensible, standards-compliant framework for 
     title="Multi-Issuer"
     description="Run a single IdentityServer instance with multiple issuer identities."
   />
-  <LinkCard
-    href="/identityserver/spaces/"
-    title="Multi-Tenancy (Spaces)"
-    description="Host multiple isolated IdentityServer security domains in a single deployment."
-  />
+  <Version since="8.1" inline>
+    <LinkCard
+      href="/identityserver/spaces/"
+      title="Multi-Tenancy (Spaces)"
+      description="Host multiple isolated IdentityServer security domains in a single deployment."
+    />
+  </Version>
   <LinkCard
     href="/identityserver/fundamentals/key-management/"
     title="Automatic Key Management"

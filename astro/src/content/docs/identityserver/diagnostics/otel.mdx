@@ -13,11 +13,11 @@ redirect_from:
   - /identityserver/v7/diagnostics/otel/metrics/
   - /identityserver/v7/diagnostics/otel/traces/
   - /identityserver/v7/diagnostics/otel/setup/
+versions:
+  since: "6.1"
 ---
 
-:::tip
-Added in Duende IdentityServer v6.1 and expanded in v7.0
-:::
+import Version from "~/components/Version.astro";
 
 [OpenTelemetry](https://opentelemetry.io) (OTel) is a collection of tools, APIs, and SDKs for generating and collecting
 telemetry data (metrics, logs, and traces). This is very useful for analyzing software performance and behavior,
@@ -117,11 +117,9 @@ app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 This setup will write the tracing information to the console and provide metrics on the /metrics endpoint.
 
-## Metrics
+<Version since="7.0">
 
-:::tip
-Added in Duende IdentityServer v7.0
-:::
+## Metrics
 
 OpenTelemetry metrics are run-time measurements that are intended to provide an indication
 of overall health and are typically used to show graphs on a dashboard or to set up monitoring rules.
@@ -175,9 +173,13 @@ These detailed metrics are instrumented by the IdentityServer middleware and ser
 flows and features.
 
 :::note
-In IdentityServer versions <span data-shb-badge data-shb-badge-variant="default">&lt;7.3</span>, 
-these metrics are created by the meter named "Duende.IdentityServer.Experimental", starting with IdentityServer 7.3,
-they are created by the meter named "Duende.IdentityServer".
+<Version until="7.3">
+These metrics are created by the meter named "Duende.IdentityServer.Experimental".
+</Version>
+
+<Version since="7.3">
+These metrics are created by the meter named "Duende.IdentityServer".
+</Version>
 :::
 
 #### Telemetry.Metrics.Counters.ApiSecretValidation
@@ -306,7 +308,9 @@ multiple actual tokens (id_token, access token, refresh token).
 | authorize_request_type | The authorize request type, if information about it is available |
 | error                  | Error label on errors                                            |
 
-#### Telemetry.Metrics.Counters.SamlSso :badge[v8.0]
+<Version since="8.0">
+
+#### Telemetry.Metrics.Counters.SamlSso
 
 Counter name: `tokenservice.saml.sso`
 
@@ -356,6 +360,8 @@ On failure:
 The `error` tag uses a bounded set of values to prevent cardinality explosion in your metrics backend:
 
 `invalid`, `unknown`, `sp_not_found`, `sp_disabled`, `invalid_acs_url`, `access_denied`, `partial_logout`, `interaction_error`
+
+</Version>
 
 ### Metrics In The UI
 
@@ -460,11 +466,11 @@ The `Microsoft.AspNetCore.Identity` meter provides the following metrics:
   * Number of remembered two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_remembered`)
   * Number of forgotten two-factor authentication (2FA) clients (`aspnetcore.identity.sign_in.two_factor_clients_forgotten`)
 
-## Traces
+</Version>
 
-:::tip
-Added in Duende IdentityServer v6.1
-:::
+<Version since="6.1">
+
+## Traces
 
 Here's e.g. the output for a request to the discovery endpoint:
 
@@ -511,6 +517,8 @@ You can select which information you are interested in by selectively listening 
 * *`IdentityServerConstants.Tracing.Validation`*
 
   More detailed tracing related to validation
+
+</Version>
 
 ## OpenTelemetry From 3rd Party Logging Frameworks
 

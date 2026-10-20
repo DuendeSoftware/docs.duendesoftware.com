@@ -9,6 +9,7 @@ redirect_from:
 ---
 
 import { Code } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 The client library for [OAuth 2.0 token introspection (RFC 7662)](https://tools.ietf.org/html/rfc7662) is provided by the `IntrospectionClient` class,
@@ -81,7 +82,9 @@ In addition, it provides access to the following standard response parameters:
 | `Issuer`     | The string representing the issuer of the token or `null` if the `iss` claim is missing.                                                                                            |
 | `JwtId`      | The string identifier for the token or `null` if the `jti` claim is missing.                                                                                                        |
 
-## JWT Response Format :badge[v7.1]
+<Version since="7.1">
+
+## JWT Response Format
 
 Introspection requests can optionally pass a parameter to indicate that a signed JWT rather than JSON payload is desired.
 Such a JWT response is most often useful for non-repudiation. For example, an API might rely on the claims from introspection
@@ -137,3 +140,5 @@ var introspectionResponse = await client.IntrospectTokenAsync(
         JwtResponseValidator = new CustomIntrospectionJwtResponseValidator()
     });
 ```
+
+</Version>

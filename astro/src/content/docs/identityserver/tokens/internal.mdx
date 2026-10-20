@@ -11,6 +11,8 @@ redirect_from:
   - /identityserver/v7/tokens/internal/
 ---
 
+import Version from "~/components/Version.astro";
+
 Sometimes, extensibility code running on your IdentityServer needs access tokens to call other APIs. In this case it is
 not necessary to use the protocol endpoints. The tokens can be issued internally.
 
@@ -29,5 +31,9 @@ app.MapGet("/myAction", async (IIdentityServerTools tools) =>
 });
 ```
 
-The `IIdentityServerTools` interface was added in v7 to allow mocking. Previous versions referenced the
+<Version since="7.0">
+
+The `IIdentityServerTools` interface allows mocking. Previous versions referenced the
 `IdentityServerTools` implementation class directly.
+
+</Version>

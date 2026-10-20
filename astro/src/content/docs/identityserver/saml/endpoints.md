@@ -120,6 +120,6 @@ See [`SamlEndpointOptions`](/identityserver/saml/configuration.md#samlendpointop
 ## Observability
 
 All SAML endpoints emit [audit events](/identityserver/diagnostics/events.md#saml-events) and
-[telemetry counters](/identityserver/diagnostics/otel.md#telemetrymetricscounterssamlsso) for
+[telemetry counters](/identityserver/diagnostics/otel.mdx#telemetrymetricscounterssamlsso) for
 monitoring and troubleshooting. The SSO and SLO endpoints also participate in distributed tracing
 through the `Duende.IdentityServer` activity source.

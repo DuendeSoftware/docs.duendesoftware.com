@@ -10,7 +10,7 @@ redirect_from:
 ---
 
 import { Badge, Code } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 A common scenario in worker applications or background tasks (or really any daemon-style applications) is to call APIs using an OAuth token obtained via the client credentials flow.
 
@@ -41,10 +41,8 @@ dotnet add package Duende.AccessTokenManagement
 
 You can add the necessary services to the ASP.NET Core service provider by calling `AddClientCredentialsTokenManagement()`. After that you can add one or more named client definitions by calling `AddClient`.
 
-{/* prettier-ignore */}
-<Tabs syncKey="atmVersion">
-  {/* prettier-ignore */}
-  <TabItem label="V4">
+<Version since="4.0">
+
 
       <Code
           lang="csharp"
@@ -68,8 +66,10 @@ You can add the necessary services to the ASP.NET Core service provider by calli
 
         client.Scope = Scope.Parse("invoice customers");
     });`}/>
-  </TabItem>
-  <TabItem label="V3">
+
+</Version>
+<Version until="4.0">
+
 
     <Code
         lang="csharp"
@@ -96,8 +96,8 @@ You can add the necessary services to the ASP.NET Core service provider by calli
 
 // in v3, you explicitly need to add a distributed cache implementation, such as in-memory
 services.AddDistributedMemoryCache();`}/>
-    </TabItem>
-</Tabs>    
+
+</Version>
 
 ## Automatic Token Management Using HTTP Factory
 
@@ -105,10 +105,8 @@ You can register HTTP clients with the factory that will automatically use the a
 
 The following code registers an `HttpClient` called `invoices` which automatically uses the `invoice.client` definition:
 
-{/* prettier-ignore */}
-<Tabs syncKey="atmVersion">
-  {/* prettier-ignore */}
-  <TabItem label="V4">
+<Version since="4.0">
+
 
       <Code
           lang="csharp"
@@ -131,8 +129,10 @@ The following code registers an `HttpClient` called `invoices` which automatical
 })
 .AddClientCredentialsTokenHandler(ClientCredentialsClientName.Parse("catalog.client"));`}/>
 
-  </TabItem>
-  <TabItem label="V3">
+
+</Version>
+<Version until="4.0">
+
 
     <Code
         lang="csharp"
@@ -154,8 +154,8 @@ The following code registers an `HttpClient` called `invoices` which automatical
     client.BaseAddress = new Uri("https://apis.company.com/catalog/");
 })
 .AddClientCredentialsTokenHandler("catalog.client");`}/>
-    </TabItem>
-</Tabs>
+
+</Version>
 
 Once you have set up HTTP clients in the HTTP factory, no token-related code is needed at all, e.g.:
 
@@ -212,10 +212,8 @@ services.AddHttpClient<CatalogClient>(client =>
 
 If you want to use access tokens in a different way or have more advanced needs which the automatic option doesn't cover, then you can also manually request access tokens. 
 
-{/* prettier-ignore */}
-<Tabs syncKey="atmVersion">
-  {/* prettier-ignore */}
-  <TabItem label="V4">
+<Version since="4.0">
+
 
     You can retrieve the current access token for a given token client via `IClientCredentialsTokenManager.GetAccessTokenAsync`.
 
@@ -282,8 +280,10 @@ if (result.WasSuccessful(out var successToken))
     client.SetBearerToken(successToken.AccessToken.ToString());
 }`}/>
 
-  </TabItem>
-  <TabItem label="V3">
+
+</Version>
+<Version until="4.0">
+
 
     You can retrieve the current access token for a given token client via `IClientCredentialsTokenManagementService.GetAccessTokenAsync`.
 
@@ -322,5 +322,5 @@ if (result.WasSuccessful(out var successToken))
     You can customize some of the per-request parameters by passing in an instance of `ClientCredentialsTokenRequestParameters`. This allows forcing a fresh token request (even if a cached token would exist) and also allows setting a per-request scope, resource and client assertion.
 
 
-  </TabItem>
-</Tabs>
+
+</Version>

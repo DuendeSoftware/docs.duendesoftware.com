@@ -51,7 +51,7 @@ a resiliency policy. If you're not using `AddClientCredentialsHttpClient` to con
 retry policy to be there, you should use `AddDefaultAccessTokenResiliency` to add our implementation or provide your own retry policy.
 See [Service Workers](/accesstokenmanagement/workers.mdx) for more details. 
 
-If you wish to implement a custom access token handling process, for example to implement token exchange, you can now [implement your own `AccessTokenRequestHandler.ITokenRetriever`](/accesstokenmanagement/advanced/extensibility.md#token-retrieval).
+If you wish to implement a custom access token handling process, for example to implement token exchange, you can now [implement your own `AccessTokenRequestHandler.ITokenRetriever`](/accesstokenmanagement/advanced/extensibility.mdx#token-retrieval).
 
 ### Strongly Typed Configuration
 

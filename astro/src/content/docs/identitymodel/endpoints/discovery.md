@@ -1,12 +1,11 @@
 ---
 title: Discovery Endpoint
 description: Documentation for using the OpenID Connect discovery endpoint client library, including configuration, validation, and caching features
+versions:
+  since: "7.1"
 sidebar:
   order: 2
   label: Discovery
-  badge:
-    text: v7.1
-    variant: tip
 redirect_from:
   - /foss/identitymodel/endpoints/discovery/
 ---

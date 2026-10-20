@@ -7,11 +7,6 @@ sidebar:
   order: 15
 ---
 
-:::caution[Preview documentation]
-This page describes preview packages and APIs that are subject to change. Start with the
-[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
-:::
-
 Duende Storage registers one database per *storage instance*. By default, every data category maps to one instance and
 your application uses a single database, as shown in [Getting Started](/identityserver/data/providers/duende-storage/getting-started.md).
 This page covers routing categories, such as configuration and operational data, to separate databases.
