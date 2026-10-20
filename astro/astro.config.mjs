@@ -344,6 +344,7 @@ export default defineConfig({
         PageSidebar: "./src/components/PageSidebar.astro",
         MarkdownContent: "./src/components/MarkdownContent.astro",
         Sidebar: "./src/components/Sidebar.astro",
+        PageTitle: "./src/components/PageTitle.astro",
       },
     }),
     redirectFrom({
