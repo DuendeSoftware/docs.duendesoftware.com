@@ -11,28 +11,20 @@ if (!banner) {
 }
 ---
 
-{
-  banner && (
-    <div class="sl-banner" data-pagefind-ignore set:html={banner.content} />
-  )
-}
+{banner && <div class="sl-banner" data-pagefind-ignore set:html={banner.content} />}
 
 {banner && (
-  <script>
-    function initBanner() {
+  <script is:inline>
+    (function initBanner() {
       const banner = document.querySelector('.sl-banner');
       if (!banner) return;
-      // Move banner to the top of <body>
       document.body.prepend(banner);
-      // Set CSS variable for offset
-      function update() {
-        document.documentElement.style.setProperty('--sl-banner-height', banner.offsetHeight + 'px');
-      }
+      const update = () => document.documentElement.style.setProperty('--sl-banner-height', banner.offsetHeight + 'px');
       update();
-      window.addEventListener('resize', update);
-    }
-    initBanner();
-    document.addEventListener('astro:after-swap', initBanner);
+      // also covers resize and web-font swaps
+      new ResizeObserver(update).observe(banner);
+      document.addEventListener('astro:after-swap', initBanner, { once: true });
+    })();
   </script>
 )}
 
@@ -63,6 +55,15 @@ if (!banner) {
 <style is:global>
   :root {
     --sl-banner-height: 0px;
+  }
+  /* first-paint estimate (single line); the script sets the exact value */
+  :root:has(.sl-banner) {
+    --sl-banner-height: calc(24px + 1.2em);
+  }
+  @media (max-width: 64rem) {
+    :root:has(.sl-banner) {
+      --sl-banner-height: calc(24px + 2.4em);
+    }
   }
   header.header {
     top: var(--sl-banner-height) !important;
