@@ -70,7 +70,7 @@ const productKeys = products.map((p) => p.key);
   function createChip({ versions, preview = [], unsupported = [] }: DvData, onChange: (version: string) => void) {
     const chip = document.createElement("select");
     chip.className = "dv-chip";
-    chip.setAttribute("aria-label", "Select version");
+    chip.setAttribute("aria-label", "Version");
     const optionLabel = (v: string) =>
       preview.includes(v) ? `${v} (preview)` : unsupported.includes(v) ? `${v} (unsupported)` : v;
     chip.innerHTML = versions.map((v) => `<option value="${v}">${optionLabel(v)}</option>`).join("");
