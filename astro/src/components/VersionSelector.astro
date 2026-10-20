@@ -10,7 +10,9 @@ const productKeys = products.map((p) => p.key);
       var seg = location.pathname.split("/").filter(Boolean);
       var p = productKeys.filter(function (x) { return seg.indexOf(x) >= 0; })[0];
       if (!p || /general|release-notes|upgrad/.test(location.pathname)) return;
-      var v = new URLSearchParams(location.search).get("version") || localStorage.getItem("dv-version:" + p);
+      var stored = null;
+      try { stored = localStorage.getItem("dv-version:" + p); } catch (e) {}
+      var v = new URLSearchParams(location.search).get("version") || stored;
       document.documentElement.setAttribute("data-dv-pending", v && v !== "latest" ? "selected" : "latest");
     } catch (e) {}
   })();
@@ -44,9 +46,24 @@ const productKeys = products.map((p) => p.key);
 
   const storageKey = (product: string) => "dv-version:" + product;
 
+  // Storage can throw (blocked cookies, privacy modes); selection must work without persistence.
+  const readStored = (key: string) => {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  };
+  const writeStored = (key: string, value: string | null) => {
+    try {
+      if (value === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, value);
+    } catch {}
+  };
+
   function initialSelection(data: DvData) {
     const requested = new URL(location.href).searchParams.get("version");
-    const stored = localStorage.getItem(storageKey(data.product));
+    const stored = readStored(storageKey(data.product));
     return [requested, stored].find((v) => v && data.versions.includes(v)) ?? defaultVersion(data);
   }
 
@@ -135,8 +152,7 @@ const productKeys = products.map((p) => p.key);
   }
 
   function storeSelection(product: string, version: string, isDefault: boolean) {
-    if (isDefault) localStorage.removeItem(storageKey(product));
-    else localStorage.setItem(storageKey(product), version);
+    writeStored(storageKey(product), isDefault ? null : version);
   }
 
   function persistSelection(product: string, version: string, isDefault: boolean, mode: "push" | "replace") {
