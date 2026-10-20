@@ -1,3 +1,5 @@
 label: "Configuration API"
 collapsed: true
 order: 8
+versions:
+  since: "6.3"
