@@ -8,8 +8,6 @@ redirect_from:
   - /identityserver/v5/ui/server_side_sessions/
   - /identityserver/v6/ui/server_side_sessions/
   - /identityserver/v7/ui/server_side_sessions/
-versions:
-  since: "6.1"
 ---
 
 When a user logs in interactively, their authentication session is managed by the ASP.NET Core authentication system,
