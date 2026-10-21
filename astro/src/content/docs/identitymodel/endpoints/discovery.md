@@ -4,9 +4,6 @@ description: Documentation for using the OpenID Connect discovery endpoint clien
 sidebar:
   order: 2
   label: Discovery
-  badge:
-    text: v7.1
-    variant: tip
 redirect_from:
   - /foss/identitymodel/endpoints/discovery/
 ---

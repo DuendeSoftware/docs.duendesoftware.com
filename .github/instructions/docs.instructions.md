@@ -52,8 +52,12 @@ Review Duende Software product docs (IdentityServer, BFF, etc.) for writing qual
 * Use backticks for inline properties, classes, symbols, and values (including status codes like `404`).
 * Mention NuGet packages with `dotnet add package ...` in a `bash` block and link to the NuGet Gallery.
 
-## Badges
+## Badges and Versions
 
-* `.mdx`: use the `Badge` component, e.g. `<Badge text="v8.0" />`.
-* `.md`: use `<span data-shb-badge data-shb-badge-variant="default">v8.0</span>`.
-* Headings (both): `### SAML Events :badge[v8.0]`.
+* Flag manual version badges (`<Badge text="v8.0" />`, `<span data-shb-badge>`, `:badge[v8.0]`) used for version info.
+* Version pages with `versions` frontmatter (quoted "major.minor", e.g. `"8.0"`) or folder `_meta.yml`. Wrap version-specific sections in `<Version since="8.0">` (`import Version from "~/components/Version.astro"`) with literal values. `until` is exclusive.
+* `since`/`until` must be a version declared in `products` (`astro/astro.config.mjs`). Preview pages need `preview: true`.
+* Non-version badges (license tier, .NET 10) are fine:
+  * `.mdx`: `<Badge text="Optional" />`.
+  * `.md`: `<span data-shb-badge data-shb-badge-variant="default">Optional</span>`.
+  * Headings (both): `### Title :badge[.NET 10]`.

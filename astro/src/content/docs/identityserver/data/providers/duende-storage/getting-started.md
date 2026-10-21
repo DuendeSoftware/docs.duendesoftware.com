@@ -10,11 +10,6 @@ redirect_from:
   - /identityserver/data/providers/duende-storage/operational-storage/
 ---
 
-:::caution[Preview documentation]
-This page describes preview packages and APIs that are subject to change. Start with the
-[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
-:::
-
 `AddStorage(...)` selects a database provider for a storage instance.
 [`AddConfigurationStorage()`](/identityserver/data/configuration.mdx) and
 [`AddOperationalStorage()`](/identityserver/data/operational.md) then route IdentityServer's configuration and

@@ -56,7 +56,7 @@ This checklist is a short summary of the detailed deployment guidance on this pa
 * **Multi-region designs account for replication lag.** Operational data must be consistent across active regions, or codes and refresh tokens can fail with `invalid_grant`. See [Active-Active Constraints](/identityserver/deployment/high-availability.md#active-active-constraints).
 * **CORS allows only the required client origins.** Configure explicit origins for browser-based clients and check the middleware order when combining IdentityServer and ASP.NET Core policies. See [CORS](/identityserver/tokens/cors.md).
 * **Token and session lifetimes match your threat model.** Review [access-token and refresh-token settings](/identityserver/reference/v8/models/client.md#token) and keep [server-side session lifetimes](/identityserver/ui/server-side-sessions/session-expiration.mdx) consistent with them.
-* **Diagnostics are ready before traffic arrives.** Configure appropriate [logging](/identityserver/diagnostics/logging.mdx), collect [OpenTelemetry](/identityserver/diagnostics/otel.md) signals, enable the [events](/identityserver/diagnostics/events.md) you need, and expose [health checks](#health-checks).
+* **Diagnostics are ready before traffic arrives.** Configure appropriate [logging](/identityserver/diagnostics/logging.mdx), collect [OpenTelemetry](/identityserver/diagnostics/otel.mdx) signals, enable the [events](/identityserver/diagnostics/events.md) you need, and expose [health checks](#health-checks).
 * **Traffic controls match the deployment risk.** Most deployments do not need application-level throttling, but public or multi-tenant deployments should assess [rate limiting](#rate-limiting).
 
 ## Proxy Servers and Load Balancers

@@ -10,8 +10,6 @@ redirect_from:
   - /identityserver/v7/ui/server_side_sessions/
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 6.1</span>
-
 When a user logs in interactively, their authentication session is managed by the ASP.NET Core authentication system,
 and more specifically the cookie authentication handler.
 IdentityServer uses the [state in the cookie](/identityserver/ui/login/session.md#well-known-claims-issued-from-the-login-page) to track the user's subject and session identifiers (i.e. the `sub` and `sid` claims),

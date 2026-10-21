@@ -7,6 +7,8 @@ sidebar:
   order: 1
 ---
 
+import Version from "~/components/Version.astro";
+
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
 ## Logging
@@ -44,7 +46,9 @@ log messages are written in a log scope that contains a `frontend` property with
 log message was emitted.
 :::
 
-## OpenTelemetry :badge[v4.0]
+<Version since="4.0">
+
+## OpenTelemetry
 
 OpenTelemetry provides a single standard for collecting and exporting telemetry data, such as metrics, logs, and traces.
 
@@ -160,6 +164,8 @@ openTelemetry.UseOtlpExporter();
 
 When using multiple frontends, log messages and traces include a `frontend` scope property identifying which frontend the activity belongs to. This allows you to filter traces by frontend in your observability backend.
 
+</Version>
+
 ## Diagnostics Endpoint
 
 The BFF also includes a `/bff/diagnostics` endpoint for development-time troubleshooting. It returns the current user and client access tokens. See [Diagnostics Endpoint](/bff/fundamentals/session/management/diagnostics.md) for details.
@@ -172,12 +178,14 @@ The BFF also includes a `/bff/diagnostics` endpoint for development-time trouble
     title="Logging Fundamentals"
     description="General Duende logging configuration"
   />
-  <LinkCard
-    href="https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel"
-    title="OpenTelemetry .NET Documentation"
-    description="Setting up OTLP export"
-    target="_blank"
-  />
+  <Version since="4.0" inline>
+    <LinkCard
+      href="https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel"
+      title="OpenTelemetry .NET Documentation"
+      description="Setting up OTLP export"
+      target="_blank"
+    />
+  </Version>
   <LinkCard
     href="/bff/troubleshooting/"
     title="Troubleshooting"

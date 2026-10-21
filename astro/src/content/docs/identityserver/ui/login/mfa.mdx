@@ -9,10 +9,14 @@ redirect_from:
   - /identityserver/v7/ui/login/mfa/
 ---
 
+import Version from "~/components/Version.astro";
+
 Multi-factor authentication (MFA) requires users to prove their identity with more than one factor: typically something 
 they know (a password) combined with something they have (a device or security key) or something they are (a biometric). 
 IdentityServer handles the protocol layer (OpenID Connect, OAuth 2.0, SAML) and delegates the actual authentication 
 experience, including MFA, to the hosting application's login UI.
+
+<Version since="8.0" inline>
 
 ## MFA with Duende User Management
 
@@ -71,9 +75,11 @@ For detailed implementation guides, see:
 - [OTP Authentication](/identityserver/identity/user-management/authentication/otp.mdx): passwordless codes via email or SMS
 - [Recovery Codes](/identityserver/identity/user-management/authentication/recovery-codes.mdx): backup access when the primary second factor is unavailable
 
+</Version>
+
 ## MFA with ASP.NET Core Identity
 
-If you are using [ASP.NET Core Identity](/identityserver/identity/aspnet-identity/index.md) as your user store, it provides its 
+If you are using [ASP.NET Core Identity](/identityserver/identity/aspnet-identity/index.mdx) as your user store, it provides its 
 own [MFA support](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-enable-qrcodes) including 
 TOTP with authenticator apps.
 Microsoft's [general MFA guidelines](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/mfa) cover 

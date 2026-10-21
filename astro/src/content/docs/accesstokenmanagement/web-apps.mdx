@@ -10,7 +10,7 @@ redirect_from:
 ---
 import { Badge } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 The `Duende.AccessTokenManagement.OpenIdConnect` library automates all the tasks around access token lifetime management for
 user-centric web applications.
@@ -194,8 +194,8 @@ builder.Services.AddGrpcClient<Greeter.GreeterClient>(o =>
 
 If you want to use access tokens differently or have more advanced needs which the automatic option doesn't cover, then you can also manually request user access tokens. 
 
-<Tabs syncKey="atmVersion">
-  <TabItem label="V4">
+<Version since="4.0">
+
 
     You can get the current user access token manually by writing code against the `IUserTokenManager`.
     
@@ -247,8 +247,10 @@ If you want to use access tokens differently or have more advanced needs which t
     }
 }`}/>
   
-  </TabItem>
-  <TabItem label="V3">
+
+</Version>
+<Version until="4.0">
+
     You can get the current user access token manually by writing code against the `IUserTokenManagementService`.
 
     <Code
@@ -276,8 +278,8 @@ If you want to use access tokens differently or have more advanced needs which t
         // rest omitted
     }
 }`}/>
-  </TabItem>
-</Tabs>
+
+</Version>
 
 ### HTTP Context Extension Methods
 

@@ -304,7 +304,7 @@ remote APIs relied on receiving cookies through YARP, see
 ### Forwarding Cookies
 
 If your remote APIs need the browser's cookies, turn off the removal with the
-[`RemoveCookieHeaderFromYarpRequests`](/bff/fundamentals/options.md#apis) option:
+[`RemoveCookieHeaderFromYarpRequests`](/bff/fundamentals/options.mdx#apis) option:
 
 ```csharp
 // Program.cs
@@ -374,7 +374,7 @@ specific API. Make sure transforms like these don't copy the browser's cookies b
 
 ## Custom Access Token Retriever
 
-You can specify a custom [`IAccessTokenRetriever`](/bff/extensibility/tokens.md#per-route-customized-token-retrieval) on
+You can specify a custom [`IAccessTokenRetriever`](/bff/extensibility/tokens.mdx#per-route-customized-token-retrieval) on
 YARP routes and clusters. This allows you to customize how access tokens are obtained for proxied requests — for
 example, to perform token exchange for delegation or impersonation scenarios.
 

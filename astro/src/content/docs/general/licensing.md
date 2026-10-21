@@ -45,7 +45,7 @@ economical option that is a good fit for organizations with basic needs. It's al
 choice if you have an aging [IdentityServer4 implementation that needs to be updated](/identityserver/upgrades/identityserver4-to-duende-identityserver-v8.mdx)
 and licensed. The Lite edition includes all the features that were part of
 IdentityServer4, along with support for the latest .NET releases, improved observability
-through [OpenTelemetry support](/identityserver/diagnostics/otel.md), and years of bug fixes and enhancements.
+through [OpenTelemetry support](/identityserver/diagnostics/otel.mdx), and years of bug fixes and enhancements.
 
 #### Standard Edition
 
@@ -439,7 +439,9 @@ MyIdentityServer/
 To verify your `ContentRootPath` at runtime, inspect `builder.Environment.ContentRootPath`.
 :::
 
-### Configuration :badge[v8.0]
+### Configuration
+
+_Available in IdentityServer 8.0 and later._
 
 
 IdentityServer can read the license key directly from `IConfiguration`, so you do not need to write any startup code.

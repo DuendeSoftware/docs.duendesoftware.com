@@ -14,6 +14,8 @@ redirect_from:
   - /identityserver/v7/apis/add_apis/
 ---
 
+import Version from "~/components/Version.astro";
+
 Duende IdentityServer issues tokens for accessing resources.
 
 These resources are very often HTTP-based APIs, but could be also other "invocable" functionality like messaging endpoints, gRPC services or even good old XML Web Services. See the [issuing tokens](/identityserver/tokens/index.md) section on more information on access tokens and how to request them.
@@ -142,10 +144,14 @@ builder.Services.AddLocalApiAuthentication(principal =>
 
 ...or implement the event on the options if you add the authentication handler manually.
 
-## DPoP Support :badge[v8.0]
+<Version since="8.0">
+
+## DPoP Support
 
 The local API authentication handler supports [DPoP](/identityserver/tokens/pop.md) proof validation.
 When a client sends a DPoP-bound access token to a local API, the handler validates the accompanying proof token automatically.
 
 Requests must include exactly one `DPoP` header. If multiple `DPoP` headers are present, 
 the handler rejects the request with an `invalid_dpop_proof` error.
+
+</Version>

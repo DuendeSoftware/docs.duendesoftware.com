@@ -18,6 +18,8 @@ redirect_from:
   - /identityserver/v7/tokens/pop/mtls/
 ---
 
+import Version from "~/components/Version.astro";
+
 By default, OAuth access tokens are so-called `bearer` tokens. This means they are not bound to a client and anybody who possesses the token can use it. The security concern here is that a leaked token could be used by a (malicious) third party to impersonate the client and/or user.
 
 On the other hand, `Proof-of-Possession` (PoP) tokens are bound to the client that requested the token. This is also often called sender constraining. This is done by using cryptography to prove that the sender of the token knows an additional secret only known to the client.
@@ -157,9 +159,9 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 });
 ```
 
-## Demonstrating Proof-of-Possession at the Application Layer (DPoP)
+<Version since="6.3">
 
-**Version:** <span data-shb-badge data-shb-badge-variant="default">&gt;=6.3</span>
+## Demonstrating Proof-of-Possession at the Application Layer (DPoP)
 
 [DPoP](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop) is a security measure that addresses token replay
 attacks by making it difficult for attackers to use stolen tokens.
@@ -199,7 +201,9 @@ For example is can be dynamically created when the client starts up, and can be 
 The main constraint is that it must be stored for as long as the client uses any access tokens (and possibly refresh
 tokens) that they are bound to.
 
-#### URL Matching (`htu` Claim) :badge[v8.0]
+<Version since="8.0">
+
+#### URL Matching (`htu` Claim)
 
 When validating the `htu` claim in a DPoP proof token, IdentityServer follows
 [RFC 9449 section 4.3 step 9](https://datatracker.ietf.org/doc/html/rfc9449#section-4.3).
@@ -212,6 +216,8 @@ The comparison between the request URL and the `htu` value:
 
 This means a proof token with an `htu` of `https://example.com/api/resource` will match a request to 
 `https://example.com/api/resource?page=1`, but not `https://example.com/API/resource`.
+
+</Version>
 
 #### Enabling DPoP In IdentityServer
 
@@ -286,3 +292,5 @@ lost, the tokens can longer be used, and if the secret is leaked, the security b
 
 See [here](/identityserver/apis/aspnetcore/confirmation.md#validating-dpop) for documentation
 describing how to enable DPoP in your APIs.
+
+</Version>

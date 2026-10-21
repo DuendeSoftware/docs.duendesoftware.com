@@ -6,7 +6,7 @@ sidebar:
   order: 30
 ---
 
-When neither [User Management](/identityserver/identity/user-management/index.mdx) nor [ASP.NET Identity](/identityserver/identity/aspnet-identity/index.md) fits your requirements, you can implement `IProfileService` directly. This interface is how IdentityServer connects to your user database or store to load user claims and determine whether a user is active.
+When neither [User Management](/identityserver/identity/user-management/index.mdx) nor [ASP.NET Identity](/identityserver/identity/aspnet-identity/index.mdx) fits your requirements, you can implement `IProfileService` directly. This interface is how IdentityServer connects to your user database or store to load user claims and determine whether a user is active.
 
 Implementing `IProfileService` yourself gives you full control over the data access code, letting you connect IdentityServer to any user store, whether a legacy database, an LDAP directory, an external API, or any other source of user data.
 

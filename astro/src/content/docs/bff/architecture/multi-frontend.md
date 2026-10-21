@@ -5,9 +5,8 @@ date: 2024-06-11T08:22:12+02:00
 sidebar:
   label: "Multiple Frontends"
   order: 5
-  badge:
-    text: v4
-    variant: tip
+versions:
+  since: "4.0"
 ---
 
 BFF V4.0 introduces the capability to support multiple BFF Frontends in a single host. This helps to simplify your 

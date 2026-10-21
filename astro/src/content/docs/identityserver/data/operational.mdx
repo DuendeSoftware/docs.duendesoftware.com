@@ -18,6 +18,8 @@ redirect_from:
   - /identityserver/v7/data/operational/sessions/
 ---
 
+import Version from "~/components/Version.astro";
+
 
 For certain operations, IdentityServer needs a persistence store to keep dynamically created state.
 This data is collectively called *operational data*, and includes:
@@ -103,11 +105,9 @@ The [SerializedKey](/identityserver/reference/v8/stores/signing-key-store.md#ser
 
 It is expected that the `Id` is the unique identifier for the key in the store. The `Data` property is the main payload of the key and contains a copy of all the other values. Some of the properties affect how the `Data` is processed (e.g. `DataProtected`), and the other properties are considered read-only and thus can't be changed to affect the behavior (e.g. changing the `Created` value will not affect the key lifetime, nor will changing `Algorithm` change which signing algorithm the key is used for).
 
-## Server Side Sessions
+<Version since="6.1">
 
-:::tip
-Added in Duende IdentityServer 6.1
-:::
+## Server Side Sessions
 
 The [server-side sessions](/identityserver/ui/server-side-sessions/index.md) feature in Duende IdentityServer requires a store to persist a user's session data.
 
@@ -159,3 +159,5 @@ builder.Services.AddIdentityServer()
        // ...
     });
 ```
+
+</Version>

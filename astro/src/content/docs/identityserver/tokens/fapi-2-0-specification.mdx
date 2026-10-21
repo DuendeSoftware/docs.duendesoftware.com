@@ -4,12 +4,11 @@ description: Overview of the FAPI 2.0 implementation in Duende IdentityServer 7.
 sidebar:
   label: FAPI 2.0
   order: 220
-  badge:
-    text: v7.3
-    variant: tip
+versions:
+  since: "7.3"
 ---
 
-<span data-shb-badge data-shb-badge-variant="default">Added in 7.3</span>
+import Version from "~/components/Version.astro";
 
 The [FAPI 2.0 Security Profile](https://openid.net/specs/fapi-security-profile-2_0-final.html) is an API security profile based on the OAuth 2.0 Authorization Framework. Its goal is to protect APIs in high-value scenarios and is a set of OAuth Security best current practice (BCP) recommendations. These high-value scenarios include assets typically deployed in the fields of e-health and e-government, which may provide consumers with sensitive data and mission-critical functionality.
 
@@ -196,15 +195,23 @@ builder.Services.ConfigureDPoPTokensForScheme(JwtBearerDefaults.AuthenticationSc
 
 You are now FAPI 2.0 compliant and ready to secure your high-value assets with Duende IdentityServer.
 
-## HTTP 303 Redirects :badge[v8.0]
+<Version since="8.0">
+
+## HTTP 303 Redirects
 
 FAPI 2.0 Section 5.3.2.2 requires that POST endpoints use HTTP 303 (See Other) redirects rather than HTTP 302.
 
 As of v8.0, IdentityServer unconditionally uses HTTP 303 (See Other) redirects from POST endpoints, in compliance with FAPI 2.0 Section 5.3.2.2.
 
-## Financial-Grade Security and Conformance Report :badge[v8.0]
+</Version>
+
+<Version since="8.0">
+
+## Financial-Grade Security and Conformance Report
 
 Starting in v8.0, IdentityServer includes a [Financial-Grade Security and Conformance report](/identityserver/diagnostics/conformance-report.md) that automatically assesses your server and client configuration against OAuth 2.1 and FAPI 2.0 specifications. The report identifies configuration gaps and provides actionable recommendations.
+
+</Version>
 
 ## Private Key JWT vs. mTLS
 

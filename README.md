@@ -158,9 +158,11 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 
 ### Badges
 
-* In .mdx pages, import and use the `Badge` component to display version badges or other labels. For example: `<Badge text="v8.0" />`.
-* In .md pages, use the `<span data-shb-badge>` HTML element to display version badges or other labels. For example: `<span data-shb-badge data-shb-badge-variant="default">v8.0</span>`.
-* Headers can also include badges. The "starlight-heading-badges" plugin enables a shorthand syntax for this. For example, `### SAML Events :badge[v8.0]` will render a badge next to the header. This works both in Markdown and MDX pages. The `:badge` syntax can be used multiple times in a header to show multiple badges.
+* Do not use badges for version-specific content. Use the `versions` frontmatter or the `<Version>` component instead; see [Versioning content](#versioning-content).
+* Use badges only for non-version labels:
+  * In .mdx pages, import and use the `Badge` component. For example: `<Badge text="Optional" />`.
+  * In .md pages, use the `<span data-shb-badge>` HTML element. For example: `<span data-shb-badge data-shb-badge-variant="default">Optional</span>`.
+  * Headers can also include badges via the "starlight-heading-badges" shorthand, in both Markdown and MDX. For example, `### Title :badge[.NET 10]`. The `:badge` syntax can be used multiple times in a header.
 
 ### Frontmatter Rules
 
@@ -187,6 +189,39 @@ Astro commands are run from the `astro/` directory:
 | `npm run build` | Build production site (use `dotnet build.cs astro-build` instead) |
 | `npm run preview` | Preview your build locally |
 | `npm run astro ...` | Run CLI commands like `astro add`, `astro check` |
+
+## Versioning content
+
+Version-specific content is declared, not hand-badged. Use quoted `"major.minor"` values; `since` is inclusive, `until` is **exclusive**.
+
+* **Pages and folders**: add a `versions` block to page frontmatter or a folder's `_meta.yml`. Pages inherit the folder's value unless they set their own.
+
+  ```yaml
+  versions:
+    since: "8.0"
+    until: "9.0"
+  ```
+
+* **Sections**: wrap a heading and its content in `<Version>`. Use literal values only. The full label (e.g. "IdentityServer 8.0 and later") always stays in the page text (visually hidden) for exports, agents and screen readers. Blocks with only `since` get a quiet "Added in 8.0" tag after the section heading, a small "8.0+" tag after each top-level list item, or a muted caption above other content; blocks with `until` show nothing visible.
+
+  ```mdx
+  import Version from "~/components/Version.astro";
+
+  <Version since="8.0">
+  ## SAML Events
+  Content for 8.0 and later.
+  </Version>
+  ```
+
+* **Cards**: wrap a `LinkCard`/`Card` in `<Version since="8.1" inline>` to hide it (never shows a caption or badge) when its target page does not apply to the selected version; the label stays as screen-reader/export text. Only use it for targets within the same product. A `inline` wrapper also works around a whole list of links (including its lead-in sentence).
+
+* **Unsupported versions**: set `unsupported: true` on a declared version (e.g. `{ version: "6.3", unsupported: true }`) to show "(unsupported)" in the dropdown and a notice on every page while it is selected. It cannot be combined with `preview: true` (the build fails). A product may also set an `upgrades` URL (e.g. `/identityserver/upgrades/`), which adds an upgrade guide link to the notice. Use sparingly.
+
+* **Preview pages**: set `preview: true` in frontmatter for an automatic sidebar badge and preview banner.
+
+Each product declares its versions (newest first) in `products` in `astro/astro.config.mjs`, e.g. `{ version: "8.1", preview: true }`, `{ version: "8.0" }`. The latest stable version is the first non-preview entry. Every `since`/`until` must be a declared version or the build fails. Declared versions with no content are still selectable. Pages whose `since` is a preview version automatically get the preview badge and banner; remove `preview: true` from the version entry when it ships (the page-level `preview: true` flag remains for pages not tied to a version). `general/`, release notes, and upgrade guides are never filtered.
+
+The version chip lists the declared versions and preselects the latest stable one. That default view also shows preview content and hides only content valid solely for older versions (`until` at or before the latest stable). Pick an older version (or the preview) for strict filtering. The `new` sidebar badge shows only in the default view.
 
 ## 🔀 Redirects
 

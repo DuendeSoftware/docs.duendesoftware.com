@@ -11,7 +11,8 @@ redirect_from:
   - /identityserver/v6/bff/extensibility/http_forwarder/
   - /identityserver/v7/bff/extensibility/http_forwarder/
 ---
-import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+import Version from "~/components/Version.astro";
 
 You can customize the HTTP forwarder behavior in two ways
 
@@ -77,53 +78,53 @@ or for all mapped API endpoints.
 This code block shows an example of how you can extend the default transformers with an additional custom
 transform.
 
-{/* prettier-ignore */}
-<Tabs syncKey="bffVersion">
-    {/* prettier-ignore */}
-    <TabItem label="Duende BFF v4">
-    ```csharp
-    app.MapRemoteBffApiEndpoint("/local", new Uri("https://target/"), context => {
+<Version since="4.0">
 
-        // If you want to extend the existing behavior, then you must call the default builder:
-        DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken("/local", context);
+```csharp
+app.MapRemoteBffApiEndpoint("/local", new Uri("https://target/"), context => {
 
-        // You can also add custom transformers, such as this one that adds an additional header
-        context.AddRequestHeader("custom", "with value");
+    // If you want to extend the existing behavior, then you must call the default builder:
+    DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken("/local", context);
 
-    });
-    ```
+    // You can also add custom transformers, such as this one that adds an additional header
+    context.AddRequestHeader("custom", "with value");
 
-    The default transform builder performs these transforms:
+});
+```
 
-    ```csharp
-    context.AddRequestHeaderRemove("Cookie");
-    context.AddPathRemovePrefix(pathMatch);
-    context.AddBffAccessToken(pathMatch);
-    ```
-    </TabItem>
-    {/* prettier-ignore */}
-    <TabItem label="Duende BFF v3">
-    ```csharp
-    app.MapRemoteBffApiEndpoint("/local", "https://target/", context => {
+The default transform builder performs these transforms:
 
-        // If you want to extend the existing behavior, then you must call the default builder:
-        DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken("/local", context);
+```csharp
+context.AddRequestHeaderRemove("Cookie");
+context.AddPathRemovePrefix(pathMatch);
+context.AddBffAccessToken(pathMatch);
+```
 
-        // You can also add custom transformers, such as this one that adds an additional header
-        context.AddRequestHeader("custom", "with value");
+</Version>
 
-    });
-    ```
+<Version until="4.0">
 
-    The default transform builder performs these transforms:
+```csharp
+app.MapRemoteBffApiEndpoint("/local", "https://target/", context => {
 
-    ```csharp
-    context.AddRequestHeaderRemove("Cookie");
-    context.AddPathRemovePrefix(localPath);
-    context.AddBffAccessToken(localPath);
-    ```
-    </TabItem>
-</Tabs>
+    // If you want to extend the existing behavior, then you must call the default builder:
+    DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken("/local", context);
+
+    // You can also add custom transformers, such as this one that adds an additional header
+    context.AddRequestHeader("custom", "with value");
+
+});
+```
+
+The default transform builder performs these transforms:
+
+```csharp
+context.AddRequestHeaderRemove("Cookie");
+context.AddPathRemovePrefix(localPath);
+context.AddBffAccessToken(localPath);
+```
+
+</Version>
 
 For more information, also see the [YARP documentation on transforms](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/yarp/transforms?view=aspnetcore-9.0)
 
@@ -131,41 +132,43 @@ For more information, also see the [YARP documentation on transforms](https://le
 
 You can change the default transformer builder delegate by registering one in the services collection:
 
-{/* prettier-ignore */}
-<Tabs syncKey="bffVersion">
-    {/* prettier-ignore */}
-    <TabItem label="Duende BFF v4">
-    ```csharp
-    BffYarpTransformBuilder builder = (pathMatch, context) => {
+<Version since="4.0">
 
-        // If you want to extend the existing behavior, then you must call the default builder:
-        DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken(pathMatch, context);
+```csharp
+BffYarpTransformBuilder builder = (pathMatch, context) => {
 
-        // You can also add custom transformers, such as this one that adds an additional header
-        context.AddResponseHeader("added-by-custom-default-transform", "some-value");
+    // If you want to extend the existing behavior, then you must call the default builder:
+    DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken(pathMatch, context);
 
-    };
+    // You can also add custom transformers, such as this one that adds an additional header
+    context.AddResponseHeader("added-by-custom-default-transform", "some-value");
 
-    services.AddSingleton<BffYarpTransformBuilder>(builder);
-    ```
-    </TabItem>
-    {/* prettier-ignore */}
-    <TabItem label="Duende BFF v3">
-    ```csharp
-    BffYarpTransformBuilder builder = (localPath, context) => {
+};
 
-        // If you want to extend the existing behavior, then you must call the default builder:
-        DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken(localPath, context);
+services.AddSingleton<BffYarpTransformBuilder>(builder);
+```
 
-        // You can also add custom transformers, such as this one that adds an additional header
-        context.AddResponseHeader("added-by-custom-default-transform", "some-value");
+</Version>
 
-    };
+<Version until="4.0">
 
-    services.AddSingleton<BffYarpTransformBuilder>(builder);
-    ```
-    </TabItem>
-</Tabs>
+```csharp
+BffYarpTransformBuilder builder = (localPath, context) => {
+
+    // If you want to extend the existing behavior, then you must call the default builder:
+    DefaultBffYarpTransformerBuilders.DirectProxyWithAccessToken(localPath, context);
+
+    // You can also add custom transformers, such as this one that adds an additional header
+    context.AddResponseHeader("added-by-custom-default-transform", "some-value");
+
+};
+
+services.AddSingleton<BffYarpTransformBuilder>(builder);
+```
+
+</Version>
+
+<Version since="4.0">
 
 ## Changing The Forwarder Request Configuration
 
@@ -190,3 +193,5 @@ app.MapRemoteBffApiEndpoint("/local", new Uri("https://target/"),
         ActivityTimeout = TimeSpan.FromMilliseconds(100)
     });
 ```
+
+</Version>

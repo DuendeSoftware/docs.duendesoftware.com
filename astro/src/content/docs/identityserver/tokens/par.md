@@ -8,11 +8,9 @@ redirect_from:
   - /identityserver/v5/tokens/par/
   - /identityserver/v6/tokens/par/
   - /identityserver/v7/tokens/par/
+versions:
+  since: "7.0"
 ---
-
-:::tip
-Added in Duende IdentityServer 7.0
-:::
 
 Pushed Authorization Requests (PAR) is a relatively new [OAuth standard](https://datatracker.ietf.org/doc/html/rfc9126)
 that improves the security of OAuth and OIDC flows by moving authorization parameters from the front channel to the back

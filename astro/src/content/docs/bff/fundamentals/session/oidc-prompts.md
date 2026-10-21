@@ -5,9 +5,8 @@ date: 2024-06-11T08:22:12+02:00
 sidebar:
   label: "OIDC Prompts"
   order: 6
-  badge:
-    text: v4
-    variant: tip
+versions:
+  since: "4.0"
 ---
 
 OpenID Connect supports a `prompt` parameter that can be used to control the user experience as it relates to the current authentication session. Duende BFF v4 supports this parameter by forwarding it to the backing identity provider to allow for more fine-grained control during unique client interactions.

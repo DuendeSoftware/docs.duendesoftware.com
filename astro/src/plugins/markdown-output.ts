@@ -142,7 +142,7 @@ export default function markdownOutput() {
               });
 
               // Remove banner
-              main.querySelectorAll(".sl-banner").forEach((el) => el.remove());
+              main.querySelectorAll(".sl-banner, nav[data-breadcrumbs]").forEach((el) => el.remove());
 
               // Remove "Section titled" anchor links in headings
               main.querySelectorAll("a").forEach((el) => {

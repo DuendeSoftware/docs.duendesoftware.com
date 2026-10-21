@@ -1,0 +1,34 @@
+---
+import Default from "@astrojs/starlight/components/MarkdownContent.astro";
+import { Aside } from "@astrojs/starlight/components";
+import { isPreviewPage, pageVersions, productOf, previewSwitchVersion, label } from "../utils/versions";
+
+const { entry } = Astro.locals.starlightRoute;
+const preview = await isPreviewPage(entry);
+const product = productOf(entry.filePath!);
+const range = preview ? await pageVersions(entry) : undefined;
+const switchVersion = preview ? previewSwitchVersion(product, range?.since) : undefined;
+const appliesTo = product && range?.since ? `${label(product, range.since, range.until)} (preview)` : undefined;
+---
+
+<Default {...Astro.props}>
+  {
+    preview && (
+      <div class="preview-notice" data-pagefind-ignore>
+        <Aside type="caution" title="Preview documentation">
+          {appliesTo
+            ? <>This page applies to {appliesTo} and describes features, packages or APIs that are subject to change.</>
+            : <>This page describes preview features, packages or APIs that are subject to change.</>}
+          {switchVersion && (
+            <p>
+              <a href={`?version=${switchVersion}`} data-dv-select={switchVersion}>
+                View the {switchVersion} (preview) documentation
+              </a>
+            </p>
+          )}
+        </Aside>
+      </div>
+    )
+  }
+  <slot />
+</Default>

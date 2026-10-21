@@ -5,9 +5,8 @@ date: 2026-05-15
 sidebar:
   label: "SAML 2.0 Provider"
   order: 65
-  badge:
-    text: v8.0
-    variant: tip
+versions:
+  since: "8.0"
 ---
 
 IdentityServer includes a built-in SAML 2.0 Service Provider (SP) authentication handler that lets you authenticate users against an external SAML 2.0 Identity Provider (IdP). This is useful when you need to federate with enterprise identity systems such as ADFS, Shibboleth, or other SAML-compliant providers.

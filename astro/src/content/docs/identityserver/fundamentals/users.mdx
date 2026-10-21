@@ -10,6 +10,8 @@ redirect_from:
   - /identityserver/v7/fundamentals/users/
 ---
 
+import Version from "~/components/Version.astro";
+
 ## Users And User Interface
 
 The design of Duende IdentityServer allows you to use any user database and build any user interface (UI) workflow
@@ -21,12 +23,26 @@ You have the ability to control the entire user experience while Duende Identity
 the security protocol (OpenID Connect and OAuth).
 
 :::note
+<Version since="8.0" inline>
+
 While you can use any custom user database or identity management library for your users, IdentityServer provides
 three ready-made options. See [Identity & Profile Management](/identityserver/identity/index.mdx) for the full overview.
 
-- [Duende User Management](/identityserver/identity/user-management/index.mdx) — first-party, passwordless-first user store with OTP, TOTP, passkeys, roles, and groups. Added in v8.
-- [ASP.NET Identity](/identityserver/identity/aspnet-identity/index.md) — integration with the standard ASP.NET Core Identity stack.
+- [Duende User Management](/identityserver/identity/user-management/index.mdx) — first-party, passwordless-first user store with OTP, TOTP, passkeys, roles, and groups.
+- [ASP.NET Identity](/identityserver/identity/aspnet-identity/index.mdx) — integration with the standard ASP.NET Core Identity stack.
 - [Custom via IProfileService](/identityserver/identity/custom.md) — implement the interface yourself to connect to any user database or store.
+
+</Version>
+
+<Version until="8.0" inline>
+
+While you can use any custom user database or identity management library for your users, IdentityServer provides
+two ready-made options. See [Identity & Profile Management](/identityserver/identity/index.mdx) for the full overview.
+
+- [ASP.NET Identity](/identityserver/identity/aspnet-identity/index.mdx) — integration with the standard ASP.NET Core Identity stack.
+- [Custom via IProfileService](/identityserver/identity/custom.md) — implement the interface yourself to connect to any user database or store.
+
+</Version>
 :::
 
 ## Authorization Endpoint And Login Page Workflow

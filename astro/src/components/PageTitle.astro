@@ -1,0 +1,72 @@
+---
+import Default from "@astrojs/starlight/components/PageTitle.astro";
+import { Breadcrumbs } from "astro-breadcrumbs";
+import { getCrumbs, type SidebarEntry } from "../utils/breadcrumbs";
+
+const { entry, sidebar } = Astro.locals.starlightRoute;
+const crumbs = await getCrumbs(Astro.url.pathname, entry.data.sidebar.label ?? entry.data.title, sidebar as SidebarEntry[]);
+---
+
+{
+  crumbs.length > 1 && (
+    <Breadcrumbs
+      crumbs={crumbs as { text: string; href: string }[]}
+      ariaLabel="Breadcrumb"
+      schemaJsonScript={false}
+      customizeNav={{ "data-pagefind-ignore": "", "data-breadcrumbs": "" }}
+    />
+  )
+}
+<Default {...Astro.props} />
+
+<style is:global>
+  .c-breadcrumbs {
+    --color-link-breadcrumbs: var(--sl-color-gray-3);
+    --size-font-breadcrumbs: var(--sl-text-sm);
+    --spacing-vertical-separator-breadcrumbs: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .c-breadcrumbs__crumbs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    row-gap: 0.2rem;
+    /* single source of truth: every crumb, link and separator inherits these */
+    font-size: var(--size-font-breadcrumbs);
+    line-height: 1.4;
+  }
+  .c-breadcrumbs__crumb {
+    display: flex;
+    align-items: baseline;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    line-height: inherit;
+  }
+  .c-breadcrumbs__crumb + .c-breadcrumbs__crumb::before {
+    content: "›";
+    flex: none;
+    font: inherit;
+    line-height: inherit;
+    margin-inline: var(--spacing-vertical-separator-breadcrumbs);
+    color: var(--sl-color-gray-4);
+  }
+  .c-breadcrumbs__link {
+    font: inherit;
+    line-height: inherit;
+    overflow-wrap: anywhere;
+    color: var(--color-link-breadcrumbs);
+    text-decoration: none;
+  }
+  .c-breadcrumbs__link[href]:hover {
+    color: var(--sl-color-white);
+    text-decoration: underline;
+  }
+  .c-breadcrumbs__link.is-current {
+    color: var(--sl-color-gray-2);
+  }
+</style>

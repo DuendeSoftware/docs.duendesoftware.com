@@ -87,7 +87,7 @@ mechanism (if provided).
 
 This is the URL to trigger logout. If the upstream provider includes a `sid` claim, the BFF logout endpoint requires
 this value as a query string parameter for CSRF protection. This behavior can be configured with the
-`RequireLogoutSessionId` in the [options](/bff/fundamentals/options.md).
+`RequireLogoutSessionId` in the [options](/bff/fundamentals/options.mdx).
 
 ## Typical Usage
 
@@ -114,7 +114,7 @@ if (resp.ok) {
 
 To protect against cross-site request forgery, you need to add
 a [static header](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers)
-to the GET request. The header's name and required value can be configured in the [options](/bff/fundamentals/options.md).
+to the GET request. The header's name and required value can be configured in the [options](/bff/fundamentals/options.mdx).
 
 ## Anonymous Session Response Option
 

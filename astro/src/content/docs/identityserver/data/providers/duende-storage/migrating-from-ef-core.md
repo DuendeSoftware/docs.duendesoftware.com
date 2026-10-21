@@ -7,11 +7,6 @@ sidebar:
   order: 50
 ---
 
-:::caution[Preview documentation]
-This page describes preview packages and APIs that are subject to change. Start with the
-[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
-:::
-
 Duende Storage and the Entity Framework Core provider use different schemas and persistence models. There is no automated
 or in-place migration between them. Treat the change as a data transfer and application cutover and rehearse it against a
 production-like copy of your data before changing a live system.

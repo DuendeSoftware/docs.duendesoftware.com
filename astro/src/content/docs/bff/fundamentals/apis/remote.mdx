@@ -11,9 +11,10 @@ redirect_from:
   - /identityserver/v6/bff/apis/remote/
   - /identityserver/v7/bff/apis/remote/
 ---
+
+import Version from "~/components/Version.astro";
 import { Badge } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 :::note
 You will need to have the [`Duende.Bff.Yarp`](https://www.nuget.org/packages/Duende.BFF.Yarp) NuGet package installed to use these features.
@@ -53,24 +54,25 @@ Use the `MapRemoteBffApiEndpoint` extension method to describe how to map reques
 
 The `MapRemoteBffApiEndpoint` extension method maps a path and all sub-paths below it. The intent is to allow easy mapping of groups of URLs. For example, you can set up mappings for the `/users`, `/users/{userId}`, `/users/{userId}/books`, and `/users/{userId}/books/{bookId}` endpoints without having to explicitly include all of them:
 
-{/* prettier-ignore */}
-<Tabs syncKey="bffVersion">
-  {/* prettier-ignore */}
-  <TabItem label="V4">
-    <Code
-          lang="csharp"
-          title="Program.cs"
-          code={`app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
-    .WithAccessToken(RequiredTokenType.User);`}/>
-  </TabItem>
-  <TabItem label="V3">
-    <Code
-          lang="csharp"
-          title="Program.cs"
-          code={`app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
-    .WithAccessToken(TokenType.User);`}/>
-  </TabItem>
-</Tabs>
+<Version since="4.0">
+
+<Code
+      lang="csharp"
+      title="Program.cs"
+      code={`app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
+.WithAccessToken(RequiredTokenType.User);`}/>
+
+</Version>
+
+<Version until="4.0">
+
+<Code
+      lang="csharp"
+      title="Program.cs"
+      code={`app.MapRemoteBffApiEndpoint("/api/users", new Uri("https://remoteHost/users"))
+.WithAccessToken(TokenType.User);`}/>
+
+</Version>
 
 :::note
 This example opens up the complete */users* API namespace to the frontend, and thus, to the outside world. While it is convenient to register API paths this way, consider if you need to be more specific when designing the forwarding paths to prevent accidentally exposing unintended endpoints.
