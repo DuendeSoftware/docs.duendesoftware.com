@@ -170,7 +170,14 @@ using Duende.Storage.Schema;
 using Oracle.ManagedDataAccess.Client;
 using Microsoft.Extensions.DependencyInjection;
 
-var connectionString = args[0];
+var connectionString = Environment.GetEnvironmentVariable(
+    "DUENDE_STORAGE_CONNECTION_STRING");
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "Set DUENDE_STORAGE_CONNECTION_STRING before running the migration.");
+}
 
 var services = new ServiceCollection();
 
@@ -203,7 +210,14 @@ using Duende.Storage.Schema;
 using Oracle.ManagedDataAccess.Client;
 using Microsoft.Extensions.DependencyInjection;
 
-var connectionString = args[0];
+var connectionString = Environment.GetEnvironmentVariable(
+    "DUENDE_STORAGE_CONNECTION_STRING");
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "Set DUENDE_STORAGE_CONNECTION_STRING before generating the migration script.");
+}
 
 var services = new ServiceCollection();
 
