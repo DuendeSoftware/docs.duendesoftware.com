@@ -695,13 +695,17 @@ summary {
   background-color: var(--sl-color-green-low);
   border-color: var(--sl-color-green);
 }
-.dv-chip--active:hover { border-color: var(--sl-color-green-high); }
+.dv-chip--active:hover { background-color: var(--sl-color-green-low); border-color: var(--sl-color-green-high); }
 .dv-chip--unsupported {
   color: var(--sl-color-orange-high);
   background-color: var(--sl-color-orange-low);
   border-color: var(--sl-color-orange);
 }
-.dv-chip--unsupported:hover { border-color: var(--sl-color-orange-high); }
+.dv-chip--unsupported:hover { background-color: var(--sl-color-orange-low); border-color: var(--sl-color-orange-high); }
+.dv-chip option {
+  color: var(--sl-color-white);
+  background-color: var(--sl-color-gray-6);
+}
 @media (max-width: 49.99rem) {
   .dv-version-select-slot { --dv-chip-fs: 16px; min-height: 2.5rem; }
   .dv-chip { min-height: 2.5rem; }
