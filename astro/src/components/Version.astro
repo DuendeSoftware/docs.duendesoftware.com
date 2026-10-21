@@ -42,10 +42,8 @@ const caption = since && !until ? `Added in ${since}` : undefined;
 <style is:global>
   .dv-version { position: relative; margin-block: 1rem; }
   .dv-version { --dv-tip: var(--sl-color-purple-high); }
-  .dv-version-label { margin: 0 0 0.25rem; font-size: 0.8rem; font-weight: 600; line-height: 1.4; color: var(--dv-tip); }
-  .dv-version-label[data-caption]::before { content: attr(data-caption); }
-  .dv-version:has(> .dv-version-label + :is(.sl-heading-wrapper, ul, ol)) > .dv-version-label { margin: 0; }
-  .dv-version:has(> .dv-version-label + :is(.sl-heading-wrapper, ul, ol)) > .dv-version-label::before { content: none; }
+  /* No visible caption above prose: headings and list items get a badge instead (below). */
+  .dv-version-label { margin: 0; }
   .dv-version > .dv-version-label + .sl-heading-wrapper :is(h2, h3, h4, h5, h6)::after {
     content: var(--dv-caption);
     display: inline-block;

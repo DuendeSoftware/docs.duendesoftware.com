@@ -217,7 +217,13 @@ const productKeys = products.map((p) => p.key);
       chip.classList.toggle("dv-chip--active", !isDefault);
       chip.classList.toggle("dv-chip--unsupported", isUnsupported);
       html.toggleAttribute("data-dv-hide-new", !isDefault);
-      for (const block of all(`.dv-version[data-product="${product}"]`)) block.hidden = !isVisible(block);
+      // In-page blocks always follow the selected version exactly: newer-version sections are hidden
+      // on older versions. Sidebar links and the page itself keep the lenient default (preview pages stay listed).
+      const inSelected: Visibility = ({ dataset: { since, until } }) =>
+        (!since || compare(selected, since) >= 0) && (!until || compare(selected, until) < 0);
+      // If the page itself is newer than the selected version (preview page), don't hide its content.
+      const isBlockVisible = inSelected(page!) ? inSelected : isVisible;
+      for (const block of all(`.dv-version[data-product="${product}"]`)) block.hidden = !isBlockVisible(block);
       filterToc();
       filterSidebarLinks(isVisible);
       hideEmptyGroups();
