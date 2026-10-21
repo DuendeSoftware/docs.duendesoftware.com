@@ -1,7 +1,7 @@
 ---
 title: Passkey Authentication
 description: "Implement passkey (WebAuthn/FIDO2) authentication with Duende User Management, covering credential storage, endpoints, MFA, and client helpers."
-date: 2026-04-29
+date: 2026-10-14
 sidebar:
   label: Passkey Authentication
   order: 6
@@ -10,6 +10,7 @@ redirect_from:
 ---
 
 import { Steps } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 
 
@@ -91,7 +92,7 @@ Passkeys are the strongest authentication option in User Management, and the one
 
 ### What User Management Does for You
 
-Credentials are cryptographically bound to the relying party ID and origin. A passkey registered at `auth.example.com` cannot be used at `evil.example.com`, even if an attacker controls a subdomain. The server stores only the public key, so a database breach gives an attacker nothing useful. Challenges are 32 bytes (256 bits) of random data, expire after 5 minutes, and are single-use. There is no shared secret to steal, no code to intercept, and no password to guess.
+Credentials are cryptographically bound to the relying party ID and origin. A passkey registered at `auth.example.com` cannot be used at `evil.example.com`, even if an attacker controls a subdomain. The server stores only the public key, so a database breach gives an attacker nothing useful. By default, challenges contain 32 bytes (256 bits) of random data and expire after 5 minutes. Challenges are single-use. There is no shared secret to steal, no code to intercept, and no password to guess.
 
 ### What You Need to Think About
 
@@ -194,6 +195,70 @@ All `PasskeyOptions` properties and their defaults:
 | `ChallengeTimeout`                | `TimeSpan`               | 5 minutes     | How long a challenge remains valid                                 |
 | `SupportedAlgorithms`             | `IReadOnlyList<int>`     | `[]` (all)    | COSE algorithm identifiers, in preference order                    |
 
+### Challenge Length
+
+`ChallengeSize` controls the number of random bytes generated for registration, second-factor authentication, and discoverable authentication. The default is `32` bytes (256 bits). You can opt into a larger challenge in your existing authentication configuration:
+
+```csharp
+// Inside auth.Configure(...) in Program.cs
+options.Passkeys.ChallengeSize = 64;
+```
+
+The size refers to the decoded bytes, not the length of the Base64URL string sent to the browser.
+
+Challenges need enough unpredictable randomness (entropy) to make guessing them infeasible and prevent replay attacks. The [Web Authentication Level 3 specification][webauthn-challenges] states in its security considerations for cryptographic challenges:
+
+> In order to prevent replay attacks, the challenges MUST contain enough entropy to make guessing them infeasible. Challenges SHOULD therefore be at least 16 bytes long.
+
+User Management enforces 16 bytes as an absolute minimum and uses 32-byte challenges by default. Any configured size must be at least `16` bytes.
+
+<Version since="8.1">
+
+Smaller values fail options validation when the host starts, with an `OptionsValidationException` such as `Passkeys.ChallengeSize must be >= 16, but was 15.`, so the application never serves a ceremony with a short challenge.
+
+</Version>
+
+<Version until="8.1">
+
+Smaller values throw `ArgumentOutOfRangeException`.
+
+</Version>
+
+Increasing the size does not change `ChallengeTimeout`, challenge storage, or replay protection.
+
+<Version since="8.1">
+
+### Signature Verifier Extension
+
+The built-in verifiers cover ES256, ES384, ES512, RS256, RS384, RS512, PS256, PS384, PS512, and RS1. You do not need a custom verifier for these algorithms.
+
+`ISignatureVerifier`, in `Duende.UserManagement.Authentication.Passkeys`, provides the contract for an additional COSE algorithm:
+
+```csharp
+// ISignatureVerifier.cs - API contract
+public interface ISignatureVerifier
+{
+    int Algorithm { get; }
+    bool VerifySignature(byte[] publicKeyCbor, byte[] data, byte[]? signature);
+}
+```
+
+`Algorithm` identifies the COSE algorithm. `publicKeyCbor` contains the COSE-encoded public key, and `data` contains the exact signed payload before algorithm-specific hashing. For authentication assertions and Packed attestation, the payload consists of the authenticator data bytes followed by the SHA-256 hash of the client data JSON (`authenticatorData || clientDataHash`). For TPM attestation, the payload is `certInfo`. Return `false` for invalid signatures or key data rather than throwing for normal validation failures.
+
+`AddPasskeySignatureVerifier<TVerifier>()`, on the authentication builder, registers a singleton verifier. Registration is additive, not replacement: every algorithm must have exactly one verifier, including the built-ins. Duplicate algorithms cause options validation to fail at host startup with an error identifying the algorithm. This applies to builder registrations and direct dependency injection (DI) registrations before or after User Management registration, even when `SupportedAlgorithms` excludes the conflicting algorithm.
+
+Verifiers are resolved once and retained for the application lifetime. Implementations and their dependencies must be thread-safe; use singleton registrations rather than scoped dependencies.
+
+`SupportedAlgorithms` controls the algorithms advertised during credential registration:
+
+* An empty list offers the built-ins first in their default preference order, followed by additional verifiers in DI registration order.
+* An explicit list offers only entries with registered verifiers, preserves the configured order, and removes duplicate entries.
+* Registering a verifier does not modify an explicit list.
+
+Restricting this list does not remove verifiers or disable authentication of previously registered credentials using those algorithms.
+
+</Version>
+
 ## Core Passkey Management
 
 Passkey credentials are managed through `IUserAuthenticatorsSelfService`. This interface handles the persistence of credentials after the WebAuthn ceremony completes.
@@ -223,6 +288,39 @@ Task<bool> TryAddPasskeyAsync(
 * `Transports` - Optional client-reported transport hints (for example `"usb"`, `"nfc"`, `"internal"`, `"hybrid"`) from the authenticator's `getTransports()`. These guide browser UI and are not verified authenticator properties; pass `null` if unavailable.
 
 Returns `true` if the credential was stored successfully, `false` if the user was not found or the credential already exists.
+
+<Version since="8.1">
+
+### Transport Hints
+
+A transport hint describes how a browser can communicate with the authenticator that holds a credential. Common hints include:
+
+| Hint | Meaning |
+|------|---------|
+| `usb` | An external authenticator connected over USB |
+| `nfc` | An external authenticator connected over near-field communication |
+| `ble` | An external authenticator connected over Bluetooth Low Energy |
+| `hybrid` | An authenticator reached through a nearby device, such as a phone |
+| `internal` | A platform authenticator built into the device, such as Windows Hello |
+
+A credential can have multiple hints. During authentication, the browser can use them to guide authenticator discovery and offer relevant ways to use the credential, rather than trying every transport.
+
+Transport hints work automatically, and there is no option to enable or tune them. The values come from the browser and authenticator, not from server configuration. The built-in JavaScript helper carries them through the known-user authentication flow:
+
+1. During registration, the helper reads `getTransports()` from the authenticator response and includes the values in the registration completion request.
+2. User Management persists them with the credential.
+3. For known-user authentication, the begin response includes each credential's hints in `options.allowCredentials[].transports`.
+4. `authenticateWithPasskey()` forwards the hints to `navigator.credentials.get()`.
+
+These hints help the browser choose appropriate authentication prompts, but the exact UI depends on the browser and platform. They are client-reported metadata, not verified authenticator properties, transport restrictions, or authorization rules.
+
+If you build your own browser client, preserve the registration response's transport array and forward each authentication descriptor's array unchanged. Do not filter unknown values: future transport strings can be preserved without changing authentication validation.
+
+Credentials registered before transport capture, or imported without hints, remain usable. Missing or empty hints are omitted from authentication descriptors; no schema migration or re-registration is required, and existing credentials do not gain hints retroactively.
+
+Discoverable authentication uses an empty `allowCredentials` list, so it does not demonstrate this per-credential transport handoff. Transport hints are not added to registration's `excludeCredentials` list by this feature.
+
+</Version>
 
 ### Removing a Passkey
 
@@ -271,7 +369,7 @@ When `AddUserManagement(...)` is called, the following HTTP endpoints are regist
 | Complete Authentication           | `POST` | `/passkeys/authenticate/complete`           | Validates the assertion response and signs the user in             |
 | JavaScript Helper                 | `GET`  | `/passkeys/js`                              | Serves the built-in passkeys JavaScript helper                     |
 
-The Begin Registration and Complete Registration endpoints require an authenticated user (they use `RequireAuthorization()`). The authentication endpoints are unauthenticated; they establish the session.
+The Begin Registration and Complete Registration endpoints require an authenticated user (they use `RequireAuthorization()`). The authentication endpoints do not require an authenticated session, but the known-user begin endpoint requires the configured resolver to identify the user. Beginning a ceremony does not establish a session.
 
 ### Configuring Endpoint Routes
 
@@ -457,7 +555,7 @@ Internally, `registerPasskey` calls `/passkeys/register/begin` to get the challe
 
 #### `authenticateWithPasskey(callbacks)`
 
-Authenticates with a second-factor passkey (for MFA flows where the user is already partially authenticated). Unlike `registerPasskey` and `authenticateWithDiscoverablePasskey`, this function does **not** call the completion endpoint itself. Instead, it passes the assertion payload to `onSuccess`, and your application is responsible for submitting it to your own completion endpoint and promoting the session.
+Authenticates a known user with a passkey, either as a second factor or to verify an already-signed-in user. Unlike `registerPasskey` and `authenticateWithDiscoverablePasskey`, this function does **not** call the completion endpoint itself. Instead, it passes the assertion payload to `onSuccess` for your application to submit to its own completion endpoint. That endpoint validates the assertion and can promote a partially authenticated session or confirm verification without changing an existing session.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -522,7 +620,7 @@ However, some applications need a **layered authentication model** where a passk
 * **Gradual migration**: you want to add passkey step-up to an existing password-based login without replacing it entirely.
 * **High-assurance flows**: admin consoles or financial transactions where you want both a password and a biometric confirmation.
 
-In this mode, the user first completes their primary authentication step. Your application stores the partially-authenticated user's identity in a temporary store (session, distributed cache, etc.). The client then calls the second-factor begin endpoint, which scopes the WebAuthn challenge to that specific user's registered passkeys. The user completes the passkey ceremony, and the server signs them in.
+In this mode, the user first completes their primary authentication step. Your application stores the partially-authenticated user's identity in a temporary store (session, distributed cache, etc.). The client then calls the second-factor begin endpoint, which scopes the WebAuthn challenge to that specific user's registered passkeys. Your application validates the completed ceremony and promotes the session only after confirming that the verified user matches the pending first-factor user.
 
 The key difference from primary passkey auth is that the server already knows *who* is authenticating before the WebAuthn ceremony starts. This is why a resolver interface is required: User Management needs your application to hand it the user identity that was established in the first factor.
 
@@ -616,8 +714,13 @@ builder.Services
 2. **State storage** - Store the user's `UserSubjectId` in session or a temporary store
 3. **Passkey challenge** - Client calls `POST /passkeys/authenticate/begin`; the resolver retrieves the user and the server returns a challenge scoped to that user's passkeys
 4. **Authenticator interaction** - Client calls `navigator.credentials.get()` with the challenge
-5. **Completion** - Client calls `POST /passkeys/authenticate/complete`; the server validates the assertion and signs the user in
+5. **Completion** - The helper passes the assertion to `onSuccess`; your client submits it to your application's completion handler
+6. **Session promotion** - Your handler validates the ceremony, checks the verified subject against the pending first-factor subject, issues the authenticated session, and clears the pending state
 </Steps>
+
+The completion handler calls `IPasskeyCeremonies.CompleteAuthenticationAsync`. It must require valid, unexpired first-factor state and compare the successful result's `UserSubjectId` with that state's subject before signing in. Protect the submission against cross-site request forgery, and use a validated local return URL. Do not use the discoverable sign-in completion endpoint as a substitute for this application-owned session promotion.
+
+If you store pending state in a protected cookie, include and enforce its expiry in the protected payload. Browser cookie expiry alone does not prevent a client from retaining and resubmitting the cookie. This state identifies the first-factor user and does not replace the server-side WebAuthn challenge store.
 
 When passkeys are used as a second factor, the flow looks like this:
 
@@ -636,7 +739,8 @@ sequenceDiagram
     User->>Browser: Authenticate
     Browser-->>App: Assertion response
     App->>UserManagement: Complete passkey assertion
-    UserManagement-->>App: Verified (2FA complete)
+    UserManagement-->>App: Verified subject
+    App->>App: Match pending subject and clear state
     App-->>User: Signed in
 ```
 
@@ -867,6 +971,44 @@ User Management uses a constant-time comparison for challenge validation. The co
 
 This is a defense-in-depth measure. WebAuthn challenges are already large (32 bytes of random data by default) and single-use, so the practical exploitability of a timing side-channel is very low. Constant-time comparison removes it entirely.
 
+<Version since="8.1">
+
+## Attestation Format Validator Extension
+
+The built-in validators handle None, Packed, and TPM attestation. `IAttestationFormatValidator`, in `Duende.UserManagement.Authentication.Passkeys`, provides a contract for validating an additional format.
+
+```csharp
+// IAttestationFormatValidator.cs - API contract
+public interface IAttestationFormatValidator
+{
+    string Format { get; }
+    ValueTask<AttestationValidationResult> ValidateAsync(
+        AttestationContext context,
+        CancellationToken ct);
+}
+```
+
+`AddAttestationFormatValidator<TValidator>()`, on the authentication builder, registers a validator selected by an exact, case-sensitive match between `Format` and the format in the attestation object. Registration is additive. The identifier must be fixed, non-empty, and unique, including the built-in formats. Null, empty, whitespace, or duplicate identifiers prevent host startup with an error naming the invalid component or conflicting format. These rules apply to both builder and direct DI registrations.
+
+The builder registers validators as transient, but they are resolved from the root service provider and retained by singleton options validation. Scoped dependencies are not supported. Constructors and `Format` lookup must not depend directly or indirectly on `UserAuthenticationOptions`, which would create circular validation.
+
+`AttestationContext` contains:
+
+| Property | Contents |
+|----------|----------|
+| `AttStmt` | The decoded attestation statement values |
+| `AuthData` | The authenticator data bytes |
+| `ClientDataHash` | The SHA-256 hash of the client data JSON |
+| `CredentialPublicKeyCbor` | The credential's public key encoded as COSE CBOR |
+
+In `AttStmt`, CBOR text strings map to `string`, byte strings to `byte[]`, integers to `long`, and booleans to `bool`. Arrays map to `object?[]`, and maps to `Dictionary<string, object?>` with text keys. These mappings apply recursively. Null and skipped unsupported values are represented as `null`.
+
+Validation returns either `AttestationValidationResult.Success`, containing the DER-encoded certificate chain if present, or `AttestationValidationResult.Failure`, containing an `AttestationValidationError` and description. The chain's first entry is the attestation certificate. Formats without certificates return a null chain.
+
+Format validation checks the attestation statement; it does not establish whether the authenticator is trusted. A successful result passes the certificate chain to the separate [attestation trust policy](#attestation-trust-policies) stage. Adding a format validator does not change attestation conveyance preferences or replace trust policies.
+
+</Version>
+
 ## Attestation Trust Policies
 
 By default, User Management accepts any authenticator during passkey registration. If you need to restrict which authenticators are allowed, you can implement `IAttestationTrustPolicy`. Common reasons to do this include:
@@ -973,3 +1115,5 @@ public class MyAttestationTrustPolicy : IAttestationTrustPolicy
 :::tip
 `AAGUID` values for well-known authenticators are published by the FIDO Alliance in the [FIDO Metadata Service](https://fidoalliance.org/metadata/). You can use the metadata service to look up AAGUIDs for specific authenticator models and build your allowlist from there.
 :::
+
+[webauthn-challenges]: https://www.w3.org/TR/webauthn-3/#sctn-cryptographic-challenges
