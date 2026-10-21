@@ -82,7 +82,7 @@ const products = [
 ];
 
 // Sidebar topics (top-of-sidebar switcher): General Information plus one per product.
-// The icons must match the product cards in src/content/docs/index.mdx.
+// Also exported through virtual:dv-products so the homepage shows the same icons.
 const productIcons = {
   identityserver: "open-book",
   bff: "window",
@@ -108,7 +108,7 @@ const productsVirtualModule = () => ({
   resolveId: (id) => (id === "virtual:dv-products" ? "\0virtual:dv-products" : undefined),
   load: (id) =>
     id === "\0virtual:dv-products"
-      ? `export const products = ${JSON.stringify(products)};`
+      ? `export const products = ${JSON.stringify(products)};\nexport const productIcons = ${JSON.stringify(productIcons)};`
       : undefined,
 });
 
@@ -345,6 +345,7 @@ export default defineConfig({
         MarkdownContent: "./src/components/MarkdownContent.astro",
         Sidebar: "./src/components/Sidebar.astro",
         PageTitle: "./src/components/PageTitle.astro",
+        Hero: "./src/components/Hero.astro",
       },
     }),
     redirectFrom({
