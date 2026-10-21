@@ -653,21 +653,34 @@ summary {
 
 /* Version selector */
 .dv-version-select { margin-bottom: 0.5rem; }
-.dv-version-select-slot { min-height: 1.875rem; }
+.dv-version-select-slot { --dv-chip-fs: 0.8125rem; position: relative; min-height: 1.875rem; }
+.dv-version-select-slot:has(> select)::before {
+  content: "Version";
+  position: absolute;
+  left: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
+  font: 400 var(--dv-chip-fs) var(--sl-font-mono);
+  color: var(--sl-color-gray-3);
+}
+.dv-version-select-slot:has(> .dv-chip--active)::before { color: color-mix(in srgb, var(--sl-color-green-high) 70%, transparent); }
+.dv-version-select-slot:has(> .dv-chip--unsupported)::before { color: color-mix(in srgb, var(--sl-color-orange-high) 70%, transparent); }
 .dv-chip {
   --dv-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23777' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
-  --dv-tag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 2h6l6 6-6 6-6-6z'/%3E%3Ccircle cx='5.5' cy='5.5' r='1'/%3E%3C/svg%3E");
   appearance: none;
   width: 100%;
   min-height: 1.875rem;
-  padding: 0.2rem 1.5rem 0.2rem 1.9rem;
-  font: 500 0.8125rem var(--sl-font-mono);
+  padding: 0.2rem 1.5rem 0.2rem calc(1.1rem + 4.3 * var(--dv-chip-fs));
+  font: 500 var(--dv-chip-fs) var(--sl-font-mono);
+  text-overflow: ellipsis;
   color: var(--sl-color-white);
   background-color: color-mix(in srgb, var(--sl-color-black) 50%, transparent);
-  background-image: var(--dv-caret), var(--dv-tag);
+  background-image: var(--dv-caret);
   background-repeat: no-repeat;
-  background-position: right 0.4rem center, 0.6rem center;
-  background-size: 0.8rem, 0.875rem;
+  background-position: right 0.4rem center;
+  background-size: 0.8rem;
   border: 1px solid var(--sl-color-gray-4);
   border-radius: 0.4rem;
   cursor: pointer;
@@ -690,8 +703,8 @@ summary {
 }
 .dv-chip--unsupported:hover { border-color: var(--sl-color-orange-high); }
 @media (max-width: 49.99rem) {
-  .dv-version-select-slot { min-height: 2.5rem; }
-  .dv-chip { min-height: 2.5rem; font-size: 16px; }
+  .dv-version-select-slot { --dv-chip-fs: 16px; min-height: 2.5rem; }
+  .dv-chip { min-height: 2.5rem; }
 }
 
 /* Compact left navigation */
@@ -745,6 +758,11 @@ ul.starlight-sidebar-topics .starlight-sidebar-topics-icon {
   background-color: var(--sl-color-white);
   border-color: var(--sl-color-white);
   color: var(--sl-color-black);
+}
+:root ul.starlight-sidebar-topics li > a:not(.starlight-sidebar-topics-current):not(:hover):not(:focus):not(:focus-visible):not(:active) .starlight-sidebar-topics-icon {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--sl-color-gray-2);
 }
 ul.starlight-sidebar-topics .starlight-sidebar-topics-icon svg { width: 100%; height: 100%; }
 @media (min-width: 50rem) {
