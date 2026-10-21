@@ -7,11 +7,6 @@ sidebar:
   order: 45
 ---
 
-:::caution[Preview documentation]
-This page describes preview packages and APIs that are subject to change. Start with the
-[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
-:::
-
 The Duende CLI (`duende`) is a .NET tool. Its `storage` command loads the Duende Storage CLI plugin, which
 migrates the Duende Storage schema for SQL Server, PostgreSQL, and SQLite. Run it as a separate deployment step,
 before your application instances start, instead of migrating from application code.

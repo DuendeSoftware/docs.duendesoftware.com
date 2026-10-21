@@ -7,11 +7,6 @@ sidebar:
   order: 40
 ---
 
-:::caution[Preview documentation]
-This page describes preview packages and APIs that are subject to change. Start with the
-[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
-:::
-
 :::danger[Do not use SQLite in production]
 SQLite is for automated tests and local development only. Use
 [SQL Server](/identityserver/data/providers/duende-storage/databases/sql-server.md),

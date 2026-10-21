@@ -7,11 +7,6 @@ sidebar:
   order: 10
 ---
 
-:::caution[Preview documentation]
-This page describes preview packages and APIs that are subject to change. Start with the
-[Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx) for the preview scope.
-:::
-
 ## Install the Package
 
 ```bash
