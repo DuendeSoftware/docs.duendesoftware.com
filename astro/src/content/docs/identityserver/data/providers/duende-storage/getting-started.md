@@ -166,8 +166,7 @@ deployment, they can migrate the same database concurrently: no provider protect
 also blocks application startup.
 :::
 
-In production, run migrations as a single deployment step before application instances start, using the
-[Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md#install-the-duende-cli):
+For local development, you can use the SQLite CLI command:
 
 ```powershell
 # Terminal
@@ -176,9 +175,22 @@ dotnet tool install --global Duende.Cli --prerelease
 duende storage migrate --provider sqlite --connection-string "Data Source=identityserver.db"
 ```
 
+For production, use SQL Server or PostgreSQL and run the migration as a single deployment step before application
+instances start. Configure `DUENDE_STORAGE_CONNECTION_STRING` in your deployment environment's secret store, then run
+the CLI from a restored application project that references the matching storage provider package:
+
+```powershell
+# Terminal
+dotnet tool install --global Duende.Cli --prerelease
+
+duende storage migrate --provider postgresql
+```
+
+The CLI reads the connection string from `DUENDE_STORAGE_CONNECTION_STRING`. Do not pass production credentials as
+command-line arguments. For plugin version resolution and the full command reference, see the
+[Duende CLI documentation](/identityserver/data/providers/duende-storage/duende-cli.md#how-the-cli-loads-the-storage-plugin).
 See the [Duende CLI reference](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate) for the
-full command reference, and the [Databases overview](/identityserver/data/providers/duende-storage/databases/index.mdx#create-and-upgrade-the-schema)
-for the other supported providers. The CLI doesn't support Oracle migrations yet; see the
+other supported providers and options. The CLI doesn't support Oracle migrations yet; see the
 [Oracle page](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli)
 for the code-based path.
 

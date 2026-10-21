@@ -63,7 +63,7 @@ Duende Storage separates two kinds of schema change:
   already current. It then calls `VerifySchemaAsync` and throws an `InvalidOperationException` if verification finds
   errors.
 * `CheckVersionAsync()` returns a `CheckSchemaVersionResult` with `CurrentVersion`, `RequiredVersion` and
-  `IsCompatible` (true only when the two versions are equal), so you can fail fast before `MigrateAsync` instead of
+  `IsCompatible`, so you can fail fast before `MigrateAsync` instead of
   discovering a mismatch at request time:
 
   ```csharp
@@ -81,8 +81,8 @@ Duende Storage separates two kinds of schema change:
   }
   ```
 
-  A `CurrentVersion` and `RequiredVersion` only differ when `IsCompatible` is false, and an unreachable database
-  throws rather than returning a result with `IsCompatible` set to false:
+  `IsCompatible` is false when `CurrentVersion` and `RequiredVersion` differ. An unreachable database throws an
+  exception rather than returning a result with `IsCompatible` set to false:
   * `CurrentVersion` of `0` means the database has never been migrated: run the migration.
   * `CurrentVersion` less than `RequiredVersion` means the database is behind: run the migration.
   * `CurrentVersion` greater than `RequiredVersion` means a newer version of Duende Storage already migrated the

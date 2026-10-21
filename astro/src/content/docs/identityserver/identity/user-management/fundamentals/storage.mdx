@@ -9,22 +9,34 @@ redirect_from:
   - /identityserver/usermanagement/fundamentals/storage/
 ---
 
-Duende User Management stores users, authenticators, roles, and groups as documents in
-[Duende Storage](/identityserver/data/providers/duende-storage/getting-started.md). Because entities are stored as
-complete documents, adding or removing properties on a user profile does not require a schema change. The storage
-tables themselves are still created and upgraded by Duende Storage migrations — see
+import Version from "~/components/Version.astro";
+
+Duende User Management stores users, authenticators, roles, and groups as documents. Because entities are stored as
+complete documents, adding or removing properties on a user profile does not require a database schema change.
+
+<Version since="8.1">
+
+The IdentityServer 8.1 integration stores these documents in
+[Duende Storage](/identityserver/data/providers/duende-storage/getting-started.md).
+The storage tables themselves are created and upgraded by Duende Storage migrations. See
 [Create and Upgrade the Schema](/identityserver/data/providers/duende-storage/databases/index.mdx#create-and-upgrade-the-schema).
 All Duende Storage databases are supported. See
 [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx) for the full list.
+
+</Version>
 
 This page covers **User Management data** — user profiles, authenticators, roles, and groups. It does not govern how
 IdentityServer stores its **configuration data** (clients, API scopes, API resources, and identity resources) or
 **operational data** (persisted grants, device flow codes, signing keys). IdentityServer configuration continues to
 use whichever provider you have configured, such as
-[Entity Framework Core](/identityserver/data/providers/entityframework-core.md) with its classic relational tables, or
-the [Duende Storage](/identityserver/data/providers/duende-storage/getting-started.md) provider.
+[Entity Framework Core](/identityserver/data/providers/entityframework-core.md) with its classic relational tables.
+<Version since="8.1">
+It can also use the [Duende Storage](/identityserver/data/providers/duende-storage/getting-started.md) provider.
+</Version>
 
 ## Storage Instances and Data Categories
+
+<Version since="8.1">
 
 Duende Storage registers databases as named **storage instances**. Each call to `AddStorage(...)` on the
 IdentityServer builder makes one database available under a `StorageInstanceId`. Separately, each product maps its
@@ -98,7 +110,7 @@ data to it. `AddUserManagement(storageInstanceId, configure)` is what tells User
 instance is a separate database, it is migrated separately — see
 [Migrate the User Management Database](#migrate-the-user-management-database) below for migrating multiple instances.
 For the general model, including how IdentityServer, User Management and
-Spaces data can each be placed in different instances, see
+Spaces data can each be placed in different instances, see the
 [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md).
 
 :::note[Shared instance with IdentityServer]
@@ -109,7 +121,63 @@ elsewhere. There is no need to call `AddStorage(...)` twice for the same instanc
 `AddOperationalStorage()`, and `AddUserManagement(...)`.
 :::
 
+</Version>
+
+<Version until="8.1">
+
+## IdentityServer 8.0 Storage Setup
+
+In IdentityServer 8.0, register the storage provider for User Management and then call `AddUserManagement(...)`.
+IdentityServer configuration and operational data continue to use their separately configured stores.
+
+For example, register a PostgreSQL data source and use it for User Management:
+
+```csharp title="Program.cs"
+using Duende.IdentityServer;
+using Duende.Storage.PostgreSql;
+using Npgsql;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton(new NpgsqlDataSourceBuilder(
+    builder.Configuration.GetConnectionString("pgsql")!).Build());
+
+builder.Services
+    .AddIdentityServer()
+    .AddStorage(storage => storage.AddPostgreSql())
+    .AddUserManagement(um => { /* ... */ });
+```
+
+For other provider package names and registration options, see the database choices below.
+
+</Version>
+
 ## Choose a Database
+
+<Version until="8.1">
+
+For IdentityServer 8.0, use the in-memory provider for local development and tests, or PostgreSQL and SQL Server for
+production. Oracle support for User Management data starts with IdentityServer 8.1.
+
+Install the provider package you use:
+
+```bash
+# Terminal
+dotnet add package Duende.Storage.Sqlite
+# For PostgreSQL:
+dotnet add package Duende.Storage.Postgresql
+# For SQL Server:
+dotnet add package Duende.Storage.Mssql
+```
+
+For PostgreSQL, register an `NpgsqlDataSource` and select the provider with
+`AddStorage(storage => storage.AddPostgreSql())`. For SQL Server, register a `CreateSqlConnection` factory and select
+it with `AddStorage(storage => storage.AddMsSql(options => { }))`. For local development and testing, use
+`AddStorage(storage => storage.AddSqliteInMemory())` or configure a file-based SQLite connection string.
+
+</Version>
+
+<Version since="8.1">
 
 SQL Server, PostgreSQL, and Oracle are production databases for User Management data; pick whichever fits your
 infrastructure. SQLite is for local development and automated tests — use `AddSqliteInMemory()` to run tests against
@@ -121,10 +189,12 @@ with no external dependencies.
 * [Oracle](/identityserver/data/providers/duende-storage/databases/oracle.md)
 * [SQLite](/identityserver/data/providers/duende-storage/databases/sqlite.md)
 
+</Version>
+
 ## Migrate the User Management Database
 
-Call `MigrateAsync` to create or upgrade the schema for the storage instance User Management uses. When User
-Management shares the default instance with IdentityServer, migrate that instance:
+Call `MigrateAsync` to create or upgrade the schema for the storage instance User Management uses. To migrate the
+default storage instance:
 
 ```csharp title="Program.cs"
 using Duende.Storage.Schema;
@@ -135,7 +205,9 @@ var schema = await schemaFactory.GetStorageInstanceSchema(CancellationToken.None
 await schema.MigrateAsync(CancellationToken.None);
 ```
 
-When User Management uses a dedicated storage instance (see
+<Version since="8.1">
+When User Management shares the default instance with IdentityServer, migrate that same instance. When User
+Management uses a dedicated storage instance (see
 [Using A Dedicated Database For User Management](#using-a-dedicated-database-for-user-management) above), also
 migrate that instance by passing its `StorageInstanceId`:
 
@@ -143,10 +215,21 @@ migrate that instance by passing its `StorageInstanceId`:
 var schema = await schemaFactory.GetStorageInstanceSchema(userManagementInstance, CancellationToken.None);
 await schema.MigrateAsync(CancellationToken.None);
 ```
+</Version>
 
 Calling `MigrateAsync()` at application startup, as shown above, is convenient for development, but production
-deployments should run migrations as a separate step. In production, run migrations as a deployment step with the
+deployments should run migrations as a separate step.
+<Version since="8.1">
+For SQL Server and PostgreSQL, run migrations as a deployment step with the
 [Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate), once per connection
-string. Run only one migration process at a time against a given database. Running startup migration and the CLI
-concurrently against the same connection string is not supported.
-
+string. The CLI does not support Oracle yet. For Oracle, use the
+[deployment console or DBA-script approach](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli).
+</Version>
+<Version until="8.1">
+In production, use deployment tooling to run `MigrateAsync` as a single step before application instances start, once
+per connection string.
+</Version>
+Run only one migration process at a time against a given database.
+<Version since="8.1">
+Running startup migration and the CLI concurrently against the same connection string is not supported.
+</Version>
