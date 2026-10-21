@@ -146,6 +146,20 @@ const productKeys = products.map((p) => p.key);
     document.querySelector(".sl-markdown-content")?.prepend(notice);
   }
 
+  function showPreviewViewing(page: HTMLElement, selected: string) {
+    const content = document.querySelector(".preview-notice .starlight-aside__content");
+    if (!content) return;
+    const switchLink = content.querySelector<HTMLAnchorElement>("a[data-dv-select]");
+    if (switchLink?.dataset.dvSelect === selected) return;
+    const productName = page.dataset.label!.split(/ (?=\d)| before/)[0];
+    const viewing = document.createElement("p");
+    viewing.dataset.dvGenerated = "";
+    viewing.textContent = `You're viewing ${productName} ${selected}.`;
+    const anchor = switchLink?.closest("p");
+    if (anchor) anchor.before(viewing);
+    else content.append(viewing);
+  }
+
   function filterToc() {
     for (const link of all<HTMLAnchorElement>("starlight-toc a[href^='#'], mobile-starlight-toc a[href^='#']")) {
       const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
@@ -218,6 +232,7 @@ const productKeys = products.map((p) => p.key);
       if (isUnsupported) {
         showUnsupportedNotice({ selected, fallback, upgrades: data.upgrades }, () => choose(fallback));
       }
+      showPreviewViewing(page!, selected);
     }
 
     document.addEventListener("click", (e) => {
