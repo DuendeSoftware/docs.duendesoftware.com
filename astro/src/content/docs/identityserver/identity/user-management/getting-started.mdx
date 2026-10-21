@@ -1,7 +1,7 @@
 ---
 title: Getting Started with User Management
 description: Build a complete OTP (one-time password) login flow from scratch using Duende User Management with IdentityServer as the foundation.
-date: 2026-10-01
+date: 2026-10-21
 sidebar:
   label: Getting Started
   order: 2
@@ -10,6 +10,7 @@ redirect_from:
 ---
 
 import { CardGrid, LinkCard, Tabs, TabItem, Steps } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 In this tutorial, you'll build a complete OTP (one-time password) login flow from scratch using Duende User Management on top of IdentityServer. By the end, you'll have a working ASP.NET Core Razor Pages app where IdentityServer handles authentication and users log in with their email address and a one-time code.
 
@@ -22,8 +23,14 @@ The tutorial is split into two phases:
 - **Phase 2** builds the OTP login pages that drive the actual user experience.
 
 :::caution
+<Version until="8.1">
 This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and single-server deployments, but not recommended for production at scale.
-For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/identityserver/identity/user-management/fundamentals/storage.md) for details.
+For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/identityserver/identity/user-management/fundamentals/storage.mdx) for details.
+</Version>
+<Version since="8.1">
+This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and testing, but production deployments need a different database.
+For production setup of each provider, see [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx).
+</Version>
 :::
 
 ## Prerequisites
@@ -49,23 +56,54 @@ The `webapp` template gives you a Razor Pages project with a `Program.cs` entry 
 
 Add the IdentityServer, IdentityServer User Management, and a storage NuGet package:
 
+<Version until="8.1">
+
 ```bash title="Terminal"
 dotnet add package Duende.IdentityServer
 dotnet add package Duende.UserManagement.IdentityServer8
 dotnet add package Duende.Storage.Sqlite
 ```
 
+</Version>
+
+<Version since="8.1">
+
+```bash title="Terminal"
+dotnet add package Duende.IdentityServer --prerelease
+dotnet add package Duende.UserManagement.IdentityServer8 --prerelease
+dotnet add package Duende.Storage.Sqlite --prerelease
+```
+
+</Version>
+
 `Duende.IdentityServer` is the core IdentityServer package. `Duende.UserManagement.IdentityServer8` adds the User Management integration on top of it. The storage package provides the backing store for user data.
 
+<Version until="8.1">
 Three storage adapters are available:
 
 | Package                     | Database   | Notes                                                                                                                     |
 |-----------------------------|------------|---------------------------------------------------------------------------------------------------------------------------|
-| `Duende.Storage.Postgresql` | PostgreSQL | Recommended for production. Requires an `NpgsqlDataSource` registered in DI.                                              |
-| `Duende.Storage.Mssql`      | SQL Server | Production-ready for Microsoft/Windows environments.                                                                      |
-| `Duende.Storage.Sqlite`     | SQLite     | File-based storage for local development. Also supports an in-memory mode (`Data Source=:memory:`) for automated testing. |
+| `Duende.Storage.Postgresql` | PostgreSQL | Production database. Requires an `NpgsqlDataSource` registered in DI.                                                     |
+| `Duende.Storage.Mssql`      | SQL Server | Production database for Microsoft/Windows environments.                                                                   |
+| `Duende.Storage.Sqlite`     | SQLite     | File-based storage for local development; also supports in-memory mode for automated testing.                             |
 
-This tutorial uses SQLite for simplicity. For production configuration and setup of each provider, see the [Storage documentation](/identityserver/identity/user-management/fundamentals/storage.md).
+This tutorial uses SQLite for simplicity. For production setup, see
+[Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.mdx).
+</Version>
+
+<Version since="8.1">
+Several storage adapters are available. See [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx) for details:
+
+| Package                    | Database   | Notes                                                                                                        |
+|----------------------------|------------|--------------------------------------------------------------------------------------------------------------|
+| `Duende.Storage.PostgreSql`| PostgreSQL | Production database. Requires an `NpgsqlDataSource` registered in DI.                                        |
+| `Duende.Storage.MsSql`     | SQL Server | Production database for Microsoft/Windows environments.                                                      |
+| `Duende.Storage.Oracle`    | Oracle     | Production database for Oracle environments.                                                                 |
+| `Duende.Storage.Sqlite`    | SQLite     | Local development and automated tests (in-memory with `AddSqliteInMemory()`).                                 |
+
+This tutorial uses SQLite for simplicity. For production configuration and setup of each provider, see
+[Databases](/identityserver/data/providers/duende-storage/databases/index.mdx).
+</Version>
 
 ### Add an IdentityServer Config File
 
@@ -294,9 +332,20 @@ In our application, we can make use of the built-in SMTP dispatcher for sending 
 
 A few things to note about this setup:
 
-- Storage is registered as a separate top-level call, `AddStorage(...)`, on the IdentityServer builder. `AddUserManagement(...)` then maps its data to that storage instance; by default, both share the same database (`StorageInstanceId.Default`). See [Using A Dedicated Database For User Management](/identityserver/identity/user-management/fundamentals/storage.md#using-a-dedicated-database-for-user-management) for how to store User Management data in a separate database.
-- `app.UseIdentityServer()` replaces the standalone `app.UseAuthentication()` call. IdentityServer sets up authentication for you.
-- The database migration runs at startup using `IStorageInstanceSchemaFactory.GetStorageInstanceSchema` and `IStorageInstanceSchema.MigrateAsync`. This creates the SQLite file and schema on first run.
+<Version until="8.1">
+In IdentityServer 8.0, `AddStorage(...)` registers the provider used by User Management. IdentityServer configuration
+and operational data continue to use their separately configured stores. See
+[Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.mdx).
+</Version>
+<Version since="8.1">
+In IdentityServer 8.1, `AddStorage(...)` registers the provider, and `AddUserManagement(...)` maps User Management data
+to that storage instance. By default, both share `StorageInstanceId.Default`. See
+[Using A Dedicated Database For User Management](/identityserver/identity/user-management/fundamentals/storage.mdx#using-a-dedicated-database-for-user-management)
+to use a separate database.
+</Version>
+
+* `app.UseIdentityServer()` replaces the standalone `app.UseAuthentication()` call. IdentityServer sets up authentication for you.
+* The database migration runs at startup using `IStorageInstanceSchemaFactory.GetStorageInstanceSchema` and `IStorageInstanceSchema.MigrateAsync`. This creates the SQLite file and schema on first run.
 
 :::tip
 For production environments, configure [ASP.NET Core Data Protection](/general/data-protection.md) to persist encryption keys across restarts, for example using Azure Key Vault, Redis, or a shared file system.
@@ -674,7 +723,7 @@ See [OTP Authentication](/identityserver/identity/user-management/authentication
   <LinkCard
     title="Storage options"
     href="/identityserver/identity/user-management/fundamentals/storage"
-    description="Switch to PostgreSQL or SQL Server, or configure separate stores for different data categories."
+    description="Choose a storage instance for User Management data, or configure separate stores for different data categories."
   />
   <LinkCard
     title="OTP customization"

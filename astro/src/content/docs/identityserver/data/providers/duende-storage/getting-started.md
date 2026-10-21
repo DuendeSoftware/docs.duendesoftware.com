@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with Duende Storage"
 description: "Configure Duende Storage for IdentityServer configuration and operational data"
-date: 2026-09-08
+date: 2026-10-19
 sidebar:
   label: "Getting Started"
   order: 10
@@ -20,7 +20,10 @@ categories to separate databases.
 
 ## Install Duende Storage NuGet Packages
 
-Install the IdentityServer preview and one database provider. This example uses SQLite:
+Install the IdentityServer preview and one database provider. This walkthrough uses SQLite, which is suitable for
+automated tests and local development only. For production, use SQL Server, PostgreSQL or Oracle; see the
+[Databases overview](/identityserver/data/providers/duende-storage/databases/index.mdx) for the provider packages and
+registration methods.
 
 ```bash
 # Terminal
@@ -45,8 +48,7 @@ Add a connection string for the provider:
 }
 ```
 
-This SQLite connection string is suitable for local development. Keep production credentials out of source control and
-load them from your deployment platform's secret store.
+Keep production credentials out of source control and load them from your deployment platform's secret store.
 
 ## Register Duende Storage
 
@@ -87,8 +89,8 @@ app.Run();
 
 Do not hide a missing connection string or continue startup after a migration failure.
 
-The example runs migrations from the application only in development. Do not give the production application schema
-creation permissions unless application-managed migrations are an intentional deployment choice.
+The example runs migrations from the application only in development. See
+[Deploy the Database Schema](#deploy-the-database-schema) for the production approach.
 
 ### Configuration Stores
 
@@ -157,44 +159,43 @@ Duende Storage.
 
 ## Deploy the Database Schema
 
-`IStorageInstanceSchema.MigrateAsync` creates or upgrades the common Duende Storage schema. It requires permissions to create and
-alter database objects. In production, run migrations as a controlled deployment step before application instances start.
-The runtime application identity can then use narrower data access permissions.
+:::caution
+Calling `IStorageInstanceSchema.MigrateAsync` from the application at startup, as shown above, is intended for
+development purposes only. When several app instances start together, for example during scale-out or a rolling
+deployment, they can migrate the same database concurrently: no provider protects against that. A failed migration
+also blocks application startup.
+:::
 
-The preview [Duende CLI](https://www.nuget.org/packages/Duende.Cli) can inspect the current schema, generate migration SQL
-or apply pending migrations for SQL Server, PostgreSQL and SQLite. Install it and run it from a restored project that
-references Duende Storage so it detects the matching plugin version:
+For local development, you can use the SQLite CLI command:
 
 ```powershell
 # Terminal
 dotnet tool install --global Duende.Cli --prerelease
-$env:DUENDE_STORAGE_CONNECTION_STRING = "<deployment-connection-string>"
 
-duende storage migrate --provider mssql --dry-run
-duende storage migrate --provider mssql
+duende storage migrate --provider sqlite --connection-string "Data Source=identityserver.db"
 ```
 
-Use `postgresql` or `sqlite` for the other supported CLI providers. Add `--schema` when you use a non-default SQL Server or
-PostgreSQL schema. The `--dry-run` output can be reviewed and applied by a database administrator instead of granting DDL
-permissions to the application.
+For production, use SQL Server or PostgreSQL and run the migration as a single deployment step before application
+instances start. Configure `DUENDE_STORAGE_CONNECTION_STRING` in your deployment environment's secret store, then run
+the CLI from a restored application project that references the matching storage provider package:
 
-On first use, the CLI downloads the matching `Duende.Storage.CliPlugin` package from NuGet and caches it. Pre-populate the
-package cache when a deployment agent cannot access NuGet.
+```powershell
+# Terminal
+dotnet tool install --global Duende.Cli --prerelease
 
-The preview CLI does not currently support Oracle migrations. For Oracle, use `IStorageInstanceSchema.BuildMigrationScript` from
-a restricted deployment utility to generate SQL for review and application by your database administrator.
+duende storage migrate --provider postgresql
+```
+
+The CLI reads the connection string from `DUENDE_STORAGE_CONNECTION_STRING`. Do not pass production credentials as
+command-line arguments. For plugin version resolution and the full command reference, see the
+[Duende CLI documentation](/identityserver/data/providers/duende-storage/duende-cli.md#how-the-cli-loads-the-storage-plugin).
+See the [Duende CLI reference](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate) for the
+other supported providers and options. The CLI doesn't support Oracle migrations yet; see the
+[Oracle page](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli)
+for the code-based path.
 
 Run only one migration process at a time. After applying a migration, `MigrateAsync` verifies that the database matches the
 expected schema and fails when it finds discrepancies.
-
-## Supported Databases
-
-The [Duende Storage overview](/identityserver/data/providers/duende-storage/index.mdx#supported-databases) lists the
-published database packages and registration methods. Replace the SQLite package and `AddSqlite` call with the
-provider for your database.
-
-SQL Server, PostgreSQL and Oracle use their provider-native connection factory or data source registrations. Keep
-credentials outside source control and use your deployment platform's secret store.
 
 ## Protect Stored Data
 

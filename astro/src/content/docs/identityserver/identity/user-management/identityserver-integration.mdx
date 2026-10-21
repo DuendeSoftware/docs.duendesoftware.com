@@ -10,6 +10,7 @@ redirect_from:
 ---
 
 import { Steps } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 The `Duende.UserManagement.IdentityServer8` package is what you add to your IdentityServer project to enable User Management.
 It wires up user storage, authentication flows, and claims mapping through a single `AddUserManagement(...)` call on the IdentityServer builder.
@@ -24,9 +25,16 @@ Once you have IdentityServer set up, adding User Management takes a single call 
 
 1. **Add the NuGet package**
 
+    <Version until="8.1">
     ```bash title="Terminal"
     dotnet add package Duende.UserManagement.IdentityServer8
     ```
+    </Version>
+    <Version since="8.1">
+    ```bash title="Terminal"
+    dotnet add package Duende.UserManagement.IdentityServer8 --prerelease
+    ```
+    </Version>
 
 2. **Call `AddUserManagement(...)` on the IdentityServer builder**
 
@@ -62,7 +70,13 @@ Once you have IdentityServer set up, adding User Management takes a single call 
         });
     ```
 
-    `AddStorage(...)` registers the database provider for the default storage instance, and `AddUserManagement(...)` maps User Management's data to it. See [Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.md) for how to give User Management its own, separate database.
+    `AddStorage(...)` registers the database provider used by User Management.
+    <Version until="8.1">
+    See [Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.mdx) for provider options.
+    </Version>
+    <Version since="8.1">
+    `AddUserManagement(...)` maps its data to the default storage instance. See [Storage Configuration](/identityserver/identity/user-management/fundamentals/storage.mdx#using-a-dedicated-database-for-user-management) to use a separate database.
+    </Version>
 
     :::tip
     You do not need to call `AddUserManagement(...)` separately on `IServiceCollection`.
