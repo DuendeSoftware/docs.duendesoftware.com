@@ -10,6 +10,7 @@ redirect_from:
 ---
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 Most .NET applications start authentication the same way: wire up ASP.NET Identity, add a login page, and ship. That works until requirements grow. MFA gets bolted on later, and passkey support requires a separate library. Greenfield projects face the same trap. Rolling custom auth feels faster at first, but compliance requirements, account recovery flows, and external provider integration accumulate quickly.
 
@@ -41,6 +42,12 @@ User Management supports the authentication methods that modern applications nee
 * **Roles and Groups**: Built-in support for role-based access control and group membership management, making it straightforward to model organizational structures and permission boundaries.
 * **Membership Management**: A dedicated API surface (`IMembershipAdmin`) for assigning and removing users from roles and groups programmatically. This matters when user-to-role and user-to-group relationships need to be managed by application code, for example during provisioning workflows, admin UIs, or automated onboarding, rather than only at login time.
 * **Opinionated Defaults**: Sensible, security-oriented defaults that reduce the surface area for misconfiguration without sacrificing extensibility.
+
+<Version since="8.1">
+
+* **SCIM Provisioning**: An experimental SCIM 2.0 service provider for provisioning users and groups from an external identity provider.
+
+</Version>
 
 ## When to use User Management
 
@@ -80,6 +87,9 @@ See the [glossary](/general/glossary.mdx) for definitions of terms used througho
   <LinkCard title="Getting Started" href="/identityserver/identity/user-management/getting-started" description="Add User Management to an ASP.NET Core app with a working OTP login flow." />
   <LinkCard title="IdentityServer Integration" href="/identityserver/identity/user-management/identityserver-integration" description="Add User Management to an existing or new IdentityServer deployment." />
   <LinkCard title="Authentication Flows" href="/identityserver/identity/user-management/authentication/overview" description="Compare OTP, TOTP, passkeys, passwords, external providers, and recovery codes." />
+  <Version since="8.1" inline>
+    <LinkCard title="SCIM Provisioning" href="/identityserver/identity/user-management/scim" description="Enable and secure the experimental SCIM 2.0 service provider for user and group provisioning." />
+  </Version>
   <LinkCard title="Configuration Reference" href="/identityserver/identity/user-management/reference/configuration" description="All configuration options for authentication, profiles, and membership modules." />
   <LinkCard title="Sample Application" href="/identityserver/samples/usermanagement" description="A complete sample showing OTP, passwords, passkeys, external login, profile management, and ASP.NET Identity migration." />
 </CardGrid>
