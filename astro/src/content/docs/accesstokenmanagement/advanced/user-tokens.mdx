@@ -31,7 +31,22 @@ You can pass in some global options when registering token management in the ASP
 * `ClientCredentialsResource` - same as previous, but for the resource parameter
 * `ClientCredentialStyle` - specifies how client credentials are transmitted to the OIDC provider
 
-<Version until="4.3">
+<Version until="4.0">
+```csharp
+// Program.cs
+builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
+{
+    options.ChallengeScheme = "schemeName";
+    options.UseChallengeSchemeScopedTokens = false;
+    options.RefreshBeforeExpiration = TimeSpan.FromMinutes(2);
+
+    options.ClientCredentialsScope = "api1 api2";
+    options.ClientCredentialsResource = "urn:resource";
+    options.ClientCredentialStyle = ClientCredentialStyle.PostBody;
+});
+```
+</Version>
+<Version since="4.0" until="4.3">
 ```csharp
 // Program.cs
 builder.Services.AddOpenIdConnectAccessTokenManagement(options =>

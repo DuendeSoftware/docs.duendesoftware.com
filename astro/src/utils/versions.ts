@@ -79,7 +79,7 @@ export async function pageVersions(entry: PageEntry): Promise<Versions | undefin
 function versionTagValues(body: string, filePath: string) {
   const values: string[] = [];
   for (const [, attrs] of body.matchAll(/<Version\b([^>]*)>/g)) {
-    for (const attr of attrs.matchAll(/\b(since|until)=(?:"([^"]*)"|'([^']*)'|\{([^}]*)\})/g)) {
+    for (const attr of attrs.matchAll(/\b(since|until)\s*=\s*(?:"([^"]*)"|'([^']*)'|\{([^}]*)\})/g)) {
       const value = attr[2] ?? attr[3] ?? attr[4];
       if (!VERSION_FORMAT.test(value)) {
         throw new Error(`Invalid <Version> value "${value}" in ${filePath}: use major.minor, e.g. "8.0"`);
