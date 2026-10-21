@@ -10,6 +10,7 @@ redirect_from:
 ---
 
 import { Steps } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 
 
@@ -190,7 +191,7 @@ All `PasskeyOptions` properties and their defaults:
 | `AttestationConveyancePreference` | `string`                 | `"none"`      | Whether attestation statements are requested                       |
 | `AuthenticatorAttachment`         | `string?`                | `null`        | Restrict to `"platform"` or `"cross-platform"` authenticators      |
 | `ResidentKeyRequirement`          | `string`                 | `"preferred"` | Whether discoverable credentials are required                      |
-| `ChallengeSize`                   | `int`                    | `32`          | Challenge size in bytes. Must be at least 16 bytes; validated at startup. |
+| `ChallengeSize`                   | `int`                    | `32`          | Challenge size in bytes. Must be at least 16 bytes.             |
 | `ChallengeTimeout`                | `TimeSpan`               | 5 minutes     | How long a challenge remains valid                                 |
 | `SupportedAlgorithms`             | `IReadOnlyList<int>`     | `[]` (all)    | COSE algorithm identifiers, in preference order                    |
 
@@ -209,7 +210,23 @@ Challenges need enough unpredictable randomness (entropy) to make guessing them 
 
 > In order to prevent replay attacks, the challenges MUST contain enough entropy to make guessing them infeasible. Challenges SHOULD therefore be at least 16 bytes long.
 
-User Management enforces 16 bytes as an absolute minimum and uses 32-byte challenges by default. Any configured size must be at least `16` bytes. Smaller values fail options validation when the host starts, with an `OptionsValidationException` such as `Passkeys.ChallengeSize must be >= 16, but was 15.`, so the application never serves a ceremony with a short challenge. Increasing the size does not change `ChallengeTimeout`, challenge storage, or replay protection.
+User Management enforces 16 bytes as an absolute minimum and uses 32-byte challenges by default. Any configured size must be at least `16` bytes.
+
+<Version since="8.1">
+
+Smaller values fail options validation when the host starts, with an `OptionsValidationException` such as `Passkeys.ChallengeSize must be >= 16, but was 15.`, so the application never serves a ceremony with a short challenge.
+
+</Version>
+
+<Version until="8.1">
+
+Smaller values throw `ArgumentOutOfRangeException`.
+
+</Version>
+
+Increasing the size does not change `ChallengeTimeout`, challenge storage, or replay protection.
+
+<Version since="8.1">
 
 ### Signature Verifier Extension
 
@@ -239,6 +256,8 @@ Verifiers are resolved once and retained for the application lifetime. Implement
 * Registering a verifier does not modify an explicit list.
 
 Restricting this list does not remove verifiers or disable authentication of previously registered credentials using those algorithms.
+
+</Version>
 
 ## Core Passkey Management
 
@@ -270,6 +289,8 @@ Task<bool> TryAddPasskeyAsync(
 
 Returns `true` if the credential was stored successfully, `false` if the user was not found or the credential already exists.
 
+<Version since="8.1">
+
 ### Transport Hints
 
 A transport hint describes how a browser can communicate with the authenticator that holds a credential. Common hints include:
@@ -298,6 +319,8 @@ If you build your own browser client, preserve the registration response's trans
 Credentials registered before transport capture, or imported without hints, remain usable. Missing or empty hints are omitted from authentication descriptors; no schema migration or re-registration is required, and existing credentials do not gain hints retroactively.
 
 Discoverable authentication uses an empty `allowCredentials` list, so it does not demonstrate this per-credential transport handoff. Transport hints are not added to registration's `excludeCredentials` list by this feature.
+
+</Version>
 
 ### Removing a Passkey
 
@@ -948,6 +971,8 @@ User Management uses a constant-time comparison for challenge validation. The co
 
 This is a defense-in-depth measure. WebAuthn challenges are already large (32 bytes of random data by default) and single-use, so the practical exploitability of a timing side-channel is very low. Constant-time comparison removes it entirely.
 
+<Version since="8.1">
+
 ## Attestation Format Validator Extension
 
 The built-in validators handle None, Packed, and TPM attestation. `IAttestationFormatValidator`, in `Duende.UserManagement.Authentication.Passkeys`, provides a contract for validating an additional format.
@@ -981,6 +1006,8 @@ In `AttStmt`, CBOR text strings map to `string`, byte strings to `byte[]`, integ
 Validation returns either `AttestationValidationResult.Success`, containing the DER-encoded certificate chain if present, or `AttestationValidationResult.Failure`, containing an `AttestationValidationError` and description. The chain's first entry is the attestation certificate. Formats without certificates return a null chain.
 
 Format validation checks the attestation statement; it does not establish whether the authenticator is trusted. A successful result passes the certificate chain to the separate [attestation trust policy](#attestation-trust-policies) stage. Adding a format validator does not change attestation conveyance preferences or replace trust policies.
+
+</Version>
 
 ## Attestation Trust Policies
 
