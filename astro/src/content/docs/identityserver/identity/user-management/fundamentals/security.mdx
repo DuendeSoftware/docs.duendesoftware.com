@@ -9,6 +9,8 @@ redirect_from:
   - /identityserver/usermanagement/fundamentals/security/
 ---
 
+import Version from "~/components/Version.astro";
+
 This page covers security best practices and design decisions in User Management's authentication system, including verified rate limiting values, authentication throttling configuration, and passkey security properties.
 
 ## Data Protection
@@ -47,7 +49,42 @@ User Management uses **PBKDF2** (RFC 2898) with the following parameters, verifi
 
 ### Password Validation Defaults
 
-The default `PasswordOptions` enforces the following constraints:
+`PasswordOptions` enforces the following defaults:
+
+<Version until="8.1">
+
+**IdentityServer 8.0 defaults**
+
+| Property     | Default      | Description                                      |
+|--------------|--------------|--------------------------------------------------|
+| `MinLength`  | `8`          | Minimum password length                          |
+| `MinLower`   | `2`          | Minimum lowercase characters                     |
+| `MinUpper`   | `2`          | Minimum uppercase characters                     |
+| `MinDigits`  | `2`          | Minimum numeric digit characters                 |
+| `MinSymbols` | `2`          | Minimum symbol characters                        |
+| `MaxLength`  | PBKDF2 limit | Maximum length based on HMAC-SHA-512 digest size |
+
+You can customize the password options during registration. For example, set a 12-character minimum in IdentityServer 8.0:
+
+```csharp title="Program.cs"
+using Duende.IdentityServer;
+using Duende.UserManagement;
+
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(um => um
+        .Authentication(auth => auth.Configure(options =>
+        {
+            options.Passwords.MinLength = 12;
+        }))
+    );
+```
+
+</Version>
+
+<Version since="8.1">
+
+**IdentityServer 8.1 defaults**
 
 | Property     | Default      | Description                                      |
 |--------------|--------------|--------------------------------------------------|
@@ -58,7 +95,7 @@ The default `PasswordOptions` enforces the following constraints:
 | `MinSymbols` | `0`          | Minimum symbol characters                        |
 | `MaxLength`  | PBKDF2 limit | Maximum length based on HMAC-SHA-512 digest size |
 
-Override these defaults during registration:
+You can customize the password options during registration. For example, set a 16-character minimum:
 
 ```csharp title="Program.cs"
 using Duende.IdentityServer;
@@ -73,6 +110,8 @@ builder.Services
         }))
     );
 ```
+
+</Version>
 
 ### ASP.NET Identity Password Hash Compatibility
 
