@@ -14,7 +14,7 @@ The System for Cross-domain Identity Management (SCIM) is an open standard for e
 
 Duende User Management includes a SCIM 2.0 **service provider**. When enabled, your IdentityServer application exposes SCIM endpoints that an external identity provider, HR system, or directory can call to create, update, and remove users and groups. Users and groups provisioned this way are stored in User Management, so they are available to the rest of your application in the same way as users created through any other User Management API.
 
-User Management supports inbound SCIM only. It receives provisioning requests from a SCIM client; it does not send changes to other systems.
+User Management supports inbound SCIM only. It receives provisioning requests from a SCIM client and it does not send changes to other systems.
 
 :::caution[Experimental]
 SCIM support is experimental and may change in a future release. The SCIM APIs carry the `duende_experimental` diagnostic. Opt in with `#pragma warning disable duende_experimental` around the relevant code, or suppress the diagnostic in your project file.
@@ -29,11 +29,27 @@ A SCIM client manages two resource types, which map to User Management concepts:
 
 Deleting a SCIM user removes the User Management user. SCIM's `active` attribute is stored on the profile as data only. User Management does not use it to block sign-in or revoke existing sessions; your application can apply it in its own business rules if needed.
 
-Provisioning creates users, but it does not register any authenticators for them. To let provisioned users sign in, configure an [authentication method](/identityserver/identity/user-management/authentication/overview.mdx) and attach it to the existing provisioned user, for example by looking up the profile by `userName` or email. Some authentication methods, such as [OTP](/identityserver/identity/user-management/authentication/otp.mdx), create a new user on first sign-in by default. If the directory should be the only source of users, make sure your sign-in flow rejects users that were not provisioned.
+When User Management authentication is enabled and a SCIM create request includes a valid `password`, SCIM registers a password authenticator for the new user. Users provisioned without a password do not have an authenticator registered automatically. To let these users sign in, configure an [authentication method](/identityserver/identity/user-management/authentication/overview.mdx) and attach it to the existing provisioned user, for example by looking up the profile by `userName` or email. Some authentication methods, such as [OTP](/identityserver/identity/user-management/authentication/otp.mdx), create a new user on first sign-in by default. If the directory should be the only source of users, make sure your sign-in flow rejects users that were not provisioned.
 
 ## Endpoints
 
 By default, the SCIM endpoints are mapped under `/scim`. Each route can be changed with `ScimEndpointOptions`, passed as the second argument to `EnableScim`.
+
+For example, to move the endpoints under `/identity/scim`:
+
+```csharp title="Program.cs"
+#pragma warning disable duende_experimental
+_ = identityServer.AddUserManagement(users => users.EnableScim(
+    _ => { },
+    endpoints =>
+    {
+        endpoints.Route = "/identity/scim/Users";
+        endpoints.GroupsRoute = "/identity/scim/Groups";
+        endpoints.MetadataRoute = "/identity/scim";
+        endpoints.BulkRoute = "/identity/scim/Bulk";
+    }));
+#pragma warning restore duende_experimental
+```
 
 | Endpoint                                    | Operations                                                             | Authorization      |
 |---------------------------------------------|------------------------------------------------------------------------|--------------------|
@@ -106,7 +122,7 @@ _ = identityServer.AddUserManagement(users => users.EnableScim(options =>
 #pragma warning restore duende_experimental
 ```
 
-`EnableUsers`, `EnableGroups`, and `ChangePassword` default to detecting the registered services. For example, `ChangePassword` is reported as supported when a password authenticator is registered. Set them explicitly to override what `ServiceProviderConfig` reports. See the [SCIM module configuration reference](/identityserver/identity/user-management/reference/configuration.md#scim-module) for all options.
+`EnableUsers`, `EnableGroups`, and `ChangePassword` default to detecting the registered services. For example, `ChangePassword` is reported as supported when a password authenticator is registered. Set them explicitly to override what `ServiceProviderConfig` reports. See the [SCIM configuration reference](/identityserver/identity/user-management/reference/configuration.md#scim) for all options.
 
 ## Authorization
 
@@ -118,6 +134,8 @@ The SCIM data endpoints require an access token. By default, they use a JWT bear
 | `scim.read` | Read only             |
 
 Register the SCIM API resource and scopes with IdentityServer, and grant a provisioning client the `scim` scope:
+
+If your application already registers in-memory API scopes or clients, merge the SCIM entries into those existing registrations. Calling `AddInMemoryApiScopes` or `AddInMemoryClients` again with only the SCIM entries can replace the configuration used by your existing scopes and clients.
 
 ```csharp title="Program.cs"
 #pragma warning disable duende_experimental
@@ -177,8 +195,6 @@ SCIM requires a separate license entitlement from User Management. In local deve
 
 ## Known Issues
 
-The following issues affect `2.0.0-preview.6`.
-
 ### Valid Tokens Rejected With An Invalid Issuer Error
 
 The default bearer scheme applies the configured authority too late for ASP.NET Core to load the issuer's discovery document, so valid tokens are rejected with `401 invalid_token`. Until this is fixed, configure the authority directly on the SCIM bearer scheme, which is named `DuendeScimBearer`:
@@ -206,7 +222,7 @@ User and Group responses do not include `externalId`, even when the client sent 
 The SCIM Provisioning sample uses .NET Aspire to connect a simulated directory, acting as the SCIM client, to an IdentityServer application with SCIM enabled. It shows the configuration on this page and lets provisioned users sign in with email OTP.
 
 <LinkCard
-  description="An Aspire sample that provisions users and groups into Duende User Management over SCIM."
+  description="A sample that provisions users and groups into Duende User Management over SCIM."
   href="https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v8/UserManagement/ScimProvisioning"
   title="SCIM Provisioning Sample"
   target="_blank"
