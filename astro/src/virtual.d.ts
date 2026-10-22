@@ -9,4 +9,6 @@ declare module "virtual:dv-products" {
     upgrades?: string;
     versions?: { version: string; preview?: boolean; unsupported?: boolean }[];
   }[];
+  /** Starlight icon name per product key; shared by the sidebar topics and the homepage. */
+  export const productIcons: Record<string, string>;
 }

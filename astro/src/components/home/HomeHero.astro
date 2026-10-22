@@ -1,0 +1,478 @@
+---
+import { Icon, LinkButton } from "@astrojs/starlight/components";
+import { products, productIcons } from "virtual:dv-products";
+
+type Version = { version: string; preview?: boolean; unsupported?: boolean };
+type Product = { key: string; label: string; versions?: Version[] };
+
+const { data } = Astro.locals.starlightRoute.entry;
+const title = data.hero?.title ?? data.title;
+const tagline = data.hero?.tagline;
+
+const latestOf = (key: string) =>
+  (products as Product[]).find((p) => p.key === key)?.versions?.find((v) => !v.preview)?.version;
+
+const icons = productIcons as Record<string, string>;
+const rows = [
+  { label: "IdentityServer", href: "/identityserver/", icon: icons.identityserver, version: latestOf("identityserver"), lead: true },
+  { label: "Backend-for-Frontend (BFF)", href: "/bff/", icon: icons.bff, version: latestOf("bff") },
+  // User Management lives under IdentityServer in the sidebar, so it has no topic icon of its own.
+  { label: "User Management", href: "/identityserver/identity/user-management/", icon: "padlock" },
+  { label: "Access Token Management", href: "/accesstokenmanagement/", icon: icons.accesstokenmanagement, version: latestOf("accesstokenmanagement") },
+  { label: "IdentityModel", href: "/identitymodel/", icon: icons.identitymodel, version: latestOf("identitymodel") },
+  { label: "OIDC Client", href: "/identitymodel-oidcclient/", icon: icons["identitymodel-oidcclient"] },
+  { label: "Introspection for ASP.NET Core", href: "/introspection/", icon: icons.introspection },
+];
+
+// Horizontal slices of the brand's blue-to-green band (as on duendesoftware.com), offset like a misregistered print.
+const slices = [
+  { y: 0, h: 14, dx: -4, alt: false },
+  { y: 14, h: 9, dx: 6, alt: true },
+  { y: 23, h: 17, dx: -2, alt: false },
+  { y: 40, h: 6, dx: 9, alt: true },
+  { y: 46, h: 15, dx: 3, alt: false },
+  { y: 61, h: 8, dx: -7, alt: true },
+  { y: 69, h: 13, dx: 5, alt: false },
+  { y: 82, h: 7, dx: -5, alt: true },
+  { y: 89, h: 11, dx: 2, alt: false },
+];
+
+const isVersions = (products as Product[]).find((p) => p.key === "identityserver")?.versions ?? [];
+const unsupportedMajors = [...new Set(isVersions.filter((v) => v.unsupported).map((v) => v.version.split(".")[0]))]
+  .map(Number)
+  .sort((a, b) => a - b);
+const unsupported =
+  unsupportedMajors.length > 1
+    ? `v${unsupportedMajors[0]}.x–v${unsupportedMajors[unsupportedMajors.length - 1]}.x`
+    : unsupportedMajors.length === 1
+      ? `v${unsupportedMajors[0]}.x`
+      : undefined;
+---
+
+<div class="home-hero not-content">
+  <section class="newcomer" aria-labelledby="_top">
+    <h1 id="_top" data-page-title set:html={title} />
+    {tagline && <p class="lede" set:html={tagline} />}
+
+    <div class="terminal-stage" data-terminal-stage>
+    <div class="plate" aria-hidden="true">
+      {slices.map((s) => (
+        <span
+          class:list={{ alt: s.alt }}
+          style={`--y:${s.y}%;--h:${s.h}%;--dx:${s.dx}%`}
+        />
+      ))}
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span>Terminal</span>
+        <button type="button" class="copy" data-copy-commands>
+          <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M3 19a2 2 0 0 1-1-2V2a2 2 0 0 1 1-1h13a2 2 0 0 1 2 1" />
+            <rect x="6" y="5" width="16" height="18" rx="1.5" ry="1.5" />
+          </svg>
+          <span data-copy-label>Copy</span>
+        </button>
+      </div>
+      <pre data-commands><code><span class="prompt" aria-hidden="true">$ </span>dotnet new install Duende.Templates
+<span class="prompt" aria-hidden="true">$ </span>dotnet new duende-is -o DuendeIdentityServer
+<span class="prompt" aria-hidden="true">$ </span>dotnet run --project DuendeIdentityServer</code></pre>
+      <a class="terminal-next" href="/identityserver/quickstarts/0-overview/">
+        <span class="terminal-next-label">Server running?</span>
+        <span class="terminal-next-action">Follow the quickstarts <Icon name="right-arrow" class="arrow" /></span>
+      </a>
+      <p class="sr-only" role="status" aria-live="polite" data-copy-status></p>
+    </div>
+    </div>
+
+  </section>
+
+  <aside class="returning" aria-labelledby="home-returning">
+    <h2 id="home-returning">Already building with Duende?</h2>
+    <p class="returning-lede">Jump to the latest docs for your product.</p>
+
+    <ul class="jump">
+      {rows.map((row) => (
+        <li>
+          <a href={row.href} class:list={{ lead: row.lead }}>
+            <span class="icon"><Icon name={row.icon as any} /></span>
+            <span class="name">{row.label}</span>
+            {row.version && (
+              <span class="version"><span class="dot" aria-hidden="true"></span><span class="sr-only">Latest </span>v{row.version}</span>
+            )}
+            <Icon name="right-arrow" class="arrow" />
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="hero-actions">
+      <LinkButton href="/identityserver/" variant="primary" icon="right-arrow">Read the docs</LinkButton>
+      <LinkButton href="#which-product-do-i-need" variant="minimal" icon="down-arrow">Find your product</LinkButton>
+    </div>
+
+    <p class="upgrade">
+      {unsupported && <>IdentityServer {unsupported} is unsupported. </>}
+      <a href="/identityserver/upgrades/">Upgrade guides</a>
+    </p>
+    <p class="upgrade">
+      Coming from IdentityServer4?{" "}
+      <a href="/identityserver/upgrades/identityserver4-to-duende-identityserver-v8/">Migration guide</a>
+    </p>
+  </aside>
+</div>
+
+<script>
+  function initHomeHero() {
+    const copyBtn = document.querySelector<HTMLButtonElement>("[data-copy-commands]");
+    const code = document.querySelector<HTMLElement>("[data-commands] code");
+    const label = document.querySelector("[data-copy-label]");
+    const status = document.querySelector("[data-copy-status]");
+    if (copyBtn && code && label) {
+      copyBtn.addEventListener("click", async () => {
+        const text = code.innerText.replace(/^\$ /gm, "").trim();
+        try {
+          await navigator.clipboard.writeText(text);
+          label.textContent = "Copied";
+          const stage = document.querySelector<HTMLElement>("[data-terminal-stage]");
+          if (stage) {
+            stage.classList.remove("jolt");
+            void stage.offsetWidth;
+            stage.classList.add("jolt");
+          }
+          if (status) status.textContent = "Commands copied to clipboard";
+        } catch {
+          label.textContent = "Select and copy";
+        }
+        setTimeout(() => {
+          label.textContent = "Copy";
+          if (status) status.textContent = "";
+        }, 2000);
+      });
+    }
+  }
+  initHomeHero();
+</script>
+
+<style>
+  .home-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+    padding-block: clamp(1.5rem, 4vw, 3.5rem) calc(var(--home-space-section) - 1.5rem);
+  }
+  @media (max-width: 56rem) {
+    .home-hero {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* Newcomer column */
+  h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(2.75rem, 1.6rem + 3.4vw, 4rem);
+    line-height: 1.05;
+    color: var(--sl-color-white);
+  }
+  /* Primary call to action closes the returning-user column, right under the product list. */
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin: 1.25rem 0 1.25rem;
+  }
+  .hero-actions :global(.sl-link-button) {
+    margin: 0;
+  }
+  .lede {
+    margin: 0 0 1.5rem;
+    max-width: 34ch;
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
+    line-height: 1.5;
+    color: var(--sl-color-gray-2);
+    text-wrap: pretty;
+  }
+
+  /* The terminal sits on a slab of the brand band, offset down and to the right. */
+  .terminal-stage {
+    --plate-offset: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+    position: relative;
+    isolation: isolate;
+    margin-right: var(--plate-offset);
+    /* The plate hangs below the stage by one offset. */
+    margin-bottom: var(--plate-offset);
+  }
+  .plate {
+    position: absolute;
+    inset: var(--plate-offset) calc(var(--plate-offset) * -1) calc(var(--plate-offset) * -1) var(--plate-offset);
+    z-index: -1;
+    overflow: hidden;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #74abfb 0%, #5fc8e8 45%, #61fb92 100%);
+  }
+  .plate span {
+    position: absolute;
+    left: -12%;
+    right: -12%;
+    top: var(--y);
+    height: var(--h);
+    background: linear-gradient(90deg, #74abfb 0%, #5fc8e8 45%, #61fb92 100%);
+    transform: translateX(var(--dx));
+    animation: settle 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .plate span.alt {
+    background: linear-gradient(90deg, #61fb92 0%, #5fc8e8 50%, #74abfb 100%);
+    opacity: 0.85;
+  }
+  .plate span:nth-child(2) { animation-delay: 40ms; }
+  .plate span:nth-child(3) { animation-delay: 80ms; }
+  .plate span:nth-child(4) { animation-delay: 120ms; }
+  .plate span:nth-child(5) { animation-delay: 160ms; }
+  .plate span:nth-child(6) { animation-delay: 200ms; }
+  .plate span:nth-child(7) { animation-delay: 240ms; }
+  .plate span:nth-child(8) { animation-delay: 280ms; }
+  .plate span:nth-child(9) { animation-delay: 320ms; }
+  @keyframes settle {
+    from {
+      transform: translateX(calc(var(--dx) * 4));
+    }
+    to {
+      transform: translateX(var(--dx));
+    }
+  }
+  .jolt .plate span {
+    animation: jolt 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes jolt {
+    0% {
+      transform: translateX(var(--dx));
+    }
+    18% {
+      transform: translateX(calc(var(--dx) * -3));
+    }
+    100% {
+      transform: translateX(var(--dx));
+    }
+  }
+  .terminal {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #212121;
+    color: #eceef2;
+    box-shadow: 0 12px 32px -16px rgb(33 33 33 / 0.45);
+  }
+  :root:not([data-theme="light"]) .terminal {
+    background: #17181c;
+    box-shadow: inset 0 0 0 1px var(--sl-color-gray-5);
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem 0.5rem 1.25rem;
+    border-bottom: 1px solid #353841;
+    font-size: var(--sl-text-sm);
+    color: #888b96;
+  }
+  .copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    border: 1px solid #545861;
+    border-radius: 999px;
+    background: transparent;
+    color: #eceef2;
+    font: inherit;
+    font-size: var(--sl-text-sm);
+    cursor: pointer;
+  }
+  .copy-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  .copy:hover {
+    border-color: var(--duende-color-green);
+  }
+  .copy:focus-visible,
+  .jump a:focus-visible,
+  .terminal-next:focus-visible,
+  .upgrade a:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 2px;
+  }
+  pre {
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    background: none;
+    border: 0;
+    font-family: var(--__sl-font-mono, ui-monospace, monospace);
+    font-size: clamp(0.875rem, 0.7rem + 0.55vw, 1.1875rem);
+    line-height: 1.9;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+  }
+  /* The next step lives in the terminal itself, as what comes after the commands. */
+  .terminal-next {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid #353841;
+    color: #c0c2c7;
+    font-size: var(--sl-text-sm);
+    text-decoration: none;
+    transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .terminal-next:hover {
+    background-color: #2a2b30;
+  }
+  .terminal-next-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-weight: 600;
+    color: var(--duende-color-green);
+  }
+  .terminal-next :global(.arrow) {
+    color: var(--duende-color-green);
+  }
+  .prompt {
+    color: var(--duende-color-green);
+    user-select: none;
+  }
+
+
+  /* Returning column */
+  .returning {
+    padding-top: 0.5rem;
+  }
+  @media (min-width: 56rem) {
+    .returning {
+      padding-top: 1.25rem;
+    }
+  }
+  h2 {
+    margin: 0 0 0.25rem;
+    font-size: var(--sl-text-xl);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--sl-color-white);
+  }
+  .returning-lede {
+    margin: 0 0 1.25rem;
+    color: var(--sl-color-gray-2);
+  }
+
+  /* Same treatment as the sidebar topic list: no rules, a hover tile per row. */
+  .jump {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    margin: 0 -0.5rem;
+    padding: 0;
+    list-style: none;
+  }
+  .jump li {
+    margin: 0;
+  }
+  .jump a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.625rem 0.5rem;
+    border-radius: 0.375rem;
+    color: var(--sl-color-white);
+    text-decoration: none;
+    transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .jump a:hover {
+    background-color: var(--dv-active-bg, var(--home-surface));
+  }
+  .jump .name {
+    flex: 1;
+  }
+  /* Matches the sidebar topic icons: muted at rest, inverted tile on hover. */
+  .jump .icon {
+    flex: none;
+    align-self: center;
+    display: inline-flex;
+    width: 1.375rem;
+    height: 1.375rem;
+    padding: 0.1875rem;
+    border-radius: 0.3125rem;
+    color: var(--sl-color-gray-2);
+    transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .jump .icon :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  .jump a:is(:hover, :focus-visible) .icon {
+    background-color: var(--sl-color-white);
+    color: var(--sl-color-black);
+  }
+  .jump .lead .name {
+    font-weight: 600;
+  }
+  .version {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--duende-color-green-800);
+  }
+  :global(.home-hero .arrow) {
+    flex: none;
+    align-self: center;
+    color: var(--sl-color-text-accent);
+    transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .jump a:hover :global(.arrow),
+  .terminal-next:hover :global(.arrow) {
+    transform: translateX(3px);
+  }
+  .upgrade {
+    margin: 0.75rem 0 0;
+  }
+  .upgrade + .upgrade {
+    margin-top: 0.25rem;
+  }
+  .upgrade {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+  }
+  .upgrade a {
+    color: var(--sl-color-text-accent);
+    text-underline-offset: 0.2em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plate span,
+    .jolt .plate span {
+      animation: none;
+    }
+    .jump a,
+    .jump .icon,
+    :global(.home-hero .arrow) {
+      transition: none;
+    }
+  }
+</style>

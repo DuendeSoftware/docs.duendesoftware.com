@@ -24,6 +24,9 @@
   --sl-color-bg: var(--sl-color-black);
   --sl-color-bg-nav: var(--sl-color-black);
 
+  /* Homepage panel surface */
+  --home-surface: var(--sl-color-gray-5);
+
   --sl-sidebar-width: 22rem;
   --sl-content-width: 58rem;
 
@@ -182,6 +185,9 @@
 
   --sl-color-bg: var(--duende-color-sand-light);
   --sl-color-bg-nav: var(--sl-color-black);
+
+  /* Homepage panel surface */
+  --home-surface: var(--sl-color-black);
 
   /* Banner */
   --sl-color-banner-text: var(--sl-color-white);
@@ -537,6 +543,36 @@ h1 {
 iframe {
   aspect-ratio: 16/9;
   width: 100%;
+}
+
+/* Homepage rhythm (4px base). Scoped with :has() so only the page with the home hero is affected. */
+:root {
+  --home-space-section: clamp(3rem, 2.25rem + 2vw, 4rem);
+  --home-space-heading: 1.25rem;
+}
+html:has(.home-hero) .sl-markdown-content {
+  padding-bottom: var(--home-space-section);
+}
+html:has(.home-hero) .sl-markdown-content > .sl-heading-wrapper {
+  margin-top: var(--home-space-section);
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+html:has(.home-hero) .sl-markdown-content > .sl-heading-wrapper:first-child {
+  margin-top: 0;
+}
+html:has(.home-hero) .sl-markdown-content > .sl-heading-wrapper + * {
+  margin-top: var(--home-space-heading);
+}
+html:has(.home-hero) .sl-markdown-content > p + :is(.home-quickstarts, .home-guide, .home-resources) {
+  margin-top: var(--home-space-heading);
+}
+html:has(.home-hero) .sl-markdown-content > .hubspot-form-wrapper {
+  margin-top: var(--home-space-section);
+}
+
+.hero .tagline {
+  text-wrap: pretty;
 }
 
 .hero > img {

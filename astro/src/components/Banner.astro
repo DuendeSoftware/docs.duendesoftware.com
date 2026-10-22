@@ -42,7 +42,7 @@ if (!banner) {
     padding: 12px 24px;
     background-color: var(--sl-color-banner-bg, var(--sl-color-bg-accent));
     color: var(--__sl-banner-text);
-    line-height: var(--sl-line-height-headings);
+    line-height: 1.4;
     text-align: center;
     text-wrap: balance;
     box-shadow: var(--sl-shadow-sm);
@@ -58,11 +58,11 @@ if (!banner) {
   }
   /* first-paint estimate (single line); the script sets the exact value */
   :root:has(.sl-banner) {
-    --sl-banner-height: calc(24px + 1.2em);
+    --sl-banner-height: calc(24px + 1.4em);
   }
   @media (max-width: 64rem) {
     :root:has(.sl-banner) {
-      --sl-banner-height: calc(24px + 2.4em);
+      --sl-banner-height: calc(24px + 2.8em);
     }
   }
   header.header {

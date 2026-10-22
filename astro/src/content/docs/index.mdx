@@ -2,103 +2,38 @@
 title: Duende Software<br/> Docs
 head:
   - tag: title
-    content: Duende Docs
+    content: "Duende Docs: IdentityServer, BFF & .NET Identity Libraries"
   - tag: meta
-    attrs: { "property": "og:title", "content": "Duende Docs" }
-description: Get started building your .NET applications with IdentityServer, User Management, Backend-for-Frontend (BFF) and our open-source tools.
+    attrs: { "property": "og:title", "content": "Duende Docs: IdentityServer, BFF & .NET Identity Libraries" }
+description: Official documentation for Duende IdentityServer, the OpenID Connect, OAuth 2.0, and SAML framework for ASP.NET Core, plus BFF and open-source .NET identity libraries.
 template: splash
 giscus: false
 hero:
-  tagline: Get started building your .NET applications with IdentityServer, User Management, Backend-for-Frontend (BFF) and our open-source tools.
-  image:
-    dark: ../../assets/duende-key.svg
-    light: ../../assets/duende-key.svg
-  actions:
-    - text: Explore docs
-      link: /identityserver/
-      icon: right-arrow
-      variant: primary
-    - text: Join our Community
-      link: https://github.com/DuendeSoftware/community
-      icon: external
-      variant: minimal
+  tagline: "New to IdentityServer? You're three commands away from a running server."
 ---
 
-import {
-  Card,
-  CardGrid,
-  LinkButton,
-  Badge,
-} from "@astrojs/starlight/components";
+import HomeQuickstarts from "~/components/home/HomeQuickstarts.astro";
+import HomeProductGuide from "~/components/home/HomeProductGuide.astro";
+import HomeCommunity from "~/components/home/HomeCommunity.astro";
+import HomeResources from "~/components/home/HomeResources.astro";
 import Newsletter from "~/components/Newsletter.astro";
 
-<CardGrid>
-  <Card title="Install templates" icon="rocket">
+## Learn IdentityServer step by step
 
-      Install the [Duende templates](/identityserver/overview/packaging.mdx#templates) to get started quickly.
+Once your server is running, these three quickstarts take you from your first API client to a signed-in user calling an API.
 
-      ```bash title="Terminal"
-      dotnet new install Duende.Templates
-      dotnet new duende-is -o DuendeIdentityServer
-      dotnet run --project DuendeIdentityServer
-      ```
-  </Card>
-  <Card title="Demo Server" icon="setting" href="https://demo.duendesoftware.com">
-    Experience IdentityServer in action with our live demo server. Test OAuth 2.0, OpenID Connect, and SAML flows, explore
-    client configurations, and see how security tokens work in practice.
+<HomeQuickstarts />
 
-    <LinkButton href="https://demo.duendesoftware.com" variant="primary">
-        Try it out
-    </LinkButton>
-  </Card>
-  <Card title="IdentityServer" icon="open-book">
-    The most flexible and standards-compliant OpenID Connect, OAuth 2.0, and SAML
-    framework for ASP.NET Core.
-    <LinkButton href="/identityserver/" variant="primary">
-      Learn more
-    </LinkButton>
-  </Card>
-  <Card title="User Management" icon="seti:c-sharp">
-    Native user storage, passwordless-first authentication, and full lifecycle management (profiles, roles, groups, multi-tenancy).
-    <LinkButton href="/identityserver/identity/user-management/" variant="primary">
-      Learn more
-    </LinkButton>
-  </Card>
-  <Card title="Backend-for-Frontend (BFF)" icon="window">
-    Securing SPAs and Blazor WASM Applications once and for all, without storing
-    tokens in the browser.
-    <LinkButton href="/bff/" variant="primary">
-      Learn more
-    </LinkButton>
-  </Card>
-  <Card title="Access Token Management" icon="clock">
-    <Badge text={"OSS"} /> .NET identity library for access token management.
-    <LinkButton href="/accesstokenmanagement/" variant="primary">
-      Learn more
-    </LinkButton>
-  </Card>
-  <Card title="Identity Model" icon="puzzle">
-    <Badge text={"OSS"} /> .NET identity library for OAuth 2.0 related protocol
-    operations.
-    <LinkButton href="/identitymodel/" variant="primary">
-      Learn more
-    </LinkButton>
-  </Card>
-  <Card title="OIDC Client" icon="laptop">
-    <Badge text={"OSS"} /> .NET identity libraries for OpenID Connect related
-    protocol operations.
-    <LinkButton href="/identitymodel-oidcclient/" variant="primary">
-      Learn more
-    </LinkButton>
-  </Card>
-  <Card title="Introspection for ASP.NET Core" icon="magnifier">
-    <Badge text={"OSS"} /> ASP.NET Core authentication handler for OAuth 2.0 token introspection.
-    <LinkButton href="/introspection/" variant="primary">
-      Learn more
-    </LinkButton>
-  </Card>
-</CardGrid>
+## Which product do I need?
 
-<hr />
+<HomeProductGuide />
+
+## Community and support
+
+<HomeCommunity />
+
+## More resources
+
+<HomeResources />
 
 <Newsletter />

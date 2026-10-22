@@ -1,0 +1,207 @@
+---
+import { Icon, LinkButton } from "@astrojs/starlight/components";
+
+// Same misregistered brand band as the hero plate, static here.
+const slices = [
+  { y: 0, h: 30, dx: -4, alt: true },
+  { y: 30, h: 18, dx: 6, alt: false },
+  { y: 48, h: 27, dx: -2, alt: true },
+  { y: 75, h: 25, dx: 5, alt: false },
+];
+---
+
+<div class="home-community not-content">
+  <section class="community" aria-labelledby="home-community-title">
+    <h3 id="home-community-title"><Icon name="comment-alt" size="1.5rem" />Ask the community</h3>
+    <p>
+      Get help from fellow developers and the Duende team in our public developer community forum. Troubleshoot an
+      integration, explore a new feature, or share what you've learned.
+    </p>
+    <div class="actions">
+      <LinkButton href="https://github.com/DuendeSoftware/community/discussions" variant="primary" icon="external">
+        Join the discussion on GitHub
+      </LinkButton>
+      <div class="links">
+        <a href="https://github.com/DuendeSoftware/products/releases" rel="noopener">Release notes</a>
+        <a href="https://github.com/duendesoftware" rel="noopener">Source code</a>
+      </div>
+    </div>
+    <div class="band" aria-hidden="true">
+      {slices.map((s) => (
+        <span class:list={{ alt: s.alt }} style={`--y:${s.y}%;--h:${s.h}%;--dx:${s.dx}%`} />
+      ))}
+    </div>
+  </section>
+
+  <section class="support" aria-labelledby="home-support-title">
+    <h3 id="home-support-title"><Icon name="question-circle" size="1.5rem" />Get support from Duende</h3>
+    <p>
+      Priority and Premium Support give licensed teams a dedicated email channel with guaranteed response times, plus
+      escalation calls with the Duende team.
+    </p>
+    <ul>
+      <li><a href="/general/support-and-issues/#support">Compare support tiers <Icon name="right-arrow" class="arrow" /></a></li>
+      <li><a href="/general/support-and-issues/#supported-versions">Supported versions <Icon name="right-arrow" class="arrow" /></a></li>
+      <li><a href="/general/support-and-issues/#reporting-a-security-vulnerability">Report a security vulnerability <Icon name="right-arrow" class="arrow" /></a></li>
+    </ul>
+  </section>
+</div>
+
+<style>
+  .home-community {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  @media (max-width: 50rem) {
+    .home-community {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    border-radius: 14px;
+    padding: clamp(1.5rem, 1rem + 1.5vw, 2rem);
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin: 0;
+    font-size: var(--sl-text-xl);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  p {
+    margin: 0;
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+  a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Community: the brand band, ink type in both themes. */
+  .community {
+    position: relative;
+    overflow: hidden;
+    color: #212121;
+    background: linear-gradient(90deg, #74abfb 0%, #5fc8e8 45%, #61fb92 100%);
+  }
+  /* The sliced band runs along the bottom edge, clear of the text. */
+  .band {
+    --pad: clamp(1.5rem, 1rem + 1.5vw, 2rem);
+    position: relative;
+    flex: none;
+    height: 2.5rem;
+    margin: auto calc(var(--pad) * -1) calc(var(--pad) * -1);
+    overflow: hidden;
+  }
+  .band span {
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    top: var(--y);
+    height: var(--h);
+    background: linear-gradient(90deg, #74abfb 0%, #5fc8e8 45%, #61fb92 100%);
+    transform: translateX(var(--dx));
+  }
+  .band span.alt {
+    background: linear-gradient(90deg, #61fb92 0%, #5fc8e8 50%, #74abfb 100%);
+    opacity: 0.85;
+  }
+  .community h3 {
+    font-size: clamp(1.375rem, 1.1rem + 0.8vw, 1.75rem);
+    letter-spacing: -0.01em;
+  }
+  .community p {
+    font-size: var(--sl-text-lg);
+    line-height: 1.55;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 0.5rem;
+  }
+  /* The site's primary pill, fixed to ink so it reads on the band in both themes. */
+  .community :global(.sl-link-button.primary) {
+    margin: 0;
+    background-color: #212121;
+    border-color: #212121;
+    color: #ffffff;
+  }
+  .community :global(.sl-link-button.primary svg) {
+    background-color: var(--duende-color-green);
+    border-color: var(--duende-color-green);
+    color: #212121;
+  }
+  .links {
+    display: flex;
+    gap: 1.25rem;
+    font-size: var(--sl-text-sm);
+    font-weight: 600;
+  }
+  .community .links a {
+    color: #212121;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Support: the standard homepage surface. */
+  .support {
+    background: var(--home-surface);
+    color: var(--sl-color-gray-2);
+  }
+  .support h3 {
+    color: var(--sl-color-white);
+  }
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    margin: 0.25rem -0.5rem 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    margin: 0;
+  }
+  .support li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    color: var(--sl-color-white);
+    font-weight: 600;
+    font-size: var(--sl-text-sm);
+    text-decoration: none;
+    transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .support li a:hover {
+    background-color: var(--dv-active-bg, var(--sl-color-gray-6));
+  }
+  .support li a:focus-visible {
+    outline-color: var(--sl-color-accent);
+  }
+  :global(.home-community .arrow) {
+    flex: none;
+    color: var(--sl-color-text-accent);
+    transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .support li a:hover :global(.arrow) {
+    transform: translateX(3px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .support li a,
+    :global(.home-community .arrow) {
+      transition: none;
+    }
+  }
+</style>

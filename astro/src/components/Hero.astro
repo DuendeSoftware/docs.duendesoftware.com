@@ -1,0 +1,10 @@
+---
+// Hero override: the docs homepage gets its own two-audience hero; every other page
+// (for example 404) keeps Starlight's default hero.
+import Default from "@astrojs/starlight/components/Hero.astro";
+import HomeHero from "./home/HomeHero.astro";
+
+const isHome = Astro.locals.starlightRoute.id === "";
+---
+
+{isHome ? <HomeHero /> : <Default />}

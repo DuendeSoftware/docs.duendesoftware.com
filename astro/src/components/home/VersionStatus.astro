@@ -1,0 +1,78 @@
+---
+// Version status for a product, read from the single product declaration in astro.config.mjs,
+// so the homepage never drifts from the version selector.
+import { products } from "virtual:dv-products";
+
+interface Props {
+  product: string;
+  compact?: boolean;
+}
+
+type Version = { version: string; preview?: boolean; unsupported?: boolean };
+
+const { product, compact = false } = Astro.props;
+const entry = products.find((p: { key: string }) => p.key === product);
+const versions: Version[] = entry?.versions ?? [];
+
+const latestIndex = versions.findIndex((v) => !v.preview);
+const latest = latestIndex >= 0 ? versions[latestIndex] : undefined;
+const preview = versions.slice(0, Math.max(latestIndex, 0)).find((v) => v.preview);
+
+const unsupportedMajors = [
+  ...new Set(versions.filter((v) => v.unsupported).map((v) => v.version.split(".")[0])),
+].sort((a, b) => Number(a) - Number(b));
+const unsupportedLabel =
+  unsupportedMajors.length === 0
+    ? undefined
+    : unsupportedMajors.length === 1
+      ? `v${unsupportedMajors[0]}.x`
+      : `v${unsupportedMajors[0]}.x–v${unsupportedMajors[unsupportedMajors.length - 1]}.x`;
+---
+
+{latest && (
+  <ul class:list={["version-status", { compact }]} aria-label={`${entry?.label ?? product} versions`}>
+    <li class="latest"><span class="dot" aria-hidden="true"></span>Latest <strong>v{latest.version}</strong></li>
+    {!compact && preview && <li class="preview">Preview v{preview.version}</li>}
+    {!compact && unsupportedLabel && (
+      <li class="unsupported"><span class="dot" aria-hidden="true"></span>{unsupportedLabel} unsupported</li>
+    )}
+  </ul>
+)}
+
+<style>
+  .version-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--sl-text-sm);
+    line-height: 1.4;
+    color: var(--sl-color-gray-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .version-status li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+  }
+  .version-status strong {
+    color: var(--sl-color-white);
+    font-weight: 600;
+  }
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--duende-color-green-800);
+    flex: none;
+  }
+  .unsupported .dot {
+    background: var(--sl-color-orange);
+  }
+  .compact {
+    font-size: var(--sl-text-xs);
+  }
+</style>
