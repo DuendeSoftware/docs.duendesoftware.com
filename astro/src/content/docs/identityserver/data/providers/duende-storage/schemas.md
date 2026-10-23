@@ -247,11 +247,11 @@ management path.
 
 ### List Schemas
 
-`ISchemaAdmin.QueryAsync` returns a page of `SchemaSummary` records, each with the schema's real `SchemaId`. A schema
-created by an earlier preview of Duende Storage is upgraded to carry its id the first time it is read by id
-(`ISchemaAdmin.GetAsync` or `ISchemaStore.GetAsync`); until that first read happens, `QueryAsync` reports that schema's id
-as unknown. Read every schema you expect to administer by id at least once after an upgrade, so `QueryAsync` results are
-complete.
+`ISchemaAdmin.QueryAsync` returns a page of `SchemaSummary` records, each with the schema's real `SchemaId`. Schemas
+created before Duende Storage assigned schema ids are upgraded the first time they are read by id
+(`ISchemaAdmin.GetAsync` or `ISchemaStore.GetAsync`). Until then, `QueryAsync` reports the schema id as unknown. After
+upgrading from a version that did not assign schema ids, read every schema you expect to administer by id at least once
+so `QueryAsync` results are complete.
 
 ## Set Extended Properties
 

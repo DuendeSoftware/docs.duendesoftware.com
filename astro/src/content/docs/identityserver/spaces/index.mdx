@@ -112,6 +112,20 @@ model requires independent trust boundaries. IdentityServer protects its own sig
 Data Protection provider, so they remain valid across every space even when `PartitionDataProtection` is enabled.
 :::
 
+To inject the Spaces cache into an application service, use its service key:
+
+```csharp
+// CachedService.cs
+using Duende.IdentityServer.Spaces;
+using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.DependencyInjection;
+
+public sealed class CachedService(
+    [FromKeyedServices(SpacesServiceProviderKeys.SpacesCache)] HybridCache cache)
+{
+}
+```
+
 By default, Spaces partitions Data Protection by space: `SpacesOptions.PartitionDataProtection` is `true`, and a
 protector obtained from the app's `IDataProtectionProvider` binds to the space resolved at the time you call `Protect`
 or `Unprotect`. Data that must be shared across every space, such as IdentityServer's signing keys, uses

@@ -20,10 +20,10 @@ The use of EntityFramework allows any EF-supported database to be used with this
 <Version since="8.1">
 
 :::caution[Spaces Requires Duende Storage]
-The Entity Framework stores keep one database for all [Spaces](/identityserver/spaces/index.mdx), so they can't be used
-together with Spaces. A host that calls `AddEntityFrameworkConfigurationStore` or `AddEntityFrameworkOperationalStore`
-together with `AddSpaces` fails at startup with an `OptionsValidationException`. Use
-[Duende Storage](/identityserver/data/providers/duende-storage/getting-started.md) instead when you need Spaces.
+The Entity Framework configuration and operational stores are not partitioned by [Space](/identityserver/spaces/index.mdx).
+Registering either store together with `AddSpaces` fails at startup with an `OptionsValidationException`. Use
+[Duende Storage](/identityserver/data/providers/duende-storage/getting-started.md) for IdentityServer data when you
+need Spaces.
 :::
 
 </Version>

@@ -137,8 +137,9 @@ builder.Services.Configure<StoragePurgeOptions>(options =>
 
 Set `EnablePurge` to `false` when an external job owns cleanup.
 
-The purge service waits on the registered `TimeProvider`, like the outbox processor. If you replace `TimeProvider`, for
-example with a fake clock in integration tests, it drives the purge schedule too.
+The purge service uses the registered `TimeProvider` to schedule each purge interval, like the outbox processor.
+In integration tests, you can replace it with a fake clock and advance time to trigger purges without waiting for the
+interval to elapse.
 
 ### Override an Individual Store
 

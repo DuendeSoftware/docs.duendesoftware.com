@@ -39,16 +39,15 @@ Keep production credentials out of source control and load them from your deploy
 
 ## Configure IdentityServer with Spaces
 
+:::caution[Spaces requires the Duende Storage adapters]
+Spaces keeps data per space through the Duende Storage pools. The Entity Framework configuration and operational
+stores are not partitioned by space. Registering either store together with `AddSpaces` fails at startup with an
+`OptionsValidationException`. Use `AddConfigurationStorage()` and `AddOperationalStorage()` instead, as shown below.
+:::
+
 Register Spaces and the IdentityServer storage adapters. `AddStorage` selects the database provider;
 `AddConfigurationStorage()` and `AddOperationalStorage()` route configuration and operational data to it. Add Spaces
 with the `AddSpaces` extension on `IIdentityServerBuilder`:
-
-:::caution[Spaces requires the Duende Storage adapters]
-Spaces keeps data per space through the Duende Storage pools. The IdentityServer Entity Framework stores keep one
-database for all spaces, so combining `AddSpaces` with `AddEntityFrameworkConfigurationStore` or
-`AddEntityFrameworkOperationalStore` fails at startup with an `OptionsValidationException`, regardless of the order
-you add them in. Use `AddConfigurationStorage()` and `AddOperationalStorage()` instead, as shown below.
-:::
 
 ```csharp
 // Program.cs
@@ -190,10 +189,15 @@ unprotected in another. IdentityServer's own signing key protection stays global
 `GetUnpartitioned()` on the provider. Use `GetUnpartitioned()` yourself for data that must be readable from every
 space; see [Data Protection](/general/data-protection.md) for background on providers and protectors.
 
+Set `SpacesOptions.PartitionDataProtection` to `false` when all protected data from the app's
+`IDataProtectionProvider`, such as cookies or tokens, must be readable across spaces. This removes per-space
+partitioning for that data. If only specific values need to be shared, use `GetUnpartitioned()` for those protectors
+instead.
+
 Spaces registers its own keyed `HybridCache` under `SpacesServiceProviderKeys.SpacesCache` instead of registering or
 sharing the app's default `HybridCache`. If your app already relies on an unkeyed `HybridCache` for its own caching,
-call `AddHybridCache()` yourself; Spaces no longer does this for you. Entries created through `IHybridCacheFactory`
-are automatically partitioned by the resolved space, so callers don't need to build space-aware cache keys themselves.
+call `AddHybridCache()` yourself. Entries created through `IHybridCacheFactory` are automatically partitioned by the
+resolved space, so callers don't need to build space-aware cache keys themselves.
 
 Spaces management data and every space's pool share the default Duende Storage instance unless you map them elsewhere.
 See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md) to route
