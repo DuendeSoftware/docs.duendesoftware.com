@@ -189,10 +189,6 @@ Follow the client's own documentation for how it maps its attributes to SCIM att
 
 If you implement your own SCIM client, do not automatically retry `POST` requests, including Bulk requests. The original request may have succeeded before its response was lost, so a retry can create duplicate users or repeat part of a Bulk request.
 
-## Licensing
-
-SCIM requires a separate license entitlement from User Management. In local development, SCIM runs without a license key and logs license warnings. See [licensing](/general/licensing.md) for details.
-
 ## Known Issues
 
 ### Valid Tokens Rejected With An Invalid Issuer Error
