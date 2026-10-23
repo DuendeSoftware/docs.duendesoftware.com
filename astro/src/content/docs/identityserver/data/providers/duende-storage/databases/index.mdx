@@ -1,7 +1,7 @@
 ---
 title: "Databases Supported by Duende Storage"
 description: "Compare the databases Duende Storage supports and learn how registration, schema deployment and connection strings work across all of them"
-date: 2026-10-19
+date: 2026-10-23
 sidebar:
   label: "Overview"
   order: 1
@@ -19,7 +19,7 @@ connection strings, custom schemas and provider-specific notes.
 | ----------------------------------------------------------------| ---------------------------------------------------------------------------------------| -------------------- | ------------------------------- | -------------- | ----------------------- | ------------- |
 | [SQL Server](/identityserver/data/providers/duende-storage/databases/sql-server.md)     | [`Duende.Storage.MsSql`](https://www.nuget.org/packages/Duende.Storage.MsSql)           | `AddMsSql`           | `CreateSqlConnection` factory   | `SchemaName`    | `mssql`                 | Production |
 | [PostgreSQL](/identityserver/data/providers/duende-storage/databases/postgresql.md)     | [`Duende.Storage.PostgreSql`](https://www.nuget.org/packages/Duende.Storage.PostgreSql) | `AddPostgreSql`      | `NpgsqlDataSource`              | `SchemaName`    | `postgresql`            | Production |
-| [Oracle](/identityserver/data/providers/duende-storage/databases/oracle.md)             | [`Duende.Storage.Oracle`](https://www.nuget.org/packages/Duende.Storage.Oracle)         | `AddOracle`          | `CreateOracleConnection` factory | `SchemaName`   | Not supported yet ([run migrations without the CLI](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli)) | Production |
+| [Oracle](/identityserver/data/providers/duende-storage/databases/oracle.md)             | [`Duende.Storage.Oracle`](https://www.nuget.org/packages/Duende.Storage.Oracle)         | `AddOracle`          | `CreateOracleConnection` factory | `SchemaName`   | `oracle`                | Production |
 | [SQLite](/identityserver/data/providers/duende-storage/databases/sqlite.md)             | [`Duende.Storage.Sqlite`](https://www.nuget.org/packages/Duende.Storage.Sqlite)         | `AddSqlite`          | A connection string             | None            | `sqlite`                | Automated tests and local development only |
 
 Duende Storage doesn't recommend any particular database. Choose the database that fits your team's operations and

@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with Duende Storage"
 description: "Configure Duende Storage for IdentityServer configuration and operational data"
-date: 2026-10-19
+date: 2026-10-23
 sidebar:
   label: "Getting Started"
   order: 10
@@ -137,6 +137,10 @@ builder.Services.Configure<StoragePurgeOptions>(options =>
 
 Set `EnablePurge` to `false` when an external job owns cleanup.
 
+The purge service uses the registered `TimeProvider` to schedule each purge interval, like the outbox processor.
+In integration tests, you can replace it with a fake clock and advance time to trigger purges without waiting for the
+interval to elapse.
+
 ### Override an Individual Store
 
 Call an explicit store registration after `AddConfigurationStorage()`/`AddOperationalStorage()` to replace only that
@@ -175,7 +179,7 @@ dotnet tool install --global Duende.Cli --prerelease
 duende storage migrate --provider sqlite --connection-string "Data Source=identityserver.db"
 ```
 
-For production, use SQL Server or PostgreSQL and run the migration as a single deployment step before application
+For production, use SQL Server, PostgreSQL, or Oracle and run the migration as a single deployment step before application
 instances start. Configure `DUENDE_STORAGE_CONNECTION_STRING` in your deployment environment's secret store, then run
 the CLI from a restored application project that references the matching storage provider package:
 
@@ -190,9 +194,7 @@ The CLI reads the connection string from `DUENDE_STORAGE_CONNECTION_STRING`. Do 
 command-line arguments. For plugin version resolution and the full command reference, see the
 [Duende CLI documentation](/identityserver/data/providers/duende-storage/duende-cli.md#how-the-cli-loads-the-storage-plugin).
 See the [Duende CLI reference](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate) for the
-other supported providers and options. The CLI doesn't support Oracle migrations yet; see the
-[Oracle page](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli)
-for the code-based path.
+other supported providers and options.
 
 Run only one migration process at a time. After applying a migration, `MigrateAsync` verifies that the database matches the
 expected schema and fails when it finds discrepancies.

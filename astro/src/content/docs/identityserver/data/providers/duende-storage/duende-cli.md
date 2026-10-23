@@ -1,14 +1,14 @@
 ---
 title: "Duende CLI Reference"
 description: "Install the Duende CLI and use its storage plugin to migrate Duende Storage schemas"
-date: 2026-10-19
+date: 2026-10-23
 sidebar:
   label: "Duende CLI"
   order: 45
 ---
 
 The Duende CLI (`duende`) is a .NET tool. Its `storage` command loads the Duende Storage CLI plugin, which
-migrates the Duende Storage schema for SQL Server, PostgreSQL, and SQLite. Run it as a separate deployment step,
+migrates the Duende Storage schema for SQL Server, PostgreSQL, Oracle, and SQLite. Run it as a separate deployment step,
 before your application instances start, instead of migrating from application code.
 
 ## Install the Duende CLI
@@ -66,9 +66,9 @@ Options:
 
 | Option | Description |
 | --- | --- |
-| `--provider <provider>` (required) | Database provider to migrate: `postgresql`, `mssql`, or `sqlite`. |
+| `--provider <provider>` (required) | Database provider to migrate: `postgresql`, `mssql`, `oracle`, or `sqlite`. |
 | `--connection-string <connection-string>` | Database connection string. Falls back to `DUENDE_STORAGE_CONNECTION_STRING`. |
-| `--schema <schema>` | Database schema name. Defaults to `public` for `postgresql` and `dbo` for `mssql`. SQLite doesn't support schemas. |
+| `--schema <schema>` | Database schema name. Defaults to `public` for `postgresql`, `dbo` for `mssql`, and the connecting user's current schema for `oracle`. SQLite doesn't support schemas. |
 | `--dry-run` | Show migration SQL without executing it. |
 
 Behavior:
@@ -81,8 +81,9 @@ Behavior:
   version without running it. It makes no changes either way.
 * Without `--dry-run`, it runs the migration and reports the new version.
 
-Oracle isn't supported by `storage migrate` yet. Support is coming; until then, use the
-[Oracle page's code-based migration](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli).
+If you can't run the CLI in your deployment environment, you can also migrate from code. The
+[Oracle page's code-based migration](/identityserver/data/providers/duende-storage/databases/oracle.md#create-and-upgrade-the-schema-without-the-cli)
+shows this approach, including generating a script for a database administrator to run.
 
 #### Examples
 
@@ -102,6 +103,15 @@ PostgreSQL:
 $env:DUENDE_STORAGE_CONNECTION_STRING = "Host=db.example.com;Database=identityserver;Username=identityserver_migrator;Password=...;SSL Mode=VerifyFull"
 duende storage migrate --provider postgresql --dry-run
 duende storage migrate --provider postgresql
+```
+
+Oracle:
+
+```powershell
+# Terminal
+$env:DUENDE_STORAGE_CONNECTION_STRING = "User Id=identityserver_migrator;******;Data Source=prod_high"
+duende storage migrate --provider oracle --schema IDENTITYSERVER --dry-run
+duende storage migrate --provider oracle --schema IDENTITYSERVER
 ```
 
 SQLite:

@@ -1,7 +1,7 @@
 ---
 title: "Oracle"
 description: "Install, register and configure Duende Storage with Oracle Database"
-date: 2026-10-19
+date: 2026-10-23
 sidebar:
   label: "Oracle"
   order: 30
@@ -147,10 +147,31 @@ If the application connects as a different user than the schema owner and you le
 application looks for tables in its own, empty schema, and every operation fails with "table or view does not
 exist".
 
+## Create and Upgrade the Schema
+
+Run the schema migration as its own deployment step, connected as the schema owner or as a user with enough
+privileges to create objects in the target schema:
+
+```powershell
+# Terminal
+$env:DUENDE_STORAGE_CONNECTION_STRING = "User Id=identityserver_migrator;******;Data Source=prod_high"
+duende storage migrate --provider oracle --schema IDENTITYSERVER --dry-run
+```
+
+Review the SQL the dry run prints, then run it again without `--dry-run` to apply it:
+
+```powershell
+# Terminal
+duende storage migrate --provider oracle --schema IDENTITYSERVER
+```
+
+Without `--schema`, the CLI migrates into the connecting user's current schema. See the
+[Duende CLI reference](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate) for all options.
+
 ## Create and Upgrade the Schema Without the CLI
 
-The Duende CLI's `storage migrate` command doesn't support Oracle yet; support is coming. Until then, deploy the
-Oracle schema with custom code instead, for example using a console application.
+If you can't run the Duende CLI in your deployment environment, deploy the Oracle schema with custom code instead,
+for example using a console application.
 
 ### Option A: Migrate from a Deployment Console App
 

@@ -1,7 +1,7 @@
 ---
 title: "Data Extension Schemas"
 description: "Define and validate custom properties on IdentityServer clients, resources and identity providers using Duende Storage data extension schemas"
-date: 2026-09-01
+date: 2026-10-23
 sidebar:
   label: "Schemas"
   order: 40
@@ -244,6 +244,14 @@ avoid concurrent instances racing between the get and create operations.
 To change a schema, get its current definition and pass the returned version to `ISchemaAdmin.UpdateAsync`. The version
 enforces optimistic concurrency. Expose schema administration only through an authenticated, authorized and audited
 management path.
+
+### List Schemas
+
+`ISchemaAdmin.QueryAsync` returns a page of `SchemaSummary` records, each with the schema's real `SchemaId`. Schemas
+created before Duende Storage assigned schema ids are upgraded the first time they are read by id
+(`ISchemaAdmin.GetAsync` or `ISchemaStore.GetAsync`). Until then, `QueryAsync` reports the schema id as unknown. After
+upgrading from a version that did not assign schema ids, read every schema you expect to administer by id at least once
+so `QueryAsync` results are complete.
 
 ## Set Extended Properties
 
