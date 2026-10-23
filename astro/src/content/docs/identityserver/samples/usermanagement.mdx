@@ -7,6 +7,7 @@ sidebar:
 ---
 
 import { LinkCard } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 This section contains a sample demonstrating [Duende User Management](/identityserver/identity/user-management/index.mdx) with IdentityServer.
 User Management is a user store and authentication platform that ships as a NuGet package and replaces ASP.NET Identity for IdentityServer scenarios.
@@ -50,6 +51,32 @@ in a single `dotnet run` command.
   title="User Management Sample"
   target="_blank"
 />
+
+<Version since="8.1">
+
+### SCIM Provisioning Sample
+
+This sample demonstrates [SCIM provisioning](/identityserver/identity/user-management/scim.mdx) with Duende User Management.
+A simulated directory acts as the SCIM client and provisions users and groups into an IdentityServer application with User Management's SCIM service provider enabled.
+
+**Concepts demonstrated:**
+
+* **SCIM metadata discovery**: The directory reads the anonymous `ServiceProviderConfig`, `Schemas`, and `ResourceTypes` endpoints.
+* **User and group provisioning**: Users and groups are created, updated, and linked through the SCIM Users, Groups, and Bulk endpoints.
+* **Scope-based authorization**: The directory uses a client credentials token with the `scim` scope, while a read-only client with `scim.read` cannot write.
+* **Sign-in for provisioned users**: Provisioned users sign in with email OTP. Unknown users are refused rather than auto-registered.
+
+The sample uses .NET Aspire to orchestrate IdentityServer, the directory, and Mailpit (for local email testing)
+in a single `dotnet run` command. All storage is in memory, and the sample runs locally without a license key.
+
+<LinkCard
+  description="GitHub Repository for the User Management SCIM Provisioning Sample"
+  href="https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v8/UserManagement/ScimProvisioning/"
+  title="User Management SCIM Provisioning Sample"
+  target="_blank"
+/>
+
+</Version>
 
 ### Account Lockout Sample
 

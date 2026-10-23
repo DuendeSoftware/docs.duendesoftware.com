@@ -1,0 +1,225 @@
+---
+title: "SCIM Provisioning"
+description: "Use Duende User Management's experimental SCIM 2.0 service provider to provision users and groups from an external identity provider or directory."
+date: 2026-10-21
+versions:
+  since: "8.1"
+sidebar:
+  order: 4
+---
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+The System for Cross-domain Identity Management (SCIM) is an open standard for exchanging user and group data between systems. It is defined by [RFC 7643](https://www.rfc-editor.org/rfc/rfc7643.html) (core schema) and [RFC 7644](https://www.rfc-editor.org/rfc/rfc7644.html) (protocol).
+
+Duende User Management includes a SCIM 2.0 **service provider**. When enabled, your IdentityServer application exposes SCIM endpoints that an external identity provider, HR system, or directory can call to create, update, and remove users and groups. Users and groups provisioned this way are stored in User Management, so they are available to the rest of your application in the same way as users created through any other User Management API.
+
+User Management supports inbound SCIM only. It receives provisioning requests from a SCIM client and it does not send changes to other systems.
+
+:::caution[Experimental]
+SCIM support is experimental and may change in a future release. The SCIM APIs carry the `duende_experimental` diagnostic. Opt in with `#pragma warning disable duende_experimental` around the relevant code, or suppress the diagnostic in your project file.
+:::
+
+## How SCIM Maps To User Management
+
+A SCIM client manages two resource types, which map to User Management concepts:
+
+* **Users** map to a User Management user and its user profile. The SCIM `id` of a user is the user's subject id. SCIM attributes such as `userName`, `name`, and `emails` are stored as user profile attributes, so the profile schema must define them.
+* **Groups** map to User Management groups. Group `members` are stored as group memberships, using the same data as `IMembershipAdmin`.
+
+Deleting a SCIM user removes the User Management user. SCIM's `active` attribute is stored on the profile as data only. User Management does not use it to block sign-in or revoke existing sessions; your application can apply it in its own business rules if needed.
+
+When User Management authentication is enabled and a SCIM create request includes a valid `password`, SCIM registers a password authenticator for the new user. Users provisioned without a password do not have an authenticator registered automatically. To let these users sign in, configure an [authentication method](/identityserver/identity/user-management/authentication/overview.mdx) and attach it to the existing provisioned user, for example by looking up the profile by `userName` or email. Some authentication methods, such as [OTP](/identityserver/identity/user-management/authentication/otp.mdx), create a new user on first sign-in by default. If the directory should be the only source of users, make sure your sign-in flow rejects users that were not provisioned.
+
+## Endpoints
+
+By default, the SCIM endpoints are mapped under `/scim`. Each route can be changed with `ScimEndpointOptions`, passed as the second argument to `EnableScim`.
+
+For example, to move the endpoints under `/identity/scim`:
+
+```csharp title="Program.cs"
+#pragma warning disable duende_experimental
+_ = identityServer.AddUserManagement(users => users.EnableScim(
+    _ => { },
+    endpoints =>
+    {
+        endpoints.Route = "/identity/scim/Users";
+        endpoints.GroupsRoute = "/identity/scim/Groups";
+        endpoints.MetadataRoute = "/identity/scim";
+        endpoints.BulkRoute = "/identity/scim/Bulk";
+    }));
+#pragma warning restore duende_experimental
+```
+
+| Endpoint                                    | Operations                                                             | Authorization      |
+|---------------------------------------------|------------------------------------------------------------------------|--------------------|
+| `/scim/Users`                               | List, filter, and search (`.search`), get, create, replace, patch, delete | Required           |
+| `/scim/Groups`                              | List, filter, and search (`.search`), get, create, replace, patch, delete | Required           |
+| `/scim/Bulk`                                | Multiple Users and Groups operations in one request                    | Required           |
+| `/scim/ServiceProviderConfig`               | Describes the features the service provider supports                   | Anonymous          |
+| `/scim/ResourceTypes`, `/scim/Schemas`      | Describe the available resource types and their schemas                | Anonymous          |
+
+The Users endpoints are enabled when `IUserProfileAdmin` is registered, and the Groups endpoints when `IGroupAdmin` is registered. `ServiceProviderConfig` advertises these capabilities, along with list and Bulk limits, to SCIM clients.
+
+## Installation
+
+SCIM is part of User Management 2.0 and requires the IdentityServer integration package:
+
+```bash
+dotnet add package Duende.IdentityServer --version 8.1.0-preview.6
+dotnet add package Duende.UserManagement.IdentityServer8 --version 2.0.0-preview.6
+```
+
+Also add a [storage provider](/identityserver/identity/user-management/fundamentals/storage.md). The examples below extend an application configured as described in [IdentityServer Integration](/identityserver/identity/user-management/identityserver-integration.mdx), where `identityServer` is the existing `IIdentityServerBuilder`.
+
+## Configuration
+
+### Profile Schema
+
+SCIM User resources require the `userName` attribute, which the default User Management profile schema does not include. Use `DefaultScimUserSchema`, which defines the SCIM core user attributes, or add its attributes to your own [profile schema](/identityserver/identity/user-management/fundamentals/profiles.md):
+
+```csharp title="Program.cs"
+var profileSchema = new SchemaConfiguration
+{
+    SchemaId = SchemaId.UserProfile,
+    DisplayName = "User Profile",
+    Groups = [.. DefaultScimUserSchema.Groups],
+    AttributeDefinitions = [.. DefaultScimUserSchema.AttributeDefinitions]
+};
+
+_ = identityServer.AddInMemoryDataExtensionSchemas([profileSchema]);
+```
+
+### Enabling SCIM
+
+Call `EnableScim` when registering User Management, then map the endpoints with `MapScim`:
+
+```csharp title="Program.cs"
+#pragma warning disable duende_experimental
+_ = identityServer.AddUserManagement(users => users.EnableScim(_ => { }));
+#pragma warning restore duende_experimental
+
+var app = builder.Build();
+
+// ...existing middleware and endpoints, including MapUserManagement()
+
+#pragma warning disable duende_experimental
+_ = app.MapScim();
+#pragma warning restore duende_experimental
+```
+
+`MapScim` requires `EnableScim` to have been called. Keep your existing authentication and authorization middleware in the pipeline.
+
+Use the `EnableScim` callback to configure `ScimOptions`, for example to limit list and Bulk request sizes:
+
+```csharp title="Program.cs"
+#pragma warning disable duende_experimental
+_ = identityServer.AddUserManagement(users => users.EnableScim(options =>
+{
+    options.MaxResults = 50;
+    options.MaxBulkOperations = 20;
+}));
+#pragma warning restore duende_experimental
+```
+
+`EnableUsers`, `EnableGroups`, and `ChangePassword` default to detecting the registered services. For example, `ChangePassword` is reported as supported when a password authenticator is registered. Set them explicitly to override what `ServiceProviderConfig` reports. See the [SCIM configuration reference](/identityserver/identity/user-management/reference/configuration.md#scim) for all options.
+
+## Authorization
+
+The SCIM data endpoints require an access token. By default, they use a JWT bearer scheme that validates tokens issued by your IdentityServer for the audience `urn:duende:scim`, with two scopes:
+
+| Scope       | Access                |
+|-------------|-----------------------|
+| `scim`      | Read and write        |
+| `scim.read` | Read only             |
+
+Register the SCIM API resource and scopes with IdentityServer, and grant a provisioning client the `scim` scope:
+
+If your application already registers in-memory API scopes or clients, merge the SCIM entries into those existing registrations. Calling `AddInMemoryApiScopes` or `AddInMemoryClients` again with only the SCIM entries can replace the configuration used by your existing scopes and clients.
+
+```csharp title="Program.cs"
+#pragma warning disable duende_experimental
+_ = identityServer
+    .AddInMemoryApiResources([ScimResources.ApiResource])
+    .AddInMemoryApiScopes([
+        ScimResources.FullAccessScope,
+        ScimResources.ReadOnlyScope
+    ])
+    .AddInMemoryClients([
+        new Client
+        {
+            ClientId = "provisioning-client",
+            ClientSecrets = [new Secret("<secret>".Sha256())],
+            AllowedGrantTypes = GrantTypes.ClientCredentials,
+            AllowedScopes = [ScimResources.FullAccessScope.Name]
+        }
+    ]);
+#pragma warning restore duende_experimental
+```
+
+The token authority must match the issuer of the tokens. With the IdentityServer integration, it is resolved from `IdentityServerOptions.IssuerUri`. You can also set it, and other token validation options, with `ConfigureScimOAuth`:
+
+```csharp title="Program.cs"
+#pragma warning disable duende_experimental
+_ = identityServer.AddUserManagement(users => users
+    .EnableScim(_ => { })
+    .ConfigureScimOAuth(options =>
+    {
+        options.Authority = "https://identity.example.com";
+    }));
+#pragma warning restore duende_experimental
+```
+
+Startup fails if no authority or audience is configured.
+
+### Custom Authorization
+
+If your SCIM client authenticates in a different way, for example with a long-lived bearer token issued by another system, register an ASP.NET Core authorization policy and set `AuthorizationPolicyName` to its name. The policy is applied to all SCIM data endpoints, so it must also implement any read-versus-write distinction you need. Metadata endpoints remain anonymous.
+
+When a custom policy is configured, the built-in `Authority` and `Audience` validation is skipped. The policy must select and validate its own authentication scheme.
+
+## Connecting A SCIM Client
+
+Configure the identity provider or directory with:
+
+* The SCIM base URL, for example `https://identity.example.com/scim`. Always use HTTPS.
+* Credentials that satisfy your authorization configuration, such as a client that can obtain a token with the `scim` scope.
+
+Follow the client's own documentation for how it maps its attributes to SCIM attributes, and make sure each attribute it sends is defined in your profile schema.
+
+If you implement your own SCIM client, do not automatically retry `POST` requests, including Bulk requests. The original request may have succeeded before its response was lost, so a retry can create duplicate users or repeat part of a Bulk request.
+
+## Known Issues
+
+### Valid Tokens Rejected With An Invalid Issuer Error
+
+The default bearer scheme applies the configured authority too late for ASP.NET Core to load the issuer's discovery document, so valid tokens are rejected with `401 invalid_token`. Until this is fixed, configure the authority directly on the SCIM bearer scheme, which is named `DuendeScimBearer`:
+
+```csharp title="Program.cs"
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+builder.Services.Configure<JwtBearerOptions>(
+    "DuendeScimBearer",
+    options => options.Authority = "https://identity.example.com");
+```
+
+Use the issuer URL that IdentityServer publishes. Token issuer, signature, audience, and lifetime validation remain enabled.
+
+### Lookup By `userName` Returns No Result
+
+`IUserProfileAdmin.TryGetAsync` with the `userName` attribute does not find SCIM-provisioned profiles. Use `IUserProfileAdmin.QueryAsync` with a filter on `userName` instead, and check for exactly one exact match.
+
+### `externalId` Is Not Returned
+
+User and Group responses do not include `externalId`, even when the client sent it. SCIM clients that match resources by `externalId` should match on `userName` for users and `displayName` for groups instead.
+
+## Sample
+
+The SCIM Provisioning sample uses .NET Aspire to connect a simulated directory, acting as the SCIM client, to an IdentityServer application with SCIM enabled. It shows the configuration on this page and lets provisioned users sign in with email OTP.
+
+<LinkCard
+  description="A sample that provisions users and groups into Duende User Management over SCIM."
+  href="https://github.com/DuendeSoftware/samples/tree/main/IdentityServer/v8/UserManagement/ScimProvisioning"
+  title="SCIM Provisioning Sample"
+  target="_blank"
+/>

@@ -334,6 +334,50 @@ auth.ConfigureEndpoints(endpoints =>
 
 This changes all passkey endpoints to use `/auth/webauthn` as the base, so registration begins at `/auth/webauthn/register/begin`, and so on.
 
+<Version since="8.1">
+
+## SCIM
+
+SCIM support is experimental. Enable it with `IUserManagementBuilder.EnableScim(...)` and map its endpoints with `app.MapScim()`. See [SCIM Provisioning](/identityserver/identity/user-management/scim.mdx) for setup, authorization, and known issues.
+
+### `ScimOptions`
+
+Controls which SCIM resources and capabilities are available, along with response and request limits.
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `EnableUsers` | `bool?` | Auto-detected | Enables SCIM User endpoints. When `null`, detected from whether `IUserProfileAdmin` is registered. |
+| `EnableGroups` | `bool?` | Auto-detected | Enables SCIM Group endpoints. When `null`, detected from whether `IGroupAdmin` is registered. |
+| `ChangePassword` | `bool?` | Auto-detected | Advertises SCIM change-password support. When `null`, detected from whether `IPasswordAuthenticator` is registered. |
+| `MaxResults` | `int` | `200` | Maximum number of resources returned in one list response. |
+| `MaxGroupMembersInResponse` | `int` | `100` | Maximum number of group members included in one group response. Additional members are truncated and a warning is logged. |
+| `MaxBulkOperations` | `int` | `100` | Maximum operations allowed in one bulk request. Requests that exceed the limit receive HTTP `413`. |
+| `MaxBulkPayloadSize` | `int` | `1,048,576` | Maximum bulk request body size in bytes (1 MB). Requests that exceed the limit receive HTTP `413`. The limit applies even when `Content-Length` is absent. |
+
+### `ScimEndpointOptions`
+
+Controls the route prefixes for SCIM resources. Configure these through the optional endpoint configuration argument to `EnableScim`.
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `Route` | `string` | `"/scim/Users"` | Base route for SCIM User endpoints. |
+| `GroupsRoute` | `string` | `"/scim/Groups"` | Base route for SCIM Group endpoints. |
+| `MetadataRoute` | `string` | `"/scim"` | Base route for `ServiceProviderConfig`, `ResourceTypes`, and `Schemas` metadata endpoints. |
+| `BulkRoute` | `string` | `"/scim/Bulk"` | Route for the SCIM Bulk endpoint. |
+
+### `ScimOAuthOptions`
+
+Controls authentication and authorization for SCIM data endpoints. Metadata endpoints remain anonymous.
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `Authority` | `string?` | `null` | Authority used for JWT bearer token validation and discovery. In the IdentityServer integration, it resolves from `IdentityServerOptions.IssuerUri` when not set explicitly. Without either value, default SCIM authorization fails startup validation. |
+| `Audience` | `string` | `"urn:duende:scim"` | Expected audience in SCIM bearer tokens. |
+| `AuthorizationPolicyName` | `string?` | `null` | Uses the named ASP.NET Core authorization policy instead of the built-in scope-based policies. The custom policy applies to all SCIM data endpoints. |
+| `RequireHttpsMetadata` | `bool` | `true` | Requires HTTPS when retrieving authority metadata. Disable only in development environments. |
+
+</Version>
+
 ## Membership Module
 
 The membership module provides administrative services for managing users, roles, and groups within your application. It is registered automatically by `AddUserManagement(...)` when your application needs to programmatically create or modify users, assign roles, or manage group membership from server-side code (for example, in admin UIs or API endpoints).
