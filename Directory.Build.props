@@ -1,0 +1,10 @@
+<Project>
+  <!--
+    This repository may be nested inside another repository. MSBuild only imports the
+    nearest Directory.Build.props, so this file stops parent settings from leaking into
+    build.cs and server/. All shared build settings for this repository live here.
+  -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

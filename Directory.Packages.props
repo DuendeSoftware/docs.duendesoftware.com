@@ -1,0 +1,11 @@
+<Project>
+  <!--
+    Central Package Management is NOT used in this repository. NuGet only imports the
+    nearest Directory.Packages.props, so this file shields build.cs and server/ from a
+    parent repository that enables CPM.
+    Keep versions on PackageReference / #:package directives.
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>
