@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with Duende Storage"
 description: "Configure Duende Storage for IdentityServer configuration and operational data"
-date: 2026-10-23
+date: 2026-10-26
 sidebar:
   label: "Getting Started"
   order: 10
@@ -103,7 +103,9 @@ The example runs migrations from the application only in development. See
 - `ICorsPolicyService`
 
 It also registers the
-[configuration administration APIs](/identityserver/data/providers/duende-storage/admin-apis.md).
+[configuration administration APIs](/identityserver/data/providers/duende-storage/admin-apis.md). These admin services
+are only available with Duende Storage. They throw `NotSupportedException` when you use the in-memory or Entity Framework
+stores.
 
 ### Operational Stores
 
