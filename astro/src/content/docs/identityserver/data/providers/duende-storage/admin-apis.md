@@ -149,6 +149,7 @@ the affected secret.
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.Clients;
+using Duende.Storage;
 
 static async Task<SaveResult<SecretId>> RotateClientSecret(
     IClientAdmin admin,
@@ -162,9 +163,13 @@ static async Task<SaveResult<SecretId>> RotateClientSecret(
         new CreateClientSecret { PlaintextValue = newSecret },
         ct);
 
-    return created.IsSuccess
-        ? await admin.DeleteSecretAsync(clientId, oldSecretId, ct)
-        : created;
+    if (!created.IsSuccess)
+    {
+        return created;
+    }
+
+    var deleted = await admin.DeleteSecretAsync(clientId, oldSecretId, ct);
+    return deleted.IsSuccess ? created : deleted;
 }
 ```
 
