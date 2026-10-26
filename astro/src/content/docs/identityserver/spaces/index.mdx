@@ -103,8 +103,9 @@ If users must be shared across spaces, use a deliberately separate user director
 When a path pattern matches a space, IdentityServer scopes its cookies to that space's path. This keeps sessions in
 different spaces on the same origin apart. IdentityServer derives the cookie `Path` on every request from the resolved
 base path, which is the hosting `PathBase` plus the matched space path (for example, `/host/space-a`). Spaces matched
-by origin only add no path, so their cookies keep `Path=/`. There is nothing to configure. All other cookie attributes
-(name, `Domain`, `Secure`, `SameSite`, and `HttpOnly`) come from your configuration unchanged.
+by origin only add no space path, so their cookies use the hosting `PathBase`, or `/` when it is empty.
+There is nothing to configure. All other cookie attributes (name, `Domain`, `Secure`, `SameSite`, and `HttpOnly`) come
+from your configuration unchanged.
 
 IdentityServer scopes these cookies to the space path:
 
