@@ -13,9 +13,9 @@ redirect_from:
 This document describes how the integrity of software produced by Duende Software is maintained during the software
 development life cycle.
 
-## Data processing
+## Data Processing
 
-Our products are off-the shelf downloadable developer components. They are not managed services or SaaS - nor do we
+Our products are off-the shelf downloadable developer components. They are not managed services or SaaS, nor do we
 store, have access to, or process any of our customers' data or their customers' data.
 
 ## Systems Access
@@ -57,14 +57,6 @@ store, have access to, or process any of our customers' data or their customers'
 * Potential security vulnerabilities can be responsibly disclosed via
   our [contact form](https://duendesoftware.com/contact/general) (we reply within two US business days)
 * We will publish an official advisory when validated
-
-## Dependencies
-
-IdentityServer has two dependencies:
-
-* [Microsoft .NET](https://dot.net)
-* [IdentityModel](https://github.com/IdentityModel)
-    * maintained by Duende Software using the same principles as outlined above
 
 ## Certification
 
