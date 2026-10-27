@@ -67,6 +67,13 @@
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^5.9.3"
   },
+  "overrides": {
+    "fflate": "^0.7.5",
+    "postcss": "^8.5.31",
+    "astro-rehype-relative-markdown-links": {
+      "zod": "^4.6.7"
+    }
+  },
   "volta": {
     "node": "24.20.0"
   },
