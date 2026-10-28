@@ -13,13 +13,13 @@ flow:
     - { name: OP, role: "OpenID provider" }
     - { name: API, role: "Resource server" }
   steps:
-    - { from: RP, to: OP, channel: front, title: "RP sends the authentication request", summary: "The RP redirects the browser to the OP's authorization endpoint with the openid scope, a PKCE challenge, state and a nonce. The redirect_uri must exactly match a value registered at the OP." }
-    - { from: OP, to: RP, channel: front, title: "OP authenticates the user and redirects back", summary: "The OP authenticates the user, then redirects the browser to the redirect_uri with a code and the same state. The iss parameter, if the OP supports it, names the OP." }
-    - { from: RP, to: OP, channel: back, title: "RP redeems the code with its verifier", summary: "The RP sends the code to the token endpoint directly, with the same redirect_uri and the code_verifier. A public client adds client_id and a confidential client must authenticate." }
+    - { from: RP, to: OP, channel: front, title: "RP sends the authentication request", summary: "The RP redirects the browser to the OP's authorization endpoint with the `openid` scope, a PKCE challenge, `state` and a `nonce`. The `redirect_uri` must exactly match a value registered at the OP." }
+    - { from: OP, to: RP, channel: front, title: "OP authenticates the user and redirects back", summary: "The OP authenticates the user, then redirects the browser to the `redirect_uri` with a code and the same `state`. The `iss` parameter, if the OP supports it, names the OP." }
+    - { from: RP, to: OP, channel: back, title: "RP redeems the code with its verifier", summary: "The RP sends the code to the token endpoint directly, with the same `redirect_uri` and the `code_verifier`. A public client adds `client_id` and a confidential client must authenticate." }
     - { from: OP, to: RP, channel: back, title: "OP returns ID token and access token", summary: "The response carries both tokens and must not be cached. The ID token is a JWT about the user, for the RP, which must validate it before using it. The access token is for APIs." }
-    - { from: RP, to: RP, channel: internal, title: "RP validates the ID token", summary: "The RP checks iss, that aud contains its client_id, the signature, exp and the nonce, if it sent one. Only then does it treat the user as signed in." }
-    - { from: RP, to: API, channel: back, title: "RP calls the API with the access token", summary: "The API receives the access token, never the ID token. This ID token's aud is the RP, so an API must refuse it." }
-    - { from: RP, to: OP, channel: back, title: "Optional UserInfo call for more claims", summary: "The RP can send the access token from the authentication to the UserInfo endpoint. It must verify that the response sub equals the ID token sub." }
+    - { from: RP, to: RP, channel: internal, title: "RP validates the ID token", summary: "The RP checks `iss`, that `aud` contains its `client_id`, the signature, `exp` and the `nonce`, if it sent one. Only then does it treat the user as signed in." }
+    - { from: RP, to: API, channel: back, title: "RP calls the API with the access token", summary: "The API receives the access token, never the ID token. This ID token's `aud` is the RP, so an API must refuse it." }
+    - { from: RP, to: OP, channel: back, title: "Optional UserInfo call for more claims", summary: "The RP can send the access token from the authentication to the UserInfo endpoint. It must verify that the response `sub` equals the ID token `sub`." }
 ---
 import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
