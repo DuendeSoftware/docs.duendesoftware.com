@@ -35,7 +35,7 @@ With [Multi-Issuer](/identityserver/tokens/issuer.mdx#multi-issuer) or [Spaces](
 In any deployment with more than one instance, region, or failover target:
 
 * Ensure that every instance resolves the same issuer for a given request: make sure the proxy in front of IdentityServer always forwards the same public host name and path base. With a single issuer, you can also set `IdentityServerOptions.IssuerUri` to a fixed value. Leave it unset when you use Multi-Issuer or Spaces, because they infer the issuer per request. See [Issuer Claim](/identityserver/tokens/issuer.mdx) and [Proxy Servers and Load Balancers](/identityserver/deployment/index.md#proxy-servers-and-load-balancers).
-* Share the signing keys across all nodes and regions, using a [shared key store](/identityserver/fundamentals/key-management.md#key-storage).
+* Share the signing keys across all nodes and regions, using a [shared key store](/identityserver/fundamentals/key-management.mdx#key-storage).
 * Share the ASP.NET Core Data Protection keys across all nodes and regions, and set the same explicit application name on each. See [ASP.NET Core Data Protection](/identityserver/deployment/index.md#aspnet-core-data-protection).
 
 :::note

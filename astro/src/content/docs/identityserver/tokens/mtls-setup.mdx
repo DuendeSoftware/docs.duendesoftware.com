@@ -512,7 +512,7 @@ The discovery document will include an `mtls_endpoint_aliases` section like:
 
 An interactive ASP.NET Core web application uses mTLS for the same two reasons as any other client: to authenticate the client with a certificate instead of a shared secret, and/or to obtain [certificate-bound (sender-constrained) access tokens](/identityserver/tokens/pop.md). What differs is how you wire it up.
 
-The [.NET client examples](/identityserver/tokens/client-authentication.md#net-client-library-2) use [Duende IdentityModel](/identitymodel/index.mdx) to request tokens directly, and they read the mTLS token endpoint from `disco.MtlsEndpointAliases` themselves. An interactive web application is different: the OpenID Connect handler makes its **back-channel** calls for you. It handles authorization code redemption and, on .NET 9 and later, the [pushed authorization request](/identityserver/tokens/par.md). To use mTLS from such a client, you need to do two things:
+The [.NET client examples](/identityserver/tokens/client-authentication.md#net-client-library-2) use [Duende IdentityModel](/identitymodel/index.mdx) to request tokens directly, and they read the mTLS token endpoint from `disco.MtlsEndpointAliases` themselves. An interactive web application is different: the OpenID Connect handler makes its **back-channel** calls for you. It handles authorization code redemption and, on .NET 9 and later, the [pushed authorization request](/identityserver/tokens/par.mdx). To use mTLS from such a client, you need to do two things:
 
 1. Present the client certificate on the handler's back-channel HTTP calls.
 2. Point the handler's endpoints at the `mtls_endpoint_aliases` published in discovery.
@@ -562,7 +562,7 @@ The ASP.NET Core OpenID Connect handler reads the standard endpoints from discov
 
 Wrap the standard configuration manager so that, after loading discovery, it overwrites the relevant endpoints with their `mtls_endpoint_aliases` values.
 
-On .NET 9 and later, the OpenID Connect handler automatically uses [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md) when IdentityServer advertises support for them. The PAR request is a back-channel, client-authenticated call, so it must target the mTLS endpoint as well, which is why the configuration manager rewrites `pushed_authorization_request_endpoint` alongside the token endpoint.
+On .NET 9 and later, the OpenID Connect handler automatically uses [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.mdx) when IdentityServer advertises support for them. The PAR request is a back-channel, client-authenticated call, so it must target the mTLS endpoint as well, which is why the configuration manager rewrites `pushed_authorization_request_endpoint` alongside the token endpoint.
 
 ```csharp
 using System.Text.Json;

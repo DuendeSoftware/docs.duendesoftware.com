@@ -31,7 +31,7 @@ and endpoint locations.
 
 SAML metadata enables automated federation setup. Instead of manually exchanging certificates and endpoint URLs out-of-band,
 Service Providers import the IdP's metadata document to configure trust automatically. This is the standard mechanism 
-for onboarding new Service Providers into a federation. See [Metadata](/identityserver/saml/concepts.md#metadata) for more background.
+for onboarding new Service Providers into a federation. See [Metadata](/identityserver/saml/concepts.mdx#metadata) for more background.
 
 Share this URL with Service Providers during SP configuration so they can automatically import
 IdP settings.
@@ -96,7 +96,7 @@ sessions have responded by the time the logout flow completes, IdentityServer re
 logout status to the originating SP to indicate that some sessions may still be active.
 
 :::note
-SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. See [Single Logout](/identityserver/saml/concepts.md#single-logout-slo) for more background.
+SAML Single Logout is inherently complex: it requires coordinated session termination across every SP that participated in the user's session. Partial failures are common. An SP may be unreachable, slow to respond, or the user may close the browser before all notifications complete, leaving some SPs with an active session while others consider it terminated. See [Single Logout](/identityserver/saml/concepts.mdx#single-logout-slo) for more background.
 :::
 
 ## Customizing Endpoint Paths
