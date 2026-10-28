@@ -8,6 +8,7 @@ const n = actors.length;
 const idx = (a: string) => actors.findIndex((x) => x.name === a);
 const via = { front: 'through the browser', back: 'direct', internal: '' };
 const kind = { front: 'Front channel', back: 'Back channel', internal: 'Internal' };
+const pathOf = (s: { from: string; to: string; channel: keyof typeof via }) => (s.from === s.to ? `${s.from} (internal)` : `${s.from} → ${s.to}${via[s.channel] ? ` · ${via[s.channel]}` : ""}`);
 // Cumulative holdings: what is held after each step (only shown on steps that changed it).
 // An entry starting with "-" removes that item, so a step can replace or drop something held earlier.
 const held: string[][] = [];
@@ -39,11 +40,11 @@ const geo = steps.map((s) => {
 		<div class="fl-lives" aria-hidden="true">{actors.map((_, i) => <i style={`--i:${i}`}></i>)}</div>
 		<ol class="fl-rows">
 			{steps.map((s, i) => (
-				<li class={`ch-${s.channel}`} data-step={i} data-from={idx(s.from)} data-to={idx(s.to)}>
+				<li class={`ch-${s.channel}`} data-step={i} data-from={idx(s.from)} data-to={idx(s.to)} data-path={pathOf(s)}>
 					<div class="fl-row">
-						<button type="button" class="fl-n" aria-label={`Step ${i + 1}: ${s.title}`}>{i + 1}</button>
+						<button type="button" class="fl-n" aria-label={`Step ${i + 1}: ${s.title}, ${pathOf(s)}`}>{i + 1}</button>
 						<div class={`fl-span${geo[i].self ? ' self' : ''}${geo[i].rev ? ' rev' : ''}`} style={geo[i].style}>
-							<span class="fl-path">{s.from === s.to ? `${s.from} (internal)` : `${s.from} → ${s.to} · ${via[s.channel]}`}</span>
+							<span class="fl-path">{pathOf(s)}</span>
 							<span class="fl-lbl">{s.title}</span>
 							<i class="fl-line"></i>
 						</div>

@@ -19,7 +19,7 @@ flow:
     - { from: Server, to: Browser, channel: front, title: "The user signs in at the server", summary: "The user types credentials into the authorization server, not into the app. The app never sees them." }
     - { from: Server, to: Browser, channel: front, title: "The server redirects back with a code", summary: "The code is short-lived and single-use. The browser follows the redirect to the app, which checks that state matches before it accepts the callback.", holds: ["authorization code"] }
     - { from: App, to: Server, channel: back, title: "App redeems the code with the verifier", summary: "The app posts the code, the code_verifier and the identical redirect_uri. The server recomputes S256 and answers invalid_grant on a mismatch. A confidential client also authenticates." }
-    - { from: Server, to: App, channel: back, title: "The server returns tokens to the app", summary: "The tokens go straight to the app on the back channel, not through the browser. The response must not be cached.", holds: ["tokens"] }
+    - { from: Server, to: App, channel: back, title: "The server returns tokens to the app", summary: "The tokens come back on the back channel, not in a redirect URL. A browser-based app still receives them in the browser. The response must not be cached.", holds: ["tokens"] }
 ---
 import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
@@ -108,7 +108,7 @@ grant_type=authorization_code&code=IGjRC6elLNFTRjC1gpc_Qlr1
 
 ### 7. The server returns tokens to the app
 
-The AS answers on the back channel, so the tokens never pass through the browser. The app now has what it needs to call APIs, as described in [access token vs ID token vs refresh token](/protocols/basics/token-types.mdx).
+The AS answers on the back channel, so the tokens never travel in a redirect URL. A server-side app keeps them on the server. A browser-based app still receives them in the browser. The app now has what it needs to call APIs, as described in [access token vs ID token vs refresh token](/protocols/basics/token-types.mdx).
 
 ```http
 HTTP/1.1 200 OK

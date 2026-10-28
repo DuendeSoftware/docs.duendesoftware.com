@@ -60,7 +60,7 @@ Location: https://budget.example/callback?code=abc123&state=7a2f
 
 ### 2. The app redeems the code for tokens
 
-The app sends the code over the back channel, so the tokens never pass through the browser. A confidential client also authenticates here, and a public client sends `client_id`, as shown. The refresh token is optional and the AS decides whether to issue one. The access token may be a JWT or an opaque string.
+The app sends the code over the back channel, so the tokens never travel in a redirect URL. Where they end up depends on where the app runs: a server-side app keeps them on the server, while a browser-based app receives them in the browser. A confidential client also authenticates here, and a public client sends `client_id`, as shown. The refresh token is optional and the AS decides whether to issue one. The access token may be a JWT or an opaque string.
 
 ```http
 POST /connect/token
@@ -118,7 +118,7 @@ WWW-Authenticate: Bearer error="invalid_token"
 
 ### 6. Who may use which token
 
-Each token has exactly one recipient. Keep this table next to your code.
+Each token is meant for a different kind of recipient. Keep this table next to your code.
 
 | Token | Recipient | What the recipient does with it |
 | --- | --- | --- |
@@ -134,7 +134,7 @@ The client does not inspect the access token, because its format can change. Ref
 
 RFC 9068 section 6 forbids the client to inspect the access token, and RFC 6749 section 1.5 says refresh tokens are never sent to resource servers. Read more about [refresh tokens](/protocols/oauth-2x-core/refresh-tokens.mdx).
 
-The ID token has no scope claim (OpenID Connect section 2), so an API cannot rely on one. The step 5 refusal rests on aud (RFC 7519 section 4.1.3, RFC 9068 section 4) and on RFC 9700 section 2.3.
+OpenID Connect Core section 2 defines no `scope` claim for the ID token, so an API cannot rely on one. The step 5 refusal rests on `aud` (RFC 7519 section 4.1.3, RFC 9068 section 4) and on RFC 9700 section 2.3.
 
 ## Use It When
 
