@@ -1,0 +1,20 @@
+id: "rfc7515"
+title: "RFC 7515"
+url: "https://www.rfc-editor.org/rfc/rfc7515"
+status: "RFC"
+# errata list checked by hand 2026-10-22 (rfc-editor.org/errata/rfc7515): 7767 Reported (§6, header parameters integrity), 8430 and 8508 Rejected (§A.1.1, §2). None on §4.1.1, §4.1.4, §4.1.9 or §5.2.
+sections:
+  - key: "jwsKid"
+    section: "4.1.4"
+    anchor: "section-4.1.4"
+    title: "\"kid\" (Key ID) Header Parameter"
+  - key: "jwsTyp"
+    section: "4.1.9"
+    anchor: "section-4.1.9"
+    title: "\"typ\" (Type) Header Parameter"
+  # port-modules.mjs
+  - key: "rfc7515_5_2"
+    section: "5.2"
+    anchor: "section-5.2"
+    title: "Message Signature or MAC Validation"
+  # port-modules.mjs

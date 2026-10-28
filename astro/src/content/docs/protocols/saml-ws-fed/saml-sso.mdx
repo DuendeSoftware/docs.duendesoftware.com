@@ -1,0 +1,175 @@
+---
+title: "SAML 2.0 Single Sign-On"
+date: 2026-10-23
+sidebar:
+  order: 1
+description: "The SP sends an AuthnRequest to the IdP through the browser, and the IdP returns a Response the same way. The SP creates its own session only after it validates the Response."
+sources: [saml_profiles_2_0_os_4_1, saml_profiles_2_0_os_4_1_2, saml_profiles_2_0_os_4_1_3, saml_profiles_2_0_os_4_1_3_1, saml_profiles_2_0_os_4_1_3_3, saml_profiles_2_0_os_4_1_3_5, saml_profiles_2_0_os_4_1_4_1, saml_profiles_2_0_os_4_1_4_2, saml_profiles_2_0_os_4_1_4_3, saml_profiles_2_0_os_4_1_4_5, saml_profiles_2_0_os_4_1_5, saml_profiles_2_0_os_4_1_6, saml_bindings_2_0_os_3_4, saml_bindings_2_0_os_3_4_3, saml_bindings_2_0_os_3_4_4_1, saml_bindings_2_0_os_3_4_5, saml_bindings_2_0_os_3_4_5_2, saml_bindings_2_0_os_3_5, saml_bindings_2_0_os_3_5_3, saml_bindings_2_0_os_3_5_4, saml_bindings_2_0_os_3_5_5, saml_bindings_2_0_os_3_5_5_1, saml_bindings_2_0_os_3_5_5_2, saml_bindings_2_0_os_3_5_6, saml_bindings_2_0_os_3_6, saml_core_2_0_os_1_3_4, saml_core_2_0_os_2_5_1, saml_core_2_0_os_2_5_1_4, saml_core_2_0_os_3_2_1, saml_core_2_0_os_3_2_2, saml_core_2_0_os_3_4_1, saml_core_2_0_os_3_4_1_4, saml_metadata_2_0_os_2_2_2, saml_sec_consider_2_0_os_6_4_5, saml_sec_consider_2_0_os_6_4_6, saml_errata05_e1, saml_errata05_e26, saml_errata05_e46, saml_errata05_e85, saml_errata05_e90, saml_errata05_e92]
+flow:
+  actors:
+    - { name: Browser, role: "User agent" }
+    - { name: SP, role: "Service provider" }
+    - { name: IdP, role: "Identity provider" }
+  steps:
+    - { from: Browser, to: SP, channel: front, title: "Browser requests a protected page", summary: "The user agent asks the SP for a resource without a security context. This is plain HTTP and no SAML message exists yet." }
+    - { from: SP, to: IdP, channel: front, title: "SP sends the AuthnRequest via the browser", summary: "The SP answers with a 302 or 303 to the IdP. With the Redirect binding, the request is DEFLATEd, base64-encoded and URL-encoded. RelayState is optional and at most 80 bytes.", holds: ["AuthnRequest ID", "RelayState"] }
+    - { from: IdP, to: IdP, channel: internal, title: "IdP processes the request and authenticates", summary: "The IdP checks that the ACS URL or index belongs to the SP, then establishes who the user is or returns an error. Any login page appears in the browser." }
+    - { from: IdP, to: SP, channel: front, title: "IdP posts the Response via the browser", summary: "The IdP returns a form the browser POSTs to the ACS URL, typically auto-submitted. RelayState is echoed exactly. Each assertion must be signed, on the Assertion or the Response.", holds: ["SAML Response and Assertion"] }
+    - { from: SP, to: SP, channel: internal, title: "SP validates the Response and Assertion", summary: "The SP verifies the signatures, then asks who issued the assertion, whether it was meant for this SP and request, and whether it is valid and unused." }
+    - { from: SP, to: Browser, channel: front, title: "SP creates a session and redirects", summary: "The SP starts its own session, here with a cookie as an example, and redirects the browser to the RelayState target after it checks the URL.", holds: ["SP session"] }
+tableOfContents: true
+draft: false
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+The SP sends an AuthnRequest to the IdP through the browser, and the IdP returns a Response the same way. The SP creates its own session only after it validates the Response.
+
+## Why It Exists
+
+You want users to sign in to an application without that application holding their credentials. In SAML, a separate identity provider (IdP) signs the user in, and the application is the service provider (SP). The browser only carries the messages between the two, so the SP has to check them itself. After reading this page you can follow one sign-in and list the checks the SP owes before it trusts the result.
+
+Four terms appear throughout. An **AuthnRequest** is the SP's request for a sign-in. An **assertion** is the IdP's signed statement about the user. The IdP sends it inside a **Response**, and it POSTs that Response to the SP's assertion consumer service (ACS) URL, the endpoint that receives it.
+
+## How It Works
+
+<Flow flow={frontmatter.flow} />
+
+Steps 2 to 4 carry a lot of detail. On a first pass, follow only three things: the request ID, the destination (the ACS URL), and the `RelayState` that comes back unchanged.
+
+## Step by Step
+
+### 1. Browser requests a protected page
+
+The user has no session at the SP yet, so the SP has to send them to an IdP. How the SP picks its IdP is implementation-dependent.
+
+```http
+GET /reports HTTP/1.1
+Host: sp.example
+Accept: text/html
+```
+
+<Cite k="saml_profiles_2_0_os_4_1_2" />
+
+### 2. SP sends the AuthnRequest via the browser
+
+The SP builds an AuthnRequest and sends the browser to the IdP with it. Remember the `ID`, because the IdP's answer has to point back to it. The `Destination` is where the request goes. `RelayState` is an opaque value the SP wants back, for example to remember which page the user asked for. The decoded excerpt shows the attributes that matter. In the URL, `ID`, `Issuer` and the other attributes sit inside the encoded `SAMLRequest`.
+
+The request may be signed. If it is signed, `Destination` must be present. An unauthenticated request must not be trusted except as advisory. See the Notes for the Redirect binding and its exposure in logs.
+
+```http
+HTTP/1.1 302 Found
+Location: https://idp.example/sso?SAMLRequest=<DEFLATE, base64, URL-encode>&RelayState=k3j9x
+# decoded AuthnRequest, excerpt:
+ID="_a81d3f" (illustrative, real IDs are longer) Version="2.0" IssueInstant="2026-10-22T09:30:00Z"
+Destination="https://idp.example/sso"
+AssertionConsumerServiceURL="https://sp.example/saml/acs"
+ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+<saml:Issuer>https://sp.example</saml:Issuer>
+```
+
+<Cite k="saml_bindings_2_0_os_3_4_4_1" />
+
+### 3. IdP processes the request and authenticates
+
+The IdP is the only party that can say who the user is, so it first verifies that any ACS URL or index in the request belongs to the SP that sent it. Otherwise the Response could go to an attacker. Then it establishes the user's identity, with a login page in the browser if it needs one, or it returns an error Response.
+
+Two optional request attributes change how the user is asked. `ForceAuthn` asks the IdP to authenticate the user again even if a session exists. `IsPassive` asks the IdP not to show any user interface.
+
+```text
+Illustration, not a wire message:
+  ACS URL or index verified as belonging to the SP
+  ForceAuthn and IsPassive limit how the user is asked
+  identity established, or an error Response is returned
+```
+
+<Cite k="saml_profiles_2_0_os_4_1_3_3" />
+
+### 4. IdP posts the Response via the browser
+
+The IdP answers with a page that holds a form. The browser POSTs the form to the ACS URL, and the `SAMLResponse` field carries the Response. The form `action`, the Response `Destination` and the bearer `SubjectConfirmationData` `Recipient` should all be the SP's ACS URL. Also check that `RelayState` is the value the SP sent. The Redirect binding must not carry the Response, so the POST form is the usual way. `SAMLResponse` is base64 with no DEFLATE, and the page should not be cached.
+
+If the IdP cannot authenticate the user or fulfil the request, it must return a Response with an error `Status` and no assertions. HTTP error codes must not signal SAML failures.
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+
+<form method="POST" action="https://sp.example/saml/acs">
+  <input type="hidden" name="SAMLResponse" value="<base64 Response>"/>
+  <input type="hidden" name="RelayState" value="k3j9x"/>
+</form>
+```
+
+<Cite k="saml_bindings_2_0_os_3_5_4" />
+
+### 5. SP validates the Response and Assertion
+
+The SP does not trust the Response because it arrived at the ACS URL. It verifies the signatures and must not rely on an invalid one. Then it works through three questions:
+
+* **Who issued it?** The signature must be valid and the `Issuer` must be the IdP the SP expects.
+* **Was it meant for this SP and this request?** `Destination` (if present) and `Recipient` must be this ACS URL. `InResponseTo` must be the ID of a request the SP sent, or absent for an unsolicited Response. Every `AudienceRestriction` must include this SP. A matching `InResponseTo` does not replace the other checks.
+* **Is it valid and unused?** `NotOnOrAfter` must not have passed, and the SP should allow for reasonable clock skew. Conditions must not be Invalid or Indeterminate. The SP must prevent replay with the POST binding, for example by remembering assertion IDs.
+
+An assertion that fails validity or subject confirmation should be discarded. Checking the client address is optional.
+
+```text
+Checks, not a wire message:
+  signatures valid; Destination and Recipient = this ACS URL
+  InResponseTo = pending request ID (absent if unsolicited)
+  NotOnOrAfter not passed, allowing for clock skew
+  Audience includes this SP; conditions not Invalid or Indeterminate
+  assertion ID not seen before (replay)
+```
+
+<Cite k="saml_profiles_2_0_os_4_1_4_3" />
+
+### 6. SP creates a session and redirects
+
+Only now does the SP act on the assertion. The user signed in at the IdP, but the SP needs its own session to recognise the user on later requests. The spec allows any session mechanism, and the cookie below is only an example. The SP then sends the browser to the page behind `RelayState`. It must sanitize the URL schemes it permits, for example only `https` or `http` (Errata E90). Limiting targets to an allow-list is good practice.
+
+```http
+HTTP/1.1 302 Found
+Set-Cookie: SPSESSION=Zx81q; Secure; HttpOnly; SameSite=Lax
+Location: /reports
+# example only: the spec allows any session mechanism
+```
+
+<Cite k="saml_profiles_2_0_os_4_1_3" />
+
+## Notes
+
+Status: the OASIS standard per the OASIS registry (not stated in the spec text), with Errata 05 applied where it changes the cited text (E1, E26, E46, E85, E90, E92).
+
+A binding is how a SAML message travels. Redirect puts the whole message in the URL, where logs and `Referer` headers can expose it. POST or Artifact can also carry the AuthnRequest. The query-string `Signature`, if used, covers `SAMLRequest`, `RelayState` and `SigAlg`. `RelayState` should be integrity protected, through that signature or by other means.
+
+Artifact binding sends a small reference (`SAMLart`) through the browser, and the receiver then fetches the message over a direct back channel. Redirect, POST and Artifact are separate choices, and none of them replaces the SP's validation in step 5.
+
+Unsolicited (IdP-initiated) Responses are a MAY. They carry no `InResponseTo`, and Errata E90 warns of CSRF. An SP should be able to disable them and should designate a default location.
+
+For error Responses, delivery to the user agent is a SHOULD. Errata E85 adds a conditional SHOULD when the user agent remains available and an acceptable location exists.
+
+The `Cache-Control: no-cache, no-store` and `Pragma: no-cache` headers on the Response page are SHOULD.
+
+## Use It When
+
+* You integrate a service provider with a SAML identity provider for browser sign-on.
+* You need to read an AuthnRequest and Response exchange and know which checks the SP owes.
+
+## Don't Confuse With
+
+* IdP-initiated sign-on, where the IdP sends a Response nobody asked for. This page covers the SP-initiated flow.
+* SAML bindings, which only move messages. No binding replaces the SP's validation.
+
+## Build with Duende
+
+IdentityServer can act as the IdP, and you tell it which SPs it trusts through its service provider store. The SP side is your application, which validates the Response and creates its own session.
+
+* [SAML 2.0 in IdentityServer](/identityserver/saml/index.mdx)
+* [SAML 2.0 concepts in IdentityServer](/identityserver/saml/concepts.mdx)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />
