@@ -11,12 +11,12 @@ flow:
     - { name: RP, role: "Relying party" }
     - { name: Authenticator, role: "Authenticator" }
   steps:
-    - { from: RP, to: Browser, channel: front, title: "The RP sends the creation options", summary: "The RP makes a random challenge of at least 16 bytes and stores it until the ceremony ends. The options carry the RP ID, user handle and algorithms.", holds: ["registration challenge", "RP ID", "user handle"] }
-    - { from: Browser, to: Authenticator, channel: internal, title: "The browser calls create(), checks the RP ID", summary: "The page decodes the base64url fields and calls create(). The browser throws SecurityError unless the RP ID fits the origin, then builds clientDataJSON.", holds: ["origin", "client data hash"] }
-    - { from: Authenticator, to: Authenticator, channel: internal, title: "The authenticator verifies the user, makes keys", summary: "After the browser's RP ID check, the authenticator tests user presence, and user verification when required. It then generates a key pair for the first algorithm it supports and binds it to the RP ID.", holds: ["credential key pair"] }
-    - { from: Authenticator, to: Browser, channel: internal, title: "The authenticator returns the attestation object", summary: "The object holds fmt, attStmt and authData with the new public key. The private key is not sent to the RP. With attestation none, fmt is usually none and attStmt is empty.", holds: ["credential public key", "credential ID"] }
+    - { from: RP, to: Browser, channel: front, title: "The RP sends the creation options", summary: "The RP makes a random challenge of at least 16 bytes and stores it until the ceremony ends. The options carry the RP ID, user handle and algorithms." }
+    - { from: Browser, to: Authenticator, channel: internal, title: "The browser calls create(), checks the RP ID", summary: "The page decodes the base64url fields and calls create(). The browser throws SecurityError unless the RP ID fits the origin, then builds clientDataJSON." }
+    - { from: Authenticator, to: Authenticator, channel: internal, title: "The authenticator verifies the user, makes keys", summary: "After the browser's RP ID check, the authenticator tests user presence, and user verification when required. It then generates a key pair for the first algorithm it supports and binds it to the RP ID." }
+    - { from: Authenticator, to: Browser, channel: internal, title: "The authenticator returns the attestation object", summary: "The object holds fmt, attStmt and authData with the new public key. The private key is not sent to the RP. With attestation none, fmt is usually none and attStmt is empty." }
     - { from: Browser, to: RP, channel: front, title: "The browser posts the response to the RP", summary: "The page sends the credential id, clientDataJSON and attestationObject to the RP over HTTPS. The body shape is app-defined and the buffers travel as base64url." }
-    - { from: RP, to: RP, channel: internal, title: "The RP validates the response and stores it", summary: "The RP checks type, the challenge it sent, origin, rpIdHash, UP, UV if required and alg. It should reject a known credential ID, then stores the record with the account.", holds: ["credential record"] }
+    - { from: RP, to: RP, channel: internal, title: "The RP validates the response and stores it", summary: "The RP checks type, the challenge it sent, origin, rpIdHash, UP, UV if required and alg. It should reject a known credential ID, then stores the record with the account." }
     - { from: Authenticator, to: Browser, channel: internal, title: "If create() fails: nothing is stored", summary: "If the user cancels, or no authenticator fits, create() rejects and the RP stores nothing. A wrong RP ID fails earlier with SecurityError. A failed RP check also stores nothing." }
 tableOfContents: true
 draft: false
@@ -25,25 +25,26 @@ import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-The relying party sends fresh creation options, the browser enforces the RP ID scope, and the authenticator creates a key pair. The RP validates the response and stores the public key.
+Registering a passkey is a WebAuthn ceremony in which the relying party (RP) sends fresh creation options, the browser enforces the RP ID scope, and the authenticator creates a key pair. The RP validates the response and stores the public key. The private key is never sent to the RP. A site uses this to let a user add a passkey, a discoverable WebAuthn credential, to an account.
 
-## Why It Exists
+Three terms matter. The **authenticator** is the device or software that holds the keys, such as a phone or a security key. The **RP ID** is the domain a credential is scoped to, for example `login.contoso.example`. The **challenge** is a random value the RP creates and keeps, so it can check that the response answers this request. [Signing In with a Passkey](/protocols/passkeys/passkey-signin.mdx) is the next page and uses the credential this one creates.
 
-Registration happens while the account is already known, for example after the user signed in with a password. It gives that account a public-key record the site can use for later sign-in, so no shared secret is stored. After reading this page you can follow one registration and say what the relying party (RP) must check before it stores a credential.
+## Why Passkey Registration Exists
 
-Three terms matter here. The **authenticator** is the device or software that holds the keys, such as a phone or a security key. The **RP ID** is the domain a credential is scoped to, for example `login.contoso.example`. The **challenge** is a random value the RP creates and keeps, so it can check that the response answers this request. The browser sits between the RP and the authenticator and enforces the RP ID scope.
+Registration happens while the account is already known, for example after the user signed in with a password. It gives that account a public-key record the site can use for later sign-in, so no shared secret is stored on the server. Unlike a password with multi-factor authentication, nothing the user types is sent to the server.
 
-Step 7 is a failure branch, not part of the normal path.
+## How Passkey Registration Works
 
-## How It Works
+The browser sits between the RP and the authenticator and enforces the RP ID scope. The diagram shows one successful registration in steps 1 to 6. Step 7 is a failure branch.
 
 <Flow flow={frontmatter.flow} />
 
-## Step by Step
+## Passkey Registration Step by Step
+
 
 ### 1. The RP sends the creation options
 
-The RP creates a fresh random challenge and keeps it, for example in the server-side session, until the ceremony ends. It should let it expire. The options object is the argument of `create()`, not a message format. How the server hands it to the page is app-defined, and the example shows a JSON form with the byte fields as base64url. `user.id` is an opaque handle of 1 to 64 bytes, without personal data. Notice that `excludeCredentials` is not in this example. It is covered in step 6.
+The RP creates a fresh random challenge and keeps it, for example in the server-side session, until the ceremony ends. It should let it expire. Accepting each challenge only once is good practice, though the spec doesn't require it. The options object is the argument of `create()`. WebAuthn defines no message format for it. How the server hands it to the page is app-defined, and the example shows a JSON form with the byte fields as base64url. `user.id` is an opaque handle of 1 to 64 bytes, without personal data. `excludeCredentials` isn't in this example. Step 6 covers it.
 
 ```text
 // app-defined JSON from the RP to the page; byte fields are base64url
@@ -73,7 +74,7 @@ navigator.credentials.create({ publicKey: options })
 
 ### 3. The authenticator verifies the user, makes keys
 
-Here the user makes a gesture at the authenticator, such as a touch, a PIN or a biometric. The authenticator tests user presence, and user verification when the RP required it, then creates a new key pair for this RP ID. A passkey is a discoverable credential, so the authenticator can offer it at sign-in without the RP naming it. The BE flag later shows whether the credential can be synced.
+Here the user makes a gesture at the authenticator, such as a touch, a PIN or a biometric. The authenticator tests user presence, and user verification when the RP required it, then creates a new key pair for this RP ID. A passkey is a discoverable credential, so the authenticator can offer it at sign-in without the RP naming it. The BE (backup eligible) flag shows whether the credential can be backed up, for example by sync, and BS (backup state) shows the current state. BE is set at creation and doesn't change.
 
 <Cite k="waMakeCredential" />
 
@@ -81,7 +82,7 @@ Here the user makes a gesture at the authenticator, such as a touch, a PIN or a 
 
 What the RP needs from this object is the credential ID and the public key. Both sit inside `authData`. The private key is never sent to the RP. A synced passkey can still copy the key to the user's other devices through the passkey provider, which WebAuthn Level 3 calls backup eligibility.
 
-The rest is encoding detail. The authenticator picks the attestation format from `attestationFormats`, or its own preference. A self attestation can come back as `packed` even when `none` was requested. The excerpt below is shortened. The real object is 194 bytes of CBOR, with a 164-byte `authData`.
+The rest is encoding detail. Attestation can be used to track users, so `none` or an anonymized statement avoids identifying information (WebAuthn sections 14.4.1 and 5.1.3). With `none`, the client sets `fmt` to `none` and `attStmt` to an empty map. Attestation describes the authenticator. It says nothing about the person. The authenticator picks the attestation format from `attestationFormats`, or its own preference. A self attestation can come back as `packed` even when `none` was requested. The excerpt below is shortened. The real object is 194 bytes of CBOR, with a 164-byte `authData`.
 
 ```text
 // attestationObject (CBOR), diagnostic notation, excerpt
@@ -96,7 +97,7 @@ authData credentialPublicKey COSE_Key: kty 2, alg -7 (ES256), crv 1, x, y
 
 ### 5. The browser posts the response to the RP
 
-The page forwards the three values the RP needs. The RP then has what it needs to check the ceremony against the challenge it stored.
+The page forwards the three values the RP needs to check the ceremony against the challenge it stored.
 
 ```text
 // app-defined JSON body from the page to the RP; excerpt, buffers shortened
@@ -110,15 +111,15 @@ The page forwards the three values the RP needs. The RP then has what it needs t
 
 ### 6. The RP validates the response and stores it
 
-The RP checks the response against what it stored in step 1, then saves the credential. The origin check is an additional layer in case a faulty authenticator fails to enforce credential scope. With `none`, the RP's policy decides whether the missing attestation is acceptable, and it may register the credential as self attestation.
+The RP checks the response against what it stored in step 1, then saves the credential. The origin check is an additional layer in case a faulty authenticator fails to enforce credential scope. With `none`, the RP's policy decides whether the missing attestation is acceptable, and it may register the credential as self attestation. Store both the BE and BS flags, and give each account another authenticator or a recovery process, because a single-device credential doesn't survive device loss.
 
 Storage has two parts. The credential record holds `type`, `id`, `publicKey`, `signCount`, `uvInitialized`, `transports`, `backupEligible` and `backupState`. The RP also links the credential to the account, because the user handle lives on the user account. The RP should pass the user's existing credentials in `excludeCredentials`, so the same authenticator does not register a second credential for that account. It should also fail the ceremony for a credential ID that is already registered for any user (WebAuthn section 7.1).
 
 ```text
-MUST    type is webauthn.create; challenge equals the one sent; origin is expected
-MUST    rpIdHash is SHA-256 of the RP ID; UP set; UV set if required; alg was requested
-SHOULD  attestation trustworthy (none: policy decides); credentialId at most 1023 bytes
-SHOULD  credentialId not yet registered for any user
+must    type is webauthn.create; challenge equals the one sent; origin is expected
+must    rpIdHash is SHA-256 of the RP ID; UP set; UV set if required; alg was requested
+should  attestation trustworthy (none: policy decides); credentialId at most 1023 bytes
+should  credentialId not yet registered for any user
 store   type, id, publicKey, signCount, uvInitialized, transports, backupEligible, backupState
 ```
 
@@ -137,29 +138,10 @@ ConstraintError  residentKey or userVerification is required and no authenticato
 
 <Cite k="waCreateMethod" />
 
-## Notes
+## See Also
 
-Attestation can be used to track users, so `none` or an anonymized statement avoids identifying information (WebAuthn sections 14.4.1 and 5.1.3). With `none`, the client sets `fmt` to `none` and `attStmt` to an empty map. Attestation describes the authenticator, not the person, and cannot show that a response came from the authenticator the user meant.
-
-The BE flag shows that a credential can be backed up, for example by sync. BS shows the current state. BE is set at creation and does not change. Store both flags, and give each account another authenticator or a recovery process, because a single-device credential does not survive device loss.
-
-Practice, not required by the spec: accept each challenge only once.
-
-## Use It When
-
-* A site lets a user add a passkey (a discoverable WebAuthn credential) to an account.
-* You want to see which checks the RP must make before it stores a new credential.
-
-## Don't Confuse With
-
-* [Passkey sign-in](/protocols/passkeys/passkey-signin.mdx), which uses an existing credential to sign a challenge (the assertion flow). It is the next page.
-* Passwords with MFA, where a shared secret is typed and sent to the server.
-
-## Build with Duende
-
-Your passkey UI calls `create()` and posts the result. Duende User Management can act as the RP side through its passkey endpoints, which send the options and validate and store the credential.
-
-* [Passkey authentication in Duende User Management](/identityserver/identity/user-management/authentication/passkeys.mdx)
+* [Signing In with a Passkey](/protocols/passkeys/passkey-signin.mdx): use the stored credential to sign in.
+* [Passkey authentication in Duende User Management](/identityserver/identity/user-management/authentication/passkeys.mdx): the RP side through passkey endpoints that send the options and validate and store the credential.
 
 ## Sources
 
