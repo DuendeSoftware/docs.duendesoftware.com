@@ -12,12 +12,12 @@ flow:
     - { name: Authenticator, role: "Authenticator" }
   steps:
     - { from: RP, to: Browser, channel: front, title: "The RP sends the creation options", summary: "The RP makes a random challenge of at least 16 bytes and stores it until the ceremony ends. The options carry the RP ID, user handle and algorithms." }
-    - { from: Browser, to: Authenticator, channel: internal, title: "The browser calls create(), checks the RP ID", summary: "The page decodes the base64url fields and calls create(). The browser throws SecurityError unless the RP ID fits the origin, then builds clientDataJSON." }
+    - { from: Browser, to: Authenticator, channel: internal, title: "The browser calls create(), checks the RP ID", summary: "The page decodes the base64url fields and calls `create()`. The browser throws SecurityError unless the RP ID fits the origin, then builds `clientDataJSON`." }
     - { from: Authenticator, to: Authenticator, channel: internal, title: "The authenticator verifies the user, makes keys", summary: "After the browser's RP ID check, the authenticator tests user presence, and user verification when required. It then generates a key pair for the first algorithm it supports and binds it to the RP ID." }
     - { from: Authenticator, to: Browser, channel: internal, title: "The authenticator returns the attestation object", summary: "The object holds fmt, attStmt and authData with the new public key. The private key is not sent to the RP. With attestation none, fmt is usually none and attStmt is empty." }
-    - { from: Browser, to: RP, channel: front, title: "The browser posts the response to the RP", summary: "The page sends the credential id, clientDataJSON and attestationObject to the RP over HTTPS. The body shape is app-defined and the buffers travel as base64url." }
-    - { from: RP, to: RP, channel: internal, title: "The RP validates the response and stores it", summary: "The RP checks type, the challenge it sent, origin, rpIdHash, UP, UV if required and alg. It should reject a known credential ID, then stores the record with the account." }
-    - { from: Authenticator, to: Browser, channel: internal, title: "If create() fails: nothing is stored", summary: "If the user cancels, or no authenticator fits, create() rejects and the RP stores nothing. A wrong RP ID fails earlier with SecurityError. A failed RP check also stores nothing." }
+    - { from: Browser, to: RP, channel: front, title: "The browser posts the response to the RP", summary: "The page sends the credential id, `clientDataJSON` and attestationObject to the RP over HTTPS. The body shape is app-defined and the buffers travel as base64url." }
+    - { from: RP, to: RP, channel: internal, title: "The RP validates the response and stores it", summary: "The RP checks type, the challenge it sent, origin, rpIdHash, UP, UV if required and `alg`. It should reject a known credential ID, then stores the record with the account." }
+    - { from: Authenticator, to: Browser, channel: internal, title: "If create() fails: nothing is stored", summary: "If the user cancels, or no authenticator fits, `create()` rejects and the RP stores nothing. A wrong RP ID fails earlier with SecurityError. A failed RP check also stores nothing." }
 tableOfContents: true
 draft: false
 ---

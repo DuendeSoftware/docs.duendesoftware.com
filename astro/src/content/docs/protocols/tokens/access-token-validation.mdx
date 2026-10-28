@@ -13,11 +13,11 @@ flow:
   steps:
     - { from: Client, to: API, channel: back, title: "The client sends the bearer token", summary: "The client sends the access token in the Authorization header. The API treats it as untrusted input until the checks pass." }
     - { from: API, to: AS, channel: back, title: "The API gets the AS's signing keys", summary: "The API fetches, or reads from its cache, the AS's metadata and JWKS, and uses only keys from its configured AS. Keys must be available before the signature check." }
-    - { from: API, to: API, channel: internal, title: "The API checks the JOSE header", summary: "typ must be at+jwt or application/at+jwt, and a missing typ is rejected. alg none is rejected, and any other alg must be in the API's configured allow-list. kid is optional." }
-    - { from: API, to: API, channel: internal, title: "The API verifies the signature", summary: "The API verifies the signature over the encoded header and payload with the AS's key, using the algorithm in alg. If any step fails, the token is not valid." }
-    - { from: API, to: API, channel: internal, title: "The API checks iss, aud and exp", summary: "iss must match the configured issuer exactly. aud must contain this API's identifier. The current time must be before exp. nbf is checked only if present. A small clock-skew leeway is optional." }
+    - { from: API, to: API, channel: internal, title: "The API checks the JOSE header", summary: "`typ` must be `at+jwt` or application/at+jwt, and a missing `typ` is rejected. `alg` none is rejected, and any other `alg` must be in the API's configured allow-list. `kid` is optional." }
+    - { from: API, to: API, channel: internal, title: "The API verifies the signature", summary: "The API verifies the signature over the encoded header and payload with the AS's key, using the algorithm in `alg`. If any step fails, the token is not valid." }
+    - { from: API, to: API, channel: internal, title: "The API checks iss, aud and exp", summary: "`iss` must match the configured issuer exactly. `aud` must contain this API's identifier. The current time must be before `exp`. `nbf` is checked only if present. A small clock-skew leeway is optional." }
     - { from: API, to: API, channel: internal, title: "The API applies its own authorization", summary: "A valid token is not permission. The API decides this request from the token's scope and its own policy, such as tenant and ownership. The specs leave those checks to the application." }
-    - { from: API, to: Client, channel: back, title: "The API answers the client", summary: "A permitted request gets 200. A failed token check gets 401 with a WWW-Authenticate: Bearer challenge and error invalid_token. A missing scope gets 403 insufficient_scope. With no token, an error code should not be sent." }
+    - { from: API, to: Client, channel: back, title: "The API answers the client", summary: "A permitted request gets 200. A failed token check gets 401 with a WWW-Authenticate: Bearer challenge and error `invalid_token`. A missing scope gets 403 `insufficient_scope`. With no token, an error code should not be sent." }
 tableOfContents: true
 draft: false
 ---
