@@ -138,4 +138,6 @@ for (const [id, fs_] of byPage) {
 	else { console.log(`failed: ${title}`); code = 1; }
 }
 if (!byPage.size) console.log('\nno page affected');
+// A spec that could not be fetched means the check is incomplete, so fail the run.
+if (errors.length) { console.log(`\n${errors.length} spec doc(s) could not be checked`); code = 1; }
 process.exit(code);
