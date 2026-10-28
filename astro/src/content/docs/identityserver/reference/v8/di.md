@@ -138,15 +138,15 @@ The use of `TestUser` is not recommended in production.
 
 Duende IdentityServer needs key material to sign tokens. This key material can
 either be created and
-[managed automatically](/identityserver/fundamentals/key-management.md#automatic-key-management)
+[managed automatically](/identityserver/fundamentals/key-management.mdx#automatic-key-management)
 or
-[configured statically](/identityserver/fundamentals/key-management.md#static-key-management).
+[configured statically](/identityserver/fundamentals/key-management.mdx#static-key-management).
 
 :::note
 We recommend that you use automatic key management. This section covers the
 configuration methods needed for manual configuration of signing keys, which are
 usually only needed if your license does not include automatic key management or
-if you are [migrating](/identityserver/fundamentals/key-management.md#migrating-from-static-keys-to-automatic-key-management) from manually
+if you are [migrating](/identityserver/fundamentals/key-management.mdx#migrating-from-static-keys-to-automatic-key-management) from manually
 managed keys to automatic key management.
 :::
 

@@ -53,7 +53,7 @@ The Standard edition adds additional features that go beyond the core protocol s
 included in the Lite edition. This is a popular license because it adds the most
 commonly needed tools and features outside a basic protocol implementation. Feature
 highlights include resource isolation, the OpenId Connect CIBA flow support,
-and server side sessions. [Automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management)
+and server side sessions. [Automatic key management](/identityserver/fundamentals/key-management.mdx#automatic-key-management)
 is available for the Standard edition as an add-on.
 
 #### Advanced Edition
@@ -85,7 +85,7 @@ resource isolation, the OpenId Connect CIBA flow, and dynamic federation.
 
 Duende IdentityServer licenses measure usage in **Connected Applications**. Previously, this licensing unit was
 referred to as "client IDs"; the term "client ID" is still used in technical OpenID Connect and OAuth
-contexts such as [client configuration](/identityserver/fundamentals/clients.md).
+contexts such as [client configuration](/identityserver/fundamentals/clients.mdx).
 
 See the [glossary](/general/glossary.mdx#connected-application) for the full definition of a Connected Application.
 
@@ -161,7 +161,7 @@ have a license configured because you are developing locally, or IdentityServer 
 environment, a warning is logged instead and startup continues.
 
 * [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
-* [Automatic Key Management](/identityserver/fundamentals/key-management.md)
+* [Automatic Key Management](/identityserver/fundamentals/key-management.mdx)
 * [SAML Identity Provider](/identityserver/saml/index.mdx)
 * [Spaces](/identityserver/spaces/index.mdx) (IdentityServer 8.1 and later)
 

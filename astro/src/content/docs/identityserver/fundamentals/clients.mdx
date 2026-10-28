@@ -10,6 +10,8 @@ redirect_from:
   - /identityserver/v7/fundamentals/clients/
 ---
 
+import Flow from "~/components/Flow.astro";
+
 [Clients](/identityserver/overview/terminology.md#client), or [connected applications](/general/glossary.mdx#connected-application),
 represent applications that can request tokens from your IdentityServer.
 
@@ -75,6 +77,9 @@ var interactiveClient = new Client
     },
 };
 ```
+
+<Flow page="oauth-2x-core/pkce" />
+
 
 ## Defining Clients In `appsettings.json`
 

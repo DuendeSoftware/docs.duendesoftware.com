@@ -132,6 +132,8 @@ steps:
 9. Handling clock skew between systems
 10. Returning appropriate error response headers when validation fails
 
+For a step-by-step illustration, see [DPoP Proof of Possession](/protocols/security-hardening/dpop.mdx).
+
 This comprehensive validation process requires careful implementation to ensure security. Luckily for
 developers, we've implemented these steps into an easy-to-use library.
 
