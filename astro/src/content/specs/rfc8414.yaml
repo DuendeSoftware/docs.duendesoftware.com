@@ -1,0 +1,18 @@
+id: "rfc8414"
+title: "RFC 8414"
+url: "https://www.rfc-editor.org/rfc/rfc8414"
+status: "RFC"
+# errata list checked by hand 2026-10-22 (rfc-editor.org/errata/rfc8414): 7793 Reported (§2 response_types_supported), 9178 Reported (§3.1 and 3.2), 8696 Rejected (§8.2). None on the issuer and jwks_uri text, §3.1 path or §3.3.
+sections:
+  - key: "asMeta"
+    section: "2"
+    anchor: "section-2"
+    title: "Authorization Server Metadata"
+  - key: "asMetaVal"
+    section: "3.3"
+    anchor: "section-3.3"
+    title: "Authorization Server Metadata Validation"
+  - key: "asMetaReq"
+    section: "3.1"
+    anchor: "section-3.1"
+    title: "Authorization Server Metadata Request"

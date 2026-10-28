@@ -1,0 +1,158 @@
+---
+title: "Access Token vs ID Token vs Refresh Token"
+date: 2026-10-23
+sidebar:
+  order: 3
+description: "An ID token tells the client who signed in, an access token lets the client call an API, and a refresh token gets new access tokens from the authorization server."
+sources: [oidcReq, rfc6749_5_1, idVal, bearer, bearerErr, refresh, bcpAud, atTyp, rfc9068_6, idToken]
+flow:
+  actors:
+    - { name: App, role: "OAuth client" }
+    - { name: AS, role: "Authorization server" }
+    - { name: API, role: "Resource server" }
+  steps:
+    - { from: App, to: AS, channel: front, title: "The app sends the authorization request", summary: "The app asks the AS for a code with the openid scope. The request goes through the user agent, and the AS redirects back to the registered redirect_uri with the code and the same state." }
+    - { from: App, to: AS, channel: back, title: "The app redeems the code for tokens", summary: "The app sends the code, code_verifier and the same redirect_uri over the back channel. The AS returns an ID token, an access token and a refresh token, with no-store headers.", holds: ["id_token", "access_token", "refresh_token"] }
+    - { from: App, to: App, channel: internal, title: "The app validates the ID token", summary: "The ID token is for the client. The app checks iss, aud, exp and any nonce. It does not inspect the access token, and keeps the refresh token for the AS." }
+    - { from: App, to: API, channel: back, title: "App calls the API with the access token", summary: "The app sends the access token as a Bearer token. The API checks it was meant for this API, then answers 200." }
+    - { from: App, to: API, channel: back, title: "Failure example: ID token sent to API", summary: "The ID token is not meant for the API, so the API refuses it, ideally with 401 and invalid_token. The app gains nothing." }
+    - { from: App, to: App, channel: internal, title: "Who may use which token", summary: "ID token: for the client. Access token: for the API. Refresh token: for the AS only. A compact table of recipients." }
+tableOfContents: true
+draft: false
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+An OpenID Connect sign-in returns up to three tokens. After reading this page you will know which token goes to an API, which one describes the sign-in, and which one stays with the client.
+
+## Why It Exists
+
+They are all tokens, but they are not interchangeable, because each one has a different recipient. The ID token goes to the client and says who signed in. The access token goes to an API and says what the client may do. The refresh token goes back to the authorization server (AS) to get new access tokens. Mixing them up is a common source of API security bugs.
+
+A few terms appear in the ID token and the access token. `iss` is the issuer, the AS that created the token. `sub` is the subject, the user the token is about. `aud` is the audience, the party the token is meant for. `exp` is the expiry time. `typ` is a header that names the kind of token, for example `at+jwt` for a JWT access token.
+
+## How It Works
+
+Steps 1 to 4 are the normal path. Step 5 is a failure branch, and step 6 is a recipient summary.
+
+<Flow flow={frontmatter.flow} />
+
+## Step by Step
+
+### 1. The app sends the authorization request
+
+The request and the redirect each pass through the user agent (RFC 6749 section 4.1.1). The `openid` scope is what turns this into an [OpenID Connect](/protocols/openid-connect/openid-connect.mdx) sign-in, which is why an ID token comes back later. `redirect_uri` is REQUIRED in OpenID Connect and must exactly match a registered value. `nonce` is OPTIONAL in the code flow.
+
+```http
+GET /connect/authorize
+  ?response_type=code&client_id=budget
+  &redirect_uri=https://budget.example/callback
+  &scope=openid orders&state=7a2f
+  &code_challenge=E9Melhoa...&code_challenge_method=S256
+
+# AS redirect response:
+HTTP/1.1 302 Found
+Location: https://budget.example/callback?code=abc123&state=7a2f
+```
+
+<Cite k="oidcReq" />
+
+### 2. The app redeems the code for tokens
+
+The app sends the code over the back channel, so the tokens never pass through the browser. A confidential client also authenticates here, and a public client sends `client_id`, as shown. The refresh token is optional and the AS decides whether to issue one. The access token may be a JWT or an opaque string.
+
+```http
+POST /connect/token
+grant_type=authorization_code&code=abc123&client_id=budget
+&redirect_uri=https://budget.example/callback&code_verifier=...
+HTTP/1.1 200 OK
+Cache-Control: no-store
+Pragma: no-cache
+{"id_token":"eyJ...","access_token":"2YotnFZ...",
+ "refresh_token":"tGzv3JO...","token_type":"Bearer"}
+```
+
+<Cite k="rfc6749_5_1" />
+
+### 3. The app validates the ID token
+
+The ID token is for the app, so the app checks it before it trusts the sign-in. Here `aud` contains the `client_id`, `budget`, which is how the app knows the token was issued for it. Remember this value for step 5. The excerpt is partial and omits other claims. Where the app stores the refresh token is an implementation choice, not a requirement of the specs.
+
+```json
+{"iss":"https://identity.example",
+ "sub":"alice","aud":"budget",
+ "iat":1713196400,"exp":1713200000}
+```
+
+<Cite k="idVal" />
+
+### 4. App calls the API with the access token
+
+For an RFC 9068 JWT access token the API checks `typ` (`at+jwt`), `iss`, `aud`, and `exp`. Here `aud` should name the API, not `budget`. An opaque token is checked another way, for example by introspection. The [access token validation](/protocols/tokens/access-token-validation.mdx) page covers the checks in order.
+
+```http
+GET /orders HTTP/1.1
+Host: api.example
+Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA
+
+HTTP/1.1 200 OK
+```
+
+<Cite k="bearer" />
+
+### 5. Failure example: ID token sent to API
+
+This is a failure example, not part of the normal flow. Compare the ID token's audience from step 3 (`budget`) with the API's own identifier. They differ, so the API refuses the token. The refusal is resource-server behavior, not something the client does. An RFC 9068 API refuses on `aud` and `typ`.
+
+```http
+GET /orders HTTP/1.1
+Host: api.example
+Authorization: Bearer eyJ...id-token...
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer error="invalid_token"
+```
+
+<Cite k="bearerErr" />
+
+### 6. Who may use which token
+
+Each token has exactly one recipient. Keep this table next to your code.
+
+| Token | Recipient | What the recipient does with it |
+| --- | --- | --- |
+| ID token | The client | Reads who signed in, after validating it. |
+| Access token | The API | Decides whether to serve the request. |
+| Refresh token | The AS only | Exchanges it for new access tokens. |
+
+The client does not inspect the access token, because its format can change. Refresh tokens are never sent to resource servers. The UserInfo endpoint is a protected resource that also accepts the access token.
+
+<Cite k="refresh" />
+
+## Notes
+
+RFC 9068 section 6 forbids the client to inspect the access token, and RFC 6749 section 1.5 says refresh tokens are never sent to resource servers. Read more about [refresh tokens](/protocols/oauth-2x-core/refresh-tokens.mdx).
+
+The ID token has no scope claim (OpenID Connect section 2), so an API cannot rely on one. The step 5 refusal rests on aud (RFC 7519 section 4.1.3, RFC 9068 section 4) and on RFC 9700 section 2.3.
+
+## Use It When
+
+* You need to decide which token goes to the API and which stays in the client.
+* An API accepted, or should have refused, a token it was not given for.
+
+## Don't Confuse With
+
+* Using the ID token as an access token for an API. The API must refuse it.
+* The application's own session cookie, which is local state, not one of these three tokens.
+
+## Build with Duende
+
+IdentityServer issues all three tokens. Your client requests them, and your ASP.NET Core API validates the access token it receives.
+
+* [Requesting tokens](/identityserver/tokens/index.md)
+* [Token endpoint reference](/identityserver/reference/v8/endpoints/token.md)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

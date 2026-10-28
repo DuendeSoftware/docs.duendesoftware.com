@@ -114,7 +114,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * General style: "big brother sitting next to you helping with your homework." Friendly, educational, patient. You're a senior engineer who has seen this before and wants to help the reader understand, not just find a quick fix.
 * Use the active voice. For example, use "Enable" instead of "Enabled" or "Enabling".
 * Use the second person ("you" not "I" or "we"). "You" is the reader of the documentation. "We" is Duende Software.
-* Use sentence case in text. Titles use Title Case.
+* Page titles and headings use Title Case. Keep a, an, the, and, or, but, as, at, by, for, in, of, on, to, vs, via, and with lowercase unless they are the first or last word. Keep acronyms and product names as written. Body text uses sentence case.
 * Use the Oxford comma.
 * Avoid words like "very", "simple", "easy", ...
 * "As well as" can be written as "and".
@@ -122,6 +122,11 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Avoid flowery language. Keep it concise. Answer thoroughly, but don't pad. Longer isn't better.
 * Educational, not pedantic: Explain *why* something works, not just *what* to change. Don't over-explain things that are likely already known. When in doubt, include some basic info and reference relevant other sources with more background.
 * When using acronyms, use the full form with parentheses the first time you use it. For example, use "Multi-Factor Authentication (MFA)" instead of "MFA".
+* No em dashes.
+* Avoid semicolons unless you need one. Write two sentences instead.
+* Avoid AI-isms: "delve", "robust", "seamless", "leverage", "crucial", "ensure" (use "make sure"), "navigate", "landscape", "journey", "unlock", "empower", "comprehensive", "straightforward", "it is worth noting", "in order to" (use "to"), exclamation marks, and emoji.
+* Vary sentence length. Mix short and long sentences.
+* Define a term the first time you use it.
 * Read it out loud. If it sounds like a robot wrote it, rewrite it.
 
 ### Linking Rules
@@ -148,7 +153,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Add a title to the code block. You can do this adding the title as a comment in the first line of the code block (e.g. `// Program.cs`).
 * Use [expressive code features](https://starlight.astro.build/guides/authoring-content/#expressive-code-features).
 * Readers should not need to scroll horizontally to read a code example. Simplify and condense the code as much as possible.
-* If writing C#, use the latest syntax — including top-level statements, collection expressions, ...
+* If writing C#, use the latest syntax, including top-level statements, collection expressions, ...
 * Make sure examples are runnable and complete. The goal is "Copy-paste from docs". Include namespaces, a result, and other prerequisites that are not obvious to someone new to the code.
 * Inline comments can be used to explain essential parts of the code. Expressive code can highlight line numbers, show diffs, and more.
 * Mention NuGet packages as a `bash` code block showing how to install it (`dotnet add package ...`). Link to the NuGet Gallery.
@@ -168,8 +173,8 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 
 * Always have a `title` property to set the page title.
 * Always have a `description` property to set the page description. This is a summary of the page's core content.
-* Always have a `date` property to set the creation/significant update date for a page. Use the `YYYY-MM-DD` format.
-* Add the `sidebar` property and must include the `label` and `order`. The `label` is used in the menu, and should typically be shorter than the more descriptive `title`. For example:
+* Always have a `date` property to set the creation/significant update date for a page. Use the `YYYY-MM-DD` format. This includes the pages under `astro/src/content/docs/protocols/`: update it when you change a page in a way readers would notice.
+* Add the `sidebar` property and include the `label` and `order` (optional on `/protocols/` pages when the title already fits the menu). The `label` is used in the menu, and should typically be shorter than the more descriptive `title`. For example:
 
   ```yaml
   title: "Using IdentityServer As A Federation Gateway"
@@ -177,6 +182,18 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
     label: "Federation"
     order: 1
   ```
+
+### Protocols: Identity Visualized
+
+* Pages live in `astro/src/content/docs/protocols/<group>/<slug>.mdx`. A group is a folder with a `_meta.yml` for its label and order. The sidebar autogenerates.
+* Frontmatter has `title`, `date`, `description`, `sources` (spec registry keys), and `flow`. The `flow` has `actors` (each with `name` and `role`) and `steps` (each with `from`, `to`, `channel`, `title`, `summary`, and `holds`).
+* Limits: max 3 actors, max 7 steps, step title max 8 words, step summary max 35 words. The `### N.` headings in the body equal the step titles.
+* Body H2s, in order: Why It Exists, How It Works (`<Flow flow={frontmatter.flow} />`), Step by Step, Notes, Use It When, Don't Confuse With, Build with Duende, and Sources (`<Sources keys={frontmatter.sources} />`).
+* Cite specs with `<Cite k="..." />`. Keys come from the spec registry in `astro/src/content/specs/*.yaml`.
+* To embed a flow in another docs page, import `Flow` from `~/components/Flow.astro` and use `<Flow page="<group>/<slug>" />`. Use at most 2 per page.
+* `npm run protocols:check` is a dry run of the spec watcher: an offline drift check plus a live spec comparison. It never opens issues.
+* `npm run protocols:monthly` is what the GitHub Action `protocols-monthly.yml` runs. Its schedule is disabled for now. Run it manually with the `dry_run` input.
+* New pages need review of the spec accuracy by a second person against the spec.
 
 ## 🧞 Commands
 
@@ -266,14 +283,14 @@ We make our docs consumable by AI agents and LLMs, not just humans.
 
 ### What we do
 
-* **[`llms.txt`](https://docs.duendesoftware.com/llms.txt) and [`llms-full.txt`](https://docs.duendesoftware.com/llms-full.txt)** — Machine-readable site index and full content dump following the [llms.txt proposal](https://llmstxt.org/), so AI tools can discover and ingest our docs.
-* **Content negotiation** — The server supports `Accept: text/markdown` to return raw Markdown for any docs page, giving AI agents clean content without HTML noise.
-* **`robots.txt` signals** — We don't block AI crawlers. The robots.txt includes references to `llms.txt` so crawlers can find structured content.
+* **[`llms.txt`](https://docs.duendesoftware.com/llms.txt) and [`llms-full.txt`](https://docs.duendesoftware.com/llms-full.txt)**: Machine-readable site index and full content dump following the [llms.txt proposal](https://llmstxt.org/), so AI tools can discover and ingest our docs.
+* **Content negotiation**: The server supports `Accept: text/markdown` to return raw Markdown for any docs page, giving AI agents clean content without HTML noise.
+* **`robots.txt` signals**: We don't block AI crawlers. The robots.txt includes references to `llms.txt` so crawlers can find structured content.
 
 Beyond this repo, Duende also provides tools that give AI coding assistants specialized knowledge (see [AI Agent Tools](https://docs.duendesoftware.com/general/ai-agent-tools/)):
 
-* **[Agent Skills](https://github.com/DuendeSoftware/duende-skills)** — Structured `SKILL.md` files following the [Agent Skills format](https://agentskills.io/) that give AI assistants domain expertise on IdentityServer, BFF, token management, and more. Loaded automatically by compatible IDEs.
-* **[MCP Server](https://github.com/DuendeSoftware/products/blob/main/docs-mcp/README.md)** — A local [Model Context Protocol](https://modelcontextprotocol.io/) server that gives AI assistants search and fetch access to the full Duende docs, blog, and sample code via SQLite full-text search.
+* **[Agent Skills](https://github.com/DuendeSoftware/duende-skills)**: Structured `SKILL.md` files following the [Agent Skills format](https://agentskills.io/) that give AI assistants domain expertise on IdentityServer, BFF, token management, and more. Loaded automatically by compatible IDEs.
+* **[MCP Server](https://github.com/DuendeSoftware/products/blob/main/docs-mcp/README.md)**: A local [Model Context Protocol](https://modelcontextprotocol.io/) server that gives AI assistants search and fetch access to the full Duende docs, blog, and sample code via SQLite full-text search.
 
 ### Why
 

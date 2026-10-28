@@ -1,0 +1,174 @@
+---
+title: "OAuth Device Authorization Grant"
+date: 2026-10-23
+sidebar:
+  order: 3
+description: "A device without a good input method gets a device code and a short user code, then polls while the user signs in on a phone or computer. The device never sees the user's credentials."
+draft: false
+tableOfContents: true
+sources: [deviceAuth, deviceResp, deviceUser, deviceToken, deviceErr, deviceUserCode, deviceCodeBf, devicePhish, deviceNonConf, rfc6749_5_1]
+flow:
+  actors:
+    - { name: TV, role: "Device (client)" }
+    - { name: Phone, role: "Secondary device (user agent)" }
+    - { name: AS, role: "Authorization server" }
+  steps:
+    - { from: TV, to: AS, channel: back, title: "The TV requests device codes", summary: "The TV, a public client, posts client_id and an optional scope straight to the device authorization endpoint. Requests from the device use TLS. No credentials are typed on the TV." }
+    - { from: AS, to: TV, channel: back, title: "The AS returns device and user codes", summary: "The response holds device_code, user_code, verification_uri and expires_in. verification_uri_complete and interval are optional, and without interval the client uses 5 seconds. The RFC example sends Cache-Control no-store.", holds: ["device_code", "user_code", "verification_uri", "polling interval"] }
+    - { from: TV, to: TV, channel: internal, title: "The TV shows the URI and user code", summary: "The TV tells Alice to open verification_uri on another device and shows the user_code, then starts polling. With verification_uri_complete, for example as a QR code, it still shows the user_code." }
+    - { from: TV, to: AS, channel: back, title: "The TV polls the token endpoint", summary: "The TV polls with the device_code, waiting at least interval seconds. If the AS answers authorization_pending, it polls again. If it answers slow_down, it adds 5 seconds to all later polls." }
+    - { from: Phone, to: AS, channel: front, title: "Alice approves on the phone", summary: "Alice opens the URI on the Phone, supplies the user_code and signs in at the AS, with any MFA it requires, then approves. The AS tells her she is authorizing a device." }
+    - { from: AS, to: TV, channel: back, title: "If approved, the next poll gets a token", summary: "After approval, a later poll succeeds. If the AS sent slow_down meanwhile, the interval is now 5 seconds longer. Token responses carry no-store cache headers.", holds: ["access token"] }
+    - { from: AS, to: TV, channel: back, title: "If denied or expired, stop polling", summary: "On access_denied or expired_token the client stops polling, as for any other error. A new request is allowed after expired_token, but a client starts one only when the user prompts it." }
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+A device without a good input method gets a device code and a short user code, then polls while the user signs in on a phone or computer. The device never sees the user's credentials.
+
+## Why It Exists
+
+A television or command-line tool has no good way to show a sign-in page or take a password. The device grant lets it ask for authorization anyway: the user signs in on a separate device, such as a phone, and the TV polls until the authorization server (AS) says yes or no. After this page you can follow that polling loop and tell apart the outcomes: still waiting, slow down, approved, denied, or expired.
+
+## How It Works
+
+Steps 1 to 5 are the normal setup and polling loop. Steps 6 and 7 are alternative outcomes of that loop.
+
+<Flow flow={frontmatter.flow} />
+
+## Step by Step
+
+### 1. The TV requests device codes
+
+The TV is the client, and it has no browser to redirect. It posts straight to the device authorization endpoint with its `client_id`. A client should start this request only when the user prompts it, not automatically at app start. The RFC example has a Host line and no scheme, but TLS is required for every request from the device.
+
+```http
+POST /device_authorization HTTP/1.1
+Host: identity.example
+Content-Type: application/x-www-form-urlencoded
+
+client_id=living-room-tv&scope=video.playback
+```
+
+<Cite k="deviceAuth" />
+
+### 2. The AS returns device and user codes
+
+The AS returns two codes for two audiences. The `device_code` is for the TV's polling and is not intended for the end user, so it should be high-entropy. The `user_code` is short so a person can type it.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+
+{"device_code":"GmRhmh...","user_code":"WDJB-MJHT",
+ "verification_uri":"https://identity.example/activate",
+ "expires_in":900,"interval":5}
+```
+
+<Cite k="deviceResp" />
+
+### 3. The TV shows the URI and user code
+
+This step is on the TV screen only, and no request crosses the wire. The TV does not show the `device_code`. The user code ties Alice's browser session to this pending request. It is not her password.
+
+```text
+On your phone, open
+  https://identity.example/activate
+and enter the code
+  WDJB-MJHT
+```
+
+<Cite k="deviceUser" />
+
+### 4. The TV polls the token endpoint
+
+Before each poll the TV waits at least `interval` seconds, or 5 if none was given. On a connection timeout it reduces its polling frequency, and exponential backoff is recommended. The wire shows the request, then the most common response. Two answers keep the loop going, and any other error ends it.
+
+```http
+POST /token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Adevice_code
+&device_code=GmRhmh...&client_id=living-room-tv
+
+HTTP/1.1 400 Bad Request
+{"error":"authorization_pending"}
+```
+
+Branch: If the response is `authorization_pending`, Alice has not approved yet, so the TV waits and polls again.
+
+```http
+HTTP/1.1 400 Bad Request
+{"error":"slow_down"}
+```
+
+Branch: If the response is `slow_down`, the TV is polling too fast. It adds 5 seconds to the interval for this and all later polls.
+
+<Cite k="deviceToken" />
+
+### 5. Alice approves on the phone
+
+Alice opens `verification_uri` on her phone and enters the `user_code`. The rest is up to the AS, for example sign-up or extra verification. RFC 8628 section 5.4 recommends that the AS tell her she is authorizing a device and confirm the device is in her possession, and that it show information about the device. If she opened the complete URI, the AS should also ask her to check that the code matches the one on the TV (section 3.3.1). If she did not start this request, she should deny it. This guards against remote phishing.
+
+<Cite k="deviceUser" /> <Cite k="devicePhish" />
+
+### 6. If approved, the next poll gets a token
+
+This is the approval branch. Once Alice approves, the AS answers the next valid poll with tokens, so the TV learns the outcome only by polling. The body can also carry a `refresh_token` or `scope`. The step cites the token response rules of RFC 6749 section 5.1.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+Pragma: no-cache
+
+{"access_token":"eyJ...","token_type":"Bearer","expires_in":3600}
+```
+
+<Cite k="rfc6749_5_1" />
+
+### 7. If denied or expired, stop polling
+
+These are the denial and expiry branches. If Alice denies the request, the AS answers `access_denied`. If she takes too long, it answers `expired_token`. Either way the TV stops polling. The RFC says a client may start a new request after `expired_token` but should wait for user interaction.
+
+```http
+HTTP/1.1 400 Bad Request
+{"error":"access_denied"}
+
+HTTP/1.1 400 Bad Request
+{"error":"expired_token"}
+```
+
+<Cite k="deviceErr" />
+
+## Notes
+
+The user code is short on purpose, so its entropy is low. RFC 8628 section 5.1 recommends that the server rate-limit user code attempts.
+
+Remote phishing: an attacker can start the flow on their own device and ask a victim to enter the code. Servers should show which device is being authorized and ask the user to confirm it (section 5.4).
+
+Device clients generally cannot keep a secret, so they should be treated as public clients unless additional measures are taken (section 5.6).
+
+## Use It When
+
+* The client runs on a device with no browser or a poor input method, such as a television or a console.
+* You want the user to authenticate on a phone or computer instead of typing credentials on the device.
+
+## Don't Confuse With
+
+* The [authorization code flow with PKCE](/protocols/oauth-2x-core/pkce.mdx), where the client has a browser and the user returns to it through a redirect.
+* Client-initiated backchannel authentication (CIBA), where the client names the user and the AS contacts that user.
+
+## Build with Duende
+
+You configure a device-flow client in IdentityServer by giving it the device flow grant type. The device app calls the device authorization endpoint and then polls the token endpoint.
+
+* [Clients in IdentityServer](/identityserver/fundamentals/clients.mdx)
+* [Device authorization endpoint in IdentityServer](/identityserver/reference/v8/endpoints/device-authorization.md)
+* [Device authorization requests in Duende.IdentityModel](/identitymodel/endpoints/device-authorize.md)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />
