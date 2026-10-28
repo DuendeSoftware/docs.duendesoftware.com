@@ -1,0 +1,101 @@
+---
+title: "Choose the Right OAuth Flow"
+date: 2026-10-23
+sidebar:
+  order: 2
+description: "Use the authorization code flow with PKCE for apps with a user, client credentials for confidential services acting for themselves, and the device grant for input-constrained devices, and avoid the implicit and password grants."
+sources: [clientType, bcpPkce, bcpImplicit, bcpRopc, ccOnly, ccResp, tokenErr, tokenReq, deviceIntro, nativeEmbedded, cc, deviceAuth, oauth21Status]
+flow:
+  actors:
+    - { name: Client, role: "OAuth client" }
+    - { name: AS, role: "Authorization server" }
+  steps:
+    - { from: Client, to: Client, channel: internal, title: "Pick by client type and user", summary: "This page has no messages. Each grant has its own page. Check whether a user is present, whether the client can keep a secret, and whether the device has input." }
+    - { from: Client, to: Client, channel: internal, title: "Apply the rules at their levels", summary: "Public clients need PKCE and confidential clients should use it too. Client credentials is for confidential clients only. Do not use the password grant, and avoid implicit." }
+    - { from: AS, to: Client, channel: back, title: "If a grant is disallowed, AS refuses", summary: "If a client uses a grant type it is not allowed to use, the token endpoint answers 400 with unauthorized_client. The request itself is not shown." }
+tableOfContents: true
+draft: false
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+This page helps you pick a grant. After reading it you will know which one fits a user-facing app, a background service, or a device with limited input, and which two to avoid.
+
+## Why It Exists
+
+A grant is the way a client gets an access token from the authorization server (AS). Three questions decide which one you use. Is a user present, can the client keep a secret, and does the device have a keyboard or browser? The current security guidance also rules out two grants, and this page names them.
+
+## How It Works
+
+<Flow flow={frontmatter.flow} />
+
+## Step by Step
+
+### 1. Pick by client type and user
+
+A client is public when it cannot keep a secret and confidential when it can. Start with that, then match the grant to the situation.
+
+* Browser or native app (public client): [authorization code with PKCE](/protocols/oauth-2x-core/pkce.mdx). A native app uses an external user agent, not an embedded one.
+* Server-side web app (confidential client): authorization code, with client authentication at the token endpoint.
+* Service acting for itself: [client credentials](/protocols/oauth-2x-core/client-credentials.mdx), for confidential clients only.
+* Device with limited input: the [device flow](/protocols/oauth-2x-core/device-flow.mdx). The user signs in at the AS on another device, and the client should start it only when the user asks. It is not meant to replace browser-based OAuth on capable devices.
+
+Credentials in a native app can be extracted, and a user can read those in a browser app, so both kinds of client are public.
+
+<Cite k="clientType" />
+
+### 2. Apply the rules at their levels
+
+Once you have a candidate grant, check it against the current guidance. Four rules matter.
+
+* PKCE: public clients need it, and confidential clients should use it too. The challenge must be bound to the client and user agent that started the request, by keeping the `code_verifier` in that browser session.
+* Client credentials: the client has to authenticate, and the AS should not include a refresh token.
+* Password grant (resource owner password credentials, ROPC): do not use it.
+* Implicit: avoid it. Use the authorization code grant, which keeps tokens out of the browser URL.
+
+The exact requirement levels are in Notes.
+
+<Cite k="bcpPkce" />
+
+### 3. If a grant is disallowed, AS refuses
+
+This is a failure branch. When the client picked a grant it is not allowed to use, the AS refuses it. The token endpoint returns `400` with `unauthorized_client` (RFC 6749 section 5.2) when an authenticated client uses a grant type it is not allowed to use. At the authorization endpoint the same error comes back as a redirect query parameter (section 4.1.2.1). Policy on which clients may use which grant is the AS's choice, so compare the error with the client's configured grant types.
+
+```http
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{"error":"unauthorized_client"}
+```
+
+<Cite k="tokenErr" />
+
+## Notes
+
+Requirement levels: public clients MUST use PKCE and it is RECOMMENDED for confidential clients. A confidential OpenID Connect client MAY use the ID token `nonce` instead of PKCE. Client credentials MUST only be used by confidential clients and the client MUST authenticate. The password grant MUST NOT be used. Implicit SHOULD NOT be used unless access token injection is prevented and the leakage vectors are mitigated.
+
+OAuth 2.1 (draft-ietf-oauth-v2-1-16) is an Internet-Draft, not a standard. It does not specify the implicit and resource owner password credentials grants. The client credentials rules come from RFC 6749, while the PKCE, password grant, and implicit rules come from RFC 9700.
+
+Refresh tokens are left out here. See the [refresh tokens](/protocols/oauth-2x-core/refresh-tokens.mdx) page.
+
+## Use It When
+
+* You are choosing the grant type for a new client.
+* A client is refused for the grant it used and you need to know which one fits.
+
+## Don't Confuse With
+
+* The [OAuth roles](/protocols/basics/oauth-roles.mdx) page, which names the parties but does not choose a grant.
+* The pages for each grant, which show each grant's message sequence.
+
+## Build with Duende
+
+You configure the allowed grant types per client in IdentityServer, and the client application then uses the grant you picked. Start with the client page, then choose the grant types for each client.
+
+* [Clients in IdentityServer](/identityserver/fundamentals/clients.mdx)
+* [Password grant (legacy) in IdentityServer](/identityserver/tokens/password-grant.md)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

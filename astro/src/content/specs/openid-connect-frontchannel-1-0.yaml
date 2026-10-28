@@ -1,0 +1,18 @@
+# Status from the spec header: "Final: OpenID Connect Front-Channel Logout 1.0" (September 12, 2022). Errata check = header only.
+id: "openid-connect-frontchannel-1-0"
+title: "OIDC Front-Channel Logout 1.0"
+url: "https://openid.net/specs/openid-connect-frontchannel-1_0.html"
+status: "OpenID Final"
+sections:
+  - key: "frontLogout"
+    section: "2"
+    anchor: "RPLogout"
+    title: "Relying Party Logout Functionality"
+  - key: "sid"
+    section: "3"
+    anchor: "OPLogout"
+    title: "OpenID Provider Logout Functionality (defines the sid claim)"
+  - key: "frontLogoutThirdParty"
+    section: "4.1"
+    anchor: "ThirdPartyContent"
+    title: "User Agents Blocking Access to Third-Party Content"

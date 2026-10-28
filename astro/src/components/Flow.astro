@@ -1,0 +1,28 @@
+---
+import { getEntry } from 'astro:content';
+import type { Flow } from '../lib/protocols/schema';
+import { flowSchema } from '../lib/protocols/schema';
+import FlowFrame from './protocols/FlowFrame.astro';
+import './protocols/flow.css';
+
+// `flow`: the frontmatter flow object of a protocols page. `page`: embed the flow of /protocols/<page>/ in another page.
+interface Props { flow?: Flow; page?: string }
+const { page } = Astro.props;
+let flow = Astro.props.flow;
+if (page) {
+	const entry = await getEntry('docs', `protocols/${page}`);
+	if (!entry) throw new Error(`[protocols] <Flow page="${page}">: no page protocols/${page}`);
+	if (entry.data.draft) throw new Error(`[protocols] <Flow page="${page}">: page is a draft`);
+	if (!entry.data.flow) throw new Error(`[protocols] <Flow page="${page}">: page has no flow in its frontmatter`);
+	flow = entry.data.flow;
+}
+if (!flow) throw new Error('[protocols] <Flow> needs a flow or a page');
+flowSchema.parse(flow);
+---
+<flow-stepper data-embed={page ? '' : undefined}>
+	<FlowFrame flow={flow} />
+	{page && <p class="flow-embed"><a href={`/protocols/${page}/`}>Learn how the protocol works →</a></p>}
+</flow-stepper>
+<script>
+	import './protocols/flow';
+</script>

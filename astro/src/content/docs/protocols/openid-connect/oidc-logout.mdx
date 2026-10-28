@@ -1,0 +1,155 @@
+---
+title: "OpenID Connect Logout"
+date: 2026-10-23
+sidebar:
+  order: 3
+description: "An RP asks the OP to end the user's session. The OP then tells each RP that user is logged in to, by back-channel POST or front-channel iframe, so the RP can end its own session."
+draft: false
+tableOfContents: true
+sources: [sid, rpLogout, rpLogoutRedirect, rpLogoutValidation, rpLogoutSecurity, frontLogout, frontLogoutThirdParty, backLogoutToken, backLogoutRequest, backLogoutValidation, backLogoutActions, backLogoutResponse, backLogoutSecurity]
+flow:
+  actors:
+    - { name: Browser, role: "User agent" }
+    - { name: RP, role: "Relying party" }
+    - { name: OP, role: "OpenID provider" }
+  steps:
+    - { from: OP, to: RP, channel: back, title: "Sign-in creates an OP session", summary: "The user signs in at the OP, which keeps its own session. The ID token sent to the RP may carry a sid (session ID) claim naming that session, if the OP supports it.", holds: ["OP session", "ID token", "sid (if supported)"] }
+    - { from: Browser, to: OP, channel: front, title: "RP asks the OP to end the session", summary: "The RP redirects the browser to the OP's end_session_endpoint with the ID token as id_token_hint, plus an optional post_logout_redirect_uri and state." }
+    - { from: OP, to: Browser, channel: front, title: "OP confirms and ends its session", summary: "The OP should ask the user whether to log out. It must ask if there is no id_token_hint or the hint does not match. If the user agrees, it must log the user out.", holds: ["OP session"] }
+    - { from: OP, to: RP, channel: back, title: "Alternative: back channel, OP POSTs logout token", summary: "For each RP logged in as that user, the OP POSTs a signed logout_token straight to its backchannel_logout_uri. The RP validates it and answers 200, or 400 if invalid.", holds: ["logout token"] }
+    - { from: OP, to: RP, channel: front, title: "Alternative: front channel, an iframe per RP", summary: "Instead of step 4, the OP renders an iframe for each RP's frontchannel_logout_uri. It may add iss and sid, and if it adds one it must add both." }
+    - { from: RP, to: RP, channel: internal, title: "RP clears its session", summary: "After a back-channel logout token, the RP finds the session named by iss and sub or sid. After a front-channel request it clears the session for that browser. Already logged out counts as success.", holds: ["RP session"] }
+    - { from: OP, to: RP, channel: back, title: "What goes wrong", summary: "A front-channel iframe can be blocked as third-party content. A lost back-channel POST should be retransmitted only after a suspected recoverable failure. A logout token can be replayed." }
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+A relying party (RP) asks the OpenID provider (OP) to end the user's session. The OP then tells each RP that user is logged in to, by back-channel POST or front-channel iframe, so the RP can end its own session.
+
+## Why It Exists
+
+Signing in to several apps through one OP creates a session at the OP and one at each RP, and each ends separately. If you log out of one app, the OP cookie and the other apps' cookies stay alive. The logout specs let the OP notify the other RPs so they can clear theirs. After reading this page you can compare the browser-delivered (front-channel) and the server-to-server (back-channel) notification and see how each one fails. Delivery can fail, so logout is never guaranteed everywhere.
+
+This page builds on [OpenID Connect sign-in](/protocols/openid-connect/openid-connect.mdx), where the session and the ID token are created.
+
+## How It Works
+
+Steps 1 to 3 are the same for every logout. Steps 4 and 5 are alternatives. An RP registers for the back channel, the front channel, or both, and the OP uses whichever it registered.
+
+<Flow flow={frontmatter.flow} />
+
+## Step by Step
+
+### 1. Sign-in creates an OP session
+
+Each RP also keeps its own session. In ASP.NET Core this is the app's cookie. The ID token is later reused as the `id_token_hint` at logout. `sid` is the session ID, an identifier the OP gives to this one sign-in session. The OP can later name that session in a logout notification, and the RP matches the `sid` to its own session. `sid` is optional and only present if the OP supports it (back-channel and front-channel logout each have a `*_session_supported` metadata flag). The claims shown are sample values, not from a real server.
+
+```json
+{
+  "iss": "https://server.example.com",
+  "sub": "248289761001",
+  "aud": "s6BhdRkqt3",
+  "sid": "08a5019c-17e1-4977-8f42-65a12843ea02"
+}
+```
+
+<Cite k="sid" />
+
+### 2. RP asks the OP to end the session
+
+The user clicks log out in one app. That app clears its own cookie, but this only ends the app's session. The OP cookie is still valid, and so are the other apps' cookies. So the RP also redirects the browser to the OP. Logging out locally first is up to the RP, and local logout alone never reaches the OP.
+
+The endpoint URL normally comes from discovery (`end_session_endpoint`, RP section 2) and must use `https`. The OP must support GET and POST. `id_token_hint` is RECOMMENDED, and the OP must check that it issued that token. `post_logout_redirect_uri` must exactly match a registered value. `state` is opaque and comes back unchanged. The path `/connect/endsession` below is an example. `logout_hint` is a different, optional parameter.
+
+```http
+GET /connect/endsession?
+  id_token_hint=eyJ...
+  &post_logout_redirect_uri=https%3A%2F%2Frp.example.org%2Fsigned-out
+  &state=af0ifjsldkj
+Host: server.example.com
+```
+
+<Cite k="rpLogout" />
+
+### 3. OP confirms and ends its session
+
+If the user agrees, the OP ends its own session and clears its cookie. This is what means the next sign-in needs a new authentication at the OP. Next the OP tells the other RPs so they can clear their cookies too (steps 4 and 5). It sends the logout notifications before any redirect to `post_logout_redirect_uri`.
+
+The OP must not redirect after an error. Without an `id_token_hint` it must not redirect unless it can confirm the target another way. Logout requests without a valid hint are a possible denial-of-service vector, which is why the OP asks the user.
+
+<Cite k="rpLogout" />
+
+### 4. Alternative: back channel, OP POSTs logout token
+
+In the back channel, the OP calls each RP directly, server to server, and the browser is not involved. The RP developer exposes one endpoint for this, registered as `backchannel_logout_uri`. In ASP.NET Core that is an endpoint that validates the token and ends the matching session.
+
+The body is form-encoded. The token must be signed (`alg` `none` is forbidden) and has `iss`, `aud`, `iat`, `exp`, `jti`, and an `events` member, plus `sub`, `sid`, or both, and no `nonce`. Header `typ` `logout+jwt` is RECOMMENDED. The RP validates the signature, `iss`, `aud`, `iat`, `exp`, the `events` member, and that `nonce` is absent. It answers 200 on success (OPs should accept 204) or 400 if invalid, and the response should carry `Cache-Control: no-store`. The claims are the example values from the Back-Channel Logout spec.
+
+```http
+POST /backchannel_logout HTTP/1.1
+Host: rp.example.org
+Content-Type: application/x-www-form-urlencoded
+
+logout_token=eyJhbGciOiJSUzI1NiJ9...
+decoded payload (not on the wire):
+{"iss":"https://server.example.com","sub":"248289761001","aud":"s6BhdRkqt3","iat":1471566154,"exp":1471569754,"jti":"bWJq","sid":"08a5019c-17e1-4977-8f42-65a12843ea02","events":{"http://schemas.openid.net/event/backchannel-logout":{}}}
+```
+
+<Cite k="backLogoutToken" />
+
+### 5. Alternative: front channel, an iframe per RP
+
+In the front channel, the browser delivers the notification. The OP page it shows to the user contains one hidden iframe per RP. The RP developer exposes an endpoint registered as `frontchannel_logout_uri`, and the browser calls it with the RP's own cookie attached. That is why this method can clear a cookie directly, and also why it is exposed to browser privacy controls.
+
+The RP clears its session, including cookies and local storage, on receiving the iframe request. Verifying `iss` and `sid` against a current or recent ID token is optional (MAY), and an RP can require them with `frontchannel_logout_session_required`, which defaults to `false`. An RP that is already logged out counts as success. The OP renders this URL as the source of the iframe.
+
+```text
+https://rp.example.org/frontchannel_logout
+  ?iss=https%3A%2F%2Fserver.example.com
+  &sid=08a5019c-17e1-4977-8f42-65a12843ea02
+```
+
+<Cite k="frontLogout" />
+
+### 6. RP clears its session
+
+Whichever method delivered the notification, the RP now ends its own session so its cookie stops working. Compare the `iss` and `sid` (or `sub`) in the notification with the session the RP holds. If no session matches, the RP has nothing to do and still counts as successful.
+
+How the RP clears state is implementation specific. For back-channel logout, refresh tokens issued without `offline_access` to the session being logged out should be revoked, and refresh tokens issued with `offline_access` normally should not be. An RP that is itself an OP for downstream sessions should send them logout requests too.
+
+<Cite k="backLogoutActions" />
+
+### 7. What goes wrong
+
+Each method fails in its own way. Front channel: browsers increasingly block third-party content, so the RP may not see its login state in the iframe. Deployments should detect this and tell the user where possible. Back-channel logout does not depend on browser state, so this blocking does not apply to it. The OP SHOULD NOT retransmit except after a suspected recoverable error such as a network outage, and then with a delay. A captured logout token can be replayed. An RP can optionally check that the `jti` was not recently received, and OPs are encouraged to use short expiry times.
+
+<Cite k="frontLogoutThirdParty" />
+
+## Notes
+
+Not covered: OIDC Session Management 1.0, `logout_hint`, `client_id` and `ui_locales` request parameters, logout-token encryption, and native-app RPs.
+
+Logging out does not revoke tokens already issued. Access-token lifetime after logout is outside these logout specs. See [token revocation](/protocols/tokens/token-revocation.mdx).
+
+## Use It When
+
+* Users sign in to several apps through one OP and you want logging out of one to end the others.
+* You need to know which logout mechanism an RP can use, and what it does when a notification is lost.
+
+## Don't Confuse With
+
+* Token revocation (RFC 7009), which invalidates a token, not a browser session.
+* Local logout, which clears only the RP's own session and never tells the OP.
+
+## Build with Duende
+
+IdentityServer is the OP: it ends its session and sends the notifications. Each client app registers its `backchannel_logout_uri` or `frontchannel_logout_uri` and exposes that endpoint. The BFF provides a back-channel logout endpoint.
+
+* [Client notifications at logout (IdentityServer)](/identityserver/ui/logout/notification.md)
+* [Logout cleanup overview](/identityserver/ui/logout/cleanup-overview.md)
+* [BFF back-channel logout endpoint](/bff/fundamentals/session/management/back-channel-logout.md)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />
