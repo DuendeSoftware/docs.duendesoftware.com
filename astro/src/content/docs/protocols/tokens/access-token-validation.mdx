@@ -17,7 +17,7 @@ flow:
     - { from: API, to: API, channel: internal, title: "The API verifies the signature", summary: "The API verifies the signature over the encoded header and payload with the AS's key, using the algorithm in alg. If any step fails, the token is not valid." }
     - { from: API, to: API, channel: internal, title: "The API checks iss, aud and exp", summary: "iss must match the configured issuer exactly. aud must contain this API's identifier. The current time must be before exp. nbf is checked only if present. A small clock-skew leeway is optional." }
     - { from: API, to: API, channel: internal, title: "The API applies its own authorization", summary: "A valid token is not permission. The API decides this request from the token's scope and its own policy, such as tenant and ownership. The specs leave those checks to the application." }
-    - { from: API, to: Client, channel: back, title: "The API answers the client", summary: "A permitted request gets 200. A failed token check gets 401 with a WWW-Authenticate: Bearer challenge and error invalid_token. A missing scope gets 403 insufficient_scope. With no token, an error code SHOULD NOT be sent." }
+    - { from: API, to: Client, channel: back, title: "The API answers the client", summary: "A permitted request gets 200. A failed token check gets 401 with a WWW-Authenticate: Bearer challenge and error invalid_token. A missing scope gets 403 insufficient_scope. With no token, an error code should not be sent." }
 tableOfContents: true
 draft: false
 ---
@@ -25,25 +25,27 @@ import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-An API that receives a JWT access token (RFC 9068) checks the header, the signature, and the `iss`, `aud` and `exp` claims, then applies its own authorization. A valid token is not a permitted request.
+An API that receives a JWT access token (RFC 9068) checks the JOSE header, verifies the signature, and checks the `iss`, `aud` and `exp` claims. It then applies its own authorization. A valid token isn't a permitted request. A token can be well formed and correctly signed and still be meant for a different API, or be expired.
 
-## Why It Exists
+Terms used on this page: the authorization server (AS) issues the token and signs it. `iss` is the issuer that signed the token. `aud` is the audience, the API the token is for. `exp` is the expiry time. `kid` is the ID of the signing key. `typ` is the JWT type in the header. The resource server (RS) is your API.
 
-Picture an ASP.NET Core API that receives a bearer token. The token parses fine, so is it safe to serve the call? Not yet. A token can be well-formed and correctly signed and still be meant for a different API, or have expired. RFC 9068 lists the checks the resource server (RS, your API) MUST make, and a token that passes them still does not by itself permit the call. After reading, you can name each check, the claim or header it looks at, and which part is your application's own decision.
+An opaque token can't be read by the API. Use [Token Introspection](/protocols/tokens/introspection.mdx) for those. An ASP.NET Core API does this validation with a JWT bearer handler that points at IdentityServer as the authority and sets the expected audience. You write the authorization policy yourself.
 
-Terms used below: the authorization server (AS) issues the token and signs it. `iss` is the issuer that signed the token. `aud` is the audience, the API the token is for. `exp` is the expiry time. `kid` is the ID of the signing key. `typ` is the JWT type in the header.
+## Why JWT Access Token Validation Matters
 
-## How It Works
+Without validation, an API that trusts any token it can parse accepts forged tokens, expired tokens, and tokens issued for other APIs. RFC 9068 lists the checks the resource server must make. A token that passes them still doesn't by itself permit the call, because the API decides that from the token's claims and its own policy.
 
-For an opaque token, which the API cannot read, use [introspection](/protocols/tokens/introspection.mdx) instead of this pipeline. Where an API-specific `aud` comes from is covered by [resource indicators](/protocols/security-hardening/resource-indicators.mdx).
+## How JWT Access Token Validation Works
+
+The diagram follows one request from the client to the API, with the AS shown only for the key lookup. Steps 3 to 5 are checks inside the API, so their arrows are internal. Where an API-specific `aud` comes from is covered by [Resource Indicators and Token Audience](/protocols/security-hardening/resource-indicators.mdx).
 
 <Flow flow={frontmatter.flow} />
 
-## Step by Step
+## JWT Access Token Validation Step by Step
 
 ### 1. The client sends the bearer token
 
-Resource servers MUST support this method. The `eyJ` prefix is how a base64url-encoded JSON header starts. The host and path are examples. The API treats the token as untrusted input until the checks pass.
+Resource servers must support this method. The `eyJ` prefix is how a base64url-encoded JSON header starts. The API treats the token as untrusted input until the checks pass.
 
 ```http
 GET /orders/42 HTTP/1.1
@@ -55,7 +57,7 @@ Authorization: Bearer eyJ...
 
 ### 2. The API gets the AS's signing keys
 
-The API cannot check a signature without the AS's public key. RFC 9068 section 4 says the AS SHOULD publish its keys and issuer through RFC 8414 metadata, and an OpenID Connect AS MAY use its discovery document instead, so the API reads whichever the AS publishes. The metadata `issuer` must equal the issuer the API is configured for. Caching and refresh are deployment policy.
+The API cannot check a signature without the AS's public key. RFC 9068 section 4 says the AS should publish its keys and issuer through RFC 8414 metadata, and an OpenID Connect AS may use its discovery document instead, so the API reads whichever the AS publishes. The metadata `issuer` must equal the issuer the API is configured for. Caching and refresh are deployment policy.
 
 ```http
 GET /.well-known/oauth-authorization-server HTTP/1.1
@@ -69,7 +71,7 @@ HTTP/1.1 200 OK
 
 ### 3. The API checks the JOSE header
 
-The header tells the API how to verify the token. Here is the header and the payload of the example token, decoded. The `typ` check keeps an ID token from being accepted as an access token. The allow-list of algorithms comes from the API's configuration, not from AS metadata, and RFC 8725 says each key is used with exactly one algorithm. `kid` is a hint (OPTIONAL in RFC 7515). When present, it picks the key. When absent, the API tries the compatible keys (practice, not a spec step), because RFC 9068 section 5 says resource servers have to accept signatures made with any published key.
+The header tells the API how to verify the token. The example token's header is decoded below. The `typ` check keeps an ID token from being accepted as an access token. The allow-list of algorithms comes from the API's own configuration, and RFC 8725 says each key is used with exactly one algorithm. `kid` is a hint (optional in RFC 7515). When present, it picks the key. When absent, the API tries the compatible keys (common practice), because RFC 9068 section 5 says resource servers have to accept signatures made with any published key.
 
 ```json
 {
@@ -104,19 +106,19 @@ RFC 9068 requires that the resource server uses keys provided by the AS. The API
 
 ### 5. The API checks iss, aud and exp
 
-These are the claim checks in RFC 9068 section 4. Compare `iss` in the payload with the issuer the API is configured for, `aud` with the API's own identifier, and `exp` with the API's own clock. In the example above, an API that is not `https://api.example` rejects the token, even with a valid signature. `nbf` is OPTIONAL and not in that list, and RFC 7519 says to reject a token before its `nbf`. RFC 9068 section 4 does not list `iat`, `jti`, `sub` or `client_id` checks, but RFC 8725 section 3.8 still requires validating a `sub` the application relies on.
+These are the claim checks in RFC 9068 section 4. Compare `iss` in the payload with the issuer the API is configured for, `aud` with the API's own identifier, and `exp` with the API's own clock. In the example above, an API that is not `https://api.example` rejects the token, even with a valid signature. `nbf` is optional and not in that list, and RFC 7519 says to reject a token before its `nbf`. RFC 9068 section 4 does not list `iat`, `jti`, `sub` or `client_id` checks, but RFC 8725 section 3.8 still requires validating a `sub` the application relies on.
 
 <Cite k="rfc9068_4" />
 
 ### 6. The API applies its own authorization
 
-A valid token is not permission. RFC 9068 says the resource server SHOULD use the authorization claims in the token together with other context, and that how it does this is beyond the profile. Tenant and ownership checks are application policy, and no spec defines them. In ASP.NET Core this is the authorization step, after authentication. The arrow is internal because nothing is sent.
+A valid token is not permission. RFC 9068 says the resource server should use the authorization claims in the token together with other context, and that how it does this is beyond the profile. Tenant and ownership checks are application policy, and no spec defines them. In ASP.NET Core this is the authorization step, after authentication. The arrow is internal because nothing is sent.
 
 <Cite k="rfc9068_4" />
 
 ### 7. The API answers the client
 
-The two status codes match two ASP.NET Core outcomes. `401 Unauthorized` means authentication failed, so the token is not acceptable. `403 Forbidden` means authentication worked but authorization failed, so the caller is known and not allowed. RFC 9068 section 4 says the response to any failed validation MUST include `invalid_token`, and RFC 6750 says the `WWW-Authenticate` header MUST be sent. The 401 status and the `error` attribute are SHOULD, and so is the 403 for insufficient scope (RFC 6750 section 3.1), whose `scope` attribute is a MAY. With no token, the response SHOULD NOT include an error code or other error information. A failed ownership or tenant check is application policy, so its status is the application's choice.
+`401 Unauthorized` means authentication failed, so the token is not acceptable. `403 Forbidden` means authentication worked but authorization failed, so the caller is known and not allowed. RFC 9068 section 4 says the response to any failed validation must include `invalid_token`, and RFC 6750 says the `WWW-Authenticate` header must be sent. The 401 status and the `error` attribute are recommended, and so is the 403 for insufficient scope (RFC 6750 section 3.1), whose `scope` attribute is optional. With no token, the response should not include an error code or other error information. A failed ownership or tenant check is application policy, so its status is the application's choice.
 
 ```http
 HTTP/1.1 401 Unauthorized
@@ -128,30 +130,21 @@ WWW-Authenticate: Bearer error="insufficient_scope", scope="orders.read"
 
 <Cite k="bearerErr" />
 
-## Notes
+## Order of Checks
 
-The spec gives no order for the checks in this pipeline, and RFC 7515 says order does not matter where steps have no dependencies. The real dependencies are that the API needs the key before it can check the signature, and that it decrypts an encrypted token first. For a nested (encrypted) JWT, `typ` sits in the inner header (RFC 8725 section 3.11), so the `typ` check follows decryption. A token that is encrypted is decrypted with the keys and algorithms the resource server specified at registration.
+The spec gives no order for the checks, and RFC 7515 says order doesn't matter where steps have no dependencies. The real dependencies are that the API needs the key before it can check the signature, and that it decrypts an encrypted token first. For a nested (encrypted) JWT, `typ` sits in the inner header (RFC 8725 section 3.11), so the `typ` check follows decryption. An encrypted token is decrypted with the keys and algorithms the resource server specified at registration.
 
-Not covered: the HTTP 400 `invalid_request` response, DPoP or mTLS binding, and replay checks with `jti`, which RFC 9068 does not require of the resource server.
+## Audience and Token Typing
 
-The AS must use a distinct `aud` for each resource (RFC 9068 section 5). Typing with `typ` is one defence against confusing an ID token with an access token. RFC 8725 notes it may not disambiguate every JWT kind.
+The AS must use a distinct `aud` for each resource (RFC 9068 section 5). Typing with `typ` is one defense against confusing an ID token with an access token, and an API must not accept an ID token as an access token. RFC 8725 notes that `typ` may not disambiguate every JWT kind. ID token validation is a client concern, covered in [OpenID Connect Sign-In](/protocols/openid-connect/openid-connect.mdx).
 
-## Use It When
+## See Also
 
-* You build or review an API that accepts JWT access tokens.
-* You debug a 401 `invalid_token` or a 403 from an API.
-
-## Don't Confuse With
-
-* ID token validation, which a client does under OpenID Connect Core (see [OpenID Connect](/protocols/openid-connect/openid-connect.mdx)). An API must not accept an ID token as an access token, which is what the `typ` check is for.
-* Opaque access tokens, which an API checks by [introspection](/protocols/tokens/introspection.mdx), not by this pipeline.
-
-## Build with Duende
-
-You configure the ASP.NET Core API with a JWT bearer handler that points at your IdentityServer as the authority and sets the expected audience, and you write the authorization policy yourself.
-
-* [Using JSON Web Tokens (JWTs) in ASP.NET Core APIs](/identityserver/apis/aspnetcore/jwt.md)
-* [Authorization in ASP.NET Core APIs](/identityserver/apis/aspnetcore/authorization.md)
+* [Token Introspection](/protocols/tokens/introspection.mdx): how an API checks an opaque token.
+* [Resource Indicators and Token Audience](/protocols/security-hardening/resource-indicators.mdx): where an API-specific `aud` comes from.
+* [OpenID Connect Sign-In](/protocols/openid-connect/openid-connect.mdx): ID token validation by the client.
+* [Using JSON Web Tokens (JWTs)](/identityserver/apis/aspnetcore/jwt.md): the JWT bearer handler in an ASP.NET Core API.
+* [Authorization based on Scopes and Claims](/identityserver/apis/aspnetcore/authorization.md): writing the authorization policy.
 
 ## Sources
 

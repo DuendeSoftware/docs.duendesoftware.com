@@ -13,29 +13,31 @@ flow:
     - { name: App, role: "OAuth client" }
     - { name: Server, role: "Authorization server" }
   steps:
-    - { from: App, to: App, channel: internal, title: "App creates a verifier and a challenge", summary: "The app makes a random code_verifier and keeps it. It hashes the verifier into a code_challenge with S256, which the spec requires when the client can use it.", holds: ["verifier", "challenge"] }
-    - { from: App, to: Browser, channel: front, title: "App redirects the browser to authorize", summary: "The app answers the user's sign-in request with a redirect to the authorization endpoint. The browser makes the next request, not the app." }
+    - { from: App, to: App, channel: internal, title: "App creates a verifier and a challenge", summary: "The app makes a random code_verifier and keeps it. It hashes the verifier into a code_challenge with S256, which the spec requires when the client can use it." }
+    - { from: App, to: Browser, channel: front, title: "App redirects the browser to authorize", summary: "The app answers the user's sign-in request with a redirect to the authorization endpoint. The browser makes the next request." }
     - { from: Browser, to: Server, channel: front, title: "The request carries the challenge", summary: "The request has code_challenge, code_challenge_method=S256, state and a redirect_uri. The server must match redirect_uri exactly against a registered value. The verifier is never sent here." }
-    - { from: Server, to: Browser, channel: front, title: "The user signs in at the server", summary: "The user types credentials into the authorization server, not into the app. The app never sees them." }
-    - { from: Server, to: Browser, channel: front, title: "The server redirects back with a code", summary: "The code is short-lived and single-use. The browser follows the redirect to the app, which checks that state matches before it accepts the callback.", holds: ["authorization code"] }
+    - { from: Server, to: Browser, channel: front, title: "The user signs in at the server", summary: "The user types credentials into the authorization server only. The app never sees them." }
+    - { from: Server, to: Browser, channel: front, title: "The server redirects back with a code", summary: "The code is short-lived and single-use. The browser follows the redirect to the app, which checks that state matches before it accepts the callback." }
     - { from: App, to: Server, channel: back, title: "App redeems the code with the verifier", summary: "The app posts the code, the code_verifier and the identical redirect_uri. The server recomputes S256 and answers invalid_grant on a mismatch. A confidential client also authenticates." }
-    - { from: Server, to: App, channel: back, title: "The server returns tokens to the app", summary: "The tokens come back on the back channel, not in a redirect URL. A browser-based app still receives them in the browser. The response must not be cached.", holds: ["tokens"] }
+    - { from: Server, to: App, channel: back, title: "The server returns tokens to the app", summary: "The tokens come back on the back channel, outside any redirect URL. A browser-based app still receives them in the browser. The response must not be cached." }
 ---
 import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-The app sends the user to the authorization server (AS) to sign in and gets back a code. PKCE (Proof Key for Code Exchange) binds that code to a secret the app keeps, so the code cannot be redeemed without it.
+Every authorization code flow should use PKCE (Proof Key for Code Exchange), for public and confidential clients alike. RFC 9700 section 2.1.1 says public clients must use it and recommends it for confidential clients. Duende IdentityServer requires it by default through the `RequirePkce` client setting. PKCE binds the authorization code to a secret the app keeps, so a stolen code cannot be redeemed without it.
 
-## Why It Exists
+In the flow, the app sends the user to the authorization server (AS) to sign in and gets back a code, then redeems the code together with the secret.
 
-The authorization code travels through the browser, where another party could copy it. If that party could redeem the code, it would get the user's tokens. PKCE closes this gap: the app never sees the user's password, and a stolen code cannot be redeemed without the `code_verifier` that only the app holds. After this page you can follow every request in a sign-in and say what each one protects. The same flow is the basis of [OpenID Connect](/protocols/openid-connect/openid-connect.mdx) sign-in.
+## Why PKCE Exists
 
-## How It Works
+The authorization code travels through the browser, where another party could copy it. If that party could redeem the code, it would get the user's tokens. PKCE closes this gap: the app never sees the user's password, and a stolen code cannot be redeemed without the `code_verifier` that only the app holds. The same flow is the basis of [OpenID Connect](/protocols/openid-connect/openid-connect.mdx) sign-in.
+
+## How PKCE Works
 
 <Flow flow={frontmatter.flow} />
 
-## Step by Step
+## Authorization Code Flow with PKCE Step by Step
 
 ### 1. App creates a verifier and a challenge
 
@@ -51,13 +53,13 @@ code_challenge_method=S256
 
 ### 2. App redirects the browser to authorize
 
-The user clicks sign in, and the app answers with a redirect. The browser, not the app, makes the next request to the AS. That is why anything in the URL is visible to the browser and its history, and why the verifier stays out of it.
+The user clicks sign in, and the app answers with a redirect. The browser makes the next request to the AS. That is why anything in the URL is visible to the browser and its history, and why the verifier stays out of it.
 
 <Cite k="authReq" />
 
 ### 3. The request carries the challenge
 
-The authorization request carries the challenge, not the verifier. Note `code_challenge_method=S256`, which tells the AS how to check the verifier later. The `state` value is the app's own check for the callback in step 5.
+The authorization request carries the challenge. The verifier stays in the app. Note `code_challenge_method=S256`, which tells the AS how to check the verifier later. The `state` value is the app's own check for the callback in step 5.
 
 ```http
 GET /connect/authorize
@@ -92,7 +94,7 @@ Host: budget.example
 
 ### 6. App redeems the code with the verifier
 
-Now the app sends the verifier it kept in step 1. The AS hashes it with S256 and compares the result with the challenge it stored in step 3. A match shows the caller holds the verifier from the request that started this sign-in, which ties the token request to that authorization request (RFC 7636 sections 3 and 4.6). It does not authenticate a public client. The sample uses a confidential client, so it also sends a Basic header. A public client sends `client_id` and no secret.
+Now the app sends the verifier it kept in step 1. The AS hashes it with S256 and compares the result with the challenge it stored in step 3. A match shows the caller holds the verifier from the request that started this sign-in, which ties the token request to that authorization request (RFC 7636 sections 3 and 4.6). It does not authenticate a public client. The sample uses a confidential client, so it also sends a Basic header. A public client sends `client_id` and no secret. PKCE does not replace client authentication, so a confidential client still authenticates at the token endpoint (RFC 6749 section 4.1.3).
 
 ```http
 POST /connect/token
@@ -122,28 +124,20 @@ Pragma: no-cache
 
 <Cite k="rfc6749_5_1" />
 
-## Notes
+## Limits of PKCE
 
 An attacker who can change the `code_challenge` in the victim's authorization request can still inject a stolen code into their own session. PKCE does not stop that (RFC 9700 section 4.5.4). Protect the authorization response from leaking as well.
 
-PKCE does not replace client authentication. A confidential client still authenticates at the token endpoint (RFC 6749 section 4.1.3).
+For the difference from the implicit grant, where tokens come back through the browser, see [Choose the Right OAuth Flow](/protocols/basics/which-oauth-flow.mdx). The `state` parameter ties the callback to the browser session and is not a substitute for the `code_verifier`.
 
-## Use It When
+## See Also
 
-* A web or native app signs users in with an authorization server and needs tokens for them.
-* You want PKCE on every authorization code flow, for public and confidential clients.
-
-## Don't Confuse With
-
-* The implicit grant, where tokens come back through the browser.
-* The `state` parameter, which ties the callback to the browser session and is not a substitute for the `code_verifier`.
-
-## Build with Duende
-
-IdentityServer requires PKCE for authorization code clients by default. You control it with the `RequirePkce` client setting, and your client app sends the verifier and challenge.
-
-* [Clients in IdentityServer](/identityserver/fundamentals/clients.mdx)
-* [The Client model, including RequirePkce](/identityserver/reference/v8/models/client.md)
+* [Choose the Right OAuth Flow](/protocols/basics/which-oauth-flow.mdx): when to use this flow instead of another grant.
+* [Access Token vs ID Token vs Refresh Token](/protocols/basics/token-types.mdx): what the tokens from step 7 are for.
+* [Refresh Tokens and Rotation](/protocols/oauth-2x-core/refresh-tokens.mdx): getting new access tokens after this flow.
+* [OpenID Connect Sign-In](/protocols/openid-connect/openid-connect.mdx): the same flow with the `openid` scope.
+* [Clients in IdentityServer](/identityserver/fundamentals/clients.mdx): configure clients, including PKCE.
+* [The Client model, including RequirePkce](/identityserver/reference/v8/models/client.md): the `RequirePkce` setting.
 
 ## Sources
 

@@ -3,7 +3,7 @@ title: "Scopes, Resources, and Authorization"
 date: 2026-10-23
 sidebar:
   order: 5
-description: "The client asks for scopes at a resource. The AS may narrow the grant to what its policy allows, and the API still checks audience and its own rules."
+description: "A scope names requested access and a resource names the target API. The AS may narrow the grant, and the API still checks the token's audience and applies its own rules."
 sources: [rfc6749_3_3, authResp, authErr, tokenReq, rfc6749_5_1, rfc6749_1_4, resourceParam, bearer, bearerErr, bcpPkce, bcpAud, atAud, atClaims, rfc9068_4, rfc9068_5, rfc9068_6]
 flow:
   actors:
@@ -11,13 +11,13 @@ flow:
     - { name: AS, role: "Authorization server" }
     - { name: API, role: "Resource server" }
   steps:
-    - { from: Client, to: AS, channel: front, title: "Client requests scopes at one resource", summary: "The client asks for three scopes at one resource. The AS may fully or partially ignore the scope per its policy. Here resource names the API and scope names the access.", holds: ["requested scopes", "target resource", "state"] }
-    - { from: AS, to: Client, channel: front, title: "AS redirects back with a code or error", summary: "The AS redirects back with a short-lived code and the client's state. A bad scope or resource returns the same way, as invalid_scope or invalid_target.", holds: ["authorization code"] }
+    - { from: Client, to: AS, channel: front, title: "Client requests scopes at one resource", summary: "The client asks for three scopes at one resource. The AS may fully or partially ignore the scope per its policy. Here resource names the API and scope names the access." }
+    - { from: AS, to: Client, channel: front, title: "AS redirects back with a code or error", summary: "The AS redirects back with a short-lived code and the client's state. A bad scope or resource returns the same way, as invalid_scope or invalid_target." }
     - { from: Client, to: AS, channel: back, title: "Client redeems the code at the AS", summary: "The client sends the single-use code to the token endpoint. A confidential client authenticates, here with HTTP Basic. A public client sends client_id and a PKCE code_verifier." }
-    - { from: AS, to: Client, channel: back, title: "AS returns a token with the narrowed scope", summary: "scope is REQUIRED here because it differs from the request. The JWT's aud limits it to one API. The client must not inspect the token. The decoded view is a teaching example.", holds: ["access token (narrowed)"] }
+    - { from: AS, to: Client, channel: back, title: "AS returns a token with the narrowed scope", summary: "scope is required here because it differs from the request. The JWT's aud limits it to one API. The client must not inspect the token." }
     - { from: Client, to: API, channel: back, title: "Client calls the API with the token", summary: "The client sends the access token as a Bearer credential. The API validates it, a JWT through its own checks and an opaque token through a server-side mechanism, then applies its own rules." }
     - { from: API, to: Client, channel: back, title: "If aud is wrong, API returns 401", summary: "A JWT whose aud lacks this API must be rejected, even if its scope string matches. The API answers 401 with invalid_token. Scope alone is not an audience restriction." }
-    - { from: API, to: Client, channel: back, title: "If policy fails, API returns 403", summary: "A token with the right audience and scope can still get 403. Tenant and ownership rules are the API's own application decision, not defined by the RFCs and not insufficient_scope." }
+    - { from: API, to: Client, channel: back, title: "If policy fails, API returns 403", summary: "A token with the right audience and scope can still get 403. Tenant and ownership rules are the API's own decision. The RFCs don't define them, and insufficient_scope doesn't apply." }
 tableOfContents: true
 draft: false
 ---
@@ -25,25 +25,31 @@ import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-The client asks for scopes at a resource. The AS may narrow the grant to what its policy allows, and the API still checks audience and its own rules.
+A scope is a named piece of requested access, such as `reports.read`. A resource is the URL of the target API. The client asks for scopes and names a resource, and the authorization server (AS) may grant less than was asked. The API then checks that the token's `aud` (audience) claim names it and applies its own rules. Three different parties make three different decisions:
 
-## Why It Exists
+* **Configuration:** the AS decides which scopes it grants.
+* **Token validation:** the API checks the audience.
+* **Application code:** the API decides whether this user may do this thing.
 
-A token that says only "reports.read" does not say which API it is for, and an API that trusts any such token accepts tokens meant for someone else. Two things fix that. The client asks for access with a scope, and names the target API with a resource. The authorization server (AS) may narrow what it grants, then the API checks the token's audience and applies its own rules. After reading, you can tell which of these three decisions belongs to configuration, token validation, and application code.
+Scope alone is not an audience restriction. `scope` names the access, and `resource` and `aud` identify the API. The RFCs don't define a consent screen or consent store. A consent prompt is one way an AS reaches a decision. RFC 6749 says only that the AS obtains approval by asking the resource owner or by other means.
 
-Two terms first. A **scope** is a named piece of requested access, such as `reports.read`. A **resource** is the URL of the target API. The token's `aud` (audience) claim records which API the token is for.
+In IdentityServer you configure API scopes on the server (see [API Scopes](/identityserver/fundamentals/resources/api-scopes.mdx)), and the ASP.NET Core API validates the token audience and applies its own authorization policy.
 
-## How It Works
+## Why Scopes and Resources Exist
 
-The browser carries steps 1 and 2 as redirects, and the client talks to the AS and API directly in the other steps. Steps 6 and 7 are two separate rejections, not a sequence. A call fails on the audience check or on the API's own policy.
+A token that says only `reports.read` doesn't say which API it is for, and an API that accepts any such token also accepts tokens meant for other APIs. Two parts fix that. The client names the access with a scope and the target API with a resource, and the AS may narrow what it grants. The API then checks the token's audience and applies its own rules, because a valid scope for the wrong API, or for the wrong tenant, must still be refused.
+
+## How Scopes, Resources, and Audience Work
+
+The browser carries steps 1 and 2 as redirects, and the client talks to the AS and API directly in the other steps. Steps 6 and 7 are two separate rejections. A call fails on the audience check or on the API's own policy.
 
 <Flow flow={frontmatter.flow} />
 
-## Step by Step
+## Scopes and Resources Step by Step
 
 ### 1. Client requests scopes at one resource
 
-The client sends three scopes and one resource. Scope strings are defined by the AS, are case-sensitive, and are space-delimited. They are shown here percent-encoded. `resource` SHOULD be the most specific URI, and the AS may use it as the audience or map it to one (RFC 8707 section 2). Compare the request with the token you will see in step 4: the client asked for three scopes and got back one.
+The client sends three scopes and one resource. Scope strings are defined by the AS, are case-sensitive, and are space-delimited. They are shown here percent-encoded. `resource` should be the most specific URI, and the AS may use it as the audience or map it to one (RFC 8707 section 2). In step 4 the client gets back one of the three.
 
 ```http
 GET /authorize?response_type=code&client_id=reports-app
@@ -60,7 +66,7 @@ Host: idsrv.example
 
 The AS may narrow the grant, or reject the request with `invalid_scope`. How it decides is its own policy. One common model is a five-way intersection of what the client may ask for, what the user may have, what the user consented to, what the server offers, and what the resource supports. That is an implementation model, not RFC 6749 mechanics. A consent screen and store are one way to reach a decision, and the RFC says only that approval comes from asking the owner or from other means.
 
-Both outcomes are redirects to the client with `state`, not requests to the AS. `invalid_target` is the RFC 8707 error for a resource that is invalid, missing, unknown, or malformed. An invalid combination of resource and scope is reported with `invalid_scope`. The code was issued for the narrowed grant, and the client already chose the resource in step 1.
+Both outcomes are redirects back to the client, with `state`. `invalid_target` is the RFC 8707 error for a resource that is invalid, missing, unknown, or malformed. An invalid combination of resource and scope is reported with `invalid_scope`. The code was issued for the narrowed grant, and the client already chose the resource in step 1.
 
 ```http
 HTTP/1.1 302 Found
@@ -75,12 +81,12 @@ Location: https://app.example/cb
 
 ### 3. Client redeems the code at the AS
 
-The client sends the code straight to the token endpoint, over a back channel. `redirect_uri` is required here only because it was in the authorization request, and it must be identical. A public client must use PKCE (RFC 9700 section 2.1.1). The credential is base64 of `reports-app:s3cr3t`.
+The client sends the code straight to the token endpoint, over a back channel. `redirect_uri` is required here only because it was in the authorization request, and it must be identical. A public client must use PKCE (RFC 9700 section 2.1.1). A confidential client authenticates here, shown as HTTP Basic.
 
 ```http
 POST /token HTTP/1.1
 Host: idsrv.example
-Authorization: Basic cmVwb3J0cy1hcHA6czNjcjN0
+Authorization: Basic <base64(client_id:client_secret)>
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
@@ -91,7 +97,7 @@ grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
 
 ### 4. AS returns a token with the narrowed scope
 
-Compare `scope` in the response with the three scopes in step 1. The response must include `scope` because it differs from the request. The JWT `scope` claim carries the scope associated with the issued token, here the narrowed one, and `aud` limits the token to one API. This is the first .NET concern: the scopes your API accepts are configured in the AS, as API scopes. `expires_in` is only RECOMMENDED. Opaque or reference tokens are equally valid, and then the API uses a server-side lookup, for example introspection, instead of reading claims.
+Compare `scope` in the response with the three scopes in step 1. The response must include `scope` because it differs from the request. The JWT `scope` claim carries the scope associated with the issued token, here the narrowed one, and `aud` limits the token to one API. The scopes your API accepts are configured in the AS, as API scopes. `expires_in` is recommended. Opaque or reference tokens are equally valid, and then the API uses a server-side lookup, for example [introspection](/protocols/tokens/introspection.mdx), instead of reading claims.
 
 ```http
 HTTP/1.1 200 OK
@@ -108,7 +114,7 @@ Decoded JWT: aud = https://reports.example,
 
 ### 5. Client calls the API with the token
 
-The client sends the token as a Bearer credential. The API now has to decide whether to trust it, and the next two steps show two ways that fails. A JWT is validated through the API's own checks, and an opaque token through a server-side mechanism.
+The client sends the token as a Bearer credential. The API must decide whether to trust it, and the next two steps show two ways that fails. A JWT is validated through the API's own checks, and an opaque token through a server-side mechanism.
 
 ```http
 GET /tenants/acme/reports/42 HTTP/1.1
@@ -120,7 +126,7 @@ Authorization: Bearer eyJ...
 
 ### 6. If aud is wrong, API returns 401
 
-This is the second .NET concern: token audience validation. The API checks that its own identifier is in `aud`. In this failure the client holds a token for `https://files.example`, and it carries the `reports.read` scope string. The API must reject it anyway, because scope alone is not an audience restriction. The 401 is a SHOULD in RFC 6750 section 3.1, and the rejection itself is a MUST in RFC 9068 section 4. For the full validation pipeline, see [access token validation](/protocols/tokens/access-token-validation.mdx). Request and response are shown on one wire.
+The API checks that its own identifier is in `aud`. In this failure the client holds a token for `https://files.example`, and it carries the `reports.read` scope string. The API must reject it anyway, because scope alone is not an audience restriction. The API should answer 401 (RFC 6750 section 3.1) and must reject the token (RFC 9068 section 4). [Validating JWT Access Tokens](/protocols/tokens/access-token-validation.mdx) covers the full set of checks. Request and response are shown together.
 
 ```text
 Request carried a JWT: aud = https://files.example,
@@ -133,7 +139,7 @@ WWW-Authenticate: Bearer error="invalid_token"
 
 ### 7. If policy fails, API returns 403
 
-This is the third .NET concern: an application authorization policy. A token with the right audience and scope can still get `403`, because the tenant and ownership rule is the API's own decision. Here the token is valid, but the user is not in tenant `other`. RFC 9068 section 4 leaves the details of these checks beyond its scope. `insufficient_scope` is for a token whose scope is too low, which is not this case. Request and response are shown on one wire.
+A token with the right audience and scope can still get `403`, because the tenant and ownership rule is the API's own decision. Here the token is valid, but the user is not in tenant `other`. RFC 9068 section 4 leaves the details of these checks beyond its scope. `insufficient_scope` is for a token whose scope is too low, which is not this case. Request and response are shown together.
 
 ```text
 Request: aud and scope valid, GET /tenants/other/reports/9
@@ -143,29 +149,20 @@ HTTP/1.1 403 Forbidden
 
 <Cite k="rfc9068_4" />
 
-## Notes
+## Audience and Resource Selection
 
-The consent prompt and stored consent record are not RFC 6749 mechanics. The RFC says only that the AS authenticates the owner and obtains a decision by asking or by other means.
+RFC 9700 section 2.3 lets `scope` or `resource` be used to determine the resource server, so scope can help pick the API. For a JWT access token the audience restriction still comes from `aud`, and RFC 9068 section 4 requires the check. RFC 9700 section 2.3 says access tokens should be audience-restricted, and that the `aud` claim may be used for it. To steer a token to one API per request, see [Resource Indicators and Token Audience](/protocols/security-hardening/resource-indicators.mdx).
 
-RFC 9700 section 2.3 lets scope or resource be used to determine the resource server, so scope can help pick the API. For a JWT access token the audience restriction still comes from `aud` (RFC 9068 section 4 requires the check). RFC 9700 section 2.3 says access tokens SHOULD be audience-restricted, and that the `aud` claim MAY be used for it.
+## Scope on Refresh
 
-On a refresh request, `scope` MUST NOT include any scope not originally granted (RFC 6749 section 6). For `resource` on refresh, RFC 8707 says policy may limit it.
+On a refresh request, `scope` must not include any scope not originally granted (RFC 6749 section 6). For `resource` on refresh, RFC 8707 says policy may limit it.
 
-## Use It When
+## See Also
 
-* You define API scopes and need to know what an AS may do with a request.
-* You debug a token with the wrong scope, wrong audience, or a 403.
-
-## Don't Confuse With
-
-* Audience. `scope` names the access, and `resource` and `aud` identify the API. Scope alone is not an audience restriction.
-* Consent. The RFCs do not define a consent screen or store. It is one way an AS reaches a decision.
-
-## Build with Duende
-
-You configure API scopes in IdentityServer, and the ASP.NET Core API validates the token audience and applies its own authorization policy. To steer a token to one API per request, read [resource indicators](/protocols/security-hardening/resource-indicators.mdx) next.
-
-* [API Scopes in IdentityServer](/identityserver/fundamentals/resources/api-scopes.mdx)
+* [Validating JWT Access Tokens](/protocols/tokens/access-token-validation.mdx): the checks an API runs on `aud` and other claims.
+* [Resource Indicators and Token Audience](/protocols/security-hardening/resource-indicators.mdx): steering a token to one API per request.
+* [Token Introspection](/protocols/tokens/introspection.mdx): how an API checks an opaque token.
+* [API Scopes](/identityserver/fundamentals/resources/api-scopes.mdx): configuring API scopes in IdentityServer.
 
 ## Sources
 
