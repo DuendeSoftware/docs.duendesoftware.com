@@ -13,10 +13,10 @@ flow:
     - { name: Browser, role: "User agent" }
     - { name: AS, role: "Authorization server" }
   steps:
-    - { from: Client, to: Client, channel: internal, title: "Client builds the authorization request", summary: "The client assembles the usual parameters, including a PKCE challenge. Without PAR they would travel as browser query parameters with no integrity protection and could leak into logs and Referer headers.", holds: ["authorization request"] }
-    - { from: Client, to: AS, channel: back, title: "Client pushes the request to the PAR endpoint", summary: "The client POSTs the parameters to the PAR endpoint, authenticating as at the token endpoint (here HTTP Basic). S256 is set explicitly because the default is plain. request_uri must not be sent.", holds: ["pushed request"] }
+    - { from: Client, to: Client, channel: internal, title: "Client builds the authorization request", summary: "The client assembles the usual parameters, including a PKCE challenge. Without PAR they would travel as browser query parameters with no integrity protection and could leak into logs and Referer headers." }
+    - { from: Client, to: AS, channel: back, title: "Client pushes the request to the PAR endpoint", summary: "The client POSTs the parameters to the PAR endpoint, authenticating as at the token endpoint (here HTTP Basic). S256 is set explicitly because the default is plain. request_uri must not be sent." }
     - { from: AS, to: AS, channel: internal, title: "The server authenticates and validates", summary: "The server authenticates the client, rejects any request_uri, and validates the request as at the authorization endpoint, refusing bad requests early. It may defer some checks to the authorization endpoint." }
-    - { from: AS, to: Client, channel: back, title: "The server returns a request_uri", summary: "On success the server returns 201 with request_uri and expires_in. The server picks format and lifetime. The value needs an unguessable random part and is bound to the client.", holds: ["request_uri"] }
+    - { from: AS, to: Client, channel: back, title: "The server returns a request_uri", summary: "On success the server returns 201 with request_uri and expires_in. The server picks format and lifetime. The value needs an unguessable random part and is bound to the client." }
     - { from: Browser, to: AS, channel: front, title: "The browser sends only two parameters", summary: "The client sends the browser to the authorization endpoint with only client_id and request_uri. The client must use a request_uri once, and the server must reject an expired one." }
     - { from: AS, to: AS, channel: internal, title: "The server resolves the reference", summary: "The server finds the pushed request, checks it belongs to this client, and rejects it if expired. It should treat the value as one-time use, though a reload may be tolerated." }
 ---
@@ -24,36 +24,35 @@ import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-The client POSTs its authorization request straight to the PAR endpoint, authenticated like a token request, and gets back a short-lived `request_uri`. The browser then carries only `client_id` and `request_uri`.
+A pushed authorization request (PAR, RFC 9126) means the client POSTs its authorization request straight to the PAR endpoint, authenticated like a token request, and gets back a short-lived `request_uri`. The browser then carries only `client_id` and `request_uri`. PAR adds no signed Request Object. A JWT-secured authorization request (JAR) is that signed object, and PAR can carry one in the `request` parameter.
 
-## Why It Exists
+## Why Pushed Authorization Requests Exist
 
-An ordinary authorization request is a long URL in the browser. Its parameters (`scope`, `redirect_uri`, `state`, `code_challenge`) can be read in logs and history, and anyone with access to the browser can change them. A pushed authorization request (PAR, RFC 9126) fixes that by sending the parameters from the client to the authorization server (AS) over a direct, authenticated call. The browser then carries a reference instead. The AS can refuse a bad request before any user interaction.
+An ordinary authorization request is a long URL in the browser. Its parameters (`scope`, `redirect_uri`, `state`, `code_challenge`) can be read in logs and history, and anyone with access to the browser can change them. PAR sends the parameters from the client to the authorization server (AS) over a direct, authenticated call, and the browser carries a reference instead. The AS can refuse a bad request before any user interaction. RFC 9126 section 1 points to JAR for clients that need cryptographically confirmed non-repudiation.
 
-PAR adds no signed Request Object. A JWT-secured authorization request (JAR) is that signed object, and you can add it later when you need one. See the Notes.
+## How Pushed Authorization Requests Work
 
-## How It Works
-
-The flow builds on the [authorization code flow with PKCE](/protocols/oauth-2x-core/pkce.mdx). Read that page first if the `code_challenge` below is new to you.
+The flow builds on the [Authorization Code Flow with PKCE](/protocols/oauth-2x-core/pkce.mdx), so the request carries a `code_challenge`. The lanes are the client, the user's browser and the AS. Steps 1 to 4 happen between the client and the AS, and steps 5 and 6 are the browser leg.
 
 <Flow flow={frontmatter.flow} />
 
-## Step by Step
+## Pushed Authorization Requests Step by Step
+
 
 ### 1. Client builds the authorization request
 
-The client builds the same authorization request it would normally put in a browser URL: the response type, scope, redirect URI, `state` and the PKCE challenge. What changes is the next step. Instead of putting these parameters in the browser, the client keeps them and sends them to the AS directly.
+The client builds the same authorization request it would normally put in a browser URL: the response type, scope, redirect URI, `state` and the PKCE challenge. Instead of putting these parameters in the browser, the client keeps them and sends them to the AS directly.
 
 <Cite k="parIntro" />
 
 ### 2. Client pushes the request to the PAR endpoint
 
-Look at two lines. `Authorization: Basic` is the client authenticating at the PAR endpoint, the same way it would at the token endpoint. The AS knows who is pushing the request. `code_challenge` is the PKCE challenge. PKCE still protects the code redemption later, and client authentication does not replace it. Neither replaces the other.
+`Authorization: Basic` is the client authenticating at the PAR endpoint, the same way it would at the token endpoint, so the AS knows who is pushing the request. `code_challenge` is the PKCE challenge. PKCE still protects the code redemption later, and client authentication doesn't replace it. `request_uri` must not be sent in this request. A public client can send `client_id` without credentials, but the server must not rely on public client authentication to identify the client (RFC 6749 section 2.3).
 
 ```http
 POST /par HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
-Authorization: Basic cGF5bWVudHMtYXBwOnMzY3IzdA==
+Authorization: Basic <base64(client_id:client_secret)>
 
 client_id=payments-app&response_type=code&scope=payments.write
 &redirect_uri=https%3A%2F%2Fclient.example%2Fcb&state=af12
@@ -65,7 +64,7 @@ client_id=payments-app&response_type=code&scope=payments.write
 
 ### 3. The server authenticates and validates
 
-The AS authenticates the client, then checks the request as it would at the authorization endpoint. A bad request fails here, before the user sees anything.
+The AS authenticates the client, rejects any `request_uri`, then checks the request as it would at the authorization endpoint. A bad request fails here, before the user sees anything. The server must accept new redirect URIs in a pushed request only from authenticated clients (RFC 9126 section 7.2).
 
 ```text
 Example checks, not a full list:
@@ -82,9 +81,9 @@ HTTP 401 invalid_client after header auth
 
 ### 4. The server returns a request_uri
 
-The AS stores the request and hands back a reference to it. The `request_uri` is the claim ticket the client gives to the browser next.
+The AS stores the request and hands back a reference to it. The `request_uri` is the reference the client gives to the browser next.
 
-The `Cache-Control` header comes from the RFC 9126 example, not from a stated requirement. The urn form is one allowed format. 60 seconds is the example lifetime, and the spec suggests 5 to 600 seconds as typical.
+On success the response is `201`. The server picks the format and lifetime of the `request_uri`. The value needs an unguessable random part and is bound to the client. The `Cache-Control` header comes from the RFC 9126 example and isn't a stated requirement. The urn form is one allowed format. 60 seconds is the example lifetime, and the spec suggests 5 to 600 seconds as typical.
 
 ```http
 HTTP/1.1 201 Created
@@ -102,7 +101,7 @@ Cache-Control: no-cache, no-store
 
 The client replaces the browser-visible parameters with a reference. The browser carries only `client_id` and `request_uri`, so there is nothing sensitive to read or edit in the URL.
 
-An attacker could try to swap in a `request_uri` of their own. Clients should use PKCE, a unique `state` or the OIDC `nonce` so a swapped `request_uri` fails (RFC 9126 section 7.5). That is the reason the PKCE challenge from step 2 matters here too.
+The client must use a `request_uri` once, and the server must reject an expired one. An attacker could try to swap in a `request_uri` of their own. Clients should use PKCE, a unique `state` or the OIDC `nonce` so a swapped `request_uri` fails (RFC 9126 section 7.5). That is why the PKCE challenge from step 2 matters here too.
 
 ```http
 GET /authorize?client_id=payments-app
@@ -115,34 +114,16 @@ Host: as.example
 
 ### 6. The server resolves the reference
 
-The AS looks up the stored request, checks that it belongs to this client and has not expired, and then continues the normal authorization flow, with sign-in and consent. The server must validate the request as it would any other authorization request. Because client policy can change between push and use, the spec recommends checking the request against it again here (section 7.4).
+The AS looks up the stored request, checks that it belongs to this client and has not expired, and then continues the normal authorization flow, with sign-in and consent. Because client policy can change between push and use, the spec recommends checking the request against it again here (section 7.4).
 
 <Cite k="parRequest" />
 
-## Notes
+## See Also
 
-PAR alone creates no signed Request Object. RFC 9126 section 1 points to JAR for clients that need cryptographically confirmed non-repudiation, and section 3 lets a client push a Request Object in the `request` parameter.
-
-A public client can send `client_id` without credentials, but the server must not rely on public client authentication to identify the client (RFC 6749 section 2.3).
-
-The server must accept new redirect URIs in a pushed request only from authenticated clients (RFC 9126 section 7.2).
-
-## Use It When
-
-* You want the request authenticated and validated before the user is involved.
-* The parameters are sensitive or too large for a browser URL.
-
-## Don't Confuse With
-
-* JAR, which signs the request as a Request Object. PAR only delivers it and can carry one.
-* The token endpoint. PAR uses its client authentication rules but returns a `request_uri`, never tokens.
-
-## Build with Duende
-
-IdentityServer hosts the PAR endpoint and resolves the `request_uri`. The client app pushes the request to it. JAR is an optional next topic once PAR is in place.
-
-* [Pushed Authorization Requests in IdentityServer](/identityserver/tokens/par.mdx)
-* [Signed Authorize Requests (JAR) in IdentityServer](/identityserver/tokens/jar.mdx)
+* [Authorization Code Flow with PKCE](/protocols/oauth-2x-core/pkce.mdx): the flow whose authorization request PAR pushes.
+* [DPoP Proof of Possession](/protocols/security-hardening/dpop.mdx): the next hardening step, which binds tokens to a key.
+* [Pushed Authorization Requests in IdentityServer](/identityserver/tokens/par.mdx): the PAR endpoint IdentityServer hosts, which resolves the `request_uri`.
+* [Signed Authorize Requests (JAR) in IdentityServer](/identityserver/tokens/jar.mdx): signing the request as a Request Object.
 
 ## Sources
 

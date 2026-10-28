@@ -3,7 +3,7 @@ title: "OpenID Connect Sign-In"
 date: 2026-10-23
 sidebar:
   order: 1
-description: "OIDC adds authentication to the OAuth authorization code flow. The client asks for the openid scope and receives an ID token about the user, for the client, next to an access token for APIs."
+description: "OpenID Connect adds authentication to the OAuth authorization code flow. The client asks for the openid scope and receives an ID token about the user, for the client, next to an access token for APIs."
 draft: false
 tableOfContents: true
 sources: [oidcReq, bcpPkce, bcpRedir, openid_connect_core_1_0_3_1_2_3, oidcAuthResp, iss, oidcTokenReq, pkceSend, oidcTokenResp, rfc6749_5_1, idVal, idToken, bcpAud, bearer, userInfo, userInfoResp, oidcTerms]
@@ -13,41 +13,43 @@ flow:
     - { name: OP, role: "OpenID provider" }
     - { name: API, role: "Resource server" }
   steps:
-    - { from: RP, to: OP, channel: front, title: "RP sends the authentication request", summary: "The RP redirects the browser to the OP's authorization endpoint with the openid scope, a PKCE challenge, state and a nonce. The redirect_uri must exactly match a value registered at the OP.", holds: ["code verifier", "nonce", "state"] }
-    - { from: OP, to: RP, channel: front, title: "OP authenticates the user and redirects back", summary: "The OP authenticates the user, then redirects the browser to the redirect_uri with a code and the same state. The iss parameter, if the OP supports it, names the OP.", holds: ["authorization code"] }
+    - { from: RP, to: OP, channel: front, title: "RP sends the authentication request", summary: "The RP redirects the browser to the OP's authorization endpoint with the openid scope, a PKCE challenge, state and a nonce. The redirect_uri must exactly match a value registered at the OP." }
+    - { from: OP, to: RP, channel: front, title: "OP authenticates the user and redirects back", summary: "The OP authenticates the user, then redirects the browser to the redirect_uri with a code and the same state. The iss parameter, if the OP supports it, names the OP." }
     - { from: RP, to: OP, channel: back, title: "RP redeems the code with its verifier", summary: "The RP sends the code to the token endpoint directly, with the same redirect_uri and the code_verifier. A public client adds client_id and a confidential client must authenticate." }
-    - { from: OP, to: RP, channel: back, title: "OP returns ID token and access token", summary: "The response carries both tokens and must not be cached. The ID token is a JWT about the user, for the RP, which must validate it before using it. The access token is for APIs.", holds: ["ID token", "access token"] }
+    - { from: OP, to: RP, channel: back, title: "OP returns ID token and access token", summary: "The response carries both tokens and must not be cached. The ID token is a JWT about the user, for the RP, which must validate it before using it. The access token is for APIs." }
     - { from: RP, to: RP, channel: internal, title: "RP validates the ID token", summary: "The RP checks iss, that aud contains its client_id, the signature, exp and the nonce, if it sent one. Only then does it treat the user as signed in." }
     - { from: RP, to: API, channel: back, title: "RP calls the API with the access token", summary: "The API receives the access token, never the ID token. This ID token's aud is the RP, so an API must refuse it." }
-    - { from: RP, to: OP, channel: back, title: "Optional UserInfo call for more claims", summary: "The RP can send the access token from the authentication to the UserInfo endpoint. It must verify that the response sub equals the ID token sub.", holds: ["UserInfo claims"] }
+    - { from: RP, to: OP, channel: back, title: "Optional UserInfo call for more claims", summary: "The RP can send the access token from the authentication to the UserInfo endpoint. It must verify that the response sub equals the ID token sub." }
 ---
 import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-OIDC adds authentication to the OAuth authorization code flow. The client asks for the openid scope and receives an ID token about the user, for the client, next to an access token for APIs.
+OpenID Connect (OIDC) adds authentication to the OAuth authorization code flow. The client asks for the `openid` scope and receives an ID token about the user, for the client, next to an access token for APIs. The ID token is a signed JWT. The client validates it, and only then treats the user as signed in. The access token is for APIs, and the ID token is not. Plain OAuth 2.0 authorizes access and defines no user identity.
 
-## Why It Exists
+In OIDC, the relying party (RP) is the app that wants to know who the user is. The OpenID provider (OP) is the server that signs the user in and issues tokens. IdentityServer is the OP. You register each app as a client in IdentityServer, and an ASP.NET Core app acts as the RP through its OpenID Connect handler.
 
-OAuth lets a client call an API on a user's behalf, but it gives no standard proof of who signed in. OpenID Connect (OIDC) adds an ID token, a signed JWT that tells the client who the user is, so the client can sign the user in. After reading, you can follow one sign-in from the browser redirect to the validated ID token and see which token goes where.
+## Why OpenID Connect Exists
 
-Orientation before the flow. The relying party (RP) is the app that wants to know who the user is. The OpenID provider (OP) is the server that signs the user in and issues tokens. Three values protect the exchange:
+OAuth lets a client call an API on a user's behalf, but it gives no standard proof of who signed in. Apps that needed one built their own on top of OAuth, and each did it differently. OIDC adds the ID token and the checks on it, so every client signs users in the same way.
 
-* **PKCE** (Proof Key for Code Exchange) ties the code to the RP that asked for it, see [PKCE](/protocols/oauth-2x-core/pkce.mdx).
+Three values protect the exchange:
+
+* **PKCE** (Proof Key for Code Exchange) ties the code to the RP that asked for it. See [Authorization Code Flow with PKCE](/protocols/oauth-2x-core/pkce.mdx).
 * **`state`** lets the RP match the response to its own request.
-* **`nonce`** ties the ID token to this sign-in, so an old ID token cannot be replayed.
+* **`nonce`** ties the ID token to this sign-in, so an old ID token can't be replayed.
 
-## How It Works
+## How OpenID Connect Sign-In Works
 
-After sign-in, the RP needs the OP's endpoints and signing keys to do the token and validation steps. See [discovery and JWKS](/protocols/openid-connect/discovery-jwks.mdx) for how it finds them. To end the session, see [OpenID Connect logout](/protocols/openid-connect/oidc-logout.mdx).
+The diagram follows one sign-in with the authorization code flow. The browser carries steps 1 and 2 as redirects. In the other steps the RP talks to the OP and the API directly. Step 7 is optional. To do the token and validation steps, the RP needs the OP's endpoints and signing keys, which it finds through [OpenID Connect Discovery and Key Rotation](/protocols/openid-connect/discovery-jwks.mdx).
 
 <Flow flow={frontmatter.flow} />
 
-## Step by Step
+## OpenID Connect Sign-In Step by Step
 
 ### 1. RP sends the authentication request
 
-This is an OAuth authorization request that also asks for the user to be authenticated. The browser carries it to the OP. `redirect_uri` MUST exactly match a pre-registered value (Core section 3.1.2.1). `scope` includes `openid`, which is what makes this an OIDC request. `state`, `nonce` and the PKCE challenge are generated by the RP and kept for later. The values in angle brackets are placeholders and must be unguessable.
+This is an OAuth authorization request that also asks for the user to be authenticated. The browser carries it to the OP. `redirect_uri` must exactly match a pre-registered value (Core section 3.1.2.1). `scope` includes `openid`, which is what makes this an OIDC request. `state`, `nonce` and the PKCE challenge are generated by the RP and kept for later. The values in angle brackets are placeholders and must be unguessable. PKCE is not an OIDC Core requirement. RFC 9700 section 2.1.1 says public clients must use it and confidential clients should. Confidential OIDC clients may use `nonce` instead of PKCE, with extra precautions. In the code flow `nonce` is optional, but if the RP sent one, the `nonce` claim must be present and match.
 
 ```http
 HTTP/1.1 302 Found
@@ -64,7 +66,7 @@ Location: https://identity.example/authorize?
 
 ### 2. OP authenticates the user and redirects back
 
-The OP shows its own sign-in page, so the RP never sees the user's password. How the OP authenticates the user (password, session cookie, other) is out of scope for the spec (Core section 3.1.2.3). Compare `state` in the redirect with the one the RP sent, because the RP must check that they match. The `iss` parameter is from RFC 9207, not OIDC Core, and lets the RP check which OP answered.
+The OP shows its own sign-in page, so the RP never sees the user's password. How the OP authenticates the user (password, session cookie, other) is outside the spec (Core section 3.1.2.3). Compare `state` in the redirect with the one the RP sent, because the RP must check that they match. The `iss` parameter is from RFC 9207, not OIDC Core, and lets the RP check which OP answered.
 
 ```http
 HTTP/1.1 302 Found
@@ -78,7 +80,7 @@ Location: https://budget.example/callback?
 
 ### 3. RP redeems the code with its verifier
 
-The RP calls the token endpoint directly, not through the browser, and sends the original `code_verifier`. The OP checks it against the `code_challenge` from step 1, so a stolen code is useless without the verifier. A confidential client authenticates to the token endpoint instead of sending only `client_id` (Core section 3.1.3.1). PKCE and client authentication are not alternatives, they protect different things.
+The RP calls the token endpoint directly from its server and sends the original `code_verifier`. The OP checks it against the `code_challenge` from step 1, so a stolen code is useless without the verifier. A confidential client authenticates to the token endpoint instead of sending only `client_id` (Core section 3.1.3.1). PKCE and client authentication protect different things, so a confidential client can use both.
 
 ```http
 POST /token HTTP/1.1
@@ -94,7 +96,7 @@ grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
 
 ### 4. OP returns ID token and access token
 
-The OP issues two tokens for two audiences. The `id_token` is for the RP and describes the sign-in. The `access_token` is for APIs. The values shown are placeholders. A refresh token is optional and not shown.
+The OP issues two tokens for two audiences. The `id_token` is for the RP and describes the sign-in. The `access_token` is for APIs. The access token format is unspecified by OIDC, so the example uses a placeholder. A refresh token is optional and not shown.
 
 ```http
 HTTP/1.1 200 OK
@@ -110,7 +112,7 @@ Pragma: no-cache
 
 ### 5. RP validates the ID token
 
-The RP treats the user as signed in only after these checks pass. Compare each claim with what the RP knows. `iss` must be the OP the RP expects. `aud` must contain the RP's own `client_id`, which is `budget` here. `exp` must be in the future. If the RP sent a `nonce` in step 1, the `nonce` claim must equal it. That match is what ties this ID token to this sign-in, so an old ID token cannot be replayed. The RP also verifies the signature. A session is app behavior, and the spec defines only the checks. The timestamps in the example are the spec's sample values, and a real token's `exp` lies in the future.
+The RP treats the user as signed in only after these checks pass. Compare each claim with what the RP knows. `iss` must be the OP the RP expects. `aud` must contain the RP's own `client_id`, which is `budget` here. `exp` must be in the future. If the RP sent a `nonce` in step 1, the `nonce` claim must equal it. That match ties this ID token to this sign-in, so an old ID token cannot be replayed. The RP also verifies the signature. In the code flow, TLS validation of the token endpoint may replace the signature check. `alg` should be `RS256` or the algorithm the client registered, and `alg` `none` is allowed only if the client asked for it at registration. Sessions are app behavior, and the spec defines only the checks. The timestamps in the example are the spec's sample values, and a real token's `exp` lies in the future.
 
 ```json
 {
@@ -127,7 +129,7 @@ The RP treats the user as signed in only after these checks pass. Compare each c
 
 ### 6. RP calls the API with the access token
 
-In the normal call below, the RP sends `shared-token...`, the access token, to the API. If the RP sent the ID token instead, its `aud` would be `budget`, not this API, and a resource server must refuse tokens not meant for it (RFC 9700 section 2.3).
+In the normal call below, the RP sends `shared-token...`, the access token, to the API. If the RP sent the ID token instead, its `aud` would be `budget`, the RP's client ID, and a resource server must refuse tokens not meant for it (RFC 9700 section 2.3).
 
 ```http
 GET /orders HTTP/1.1
@@ -154,31 +156,14 @@ Content-Type: application/json
 
 <Cite k="userInfo" />
 
-## Notes
+## See Also
 
-PKCE is not an OIDC Core requirement. RFC 9700 section 2.1.1 says public clients MUST use it and confidential clients should. Under that section, confidential OIDC clients MAY use the `nonce` instead of PKCE, with extra precautions. The `nonce` is optional in the code flow, but if the RP sent one, the `nonce` claim MUST be present and match.
-
-In the code flow, TLS validation of the token endpoint MAY replace the signature check. `alg` SHOULD be `RS256` or the algorithm the client registered, and `alg` `none` is allowed only if the client asked for it at registration.
-
-The access token format is unspecified by OIDC. The example uses a placeholder.
-
-## Use It When
-
-* Your app needs to know who the user is, not only to call an API for them.
-* You want a standard sign-in flow instead of building login on plain OAuth.
-
-## Don't Confuse With
-
-* Plain OAuth 2.0, which authorizes access and does not itself say who the user is (the OAuth spec defines no user identity).
-* The access token, which is for APIs. The ID token is for the client.
-
-## Build with Duende
-
-IdentityServer is the OP. You register each app as a client in IdentityServer, and an ASP.NET Core app acts as the RP through its OpenID Connect handler.
-
-* [The big picture](/identityserver/overview/big-picture.mdx)
-* [Identity resources](/identityserver/fundamentals/resources/identity.md)
-* [Clients](/identityserver/fundamentals/clients.mdx)
+* [Authorization Code Flow with PKCE](/protocols/oauth-2x-core/pkce.mdx): the code flow this sign-in builds on, and how PKCE works.
+* [OpenID Connect Discovery and Key Rotation](/protocols/openid-connect/discovery-jwks.mdx): how the RP finds the OP's endpoints and signing keys.
+* [OpenID Connect Logout](/protocols/openid-connect/oidc-logout.mdx): ending the session at the OP and the RPs.
+* [The Big Picture](/identityserver/overview/big-picture.mdx): how IdentityServer, your apps, and your APIs fit together.
+* [Identity Resources](/identityserver/fundamentals/resources/identity.md): the scopes and claims an ID token can carry.
+* [Clients](/identityserver/fundamentals/clients.mdx): registering an app as a client.
 
 ## Sources
 
