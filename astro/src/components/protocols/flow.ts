@@ -12,7 +12,6 @@ class FlowStepper extends HTMLElement {
 		const last = rows.length - 1, embed = this.hasAttribute('data-embed');
 		if (last < 1 || this.hasAttribute('data-ready')) return;
 		this.setAttribute('data-ready', '');
-		this.#bindDetails(rows);
 		const go = (n: number, announce = true) => {
 			const i = (this.#i = Math.max(0, Math.min(last, n)));
 			rows.forEach((li, k) => {
@@ -31,6 +30,7 @@ class FlowStepper extends HTMLElement {
 				if (!embed) history.replaceState(null, '', `#step-${i + 1}`);
 			}
 		};
+		this.#bindDetails(rows, go);
 		prev.onclick = () => go(this.#i - 1);
 		next.onclick = () => go(this.#i + 1);
 		this.tabIndex = 0;
@@ -65,17 +65,33 @@ class FlowStepper extends HTMLElement {
 		const h = !embed && /^#step-(\d+)$/.exec(location.hash);
 		go(h ? +h[1] - 1 : 0, false);
 	}
-	// 'Details ↓' links to the k-th "###" heading under "## Step by Step" (matched case-insensitively) (full protocols pages only).
-	#bindDetails(rows: HTMLElement[]) {
+	// Full protocols pages only: 'Details ↓' links to the k-th "###" heading under the H2 ending in "Step by Step" (matched
+	// case-insensitively), and each step section gets a link back to the diagram at that step.
+	#bindDetails(rows: HTMLElement[], go: (n: number, announce?: boolean) => void) {
 		if (this.hasAttribute('data-embed')) return;
-		const heads = [...document.querySelectorAll('.sl-markdown-content h2, .sl-markdown-content h3')];
-		const from = heads.findIndex((h) => h.tagName === 'H2' && h.textContent?.trim().toLowerCase() === 'step by step');
+		const heads = [...document.querySelectorAll<HTMLElement>('.sl-markdown-content h2, .sl-markdown-content h3')];
+		const from = heads.findIndex((h) => h.tagName === 'H2' && h.textContent?.trim().toLowerCase().endsWith('step by step'));
 		if (from < 0) return;
 		const rest = heads.slice(from + 1), end = rest.findIndex((h) => h.tagName === 'H2');
 		const h3 = (end < 0 ? rest : rest.slice(0, end)).filter((h) => h.tagName === 'H3');
+		const isHead = (e: Element) => e.matches('h2, h3, .sl-heading-wrapper');
 		rows.forEach((li, k) => {
+			const head = h3[k];
+			if (!head?.id) return;
 			const a = li.querySelector<HTMLAnchorElement>('.fl-more');
-			if (a && h3[k]?.id) { a.href = `#${h3[k].id}`; a.hidden = false; }
+			if (a) { a.href = `#${head.id}`; a.hidden = false; }
+			let el: Element = head.closest('.sl-heading-wrapper') ?? head;
+			while (el.nextElementSibling && !isHead(el.nextElementSibling)) el = el.nextElementSibling;
+			const back = (this.querySelector<HTMLTemplateElement>('.fl-back-tpl')!.content.firstElementChild as HTMLElement).cloneNode(true) as HTMLElement;
+			back.querySelector('a')!.href = `#step-${k + 1}`;
+			back.querySelector('a')!.addEventListener('click', (e) => {
+				e.preventDefault();
+				go(k, false);
+				history.replaceState(null, '', `#step-${k + 1}`);
+				this.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+				this.focus({ preventScroll: true });
+			});
+			el.after(back);
 		});
 	}
 }

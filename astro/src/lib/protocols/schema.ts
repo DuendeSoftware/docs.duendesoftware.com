@@ -29,7 +29,6 @@ const flowStepSchema = z.object({
 	channel,
 	title: z.string().refine((t) => words(t) <= 8, { error: 'step title has more than 8 words' }),
 	summary: z.string().refine((t) => words(t) <= 35, { error: 'step summary has more than 35 words' }),
-	holds: z.array(z.string()).optional(), // holdings that CHANGED in this step; prefix with "-" to remove one
 });
 
 export const flowSchema = z

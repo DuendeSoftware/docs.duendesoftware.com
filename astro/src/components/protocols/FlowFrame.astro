@@ -1,6 +1,7 @@
 ---
 // Sequence diagram as HTML rows (actors, lifelines, one arrow row + card per step) and a control panel.
 // All steps and cards are in the server HTML; flow.ts shows one card at a time.
+import { Icon } from '@astrojs/starlight/components';
 import type { Flow } from '../../lib/protocols/schema';
 interface Props { flow: Flow }
 const { actors, steps } = Astro.props.flow;
@@ -9,18 +10,6 @@ const idx = (a: string) => actors.findIndex((x) => x.name === a);
 const via = { front: 'through the browser', back: 'direct', internal: '' };
 const kind = { front: 'Front channel', back: 'Back channel', internal: 'Internal' };
 const pathOf = (s: { from: string; to: string; channel: keyof typeof via }) => (s.from === s.to ? `${s.from} (internal)` : `${s.from} → ${s.to}${via[s.channel] ? ` · ${via[s.channel]}` : ""}`);
-// Cumulative holdings: what is held after each step (only shown on steps that changed it).
-// An entry starting with "-" removes that item, so a step can replace or drop something held earlier.
-const held: string[][] = [];
-steps.reduce((acc, s) => {
-	let m = [...acc];
-	for (const h of s.holds ?? []) {
-		if (h.startsWith('-')) m = m.filter((x) => x !== h.slice(1).trim());
-		else if (!m.includes(h)) m.push(h);
-	}
-	held.push(m);
-	return m;
-}, [] as string[]);
 
 // Grid placement of the arrow: lanes it covers (start column, count). Self steps run toward the free side.
 const geo = steps.map((s) => {
@@ -55,8 +44,7 @@ const geo = steps.map((s) => {
 						</div>
 						<p class="fl-title">{s.title}</p>
 						<p class="fl-sum">{s.summary}</p>
-						{s.holds?.length ? <p class="fl-holds"><span>Now holding</span>{held[i].length ? held[i].join(', ') : 'nothing'}</p> : null}
-						<a class="fl-more" hidden>Details <span aria-hidden="true">↓</span></a>
+						<a class="fl-more" hidden>Details<Icon name="down-arrow" class="fl-ico" /></a>
 					</div>
 				</li>
 			))}
@@ -65,9 +53,10 @@ const geo = steps.map((s) => {
 	</div>
 	<div class="fl-panel" role="group" aria-label="Step through the walkthrough">
 		<p class="fl-count" aria-hidden="true"></p>
-		<button type="button" class="prev">← Back</button>
-		<button type="button" class="next">Next →</button>
+		<button type="button" class="prev"><Icon name="left-arrow" class="fl-ico" />Back</button>
+		<button type="button" class="next">Next<Icon name="right-arrow" class="fl-ico" /></button>
 		<p class="fl-hint">Tip: use the ← → keys</p>
 		<div class="fl-sr" aria-live="polite"></div>
 	</div>
+	<template class="fl-back-tpl"><p class="fl-back"><a class="fl-more"><Icon name="up-arrow" class="fl-ico" />Back to the diagram</a></p></template>
 </div>
