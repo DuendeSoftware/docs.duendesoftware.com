@@ -90,6 +90,8 @@ Back to the example: the API holds a JWT and checks `exp` itself. Per RFC 7519 a
 
 The API asks the AS instead of reading the token. The introspection endpoint MUST require authorization. The `active` member is REQUIRED, and `true` generally means the token has not been revoked and is within its validity window. A false value covers revoked, expired, unknown and otherwise invalid tokens, so it is not a revocation flag by itself. Compare the response here with the self-contained case in step 4: the AS can report the revocation. The response MAY be cached, at the cost of liveness. Any propagation delay at the AS applies here too. A cached response leaves a gap too, so self-contained tokens are not the only ones affected. See [token introspection](/protocols/tokens/introspection.mdx).
 
+This example assumes the AS also revoked the access token `AT1` when the refresh token was revoked, which step 3 says it SHOULD do if it supports access-token revocation. If it did not, introspection still reports `AT1` as active until it expires.
+
 ```http
 POST /introspect HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
