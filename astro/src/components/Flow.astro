@@ -18,7 +18,7 @@ if (page) {
 	flow = entry.data.flow;
 }
 if (!flow) throw new Error('[protocols] <Flow> needs a flow or a page');
-flowSchema.parse(flow);
+flow = flowSchema.parse(flow);
 ---
 <flow-stepper data-embed={page ? '' : undefined}>
 	<FlowFrame flow={flow} />

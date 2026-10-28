@@ -108,7 +108,7 @@ The RP does not trust the response because it arrived. It makes four checks:
 
 The flags need two terms. UP (user presence) means someone touched or approved the authenticator. UV (user verification) means the authenticator also verified the user, for example with a PIN or biometric. Here UV is required, so both flags must be set.
 
-A non-increasing `signCount` is a warning sign. It doesn't prove a cloned key. What the RP does with it is its own policy. The RP also checks that BS isn't set when BE isn't, and compares BE and BS with its stored record if it uses backup state in its policy (WebAuthn section 7.2). The BE and BS flags report whether a credential can be and is backed up. The `crossOrigin` and `topOrigin` checks, extension outputs and the record update aren't shown here, and the record update should wait for any extra checks. Origin checking may be exact string matching or another method, and that is the RP's choice.
+A non-increasing `signCount` is a warning sign. It doesn't prove a cloned key. What the RP does with it is its own policy. The RP always checks that BS isn't set when BE isn't. If it uses backup state in its policy, it also checks that BE matches the stored record, and applies its policy to BS, which can change from one sign-in to the next (WebAuthn section 7.2). The BE and BS flags report whether a credential can be and is backed up. The `crossOrigin` and `topOrigin` checks, extension outputs and the record update aren't shown here, and the record update should wait for any extra checks. Origin checking may be exact string matching or another method, and that is the RP's choice.
 
 ```text
 C = parse(utf8(clientDataJSON)); C.type === "webauthn.get"
