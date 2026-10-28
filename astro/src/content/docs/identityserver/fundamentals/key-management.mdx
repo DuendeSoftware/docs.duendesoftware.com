@@ -115,9 +115,6 @@ gantt
         Delete    :crit, es_nd, after es_nr, 1d
 ```
 
-<Flow page="openid-connect/discovery-jwks" />
-
-
 All of these options are configurable in the `KeyManagement` options. For example:
 
 ```csharp
@@ -137,6 +134,10 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
     options.KeyManagement.DeleteRetiredKeys = false;
 });
 ```
+
+On the client side, apps and APIs read the published keys from discovery. Because IdentityServer announces a new key before it signs with it, clients usually have the key before they see it in a token. If a token arrives with a key ID a client doesn't know yet, the client fetches the keys again:
+
+<Flow page="openid-connect/discovery-jwks" />
 
 ### Key Storage
 
