@@ -38,8 +38,6 @@ flow-stepper { display: block; container: flow / inline-size; margin-block: 1.5r
 .fl-route { overflow-wrap: anywhere; }
 .fl-title { font-family: var(--font-gt-canon), serif; font-size: var(--sl-text-xl); font-weight: 600; line-height: 1.25; color: var(--sl-color-white); overflow-wrap: anywhere; }
 .fl-sum { max-width: 65ch; line-height: 1.55; color: var(--sl-color-gray-2); }
-.fl-holds { display: grid; gap: .125rem; margin-block-start: .875rem !important; padding-block-start: .75rem; border-top: 1px solid var(--sl-color-gray-5); font-size: var(--sl-text-sm); color: var(--sl-color-text); overflow-wrap: anywhere; }
-.fl-holds span { font-size: var(--sl-text-xs); font-variant: small-caps; letter-spacing: .06em; text-transform: lowercase; color: var(--sl-color-gray-2); }
 .fl-more, .flow-embed a { display: inline-block; font-size: var(--sl-text-sm); font-weight: 500; text-decoration: none; color: var(--sl-color-white); padding: .375rem 1rem; border: 1px solid var(--sl-color-gray-3); border-radius: 999px; }
 .fl-more { margin-block-start: .25rem !important; }
 .fl-more:hover, .flow-embed a:hover { background: var(--sl-color-gray-5); }
@@ -119,10 +117,19 @@ flow-stepper {
 [data-ready] .fl-actor.on b, [data-ready] .fl-actor.on small { color: #111; }
 [data-ready] .fl-actor.on small { opacity: .8; }
 .fl-card, [data-ready] .fl-panel { background: var(--surface); border-color: var(--line); }
-.fl-holds { border-top-color: var(--line); }
 .fl-more, .flow-embed a, .fl-panel button { border-color: var(--line); font-weight: 400; }
 .fl-panel button { background: transparent; }
 .fl-panel .next { background: var(--duende-color-green); border-color: var(--duende-color-green); color: #111; }
 .fl-more:hover, .flow-embed a:hover, .fl-panel button:hover:not(:disabled) { background: color-mix(in srgb, var(--sl-color-white) 8%, transparent); border-color: var(--line); }
 .fl-panel .next:hover:not(:disabled) { background: var(--duende-color-green); border-color: var(--duende-color-green); filter: brightness(1.06); }
 @container rows (min-width: 28rem) { .fl-span { font-weight: 400; } [data-active] .fl-span { font-weight: 600; } }
+
+/* Link from each step section back to the diagram (added by flow.ts on full protocols pages) */
+flow-stepper { scroll-margin-top: calc(var(--sl-nav-height, 4rem) + 1rem); }
+.fl-back { margin-block: .5rem 0; }
+/* Narrow layouts: the control row is a plain row (no half-styled surface), and the card uses the full width */
+@container flow (max-width: 41.99rem) { [data-ready] .fl-panel { background: none; border: 0; padding: 0; } }
+@container rows (max-width: 27.99rem) { .fl-card { margin-inline-start: 0; } }
+/* Starlight icons in the buttons, in the place of arrow characters */
+.fl-more, .fl-panel button, .flow-embed a { display: inline-flex; align-items: center; justify-content: center; gap: .375rem; }
+.fl-ico { width: 1em; height: 1em; flex: none; }
