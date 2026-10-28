@@ -186,9 +186,10 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 ### Protocols: Identity Visualized
 
 * Pages live in `astro/src/content/docs/protocols/<group>/<slug>.mdx`. A group is a folder with a `_meta.yml` for its label and order. The sidebar autogenerates.
-* Frontmatter has `title`, `date`, `description`, `sources` (spec registry keys), and `flow`. The `flow` has `actors` (each with `name` and `role`) and `steps` (each with `from`, `to`, `channel`, `title`, `summary`, and `holds`). An entry in `holds` that starts with `-` removes that item, for example when a token is replaced.
+* Frontmatter has `title`, `date`, `description`, `sources` (spec registry keys), and `flow`. The `flow` has `actors` (each with `name` and `role`) and `steps` (each with `from`, `to`, `channel`, `title`, and `summary`).
 * Limits: max 3 actors, max 7 steps, step title max 8 words, step summary max 35 words. The `### N.` headings in the body equal the step titles.
-* Body H2s, in order: Why It Exists, How It Works (`<Flow flow={frontmatter.flow} />`), Step by Step, Notes, Use It When, Don't Confuse With, Build with Duende, and Sources (`<Sources keys={frontmatter.sources} />`).
+* Start the page with the answer: the first paragraph says what the protocol does or what to choose. No teasers or "after reading this page" intros.
+* Body H2s, in order: "Why <Topic> Exists", "How <Topic> Works" (with `<Flow flow={frontmatter.flow} />`), "<Topic> Step by Step" (name the protocol in each, for search. The step section heading must end in "Step by Step"), optional sections with a heading that names their content (for example "Other Grants"), See Also, and Sources (`<Sources keys={frontmatter.sources} />`). Put requirement levels in the step they apply to, not in a separate notes section.
 * Cite specs with `<Cite k="..." />`. Keys come from the spec registry in `astro/src/content/specs/*.yaml`.
 * To embed a flow in another docs page, import `Flow` from `~/components/Flow.astro` and use `<Flow page="<group>/<slug>" />`. Use at most 2 per page.
 * `npm run protocols:check` is a dry run of the spec watcher: an offline drift check plus a live spec comparison. It never opens issues.
