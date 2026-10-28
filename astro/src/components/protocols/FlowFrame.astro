@@ -9,8 +9,17 @@ const idx = (a: string) => actors.findIndex((x) => x.name === a);
 const via = { front: 'through the browser', back: 'direct', internal: '' };
 const kind = { front: 'Front channel', back: 'Back channel', internal: 'Internal' };
 // Cumulative holdings: what is held after each step (only shown on steps that changed it).
+// An entry starting with "-" removes that item, so a step can replace or drop something held earlier.
 const held: string[][] = [];
-steps.reduce((acc, s) => { const m = [...acc]; (s.holds ?? []).forEach((h) => !m.includes(h) && m.push(h)); held.push(m); return m; }, [] as string[]);
+steps.reduce((acc, s) => {
+	let m = [...acc];
+	for (const h of s.holds ?? []) {
+		if (h.startsWith('-')) m = m.filter((x) => x !== h.slice(1).trim());
+		else if (!m.includes(h)) m.push(h);
+	}
+	held.push(m);
+	return m;
+}, [] as string[]);
 
 // Grid placement of the arrow: lanes it covers (start column, count). Self steps run toward the free side.
 const geo = steps.map((s) => {
@@ -45,7 +54,7 @@ const geo = steps.map((s) => {
 						</div>
 						<p class="fl-title">{s.title}</p>
 						<p class="fl-sum">{s.summary}</p>
-						{s.holds?.length ? <p class="fl-holds"><span>Now holding</span>{held[i].join(', ')}</p> : null}
+						{s.holds?.length ? <p class="fl-holds"><span>Now holding</span>{held[i].length ? held[i].join(', ') : 'nothing'}</p> : null}
 						<a class="fl-more" hidden>Details <span aria-hidden="true">↓</span></a>
 					</div>
 				</li>

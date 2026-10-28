@@ -83,7 +83,7 @@ multiple servers for load-balancing purposes, or your mobile application might b
 phones. Logically these instances are still a single client.
 :::
 
-To see how these roles exchange messages, read [The Four OAuth Roles](/protocols/basics/oauth-roles.mdx).
+To see how these roles exchange messages, read [The OAuth Roles](/protocols/basics/oauth-roles.mdx).
 
 ## Resources
 

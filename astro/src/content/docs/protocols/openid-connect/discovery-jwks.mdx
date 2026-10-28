@@ -15,7 +15,7 @@ flow:
     - { from: RP, to: OP, channel: back, title: "The RP fetches the jwks_uri", summary: "The RP sends a GET to the jwks_uri from the validated metadata. The URL MUST use https." }
     - { from: OP, to: RP, channel: back, title: "The OP returns the JWK Set", summary: "The JWK Set holds public keys only and MUST NOT contain private or symmetric values. The RP keeps the keys to verify later tokens.", holds: ["JWK Set cache: kid 2026-01"] }
     - { from: OP, to: RP, channel: back, title: "RP selects a key by kid, validates", summary: "An ID token arrives in the token response. The RP picks the key by kid, checks the signature, then iss, aud, exp, and nonce if it sent one." }
-    - { from: RP, to: OP, channel: back, title: "Rotation: an unfamiliar kid triggers a refetch", summary: "The OP adds a new key to its JWK Set and starts signing with it. The RP sees an unfamiliar kid and re-retrieves the keys from jwks_uri.", holds: ["JWK Set cache: kid 2026-01, 2026-10"] }
+    - { from: RP, to: OP, channel: back, title: "Rotation: an unfamiliar kid triggers a refetch", summary: "The OP adds a new key to its JWK Set and starts signing with it. The RP sees an unfamiliar kid and re-retrieves the keys from jwks_uri.", holds: ["-JWK Set cache: kid 2026-01", "JWK Set cache: kid 2026-01, 2026-10"] }
     - { from: RP, to: RP, channel: internal, title: "If no key matches or signature fails", summary: "Alternative outcome. If kid is still unknown after the refetch, or the signature fails on a known key, the RP rejects the token and never uses keys from another issuer." }
 tableOfContents: true
 draft: false

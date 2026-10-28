@@ -186,7 +186,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 ### Protocols: Identity Visualized
 
 * Pages live in `astro/src/content/docs/protocols/<group>/<slug>.mdx`. A group is a folder with a `_meta.yml` for its label and order. The sidebar autogenerates.
-* Frontmatter has `title`, `date`, `description`, `sources` (spec registry keys), and `flow`. The `flow` has `actors` (each with `name` and `role`) and `steps` (each with `from`, `to`, `channel`, `title`, `summary`, and `holds`).
+* Frontmatter has `title`, `date`, `description`, `sources` (spec registry keys), and `flow`. The `flow` has `actors` (each with `name` and `role`) and `steps` (each with `from`, `to`, `channel`, `title`, `summary`, and `holds`). An entry in `holds` that starts with `-` removes that item, for example when a token is replaced.
 * Limits: max 3 actors, max 7 steps, step title max 8 words, step summary max 35 words. The `### N.` headings in the body equal the step titles.
 * Body H2s, in order: Why It Exists, How It Works (`<Flow flow={frontmatter.flow} />`), Step by Step, Notes, Use It When, Don't Confuse With, Build with Duende, and Sources (`<Sources keys={frontmatter.sources} />`).
 * Cite specs with `<Cite k="..." />`. Keys come from the spec registry in `astro/src/content/specs/*.yaml`.
