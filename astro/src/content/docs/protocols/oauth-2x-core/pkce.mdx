@@ -13,12 +13,12 @@ flow:
     - { name: App, role: "OAuth client" }
     - { name: Server, role: "Authorization server" }
   steps:
-    - { from: App, to: App, channel: internal, title: "App creates a verifier and a challenge", summary: "The app makes a random code_verifier and keeps it. It hashes the verifier into a code_challenge with S256, which the spec requires when the client can use it." }
+    - { from: App, to: App, channel: internal, title: "App creates a verifier and a challenge", summary: "The app makes a random `code_verifier` and keeps it. It hashes the verifier into a `code_challenge` with `S256`, which the spec requires when the client can use it." }
     - { from: App, to: Browser, channel: front, title: "App redirects the browser to authorize", summary: "The app answers the user's sign-in request with a redirect to the authorization endpoint. The browser makes the next request." }
-    - { from: Browser, to: Server, channel: front, title: "The request carries the challenge", summary: "The request has code_challenge, code_challenge_method=S256, state and a redirect_uri. The server must match redirect_uri exactly against a registered value. The verifier is never sent here." }
+    - { from: Browser, to: Server, channel: front, title: "The request carries the challenge", summary: "The request has `code_challenge`, `code_challenge_method`=`S256`, `state` and a `redirect_uri`. The server must match `redirect_uri` exactly against a registered value. The verifier is never sent here." }
     - { from: Server, to: Browser, channel: front, title: "The user signs in at the server", summary: "The user types credentials into the authorization server only. The app never sees them." }
-    - { from: Server, to: Browser, channel: front, title: "The server redirects back with a code", summary: "The code is short-lived and single-use. The browser follows the redirect to the app, which checks that state matches before it accepts the callback." }
-    - { from: App, to: Server, channel: back, title: "App redeems the code with the verifier", summary: "The app posts the code, the code_verifier and the identical redirect_uri. The server recomputes S256 and answers invalid_grant on a mismatch. A confidential client also authenticates." }
+    - { from: Server, to: Browser, channel: front, title: "The server redirects back with a code", summary: "The code is short-lived and single-use. The browser follows the redirect to the app, which checks that `state` matches before it accepts the callback." }
+    - { from: App, to: Server, channel: back, title: "App redeems the code with the verifier", summary: "The app posts the code, the `code_verifier` and the identical `redirect_uri`. The server recomputes `S256` and answers `invalid_grant` on a mismatch. A confidential client also authenticates." }
     - { from: Server, to: App, channel: back, title: "The server returns tokens to the app", summary: "The tokens come back on the back channel, outside any redirect URL. A browser-based app still receives them in the browser. The response must not be cached." }
 ---
 import Flow from '~/components/Flow.astro';

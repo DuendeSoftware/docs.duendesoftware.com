@@ -11,12 +11,12 @@ flow:
     - { name: AS, role: "Authorization server" }
     - { name: RS, role: "Resource server" }
   steps:
-    - { from: Client, to: AS, channel: back, title: "The client is registered at the AS", summary: "Before any sign-in, the client is registered with the authorization server and receives a client_id. A confidential client also receives credentials, such as a client secret." }
-    - { from: Client, to: AS, channel: front, title: "Client sends Alice to the AS", summary: "The client redirects Alice's browser to the authorization endpoint with its client_id, a redirect_uri, and a state value. No client secret is sent, because the browser can read the URL." }
+    - { from: Client, to: AS, channel: back, title: "The client is registered at the AS", summary: "Before any sign-in, the client is registered with the authorization server and receives a `client_id`. A confidential client also receives credentials, such as a client secret." }
+    - { from: Client, to: AS, channel: front, title: "Client sends Alice to the AS", summary: "The client redirects Alice's browser to the authorization endpoint with its `client_id`, a `redirect_uri`, and a `state` value. No client secret is sent, because the browser can read the URL." }
     - { from: AS, to: AS, channel: internal, title: "The AS authenticates Alice and decides", summary: "Alice signs in at the authorization server, so the client never sees her password. The AS then asks her to approve the request, or decides by policy." }
-    - { from: AS, to: Client, channel: front, title: "The AS redirects back with a code", summary: "The AS redirects Alice's browser to the client's redirect_uri with a short-lived authorization code and the same state value." }
-    - { from: Client, to: AS, channel: back, title: "The client presents the grant", summary: "The client sends the code to the token endpoint in a direct call and authenticates with its own credentials. The redirect_uri must match the one from step 2." }
-    - { from: AS, to: Client, channel: back, title: "The AS issues an access token", summary: "The AS checks the code, the client, and the redirect_uri, then returns an access token with its type and lifetime. The response must not be cached." }
+    - { from: AS, to: Client, channel: front, title: "The AS redirects back with a code", summary: "The AS redirects Alice's browser to the client's `redirect_uri` with a short-lived authorization code and the same `state` value." }
+    - { from: Client, to: AS, channel: back, title: "The client presents the grant", summary: "The client sends the code to the token endpoint in a direct call and authenticates with its own credentials. The `redirect_uri` must match the one from step 2." }
+    - { from: AS, to: Client, channel: back, title: "The AS issues an access token", summary: "The AS checks the code, the client, and the `redirect_uri`, then returns an access token with its type and lifetime. The response must not be cached." }
     - { from: Client, to: RS, channel: back, title: "The resource server serves the request", summary: "The client sends the access token in the Authorization header. The resource server validates the token and decides whether to return Alice's data." }
 tableOfContents: true
 draft: false

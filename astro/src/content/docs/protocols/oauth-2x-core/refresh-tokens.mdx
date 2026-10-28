@@ -14,11 +14,11 @@ flow:
   steps:
     - { from: AS, to: Client, channel: back, title: "AS issues a refresh token", summary: "The token response can include a refresh token next to the access token. Issuing one is optional, and the server decides based on its risk assessment." }
     - { from: Client, to: Client, channel: internal, title: "Client stores it and protects it", summary: "The client keeps the refresh token confidential. A public client's refresh token must be sender-constrained or rotated. The rotation variant is shown." }
-    - { from: Client, to: AS, channel: back, title: "Client asks for a new access token", summary: "The client sends grant_type=refresh_token with the refresh token. Any scope it asks for must not exceed the original grant." }
+    - { from: Client, to: AS, channel: back, title: "Client asks for a new access token", summary: "The client sends `grant_type`=`refresh_token` with the refresh token. Any scope it asks for must not exceed the original grant." }
     - { from: AS, to: Client, channel: back, title: "AS rotates the refresh token", summary: "The AS returns a new access token and a new refresh token, R2, and invalidates R1. The client must discard R1 and keep R2." }
     - { from: Client, to: AS, channel: back, title: "Alternative: old token reused, active revoked", summary: "R1 is presented again, for example a stolen copy. The AS sees a breach but cannot tell who sent it, so it revokes the active refresh token. The client needs a fresh grant." }
     - { from: Client, to: AS, channel: back, title: "Alternative: client revokes the refresh token", summary: "As another ending, the client calls the revocation endpoint with the refresh token. The server can also revoke related tokens and the grant." }
-    - { from: AS, to: Client, channel: back, title: "Alternative: inactivity ends the refresh token", summary: "A refresh token should expire after the client has been inactive. After that the AS answers invalid_grant and a new authorization grant is required." }
+    - { from: AS, to: Client, channel: back, title: "Alternative: inactivity ends the refresh token", summary: "A refresh token should expire after the client has been inactive. After that the AS answers `invalid_grant` and a new authorization grant is required." }
 ---
 import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';

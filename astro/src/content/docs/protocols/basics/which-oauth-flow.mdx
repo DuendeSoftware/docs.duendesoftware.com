@@ -12,7 +12,7 @@ flow:
   steps:
     - { from: Client, to: Client, channel: internal, title: "Pick by client type and user", summary: "This step has no messages. Each grant has its own page. Check whether a user is present, whether the client can keep a secret, and whether the device has input." }
     - { from: Client, to: Client, channel: internal, title: "Apply the rules at their levels", summary: "Public clients need PKCE and confidential clients should use it too. Client credentials is for confidential clients only. Do not use the password grant, and avoid implicit." }
-    - { from: AS, to: Client, channel: back, title: "If a grant is disallowed, AS refuses", summary: "If a client uses a grant type it is not allowed to use, the token endpoint answers 400 with unauthorized_client. The request itself is not shown." }
+    - { from: AS, to: Client, channel: back, title: "If a grant is disallowed, AS refuses", summary: "If a client uses a grant type it is not allowed to use, the token endpoint answers 400 with `unauthorized_client`. The request itself is not shown." }
 tableOfContents: true
 draft: false
 ---

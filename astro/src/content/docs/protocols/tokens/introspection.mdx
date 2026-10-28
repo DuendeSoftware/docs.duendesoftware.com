@@ -13,10 +13,10 @@ flow:
   steps:
     - { from: Client, to: API, channel: back, title: "The client presents the token to the API", summary: "The client sends the bearer token to the API without reading it. Here the API relies on the AS to report its state." }
     - { from: API, to: AS, channel: back, title: "The API sends an introspection request", summary: "The API POSTs the token to the introspection endpoint over TLS and authenticates. The token is required and the type hint is optional." }
-    - { from: AS, to: API, channel: back, title: "Alternative: inactive token, active false", summary: "For an unknown, expired, revoked or disallowed token, the AS returns 200 with active false. It should not say why. The API then answers its client with 401 invalid_token." }
-    - { from: AS, to: API, channel: back, title: "Alternative: active token returns metadata", summary: "As the other outcome, a usable token gets active true. Scope, client_id, sub, aud, iss and exp are all optional, and the AS may return different metadata to different APIs." }
-    - { from: API, to: API, channel: internal, title: "The API treats active as input to policy", summary: "The AS must check that a token limited to certain APIs fits this API. The API's own aud and exp checks add defence in depth. Missing scope gets 403 and wrong audience gets 401." }
-    - { from: API, to: API, channel: internal, title: "The API chooses between caching and fresh calls", summary: "The API may cache the response, trading liveness for fewer calls. If the response has exp, it must not be cached beyond that time. Without exp the spec sets no upper limit." }
+    - { from: AS, to: API, channel: back, title: "Alternative: inactive token, active false", summary: "For an unknown, expired, revoked or disallowed token, the AS returns 200 with `active` false. It should not say why. The API then answers its client with 401 `invalid_token`." }
+    - { from: AS, to: API, channel: back, title: "Alternative: active token returns metadata", summary: "As the other outcome, a usable token gets `active` true. Scope, `client_id`, `sub`, `aud`, `iss` and `exp` are all optional, and the AS may return different metadata to different APIs." }
+    - { from: API, to: API, channel: internal, title: "The API treats active as input to policy", summary: "The AS must check that a token limited to certain APIs fits this API. The API's own `aud` and `exp` checks add defence in depth. Missing scope gets 403 and wrong audience gets 401." }
+    - { from: API, to: API, channel: internal, title: "The API chooses between caching and fresh calls", summary: "The API may cache the response, trading liveness for fewer calls. If the response has `exp`, it must not be cached beyond that time. Without `exp` the spec sets no upper limit." }
 tableOfContents: true
 draft: false
 ---

@@ -11,13 +11,13 @@ flow:
     - { name: AS, role: "Authorization server" }
     - { name: API, role: "Resource server" }
   steps:
-    - { from: Client, to: AS, channel: front, title: "Client requests scopes at one resource", summary: "The client asks for three scopes at one resource. The AS may fully or partially ignore the scope per its policy. Here resource names the API and scope names the access." }
-    - { from: AS, to: Client, channel: front, title: "AS redirects back with a code or error", summary: "The AS redirects back with a short-lived code and the client's state. A bad scope or resource returns the same way, as invalid_scope or invalid_target." }
-    - { from: Client, to: AS, channel: back, title: "Client redeems the code at the AS", summary: "The client sends the single-use code to the token endpoint. A confidential client authenticates, here with HTTP Basic. A public client sends client_id and a PKCE code_verifier." }
-    - { from: AS, to: Client, channel: back, title: "AS returns a token with the narrowed scope", summary: "scope is required here because it differs from the request. The JWT's aud limits it to one API. The client must not inspect the token." }
+    - { from: Client, to: AS, channel: front, title: "Client requests scopes at one resource", summary: "The client asks for three scopes at one resource. The AS may fully or partially ignore the scope per its policy. Here `resource` names the API and `scope` names the access." }
+    - { from: AS, to: Client, channel: front, title: "AS redirects back with a code or error", summary: "The AS redirects back with a short-lived code and the client's `state`. A bad scope or resource returns the same way, as `invalid_scope` or `invalid_target`." }
+    - { from: Client, to: AS, channel: back, title: "Client redeems the code at the AS", summary: "The client sends the single-use code to the token endpoint. A confidential client authenticates, here with HTTP Basic. A public client sends `client_id` and a PKCE `code_verifier`." }
+    - { from: AS, to: Client, channel: back, title: "AS returns a token with the narrowed scope", summary: "`scope` is required here because it differs from the request. The JWT's `aud` limits it to one API. The client must not inspect the token." }
     - { from: Client, to: API, channel: back, title: "Client calls the API with the token", summary: "The client sends the access token as a Bearer credential. The API validates it, a JWT through its own checks and an opaque token through a server-side mechanism, then applies its own rules." }
-    - { from: API, to: Client, channel: back, title: "If aud is wrong, API returns 401", summary: "A JWT whose aud lacks this API must be rejected, even if its scope string matches. The API answers 401 with invalid_token. Scope alone is not an audience restriction." }
-    - { from: API, to: Client, channel: back, title: "If policy fails, API returns 403", summary: "A token with the right audience and scope can still get 403. Tenant and ownership rules are the API's own decision. The RFCs don't define them, and insufficient_scope doesn't apply." }
+    - { from: API, to: Client, channel: back, title: "If aud is wrong, API returns 401", summary: "A JWT whose `aud` lacks this API must be rejected, even if its scope string matches. The API answers 401 with `invalid_token`. Scope alone is not an audience restriction." }
+    - { from: API, to: Client, channel: back, title: "If policy fails, API returns 403", summary: "A token with the right audience and scope can still get 403. Tenant and ownership rules are the API's own decision. The RFCs don't define them, and `insufficient_scope` doesn't apply." }
 tableOfContents: true
 draft: false
 ---

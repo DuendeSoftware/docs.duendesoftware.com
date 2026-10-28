@@ -11,11 +11,11 @@ flow:
     - { name: AS, role: "Authorization server" }
     - { name: API, role: "Resource server" }
   steps:
-    - { from: App, to: AS, channel: front, title: "The app sends the authorization request", summary: "The app asks the AS for a code with the openid scope. The request goes through the user agent, and the AS redirects back to the registered redirect_uri with the code and the same state." }
-    - { from: App, to: AS, channel: back, title: "The app redeems the code for tokens", summary: "The app sends the code, code_verifier and the same redirect_uri over the back channel. The AS returns an ID token, an access token and a refresh token, with no-store headers." }
-    - { from: App, to: App, channel: internal, title: "The app validates the ID token", summary: "The ID token is for the client. The app checks iss, aud, exp and any nonce. It does not inspect the access token, and keeps the refresh token for the AS." }
+    - { from: App, to: AS, channel: front, title: "The app sends the authorization request", summary: "The app asks the AS for a code with the `openid` scope. The request goes through the user agent, and the AS redirects back to the registered `redirect_uri` with the code and the same `state`." }
+    - { from: App, to: AS, channel: back, title: "The app redeems the code for tokens", summary: "The app sends the code, `code_verifier` and the same `redirect_uri` over the back channel. The AS returns an ID token, an access token and a refresh token, with no-store headers." }
+    - { from: App, to: App, channel: internal, title: "The app validates the ID token", summary: "The ID token is for the client. The app checks `iss`, `aud`, `exp` and any `nonce`. It does not inspect the access token, and keeps the refresh token for the AS." }
     - { from: App, to: API, channel: back, title: "App calls the API with the access token", summary: "The app sends the access token as a Bearer token. The API checks it was meant for this API, then answers 200." }
-    - { from: App, to: API, channel: back, title: "Failure example: ID token sent to API", summary: "The ID token is not meant for the API, so the API refuses it, ideally with 401 and invalid_token. The app gains nothing." }
+    - { from: App, to: API, channel: back, title: "Failure example: ID token sent to API", summary: "The ID token is not meant for the API, so the API refuses it, ideally with 401 and `invalid_token`. The app gains nothing." }
     - { from: App, to: App, channel: internal, title: "Who may use which token", summary: "ID token: for the client. Access token: for the API. Refresh token: for the AS only. A compact table of recipients." }
 tableOfContents: true
 draft: false

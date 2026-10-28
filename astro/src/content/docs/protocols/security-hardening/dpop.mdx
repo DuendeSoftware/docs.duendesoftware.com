@@ -12,10 +12,10 @@ flow:
     - { name: RS, role: "Resource server" }
   steps:
     - { from: Client, to: Client, channel: internal, title: Client creates a key pair, summary: "The client generates an asymmetric key pair and keeps the private key. Only the public key, as a JWK, goes into DPoP proofs." }
-    - { from: Client, to: AS, channel: back, title: Client sends a proof with the token request, summary: "The client signs a proof JWT with htm, htu, iat and a unique jti, and sends it in the DPoP header. This example uses a public client with client_id and no client authentication." }
-    - { from: AS, to: Client, channel: back, title: AS binds the token to the key, summary: "After checking the proof, the AS issues an access token bound to the proof key and sets token_type to DPoP." }
-    - { from: Client, to: RS, channel: back, title: Client sends the token with a fresh proof, summary: "The client sends the token under the DPoP scheme, with a new proof for this request. The proof adds ath, the SHA-256 hash of the access token." }
-    - { from: RS, to: RS, channel: internal, title: "API checks the token, then the proof", summary: "The API validates the token, then the proof's typ, alg, signature, htm, htu, iat and ath. It also checks that the proof key matches the token's cnf.jkt." }
+    - { from: Client, to: AS, channel: back, title: Client sends a proof with the token request, summary: "The client signs a proof JWT with `htm`, `htu`, `iat` and a unique `jti`, and sends it in the DPoP header. This example uses a public client with `client_id` and no client authentication." }
+    - { from: AS, to: Client, channel: back, title: AS binds the token to the key, summary: "After checking the proof, the AS issues an access token bound to the proof key and sets `token_type` to DPoP." }
+    - { from: Client, to: RS, channel: back, title: Client sends the token with a fresh proof, summary: "The client sends the token under the DPoP scheme, with a new proof for this request. The proof adds `ath`, the SHA-256 hash of the access token." }
+    - { from: RS, to: RS, channel: internal, title: "API checks the token, then the proof", summary: "The API validates the token, then the proof's `typ`, `alg`, signature, `htm`, `htu`, `iat` and `ath`. It also checks that the proof key matches the token's `cnf.jkt`." }
     - { from: RS, to: Client, channel: back, title: "If a check fails: what goes wrong", summary: "A stolen token fails without a proof from the key. A proof for another method, URI or token fails its check. A replayed proof works only at the same endpoint, within its window." }
 tableOfContents: true
 draft: false

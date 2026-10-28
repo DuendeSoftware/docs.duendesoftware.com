@@ -9,6 +9,8 @@ const n = actors.length;
 const idx = (a: string) => actors.findIndex((x) => x.name === a);
 const via = { front: 'through the browser', back: 'direct', internal: '' };
 const kind = { front: 'Front channel', back: 'Back channel', internal: 'Internal' };
+// Step summaries may use `backticks` for parameter and claim names, as in the prose. Odd parts are code.
+const parts = (t: string) => t.split('`').map((x, k) => ({ x, code: k % 2 === 1 }));
 const pathOf = (s: { from: string; to: string; channel: keyof typeof via }) => (s.from === s.to ? `${s.from} (internal)` : `${s.from} → ${s.to}${via[s.channel] ? ` · ${via[s.channel]}` : ""}`);
 
 // Grid placement of the arrow: lanes it covers (start column, count). Self steps run toward the free side.
@@ -43,7 +45,7 @@ const geo = steps.map((s) => {
 							<p class="fl-kind">{kind[s.channel]}{via[s.channel] && ` · ${via[s.channel]}`}</p>
 						</div>
 						<p class="fl-title">{s.title}</p>
-						<p class="fl-sum">{s.summary}</p>
+						<p class="fl-sum">{parts(s.summary).map((p) => (p.code ? <code>{p.x}</code> : p.x))}</p>
 						<a class="fl-more" hidden>Details<Icon name="down-arrow" class="fl-ico" /></a>
 					</div>
 				</li>
