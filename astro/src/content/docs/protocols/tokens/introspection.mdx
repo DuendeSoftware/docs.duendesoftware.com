@@ -3,7 +3,7 @@ title: "Token Introspection"
 date: 2026-10-23
 sidebar:
   order: 2
-description: "The API sends the presented token to the authorization server's introspection endpoint and gets back its current state. Only an active of false means inactive, and everything else is optional metadata."
+description: "The API sends the presented token to the authorization server's introspection endpoint and gets back its current state. Only active is required in the response, and everything else is optional metadata."
 sources: [bearer, bearerErr, rfc7662_1, rfc7662_2_1, rfc7662_2_2, rfc7662_2_3, rfc7662_4, rfc9068_4]
 flow:
   actors:
@@ -11,12 +11,12 @@ flow:
     - { name: API, role: "Resource server" }
     - { name: AS, role: "Authorization server" }
   steps:
-    - { from: Client, to: API, channel: back, title: "The client presents the token to the API", summary: "The client sends the bearer token to the API without reading it. Here the API relies on the AS to report its state.", holds: ["access token"] }
-    - { from: API, to: AS, channel: back, title: "The API sends an introspection request", summary: "The API, not the client, POSTs the token to the introspection endpoint over TLS and authenticates. The token is required and the type hint is optional.", holds: ["API credential"] }
+    - { from: Client, to: API, channel: back, title: "The client presents the token to the API", summary: "The client sends the bearer token to the API without reading it. Here the API relies on the AS to report its state." }
+    - { from: API, to: AS, channel: back, title: "The API sends an introspection request", summary: "The API POSTs the token to the introspection endpoint over TLS and authenticates. The token is required and the type hint is optional." }
     - { from: AS, to: API, channel: back, title: "Alternative: inactive token, active false", summary: "For an unknown, expired, revoked or disallowed token, the AS returns 200 with active false. It should not say why. The API then answers its client with 401 invalid_token." }
-    - { from: AS, to: API, channel: back, title: "Alternative: active token returns metadata", summary: "As the other outcome, a usable token gets active true. Scope, client_id, sub, aud, iss and exp are all optional, and the AS may return different metadata to different APIs.", holds: ["token metadata"] }
+    - { from: AS, to: API, channel: back, title: "Alternative: active token returns metadata", summary: "As the other outcome, a usable token gets active true. Scope, client_id, sub, aud, iss and exp are all optional, and the AS may return different metadata to different APIs." }
     - { from: API, to: API, channel: internal, title: "The API treats active as input to policy", summary: "The AS must check that a token limited to certain APIs fits this API. The API's own aud and exp checks add defence in depth. Missing scope gets 403 and wrong audience gets 401." }
-    - { from: API, to: API, channel: internal, title: "The API chooses between caching and fresh calls", summary: "The API may cache the response, trading liveness for fewer calls. If the response has exp, it must not be cached beyond that time. Without exp the spec sets no upper limit.", holds: ["cached response"] }
+    - { from: API, to: API, channel: internal, title: "The API chooses between caching and fresh calls", summary: "The API may cache the response, trading liveness for fewer calls. If the response has exp, it must not be cached beyond that time. Without exp the spec sets no upper limit." }
 tableOfContents: true
 draft: false
 ---
@@ -24,25 +24,27 @@ import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-The API sends the presented token to the authorization server's introspection endpoint and gets back its current state. Only an active of false means inactive. Everything else is optional metadata.
+The API sends the presented token to the authorization server's (AS) introspection endpoint and gets back its current state. Only `active` is required in the response. Everything else is optional metadata. The API still decides what to allow.
 
-## Why It Exists
-
-An API that receives a reference (opaque) token cannot read it, and an API that receives a JWT may still want to know whether it has been revoked. Introspection lets the API ask the authorization server (AS) for the token's current state without knowing its format. The API still decides what to allow. After reading, you can tell what the AS answer means and what the API must still check itself.
+IdentityServer hosts the introspection endpoint. On the API side, an ASP.NET Core API validates reference tokens by introspection through the OAuth 2.0 introspection handler, authenticating with its own API resource credential.
 
 The actors are the client that holds the token, the API (the resource server, RS) that receives it, and the AS that issued it.
 
-## How It Works
+## Why Token Introspection Exists
+
+An API that receives a reference (opaque) token can't read it, so it can't check it locally. An API that receives a JWT may still want to know whether it has been revoked, which local validation can't show. Introspection lets the API ask the AS for the token's current state without knowing its format. [Validating JWT Access Tokens](/protocols/tokens/access-token-validation.mdx) needs no call to the AS but can't see revocation on its own. Introspection only reads state. A client tells the AS to invalidate a token through [Token Revocation](/protocols/tokens/token-revocation.mdx).
+
+## How Token Introspection Works
 
 Steps 1 and 2 are the normal start. Steps 3 and 4 are alternative responses to the same introspection request, and the AS sends one of them. Steps 5 and 6 are about what the API does next.
 
 <Flow flow={frontmatter.flow} />
 
-## Step by Step
+## Token Introspection Step by Step
 
 ### 1. The client presents the token to the API
 
-The client sends the token without reading it. To the client the token is opaque. The contents of tokens are opaque to clients (RFC 7662 section 1). It may be a reference value or a JWT, and introspection gives the API the token's state either way.
+The client sends the token without reading it, because token contents are opaque to clients (RFC 7662 section 1). It may be a reference value or a JWT, and introspection gives the API the token's state either way.
 
 ```http
 GET /orders/42 HTTP/1.1
@@ -54,14 +56,14 @@ Authorization: Bearer mF_9.B5f-4.1JqM
 
 ### 2. The API sends an introspection request
 
-The API, not the client, calls the AS. The AS must require some form of authorization for this call, because the answer can reveal data about a token. Compare the `Authorization` header with step 1: this one is the API's own credential, not the client's token. Bad credentials get HTTP 401, as at the token endpoint. If the hint does not find the token, the AS must search all its token types.
+The API calls the AS itself. The AS must require some form of authorization for this call, because the answer can reveal data about a token. The `Authorization` header here is the API's own credential. The client's token from step 1 goes in the body. Bad credentials get HTTP 401, as at the token endpoint. If the hint does not find the token, the AS must search all its token types.
 
 ```http
 POST /introspect HTTP/1.1
 Host: server.example.com
 Accept: application/json
 Content-Type: application/x-www-form-urlencoded
-Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Authorization: Basic <base64(client_id:client_secret)>
 
 token=mF_9.B5f-4.1JqM&token_type_hint=access_token
 ```
@@ -70,7 +72,7 @@ token=mF_9.B5f-4.1JqM&token_type_hint=access_token
 
 ### 3. Alternative: inactive token, active false
 
-This is one possible response. A token that is unknown, expired, revoked, or not allowed gets a normal `200`, not an HTTP error, because the question was answered. Only `active` is returned. The API then answers its own client with `401` and `invalid_token`. That 401 is the API's own behavior (RFC 6750 section 3.1), not part of RFC 7662.
+A token that is unknown, expired, revoked, or not allowed still gets a `200`, because the question was answered. Only `active` is returned. The API then answers its own client with `401` and `invalid_token`. That 401 comes from RFC 6750 section 3.1. RFC 7662 doesn't define it.
 
 ```http
 HTTP/1.1 200 OK
@@ -83,7 +85,7 @@ Content-Type: application/json
 
 ### 4. Alternative: active token returns metadata
 
-This is the other possible response. The AS says the token is usable and adds what it knows. Look at `aud`, `exp` and `scope`, because step 5 depends on them.
+The AS says the token is usable and adds what it knows. Step 5 depends on `aud`, `exp` and `scope`.
 
 ```http
 HTTP/1.1 200 OK
@@ -100,7 +102,7 @@ Content-Type: application/json
 
 ### 5. The API treats active as input to policy
 
-Without a profile, `aud`, `exp` and `scope` are optional response members. That does not make them optional for your API. This example API requires `active`, an `aud` that contains its own identifier, an `exp` in the future, and the `orders.read` scope. If the response lacks a field the API needs, the API cannot establish that condition, so it denies access. The `401` `invalid_token` and `403` `insufficient_scope` answers go from the API to the client (RFC 6750 section 3.1). The checks below are guidance from this page, not RFC 7662 requirements.
+Without a profile, `aud`, `exp` and `scope` are optional response members. That does not make them optional for your API. This example API requires `active`, an `aud` that contains its own identifier, an `exp` in the future, and the `orders.read` scope. If the response lacks a field the API needs, the API cannot establish that condition, so it denies access. The `401` `invalid_token` and `403` `insufficient_scope` answers go from the API to the client (RFC 6750 section 3.1). The checks below are guidance from this page, not RFC 7662 requirements. Those checks are:
 
 ```text
 require active === true
@@ -115,37 +117,27 @@ privilege missing -> 403 insufficient_scope
 
 ### 6. The API chooses between caching and fresh calls
 
-A longer cache lowers load but leaves a window where a revoked token is still accepted. Highly sensitive deployments can disable caching.
+The API may cache the response. A longer cache lowers load but leaves a window where a revoked token is still accepted. If the response has `exp`, the API must not cache it beyond that time. Without `exp` the spec sets no upper limit. Highly sensitive deployments can disable caching.
 
 <Cite k="rfc7662_4" />
 
-## Notes
+## When the AS Is Unreachable
 
-If the AS cannot be reached, or the response is malformed or fails the TLS server certificate check, the API has no trustworthy state. RFC 7662 gives no rule for an unreachable endpoint (the certificate check is a MUST, section 4). Denying access, with a 401 `invalid_token` or a 503, is guidance from this page, not from the RFC.
+If the AS can't be reached, or the response is malformed or fails the TLS server certificate check, the API has no trustworthy state. RFC 7662 gives no rule for an unreachable endpoint, although the certificate check is a must (section 4). Denying access, with a 401 `invalid_token` or a 503, is our recommendation. The RFC doesn't say.
 
-The AS decides what `active` means (RFC 7662 section 2.2). The RFC lists checks the AS must run, including, if the token can be used only at certain APIs, whether it can be used at the calling API (section 4). Which checks apply is up to the AS. A foreign `aud` on an active response suggests the AS did not apply the section 4 audience check. RFC 9068 section 4 makes the `aud` check a MUST only for JWT access tokens.
+## What Active Means
+
+The AS decides what `active` means (RFC 7662 section 2.2). The RFC lists checks the AS must run, including, if the token can be used only at certain APIs, whether it can be used at the calling API (section 4). Which checks apply is up to the AS. A foreign `aud` on an active response suggests the AS did not apply the section 4 audience check. RFC 9068 section 4 makes the `aud` check a must only for JWT access tokens.
 
 A single piece of software acting as both client and protected resource may reuse the same credentials at the token and introspection endpoints. The AS may demand separate ones (section 4).
 
-RFC 7662 describes the protected resource as the caller.
+## See Also
 
-## Use It When
-
-* You want the AS's current view of a token, including revocation, instead of checking it locally.
-* The API receives tokens whose format it cannot or should not parse.
-
-## Don't Confuse With
-
-* Local JWT validation (RFC 9068, see [access token validation](/protocols/tokens/access-token-validation.mdx)). It needs no call to the AS, but cannot see revocation on its own.
-* Token revocation, which is how a client tells the AS to invalidate a token (see [token revocation](/protocols/tokens/token-revocation.mdx)). Introspection only reads state.
-
-## Build with Duende
-
-IdentityServer hosts the introspection endpoint. On the API side, an ASP.NET Core API validates reference tokens by introspection through the OAuth 2.0 introspection handler, authenticating with its own API resource credential.
-
-* [Introspection Endpoint in IdentityServer](/identityserver/reference/v8/endpoints/introspection.md)
-* [Token Introspection with IdentityModel](/identitymodel/endpoints/introspection.mdx)
-* [Using reference tokens in ASP.NET Core APIs](/identityserver/apis/aspnetcore/reference.md)
+* [Validating JWT Access Tokens](/protocols/tokens/access-token-validation.mdx): local validation of JWT access tokens, with no call to the AS.
+* [Token Revocation](/protocols/tokens/token-revocation.mdx): how a client tells the AS to invalidate a token.
+* [Introspection Endpoint](/identityserver/reference/v8/endpoints/introspection.md): the endpoint IdentityServer hosts.
+* [Token Introspection Endpoint](/identitymodel/endpoints/introspection.mdx): calling introspection with IdentityModel.
+* [Reference Tokens](/identityserver/apis/aspnetcore/reference.md): validating reference tokens in an ASP.NET Core API.
 
 ## Sources
 

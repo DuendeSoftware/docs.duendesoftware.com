@@ -12,7 +12,7 @@ flow:
     - { name: API, role: "Resource server" }
   steps:
     - { from: App, to: AS, channel: front, title: "The app sends the authorization request", summary: "The app asks the AS for a code with the openid scope. The request goes through the user agent, and the AS redirects back to the registered redirect_uri with the code and the same state." }
-    - { from: App, to: AS, channel: back, title: "The app redeems the code for tokens", summary: "The app sends the code, code_verifier and the same redirect_uri over the back channel. The AS returns an ID token, an access token and a refresh token, with no-store headers.", holds: ["id_token", "access_token", "refresh_token"] }
+    - { from: App, to: AS, channel: back, title: "The app redeems the code for tokens", summary: "The app sends the code, code_verifier and the same redirect_uri over the back channel. The AS returns an ID token, an access token and a refresh token, with no-store headers." }
     - { from: App, to: App, channel: internal, title: "The app validates the ID token", summary: "The ID token is for the client. The app checks iss, aud, exp and any nonce. It does not inspect the access token, and keeps the refresh token for the AS." }
     - { from: App, to: API, channel: back, title: "App calls the API with the access token", summary: "The app sends the access token as a Bearer token. The API checks it was meant for this API, then answers 200." }
     - { from: App, to: API, channel: back, title: "Failure example: ID token sent to API", summary: "The ID token is not meant for the API, so the API refuses it, ideally with 401 and invalid_token. The app gains nothing." }
@@ -24,25 +24,25 @@ import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-An OpenID Connect sign-in returns up to three tokens. After reading this page you will know which token goes to an API, which one describes the sign-in, and which one stays with the client.
+An OpenID Connect sign-in returns up to three tokens. The access token goes to an API and says what the client may do. The ID token stays with the client and says who signed in. The refresh token goes only to the authorization server (AS), to get new access tokens.
 
-## Why It Exists
+## Why OpenID Connect Uses Three Tokens
 
-They are all tokens, but they are not interchangeable, because each one has a different recipient. The ID token goes to the client and says who signed in. The access token goes to an API and says what the client may do. The refresh token goes back to the authorization server (AS) to get new access tokens. Mixing them up is a common source of API security bugs.
+The three tokens are not interchangeable, because each one has a different recipient. Mixing them up is a common source of API security bugs. For example, an API that accepts an ID token lets any client that signed a user in call it.
 
 A few terms appear in the ID token and the access token. `iss` is the issuer, the AS that created the token. `sub` is the subject, the user the token is about. `aud` is the audience, the party the token is meant for. `exp` is the expiry time. `typ` is a header that names the kind of token, for example `at+jwt` for a JWT access token.
 
-## How It Works
+## How Access, ID, and Refresh Tokens Are Used
 
 Steps 1 to 4 are the normal path. Step 5 is a failure branch, and step 6 is a recipient summary.
 
 <Flow flow={frontmatter.flow} />
 
-## Step by Step
+## Token Types Step by Step
 
 ### 1. The app sends the authorization request
 
-The request and the redirect each pass through the user agent (RFC 6749 section 4.1.1). The `openid` scope is what turns this into an [OpenID Connect](/protocols/openid-connect/openid-connect.mdx) sign-in, which is why an ID token comes back later. `redirect_uri` is REQUIRED in OpenID Connect and must exactly match a registered value. `nonce` is OPTIONAL in the code flow.
+The request and the redirect each pass through the user agent (RFC 6749 section 4.1.1). The `openid` scope is what turns this into an [OpenID Connect](/protocols/openid-connect/openid-connect.mdx) sign-in, which is why an ID token comes back later. `redirect_uri` is required in OpenID Connect and must exactly match a registered value. `nonce` is optional in the code flow.
 
 ```http
 GET /connect/authorize
@@ -77,7 +77,7 @@ Pragma: no-cache
 
 ### 3. The app validates the ID token
 
-The ID token is for the app, so the app checks it before it trusts the sign-in. Here `aud` contains the `client_id`, `budget`, which is how the app knows the token was issued for it. Remember this value for step 5. The excerpt is partial and omits other claims. Where the app stores the refresh token is an implementation choice, not a requirement of the specs.
+The ID token is for the app, so the app checks it before it trusts the sign-in. Here `aud` contains the `client_id`, `budget`, which is how the app knows the token was issued for it. Remember this value for step 5. The excerpt is partial and omits other claims. The specs don't say where the app stores the refresh token.
 
 ```json
 {"iss":"https://identity.example",
@@ -103,7 +103,7 @@ HTTP/1.1 200 OK
 
 ### 5. Failure example: ID token sent to API
 
-This is a failure example, not part of the normal flow. Compare the ID token's audience from step 3 (`budget`) with the API's own identifier. They differ, so the API refuses the token. The refusal is resource-server behavior, not something the client does. An RFC 9068 API refuses on `aud` and `typ`.
+This step is a failure example. Compare the ID token's audience from step 3 (`budget`) with the API's own identifier. They differ, so the API refuses the token. The resource server makes this refusal. An RFC 9068 API refuses on `aud` and `typ`. OpenID Connect Core section 2 defines no `scope` claim for the ID token, so an API cannot rely on one. The refusal rests on `aud` (RFC 7519 section 4.1.3, RFC 9068 section 4) and on RFC 9700 section 2.3.
 
 ```http
 GET /orders HTTP/1.1
@@ -118,7 +118,7 @@ WWW-Authenticate: Bearer error="invalid_token"
 
 ### 6. Who may use which token
 
-Each token is meant for a different kind of recipient. Keep this table next to your code.
+Each token is meant for a different kind of recipient.
 
 | Token | Recipient | What the recipient does with it |
 | --- | --- | --- |
@@ -126,32 +126,18 @@ Each token is meant for a different kind of recipient. Keep this table next to y
 | Access token | The API | Decides whether to serve the request. |
 | Refresh token | The AS only | Exchanges it for new access tokens. |
 
-The client does not inspect the access token, because its format can change. Refresh tokens are never sent to resource servers. The UserInfo endpoint is a protected resource that also accepts the access token.
+The client does not inspect the access token, because its format can change (RFC 9068 section 6). Refresh tokens are never sent to resource servers (RFC 6749 section 1.5). The UserInfo endpoint is a protected resource that also accepts the access token.
 
 <Cite k="refresh" />
 
-## Notes
+## See Also
 
-RFC 9068 section 6 forbids the client to inspect the access token, and RFC 6749 section 1.5 says refresh tokens are never sent to resource servers. Read more about [refresh tokens](/protocols/oauth-2x-core/refresh-tokens.mdx).
-
-OpenID Connect Core section 2 defines no `scope` claim for the ID token, so an API cannot rely on one. The step 5 refusal rests on `aud` (RFC 7519 section 4.1.3, RFC 9068 section 4) and on RFC 9700 section 2.3.
-
-## Use It When
-
-* You need to decide which token goes to the API and which stays in the client.
-* An API accepted, or should have refused, a token it was not given for.
-
-## Don't Confuse With
-
-* Using the ID token as an access token for an API. The API must refuse it.
-* The application's own session cookie, which is local state, not one of these three tokens.
-
-## Build with Duende
-
-IdentityServer issues all three tokens. Your client requests them, and your ASP.NET Core API validates the access token it receives.
-
-* [Requesting tokens](/identityserver/tokens/index.md)
-* [Token endpoint reference](/identityserver/reference/v8/endpoints/token.md)
+* [Authorization Code Flow with PKCE](/protocols/oauth-2x-core/pkce.mdx): how the app gets these tokens.
+* [Refresh Tokens and Rotation](/protocols/oauth-2x-core/refresh-tokens.mdx): what happens to the refresh token after step 2.
+* [OpenID Connect Sign-In](/protocols/openid-connect/openid-connect.mdx): where the ID token comes from.
+* [Validating JWT Access Tokens](/protocols/tokens/access-token-validation.mdx): the checks an API makes in step 4.
+* [Requesting tokens](/identityserver/tokens/index.md): how a client requests tokens from IdentityServer.
+* [Token endpoint reference](/identityserver/reference/v8/endpoints/token.md): the IdentityServer token endpoint.
 
 ## Sources
 

@@ -12,11 +12,11 @@ flow:
     - { name: IdP, role: "Identity provider" }
   steps:
     - { from: Browser, to: SP, channel: front, title: "Browser requests a protected page", summary: "The user agent asks the SP for a resource without a security context. This is plain HTTP and no SAML message exists yet." }
-    - { from: SP, to: IdP, channel: front, title: "SP sends the AuthnRequest via the browser", summary: "The SP answers with a 302 or 303 to the IdP. With the Redirect binding, the request is DEFLATEd, base64-encoded and URL-encoded. RelayState is optional and at most 80 bytes.", holds: ["AuthnRequest ID", "RelayState"] }
+    - { from: SP, to: IdP, channel: front, title: "SP sends the AuthnRequest via the browser", summary: "The SP answers with a 302 or 303 to the IdP. With the Redirect binding, the request is DEFLATEd, base64-encoded and URL-encoded. RelayState is optional and at most 80 bytes." }
     - { from: IdP, to: IdP, channel: internal, title: "IdP processes the request and authenticates", summary: "The IdP checks that the ACS URL or index belongs to the SP, then establishes who the user is or returns an error. Any login page appears in the browser." }
-    - { from: IdP, to: SP, channel: front, title: "IdP posts the Response via the browser", summary: "The IdP returns a form the browser POSTs to the ACS URL, typically auto-submitted. RelayState is echoed exactly. Each assertion must be signed, on the Assertion or the Response.", holds: ["SAML Response and Assertion"] }
+    - { from: IdP, to: SP, channel: front, title: "IdP posts the Response via the browser", summary: "The IdP returns a form the browser POSTs to the ACS URL, typically auto-submitted. RelayState is echoed exactly. Each assertion must be signed, on the Assertion or the Response." }
     - { from: SP, to: SP, channel: internal, title: "SP validates the Response and Assertion", summary: "The SP verifies the signatures, then asks who issued the assertion, whether it was meant for this SP and request, and whether it is valid and unused." }
-    - { from: SP, to: Browser, channel: front, title: "SP creates a session and redirects", summary: "The SP starts its own session, here with a cookie as an example, and redirects the browser to the RelayState target after it checks the URL.", holds: ["SP session"] }
+    - { from: SP, to: Browser, channel: front, title: "SP creates a session and redirects", summary: "The SP starts its own session, here with a cookie as an example, and redirects the browser to the RelayState target after it checks the URL." }
 tableOfContents: true
 draft: false
 ---
@@ -24,21 +24,22 @@ import Flow from '~/components/Flow.astro';
 import Cite from '~/components/Cite.astro';
 import Sources from '~/components/Sources.astro';
 
-The SP sends an AuthnRequest to the IdP through the browser, and the IdP returns a Response the same way. The SP creates its own session only after it validates the Response.
+In SAML 2.0 Single Sign-On, the service provider (SP) sends an AuthnRequest to the identity provider (IdP) through the browser, and the IdP returns a Response the same way. The SP creates its own session only after it validates the Response. The flow shown is SP-initiated, and the SP's checks in step 5 matter most.
 
-## Why It Exists
+IdentityServer can act as the IdP, and you tell it which SPs it trusts through its service provider store. It can also be configured as an SP. In your own setup, the SP side is your application, which validates the Response and creates its own session.
 
-You want users to sign in to an application without that application holding their credentials. In SAML, a separate identity provider (IdP) signs the user in, and the application is the service provider (SP). The browser only carries the messages between the two, so the SP has to check them itself. After reading this page you can follow one sign-in and list the checks the SP owes before it trusts the result.
+## Why SAML Single Sign-On Exists
 
-Four terms appear throughout. An **AuthnRequest** is the SP's request for a sign-in. An **assertion** is the IdP's signed statement about the user. The IdP sends it inside a **Response**, and it POSTs that Response to the SP's assertion consumer service (ACS) URL, the endpoint that receives it.
+An application shouldn't hold its users' credentials. In SAML, a separate IdP signs the user in, and the application is the SP. The browser only carries the messages between the two, so the SP has to check them itself. Four terms matter. An **AuthnRequest** is the SP's request for a sign-in. An **assertion** is the IdP's signed statement about the user. The IdP sends it inside a **Response**, and it POSTs that Response to the SP's assertion consumer service (ACS) URL, the endpoint that receives it.
 
-## How It Works
+## How SAML Single Sign-On Works
+
+The diagram shows an SP-initiated sign-in with the Redirect binding for the request and the POST binding for the Response. Steps 2 to 4 carry the most detail. Track three things through them: the request ID, the destination (the ACS URL), and the `RelayState` that comes back unchanged.
 
 <Flow flow={frontmatter.flow} />
 
-Steps 2 to 4 carry a lot of detail. On a first pass, follow only three things: the request ID, the destination (the ACS URL), and the `RelayState` that comes back unchanged.
+## SAML Single Sign-On Step by Step
 
-## Step by Step
 
 ### 1. Browser requests a protected page
 
@@ -56,7 +57,7 @@ Accept: text/html
 
 The SP builds an AuthnRequest and sends the browser to the IdP with it. Remember the `ID`, because the IdP's answer has to point back to it. The `Destination` is where the request goes. `RelayState` is an opaque value the SP wants back, for example to remember which page the user asked for. The decoded excerpt shows the attributes that matter. In the URL, `ID`, `Issuer` and the other attributes sit inside the encoded `SAMLRequest`.
 
-The request may be signed. If it is signed, `Destination` must be present. An unauthenticated request must not be trusted except as advisory. See the Notes for the Redirect binding and its exposure in logs.
+The request may be signed. If it is signed, `Destination` must be present. An unauthenticated request must not be trusted except as advisory. See [Choosing a Binding](#choosing-a-binding) for the Redirect binding and its exposure in logs.
 
 ```http
 HTTP/1.1 302 Found
@@ -88,9 +89,9 @@ Illustration, not a wire message:
 
 ### 4. IdP posts the Response via the browser
 
-The IdP answers with a page that holds a form. The browser POSTs the form to the ACS URL, and the `SAMLResponse` field carries the Response. The form `action`, the Response `Destination` and the bearer `SubjectConfirmationData` `Recipient` should all be the SP's ACS URL. Also check that `RelayState` is the value the SP sent. The Redirect binding must not carry the Response, so the POST form is the usual way. `SAMLResponse` is base64 with no DEFLATE, and the page should not be cached.
+The IdP answers with a page that holds a form. The browser POSTs the form to the ACS URL, and the `SAMLResponse` field carries the Response. The form `action`, the Response `Destination` and the bearer `SubjectConfirmationData` `Recipient` should all be the SP's ACS URL. Also check that `RelayState` is the value the SP sent. The Redirect binding must not carry the Response, so the POST form is the usual way. `SAMLResponse` is base64 with no DEFLATE. The page should not be cached, so the `Cache-Control: no-cache, no-store` and `Pragma: no-cache` headers are recommended.
 
-If the IdP cannot authenticate the user or fulfil the request, it must return a Response with an error `Status` and no assertions. HTTP error codes must not signal SAML failures.
+If the IdP cannot authenticate the user or fulfil the request, it must return a Response with an error `Status` and no assertions. HTTP error codes must not signal SAML failures. Delivering the error Response to the user agent is recommended, and Errata E85 adds a conditional recommendation when the user agent remains available and an acceptable location exists.
 
 ```http
 HTTP/1.1 200 OK
@@ -139,36 +140,21 @@ Location: /reports
 
 <Cite k="saml_profiles_2_0_os_4_1_3" />
 
-## Notes
-
-Status: the OASIS standard per the OASIS registry (not stated in the spec text), with Errata 05 applied where it changes the cited text (E1, E26, E46, E85, E90, E92).
+## Choosing a Binding
 
 A binding is how a SAML message travels. Redirect puts the whole message in the URL, where logs and `Referer` headers can expose it. POST or Artifact can also carry the AuthnRequest. The query-string `Signature`, if used, covers `SAMLRequest`, `RelayState` and `SigAlg`. `RelayState` should be integrity protected, through that signature or by other means.
 
 Artifact binding sends a small reference (`SAMLart`) through the browser, and the receiver then fetches the message over a direct back channel. Redirect, POST and Artifact are separate choices, and none of them replaces the SP's validation in step 5.
 
-Unsolicited (IdP-initiated) Responses are a MAY. They carry no `InResponseTo`, and Errata E90 warns of CSRF. An SP should be able to disable them and should designate a default location.
+## IdP-Initiated Sign-On
 
-For error Responses, delivery to the user agent is a SHOULD. Errata E85 adds a conditional SHOULD when the user agent remains available and an acceptable location exists.
+Unsolicited (IdP-initiated) Responses are optional. They carry no `InResponseTo`, and Errata E90 warns of cross-site request forgery. An SP should be able to disable them and should designate a default location.
 
-The `Cache-Control: no-cache, no-store` and `Pragma: no-cache` headers on the Response page are SHOULD.
+## See Also
 
-## Use It When
-
-* You integrate a service provider with a SAML identity provider for browser sign-on.
-* You need to read an AuthnRequest and Response exchange and know which checks the SP owes.
-
-## Don't Confuse With
-
-* IdP-initiated sign-on, where the IdP sends a Response nobody asked for. This page covers the SP-initiated flow.
-* SAML bindings, which only move messages. No binding replaces the SP's validation.
-
-## Build with Duende
-
-IdentityServer can act as the IdP, and you tell it which SPs it trusts through its service provider store. The SP side is your application, which validates the Response and creates its own session.
-
-* [SAML 2.0 in IdentityServer](/identityserver/saml/index.mdx)
-* [SAML 2.0 concepts in IdentityServer](/identityserver/saml/concepts.mdx)
+* [SAML 2.0 in IdentityServer](/identityserver/saml/index.mdx): set up IdentityServer for SAML.
+* [SAML 2.0 concepts in IdentityServer](/identityserver/saml/concepts.mdx): how IdentityServer models service providers and sign-on.
+* [OpenID Connect Sign-In](/protocols/openid-connect/openid-connect.mdx): the OpenID Connect counterpart to this flow.
 
 ## Sources
 
