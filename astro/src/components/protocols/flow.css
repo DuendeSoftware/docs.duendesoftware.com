@@ -1,0 +1,128 @@
+flow-stepper { display: block; container: flow / inline-size; margin-block: 1.5rem; --g: 2.5rem; --ink: var(--sl-color-white); /* brand pass: was var(--sl-color-text-accent) */ }
+.fl { display: grid; gap: 1rem; }
+.fl-main { min-width: 0; container: rows / inline-size; }
+
+/* Actors and lifelines (wide rows only) */
+.fl-actors { display: none; grid-template-columns: var(--g) repeat(var(--n), 1fr); margin-block-end: .25rem; }
+.fl-actors::before { content: ""; }
+.fl-actor { display: grid; gap: .125rem; margin-inline: .25rem; padding: .5rem .25rem; text-align: center; background: var(--sl-color-bg); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+.fl-actor b { color: var(--sl-color-white); overflow-wrap: anywhere; }
+.fl-actor small { font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); }
+[data-ready] .fl-actor.on { border: 2px solid var(--ink); padding: calc(.5rem - 1px) calc(.25rem - 1px); }
+.fl-body { position: relative; }
+.fl-lives { display: none; position: absolute; inset: 0; }
+.fl-lives i { position: absolute; inset-block: 0; left: calc(var(--g) + (var(--i) + .5) * (100% - var(--g)) / var(--n)); border-inline-start: 1px dashed var(--sl-color-gray-4); }
+
+/* Rows */
+.fl-rows { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+.fl-rows > li { margin: 0; cursor: pointer; }
+.fl-row { display: grid; grid-template-columns: var(--g) repeat(var(--n), 1fr); align-items: start; }
+.fl-n { margin-block-start: .0625rem; }
+.fl-n { all: unset; box-sizing: border-box; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 1.5px solid var(--sl-color-gray-3); border-radius: 50%; background: var(--sl-color-bg); font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-text); cursor: pointer; }
+.fl-n:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+[data-active] .fl-n { background: var(--duende-color-green); border-color: var(--duende-color-green); color: #111; }
+.fl-span { grid-column: 2 / -1; padding-block: .125rem; min-width: 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); overflow-wrap: anywhere; }
+.fl-path { display: block; font-size: var(--sl-text-xs); }
+.fl-lbl { display: block; }
+.fl-line { display: none; }
+[data-active] .fl-span { color: var(--sl-color-white); font-weight: 600; }
+
+/* Card: the active step; every card without JS */
+.fl-card { margin: .25rem 0 .5rem; margin-inline-start: var(--g); padding: 1rem 1.25rem; background: var(--sl-color-gray-6); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; cursor: auto; position: relative; }
+[data-ready] .fl-rows > li:not([data-active]) .fl-card { display: none; }
+.fl-card > * { margin: 0 0 .625rem; }
+.fl-card > :last-child { margin: 0; }
+.fl-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .125rem 1rem; }
+.fl-head > p { margin: 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); }
+.fl-kind { font-variant: small-caps; letter-spacing: .06em; text-transform: lowercase; }
+.fl-route { overflow-wrap: anywhere; }
+.fl-title { font-family: var(--font-gt-canon), serif; font-size: var(--sl-text-xl); font-weight: 600; line-height: 1.25; color: var(--sl-color-white); overflow-wrap: anywhere; }
+.fl-sum { max-width: 65ch; line-height: 1.55; color: var(--sl-color-gray-2); }
+.fl-holds { display: grid; gap: .125rem; margin-block-start: .875rem !important; padding-block-start: .75rem; border-top: 1px solid var(--sl-color-gray-5); font-size: var(--sl-text-sm); color: var(--sl-color-text); overflow-wrap: anywhere; }
+.fl-holds span { font-size: var(--sl-text-xs); font-variant: small-caps; letter-spacing: .06em; text-transform: lowercase; color: var(--sl-color-gray-2); }
+.fl-more, .flow-embed a { display: inline-block; font-size: var(--sl-text-sm); font-weight: 500; text-decoration: none; color: var(--sl-color-white); padding: .375rem 1rem; border: 1px solid var(--sl-color-gray-3); border-radius: 999px; }
+.fl-more { margin-block-start: .25rem !important; }
+.fl-more:hover, .flow-embed a:hover { background: var(--sl-color-gray-5); }
+.fl-more:focus-visible, .flow-embed a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.fl-more[hidden] { display: none; }
+
+/* Control panel (needs JS) */
+.fl-panel { display: none; order: -1; min-width: 0; }
+[data-ready] .fl-panel { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: .5rem; }
+.fl-count { grid-column: 1 / -1; margin: 0; font-size: var(--sl-text-h2); font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; color: var(--sl-color-white); }
+.fl-hint { display: none; grid-column: 1 / -1; margin: 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); }
+.fl-panel button { font: inherit; font-weight: 600; min-height: 2.5rem; padding: .4rem 1rem; color: var(--sl-color-white); background: var(--sl-color-bg); border: 1px solid var(--sl-color-gray-3); border-radius: 999px; cursor: pointer; }
+.fl-panel .next { background: var(--duende-color-green); border-color: var(--duende-color-green); color: #111; }
+.fl-panel button:hover:not(:disabled) { border-color: var(--ink); }
+.fl-panel button:disabled { opacity: .4; cursor: default; }
+.fl-panel button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.fl-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@container flow (max-width: 41.99rem) { [data-ready] .fl-panel { grid-template-columns: auto 1fr 1fr; } .fl-count { grid-column: auto; font-size: var(--sl-text-lg); } }
+@container flow (min-width: 42rem) {
+	.fl { grid-template-columns: minmax(0, 1fr) 12.5rem; gap: 1.5rem; align-items: start; }
+	.fl-panel { order: 0; }
+	[data-ready] .fl-panel { position: sticky; top: calc(var(--sl-nav-height, 4rem) + 1rem); align-content: start; padding: 1rem; background: var(--sl-color-gray-6); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+	.fl-count { font-size: 2rem; margin-block-end: .5rem; }
+	.fl-panel button { grid-column: 1 / -1; }
+	.fl-hint { display: block; }
+}
+
+/* Wide rows: actor header, lifelines, arrows */
+@container rows (min-width: 28rem) {
+	.fl-actors { display: grid; }
+	.fl-lives { display: block; }
+	.fl-span { grid-column: calc(var(--c) + 1) / span var(--k); position: relative; padding: .25rem 0 1.1rem; text-align: center; }
+	.fl-path { display: none; }
+	.fl-lbl { display: inline; padding: .1rem .4rem; background: var(--sl-color-bg); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+	.fl-line { display: block; position: absolute; bottom: .35rem; left: calc(50% / var(--k)); right: calc(50% / var(--k)); border-top: 2px solid var(--sl-color-gray-3); }
+	.fl-line::after { content: ""; position: absolute; top: -6px; right: -1px; border: 5px solid transparent; border-right: 0; border-left: 9px solid var(--sl-color-gray-3); }
+	.ch-back .fl-line { border-top-style: dashed; }
+	.ch-internal .fl-line { border-top-style: dotted; }
+	.rev .fl-line::after { right: auto; left: -1px; border: 5px solid transparent; border-left: 0; border-right: 9px solid var(--sl-color-gray-3); }
+	[data-active] .fl-line { border-color: var(--ink); border-top-width: 3px; } /* stronger active arrow: delete border-top-width and the next ::after top to revert */
+	[data-active] .fl-line::after { top: -7px; }
+	[data-active] .fl-line::after { border-left-color: var(--ink); }
+	[data-active] .rev .fl-line::after { border-right-color: var(--ink); border-left-color: transparent; }
+	/* Self step: a small loop beside the lifeline, label on the free side */
+	.self { text-align: start; padding-inline-start: calc(50% / var(--k) + 1.75rem); padding-block: .25rem; min-height: 2.25rem; }
+	.self .fl-line { inset: .5rem auto auto calc(50% / var(--k)); width: 1.25rem; height: 1.1rem; border: 2px dotted var(--sl-color-gray-3); border-left: 0; }
+	.self .fl-line::after { top: auto; bottom: -6px; right: auto; left: -1px; border: 5px solid transparent; border-left: 0; border-right: 9px solid var(--sl-color-gray-3); }
+	[data-active] .self .fl-line { border-color: var(--ink); border-left: 0; }
+	[data-active] .self .fl-line::after { border-right-color: var(--ink); border-left-color: transparent; }
+	.self.rev { text-align: end; padding-inline: 0 calc(50% / var(--k) + 1.75rem); }
+	.self.rev .fl-line { inset: .5rem calc(50% / var(--k)) auto auto; border: 2px dotted var(--sl-color-gray-3); border-right: 0; }
+	.self.rev .fl-line::after { left: auto; right: -1px; border-right: 0; border-left: 9px solid var(--sl-color-gray-3); border-right-color: transparent; }
+	[data-active] .self.rev .fl-line { border-color: var(--ink); border-right: 0; }
+	[data-active] .self.rev .fl-line::after { border-left-color: var(--ink); border-right-color: transparent; }
+	.self.rev .fl-line, .self .fl-line { background: none; }
+}
+@container rows (max-width: 27.99rem) {
+	[data-ready] [data-active] .fl-lbl { display: none; }
+}
+
+.flow-embed { margin: .5rem 0 0; font-weight: 500; }
+/* Site h1 is 3.6em: on phones long words break mid-word. Smaller title on pages with a flow. */
+@media (max-width: 50rem) { body:has(flow-stepper) h1 { font-size: 2.4em; line-height: 1.15; } }
+/* Starlight adds a top margin between sibling elements of prose; the stepper lays itself out (higher specificity on purpose). */
+.fl.fl :is(div, ol, li, button, p, h3, i, span, small, b, a) { margin-block-start: 0 !important; }
+.flow-embed.flow-embed { margin-block-start: .5rem; }
+
+flow-stepper:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: .25rem; }
+
+/* brand pass: warm surfaces, near-black ink, quiet buttons. Delete this whole block (and restore --ink on line 1) to revert. */
+flow-stepper {
+	--line: color-mix(in srgb, var(--sl-color-white) 18%, transparent);
+	--surface: color-mix(in srgb, var(--sl-color-bg) 95%, var(--sl-color-white));
+}
+.fl-actor { border-color: var(--line); }
+[data-ready] .fl-actor.on { border: 1px solid var(--ink); padding: .5rem .25rem; background: var(--duende-color-green); border-color: var(--duende-color-green); color: #111; } /* was background: color-mix(in srgb, var(--sl-color-bg) 88%, var(--duende-color-green)) with --ink border */
+[data-ready] .fl-actor.on b, [data-ready] .fl-actor.on small { color: #111; }
+[data-ready] .fl-actor.on small { opacity: .8; }
+.fl-card, [data-ready] .fl-panel { background: var(--surface); border-color: var(--line); }
+.fl-holds { border-top-color: var(--line); }
+.fl-more, .flow-embed a, .fl-panel button { border-color: var(--line); font-weight: 400; }
+.fl-panel button { background: transparent; }
+.fl-panel .next { background: var(--duende-color-green); border-color: var(--duende-color-green); color: #111; }
+.fl-more:hover, .flow-embed a:hover, .fl-panel button:hover:not(:disabled) { background: color-mix(in srgb, var(--sl-color-white) 8%, transparent); border-color: var(--line); }
+.fl-panel .next:hover:not(:disabled) { background: var(--duende-color-green); border-color: var(--duende-color-green); filter: brightness(1.06); }
+@container rows (min-width: 28rem) { .fl-span { font-weight: 400; } [data-active] .fl-span { font-weight: 600; } }

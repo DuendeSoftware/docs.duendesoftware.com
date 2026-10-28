@@ -1,0 +1,188 @@
+---
+title: "Resource Indicators and Token Audience"
+date: 2026-10-23
+sidebar:
+  order: 3
+description: "The client names the target API with resource, and the access with scope. The AS may issue a token whose aud names that resource, and each resource server accepts only tokens that name it."
+sources: [resourceParam, resourceAuth, resourceSec, atAud, rfc9700_4_14_2, rfc6749_6, rfc6749_5_1, bearerUsage, bcpAud]
+flow:
+  actors:
+    - { name: Client, role: "OAuth client" }
+    - { name: AS, role: "Authorization server" }
+    - { name: "Files & Payments", role: "Resource servers" }
+  steps:
+    - { from: Client, to: AS, channel: front, title: "Client requests scopes and resources", summary: "scope names the access, resource names where the token will be used. The client may repeat resource. The AS decides per policy and may refuse with invalid_target, returned as a redirect error.", holds: ["requested scopes", "resource indicators", "state", "PKCE challenge"] }
+    - { from: AS, to: Client, channel: front, title: "AS redirects back with a code", summary: "After the user is authenticated and decides, the AS redirects with a code and the same state. In the code flow the resources apply to the full grant and may limit later token requests.", holds: ["authorization code"] }
+    - { from: Client, to: AS, channel: back, title: "Client requests a token for one resource", summary: "The token request names one resource. RFC 8707 encourages a single resource per request, since a multi-audience token works at every audience. This public client sends client_id and the PKCE code_verifier." }
+    - { from: AS, to: Client, channel: back, title: "AS returns a token with aud = Files", summary: "The AS should audience-restrict the token to the requested resource. One response carries one access token, here scoped files.read. The client treats it as opaque, and the decoded aud is a teaching view.", holds: ["Files access token", "refresh token"] }
+    - { from: Client, to: "Files & Payments", channel: back, title: "Resource server checks the audience", summary: "The client sends the token only to Files. A JWT access token must contain an identifier the resource server expects for itself in aud. A token for another resource is rejected, typically 401 invalid_token." }
+    - { from: Client, to: AS, channel: back, title: "Client asks for a second resource", summary: "The client uses the refresh token to request a separate Payments token, so each token keeps one audience. The AS may limit resources to the original grant." }
+    - { from: AS, to: Client, channel: back, title: "AS returns the Payments token", summary: "The AS issues a new access token with aud = https://payments.example/ and, for this public client, a rotated refresh token. The client then sends the token to payments.example only, not to Files.", holds: ["Payments access token", "rotated refresh token"] }
+tableOfContents: true
+draft: false
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+The client names the target API with `resource`, and the access with `scope`. The authorization server (AS) may issue a token whose `aud` names that resource, and each resource server accepts only tokens that name it.
+
+## Why It Exists
+
+A token that many APIs accept has a large audience: whoever steals it can try it everywhere. RFC 8707 lets the client say where it will use a token, so the AS can restrict the audience. `resource` selects the target, and `aud` (audience) lets an API reject a token that was meant for another. After this page you can read a decoded access token and say which API it is for.
+
+Audience restriction does not stop a stolen bearer token from being used at its intended API. Sender constraint such as [DPoP](/protocols/security-hardening/dpop.mdx) covers that, and it is the natural next step.
+
+## How It Works
+
+In this example a client needs tokens for two APIs on different hosts, Files and Payments. The diagram leaves out the user and the browser (the authorization request and the redirect still go through the browser), so the arrows show only the OAuth messages. The [scope](/protocols/oauth-2x-core/scopes.mdx) says what access the client wants, and `resource` says where the token will be used.
+
+<Flow flow={frontmatter.flow} />
+
+## Step by Step
+
+### 1. Client requests scopes and resources
+
+There are two requested API URLs here, `https://files.example/` and `https://payments.example/`, one `resource` parameter each. The AS decides per policy, and it may refuse with `invalid_target`.
+
+```http
+GET /authorize?response_type=code&client_id=workspace-app
+  &redirect_uri=https%3A%2F%2Fclient.example%2Fcb&state=af12
+  &code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+  &code_challenge_method=S256
+  &scope=files.read%20payments.read
+  &resource=https%3A%2F%2Ffiles.example%2F
+  &resource=https%3A%2F%2Fpayments.example%2F HTTP/1.1
+Host: as.example
+```
+
+<Cite k="resourceParam" />
+
+### 2. AS redirects back with a code
+
+After the user signs in and decides, the AS sends the browser back with a `code`. The resources apply to the whole grant, so the AS can use them to limit later token requests. Compare the `state` with the one the client sent in step 1. They must match.
+
+```http
+HTTP/1.1 302 Found
+Location: https://client.example/cb
+  ?code=SplxlOBeZQQYbYS6WxSbIA&state=af12
+On error, instead:
+Location: https://client.example/cb
+  ?error=invalid_target&state=af12
+```
+
+<Cite k="resourceAuth" />
+
+### 3. Client requests a token for one resource
+
+The grant covers both APIs, but the token request names only Files. RFC 8707 encourages one `resource` per request, because a token with several audiences works at every one of them. Narrowing the request keeps this token useful at one API only.
+
+This example is a public client. It sends `client_id` and the PKCE `code_verifier` and no secret. A confidential client would authenticate at the token endpoint instead of sending only `client_id`.
+
+```http
+POST /token HTTP/1.1
+Host: as.example
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
+  &redirect_uri=https%3A%2F%2Fclient.example%2Fcb&client_id=workspace-app
+  &code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+  &resource=https%3A%2F%2Ffiles.example%2F
+```
+
+<Cite k="resourceSec" />
+
+### 4. AS returns a token with aud = Files
+
+The AS should restrict the token to the requested resource. In the decoded view, `aud` is the API this token is for. The `scope` in the response is `files.read` alone. The client treats the token as opaque, and the decoded `aud` is a teaching view.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+Pragma: no-cache
+
+{"access_token":"eyJ...files...","token_type":"Bearer","expires_in":300,
+ "scope":"files.read","refresh_token":"8xLOxBtZp8"}
+Decoded JWT (teaching view): aud = https://files.example/
+```
+
+<Cite k="resourceParam" />
+
+### 5. Resource server checks the audience
+
+The client sends the token only to Files. Files looks at `aud` and finds its own identifier, so it accepts the token. A token for another resource is rejected, typically with 401 `invalid_token`. This failure example shows the opposite case. If the token had `aud = https://payments.example/`, Files would refuse it. See [access token validation](/protocols/tokens/access-token-validation.mdx) for the full check.
+
+```http
+GET /documents/42 HTTP/1.1
+Host: files.example
+Authorization: Bearer eyJ...files...
+Response, if the token had aud = https://payments.example/ (hypothetical):
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer error="invalid_token"
+```
+
+<Cite k="atAud" />
+
+### 6. Client asks for a second resource
+
+A Files token cannot be made to work at Payments by adding `payments.read` to it, because the audience is fixed in the token. The client needs a second token. It sends the refresh token to the token endpoint and asks for Payments separately with `resource`. The AS may limit resources to the original grant, and refresh tokens stay bound to the consented servers. See [refresh tokens](/protocols/oauth-2x-core/refresh-tokens.mdx) for how refresh works.
+
+The refresh request omits `scope`, so it equals the original grant. The narrower scope in the response is required because it differs (RFC 6749 sections 5.1 and 6).
+
+```http
+POST /token HTTP/1.1
+Host: as.example
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=8xLOxBtZp8
+  &client_id=workspace-app
+  &resource=https%3A%2F%2Fpayments.example%2F
+```
+
+<Cite k="rfc9700_4_14_2" />
+
+### 7. AS returns the Payments token
+
+The AS issues a new access token with `aud = https://payments.example/` and, for this public client, a rotated refresh token. Each token keeps one audience, so the client sends this one to `payments.example` only, never to Files.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+Pragma: no-cache
+
+{"access_token":"eyJ...payments...","token_type":"Bearer","expires_in":300,
+ "scope":"payments.read","refresh_token":"tGzv3JOkF0"}
+Decoded JWT (teaching view): aud = https://payments.example/
+```
+
+<Cite k="rfc6749_6" />
+
+## Notes
+
+Files and Payments are two resource servers on distinct hosts. Each host checks `aud` on its own. RFC 9068 section 5 requires a distinct `aud` identifier for distinct resources.
+
+A response with one `access_token` means separate tokens come from separate token requests. An AS may also refuse a multi-resource request or issue one token for an allowed set. RFC 8707 leaves that to policy.
+
+If `resource` is omitted, the AS may use a default or fail with `invalid_target`. A JWT access token then still needs a default `aud` (RFC 9068 section 3). In a multi-tenant system use a specific resource URI that includes the tenant part (RFC 8707 section 3).
+
+## Use It When
+
+* You issue tokens for more than one API and want each token accepted by one.
+* You debug a 401 `invalid_token` on a token whose scope looks right.
+
+## Don't Confuse With
+
+* Scope. `scope` names the access, `resource` names where the token will be used. RFC 9700 lets a client use either to pick the resource server.
+* Sender constraint. Audience says where a bearer token should go, and DPoP or mTLS binds its use to proof of possession.
+
+## Build with Duende
+
+IdentityServer is the AS: you configure API resources there, and it maps them to `aud`. Each API configures which audience it accepts.
+
+* [API Resources in IdentityServer](/identityserver/fundamentals/resources/api-resources.md)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

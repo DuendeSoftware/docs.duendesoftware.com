@@ -1,0 +1,10 @@
+---
+import { resolveSpec } from '../lib/protocols/cite';
+interface Props { k: string }
+const { k } = Astro.props;
+const c = await resolveSpec(k, '<Cite>');
+---
+<p class="proto-cite"><a href={c.href}>{c.label}</a></p>
+<style>
+	.proto-cite { font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); margin-block: .5rem 0; }
+</style>

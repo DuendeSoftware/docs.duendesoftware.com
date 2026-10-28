@@ -1,0 +1,63 @@
+---
+// Sequence diagram as HTML rows (actors, lifelines, one arrow row + card per step) and a control panel.
+// All steps and cards are in the server HTML; flow.ts shows one card at a time.
+import type { Flow } from '../../lib/protocols/schema';
+interface Props { flow: Flow }
+const { actors, steps } = Astro.props.flow;
+const n = actors.length;
+const idx = (a: string) => actors.findIndex((x) => x.name === a);
+const via = { front: 'through the browser', back: 'direct', internal: '' };
+const kind = { front: 'Front channel', back: 'Back channel', internal: 'Internal' };
+// Cumulative holdings: what is held after each step (only shown on steps that changed it).
+const held: string[][] = [];
+steps.reduce((acc, s) => { const m = [...acc]; (s.holds ?? []).forEach((h) => !m.includes(h) && m.push(h)); held.push(m); return m; }, [] as string[]);
+
+// Grid placement of the arrow: lanes it covers (start column, count). Self steps run toward the free side.
+const geo = steps.map((s) => {
+	const f = idx(s.from), t = idx(s.to), self = f === t;
+	const rev = self ? f === n - 1 : t < f;
+	const c = self ? (rev ? 1 : f + 1) : Math.min(f, t) + 1;
+	const k = self ? (rev ? f + 1 : n - f) : Math.abs(f - t) + 1;
+	return { self, rev, style: `--c:${c};--k:${k}` };
+});
+---
+<div class="fl">
+	<div class="fl-main">
+		<div class="fl-actors" style={`--n:${n}`}>
+			{actors.map((a) => <div class="fl-actor"><b>{a.name}</b>{a.role && <small>{a.role}</small>}</div>)}
+		</div>
+		<div class="fl-body" style={`--n:${n}`}>
+		<div class="fl-lives" aria-hidden="true">{actors.map((_, i) => <i style={`--i:${i}`}></i>)}</div>
+		<ol class="fl-rows">
+			{steps.map((s, i) => (
+				<li class={`ch-${s.channel}`} data-step={i} data-from={idx(s.from)} data-to={idx(s.to)}>
+					<div class="fl-row">
+						<button type="button" class="fl-n" aria-label={`Step ${i + 1}: ${s.title}`}>{i + 1}</button>
+						<div class={`fl-span${geo[i].self ? ' self' : ''}${geo[i].rev ? ' rev' : ''}`} style={geo[i].style}>
+							<span class="fl-path">{s.from === s.to ? `${s.from} (internal)` : `${s.from} → ${s.to} · ${via[s.channel]}`}</span>
+							<span class="fl-lbl">{s.title}</span>
+							<i class="fl-line"></i>
+						</div>
+					</div>
+					<div class="fl-card">
+						<div class="fl-head">
+							<p class="fl-kind">{kind[s.channel]}{via[s.channel] && ` · ${via[s.channel]}`}</p>
+						</div>
+						<p class="fl-title">{s.title}</p>
+						<p class="fl-sum">{s.summary}</p>
+						{s.holds?.length ? <p class="fl-holds"><span>Now holding</span>{held[i].join(', ')}</p> : null}
+						<a class="fl-more" hidden>Details <span aria-hidden="true">↓</span></a>
+					</div>
+				</li>
+			))}
+		</ol>
+		</div>
+	</div>
+	<div class="fl-panel" role="group" aria-label="Step through the walkthrough">
+		<p class="fl-count" aria-hidden="true"></p>
+		<button type="button" class="prev">← Back</button>
+		<button type="button" class="next">Next →</button>
+		<p class="fl-hint">Tip: use the ← → keys</p>
+		<div class="fl-sr" aria-live="polite"></div>
+	</div>
+</div>

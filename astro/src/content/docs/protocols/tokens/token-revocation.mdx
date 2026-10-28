@@ -1,0 +1,154 @@
+---
+title: "Token Revocation"
+date: 2026-10-23
+sidebar:
+  order: 3
+description: "Revoking a token invalidates it at the AS, but it does not end any session, and a self-contained access token keeps working until it expires. Logout ends sessions, and the specs link the two only in places."
+draft: false
+tableOfContents: true
+sources: [rfc7009_2, rfc6749_2_3, rfc7009_2_1, rfc7009_2_2, rfc7009_3, rfc7662_2, rfc7662_2_2, jwtExp, rfc9068_4, rpLogout, openid_connect_session_1_0_3, backLogoutActions]
+flow:
+  actors:
+    - { name: RP, role: "Relying party" }
+    - { name: AS, role: "Authorization server" }
+    - { name: API, role: "Resource server" }
+  steps:
+    - { from: AS, to: RP, channel: back, title: "Sign-in creates separate lifetimes", summary: "Sign-in leaves the AS with a grant, a refresh token and an OP session, the API with an access token to accept, and the RP with its own session. Each ends by its own rule.", holds: ["Grant", "Refresh token", "Access token", "OP session", "RP session"] }
+    - { from: RP, to: AS, channel: back, title: "The client revokes its refresh token", summary: "The RP, acting as the client, POSTs the refresh token to the AS's HTTPS revocation endpoint, authenticating as in RFC 6749. The token_type_hint is optional." }
+    - { from: AS, to: RP, channel: back, title: "The AS invalidates it and answers 200", summary: "The AS invalidates the token and returns 200, also if already invalid. For a revoked refresh token, an AS that supports access-token revocation SHOULD also invalidate access tokens of the same grant.", holds: ["Refresh token (revoked)"] }
+    - { from: API, to: API, channel: internal, title: "A self-contained access token still works", summary: "An API that validates a JWT access token locally does not ask the AS about each token. It accepts the token until exp, even after the 200 in step 3." }
+    - { from: API, to: AS, channel: back, title: "Introspection sees revocation, but a cache may not", summary: "An API that introspects asks the AS, which reports active false for a revoked token. A cached active true can still be wrong until the cache entry expires." }
+    - { from: RP, to: AS, channel: front, title: "Logout is a separate action from revocation", summary: "The RP redirects the browser to the OP's end_session_endpoint, and the user may decline. The request revokes no tokens. Back-channel logout notifications can affect refresh tokens (step 7)." }
+    - { from: AS, to: RP, channel: back, title: "Each layer ends by its own mechanism", summary: "Access tokens end at exp. Introspection returns active false for revoked tokens, and also for expired or unknown ones. Back-channel logout lets the OP tell RPs, and refresh tokens without offline_access SHOULD then be revoked." }
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+Revoking a token invalidates it at the AS, but it does not end any session, and a self-contained access token keeps working until it expires. Logout ends sessions, and the specs link the two only in places.
+
+## Why It Exists
+
+Say your app revokes a user's refresh token, and the user expects everything to stop. The API may still accept the JWT access token it was holding, because the API checks the token's `exp` locally and never asks the authorization server (AS). A `200` from the revocation endpoint means the submitted token is no longer valid, not that every self-contained or cached copy, or any session, has stopped working. After reading, you can tell what revoking a token ends and what it leaves alone.
+
+Two terms before the flow. The relying party (RP) is the app that signs the user in. The OpenID provider (OP) is the server that authenticates the user, which in this page is also the AS.
+
+## How It Works
+
+<Flow flow={frontmatter.flow} />
+
+The table summarizes what each action ends. Steps 6 and 7 explain the logout rows. The logout row for refresh tokens depends on how the token was issued (see step 7).
+
+| Action | Ends | Does not end |
+| --- | --- | --- |
+| Revoke the refresh token (step 3) | That refresh token, possibly related tokens | The OP session, the RP session, an unexpired JWT access token validated locally |
+| Introspection by the API (step 5) | Nothing, it reads state and reports `active: false` for a revoked token (it is also false for expired or unknown tokens) | A cached `active: true` answer until the cache entry expires |
+| Logout (steps 6 and 7) | Sessions, where notifications arrive | Tokens, unless the OP applies back-channel logout rules to refresh tokens |
+
+## Step by Step
+
+### 1. Sign-in creates separate lifetimes
+
+Separate is not the same as unrelated. RFC 7009 and Back-Channel Logout link some of them, as steps 3 and 7 show. Sessions are not specified as one object. The RP session typically starts when the RP validates the ID token.
+
+<Cite k="openid_connect_session_1_0_3" />
+
+### 2. The client revokes its refresh token
+
+The RP acts as the client here, and sends the refresh token to the AS so it cannot be used again. The `token` parameter is REQUIRED. If the hint does not locate the token, the AS MUST search all token types it supports. The AS checks the token was issued to this client, and refuses the request if not. The path `/revoke` and the Basic credentials are examples, and other client authentication methods are allowed.
+
+```http
+POST /revoke HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic (client credentials)
+
+token=R7...&token_type_hint=refresh_token
+```
+
+<Cite k="rfc7009_2_1" />
+
+### 3. The AS invalidates it and answers 200
+
+The response is short. The client ignores the body, because the status code carries all it needs.
+
+```http
+HTTP/1.1 200 OK
+```
+
+The RFC reason for `200` on an invalid token is that the purpose of the request is already achieved. A token issued to another client is refused with an error, so the `200` is the same for a token revoked now or already invalid, but not for a token of another client. Invalidation is immediate in principle, but there could be a propagation delay, so the client must not use the token after the `200`. Revoking an access token MAY also revoke its refresh token. A server that cannot revoke access tokens answers `unsupported_token_type`.
+
+<Cite k="rfc7009_2_2" />
+
+### 4. A self-contained access token still works
+
+Back to the example: the API holds a JWT and checks `exp` itself. Per RFC 7519 a JWT MUST NOT be accepted on or after `exp` (a small leeway MAY be allowed). The validation checks in RFC 9068 section 4 do not include revocation status. For example, the refresh token is revoked at 12:01 and the access token `exp` is 12:05, so local validation accepts it until 12:05 (times are illustrative). RFC 7009 section 3 names short-lived access tokens, and some backend interaction between AS and API that is not standardized, as two ways to limit this. For how the API checks a JWT, see [access token validation](/protocols/tokens/access-token-validation.mdx).
+
+<Cite k="rfc7009_3" />
+
+### 5. Introspection sees revocation, but a cache may not
+
+The API asks the AS instead of reading the token. The introspection endpoint MUST require authorization. The `active` member is REQUIRED, and `true` generally means the token has not been revoked and is within its validity window. A false value covers revoked, expired, unknown and otherwise invalid tokens, so it is not a revocation flag by itself. Compare the response here with the self-contained case in step 4: the AS can report the revocation. The response MAY be cached, at the cost of liveness. Any propagation delay at the AS applies here too. A cached response leaves a gap too, so self-contained tokens are not the only ones affected. See [token introspection](/protocols/tokens/introspection.mdx).
+
+```http
+POST /introspect HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic (API credentials)
+
+token=AT1...
+
+HTTP/1.1 200 OK
+{ "active": false }
+```
+
+<Cite k="rfc7662_2_2" />
+
+### 6. Logout is a separate action from revocation
+
+Logout ends a session, not a token. The RP sends the user's browser to the OP's end session endpoint, and the OP SHOULD ask the user whether to log out. The request revokes no tokens, and the cited sections of RP-Initiated Logout say nothing about tokens. RFC 7009 says nothing about sessions either. The endpoint normally comes from discovery and MUST use `https`. The path `/connect/endsession` is an example. `id_token_hint` is RECOMMENDED, and the OP MUST ask without a hint unless it can confirm the request another way. `post_logout_redirect_uri` and `state` are OPTIONAL. The deeper logout rules are on the [OpenID Connect logout](/protocols/openid-connect/oidc-logout.mdx) page.
+
+```http
+GET /connect/endsession?
+  id_token_hint=eyJ...
+  &post_logout_redirect_uri=https%3A%2F%2Frp.example.org%2Fsigned-out
+  &state=af0ifjsldkj
+Host: server.example.com
+```
+
+<Cite k="rpLogout" />
+
+### 7. Each layer ends by its own mechanism
+
+The refresh-token rule is Back-Channel Logout section 2.7: refresh tokens issued without `offline_access` to a session being logged out SHOULD be revoked, and those issued with `offline_access` normally SHOULD NOT be. After revocation, introspection returns `active: false` for that token. It also returns false for tokens that are expired, unknown, or otherwise invalid (RFC 7662 section 2.2), so `active` is not a revocation flag. A denylist or a security-event feed to the API would be examples of the non-standardized backend interaction in RFC 7009 section 3. These specs do not define them.
+
+<Cite k="backLogoutActions" />
+
+## Notes
+
+Notifications to RPs can fail, so the RP cannot assume a global logout. Whether the RP logs out locally first is the RP's choice. A local logout, for example `Set-Cookie: rp_session=; Max-Age=0` after `POST /logout`, is application code that no spec defines.
+
+Not covered: sender-constrained tokens, Shared Signals (CAEP, RISC), the `invalid_request` and 503 `Retry-After` responses of the revocation endpoint, and OIDC Session Management.
+
+Reference (handle) access tokens are another design in RFC 7009 section 3 (it says its options are not the only ones). The AS can revoke one when the API relays it. Whether a deployment cascades a revocation to the grant or related tokens varies, and a client must be prepared for unexpected invalidation at any time.
+
+## Use It When
+
+* You revoke a refresh token and need to know what still works afterwards.
+* You choose how an API validates access tokens, and how long a revoked one could still be accepted.
+
+## Don't Confuse With
+
+* OIDC logout, which ends sessions at the OP and RPs. RP-Initiated Logout itself does not revoke tokens, and Back-Channel Logout section 2.7 covers refresh tokens.
+* Refresh token rotation, which replaces a refresh token on each use and is not an RFC 7009 revocation request.
+
+## Build with Duende
+
+IdentityServer hosts the revocation and introspection endpoints. Your client app calls revocation, for example through the IdentityModel client.
+
+* [Revocation endpoint (IdentityServer)](/identityserver/reference/v8/endpoints/revocation.md)
+* [Introspection endpoint (IdentityServer)](/identityserver/reference/v8/endpoints/introspection.md)
+* [Token revocation client (IdentityModel)](/identitymodel/endpoints/revocation.md)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

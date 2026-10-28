@@ -1,0 +1,24 @@
+---
+import { resolveSpec, type SpecRef } from '../lib/protocols/cite';
+interface Props { keys?: string[] }
+const { keys = [] } = Astro.props;
+// One entry per specification document; its cited sections are listed after it.
+const docs = new Map<string, { doc: SpecRef['doc']; sections: SpecRef[] }>();
+for (const k of new Set(keys)) {
+	const r = await resolveSpec(k, '<Sources>');
+	if (!docs.has(r.doc.id)) docs.set(r.doc.id, { doc: r.doc, sections: [] });
+	docs.get(r.doc.id)!.sections.push(r);
+}
+---
+<ul>
+	{[...docs.values()].map(({ doc, sections }) => {
+		const withSection = sections.filter((s, i) => s.section && sections.findIndex((x) => x.section === s.section) === i).sort((a, b) => a.section!.localeCompare(b.section!, undefined, { numeric: true }));
+		return (
+			<li>
+				<a href={doc.url}>{doc.title}</a>
+				{doc.status !== 'RFC' && `, ${doc.status}`}
+				{withSection.length > 0 && <>, {withSection.length > 1 ? 'sections' : 'section'} {withSection.map((s, i) => <>{i > 0 && ', '}<a href={s.href}>{s.section}</a></>)}</>}
+			</li>
+		);
+	})}
+</ul>

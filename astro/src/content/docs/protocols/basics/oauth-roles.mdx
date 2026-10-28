@@ -1,0 +1,155 @@
+---
+title: "The Four OAuth Roles"
+date: 2026-10-23
+sidebar:
+  order: 1
+description: "OAuth has four roles: the resource owner grants access, the client asks for it, the authorization server issues the access token, and the resource server accepts the token."
+sources: [roles, protoFlow, grantTypes, authReq, authEndpoint, authResp, tokenReq, rfc6749_5_1, rfc6749_1_4, bearer, oidcTerms]
+flow:
+  actors:
+    - { name: Client, role: "OAuth client" }
+    - { name: AS, role: "Authorization server" }
+    - { name: RS, role: "Resource server" }
+  steps:
+    - { from: Client, to: Client, channel: internal, title: "Four roles, one flow", summary: "Resource owner, client, authorization server, resource server. Alice, the resource owner, acts through her user agent at the authorization server." }
+    - { from: Client, to: AS, channel: front, title: "Client sends Alice to the AS", summary: "Through the user agent, the client directs Alice to the authorization endpoint. The request names the client and the response type. No client credential is sent, because the client identifier is not a secret." }
+    - { from: AS, to: AS, channel: internal, title: "The AS authenticates Alice and decides", summary: "Alice authenticates only with the authorization server, so her credentials are never shared with the client. The server then obtains an authorization decision by asking her or by other means.", holds: ["authorization decision"] }
+    - { from: AS, to: Client, channel: front, title: "The AS redirects back with a code", summary: "Through the user agent, the authorization server redirects to the client's redirection URI with an authorization code and the same state. The code is the grant, a credential representing Alice's authorization.", holds: ["authorization code"] }
+    - { from: Client, to: AS, channel: back, title: "The client presents the grant", summary: "The client sends the code to the token endpoint over the back channel. A client with credentials authenticates (Basic here), and the redirect_uri must be identical to the one in step 2." }
+    - { from: AS, to: Client, channel: back, title: "The AS issues an access token", summary: "The server validates the grant and issues an access token. The response has a token_type, usually an expires_in, and no-store cache headers.", holds: ["access token"] }
+    - { from: Client, to: RS, channel: back, title: "The resource server serves the request", summary: "The client presents the access token as a Bearer token and the resource server validates it. Scope and lifetime are enforced by the resource server and the authorization server." }
+tableOfContents: true
+draft: false
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+OAuth has four roles. This page follows one sign-in and API call, so you can see which role does what. After reading it you can map your own app, API, and login server onto the role names.
+
+## Why It Exists
+
+The roles name what each party does, not separate machines. The authorization server (AS) may also be the resource server (RS), and the client may be the resource owner.
+
+Meet the four parties. Alice is the resource owner: she owns the data and can grant access to it. The client is the app that wants that access. The AS signs Alice in and issues tokens, and the RS is the API that holds her data. Alice never talks to the client's code directly in this flow. Her browser (the user agent) is how she takes part: it carries her to the AS and back to the client.
+
+## How It Works
+
+The diagram combines Alice's browser into the front-channel arrows between `Client` and `AS`.
+
+<Flow flow={frontmatter.flow} />
+
+## Step by Step
+
+### 1. Four roles, one flow
+
+The AS may be the same server as the RS, and one AS can serve several resource servers. The client may also be the resource owner (client credentials grant, RFC 6749 section 1.3.4).
+
+<Cite k="roles" />
+
+### 2. Client sends Alice to the AS
+
+The client cannot sign Alice in itself, so it sends her browser to the AS. Look at `client_id` and `redirect_uri`. They tell the AS who is asking and where to send Alice back.
+
+```http
+GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz
+    &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+Host: server.example.com
+```
+
+<Cite k="authReq" />
+
+### 3. The AS authenticates Alice and decides
+
+Alice signs in only at the AS, so her credentials never reach the client. How the AS authenticates the resource owner is beyond the scope of RFC 6749.
+
+<Cite k="authEndpoint" />
+
+### 4. The AS redirects back with a code
+
+The user agent follows the redirect to that URI, which is how the code reaches the client. Compare `state` here with the value the client sent in step 2.
+
+```http
+HTTP/1.1 302 Found
+Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA
+          &state=xyz
+```
+
+<Cite k="authResp" />
+
+### 5. The client presents the grant
+
+The code is only a grant, not an access token. The client exchanges it at the token endpoint over the back channel, so Alice's browser never sees the token. The `Authorization: Basic` header proves which client is asking.
+
+```http
+POST /token HTTP/1.1
+Host: server.example.com
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
+&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+```
+
+<Cite k="tokenReq" />
+
+### 6. The AS issues an access token
+
+The AS checks the code and the client, then sends the access token straight to the client. Alice's browser is not involved, which keeps the token out of URLs and browser history.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{"access_token":"2YotnFZFEjr1zCsicMWpAA",
+ "token_type":"Bearer","expires_in":3600}
+```
+
+<Cite k="rfc6749_5_1" />
+
+### 7. The resource server serves the request
+
+The client calls the RS, not the AS. The API checks the token itself, because the resource server is the party that enforces access to Alice's data.
+
+```http
+GET /resource HTTP/1.1
+Host: api.example.com
+Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA
+```
+
+<Cite k="bearer" />
+
+## Notes
+
+The client is not the resource owner in this flow. The roles can coincide: with client credentials the client acts on its own behalf (RFC 6749 section 1.3.4).
+
+Requirement levels: in step 2, `response_type` and `client_id` are REQUIRED, `redirect_uri` and `scope` are OPTIONAL, and `state` is RECOMMENDED. In step 5, a confidential client, or one issued credentials, MUST authenticate, and an unauthenticated client MUST send `client_id`. In step 6, `token_type` is REQUIRED, `expires_in` is RECOMMENDED, and the response MUST carry `Cache-Control: no-store` and `Pragma: no-cache`.
+
+Client registration comes first: the client registers with the authorization server and receives a client identifier before step 2 (RFC 6749 section 2).
+
+The walkthrough shows the authorization code grant only. RFC 6749 defines four grant types and an extension mechanism (section 1.3).
+
+## Use It When
+
+* You are mapping your app, your API and your login server to OAuth role names.
+* You need the vocabulary the OAuth specifications use.
+
+Next, read [which OAuth flow to choose](/protocols/basics/which-oauth-flow.mdx) and what the tokens in step 6 are for in [access token vs ID token vs refresh token](/protocols/basics/token-types.mdx).
+
+## Don't Confuse With
+
+* The OpenID Connect OP (OpenID provider) and RP (relying party). In an [OpenID Connect](/protocols/openid-connect/openid-connect.mdx) flow the OP is an OAuth authorization server and the RP is an OAuth client.
+* The resource owner is not always the app user. It is whoever can grant access, and the spec calls it an end-user only when it is a person (here Alice is both).
+
+## Build with Duende
+
+IdentityServer is the AS. Your ASP.NET Core web app or other client is the client, and your API is the RS. Start with the terminology page, which maps these roles to the names IdentityServer uses.
+
+* [Terminology in IdentityServer](/identityserver/overview/terminology.md)
+* [The Big Picture](/identityserver/overview/big-picture.mdx)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

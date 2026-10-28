@@ -1,0 +1,164 @@
+---
+title: "Refresh Tokens and Rotation"
+date: 2026-10-23
+sidebar:
+  order: 4
+description: "A refresh token lets a client get new access tokens without asking the user again. Rotation replaces it on every use, so reuse of an old one exposes a leak."
+draft: false
+tableOfContents: true
+sources: [refresh, clientType, rfc6749_5_1, rfc6749_6, invGrant, bcpRt, rfc9700_4_14, rfc9700_4_14_2, rfc7009_2_1, rfc7009_2_2]
+flow:
+  actors:
+    - { name: Client, role: "OAuth client" }
+    - { name: AS, role: "Authorization server" }
+  steps:
+    - { from: AS, to: Client, channel: back, title: "AS issues a refresh token", summary: "The token response can include a refresh token next to the access token. Issuing one is optional, and the server decides based on its risk assessment.", holds: ["access token A1", "refresh token R1"] }
+    - { from: Client, to: Client, channel: internal, title: "Client stores it and protects it", summary: "The client keeps the refresh token confidential. A public client's refresh token must be sender-constrained or rotated. This page follows rotation." }
+    - { from: Client, to: AS, channel: back, title: "Client asks for a new access token", summary: "The client sends grant_type=refresh_token with the refresh token. Any scope it asks for must not exceed the original grant." }
+    - { from: AS, to: Client, channel: back, title: "AS rotates the refresh token", summary: "The AS returns a new access token and a new refresh token, R2, and invalidates R1. The client must discard R1 and keep R2.", holds: ["access token A2", "refresh token R2"] }
+    - { from: Client, to: AS, channel: back, title: "Alternative: old token reused, active revoked", summary: "R1 is presented again, for example a stolen copy. The AS sees a breach but cannot tell who sent it, so it revokes the active refresh token. The client needs a fresh grant." }
+    - { from: Client, to: AS, channel: back, title: "Alternative: client revokes the refresh token", summary: "As another ending, the client calls the revocation endpoint with the refresh token. The server can also revoke related tokens and the grant." }
+    - { from: AS, to: Client, channel: back, title: "Alternative: inactivity ends the refresh token", summary: "A refresh token should expire after the client has been inactive. After that the AS answers invalid_grant and a new authorization grant is required." }
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+A refresh token lets a client get new access tokens without asking the user again. Rotation replaces it on every use, so reuse of an old one exposes a leak.
+
+## Why It Exists
+
+Access tokens expire quickly, but an app often needs to keep working without sending the user through sign-in again. A refresh token lets the client trade in for a new access token quietly. Because it can keep producing access tokens, it needs more protection than the access token itself. After reading, you can follow one refresh token through issue, rotation, and the three ways it ends. This page assumes you know how the client got its first tokens, for example from the [authorization code flow with PKCE](/protocols/oauth-2x-core/pkce.mdx).
+
+The actors are the client (the app) and the authorization server (AS), which issues and checks tokens.
+
+## How It Works
+
+Steps 1 to 4 are the normal path. Steps 5, 6, and 7 are three alternative endings, not a sequence. A refresh token meets one of them.
+
+<Flow flow={frontmatter.flow} />
+
+## Step by Step
+
+### 1. AS issues a refresh token
+
+The AS includes the refresh token in the token response, next to the access token. RFC 9700 section 4.14.2 says an issued refresh token MUST be bound to the scope and resource servers the resource owner consented to. It is never sent to a resource server, because only the AS can redeem it.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+Pragma: no-cache
+
+{"access_token":"A1...","token_type":"Bearer","expires_in":300,"refresh_token":"R1..."}
+```
+
+<Cite k="rfc6749_5_1" />
+
+### 2. Client stores it and protects it
+
+Whoever holds the refresh token can get new access tokens, so the client has to keep it safe. How it does that depends on the platform. RFC 6749 section 2.1 says that for a native app these tokens are at least protected from hostile servers, and on some platforms might also be protected from other applications. RFC 9700 section 4.14.1 notes that RFC 6749 requires confidentiality of refresh tokens in transit and storage. A sender constraint binds the token to a client key or certificate, for example with DPoP or mutual TLS. The refresh token never goes to a resource server.
+
+<Cite k="bcpRt" />
+
+### 3. Client asks for a new access token
+
+The client can do this whenever it needs a new access token. If `scope` is omitted, the original grant applies. This client is a public client, so `client_id` is in the body. A confidential client MUST authenticate (RFC 6749 section 6).
+
+```http
+POST /token HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=R1...&client_id=budget-app
+```
+
+<Cite k="rfc6749_6" />
+
+### 4. AS rotates the refresh token
+
+With rotation, every use of R1 gives the client a new refresh token, R2, and the AS invalidates R1. The server keeps the relationship between R1 and R2. Compare the two responses: `refresh_token` changed from `R1...` to `R2...`, so the client must replace what it stored.
+
+The specs do not cover two refreshes with R1 at the same time, which a server could treat as reuse. How it handles that is its own policy, and a client can avoid the case by refreshing one at a time. Check the rotation and lifetime settings of your AS before you refresh from several threads or devices (see Build with Duende).
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+Pragma: no-cache
+
+{"access_token":"A2...","token_type":"Bearer","expires_in":300,"refresh_token":"R2..."}
+```
+
+<Cite k="rfc9700_4_14_2" />
+
+### 5. Alternative: old token reused, active revoked
+
+This is the first alternative ending. Someone presents the already-replaced R1 again, for example a stolen copy. The AS cannot tell the thief from the real client, so it answers `invalid_grant` and revokes the active refresh token too. Revoking stops the attack at the cost of forcing the legitimate client to obtain a fresh authorization grant. Which tokens count as one grant is an implementation choice.
+
+```http
+POST /token HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=R1...&client_id=budget-app
+
+HTTP/1.1 400 Bad Request
+{"error":"invalid_grant"}
+```
+
+<Cite k="invGrant" />
+
+### 6. Alternative: client revokes the refresh token
+
+In this alternative ending the client decides it no longer needs the token, for example when the user signs out. The request identifies the client, and a confidential client authenticates (RFC 7009 section 2.1). The public-client `client_id` here is only an example value. A successful call returns `200`. The server SHOULD also invalidate access tokens of the same grant if it supports access token revocation. For what a revocation does and does not end, see [token revocation](/protocols/tokens/token-revocation.mdx).
+
+```http
+POST /revoke HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+
+token=R2...&token_type_hint=refresh_token&client_id=budget-app
+```
+
+<Cite k="rfc7009_2_1" />
+
+### 7. Alternative: inactivity ends the refresh token
+
+In this last alternative the client does nothing wrong and the token ages out after a long idle period. Expiry time is at the server's discretion, for example a global value or client policy. The next refresh gets `invalid_grant` and the client needs a new authorization grant.
+
+```http
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{"error":"invalid_grant"}
+```
+
+<Cite k="rfc9700_4_14_2" />
+
+## Notes
+
+Rotation does not prevent theft. If both the attacker and the legitimate client use the same refresh token, one presents an invalidated token. The AS then revokes the active refresh token (RFC 9700 section 4.14.2).
+
+IdentityServer's rotation, sliding and absolute lifetime options are implementation choices, not spec requirements.
+
+## Use It When
+
+* You issue refresh tokens to public clients and need to detect a stolen token.
+* You decide how long refresh tokens live and when they are revoked.
+
+## Don't Confuse With
+
+* Access tokens, which are short-lived and sent to resource servers. A refresh token goes only to the authorization server.
+* Session cookies, which keep a user signed in at one site.
+
+## Build with Duende
+
+You configure refresh token behavior on the client in IdentityServer, including rotation and lifetimes. An app that uses the OidcClient or Duende.AccessTokenManagement libraries calls the token endpoint for you.
+
+* [Refresh tokens in IdentityServer](/identityserver/tokens/refresh.mdx)
+* [Token refresh in Duende.IdentityModel.OidcClient](/identitymodel-oidcclient/token-refresh.md)
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

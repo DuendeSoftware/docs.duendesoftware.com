@@ -94,6 +94,7 @@ const productIcons = {
 
 const topics = [
   { label: "General Information", link: "/general/", icon: "information", items: [{ autogenerate: { directory: "general" } }] },
+  { label: "Protocols", link: "/protocols/", icon: "random", items: [{ autogenerate: { directory: "protocols" } }] },
   ...products.map(({ key, label, badge }) => ({
     label,
     link: `/${key}/`,
@@ -112,6 +113,10 @@ const productsVirtualModule = () => ({
       : undefined,
 });
 
+// Draft pages (`draft: true` frontmatter, protocols section): verified with a fixture page in a real
+// build. Starlight already leaves drafts out of dist/, the sidebar (sidebar-topics autogenerate and
+// auto-sidebar), sitemap-*.xml, llms*.txt / _llms-txt and the Pagefind index (it indexes dist/ only).
+// No filter fallbacks are needed. Re-check this if Starlight or the llms-txt/sitemap plugins are upgraded.
 // https://astro.build/config
 const isDev = import.meta.env.DEV;
 
@@ -179,6 +184,12 @@ export default defineConfig({
               paths: ["general/**"],
             },
             {
+              label: "Protocols",
+              description:
+                "Illustrated explainers of OAuth 2.x, OpenID Connect, SAML, WebAuthn and related protocols, with step-by-step flows and links to the specifications.",
+              paths: ["protocols/**"],
+            },
+            {
               label: "IdentityServer",
               description: "Documentation for Duende IdentityServer",
               paths: ["identityserver/**"],
@@ -220,9 +231,7 @@ export default defineConfig({
             },
           ],
         }),
-        starlightSidebarTopics(
-          topics,
-        ),
+        starlightSidebarTopics(topics),
         starlightHeadingBadges(),
         starlightAutoSidebar(),
         starlightGiscus({
