@@ -13,15 +13,9 @@ import { CardGrid, LinkCard } from "@astrojs/starlight/components";
   .sl-markdown-content h1#_top, h1#_top { font-family: var(--font-gt-canon, inherit); }
 `}</style>
 
-Each page here answers one question about an identity protocol: who sends what to whom, in which order, and what each party checks. Every step links to the section of the specification it comes from.
+These pages explain the identity protocols that IdentityServer and the other Duende products implement: OAuth 2.0, OpenID Connect, SAML 2.0, and WebAuthn passkeys. Each page shows one flow as a sequence diagram you can step through. For each step it shows the HTTP message, what the receiving party checks, and the section of the specification that defines it.
 
-Pages start with a short answer, then walk through the flow. Where it matters, they say when to use the protocol and what it is easy to confuse with it.
-
-<LinkCard
-  title="New to this? Start with the basics"
-  href="/protocols/basics/which-oauth-flow/"
-  description="Pick the right OAuth flow first, then follow the pages that match it."
-/>
+If you're new to OAuth, read [The OAuth Roles](/protocols/basics/oauth-roles.mdx) and [Choose the Right OAuth Flow](/protocols/basics/which-oauth-flow.mdx) first. Most other pages build on them.
 
 ## The Basics
 
