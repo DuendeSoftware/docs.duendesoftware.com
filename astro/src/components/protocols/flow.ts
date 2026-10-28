@@ -27,7 +27,7 @@ class FlowStepper extends HTMLElement {
 			count.textContent = `${i + 1} / ${last + 1}`;
 			if (announce) {
 				rows[i].scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-				live.textContent = `Step ${i + 1} of ${last + 1}: ${rows[i].querySelector('.fl-title')!.textContent}`;
+				live.textContent = `Step ${i + 1} of ${last + 1}: ${rows[i].querySelector(".fl-title")!.textContent}, ${rows[i].dataset.path}`;
 				if (!embed) history.replaceState(null, '', `#step-${i + 1}`);
 			}
 		};
@@ -41,7 +41,7 @@ class FlowStepper extends HTMLElement {
 			if (!(e.target as HTMLElement).closest('button')) this.focus();
 		}));
 		// Page-wide Left/Right for the instance most in view; Up/Down/Home/End only with focus inside (they scroll the page).
-		const io = new IntersectionObserver((es) => es.forEach((x) => (x.isIntersecting ? FlowStepper.#vis.set(this, x.intersectionRatio) : FlowStepper.#vis.delete(this))));
+		const io = new IntersectionObserver((es) => es.forEach((x) => (x.isIntersecting ? FlowStepper.#vis.set(this, x.intersectionRatio) : FlowStepper.#vis.delete(this))), { threshold: [0, 0.1, 0.25, 0.5, 0.75, 0.9, 1] });
 		io.observe(this);
 		const doc = (e: KeyboardEvent) => {
 			const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];

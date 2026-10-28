@@ -130,7 +130,7 @@ Each method fails in its own way. Front channel: browsers increasingly block thi
 
 Not covered: OIDC Session Management 1.0, `logout_hint`, `client_id` and `ui_locales` request parameters, logout-token encryption, and native-app RPs.
 
-Logging out does not revoke tokens already issued. Access-token lifetime after logout is outside these logout specs. See [token revocation](/protocols/tokens/token-revocation.mdx).
+Logging out does not, by itself, revoke tokens already issued. With back-channel logout, refresh tokens issued without `offline_access` should be revoked (step 6). Access-token lifetime after logout is outside these logout specs. See [token revocation](/protocols/tokens/token-revocation.mdx).
 
 ## Use It When
 
