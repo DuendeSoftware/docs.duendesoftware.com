@@ -27,9 +27,6 @@ might be shared.
 
 Let's start with simple scopes first, and then we'll have a look how resources can help structure scopes.
 
-<Flow page="oauth-2x-core/scopes" />
-
-
 ### Scopes
 
 Let's model something very simple - a system that has three logical operations `read`, `write`, and `delete`.
@@ -99,6 +96,10 @@ to invoke the functionality associated with the scope and is unrelated to the us
 additional user-centric authorization is application logic and not covered by OAuth, yet still possibly important to
 implement in your API.
 :::
+
+The flow below puts these pieces together: the client asks for scopes, IdentityServer may grant fewer, and the API still checks the token's audience and applies its own rules for the user:
+
+<Flow page="oauth-2x-core/scopes" />
 
 ### Adding User Claims
 
