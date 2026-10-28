@@ -13,6 +13,8 @@ redirect_from:
 
 On ASP.NET Core, you typically use the [JWT authentication handler](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer) for validating JWT bearer tokens.
 
+For a step-by-step illustration, see [Validating JWT Access Tokens](/protocols/tokens/access-token-validation.mdx).
+
 ## Validating A JWT
 
 First you need to add a reference to the authentication handler in your API project:

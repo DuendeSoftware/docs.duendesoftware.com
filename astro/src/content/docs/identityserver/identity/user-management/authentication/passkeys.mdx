@@ -11,6 +11,7 @@ redirect_from:
 
 import { Steps } from "@astrojs/starlight/components";
 import Version from "~/components/Version.astro";
+import Flow from "~/components/Flow.astro";
 
 
 
@@ -68,6 +69,8 @@ WebAuthn calls its two main protocol flows *ceremonies*. The **registration cere
 5. **Private key retention** - The private key never leaves the user's device
 </Steps>
 
+<Flow page="passkeys/passkey-registration" />
+
 ### Authentication Ceremony
 
 <Steps>
@@ -76,6 +79,8 @@ WebAuthn calls its two main protocol flows *ceremonies*. The **registration cere
 3. **Signature verification** - The server verifies the signature using the stored public key
 4. **Session establishment** - Authentication is complete
 </Steps>
+
+<Flow page="passkeys/passkey-signin" />
 
 ### Discoverable Credentials
 
