@@ -13,12 +13,12 @@ flow:
     - { name: RP, role: "Relying party" }
     - { name: OP, role: "OpenID provider" }
   steps:
-    - { from: OP, to: RP, channel: back, title: "Sign-in creates an OP session", summary: "The user signs in at the OP, which keeps its own session. The ID token sent to the RP may carry a sid (session ID) claim naming that session, if the OP supports it." }
-    - { from: Browser, to: OP, channel: front, title: "RP asks the OP to end the session", summary: "The RP redirects the browser to the OP's end_session_endpoint with the ID token as id_token_hint, plus an optional post_logout_redirect_uri and state." }
-    - { from: OP, to: Browser, channel: front, title: "OP confirms and ends its session", summary: "The OP should ask the user whether to log out. It must ask if there is no id_token_hint or the hint does not match. If the user agrees, it must log the user out." }
-    - { from: OP, to: RP, channel: back, title: "Alternative: back channel, OP POSTs logout token", summary: "For each RP logged in as that user, the OP POSTs a signed logout_token straight to its backchannel_logout_uri. The RP validates it and answers 200, or 400 if invalid." }
-    - { from: OP, to: RP, channel: front, title: "Alternative: front channel, an iframe per RP", summary: "Instead of step 4, the OP renders an iframe for each RP's frontchannel_logout_uri. It may add iss and sid, and if it adds one it must add both." }
-    - { from: RP, to: RP, channel: internal, title: "RP clears its session", summary: "After a back-channel logout token, the RP finds the session named by iss and sub or sid. After a front-channel request it clears the session for that browser. Already logged out counts as success." }
+    - { from: OP, to: RP, channel: back, title: "Sign-in creates an OP session", summary: "The user signs in at the OP, which keeps its own session. The ID token sent to the RP may carry a `sid` (session ID) claim naming that session, if the OP supports it." }
+    - { from: Browser, to: OP, channel: front, title: "RP asks the OP to end the session", summary: "The RP redirects the browser to the OP's `end_session_endpoint` with the ID token as `id_token_hint`, plus an optional `post_logout_redirect_uri` and `state`." }
+    - { from: OP, to: Browser, channel: front, title: "OP confirms and ends its session", summary: "The OP should ask the user whether to log out. It must ask if there is no `id_token_hint` or the hint does not match. If the user agrees, it must log the user out." }
+    - { from: OP, to: RP, channel: back, title: "Alternative: back channel, OP POSTs logout token", summary: "For each RP logged in as that user, the OP POSTs a signed `logout_token` straight to its `backchannel_logout_uri`. The RP validates it and answers 200, or 400 if invalid." }
+    - { from: OP, to: RP, channel: front, title: "Alternative: front channel, an iframe per RP", summary: "Instead of step 4, the OP renders an iframe for each RP's `frontchannel_logout_uri`. It may add `iss` and `sid`, and if it adds one it must add both." }
+    - { from: RP, to: RP, channel: internal, title: "RP clears its session", summary: "After a back-channel logout token, the RP finds the session named by `iss` and `sub` or `sid`. After a front-channel request it clears the session for that browser. Already logged out counts as success." }
     - { from: OP, to: RP, channel: back, title: "What goes wrong", summary: "A front-channel iframe can be blocked as third-party content. A lost back-channel POST should be retransmitted only after a suspected recoverable failure. A logout token can be replayed." }
 ---
 import Flow from '~/components/Flow.astro';
