@@ -17,7 +17,7 @@ flow:
     - { from: AS, to: Client, channel: back, title: "AS returns a token with aud = Files", summary: "The AS should audience-restrict the token to the requested resource. One response carries one access token, here scoped files.read. The client treats it as opaque, and the decoded aud is a teaching view.", holds: ["Files access token", "refresh token"] }
     - { from: Client, to: "Files & Payments", channel: back, title: "Resource server checks the audience", summary: "The client sends the token only to Files. A JWT access token must contain an identifier the resource server expects for itself in aud. A token for another resource is rejected, typically 401 invalid_token." }
     - { from: Client, to: AS, channel: back, title: "Client asks for a second resource", summary: "The client uses the refresh token to request a separate Payments token, so each token keeps one audience. The AS may limit resources to the original grant." }
-    - { from: AS, to: Client, channel: back, title: "AS returns the Payments token", summary: "The AS issues a new access token with aud = https://payments.example/ and, for this public client, a rotated refresh token. The client then sends the token to payments.example only, not to Files.", holds: ["Payments access token", "rotated refresh token"] }
+    - { from: AS, to: Client, channel: back, title: "AS returns the Payments token", summary: "The AS issues a new access token with aud = https://payments.example/ and, for this public client, a rotated refresh token. The client then sends the token to payments.example only, not to Files.", holds: ["-refresh token", "Payments access token", "rotated refresh token"] }
 tableOfContents: true
 draft: false
 ---
