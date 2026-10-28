@@ -1,5 +1,6 @@
 ---
 import { getEntry } from 'astro:content';
+import { Icon } from '@astrojs/starlight/components';
 import type { Flow } from '../lib/protocols/schema';
 import { flowSchema } from '../lib/protocols/schema';
 import FlowFrame from './protocols/FlowFrame.astro';
@@ -21,7 +22,7 @@ flowSchema.parse(flow);
 ---
 <flow-stepper data-embed={page ? '' : undefined}>
 	<FlowFrame flow={flow} />
-	{page && <p class="flow-embed"><a href={`/protocols/${page}/`}>Learn how the protocol works →</a></p>}
+	{page && <p class="flow-embed"><a href={`/protocols/${page}/`}>Learn how the protocol works<Icon name="right-arrow" class="fl-ico" /></a></p>}
 </flow-stepper>
 <script>
 	import './protocols/flow';
