@@ -71,7 +71,7 @@ The client signs a proof and sends it in the `DPoP` header, so the AS can see th
 
 `htm` is the HTTP method and `htu` is the target URI, without query and fragment. Compare them with the request line and `Host` below. They must match, which is why a proof can't be reused for another request. `iat` is the creation time and `jti` is a unique identifier for the proof.
 
-The first proof has no nonce, because nonces are sent only if the server wants them. If the AS requires one, it answers 400 with error `use_dpop_nonce` and a `DPoP-Nonce` header. The client keeps that nonce, signs a new proof with it in the `nonce` claim and retries (section 8). Nonce values are unpredictable and opaque to the client. If the proof is invalid, the AS returns `invalid_dpop_proof`. Confidential clients also authenticate as in RFC 6749, and DPoP does not replace that (sections 5 and 11.11).
+The first proof has no nonce, because nonces are sent only if the server wants them. If the AS requires one, it answers 400 with error `use_dpop_nonce` and a `DPoP-Nonce` header. The client keeps that nonce, signs a new proof with it in the `nonce` claim and retries (section 8). Nonce values are unpredictable and opaque to the client. If the proof is invalid, the AS returns `invalid_dpop_proof`. Confidential clients also authenticate as in RFC 6749, and DPoP does not replace that (sections 5 and 11.11). DPoP doesn't replace PKCE either, so the request carries the `code_verifier`.
 
 ```http
 POST /token HTTP/1.1
@@ -79,7 +79,7 @@ Host: server.example.com
 Content-Type: application/x-www-form-urlencoded
 DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2Ii...
 
-grant_type=authorization_code&client_id=s6BhdRkqt&code=SplxlOBeZQQYbYS6WxSbIA&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb&...
+grant_type=authorization_code&client_id=s6BhdRkqt&code=SplxlOBeZQQYbYS6WxSbIA&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb&code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
 ```
 
 <Cite k="dpopProofSyntax" />
