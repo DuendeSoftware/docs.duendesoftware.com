@@ -177,7 +177,7 @@ CIBA is one of the requirements to support the Financal-grade API compliance.
 
 ### Proof-of-Possession At The Application Layer / DPoP
 
-**License: <Badge text="Enterprise (legacy)" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
+**License: <Badge text="Enterprise (legacy)" />, <Badge text="Lite" />, <Badge text="Standard" />, <Badge text="Advanced" />, <Badge text="Custom" />**
 
 A mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This
 mechanism allows for the detection of replay attacks with access and refresh tokens.
@@ -318,7 +318,7 @@ This is designed to address the performance concern and allowing changes to the 
   />
   <LinkCard
     description="Learn more about Dynamic Authentication Providers"
-    href="/identityserver/fundamentals/key-management/#automatic-key-management"
+    href="/identityserver/ui/login/dynamicproviders/"
     title="Documentation"
   />
 </CardGrid>
@@ -411,7 +411,7 @@ branding, isolation or multi-tenancy reasons).
 ### Multi-Issuer
 
 A built-in capability of Duende IdentityServer where a single instance responds with different
-issuer (`iss`) claim values depending on the host it is served from. It requires no add-on.
+issuer (`iss`) claim values depending on the host it is served from.
 Multi-issuer changes only the `iss` claim; it does not separate configuration or operational
 data between tenants. Use [Spaces](/identityserver/spaces/index.mdx) for data isolation.
 
