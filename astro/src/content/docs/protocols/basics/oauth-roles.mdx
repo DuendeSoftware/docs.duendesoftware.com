@@ -12,11 +12,11 @@ flow:
     - { name: RS, role: "Resource server" }
   steps:
     - { from: Client, to: AS, channel: back, title: "The client is registered at the AS", summary: "Before any sign-in, the client is registered with the authorization server and receives a `client_id`. A confidential client also receives credentials, such as a client secret." }
-    - { from: Client, to: AS, channel: front, title: "Client sends Alice to the AS", summary: "The client redirects Alice's browser to the authorization endpoint with its `client_id`, a `redirect_uri`, and a `state` value. No client secret is sent, because the browser can read the URL." }
+    - { from: Client, to: AS, channel: front, title: "Client sends Alice to the AS", summary: "The client redirects Alice's browser to the authorization endpoint with its `client_id`, a `redirect_uri`, a `state` value, and a PKCE `code_challenge`. No client secret is sent, because the browser can read the URL." }
     - { from: AS, to: AS, channel: internal, title: "The AS authenticates Alice and decides", summary: "Alice signs in at the authorization server, so the client never sees her password. The AS then asks her to approve the request, or decides by policy." }
     - { from: AS, to: Client, channel: front, title: "The AS redirects back with a code", summary: "The AS redirects Alice's browser to the client's `redirect_uri` with a short-lived authorization code and the same `state` value." }
-    - { from: Client, to: AS, channel: back, title: "The client presents the grant", summary: "The client sends the code to the token endpoint in a direct call and authenticates with its own credentials. The `redirect_uri` must match the one from step 2." }
-    - { from: AS, to: Client, channel: back, title: "The AS issues an access token", summary: "The AS checks the code, the client, and the `redirect_uri`, then returns an access token with its type and lifetime. The response must not be cached." }
+    - { from: Client, to: AS, channel: back, title: "The client presents the grant", summary: "The client sends the code and the PKCE `code_verifier` to the token endpoint in a direct call, and authenticates with its own credentials. The `redirect_uri` must match step 2." }
+    - { from: AS, to: Client, channel: back, title: "The AS issues an access token", summary: "The AS checks the code, the client, the `redirect_uri`, and the `code_verifier`, then returns an access token with its type and lifetime. The response must not be cached." }
     - { from: Client, to: RS, channel: back, title: "The resource server serves the request", summary: "The client sends the access token in the Authorization header. The resource server validates the token and decides whether to return Alice's data." }
 tableOfContents: true
 draft: false
@@ -58,13 +58,15 @@ Registration happens once, before any user signs in. An administrator, or the cl
 
 ### 2. Client sends Alice to the AS
 
-The client can't sign Alice in itself, so it redirects her browser to the authorization server. `client_id` says which app is asking, and `redirect_uri` says where to send Alice back. `state` is a random value the client checks in step 4. The URL passes through the browser, so it carries no client secret.
+The client can't sign Alice in itself, so it redirects her browser to the authorization server. `client_id` says which app is asking, and `redirect_uri` says where to send Alice back. `state` is a random value the client checks in step 4. `code_challenge` is the PKCE challenge, which ties the code to this client in step 5. The URL passes through the browser, so it carries no client secret.
 
 `response_type` and `client_id` are required. `state` is recommended. `redirect_uri` and `scope` are optional, but the authorization server needs a `redirect_uri` from somewhere, so a client that registered more than one must send it.
 
 ```http
 GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz
-    &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+    &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+    &code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+    &code_challenge_method=S256 HTTP/1.1
 Host: server.example.com
 ```
 
@@ -90,7 +92,7 @@ Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA
 
 ### 5. The client presents the grant
 
-The code isn't an access token. The client exchanges it at the token endpoint in a direct call from its server, and authenticates with the credentials from step 1. Alice's browser isn't involved, so the access token never appears in the address bar or browser history. `redirect_uri` must be identical to the value from step 2.
+The code isn't an access token. The client exchanges it at the token endpoint in a direct call from its server, and authenticates with the credentials from step 1. Alice's browser isn't involved, so the access token never appears in the address bar or browser history. `redirect_uri` must be identical to the value from step 2. `code_verifier` is the secret behind the PKCE challenge from step 2. Every authorization code flow should use [PKCE](/protocols/oauth-2x-core/pkce.mdx).
 
 A confidential client must authenticate here. A public client has no credentials, so it sends its `client_id` in the body instead.
 
@@ -102,13 +104,14 @@ Content-Type: application/x-www-form-urlencoded
 
 grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
 &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+&code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
 ```
 
 <Cite k="tokenReq" />
 
 ### 6. The AS issues an access token
 
-The authorization server checks that the code is valid, was issued to this client, and matches the `redirect_uri`. It then returns the access token. `token_type` is required and tells the client how to send the token, here as a bearer token. `expires_in` is recommended and says how many seconds the token is valid. The response must carry `Cache-Control: no-store` and `Pragma: no-cache`, so proxies and browsers don't cache the token.
+The authorization server checks that the code is valid, was issued to this client, and matches the `redirect_uri`. It also hashes the `code_verifier` and compares the result with the `code_challenge` from step 2. It then returns the access token. `token_type` is required and tells the client how to send the token, here as a bearer token. `expires_in` is recommended and says how many seconds the token is valid. The response must carry `Cache-Control: no-store` and `Pragma: no-cache`, so proxies and browsers don't cache the token.
 
 ```http
 HTTP/1.1 200 OK
