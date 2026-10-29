@@ -4,6 +4,7 @@ const topics = [
   { key: "/bff/", value: "BFF Security Framework" },
   { key: "/accesstokenmanagement/", value: "Access Token Management" },
   { key: "/general/", value: "General" },
+  { key: "/protocols/", value: "Protocols" },
   { key: "/identitymodel/", value: "IdentityModel" },
   {
     key: "/identitymodel-oidcclient/",

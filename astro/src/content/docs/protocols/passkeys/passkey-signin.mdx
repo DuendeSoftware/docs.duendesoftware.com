@@ -116,7 +116,7 @@ C.challenge === base64url(pkOptions.challenge)
 C.origin is an origin the RP expects
 rpIdHash === SHA-256("login.contoso.example"); UP set; UV set (required)
 userHandle present and owns this credential ID
-verify(storedPublicKey, authenticatorData || SHA-256(cData), signature)
+verify(storedPublicKey, authenticatorData || SHA-256(clientDataJSON), signature)
 if returned or stored signCount is nonzero: returned > stored is valid, else a risk signal
 ```
 
