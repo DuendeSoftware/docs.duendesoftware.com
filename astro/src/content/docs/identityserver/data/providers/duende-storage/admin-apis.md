@@ -1,7 +1,7 @@
 ---
 title: "Configuration Admin APIs"
 description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende Storage admin APIs"
-date: 2026-09-01
+date: 2026-10-26
 sidebar:
   label: "Admin APIs"
   order: 30
@@ -26,8 +26,21 @@ require a dedicated administrative policy, validate anti-forgery protections for
 | `IIdentityProviderAdmin`    | Dynamic identity providers                                 |
 | `ISamlServiceProviderAdmin` | SAML service providers                                     |
 
-Each service supports create, get, update, query and delete operations. Resolve the service from a dependency injection
+Each service supports create, get, update, query and delete operations. You can also get a client by its `client_id`
+with `IClientAdmin.GetByClientIdAsync`. The API scope, API resource and identity resource services get an entity by name
+with `GetByNameAsync`. Resolve the service from a dependency injection
 scope, such as an authorized endpoint or a scoped application service.
+
+IdentityServer serves this configuration at runtime from the storage-backed stores that `AddConfigurationStorage`
+registers. It reads clients through `IClientStore` and `ICorsPolicyService`. It reads API scopes, API resources and
+identity resources through `IResourceStore`. Changes you make with the admin APIs need no separate synchronization step.
+
+:::note[Admin APIs Require Duende Storage]
+The admin interfaces `IClientAdmin`, `IApiScopeAdmin`, `IApiResourceAdmin`, `IIdentityResourceAdmin`,
+`IIdentityProviderAdmin` and `ISamlServiceProviderAdmin` only work when you store configuration with Duende Storage. If you
+use the in-memory stores or the Entity Framework stores, resolving one of these services throws a `NotSupportedException`.
+The exception message says that admin services require `AddConfigurationStorage()`.
+:::
 
 ## Create Configuration
 
@@ -125,6 +138,48 @@ static Task<SaveResult<Guid>> CreateClient(
 
 The API hashes plaintext client and API secret values before storage. Read secrets from a secret manager, never source
 control or application configuration committed with your code. Secret values are not returned by read operations.
+
+### Manage Secrets
+
+Manage secrets separately from the client or API resource definition, because `UpdateAsync` cannot update secret
+metadata. To change a secret, delete it and create a new one. Both operations return a `SaveResult` that contains the ID of
+the affected secret.
+
+```csharp
+// ConfigurationAdmin.cs
+using Duende.IdentityServer.Admin;
+using Duende.IdentityServer.Admin.Clients;
+using Duende.Storage;
+
+static async Task<SaveResult<SecretId>> RotateClientSecret(
+    IClientAdmin admin,
+    ClientId clientId,
+    SecretId oldSecretId,
+    string newSecret,
+    CancellationToken ct)
+{
+    var created = await admin.CreateSecretAsync(
+        clientId,
+        new CreateClientSecret { PlaintextValue = newSecret },
+        ct);
+
+    if (!created.IsSuccess)
+    {
+        return created;
+    }
+
+    var deleted = await admin.DeleteSecretAsync(clientId, oldSecretId, ct);
+    return deleted.IsSuccess ? created : deleted;
+}
+```
+
+`IApiResourceAdmin` also has `CreateSecretAsync` and `DeleteSecretAsync`. `CreateSecretAsync` takes the API resource ID
+and the plaintext value. It also takes an optional hash algorithm, description, expiration, and secret type. It returns an
+`ApiResourceSecretId`.
+
+`SharedSecret` values and custom secret types are hashed before storage. The built-in key and certificate types
+(X.509 thumbprint, X.509 name, X.509 base64 certificate, and JSON Web Key) are stored verbatim, so you must supply
+appropriate material for them.
 
 ### Dynamic Identity Provider
 
