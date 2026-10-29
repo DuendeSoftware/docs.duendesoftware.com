@@ -1,7 +1,7 @@
 ---
 title: "IdentityServer Spaces"
 description: "Run multiple isolated IdentityServer security domains in a single deployment using Spaces with per-tenant configuration and operational data"
-date: 2026-10-23
+date: 2026-10-26
 sidebar:
   label: "Overview"
   order: 1
@@ -40,9 +40,48 @@ flowchart LR
 
 Use `ISpaceAdmin` from a protected administration path to create spaces or change their pool assignments. Moving a space
 to another pool changes which data it sees, so authorize and audit these operations as changes to a security boundary.
-Deleting a space is a soft delete: its pool's data is blocked from reads and writes but retained, and `ISpaceAdmin.UndeleteAsync`
-can restore the space and its matching rules later. Reserve pool reassignment and deletion for break-glass or deliberate
-deprovisioning procedures.
+Reserve pool reassignment and deletion for break-glass or deliberate deprovisioning procedures.
+
+### Space Lifecycle: Delete, Undelete, and Purge
+
+`ISpaceAdmin` manages the end of a space's life, through delete, undelete, and purge operations. Each method returns a
+`SaveResult<SpaceId>`. Check its success state instead of assuming the call worked.
+
+1. `DeleteAsync(SpaceId id, CancellationToken ct)` soft deletes the space. Its pool data is blocked from reads and
+   writes but retained. The space's match patterns and pool ID stay reserved, so no other space can claim them.
+2. `UndeleteAsync(SpaceId id, CancellationToken ct)` restores a deleted space to active, along with its matching
+   rules. Calling it on a space that is already active succeeds without changing anything.
+3. `PurgeAsync(SpaceId id, CancellationToken ct)` permanently removes the space. It purges all data in the space's
+   storage pool and then deletes the space record. A purge can't be undone. It's also the only step that releases the
+   space's match patterns and pool ID for reuse.
+
+`PurgeAsync` is only valid for a space that you already deleted with `DeleteAsync`. Otherwise it returns a failed
+result and doesn't throw:
+
+| Situation                                      | Failure                                                                  |
+|------------------------------------------------|--------------------------------------------------------------------------|
+| The space doesn't exist or is already purged   | `not_found`                                                              |
+| The space is still active                      | A validation error asking you to call `DeleteAsync` first. No data is removed. |
+| The space was modified concurrently            | A version conflict                                                       |
+
+`PurgeAsync` only purges the storage instance that holds Spaces data. If your application keeps data for a pool in a
+different storage instance, purge that data yourself before reusing the pool ID.
+
+#### Undelete Failures
+
+`UndeleteAsync` returns a failed result and leaves the space deleted in these cases:
+
+| Error code     | Cause                                                                                                                                                                                                         |
+|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `eav_conflict` | Another space has claimed a unique extended property value that the deleted space held. You get one error per conflicting value, naming the attribute, the value, and the space that holds it.                |
+| `schema_drift` | The current schema no longer has an attribute that the deleted space stored. You get one error per missing attribute.                                                                                        |
+| `not_found`    | The space was never created or has already been purged.                                                                                                                                                       |
+
+An undelete never partially restores a space. It either fully succeeds or leaves the space deleted. Because all
+conflicts are reported together, you can resolve each one and retry.
+
+Deleting a space releases its unique extended property values so other spaces can claim them. That's why a later
+`UndeleteAsync` can fail with `eav_conflict`.
 
 ## How Spaces Resolve Incoming Requests
 
