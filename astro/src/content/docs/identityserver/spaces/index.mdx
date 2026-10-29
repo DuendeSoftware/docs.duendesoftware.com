@@ -1,7 +1,7 @@
 ---
 title: "IdentityServer Spaces"
 description: "Run multiple isolated IdentityServer security domains in a single deployment using Spaces with per-tenant configuration and operational data"
-date: 2026-10-23
+date: 2026-10-26
 sidebar:
   label: "Overview"
   order: 1
@@ -97,6 +97,37 @@ isolates user profiles, authenticators, roles and groups per space.
 If users must be shared across spaces, use a deliberately separate user directory architecture rather than the default
 [space-aware User Management storage](/identityserver/data/providers/duende-storage/getting-started.md#use-duende-user-management).
 :::
+
+## Cookies and Space Paths
+
+When a path pattern matches a space, IdentityServer scopes its cookies to that space's path. This keeps sessions in
+different spaces on the same origin apart. IdentityServer derives the cookie `Path` on every request from the resolved
+base path, which is the hosting `PathBase` plus the matched space path (for example, `/host/space-a`). Spaces matched
+by origin only add no space path, so their cookies use the hosting `PathBase`, or `/` when it is empty.
+There is nothing to configure. All other cookie attributes (name, `Domain`, `Secure`, `SameSite`, and `HttpOnly`) come
+from your configuration unchanged.
+
+IdentityServer scopes these cookies to the space path:
+
+* The session cookie, which uses the `idsrv` scheme by default. If you set
+  `IdentityServerOptions.Authentication.CookieAuthenticationScheme`, or rely on the default authenticate or default
+  scheme, that scheme's cookie is scoped instead (for example, ASP.NET Core Identity's `Identity.Application`).
+* The `idsrv.external` cookie used for external authentication.
+* The temporary message cookies that carry state between pages, such as consent.
+
+Other application cookies, and the correlation and nonce cookies of external authentication handlers such as OpenID
+Connect, are not changed.
+
+:::caution[Don't use the __Host- cookie name prefix with path-based spaces]
+The `__Host-` prefix requires `Path=/`. If IdentityServer builds a `__Host-` prefixed cookie for a request whose
+resolved path isn't `/`, it throws an `InvalidOperationException` before issuing the cookie. The message reads:
+`Cookie '<name>' uses the '__Host-' prefix, which requires the cookie path to be '/', but the resolved IdentityServer
+cookie path is '<path>'.` Use the `__Secure-` prefix instead. It still requires the `Secure` attribute but permits
+non-root paths.
+:::
+
+Call `UseSpaceResolution()` before `UseIdentityServer()`. If space resolution hasn't run yet, cookies fall back to
+`Path=/` and aren't isolated between spaces.
 
 ## What Spaces Does Not Isolate
 
