@@ -11,6 +11,7 @@ redirect_from:
 ---
 
 import { LinkCard } from "@astrojs/starlight/components";
+import Flow from "~/components/Flow.astro";
 
 Designing your API surface can be a complicated task. Duende IdentityServer provides a couple of primitives to help you
 with that.
@@ -95,6 +96,10 @@ to invoke the functionality associated with the scope and is unrelated to the us
 additional user-centric authorization is application logic and not covered by OAuth, yet still possibly important to
 implement in your API.
 :::
+
+The flow below puts these pieces together: the client asks for scopes, IdentityServer may grant fewer, and the API still checks the token's audience and applies its own rules for the user:
+
+<Flow page="oauth-2x-core/scopes" />
 
 ### Adding User Claims
 

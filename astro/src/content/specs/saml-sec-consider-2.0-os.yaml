@@ -1,0 +1,15 @@
+id: "saml-sec-consider-2.0-os"
+title: "SAML Security 2.0"
+url: "https://docs.oasis-open.org/security/saml/v2.0/saml-sec-consider-2.0-os.pdf"
+status: "OASIS"
+quoteCheck: manual
+sections:
+  - key: "saml_sec_consider_2_0_os_6_4_6"
+    section: "6.4.6"
+    anchor: "page=21"
+    title: "Modification or Exposure of state information"
+  # saml-sso
+  - key: "saml_sec_consider_2_0_os_6_4_5"
+    section: "6.4.5"
+    anchor: "page=21"
+    title: "Replay"

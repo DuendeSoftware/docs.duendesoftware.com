@@ -1,0 +1,163 @@
+---
+title: "DPoP Proof of Possession"
+date: 2026-10-23
+sidebar:
+  order: 2
+description: DPoP ties an access token to a key held by the client. Each request carries a signed proof, so a stolen token alone is not enough.
+sources: [dpopProof, dpopProofSyntax, dpopTokenRequest, dpopBoundTokens, dpopResource, dpopScheme, dpopValidation, dpopNonce, dpopRsNonce, dpopReplay, dpopSecurity, bcpAud, bearerUsage]
+flow:
+  actors:
+    - { name: Client, role: "OAuth client" }
+    - { name: AS, role: "Authorization server" }
+    - { name: RS, role: "Resource server" }
+  steps:
+    - { from: Client, to: Client, channel: internal, title: Client creates a key pair, summary: "The client generates an asymmetric key pair and keeps the private key. Only the public key, as a JWK, goes into DPoP proofs." }
+    - { from: Client, to: AS, channel: back, title: Client sends a proof with the token request, summary: "The client signs a proof JWT with `htm`, `htu`, `iat` and a unique `jti`, and sends it in the DPoP header. This example uses a public client with `client_id` and no client authentication." }
+    - { from: AS, to: Client, channel: back, title: AS binds the token to the key, summary: "After checking the proof, the AS issues an access token bound to the proof key and sets `token_type` to DPoP." }
+    - { from: Client, to: RS, channel: back, title: Client sends the token with a fresh proof, summary: "The client sends the token under the DPoP scheme, with a new proof for this request. The proof adds `ath`, the SHA-256 hash of the access token." }
+    - { from: RS, to: RS, channel: internal, title: "API checks the token, then the proof", summary: "The API validates the token, then the proof's `typ`, `alg`, signature, `htm`, `htu`, `iat` and `ath`. It also checks that the proof key matches the token's `cnf.jkt`." }
+    - { from: RS, to: Client, channel: back, title: "If a check fails: what goes wrong", summary: "A stolen token fails without a proof from the key. A proof for another method, URI or token fails its check. A replayed proof works only at the same endpoint, within its window." }
+tableOfContents: true
+draft: false
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+DPoP (Demonstrating Proof of Possession, RFC 9449) ties an access token to a key held by the client. Each request carries a signed proof, so a stolen token alone is not enough. It adds a proof per request and doesn't change what the token authorizes. The authorization server (AS) issues tokens, the resource server (RS) is the API that accepts them, and a **proof** is a small signed JWT the client creates for each request.
+
+Mutual TLS certificate-bound access tokens (RFC 8705) are a different mechanism. They bind the token to a client certificate instead of a proof JWT.
+
+## Why DPoP Exists
+
+A bearer token works for anyone who holds it. If it leaks from a log, a proxy or a compromised client, the thief can use it. DPoP makes the client prove, on every HTTP request, that it also holds the key the token is bound to. It suits public clients and places where tokens can leak, and it applies when you can't use mutual TLS.
+
+## How DPoP Works
+
+The diagram follows one token from the request that binds it to the API call that checks it. Steps 1 to 3 bind the token to a key, and steps 4 and 5 use it. Step 6 is a failure branch.
+
+<Flow flow={frontmatter.flow} />
+
+## DPoP Step by Step
+
+
+### 1. Client creates a key pair
+
+The JWK in a proof must not contain a private key. The bound token identifies this key, in a JWT access token or an introspection response, by its SHA-256 JWK thumbprint (`jkt`). How the private key is stored depends on the client platform. The spec only discusses non-exportable keys (section 11.4). If code running in the client is compromised, for example through XSS, it can ask the client to sign new proofs, so DPoP no longer protects the token (RFC 9449 section 11.4). An attacker in control of the client can also pre-generate proofs for later use. Server-provided nonces and short-lived access tokens limit this (section 11.2).
+
+```json
+{
+  "kty":"EC",
+  "x":"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs",
+  "y":"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA",
+  "crv":"P-256"
+}
+```
+
+<Cite k="dpopProofSyntax" />
+
+### 2. Client sends a proof with the token request
+
+The client signs a proof and sends it in the `DPoP` header, so the AS can see that the client holds the private key. The proof header has `typ` `dpop+jwt`, an asymmetric `alg` and the public `jwk`. Decoded, the payload of this first proof names the request it is for:
+
+```json
+{
+  "jti":"-BwC3ESc6acc2lTc",
+  "htm":"POST",
+  "htu":"https://server.example.com/token",
+  "iat":1562262616
+}
+```
+
+`htm` is the HTTP method and `htu` is the target URI, without query and fragment. Compare them with the request line and `Host` below. They must match, which is why a proof can't be reused for another request. `iat` is the creation time and `jti` is a unique identifier for the proof.
+
+The first proof has no nonce, because nonces are sent only if the server wants them. If the AS requires one, it answers 400 with error `use_dpop_nonce` and a `DPoP-Nonce` header. The client keeps that nonce, signs a new proof with it in the `nonce` claim and retries (section 8). Nonce values are unpredictable and opaque to the client. If the proof is invalid, the AS returns `invalid_dpop_proof`. Confidential clients also authenticate as in RFC 6749, and DPoP does not replace that (sections 5 and 11.11). DPoP doesn't replace PKCE either, so the request carries the `code_verifier`.
+
+```http
+POST /token HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2Ii...
+
+grant_type=authorization_code&client_id=s6BhdRkqt&code=SplxlOBeZQQYbYS6WxSbIA&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb&code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+```
+
+<Cite k="dpopProofSyntax" />
+
+### 3. AS binds the token to the key
+
+The AS checks the proof, then records which key it saw inside the token. For a JWT access token the binding is the `cnf` claim. Its `jkt` member is the thumbprint (hash) of the client's public key, for example `"cnf": {"jkt": "0ZcOCORZNYy-DWpqq30jZyJGHTN0d2HglBV3uiguA4I"}`. Later, the API compares this value with the key in each proof. With token introspection (section 6.2) the introspection response carries the same `cnf` member. A refresh token issued to a public client is bound to the key too.
+
+`token_type` is `DPoP`, which tells the client to send the token under the `DPoP` authorization scheme.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+
+{"access_token":"Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU",
+ "token_type":"DPoP","expires_in":2677}
+```
+
+<Cite k="dpopTokenRequest" />
+
+### 4. Client sends the token with a fresh proof
+
+Every request needs its own proof, signed for that method and URI. Replaying the proof from the token request would fail the `htm` and `htu` checks. The new proof also includes `ath`, a hash of the access token, which ties the proof to this one token. The proof payload is shown in step 5.
+
+```http
+GET /protectedresource HTTP/1.1
+Host: resource.example.org
+Authorization: DPoP Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU
+DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2Ii...
+```
+
+<Cite k="dpopResource" />
+
+### 5. API checks the token, then the proof
+
+The API first decides whether it accepts the token, then whether the proof belongs to it. Compare these three things:
+
+* The proof's public key with the token's `cnf.jkt`. They must be the same key.
+* The proof's `htm` and `htu` with the request the API received. Here `GET` and `https://resource.example.org/protectedresource`.
+* The proof's `ath` with the hash of the access token in the `Authorization` header.
+
+The spec allows these checks in any order. All checks must pass, otherwise the API must not grant access. If the API issued a nonce, the proof must contain it. If the server tracks `jti` values, a repeated `jti` within the validity window is rejected. The spec makes this optional. Tracking `jti` is optional. Tokens should also be audience-restricted, for example with `aud`, to limit where they work (RFC 9700 section 2.3). A resource that accepts both DPoP and Bearer must reject a DPoP-bound token sent as a bearer token (section 7.2). A DPoP resource requires a proof from the key.
+
+```json
+{
+  "jti":"e1j3V_bKic8-LAEB",
+  "htm":"GET",
+  "htu":"https://resource.example.org/protectedresource",
+  "iat":1562262618,
+  "ath":"fUHyO2r2Z3DZ53EsNrWBb0xWXoaNy59IiKCAqksmQEo"
+}
+```
+
+<Cite k="dpopValidation" />
+
+### 6. If a check fails: what goes wrong
+
+This is a failure branch. A stolen token alone fails, because the thief has no proof from the key. A proof that fails section 4.3 gets `WWW-Authenticate: DPoP error="invalid_dpop_proof"`, and the API should include an error. A token whose key does not match the proof can get `error="invalid_token"`. The API can also choose to demand a nonce (section 9) with 401, `error="use_dpop_nonce"` and a `DPoP-Nonce` header. The client retries with a new proof containing that nonce. AS and RS nonces are separate.
+
+One failure DPoP does not stop: a captured proof can be replayed to the same endpoint and method within its validity window (section 11.1). A proof for another method, URI or token fails its check, but the identical request still passes. Tracking `jti` is one way to catch it. Short-lived proofs and server-provided nonces narrow the window.
+
+```http
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: DPoP error="invalid_token", \
+  error_description="Invalid DPoP key binding", algs="ES256"
+```
+
+<Cite k="dpopScheme" />
+
+## See Also
+
+* [Resource Indicators and Token Audience](/protocols/security-hardening/resource-indicators.mdx): limit where a token works with `aud`.
+* [Validating JWT Access Tokens](/protocols/tokens/access-token-validation.mdx): the token checks the API makes alongside the proof.
+* [Proof-of-possession tokens in IdentityServer](/identityserver/tokens/pop.mdx): IdentityServer issues the bound token.
+* [DPoP in Duende.AccessTokenManagement](/accesstokenmanagement/advanced/dpop.md): the client app creates the key and proofs.
+* [DPoP in Duende.IdentityModel.OidcClient](/identitymodel-oidcclient/advanced/dpop.mdx): the same for OidcClient apps.
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

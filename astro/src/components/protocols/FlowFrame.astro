@@ -1,0 +1,64 @@
+---
+// Sequence diagram as HTML rows (actors, lifelines, one arrow row + card per step) and a control panel.
+// All steps and cards are in the server HTML; flow.ts shows one card at a time.
+import { Icon } from '@astrojs/starlight/components';
+import type { Flow } from '../../lib/protocols/schema';
+interface Props { flow: Flow }
+const { actors, steps } = Astro.props.flow;
+const n = actors.length;
+const idx = (a: string) => actors.findIndex((x) => x.name === a);
+const via = { front: 'through the browser', back: 'direct', internal: '' };
+const kind = { front: 'Front channel', back: 'Back channel', internal: 'Internal' };
+// Step summaries may use `backticks` for parameter and claim names, as in the prose. Odd parts are code.
+const parts = (t: string) => t.split('`').map((x, k) => ({ x, code: k % 2 === 1 }));
+const pathOf = (s: { from: string; to: string; channel: keyof typeof via }) => (s.from === s.to ? `${s.from} (internal)` : `${s.from} → ${s.to}${via[s.channel] ? ` · ${via[s.channel]}` : ""}`);
+
+// Grid placement of the arrow: lanes it covers (start column, count). Self steps run toward the free side.
+const geo = steps.map((s) => {
+	const f = idx(s.from), t = idx(s.to), self = f === t;
+	const rev = self ? f === n - 1 : t < f;
+	const c = self ? (rev ? 1 : f + 1) : Math.min(f, t) + 1;
+	const k = self ? (rev ? f + 1 : n - f) : Math.abs(f - t) + 1;
+	return { self, rev, style: `--c:${c};--k:${k}` };
+});
+---
+<div class="fl">
+	<div class="fl-main">
+		<div class="fl-actors" style={`--n:${n}`}>
+			{actors.map((a) => <div class="fl-actor"><b>{a.name}</b>{a.role && <small>{a.role}</small>}</div>)}
+		</div>
+		<div class="fl-body" style={`--n:${n}`}>
+		<div class="fl-lives" aria-hidden="true">{actors.map((_, i) => <i style={`--i:${i}`}></i>)}</div>
+		<ol class="fl-rows">
+			{steps.map((s, i) => (
+				<li class={`ch-${s.channel}`} data-step={i} data-from={idx(s.from)} data-to={idx(s.to)} data-path={pathOf(s)}>
+					<div class="fl-row">
+						<button type="button" class="fl-n" aria-label={`Step ${i + 1}: ${s.title}, ${pathOf(s)}`}>{i + 1}</button>
+						<div class={`fl-span${geo[i].self ? ' self' : ''}${geo[i].rev ? ' rev' : ''}`} style={geo[i].style}>
+							<span class="fl-path">{pathOf(s)}</span>
+							<span class="fl-lbl">{s.title}</span>
+							<i class="fl-line"></i>
+						</div>
+					</div>
+					<div class="fl-card">
+						<div class="fl-head">
+							<p class="fl-kind">{kind[s.channel]}{via[s.channel] && ` · ${via[s.channel]}`}</p>
+						</div>
+						<p class="fl-title">{s.title}</p>
+						<p class="fl-sum">{parts(s.summary).map((p) => (p.code ? <code>{p.x}</code> : p.x))}</p>
+						<a class="fl-more" hidden>Details<Icon name="down-arrow" class="fl-ico" /></a>
+					</div>
+				</li>
+			))}
+		</ol>
+		</div>
+	</div>
+	<div class="fl-panel" role="group" aria-label="Step through the walkthrough">
+		<p class="fl-count" aria-hidden="true"></p>
+		<button type="button" class="prev"><Icon name="left-arrow" class="fl-ico" />Back</button>
+		<button type="button" class="next">Next<Icon name="right-arrow" class="fl-ico" /></button>
+		<p class="fl-hint">Tip: use the ← → keys</p>
+		<div class="fl-sr" aria-live="polite"></div>
+	</div>
+	<template class="fl-back-tpl"><p class="fl-back"><a class="fl-more"><Icon name="up-arrow" class="fl-ico" />Back to the diagram</a></p></template>
+</div>

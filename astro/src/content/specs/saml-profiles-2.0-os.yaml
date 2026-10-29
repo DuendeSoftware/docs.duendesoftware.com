@@ -1,0 +1,65 @@
+id: "saml-profiles-2.0-os"
+title: "SAML Profiles 2.0"
+url: "https://docs.oasis-open.org/security/saml/v2.0/saml-profiles-2.0-os.pdf"
+status: "OASIS"
+quoteCheck: manual
+sections:
+  - key: "saml_profiles_2_0_os_4_1"
+    section: "4.1"
+    anchor: "page=14"
+    title: "Web Browser SSO Profile"
+  # port-modules.mjs
+  - key: "saml_profiles_2_0_os_4_1_4_1"
+    section: "4.1.4.1"
+    anchor: "page=18"
+    title: "<AuthnRequest> Usage"
+  # port-modules.mjs
+  - key: "saml_profiles_2_0_os_4_1_3"
+    section: "4.1.3"
+    anchor: "page=16"
+    title: "Profile Description"
+  # port-modules.mjs
+  - key: "saml_profiles_2_0_os_4_1_4_3"
+    section: "4.1.4.3"
+    anchor: "page=19"
+    title: "<Response> Message Processing Rules"
+  # port-modules.mjs
+  - key: "saml_profiles_2_0_os_4_1_5"
+    section: "4.1.5"
+    anchor: "page=20"
+    title: "Unsolicited Responses"
+  # saml-sso
+  - key: "saml_profiles_2_0_os_4_1_2"
+    section: "4.1.2"
+    anchor: "page=14"
+    title: "Profile Overview"
+  # saml-sso
+  - key: "saml_profiles_2_0_os_4_1_3_1"
+    section: "4.1.3.1"
+    anchor: "page=16"
+    title: "HTTP Request to Service Provider"
+  # saml-sso
+  - key: "saml_profiles_2_0_os_4_1_3_3"
+    section: "4.1.3.3"
+    anchor: "page=16"
+    title: "<AuthnRequest> Is Issued by Service Provider to Identity Provider"
+  # saml-sso
+  - key: "saml_profiles_2_0_os_4_1_3_5"
+    section: "4.1.3.5"
+    anchor: "page=17"
+    title: "Identity Provider Issues <Response> to Service Provider"
+  # saml-sso
+  - key: "saml_profiles_2_0_os_4_1_4_2"
+    section: "4.1.4.2"
+    anchor: "page=18"
+    title: "<Response> Usage"
+  # saml-sso
+  - key: "saml_profiles_2_0_os_4_1_4_5"
+    section: "4.1.4.5"
+    anchor: "page=20"
+    title: "POST-Specific Processing Rules"
+  # saml-sso
+  - key: "saml_profiles_2_0_os_4_1_6"
+    section: "4.1.6"
+    anchor: "page=20"
+    title: "Use of Metadata"

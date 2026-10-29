@@ -1,0 +1,156 @@
+---
+title: "Signing In with a Passkey"
+date: 2026-10-23
+sidebar:
+  order: 2
+description: "The RP sends a random challenge, and the authenticator signs it for the credential scoped to the RP ID. The RP checks the signed assertion against the stored public key before it creates a session."
+sources: [waSecChallenges, waGetMethod, waGetAssertionOp, waAssertionResponse, webauthnVerifyAssertion]
+flow:
+  actors:
+    - { name: Browser, role: "User agent" }
+    - { name: RP, role: "Relying party" }
+    - { name: Authenticator, role: "Authenticator" }
+  steps:
+    - { from: RP, to: Browser, channel: front, title: "The RP sends the request options", summary: "The RP generates a random challenge and sends request options as JSON. Empty `allowCredentials` means the user picks a discoverable credential. The RP stores the challenge temporarily." }
+    - { from: Browser, to: Authenticator, channel: internal, title: "The browser checks origin and builds client data", summary: "The browser checks the RP ID against the origin, or throws a SecurityError. It hashes `clientDataJSON` and gives the authenticator only the RP ID, the hash, and the UV requirement." }
+    - { from: Authenticator, to: Authenticator, channel: internal, title: "Alice confirms and the authenticator signs", summary: "Alice makes a gesture. The authenticator tests user presence and, because the RP asked for `required`, user verification. It then signs `authenticatorData || hash` with the credential's private key." }
+    - { from: Browser, to: RP, channel: front, title: "The browser returns the assertion to the RP", summary: "The page sends the RP `clientDataJSON`, `authenticatorData`, the signature, the credential ID and the user handle. The user handle is returned because `allowCredentials` was empty." }
+    - { from: RP, to: RP, channel: internal, title: "The RP verifies the assertion", summary: "The RP checks type, that the challenge matches the one it sent, an expected origin, RP ID hash, UP and UV, the credential and user handle, then the signature and sign count." }
+    - { from: RP, to: Browser, channel: front, title: "The RP creates the session", summary: "When every check passes, the RP creates its own session and redirects. WebAuthn doesn't define sessions. If a check fails, the RP fails the ceremony." }
+    - { from: Browser, to: Browser, channel: internal, title: "Alternative: a page on another origin", summary: "A page on `evil.example` asks for RP ID `login.contoso.example`. The browser throws a SecurityError before any authenticator call." }
+tableOfContents: true
+draft: false
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+Signing in with a passkey is the WebAuthn authentication ceremony. The relying party (RP) sends a random challenge, and the authenticator signs it with the private key of a credential scoped to the RP ID. The RP checks the signed assertion against the stored public key before it creates a session. The private key is never sent to the RP, and no attestation is involved. This is phishing-resistant sign-in for accounts that already have a registered passkey.
+
+## Why Passkey Sign-In Exists
+
+A password is a shared secret that the server can receive and a phishing site can capture. A passkey sign-in proves control of a registered private key without sending a secret. Registration must already have stored a credential ID and public key for the account, see [Registering a Passkey](/protocols/passkeys/passkey-registration.mdx).
+
+## How Passkey Sign-In Works
+
+The actors are the same as on the registration page. The browser only lets a page use an RP ID its origin is allowed to use. The authenticator holds the private key and signs the challenge. Alice, the user, makes the gesture that allows it. The RP is the site she signs in to, and it keeps the challenge it sent so it can check that the signed response answers this request. Steps 1 to 6 are the normal path. Step 7 is a separate failure branch.
+
+<Flow flow={frontmatter.flow} />
+
+## Passkey Sign-In Step by Step
+
+
+### 1. The RP sends the request options
+
+The RP makes a random challenge and keeps it until the ceremony ends. Here it is 32 random bytes, base64url-encoded to 43 characters. The spec says at least 16 bytes. How the options travel between RP and page is not defined by WebAuthn. Accepting each challenge only once is common practice, though the spec doesn't require it. The page passes them to `navigator.credentials.get()` after converting them, for example with `parseRequestOptionsFromJSON()`.
+
+`allowCredentials` is empty. That means the RP does not name a credential, so the user picks a discoverable credential (a passkey) offered by the authenticator.
+
+```json
+{
+  "challenge": "IriCWMBd-4f1VENWIUzApG764kjwmiT5Rj2t6Gka4mc",
+  "rpId": "login.contoso.example",
+  "allowCredentials": [],
+  "userVerification": "required"
+}
+```
+
+<Cite k="waSecChallenges" />
+
+### 2. The browser checks origin and builds client data
+
+The browser writes `clientDataJSON`. It checks the RP ID against the page's origin first, so a page cannot ask for another site's credential. Keep its exact serialization, because the hash covers it. The authenticator only receives its hash. The wire shows the serialized string.
+
+```text
+// serialized exactly once; the hash covers these bytes
+{"type":"webauthn.get","challenge":"IriCWMBd-4f1VENWIUzApG764kjwmiT5Rj2t6Gka4mc","origin":"https://login.contoso.example","crossOrigin":false}
+// authenticator input: rpId, SHA-256 hash of the line above, userVerification, extensions; no allow list (empty allowCredentials)
+```
+
+<Cite k="waGetMethod" />
+
+### 3. Alice confirms and the authenticator signs
+
+Alice makes a gesture, such as a touch, a PIN or a fingerprint. The authenticator checks it and signs with the credential's private key. The private key is never sent to the RP. A synced passkey can copy the key to the user's other devices through the passkey provider. The wire shows the flags byte `0x05` (UP and UV) and the signed input. The `signCount` value 42 is an example.
+
+```text
+authenticatorData = rpIdHash (32 bytes) | flags 0x05 | signCount 42
+signature = sign(privateKey, authenticatorData || SHA-256(clientDataJSON))
+// UP always; UV because userVerification is required
+```
+
+<Cite k="waGetAssertionOp" />
+
+### 4. The browser returns the assertion to the RP
+
+The page forwards what the authenticator produced. The wire shows base64url values, and `authenticatorData` is the 37-byte example (flags `0x05`, `signCount` 42). The message shape and transport are application-defined. The signature bytes are not shown.
+
+```json
+{
+  "id": "jvakuivcEnPn5wbb3nPo4brYiO8dJHGrgC9e_dBoxv0",
+  "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiSXJpQ1dNQmQtNGYxVkVOV0lVekFwRzc2NGtqd21pVDVSajJ0NkdrYTRtYyIsIm9yaWdpbiI6Imh0dHBzOi8vbG9naW4uY29udG9zby5leGFtcGxlIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfQ",
+  "authenticatorData": "e4N4SYy15zsdZPezx3ZZqijzcn8qpQIIvOExYEl-F7QFAAAAKg",
+  "signature": "<signature bytes>",
+  "userHandle": "85VZtBh0Pzzw_cCDVli27g"
+}
+```
+
+<Cite k="waAssertionResponse" />
+
+### 5. The RP verifies the assertion
+
+The RP does not trust the response because it arrived. It makes four checks:
+
+* **The saved challenge and the expected site.** `challenge` in `clientDataJSON` equals the one the RP sent, and `origin` and `rpIdHash` match the site.
+* **The stored credential.** The credential ID belongs to the user handle in the response.
+* **The signature.** It verifies against the stored public key.
+* **The counter signal.** `signCount` should increase when either value is nonzero.
+
+The flags need two terms. UP (user presence) means someone touched or approved the authenticator. UV (user verification) means the authenticator also verified the user, for example with a PIN or biometric. Here UV is required, so both flags must be set.
+
+A non-increasing `signCount` is a warning sign. It doesn't prove a cloned key. What the RP does with it is its own policy. The RP always checks that BS isn't set when BE isn't. If it uses backup state in its policy, it also checks that BE matches the stored record, and applies its policy to BS, which can change from one sign-in to the next (WebAuthn section 7.2). The BE and BS flags report whether a credential can be and is backed up. The `crossOrigin` and `topOrigin` checks, extension outputs and the record update aren't shown here, and the record update should wait for any extra checks. Origin checking may be exact string matching or another method, and that is the RP's choice.
+
+```text
+C = parse(utf8(clientDataJSON)); C.type === "webauthn.get"
+C.challenge === base64url(pkOptions.challenge)
+C.origin is an origin the RP expects
+rpIdHash === SHA-256("login.contoso.example"); UP set; UV set (required)
+userHandle present and owns this credential ID
+verify(storedPublicKey, authenticatorData || SHA-256(clientDataJSON), signature)
+if returned or stored signCount is nonzero: returned > stored is valid, else a risk signal
+```
+
+<Cite k="webauthnVerifyAssertion" />
+
+### 6. The RP creates the session
+
+WebAuthn ends when the checks pass. The app then creates its own session, here with a cookie, and redirects. WebAuthn doesn't define sessions.
+
+```http
+HTTP/1.1 302 Found
+Location: https://login.contoso.example/account
+Set-Cookie: sid=<opaque id>; Path=/; Secure; HttpOnly; SameSite=Lax
+```
+
+<Cite k="webauthnVerifyAssertion" />
+
+### 7. Alternative: a page on another origin
+
+This step is a separate failure branch. The browser stops the request before any authenticator call, so nothing is signed. The RP's own origin check is an extra layer in case an authenticator fails to enforce credential scope.
+
+```text
+// page origin: https://evil.example
+navigator.credentials.get({ publicKey: { rpId: "login.contoso.example", ... } })
+// rejects with a SecurityError DOMException
+```
+
+<Cite k="waGetMethod" />
+
+## See Also
+
+* [Registering a Passkey](/protocols/passkeys/passkey-registration.mdx): create the credential and store its public key.
+* [Passkey authentication in Duende User Management](/identityserver/identity/user-management/authentication/passkeys.mdx): the RP side through passkey endpoints that send the options and verify the assertion.
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

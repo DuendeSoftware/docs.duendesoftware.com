@@ -7,6 +7,8 @@ sidebar:
   order: 5
 ---
 
+import Flow from "~/components/Flow.astro";
+
 SAML 2.0 is an XML-based federation protocol widely used in enterprise, government, healthcare, and education environments. It predates OpenID Connect and is often found in legacy applications and organizations that adopted federated identity early. This page covers the core concepts you need when working with SAML 2.0 federation. Where relevant, each section links to the corresponding IdentityServer [configuration](/identityserver/saml/configuration.md) so you can put these concepts into practice.
 
 ## Assertions
@@ -44,26 +46,11 @@ The Service Provider (SP) is the application the user wants to access. It corres
 
 To authenticate the user, the SP redirects the user's browser to the IdP with an `AuthnRequest`. After the IdP authenticates the user and returns an assertion, the SP validates the signature, checks the conditions, extracts identity and attributes, and establishes a local session. The SP never handles the user's credentials. It trusts the IdP because the two parties have established a federation agreement where trust is backed by cryptographic keys.
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant SP as Service Provider
-    participant IdP as Identity Provider
-
-    User->>SP: Access protected resource
-    SP->>User: Redirect with AuthnRequest
-    User->>IdP: AuthnRequest (via browser)
-    IdP->>User: Login page
-    User->>IdP: Credentials
-    IdP->>User: SAML Response (assertion)
-    User->>SP: POST assertion to ACS URL
-    SP->>SP: Validate signature & conditions
-    SP->>User: Grant access (session created)
-```
+<Flow page="saml-ws-fed/saml-sso" />
 
 In IdentityServer, you register each SP using a `SamlServiceProvider` configuration object. This tells IdentityServer the SP's entity identifier, where to deliver assertions (the Assertion Consumer Service URL) and how to communicate. See the [Service Provider Store](/identityserver/saml/service-providers.md) and the [SamlServiceProvider model](/identityserver/saml/configuration.md#samlserviceprovider-model) for details.
 
-Duende IdentityServer can also act as a SAML Service Provider itself, consuming assertions from an external SAML IdP. See [Identity Provider and Service Provider](/identityserver/saml/idp-and-sp.mdx) for an overview of both roles.
+Duende IdentityServer can also act as a SAML Service Provider itself, consuming assertions from an external SAML IdP. See [Identity Provider and Service Provider](/identityserver/saml/index.mdx) for an overview of both roles.
 
 ## Entity Identifiers
 

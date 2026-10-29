@@ -1,0 +1,70 @@
+id: "saml-bindings-2.0-os"
+title: "SAML Bindings 2.0"
+url: "https://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf"
+status: "OASIS"
+quoteCheck: manual
+sections:
+  - key: "saml_bindings_2_0_os_3_4"
+    section: "3.4"
+    anchor: "page=15"
+    title: "HTTP Redirect Binding"
+  # port-modules.mjs
+  - key: "saml_bindings_2_0_os_3_5"
+    section: "3.5"
+    anchor: "page=21"
+    title: "HTTP POST Binding"
+  # port-modules.mjs
+  - key: "saml_bindings_2_0_os_3_4_3"
+    section: "3.4.3"
+    anchor: "page=16"
+    title: "RelayState"
+  # port-modules.mjs
+  - key: "saml_bindings_2_0_os_3_6"
+    section: "3.6"
+    anchor: "page=26"
+    title: "HTTP Artifact Binding"
+  # port-modules.mjs
+  - key: "saml_bindings_2_0_os_3_5_3"
+    section: "3.5.3"
+    anchor: "page=22"
+    title: "RelayState with HTTP POST"
+  # saml-sso
+  - key: "saml_bindings_2_0_os_3_4_4_1"
+    section: "3.4.4.1"
+    anchor: "page=17"
+    title: "DEFLATE Encoding"
+  # saml-sso
+  - key: "saml_bindings_2_0_os_3_4_5"
+    section: "3.4.5"
+    anchor: "page=18"
+    title: "Message Exchange"
+  # saml-sso
+  - key: "saml_bindings_2_0_os_3_4_5_2"
+    section: "3.4.5.2"
+    anchor: "page=19"
+    title: "Security Considerations"
+  # saml-sso
+  - key: "saml_bindings_2_0_os_3_5_4"
+    section: "3.5.4"
+    anchor: "page=22"
+    title: "Message Encoding"
+  # saml-sso
+  - key: "saml_bindings_2_0_os_3_5_5"
+    section: "3.5.5"
+    anchor: "page=22"
+    title: "Message Exchange"
+  # saml-sso
+  - key: "saml_bindings_2_0_os_3_5_5_1"
+    section: "3.5.5.1"
+    anchor: "page=23"
+    title: "HTTP and Caching Considerations"
+  # saml-sso
+  - key: "saml_bindings_2_0_os_3_5_5_2"
+    section: "3.5.5.2"
+    anchor: "page=24"
+    title: "Security Considerations"
+  # saml-sso
+  - key: "saml_bindings_2_0_os_3_5_6"
+    section: "3.5.6"
+    anchor: "page=24"
+    title: "Error Reporting"

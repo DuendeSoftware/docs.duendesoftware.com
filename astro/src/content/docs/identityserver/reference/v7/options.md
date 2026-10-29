@@ -738,7 +738,7 @@ Demonstration of Proof-of-Possession settings. Available on the `DPoP` property 
 
 ## Pushed Authorization Requests
 
-[Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md) settings. Added in `v7.0`. Available on the `PushedAuthorization` property of the `IdentityServerOptions` object.
+[Pushed Authorization Requests (PAR)](/identityserver/tokens/par.mdx) settings. Added in `v7.0`. Available on the `PushedAuthorization` property of the `IdentityServerOptions` object.
 
 - **`Required`**
 

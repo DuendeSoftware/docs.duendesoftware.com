@@ -1,0 +1,37 @@
+name: Protocols monthly spec check
+
+on:
+  # Schedule disabled: enable when the protocols section is released.
+  # schedule:
+  #   - cron: '0 6 1 * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (print findings, do not open issues)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  monthly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: astro/package-lock.json
+      - run: npm ci
+        working-directory: astro
+      - name: Check registry against pages (offline, also run locally with npm run protocols:check)
+        working-directory: astro
+        run: node scripts/protocols/monthly.mjs --local
+      - name: Check specs and open re-review issues
+        working-directory: astro
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npm run protocols:monthly${{ inputs.dry_run && ' -- --dry-run' || '' }}

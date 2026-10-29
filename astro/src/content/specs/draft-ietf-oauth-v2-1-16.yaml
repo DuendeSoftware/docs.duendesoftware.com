@@ -1,0 +1,10 @@
+id: "draft-ietf-oauth-v2-1-16"
+title: "OAuth 2.1 draft-16"
+url: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-16"
+status: "I-D draft-ietf-oauth-v2-1-16"
+# Internet-Draft, not a standard. Revision -16 (3 September 2026, expires 7 March 2027) was the latest on datatracker when checked 2026-10-22 (which-oauth-flow). Errata do not apply to I-Ds.
+sections:
+  - key: "oauth21Status"
+    section: "1.8"
+    anchor: "section-1.8"
+    title: "Compatibility with OAuth 2.0"

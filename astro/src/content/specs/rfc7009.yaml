@@ -1,0 +1,26 @@
+# Added by port-modules.mjs for inline sources of the Identity Visualized prototype.
+id: "rfc7009"
+title: "RFC 7009"
+url: "https://www.rfc-editor.org/rfc/rfc7009"
+status: "RFC"
+# errata checked by hand: 6663 (Reported, Technical, §2.1: bearer-token authentication; not adopted, the RFC text is used)
+sections:
+  - key: "rfc7009_2"
+    section: "2"
+    anchor: "section-2"
+    title: "Token Revocation"
+  # port-modules.mjs
+  - key: "rfc7009_2_1"
+    section: "2.1"
+    anchor: "section-2.1"
+    title: "Revocation Request"
+  # port-modules.mjs
+  - key: "rfc7009_2_2"
+    section: "2.2"
+    anchor: "section-2.2"
+    title: "Revocation Response"
+  # port-modules.mjs
+  - key: "rfc7009_3"
+    section: "3"
+    anchor: "section-3"
+    title: "Implementation Note"

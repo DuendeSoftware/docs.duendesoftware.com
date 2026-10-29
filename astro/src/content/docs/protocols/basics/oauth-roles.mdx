@@ -1,0 +1,152 @@
+---
+title: "The OAuth Roles"
+date: 2026-10-23
+sidebar:
+  order: 1
+description: "OAuth 2.0 defines four roles: the resource owner grants access, the client requests it, the authorization server issues access tokens, and the resource server accepts them."
+sources: [roles, rfc6749_1, clientReg, protoFlow, grantTypes, authReq, authEndpoint, authResp, csrf, tokenReq, rfc6749_5_1, rfc6749_1_4, bearer, oidcTerms]
+flow:
+  actors:
+    - { name: Client, role: "OAuth client" }
+    - { name: AS, role: "Authorization server" }
+    - { name: RS, role: "Resource server" }
+  steps:
+    - { from: Client, to: AS, channel: back, title: "The client is registered at the AS", summary: "Before any sign-in, the client is registered with the authorization server and receives a `client_id`. A confidential client also receives credentials, such as a client secret." }
+    - { from: Client, to: AS, channel: front, title: "Client sends Alice to the AS", summary: "The client redirects Alice's browser to the authorization endpoint with its `client_id`, a `redirect_uri`, a `state` value, and a PKCE `code_challenge`. No client secret is sent, because the browser can read the URL." }
+    - { from: AS, to: AS, channel: internal, title: "The AS authenticates Alice and decides", summary: "Alice signs in at the authorization server, so the client never sees her password. The AS then asks her to approve the request, or decides by policy." }
+    - { from: AS, to: Client, channel: front, title: "The AS redirects back with a code", summary: "The AS redirects Alice's browser to the client's `redirect_uri` with a short-lived authorization code and the same `state` value." }
+    - { from: Client, to: AS, channel: back, title: "The client presents the grant", summary: "The client sends the code and the PKCE `code_verifier` to the token endpoint in a direct call, and authenticates with its own credentials. The `redirect_uri` must match step 2." }
+    - { from: AS, to: Client, channel: back, title: "The AS issues an access token", summary: "The AS checks the code, the client, the `redirect_uri`, and the `code_verifier`, then returns an access token with its type and lifetime. The response must not be cached." }
+    - { from: Client, to: RS, channel: back, title: "The resource server serves the request", summary: "The client sends the access token in the Authorization header. The resource server validates the token and decides whether to return Alice's data." }
+tableOfContents: true
+draft: false
+---
+import Flow from '~/components/Flow.astro';
+import Cite from '~/components/Cite.astro';
+import Sources from '~/components/Sources.astro';
+
+OAuth 2.0 defines four roles:
+
+* **Resource owner:** the party that owns the data and can grant access to it. When it's a person, the spec calls it the end-user. On this page, that's Alice.
+* **Client:** the application that wants to access the data. It acts on Alice's behalf, with her approval.
+* **Authorization server (AS):** signs Alice in, gets her approval, and issues access tokens to the client.
+* **Resource server (RS):** the API that holds the data and accepts access tokens.
+
+In a typical Duende setup, IdentityServer is the authorization server, your web or mobile app is the client, and your ASP.NET Core API is the resource server. One server can fill more than one role. IdentityServer, for example, is also a resource server for its own UserInfo endpoint. In OpenID Connect, the authorization server is called the OpenID provider (OP) and the client is called the relying party (RP). See [OpenID Connect Sign-In](/protocols/openid-connect/openid-connect.mdx).
+
+## Why OAuth Separates the Roles
+
+Before OAuth, an app that needed your data at another service asked for your password at that service and stored it. The app then had the same access you had, for as long as it kept the password. You could only take that access back by changing your password, which also cut off every other app you'd given it to.
+
+OAuth splits that one password into separate roles. Alice gives her password only to the authorization server. The client receives an access token that is limited in scope and lifetime. The API checks that token, and never sees a password.
+
+<Cite k="rfc6749_1" />
+
+## How the OAuth Roles Work Together
+
+The diagram follows one sign-in using the authorization code grant, the grant most apps with a user should use. It has three lanes for four roles: Alice takes part through her browser, so she appears in the arrows between the client and the authorization server.
+
+<Flow flow={frontmatter.flow} />
+
+## The OAuth Roles Step by Step
+
+### 1. The client is registered at the AS
+
+Registration happens once, before any user signs in. An administrator, or the client itself through dynamic registration, tells the authorization server about the client. The client receives a `client_id`, which identifies it in every later request. A confidential client, such as a server-side web app, also receives credentials it uses to authenticate. A public client, such as a browser or mobile app, can't keep a secret, so it gets none.
+
+<Cite k="clientReg" />
+
+### 2. Client sends Alice to the AS
+
+The client can't sign Alice in itself, so it redirects her browser to the authorization server. `client_id` says which app is asking, and `redirect_uri` says where to send Alice back. `state` is a random value the client checks in step 4. `code_challenge` is the PKCE challenge, which ties the code to this client in step 5. The URL passes through the browser, so it carries no client secret.
+
+`response_type` and `client_id` are required. `state` is recommended. `redirect_uri` and `scope` are optional, but the authorization server needs a `redirect_uri` from somewhere, so a client that registered more than one must send it.
+
+```http
+GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz
+    &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+    &code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+    &code_challenge_method=S256 HTTP/1.1
+Host: server.example.com
+```
+
+<Cite k="authReq" />
+
+### 3. The AS authenticates Alice and decides
+
+Alice enters her password, or uses another sign-in method, at the authorization server. Her credentials never reach the client. The authorization server then asks Alice to approve the client's request, or decides on its own based on policy. RFC 6749 leaves both how the server signs Alice in and how it makes this decision to the server.
+
+<Cite k="authEndpoint" />
+
+### 4. The AS redirects back with a code
+
+The authorization server sends Alice's browser back to the `redirect_uri` with an authorization code. The code is short-lived and can be used once. Before the client accepts it, the client compares `state` with the value it sent in step 2. A mismatch means the response doesn't belong to this sign-in, for example because of a cross-site request forgery attempt.
+
+```http
+HTTP/1.1 302 Found
+Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA
+          &state=xyz
+```
+
+<Cite k="authResp" />
+
+### 5. The client presents the grant
+
+The code isn't an access token. The client exchanges it at the token endpoint in a direct call from its server, and authenticates with the credentials from step 1. Alice's browser isn't involved, so the access token never appears in the address bar or browser history. `redirect_uri` must be identical to the value from step 2. `code_verifier` is the secret behind the PKCE challenge from step 2. Every authorization code flow should use [PKCE](/protocols/oauth-2x-core/pkce.mdx).
+
+A confidential client must authenticate here. A public client has no credentials, so it sends its `client_id` in the body instead.
+
+```http
+POST /token HTTP/1.1
+Host: server.example.com
+Authorization: Basic <base64(client_id:client_secret)>
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
+&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+&code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+```
+
+<Cite k="tokenReq" />
+
+### 6. The AS issues an access token
+
+The authorization server checks that the code is valid, was issued to this client, and matches the `redirect_uri`. It also hashes the `code_verifier` and compares the result with the `code_challenge` from step 2. It then returns the access token. `token_type` is required and tells the client how to send the token, here as a bearer token. `expires_in` is recommended and says how many seconds the token is valid. The response must carry `Cache-Control: no-store` and `Pragma: no-cache`, so proxies and browsers don't cache the token.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{"access_token":"2YotnFZFEjr1zCsicMWpAA",
+ "token_type":"Bearer","expires_in":3600}
+```
+
+<Cite k="rfc6749_5_1" />
+
+### 7. The resource server serves the request
+
+The client calls the API with the access token in the `Authorization` header. The API validates the token, checking its signature, issuer, audience, and expiry for a JWT, and then decides whether to return Alice's data. [Validating JWT Access Tokens](/protocols/tokens/access-token-validation.mdx) covers those checks.
+
+```http
+GET /resource HTTP/1.1
+Host: api.example.com
+Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA
+```
+
+<Cite k="bearer" />
+
+## Other Grants
+
+This page uses the authorization code grant. RFC 6749 defines three more grants and a way to add new ones. The roles stay the same, but not every grant uses all four. With the [client credentials grant](/protocols/oauth-2x-core/client-credentials.mdx) there is no user, so the client is its own resource owner. [Choose the Right OAuth Flow](/protocols/basics/which-oauth-flow.mdx) explains which grant to use for which kind of app.
+
+## See Also
+
+* [Access Token vs ID Token vs Refresh Token](/protocols/basics/token-types.mdx): what the token from step 6 is for, and how it differs from an ID token.
+* [Terminology in IdentityServer](/identityserver/overview/terminology.md): the same roles under the names IdentityServer uses: user, client, and resources.
+* [The Big Picture](/identityserver/overview/big-picture.mdx): how IdentityServer, your apps, and your APIs fit together.
+
+## Sources
+
+<Sources keys={frontmatter.sources} />

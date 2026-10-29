@@ -1,0 +1,73 @@
+---
+title: "Protocols: Identity Visualized"
+date: 2026-10-23
+description: Illustrated, step-by-step explainers of OAuth 2.x, OpenID Connect, SAML, passkeys, and related identity protocols, each linked to the specification.
+sidebar:
+  label: Overview
+  order: 0
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+<style is:global>{`
+  .sl-markdown-content h1#_top, h1#_top { font-family: var(--font-gt-canon, inherit); }
+`}</style>
+
+These pages explain the identity protocols that IdentityServer and the other Duende products implement: OAuth 2.0, OpenID Connect, SAML 2.0, and WebAuthn passkeys. Each page shows one flow as a sequence diagram you can step through. For each step it shows the HTTP message, what the receiving party checks, and the section of the specification that defines it.
+
+If you're new to OAuth, read [The OAuth Roles](/protocols/basics/oauth-roles.mdx) and [Choose the Right OAuth Flow](/protocols/basics/which-oauth-flow.mdx) first. Most other pages build on them.
+
+## The Basics
+
+<CardGrid>
+  <LinkCard title="The OAuth Roles" href="/protocols/basics/oauth-roles/" description="Who grants access, who asks, who issues the token, and who accepts it." />
+  <LinkCard title="Choose the Right OAuth Flow" href="/protocols/basics/which-oauth-flow/" description="Which flow fits which app: code with PKCE, client credentials, or the device grant." />
+  <LinkCard title="Access Token vs ID Token vs Refresh Token" href="/protocols/basics/token-types/" description="What each token is for: who signed in, which API to call, and how to get new tokens." />
+</CardGrid>
+
+## OAuth 2.x Core
+
+<CardGrid>
+  <LinkCard title="Authorization Code Flow with PKCE" href="/protocols/oauth-2x-core/pkce/" description="How PKCE binds the authorization code to a secret the app keeps." />
+  <LinkCard title="Client Credentials Grant" href="/protocols/oauth-2x-core/client-credentials/" description="A confidential client gets an access token for itself, with no user involved." />
+  <LinkCard title="OAuth Device Authorization Grant" href="/protocols/oauth-2x-core/device-flow/" description="How a device without a keyboard signs in through a phone or computer." />
+  <LinkCard title="Refresh Tokens and Rotation" href="/protocols/oauth-2x-core/refresh-tokens/" description="How refresh tokens get new access tokens, and how rotation exposes reuse." />
+  <LinkCard title="Scopes, Resources, and Authorization" href="/protocols/oauth-2x-core/scopes/" description="How scopes are requested, narrowed, and then checked by the API." />
+</CardGrid>
+
+## OpenID Connect
+
+<CardGrid>
+  <LinkCard title="OpenID Connect Sign-In" href="/protocols/openid-connect/openid-connect/" description="What OIDC adds to the OAuth authorization code flow: an ID token about the user." />
+  <LinkCard title="OpenID Connect Discovery and Key Rotation" href="/protocols/openid-connect/discovery-jwks/" description="How an RP finds the OP's metadata and signing keys, and picks one by kid." />
+  <LinkCard title="OpenID Connect Logout" href="/protocols/openid-connect/oidc-logout/" description="How an RP ends the session at the OP and how the OP informs other RPs." />
+</CardGrid>
+
+## Tokens
+
+<CardGrid>
+  <LinkCard title="Validating JWT Access Tokens" href="/protocols/tokens/access-token-validation/" description="The checks an API runs on a JWT access token before applying its own authorization." />
+  <LinkCard title="Token Introspection" href="/protocols/tokens/introspection/" description="How an API asks the authorization server for the current state of a token." />
+  <LinkCard title="Token Revocation" href="/protocols/tokens/token-revocation/" description="What revoking a token does, and why a self-contained access token can outlive it." />
+</CardGrid>
+
+## Security Hardening
+
+<CardGrid>
+  <LinkCard title="Pushed Authorization Requests (PAR)" href="/protocols/security-hardening/par/" description="How the client sends its authorization request directly and gets a short-lived request_uri." />
+  <LinkCard title="DPoP Proof of Possession" href="/protocols/security-hardening/dpop/" description="How DPoP ties an access token to a client-held key, so a stolen token is not enough." />
+  <LinkCard title="Resource Indicators and Token Audience" href="/protocols/security-hardening/resource-indicators/" description="How naming the target API puts an aud in the token that only that API accepts." />
+</CardGrid>
+
+## SAML & WS-Fed
+
+<CardGrid>
+  <LinkCard title="SAML 2.0 Single Sign-On" href="/protocols/saml-ws-fed/saml-sso/" description="How the SP sends an AuthnRequest and validates the IdP Response before creating a session." />
+</CardGrid>
+
+## Passkeys & WebAuthn
+
+<CardGrid>
+  <LinkCard title="Registering a Passkey" href="/protocols/passkeys/passkey-registration/" description="How the authenticator creates a key pair and the RP stores the public key." />
+  <LinkCard title="Signing In with a Passkey" href="/protocols/passkeys/passkey-signin/" description="How the authenticator signs the RP challenge and the RP checks the assertion." />
+</CardGrid>

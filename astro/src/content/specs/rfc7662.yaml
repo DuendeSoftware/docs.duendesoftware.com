@@ -1,0 +1,37 @@
+# Added by port-modules.mjs for inline sources of the Identity Visualized prototype.
+id: "rfc7662"
+title: "RFC 7662"
+url: "https://www.rfc-editor.org/rfc/rfc7662"
+status: "RFC"
+# errata checked by hand: 4764 (Verified, Editorial, §3.1 IANA wording; no effect on cited text), 7607 (Reported, Technical, §2.2: "revoked by the resource owner or client"; not adopted)
+sections:
+  - key: "rfc7662_1"
+    section: "1"
+    anchor: "section-1"
+    title: "Token introspection"
+  # port-modules.mjs
+  - key: "rfc7662_2"
+    section: "2"
+    anchor: "section-2"
+    title: "Introspection endpoint and active state"
+  # port-modules.mjs
+  - key: "rfc7662_2_1"
+    section: "2.1"
+    anchor: "section-2.1"
+    title: "Introspection request"
+  # port-modules.mjs
+  - key: "rfc7662_2_2"
+    section: "2.2"
+    anchor: "section-2.2"
+    title: "Introspection response"
+  # port-modules.mjs
+  - key: "rfc7662_2_3"
+    section: "2.3"
+    anchor: "section-2.3"
+    title: "Introspection error response"
+  # port-modules.mjs
+  - key: "rfc7662_4"
+    section: "4"
+    anchor: "section-4"
+    title: "Introspection security considerations"
+  # port-modules.mjs

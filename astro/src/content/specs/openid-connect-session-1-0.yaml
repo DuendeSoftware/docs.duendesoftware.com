@@ -1,0 +1,10 @@
+# Added by port-modules.mjs for inline sources of the Identity Visualized prototype.
+id: "openid-connect-session-1-0"
+title: "OIDC Session Management"
+url: "https://openid.net/specs/openid-connect-session-1_0.html"
+status: "OpenID Final"
+sections:
+  - key: "openid_connect_session_1_0_3"
+    section: "2"
+    anchor: "CreatingUpdatingSessions"
+    title: "Creating and Updating Sessions"
