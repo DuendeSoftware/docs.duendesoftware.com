@@ -132,14 +132,23 @@ non-root paths.
 
 ### Rollout Impact
 
-IdentityServer doesn't migrate existing cookies. Browsers hold cookies issued with `Path=/` by earlier versions, and
-IdentityServer now issues and reads cookies with the space path. Those older cookies aren't sent to the space path, so
-users with an active session usually have to sign in again after you upgrade. This applies to the session cookie, the
-`idsrv.external` cookie, and the `idsrv.session` check-session cookie.
+IdentityServer doesn't migrate or remove existing cookies. Cookies issued with `Path=/` before you enabled path-based
+spaces stay in the browser until they expire or the user clears them. Browsers send `Path=/` cookies to every path,
+so these older cookies are still sent to requests under each space path. A new space-scoped cookie with the same name
+can exist next to them.
 
-The old root-path cookies stay in the browser until they expire or the user clears them. IdentityServer doesn't remove
-them. Plan the upgrade for a time when signing users out is acceptable. Hosts without a space path, including origin-only
-spaces with an empty `PathBase`, keep `Path=/` and aren't affected.
+Changing the cookie path alone doesn't end existing sessions. Whether IdentityServer accepts an older cookie depends on
+[data protection partitioning](/identityserver/spaces/getting-started.md#before-deployment):
+
+* In a named space, the partitioned data protector can't read a cookie that was protected before partitioning, so the
+  user has to sign in again.
+* In the Default space, a fallback to the unpartitioned purpose chain can still read the
+  older cookie, so the existing session can stay valid.
+* With `SpacesOptions.PartitionDataProtection` set to `false`, an older cookie can be read in any space.
+
+Don't rely on path scoping to sign users out. If existing sessions must end when you enable path-based spaces, end them
+explicitly, for example by changing the session cookie name. Hosts without a space path, including origin-only spaces
+with an empty `PathBase`, keep `Path=/` and aren't affected.
 
 Call `UseSpaceResolution()` before `UseIdentityServer()`. If space resolution hasn't run yet, cookies fall back to
 `Path=/` and aren't isolated between spaces.
