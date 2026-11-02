@@ -48,8 +48,11 @@ the fallback would accept the unpartitioned value. Spaces doesn't check for this
 Spaces only partitions the non-keyed `IDataProtectionProvider` registration. These are not partitioned:
 
 * Keyed `IDataProtectionProvider` registrations.
-* Providers assigned to an authentication scheme's options, such as
-  `CookieAuthenticationOptions.DataProtectionProvider`.
+* Providers you create yourself, for example with `DataProtectionProvider.Create(...)`, and assign to an
+  authentication scheme's options, such as `CookieAuthenticationOptions.DataProtectionProvider`.
+
+If you assign the app's registered `IDataProtectionProvider` to a scheme's options, that scheme still uses the
+partitioned provider. Assigning it doesn't make the scheme's cookies readable across spaces.
 
 Register the provider once, as a singleton, before you call `AddSpaces`. `UseSpaceResolution()` throws at startup when
 the provider was registered or replaced after `AddSpaces`, or when more than one provider is registered.
