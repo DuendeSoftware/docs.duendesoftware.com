@@ -19,6 +19,7 @@ redirect_from:
 ---
 
 import Version from "~/components/Version.astro";
+import Flow from "~/components/Flow.astro";
 
 By default, OAuth access tokens are so-called `bearer` tokens. This means they are not bound to a client and anybody who possesses the token can use it. The security concern here is that a leaked token could be used by a (malicious) third party to impersonate the client and/or user.
 
@@ -200,6 +201,8 @@ The creation and management of this DPoP key is up to the policy of the client.
 For example is can be dynamically created when the client starts up, and can be periodically rotated.
 The main constraint is that it must be stored for as long as the client uses any access tokens (and possibly refresh
 tokens) that they are bound to.
+
+<Flow page="security-hardening/dpop" />
 
 <Version since="8.0">
 

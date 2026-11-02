@@ -12,6 +12,8 @@ versions:
   since: "7.0"
 ---
 
+import Flow from "~/components/Flow.astro";
+
 Pushed Authorization Requests (PAR) is a relatively new [OAuth standard](https://datatracker.ietf.org/doc/html/rfc9126)
 that improves the security of OAuth and OIDC flows by moving authorization parameters from the front channel to the back
 channel (that is, from redirect URLs in the browser to direct machine to machine http calls on the back end).
@@ -33,6 +35,9 @@ The use of PAR is encouraged by the [FAPI working group](https://openid.net/wg/f
 example, [the FAPI2.0 Security Profile](https://openid.bitbucket.io/fapi/fapi-2_0-security-profile.html) requires the
 use of PAR. This security profile is used by many of the groups working on open banking (primarily in Europe), in health
 care, and in other industries with high security requirements.
+
+<Flow page="security-hardening/par" />
+
 
 ## Licensing
 

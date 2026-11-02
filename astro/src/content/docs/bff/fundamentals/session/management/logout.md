@@ -20,6 +20,8 @@ var logoutUrl = userClaims["bff:logout_url"]; // assumes userClaims is the resul
 window.location = logoutUrl;
 ```
 
+For a step-by-step illustration, see [OpenID Connect Logout](/protocols/openid-connect/oidc-logout.mdx).
+
 ## Return Url
 After signout is complete, the logout endpoint will redirect back to your front end application. By default, this redirect goes to the root of the application. You can use a different URL instead by including a local URL as the *returnUrl* query parameter. 
 ```js

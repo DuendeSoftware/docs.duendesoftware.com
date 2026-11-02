@@ -21,6 +21,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "linkchecker": "npm run build && lychee --skip-missing --no-progress --max-concurrency 16 --require-https --exclude-path dist/_llms-txt --exclude-path dist/llms.txt --exclude-path dist/llms-full.txt --exclude-path dist/llms-small.txt --exclude sample.duendesoftware.com --exclude docs.duendesoftware.com --exclude sitemap --exclude github --root-dir \"$PWD/dist\" dist/**",
+    "protocols:monthly": "node scripts/protocols/monthly.mjs",
+    "protocols:check": "node scripts/protocols/monthly.mjs --dry-run",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -55,7 +57,8 @@
     "starlight-llms-txt": "^0.11.0",
     "starlight-sidebar-topics": "^0.9.0",
     "tw-to-css": "^0.0.12",
-    "wawoff2": "^2.0.1"
+    "wawoff2": "^2.0.1",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",

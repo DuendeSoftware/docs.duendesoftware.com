@@ -63,6 +63,8 @@ services.AddClientCredentialsTokenManagement()
    });
 ```
 
+For a step-by-step illustration, see [DPoP Proof of Possession](/protocols/security-hardening/dpop.mdx).
+
 ## Proof Tokens At The Token Server's Token Endpoint
 
 Once the key has been configured for the client, then the library will use it to produce a DPoP proof token when calling the token server (including token renewals if relevant).

@@ -422,7 +422,7 @@ If you're using fully-qualified names in your code, those will need to be update
 
 In your application startup code, typically found in the `ConfigureServices` method in `Startup.cs`, consider removing `AddDeveloperSigningCredential`.
 
-You can use Duende IdentityServer's built-in [manual or automatic key management](/identityserver/fundamentals/key-management.md) instead.
+You can use Duende IdentityServer's built-in [manual or automatic key management](/identityserver/fundamentals/key-management.mdx) instead.
 
 ### Step 5: Update Database Schema
 
@@ -448,7 +448,7 @@ In this section, we'll look at updating the database schema based on the stores 
   - `DPoPClockSkew` is a non-nullable timespan that controls how much clock skew is allowed for a particular DPoP client. Existing clients that aren't using DPoP can set its value to a timespan of length ``0.
 
 - Two new properties have been added to the `Client` model:
-  - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](/identityserver/tokens/par.md). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
+  - `Client.RequirePushedAuthorization` is a new boolean property that controls if this client requires [pushed authorization requests (PAR)](/identityserver/tokens/par.mdx). It is safe to initialize this column to `false` for existing clients, which will mean that the global PAR configuration will be used.
   - `Client.PushedAuthorizationLifetime` is a new nullable integer property that controls the lifetime of pushed
     authorization requests (in seconds) for a client. It is safe to initialize this column to `null` for existing clients, which means the global value is used.
 - A new `PushedAuthorizationRequest` table has been added to store pushed authorization requests.
@@ -505,9 +505,9 @@ Client apps and APIs typically cache the key material published from IdentitySer
 When upgrading, consider how those applications will handle an upgraded token server with a new and different signing key.
 
 - If you can restart all client apps and APIs that depend on your current signing key, you can remove the old signing key and start to use automatic key management. A restart reloads the discovery document and the new signing key.
-- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](/identityserver/fundamentals/key-management.md#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
+- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](/identityserver/fundamentals/key-management.mdx#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
 
-If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](/identityserver/fundamentals/key-management.md).
+If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](/identityserver/fundamentals/key-management.mdx).
 
 :::note
 This feature is part of the [Duende IdentityServer Standard (add-on), Advanced, Business (legacy) and Enterprise (legacy) Edition](https://duendesoftware.com/products/identityserver).
@@ -631,4 +631,4 @@ The following breaking changes are new in Duende IdentityServer v8.0. For full d
 - **`IEnumerable<T>` return types changed to `IReadOnlyCollection<T>`.** Several interface methods updated. Custom implementations must update return types; callers that only enumerate are unaffected.
 - **`IUserSession`: new SAML session methods.** Three new methods for SAML 2.0 session tracking. Custom implementations must add them (no-op implementations are fine if not using SAML).
 - **DPoP changes in JwtBearer package.** `DPoPExtensions` replaced by `DPoPServiceCollectionExtensions`, with new properties for proof token expiration modes.
-- **`IAuthorizationParametersMessageStore` removed.** This interface and its implementations have been removed. If you used it to pass large authorization parameters, migrate to [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md).
+- **`IAuthorizationParametersMessageStore` removed.** This interface and its implementations have been removed. If you used it to pass large authorization parameters, migrate to [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.mdx).

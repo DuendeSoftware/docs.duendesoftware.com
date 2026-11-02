@@ -17,6 +17,8 @@ redirect_from:
   - /identityserver/v7/fundamentals/keys/static_key_management/
 ---
 
+import Flow from "~/components/Flow.astro";
+
 Duende IdentityServer issues several types of tokens that are cryptographically
 signed, including identity tokens, JWT access tokens, and logout tokens. To
 create those signatures, IdentityServer needs key material. That key material
@@ -133,16 +135,20 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 });
 ```
 
+On the client side, apps and APIs read the published keys from discovery. Because IdentityServer announces a new key before it signs with it, clients usually have the key before they see it in a token. If a token arrives with a key ID a client doesn't know yet, the client fetches the keys again:
+
+<Flow page="openid-connect/discovery-jwks" />
+
 ### Key Storage
 
 Automatic Key Management stores keys through the abstraction of the
-[`ISigningKeyStore`](/identityserver/data/operational.md#keys). You can implement this
+[`ISigningKeyStore`](/identityserver/data/operational.mdx#keys). You can implement this
 extensibility point to customize the storage of your keys (perhaps using a key
 vault of some kind) or use one of the implementations of the
 `ISigningKeyStore` that we provide:
 
 * The default `FileSystemKeyStore`, which writes keys to the file system.
-* The [Entity Framework operational store](/identityserver/data/providers/entityframework-core.md#operational-store),
+* The [Entity Framework operational store](/identityserver/data/providers/entityframework-core.mdx#operational-store),
   which writes keys to a database using Entity Framework Core.
 * The [Duende Storage provider](/identityserver/data/providers/duende-storage/getting-started.md#operational-stores),
   which writes keys through the common Duende storage layer.
@@ -506,7 +512,7 @@ store.Add(certificate);
 ## Backing Up Signing Keys
 
 Back up signing keys so that you can restore service after data loss. With automatic key management, the keys in the
-[signing key store](/identityserver/data/operational.md#keys) are encrypted using ASP.NET Core Data Protection by
+[signing key store](/identityserver/data/operational.mdx#keys) are encrypted using ASP.NET Core Data Protection by
 default (see [Encryption Of Keys at Rest](#encryption-of-keys-at-rest)). A backup of the signing keys is therefore only
 usable together with the Data Protection keys that encrypted them, so back up and restore both together. A restored
 Data Protection key ring is only readable when the restored application uses the same application name
@@ -647,7 +653,7 @@ If you suspect a signing key has been exposed, rotate immediately rather than wa
    their key material will reject tokens signed with it, and users may need to sign in again.
 4. **Revoke refresh tokens and grants.** Remove persisted grants that were issued before the compromised key was
    removed from every instance, so grants issued during the exposure window can't be used to obtain new tokens. If you
-   don't know when the exposure started or ended, revoke all active grants. See [Persisted Grants](/identityserver/data/operational.md#grants).
+   don't know when the exposure started or ended, revoke all active grants. See [Persisted Grants](/identityserver/data/operational.mdx#grants).
 5. **Notify relying parties.** Tell clients and APIs (including those that cache JWKS) to refresh their key material,
    and update any Service Providers that use a statically configured certificate.
 
