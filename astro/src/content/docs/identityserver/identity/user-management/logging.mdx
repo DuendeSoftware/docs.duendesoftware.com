@@ -1,7 +1,7 @@
 ---
 title: "Logging"
 description: "How to configure and use logging in Duende User Management, including log categories, levels, and troubleshooting guidance."
-date: 2026-05-22
+date: 2026-11-02
 sidebar:
   label: Logging
   order: 10
@@ -38,6 +38,7 @@ More specific sub-categories exist for individual features:
 | User profiles             | `Duende.UserManagement.Profiles.Internal`                     |
 | Membership (groups/roles) | `Duende.UserManagement.Membership.Internal`                   |
 | User import               | `Duende.UserManagement.Import.Internal`                       |
+| SCIM provisioning         | `Duende.UserManagement.Scim`                                  |
 
 To enable detailed logging for all User Management components, set the `Duende.UserManagement` 
 namespace to `Debug` in your `appsettings.json`:
@@ -74,6 +75,8 @@ In production, keep logging at `Warning` or higher to avoid excessive log volume
 Drop to `Information` or `Debug` only when actively troubleshooting.
 For definitions of each log level and guidance on what to do when you see one, see [Logging Fundamentals](/general/logging.mdx).
 :::
+
+For SCIM troubleshooting with Microsoft Entra ID or Okta, see [Troubleshooting](/identityserver/identity/user-management/scim.mdx#troubleshooting).
 
 ## What Gets Logged
 
