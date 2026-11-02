@@ -1,7 +1,7 @@
 ---
 title: "Logging Fundamentals"
 description: "General guidance on configuring logging for Duende Software products using Microsoft.Extensions.Logging and Serilog."
-date: 2026-01-19
+date: 2026-11-02
 sidebar:
   order: 10
 ---
@@ -252,6 +252,7 @@ If you are debugging a specific component, you can target its namespace to reduc
 | **BFF**                     | `Duende.Bff`                   |
 | **User Management**         | `Duende.UserManagement`        |
 | **Access Token Management** | `Duende.AccessTokenManagement` |
+| **Duende Storage**         | `Duende.Storage`               |
 
 Example `appsettings.json` for debugging only BFF interactions:
 
@@ -271,6 +272,11 @@ Each Duende product has its own logging page with product-specific configuration
     description="Exception filtering, OpenTelemetry integration, and key events for IdentityServer."
   />
   <LinkCard
+    title="BFF Logging"
+    href="/bff/diagnostics#logging"
+    description="Log categories and configuration for the Backend for Frontend (BFF) middleware."
+  />
+  <LinkCard
     title="User Management Logging"
     href="/identityserver/identity/user-management/logging"
     description="Log categories by feature area: passwords, passkeys, OTP, TOTP, profiles, and more."
@@ -284,5 +290,10 @@ Each Duende product has its own logging page with product-specific configuration
     title="OidcClient Logging"
     href="/identitymodel-oidcclient/logging"
     description="Wiring up ILoggerFactory to OidcClient for native and mobile app diagnostics."
+  />
+  <LinkCard
+    title="Duende Storage Logging"
+    href="/identityserver/data/providers/duende-storage/databases#logging"
+    description="Log categories for Duende Storage and each database provider."
   />
 </CardGrid>
