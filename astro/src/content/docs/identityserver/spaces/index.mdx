@@ -122,12 +122,13 @@ IdentityServer scopes these cookies to the space path:
 Other application cookies, and the correlation and nonce cookies of external authentication handlers such as OpenID
 Connect, are not changed.
 
-:::caution[Don't use the __Host- cookie name prefix with path-based spaces]
+:::caution[Don't use the __Host- cookie name prefix with a non-root cookie path]
 The `__Host-` prefix requires `Path=/`. If IdentityServer builds a `__Host-` prefixed cookie for a request whose
-resolved path isn't `/`, it throws an `InvalidOperationException` before issuing the cookie. The message reads:
-`Cookie '<name>' uses the '__Host-' prefix, which requires the cookie path to be '/', but the resolved IdentityServer
-cookie path is '<path>'.` Use the `__Secure-` prefix instead. It still requires the `Secure` attribute but permits
-non-root paths.
+resolved cookie path isn't `/`, it throws an `InvalidOperationException` before issuing the cookie. This happens with
+path-based spaces, and also with origin-only spaces or apps without Spaces when the hosting `PathBase` isn't empty.
+The message starts with: `Cookie '<name>' uses the '__Host-' prefix, which requires the cookie path to be '/', but the
+resolved IdentityServer cookie path is '<path>'.` Use the `__Secure-` prefix instead. It still requires the `Secure`
+attribute but permits non-root paths.
 :::
 
 ### Rollout Impact
