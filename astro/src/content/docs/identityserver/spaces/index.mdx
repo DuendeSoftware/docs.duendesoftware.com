@@ -1,7 +1,7 @@
 ---
 title: "IdentityServer Spaces"
 description: "Run multiple isolated IdentityServer security domains in a single deployment using Spaces with per-tenant configuration and operational data"
-date: 2026-10-26
+date: 2026-11-02
 sidebar:
   label: "Overview"
   order: 1
@@ -114,6 +114,10 @@ IdentityServer scopes these cookies to the space path:
   scheme, that scheme's cookie is scoped instead (for example, ASP.NET Core Identity's `Identity.Application`).
 * The `idsrv.external` cookie used for external authentication.
 * The temporary message cookies that carry state between pages, such as consent.
+* The check-session cookie, `idsrv.session` by default. It takes the same path as the cookies above, so it is scoped to
+  the space path and your hosting `PathBase`. The name comes from `Authentication.CheckSessionCookieName`. IdentityServer
+  issues it only when `Endpoints.EnableCheckSessionEndpoint` is enabled. It still uses `Domain` and `SameSite` from
+  `Authentication.CheckSessionCookieDomain` and `Authentication.CheckSessionCookieSameSiteMode`.
 
 Other application cookies, and the correlation and nonce cookies of external authentication handlers such as OpenID
 Connect, are not changed.
@@ -125,6 +129,17 @@ resolved path isn't `/`, it throws an `InvalidOperationException` before issuing
 cookie path is '<path>'.` Use the `__Secure-` prefix instead. It still requires the `Secure` attribute but permits
 non-root paths.
 :::
+
+### Rollout Impact
+
+IdentityServer doesn't migrate existing cookies. Browsers hold cookies issued with `Path=/` by earlier versions, and
+IdentityServer now issues and reads cookies with the space path. Those older cookies aren't sent to the space path, so
+users with an active session usually have to sign in again after you upgrade. This applies to the session cookie, the
+`idsrv.external` cookie, and the `idsrv.session` check-session cookie.
+
+The old root-path cookies stay in the browser until they expire or the user clears them. IdentityServer doesn't remove
+them. Plan the upgrade for a time when signing users out is acceptable. Hosts without a space path, including origin-only
+spaces with an empty `PathBase`, keep `Path=/` and aren't affected.
 
 Call `UseSpaceResolution()` before `UseIdentityServer()`. If space resolution hasn't run yet, cookies fall back to
 `Path=/` and aren't isolated between spaces.
