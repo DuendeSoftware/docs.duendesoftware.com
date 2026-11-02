@@ -18,6 +18,7 @@ Currently, the Configuration API supports the [Dynamic Client Registration](/ide
 
 :::note
 This feature is part of the [Duende IdentityServer Business (legacy), Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+Legacy customers need a [compatible license key](/general/licensing.md#new-license-key-file-format) to enable it. [Contact us](https://duendesoftware.com/contact/general) to get one.
 :::
 
 The Configuration API source code is available [on GitHub](https://github.com/DuendeSoftware/products/tree/main/identity-server/src/Configuration).

@@ -15,6 +15,7 @@ CIBA is one of the requirements to support the [Financial-grade API](https://ope
 
 :::note
 This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+Legacy customers need a [compatible license key](/general/licensing.md#new-license-key-file-format) to enable it. [Contact us](https://duendesoftware.com/contact/general) to get one.
 :::
 
 Normally when using OpenID Connect, a user accesses a client application on the same device they use to login to the OpenID Connect provider.
