@@ -215,6 +215,10 @@ To check that provisioning works, look at the stored profile attributes or the i
    * Keep the default `active` mapping. Entra sends `active` as the strings `"True"` and `"False"`, and User Management accepts them.
 1. Disable group provisioning unless you need groups.
 
+:::note
+The `givenName` to `given_name` and `surname` to `family_name` mappings haven't been tested end to end. Check the stored profile attributes after the first provisioning cycle.
+:::
+
 Use the `email` mapping above instead of Entra's default email mapping. The default mapping targets `emails[type eq "work"].value`, and User Management rejects that filtered path (see [Known Issues](#filtered-patch-paths-are-rejected)).
 
 The `email` mapping reads the Entra `mail` attribute, which can be empty even when the user principal name is set. When `mail` is empty, Entra leaves `emails` out of the create request. It sends the value later as a PATCH on the filtered path, and that PATCH fails.
@@ -330,7 +334,7 @@ PATCH paths that contain a filter, such as `emails[type eq "work"].value`, retur
 
 ### Group `externalId` PATCH Fails
 
-A PATCH operation with the path `externalId` on a group returns `400` with `scimType: invalidPath`. The PATCH stops at the first failed operation and applies none of the changes. Entra sends `Add externalId` followed by `Replace displayName` when you rename a group, so the rename fails. To avoid this, remove the `externalId` mapping from the group attribute mappings in Entra.
+A PATCH operation with the path `externalId` on a group returns `400` with `scimType: invalidPath`. The PATCH stops at the first failed operation and applies none of the changes. Entra sends `Add externalId` followed by `Replace displayName` when you rename a group, so the rename fails. To avoid this, remove the `externalId` mapping from the group attribute mappings in Entra. This workaround hasn't been tested yet.
 
 ### Lookup By `userName` Returns No Result
 
