@@ -210,6 +210,8 @@ To check that provisioning works, look at the stored profile attributes or the i
 1. Set the provisioning mode to **Automatic** and the authentication method to **OAuth2 client credentials grant**. Enter the tenant URL (the SCIM base URL), the token endpoint, the client ID, and the client secret. Entra requests and renews tokens itself.
 1. In the classic provisioning UI, edit the attribute mappings:
    * Delete the rows whose target is in `urn:ietf:params:scim:schemas:extension:enterprise:2.0:User`.
+   * Delete the default email mapping, whose target is `emails[type eq "work"].value`. User Management rejects this
+     filtered path (see [Known Issues](#filtered-patch-paths-are-rejected)).
    * Under **Show advanced options**, choose **Edit attribute list for** the application and add `email`, `given_name`, and `family_name` with type String.
    * Add Direct mappings from `mail` to `email`, from `givenName` to `given_name`, and from `surname` to `family_name`.
    * Keep the default `active` mapping. Entra sends `active` as the strings `"True"` and `"False"`, and User Management accepts them.
@@ -219,13 +221,26 @@ To check that provisioning works, look at the stored profile attributes or the i
 The `givenName` to `given_name` and `surname` to `family_name` mappings haven't been tested end to end. Check the stored profile attributes after the first provisioning cycle.
 :::
 
-Use the `email` mapping above instead of Entra's default email mapping. The default mapping targets `emails[type eq "work"].value`, and User Management rejects that filtered path (see [Known Issues](#filtered-patch-paths-are-rejected)).
+The `email` mapping reads the Entra `mail` attribute, which can be empty even when the user principal name is set. Users without a `mail` value are created without an email.
 
-The `email` mapping reads the Entra `mail` attribute, which can be empty even when the user principal name is set. When `mail` is empty, Entra leaves `emails` out of the create request. It sends the value later as a PATCH on the filtered path, and that PATCH fails.
+If you keep Entra's default email mapping, Entra leaves `emails` out of the create request when `mail` is empty. It sends the value later as a PATCH on the filtered path, and that PATCH fails.
 
 ### Okta
 
 1. Add the SCIM 2.0 Test App (OAuth Bearer Token).
+1. Request an access token for the SCIM client yourself with the client credentials grant. Okta doesn't request tokens
+   for this app. See [Token Lifetime](#token-lifetime) before you choose the token lifetime.
+
+   ```bash
+   curl -X POST https://<host>/connect/token \
+     -d grant_type=client_credentials \
+     -d client_id=<client-id> \
+     -d client_secret=<client-secret> \
+     -d scope=scim
+   ```
+
+1. Under **Provisioning**, select **Configure API Integration** and enable the API integration. Enter the SCIM base URL
+   and paste the `access_token` value from the response as the OAuth bearer token. Test the credentials, then save.
 1. Under **Provisioning > To App**, enable **Create Users**, **Update User Attributes**, and **Deactivate Users**. Without **Create Users**, assignment fails with `Matching user not found`.
 1. Go to **Directory > Profile Editor** and open the application's user profile, not the Okta user profile. Select **Add Attribute** three times. Use the data type string and the external namespace `urn:ietf:params:scim:schemas:core:2.0:User` for each:
 
@@ -298,7 +313,19 @@ app.UseWhen(
     scim => scim.UseHttpLogging());
 ```
 
-HTTP logging writes to the `Microsoft.AspNetCore.HttpLogging` category at `Information`. The fields above leave out request headers, so the bearer token in the `Authorization` header isn't logged.
+HTTP logging writes to the `Microsoft.AspNetCore.HttpLogging` category at `Information`. If your minimum log level is `Warning` or higher, set this category to `Information` as well, or the request and response logs are filtered out:
+
+```json title="appsettings.json"
+{
+  "Logging": {
+    "LogLevel": {
+      "Microsoft.AspNetCore.HttpLogging": "Information"
+    }
+  }
+}
+```
+
+The fields above leave out request headers, so the bearer token in the `Authorization` header isn't logged.
 
 :::caution
 Request bodies contain personal data. Enable HTTP logging for SCIM only while you troubleshoot, and not in production.
