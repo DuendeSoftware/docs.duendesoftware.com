@@ -66,7 +66,7 @@ The [User Session Service](/identityserver/reference/v8/services/user-session-se
 
 - **Default Name:** `"idsrv.session"` (Constant: `IdentityServerConstants.DefaultCheckSessionCookieName`).
 
-Note this cookie is not marked as `HttpOnly`, so it can be accessed in client-side code. The JavaScript code that is required to check user sessions in the background also requires access to this cookie, and needs it to be `HttpOnly`.
+Note this cookie is not marked as `HttpOnly`, so it can be accessed in client-side code. The JavaScript code that is required to check user sessions in the background also requires access to this cookie, and needs it to not be `HttpOnly`.
 
 ## Common Pitfalls
 
