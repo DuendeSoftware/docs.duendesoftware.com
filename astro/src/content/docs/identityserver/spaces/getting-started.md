@@ -204,8 +204,8 @@ resolved space, so callers don't need to build space-aware cache keys themselves
 
 Space resolution results are cached in the Spaces `HybridCache`. `SpacesOptions.LocalCacheExpiration` sets the
 in-process cache lifetime (default 30 seconds), and `SpacesOptions.Expiration` sets the distributed cache lifetime
-(default 30 minutes). A space change is visible immediately on the instance that made it. Other instances can take up to
-these lifetimes to see it.
+(default 30 minutes). A space change is visible immediately on the instance that made it. Other instances see it once
+their in-process cache entry expires, after at most `LocalCacheExpiration`.
 
 Spaces management data and every space's pool share the default Duende Storage instance unless you map them elsewhere.
 See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md) to route
