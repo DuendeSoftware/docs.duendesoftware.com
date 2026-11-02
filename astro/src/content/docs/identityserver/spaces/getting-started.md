@@ -1,7 +1,7 @@
 ---
 title: "Getting Started With Spaces"
 description: "Step-by-step guide to installing Duende.Spaces, configuring space resolution by origin or path and creating your first IdentityServer space"
-date: 2026-10-23
+date: 2026-11-02
 sidebar:
   label: "Getting Started"
   order: 10
@@ -189,6 +189,9 @@ unprotected in another. IdentityServer's own signing key protection stays global
 `GetUnpartitioned()` on the provider. Use `GetUnpartitioned()` yourself for data that must be readable from every
 space; see [Data Protection](/general/data-protection.md) for background on providers and protectors.
 
+For the Default space fallback, failures outside a resolved space, and which providers are partitioned, see
+[Data Protection In Spaces](/identityserver/spaces/data-protection.md).
+
 Set `SpacesOptions.PartitionDataProtection` to `false` when all protected data from the app's
 `IDataProtectionProvider`, such as cookies or tokens, must be readable across spaces. This removes per-space
 partitioning for that data. If only specific values need to be shared, use `GetUnpartitioned()` for those protectors
@@ -198,6 +201,11 @@ Spaces registers its own keyed `HybridCache` under `SpacesServiceProviderKeys.Sp
 sharing the app's default `HybridCache`. If your app already relies on an unkeyed `HybridCache` for its own caching,
 call `AddHybridCache()` yourself. Entries created through `IHybridCacheFactory` are automatically partitioned by the
 resolved space, so callers don't need to build space-aware cache keys themselves.
+
+Space resolution results are cached in the Spaces `HybridCache`. `SpacesOptions.LocalCacheExpiration` sets the
+in-process cache lifetime (default 30 seconds), and `SpacesOptions.Expiration` sets the distributed cache lifetime
+(default 30 minutes). A space change is visible immediately on the instance that made it. Other instances can take up to
+these lifetimes to see it.
 
 Spaces management data and every space's pool share the default Duende Storage instance unless you map them elsewhere.
 See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md) to route
