@@ -1,7 +1,7 @@
 ---
 title: "Configuration Admin APIs"
 description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende Storage admin APIs"
-date: 2026-10-26
+date: 2026-11-02
 sidebar:
   label: "Admin APIs"
   order: 30
@@ -28,7 +28,8 @@ require a dedicated administrative policy, validate anti-forgery protections for
 
 Each service supports create, get, update, query and delete operations. You can also get a client by its `client_id`
 with `IClientAdmin.GetByClientIdAsync`. The API scope, API resource and identity resource services get an entity by name
-with `GetByNameAsync`. Resolve the service from a dependency injection
+with `GetByNameAsync`. `IIdentityProviderAdmin` gets a provider by its scheme with `GetBySchemeAsync`, and
+`ISamlServiceProviderAdmin` gets a service provider by its SAML entity ID with `GetByEntityIdAsync`. Resolve the service from a dependency injection
 scope, such as an authorized endpoint or a scoped application service.
 
 IdentityServer serves this configuration at runtime from the storage-backed stores that `AddConfigurationStorage`
@@ -250,6 +251,41 @@ static Task<SaveResult<Guid>> CreateSamlServiceProvider(
         ct);
 ```
 
+To validate SAML service provider configuration with your own rules, implement `ISamlServiceProviderConfigurationValidator`
+and register it with `AddSamlServiceProviderConfigurationValidator<T>()`. IdentityServer runs the validator when it loads
+service providers from the store and when you save one through `ISamlServiceProviderAdmin`. The registration replaces the
+default validator. Call `SetError` on the context to reject a configuration. The message appears in the validation
+errors of the `SaveResult`.
+
+```csharp
+// RequireHttpsEntityIdValidator.cs
+using Duende.IdentityServer.Validation;
+
+public class RequireHttpsEntityIdValidator : ISamlServiceProviderConfigurationValidator
+{
+    public Task ValidateAsync(
+        SamlServiceProviderConfigurationValidationContext context,
+        CancellationToken ct)
+    {
+        if (!context.ServiceProvider.EntityId.StartsWith("https://", StringComparison.Ordinal))
+        {
+            context.SetError("The entity ID must start with https://.");
+        }
+
+        return Task.CompletedTask;
+    }
+}
+```
+
+```csharp
+// Program.cs
+builder.Services.AddIdentityServer()
+    .AddSamlServiceProviderConfigurationValidator<RequireHttpsEntityIdValidator>();
+```
+
+The default validator checks the entity ID, assertion consumer service URLs, allowed scopes, and lifetimes. If you still
+need those checks, derive from `DefaultSamlServiceProviderConfigurationValidator` and override its virtual methods.
+
 ## Handle Results And Updates
 
 Create, update and delete operations return `SaveResult<TId>`. Check `IsSuccess` before using `Id` or `Version`; failed
@@ -305,6 +341,17 @@ foreach (var scope in page.Items)
     Console.WriteLine($"{scope.Id}: {scope.Name}");
 }
 ```
+
+The filters for each service support these properties:
+
+| Filter                   | Properties                | Sort fields (enum)                       |
+| ------------------------ | ------------------------- | ---------------------------------------- |
+| `ApiScopeFilter`         | `Name`, `Enabled`         | `ApiScopeSortField`: `Name`, `Enabled`   |
+| `ApiResourceFilter`      | `Name`, `Scope`, `Enabled` | `ApiResourceSortField`: `Name`, `Enabled` |
+| `IdentityResourceFilter` | `Name`, `Enabled`         | `IdentityResourceSortField`: `Name`, `Enabled` |
+
+`ApiResourceFilter.Scope` returns API resources that reference a matching scope name. Each `ApiResourceListItem` also
+reports its `ScopeCount`.
 
 Filters can use contains matching, so compare a returned business identifier exactly when you need one specific entity.
 Use the continuation tokens on `QueryResult<T>` to retrieve additional pages.
