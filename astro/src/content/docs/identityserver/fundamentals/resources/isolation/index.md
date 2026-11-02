@@ -13,6 +13,7 @@ redirect_from:
 
 :::note
 This feature is part of the [Duende IdentityServer Enterprise (legacy), Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+Legacy customers need a [compatible license key](/general/licensing.md#new-license-key-file-format) to enable it. [Contact us](https://duendesoftware.com/contact/general) to get one.
 :::
 
 OAuth itself only knows about scopes - the (API) resource concept does not exist from a pure protocol point of view.

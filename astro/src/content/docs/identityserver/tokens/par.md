@@ -38,6 +38,7 @@ care, and in other industries with high security requirements.
 
 :::note
 This feature is part of the [Duende IdentityServer Business (legacy), Enterprise (legacy), Lite, Standard, Advanced, and Custom Edition](https://duendesoftware.com/products/identityserver).
+Legacy customers need a [compatible license key](/general/licensing.md#new-license-key-file-format) to enable it. [Contact us](https://duendesoftware.com/contact/general) to get one.
 :::
 
 In the Duende IdentityServer Starter (legacy) edition, PAR requests will not be processed and instead log errors. 
