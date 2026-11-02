@@ -1,7 +1,7 @@
 ---
 title: Configuration Reference
 description: "Configuration options reference for Duende User Management, including passwords, passkeys, TOTP, rate limiting, and endpoint routing."
-date: 2026-10-14
+date: 2026-11-02
 sidebar:
   label: Configuration Reference
   order: 1
@@ -71,6 +71,32 @@ Top-level options class for authentication configuration. Accessed via `IOptions
 | `Throttling`    | `AuthenticationThrottlingOptions` | Configuration for per-authenticator attempt throttling.                      |
 
 All sub-option objects are initialized with their defaults automatically. You only need to set the properties you want to override.
+
+<Version since="8.1">
+
+## Options Validation
+
+User Management validates `UserAuthenticationOptions` when the host starts. If any value is invalid, startup fails with an `OptionsValidationException` that lists every failure. For example: `Throttling.MaxFailedAttempts must be >= 1, but was 0.`
+
+| Option                                         | Valid values                          |
+|------------------------------------------------|---------------------------------------|
+| `Passwords.HistoryCount`                       | 0 or greater                          |
+| `Passwords.MaxAgeDays`                         | `null`, or 1 to 36500 (100 years)     |
+| `RecoveryCodes.Count`                          | 1 to 50                               |
+| `Throttling.MaxFailedAttempts`                 | 1 or greater                          |
+| `Throttling.ThrottleDuration`                  | Greater than `TimeSpan.Zero`          |
+| `Throttling.EscalatingThrottleDurations`       | Every entry greater than `TimeSpan.Zero` |
+| `Passkeys.ChallengeSize`                       | 16 or greater                         |
+
+Startup also fails when passkey extensions are registered incorrectly:
+
+* More than one signature verifier is registered for the same COSE algorithm.
+* An attestation format validator has a null, empty, or whitespace `Format`.
+* More than one attestation format validator is registered for the same format.
+
+See [Passkeys](/identityserver/identity/user-management/authentication/passkeys.mdx) for details on the passkey rules.
+
+</Version>
 
 ## `PasswordOptions`
 
