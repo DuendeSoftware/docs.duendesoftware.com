@@ -64,8 +64,7 @@ result and doesn't throw:
 | The space is still active                      | A validation error asking you to call `DeleteAsync` first. No data is removed. |
 | The space was modified concurrently            | A version conflict                                                       |
 
-`PurgeAsync` only purges the storage instance that holds Spaces data. If your application keeps data for a pool in a
-different storage instance, purge that data yourself before reusing the pool ID.
+`PurgeAsync` purges the space's pool from every registered storage instance. If any instance fails, it returns `purge_incomplete` and keeps the deleted space record, match patterns, and pool ID reserved so the operation can be retried. Data may already have been removed from instances that succeeded.
 
 #### Undelete Failures
 
