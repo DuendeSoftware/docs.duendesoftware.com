@@ -46,7 +46,7 @@ first provider.
 
 ## Choose the Schema API
 
-Use `IStorageInstanceSchema` when you need to create, upgrade or verify the default storage instance. Resolving it
+Use `IStorageInstanceSchema` when you need to create, upgrade, or verify the default storage instance. Resolving it
 without a key returns the schema for `StorageInstanceId.Default`.
 
 Use `IStorageInstanceSchemaFactory` when you need the schema for a specific instance. Pass the `StorageInstanceId`

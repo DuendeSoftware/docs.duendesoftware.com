@@ -91,7 +91,7 @@ Duende Storage separates two kinds of schema change:
 `app.Services.GetRequiredService<IStorageInstanceSchema>()` resolves the default storage instance only. For a named
 instance, resolve `IStorageInstanceSchemaFactory` and call
 `GetStorageInstanceSchema(storageInstanceId, cancellationToken)`. The returned schema provides the same migration,
-version-checking, verification and script-generation operations for that named instance. See
+version-checking, verification, and script-generation operations for that named instance. See
 [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md) for a
 complete registration and migration example.
 
