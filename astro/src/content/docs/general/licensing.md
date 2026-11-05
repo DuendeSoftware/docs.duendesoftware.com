@@ -123,7 +123,7 @@ and there are no outbound network calls related to license validation.
 IdentityServer loads and parses the license key at startup. If the key is present but invalid,
 a critical error is logged and IdentityServer continues as if no license were configured.
 
-When a license is configured, IdentityServer also checks a small number of features at startup and throws an exception
+When a license is configured, IdentityServer also checks a small number of enabled features at startup and throws an exception
 if the license does not include them: Automatic Key Management, Server-Side Sessions, and SAML Identity Provider
 (see [Runtime Validation](#runtime-validation) for details). When no license is configured, none of the startup
 checks throw. Most other features are checked at runtime, when they are actively used.
@@ -237,7 +237,7 @@ a `TimeSpan` value:
 
 You can stop these messages by configuring a license key, even in non-production environments.
 Keep in mind that once a license is configured, IdentityServer checks your [entitlements](#license-validation-and-logging):
-features that are not included in your license are no longer available, even though they worked without a license.
+the features listed above as throwing at startup or becoming unavailable at runtime require the corresponding license entitlement.
 
 :::note[IdentityServer 7 and earlier]
 In IdentityServer 7 and earlier, running without a license is called Trial Mode and has a threshold of 500 protocol requests.
