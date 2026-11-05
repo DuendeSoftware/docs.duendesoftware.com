@@ -184,12 +184,13 @@ const productKeys = products.map((p) => p.key);
   function setup() {
     const raw = document.getElementById("dv-versions")?.textContent;
     const page = document.querySelector<HTMLElement>('meta[name="dv-page"]');
-    const data = raw && page ? (JSON.parse(raw) as DvData) : undefined;
-    if (!data || !page || data.versions.length < 2) {
+    const parsed = raw && page ? (JSON.parse(raw) as DvData) : undefined;
+    if (!parsed || !page || parsed.versions.length < 2) {
       // No chip will be mounted: never leave an empty "Version" label behind.
       document.querySelector<HTMLElement>(".dv-version-select")?.remove();
       return;
     }
+    const data: DvData = parsed;
     const { product, versions } = data;
     const fallback = defaultVersion(data);
 
