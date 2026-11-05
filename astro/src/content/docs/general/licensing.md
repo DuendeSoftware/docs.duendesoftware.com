@@ -123,15 +123,18 @@ and there are no outbound network calls related to license validation.
 IdentityServer loads and parses the license key at startup. If the key is present but invalid,
 a critical error is logged and IdentityServer continues as if no license were configured.
 
-When a license is configured, IdentityServer also checks a small number of enabled features at startup and throws an exception
-if the license does not include them: Automatic Key Management, Server-Side Sessions, and SAML Identity Provider
-(see [Runtime Validation](#runtime-validation) for details). When no license is configured, none of the startup
-checks throw. Most other features are checked at runtime, when they are actively used.
+IdentityServer also checks a number of features at startup, but only if they are enabled:
+Automatic Key Management, Server-Side Sessions, and the SAML Identity Provider (registered with `AddSaml()`).
+If a license is configured but does not include the entitlement for an enabled feature, IdentityServer throws an
+exception and the application does not start. If no license is configured, IdentityServer logs a
+warning instead and startup continues. Most other features are checked at runtime, when they are actively used
+(see [Runtime Validation](#runtime-validation) for details).
 
 :::note[IdentityServer 7 and earlier]
-In IdentityServer 7 and earlier, IdentityServer performs validation checks at startup. If no license is configured,
-it logs a warning and enters [Trial Mode](#trial-mode). If a license is configured, it compares the license
-against the current configuration and logs any discrepancies it finds.
+IdentityServer 7 and earlier also run startup checks, warn when no license is configured, and throw an exception
+when a configured license lacks the entitlement for some enabled features (such as Server-Side Sessions). In addition, when a license is configured,
+v7 compares the license against the current configuration at startup and logs any discrepancies it finds. Version 8
+instead limits startup checks to the enabled features described above.
 :::
 
 #### Runtime Validation
@@ -151,14 +154,18 @@ required license entitlement, IdentityServer logs a warning (rate-limited to onc
 * [User Management](/identityserver/identity/user-management/index.mdx)
 
 Some features do require a license with the proper entitlement(s). If you use one of the following features
-without the required license entitlement, IdentityServer throws an exception during startup validation. 
-This only applies when a license is present. If you do not have a license configured because you are 
-developing locally, or IdentityServer is deployed to a non-production environment, a log message will be output
-instead.
+without the required license entitlement, IdentityServer throws an exception during startup validation and the
+application does not start. This only applies when the feature is enabled and a license is configured. If you do not
+have a license configured because you are developing locally, or IdentityServer is deployed to a non-production
+environment, a warning is logged instead and startup continues.
 
 * [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
 * [Automatic Key Management](/identityserver/fundamentals/key-management.md)
 * [SAML Identity Provider](/identityserver/saml/index.mdx)
+
+The SAML Service Provider is different: if a configured license lacks the SAML Service Provider entitlement,
+IdentityServer logs a warning when a SAML Service Provider endpoint is requested, and the endpoint returns
+`404 Not Found`. This applies to both statically and dynamically configured providers and does not stop the application.
 
 :::note
 When developing, you may use your production license key in _any_
