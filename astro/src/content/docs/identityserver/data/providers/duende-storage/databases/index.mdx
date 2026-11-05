@@ -1,7 +1,7 @@
 ---
 title: "Databases Supported by Duende Storage"
 description: "Compare the databases Duende Storage supports and learn how registration, schema deployment and connection strings work across all of them"
-date: 2026-10-23
+date: 2026-11-02
 sidebar:
   label: "Overview"
   order: 1
@@ -129,6 +129,30 @@ connection string or connection object you register: `Min Pool Size`/`Max Pool S
 Size`/`Maximum Pool Size` for PostgreSQL, and `Min Pool Size`/`Max Pool Size` for Oracle. Tune these on the connection
 string; see each provider's page for the keywords it supports. SQLite is for automated tests and local development
 only, so connection pooling isn't a concern there.
+
+## Logging
+
+Duende Storage logs under categories that start with `Duende.Storage`. Log filters match by prefix, so you can set a level for all of Duende Storage or for one database provider.
+
+| Scope        | Log category prefix           |
+|--------------|-------------------------------|
+| All of Duende Storage | `Duende.Storage`     |
+| SQLite       | `Duende.Storage.Sqlite`       |
+| SQL Server   | `Duende.Storage.MsSql`        |
+| PostgreSQL   | `Duende.Storage.PostgreSql`   |
+| Oracle       | `Duende.Storage.Oracle`       |
+
+```json title="appsettings.json"
+{
+  "Logging": {
+    "LogLevel": {
+      "Duende.Storage.PostgreSql": "Debug"
+    }
+  }
+}
+```
+
+For general logging setup, see [Logging](/general/logging.mdx).
 
 ## Next Steps
 
