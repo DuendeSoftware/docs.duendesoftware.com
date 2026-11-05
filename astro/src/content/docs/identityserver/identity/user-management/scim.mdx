@@ -349,7 +349,7 @@ Use the issuer URL that IdentityServer publishes. Token issuer, signature, audie
 
 ### Spaces Are Not Supported For SCIM Authentication
 
-The built-in SCIM bearer authentication uses one authority and one set of signing keys, so it can't validate tokens per space. With Spaces enabled, IdentityServer determines the issuer per request and `IssuerUri` stays empty. The SCIM authority can't be derived from it, and startup fails when you don't set `Authority`. Setting `Authority` to the host root URL or to one space's issuer URL results in `401` responses. Don't use the built-in SCIM authentication together with Spaces.
+The built-in SCIM bearer authentication uses one authority and one set of signing keys, so it can't validate tokens per space. With Spaces enabled, IdentityServer determines the issuer per request and `IssuerUri` stays empty. The SCIM authority can't be derived from it, and startup fails when you don't set `Authority`. Setting `Authority` to the host root URL or to one space's issuer URL doesn't help: a fixed authority can't validate tokens issued by different spaces, and SCIM requests from those spaces can fail with `401` responses. Don't use the built-in SCIM authentication together with Spaces.
 
 ### `groups` In Create And Replace Requests Is Rejected
 
