@@ -44,6 +44,16 @@ Selecting a second database provider for the same instance, whether in one `AddS
 throws an `InvalidOperationException`. This catches accidental double registration instead of silently replacing the
 first provider.
 
+## Choose the Schema API
+
+Use `IStorageInstanceSchema` when you need to create, upgrade, or verify the default storage instance. Resolving it
+without a key returns the schema for `StorageInstanceId.Default`.
+
+Use `IStorageInstanceSchemaFactory` when you need the schema for a specific instance. Pass the `StorageInstanceId`
+created for the named instance to `GetStorageInstanceSchema(...)`, then call the same migration and verification
+methods on the returned `IStorageInstanceSchema`. The factory does not fall back to another instance when the
+requested instance is not registered, so configuration errors fail at the point where you resolve the schema.
+
 ## Register a Second Instance
 
 Give the instance an explicit ID, register a provider for it, then map a category to it:
@@ -92,8 +102,8 @@ app.UseIdentityServer();
 app.Run();
 ```
 
-Migrate every instance you register. `IStorageInstanceSchema.MigrateAsync` resolves the default instance only;
-use `IStorageInstanceSchemaFactory.GetStorageInstanceSchema(storageInstanceId, ct)` to resolve and migrate a named
+Migrate every instance you register. `IStorageInstanceSchema.MigrateAsync` resolves the default instance only. Use
+`IStorageInstanceSchemaFactory.GetStorageInstanceSchema(storageInstanceId, ct)` to resolve and migrate each named
 instance, as shown above.
 
 ## Cross-Product Example: IdentityServer, User Management and Spaces

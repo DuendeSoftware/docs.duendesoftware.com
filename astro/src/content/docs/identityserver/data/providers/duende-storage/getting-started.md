@@ -91,6 +91,9 @@ Do not hide a missing connection string or continue startup after a migration fa
 
 The example runs migrations from the application only in development. See
 [Deploy the Database Schema](#deploy-the-database-schema) for the production approach.
+If you register additional storage instances, resolve each one with
+`IStorageInstanceSchemaFactory.GetStorageInstanceSchema(storageInstanceId, cancellationToken)` and migrate it
+separately. See [Multiple Storage Instances](/identityserver/data/providers/duende-storage/multiple-storage-instances.md).
 
 ### Configuration Stores
 
