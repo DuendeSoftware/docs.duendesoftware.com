@@ -49,6 +49,9 @@ store, have access to, or process any of our customers' data or their customers'
     * NuGet will validate the package signature with Duende's public key to verify they were legitimately built by
       Duende Software and have not been compromised or tampered with.
     * NuGet client tooling can be configured to accept signed packages only.
+* NuGet packages include a [CycloneDX](https://cyclonedx.org/) Software Bill of Materials (SBOM) describing the
+  package and its dependencies. The SBOM is generated during the automated build and validated before release.
+  See [Software Bill of Materials](#software-bill-of-materials-sbom) below.
 * Once on NuGet, the package is available for end users to update their own solutions.
 * End users still must take explicit action to upgrade after reviewing the package's release notes.
 
@@ -61,6 +64,42 @@ store, have access to, or process any of our customers' data or their customers'
 ## Certification
 
 Duende IdentityServer is a [certified](https://openid.net/certification/) implementation of OpenID Connect.
+
+## Software Bill of Materials (SBOM)
+
+NuGet packages published by Duende embed a Software Bill of Materials (SBOM) in
+[CycloneDX](https://cyclonedx.org/) JSON format. The SBOM describes the package and lists its
+NuGet dependencies, including [package URLs (purls)](https://github.com/package-url/purl-spec),
+so it can be imported into software composition analysis and vulnerability scanning tools
+such as [OWASP Dependency-Track](https://dependencytrack.org/), [Grype](https://github.com/anchore/grype),
+or [Trivy](https://trivy.dev/).
+
+The SBOM is stored inside the package at `sbom/bom.cdx.json`. Because the SBOM is part of the
+package, it is covered by the package's [signature](#package-signing).
+
+SBOMs are included in packages released after November 2026. Older package versions,
+including patch releases of older major versions, may not include an SBOM.
+
+### Extracting The SBOM
+
+A `.nupkg` file is a zip archive, so the SBOM can be extracted with any zip tool. For example,
+to extract the SBOM from a package in your local NuGet cache:
+
+```bash
+unzip -p ~/.nuget/packages/duende.identityserver/<version>/duende.identityserver.<version>.nupkg \
+  sbom/bom.cdx.json > duende.identityserver.cdx.json
+```
+
+On Windows, using PowerShell:
+
+```powershell
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$package = "$env:USERPROFILE\.nuget\packages\duende.identityserver\<version>\duende.identityserver.<version>.nupkg"
+$zip = [System.IO.Compression.ZipFile]::OpenRead($package)
+$entry = $zip.GetEntry("sbom/bom.cdx.json")
+[System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, "duende.identityserver.cdx.json", $true)
+$zip.Dispose()
+```
 
 ## Package Signing
 
