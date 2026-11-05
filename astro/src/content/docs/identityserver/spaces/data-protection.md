@@ -13,6 +13,12 @@ Spaces partitions [ASP.NET Core Data Protection](/general/data-protection.md) by
 in one space can't be unprotected in another. Use `GetUnpartitioned()` on the provider for data that must be readable
 from every space.
 
+:::caution[Don't turn partitioning off after deployment]
+Once a host has run with `PartitionDataProtection` enabled, don't set it to `false`. Data protected while partitioning
+was on uses a space-specific purpose chain, so it can't be unprotected without it. Cookies, tokens, and other protected
+data created earlier become unreadable.
+:::
+
 This page describes how partitioning behaves at runtime and where its limits are. To turn partitioning on or off, see
 [Getting Started With Spaces](/identityserver/spaces/getting-started.md#before-deployment).
 
