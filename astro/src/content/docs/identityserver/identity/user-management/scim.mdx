@@ -1,7 +1,7 @@
 ---
 title: "SCIM Provisioning"
 description: "Use Duende User Management's experimental SCIM 2.0 service provider to provision users and groups from an external identity provider or directory."
-date: 2026-10-21
+date: 2026-11-02
 versions:
   since: "8.1"
 sidebar:
@@ -189,6 +189,148 @@ Follow the client's own documentation for how it maps its attributes to SCIM att
 
 If you implement your own SCIM client, do not automatically retry `POST` requests, including Bulk requests. The original request may have succeeded before its response was lost, so a retry can create duplicate users or repeat part of a Bulk request.
 
+## Provisioning From Identity Providers
+
+This section describes how to connect Microsoft Entra ID and Okta to an IdentityServer application that uses the default template and the default profile schema. Read [Known Issues](#known-issues) first, because several provider defaults hit current limitations.
+
+### Common Setup
+
+* Use `https://<host>/scim` as the SCIM base URL, or the route you configured with `ScimEndpointOptions`.
+* Create a `client_credentials` client with the `scim` scope, as shown in [Authorization](#authorization). The provider uses the token endpoint of your IdentityServer.
+* Define the SCIM User attributes in the profile schema, for example with `DefaultScimUserSchema`. Without them, provisioning fails with errors such as `Attribute 'active' is not defined in the schema`.
+* Add the single-valued attributes `email`, `given_name`, and `family_name` to the profile schema if it doesn't define them. They are the source of the OIDC claims.
+
+Both providers send the email in the SCIM `emails` collection and the names in the `name` object. User Management does not copy these values into `email`, `given_name`, and `family_name`. Without the attribute mappings below, users are created with these attributes empty.
+
+To check that provisioning works, look at the stored profile attributes or the issued claims. The SCIM `name` object can contain names that aren't stored in the profile, so it doesn't tell you whether the mappings work.
+
+### Microsoft Entra ID
+
+1. Create a non-gallery enterprise application.
+1. Set the provisioning mode to **Automatic** and the authentication method to **OAuth2 client credentials grant**. Enter the tenant URL (the SCIM base URL), the token endpoint, the client ID, and the client secret. Entra requests and renews tokens itself.
+1. In the classic provisioning UI, edit the attribute mappings:
+   * Delete the rows whose target is in `urn:ietf:params:scim:schemas:extension:enterprise:2.0:User`.
+   * Delete the default email mapping, whose target is `emails[type eq "work"].value`. User Management rejects this
+     filtered path (see [Known Issues](#filtered-patch-paths-are-rejected)).
+   * Under **Show advanced options**, choose **Edit attribute list for** the application and add `email`, `given_name`, and `family_name` with type String.
+   * Add Direct mappings from `mail` to `email`, from `givenName` to `given_name`, and from `surname` to `family_name`.
+   * Keep the default `active` mapping. Entra sends `active` as the strings `"True"` and `"False"`, and User Management accepts them.
+1. Disable group provisioning unless you need groups.
+
+:::note
+The `givenName` to `given_name` and `surname` to `family_name` mappings haven't been tested end to end. Check the stored profile attributes after the first provisioning cycle.
+:::
+
+The `email` mapping reads the Entra `mail` attribute, which can be empty even when the user principal name is set. Users without a `mail` value are created without an email.
+
+If you keep Entra's default email mapping, Entra leaves `emails` out of the create request when `mail` is empty. It sends the value later as a PATCH on the filtered path, and that PATCH fails.
+
+### Okta
+
+1. Add the SCIM 2.0 Test App (OAuth Bearer Token).
+1. Request an access token for the SCIM client yourself with the client credentials grant. Okta doesn't request tokens
+   for this app. See [Token Lifetime](#token-lifetime) before you choose the token lifetime.
+
+   ```bash
+   curl -X POST https://<host>/connect/token \
+     --data-urlencode "grant_type=client_credentials" \
+     --data-urlencode "client_id=<client-id>" \
+     --data-urlencode "client_secret=<client-secret>" \
+     --data-urlencode "scope=scim"
+   ```
+
+1. Under **Provisioning**, select **Configure API Integration** and enable the API integration. Enter the SCIM base URL
+   and paste the `access_token` value from the response as the OAuth bearer token. Test the credentials, then save.
+1. Under **Provisioning > To App**, enable **Create Users**, **Update User Attributes**, and **Deactivate Users**. Without **Create Users**, assignment fails with `Matching user not found`.
+1. Go to **Directory > Profile Editor** and open the application's user profile, not the Okta user profile. Select **Add Attribute** three times. Use the data type string and the external namespace `urn:ietf:params:scim:schemas:core:2.0:User` for each:
+
+   | Variable name   | External name | Map from         |
+   |-----------------|---------------|------------------|
+   | `oidcEmail`     | `email`       | `user.email`     |
+   | `oidcGivenName` | `given_name`  | `user.firstName` |
+   | `oidcFamilyName`| `family_name` | `user.lastName`  |
+
+   The variable names can't be `email`, `givenName`, or `familyName`, because the default application profile uses those for the SCIM `emails` and `name` mappings.
+1. Open **Mappings**, choose the Okta User to application direction, and map the sources to the new attributes. Apply the change to existing users.
+
+Okta then sends `email`, `given_name`, and `family_name` next to `emails` and `name`.
+
+Okta's default create and replace requests contain `"groups": []`, which this version rejects (see [Known Issues](#groups-in-create-and-replace-requests-is-rejected)).
+
+#### Token Lifetime
+
+Okta stores the bearer token as a fixed value and doesn't renew it. With the default access token lifetime of one hour, provisioning fails after an hour with `Error while verifying if user ... exists: Unauthorized`.
+
+Set a longer access token lifetime on the SCIM client, and replace the token in Okta before it expires. Anyone who obtains the token can read and write users until it expires, so keep the lifetime as short as your rotation process allows. To confirm that an expired token is the cause, see [Troubleshooting](#troubleshooting).
+
+#### Group Push
+
+Use separate Okta groups for application assignment and for Group Push. When one group does both, removing a user from it unassigns the user from the application. Okta then sends `active: false` and no member removal, so the user stays in the downstream group. Remove the user from the push group before you unassign them. Okta also sends a group PATCH that replaces only `id` and `displayName`, which doesn't change membership. See [App assignments and Group Push](https://help.okta.com/en-us/content/topics/users-groups-profiles/app-assignments-group-push.htm) in the Okta documentation.
+
+### Troubleshooting
+
+Two log categories explain most provisioning failures:
+
+* `Duende.UserManagement.Scim` logs rejected create and replace requests with the reason, at `Information`.
+* `Microsoft.AspNetCore.Authentication` logs token validation failures, such as an expired token, at `Information`.
+
+If your minimum log level is `Warning` or higher, set both categories to `Information`:
+
+```json title="appsettings.json"
+{
+  "Logging": {
+    "LogLevel": {
+      "Duende.UserManagement.Scim": "Information",
+      "Microsoft.AspNetCore.Authentication": "Information"
+    }
+  }
+}
+```
+
+If you use Serilog, add the same categories under `Serilog:MinimumLevel:Override`.
+
+#### Logging Request And Response Bodies
+
+The SCIM logs don't contain request bodies. Most failed PATCH requests, such as a request with an unsupported path, aren't logged at all. To see what a provider sends, enable [HTTP logging](https://learn.microsoft.com/aspnet/core/fundamentals/http-logging/) for the SCIM endpoints only:
+
+```csharp
+// Program.cs
+using Microsoft.AspNetCore.HttpLogging;
+
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = HttpLoggingFields.RequestMethod
+        | HttpLoggingFields.RequestPath
+        | HttpLoggingFields.RequestBody
+        | HttpLoggingFields.ResponseStatusCode
+        | HttpLoggingFields.ResponseBody;
+});
+
+var app = builder.Build();
+
+app.UseWhen(
+    context => context.Request.Path.StartsWithSegments("/scim"),
+    scim => scim.UseHttpLogging());
+```
+
+HTTP logging writes to the `Microsoft.AspNetCore.HttpLogging` category at `Information`. If your minimum log level is `Warning` or higher, set this category to `Information` as well, or the request and response logs are filtered out:
+
+```json title="appsettings.json"
+{
+  "Logging": {
+    "LogLevel": {
+      "Microsoft.AspNetCore.HttpLogging": "Information"
+    }
+  }
+}
+```
+
+The fields above leave out request headers, so the bearer token in the `Authorization` header isn't logged.
+
+:::caution
+Request bodies contain personal data. Enable HTTP logging for SCIM only while you troubleshoot, and not in production.
+:::
+
 ## Known Issues
 
 ### Valid Tokens Rejected With An Invalid Issuer Error
@@ -204,6 +346,22 @@ builder.Services.Configure<JwtBearerOptions>(
 ```
 
 Use the issuer URL that IdentityServer publishes. Token issuer, signature, audience, and lifetime validation remain enabled.
+
+### Spaces Are Not Supported For SCIM Authentication
+
+The built-in SCIM bearer authentication uses one authority and one set of signing keys, so it can't validate tokens per space. With Spaces enabled, IdentityServer determines the issuer per request and `IssuerUri` stays empty. The SCIM authority can't be derived from it, and startup fails when you don't set `Authority`. Setting `Authority` to the host root URL or to one space's issuer URL doesn't help: a fixed authority can't validate tokens issued by different spaces, and SCIM requests from those spaces can fail with `401` responses. Don't use the built-in SCIM authentication together with Spaces.
+
+### `groups` In Create And Replace Requests Is Rejected
+
+SCIM defines the User `groups` attribute as read-only, and clients such as Okta send `"groups": []` in create and replace requests. This version rejects these requests with `400` and `scimType: invalidPath`, because `groups` isn't defined in the profile schema. As a result, Okta can't create or replace users with its default settings.
+
+### Filtered PATCH Paths Are Rejected
+
+PATCH paths that contain a filter, such as `emails[type eq "work"].value`, return `400` with `scimType: invalidPath` and the detail `Complex filter path expressions are not supported.` Adding `emails` to the profile schema does not change this. Microsoft Entra ID uses this path in its default email mapping. See [Microsoft Entra ID](#microsoft-entra-id) for the mapping to use instead.
+
+### Group `externalId` PATCH Fails
+
+A PATCH operation with the path `externalId` on a group returns `400` with `scimType: invalidPath`. The PATCH stops at the first failed operation and applies none of the changes. Entra sends `Add externalId` followed by `Replace displayName` when you rename a group, so the rename fails. To avoid this, remove the `externalId` mapping from the group attribute mappings in Entra. This workaround hasn't been tested yet.
 
 ### Lookup By `userName` Returns No Result
 
