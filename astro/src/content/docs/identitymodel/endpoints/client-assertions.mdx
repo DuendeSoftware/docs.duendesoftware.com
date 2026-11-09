@@ -34,10 +34,10 @@ A JWT you use for client authentication follows
 [RFC 7523](https://datatracker.ietf.org/doc/html/rfc7523) and
 [RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html):
 
-- Put the authorization server's **issuer identifier** in `aud`, as the only
+* Put the authorization server's **issuer identifier** in `aud`, as the only
   value. Don't use the token endpoint URL or the pushed authorization request
   (PAR) endpoint URL.
-- Set the `typ` header to `client-authentication+jwt`, which the RFC recommends.
+* Set the `typ` header to `client-authentication+jwt`, which the RFC recommends.
 
 The same audience applies to PAR requests and token requests. If you use
 [`ClientAssertionFactory`](#clientassertionfactory), it's called for both, so
