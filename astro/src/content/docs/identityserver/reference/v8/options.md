@@ -106,22 +106,23 @@ Top-level settings. Available directly on the `IdentityServerOptions` object.
 
 - **`StrictClientAssertionAudienceValidation`**
 
-  When using [private key JWT](/identityserver/tokens/client-authentication.md#private-key-jwts)
-  client authentication, there is a theoretical vulnerability where a relying party trusting
-  multiple OpenID Providers could be attacked if one of those providers is malicious or compromised.
-  The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an explicit
-  `typ` header in the authentication JWT.
+  Controls audience and `typ` validation for [private key JWT](/identityserver/tokens/client-authentication.md#private-key-jwts)
+  client assertions, as described in
+  [RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html). Defaults to `false`.
 
-  Setting this flag to `true` strictly validates that the audience is equal to the issuer and
-  validates the token's `typ` header, as specified in
-  [RFC 7523 bis](https://datatracker.ietf.org/doc/draft-ietf-oauth-rfc7523bis/). Defaults to
-  `false`.
+  When `true`, the `aud` claim must be the issuer as its sole value (either a string or a
+  single-element array), and the `typ` header must be `client-authentication+jwt`.
 
-  When this flag is `false`, validation behavior is determined based on the `typ` header being
-  present. When the token sets the `typ` header to `client-authentication+jwt`, IdentityServer
-  assumes the client's intention is to apply strict audience validation. If `typ` is not present,
-  [default audience validation](/identityserver/apis/aspnetcore/jwt.md#adding-audience-validation)
-  is used.
+  When `false`, legacy audiences (the token, CIBA, and PAR endpoint URLs) are accepted, unless the
+  assertion sets the `typ` header to `client-authentication+jwt`, in which case strict validation
+  is applied to that token.
+
+  RFC 10070 recommends the `typ` header, but strict mode requires it. Strict mode also ignores a
+  trailing-slash difference when it compares the audience, so don't rely on that behavior.
+
+  Update your clients to send the issuer as the audience, with the `typ` header, before you enable
+  this option. For details, see
+  [Strict Audience Validation](/identityserver/tokens/client-authentication.md#strict-audience-validation).
 
 ## Key management
 

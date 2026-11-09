@@ -252,7 +252,7 @@ You can share the same key for client authentication and [signed authorize reque
 
 ### Authentication Using A Private Key JWT
 
-On the client side, the caller must first generate the JWT, and then send it on the `assertion` body field:
+On the client side, the caller must first generate the JWT, and then send it on the `client_assertion` body field:
 
 ```http request
 POST /connect/token
@@ -260,7 +260,7 @@ POST /connect/token
 Content-type: application/x-www-form-urlencoded
 
     client_assertion=<jwt>&
-    client_assertion_type=urn:ietf:params:oauth:grant-type:jwt-bearer&
+    client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&
 
     grant_type=authorization_code&
     code=hdh922&
@@ -388,33 +388,71 @@ JWT-based authentication (and signed authorize requests) in ASP.NET Core.
 
 ## Strict Audience Validation
 
-Private key JWTs have a theoretical vulnerability where a Relying Party trusting multiple
-OpenID Providers could be attacked if one of the OpenID Providers is malicious or compromised.
+[RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html) closes an audience confusion gap in JWT client
+authentication. If a client trusts several authorization servers and one of them is malicious or compromised, that server
+can trick the client into creating an assertion that another server accepts. The fix is to bind each assertion to
+exactly one authorization server.
 
-The attack relies on the OpenID Provider setting the audience value of the authentication JWT
-to the token endpoint based on the token endpoint value found in the discovery document.
-The malicious Open ID Provider can attack this because it controls what the discovery document
-contains, and can fool the Relying Party into creating authentication JWTs for the audience of
-a victim OpenID Provider.
+Here's what that means for the assertions your clients create:
 
-The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
-explicit `typ` header (with value `client-authentication+jwt`) in the authentication JWT.
+* Use the authorization server's issuer identifier as the only value in `aud`. Take it from the `issuer` value in the
+  server's discovery document. Don't use the token endpoint URL, even though that's where you send the assertion.
+* Apply the same rule to assertions you send to the pushed authorization request (PAR) endpoint.
+* Set the `typ` header to `client-authentication+jwt`. The RFC recommends this header, and advises servers not to reject
+  a JWT only because it's untyped.
 
-You can enable strict audience validation by setting [`StrictClientAssertionAudienceValidation`](/identityserver/reference/v8/options.md#main)
-to `true`. When enabled, IdentityServer strictly validates that the audience is equal to the issuer identifier and validates the token's
-`typ` header, as specified in [RFC 7523 bis](https://datatracker.ietf.org/doc/draft-ietf-oauth-rfc7523bis/).
+This only applies to client authentication. JWT authorization grants (the `jwt-bearer` grant type) work differently, and
+their audience can still be the issuer or the token endpoint.
 
-`StrictClientAssertionAudienceValidation` defaults to `false`. When `false`, IdentityServer accepts the following legacy audience values in addition to the issuer identifier:
+### IdentityServer Behavior
 
+Strict validation is off by default in both v7 and v8. It applies to an assertion when you enable the option, or when the
+assertion has the `typ` header `client-authentication+jwt`. In the second case, IdentityServer assumes the client wants
+strict validation and applies it to that token.
+
+#### IdentityServer v8
+
+The [`StrictClientAssertionAudienceValidation`](/identityserver/reference/v8/options.md#main) option on
+`IdentityServerOptions` defaults to `false`.
+
+When strict validation doesn't apply, IdentityServer accepts these legacy audience values:
+
+* The issuer identifier
+* The issuer identifier followed by `/connect/token`
 * The token endpoint URL
 * The CIBA endpoint URL
 * The PAR endpoint URL
 
-When `StrictClientAssertionAudienceValidation` is `false`, validation behavior is also determined based
-on the `typ` header being present. When the token sets the `typ` header to `client-authentication+jwt`,
-IdentityServer assumes the client's intention is to apply strict audience validation.
-If `typ` is not present, [default audience validation](/identityserver/apis/aspnetcore/jwt.md#adding-audience-validation)
-is used.
+This mode exists for compatibility. It doesn't enforce an issuer-only audience, and it also accepts `aud` arrays,
+including arrays with more than one element.
+
+When strict validation applies, either through the option or the `typ` header:
+
+* `aud` must be the issuer identifier, as a string or as a single-element array. Arrays with more than one element are rejected.
+* The `typ` header must be `client-authentication+jwt`. The RFC only recommends this header, but IdentityServer's strict
+  mode requires it.
+
+#### IdentityServer v7
+
+In v7, the option is a preview feature named `options.Preview.StrictClientAssertionAudienceValidation`. It defaults to
+`false`, so if you haven't opted in, you get the legacy audience behavior.
+
+When strict validation applies, `aud` must be a string that equals the issuer identifier. Arrays aren't accepted, not even
+single-element ones, and the `typ` header must be `client-authentication+jwt`. See the
+[upgrade guide](/identityserver/upgrades/v7_4-to-v8_0.md) for how the option moves in v8.
+
+:::caution
+IdentityServer's strict mode requires the `typ` header, although RFC 10070 recommends accepting otherwise-valid assertions
+without it. In v8, audience comparison also treats issuers with and without a trailing slash as equivalent, whereas the RFC
+describes an exact string comparison. Send the issuer exactly as it appears in the discovery document rather than relying
+on that tolerance.
+
+If you use FAPI 2.0, send `aud` as a string. That profile doesn't allow the single-element arrays that v8 accepts.
+:::
+
+When you roll this out, update your clients first, as [RFC 10070 section 6](https://www.rfc-editor.org/rfc/rfc10070.html)
+suggests. Otherwise, clients that still send an endpoint URL as the audience will stop authenticating once you enable the
+option on the server.
 
 ### Mutual TLS Client Certificates
 

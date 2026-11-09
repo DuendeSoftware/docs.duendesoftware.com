@@ -784,13 +784,9 @@ discovery document or implement a custom _`IDiscoveryResponseGenerator`_.
 
 #### Strict Audience Validation
 
-When using [_private key JWT_](/identityserver/tokens/client-authentication.md#private-key-jwts),
-there is a theoretical vulnerability where a Relying Party trusting multiple OpenID Providers
-could be attacked if one of the OpenID Providers is malicious or compromised.
-
-The OpenID Foundation proposed a two-part fix: strictly validate the audience and set an
-explicit `typ` header in the authentication JWT.
+For [private key JWTs](/identityserver/tokens/client-authentication.md#private-key-jwts), [RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html) requires the authorization
+server's issuer identifier as the only audience and recommends setting the `typ` header to `client-authentication+jwt`.
 
 You can [enable strict audience validation in Duende IdentityServer](/identityserver/tokens/client-authentication.md#strict-audience-validation)
 using the _`StrictClientAssertionAudienceValidation`_ flag, which strictly validates that
-the audience is equal to the issuer and validates the token's `typ` header.
+the audience is equal to the issuer. The strict validator also requires the token's `typ` header.

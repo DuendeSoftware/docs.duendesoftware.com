@@ -58,6 +58,11 @@ Using PAR is similar to other flows that use the authorization endpoint, but it 
 a new protocol endpoint for pushed authorization requests. This endpoint requires client authentication and accepts
 POSTed form-urlencoded data containing all the same parameters that are accepted at the authorize endpoint.
 
+If you authenticate with a JWT client assertion (`private_key_jwt`), use the authorization server's issuer identifier
+as the only audience, as [RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html) requires. Don't use the PAR endpoint
+URL. Set the `typ` header to `client-authentication+jwt` as well. IdentityServer still accepts the PAR endpoint URL as the
+audience until strict validation applies. See [Strict Audience Validation](/identityserver/tokens/client-authentication.md#strict-audience-validation).
+
 The result of the PAR request is JSON containing an identifier (the `request_uri` property) and expiration information (
 the `expires_in` property). Clients then send that identifier to the authorize endpoint instead of the parameters that
 were just pushed. From there, the OAuth or OIDC flow continues as normal. For example, in the authorization code flow,
