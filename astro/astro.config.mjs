@@ -40,10 +40,10 @@ const products = [
       { version: "8.1", preview: true },
       { version: "8.0" },
       { version: "7.4" },
-      { version: "7.3" },
-      { version: "7.2" },
-      { version: "7.1" },
-      { version: "7.0" },
+      { version: "7.3", unsupported: true },
+      { version: "7.2", unsupported: true },
+      { version: "7.1", unsupported: true },
+      { version: "7.0", unsupported: true },
       { version: "6.3", unsupported: true },
       { version: "6.2", unsupported: true },
       { version: "6.1", unsupported: true },
@@ -53,32 +53,50 @@ const products = [
       { version: "5.0", unsupported: true },
     ],
   },
-  { key: "bff", label: "BFF Security Framework", shortName: "BFF", upgrades: "/bff/upgrading/", versions: [
-    { version: "4.3" },
-    { version: "4.2" },
-    { version: "4.1" },
-    { version: "4.0" },
-    { version: "3.1" },
-    { version: "3.0" }
-  ] },
-  { key: "accesstokenmanagement", label: "Access Token Management", versions: [
-    { version: "4.3" },
-    { version: "4.2" },
-    { version: "4.1" },
-    { version: "4.0" },
-    { version: "3.3" },
-    { version: "3.2" },
-    { version: "3.1" },
-    { version: "3.0" }
-  ] },
-  { key: "identitymodel", label: "IdentityModel", versions: [
-    { version: "8.1" },
-    { version: "8.0" },
-    { version: "7.1" },
-    { version: "7.0" }
-  ] },
+  {
+    key: "bff",
+    label: "BFF Security Framework",
+    shortName: "BFF",
+    upgrades: "/bff/upgrading/",
+    versions: [
+      { version: "4.3" },
+      { version: "4.2" },
+      { version: "4.1" },
+      { version: "4.0" },
+      { version: "3.1" },
+      { version: "3.0" },
+    ],
+  },
+  {
+    key: "accesstokenmanagement",
+    label: "Access Token Management",
+    versions: [
+      { version: "4.3" },
+      { version: "4.2" },
+      { version: "4.1" },
+      { version: "4.0" },
+      { version: "3.3" },
+      { version: "3.2" },
+      { version: "3.1" },
+      { version: "3.0" },
+    ],
+  },
+  {
+    key: "identitymodel",
+    label: "IdentityModel",
+    versions: [
+      { version: "8.1" },
+      { version: "8.0" },
+      { version: "7.1" },
+      { version: "7.0" },
+    ],
+  },
   { key: "identitymodel-oidcclient", label: "IdentityModel.OidcClient" },
-  { key: "introspection", label: "ASP.NET Core Introspection", shortName: "Introspection" },
+  {
+    key: "introspection",
+    label: "ASP.NET Core Introspection",
+    shortName: "Introspection",
+  },
 ];
 
 // Sidebar topics (top-of-sidebar switcher): General Information plus one per product.
