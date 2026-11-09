@@ -1,7 +1,8 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
+import type { StarlightIcon } from "@astrojs/starlight/types";
 
-const steps = [
+const steps: { href: string; icon: StarlightIcon; title: string; detail: string }[] = [
   {
     href: "/protocols/basics/which-oauth-flow/",
     icon: "random",

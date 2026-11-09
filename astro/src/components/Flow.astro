@@ -21,7 +21,7 @@ if (!flow) throw new Error('[protocols] <Flow> needs a flow or a page');
 flow = flowSchema.parse(flow);
 ---
 <flow-stepper data-embed={page ? '' : undefined}>
-	<FlowFrame flow={flow} />
+	<FlowFrame flow={flow} embed={!!page} />
 	{page && <p class="flow-embed"><a href={`/protocols/${page}/`}>Learn how the protocol works<Icon name="right-arrow" class="fl-ico" /></a></p>}
 </flow-stepper>
 <script>
