@@ -3,8 +3,9 @@
 // All steps and cards are in the server HTML; flow.ts shows one card at a time.
 import { Icon } from '@astrojs/starlight/components';
 import type { Flow } from '../../lib/protocols/schema';
-interface Props { flow: Flow }
+interface Props { flow: Flow; embed?: boolean }
 const { actors, steps } = Astro.props.flow;
+const { embed = false } = Astro.props;
 const n = actors.length;
 const idx = (a: string) => actors.findIndex((x) => x.name === a);
 const via = { front: 'through the browser', back: 'direct', internal: '' };
@@ -31,7 +32,7 @@ const geo = steps.map((s) => {
 		<div class="fl-lives" aria-hidden="true">{actors.map((_, i) => <i style={`--i:${i}`}></i>)}</div>
 		<ol class="fl-rows">
 			{steps.map((s, i) => (
-				<li class={`ch-${s.channel}`} data-step={i} data-from={idx(s.from)} data-to={idx(s.to)} data-path={pathOf(s)}>
+				<li id={embed ? undefined : `step-${i + 1}`} class={`ch-${s.channel}`} data-step={i} data-from={idx(s.from)} data-to={idx(s.to)} data-path={pathOf(s)}>
 					<div class="fl-row">
 						<button type="button" class="fl-n" aria-label={`Step ${i + 1}: ${s.title}, ${pathOf(s)}`}>{i + 1}</button>
 						<div class={`fl-span${geo[i].self ? ' self' : ''}${geo[i].rev ? ' rev' : ''}`} style={geo[i].style}>
