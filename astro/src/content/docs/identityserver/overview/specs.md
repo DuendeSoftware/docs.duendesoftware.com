@@ -30,30 +30,31 @@ Duende IdentityServer implements the following specifications:
 
 ## OAuth 2.x
 
-| Specification                                                                    | Reference                                                 |
-|----------------------------------------------------------------------------------|-----------------------------------------------------------|
-| OAuth 2.0                                                                        | [RFC 6749](https://tools.ietf.org/html/rfc6749)           |
-| OAuth 2.0 Bearer Token Usage                                                     | [RFC 6750](https://tools.ietf.org/html/rfc6750)           |
-| JSON Web Token (JWT)                                                             | [RFC 7519](https://tools.ietf.org/html/rfc7519)           |
-| OAuth 2.0 Token Revocation                                                       | [RFC 7009](https://tools.ietf.org/html/rfc7009)           |
-| OAuth 2.0 Token Introspection                                                    | [RFC 7662](https://tools.ietf.org/html/rfc7662)           |
-| Proof Key for Code Exchange by OAuth Public Clients (PKCE)                       | [RFC 7636](https://tools.ietf.org/html/rfc7636)           |
-| Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants | [RFC 7521](https://tools.ietf.org/html/rfc7521)           |
-| OAuth 2.0 JSON Web Tokens for Client Authentication                              | [RFC 7523](https://tools.ietf.org/html/rfc7523) and [RFC 7523bis](https://www.ietf.org/archive/id/draft-ietf-oauth-rfc7523bis-11.html) |
-| OAuth 2.0 Device Authorization Grant                                             | [RFC 8628](https://tools.ietf.org/html/rfc8628)           |
-| Proof-of-Possession Key Semantics for JSON Web Tokens                            | [RFC 7800](https://tools.ietf.org/html/rfc7800)           |
-| OAuth 2.0 Mutual TLS Client Authentication and Certificate-Bound Access Tokens   | [RFC 8705](https://tools.ietf.org/html/rfc8705)           |
-| OAuth 2.0 Token Exchange                                                         | [RFC 8693](https://tools.ietf.org/html/rfc8693)           |
-| JWT Secured Authorization Request (JAR)                                          | [RFC 9101](https://datatracker.ietf.org/doc/html/rfc9101) |
-| JWT Profile for OAuth 2.0 Access Tokens                                          | [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068) |
-| OAuth 2.0 Authorization Server Issuer Identifier in Authorization Response       | [RFC 9207](https://datatracker.ietf.org/doc/html/rfc9207) |
-| OAuth 2.0 Step-up Authentication Challenge Protocol                              | [RFC 9470](https://datatracker.ietf.org/doc/html/rfc9470) |
-| OAuth 2.0 Dynamic Client Registration Protocol                                   | [RFC 7591](https://www.rfc-editor.org/rfc/rfc7591)        |
-| OAuth 2.0 Pushed Authorization Requests                                          | [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126)        |
-| Resource Indicators for OAuth 2.0                                                | [RFC 8707](https://tools.ietf.org/html/rfc8707)           |
-| OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer (DPoP)      | [RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449) |
-| JSON Web Token (JWT) Response for OAuth Token Introspection                      | [RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html)   |
-| OAuth 2.0 Authorization Server Metadata                                          | [RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414) |
+| Specification                                                                                             | Reference                                                                                                                             |
+|-----------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| OAuth 2.0                                                                                                 | [RFC 6749](https://tools.ietf.org/html/rfc6749)                                                                                       |
+| OAuth 2.0 Bearer Token Usage                                                                              | [RFC 6750](https://tools.ietf.org/html/rfc6750)                                                                                       |
+| JSON Web Token (JWT)                                                                                      | [RFC 7519](https://tools.ietf.org/html/rfc7519)                                                                                       |
+| OAuth 2.0 Token Revocation                                                                                | [RFC 7009](https://tools.ietf.org/html/rfc7009)                                                                                       |
+| OAuth 2.0 Token Introspection                                                                             | [RFC 7662](https://tools.ietf.org/html/rfc7662)                                                                                       |
+| Proof Key for Code Exchange by OAuth Public Clients (PKCE)                                                | [RFC 7636](https://tools.ietf.org/html/rfc7636)                                                                                       |
+| Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants                          | [RFC 7521](https://tools.ietf.org/html/rfc7521)                                                                                       |
+| OAuth 2.0 JSON Web Tokens for Client Authentication                                                       | [RFC 7523](https://tools.ietf.org/html/rfc7523) and [RFC 7523bis](https://www.ietf.org/archive/id/draft-ietf-oauth-rfc7523bis-11.html) |
+| OAuth 2.0 Device Authorization Grant                                                                      | [RFC 8628](https://tools.ietf.org/html/rfc8628)                                                                                       |
+| Proof-of-Possession Key Semantics for JSON Web Tokens                                                     | [RFC 7800](https://tools.ietf.org/html/rfc7800)                                                                                       |
+| OAuth 2.0 Mutual TLS Client Authentication and Certificate-Bound Access Tokens                            | [RFC 8705](https://tools.ietf.org/html/rfc8705)                                                                                       |
+| OAuth 2.0 Token Exchange                                                                                  | [RFC 8693](https://tools.ietf.org/html/rfc8693)                                                                                       |
+| JWT Secured Authorization Request (JAR)                                                                   | [RFC 9101](https://datatracker.ietf.org/doc/html/rfc9101)                                                                             |
+| JWT Profile for OAuth 2.0 Access Tokens                                                                   | [RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068)                                                                             |
+| OAuth 2.0 Authorization Server Issuer Identifier in Authorization Response                                | [RFC 9207](https://datatracker.ietf.org/doc/html/rfc9207)                                                                             |
+| OAuth 2.0 Step-up Authentication Challenge Protocol                                                       | [RFC 9470](https://datatracker.ietf.org/doc/html/rfc9470)                                                                             |
+| OAuth 2.0 Dynamic Client Registration Protocol                                                            | [RFC 7591](https://www.rfc-editor.org/rfc/rfc7591)                                                                                    |
+| OAuth 2.0 Pushed Authorization Requests                                                                   | [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126)                                                                                    |
+| Resource Indicators for OAuth 2.0                                                                         | [RFC 8707](https://tools.ietf.org/html/rfc8707)                                                                                       |
+| OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer (DPoP)                               | [RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449)                                                                             |
+| JSON Web Token (JWT) Response for OAuth Token Introspection                                               | [RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html)                                                                               |
+| OAuth 2.0 Authorization Server Metadata                                                                   | [RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414)                                                                             |
+| Updates to OAuth 2.0 JSON Web Token (JWT) Client Authentication and Assertion-Based Authorization Grants  | [RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html)                                                                             |
 
 ## SAML
 
