@@ -64,6 +64,8 @@ class FlowStepper extends HTMLElement {
 		});
 		const h = !embed && /^#step-(\d+)$/.exec(location.hash);
 		go(h ? +h[1] - 1 : 0, false);
+		// A shared #step-N link (or Back to the diagram opened in a new tab): bring that step into view.
+		if (h) requestAnimationFrame(() => rows[this.#i].scrollIntoView({ block: 'center' }));
 	}
 	// Full protocols pages only: 'Details ↓' links to the k-th "###" heading under the H2 ending in "Step by Step" (matched
 	// case-insensitively), and each step section gets a link back to the diagram at that step.
