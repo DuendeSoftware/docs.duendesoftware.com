@@ -1,7 +1,7 @@
 ---
 title: "Licensing"
 description: "Details about Duende IdentityServer and BFF licensing requirements, editions, configuration options, and trial mode functionality."
-date: 2026-05-29
+date: 2026-11-10
 sidebar:
   order: 1
 tableOfContents:
@@ -162,6 +162,7 @@ environment, a warning is logged instead and startup continues.
 * [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
 * [Automatic Key Management](/identityserver/fundamentals/key-management.md)
 * [SAML Identity Provider](/identityserver/saml/index.mdx)
+* [Spaces](/identityserver/spaces/index.mdx) (IdentityServer 8.1 and later)
 
 The SAML Service Provider is different: if a configured license lacks the SAML Service Provider entitlement,
 IdentityServer logs a warning when a SAML Service Provider endpoint is requested, and the endpoint returns
@@ -221,7 +222,7 @@ The only difference you will notice is that IdentityServer logs messages about t
   Please start a conversation with us: https://duende.link/l/contact
   ```
 * A warning for licensed counts, such as the number of clients (Connected Applications), issuers,
-  or SAML service providers and identity providers:
+  SAML service providers and identity providers, or spaces:
   ```text
   {EntitlementName} detected ({Actual} registered) but no Duende license is configured.
   Please start a conversation with us: https://duende.link/l/contact
