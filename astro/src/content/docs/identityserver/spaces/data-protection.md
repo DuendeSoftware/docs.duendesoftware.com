@@ -56,7 +56,9 @@ the fallback would accept the unpartitioned value from both. Spaces has no runti
 ## Which Providers Are Partitioned
 
 Spaces partitions only the non-keyed `IDataProtectionProvider` registration, and specifically the last one. Keyed
-`IDataProtectionProvider` registrations and providers set on authentication scheme options aren't partitioned.
+`IDataProtectionProvider` registrations and independently created providers (for example, from
+`DataProtectionProvider.Create(...)`) aren't automatically partitioned. Assigning the app's registered provider to
+authentication scheme options doesn't remove its partitioning.
 
 Register the provider once, before you call `AddSpaces`. Spaces replaces that registration with a singleton that builds
 your original provider once, so how you register it matters:
