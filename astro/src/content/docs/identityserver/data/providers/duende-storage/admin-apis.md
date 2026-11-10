@@ -1,7 +1,7 @@
 ---
 title: "Configuration Admin APIs"
 description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende Storage admin APIs"
-date: 2026-11-02
+date: 2026-11-10
 sidebar:
   label: "Admin APIs"
   order: 30
@@ -29,18 +29,22 @@ require a dedicated administrative policy, validate anti-forgery protections for
 Each service supports create, get, update, query and delete operations. You can also get a client by its `client_id`
 with `IClientAdmin.GetByClientIdAsync`. The API scope, API resource and identity resource services get an entity by name
 with `GetByNameAsync`. `IIdentityProviderAdmin` gets a provider by its scheme with `GetBySchemeAsync`, and
-`ISamlServiceProviderAdmin` gets a service provider by its SAML entity ID with `GetByEntityIdAsync`. Resolve the service from a dependency injection
-scope, such as an authorized endpoint or a scoped application service.
+`ISamlServiceProviderAdmin` gets a service provider by its SAML entity ID with `GetByEntityIdAsync`.
 
 IdentityServer serves this configuration at runtime from the storage-backed stores that `AddConfigurationStorage`
 registers. It reads clients through `IClientStore` and `ICorsPolicyService`. It reads API scopes, API resources and
-identity resources through `IResourceStore`. Changes you make with the admin APIs need no separate synchronization step.
+identity resources through `IResourceStore`.
 
 :::note[Admin APIs Require Duende Storage]
 The admin interfaces `IClientAdmin`, `IApiScopeAdmin`, `IApiResourceAdmin`, `IIdentityResourceAdmin`,
 `IIdentityProviderAdmin` and `ISamlServiceProviderAdmin` only work when you store configuration with Duende Storage. If you
 use the in-memory stores or the Entity Framework stores, resolving one of these services throws a `NotSupportedException`.
-The exception message says that admin services require `AddConfigurationStorage()`.
+The message names the interface and the store you use, for example `IClientAdmin is not supported when using in-memory
+stores.` It ends with `Admin services are only available when configuration is registered via AddStorage().`
+
+`AddStorage(...)` registers the database. The call that registers the admin services is
+[`AddConfigurationStorage()`](/identityserver/data/providers/duende-storage/getting-started.md#configuration-stores), so
+call both.
 :::
 
 ## Create Configuration
@@ -54,12 +58,13 @@ clients that use them.
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.ApiScopes;
+using Duende.Storage;
 
-static Task<SaveResult<Guid>> CreateApiScope(
+static Task<SaveResult<ApiScopeId>> CreateApiScope(
     IApiScopeAdmin admin,
     CancellationToken ct) =>
     admin.CreateAsync(
-        new ApiScopeConfiguration
+        new CreateApiScope
         {
             Name = "inventory.read",
             DisplayName = "Read inventory"
@@ -73,12 +78,13 @@ static Task<SaveResult<Guid>> CreateApiScope(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.ApiResources;
+using Duende.Storage;
 
-static Task<SaveResult<Guid>> CreateApiResource(
+static Task<SaveResult<ApiResourceId>> CreateApiResource(
     IApiResourceAdmin admin,
     CancellationToken ct) =>
     admin.CreateAsync(
-        new ApiResourceConfiguration
+        new CreateApiResource
         {
             Name = "inventory",
             DisplayName = "Inventory API",
@@ -93,12 +99,13 @@ static Task<SaveResult<Guid>> CreateApiResource(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.IdentityResources;
+using Duende.Storage;
 
-static Task<SaveResult<Guid>> CreateIdentityResource(
+static Task<SaveResult<IdentityResourceId>> CreateIdentityResource(
     IIdentityResourceAdmin admin,
     CancellationToken ct) =>
     admin.CreateAsync(
-        new IdentityResourceConfiguration
+        new CreateIdentityResource
         {
             Name = "employee_profile",
             DisplayName = "Employee profile",
@@ -113,8 +120,9 @@ static Task<SaveResult<Guid>> CreateIdentityResource(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.Clients;
+using Duende.Storage;
 
-static Task<SaveResult<Guid>> CreateClient(
+static Task<SaveResult<ClientId>> CreateClient(
     IClientAdmin admin,
     CancellationToken ct) =>
     admin.CreateAsync(
@@ -137,7 +145,7 @@ static Task<SaveResult<Guid>> CreateClient(
         ct);
 ```
 
-The API hashes plaintext client and API secret values before storage. Read secrets from a secret manager, never source
+The API hashes plaintext shared secret values before storage (see the secret types below). Read secrets from a secret manager, never source
 control or application configuration committed with your code. Secret values are not returned by read operations.
 
 ### Manage Secrets
@@ -178,8 +186,8 @@ static async Task<SaveResult<SecretId>> RotateClientSecret(
 and the plaintext value. It also takes an optional hash algorithm, description, expiration, and secret type. It returns an
 `ApiResourceSecretId`.
 
-`SharedSecret` values and custom secret types are hashed before storage. The built-in key and certificate types
-(X.509 thumbprint, X.509 name, X.509 base64 certificate, and JSON Web Key) are stored verbatim, so you must supply
+`SharedSecret` values and custom secret types are hashed with SHA-256, or SHA-512 when you pick it, before storage.
+The `X509Thumbprint`, `X509Name`, `X509CertificateBase64`, and `JWK` types are stored verbatim, so you must supply
 appropriate material for them.
 
 ### Dynamic Identity Provider
@@ -188,34 +196,40 @@ appropriate material for them.
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.IdentityProviders;
+using Duende.Storage;
+using Duende.Storage.EntityAttributeValue;
 
-static Task<SaveResult<Guid>> CreateIdentityProvider(
+static Task<SaveResult<IdentityProviderId>> CreateIdentityProvider(
     IIdentityProviderAdmin admin,
     string clientSecret,
-    CancellationToken ct) =>
-    admin.CreateAsync(
-        new IdentityProviderConfiguration
-        {
-            Scheme = "corporate-oidc",
-            DisplayName = "Corporate sign-in",
-            Type = "oidc",
-            Properties = new Dictionary<string, string>
-            {
-                ["Authority"] = "https://login.example.com",
-                ["ClientId"] = "identityserver",
-                ["ClientSecret"] = clientSecret
-            }
-        },
-        ct);
+    CancellationToken ct)
+{
+    var provider = new CreateIdentityProvider
+    {
+        Scheme = "corporate-oidc",
+        DisplayName = "Corporate sign-in",
+        Type = "oidc"
+    };
+
+    provider.ExtendedProperties.Set(AttributeCode.Create("Authority"), "https://login.example.com");
+    provider.ExtendedProperties.Set(AttributeCode.Create("ClientId"), "identityserver");
+    provider.ExtendedProperties.Set(AttributeCode.Create("ClientSecret"), clientSecret);
+
+    return admin.CreateAsync(provider, ct);
+}
 ```
 
-Register the corresponding dynamic provider type and supply all protocol-specific properties it requires. Read
-`clientSecret` from a secure source, such as Azure Key Vault. IdentityServer validates the configuration before storing it.
+Dynamic identity provider settings are extended properties. Register the corresponding dynamic provider, such as
+`AddOidcDynamicProvider()`, so that the matching schema is available, and set every property the provider type requires.
+The built-in OIDC schema defines `Authority`, `ClientId`, `ClientSecret`, `ResponseType`, `Scope`,
+`GetClaimsFromUserInfoEndpoint`, and `UsePkce`. See [data extension schemas](/identityserver/data/providers/duende-storage/schemas.md)
+for details. Read `clientSecret` from a secure source, such as Azure Key Vault. IdentityServer validates the configuration
+before storing it.
 
 :::caution[Protect Recoverable Identity Provider Secrets]
 Client and API resource secrets accepted by their dedicated admin APIs are one-way hashed before storage. Dynamic identity
 provider properties are different: IdentityServer needs the original values at runtime, so a property such as
-`ClientSecret` is stored in the entity payload without hashing or Duende Storage field-level encryption.
+`ClientSecret` is stored in the entity payload without hashing.
 
 Use encrypted database connections, database encryption at rest, restricted database access and protected backups. Do not
 grant direct read access to the configuration store as a substitute for an authorized administration API.
@@ -228,12 +242,13 @@ grant direct read access to the configuration store as a substitute for an autho
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.SamlServiceProviders;
 using Duende.IdentityServer.Models;
+using Duende.Storage;
 
-static Task<SaveResult<Guid>> CreateSamlServiceProvider(
+static Task<SaveResult<SamlServiceProviderId>> CreateSamlServiceProvider(
     ISamlServiceProviderAdmin admin,
     CancellationToken ct) =>
     admin.CreateAsync(
-        new SamlServiceProviderConfiguration
+        new CreateSamlServiceProvider
         {
             EntityId = "https://service-provider.example.com",
             DisplayName = "Example service provider",
@@ -251,10 +266,15 @@ static Task<SaveResult<Guid>> CreateSamlServiceProvider(
         ct);
 ```
 
+Service provider certificates are public key material. Set them with `SamlCertificateInput`, which takes the
+DER-encoded certificate as a base64 string in `Base64Data` and a `Use` value that defaults to `KeyUse.Signing`.
+The admin strips any private key material. On read, each `SamlCertificateConfiguration` returns the full certificate data,
+plus `Subject`, `Thumbprint`, and `NotAfter`. Certificates are a full-replace list on update, so submit an existing
+certificate with its `Id` to keep it. A certificate with an empty `Id` is added as new.
+
 To validate SAML service provider configuration with your own rules, implement `ISamlServiceProviderConfigurationValidator`
-and register it with `AddSamlServiceProviderConfigurationValidator<T>()`. IdentityServer runs the validator when it loads
-service providers from the store and when you save one through `ISamlServiceProviderAdmin`. The registration replaces the
-default validator. Call `SetError` on the context to reject a configuration. The message appears in the validation
+and register it with `AddSamlServiceProviderConfigurationValidator<T>()`. IdentityServer runs the validator when you save a
+service provider through `ISamlServiceProviderAdmin`. The registration replaces the default validator. Call `SetError` on the context to reject a configuration. The message appears in the validation
 errors of the `SaveResult`.
 
 ```csharp
@@ -288,16 +308,20 @@ need those checks, derive from `DefaultSamlServiceProviderConfigurationValidator
 
 ## Handle Results And Updates
 
-Create, update and delete operations return `SaveResult<TId>`. Check `IsSuccess` before using `Id` or `Version`; failed
+Create, update and delete operations return `SaveResult<TId>`, where `TId` is the typed ID of the entity, such as
+`ApiScopeId` or `ClientId`. Check `IsSuccess` before using `Id` or `Version`. Failed
 results contain structured `Errors`. Get operations return `GetResult<T>`, whose `Found` property tells you whether `Item`
 and `Version` are available.
 
-Updates require the version returned by the preceding create or get operation:
+Updates take an `Update...` model and the version returned by the preceding create or get operation. Call `ToUpdate()` on the
+configuration you read to get a mutable copy:
 
 ```csharp
 // ConfigurationAdmin.cs
+using Duende.IdentityServer.Admin.ApiScopes;
+
 // ID returned by a previous CreateAsync or QueryAsync call.
-var scopeId = new Guid("0198f3a4-5760-7000-8000-000000000001");
+ApiScopeId scopeId = /* ... */;
 var current = await apiScopes.GetAsync(scopeId, ct);
 
 if (!current.Found)
@@ -305,17 +329,18 @@ if (!current.Found)
     throw new InvalidOperationException("The API scope does not exist.");
 }
 
-current.Item.DisplayName = "Inventory read access";
+var update = current.Item.ToUpdate();
+update.DisplayName = "Inventory read access";
 
 var updated = await apiScopes.UpdateAsync(
     scopeId,
-    current.Item,
+    update,
     current.Version,
     ct);
 
 if (!updated.IsSuccess)
 {
-    throw new InvalidOperationException(updated.Errors.ToString());
+    throw new InvalidOperationException(string.Join("; ", updated.Errors.Select(e => e.Message)));
 }
 ```
 
@@ -342,19 +367,35 @@ foreach (var scope in page.Items)
 }
 ```
 
-The filters for each service support these properties:
+The filters for each service support these properties. Properties you leave `null` do not filter.
 
-| Filter                   | Properties                | Sort fields (enum)                       |
-| ------------------------ | ------------------------- | ---------------------------------------- |
-| `ApiScopeFilter`         | `Name`, `Enabled`         | `ApiScopeSortField`: `Name`, `Enabled`   |
-| `ApiResourceFilter`      | `Name`, `Scope`, `Enabled` | `ApiResourceSortField`: `Name`, `Enabled` |
-| `IdentityResourceFilter` | `Name`, `Enabled`         | `IdentityResourceSortField`: `Name`, `Enabled` |
+| Filter                       | Properties                                                      | Sort fields                                          |
+| ---------------------------- | --------------------------------------------------------------- | ---------------------------------------------------- |
+| `ApiScopeFilter`             | `Name`, `Enabled`                                               | `ApiScopeSortField`: `Name`, `Enabled`               |
+| `ApiResourceFilter`          | `Name`, `Scope`, `Enabled`                                      | `ApiResourceSortField`: `Name`, `Enabled`            |
+| `IdentityResourceFilter`     | `Name`, `Enabled`                                               | `IdentityResourceSortField`: `Name`, `Enabled`       |
+| `ClientFilter`               | `ClientId`, `ClientName`, `Enabled`, `GrantType`, `AllowedScope` | `ClientSortField`: `ClientId`, `ClientName`, `Enabled` |
+| `IdentityProviderFilter`     | `Scheme`, `DisplayName`, `Enabled`, `Type`                      | `IdentityProviderSortField`: `Scheme`, `DisplayName`, `Enabled`, `Type` |
+| `SamlServiceProviderFilter`  | `EntityId`, `DisplayName`, `Enabled`                            | `SamlServiceProviderSortField`: `EntityId`, `DisplayName`, `Enabled` |
 
-`ApiResourceFilter.Scope` returns API resources that reference a matching scope name. Each `ApiResourceListItem` also
-reports its `ScopeCount`.
+`ApiResourceFilter.Scope` returns API resources that list exactly that scope name. `ClientFilter.GrantType` returns
+clients that list exactly that grant type, and `ClientFilter.AllowedScope` returns clients that list exactly that scope.
+These three comparisons ignore case. The other string properties match any value that contains the text you provide,
+ignoring case. `Enabled` matches exactly. Multiple properties combine with AND.
 
-Filters can use contains matching, so compare a returned business identifier exactly when you need one specific entity.
-Use the continuation tokens on `QueryResult<T>` to retrieve additional pages.
+Each service returns its own list item type. These carry the typed ID and a few summary values, not the full configuration:
+
+| List item                      | Notable properties                                                               |
+| ------------------------------ | -------------------------------------------------------------------------------- |
+| `ApiResourceListItem`          | `Id`, `Name`, `DisplayName`, `Enabled`, `Description`, `ScopeCount`              |
+| `ClientListItem`               | `Id`, `ClientId`, `ClientName`, `Enabled`, `Description`, `AllowedGrantTypes`, `AllowedScopeCount`, `RedirectUriCount` |
+| `IdentityProviderListItem`     | `Id`, `Scheme`, `DisplayName`, `Enabled`, `Type`                                 |
+| `SamlServiceProviderListItem`  | `Id`, `EntityId`, `DisplayName`, `Enabled`, `Description`, `CertificateCount`, `AllowedScopeCount` |
+
+Call `GetAsync`, or the matching get-by-identifier method, when you need the full configuration.
+
+Because text properties match substrings, compare a returned business identifier exactly when you need one specific
+entity. Use the continuation tokens on `QueryResult<T>` to retrieve additional pages.
 
 Delete an entity by its storage ID:
 
@@ -364,7 +405,7 @@ var deleted = await apiScopes.DeleteAsync(scopeId, ct);
 
 if (!deleted.IsSuccess)
 {
-    throw new InvalidOperationException(deleted.Errors.ToString());
+    throw new InvalidOperationException(string.Join("; ", deleted.Errors.Select(e => e.Message)));
 }
 ```
 
