@@ -161,7 +161,8 @@ app.Run();
 ```
 
 If another middleware reads tenant-specific data, place it after `UseSpaceResolution`. You can inject
-`ISpaceContextAccessor` into scoped services and call `GetSpaceId()` after resolution.
+`ISpaceContextAccessor` into scoped services and call `GetSpaceId()` after resolution. See
+[Reading And Setting The Current Space](/identityserver/spaces/space-context.md) for the other members and for `ISpaceStore`.
 
 Replace `203.0.113.42` with your proxy's address or configure an appropriate trusted network. Only accept forwarded
 headers from expected proxies or networks. An untrusted forwarded host or protocol can otherwise influence which security
