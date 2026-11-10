@@ -14,12 +14,34 @@ import Version from "~/components/Version.astro";
 
 **Client assertions** are an alternative to client secrets for authenticating
 confidential clients at token endpoints. Instead of sending a shared secret,
-the client creates a signed JWT (or SAML assertion) and includes it in the
+the client creates a signed JWT and includes it in the
 request. This is defined in
 [RFC 7523: JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication](https://datatracker.ietf.org/doc/html/rfc7523)
 and is commonly known as the `private_key_jwt` or `client_secret_jwt`
 authentication methods defined in
 [OpenID Connect Core §9](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication).
+
+:::note
+Don't use SAML bearer assertions for client authentication in new applications.
+[RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html#section-3) rules this out.
+If you already use them, you can decide whether to migrate. This only concerns client
+authentication. SAML single sign-on and the SAML bearer authorization grant aren't affected.
+:::
+
+### Audience and type of client authentication JWTs
+
+A JWT you use for client authentication follows
+[RFC 7523](https://datatracker.ietf.org/doc/html/rfc7523) and
+[RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html):
+
+* Put the authorization server's **issuer identifier** in `aud`, as the only
+  value. Don't use the token endpoint URL or the pushed authorization request
+  (PAR) endpoint URL.
+* Set the `typ` header to `client-authentication+jwt`, which the RFC recommends.
+
+The same audience applies to PAR requests and token requests. If you use
+[`ClientAssertionFactory`](#clientassertionfactory), it's called for both, so
+make sure it produces assertions with the issuer as the audience.
 
 ### Client Secret vs Client Assertion
 

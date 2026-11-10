@@ -160,7 +160,7 @@ options.Events = new OAuth2IntrospectionEvents
 **Context:** `UpdateClientAssertionContext`
 
 Invoked when the introspection handler needs to authenticate to the introspection endpoint using a
-[JWT client assertion](https://www.rfc-editor.org/rfc/rfc7523) rather than a shared secret.
+JWT client assertion ([RFC 7523](https://www.rfc-editor.org/rfc/rfc7523) and [RFC 10070](https://www.rfc-editor.org/rfc/rfc10070)) rather than a shared secret.
 Use this event to generate and rotate short-lived signed JWTs for client authentication.
 
 :::tip
@@ -188,9 +188,17 @@ options.Events = new OAuth2IntrospectionEvents
         var now = DateTime.UtcNow;
         var expiry = now.AddMinutes(5);
 
+        // Use the authorization server's issuer identifier as the only audience (RFC 10070),
+        // not the introspection endpoint URL. It has to match the "issuer" value in the
+        // discovery document exactly. Authority isn't automatically the issuer.
+        var authorizationServerIssuer = context.HttpContext.RequestServices
+            .GetRequiredService<IConfiguration>()["IdentityServer:Issuer"]!;
+
+        // RFC 10070 recommends setting the JWT "typ" header to "client-authentication+jwt".
+        // Do that in your signing helper.
         var token = keyService.CreateSignedJwt(
             issuer: context.Options.ClientId,
-            audience: context.Options.IntrospectionEndpoint ?? context.Options.Authority,
+            audience: authorizationServerIssuer,
             expiry: expiry);
 
         context.ClientAssertion = new ClientAssertion

@@ -81,16 +81,44 @@ builder.Services.AddIdentityServer(opt =>
         SecurityAlgorithms.EcdsaSha512
     ];
     opt.JwtValidationClockSkew = TimeSpan.FromSeconds(10);
-
 })
 ```
 
-The general configuration for IdentityServer includes two notable changes from what you may see in a typical authorization server implementation.
+Inside the same `AddIdentityServer` callback, enable the strict audience validation.
+The option is `false` by default. Until you enable it, legacy audiences such as the token or PAR endpoint
+URLs are still accepted, unless the assertion has the `client-authentication+jwt` type.
+
+<Version since="8.0" inline>
+
+```csharp
+opt.StrictClientAssertionAudienceValidation = true;
+```
+
+</Version>
+
+<Version until="8.0" inline>
+
+In IdentityServer v7, this is a preview option under `Preview`, and it accepts only a string `aud`.
+
+```csharp
+opt.Preview.StrictClientAssertionAudienceValidation = true;
+```
+
+</Version>
+
+The general configuration for IdentityServer includes three notable changes from what you may see in a typical authorization server implementation.
 
 1. Explicit setting of signing algorithms for JWTs and DPoP to meet FAPI 2.0 compliance, including adding the information to the discovery document.
 2. Setting the `JwtValidationClockSkew` to meet the time requirements of FAPI 2.0.
+3. Enabling strict client assertion audience validation, so the issuer identifier is the expected audience. The option name depends on your IdentityServer version, as shown above.
 
-That's it for the server. Next, let's examine how to configure the clients to meet FAPI 2.0 specifications.
+:::caution
+FAPI 2.0 (sections 5.3.2.1 and 5.3.3.1) requires the issuer identifier as a string in `aud`, and strict validation doesn't enforce that on its own. IdentityServer v8 strict mode also accepts a single-element array, and it ignores a trailing-slash difference when comparing the issuer. v7 strict mode accepts only a string.
+
+Strict mode also requires the `typ: client-authentication+jwt` header, while [RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html) only recommends it. Check that your clients send the issuer as a string and set `typ`. Configuration alone doesn't make a deployment FAPI 2.0 compliant.
+:::
+
+That's it for the server configuration. Next, let's examine how to configure the clients to meet FAPI 2.0 specifications.
 
 ### Client Configuration
 

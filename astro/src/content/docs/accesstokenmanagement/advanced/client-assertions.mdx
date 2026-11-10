@@ -45,7 +45,8 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
             {
                 Issuer = options1.ClientId!.ToString(),
 
-                // Set the audience to the url of identity server. Do not use the tokenurl to build the autority. 
+                // Use the issuer value from the authorization server's discovery document as the only
+                // audience (RFC 10070). Don't use the token URL.
                 Audience = "https://--url-to-authority-here--",
 
                 Expires = DateTime.UtcNow.AddMinutes(1),
@@ -111,7 +112,8 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
             {
                 Issuer = options1.ClientId,
 
-                // Set the audience to the url of identity server. Do not use the tokenurl to build the autority. 
+                // Use the issuer value from the authorization server's discovery document as the only
+                // audience (RFC 10070). Don't use the token URL.
                 Audience = "https://--url-to-authority-here--",
                 Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = GetSigningCredential(),
@@ -154,8 +156,11 @@ public class ClientAssertionService(IOptionsSnapshot<ClientCredentialsClient> op
 :::note
 You need to explicitly set the `Audience` to the authorization server's issuer URL (usually the URL of identity server). 
 
-Don't set the audience to the `TokenUrl`. Setting the `Audience` value to the token endpoint leaves 
-you vulnerable to these vulnerabilities: (CVE-2025-27370/CVE-2025-27371).
+Don't set the audience to the `TokenUrl`. Using the token endpoint as the audience can expose your client to
+[CVE-2025-27370](https://www.cve.org/CVERecord?id=CVE-2025-27370) and [CVE-2025-27371](https://www.cve.org/CVERecord?id=CVE-2025-27371).
+
+Use the issuer identifier as the only audience of the client assertion, as
+[RFC 10070](https://www.rfc-editor.org/rfc/rfc10070.html) requires.
 :::
 
 For a complete working example, see the [WebClientAssertions sample](https://github.com/DuendeSoftware/foss/tree/main/access-token-management/samples/WebClientAssertions).

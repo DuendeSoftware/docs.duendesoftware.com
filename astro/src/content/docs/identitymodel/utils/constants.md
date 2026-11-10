@@ -348,6 +348,9 @@ OpenID Connect protocol values.
 | JwtBearer  | `urn:ietf:params:oauth:client-assertion-type:jwt-bearer`   |
 | SamlBearer | `urn:ietf:params:oauth:client-assertion-type:saml2-bearer` |
 
+Don't use `SamlBearer` for client authentication in new applications. See
+[RFC 10070 §3](https://www.rfc-editor.org/rfc/rfc10070.html#section-3).
+
 ### ResponseTypes
 
 | Name             | Value                 |
