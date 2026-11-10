@@ -1,7 +1,7 @@
 ---
 title: "IdentityServer Spaces"
 description: "Run multiple isolated IdentityServer security domains in a single deployment using Spaces with per-tenant configuration and operational data"
-date: 2026-11-02
+date: 2026-11-10
 sidebar:
   label: "Overview"
   order: 1
@@ -100,59 +100,66 @@ If users must be shared across spaces, use a deliberately separate user director
 
 ## Cookies and Space Paths
 
-When a path pattern matches a space, IdentityServer scopes its cookies to that space's path. This keeps sessions in
-different spaces on the same origin apart. IdentityServer derives the cookie `Path` on every request from the resolved
-base path, which is the hosting `PathBase` plus the matched space path (for example, `/host/space-a`). Spaces matched
-by origin only add no space path, so their cookies use the hosting `PathBase`, or `/` when it is empty.
-There is nothing to configure. All other cookie attributes (name, `Domain`, `Secure`, `SameSite`, and `HttpOnly`) come
-from your configuration unchanged.
+In a path-based space, IdentityServer sets the `Path` of its cookies to that space's path. For this to work, call
+`UseSpaceResolution()` before `UseIdentityServer()`. Don't use a `__Host-` name for the cookies IdentityServer wraps,
+because that prefix requires `Path=/` (see [Using the __Host- Prefix](#using-the-__host--prefix)).
 
-IdentityServer scopes these cookies to the space path:
+The cookie `Path` is IdentityServer's base path on each request, which is the hosting `PathBase` plus the matched space
+path. For a space at `/space-a` hosted under `/host`, the path is `/host/space-a`. Spaces matched by origin only have no
+space path, so their cookies use the hosting `PathBase`, or `/` when it is empty.
 
-* The session cookie, which uses the `idsrv` scheme by default. If you set
+`UseIdentityServer()` records the request's `PathBase` as the base path, and `UseSpaceResolution()` is what adds the
+matched space path to `PathBase`. If space resolution runs after `UseIdentityServer()`, or not at all, the cookie path
+is only the hosting `PathBase`, or `/` when it is empty.
+
+### Cookies Scoped to the Space Path
+
+IdentityServer sets the space path on these cookies:
+
+* The session cookie. It uses the `idsrv` scheme by default. If you set
   `IdentityServerOptions.Authentication.CookieAuthenticationScheme`, or rely on the default authenticate or default
-  scheme, that scheme's cookie is scoped instead (for example, ASP.NET Core Identity's `Identity.Application`).
-* The `idsrv.external` cookie used for external authentication.
+  scheme, that scheme's cookie is used instead, for example ASP.NET Core Identity's `Identity.Application`.
+* The `idsrv.external` cookie for external authentication.
 * The temporary message cookies that carry state between pages, such as consent.
-* The check-session cookie, `idsrv.session` by default. It takes the same path as the cookies above, so it is scoped to
-  the space path and your hosting `PathBase`. The name comes from `Authentication.CheckSessionCookieName`. IdentityServer
-  issues it only when `Endpoints.EnableCheckSessionEndpoint` is enabled. It still uses `Domain` and `SameSite` from
-  `Authentication.CheckSessionCookieDomain` and `Authentication.CheckSessionCookieSameSiteMode`.
+* The check-session cookie, `idsrv.session` by default.
 
-Other application cookies, and the correlation and nonce cookies of external authentication handlers such as OpenID
-Connect, are not changed.
+The check-session cookie is only issued when `Endpoints.EnableCheckSessionEndpoint` is enabled. Its name comes from
+`Authentication.CheckSessionCookieName`, and it keeps using `Domain` and `SameSite` from
+`Authentication.CheckSessionCookieDomain` and `Authentication.CheckSessionCookieSameSiteMode`.
+
+Your other application cookies, and the correlation and nonce cookies of external handlers such as OpenID Connect, are
+not changed.
+
+### Customizing the Session Cookie
+
+For the session cookie, the `idsrv.external` cookie and the cookie of the configured scheme, IdentityServer replaces
+`options.Cookie` on the cookie authentication options with a wrapper around your `CookieBuilder`. The wrapper passes
+`Name`, `Domain`, `SameSite`, `HttpOnly`, `Secure` and your other settings through and replaces only `Path`. Cookie
+extensions you add to the wrapper are copied into the cookie it builds.
+
+If your code assigns a new `CookieBuilder` to `options.Cookie` after IdentityServer has wrapped it, the new builder
+isn't wrapped. IdentityServer then doesn't set the space path on that cookie.
+
+### Using the __Host- Prefix
 
 :::caution[Don't use the __Host- cookie name prefix with a non-root cookie path]
-The `__Host-` prefix requires `Path=/`. If IdentityServer builds a `__Host-` prefixed cookie for a request whose
-resolved cookie path isn't `/`, it throws an `InvalidOperationException` before issuing the cookie. This happens with
-path-based spaces, and also with origin-only spaces or apps without Spaces when the hosting `PathBase` isn't empty.
-The message starts with: `Cookie '<name>' uses the '__Host-' prefix, which requires the cookie path to be '/', but the
-resolved IdentityServer cookie path is '<path>'.` Use the `__Secure-` prefix instead. It still requires the `Secure`
-attribute but permits non-root paths.
+The `__Host-` prefix requires the cookie path to be `/`. IdentityServer checks the name of the session cookie, the
+`idsrv.external` cookie and the cookie of the configured scheme. If the name starts with `__Host-` and the resolved
+path for the request isn't `/`, IdentityServer throws an `InvalidOperationException` before it issues the cookie.
 :::
 
-### Rollout Impact
+You get this exception in any path-based space, because the cookie path is the space path. You also get it when the
+hosting `PathBase` isn't empty, for example when IdentityServer runs under `/host`. That applies to origin-only spaces
+and to apps that don't use Spaces at all. The message starts with:
 
-IdentityServer doesn't migrate or remove existing cookies. Cookies issued with `Path=/` before you enabled path-based
-spaces stay in the browser until they expire or the user clears them. Browsers send `Path=/` cookies to every path,
-so these older cookies are still sent to requests under each space path. A new space-scoped cookie with the same name
-can exist next to them.
+```text
+Cookie '<name>' uses the '__Host-' prefix, which requires the cookie path to be '/', but the resolved IdentityServer cookie path is '<path>'.
+```
 
-Changing the cookie path alone doesn't end existing sessions. Whether IdentityServer accepts an older cookie depends on
-[data protection partitioning](/identityserver/spaces/getting-started.md#before-deployment):
+Use the `__Secure-` prefix instead. It still enforces `Secure` but permits non-root paths.
 
-* In a named space, the partitioned data protector can't read a cookie that was protected before partitioning, so the
-  user has to sign in again.
-* In the Default space, a fallback to the unpartitioned purpose chain can still read the
-  older cookie, so the existing session can stay valid.
-* With `SpacesOptions.PartitionDataProtection` set to `false`, an older cookie can be read in any space.
-
-Don't rely on path scoping to sign users out. If existing sessions must end when you enable path-based spaces, end them
-explicitly, for example by changing the session cookie name. Hosts without a space path, including origin-only spaces
-with an empty `PathBase`, keep `Path=/` and aren't affected.
-
-Call `UseSpaceResolution()` before `UseIdentityServer()`. If space resolution hasn't run yet, cookies fall back to
-`Path=/` and aren't isolated between spaces.
+IdentityServer doesn't run this check for the check-session cookie or the message cookies. They get the same path as
+the other cookies.
 
 ## What Spaces Does Not Isolate
 
