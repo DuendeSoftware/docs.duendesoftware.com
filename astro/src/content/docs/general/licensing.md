@@ -124,7 +124,8 @@ IdentityServer loads and parses the license key at startup. If the key is presen
 a critical error is logged and IdentityServer continues as if no license were configured.
 
 IdentityServer also checks a number of features at startup, but only if they are enabled:
-Automatic Key Management, Server-Side Sessions, and the SAML Identity Provider (registered with `AddSaml()`).
+Automatic Key Management, Server-Side Sessions, Spaces (registered with `.UseSpaceResolution()`),
+and the SAML Identity Provider (registered with `AddSaml()`).
 If a license is configured but does not include the entitlement for an enabled feature, IdentityServer throws an
 exception and the application does not start. If no license is configured, IdentityServer logs a
 warning instead and startup continues. Most other features are checked at runtime, when they are actively used
@@ -495,7 +496,6 @@ To verify your `ContentRootPath` at runtime, inspect `builder.Environment.Conten
 ### Configuration
 
 _Available in IdentityServer 8.0 and later._
-
 
 IdentityServer can read the license key directly from `IConfiguration`, so you do not need to write any startup code.
 If `LicenseKey` is not set in your `AddIdentityServer` call, IdentityServer checks the following configuration keys in order,
