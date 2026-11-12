@@ -8,7 +8,7 @@ sidebar:
 ---
 
 The Federal Information Processing Standard (FIPS) Publication 140-3 is the U.S. and Canadian government standard for
-validating cryptographic modules. It replaces FIPS 140-2: on September 21, 2026, all remaining FIPS 140-2 validations
+validating cryptographic modules. It replaces FIPS 140-2: on September 22, 2026, all remaining FIPS 140-2 validations
 moved to the [CMVP](https://csrc.nist.gov/projects/cryptographic-module-validation-program) historical list. If you're
 working towards FedRAMP, CMMC, or a similar program, expect your assessor to ask for FIPS 140-3 validated modules.
 
@@ -18,18 +18,18 @@ IdentityServer doesn't implement any cryptographic algorithms itself, and it isn
 it signs tokens, validates signatures, or protects cookies, it calls into .NET, and .NET in turn passes those calls
 through to the cryptographic module provided by the operating system:
 
-- **Windows**: Cryptography API: Next Generation (CNG)
-- **Linux**: OpenSSL
-- **macOS**: Apple's platform cryptography libraries
+* **Windows**: Cryptography API: Next Generation (CNG)
+* **Linux**: OpenSSL
+* **macOS**: Apple's platform cryptography libraries
 
 That means your FIPS posture is determined by the operating system module your application runs on, and by how you
 configure it. Neither IdentityServer nor .NET enforces FIPS-approved algorithms or key sizes, and IdentityServer has no
 "FIPS mode" setting. You're responsible for:
 
-- Running on an operating system whose cryptographic module has a FIPS 140-3 validation, with FIPS mode enabled
-- Configuring only FIPS-approved algorithms and key sizes
-- Storing and managing key material appropriately
-- Validating that your complete solution meets the requirements of your compliance program
+* Running on an operating system whose cryptographic module has a FIPS 140-3 validation, with FIPS mode enabled
+* Configuring only FIPS-approved algorithms and key sizes
+* Storing and managing key material appropriately
+* Validating that your complete solution meets the requirements of your compliance program
 
 ## Building a FIPS-compliant deployment
 
@@ -55,9 +55,9 @@ Test your full login, token, and logout flows on a FIPS-enabled machine before g
 All the asymmetric signing algorithms IdentityServer supports are approved under FIPS 186-5, as long as you use
 appropriate key sizes:
 
-- `RS256`, `RS384`, `RS512` (RSASSA-PKCS1-v1_5) and `PS256`, `PS384`, `PS512` (RSASSA-PSS) with RSA keys of at least
+* `RS256`, `RS384`, `RS512` (RSASSA-PKCS1-v1_5) and `PS256`, `PS384`, `PS512` (RSASSA-PSS) with RSA keys of at least
   2048 bits
-- `ES256`, `ES384`, `ES512` with the NIST P-256, P-384, and P-521 curves
+* `ES256`, `ES384`, `ES512` with the NIST P-256, P-384, and P-521 curves
 
 Check whether your compliance program sets a stricter baseline, such as a minimum RSA key size of 3072 bits.
 
@@ -65,6 +65,7 @@ The [automatic key management](/identityserver/fundamentals/key-management.md) f
 default. To raise that, set `KeyManagement.RsaKeySize`, which applies to all `RS*` and `PS*` algorithms:
 
 ```csharp
+// Program.cs
 builder.Services.AddIdentityServer(options =>
 {
     options.KeyManagement.RsaKeySize = 3072;
