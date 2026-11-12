@@ -145,12 +145,6 @@ public class SpaceLookupJob(ISpaceContextAccessor accessor, ISpaceStore store)
 }
 ```
 
-### Check Whether An Origin Is Claimed
-
-`IsOriginClaimed` tells you whether a space that isn't deleted uses the origin, whether or not that space also has a path.
-The comparison ignores case, and a disabled space still claims its origin. `UseSpaceResolution()` calls it so that a
-request to a claimed host is never routed to a different space by a path-only match.
-
 ### Find The Space For A Pool
 
 `TryGetSpaceByPoolId` returns the `Space` assigned to a `PoolId`. A `Space` has an `Id`, `Name`, `Enabled`,
