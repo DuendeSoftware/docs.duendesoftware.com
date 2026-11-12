@@ -18,7 +18,15 @@ purposes.
 
 :::caution[Don't turn partitioning off after deployment]
 Turning `PartitionDataProtection` off after the host has run with it enabled is unsupported. Data protected while
-partitioning was enabled uses the space-specific purpose chain, so it can't be unprotected when that chain isn't there.
+partitioning was enabled includes the space in its purpose chain, so once partitioning is off it can't be unprotected,
+including in the Default space:
+
+* Users are signed out, and refresh tokens and other persisted grants stop working.
+* Users who registered a TOTP authenticator can't sign in at all, including with their password.
+
+Signing keys aren't affected. If partitioning was turned off by mistake, turn it back on. The keys are unchanged, so
+data protected before the switch can be read again. Data protected while partitioning was off can still be read in the
+Default space, but not in named spaces, so users in named spaces need to sign in again.
 :::
 
 To turn partitioning on or off, see [Getting Started With Spaces](/identityserver/spaces/getting-started.md#before-deployment).
@@ -79,6 +87,11 @@ If you decorate the provider or a protector, for example to add logging, your wr
 instance it wraps. The partitioned provider and its protectors implement the interface, and `GetUnpartitioned()` uses
 it to find the unpartitioned provider. When an object doesn't implement it, `GetUnpartitioned()` returns that object
 unchanged. Your wrapper would then be returned as is, and it's still partitioned.
+
+This applies to a wrapper around the partitioned provider, the one you resolve from the container, for example a wrapper
+you create for an authentication scheme's options. Don't register the wrapper as `IDataProtectionProvider` after
+`AddSpaces`, because `UseSpaceResolution()` then throws. A wrapper registered before `AddSpaces` is wrapped by Spaces and
+doesn't need the interface.
 
 ```csharp
 // LoggingDataProtectionProvider.cs
