@@ -14,15 +14,15 @@ jobs:
       issues: write
     name: Link Checker Job
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
           dotnet-version: '10.0.x'
           
       - name: Setup Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
           
@@ -30,7 +30,7 @@ jobs:
         run: dotnet build.cs astro-build
         
       - name: Link Checker
-        uses: lycheeverse/lychee-action@v2
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
