@@ -8,9 +8,9 @@ sidebar:
 ---
 
 Spaces binds [ASP.NET Core Data Protection](/general/data-protection.md) to the current space, so a value protected in
-one space can't be unprotected in another. It's on by default (`SpacesOptions.PartitionDataProtection` is `true`). Register your `IDataProtectionProvider` as a singleton before `AddSpaces`, call
-`UseSpaceResolution()` early in the pipeline, and use `GetUnpartitioned()` for the few values that must be readable
-from every space.
+one space can't be unprotected in another. It's on by default (`SpacesOptions.PartitionDataProtection` is `true`).
+If you register your own `IDataProtectionProvider`, do it before `AddSpaces`. Call `UseSpaceResolution()` early in the
+pipeline, and use `GetUnpartitioned()` for the few values that must be readable from every space.
 
 Spaces wraps the app's `IDataProtectionProvider`. A protector from that provider binds to the space
 that is resolved when it protects or unprotects a value. Its purpose chain is `space`, then the space ID, then your own
@@ -55,7 +55,7 @@ the fallback would accept the unpartitioned value from both. Spaces has no runti
 
 ## Which Providers Are Partitioned
 
-Spaces partitions only the non-keyed `IDataProtectionProvider` registration, and specifically the last one. Keyed
+Spaces partitions only the non-keyed `IDataProtectionProvider` registration. Keyed
 `IDataProtectionProvider` registrations and independently created providers (for example, from
 `DataProtectionProvider.Create(...)`) aren't automatically partitioned. Assigning the app's registered provider to
 authentication scheme options doesn't remove its partitioning.
