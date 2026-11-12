@@ -3,7 +3,7 @@ title: "IdentityServer Quickstarts"
 description: "Step-by-step tutorials for implementing common Duende IdentityServer scenarios, from basic setup to advanced features."
 date: 2020-09-10T08:22:12+02:00
 sidebar:
-  label: Overview
+  label: Overview and Template Installation
   order: 1
 redirect_from:
   - /quickstarts/
@@ -49,4 +49,4 @@ dotnet new install Duende.Templates
 ```
 :::
 
-<iframe width="853" height="505" src="https://www.youtube.com/embed/cxYmODQHErM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+For a detailed explanation of the available IdentityServer templates, see the [templates page](/identityserver/overview/templates.mdx).
