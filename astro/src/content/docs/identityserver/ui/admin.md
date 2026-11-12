@@ -37,7 +37,7 @@ provide create, read, update, query and delete operations for clients, resources
 service APIs behind your own authorized UI without writing directly to storage tables.
 
 :::tip[Duende IdentityServer AdminUI Templates]
-Creating custom, specialized admin UI functionality is demonstrated in the [Duende IdentityServer (`duende-is`) template](/identityserver/overview/packaging.mdx#duende-identityserver).
+Creating custom, specialized admin UI functionality is demonstrated in the [Duende IdentityServer (`duende-is`) template](/identityserver/overview/templates.mdx#duende-identityserver).
 
 The template is built on the Entity Framework Core template and includes an administrative UI for managing clients, scopes, and claims.
 There's also a diagnostics dashboard showing system information about your IdentityServer deployment.
