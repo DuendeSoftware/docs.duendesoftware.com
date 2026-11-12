@@ -32,7 +32,9 @@ A request that matches no space never reaches your code. By default,
 matches no space and has no space path goes to `SpaceId.Default`. A request with a space path that matches no space still
 gets a 404.
 
-This endpoint reports the current space and returns a 404 when none is set:
+This endpoint reports the current space. Behind `UseSpaceResolution()`, a space is always set by the time an endpoint
+runs, because the middleware either sets one or answers with a 404. The `NotFound` branch only runs for endpoints that
+sit outside the middleware, so treat it as a safeguard rather than a normal case:
 
 ```csharp
 // Program.cs
@@ -90,6 +92,54 @@ Two rules apply to scopes:
   created them. Disposing an outer scope first throws an `InvalidOperationException`.
 * `SetSpace` throws when your license doesn't include Spaces.
 
+### Choose The Space Yourself
+
+`UseSpaceResolution()` only resolves a space when none is set. If a space is already set when a request reaches it, it
+keeps that space and skips resolution. To choose the space yourself for some requests, add middleware before
+`UseSpaceResolution()` that sets the space and runs the rest of the pipeline inside the scope. Use this, for example,
+to run an admin API in a dedicated space, or to read the space ID from somewhere other than the host and path.
+
+:::caution[Choosing a space is a security decision]
+The space decides which tenant's data a request can read and change. You can use a fixed value from your configuration.
+If the space ID comes from the request, for example from a header or the request body, the caller picks the tenant.
+Accept it only from callers you've authenticated and authorized for
+that space, otherwise a caller can reach another tenant's data. A fixed admin space needs protecting too: require
+authentication and authorization on those endpoints, because the space doesn't do that for you.
+:::
+
+```csharp
+// Program.cs
+using Duende.Spaces;
+
+var adminSpaceId = SpaceId.Create(app.Configuration["AdminSpaceId"]!);
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/admin"))
+    {
+        var accessor = context.RequestServices.GetRequiredService<ISpaceContextAccessor>();
+        using (accessor.SetSpace(adminSpaceId))
+        {
+            await next();
+        }
+
+        return;
+    }
+
+    await next();
+});
+
+app.UseSpaceResolution();
+```
+
+Requests to `/admin` run in `adminSpaceId` whatever their host and path, and other requests are resolved as usual.
+
+When you set the space yourself, Spaces doesn't check it:
+
+* `SetSpace` doesn't check that the space exists or is enabled, so the request also runs in a space that doesn't exist
+  or is disabled. Call `ISpaceStore.TryGetSpace` first if that matters.
+* The request path isn't rewritten, so a space path under `SpacePathPrefix` stays in the path.
+
 ## Look Up Spaces
 
 `ISpaceStore` reads spaces. It doesn't create or change them, which is what `ISpaceAdmin` is for. It has four methods:
@@ -106,8 +156,38 @@ Passing `null` to any method throws an `ArgumentNullException`. For `IsOriginCla
 `ArgumentNullException` and an empty one throws an `ArgumentException`.
 
 All four lookups are cached. The cache entries use `SpacesOptions.LocalCacheExpiration` (30 seconds by default) and
-`SpacesOptions.Expiration` (30 minutes by default). `PoolId` is in the `Duende.Storage` namespace.
+`SpacesOptions.Expiration` (30 minutes by default). `TryResolveSpace` and `IsOriginClaimed` only cache matches.
+Changes made through `ISpaceAdmin` remove the affected entries, but other instances can return the old result until
+their local copy expires. So if you run more than one instance, a space you just disabled can still resolve on the
+others for up to 30 seconds with the default local cache expiration. `PoolId` is in the `Duende.Storage` namespace.
 
+### Find The Space For A Pool
+
+`TryGetSpaceByPoolId` returns the `Space` assigned to a `PoolId`. A `Space` has an `Id`, `Name`, `Enabled`,
+`MatchPatterns`, `PoolId`, and `ExtendedProperties`.
+
+```csharp
+// PoolLookupJob.cs
+using Duende.Spaces;
+using Duende.Storage;
+
+public class PoolLookupJob(ISpaceContextAccessor accessor, ISpaceStore store)
+{
+    public async Task Run(PoolId poolId, CancellationToken ct)
+    {
+        var space = await store.TryGetSpaceByPoolId(poolId, ct);
+        if (space is null)
+        {
+            return;
+        }
+
+        using (accessor.SetSpace(space.Id))
+        {
+            // Code in this block runs in the space that owns the pool.
+        }
+    }
+}
+```
 
 ## Well-Known Space IDs
 
