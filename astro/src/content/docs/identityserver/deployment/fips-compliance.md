@@ -37,7 +37,7 @@ configure it. Neither IdentityServer nor .NET enforces FIPS-approved algorithms 
 
 Check that the specific operating system version you deploy to has an active FIPS 140-3 certificate on the
 [CMVP validated modules list](https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search),
-and enable FIPS mode as described by your OS vendor. For containers, the FIPS-validated module is the OpenSSL build
+and enable FIPS mode as described by your OS vendor. For Linux containers, the FIPS-validated module is the OpenSSL build
 inside the image, so pick a base image whose vendor provides a FIPS 140-3 validated OpenSSL provider, and enable FIPS
 mode for it.
 
@@ -45,7 +45,8 @@ Microsoft's [.NET FIPS compliance documentation](https://learn.microsoft.com/en-
 describes how .NET relies on the platform module.
 
 :::note
-Some algorithms, such as MD5 and SHA-1 for signatures, will throw at runtime once the operating system is in FIPS mode.
+Depending on the platform and cryptographic provider, non-approved operations may throw at runtime. Enabling FIPS
+mode does not guarantee that non-approved algorithms will be rejected, so review algorithm use explicitly.
 Test your full login, token, and logout flows on a FIPS-enabled machine before going to production.
 :::
 
