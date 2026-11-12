@@ -186,7 +186,7 @@ Other features are checked at runtime, when they are used. If a license is confi
 the feature, IdentityServer logs a warning and the feature is not available:
 
 * [DPoP](/identityserver/tokens/pop.mdx): token requests that include a DPoP proof fail.
-* [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md): the PAR endpoint returns `404 Not Found`.
+* [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.mdx): the PAR endpoint returns `404 Not Found`.
 * [Resource Isolation](/identityserver/fundamentals/resources/isolation/index.md): resource indicators are ignored.
 * [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.md): loading a dynamic provider fails.
 * SAML Service Provider: SAML Service Provider requests return `404 Not Found`.
