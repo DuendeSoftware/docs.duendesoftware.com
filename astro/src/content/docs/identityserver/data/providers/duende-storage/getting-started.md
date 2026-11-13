@@ -173,8 +173,10 @@ Duende Storage.
 :::caution
 Calling `IStorageInstanceSchema.MigrateAsync` from the application at startup, as shown above, is intended for
 development purposes only. When several app instances start together, for example during scale-out or a rolling
-deployment, they can migrate the same database concurrently: no provider protects against that. A failed migration
-also blocks application startup.
+deployment, they can migrate the same database concurrently. Only the SQL Server provider serializes concurrent
+migrations; on the other providers, all but one instance can fail to start. See
+[Concurrent Migrations](/identityserver/data/providers/duende-storage/databases/index.mdx#concurrent-migrations). A failed
+migration also blocks application startup.
 :::
 
 For local development, you can use the SQLite CLI command:
