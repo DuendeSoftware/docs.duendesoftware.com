@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with Duende Storage"
 description: "Configure Duende Storage for IdentityServer configuration and operational data"
-date: 2026-10-23
+date: 2026-11-10
 sidebar:
   label: "Getting Started"
   order: 10
@@ -106,7 +106,11 @@ separately. See [Multiple Storage Instances](/identityserver/data/providers/duen
 - `ICorsPolicyService`
 
 It also registers the
-[configuration administration APIs](/identityserver/data/providers/duende-storage/admin-apis.md).
+[configuration administration APIs](/identityserver/data/providers/duende-storage/admin-apis.md). These admin services
+are only available with Duende Storage. Resolving them throws a `NotSupportedException` when you use the in-memory or
+Entity Framework stores. The exception message says that admin services are only available when configuration is
+registered via `AddStorage()`. `AddStorage(...)` registers the database, and `AddConfigurationStorage()` registers the
+admin services.
 
 ### Operational Stores
 
