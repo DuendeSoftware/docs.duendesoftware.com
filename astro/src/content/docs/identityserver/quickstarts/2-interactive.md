@@ -272,7 +272,7 @@ cookie (as they will be needed later).
 
 :::note
 This uses the *authorization code* flow with PKCE to connect to the OpenID
-Connect provider. See [here](/identityserver/fundamentals/clients.md) for more
+Connect provider. See [here](/identityserver/fundamentals/clients.mdx) for more
 information on protocol flows.
 :::
 

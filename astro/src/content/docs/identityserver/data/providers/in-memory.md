@@ -44,7 +44,7 @@ builder.Services.AddIdentityServer()
     .AddInMemoryPersistedGrants();
 ```
 
-If you use [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md), `AddInMemoryPushedAuthorizationRequests` provides an in-memory `IPushedAuthorizationRequestStore`:
+If you use [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.mdx), `AddInMemoryPushedAuthorizationRequests` provides an in-memory `IPushedAuthorizationRequestStore`:
 
 ```csharp
 builder.Services.AddIdentityServer()

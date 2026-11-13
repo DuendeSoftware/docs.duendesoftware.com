@@ -14,11 +14,11 @@ Duende IdentityServer implements the OpenID Connect, OAuth and SAML protocol lay
 
 These are the core concepts you'll work with when configuring and running IdentityServer:
 
-* **Clients** — A client is any application that requests tokens from IdentityServer, whether a web app, SPA, mobile app, API, or backend service. Each client is registered with an allowed set of scopes, grant types, and redirect URIs. See [Clients](/identityserver/fundamentals/clients.md).
+* **Clients** — A client is any application that requests tokens from IdentityServer, whether a web app, SPA, mobile app, API, or backend service. Each client is registered with an allowed set of scopes, grant types, and redirect URIs. See [Clients](/identityserver/fundamentals/clients.mdx).
 * **Resources** — Resources model what your system protects. Identity resources represent user claims (like profile or email), API scopes define logical permission boundaries, and API resources group scopes for audience-based access control. See [Resources](/identityserver/fundamentals/resources/index.md).
 * **Claims** — Claims are name-value pairs that describe a user or client. They flow through tokens and are the primary way downstream applications learn about the authenticated entity. Understanding how claims are requested, issued, and transformed is central to working with IdentityServer. See [Claims](/identityserver/fundamentals/claims.md) and [Claims Lifecycle](/identityserver/fundamentals/claims-lifecycle.mdx).
 * **Users** — Users are the people who authenticate through IdentityServer. How users are modeled, stored, and resolved into claims depends on your identity management choice. See [Users](/identityserver/fundamentals/users.md).
-* **Key Management** — IdentityServer uses cryptographic keys to sign tokens. Key management covers how signing keys are created, rotated, and stored, which is critical for production deployments. See [Key Management](/identityserver/fundamentals/key-management.md).
+* **Key Management** — IdentityServer uses cryptographic keys to sign tokens. Key management covers how signing keys are created, rotated, and stored, which is critical for production deployments. See [Key Management](/identityserver/fundamentals/key-management.mdx).
 * **Hosting** — IdentityServer runs as middleware in an ASP.NET Core application. Hosting covers how to configure the host, set up endpoints, and prepare for production deployment. See [Hosting](/identityserver/fundamentals/hosting.md).
 * **Events** — IdentityServer raises events for key operations like token issuance, login, and errors. These are useful for auditing, monitoring, and diagnostics. See [Events](/identityserver/fundamentals/openid-connect-events.md).
 
