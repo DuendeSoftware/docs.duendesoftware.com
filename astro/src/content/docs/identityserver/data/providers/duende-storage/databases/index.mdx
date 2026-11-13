@@ -107,8 +107,8 @@ verification finds a mismatch.
 ### Concurrent Migrations
 
 In production, migrate the schema with the [Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate),
-as a single deployment step that runs before your application instances start, for example a pipeline step, a
-Kubernetes Job or an init container:
+as a single deployment step that runs before your application instances start, for example a pipeline step or a
+single Kubernetes Job that completes before the application rollout:
 
 * Grant schema-changing permissions only to that step. Your application doesn't need them.
 * At application startup, call `CheckVersionAsync` and wait, or fail readiness, until `IsCompatible` is `true`.
