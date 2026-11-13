@@ -196,8 +196,8 @@ appropriate material for them.
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.IdentityProviders;
+using Duende.IdentityServer.Stores.Storage.IdentityProviders;
 using Duende.Storage;
-using Duende.Storage.EntityAttributeValue;
 
 static Task<SaveResult<IdentityProviderId>> CreateIdentityProvider(
     IIdentityProviderAdmin admin,
@@ -211,20 +211,26 @@ static Task<SaveResult<IdentityProviderId>> CreateIdentityProvider(
         Type = "oidc"
     };
 
-    provider.ExtendedProperties.Set(AttributeCode.Create("Authority"), "https://login.example.com");
-    provider.ExtendedProperties.Set(AttributeCode.Create("ClientId"), "identityserver");
-    provider.ExtendedProperties.Set(AttributeCode.Create("ClientSecret"), clientSecret);
+    provider.ExtendedProperties.Set(DefaultOidcProviderSchema.Authority, "https://login.example.com");
+    provider.ExtendedProperties.Set(DefaultOidcProviderSchema.ClientId, "identityserver");
+    provider.ExtendedProperties.Set(DefaultOidcProviderSchema.ClientSecret, clientSecret);
 
     return admin.CreateAsync(provider, ct);
 }
 ```
 
-Dynamic identity provider settings are extended properties. Register the corresponding dynamic provider, such as
-`AddOidcDynamicProvider()`, so that the matching schema is available, and set every property the provider type requires.
-The built-in OIDC schema defines `Authority`, `ClientId`, `ClientSecret`, `ResponseType`, `Scope`,
-`GetClaimsFromUserInfoEndpoint`, and `UsePkce`. See [data extension schemas](/identityserver/data/providers/duende-storage/schemas.md)
-for details. Read `clientSecret` from a secure source, such as Azure Key Vault. IdentityServer validates the configuration
-before storing it.
+Dynamic identity provider settings are extended properties, defined by a built-in schema for each provider type.
+`AddOidcDynamicProvider()` registers the OIDC schema (`idp:oidc`, `BuiltInSchemas.OidcProvider`), and
+`AddSamlDynamicProvider()` registers the SAML schema (`idp:saml`, `BuiltInSchemas.SamlProvider`). Register the dynamic
+provider you use so that its schema is available, and set every property the provider type requires.
+
+Use the typed definitions on `DefaultOidcProviderSchema` and `DefaultSamlProviderSchema` (in the
+`Duende.IdentityServer.Stores.Storage.IdentityProviders` namespace) to set these properties, instead of spelling out the
+attribute codes. The OIDC schema defines `Authority`, `ClientId`, `ClientSecret`, `ResponseType` (`id_token` when not
+set), `Scope` (`openid` when not set), and `GetClaimsFromUserInfoEndpoint` and `UsePkce`, which are stored as `"true"` or
+`"false"` and are `true` when not set. See [data extension schemas](/identityserver/data/providers/duende-storage/schemas.md#built-in-schemas)
+to extend a built-in schema. Read `clientSecret` from a secure source, such as Azure Key Vault. IdentityServer validates
+the configuration before storing it.
 
 :::caution[Protect Recoverable Identity Provider Secrets]
 Client and API resource secrets accepted by their dedicated admin APIs are one-way hashed before storage. Dynamic identity
