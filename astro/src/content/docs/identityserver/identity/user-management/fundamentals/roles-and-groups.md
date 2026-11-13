@@ -1,7 +1,7 @@
 ---
 title: Roles and Groups
 description: How to manage roles and groups in Duende User Management, including direct and transitive role assignment, CRUD operations, and membership queries.
-date: 2026-04-29
+date: 2026-11-13
 sidebar:
   label: Roles and Groups
   order: 2
@@ -151,7 +151,7 @@ if (result.IsSuccess)
 ### Querying Roles
 
 ```csharp
-using Duende.Storage.Querying;
+using Duende.IdentityServer.Models;
 using Duende.UserManagement.Membership;
 
 var filter = new RoleFilter { Name = "editor" };
@@ -230,7 +230,7 @@ if (result.IsSuccess)
 
 ```csharp
 using Duende.UserManagement.Membership;
-using Duende.Storage.Querying;
+using Duende.IdentityServer.Models;
 
 var filter = new GroupFilter
 {

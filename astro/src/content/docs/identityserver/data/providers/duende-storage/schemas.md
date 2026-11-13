@@ -1,7 +1,7 @@
 ---
 title: "Data Extension Schemas"
 description: "Define and validate custom properties on IdentityServer clients, resources and identity providers using Duende Storage data extension schemas"
-date: 2026-10-23
+date: 2026-11-13
 sidebar:
   label: "Schemas"
   order: 40
@@ -72,7 +72,7 @@ result as an in-memory schema:
 
 ```csharp
 // Program.cs
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.IdentityServer.Stores.Storage;
 using Duende.IdentityServer.Stores.Storage.IdentityProviders;
 
@@ -95,7 +95,7 @@ Register a full `SchemaConfiguration` that reuses the same `SchemaId` to replace
 
 ```csharp
 using Duende.IdentityServer.Stores.Storage;
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 
 builder.Services
     .AddIdentityServer()
@@ -125,7 +125,7 @@ In that mode, create the schema in the database yourself, for example:
 
 ```csharp
 using Duende.IdentityServer.Stores.Storage.IdentityProviders;
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 
 var result = await schemaAdmin.CreateAsync(BuiltInSchemas.SamlProvider, CancellationToken.None);
 
@@ -145,7 +145,7 @@ Define typed attributes once and reuse those definitions when assigning values:
 ```csharp
 // ClientDataExtensions.cs
 using Duende.IdentityServer.Stores.Storage;
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 
 public static class ClientDataExtensions
 {
@@ -211,7 +211,7 @@ After the database migration has completed, provision the schema through `ISchem
 
 ```csharp
 // Program.cs
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 
 var schemaAdmin = app.Services.GetRequiredService<ISchemaAdmin>();
 var schemaId = ClientDataExtensions.Schema.SchemaId;
@@ -260,7 +260,7 @@ Use the same typed definitions to add values to an administration model:
 ```csharp
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin.Clients;
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 
 var extensions = new AttributeValueCollection();
 extensions.Set(ClientDataExtensions.Department, "Sales");

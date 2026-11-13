@@ -1,7 +1,7 @@
 ---
 title: User Profiles and Attributes
 description: "Store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfServic, IUserProfileAdmin, and the BuiltInSchemas.UserProfile and profile administration APIs."
-date: 2026-05-19
+date: 2026-11-13
 sidebar:
   label: User Profiles and Attributes
   order: 1
@@ -80,7 +80,7 @@ Each access to `BuiltInSchemas.UserProfile` returns a new instance, so you can s
 To add attributes to the default profile, derive a new schema with `Extend` and register it with `AddInMemoryDataExtensionSchemas`:
 
 ```csharp title="Program.cs"
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement.Profiles;
 
 var department = new AttributeDefinition
@@ -111,7 +111,7 @@ The call to `AddInMemoryDataExtensionSchemas` can come before or after `AddUserM
 To replace the default profile entirely — for example, to log in by a custom attribute instead of `email` — register a full `SchemaConfiguration` that uses `SchemaId.UserProfile`:
 
 ```csharp title="Program.cs"
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement.Profiles;
 
 var username = new AttributeDefinition
@@ -152,7 +152,7 @@ builder.Services
 With `AddDynamicSchemas()`, in-memory schemas — including `BuiltInSchemas.UserProfile` and anything passed to `AddInMemoryDataExtensionSchemas` — are not used, and the built-in profile is **not** seeded into the database. `ISchemaAdmin.GetAsync(SchemaId.UserProfile, ct)` returns "not found" until you create the schema yourself.
 :::
 
-`ISchemaAdmin` (from `Duende.Storage.EntityAttributeValue`) is the interface for managing the schema at runtime:
+`ISchemaAdmin` (from `Duende.IdentityServer.DataExtensions`) is the interface for managing the schema at runtime:
 
 ```csharp
 public interface ISchemaAdmin
@@ -169,7 +169,7 @@ The typical pattern is get-modify-save, using `GetResult<T>.Version` as the `exp
 
 ```csharp
 // SchemaSetup.cs
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement.Profiles;
 
 public class SchemaSetup(ISchemaAdmin schemaAdmin)
@@ -270,7 +270,7 @@ Value objects like `AttributeCode` and `AttributeGroupCode` support implicit con
 The following example defines a custom `department` string attribute and a unique `employee_id` integer attribute. Add them to the schema either at compile time with `Extend` (see [Extending the built-in profile](#extending-the-built-in-profile)), or at runtime through the `ISchemaAdmin` get-modify-save pattern shown above:
 
 ```csharp
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 
 var department = new AttributeDefinition
 {
@@ -697,7 +697,7 @@ public interface IUserProfileSelfService
 ### Registering a Profile
 
 ```csharp
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement;
 using Duende.UserManagement.Profiles;
 
@@ -788,7 +788,7 @@ public interface IUserProfileAdmin
 ### Creating a Profile (Admin)
 
 ```csharp
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement;
 using Duende.UserManagement.Profiles;
 
@@ -857,7 +857,7 @@ Filtering and sorting are not supported for profile queries; only pagination via
 ### Querying All Profiles
 
 ```csharp
-using Duende.Storage.Querying;
+using Duende.IdentityServer.Models;
 using Duende.UserManagement.Profiles;
 
 var request = QueryRequest.Create(new DataRange(0, 50));
@@ -872,8 +872,8 @@ foreach (var profile in result.Items)
 ### Querying Profiles with Attribute Projection
 
 ```csharp
-using Duende.Storage.EntityAttributeValue;
-using Duende.Storage.Querying;
+using Duende.IdentityServer.DataExtensions;
+using Duende.IdentityServer.Models;
 using Duende.UserManagement.Profiles;
 
 // Only retrieve email and department attributes for performance
@@ -916,7 +916,7 @@ public interface IReadOnlyAttributeSchema
 The following example shows a complete flow: initialising the schema on startup, registering a user profile, and then reading it back.
 
 ```csharp
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement;
 using Duende.UserManagement.Profiles;
 
