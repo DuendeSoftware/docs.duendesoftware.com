@@ -133,7 +133,7 @@ client-supplied hint that your login page can use within a space; it never selec
 Custom user stores, such as ASP.NET Identity or your own user database, and other application-level services are not
 made space-aware automatically. You must isolate or partition them yourself when users, profile data, email delivery or
 other dependencies belong to a specific space. Duende User Management is the exception: it works with Spaces out of the box,
-and stores each space's users in that space's own database without extra configuration.
+and stores each space's users in that space's own storage pool without extra configuration.
 
 :::note[Duende User Management]
 [Duende User Management](/identityserver/identity/user-management/index.mdx) uses the same storage factory as

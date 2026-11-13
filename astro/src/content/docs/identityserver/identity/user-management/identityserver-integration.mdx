@@ -123,8 +123,14 @@ is logged.
 ## Using User Management With Spaces
 
 When [Spaces](/identityserver/spaces/index.mdx) is enabled, User Management stores its data through the same
-space-aware storage factory as IdentityServer. User profiles, authenticators, roles and groups go to the database of the
-space that handles the request. Each space has its own users, and a user created in one space can't sign in to another.
+space-aware storage factory as IdentityServer. User profiles, authenticators, roles and groups go to the storage pool of the
+space that handles the request, within the database of the storage instance mapped to User Management. Accounts and
+authenticators are not shared between spaces: signing in to a space only uses that space's users.
+
+Isolation doesn't restrict who can register. If a flow creates users on demand, such as
+[one-time passwords](/identityserver/identity/user-management/authentication/otp.mdx) for an unknown address, the same
+person can sign in to another space and get a separate, independent account there. Add your own registration or
+admission checks if a space should only admit specific users.
 
 </Version>
 
