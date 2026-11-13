@@ -100,16 +100,38 @@ complete registration and migration example.
 On SQL Server, PostgreSQL and SQLite, each version step runs inside a transaction, so a failed step rolls back and
 running the migration again resumes from the last completed version. On Oracle, DDL commits automatically, so a
 failed step can leave some objects already created; the migration scripts skip objects that already exist, so running
-the migration again is safe there too. After migrating, Duende Storage verifies the schema and throws if verification
-finds a mismatch.
+the migration again is safe there too. This also applies when a migration fails because another process was
+migrating the same database at the same time. After migrating, Duende Storage verifies the schema and throws if
+verification finds a mismatch.
 
-:::caution[Run exactly one migration process at a time]
-No provider protects against concurrent migrations. Run one migration process before your app instances start,
-preferably with the [Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md). Calling `MigrateAsync`
-at startup, as the [getting started](/identityserver/data/providers/duende-storage/getting-started.md) walkthrough
-does, is convenient for local development, but in production it risks two app instances migrating the same database
-at the same time during a rolling deployment.
+### Concurrent Migrations
+
+In production, migrate the schema with the [Duende CLI](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate),
+as a single deployment step that runs before your application instances start, for example a pipeline step, a
+Kubernetes Job or an init container:
+
+* Grant schema-changing permissions only to that step. Your application doesn't need them.
+* At application startup, call `CheckVersionAsync` and wait, or fail readiness, until `IsCompatible` is `true`.
+
+:::caution[Calling MigrateAsync at startup is for local development only]
+Calling `MigrateAsync` from the application at startup, as the
+[getting started](/identityserver/data/providers/duende-storage/getting-started.md) walkthrough does, is convenient for
+local development, but isn't recommended in production. When several instances start together during a scale-out or
+rolling deployment, they migrate the same database at the same time, and on every provider except SQL Server some of
+them fail to start.
 :::
+
+If several processes do migrate the same database at the same time, what happens depends on the provider:
+
+| Provider           | Concurrent `MigrateAsync` calls                                                                                                                                                                                                    |
+|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SQL Server         | Serialized with an application lock. Instances wait for each other and skip steps that are already applied. An instance that waits longer than 60 seconds for the lock throws.                                                    |
+| PostgreSQL, SQLite | Not serialized. One instance completes the migration; the others typically throw (for example, a duplicate schema or column error) and their changes are rolled back.                                                            |
+| Oracle             | Not serialized. Instances can throw lock or concurrent-DDL errors such as `ORA-00054`, `ORA-14411` or `ORA-00001`. Because the migration scripts skip objects that already exist, running the migration again is safe. |
+
+On every provider, a migration that fails because another process migrated at the same time leaves the database in a
+consistent state, and running the migration again completes it. The cost is a failed startup, not a damaged database,
+but it is still a failed deployment, which the single CLI step above avoids.
 
 ## Keep Connection Strings Secret
 
