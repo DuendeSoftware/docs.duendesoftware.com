@@ -1,7 +1,7 @@
 ---
 title: Attribute Groups and Ordering
 description: How to organize user profile attributes into groups and control their display order in Duende User Management.
-date: 2026-05-15
+date: 2026-11-13
 sidebar:
   label: Attribute Groups
   order: 2
@@ -68,7 +68,7 @@ The example adds new attributes rather than grouping existing ones: the built-in
 
 ```csharp
 // attribute-groups-setup.cs
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement.Profiles;
 
 var workInfo = new AttributeGroup(

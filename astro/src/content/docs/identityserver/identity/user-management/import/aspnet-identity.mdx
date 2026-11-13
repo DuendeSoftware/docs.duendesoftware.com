@@ -1,7 +1,7 @@
 ---
 title: "Migrating from ASP.NET Identity"
 description: Step-by-step guide to migrating users from an ASP.NET Identity database into Duende User Management using a hosted service and the IUserImporter API.
-date: 2025-05-22
+date: 2026-11-13
 sidebar:
   label: "From ASP.NET Identity"
   order: 2
@@ -232,7 +232,7 @@ Add a helper method that takes an `IdentityUser` and its claims and returns a `U
 
 ```csharp
 // MigrationHelpers.cs
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement;
 using Duende.UserManagement.Authentication.Otp;
 using Duende.UserManagement.Authentication.Passkeys;
@@ -409,7 +409,7 @@ Now wire everything together in a hosted service. The service runs once on appli
 ```csharp
 // AspNetIdentityMigrationService.cs
 using Duende.Storage.Schema;
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement;
 using Duende.UserManagement.Import;
 using Duende.UserManagement.Profiles;

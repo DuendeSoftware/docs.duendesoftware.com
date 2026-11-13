@@ -1,7 +1,7 @@
 ---
 title: "Getting Started With Spaces"
 description: "Step-by-step guide to installing Duende.Spaces, configuring space resolution by origin or path and creating your first IdentityServer space"
-date: 2026-11-02
+date: 2026-11-13
 sidebar:
   label: "Getting Started"
   order: 10
@@ -101,7 +101,7 @@ Use `ISpaceAdmin` from a trusted provisioning or administration path. Query by n
 
 ```csharp
 // Program.cs
-using Duende.Storage.Querying;
+using Duende.IdentityServer.Models;
 
 var spaces = app.Services.GetRequiredService<ISpaceAdmin>();
 

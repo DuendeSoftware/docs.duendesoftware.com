@@ -1,7 +1,7 @@
 ---
 title: "Configuration Admin APIs"
 description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende Storage admin APIs"
-date: 2026-09-01
+date: 2026-11-13
 sidebar:
   label: "Admin APIs"
   order: 30
@@ -238,7 +238,7 @@ Use `QueryAsync` to list entities. The result contains the current page and pagi
 ```csharp
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin.ApiScopes;
-using Duende.Storage.Querying;
+using Duende.IdentityServer.Models;
 
 var request = QueryRequest.Create<ApiScopeFilter, ApiScopeSortField>(
     new ApiScopeFilter { Name = "inventory" });
