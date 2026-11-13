@@ -145,8 +145,9 @@ static Task<SaveResult<ClientId>> CreateClient(
         ct);
 ```
 
-The API hashes plaintext shared secret values before storage (see the secret types below). Read secrets from a secret manager, never source
-control or application configuration committed with your code. Secret values are not returned by read operations.
+The API hashes plaintext shared secret values before storage (see the secret types below). Read secrets from a secret
+manager, never source control or application configuration committed with your code. Secret values are not returned by
+read operations.
 
 ### Manage Secrets
 
@@ -280,8 +281,8 @@ certificate with its `Id` to keep it. A certificate with an empty `Id` is added 
 
 To validate SAML service provider configuration with your own rules, implement `ISamlServiceProviderConfigurationValidator`
 and register it with `AddSamlServiceProviderConfigurationValidator<T>()`. IdentityServer runs the validator when you save a
-service provider through `ISamlServiceProviderAdmin`. The registration replaces the default validator. Call `SetError` on the context to reject a configuration. The message appears in the validation
-errors of the `SaveResult`.
+service provider through `ISamlServiceProviderAdmin`. The registration replaces the default validator. Call `SetError`
+on the context to reject a configuration. The message appears in the validation errors of the `SaveResult`.
 
 ```csharp
 // RequireHttpsEntityIdValidator.cs
@@ -391,12 +392,14 @@ ignoring case. `Enabled` matches exactly. Multiple properties combine with AND.
 
 Each service returns its own list item type. These carry the typed ID and a few summary values, not the full configuration:
 
-| List item                      | Notable properties                                                               |
-| ------------------------------ | -------------------------------------------------------------------------------- |
-| `ApiResourceListItem`          | `Id`, `Name`, `DisplayName`, `Enabled`, `Description`, `ScopeCount`              |
-| `ClientListItem`               | `Id`, `ClientId`, `ClientName`, `Enabled`, `Description`, `AllowedGrantTypes`, `AllowedScopeCount`, `RedirectUriCount` |
-| `IdentityProviderListItem`     | `Id`, `Scheme`, `DisplayName`, `Enabled`, `Type`                                 |
-| `SamlServiceProviderListItem`  | `Id`, `EntityId`, `DisplayName`, `Enabled`, `Description`, `CertificateCount`, `AllowedScopeCount` |
+| List item                     | Notable properties                                                                                                     |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `ApiScopeListItem`            | `Id`, `Name`, `DisplayName`, `Enabled`, `Description`                                                                  |
+| `ApiResourceListItem`         | `Id`, `Name`, `DisplayName`, `Enabled`, `Description`, `ScopeCount`                                                    |
+| `IdentityResourceListItem`    | `Id`, `Name`, `DisplayName`, `Enabled`, `Description`                                                                  |
+| `ClientListItem`              | `Id`, `ClientId`, `ClientName`, `Enabled`, `Description`, `AllowedGrantTypes`, `AllowedScopeCount`, `RedirectUriCount` |
+| `IdentityProviderListItem`    | `Id`, `Scheme`, `DisplayName`, `Enabled`, `Type`                                                                       |
+| `SamlServiceProviderListItem` | `Id`, `EntityId`, `DisplayName`, `Enabled`, `Description`, `CertificateCount`, `AllowedScopeCount`                     |
 
 Call `GetAsync`, or the matching get-by-identifier method, when you need the full configuration.
 
