@@ -112,6 +112,18 @@ space path, so their cookies use the hosting `PathBase`, or `/` when it is empty
 matched space path to `PathBase`. If space resolution runs after `UseIdentityServer()`, or not at all, the cookie path
 is only the hosting `PathBase`, or `/` when it is empty.
 
+### Why Cookies Are Scoped to the Path
+
+Path-based spaces share one host name. If their cookies used `Path=/`, the browser would send each space's cookies to
+every other space on that host, and all spaces would share a single session cookie. Signing in to space B would replace
+the session cookie of space A. With `PartitionDataProtection` set to `false`, a user signed in to space A would also be
+signed in to space B. Scoping the cookies to the space path gives each space its own cookies, so a session in one space
+isn't sent to another space and can't be replaced by it.
+
+The same reasoning applies when you host IdentityServer under a `PathBase` without Spaces. Hosting under a path usually
+means other applications share the host name. Scoping IdentityServer's cookies to its base path keeps them from being
+sent to those applications, and keeps them separate from cookies with the same name that those applications set.
+
 ### Cookies Scoped to the Space Path
 
 IdentityServer sets the space path on these cookies:
@@ -134,8 +146,9 @@ not changed.
 
 For the session cookie, the `idsrv.external` cookie and the cookie of the configured scheme, IdentityServer replaces
 `options.Cookie` on the cookie authentication options with a wrapper around your `CookieBuilder`. The wrapper passes
-`Name`, `Domain`, `SameSite`, `HttpOnly`, `Secure` and your other settings through and replaces only `Path`. Cookie
-extensions you add to the wrapper are copied into the cookie it builds.
+`Name`, `Domain`, `SameSite`, `HttpOnly`, `Secure` and your other settings through and replaces only `Path`. A `Path`
+you set on `options.Cookie` is ignored for these cookies. Cookie extensions you add to the wrapper are copied into the
+cookie it builds.
 
 If your code assigns a new `CookieBuilder` to `options.Cookie` after IdentityServer has wrapped it, the new builder
 isn't wrapped. IdentityServer then doesn't set the space path on that cookie.
@@ -160,6 +173,15 @@ Use the `__Secure-` prefix instead. It still enforces `Secure` but permits non-r
 
 IdentityServer doesn't run this check for the check-session cookie or the message cookies. They get the same path as
 the other cookies.
+
+### Existing Cookies
+
+IdentityServer doesn't migrate or remove existing cookies. Cookies issued with `Path=/` before IdentityServer scoped
+cookies to the base path stay in the browser until they expire. Browsers still send them to every path, and they can
+exist next to a new cookie with the same name. Changing the path alone doesn't end existing sessions. In a named space
+with data protection partitioning enabled, an older cookie can't be read, so the user signs in again. Otherwise, the
+older cookie can still be accepted. If existing sessions must end, end them explicitly, for example by changing the
+session cookie name.
 
 ## What Spaces Does Not Isolate
 
