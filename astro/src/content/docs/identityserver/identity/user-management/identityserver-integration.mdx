@@ -118,6 +118,22 @@ is logged.
 
 `IsActiveAsync` returns `true` when the user profile exists **and** the user has at least one registered authenticator (password, passkey, external login, or OTP address). A user whose profile exists but has no authenticators is treated as inactive, which causes IdentityServer to reject tokens for that user. Users who have been deleted or never existed also return `false`.
 
+<Version since="8.1">
+
+## Using User Management With Spaces
+
+When [Spaces](/identityserver/spaces/index.mdx) is enabled, User Management stores its data through the same
+space-aware storage factory as IdentityServer. User profiles, authenticators, roles and groups go to the storage pool of the
+space that handles the request, within the database of the storage instance mapped to User Management. Accounts and
+authenticators are not shared between spaces: signing in to a space only uses that space's users.
+
+Isolation doesn't restrict who can register. If a flow creates users on demand, such as
+[one-time passwords](/identityserver/identity/user-management/authentication/otp.mdx) for an unknown address, the same
+person can sign in to another space and get a separate, independent account there. Add your own registration or
+admission checks if a space should only admit specific users.
+
+</Version>
+
 ## Customization
 
 `UserManagementProfileService` is a public class with virtual methods you can override by subclassing it and registering your
