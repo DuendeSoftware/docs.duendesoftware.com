@@ -116,13 +116,18 @@ is only the hosting `PathBase`, or `/` when it is empty.
 
 Path-based spaces share one host name. If their cookies used `Path=/`, the browser would send each space's cookies to
 every other space on that host, and all spaces would share a single session cookie. Signing in to space B would replace
-the session cookie of space A. With `PartitionDataProtection` set to `false`, a user signed in to space A would also be
-signed in to space B. Scoping the cookies to the space path gives each space its own cookies, so a session in one space
-isn't sent to another space and can't be replaced by it.
+the session cookie of space A. With `PartitionDataProtection` set to `false` and a self-contained session cookie, space
+B could also accept the cookie from space A. With server-side sessions, the session is stored per space, so space B
+can't find a session created in space A. Scoping the cookies to the space path gives each space its own cookies, so the
+browser doesn't send one space's session to another space and one space's sign-in doesn't replace another's.
 
 The same reasoning applies when you host IdentityServer under a `PathBase` without Spaces. Hosting under a path usually
-means other applications share the host name. Scoping IdentityServer's cookies to its base path keeps them from being
-sent to those applications, and keeps them separate from cookies with the same name that those applications set.
+means other applications share the host name. Scoping IdentityServer's cookies to its base path keeps browsers from
+sending them to those applications, and avoids accidental collisions with cookies of the same name.
+
+Path scoping isn't a security boundary. Any application on the same host can set a cookie with the same name and path,
+and cookies scoped to a parent path are also sent to nested paths. Don't host untrusted applications on the same host
+name as IdentityServer.
 
 ### Cookies Scoped to the Space Path
 
