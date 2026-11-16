@@ -58,9 +58,9 @@ during a SAML sign-in flow. After an `AuthnRequest` is received and validated, I
 calls `ProcessInteractionAsync` to decide whether the user needs to be redirected to the login page or whether the flow can proceed directly to assertion generation.
 
 The default implementation handles standard login flows. Override it when you need custom step-up
-authentication logic or any other non-standard interaction decision. The default implementation does not evaluate
-`RequestedAuthnContext`, so enforcing it requires your own logic here or in your login UI. The default class is sealed, so
-wrap it rather than inherit from it.
+authentication logic or any other non-standard interaction decision. To enforce `RequestedAuthnContext`,
+add the checks here or in your login UI, because the default implementation doesn't evaluate it.
+The default class is sealed, so wrap it rather than inherit from it.
 
 For the full interface and its members, see [SAML SSO Interaction Response Generator](/identityserver/reference/v8/saml/saml-sso-interaction-response-generator.md).
 
@@ -157,7 +157,7 @@ For the full interface and default behavior, see [SAML Logout Services](/identit
 
 ### When to Use
 
-Override `ISaml2SloResponseGenerator` to customize the SAML `LogoutResponse` that IdentityServer sends back to the SP that initiated the SLO flow, for example to change how partial-logout scenarios are reported.
+Replace `ISaml2SloResponseGenerator` when you need to change how partial logout is reported to the SP that initiated the logout.
 
 This interface controls **response generation**, not persistence. To customize how logout session state is stored, see [`ISamlLogoutSessionStore`](#isamllogoutsessionstore).
 
@@ -286,7 +286,7 @@ generation, after the user has authenticated and the requested `NameID` format h
 
 The default implementation handles email address and unspecified (using the `sub` values as the identifier). Register a custom implementation to support additional `NameID` formats or to derive the `NameID` value from non-standard claims.
 
-For the full interface and the context and result types, see [SAML NameID Generator](/identityserver/reference/v8/saml/saml-nameid-generator.md).
+See [SAML NameID Generator](/identityserver/reference/v8/saml/saml-nameid-generator.md) for the interface, context, and result types.
 
 ### When to Use
 
@@ -409,7 +409,7 @@ Override `ISaml2SsoResponseGenerator` when:
 
 * You need to add custom SAML attributes or assertion elements not supported by the default
   implementation.
-* You need SP-specific response customization based on `validatedAuthnRequest.Saml2Sp`.
+* You need to customize the response for a particular SP, available through `validatedAuthnRequest.Saml2Sp`.
 
 ### Registration
 
@@ -646,7 +646,7 @@ For guidance on implementing a custom store, see [SAML Sign-in State Store](/ide
 
 ## ISamlSigninStateSerializer
 
-`ISamlSigninStateSerializer` handles serialization and deserialization of `SamlAuthenticationState` for persistence. The default implementation is registered by `AddOperationalStore()` and used by the Entity Framework Core store. You can replace it to use a different serialization format.
+`ISamlSigninStateSerializer` converts `SamlAuthenticationState` to and from its stored representation. `AddOperationalStore()` registers the default implementation for the EF Core store. Replace it if you need a different serialization format.
 
 For the full interface, see [SAML Sign-in State Store](/identityserver/reference/v8/saml/saml-signin-state-store.md#isamlsigninstateserializer).
 
@@ -690,7 +690,7 @@ conventions on EntityIds, restrict which scopes are allowed, or apply business-s
 
 ### Registration
 
-The default is registered as transient. Register your implementation after `AddIdentityServer()` so it replaces the default:
+Register your implementation after `AddIdentityServer()` to replace the default:
 
 ```csharp
 // Program.cs

@@ -79,8 +79,8 @@ Service Provider's Assertion Consumer Service (ACS) URL using the HTTP-POST bind
 Handles incoming SAML Single Logout (SLO) requests and responses. Service Providers send a SAML
 `LogoutRequest` message to this endpoint to initiate logout, or a `LogoutResponse` after processing
 a logout notification from IdentityServer. IdentityServer validates a `LogoutRequest` and starts the logout
-flow, which ends the user's IdentityServer session and coordinates logout across all other SPs. A `LogoutResponse`
-from an SP is recorded against the logout session that is waiting for it.
+flow, which ends the user's IdentityServer session and coordinates logout across all other SPs.
+IdentityServer records each SP's `LogoutResponse` in the corresponding logout session.
 
 IdentityServer tracks which SPs have active sessions for the user. After receiving a `LogoutRequest`,
 it sends `LogoutRequest` messages to all other SPs with active sessions. It then collects their

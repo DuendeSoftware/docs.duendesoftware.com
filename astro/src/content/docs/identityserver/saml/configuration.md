@@ -71,7 +71,7 @@ Available options:
 
 * **`RequireSignedLogoutResponses`**
   When `true`, IdentityServer requires LogoutResponse messages from SPs to be signed.
-  Defaults to `true`, per SAML 2.0 Profiles §4.4.4. Individual SPs can override this via `SamlServiceProvider.RequireSignedLogoutResponses`.
+  Defaults to `true`. Individual SPs can override this via `SamlServiceProvider.RequireSignedLogoutResponses`.
 
 * **`DefaultClaimMappings`**
   Maps OIDC claim types to SAML attribute names. See [Default Claim Mappings](#default-claim-mappings) below.
@@ -79,7 +79,7 @@ Available options:
 * **`SupportedNameIdFormats`**
   Supported NameID formats advertised by the IdP. Defaults to `[ EmailAddress, Unspecified ]`.
 
-  The NameID format determines how the user is identified to the SP. **emailAddress** uses the user's email claim and is human-readable but is considered a good identifier. **Unspecified** uses the user's `sub` claim value. Inbound AuthnRequests are validated against the formats configured here; requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
+  The NameID format determines how the user is identified to the SP. **emailAddress** uses the user's email claim and is human-readable but is not considered a good identifier. **Unspecified** uses the user's `sub` claim value. Inbound AuthnRequests are validated against the formats configured here. Requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
 
 * **`DefaultClockSkew`**
   Clock skew tolerance for validating SAML message timestamps. Defaults to 5 minutes.
@@ -104,11 +104,13 @@ Available options:
   RelayState is an opaque string that an SP may include in its `AuthnRequest` to preserve application state across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can keep state that it needs for processing after authentication. The SAML specification mandates that RelayState MUST NOT exceed 80 bytes in length; this limit enforces that requirement. See [`RelayState`](/identityserver/saml/concepts.md#relaystate) for more context.
 
 * **`DefaultAuthnContextMappings`**
-  Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML identifier (a URI).
-  
-  Default mappings include `pwd` → `urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport` and `external` → `urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified`. 
-  
-  Per-SP overrides are set via `SamlServiceProvider.AuthnContextMappings`.
+  Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. When IdentityServer issues an assertion, it uses these mappings to fill the `AuthnContextClassRef` of the `AuthnStatement`: it looks up the user's `acr` claim first, then each `amr` claim, and uses the first match. If nothing matches, it uses `urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified`.
+
+  These mappings describe how the user authenticated. They don't enforce the SP's `RequestedAuthnContext` requirements. See [SAML Authentication Context](/identityserver/saml/extensibility.md#saml-authentication-context) for how to handle those requirements.
+
+  Default mappings include `pwd` → `urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport` and `external` → `urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified`. There is no built-in mapping for values such as `mfa` or `otp`, so add one if you want them reflected in the assertion.
+
+  To override the mappings for an SP, set `SamlServiceProvider.AuthnContextMappings`. A non-empty dictionary replaces the defaults rather than merging with them.
 
 * **`DefaultAssertionLifetime`**
   How long issued assertions are considered valid. Defaults to 5 minutes. Per-SP overrides are set via `SamlServiceProvider.AssertionLifetime`.
@@ -143,7 +145,7 @@ names:
 | `role`     | `http://schemas.xmlsoap.org/ws/2005/05/identity/role`                |
 
 Claims not present in this mapping are still included in the assertion but use their original claim type as the attribute name.
-Override mappings globally via `SamlOptions.DefaultClaimMappings` or per Service Provider via `SamlServiceProvider.ClaimMappings`.
+Override mappings globally with `SamlOptions.DefaultClaimMappings` or for an individual SP with `SamlServiceProvider.ClaimMappings`. A non-empty per-SP dictionary replaces the defaults, so include any default mappings you still need.
 
 :::note
 Claim selection and attribute naming are two separate steps. You select which claims to include in assertions using OIDC claim type names (via identity resources and `RequestedClaimTypes`). The claim mapping then controls what SAML attribute name each selected claim is emitted as. For example, selecting the `email` claim (an OIDC name) results in an attribute named `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress` (a SAML URI) in the assertion.
@@ -175,15 +177,15 @@ builder.Services.AddIdentityServer()
 
 `SamlEndpointOptions` configures the URL paths and supported bindings for all SAML protocol endpoints. Access it via `SamlOptions.Endpoints`.
 
-| Property                      | Type                  | Default                    | Description                                                                                                                                                                                                                                                             |
-|-------------------------------|-----------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`             | Path for the SSO endpoint (receives AuthnRequests).                                                                                                                                                                                                                     |
-| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SSO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests.                                                                                                                   |
-| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`    | Path for the SSO callback endpoint (after user authenticates). This is an internal endpoint that is not visible in the metadata document.                                                                                                                               |
-| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`             | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses).                                                                                                                                                                                                |
-| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` | Bindings advertised in metadata for the SLO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. Note: SP-side SLO endpoints (`SamlServiceProvider.SingleLogoutServiceUrls`) currently only support HTTP Redirect. |
-| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`    | Path for the SLO callback endpoint (completes the logout flow). This is an internal endpoint that is not visible in the metadata document.                                                                                                                              |
-| `StateIdParameterName`        | `string`              | `"samlStateId"`            | Query string parameter name used to pass the SAML sign-in state identifier through the return URL in the redirect to the login page.                                                                                                                                    |
+| Property                      | Type                  | Default                                   | Description                                                                                                                                                                                                                                                             |
+|-------------------------------|-----------------------|-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SingleSignOnServicePath`     | `string`              | `"/Saml2/SSO"`                            | Path for the SSO endpoint (receives AuthnRequests).                                                                                                                                                                                                                     |
+| `SingleSignOnServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` (binding URNs) | Bindings advertised in metadata for the SSO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests.                                                                                                                   |
+| `SingleSignOnCallbackPath`    | `string`              | `"/Saml2/SSO/Callback"`                   | Path for the SSO callback endpoint (after user authenticates). This is an internal endpoint that is not visible in the metadata document.                                                                                                                               |
+| `SingleLogoutServicePath`     | `string`              | `"/Saml2/SLO"`                            | Path for the SLO endpoint (receives LogoutRequests and LogoutResponses).                                                                                                                                                                                                |
+| `SingleLogoutServiceBindings` | `ICollection<string>` | `[HttpRedirect, HttpPost]` (binding URNs) | Bindings advertised in metadata for the SLO endpoint. This controls what appears in the metadata document, not whether the endpoint accepts requests. Note: SP-side SLO endpoints (`SamlServiceProvider.SingleLogoutServiceUrls`) currently only support HTTP Redirect. |
+| `SingleLogoutCallbackPath`    | `string`              | `"/Saml2/SLO/Callback"`                   | Path for the SLO callback endpoint (completes the logout flow). This is an internal endpoint that is not visible in the metadata document.                                                                                                                              |
+| `StateIdParameterName`        | `string`              | `"samlStateId"`                           | Query string parameter name used to pass the SAML sign-in state identifier through the return URL in the redirect to the login page.                                                                                                                                    |
 
 
 ```csharp
@@ -207,8 +209,8 @@ Available options:
 * **`EntityId`** (`string`)
   The SP's entity identifier, as declared in its SAML metadata. Required.
 
-* **`DisplayName`** (`string`)
-  Human-readable name shown in logs and consent screens. Required.
+* **`DisplayName`** (`string?`)
+  Optional human-readable name for the SP. Defaults to `null`.
 
 * **`Description`** (`string?`)
   Optional description. Defaults to `null`.
@@ -259,7 +261,7 @@ Available options:
   Per-SP override for whether LogoutResponse messages must be signed. When `null`, falls back to `SamlOptions.RequireSignedLogoutResponses`. Defaults to `null`.
 
 * **`Certificates`** (`ICollection<ServiceProviderCertificate>?`)
-  Certificates associated with this SP, with use annotations indicating whether each certificate is used for signature verification, encryption, or both. See [`ServiceProviderCertificate`](#serviceprovidercertificate) below. Defaults to `null`.
+  The SP's certificates. IdentityServer uses those marked for signing to verify signatures on messages from the SP. See [`ServiceProviderCertificate`](#serviceprovidercertificate) below. Defaults to `null`.
 
 * **`AllowIdpInitiated`** (`bool`)
   When `true`, IdP-initiated SSO is allowed for this SP. Defaults to `false`.
@@ -267,7 +269,7 @@ Available options:
 * **`ClaimMappings`** (`IDictionary<string, string>`)
   Per-SP claim-to-attribute mappings (internal claim name → SAML attribute URI) that override `SamlOptions.DefaultClaimMappings`. Defaults to `{}`.
 
-* **`DefaultNameIdFormat`** (`string`)
+* **`DefaultNameIdFormat`** (`string?`)
   Default NameID format to use when the SP does not specify one. Defaults to `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified`.
 
 * **`SigningBehavior`** (`SamlSigningBehavior?`)
@@ -289,7 +291,7 @@ Available options:
   Per-SP override for the claim used to resolve an email-format NameID. Uses `SamlOptions.EmailNameIdClaimType` when `null`. Defaults to `null`.
 
 * **`AllowedSignatureAlgorithms`** (`List<string>?`)
-  Signature algorithms this SP accepts. When `null`, the IdP's default algorithm is used. Defaults to `null`.
+  Signature algorithms IdentityServer accepts on inbound messages from this SP (for example, signed `AuthnRequest` messages). This doesn't affect how IdentityServer signs its own responses. Defaults to `null`.
 
 ## Enums and Value Types
 
@@ -343,7 +345,7 @@ Properties:
 
 ### IndexedEndpoint
 
-`IndexedEndpoint` represents a single Assertion Consumer Service (ACS) endpoint on a Service Provider. It extends the basic location-and-binding pair with an index (for ordering when multiple ACS endpoints are registered) and an optional default flag.
+`IndexedEndpoint` represents a single Assertion Consumer Service (ACS) endpoint on a Service Provider. It extends the basic location-and-binding pair with an index and a default flag.
 
 `IndexedEndpoint` is used as the element type of `SamlServiceProvider.AssertionConsumerServiceUrls`.
 
@@ -351,8 +353,8 @@ Properties:
 
 * **`Location`** (`string`): The ACS URL where SAML responses are delivered.
 * **`Binding`** (`SamlBinding`): The HTTP binding the endpoint uses. Must be `SamlBinding.HttpPost` for the ACS endpoint. HTTP Redirect is not supported for SAML Response delivery.
-* **`Index`** (`int`): Integer index used to order multiple endpoints. Lower values take precedence.
-* **`IsDefault`** (`bool?`): When `true`, this endpoint is the default endpoint of its kind. When multiple endpoints are registered, exactly one should be marked as default.
+* **`Index`** (`int`): The index of the endpoint.
+* **`IsDefault`** (`bool`): When `true`, this endpoint is the default endpoint. Defaults to `false`.
 
 Example:
 
@@ -371,7 +373,7 @@ AssertionConsumerServiceUrls =
 
 ### ServiceProviderCertificate
 
-`ServiceProviderCertificate` pairs an X.509 certificate with a use annotation that tells IdentityServer how to apply it for a given SP. Use it to configure signature verification certificates, encryption certificates, or certificates that serve both purposes.
+`ServiceProviderCertificate` pairs an SP's X.509 certificate with a `Use` value. IdentityServer uses certificates marked for signing to verify signatures from that SP.
 
 Properties:
 
@@ -382,17 +384,17 @@ Properties:
 
 `KeyUse` is a flags enum that controls how a `ServiceProviderCertificate` is applied.
 
-| Value        | Description                                                                                 |
-|--------------|---------------------------------------------------------------------------------------------|
-| `Signing`    | Used to verify signatures on messages from this SP.                                         |
-| `Encryption` | Used to encrypt assertions sent to this SP.                                                 |
-| `Both`       | Used for both signature verification and encryption. Equivalent to `Signing \| Encryption`. |
+| Value        | Description                                                                                             |
+|--------------|---------------------------------------------------------------------------------------------------------|
+| `Signing`    | Used to verify signatures on messages from this SP.                                                     |
+| `Encryption` | Reserved. IdentityServer doesn't encrypt assertions, and doesn't use certificates with only this value. |
+| `Both`       | Equivalent to `Signing \| Encryption`. Used to verify signatures.                                       |
 
 ## Caching Options
 
 The SAML add-on integrates with IdentityServer's built-in caching infrastructure.
 When you register a custom [SP store](/identityserver/reference/v8/saml/saml-service-provider-store.md) with `AddSamlServiceProviderStoreCache<T>()`, IdentityServer wraps your store with
-an in-memory cache to reduce repeated lookups.
+a `HybridCache`-based cache to reduce repeated lookups. `GetAllSamlServiceProvidersAsync` isn't cached.
 
 The cache duration is controlled by `SamlServiceProviderStoreExpiration` on `IdentityServerOptions.Caching`:
 
