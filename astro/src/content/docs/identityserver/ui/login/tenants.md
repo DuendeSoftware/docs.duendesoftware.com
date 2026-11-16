@@ -184,7 +184,7 @@ The tenant hint is surfaced in several other endpoints:
   [backchannel authentication request](/identityserver/reference/v8/endpoints/ciba.md) is exposed as the `Tenant`
   property of the [`BackchannelUserLoginRequest`](/identityserver/reference/v8/models/ciba-login-request.md), so your
   notification and approval logic can take it into account.
-* **SAML**: When IdentityServer acts as a [SAML identity provider](/identityserver/saml/index.md), a
+* **SAML**: When IdentityServer acts as a [SAML identity provider](/identityserver/saml/index.mdx), a
   `tenant:` value in the `AuthnContextClassRef` of the requested authentication context is parsed in the same way and
   exposed to your login page as the tenant of the SAML authentication context.
 * **Token endpoint**: IdentityServer does not process a `tenant:` value sent to the token endpoint. Custom

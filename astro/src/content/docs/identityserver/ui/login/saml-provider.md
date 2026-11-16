@@ -89,7 +89,7 @@ The `SamlServiceProviderOptions` class controls how the SP handler communicates 
   Whether to allow unsolicited (IdP-initiated) authentication responses. When `true`, also set `IdpInitiatedCallbackUrl` to specify where users land after authentication. Defaults to `false`.
 
 * **`IdpInitiatedCallbackUrl`**
-  The URL to redirect to after processing an unsolicited (IdP-initiated) authentication response. Required when `AllowUnsolicitedAuthnResponse` is `true`. Must be a relative path (e.g., `/ExternalLogin/Callback`) or an absolute URL with http/https scheme. Defaults to `null`.
+  The URL to redirect to after processing an unsolicited (IdP-initiated) authentication response. Needed to complete unsolicited responses when `AllowUnsolicitedAuthnResponse` is `true`: without it, an unsolicited response results in an error. Must be a relative path (e.g., `/ExternalLogin/Callback`) or an absolute URL with http/https scheme. Defaults to `null`.
 
 * **`MaxRelayStateLength`**
   Maximum length (in bytes) of the SAML RelayState value that will be persisted in authentication properties. RelayState values exceeding this limit are silently dropped to prevent cookie bloat. Defaults to `1024`.
@@ -101,10 +101,13 @@ The `SamlServiceProviderOptions` class controls how the SP handler communicates 
   The XML signature algorithm used for outbound SAML requests. Defaults to RSA-SHA256.
 
 * **`SpSigningCertificateBase64`**
-  A base64-encoded PKCS#12 (PFX) certificate that includes the SP's private key. The SP uses this certificate to sign outbound SAML messages such as `AuthnRequest` and `LogoutResponse`. You need to set this property when the remote IdP requires signed authentication requests, or when you enable single logout (SLO) via `SingleLogoutServiceUrl`. Defaults to `null`.
+  A base64-encoded PKCS#12 (PFX) certificate that includes the SP's private key. The SP uses this certificate to sign outbound SAML messages such as `AuthnRequest`. Set this property when the remote IdP requires signed authentication requests. It's required when `AuthnRequestSigningBehavior` is `Always`. Defaults to `null`.
 
 * **`SpSigningCertificatePassword`**
   The password for the PKCS#12 SP signing certificate set in `SpSigningCertificateBase64`. Leave this `null` if the certificate file has no password. Defaults to `null`.
+
+* **`AuthnRequestSigningBehavior`**
+  Controls whether outbound `AuthnRequest` messages are signed. Accepted values from the `AuthnRequestSigningBehavior` enum are `Never` and `Always`. Defaults to `Never`. When set to `Always`, you must also set `SpSigningCertificateBase64`.
 
 * **`ModulePath`**
   The application-relative path prefix for the handler's ACS and metadata endpoints. Defaults to `"/Saml2"`.
@@ -122,7 +125,7 @@ The `BindingType` property accepts values from the `SamlBindingType` enum:
 
 ## Validation
 
-The required properties (`SpEntityId`, `IdpEntityId`, and `SingleSignOnServiceUrl`) are validated eagerly at host startup. Any certificates listed in `SigningCertificatesBase64` are also validated to confirm they can be loaded as X.509 certificates. If a required property is missing or a certificate is invalid, the application fails to start with a clear `OptionsValidationException`.
+The required properties (`SpEntityId`, `IdpEntityId`, and `SingleSignOnServiceUrl`) are validated eagerly at host startup. Any certificates listed in `SigningCertificatesBase64` are also validated to confirm they can be loaded as X.509 certificates, and `SpSigningCertificateBase64` must be set when `AuthnRequestSigningBehavior` is `Always`. If a required property is missing or a certificate is invalid, the application fails to start with a clear `OptionsValidationException`.
 
 ## Static vs. Dynamic Providers
 
@@ -135,7 +138,7 @@ Use this table to decide which registration approach fits your situation:
 
 Both approaches use the same underlying SAML SP handler. Static registration is simpler when you have a fixed set of providers and do not need runtime management.
 
-For background on the IdP and SP roles in SAML 2.0, see [IdP and SP Concepts](/identityserver/saml/idp-and-sp.mdx).
+For background on the IdP and SP roles in SAML 2.0, see [SAML 2.0](/identityserver/saml/index.mdx).
 
 ## IdP-Initiated SSO
 
