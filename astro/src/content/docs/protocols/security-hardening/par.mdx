@@ -6,7 +6,7 @@ sidebar:
 description: "The client POSTs its authorization request straight to the PAR endpoint, authenticated like a token request, and gets back a short-lived request_uri. The browser then carries only client_id and request_uri."
 draft: false
 tableOfContents: true
-sources: [parIntro, parEndpoint, parResponse, parError, parRedirect, parJar, parRequest, parSecGuess, parSecRedirect, parSecurity, parSecPolicy, parSecSwap, clientAuth, tokenErr, pkceReq]
+sources: [parIntro, parEndpoint, parResponse, parError, parRedirect, parJar, parRequest, parSecGuess, parSecRedirect, parSecurity, parSecPolicy, parSecSwap, clientAuth, tokenErr, pkceReq, parJwtAud]
 flow:
   actors:
     - { name: Client, role: "OAuth client" }
@@ -49,6 +49,8 @@ The client builds the same authorization request it would normally put in a brow
 
 `Authorization: Basic` is the client authenticating at the PAR endpoint, the same way it would at the token endpoint, so the AS knows who is pushing the request. `code_challenge` is the PKCE challenge. PKCE still protects the code redemption later, and client authentication doesn't replace it. `request_uri` must not be sent in this request. A public client can send `client_id` without credentials, but the server must not rely on public client authentication to identify the client (RFC 6749 section 2.3).
 
+A client that authenticates with a signed JWT instead (`private_key_jwt`) must put only the authorization server's issuer identifier in the JWT's `aud` claim. RFC 10070 tightened this rule for the PAR endpoint: before, the server also accepted its token endpoint URL or PAR endpoint URL as the audience. The JWT should also carry the header `typ: client-authentication+jwt`.
+
 ```http
 POST /par HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
@@ -60,7 +62,7 @@ client_id=payments-app&response_type=code&scope=payments.write
 &code_challenge_method=S256
 ```
 
-<Cite k="parEndpoint" />
+<Cite k="parEndpoint" /> <Cite k="parJwtAud" />
 
 ### 3. The server authenticates and validates
 
