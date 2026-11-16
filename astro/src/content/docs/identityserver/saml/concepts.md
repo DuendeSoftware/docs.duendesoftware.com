@@ -63,7 +63,7 @@ sequenceDiagram
 
 In IdentityServer, you register each SP using a `SamlServiceProvider` configuration object (see [SAML Service Provider Store](/identityserver/reference/v8/saml/saml-service-provider-store.md)). This tells IdentityServer the SP's entity identifier, where to deliver assertions (the Assertion Consumer Service URL) and how to communicate. See the [Service Provider Store](/identityserver/saml/service-providers.md) and the [SamlServiceProvider model](/identityserver/saml/configuration.md#samlserviceprovider-model) for details.
 
-Duende IdentityServer can also act as a SAML Service Provider itself, consuming assertions from an external SAML IdP. See [Identity Provider and Service Provider](/identityserver/saml/idp-and-sp.mdx) for an overview of both roles.
+Duende IdentityServer can also act as a SAML Service Provider itself, consuming assertions from an external SAML IdP. See [SAML 2.0](/identityserver/saml/index.mdx) for an overview of both roles.
 
 ## Entity Identifiers
 

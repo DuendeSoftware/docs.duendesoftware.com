@@ -37,7 +37,7 @@ SAML-specific request details, such as enforcing MFA when the SP requests a spec
 
 ```csharp
 // LoginModel.cshtml.cs
-var context = await _interaction.GetAuthenticationContextAsync(returnUrl);
+var context = await _interaction.GetAuthenticationContextAsync(returnUrl, HttpContext.RequestAborted);
 
 if (context is SamlAuthenticationContext samlContext)
 {
@@ -254,7 +254,7 @@ assertion generation to determine which claims are available for inclusion in th
 
 The resolution chain works as follows: `AllowedScopes` determines which identity resources (and their claim types)
 are available. If `RequestedClaimTypes` is also configured, it narrows the resolved set to only those specific claim types.
-Note that `AllowedScopes` must contain only identity resource names; API resource scopes are not supported for SAML service providers.
+Note that `AllowedScopes` must contain only identity resource names. API resource scopes aren't supported for SAML service providers.
 
 The default implementation (`DefaultSamlResourceResolver`) resolves claim types from the
 configured identity resource store based on the SP's `AllowedScopes`. Override this interface if
@@ -677,8 +677,8 @@ For the full interface and validation context, see [SAML Service Provider Config
 ### When to Use
 
 The built-in `DefaultSamlServiceProviderConfigurationValidator` already checks EntityId, ACS URLs
-(which must use HTTP-POST), AllowedScopes, and lifetime values. It exposes virtual methods you can
-override without replacing the whole validator:
+(which must use HTTP-POST), AllowedScopes, and lifetime values. You can derive from it and override
+individual checks without replacing the whole validator:
 
 * `ValidateEntityIdAsync` - validates that EntityId is not null or empty.
 * `ValidateAssertionConsumerServiceUrlsAsync` - validates that ACS URLs exist and use HTTP-POST.

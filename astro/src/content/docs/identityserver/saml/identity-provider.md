@@ -17,7 +17,7 @@ The SAML 2.0 IdP feature covers the full SP-initiated flow, logout, and plenty o
 
 * **SP-initiated SSO**: HTTP Redirect and HTTP POST bindings for authentication requests
 * **Single Logout (SLO)**: front-channel logout notifications to registered SPs, with session tracking and partial logout responses when not all SPs respond
-* **Assertion signing**: per-SP configuration of signing algorithms
+* **Assertion signing**: per-SP signing behavior (sign the response, the assertion, or both)
 * **NameID format support**: email and using IdentityServer's `sub` (unspecified format) out of the box, with extensibility for custom formats
 * **AuthnContext class mapping**: maps OIDC `acr`/`amr` values to SAML AuthnContext class URIs
 * **Per-SP claim mappings**: transform and filter claims before they are included in assertions
@@ -65,7 +65,7 @@ builder.Services.AddIdentityServer()
     ]);
 ```
 
-For production, use the EF Core store from `Duende.IdentityServer.EntityFramework.Stores` to persist SP configuration in your database. See [Service Providers](/identityserver/saml/service-providers.md) for all storage options.
+For production, use the EF Core store from the `Duende.IdentityServer.EntityFramework` package to persist SP configuration in your database. See [Service Providers](/identityserver/saml/service-providers.md) for all storage options.
 
 For the interfaces and registration methods behind these steps, see the [SAML reference](/identityserver/reference/v8/saml/saml-registration.md).
 

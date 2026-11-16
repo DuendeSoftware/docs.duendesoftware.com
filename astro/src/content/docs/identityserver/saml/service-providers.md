@@ -10,7 +10,7 @@ sidebar:
 IdentityServer needs to know which SAML 2.0 Service Providers (SPs) are allowed to request
 authentication. The SAML plugin provides the `ISamlServiceProviderStore` interface: a read-only lookup called on every incoming SAML request to resolve SP configuration by entity ID.
 
-For simple deployments, you configure SPs at startup using the in-memory store. For more advanced setups where configuration changes more frequently, you implement a store backed by a database or configuration service. The `Duende.IdentityServer.EntityFramework.Stores` package contains an implementation of a database store.
+For simple deployments, you configure SPs at startup using the in-memory store. For more advanced setups where configuration changes more frequently, you implement a store backed by a database or configuration service. The `Duende.IdentityServer.EntityFramework` package contains an implementation of a database store.
 
 ## ISamlServiceProviderStore
 
@@ -18,14 +18,12 @@ For simple deployments, you configure SPs at startup using the in-memory store. 
 
 This interface is used for read-only lookup during request processing. Your store implementation should be optimized for fast, concurrent reads (e.g., backed by a cache or an indexed database query).
 
-`GetAllSamlServiceProvidersAsync` is used for bulk operations such as cache warming. It returns all registered SPs as an async stream.
-
 ```csharp
 // ISamlServiceProviderStore.cs
 public interface ISamlServiceProviderStore
 {
     Task<SamlServiceProvider?> FindByEntityIdAsync(string entityId, CancellationToken ct);
-    IAsyncEnumerable<SamlServiceProvider> GetAllSamlServiceProvidersAsync(CancellationToken ct = default);
+    IAsyncEnumerable<SamlServiceProvider> GetAllSamlServiceProvidersAsync(CancellationToken ct);
 }
 ```
 
@@ -66,6 +64,8 @@ builder.Services.AddIdentityServer()
     );
 ```
 
+The in-memory store validates each SP when it's added, throws an `ArgumentException` for duplicate entity IDs, and doesn't return SPs with `Enabled = false`.
+
 ## Entity Framework Core Store
 
 For production deployments, IdentityServer ships an EF Core-backed implementation of `ISamlServiceProviderStore` in the `Duende.IdentityServer.EntityFramework.Stores` package. This stores SP configuration in your database alongside other IdentityServer operational and configuration data.
@@ -89,7 +89,7 @@ The EF Core store handles concurrent reads efficiently and integrates with EF Co
 
 For deployments that need a store not covered by the built-in options, implement `ISamlServiceProviderStore` backed by your own data store (e.g., a NoSQL database or external configuration service). Register your implementation using `AddSamlServiceProviderStore<T>()` on the IdentityServer builder.
 
-Your implementation must handle concurrent reads efficiently. Consider adding a caching layer (e.g., `IMemoryCache`) in front of your database queries, since `FindByEntityIdAsync` is called on every SAML request.
+Your implementation must handle concurrent reads efficiently. Consider registering your store with [`AddSamlServiceProviderStoreCache<T>()`](#caching) instead, since `FindByEntityIdAsync` is called on every SAML request.
 
 ```csharp
 // Program.cs
