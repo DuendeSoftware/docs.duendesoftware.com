@@ -81,4 +81,5 @@ await _interaction.DenyAuthenticationAsync(
 ```
 
 For SAML-specific details about how the authentication context works, see
-[SAML Authentication Context](/identityserver/saml/extensibility.md#saml-authentication-context).
+[SAML Authentication Context](/identityserver/reference/v8/saml/saml-authentication-context.md) in the reference, or the
+[extensibility guide](/identityserver/saml/extensibility.md#saml-authentication-context).

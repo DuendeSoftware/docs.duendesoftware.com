@@ -1,7 +1,7 @@
 ---
 title: "SAML Extensibility"
 description: "Extensibility interfaces for SAML 2.0 IdP in IdentityServer, covering NameID generation, SSO response creation, metadata, and AuthnRequest validation."
-date: 2026-05-25
+date: 2026-11-16
 sidebar:
   label: Extensibility
   order: 32
@@ -13,6 +13,9 @@ tableOfContents:
 IdentityServer's SAML 2.0 Identity Provider has several extensibility interfaces you can implement
 to customize behavior. They're all registered in the DI container and can be replaced with your own
 implementations.
+
+This page explains when you need each extensibility point. For the full interfaces, members, and default behavior, see the
+[SAML reference](/identityserver/reference/v8/saml/saml-registration.md).
 
 ---
 
@@ -44,23 +47,7 @@ if (context is SamlAuthenticationContext samlContext)
 }
 ```
 
-`SamlAuthenticationContext` exposes the following properties:
-
-* **`ServiceProvider`** (`SamlServiceProvider`): The SP that initiated the request. Use this to
-  display SP-specific branding or to apply SP-specific authentication policies.
-* **`IdP`** (`string?`): The IdP entity ID from the `Scoping` element, populated only when the SP specified a single IdP in the `IDPList`. When multiple IdPs are listed, this property is `null`.
-* **`LoginHint`** (`string?`): A login hint derived from the `NameID` in the `AuthnRequest`, if
-  present.
-* **`Tenant`** (`string?`): A tenant identifier extracted from `RequestedAuthnContext`, if present.
-* **`PromptModes`** (`IEnumerable<string>`): Derived from `ForceAuthn` and `IsPassive` flags in
-  the `AuthnRequest`.
-* **`RelayState`** (`string?`): The relay state parameter from the `AuthnRequest`.
-* **`IsIdpInitiated`** (`bool`): Whether this is an IdP-initiated SSO flow.
-* **`RequestedAuthnContext`** (`RequestedAuthnContext?`): The authentication context requirements
-  from the SP, if specified.
-* **`StateId`** (`Guid`): The identifier for the stored sign-in state entry. You need this when
-  calling `DenyAuthenticationAsync` to deny the authentication request (see
-  [denying authentication](/identityserver/ui/login/context.md#denying-authentication)).
+For the full list of properties, see [SAML Authentication Context](/identityserver/reference/v8/saml/saml-authentication-context.md).
 
 ---
 
@@ -71,17 +58,11 @@ during a SAML sign-in flow. After an `AuthnRequest` is received and validated, I
 calls `ProcessInteractionAsync` to decide whether the user needs to be redirected to the login page or whether the flow can proceed directly to assertion generation.
 
 The default implementation handles standard login flows. Override it when you need custom step-up
-authentication logic or any other non-standard interaction decision.
+authentication logic or any other non-standard interaction decision. The default implementation does not evaluate
+`RequestedAuthnContext`, so enforcing it requires your own logic here or in your login UI. The default class is sealed, so
+wrap it rather than inherit from it.
 
-```csharp
-// ISaml2SsoInteractionResponseGenerator.cs
-public interface ISaml2SsoInteractionResponseGenerator
-{
-    Task<Saml2InteractionResponse> ProcessInteractionAsync(
-        ValidatedAuthnRequest request,
-        CancellationToken ct = default);
-}
-```
+For the full interface and its members, see [SAML SSO Interaction Response Generator](/identityserver/reference/v8/saml/saml-sso-interaction-response-generator.md).
 
 ### When to Use
 
@@ -96,12 +77,7 @@ to the SP by returning `Saml2InteractionResponse.Error(statusCode, subStatusCode
 programmatically, for example when the SP isn't permitted to request SSO at the current time
 and you want the SP to receive a SAML error response rather than a login redirect.
 
-`Saml2InteractionResponse` has three factory methods:
-
-* `Login()` - redirect the user to the login page.
-* `NoInteraction()` - proceed directly to assertion generation without interaction.
-* `Error(statusCode, subStatusCode)` / `Error(statusCode, subStatusCode, message)` - return a
-  SAML error response to the SP with the given status codes and an optional human-readable message.
+See the reference page for the `Saml2InteractionResponse` factory methods.
 
 ### Registration
 
@@ -123,26 +99,7 @@ The default implementation is `Saml2LogoutNotificationService`, which sends a SA
 to each SP that has a configured `SingleLogoutServiceUrls` entry. Override it to customize which SPs
 receive notifications or to modify the logout messages.
 
-```csharp
-// ISamlLogoutNotificationService.cs
-public interface ISamlLogoutNotificationService
-{
-    Task<SamlLogoutNotificationResult> GetSamlFrontChannelLogoutsAsync(
-        LogoutNotificationContext context,
-        CancellationToken ct);
-}
-```
-
-The method returns a `SamlLogoutNotificationResult` record with two properties:
-
-* `Messages` (`IReadOnlyCollection<SamlLogoutRequestContext>`): the successfully generated logout request contexts, one per SP to notify.
-* `SkippedCount` (`int`): the number of SPs that could not be notified (for example, because they are disabled, have no SLO URL, use an unsupported binding, or request generation failed).
-
-`SamlLogoutRequestContext` is a record with three properties:
-
-* `Message` (`OutboundSaml2Message`): the outbound message ready to send to the SP.
-* `RequestId` (`string`): the SAML ID attribute value from the `LogoutRequest`, used to correlate the SP's `LogoutResponse` via its `InResponseTo` attribute.
-* `SpEntityId` (`string`): the entity ID of the destination SP.
+For the full interface and result types, see [SAML Logout Services](/identityserver/reference/v8/saml/saml-logout-services.md#isamllogoutnotificationservice).
 
 ### When to Use
 
@@ -153,6 +110,10 @@ modify the logout messages sent.
 
 ```csharp
 // Program.cs
+builder.Services.AddIdentityServer()
+    .AddSaml();
+
+// AddSaml() replaces any earlier registration, so register your implementation afterwards
 builder.Services.AddScoped<ISamlLogoutNotificationService, CustomSamlLogoutNotificationService>();
 ```
 
@@ -162,20 +123,10 @@ builder.Services.AddScoped<ISamlLogoutNotificationService, CustomSamlLogoutNotif
 
 `ILogoutRequestValidator` validates incoming SAML `LogoutRequest` messages from Service Providers.
 It is called early in the SLO pipeline, before IdentityServer begins notifying other SPs.
-Validation ensures the request is well-formed, the SP is registered, and the signature is valid.
 
-The default implementation enforces signature requirements and checks SP registration. Override
-this interface to add custom business rules on top of the default validation.
+Override this interface to add custom business rules on top of the default validation.
 
-```csharp
-// ILogoutRequestValidator.cs
-public interface ILogoutRequestValidator
-{
-    Task<LogoutRequestValidationResult> ValidateAsync(
-        ValidatedLogoutRequest request,
-        CancellationToken ct);
-}
-```
+For the full interface and result types, see [SAML Logout Services](/identityserver/reference/v8/saml/saml-logout-services.md#ilogoutrequestvalidator).
 
 ### When to Use
 
@@ -200,29 +151,13 @@ their responses.
 
 The default implementation generates a success response when all SPs responded successfully, and a
 partial logout response when some SPs did not respond or returned errors. Override this interface
-to customize the response status or add custom response elements.
+to customize the response.
 
-```csharp
-// ISaml2SloResponseGenerator.cs
-public interface ISaml2SloResponseGenerator
-{
-    Task<Saml2FrontChannelResult> CreateSuccessResponse(
-        ValidatedLogoutRequest request,
-        CancellationToken ct);
-
-    Task<Saml2FrontChannelResult> CreatePartialLogoutResponse(
-        ValidatedLogoutRequest request,
-        CancellationToken ct);
-}
-```
+For the full interface and default behavior, see [SAML Logout Services](/identityserver/reference/v8/saml/saml-logout-services.md#isaml2sloresponsegenerator).
 
 ### When to Use
 
-Override `ISaml2SloResponseGenerator` to customize the SAML `LogoutResponse` XML that IdentityServer sends back to the SP that initiated the SLO flow. Common reasons include:
-
-- Changing the response status code or sub-status codes based on custom business logic
-- Adding SAML extensions to the `LogoutResponse` element
-- Altering how partial-logout scenarios are reported (e.g., always returning success even when some SPs failed to respond)
+Override `ISaml2SloResponseGenerator` to customize the SAML `LogoutResponse` that IdentityServer sends back to the SP that initiated the SLO flow, for example to change how partial-logout scenarios are reported.
 
 This interface controls **response generation**, not persistence. To customize how logout session state is stored, see [`ISamlLogoutSessionStore`](#isamllogoutsessionstore).
 
@@ -261,38 +196,7 @@ If you implement `IOperationalStoreNotification`, the new `SamlLogoutSessionsRem
 callback is invoked each time `TokenCleanupService` removes a batch of expired logout sessions.
 This lets you react to cleanup events, for example to update a secondary index or emit metrics.
 
-```csharp
-// ISamlLogoutSessionStore.cs
-public interface ISamlLogoutSessionStore
-{
-    Task StoreAsync(SamlLogoutSession session, CancellationToken ct);
-    Task<SamlLogoutSession?> GetByLogoutIdAsync(string logoutId, CancellationToken ct);
-    Task<bool> TryRecordResponseAsync(string requestId, string issuer, bool success, CancellationToken ct);
-    Task RemoveAsync(string logoutId, CancellationToken ct);
-}
-```
-
-* `StoreAsync`: stores a new logout session.
-* `GetByLogoutIdAsync`: retrieves a logout session by its logout ID; returns `null` if not found
-  or expired.
-* `TryRecordResponseAsync`: records a `LogoutResponse` for a previously stored request, looked up
-  by `InResponseTo` (the request ID). Returns `true` if the response was recorded, `false` if the
-  request ID was not found or the issuer did not match.
-* `RemoveAsync`: removes a logout session. Idempotent; does not throw if the session does not
-  exist.
-
-`SamlLogoutSession` has a `SkippedSpCount` (`int`) property that records how many SPs could not
-be notified during logout. This value is set from `SamlLogoutNotificationResult.SkippedCount`
-when the session is created. When `SkippedSpCount` is greater than zero, the best achievable
-logout outcome is `PartialLogout`, regardless of whether the remaining SPs respond successfully.
-
-Each session also carries an `ExpiresAtUtc` (`DateTime`) property that controls when the session
-becomes eligible for cleanup. Store implementations should treat entries past this time as expired.
-
-The `ExpectedResponses` dictionary on `SamlLogoutSession` maps each outbound `LogoutRequest` ID
-to an `ExpectedSpLogout` record. That record holds the SP's entity ID and, once the SP replies, a
-`SamlSpLogoutResponse` with the outcome (`Success`) and the time the response was received
-(`ReceivedUtc`).
+For the full interface and the `SamlLogoutSession` model, see [SAML Logout Session Store](/identityserver/reference/v8/saml/saml-logout-session-store.md).
 
 ### When to Use
 
@@ -325,27 +229,7 @@ The default implementation constructs a standards-compliant `LogoutRequest` incl
 `NameID` and session index. Override this interface to customize the logout request structure, for
 example to add custom extensions or to change how the `NameID` is derived.
 
-The method returns a `SamlLogoutRequestContext`, which wraps the outbound message together with the
-request ID and SP entity ID, giving you the information needed to correlate the logout response back to the original
-request when the SP replies.
-
-```csharp
-// ISaml2FrontChannelLogoutRequestBuilder.cs
-public interface ISaml2FrontChannelLogoutRequestBuilder
-{
-    /// <returns>
-    /// A <see cref="SamlLogoutRequestContext"/> that wraps the outbound message with the
-    /// request ID and SP entity ID for response correlation.
-    /// </returns>
-    Task<SamlLogoutRequestContext> BuildLogoutRequestAsync(
-        SamlServiceProvider serviceProvider,
-        string nameId,
-        string? nameIdFormat,
-        string sessionIndex,
-        string issuer,
-        CancellationToken ct);
-}
-```
+For the full interface, see [SAML Logout Services](/identityserver/reference/v8/saml/saml-logout-services.md#isaml2frontchannellogoutrequestbuilder).
 
 ### When to Use
 
@@ -377,18 +261,7 @@ configured identity resource store based on the SP's `AllowedScopes`. Override t
 you need custom resource resolution logic, for example to apply dynamic scope filtering or to load
 resources from a non-standard source.
 
-```csharp
-// ISamlResourceResolver.cs
-public interface ISamlResourceResolver
-{
-    Task<SamlResourceResolutionResult> ResolveRequestedClaimTypesAsync(
-        SamlServiceProvider sp,
-        CancellationToken ct);
-}
-```
-
-`SamlResourceResolutionResult` has a `Succeeded` property, a `ClaimTypes` list (populated on
-success), and an `Error` string (populated on failure).
+For the full interface and result type, see [SAML Resource Resolver](/identityserver/reference/v8/saml/saml-resource-resolver.md).
 
 ### When to Use
 
@@ -413,30 +286,7 @@ generation, after the user has authenticated and the requested `NameID` format h
 
 The default implementation handles email address and unspecified (using the `sub` values as the identifier). Register a custom implementation to support additional `NameID` formats or to derive the `NameID` value from non-standard claims.
 
-```csharp
-// ISamlNameIdGenerator.cs
-public interface ISamlNameIdGenerator
-{
-    Task<NameIdGenerationResult> GenerateAsync(NameIdGenerationContext context, CancellationToken ct);
-}
-
-public sealed class NameIdGenerationContext
-{
-    public required ClaimsPrincipal Subject { get; init; }
-    public required SamlServiceProvider ServiceProvider { get; init; }
-    public required string ResolvedFormat { get; init; }
-    public string? SPNameQualifier { get; init; }
-}
-
-public sealed class NameIdGenerationResult
-{
-    public NameId? NameId { get; private init; }
-    public SamlError? Error { get; private init; }
-    public bool IsError => Error is not null;
-    public static NameIdGenerationResult Success(NameId nameId) => ...;
-    public static NameIdGenerationResult Failure(string statusCode, string subStatusCode, string message) => ...;
-}
-```
+For the full interface and the context and result types, see [SAML NameID Generator](/identityserver/reference/v8/saml/saml-nameid-generator.md).
 
 ### When to Use
 
@@ -467,7 +317,7 @@ public class MyNameIdGenerator : ISamlNameIdGenerator
         var employeeId = context.Subject.FindFirst("employee_id")?.Value;
         if (employeeId is null)
             return Task.FromResult(NameIdGenerationResult.Failure(
-                StatusCodes.Responder, StatusCodes.UnknownPrincipal,
+                SamlStatusCodes.Responder, SamlStatusCodes.UnknownPrincipal,
                 "Employee ID claim not found."));
 
         var nameId = new NameId(employeeId, context.ResolvedFormat);
@@ -495,22 +345,7 @@ Even with proper CSRF protection on the entry point of the flow, IdP-initiated s
 A better approach is to mimic the third-party initiated login flow used by OIDC: create an endpoint on the SP that responds with a redirect to the IdP, including an `AuthnRequest`.
 :::
 
-```csharp
-// IIdpInitiatedSsoService.cs
-public interface IIdpInitiatedSsoService
-{
-    Task<IdpInitiatedSsoResult> CreateResponseAsync(
-        HttpContext httpContext,
-        string spEntityId,
-        string? relayState,
-        CancellationToken ct);
-
-    Task<IdpInitiatedSsoResult> CreateResponseAsync(
-        HttpContext httpContext,
-        string spEntityId,
-        CancellationToken ct);
-}
-```
+For the full interface and result type, see [SAML IdP-Initiated SSO Service](/identityserver/reference/v8/saml/saml-idp-initiated-sso-service.md).
 
 ### When to Use
 
@@ -539,9 +374,15 @@ public class MyAppsPageModel : PageModel
 
     public async Task<IActionResult> OnPostLaunchAsync(string spEntityId)
     {
-        var result = await _ssoService.CreateResponseAsync(HttpContext, spEntityId, ct: HttpContext.RequestAborted);
-        // Handle result (e.g., write the auto-submit form to the response)
-        return result.ToActionResult();
+        var result = await _ssoService.CreateResponseAsync(HttpContext, spEntityId, HttpContext.RequestAborted);
+        if (result.IsError)
+        {
+            return BadRequest();
+        }
+
+        // result.Response is an IResult that writes the auto-submit form
+        await result.Response!.ExecuteAsync(HttpContext);
+        return new EmptyResult();
     }
 }
 ```
@@ -557,23 +398,10 @@ includes the SAML assertion with the subject, attributes, and conditions the SP 
 
 The default implementation produces a standards-compliant signed response. Override this interface
 when you need full control over the SAML response structure, for example to add custom attributes,
-change signing behavior, or embed additional assertion elements required by a specific SP or
+embed additional assertion elements required by a specific SP or
 federation.
 
-```csharp
-// ISaml2SsoResponseGenerator.cs
-public interface ISaml2SsoResponseGenerator
-{
-    Task<Saml2FrontChannelResult> CreateResponse(
-        ValidatedAuthnRequest validatedAuthnRequest,
-        CancellationToken ct);
-
-    Task<Saml2FrontChannelResult> CreateErrorResponse(
-        ValidatedAuthnRequest validatedAuthnRequest,
-        Saml2InteractionResponse interactionResponse,
-        CancellationToken ct);
-}
-```
+For the full interface and the overridable members of the default implementation, see [SAML SSO Response Generator](/identityserver/reference/v8/saml/saml-sso-response-generator.md).
 
 ### When to Use
 
@@ -581,8 +409,7 @@ Override `ISaml2SsoResponseGenerator` when:
 
 * You need to add custom SAML attributes or assertion elements not supported by the default
   implementation.
-* You need to change how the response or assertion is signed or encrypted.
-* You need SP-specific response customization based on `validatedAuthnRequest.ServiceProvider`.
+* You need SP-specific response customization based on `validatedAuthnRequest.Saml2Sp`.
 
 ### Registration
 
@@ -599,24 +426,7 @@ builder.Services.AddScoped<ISaml2SsoResponseGenerator, CustomSsoResponseGenerato
 IdentityServer calls this service when it needs to sign a SAML response or include the signing
 certificate in the IdP metadata document.
 
-```csharp
-// ISamlSigningService.cs
-public interface ISamlSigningService
-{
-    Task<X509Certificate2> GetSigningCertificateAsync(CancellationToken ct);
-    Task<string> GetSigningCertificateBase64Async(CancellationToken ct);
-    Task<IReadOnlyList<X509Certificate2>> GetAllSigningCertificatesAsync(CancellationToken ct);
-}
-```
-
-* `GetSigningCertificateAsync` - returns the `X509Certificate2` with private key used to sign
-  SAML messages. Throws `InvalidOperationException` if no signing credential is configured, if
-  the credential is not an X.509 certificate or RSA key, or if the certificate has no private key.
-* `GetSigningCertificateBase64Async` - returns the base64-encoded DER representation of the
-  certificate, used when embedding the certificate in SAML metadata key descriptors.
-* `GetAllSigningCertificatesAsync` - returns all available signing certificates, including any
-  previously rotated keys that are still valid. Used by the metadata generator to publish multiple
-  key descriptors, allowing Service Providers to validate signatures during key rollover periods.
+For the full interface and its members, see [SAML Signing Service](/identityserver/reference/v8/saml/saml-signing-service.md).
 
 The default implementation derives the certificate from IdentityServer's configured signing keys.
 When the active signing key is an `X509SecurityKey`, it uses the certificate directly. When the
@@ -639,8 +449,7 @@ specific certificate selection or key management requirement that the default ca
 
 ### Registration
 
-`ISamlSigningService` is registered with `TryAddScoped`, so register your implementation before
-calling `AddSaml()` to replace the default:
+The default is registered with `TryAdd`, so your own registration replaces it:
 
 ```csharp
 // Program.cs
@@ -655,25 +464,14 @@ builder.Services.AddIdentityServer()
 
 `ISaml2MetadataResponseGenerator` generates the IdP metadata document served at the
 `/Saml2` endpoint. SAML metadata describes the IdP's capabilities, endpoints, and signing
-keys to Service Providers and federation operators. SPs capable of loading metadata loads this 
+keys to Service Providers and federation operators. SPs capable of loading metadata load this
 regularly to get up to date configuration, including the public keys required for signature 
 validation.
 
 The default implementation produces a standards-compliant metadata document from the configured
 `SamlOptions` and signing keys.
 
-```csharp
-// ISaml2MetadataResponseGenerator.cs
-public interface ISaml2MetadataResponseGenerator
-{
-    Task<Saml2MetadataResult> GenerateMetadataAsync(
-        string issuer,
-        IEnumerable<X509Certificate2> signingKeys,
-        SamlOptions options,
-        string baseUrl,
-        CancellationToken ct);
-}
-```
+For the full interface, see [SAML Metadata Services](/identityserver/reference/v8/saml/saml-metadata-services.md#isaml2metadataresponsegenerator).
 
 ### When to Use
 
@@ -695,16 +493,10 @@ builder.Services.AddScoped<ISaml2MetadataResponseGenerator, CustomMetadataGenera
 
 `ISaml2IssuerNameService` resolves the SAML entity ID that IdentityServer uses as its IdP issuer.
 The default implementation derives the entity ID from the OIDC issuer name combined with
-`SamlOptions.EntityIdPath`. Override this interface when you need dynamic entity ID resolution,
+`SamlOptions.EntityIdPath`, unless `SamlOptions.EntityId` is set. Override this interface when you need dynamic entity ID resolution,
 for example in multi-tenant deployments where each tenant has a distinct SAML entity ID.
 
-```csharp
-// ISaml2IssuerNameService.cs
-public interface ISaml2IssuerNameService
-{
-    Task<string> GetCurrentAsync(CancellationToken ct);
-}
-```
+For the full interface, see [SAML Metadata Services](/identityserver/reference/v8/saml/saml-metadata-services.md#isaml2issuernameservice).
 
 ### When to Use
 
@@ -735,15 +527,7 @@ ACS URLs. Override this interface to add custom business rules on top of the def
 for example restricting which SPs can request certain `AuthnContext` classes, enforcing IP-based
 access controls, or applying time-of-day restrictions.
 
-```csharp
-// IAuthnRequestValidator.cs
-public interface IAuthnRequestValidator
-{
-    Task<AuthnRequestValidationResult> ValidateAsync(
-        ValidatedAuthnRequest request,
-        CancellationToken ct);
-}
-```
+For the full interface and result type, see [SAML AuthnRequest Validator](/identityserver/reference/v8/saml/saml-authn-request-validator.md).
 
 ### When to Use
 
@@ -782,10 +566,11 @@ public class MyAuthnRequestValidator : IAuthnRequestValidator
         if (!result.IsError)
         {
             // Add custom rule: only allow SP "https://partner.example.com" during business hours
-            if (request.ServiceProvider.EntityId == "https://partner.example.com"
+            if (request.Saml2Sp?.EntityId == "https://partner.example.com"
                 && DateTime.UtcNow.Hour is < 8 or > 18)
             {
-                return AuthnRequestValidationResult.Failure("Access outside business hours is not permitted.");
+                return AuthnRequestValidationResult.InValid(
+                    request, SamlStatusCodes.RequestDenied, "Access outside business hours is not permitted.");
             }
         }
         return result;
@@ -812,8 +597,7 @@ Several implementations are available:
 * **Custom**: register your own implementation for a specific persistence backend (Redis,
   DynamoDB, etc.) in the DI container.
 
-State is retained after a successful callback to allow browser retries (for example, if the user
-navigates back). The `TokenCleanupService` automatically removes expired sign-in state entries
+The `TokenCleanupService` automatically removes expired sign-in state entries
 from the EF Core store during its scheduled cleanup runs. Each `SamlAuthenticationState` carries
 an `ExpiresAtUtc` property that controls when the entry becomes eligible for removal. TTL-based
 expiry is the primary cleanup mechanism; `RemoveSigninRequestStateAsync` is available for
@@ -823,16 +607,7 @@ If you implement `IOperationalStoreNotification`, the `SamlSigninStatesRemovedAs
 is invoked each time `TokenCleanupService` removes a batch of expired sign-in state entries. This
 lets you react to cleanup events, for example to emit metrics or update external systems.
 
-```csharp
-// ISamlSigninStateStore.cs
-public interface ISamlSigninStateStore
-{
-    Task<Guid> StoreSigninRequestStateAsync(SamlAuthenticationState state, CancellationToken ct = default);
-    Task<SamlAuthenticationState?> RetrieveSigninRequestStateAsync(Guid stateId, CancellationToken ct = default);
-    Task UpdateSigninRequestStateAsync(Guid stateId, SamlAuthenticationState state, CancellationToken ct = default);
-    Task RemoveSigninRequestStateAsync(Guid stateId, CancellationToken ct = default);
-}
-```
+For the full interface and the `SamlAuthenticationState` model, see [SAML Sign-in State Store](/identityserver/reference/v8/saml/saml-signin-state-store.md).
 
 ### When to Use
 
@@ -865,82 +640,21 @@ builder.Services.AddIdentityServer()
 
 ### Example
 
-```csharp
-// CustomDistributedSamlSigninStateStore.cs
-public class CustomDistributedSamlSigninStateStore : ISamlSigninStateStore
-{
-    private readonly IDistributedCache _cache;
-
-    public CustomDistributedSamlSigninStateStore(IDistributedCache cache)
-        => _cache = cache;
-
-    public async Task<Guid> StoreSigninRequestStateAsync(
-        SamlAuthenticationState state,
-        CancellationToken ct = default)
-    {
-        var stateId = Guid.NewGuid();
-        var json = JsonSerializer.Serialize(state);
-        var expiry = state.ExpiresAtUtc - DateTime.UtcNow;
-        await _cache.SetStringAsync(stateId.ToString(), json,
-            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiry },
-            ct);
-        return stateId;
-    }
-
-    public async Task<SamlAuthenticationState?> RetrieveSigninRequestStateAsync(
-        Guid stateId,
-        CancellationToken ct = default)
-    {
-        var json = await _cache.GetStringAsync(stateId.ToString(), ct);
-        return json is null ? null : JsonSerializer.Deserialize<SamlAuthenticationState>(json);
-    }
-
-    public Task RemoveSigninRequestStateAsync(Guid stateId, CancellationToken ct = default)
-        => _cache.RemoveAsync(stateId.ToString(), ct);
-
-    public async Task UpdateSigninRequestStateAsync(
-        Guid stateId,
-        SamlAuthenticationState state,
-        CancellationToken ct = default)
-    {
-        var json = JsonSerializer.Serialize(state);
-        var expiry = state.ExpiresAtUtc - DateTime.UtcNow;
-        await _cache.SetStringAsync(stateId.ToString(), json,
-            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiry },
-            ct);
-    }
-}
-```
-
-:::tip
-The example above uses `JsonSerializer` directly for simplicity. For production use, consider injecting [`ISamlSigninStateSerializer`](#isamlsigninstateserializer) instead, which provides the same serialization logic used by the built-in EF Core store. Note that the default serializer ignores the `Extensions` property — if you need to persist custom extension data, you'll need to implement a custom serializer.
-:::
+For guidance on implementing a custom store, see [SAML Sign-in State Store](/identityserver/reference/v8/saml/saml-signin-state-store.md).
 
 ---
 
 ## ISamlSigninStateSerializer
 
-`ISamlSigninStateSerializer` handles serialization and deserialization of `SamlAuthenticationState` for persistence. The default implementation is used by the Entity Framework Core store, but you can replace it to customize how SAML authentication state is serialized — for example, to support custom `Extensions` content or to use a different serialization format.
+`ISamlSigninStateSerializer` handles serialization and deserialization of `SamlAuthenticationState` for persistence. The default implementation is registered by `AddOperationalStore()` and used by the Entity Framework Core store. You can replace it to use a different serialization format.
 
-```csharp
-// ISamlSigninStateSerializer.cs
-public interface ISamlSigninStateSerializer
-{
-    string Serialize(SamlAuthenticationState state);
-    SamlAuthenticationState Deserialize(string serializedState);
-}
-```
-
-* `Serialize`: converts a `SamlAuthenticationState` instance to a string representation for storage.
-* `Deserialize`: reconstructs a `SamlAuthenticationState` from its stored string representation.
+For the full interface, see [SAML Sign-in State Store](/identityserver/reference/v8/saml/saml-signin-state-store.md#isamlsigninstateserializer).
 
 ### When to Use
 
 Override `ISamlSigninStateSerializer` when:
 
-- You need to persist custom data stored in the `Extensions` property of `SamlAuthenticationState` and the default JSON serialization doesn't handle it correctly.
 - You want to use a different serialization format (e.g., binary, MessagePack) for performance or size reasons.
-- You're building a custom `ISamlSigninStateStore` and want to reuse the same serialization logic as the built-in EF store rather than writing your own.
 
 ### Registration
 
@@ -958,20 +672,7 @@ at runtime, before IdentityServer processes requests from that SP. It is called 
 `ValidatingSamlServiceProviderStore<T>`, which wraps your store automatically when you use
 `AddSamlServiceProviderStore<T>()`.
 
-```csharp
-// ISamlServiceProviderConfigurationValidator.cs
-public interface ISamlServiceProviderConfigurationValidator
-{
-    Task ValidateAsync(SamlServiceProviderConfigurationValidationContext context, CancellationToken ct);
-}
-```
-
-The `SamlServiceProviderConfigurationValidationContext` passed to `ValidateAsync` exposes:
-
-* `ServiceProvider` (`SamlServiceProvider`) - the SP being validated.
-* `IsValid` (`bool`) - `true` by default; set to `false` when validation fails.
-* `ErrorMessage` (`string?`) - the error message when invalid.
-* `SetError(string message)` - sets `IsValid` to `false` and records the error message.
+For the full interface and validation context, see [SAML Service Provider Configuration Validator](/identityserver/reference/v8/saml/saml-service-provider-configuration-validator.md).
 
 ### When to Use
 
@@ -989,13 +690,13 @@ conventions on EntityIds, restrict which scopes are allowed, or apply business-s
 
 ### Registration
 
-The default is registered with `TryAddScoped`, so your implementation takes precedence when registered as a scoped service:
+The default is registered as transient. Register your implementation after `AddIdentityServer()` so it replaces the default:
 
 ```csharp
 // Program.cs
-builder.Services.AddScoped<ISamlServiceProviderConfigurationValidator, CustomSamlServiceProviderConfigurationValidator>();
 builder.Services.AddIdentityServer()
     .AddSaml();
+builder.Services.AddScoped<ISamlServiceProviderConfigurationValidator, CustomSamlServiceProviderConfigurationValidator>();
 ```
 
 ### Example

@@ -7,16 +7,16 @@ sidebar:
   order: 16
 ---
 
-## Duende.IdentityServer.Saml.Models.SamlAttribute
+## Duende.IdentityServer.Saml.SamlAttribute
 
 A SAML attribute included in the assertion's attribute statement.
 
 | Property | Description |
 |---|---|
-| `Name` | The attribute name. |
-| `NameFormat` | The attribute name format. |
-| `FriendlyName` | The friendly name. |
-| `Values` | The attribute values. |
+| `Name` | The attribute name (`string`). |
+| `NameFormat` | The attribute name format URI (`string?`). |
+| `FriendlyName` | The human-readable friendly name (`string?`). |
+| `Values` | The attribute values (`List<string?>`). |
 
 ## ProfileDataRequestContext.SamlAttributes
 

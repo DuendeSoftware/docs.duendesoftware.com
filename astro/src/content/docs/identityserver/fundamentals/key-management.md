@@ -232,7 +232,7 @@ wrap a manually registered raw RSA key, including one registered by `AddDevelope
 
 :::caution
 The default SAML signing service supports RSA signing credentials. `UseX509Certificate` is not supported for EC keys.
-Use a custom [`ISamlSigningService`](/identityserver/saml/extensibility.md#isamlsigningservice) if SAML needs a different
+Use a custom [`ISamlSigningService`](/identityserver/reference/v8/saml/saml-signing-service.md) (see the [extensibility guide](/identityserver/saml/extensibility.md#isamlsigningservice)) if SAML needs a different
 certificate, an independent rotation schedule, or integration with an external key system.
 :::
 

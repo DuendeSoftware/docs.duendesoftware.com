@@ -16,9 +16,11 @@ protocol endpoints under the `/Saml2` path prefix.
 |------------------|-----------------------|--------------|--------------------|
 | Metadata         | `/Saml2`              | GET          | ✅ Yes              |
 | Sign-in          | `/Saml2/SSO`          | GET, POST    | ✅ Yes              |
-| Sign-in Callback | `/Saml2/SSO/Callback` | GET, POST    | ✅ Yes              |
+| Sign-in Callback | `/Saml2/SSO/Callback` | GET          | ✅ Yes              |
 | Logout           | `/Saml2/SLO`          | GET, POST    | ✅ Yes              |
-| Logout Callback  | `/Saml2/SLO/Callback` | GET, POST    | ✅ Yes              |
+| Logout Callback  | `/Saml2/SLO/Callback` | GET          | ✅ Yes              |
+
+For the services that implement these endpoints, see the [SAML metadata](/identityserver/reference/v8/saml/saml-metadata-services.md) and [SAML logout](/identityserver/reference/v8/saml/saml-logout-services.md) reference pages.
 
 ## Metadata Endpoint
 
@@ -61,7 +63,7 @@ for disabled or locked accounts without waiting for the session to expire.
 ## Sign-in Callback Endpoint
 
 **Path**: `/Saml2/SSO/Callback`  
-**Methods**: GET, POST
+**Methods**: GET
 
 Processes the outcome of user authentication during SP-initiated SSO. After the user authenticates,
 this endpoint builds the SAML `Response` (containing the `Assertion`) and delivers it to the
@@ -85,7 +87,7 @@ originating SP to indicate that not all sessions were successfully terminated.
 ## Logout Callback Endpoint
 
 **Path**: `/Saml2/SLO/Callback`  
-**Methods**: GET, POST
+**Methods**: GET
 
 Completes the SAML SLO round-trip after all Service Providers have been notified. This endpoint
 processes the aggregated results of the logout notifications and sends the final `LogoutResponse`
