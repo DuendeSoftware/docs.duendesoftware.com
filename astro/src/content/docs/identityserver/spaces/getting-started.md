@@ -201,7 +201,7 @@ instead.
 
 Spaces also keeps issuers separate. If you set `IdentityServerOptions.IssuerUri`, every space gets the same issuer, so
 the host fails to start unless you set `SpacesOptions.AllowSharedIssuerUri` to `true` (default `false`). Only opt in
-when sharing one issuer is deliberate: with shared signing keys, a token from one space is accepted in every other
+when sharing one issuer is deliberate: with shared signing keys, a token from one space can be accepted in another
 space. See [Leave `IssuerUri` unset with Spaces](/identityserver/spaces/index.mdx).
 
 Spaces registers its own keyed `HybridCache` under `SpacesServiceProviderKeys.SpacesCache` instead of registering or

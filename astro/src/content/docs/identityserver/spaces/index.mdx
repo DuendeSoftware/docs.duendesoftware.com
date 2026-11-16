@@ -112,8 +112,8 @@ your isolation model. A strict `404 Not Found` response is safer for multi-tenan
 :::caution[Leave `IssuerUri` unset with Spaces]
 Spaces rely on IdentityServer inferring the issuer from each request's origin and path base, which is what gives every
 space its own `iss` claim. Leave `IssuerUri` unset so each space has its own issuer. Setting a fixed value makes every
-space return the same `issuer`/`iss`. If the spaces also share signing keys, a token issued in one space is accepted in
-every other space.
+space return the same `issuer`/`iss`. If the spaces also share signing keys, a token issued in one space can be accepted
+in another space when the rest of its validation, such as the audience and client ID, also passes there.
 
 To protect against this, the host fails to start when Spaces is registered and `IssuerUri` is set. If sharing one issuer
 is deliberate, set `SpacesOptions.AllowSharedIssuerUri` to `true` (the default is `false`). See
@@ -249,7 +249,7 @@ they also need space-aware configuration.
 
 For example, sharing signing credentials reduces cryptographic separation between spaces. Token validation still checks
 the issuer, audience and other constraints, but when spaces share an issuer (see
-[How Spaces Resolve Incoming Requests](#how-spaces-resolve-incoming-requests)) those checks no longer tell spaces
+[How Spaces Resolve Incoming Requests](#how-spaces-resolve-incoming-requests)) the issuer check no longer tells spaces
 apart. Each space should use deliberately scoped credentials when your security model requires independent trust
 boundaries. IdentityServer protects its own signing keys through the unpartitioned Data Protection provider, so they
 remain valid across every space even when `PartitionDataProtection` is enabled.
