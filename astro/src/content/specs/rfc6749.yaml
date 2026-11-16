@@ -2,6 +2,7 @@ id: "rfc6749"
 title: "RFC 6749"
 url: "https://www.rfc-editor.org/rfc/rfc6749"
 status: "RFC"
+updatedBy: ["RFC8252", "RFC8996", "RFC9700"]
 # scopes: re-checked by hand 2026-10-22 (rfc-editor.org/errata/rfc6749). §3.3: 6613 Verified, editorial (wording "space-delimited list of case-sensitive strings"; no change in meaning). §5.1: 5379 and 6614 Reported, editorial; 4679 Reported, technical (Content-Type charset, not about scope; RFC 6749 §5.1 example kept as shown). §4.1: 5332 Reported (step B wording; consistent with §4.1.1). Nothing changes a scope claim.
 # client-credentials: re-checked by hand 2026-10-22 (rfc-editor.org/errata/rfc6749). §4.4: none. §2.3.1: 4749, 5793, 6017 Reported (Basic wording, "Alternatively", RFC 7617). §3.2.1: 7631, 7823 Reported. §5.1: 4679 Reported (charset), 6614 Reported editorial. §5.2: 4745 Reported (invalid_client 401 paragraph). None Verified; no claim changes.
 # token-types: re-checked by hand 2026-10-22 (rfc-editor.org/errata/rfc6749). §1.5: 8722 Reported Technical (editorial: "Figure 1 above"; no claim changes). §1.4, §5.1: 4679, 6614 Reported (charset, editorial). None Verified on §1.1, §1.4, §1.5, §5.1.

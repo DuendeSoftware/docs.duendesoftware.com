@@ -2,6 +2,7 @@ id: "rfc6750"
 title: "RFC 6750"
 url: "https://www.rfc-editor.org/rfc/rfc6750"
 status: "RFC"
+updatedBy: ["RFC8996", "RFC9700"]
 # errata list re-checked by hand 2026-10-22 for access-token-validation (rfc-editor.org/errata/rfc6750): 5335 Reported (§2.1 b64token naming), 9053 and 9054 Reported (§5.1), 6161 Reported Editorial (§4). None on §3 or §3.1.
 sections:
   - key: "bearer"

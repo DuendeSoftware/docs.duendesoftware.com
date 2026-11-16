@@ -3,6 +3,7 @@ id: "rfc7518"
 title: "RFC 7518"
 url: "https://www.rfc-editor.org/rfc/rfc7518"
 status: "RFC"
+updatedBy: ["RFC9864"]
 # errata list checked by hand 2026-10-22 (rfc-editor.org/errata/rfc7518): 8526 Verified Technical (§3.4.5), 8568 Verified Editorial (§3.2), 6612 and 8747 Verified Editorial (other sections). None on §3.1 or §3.3.
 sections:
   - key: "jwaRs256"

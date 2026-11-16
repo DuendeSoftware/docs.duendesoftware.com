@@ -194,6 +194,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * To embed a flow in another docs page, import `Flow` from `~/components/Flow.astro` and use `<Flow page="<group>/<slug>" />`. Use at most 2 per page.
 * `npm run protocols:check` is the offline check: it checks the spec registry against the pages, and the step headings against the flow, and fails on unknown or unused keys. The `protocols-check.yml` workflow runs it on pull requests that change the protocols pages, the spec registry, or the check script.
 * `npm run protocols:specs` compares the registry with the live specs (a dry run of the monthly check). It needs network access and never opens issues.
+* When an RFC in the registry gets a new "updated by" RFC, `protocols:specs` reports it as a finding, and a real `protocols:monthly` run opens an issue for it. After you review the update against the citing pages, add it to the `updatedBy` list in that RFC's registry file.
 * `npm run protocols:monthly` is what the GitHub Action `protocols-monthly.yml` runs. Its schedule is disabled for now. Run it manually with the `dry_run` input.
 * New pages need review of the spec accuracy by a second person against the spec.
 

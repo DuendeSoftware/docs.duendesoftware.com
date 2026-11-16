@@ -2,6 +2,7 @@ id: "rfc9126"
 title: "RFC 9126"
 url: "https://www.rfc-editor.org/rfc/rfc9126"
 status: "RFC"
+updatedBy: ["RFC10070"]
 sections:
   - key: "parIntro"
     section: "1"
