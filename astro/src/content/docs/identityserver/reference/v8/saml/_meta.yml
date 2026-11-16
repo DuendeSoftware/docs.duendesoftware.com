@@ -1,2 +1,4 @@
 label: "SAML"
 collapsed: true
+versions:
+  since: "8.0"
