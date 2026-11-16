@@ -61,9 +61,9 @@ sequenceDiagram
     SP->>User: Grant access (session created)
 ```
 
-In IdentityServer, you register each SP using a `SamlServiceProvider` configuration object (see [SAML Service Provider Store](/identityserver/reference/v8/saml/saml-service-provider-store.md)). This tells IdentityServer the SP's entity identifier, where to deliver assertions (the Assertion Consumer Service URL) and how to communicate. See the [Service Provider Store](/identityserver/saml/service-providers.md) and the [SamlServiceProvider model](/identityserver/saml/configuration.md#samlserviceprovider-model) for details.
+In IdentityServer, you register each SP using a `SamlServiceProvider` configuration object (see [SAML Service Provider Store](/identityserver/reference/v8/saml/saml-service-provider-store.md)). This tells IdentityServer the SP's entity identifier, where to deliver assertions (the Assertion Consumer Service URL) and how to communicate. See the [Service Provider Store](/identityserver/saml/service-providers.md) and the [`SamlServiceProvider` model](/identityserver/saml/configuration.md#samlserviceprovider-model) for details.
 
-Duende IdentityServer can also act as a SAML Service Provider itself, consuming assertions from an external SAML IdP. See [Identity Provider and Service Provider](/identityserver/saml/idp-and-sp.mdx) for an overview of both roles.
+Duende IdentityServer can also act as a SAML Service Provider itself, consuming assertions from an external SAML IdP. See [SAML 2.0](/identityserver/saml/index.mdx) for an overview of both roles.
 
 ## Entity Identifiers
 
@@ -126,7 +126,7 @@ Common formats include:
 * **Persistent**: a stable, opaque identifier that remains the same for a given user for each IdP-SP pair across all sessions. Useful when the SP needs to correlate the user over time without revealing the user's real identity.
 * **Transient**: a session-scoped, one-time identifier that changes with every SSO session. Useful when the SP does not need to recognize the user across sessions.
 
-IdentityServer supports using the `sub` claim with the `unspecified` NameID formats and the `emailAddress` format out of the box. For other formats (persistent, transient, or custom), implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
+Out of the box, IdentityServer issues the user's email address for the `emailAddress` format and the `sub` claim for every other format, including `persistent` and `transient`. That means the value isn't a per-SP identifier for `persistent`, and it doesn't change per session for `transient`. If a service provider needs either of those, implement [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator).
 
 Inbound `AuthnRequest` messages are validated against the formats configured in `SamlOptions.SupportedNameIdFormats`. Requests specifying an unsupported format are rejected. If you implement a custom NameID format via `ISamlNameIdGenerator`, add it to this list to pass validation.
 

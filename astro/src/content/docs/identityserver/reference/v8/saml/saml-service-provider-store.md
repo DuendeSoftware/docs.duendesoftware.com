@@ -31,10 +31,10 @@ public interface ISamlServiceProviderStore
     Task<SamlServiceProvider?> FindByEntityIdAsync(string entityId, CancellationToken ct);
 
     /// <summary>
-    /// Returns all registered SAML Service Providers.
+    /// Returns all SAML Service Providers for enumeration purposes.
     /// </summary>
     /// <param name="ct">The cancellation token.</param>
-    /// <returns>An async enumerable of all Service Providers.</returns>
+    /// <returns>An async enumerable of all SAML Service Providers.</returns>
     IAsyncEnumerable<SamlServiceProvider> GetAllSamlServiceProvidersAsync(CancellationToken ct);
 }
 ```

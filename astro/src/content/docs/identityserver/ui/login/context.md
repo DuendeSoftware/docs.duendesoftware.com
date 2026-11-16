@@ -40,14 +40,15 @@ the appropriate protocol-specific error response.
 This works for both OpenID Connect (OIDC) and SAML flows:
 
 * **OIDC**: Returns an `access_denied` error to the client.
-* **SAML**: Returns a SAML response with `Responder`/`AuthnFailed` status codes to the service
-  provider.
+* **SAML**: Returns a SAML error response to the service provider. The top-level status is
+  always `Responder`. The second-level status depends on the `InteractionError` you pass (see the
+  table below).
 
 ```csharp
 // LoginModel.cshtml.cs
 public async Task<IActionResult> OnPostCancelAsync(string returnUrl)
 {
-    var context = await _interaction.GetAuthenticationContextAsync(returnUrl);
+    var context = await _interaction.GetAuthenticationContextAsync(returnUrl, HttpContext.RequestAborted);
 
     if (context is not null)
     {
@@ -69,6 +70,17 @@ was denied. The available values are:
 * `InteractionError.ConsentRequired`: Consent was required, but not granted.
 * `InteractionError.TemporarilyUnavailable`: The request could not be processed.
 * `InteractionError.UnmetAuthenticationRequirements`: The user did not meet authentication requirements.
+
+For SAML, the `InteractionError` maps to the following second-level status code:
+
+| `InteractionError`                                                                    | SAML second-level status |
+|---------------------------------------------------------------------------------------|--------------------------|
+| `AccessDenied`, `LoginRequired`, `AccountSelectionRequired`, `TemporarilyUnavailable` | `AuthnFailed`            |
+| `InteractionRequired`                                                                 | `NoPassive`              |
+| `ConsentRequired`                                                                     | `RequestDenied`          |
+| `UnmetAuthenticationRequirements`                                                     | `NoAuthnContext`         |
+
+Use `UnmetAuthenticationRequirements` when the user can't satisfy a requirement such as step-up or multi-factor authentication.
 
 You can also pass an optional `errorDescription` string for additional context:
 

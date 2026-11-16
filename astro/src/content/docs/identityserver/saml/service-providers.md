@@ -10,22 +10,20 @@ sidebar:
 IdentityServer needs to know which SAML 2.0 Service Providers (SPs) are allowed to request
 authentication. The SAML plugin provides the `ISamlServiceProviderStore` interface: a read-only lookup called on every incoming SAML request to resolve SP configuration by entity ID.
 
-For simple deployments, you configure SPs at startup using the in-memory store. For more advanced setups where configuration changes more frequently, you implement a store backed by a database or configuration service. The `Duende.IdentityServer.EntityFramework.Stores` package contains an implementation of a database store.
+For simple deployments, you configure SPs at startup using the in-memory store. For more advanced setups where configuration changes more frequently, you implement a store backed by a database or configuration service. The `Duende.IdentityServer.EntityFramework` package contains an implementation of a database store.
 
 ## ISamlServiceProviderStore
 
-[`ISamlServiceProviderStore`](/identityserver/reference/v8/saml/saml-service-provider-store.md) is the read-only lookup interface that IdentityServer calls on every incoming SAML request. When a SAML AuthnRequest arrives, IdentityServer extracts the `Issuer` entity ID and calls `FindByEntityIdAsync` to load the SP's configuration. If the method returns `null`, the request is rejected.
+[`ISamlServiceProviderStore`](/identityserver/reference/v8/saml/saml-service-provider-store.md) is the read-only lookup interface that IdentityServer calls on every incoming SAML request. When a SAML `AuthnRequest` arrives, IdentityServer extracts the `Issuer` entity ID and calls `FindByEntityIdAsync` to load the SP's configuration. If the method returns `null`, the request is rejected.
 
 This interface is used for read-only lookup during request processing. Your store implementation should be optimized for fast, concurrent reads (e.g., backed by a cache or an indexed database query).
-
-`GetAllSamlServiceProvidersAsync` is used for bulk operations such as cache warming. It returns all registered SPs as an async stream.
 
 ```csharp
 // ISamlServiceProviderStore.cs
 public interface ISamlServiceProviderStore
 {
     Task<SamlServiceProvider?> FindByEntityIdAsync(string entityId, CancellationToken ct);
-    IAsyncEnumerable<SamlServiceProvider> GetAllSamlServiceProvidersAsync(CancellationToken ct = default);
+    IAsyncEnumerable<SamlServiceProvider> GetAllSamlServiceProvidersAsync(CancellationToken ct);
 }
 ```
 
@@ -66,11 +64,11 @@ builder.Services.AddIdentityServer()
     );
 ```
 
+The in-memory store validates each SP when you add it. Duplicate entity IDs throw an `ArgumentException`, and SPs with `Enabled = false` aren't returned.
+
 ## Entity Framework Core Store
 
-For production deployments, IdentityServer ships an EF Core-backed implementation of `ISamlServiceProviderStore` in the `Duende.IdentityServer.EntityFramework.Stores` package. This stores SP configuration in your database alongside other IdentityServer operational and configuration data.
-
-Register the EF Core store using the IdentityServer builder:
+In production you'll usually keep your service providers in a database. The `Duende.IdentityServer.EntityFramework` package includes an EF Core store for that, and `AddConfigurationStore()` registers it, so your SPs live next to the rest of your IdentityServer configuration:
 
 ```csharp
 // Program.cs
@@ -83,13 +81,13 @@ builder.Services.AddIdentityServer()
     });
 ```
 
-The EF Core store handles concurrent reads efficiently and integrates with EF Core migrations for schema management.
+Like the rest of the configuration store, the SAML tables are created through your EF Core migrations.
 
 ## Custom Store
 
 For deployments that need a store not covered by the built-in options, implement `ISamlServiceProviderStore` backed by your own data store (e.g., a NoSQL database or external configuration service). Register your implementation using `AddSamlServiceProviderStore<T>()` on the IdentityServer builder.
 
-Your implementation must handle concurrent reads efficiently. Consider adding a caching layer (e.g., `IMemoryCache`) in front of your database queries, since `FindByEntityIdAsync` is called on every SAML request.
+Your implementation must handle concurrent reads efficiently. Consider registering your store with [`AddSamlServiceProviderStoreCache<T>()`](#caching) instead, since `FindByEntityIdAsync` is called on every SAML request.
 
 ```csharp
 // Program.cs
@@ -150,7 +148,7 @@ public class MySamlServiceProviderStore : ISamlServiceProviderStore
 
 ## Runtime Validation
 
-When you call `AddSamlServiceProviderStore<T>()`, IdentityServer automatically wraps your store with a `ValidatingSamlServiceProviderStore<T>` that runs configuration checks (see [`ISamlServiceProviderConfigurationValidator`](/identityserver/reference/v8/saml/saml-service-provider-configuration-validator.md)) on every SP loaded from the store.
+When you call `AddSamlServiceProviderStore<T>()`, IdentityServer wraps your store with a `ValidatingSamlServiceProviderStore<T>` that runs configuration checks (see [`ISamlServiceProviderConfigurationValidator`](/identityserver/reference/v8/saml/saml-service-provider-configuration-validator.md)) on every SP loaded from the store.
 
 The default validator (`DefaultSamlServiceProviderConfigurationValidator`) checks the following:
 
@@ -211,6 +209,9 @@ new SamlServiceProvider
     DisplayName = "Example SP",
     Enabled = true,
 
+    // Claims available to the SP (identity resources only)
+    AllowedScopes = { "openid", "profile" },
+
     // Assertion Consumer Service
     AssertionConsumerServiceUrls =
     [
@@ -256,6 +257,6 @@ new SamlServiceProvider
 }
 ```
 
-Each entry in `Certificates` is a [`ServiceProviderCertificate`](/identityserver/saml/configuration.md#serviceprovidercertificate), which uses the `KeyUse` enum to annotate whether the certificate is used for signing, encryption, or both.
+`Certificates` holds the SP's public certificates. IdentityServer uses them to verify the signatures on messages the SP sends, such as signed authentication requests. See [`ServiceProviderCertificate`](/identityserver/saml/configuration.md#serviceprovidercertificate) for the details.
 
 See [SAML Configuration](/identityserver/saml/configuration.md) for full property documentation.

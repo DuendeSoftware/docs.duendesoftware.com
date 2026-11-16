@@ -9,7 +9,7 @@ sidebar:
 
 #### Duende.IdentityServer.Saml.Services.ISamlNameIdGenerator
 
-Generates the SAML `NameID` included in assertions. It is called during assertion generation, after the user authenticated and the `NameID` format was resolved.
+Generates SAML NameID values for SSO responses. The built-in handling generates an email NameID for the email format and uses the `sub` claim for every other format, including persistent and transient. Register a custom implementation if a service provider needs a different value, for example a pairwise identifier for the persistent format or a session-scoped identifier for the transient format. It's called for an assertion after the user authenticates and the `NameID` format is resolved.
 
 ```csharp
 public interface ISamlNameIdGenerator
@@ -17,6 +17,8 @@ public interface ISamlNameIdGenerator
     Task<NameIdGenerationResult> GenerateAsync(NameIdGenerationContext context, CancellationToken ct);
 }
 ```
+
+`GenerateAsync` generates a NameID for the given context.
 
 ## NameIdGenerationContext
 
@@ -29,6 +31,15 @@ public sealed class NameIdGenerationContext
     public string? SPNameQualifier { get; init; }
 }
 ```
+
+Context provided to `ISamlNameIdGenerator` for NameID generation.
+
+| Property | Description |
+|---|---|
+| `Subject` | The authenticated subject. |
+| `ServiceProvider` | The SAML service provider requesting the assertion. |
+| `ResolvedFormat` | The resolved NameID format (after applying priority: request → SP default → unspecified). |
+| `SPNameQualifier` | `SPNameQualifier` from the `AuthnRequest` `NameIDPolicy`, if present. |
 
 ## NameIdGenerationResult
 
@@ -44,7 +55,26 @@ public sealed class NameIdGenerationResult
 }
 ```
 
-`NameId` (namespace `Duende.IdentityServer.Saml`) has `Value`, `Format`, `SPNameQualifier`, and `NameQualifier`, and converts implicitly from `string`. Use [`SamlStatusCodes`](/identityserver/reference/v8/saml/saml-constants.md) for the failure codes, for example `SamlStatusCodes.Responder` and `SamlStatusCodes.UnknownPrincipal`.
+Result of NameID generation, representing either a successful `NameId` or a SAML protocol error.
+
+| Member | Description |
+|---|---|
+| `NameId` | The generated NameID, or null if generation failed. |
+| `Error` | The error, or null if generation succeeded. |
+| `IsError` | Whether this result represents an error. |
+| `Success` | Creates a successful result. |
+| `Failure` | Creates a failure result with SAML error status codes. |
+
+`NameId` (namespace `Duende.IdentityServer.Saml`) is the Saml `NameIDType`. It converts implicitly from `string`, which creates a `NameId` with the string supplied as value.
+
+| Property | Description |
+|---|---|
+| `Value` | The value, i.e. string contents of the XML node. |
+| `Format` | A URI reference representing the classification of string-based identifier information. |
+| `SPNameQualifier` | Optionally qualifies a name identifier in the namespace of a service provider or affiliation of providers. |
+| `NameQualifier` | The security or administrative domain that qualifies the name. |
+
+Use [`SamlStatusCodes`](/identityserver/reference/v8/saml/saml-constants.md) for the failure codes, for example `SamlStatusCodes.Responder` and `SamlStatusCodes.UnknownPrincipal`.
 
 ```csharp
 return Task.FromResult(NameIdGenerationResult.Failure(
@@ -55,9 +85,11 @@ return Task.FromResult(NameIdGenerationResult.Failure(
 
 ## Default behavior
 
+Default implementation of `ISamlNameIdGenerator` that generates an email NameID for the email format and uses the `sub` claim for every other format.
+
 * Email format: uses the claim type from `SamlServiceProvider.EmailNameIdClaimType`, falling back to `SamlOptions.EmailNameIdClaimType` (default `email`).
-* Every other format: uses the `sub` claim and echoes `ResolvedFormat`. The default doesn't special-case `persistent` or `transient`.
-* On failure, the SP receives a `Responder` / `InvalidNameIDPolicy` status.
+* Every other format: uses the `sub` claim and echoes `ResolvedFormat`, including for `persistent` and `transient`.
+* On failure, the default implementation returns `Responder` / `InvalidNameIDPolicy` status codes with a message. The default `ISaml2SsoResponseGenerator` uses only the message: the user sees the IdentityServer error page and no SAML error response is sent to the SP.
 
 ## Registration
 

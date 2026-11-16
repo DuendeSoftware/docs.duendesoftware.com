@@ -147,7 +147,7 @@ If you are using Duende IdentityServer's Entity Framework stores for configurati
 | `SingleLogoutServices`                | `SingleLogoutServiceUrls`       |
 | `ClaimsMapping`                       | `ClaimMappings`                 |
 | `SignAssertions` (bool)               | `SigningBehavior` (enum)        |
-| `EncryptAssertions`                   | `EncryptAssertions`             |
+| `EncryptAssertions`                   | Not supported                   |
 | `RequireAuthenticationRequestsSigned` | `RequireSignedAuthnRequests`    |
 | `AllowIdpInitiatedSso`                | `AllowIdpInitiated`             |
 | —                                     | `AllowedScopes` (NEW, required) |
@@ -255,7 +255,6 @@ public static IEnumerable<SamlServiceProvider> SamlServiceProviders =>
         },
         
         SigningBehavior = SamlSigningBehavior.SignAssertion,
-        EncryptAssertions = false,
         RequireSignedAuthnRequests = false,
         AllowIdpInitiated = true,
         
@@ -317,7 +316,7 @@ new IndexedEndpoint
 
 Single Logout (SLO) endpoints only support `SamlBinding.HttpRedirect`. Unlike ACS binding validation, this is **not checked at configuration time**. If you configure `HttpPost` for SLO, the configuration will load successfully, but SLO notifications will be **silently skipped** for that Service Provider at runtime.
 
-This happens because the SLO notification service specifically looks for an `HttpRedirect` endpoint. If none is found, it logs a debug message ("UnsupportedBinding") and skips the Service Provider without throwing an error.
+This happens because the SLO notification service specifically looks for an `HttpRedirect` endpoint. If none is found, it logs a debug message ("Skipping SAML logout for SP with unsupported binding") and skips the Service Provider.
 
 If your RSK configuration used `HttpPost` for SLO, change it to `HttpRedirect`:
 
@@ -378,6 +377,7 @@ Watch for these subtle naming differences when translating RSK code to Duende:
 - `ClaimsMapping` → `ClaimMappings` (plural)
 - `AllowIdpInitiatedSso` → `AllowIdpInitiated` (shorter)
 - `RequireAuthenticationRequestsSigned` → `RequireSignedAuthnRequests` (reordered)
+- `EncryptAssertions` has no Duende equivalent: IdentityServer doesn't encrypt assertions, so remove it from your configuration.
 
 ## Testing Checklist
 
@@ -439,7 +439,7 @@ Change your ACS endpoint binding to `SamlBinding.HttpPost`. HTTP-Redirect cannot
 ### SSO Works but SLO Fails
 
 1. Verify `SingleLogoutServiceUrls` is configured
-2. Ensure SLO binding is `SamlBinding.HttpRedirect` — if you configured `HttpPost`, SLO notifications will be silently skipped (check debug logs for "UnsupportedBinding")
+2. Ensure SLO binding is `SamlBinding.HttpRedirect` — if you configured `HttpPost`, SLO notifications are silently skipped (check the debug logs for "Skipping SAML logout for SP with unsupported binding")
 3. Check that the Service Provider and IdP agree on the binding
 4. Ensure session management is properly configured
 

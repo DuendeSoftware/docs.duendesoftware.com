@@ -25,7 +25,7 @@ All async methods accept a `CancellationToken ct` parameter.
 * **`GetAuthenticationContextAsync(string? returnUrl, CancellationToken ct)`**
 
   Returns the protocol-agnostic authentication context for the current request. Returns an `AuthorizationRequest` for
-  OIDC flows or a `SamlAuthenticationRequest` for SAML flows, both behind the common `IAuthenticationContext` interface.
+  OIDC flows or a `SamlAuthenticationContext` for SAML flows, both behind the common `IAuthenticationContext` interface.
   Use pattern matching to access protocol-specific details. Returns `null` if the URL does not correspond to a valid
   pending authorization request.
 

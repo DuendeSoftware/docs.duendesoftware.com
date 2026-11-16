@@ -7,13 +7,13 @@ sidebar:
   order: 6
 ---
 
-Two services shape the identity provider (IdP) metadata that service providers consume. `ISaml2IssuerNameService` resolves the entity ID that identifies IdentityServer as the IdP. `ISaml2MetadataResponseGenerator` generates the metadata document that is served by the metadata endpoint.
+These services shape the identity provider (IdP) metadata that service providers consume. `ISaml2IssuerNameService` resolves IdentityServer's IdP entity ID, and `ISaml2MetadataResponseGenerator` builds the metadata document that service providers consume.
 
 ## ISaml2MetadataResponseGenerator
 
 #### Duende.IdentityServer.Saml.ResponseHandling.ISaml2MetadataResponseGenerator
 
-Generates the IdP metadata document served by the metadata endpoint (`/Saml2` by default, content type `application/samlmetadata+xml`).
+Saml2 metadata response generator. It generates the IdP metadata document served by the metadata endpoint with content type `application/samlmetadata+xml`. The endpoint uses the path from `SamlOptions.EntityId` when that is an HTTP(S) URL with a path other than `/`. Otherwise it uses `SamlOptions.EntityIdPath` (default `/Saml2`).
 
 ```csharp
 public interface ISaml2MetadataResponseGenerator
@@ -27,13 +27,23 @@ public interface ISaml2MetadataResponseGenerator
 }
 ```
 
-`Saml2MetadataResult` (namespace `Duende.IdentityServer.Saml.Endpoints.Results`, sealed) has one required property, `Xml`, the metadata as an `XmlDocument`.
+| Parameter | Description |
+|---|---|
+| `issuer` | Entity Id of IdentityServer |
+| `signingKeys` | The certificates to publish as signing keys in the metadata. |
+| `options` | Saml options |
+| `baseUrl` | Base url of IdentityServer |
+| `ct` | The cancellation token. |
+
+`GenerateMetadataAsync` generates the metadata response. It returns a `Saml2MetadataResult` that contains the generated XML.
+
+`Saml2MetadataResult` (namespace `Duende.IdentityServer.Saml.Endpoints.Results`, sealed) is the result of Saml2 Metadata generation. It has one required property, `Xml`: the metadata as an XML document.
 
 ### Default behavior
 
-The default implementation, `Saml2MetadataResponseGenerator`, is a public class. It doesn't call [`ISamlSigningService`](/identityserver/reference/v8/saml/saml-signing-service.md) itself. The metadata endpoint passes in the issuer and the certificates from `ISamlSigningService.GetAllSigningCertificatesAsync`, and the generator publishes each as a signing `KeyDescriptor`. The rest of the document comes from `SamlOptions`: the single sign-on and single logout endpoints (one per configured binding, `SingleSignOnServiceBindings` and `SingleLogoutServiceBindings`), `SupportedNameIdFormats`, `WantAuthnRequestsSigned`, and the `Metadata.CacheDuration` and `Metadata.ExpiryDuration` values. The content type is `application/samlmetadata+xml`, or `text/xml` when the request accepts `text/html`.
+The metadata endpoint passes `Saml2MetadataResponseGenerator` the issuer and the certificates from [`ISamlSigningService`](/identityserver/reference/v8/saml/saml-signing-service.md)`.GetAllSigningCertificatesAsync`, and the generator publishes each certificate as a signing `KeyDescriptor`. The rest of the document comes from `SamlOptions`: the single sign-on and single logout endpoints (one per configured binding, `SingleSignOnServiceBindings` and `SingleLogoutServiceBindings`), `SupportedNameIdFormats`, `WantAuthnRequestsSigned`, and the `Metadata.CacheDuration` and `Metadata.ExpiryDuration` values. The content type is `application/samlmetadata+xml`, or `text/xml` when the request accepts `text/html`.
 
-The class has a `protected virtual GenerateEntityDescriptorAsync` method you can override to change the document.
+To change the document, derive from the generator and override `GenerateEntityDescriptorAsync`, which generates the `EntityDescriptor` for IdentityServer acting as a SAML identity provider. It takes the same `issuer`, `signingKeys`, `options`, `baseUrl`, and `ct` arguments as `GenerateMetadataAsync`.
 
 ### Registration
 
@@ -45,7 +55,7 @@ builder.Services.AddScoped<ISaml2MetadataResponseGenerator, CustomMetadataGenera
 
 #### Duende.IdentityServer.Saml.Services.ISaml2IssuerNameService
 
-Resolves the entity ID IdentityServer uses as the SAML IdP issuer.
+Access to current IdentityServer Entity Id. It resolves the entity ID IdentityServer uses as the SAML IdP issuer.
 
 ```csharp
 public interface ISaml2IssuerNameService
@@ -53,6 +63,8 @@ public interface ISaml2IssuerNameService
     Task<string> GetCurrentAsync(CancellationToken ct);
 }
 ```
+
+`GetCurrentAsync` gets the current IdentityServer Entity Id and returns the Entity Id string.
 
 ### Default behavior
 

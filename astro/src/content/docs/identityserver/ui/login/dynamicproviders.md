@@ -265,11 +265,12 @@ SAML dynamic providers use the `SamlProvider` model, which extends `IdentityProv
 * `BindingType` (`string`, default `"redirect"`) — The SAML binding type (`"redirect"` or `"post"`).
 * `SpEntityId` (`string?`, default `null`) — The entity ID of your application (the SP). When `null`, derived from the IdentityServer issuer.
 * `AllowUnsolicitedAuthnResponse` (`bool`, default `false`) — Whether to accept IdP-initiated (unsolicited) responses. When `true`, also set `IdpInitiatedCallbackUrl`.
-* `IdpInitiatedCallbackUrl` (`string?`, default `null`) — The URL to redirect to after processing an IdP-initiated (unsolicited) response. Required when `AllowUnsolicitedAuthnResponse` is `true`. Must be a relative path or absolute URL with http/https scheme.
+* `IdpInitiatedCallbackUrl` (`string?`, default `null`) — The redirect URL after processing an unsolicited (IdP-initiated) authentication response. When `AllowUnsolicitedAuthnResponse` is `true`, set this to a relative path (such as `/ExternalLogin/Callback`) or an absolute HTTP(S) URL. Otherwise, unsolicited responses fail.
 * `MaxRelayStateLength` (`int`, default `1024`) — Maximum length (in bytes) of SAML RelayState to persist in authentication properties. Values exceeding this limit are not surfaced.
 * `WantAssertionsSigned` (`bool`, default `true`) — Whether assertions from the IdP must be signed.
 * `OutboundSigningAlgorithm` (`string`, default RSA-SHA256) — The XML signature algorithm for outbound requests.
-* `SpSigningCertificateBase64` (`string?`, default `null`) — Base64-encoded PKCS#12 certificate (with private key) that your SP uses to sign outbound SAML messages such as `AuthnRequest` and `LogoutResponse`. Set this when the remote IdP requires signed requests or when you use single logout.
+* `SpSigningCertificateBase64` (`string?`, default `null`) — Base64-encoded PKCS#12 certificate containing the SP's private key, used to sign outbound SAML messages such as `AuthnRequest`. Set it when the remote IdP requires signed requests. `AuthnRequestSigningBehavior.Always` requires it.
+* `AuthnRequestSigningBehavior` (`AuthnRequestSigningBehavior`, default `Never`) — Controls whether outbound `AuthnRequest` messages are signed: `Never` (the default) or `Always`. To use `Always`, also set `SpSigningCertificateBase64`.
 * `SpSigningCertificatePassword` (`string?`, default `null`) — Optional password for the PKCS#12 certificate supplied in `SpSigningCertificateBase64`. Omit this property if the certificate has no password.
 
 `SamlProvider` also inherits `Scheme`, `DisplayName`, `Enabled`, and the `Properties` dictionary from `IdentityProvider`.
