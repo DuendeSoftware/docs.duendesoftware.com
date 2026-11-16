@@ -39,7 +39,7 @@ builder.Services.AddIdentityServer()
 
 ### 2. Register Service Providers
 
-Register Service Providers using the in-memory store for development, the EF Core store for production, or implement a custom `ISamlServiceProviderStore`:
+Register Service Providers using the in-memory store for development, the EF Core store for production, or implement a custom [`ISamlServiceProviderStore`](/identityserver/reference/v8/saml/saml-service-provider-store.md):
 
 ```csharp
 builder.Services.AddIdentityServer()
@@ -50,6 +50,7 @@ builder.Services.AddIdentityServer()
         {
             EntityId = "https://sp.example.com",
             DisplayName = "Example SP",
+            AllowedScopes = { "openid", "profile" },
             AssertionConsumerServiceUrls =
             [
                 new()
@@ -65,6 +66,8 @@ builder.Services.AddIdentityServer()
 ```
 
 For production, use the EF Core store from `Duende.IdentityServer.EntityFramework.Stores` to persist SP configuration in your database. See [Service Providers](/identityserver/saml/service-providers.md) for all storage options.
+
+For the interfaces and registration methods behind these steps, see the [SAML reference](/identityserver/reference/v8/saml/saml-registration.md).
 
 ## Login Page Compatibility
 

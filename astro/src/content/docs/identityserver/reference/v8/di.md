@@ -282,11 +282,11 @@ Extension methods for configuring [SAML 2.0 Identity Provider](/identityserver/s
 
 * **`AddSaml`**
 
-  Adds SAML 2.0 Identity Provider services to IdentityServer and enables all SAML endpoints except IdP-initiated SSO.
+  Adds SAML 2.0 Identity Provider services to IdentityServer (see [SAML registration extension methods](/identityserver/reference/v8/saml/saml-registration.md)) and enables all SAML endpoints except IdP-initiated SSO.
 
 * **`AddSamlServiceProviderStore<T>`**
 
-  Registers a custom `ISamlServiceProviderStore` implementation.
+  Registers a custom [`ISamlServiceProviderStore`](/identityserver/reference/v8/saml/saml-service-provider-store.md) implementation.
 
 * **`AddInMemorySamlServiceProviders`**
 

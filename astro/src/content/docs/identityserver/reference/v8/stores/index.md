@@ -26,7 +26,7 @@ Configuration stores manage the relatively static data that defines how Identity
 | [IIdentityProviderStore](/identityserver/reference/v8/stores/idp-store.md) | Dynamic external identity providers |
 | [ICorsPolicyService](/identityserver/reference/v8/stores/cors-policy-service.md) | CORS origin validation for clients |
 | `IConnectedApplicationStore` | Read-only unified access to all registered applications across protocols (OIDC clients and SAML service providers) |
-| [ISamlServiceProviderStore](/identityserver/reference/v8/stores/saml-service-provider-store.md) | SAML Service Provider configuration retrieval by entity ID (used when SAML is enabled) |
+| [ISamlServiceProviderStore](/identityserver/reference/v8/saml/saml-service-provider-store.md) | SAML Service Provider configuration retrieval by entity ID (used when SAML is enabled) |
 
 ## Operational Stores
 

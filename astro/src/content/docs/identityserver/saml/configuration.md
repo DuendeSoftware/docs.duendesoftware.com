@@ -198,7 +198,7 @@ builder.Services.AddIdentityServer()
 
 ## SamlServiceProvider Model
 
-`SamlServiceProvider` represents a registered SAML 2.0 Service Provider. Each SP has its own entity ID, ACS endpoints, signing certificates, and claim configuration. SPs can be registered statically in code or managed dynamically via a custom store.
+`SamlServiceProvider` (see also the [SAML reference](/identityserver/reference/v8/saml/saml-registration.md)) represents a registered SAML 2.0 Service Provider. Each SP has its own entity ID, ACS endpoints, signing certificates, and claim configuration. SPs can be registered statically in code or managed dynamically via a custom store.
 
 Most properties on `SamlServiceProvider` are optional overrides of the global defaults set in `SamlOptions`. When a property is `null`, the corresponding `SamlOptions` default applies. This lets you configure sensible defaults once and only specify per-SP values where behavior needs to differ.
 
@@ -391,7 +391,7 @@ Properties:
 ## Caching Options
 
 The SAML add-on integrates with IdentityServer's built-in caching infrastructure.
-When you register a custom SP store with `AddSamlServiceProviderStoreCache<T>()`, IdentityServer wraps your store with
+When you register a custom [SP store](/identityserver/reference/v8/saml/saml-service-provider-store.md) with `AddSamlServiceProviderStoreCache<T>()`, IdentityServer wraps your store with
 an in-memory cache to reduce repeated lookups.
 
 The cache duration is controlled by `SamlServiceProviderStoreExpiration` on `IdentityServerOptions.Caching`:
@@ -414,7 +414,7 @@ builder.Services
 
 IdP-initiated SSO is a flow where the Identity Provider sends a SAML assertion to a Service Provider without first receiving an `AuthnRequest`. This is commonly used in portal pages (for example, a "My Apps" dashboard) where the user is already authenticated and clicks a tile to launch an SP application.
 
-There is no built-in endpoint for IdP-initiated SSO. Instead, inject `IIdpInitiatedSsoService` into your own Razor Pages or controllers to generate and send the SAML response programmatically. See [`IIdpInitiatedSsoService`](/identityserver/saml/extensibility.md#iidpinitiatedssoservice) for usage details.
+There is no built-in endpoint for IdP-initiated SSO. Instead, inject [`IIdpInitiatedSsoService`](/identityserver/reference/v8/saml/saml-idp-initiated-sso-service.md) into your own Razor Pages or controllers to generate and send the SAML response programmatically. See [`IIdpInitiatedSsoService`](/identityserver/saml/extensibility.md#iidpinitiatedssoservice) for usage details.
 
 To allow IdP-initiated SSO for a given SP, set `AllowIdpInitiated = true` on its `SamlServiceProvider` configuration:
 
