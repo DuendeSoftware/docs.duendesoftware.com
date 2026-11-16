@@ -452,7 +452,7 @@ In this section, we'll look at updating the database schema based on the stores 
   - `Client.PushedAuthorizationLifetime` is a new nullable integer property that controls the lifetime of pushed
     authorization requests (in seconds) for a client. It is safe to initialize this column to `null` for existing clients, which means the global value is used.
 - A new `PushedAuthorizationRequest` table has been added to store pushed authorization requests.
-- If you are using the SAML 2.0 Identity Provider feature, five new tables are required: `SamlServiceProviders`, `SamlServiceProviderAssertionConsumerServices`, `SamlServiceProviderSigningCertificates`, `SamlServiceProviderEncryptionCertificates`, and `SamlServiceProviderClaimMappings`.
+- If you are using the SAML 2.0 Identity Provider feature, new configuration tables are required: `SamlServiceProviders`, `SamlAllowedScopes`, `SamlAssertionConsumerServices`, `SamlAuthnContextMappings`, `SamlCertificates`, `SamlClaimMappings`, `SamlRequestedClaimTypes`, and `SamlSingleLogoutServices`. The operational store also gets `SamlSigninStates`, `SamlLogoutSessions`, and `SamlLogoutSessionRequestIndices`.
 
 You'll need to create two database migrations that update the database schema: one that targets the `PersistedGrantDbContext` (for operational data), and one that targets the `ConfigurationDbContext` (for configuration data).
 Note that you may want to change the database migration paths in the examples below to match your project structure.
