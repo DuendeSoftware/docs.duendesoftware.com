@@ -1,6 +1,6 @@
 // Monthly spec check: node scripts/protocols/monthly.mjs [--dry-run | --local]
 // npm scripts: protocols:check (--local, offline), protocols:specs (--dry-run), protocols:monthly (opens issues).
-// --local: offline registry/page drift check only (unknown keys, unused registry keys, status/url consistency); exits 1 on findings.
+// --local: offline registry/page drift check only (unknown keys, unused registry keys, status/url consistency, step headings that match the flow); exits 1 on findings.
 // For each spec document cited by a PUBLISHED protocols page (frontmatter `sources:` + <Cite k="..." />): verify registry quotes still appear in the live text,
 // check RFC obsoleted/updated/errata and newer I-D revisions, and open one `protocols/re-review` issue per affected page.
 // Never edits `draft`. --dry-run only prints.
@@ -48,8 +48,19 @@ function drift() {
 	const out = [];
 	const all = fs.readdirSync(pdir, { recursive: true }).map((f) => f.replaceAll('\\', '/')).filter((f) => f.endsWith('.mdx') && f !== 'index.mdx').map((f) => {
 		const { data, content } = matter(fs.readFileSync(new URL(f, pdir), 'utf8'));
-		return { id: f, draft: data.draft === true, keys: [...(data.sources ?? []), ...[...content.matchAll(/<Cite\s+k=["']([^"']+)["']/g)].map((m) => m[1])] };
+		return { id: f, draft: data.draft === true, flow: data.flow, content, keys: [...(data.sources ?? []), ...[...content.matchAll(/<Cite\s+k=["']([^"']+)["']/g)].map((m) => m[1])] };
 	});
+	// Each flow step needs a matching "### N. <title>" heading, numbered from 1, in the same order.
+	for (const p of all) {
+		const steps = p.flow?.steps ?? [];
+		if (!steps.length) continue;
+		const heads = [...p.content.matchAll(/^### (\d+)\. (.+?)\s*$/gm)].map((m) => ({ n: +m[1], title: m[2] }));
+		if (heads.length !== steps.length) out.push(`${P}${p.id}: ${steps.length} flow steps but ${heads.length} "### N." step headings`);
+		steps.forEach((s, i) => {
+			const h = heads[i];
+			if (h && (h.n !== i + 1 || h.title !== s.title)) out.push(`${P}${p.id}: step ${i + 1} heading "### ${h.n}. ${h.title}" must be "### ${i + 1}. ${s.title}" (the flow step title)`);
+		});
+	}
 	for (const p of all) for (const k of new Set(p.keys)) if (!sectionDoc.has(k)) out.push(`unknown key "${k}" in ${P}${p.id}: add it to its astro/src/content/specs/*.yaml or fix the key`);
 	const used = new Set(published.flatMap((e) => e.keys)), usedAny = new Set(all.flatMap((e) => e.keys));
 	for (const d of docs) for (const s of d.sections) {
