@@ -248,11 +248,10 @@ dependency. Review signing credentials, external caches, telemetry, rate limits 
 they also need space-aware configuration.
 
 For example, sharing signing credentials reduces cryptographic separation between spaces. Token validation still checks
-the issuer, audience and other constraints, but when spaces share an issuer (see
-[How Spaces Resolve Incoming Requests](#how-spaces-resolve-incoming-requests)) the issuer check no longer tells spaces
-apart. Each space should use deliberately scoped credentials when your security model requires independent trust
-boundaries. IdentityServer protects its own signing keys through the unpartitioned Data Protection provider, so they
-remain valid across every space even when `PartitionDataProtection` is enabled.
+the issuer, audience and other constraints, but when `IssuerUri` is set and spaces share an issuer, the issuer check no
+longer tells spaces apart. Each space should use deliberately scoped credentials when your security model requires
+independent trust boundaries. IdentityServer protects its own signing keys through the unpartitioned Data Protection
+provider, so they remain valid across every space even when `PartitionDataProtection` is enabled.
 
 Whether signing keys are shared depends on how you configure them:
 
