@@ -192,7 +192,7 @@ WebStorm has Grazie as a built-in spell checker and grammar checker, and support
 * Body H2s, in order: "Why <Topic> Exists", "How <Topic> Works" (with `<Flow flow={frontmatter.flow} />`), "<Topic> Step by Step" (name the protocol in each, for search. The step section heading must end in "Step by Step"), optional sections with a heading that names their content (for example "Other Grants"), See Also, and Sources (`<Sources keys={frontmatter.sources} />`). Put requirement levels in the step they apply to, not in a separate notes section.
 * Cite specs with `<Cite k="..." />`. Keys come from the spec registry in `astro/src/content/specs/*.yaml`.
 * To embed a flow in another docs page, import `Flow` from `~/components/Flow.astro` and use `<Flow page="<group>/<slug>" />`. Use at most 2 per page.
-* `npm run protocols:check` is the offline check: it checks the spec registry against the pages and fails on unknown or unused keys. Run it before you open a pull request.
+* `npm run protocols:check` is the offline check: it checks the spec registry against the pages, and the step headings against the flow, and fails on unknown or unused keys. The `protocols-check.yml` workflow runs it on pull requests that change the protocols pages, the spec registry, or the check script.
 * `npm run protocols:specs` compares the registry with the live specs (a dry run of the monthly check). It needs network access and never opens issues.
 * `npm run protocols:monthly` is what the GitHub Action `protocols-monthly.yml` runs. Its schedule is disabled for now. Run it manually with the `dry_run` input.
 * New pages need review of the spec accuracy by a second person against the spec.
