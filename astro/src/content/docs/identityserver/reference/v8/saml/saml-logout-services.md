@@ -120,7 +120,7 @@ Encapsulates the result of building a SAML `LogoutRequest`, including the bindin
 
 ### Default behavior
 
-Default implementation of `ISamlLogoutNotificationService` that uses the new `ISaml2FrontChannelLogoutRequestBuilder` to build outbound `LogoutRequest` messages. The default implementation, `Saml2LogoutNotificationService`, builds a request for each SP session using [`ISaml2FrontChannelLogoutRequestBuilder`](#isaml2frontchannellogoutrequestbuilder). It skips the initiating SP, SPs that are unknown or disabled, SPs without a single logout URL or without an HTTP-Redirect logout endpoint, and SPs for which building the request fails. Skipped SPs are counted in `SkippedCount`. Outbound logout requests support only HTTP-Redirect.
+Default implementation of `ISamlLogoutNotificationService` that uses the new `ISaml2FrontChannelLogoutRequestBuilder` to build outbound `LogoutRequest` messages. The default implementation, `Saml2LogoutNotificationService`, builds a request for each SP session using [`ISaml2FrontChannelLogoutRequestBuilder`](#isaml2frontchannellogoutrequestbuilder). It skips the initiating SP, SPs that are unknown or disabled, SPs without a single logout URL or without an HTTP-Redirect logout endpoint, and SPs for which building the request fails. SPs skipped for any reason other than being the initiating SP are counted in `SkippedCount`; the initiating SP is skipped but not counted. Outbound logout requests support only HTTP-Redirect.
 
 ### Registration
 

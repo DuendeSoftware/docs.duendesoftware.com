@@ -43,7 +43,7 @@ The result of an IdP-initiated SSO operation. Either a success containing an `IR
 | `IsError` | Gets a value indicating whether the operation failed. |
 | `Error` | Gets the error description when `IsError` is `true`. |
 | `SpEntityId` | Gets the entity ID of the target service provider, when available. |
-| `Response` | Gets the `IResult` that writes the SAML response to the browser via the appropriate binding (e.g., HTTP-POST auto-submit form). Return it from a Razor Page handler or minimal API endpoint. `null` when `IsError` is `true`. With the default implementation, the response is auto-submitted to the SP's ACS URL using HTTP-POST. |
+| `Response` | Gets the `IResult` that writes the SAML response to the browser via the appropriate binding (e.g., HTTP-POST auto-submit form). Return it directly from a minimal API endpoint. In a Razor Page handler, await `result.Response.ExecuteAsync(HttpContext)` and then return an `EmptyResult`. `null` when `IsError` is `true`. With the default implementation, the response is auto-submitted to the SP's ACS URL using HTTP-POST. |
 | `Success(response, spEntityId)` | Creates a successful result containing the SAML response. `response` is the `IResult` that writes the SAML response. Custom implementations are responsible for ensuring the result produces a properly signed SAML response via the appropriate binding. `spEntityId` is the entity ID of the target service provider. |
 | `Failure(error, spEntityId)` | Creates a failure result with an error description. `error` is a description of why the operation failed. `spEntityId` is the entity ID of the target service provider, if known. |
 | `Failure(error)` | Creates a failure result with an error description, without a known SP entity ID. |
