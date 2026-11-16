@@ -4,15 +4,11 @@ description: Documentation for the ISamlServiceProviderStore interface which ret
 date: 2026-03-02
 sidebar:
   label: SAML Service Provider
-  order: 45
-  badge:
-    text: v8.0
-    variant: tip
+  order: 12
 redirect_from:
   - /identityserver/reference/stores/saml-service-provider-store/
+  - /identityserver/reference/v8/stores/saml-service-provider-store/
 ---
-
-<span data-shb-badge data-shb-badge-variant="default">Added in 8.0</span>
 
 The `ISamlServiceProviderStore` interface is the contract for a service that retrieves
 [SAML 2.0 Service Provider](/identityserver/saml/service-providers.md) configuration by entity identifier.
