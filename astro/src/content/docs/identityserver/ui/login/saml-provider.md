@@ -89,7 +89,7 @@ The `SamlServiceProviderOptions` class controls how the SP handler communicates 
   Whether to allow unsolicited (IdP-initiated) authentication responses. When `true`, also set `IdpInitiatedCallbackUrl` to specify where users land after authentication. Defaults to `false`.
 
 * **`IdpInitiatedCallbackUrl`**
-  The URL to redirect to after processing an unsolicited (IdP-initiated) authentication response. Needed to complete unsolicited responses when `AllowUnsolicitedAuthnResponse` is `true`: without it, an unsolicited response results in an error. Must be a relative path (e.g., `/ExternalLogin/Callback`) or an absolute URL with http/https scheme. Defaults to `null`.
+  The redirect URL after processing an unsolicited (IdP-initiated) authentication response. When `AllowUnsolicitedAuthnResponse` is `true`, set this to a relative path (such as `/ExternalLogin/Callback`) or an absolute HTTP(S) URL. Otherwise, unsolicited responses fail. Defaults to `null`.
 
 * **`MaxRelayStateLength`**
   Maximum length (in bytes) of the SAML RelayState value that will be persisted in authentication properties. RelayState values exceeding this limit are silently dropped to prevent cookie bloat. Defaults to `1024`.
@@ -101,13 +101,13 @@ The `SamlServiceProviderOptions` class controls how the SP handler communicates 
   The XML signature algorithm used for outbound SAML requests. Defaults to RSA-SHA256.
 
 * **`SpSigningCertificateBase64`**
-  A base64-encoded PKCS#12 (PFX) certificate that includes the SP's private key. The SP uses this certificate to sign outbound SAML messages such as `AuthnRequest`. Set this property when the remote IdP requires signed authentication requests. It's required when `AuthnRequestSigningBehavior` is `Always`. Defaults to `null`.
+  A base64-encoded PKCS#12 (PFX) certificate containing the SP's private key, used to sign outbound SAML messages such as `AuthnRequest`. Set it when the remote IdP requires signed authentication requests. `AuthnRequestSigningBehavior.Always` requires it. Defaults to `null`.
 
 * **`SpSigningCertificatePassword`**
   The password for the PKCS#12 SP signing certificate set in `SpSigningCertificateBase64`. Leave this `null` if the certificate file has no password. Defaults to `null`.
 
 * **`AuthnRequestSigningBehavior`**
-  Controls whether outbound `AuthnRequest` messages are signed. Accepted values from the `AuthnRequestSigningBehavior` enum are `Never` and `Always`. Defaults to `Never`. When set to `Always`, you must also set `SpSigningCertificateBase64`.
+  Controls whether outbound `AuthnRequest` messages are signed: `Never` (the default) or `Always`. To use `Always`, also set `SpSigningCertificateBase64`.
 
 * **`ModulePath`**
   The application-relative path prefix for the handler's ACS and metadata endpoints. Defaults to `"/Saml2"`.
@@ -125,7 +125,7 @@ The `BindingType` property accepts values from the `SamlBindingType` enum:
 
 ## Validation
 
-The required properties (`SpEntityId`, `IdpEntityId`, and `SingleSignOnServiceUrl`) are validated eagerly at host startup. Any certificates listed in `SigningCertificatesBase64` are also validated to confirm they can be loaded as X.509 certificates, and `SpSigningCertificateBase64` must be set when `AuthnRequestSigningBehavior` is `Always`. If a required property is missing or a certificate is invalid, the application fails to start with a clear `OptionsValidationException`.
+At startup, IdentityServer checks that `SpEntityId`, `IdpEntityId`, and `SingleSignOnServiceUrl` are set, that certificates in `SigningCertificatesBase64` can be loaded as X.509 certificates, and that `SpSigningCertificateBase64` is set when `AuthnRequestSigningBehavior` is `Always`. Missing required values or invalid certificates prevent startup with an `OptionsValidationException`.
 
 ## Static vs. Dynamic Providers
 

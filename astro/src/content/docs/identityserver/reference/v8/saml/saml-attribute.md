@@ -13,14 +13,14 @@ A SAML attribute included in the assertion's attribute statement.
 
 | Property | Description |
 |---|---|
-| `Name` | The attribute name (`string`). |
-| `NameFormat` | The attribute name format URI (`string?`). |
-| `FriendlyName` | The human-readable friendly name (`string?`). |
-| `Values` | The attribute values (`List<string?>`). |
+| `Name` | The attribute name. |
+| `NameFormat` | The attribute name format URI. |
+| `FriendlyName` | The human-readable friendly name. |
+| `Values` | The attribute values. |
 
 ## ProfileDataRequestContext.SamlAttributes
 
-When the SAML response is built, `IProfileService.GetProfileDataAsync` receives a `ProfileDataRequestContext` that has a `SamlAttributes` property (`List<SamlAttribute>`). Attributes added there are merged with the attributes mapped from claims; when the `Name` matches, the values are appended.
+When IdentityServer builds a SAML response, your `IProfileService.GetProfileDataAsync` implementation can add attributes to `ProfileDataRequestContext.SamlAttributes` (`List<SamlAttribute>`). They're merged with the attributes mapped from claims, and the values are appended when the `Name` matches.
 
 For this request, the context has:
 

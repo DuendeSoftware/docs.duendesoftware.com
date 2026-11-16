@@ -12,7 +12,7 @@ sidebar:
 A sealed class implementing `IAuthenticationContext`. `IIdentityServerInteractionService.GetAuthenticationContextAsync` returns it for a SAML sign-in request.
 
 ```csharp
-var context = await _interaction.GetAuthenticationContextAsync(returnUrl);
+var context = await _interaction.GetAuthenticationContextAsync(returnUrl, HttpContext.RequestAborted);
 
 if (context is SamlAuthenticationContext samlContext)
 {
@@ -23,7 +23,7 @@ if (context is SamlAuthenticationContext samlContext)
 | Property | Type | Description |
 |---|---|---|
 | `ServiceProvider` | `SamlServiceProvider` | The SP that initiated the request. |
-| `IdP` | `string?` | The IdP entity ID from the `Scoping` element. Populated only when the `IDPList` contains exactly one entry; otherwise `null`. |
+| `IdP` | `string?` | The IdP entity ID from the `Scoping` element. Populated only when the `IDPList` contains exactly one entry. Otherwise it's `null`. The default `AuthnRequestValidator` rejects requests that contain a `Scoping` element, so this is only populated when a custom validator accepts them. |
 | `LoginHint` | `string?` | The `NameID` value from the `AuthnRequest` `Subject`, if present. |
 | `Tenant` | `string?` | Taken from the first `AuthnContextClassRef` that starts with `tenant:`, with the prefix removed. |
 | `PromptModes` | `IEnumerable<string>` | `login` when `ForceAuthn` is set, `none` when `IsPassive` is set. |
