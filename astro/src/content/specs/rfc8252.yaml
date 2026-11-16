@@ -1,0 +1,11 @@
+# Added for which-oauth-flow.
+id: "rfc8252"
+title: "RFC 8252"
+url: "https://www.rfc-editor.org/rfc/rfc8252"
+status: "RFC"
+# Checked by hand 2026-10-22 (rfc-editor.org/errata/rfc8252): 8080 Reported, technical (§6 and §7.1, redirect URI wording; not cited); 5848 Rejected. No verified errata.
+sections:
+  - key: "nativeEmbedded"
+    section: "8.12"
+    anchor: "section-8.12"
+    title: "Embedded User-Agents"

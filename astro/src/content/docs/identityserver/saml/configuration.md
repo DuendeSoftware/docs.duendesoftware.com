@@ -79,7 +79,7 @@ Available options:
 * **`SupportedNameIdFormats`**
   Supported NameID formats advertised by the IdP. Defaults to `[ EmailAddress, Unspecified ]`.
 
-  The NameID format determines how the user is identified to the SP. **emailAddress** uses the user's email claim and is human-readable but is considered a good identifier. **Unspecified** uses the user's `sub` claim value. Inbound AuthnRequests are validated against the formats configured here; requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.md#name-identifiers) for a full explanation.
+  The NameID format determines how the user is identified to the SP. **emailAddress** uses the user's email claim and is human-readable but is considered a good identifier. **Unspecified** uses the user's `sub` claim value. Inbound AuthnRequests are validated against the formats configured here; requests specifying an unsupported format are rejected. If you implement a custom NameID format via [`ISamlNameIdGenerator`](/identityserver/saml/extensibility.md#isamlnameidgenerator), add it to this list so that validation passes. See [Name Identifiers](/identityserver/saml/concepts.mdx#name-identifiers) for a full explanation.
 
 * **`DefaultClockSkew`**
   Clock skew tolerance for validating SAML message timestamps. Defaults to 5 minutes.
@@ -95,13 +95,13 @@ Available options:
   :::note
   SAML signing requires an X.509 certificate. When you use Automatic Key Management with RSA keys, IdentityServer automatically generates an X.509 container that wraps the managed key material. You do not need to create or provide a certificate manually. Manually registered raw RSA keys, including keys registered by `AddDeveloperSigningCredential()`, cannot be wrapped automatically; use an X.509 certificate with a private key instead.
 
-  See [Using The Same Signing Keys For OIDC And SAML](/identityserver/fundamentals/key-management.md#using-the-same-signing-keys-for-oidc-and-saml) for rotation, metadata refresh, and custom key requirements.
+  See [Using The Same Signing Keys For OIDC And SAML](/identityserver/fundamentals/key-management.mdx#using-the-same-signing-keys-for-oidc-and-saml) for rotation, metadata refresh, and custom key requirements.
   :::
 
 * **`MaxRelayStateLength`**
   Maximum length (in UTF-8 bytes) of the RelayState parameter. Defaults to 80.
 
-  RelayState is an opaque string that an SP may include in its `AuthnRequest` to preserve application state across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can keep state that it needs for processing after authentication. The SAML specification mandates that RelayState MUST NOT exceed 80 bytes in length; this limit enforces that requirement. See [`RelayState`](/identityserver/saml/concepts.md#relaystate) for more context.
+  RelayState is an opaque string that an SP may include in its `AuthnRequest` to preserve application state across the SSO round-trip. IdentityServer echoes it back unchanged so the SP can keep state that it needs for processing after authentication. The SAML specification mandates that RelayState MUST NOT exceed 80 bytes in length; this limit enforces that requirement. See [`RelayState`](/identityserver/saml/concepts.mdx#relaystate) for more context.
 
 * **`DefaultAuthnContextMappings`**
   Maps OIDC `acr`/`amr` values to SAML `AuthnContextClassRef` URIs. Used when an SP requests a specific AuthnContext and IdentityServer needs to translate the user's authentication method into the corresponding SAML identifier (a URI).
@@ -295,7 +295,7 @@ Available options:
 
 ### SamlBinding
 
-SAML bindings define how messages travel over HTTP. HTTP Redirect encodes the message into the URL query string, which works well for small messages such as `AuthnRequest` but is limited by URL length constraints. HTTP POST encodes the message in a hidden HTML form field and submits it automatically, making it the right choice for larger payloads (such as assertions with many attributes) and for keeping message content out of server access logs. See [Bindings](/identityserver/saml/concepts.md#bindings) for a deeper explanation.
+SAML bindings define how messages travel over HTTP. HTTP Redirect encodes the message into the URL query string, which works well for small messages such as `AuthnRequest` but is limited by URL length constraints. HTTP POST encodes the message in a hidden HTML form field and submits it automatically, making it the right choice for larger payloads (such as assertions with many attributes) and for keeping message content out of server access logs. See [Bindings](/identityserver/saml/concepts.mdx#bindings) for a deeper explanation.
 
 `SamlBinding` is used on `SamlEndpointType` (for each entry in `SingleLogoutServiceUrls`) and on the derived `IndexedEndpoint` (for each ACS endpoint in `AssertionConsumerServiceUrls`).
 
@@ -306,7 +306,7 @@ SAML bindings define how messages travel over HTTP. HTTP Redirect encodes the me
 
 ### SamlSigningBehavior
 
-SAML assertions and/or responses are signed with the IdP's private key to prove their authenticity and prevent tampering. The signing behavior controls which XML elements carry a digital signature. `SignResponse` is the recommended choice for most deployments: it signs the  response, providing integrity protection to the entire SAML message. See [Assertions](/identityserver/saml/concepts.md#assertions) for background on why signing matters.
+SAML assertions and/or responses are signed with the IdP's private key to prove their authenticity and prevent tampering. The signing behavior controls which XML elements carry a digital signature. `SignResponse` is the recommended choice for most deployments: it signs the  response, providing integrity protection to the entire SAML message. See [Assertions](/identityserver/saml/concepts.mdx#assertions) for background on why signing matters.
 
 Controls what elements are signed in SAML responses:
 

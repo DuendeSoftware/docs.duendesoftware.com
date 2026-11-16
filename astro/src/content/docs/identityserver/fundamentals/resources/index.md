@@ -64,4 +64,4 @@ To solve this problem [RFC 8707](https://tools.ietf.org/html/rfc8707) adds anoth
 authorize and token endpoint called *resource*. This allows requesting a token for a specific resource (in other words -
 making sure the audience claim has a single value only, and all scopes belong to that single resource).
 
-[Read More](/identityserver/fundamentals/resources/isolation.md)
+[Read More](/identityserver/fundamentals/resources/isolation/index.md)

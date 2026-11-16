@@ -1,0 +1,33 @@
+name: protocols-check
+
+permissions:
+  contents: read
+
+# Offline check of the protocols pages: spec registry keys and step headings.
+# Runs only when a pull request touches the protocols pages, the spec registry, or the check itself.
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "astro/src/content/docs/protocols/**"
+      - "astro/src/content/specs/**"
+      - "astro/scripts/protocols/**"
+      - ".github/workflows/protocols-check.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+
+      - name: Check protocol pages against the spec registry
+        working-directory: astro
+        run: |
+          npm ci --ignore-scripts
+          npm run protocols:check

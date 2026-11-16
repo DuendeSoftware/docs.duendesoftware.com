@@ -10,6 +10,7 @@ redirect_from:
   - /identityserver/v7/overview/terminology/
 ---
 
+
 The specs, documentation and object model use a certain terminology that you should be aware of.
 
 ```mermaid
@@ -51,7 +52,7 @@ A user is a human that is using a registered client to access resources.
 
 ## Client
 
-A [client](/identityserver/fundamentals/clients.md) is a piece of software that requests tokens from your
+A [client](/identityserver/fundamentals/clients.mdx) is a piece of software that requests tokens from your
 IdentityServer - either for authenticating a user (requesting an identity token) or for accessing a resource (requesting
 an access token). A client must be first registered with your IdentityServer before it can request tokens.
 
@@ -82,6 +83,8 @@ multiple servers for load-balancing purposes, or your mobile application might b
 phones. Logically these instances are still a single client.
 :::
 
+To see how these roles exchange messages, read [The OAuth Roles](/protocols/basics/oauth-roles.mdx).
+
 ## Resources
 
 [Resources](/identityserver/fundamentals/resources/index.md) are something you want to protect with your IdentityServer -
@@ -106,6 +109,8 @@ additional identity data.
 An access token allows access to an API resource. Clients request access tokens and forward them to the API.
 Access tokens contain information about the client and the user (if present).
 APIs use that information to authorize access to their data and functionality.
+
+[Access Token vs ID Token vs Refresh Token](/protocols/basics/token-types.mdx) shows what each token is for.
 
 ## Multi-Issuer
 
