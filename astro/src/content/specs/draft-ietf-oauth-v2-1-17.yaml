@@ -1,0 +1,11 @@
+id: "draft-ietf-oauth-v2-1-17"
+title: "OAuth 2.1 draft-17"
+url: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-17"
+status: "I-D draft-ietf-oauth-v2-1-17"
+# Internet-Draft, not a standard. Revision -17 (31 October 2026, expires 4 May 2027) was the latest on datatracker when checked 2026-11-16 (which-oauth-flow). Section 1.8 still says the implicit and password grants are not specified. Errata do not apply to I-Ds.
+sections:
+  - key: "oauth21Status"
+    section: "1.8"
+    anchor: "section-1.8"
+    title: "Compatibility with OAuth 2.0"
+    quote: "Credentials grant types, are not specified in OAuth 2.1."
