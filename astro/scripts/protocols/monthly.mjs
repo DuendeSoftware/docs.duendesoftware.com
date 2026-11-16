@@ -1,4 +1,5 @@
 // Monthly spec check: node scripts/protocols/monthly.mjs [--dry-run | --local]
+// npm scripts: protocols:check (--local, offline), protocols:specs (--dry-run), protocols:monthly (opens issues).
 // --local: offline registry/page drift check only (unknown keys, unused registry keys, status/url consistency); exits 1 on findings.
 // For each spec document cited by a PUBLISHED protocols page (frontmatter `sources:` + <Cite k="..." />): verify registry quotes still appear in the live text,
 // check RFC obsoleted/updated/errata and newer I-D revisions, and open one `protocols/re-review` issue per affected page.
