@@ -276,8 +276,12 @@ With `SchemaName` set, as in the example above, the script's statements are sche
 schema. With `SchemaName` unset, the script's statements are unqualified, so the DBA must run it while connected
 *as* the owning user, or the objects land in the wrong schema.
 
-No provider locks against concurrent migrations. Run only one migration process at a time, as described in
-[Create and Upgrade the Schema](/identityserver/data/providers/duende-storage/databases/index.mdx#create-and-upgrade-the-schema).
+There's no migration lock on Oracle. When several processes migrate the same database at the same time, some can fail
+with `ORA-00054` (resource busy), `ORA-14411` (concurrent DDL) or `ORA-00001` (unique constraint on the schema
+version table). The migration scripts skip objects that already exist, so running the migration again completes it.
+In production, migrate with the Duende CLI, or a DBA-reviewed script as shown above, as a single deployment step before
+your app instances start, as described in
+[Concurrent Migrations](/identityserver/data/providers/duende-storage/databases/index.mdx#concurrent-migrations).
 
 ## Provider Notes
 

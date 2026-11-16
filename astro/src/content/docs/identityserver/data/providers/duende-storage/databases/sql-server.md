@@ -179,6 +179,8 @@ for the schema APIs behind it.
 
 * The database's compatibility level must be 140 or higher (SQL Server 2017 or later). Migrating against a lower
   compatibility level fails with error 50001.
-* Migration scripts run under an application lock (`sp_getapplock`), but the schema version is read before the lock
-  is taken, so this doesn't make concurrent migrations safe. Run exactly one migration process at a time, as
-  described in [Create and Upgrade the Schema](/identityserver/data/providers/duende-storage/databases/index.mdx#create-and-upgrade-the-schema).
+* Each migration step runs under an application lock (`sp_getapplock`) and re-checks the schema version once it holds
+  the lock, so concurrent migrations wait for each other instead of failing. A process that waits longer than 60
+  seconds for the lock throws. Even so, in production migrate with the Duende CLI as a single deployment step rather
+than calling `MigrateAsync` at startup, as described in
+  [Concurrent Migrations](/identityserver/data/providers/duende-storage/databases/index.mdx#concurrent-migrations).

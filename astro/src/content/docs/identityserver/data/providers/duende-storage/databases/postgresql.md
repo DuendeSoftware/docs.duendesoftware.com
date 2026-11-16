@@ -160,6 +160,8 @@ for the schema APIs behind it.
 
 * Duende Storage requires PostgreSQL 13 or later.
 * Documents are stored as `jsonb` columns.
-* There's no migration lock on PostgreSQL. Don't run migrations concurrently against the same database; run exactly
-  one migration process at a time, as described in
-  [Create and Upgrade the Schema](/identityserver/data/providers/duende-storage/databases/index.mdx#create-and-upgrade-the-schema).
+* There's no migration lock on PostgreSQL. When several processes migrate the same database at the same time, one
+  completes the migration and the others typically fail, for example with `23505` (duplicate key) or `42701`
+  (column already exists). Their changes roll back, and running the migration again completes. In production,
+  migrate with the Duende CLI as a single deployment step before your app instances start, as described in
+  [Concurrent Migrations](/identityserver/data/providers/duende-storage/databases/index.mdx#concurrent-migrations).
