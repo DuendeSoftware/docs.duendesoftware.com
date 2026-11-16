@@ -34,7 +34,7 @@ For this request, the context has:
 `IsActiveAsync` is called with the caller `SamlSsoEndpoint` and the SP as the application.
 
 ```csharp
-public Task GetProfileDataAsync(ProfileDataRequestContext context)
+public Task GetProfileDataAsync(ProfileDataRequestContext context, CancellationToken ct)
 {
     if (context.Application is SamlServiceProvider)
     {
