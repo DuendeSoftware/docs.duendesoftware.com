@@ -106,7 +106,10 @@ for (const [id, [d, users]] of cited) {
 			const j = await get(`https://www.rfc-editor.org/rfc/${id}.json`, true);
 			const link = (n) => `https://www.rfc-editor.org/info/rfc${String(n).replace(/\D/g, '')}`;
 			if (j?.obsoleted_by?.length) add(`obsoleted by ${j.obsoleted_by.join(', ')} (${j.obsoleted_by.map(link).join(' ')})`, `Re-read each citing page against the replacing RFC; update \`status\` and the cited sections/quotes in ${file} (or cite the new RFC)`);
-			if (j?.updated_by?.length) updated.push(`${id}: updated by ${j.updated_by.join(', ')} (${j.updated_by.map(link).join(' ')})`);
+			const ub = j?.updated_by ?? [], known = new Set(d.updatedBy ?? []);
+			const fresh = ub.filter((u) => !known.has(u)), seen = ub.filter((u) => known.has(u));
+			if (fresh.length) add(`updated by ${fresh.join(', ')} (${fresh.map(link).join(' ')})`, `Read the update, re-read each citing page against it, then add ${fresh.map((u) => `"${u}"`).join(', ')} to \`updatedBy\` in ${file}`);
+			if (seen.length) updated.push(`${id}: updated by ${seen.join(', ')} (reviewed, listed in updatedBy)`);
 			const n = +((await get(`https://www.rfc-editor.org/errata/${id}`))?.match(/Verified \((\d+)\)/)?.[1] ?? 0);
 			if (n) errata.push(`${id}: ${n} verified (https://www.rfc-editor.org/errata/${id})`);
 		} else if (draft) {
@@ -124,7 +127,7 @@ const withFindings = new Set(findings.map((f) => f.doc));
 
 console.log(`protocols monthly${DRY ? ' (dry run)' : ''}`);
 console.log(`  ${cited.size} spec docs checked, ${withFindings.size} with findings, ${byPage.size} of ${published.length} published pages affected, ${errors.length} fetch errors`);
-console.log(`  informational only (noise, no per-page action): ${updated.length} cited RFCs have 'updated by' notes (long-standing; only 'obsoleted by' is actionable), ${errata.length} RFCs have verified errata (see below); errata data has no per-section detail, so check those by hand when touching a cited section`);
+console.log(`  informational only (noise, no per-page action): ${updated.length} cited RFCs have 'updated by' notes that were already reviewed (listed in \`updatedBy\`; a new one is reported as a finding), ${errata.length} RFCs have verified errata (see below); errata data has no per-section detail, so check those by hand when touching a cited section`);
 errors.forEach((e) => console.log(`  error: ${e}`));
 for (const doc of withFindings) {
 	console.log(`\n${doc}  (${cited.get(doc)[0].url})  registry: astro/src/content/specs/${doc}.yaml`);

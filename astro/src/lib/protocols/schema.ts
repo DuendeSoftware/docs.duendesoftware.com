@@ -18,6 +18,9 @@ export const specDocSchema = z.object({
 	url: z.string(),
 	status: z.string().regex(/^(RFC|I-D .+|OpenID Final|W3C (Rec|CR)|OASIS|HL7 STU .+)$/),
 	quoteCheck: z.enum(['auto', 'manual']).default('auto'),
+	// RFCs listed as "updated by" on rfc-editor.org that someone has reviewed against the citing pages.
+	// The spec check reports any update that is not in this list as a finding (see scripts/protocols/monthly.mjs).
+	updatedBy: z.array(z.string().regex(/^RFC\d+$/)).default([]),
 	sections: z.array(specSectionSchema),
 });
 export type SpecDoc = z.infer<typeof specDocSchema>;

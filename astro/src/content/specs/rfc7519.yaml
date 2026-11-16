@@ -2,6 +2,7 @@ id: "rfc7519"
 title: "RFC 7519"
 url: "https://www.rfc-editor.org/rfc/rfc7519"
 status: "RFC"
+updatedBy: ["RFC7797", "RFC8725"]
 # errata list checked by hand 2026-10-22 (rfc-editor.org/errata/rfc7519): 8060 Verified Technical on §7.2 step 5 (ignore unknown header parameters per RFC 7515); 5906 Reported (§7.2, SHOULD reject unacceptable algorithm -> MUST); 8225 Reported (§7.2 steps 7-10); 7720 Reported (§4.1.6, future iat); 8388 Verified Editorial (§13.2); 5648, 6622, 9212 Rejected. None on §4.1.1, §4.1.3, §4.1.4, §4.1.5, §4.1.7.
 sections:
   - key: "jwtExp"
