@@ -7,7 +7,7 @@ sidebar:
   order: 7
 ---
 
-Four extensibility points take part in a single logout (SLO) flow. `ILogoutRequestValidator` validates a `LogoutRequest` that a service provider (SP) sends to IdentityServer. `ISamlLogoutNotificationService` decides which other SPs to notify, and calls `ISaml2FrontChannelLogoutRequestBuilder` to build one outbound `LogoutRequest` per SP. When all SPs have been handled, `ISaml2SloResponseGenerator` creates the `LogoutResponse` that goes back to the SP that started the logout. The state of the flow is kept in [`ISamlLogoutSessionStore`](/identityserver/reference/v8/saml/saml-logout-session-store.md).
+Single logout (SLO) involves several extensibility points. `ILogoutRequestValidator` validates a `LogoutRequest` that a service provider (SP) sends to IdentityServer. `ISamlLogoutNotificationService` decides which other SPs to notify, and calls `ISaml2FrontChannelLogoutRequestBuilder` to build one outbound `LogoutRequest` per SP. When all SPs have been handled, `ISaml2SloResponseGenerator` creates the `LogoutResponse` that goes back to the SP that started the logout. The state of the flow is kept in [`ISamlLogoutSessionStore`](/identityserver/reference/v8/saml/saml-logout-session-store.md).
 
 ## ILogoutRequestValidator
 
@@ -24,36 +24,53 @@ public interface ILogoutRequestValidator
 }
 ```
 
+| Method | Description |
+|---|---|
+| `ValidateAsync` | Validate a `LogoutRequest`. `request` is the `LogoutRequest` validation context and `ct` is the cancellation token. Returns the validation result. |
+
 ### LogoutRequestValidationResult
+
+Result of `LogoutRequest` validation
 
 | Member | Description |
 |---|---|
 | `ValidatedRequest` | The `ValidatedLogoutRequest` the result belongs to. |
-| `IsError` | `true` when validation failed. Inherited from `ValidationResult`; `Valid(...)` sets it to `false`. |
-| `Error` | The SAML status code of the failure (inherited). |
-| `ErrorDescription` | The optional description of the failure (inherited). |
-| `SessionFound` | Indicates whether a session was found. |
-| `Valid(request)` | Creates a valid result. |
-| `InValid(request, saml2ErrorCode, errorDescription)` | Creates an invalid result with a SAML status code. |
+| `IsError` | `true` when validation failed. Inherited from `ValidationResult`. `Valid(...)` sets it to `false`. |
+| `Error` | Gets or sets the error. For this result, it's the SAML status code of the failure (inherited). |
+| `ErrorDescription` | Gets or sets the error description. It's optional for this result (inherited). |
+| `SessionFound` | Indicates whether a matching SAML session was found for the requesting SP. When `false`, the IdP should respond with Success without terminating the user's IdP session (per SAML 2.0 Profiles §4.4). |
+| `Valid(validatedLogoutRequest)` | Creates a valid validation result |
+| `InValid(validatedLogoutRequest, saml2ErrorCode, errorDescription)` | Creates an invalid validation result. `saml2ErrorCode` is the error code (a Saml2 status code) and `errorDescription` is the error description. |
 
 ### ValidatedLogoutRequest
 
-Members: `LogoutRequest`, `Binding`, `RelayState`, `Saml2Sp`, `Subject`, `SessionId`, `Saml2IdpEntityId`.
+Validated `LogoutRequest` context
+
+| Member | Description |
+|---|---|
+| `LogoutRequest` | The parsed `LogoutRequest` |
+| `Binding` | Identifier of binding used to receive the `LogoutRequest` |
+| `Saml2Message` | The raw inbound SAML message from the binding layer. Null when the request is reconstructed from stored state (e.g., in the callback endpoint). |
+| `RelayState` | The relay state to include in the response. When `Saml2Message` is present, this defaults to `Saml2Message.RelayState`. |
+| `Saml2Sp` | The resolved SAML Service Provider |
+| `Subject` | The current user |
+| `SessionId` | The current session ID |
+| `Saml2IdpEntityId` | The SAML entity ID of this IdP |
 
 ### Default behavior
 
-The default implementation, `LogoutRequestValidator`, is a public class with `protected virtual` steps. It runs them in this order and stops at the first error. Errors use `SamlStatusCodes.Requester` unless noted.
+`LogoutRequest` validator. The default implementation, `LogoutRequestValidator`, runs the following checks in order and stops at the first error. To customize a check, derive from the class and override its `protected virtual` method. Errors use `SamlStatusCodes.Requester` unless noted.
 
 | Step | Checks |
 |---|---|
-| `ValidateSpAsync` | The request has an issuer, the SP exists and is enabled, and it has at least one single logout URL. |
-| `ValidateSignatureTrust` | The request signature is present and trusted. |
-| `ValidateVersion` | The version is 2.0 (`SamlStatusCodes.VersionMismatch` otherwise). |
-| `ValidateDestination` | A signed request has a `Destination`, and it matches the single logout endpoint URL (case-insensitive). |
-| `ValidateNotOnOrAfter` | When `NotOnOrAfter` is present, it hasn't expired, allowing for the SP's `ClockSkew` (or `SamlOptions.DefaultClockSkew`). |
-| `ValidateSessionAsync` | When the user is signed in, the request has a `NameID` that matches an active SAML session for the SP, and the `SessionIndex` (when present) matches. |
+| `ValidateSpAsync` | Validates the SP from the Issuer entity ID. The request has an issuer, the SP exists and is enabled, and it has at least one single logout URL. |
+| `ValidateSignatureTrust` | Validates that the `LogoutRequest` is signed (required per SAML spec). The request signature must be present and trusted. |
+| `ValidateVersion` | Validates that the `LogoutRequest` uses SAML version 2.0. Other versions fail with `SamlStatusCodes.VersionMismatch`. |
+| `ValidateDestination` | Validates that the Destination matches the SLO endpoint URL. Signed requests must include a Destination per SAML Bindings 2.0. The comparison is case-insensitive. |
+| `ValidateNotOnOrAfter` | Validates that the `NotOnOrAfter` has not expired. It's checked when present, allowing for the SP's `ClockSkew` (or `SamlOptions.DefaultClockSkew`). |
+| `ValidateSessionAsync` | Validates that the `LogoutRequest`'s NameID and `SessionIndex` match an active SAML session for the requesting SP. Per SAML 2.0 Core §3.7.1, the NameID identifies the principal and the `SessionIndex` identifies the specific session to terminate. This check applies when the user is signed in. The request needs a `NameID` that matches an active SAML session for the SP, and the `SessionIndex` (when present) must match. |
 
-If no user is signed in, no SAML session exists for the SP, or the `SessionIndex` doesn't match, the result is valid with `SessionFound` set to `false`. IdentityServer then responds with success without ending the user's session. The default doesn't do replay protection for logout requests.
+If no user is signed in at IdentityServer, `ValidateSessionAsync` returns a valid result. If a user is signed in but no SAML session exists for the SP, or the `SessionIndex` doesn't match, the result is valid with `SessionFound` set to `false`. In both cases IdentityServer responds with success and leaves the user's session alone, without showing the logout page. The default validator has no replay protection for logout requests.
 
 ### Registration
 
@@ -61,13 +78,13 @@ If no user is signed in, no SAML session exists for the SP, or the `SessionIndex
 builder.Services.AddScoped<ILogoutRequestValidator, CustomLogoutRequestValidator>();
 ```
 
-The default is registered by `AddSaml()` with `TryAddTransient`.
+`AddSaml()` registers the default validator, so you only need to register your own to replace it.
 
 ## ISamlLogoutNotificationService
 
 #### Duende.IdentityServer.Saml.ISamlLogoutNotificationService
 
-Builds the front-channel `LogoutRequest` messages IdentityServer sends to SAML service providers when a user logs out.
+Service for building SAML front-channel logout notifications. It builds the front-channel `LogoutRequest` messages IdentityServer sends to SAML service providers when a user logs out.
 
 ```csharp
 public interface ISamlLogoutNotificationService
@@ -78,30 +95,36 @@ public interface ISamlLogoutNotificationService
 }
 ```
 
+| Method | Description |
+|---|---|
+| `GetSamlFrontChannelLogoutsAsync` | Builds the SAML messages needed for front-channel logout notification. `context` is the context for the logout notification and `ct` is the cancellation token. Returns the logout request messages that were generated and the number of service providers that were skipped. |
+
 ### SamlLogoutNotificationResult
+
+Result of generating SAML front-channel logout notifications.
 
 | Property | Type | Description |
 |---|---|---|
-| `Messages` | `IReadOnlyCollection<SamlLogoutRequestContext>` | One entry per SP to notify. |
-| `SkippedCount` | `int` | The number of SPs that couldn't be notified. |
+| `Messages` | `IReadOnlyCollection<SamlLogoutRequestContext>` | The successfully generated logout request contexts. There is one entry per SP to notify. |
+| `SkippedCount` | `int` | The number of SPs that could not be notified. |
 
 ### SamlLogoutRequestContext
 
-Namespace `Duende.IdentityServer.Saml.Services`.
+Encapsulates the result of building a SAML `LogoutRequest`, including the binding-layer message and application-level metadata needed for response correlation. Namespace `Duende.IdentityServer.Saml.Services`.
 
 | Property | Type | Description |
 |---|---|---|
-| `Message` | `OutboundSaml2Message` | The outbound message. |
-| `RequestId` | `string` | The `ID` of the `LogoutRequest`. The SP's `LogoutResponse` references it in `InResponseTo`. |
-| `SpEntityId` | `string` | The entity ID of the destination SP. |
+| `Message` | `OutboundSaml2Message` | The binding-layer message ready to be sent to the SP. |
+| `RequestId` | `string` | The SAML request ID (from the `ID` attribute) for correlating responses via `InResponseTo`. |
+| `SpEntityId` | `string` | The entity ID of the SP this request is destined for. |
 
 ### Default behavior
 
-The default implementation, `Saml2LogoutNotificationService`, is sealed. It builds a request for each SP session using [`ISaml2FrontChannelLogoutRequestBuilder`](#isaml2frontchannellogoutrequestbuilder). It skips, and counts in `SkippedCount`, the initiating SP, SPs that are unknown or disabled, SPs without a single logout URL or without an HTTP-Redirect logout endpoint, and SPs for which building the request fails. Only HTTP-Redirect is supported for outbound logout requests.
+Default implementation of `ISamlLogoutNotificationService` that uses the new `ISaml2FrontChannelLogoutRequestBuilder` to build outbound `LogoutRequest` messages. The default implementation, `Saml2LogoutNotificationService`, builds a request for each SP session using [`ISaml2FrontChannelLogoutRequestBuilder`](#isaml2frontchannellogoutrequestbuilder). It skips the initiating SP, SPs that are unknown or disabled, SPs without a single logout URL or without an HTTP-Redirect logout endpoint, and SPs for which building the request fails. Skipped SPs are counted in `SkippedCount`. Outbound logout requests support only HTTP-Redirect.
 
 ### Registration
 
-`AddSaml()` registers this service with `Replace`, so a registration made before `AddSaml()` is overwritten. Register your implementation after `AddSaml()`:
+`AddSaml()` replaces any registration made before it, so register your implementation after `AddSaml()`:
 
 ```csharp
 builder.Services.AddIdentityServer()
@@ -114,7 +137,7 @@ builder.Services.AddScoped<ISamlLogoutNotificationService, CustomSamlLogoutNotif
 
 #### Duende.IdentityServer.Saml.Services.ISaml2FrontChannelLogoutRequestBuilder
 
-Builds the outbound `LogoutRequest` for one service provider. It is called once per SP by the [logout notification service](#isamllogoutnotificationservice).
+Builds outbound SAML 2.0 `LogoutRequest` messages for front-channel logout notifications. It builds the outbound `LogoutRequest` for one service provider and is called once per SP by the [logout notification service](#isamllogoutnotificationservice).
 
 ```csharp
 public interface ISaml2FrontChannelLogoutRequestBuilder
@@ -129,11 +152,20 @@ public interface ISaml2FrontChannelLogoutRequestBuilder
 }
 ```
 
-The returned `SamlLogoutRequestContext` carries the outbound message, the request ID, and the SP entity ID used to correlate the SP's response.
+| Parameter | Description |
+|---|---|
+| `serviceProvider` | The SP to notify. |
+| `nameId` | The NameID value for the subject being logged out. |
+| `nameIdFormat` | Optional NameID format URI. |
+| `sessionIndex` | The session index to include in the request. |
+| `issuer` | The IdP entity ID (issuer). |
+| `ct` | Cancellation token. |
+
+`BuildLogoutRequestAsync` builds a front-channel logout request for the given service provider. It returns a `SamlLogoutRequestContext` containing the message and correlation metadata.
 
 ### Default behavior
 
-The default implementation (`Saml2FrontChannelLogoutRequestBuilder`) is a public sealed class. It signs the request with the certificate from [`ISamlSigningService`](/identityserver/reference/v8/saml/saml-signing-service.md) and uses the HTTP-Redirect binding. It throws `InvalidOperationException` if the SP has no single logout URL or no HTTP-Redirect logout endpoint.
+The default builder, `Saml2FrontChannelLogoutRequestBuilder`, signs requests with the certificate from [`ISamlSigningService`](/identityserver/reference/v8/saml/saml-signing-service.md) and sends them using HTTP-Redirect. It throws `InvalidOperationException` if the SP has no single logout URL or no HTTP-Redirect logout endpoint.
 
 ### Registration
 
@@ -145,7 +177,7 @@ builder.Services.AddScoped<ISaml2FrontChannelLogoutRequestBuilder, CustomLogoutR
 
 #### Duende.IdentityServer.Saml.ResponseHandling.ISaml2SloResponseGenerator
 
-Creates the `LogoutResponse` returned to the service provider that initiated single logout.
+Response generator for SAML 2.0 Single Logout. It creates the `LogoutResponse` returned to the service provider that initiated single logout.
 
 ```csharp
 public interface ISaml2SloResponseGenerator
@@ -160,16 +192,23 @@ public interface ISaml2SloResponseGenerator
 }
 ```
 
-`Saml2FrontChannelResult` (namespace `Duende.IdentityServer.Saml.Endpoints.Results`) has these properties: `Message` (the `OutboundSaml2Message`), `Error`, `SpEntityId`, and `GeneratedNameId`. When `Error` is set, IdentityServer redirects to the error page instead of sending `Message`.
-
 | Method | Description |
 |---|---|
-| `CreateSuccessResponse` | Creates a success `LogoutResponse`. |
-| `CreatePartialLogoutResponse` | Creates a `LogoutResponse` that reports a partial logout (`SamlStatusCodes.PartialLogout`). |
+| `CreateSuccessResponse` | Create a success `LogoutResponse` for a validated `LogoutRequest`. `request` is the validated logout request context and `ct` is the cancellation token. Returns the Saml2 front channel result containing the `LogoutResponse`. |
+| `CreatePartialLogoutResponse` | Create a partial logout `LogoutResponse` indicating not all SPs successfully logged out. It reports a partial logout (`SamlStatusCodes.PartialLogout`). `request` is the validated logout request context and `ct` is the cancellation token. Returns the Saml2 front channel result containing the `LogoutResponse` with partial logout status. |
+
+`Saml2FrontChannelResult` (namespace `Duende.IdentityServer.Saml.Endpoints.Results`) is the result from a Saml2 endpoint that wraps a Saml2 message and should be handled by a front channel binding.
+
+| Property | Description |
+|---|---|
+| `Message` | Contained Saml2 Message. It's the `OutboundSaml2Message`. |
+| `Error` | Error message if this result is an error. When it's set, IdentityServer redirects to the error page instead of sending `Message`. |
+| `SpEntityId` | Entity Id of Sp as received in incoming message, may not be validated. |
+| `GeneratedNameId` | The NameID that was generated for the subject in this response. Null when the result is an error. |
 
 ### Default behavior
 
-Both methods build a `LogoutResponse` with `InResponseTo` set to the request ID, the IdP entity ID from [`ISaml2IssuerNameService`](/identityserver/reference/v8/saml/saml-metadata-services.md#isaml2issuernameservice) as issuer, and sign it with the certificate from [`ISamlSigningService`](/identityserver/reference/v8/saml/saml-signing-service.md). The destination is the SP's HTTP-Redirect single logout URL, falling back to the request's issuer; the method throws `InvalidOperationException` if neither is available. `CreateSuccessResponse` uses the status `SamlStatusCodes.Success`. `CreatePartialLogoutResponse` uses `SamlStatusCodes.Success` with a nested `SamlStatusCodes.PartialLogout` status. The response's `RelayState` and binding are copied from the request.
+Both methods create a `LogoutResponse`, set `InResponseTo` to the request ID, use the IdP entity ID from [`ISaml2IssuerNameService`](/identityserver/reference/v8/saml/saml-metadata-services.md#isaml2issuernameservice) as the issuer, and sign the response with the certificate from [`ISamlSigningService`](/identityserver/reference/v8/saml/saml-signing-service.md). The destination is the SP's HTTP-Redirect single logout URL, falling back to the request's issuer. If neither is available, they throw `InvalidOperationException`. `CreateSuccessResponse` uses the status `SamlStatusCodes.Success`. `CreatePartialLogoutResponse` uses `SamlStatusCodes.Success` with a nested `SamlStatusCodes.PartialLogout` status. The response's `RelayState` and binding are copied from the request.
 
 IdentityServer calls `CreateSuccessResponse` only when every notified SP responded with success and `SkippedSpCount` of the logout session is `0`. In all other cases, including when the logout session can't be found, it calls `CreatePartialLogoutResponse`. The logout session is removed afterward.
 
@@ -181,4 +220,4 @@ The interface controls response generation only. Logout state is stored by [`ISa
 builder.Services.AddScoped<ISaml2SloResponseGenerator, CustomSloResponseGenerator>();
 ```
 
-The default (`Saml2SloResponseGenerator`) is a public, non-sealed class registered by IdentityServer core (not by `AddSaml()`) with `TryAdd`.
+`AddIdentityServer()` registers the default `Saml2SloResponseGenerator`, so you only need to register your own if you want to replace it. To customize both response methods at once, derive from the default class and override their shared `CreateResponseAsync(ValidatedLogoutRequest, string statusCode, string? subStatusCode, string? statusMessage, CancellationToken)` method, which builds a `LogoutResponse` and wraps it in a `Saml2FrontChannelResult`.

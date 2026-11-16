@@ -14,8 +14,7 @@ IdentityServer's SAML 2.0 Identity Provider has several extensibility interfaces
 to customize behavior. They're all registered in the DI container and can be replaced with your own
 implementations.
 
-This page explains when you need each extensibility point. For the full interfaces, members, and default behavior, see the
-[SAML reference](/identityserver/reference/v8/saml/saml-registration.md).
+This page explains when you need each extensibility point. The [SAML reference](/identityserver/reference/v8/saml/saml-registration.md) has the full interfaces, members, and default behavior.
 
 ---
 
@@ -59,8 +58,8 @@ calls `ProcessInteractionAsync` to decide whether the user needs to be redirecte
 
 The default implementation handles standard login flows. Override it when you need custom step-up
 authentication logic or any other non-standard interaction decision. To enforce `RequestedAuthnContext`,
-add the checks here or in your login UI, because the default implementation doesn't evaluate it.
-The default class is sealed, so wrap it rather than inherit from it.
+add the checks here or in your login UI, because the default implementation ignores it.
+The default class is sealed, so decorate it instead of inheriting from it.
 
 For the full interface and its members, see [SAML SSO Interaction Response Generator](/identityserver/reference/v8/saml/saml-sso-interaction-response-generator.md).
 
@@ -159,7 +158,7 @@ For the full interface and default behavior, see [SAML Logout Services](/identit
 
 Replace `ISaml2SloResponseGenerator` when you need to change how partial logout is reported to the SP that initiated the logout.
 
-This interface controls **response generation**, not persistence. To customize how logout session state is stored, see [`ISamlLogoutSessionStore`](#isamllogoutsessionstore).
+To customize how logout session state is stored, see [`ISamlLogoutSessionStore`](#isamllogoutsessionstore).
 
 ### Registration
 
@@ -254,7 +253,7 @@ assertion generation to determine which claims are available for inclusion in th
 
 The resolution chain works as follows: `AllowedScopes` determines which identity resources (and their claim types)
 are available. If `RequestedClaimTypes` is also configured, it narrows the resolved set to only those specific claim types.
-Note that `AllowedScopes` must contain only identity resource names. API resource scopes aren't supported for SAML service providers.
+`AllowedScopes` must contain only identity resource names, because SAML service providers don't support API resource scopes.
 
 The default implementation (`DefaultSamlResourceResolver`) resolves claim types from the
 configured identity resource store based on the SP's `AllowedScopes`. Override this interface if
@@ -302,6 +301,8 @@ Override `ISamlNameIdGenerator` when:
 // Program.cs
 builder.Services.AddScoped<ISamlNameIdGenerator, CustomNameIdGenerator>();
 ```
+
+When the generator returns a failure, IdentityServer doesn't send a SAML error response to the service provider. It redirects the user to the IdentityServer error page and uses only the failure message. The status codes never reach the service provider.
 
 ### Example
 
@@ -360,8 +361,7 @@ Use `IIdpInitiatedSsoService` when:
 
 ### Registration
 
-`IIdpInitiatedSsoService` is registered by the SAML plugin and does not need to be replaced.
-Inject it directly into your Razor Page or controller:
+`AddSaml()` registers `IIdpInitiatedSsoService`. Inject it directly into your Razor Page or controller:
 
 ```csharp
 // MyAppsPage.cshtml.cs
@@ -444,12 +444,11 @@ Override `ISamlSigningService` when:
 * You need to return a different certificate for SAML signing than the one used for OIDC token
   signing.
 
-For most deployments the default implementation is sufficient. Only replace it if you have a
-specific certificate selection or key management requirement that the default cannot satisfy.
+The default implementation works for most deployments. Replace it only if you have a specific certificate selection or key management requirement.
 
 ### Registration
 
-The default is registered with `TryAdd`, so your own registration replaces it:
+`AddIdentityServer()` registers the default, so register your own to replace it:
 
 ```csharp
 // Program.cs
@@ -518,8 +517,7 @@ builder.Services.AddScoped<ISaml2IssuerNameService, CustomIssuerNameService>();
 ## IAuthnRequestValidator
 
 `IAuthnRequestValidator` validates incoming SAML `AuthnRequest` messages from Service Providers.
-It is called early in the sign-in pipeline, before any interaction begins. Validation ensures the
-request is well-formed, the SP is registered, the signature is valid, and the requested ACS URL
+It is called early in the sign-in pipeline, before any interaction begins. It checks that the request is well-formed, the SP is registered, the signature is valid, and the requested ACS URL
 is permitted.
 
 The default implementation enforces signature requirements, checks SP registration, and validates
@@ -527,7 +525,7 @@ ACS URLs. Override this interface to add custom business rules on top of the def
 for example restricting which SPs can request certain `AuthnContext` classes, enforcing IP-based
 access controls, or applying time-of-day restrictions.
 
-For the full interface and result type, see [SAML AuthnRequest Validator](/identityserver/reference/v8/saml/saml-authn-request-validator.md).
+For the full interface and result type, see [SAML `AuthnRequest` Validator](/identityserver/reference/v8/saml/saml-authn-request-validator.md).
 
 ### When to Use
 
@@ -589,8 +587,8 @@ to be stored somewhere durable for the duration of the interaction.
 
 Several implementations are available:
 
-* **In-memory** (default, added by `AddSaml()`): suitable for development and testing. State is lost on restart and is
-  not shared across multiple server instances.
+* **In-memory** (default, added by `AddSaml()`): suitable for development and testing. State is lost on restart and isn't
+  shared across server instances.
 * **EF Core**: registered when you call `AddOperationalStore()` from
   `Duende.IdentityServer.EntityFramework`. Use this for production. The operational store
   registration replaces the in-memory fallback. No extra configuration is needed.
@@ -599,9 +597,9 @@ Several implementations are available:
 
 The `TokenCleanupService` automatically removes expired sign-in state entries
 from the EF Core store during its scheduled cleanup runs. Each `SamlAuthenticationState` carries
-an `ExpiresAtUtc` property that controls when the entry becomes eligible for removal. TTL-based
-expiry is the primary cleanup mechanism; `RemoveSigninRequestStateAsync` is available for
-scenarios that need immediate cleanup but is not called in the default flow.
+an `ExpiresAtUtc` property that controls when the entry becomes eligible for removal. Expiry
+is the main cleanup mechanism. `RemoveSigninRequestStateAsync` is available for
+scenarios that need immediate cleanup, but the default flow doesn't call it.
 
 If you implement `IOperationalStoreNotification`, the `SamlSigninStatesRemovedAsync()` callback
 is invoked each time `TokenCleanupService` removes a batch of expired sign-in state entries. This
@@ -677,10 +675,10 @@ For the full interface and validation context, see [SAML Service Provider Config
 ### When to Use
 
 The built-in `DefaultSamlServiceProviderConfigurationValidator` already checks EntityId, ACS URLs
-(which must use HTTP-POST), AllowedScopes, and lifetime values. You can derive from it and override
+(which must use HTTP-POST), `AllowedScopes`, and lifetime values. You can derive from it and override
 individual checks without replacing the whole validator:
 
-* `ValidateEntityIdAsync` - validates that EntityId is not null or empty.
+* `ValidateEntityIdAsync` - validates that `EntityId` is not null, empty, or whitespace.
 * `ValidateAssertionConsumerServiceUrlsAsync` - validates that ACS URLs exist and use HTTP-POST.
 * `ValidateAllowedScopesAsync` - validates that at least one scope is configured.
 * `ValidateLifetimesAsync` - validates `AssertionLifetime`, `ClockSkew`, and `RequestMaxAge`.

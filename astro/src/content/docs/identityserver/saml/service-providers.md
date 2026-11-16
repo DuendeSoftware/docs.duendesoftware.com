@@ -14,7 +14,7 @@ For simple deployments, you configure SPs at startup using the in-memory store. 
 
 ## ISamlServiceProviderStore
 
-[`ISamlServiceProviderStore`](/identityserver/reference/v8/saml/saml-service-provider-store.md) is the read-only lookup interface that IdentityServer calls on every incoming SAML request. When a SAML AuthnRequest arrives, IdentityServer extracts the `Issuer` entity ID and calls `FindByEntityIdAsync` to load the SP's configuration. If the method returns `null`, the request is rejected.
+[`ISamlServiceProviderStore`](/identityserver/reference/v8/saml/saml-service-provider-store.md) is the read-only lookup interface that IdentityServer calls on every incoming SAML request. When a SAML `AuthnRequest` arrives, IdentityServer extracts the `Issuer` entity ID and calls `FindByEntityIdAsync` to load the SP's configuration. If the method returns `null`, the request is rejected.
 
 This interface is used for read-only lookup during request processing. Your store implementation should be optimized for fast, concurrent reads (e.g., backed by a cache or an indexed database query).
 
@@ -64,7 +64,7 @@ builder.Services.AddIdentityServer()
     );
 ```
 
-The in-memory store validates each SP when it's added, throws an `ArgumentException` for duplicate entity IDs, and doesn't return SPs with `Enabled = false`.
+The in-memory store validates each SP when you add it. Duplicate entity IDs throw an `ArgumentException`, and SPs with `Enabled = false` aren't returned.
 
 ## Entity Framework Core Store
 
@@ -148,7 +148,7 @@ public class MySamlServiceProviderStore : ISamlServiceProviderStore
 
 ## Runtime Validation
 
-When you call `AddSamlServiceProviderStore<T>()`, IdentityServer automatically wraps your store with a `ValidatingSamlServiceProviderStore<T>` that runs configuration checks (see [`ISamlServiceProviderConfigurationValidator`](/identityserver/reference/v8/saml/saml-service-provider-configuration-validator.md)) on every SP loaded from the store.
+When you call `AddSamlServiceProviderStore<T>()`, IdentityServer wraps your store with a `ValidatingSamlServiceProviderStore<T>` that runs configuration checks (see [`ISamlServiceProviderConfigurationValidator`](/identityserver/reference/v8/saml/saml-service-provider-configuration-validator.md)) on every SP loaded from the store.
 
 The default validator (`DefaultSamlServiceProviderConfigurationValidator`) checks the following:
 
