@@ -109,7 +109,11 @@ Check the [pricing page](https://duendesoftware.com/products/identityserver) for
 
 ### Deployments
 
-Each license includes a number of **deployments**. A deployment is one IdentityServer that has its own
+Each license includes a number of **deployments**. Put simply, a deployment is one separate IdentityServer installation.
+For example, if you run one IdentityServer for your customer portal and a separate one for internal tools, that's two
+deployments.
+
+More precisely, a deployment is one IdentityServer that has its own
 [configuration data](/identityserver/data/configuration.mdx), its own [operational data](/identityserver/data/operational.mdx), its own users, and its own set of authorities. In the license agreement, this setup is called a *Logical Host*,
 and each Logical Host is one deployment.
 
@@ -128,6 +132,7 @@ Some examples:
 
 | Scenario                                                                                                     | Deployments |
 |--------------------------------------------------------------------------------------------------------------|-------------|
+| Separate IdentityServers for a customer portal and for internal tools                                        | 2           |
 | One IdentityServer running on several servers behind a load balancer                                         | 1           |
 | The same IdentityServer running in three data centers, sharing configuration data and authorities            | 1           |
 | One IdentityServer with shared configuration, storing operational data in the EU and US separately           | 1           |
