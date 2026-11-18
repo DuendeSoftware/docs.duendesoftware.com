@@ -390,30 +390,46 @@ the same process, code, and database infrastructure.
 In **Duende User Management**, each space has its own isolated user store, configuration, and authentication settings,
 so users, roles, and groups in one space are completely separated from those in another.
 
-A typical use case is supporting multiple tenants in a single deployment.
+A typical use case is serving many tenants, such as customers or business units, from one IdentityServer, each in their
+own space. All spaces in the same IdentityServer count as one [deployment](#deployment). Spaces are part of the
+[Multi-Tenancy](#multi-tenancy) add-on.
 
 ## Deployment and Licensing
 
 ### Single Deployment
 
-A single deployment acts as a single OpenID Connect / OAuth authority hosted at a single URL. It can consist of multiple
-physical or virtual nodes for load-balancing or fail-over purposes.
-
+See [deployment](#deployment).
 ### Multiple Deployments
 
-Can be either completely independent single deployments, or a single deployment that acts as multiple authorities.
+See [deployment](#deployment).
 
-### Multiple Authorities
+### Logical Host
 
-A single logical deployment that acts as multiple logical token services on multiple URLs or host names (e.g. for
-branding, isolation or multi-tenancy reasons).
+The license agreement's term for one IdentityServer installation running as a single system. Each logical host is one
+[deployment](#deployment).
+
+### Deployment
+
+A deployment is one IdentityServer with its own [configuration data](/identityserver/data/configuration.mdx),
+[operational data](/identityserver/data/operational.mdx), users, and set of authorities. Adding servers, regions, or
+URLs doesn't add deployments.
+
+* One IdentityServer on several servers or in several data centers, sharing the same data: **one deployment**.
+* Two IdentityServers that each have their own configuration data and their own users: **two deployments**, even
+  if they sit behind a single URL.
+* One IdentityServer serving many [spaces](#space): **one deployment**.
+* Development, test, and staging environments that don't handle production traffic: **not a deployment**.
+
+See [Deployments](/general/licensing.md#deployments) for failover and more examples.
 
 ### Multi-Issuer
 
-A built-in capability of Duende IdentityServer where a single instance responds with different
-issuer (`iss`) claim values depending on the host it is served from.
-Multi-issuer changes only the `iss` claim; it does not separate configuration or operational
-data between tenants. Use [Spaces](/identityserver/spaces/index.mdx) for data isolation.
+An issuer is the name an IdentityServer uses to sign its tokens, published as the `iss` claim. With multi-issuer, one
+IdentityServer uses a different issuer depending on the host name it is reached on, for example for branding.
+
+Multi-issuer only changes the `iss` claim. All issuers still share the same configuration data, operational data, and users; use [spaces](#space) if you
+need to keep those apart. Serving more than one issuer requires the [Multi-Tenancy](#multi-tenancy) add-on and
+doesn't add deployments by itself.
 
 <LinkCard
   description="Learn more about multi-issuer support"
@@ -423,10 +439,13 @@ data between tenants. Use [Spaces](/identityserver/spaces/index.mdx) for data is
 
 ### Multi-Tenancy
 
-Hosting multiple isolated security domains (tenants) from a single IdentityServer deployment.
-Duende delivers multi-tenancy through **[Spaces](/identityserver/spaces/index.mdx)**, a licensed
-add-on that gives each [space](#space) its own configuration and operational data via storage
-pools.
+Serving multiple customers or brands from a single IdentityServer [deployment](#deployment). The Multi-Tenancy add-on
+includes two capabilities:
+
+* **[Spaces](#space)**, which give each customer its own configuration data, operational data, and users.
+* **[Multi-issuer](#multi-issuer)**, which lets one IdentityServer use more than one issuer (`iss`) value.
+
+Neither adds deployments by itself.
 
 <LinkCard
   description="Learn more about IdentityServer Spaces"
