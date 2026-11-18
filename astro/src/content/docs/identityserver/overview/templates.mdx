@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import {LinkCard, CardGrid} from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 There are templates available for the `dotnet` CLI to help jump-start your Duende-powered solutions.
 
@@ -68,6 +69,49 @@ All templates currently target .NET 8.0, but you can alter the target framework 
 :::
 
 All templates are provided as a starting point for your customization. Using the templates, you assume development responsibility for the choices, alterations, and inevitable deployment of your IdentityServer instance.
+
+### Duende IdentityServer
+
+The Duende IdentityServer template is our most feature-rich offering and a great starting point for developers who want a simple yet effective UI/UX experience.
+
+```bash
+dotnet new duende-is
+```
+
+<Version until="8.1">
+    The template is built on the Entity Framework Core template but provides an administrative UI for managing clients, scopes, and claims against a database storage engine.
+    It also has a diagnostics dashboard showing system information, including the licensing tier and features currently used in your IdentityServer deployment.
+</Version>
+
+<Version since="8.1">
+    By default the created project will use:
+    - [Duende User Management](/identityserver/identity/user-management/) in a passwordless configuration.
+    - [Duende Storage](/identityserver/data/providers/duende-storage/) for IdentityServer's configuration and operational data.
+    - [SAML 2.0 support](/identityserver/saml/) in addition to OpenID Connect.
+    
+    #### Command line parameters
+    With command line parameters you can deviate from these defaults:
+    ##### --identity-store
+    Options:
+    - in-memory
+    - aspnet-identity
+    - user-management (default)
+    ##### --store
+    Options:
+    - ef-core
+    - duende
+    ##### --saml
+    Options:
+    - true (default)
+    - false
+    ##### --passwords
+    Options:
+    - true
+    - false (default)
+    
+    
+    The duende-is template is the way to go for new IdentityServer projects. The templates below are still included but will be deprecated soon:
+</Version>
 
 ### Duende IdentityServer Empty
 
@@ -224,17 +268,6 @@ This template stores all operational and configuration data of the IdentityServe
 The template targets SQLite by default, but we have included scripts to easily swap out and regenerate migrations for your database.
 
 [Read more about the Entity Framework Core setup here.](/identityserver/data/providers/entityframework-core.md)
-
-### Duende IdentityServer
-
-The Duende IdentityServer template is our most feature-rich offering and a great starting point for developers who want a simple yet effective UI/UX experience.
-
-```bash
-dotnet new duende-is
-```
-
-The template is built on the Entity Framework Core template but provides an administrative UI for managing clients, scopes, and claims against a database storage engine.
-It also has a diagnostics dashboard showing system information, including the licensing tier and features currently used in your IdentityServer deployment.
 
 #### Third-party Dependencies
 
