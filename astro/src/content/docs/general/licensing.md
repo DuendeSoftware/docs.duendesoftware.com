@@ -150,8 +150,8 @@ Standby servers kept for failover, disaster recovery, or business continuity are
 whether they're powered off or running, as long as they don't handle production traffic while the main deployment is
 up. Failing over to them, including failover tests of a reasonable length, doesn't add a deployment.
 
-Servers that handle production traffic at the same time as the rest of the deployment only count as part of it when
-they share its configuration data, operational data, and authorities.
+Servers that handle production traffic at the same time as the rest of the deployment follow the deployment counting
+rules above, including the exception for operational data partitioned by region or user.
 
 #### Non-production environments
 

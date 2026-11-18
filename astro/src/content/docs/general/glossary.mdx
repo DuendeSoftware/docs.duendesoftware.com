@@ -443,7 +443,8 @@ doesn't add deployments by itself.
 Serving multiple customers or brands from a single IdentityServer [deployment](#deployment). The Multi-Tenancy add-on
 includes two capabilities:
 
-* **[Spaces](#space)**, which give each customer its own configuration data, operational data, and users.
+* **[Spaces](#space)**, which give each customer its own configuration and operational data. User isolation is automatic
+  with Duende User Management; custom user stores must be made space-aware explicitly.
 * **[Multi-issuer](#multi-issuer)**, which lets one IdentityServer use more than one issuer (`iss`) value.
 
 Neither adds deployments by itself.
