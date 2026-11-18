@@ -110,16 +110,17 @@ APIs use that information to authorize access to their data and functionality.
 ## Multi-Issuer
 
 Duende IdentityServer can respond with different issuer (`iss`) claim values depending on the
-host it is served from. This *multi-issuer* capability is built in and lets a single instance
-present multiple issuer identities. It changes only the `iss` claim and does not separate
-configuration or operational data between tenants. See the
+host it is served from. This *multi-issuer* capability lets a single deployment present multiple
+issuer identities. It changes only the `iss` claim and does not separate configuration or
+operational data between tenants. Multi-issuer is part of the Multi-Tenancy add-on. See the
 [Issuer Claim](/identityserver/tokens/issuer.md#multi-issuer) documentation for details.
 
 ## Multi-Tenancy
 
-Hosting multiple isolated security domains (tenants) from a single IdentityServer deployment.
-Duende delivers multi-tenancy through [Spaces](/identityserver/spaces/index.mdx), a licensed
-add-on that isolates each tenant's configuration and operational data. 
+Serving multiple tenants, such as customers or brands, from a single IdentityServer
+[deployment](/general/licensing.md#deployments). The Multi-Tenancy add-on includes
+[Spaces](/identityserver/spaces/index.mdx), which give each tenant its own configuration and
+operational data, and multi-issuer. Neither adds deployments by itself.
 
 ## Space
 
