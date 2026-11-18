@@ -110,9 +110,7 @@ Check the [pricing page](https://duendesoftware.com/products/identityserver) for
 ### Deployments
 
 Each license includes a number of **deployments**. A deployment is one IdentityServer that has its own
-[configuration data](/identityserver/data/configuration.mdx) (such as Connected Application registrations, API
-definitions, and signing keys), its own [operational data](/identityserver/data/operational.mdx) (such as grants and
-sessions), its own users, and its own set of authorities. In the license agreement, this setup is called a *Logical Host*,
+[configuration data](/identityserver/data/configuration.mdx), its own [operational data](/identityserver/data/operational.mdx), its own users, and its own set of authorities. In the license agreement, this setup is called a *Logical Host*,
 and each Logical Host is one deployment.
 
 You can run it on as many servers, containers, clusters, regions, or data centers as you like, behind as many URLs or
