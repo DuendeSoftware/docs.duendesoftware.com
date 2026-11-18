@@ -107,6 +107,58 @@ Many of the limits in your license, such as the number of Connected Applications
 Check the [pricing page](https://duendesoftware.com/products/identityserver) for the available options.
 :::
 
+### Deployments
+
+Each license includes a number of **deployments**. A deployment is one IdentityServer that has its own
+[configuration data](/identityserver/data/configuration.mdx) (such as Connected Application registrations, API
+definitions, and signing keys), its own [operational data](/identityserver/data/operational.mdx) (such as grants and
+sessions), its own users, and its own set of authorities. In the license agreement, this setup is called a *Logical Host*,
+and each Logical Host is one deployment.
+
+You can run it on as many servers, containers, clusters, regions, or data centers as you like, behind as many URLs or
+load balancers as you like, and it's still one deployment. How the data is stored, cached, or replicated doesn't
+matter either, and neither does whether every server runs the same version at the same time.
+
+Installations count as separate deployments when they keep separate configuration data or separate operational data,
+or are configured with different authorities. That's true even if they run the same application or share a URL or
+issuer.
+
+There is one exception to the operational data rule: you can split operational data by region or by user and still
+have one deployment, as long as the installations share their configuration data and authorities.
+
+Some examples:
+
+| Scenario                                                                                                     | Deployments |
+|--------------------------------------------------------------------------------------------------------------|-------------|
+| One IdentityServer running on several servers behind a load balancer                                         | 1           |
+| The same IdentityServer running in three data centers, sharing configuration data and authorities            | 1           |
+| One IdentityServer with shared configuration, storing operational data in the EU and US separately           | 1           |
+| Separate EU and US IdentityServers behind one URL, each with its own configuration data and users            | 2           |
+| One IdentityServer serving every customer in its own [space](/identityserver/spaces/index.mdx)               | 1           |
+
+:::note[Deployments and issuers are counted separately]
+Using more than one issuer (`iss`) value, for example a different host name per brand, doesn't add deployments by
+itself. If all issuers are part of the same set of authorities and share the same configuration data, operational data,
+and users, that's still one deployment. Using more than one issuer requires the Multi-Tenancy add-on, which also
+includes [spaces](/identityserver/spaces/index.mdx). See [Multi-Tenancy](/general/glossary.mdx#multi-tenancy) in the
+glossary.
+:::
+
+#### Failover and disaster recovery
+
+Standby servers kept for failover, disaster recovery, or business continuity are part of the deployment they protect,
+whether they're powered off or running, as long as they don't handle production traffic while the main deployment is
+up. Failing over to them, including failover tests of a reasonable length, doesn't add a deployment.
+
+Servers that handle production traffic at the same time as the rest of the deployment only count as part of it when
+they share its configuration data, operational data, and authorities.
+
+#### Non-production environments
+
+Development, test, QA, staging, user acceptance testing, performance testing, training, and demo environments are not
+deployments, as long as they don't handle production traffic. Backups, source code, container images, and configuration
+templates aren't deployments either.
+
 ### Redistribution
 
 If you want to redistribute Duende IdentityServer to your customers as part of a product,
@@ -285,7 +337,7 @@ You are always responsible for ensuring your license is renewed.
 ##### Redistribution options
 
 Redistribution licenses are based on features, the number of Connected Applications, and the number of IdentityServer
-instances you deploy to your end customers. Many limits, including the number of Connected Applications, can be lifted
+installations you deploy to your end customers. Many limits, including the number of Connected Applications, can be lifted
 to unlimited. Unlimited Connected Applications does not mean unlimited redistributions: the number of installations
 you ship to your own customers is licensed separately.
 [Duende User Management](/identityserver/identity/user-management/index.mdx) and the
