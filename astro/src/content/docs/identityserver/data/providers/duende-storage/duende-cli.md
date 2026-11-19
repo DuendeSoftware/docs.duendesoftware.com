@@ -183,11 +183,11 @@ Checks that a database has the expected Duende Storage schema without changing i
 the schema's structure, including nullability, keys, foreign-key delete rules, and ordered index columns.
 
 The options are the same as `storage migrate`: `--provider`, `--connection-string`, and `--schema`. The connection
-string also falls back to `DUENDE_STORAGE_CONNECTION_STRING`; the example assumes it is set. SQLite verification uses
+string also falls back to `DUENDE_STORAGE_CONNECTION_STRING`. SQLite verification uses
 a read-only connection, including when the connection string uses an encoded SQLite URI mode. `storage verify` is
 already read-only and has no `--dry-run` option. SQLite does not support `--schema`.
 
-`storage verify` is read-only by design:
+Set `DUENDE_STORAGE_CONNECTION_STRING` to your PostgreSQL connection string before running this example:
 
 ```powershell
 # Terminal

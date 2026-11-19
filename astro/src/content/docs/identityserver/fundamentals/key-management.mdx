@@ -169,10 +169,12 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
 
 <Version since="8.1">
 
-### Key Creation Across Nodes (IdentityServer 8.1 and later)
+### Key Creation Across Nodes
+
+<a id="key-creation-across-nodes-identityserver-81-and-later"></a>
 
 :::caution[IdentityServer 8.1 preview]
-This coordination is available in the 8.1 preview, not IdentityServer 8.0. It is subject to change before general release.
+This coordination is available in the 8.1 preview. It is subject to change before general release.
 :::
 
 When Duende Storage's default instance or Spaces is registered, IdentityServer uses a Storage-backed lock so only one

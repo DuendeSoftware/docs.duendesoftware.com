@@ -60,13 +60,16 @@ See [Operational Data](/identityserver/data/operational.md) for the full details
 
 <Version since="8.1">
 
-## In-Memory Operational Stores With Spaces (IdentityServer 8.1 and later)
+## In-Memory Operational Stores With Spaces
+
+<a id="in-memory-operational-stores-with-spaces-identityserver-81-and-later"></a>
 
 :::caution[IdentityServer 8.1 preview]
-This partitioning is available in the 8.1 preview, not IdentityServer 8.0. It is subject to change before general release.
+This partitioning is available in the 8.1 preview. It is subject to change before general release.
 :::
 
-When you register Spaces with `AddSpaces()` and don't call `AddOperationalStorage()`, the default in-memory operational
+When you register [Spaces](/identityserver/spaces/index.mdx) with `AddSpaces()` and don't call
+`AddOperationalStorage()`, the default in-memory operational
 stores use a separate partition for each space. This applies to persisted grants, device-flow codes, pushed
 authorization requests, server-side sessions, and SAML sign-in and logout state. Requests without a resolved space use
 the Default space's partition.

@@ -155,13 +155,6 @@ The three `Try` methods return `null` when no space matches, when the matching s
 Passing `null` to any method throws an `ArgumentNullException`. For `IsOriginClaimed`, a `null` origin throws an
 `ArgumentNullException` and an empty one throws an `ArgumentException`.
 
-:::caution[Draft for a future preview: supported replacement point]
-The current public API does not enforce a single supported replacement point. An unmerged proposal in
-[products-private#4768](https://github.com/DuendeSoftware/products-private/issues/4768) says that `ISpaceStore` should
-be the only replaceable Spaces service. It would exclude replacing `ISpaceAdmin`, `ISpaceContextAccessor`, and the
-Spaces cache factory. Treat that as a proposal until it is merged and released.
-:::
-
 All four lookups are cached. The cache entries use `SpacesOptions.LocalCacheExpiration` (30 seconds by default) and
 `SpacesOptions.Expiration` (30 minutes by default). `TryResolveSpace` and `IsOriginClaimed` only cache matches.
 Changes made through `ISpaceAdmin` remove the affected entries, but other instances can return the old result until
