@@ -54,7 +54,7 @@ all available on the same domain name, but use path based routing to distinguish
 `https://app.example.com/app1`
 
 There is also a partner portal. This partner portal can only be accessed by employees of the partners. Each partner 
-should be able to bring their own identity provider. This is implemented using the [Dynamic Providers](/identityserver/ui/login/dynamicproviders.md) feature of
+should be able to bring their own identity provider. This is implemented using the [Dynamic Providers](/identityserver/ui/login/dynamicproviders.mdx) feature of
 Duende IdentityServer. 
 
 This setup, with multiple frontends, each having different authentication requirements and different API surfaces, 

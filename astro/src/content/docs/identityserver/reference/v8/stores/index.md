@@ -45,7 +45,7 @@ can be replaced individually for finer-grained control.
 | [IDeviceFlowStore](/identityserver/reference/v8/stores/device-flow-store.md) | Device authorization grant data |
 | [IBackChannelAuthenticationRequestStore](/identityserver/reference/v8/stores/backchannel-auth-request-store.md) | CIBA authentication requests |
 | [IPushedAuthorizationRequestStore](/identityserver/reference/v8/stores/pushed-authorization-request-store.md) | Pushed Authorization Requests (PAR) |
-| [IServerSideSessionStore](/identityserver/reference/v8/stores/server-side-sessions.md) | Server-side user sessions |
+| [IServerSideSessionStore](/identityserver/reference/v8/stores/server-side-sessions.mdx) | Server-side user sessions |
 | [ISigningKeyStore](/identityserver/reference/v8/stores/signing-key-store.md) | Automatic key management signing keys |
 
 ## Key Management Stores

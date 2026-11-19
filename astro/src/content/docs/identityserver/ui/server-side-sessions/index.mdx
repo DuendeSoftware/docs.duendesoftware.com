@@ -53,7 +53,7 @@ By default, the store for the server-side sessions will just be kept in-memory.
 For production scenarios, configure a durable store by using the
 [Entity Framework Core implementation](/identityserver/data/providers/entityframework-core.md#operational-store), the
 [Duende Storage provider](/identityserver/data/providers/duende-storage/getting-started.md#operational-stores) or
-[your own implementation](/identityserver/reference/v8/stores/server-side-sessions.md).
+[your own implementation](/identityserver/reference/v8/stores/server-side-sessions.mdx).
 
 :::note
 Order is important in the ASP.NET Core service provider.
@@ -77,7 +77,7 @@ These values are the user's:
 - display name (an optional and configurable claim value)
 
 If you would like to query this data based on a user's display name, then the claim type used is configurable with the
-`ServerSideSessions.UserDisplayNameClaimType` property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.md#authentication).
+`ServerSideSessions.UserDisplayNameClaimType` property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.mdx#authentication).
 This claim must be included in the claims when the user's [authentication session is established](/identityserver/ui/login/session.md).
 
 For example:
@@ -91,12 +91,12 @@ builder.Services.AddIdentityServer(options => {
 
 ### IServerSideSessionStore
 
-The [`IServerSideSessionStore`](/identityserver/reference/v8/stores/server-side-sessions.md) is the abstraction for storing the server-side session.
+The [`IServerSideSessionStore`](/identityserver/reference/v8/stores/server-side-sessions.mdx) is the abstraction for storing the server-side session.
 
 Entity Framework Core and the preview
 [Duende Storage provider](/identityserver/data/providers/duende-storage/getting-started.md#operational-stores) includes
 implementations. You can also implement the
-[`IServerSideSessionStore` interface](/identityserver/reference/v8/stores/server-side-sessions.md) for another backend.
+[`IServerSideSessionStore` interface](/identityserver/reference/v8/stores/server-side-sessions.mdx) for another backend.
 
 :::caution[Prefer `GetSessionsAsync` over `QuerySessionsAsync`]
 When listing sessions, prefer `GetSessionsAsync` over `QuerySessionsAsync`.

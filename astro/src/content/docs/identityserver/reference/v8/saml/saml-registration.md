@@ -29,7 +29,7 @@ SAML in IdentityServer works in two directions, and the registration methods dif
 
 | Method | Description |
 |---|---|
-| `AddSamlDynamicProvider()` | Adds the SAML 2.0 dynamic provider feature. It registers the SAML SP authentication handler for dynamic providers, so IdentityServer can act as the SP toward dynamically managed, external SAML identity providers (see [Dynamic Providers](/identityserver/ui/login/dynamicproviders.md#saml-providers)). For downstream `SamlServiceProvider` entries, use the methods in the previous section. |
+| `AddSamlDynamicProvider()` | Adds the SAML 2.0 dynamic provider feature. It registers the SAML SP authentication handler for dynamic providers, so IdentityServer can act as the SP toward dynamically managed, external SAML identity providers (see [Dynamic Providers](/identityserver/ui/login/dynamicproviders.mdx#saml-providers)). For downstream `SamlServiceProvider` entries, use the methods in the previous section. |
 | `AddInMemorySamlProviders(IEnumerable<SamlProvider>)` | Adds the in-memory SAML provider store. Providers registered by multiple calls to any in-memory identity provider registration method are accumulated rather than replacing one another. The supplied collection is retained by reference, so callers may mutate their own collection at runtime and have the changes observed by the store. The `SamlProvider` entries describe the external SAML identity providers that users sign in with. They're separate from `SamlServiceProvider` entries. |
 
 ## Registration behavior

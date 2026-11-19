@@ -12,7 +12,7 @@ versions:
 IdentityServer includes a built-in SAML 2.0 Service Provider (SP) authentication handler that lets you authenticate users against an external SAML 2.0 Identity Provider (IdP). This is useful when you need to federate with enterprise identity systems such as ADFS, Shibboleth, or other SAML-compliant providers.
 
 :::note
-This page covers **static** registration of a SAML 2.0 external provider using `AddSamlServiceProvider()`. If you need to manage a large or frequently changing set of SAML providers at runtime, see [Dynamic Providers](/identityserver/ui/login/dynamicproviders.md) instead.
+This page covers **static** registration of a SAML 2.0 external provider using `AddSamlServiceProvider()`. If you need to manage a large or frequently changing set of SAML providers at runtime, see [Dynamic Providers](/identityserver/ui/login/dynamicproviders.mdx) instead.
 :::
 
 For the general external provider workflow (triggering authentication, handling callbacks, and managing cookies), see [Integrating with External Providers](/identityserver/ui/login/external.md).
@@ -134,7 +134,7 @@ Use this table to decide which registration approach fits your situation:
 | Scenario                                                        | Approach                                                                                          |
 |-----------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
 | A small number of known SAML IdPs configured at deployment time | `AddSamlServiceProvider()` (this page)                                                            |
-| Many IdPs managed at runtime, loaded from a database            | [Dynamic Providers](/identityserver/ui/login/dynamicproviders.md) with `AddSamlDynamicProvider()` |
+| Many IdPs managed at runtime, loaded from a database            | [Dynamic Providers](/identityserver/ui/login/dynamicproviders.mdx) with `AddSamlDynamicProvider()` |
 
 Both approaches use the same underlying SAML SP handler. Static registration is simpler when you have a fixed set of providers and do not need runtime management.
 

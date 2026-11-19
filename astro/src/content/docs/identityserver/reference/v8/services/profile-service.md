@@ -64,7 +64,7 @@ Models the request for user claims and is the vehicle to return those claims. It
   invoked for tokens, the `Subject` property will contain the user's principal. Which claims are contained in the
   principal depends on the following:
 
-    - When the [server side sessions feature](/identityserver/ui/server-side-sessions/index.md) is enabled `Subject` will always contain
+    - When the [server side sessions feature](/identityserver/ui/server-side-sessions/index.mdx) is enabled `Subject` will always contain
       the claims stored in the server side session.
     - When that is not the case, it depends on the caller context:
         - If the `ProfileService` is called in the context of a grant (e.g. exchanging a code for a token), the claims
