@@ -10,6 +10,10 @@ sidebar:
 
 import { LinkCard } from "@astrojs/starlight/components";
 
+:::note
+This feature is part of the [Duende IdentityServer Advanced and Custom Edition](https://duendesoftware.com/products/identityserver).
+:::
+
 The System for Cross-domain Identity Management (SCIM) is an open standard for exchanging user and group data between systems. It is defined by [RFC 7643](https://www.rfc-editor.org/rfc/rfc7643.html) (core schema) and [RFC 7644](https://www.rfc-editor.org/rfc/rfc7644.html) (protocol).
 
 Duende User Management includes a SCIM 2.0 **service provider**. When enabled, your IdentityServer application exposes SCIM endpoints that an external identity provider, HR system, or directory can call to create, update, and remove users and groups. Users and groups provisioned this way are stored in User Management, so they are available to the rest of your application in the same way as users created through any other User Management API.

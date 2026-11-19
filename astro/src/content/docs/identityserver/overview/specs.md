@@ -65,3 +65,14 @@ Support for [Security Assertion Markup Language (SAML) v2.0](https://www.oasis-o
 | SAML Profiles 2.0 (Web Browser SSO, Single Logout)         | [OASIS SAML 2.0](https://www.oasis-open.org/standard/saml/) |
 | SAML Bindings 2.0 (HTTP-Redirect, HTTP-POST)               | [OASIS SAML 2.0](https://www.oasis-open.org/standard/saml/) |
 | SAML Metadata 2.0 (`EntityDescriptor`, `IDPSSODescriptor`) | [OASIS SAML 2.0](https://www.oasis-open.org/standard/saml/) |
+
+## SCIM
+
+Support for the [System for Cross-domain Identity Management (SCIM) 2.0](https://www.rfc-editor.org/rfc/rfc7644.html)
+as a service provider in [Duende User Management](/identityserver/identity/user-management/scim.mdx).
+This feature is part of the [Duende IdentityServer Advanced and Custom Edition](https://duendesoftware.com/products/identityserver).
+
+| Specification                                                  | Reference                                         |
+|----------------------------------------------------------------|---------------------------------------------------|
+| System for Cross-domain Identity Management: Core Schema       | [RFC 7643](https://www.rfc-editor.org/rfc/rfc7643) |
+| System for Cross-domain Identity Management: Protocol          | [RFC 7644](https://www.rfc-editor.org/rfc/rfc7644) |
