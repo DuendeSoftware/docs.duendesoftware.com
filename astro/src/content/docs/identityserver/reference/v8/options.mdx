@@ -208,7 +208,7 @@ must decide whether to continue using it or replace it with a new certificate.
 
 * **`KeyCreationLockTimeout`**
 
-  **8.1 preview.** Maximum time to wait for the signing-key creation lock. Defaults to 60 seconds and
+  Maximum time to wait for the signing-key creation lock. Defaults to 60 seconds and
   must be greater than zero. If the lock is not acquired in time, IdentityServer checks the store again and uses an
   existing usable key if available. If there is no usable key, key retrieval fails.
 
@@ -648,8 +648,8 @@ Caching settings for the stores. Available on the `Caching` property of the `Ide
 
 * **`CacheLockTimeout`** *(obsolete)*
 
-  In IdentityServer 8.0, this is the timeout for key-management locking and defaults to 60 seconds. It has no effect
-  on configuration-store caching, because `HybridCache` provides stampede protection.
+  This property is already obsolete in IdentityServer 8.0 because `HybridCache` handles stampede protection for
+  configuration-store caching. The 8.0 key manager still uses it as the lock timeout. It defaults to 60 seconds.
 
 </Version>
 
@@ -657,8 +657,7 @@ Caching settings for the stores. Available on the `Caching` property of the `Ide
 
 * **`CacheLockTimeout`** *(obsolete)*
 
-  **8.1 preview.** The property remains but is
-  obsolete and has no effect with the default distributed key manager. The compatibility `KeyManager` still reads it
+  This obsolete property has no effect with the default distributed key manager. The compatibility `KeyManager` still reads it
   when a host explicitly uses that legacy implementation. Use `KeyManagement.KeyCreationLockTimeout` with the default
   IdentityServer 8.1 key manager.
 
@@ -821,7 +820,7 @@ Settings for [server-side sessions](/identityserver/ui/server-side-sessions/inde
 
 ## Background Job Leases
 
-**8.1 preview.** `BackgroundJobLeaseOptions` is exposed through the `Lease` property on `OutboxProcessorOptions`,
+`BackgroundJobLeaseOptions` is exposed through the `Lease` property on `OutboxProcessorOptions`,
 `StoragePurgeOptions`, and `ServerSideSessionOptions`. These settings coordinate jobs across nodes only when Duende
 Storage's default instance or Spaces is registered. Without either, the options have no effect.
 

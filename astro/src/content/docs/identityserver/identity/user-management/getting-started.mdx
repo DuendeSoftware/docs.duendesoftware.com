@@ -28,7 +28,6 @@ This guide uses a file-based SQLite database for simplicity. SQLite is suitable 
 For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/identityserver/identity/user-management/fundamentals/storage.mdx) for details.
 </Version>
 <Version since="8.1">
-This version of the guide targets the IdentityServer 8.1 preview, not the current stable 8.0 release.
 This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and testing, but production deployments need a different database.
 For production setup of each provider, see [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx).
 </Version>
@@ -74,18 +73,7 @@ dotnet add package Duende.IdentityServer --prerelease
 dotnet add package Duende.Storage.Sqlite --prerelease
 ```
 
-</Version>
-
-For IdentityServer `8.1.0-preview.7` and later, User Management is included in `Duende.IdentityServer`. Earlier 8.1
-previews require the separate `Duende.UserManagement.IdentityServer8` package. The storage package provides the
-backing store for user data.
-
-<Version since="8.1">
-
-:::note[Earlier 8.1 previews]
-For `8.1.0-preview.6` and earlier, add `Duende.UserManagement.IdentityServer8 --prerelease` as a separate package.
-The package merge is included in preview.7 and later.
-:::
+`Duende.IdentityServer` includes User Management. The storage package provides the backing store for user data.
 
 </Version>
 

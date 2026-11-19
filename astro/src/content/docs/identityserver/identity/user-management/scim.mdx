@@ -62,7 +62,7 @@ The Users endpoints are enabled when `IUserProfileAdmin` is registered, and the 
 
 ## Installation
 
-SCIM is part of User Management, which is included in `Duende.IdentityServer` starting with `8.1.0-preview.7`.
+Install IdentityServer and a Storage provider:
 Install IdentityServer and a Storage provider:
 
 ```bash
@@ -74,9 +74,6 @@ These commands use SQLite as the Storage provider. For another database, select 
 [Storage provider](/identityserver/identity/user-management/fundamentals/storage.md). The examples below extend an
 application configured as described in [IdentityServer Integration](/identityserver/identity/user-management/identityserver-integration.mdx),
 where `identityServer` is the existing `IIdentityServerBuilder`.
-
-No separate IdentityServer integration package is needed for preview.7. Earlier 8.1 previews use
-`Duende.UserManagement.IdentityServer8` `2.0.0-preview.6`.
 
 ## Configuration
 
@@ -156,9 +153,9 @@ _ = identityServer
 ```
 
 The token authority must match the issuer of the tokens. With the IdentityServer integration, leave
-`ScimOAuthOptions.Authority` unset to validate against the current space's issuer and signing keys in-process. The option
-stays unset; IdentityServer does not copy `IdentityServerOptions.IssuerUri` into it. You can set a fixed authority, and
-other token validation options, with `ConfigureScimOAuth`:
+`ScimOAuthOptions.Authority` unset to validate against the current space's issuer and signing keys in-process.
+IdentityServer does not copy `IdentityServerOptions.IssuerUri` into `Authority`. You can set a fixed authority and other
+token validation options with `ConfigureScimOAuth`:
 
 ```csharp title="Program.cs"
 _ = identityServer.AddUserManagement(users => users
@@ -181,16 +178,13 @@ check is skipped when you set an explicit `Authority` or when `AccessTokenJwtTyp
 With path-based Spaces, call `UseSpaceResolution()` before authentication and SCIM endpoint handling so the space is
 available to token validation. An unknown space path is rejected with `404` before authentication. If a request reaches
 SCIM authentication without a resolved space, IdentityServer logs an error naming `UseSpaceResolution()` and returns
-`401`; it does not fall back to the Default space.
+`401`. It does not fall back to the Default space.
 
 A token issued in one space is rejected in every other space, including Default. Setting a shared
 `IdentityServerOptions.IssuerUri` and using process-wide signing keys is allowed, but removes this SCIM isolation: tokens
 can then work across spaces. If you set a fixed `Authority` with Spaces, startup fails when either SCIM read or write
 authorization uses a built-in policy. A fixed authority is supported with custom read and write policies that enforce
 which client may provision into each space.
-
-The former `Configure<JwtBearerOptions>("DuendeScimBearer", ...)` workaround is no longer needed. Use
-`ScimOAuthOptions.Authority` when you need a fixed authority.
 
 ### Custom Authorization
 
@@ -353,8 +347,7 @@ Request bodies contain personal data. Enable HTTP logging for SCIM only while yo
 
 ## Known Issues
 
-The issues in this section describe the published preview. The future-change notes below are unmerged draft coverage and
-are not available in that preview.
+The issues in this section describe the current 8.1 preview.
 
 ### `groups` In Create And Replace Requests Is Rejected
 
@@ -374,49 +367,8 @@ A PATCH operation with the path `externalId` on a group returns `400` with `scim
 
 ### `externalId` Is Not Returned
 
-The published preview does not return `externalId` on User or Group responses, even when the client sent it. The draft
-group change below updates Group behavior only. Until that change is available, SCIM clients that match resources by
-`externalId` should match on `userName` for users and `displayName` for groups instead.
-
-## Draft Coverage For Unreleased Changes
-
-:::caution[Unreleased: group `externalId`]
-The behavior below is described in the open
-[products-private#4776](https://github.com/DuendeSoftware/products-private/pull/4776). It is not available in the
-published preview. Once the product change is merged and released, remove the group-specific `externalId` workarounds
-from [Known Issues](#known-issues).
-
-The draft adds an optional group `externalId`. Clients can set or clear it on create and replace, update or remove it
-with PATCH, select it with `attributes` or `excludedAttributes`, and filter groups with `externalId eq` through
-`GET /Groups` or `POST /Groups/.search`. The filter is case-insensitive. Values must be non-empty strings of at most
-200 characters; invalid values return `400` with `scimType: invalidValue`. Values do not have to be unique. Group
-responses include the value when set. `/Schemas` deliberately does not list this common SCIM attribute.
-
-The draft also rejects unknown keys in a path-less PATCH value with `400 invalidPath` instead of silently ignoring
-them. The admin API exposes the value on `Group` and `GroupListItem` through `GroupExternalId`, and supports filtering
-with `GroupFilter.SearchExpression`.
-:::
-
-:::caution[Unreleased: SCIM diagnostic logging]
-The open [products-private#4649](https://github.com/DuendeSoftware/products-private/pull/4649) proposes structured
-request diagnostics and is not merged. Its draft logs request shape at Debug and request values at Trace, redacting
-passwords and password-targeted or ambiguous PATCH values. Bulk warnings include the operation index and SCIM error.
-Missing scopes and undefined attribute names are logged without attribute values, and filter text is kept out of logs.
-
-Request data can contain personal or sensitive information. The draft's Trace logging is not a general redaction
-guarantee; enable it only for controlled troubleshooting and review the data your logging pipeline retains.
-:::
-
-:::caution[Unreleased: native inactive-user state]
-Open [products-private#4389](https://github.com/DuendeSoftware/products-private/issues/4389) specifies a native
-active/inactive user state. It is not implemented in the published preview. The proposal maps SCIM `active` writes and
-filters to that state, defaults existing and new users to active, and makes inactive users unable to sign in or receive
-new tokens. It also specifies that the login flow should not reveal the inactive state to the user.
-
-The proposal includes an upgrade consequence: `active` values previously stored as profile attributes would not carry
-over to the native state, so users would be active after upgrading and administrators would need to mark them inactive
-again. Verify this behavior against the merged implementation and release notes before using it as upgrade guidance.
-:::
+The current 8.1 preview does not return `externalId` on User or Group responses, even when the client sent it. To match
+resources, use `userName` for users and `displayName` for groups instead.
 
 ## Sample
 

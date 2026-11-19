@@ -69,16 +69,11 @@ public interface IServerSideSessionStore
 }
 ```
 
-In IdentityServer 8.0, the method returns `Task` and does not report whether a concurrent update was rejected.
+`UpdateSessionAsync` returns `Task` and does not report whether a concurrent update was rejected.
 
 </Version>
 
 <Version since="8.1">
-
-:::caution[IdentityServer 8.1 preview contract]
-The 8.1 contract below is available in preview.7 and is subject to change before general release.
-IdentityServer 8.0 uses the `Task` return type instead.
-:::
 
 ```csharp
 /// <summary>
@@ -97,7 +92,7 @@ public interface IServerSideSessionStore
 }
 ```
 
-In IdentityServer 8.1, `UpdateSessionAsync` returns `true` when it saves the session and `false` when the version
+`UpdateSessionAsync` returns `true` when it saves the session and `false` when the version
 changed or the session was removed after it was read.
 
 </Version>
@@ -174,13 +169,15 @@ public int Version { get; set; }
 
 <Version since="8.1">
 
-#### Concurrent Updates In IdentityServer 8.1
+#### Concurrent Updates
+
+<a id="concurrent-updates-in-identityserver-81"></a>
 
 In IdentityServer 8.1, compare `session.Version` with the stored version atomically. When they match, save the update,
 increment the stored version, and return `true`. If the version changed or the session was removed after it was read,
 do not write or recreate the session; return `false`.
 
-A `Version` of `0` skips the concurrency check. Query results can also carry `Version` 0, so zero does not indicate
+A `Version` of `0` skips the concurrency check. Query results can also carry a `Version` of `0`, so zero does not indicate
 whether the session was read from the store.
 
 The Entity Framework operational store migration adds a non-null `Version` integer column to `ServerSideSessions`,
@@ -188,8 +185,8 @@ with a default value of `1`.
 
 When a browser request's session-changing write is refused, the request fails with HTTP 500. A cookie renewal that
 only moves the session dates is skipped and succeeds. If a token call's session extension is refused, the token call
-still succeeds but that extension is skipped; a later token call tries again. These behaviors prevent a stale write
-from overwriting a newer session.
+still succeeds but that extension is skipped. A later token call that qualifies for an extension can try again.
+These behaviors prevent a stale write from overwriting a newer session.
 
 </Version>
 

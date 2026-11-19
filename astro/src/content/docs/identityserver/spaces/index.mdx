@@ -274,13 +274,6 @@ Shared keys with a separate issuer per space is a valid trade-off, because the i
 key management and the file-system key store. A custom signing key store doesn't trigger the warning.
 :::
 
-:::caution[Draft for a future preview: Spaces replacement points]
-The current Spaces API still exposes several public services that can be replaced through dependency injection. An
-unmerged proposal in [products-private#4768](https://github.com/DuendeSoftware/products-private/issues/4768) would make
-`ISpaceStore` the only supported replacement point. Until that change is merged and released, do not treat this proposal
-as current behavior or remove existing registrations based on it.
-:::
-
 To inject the Spaces cache into an application service, use its service key:
 
 ```csharp

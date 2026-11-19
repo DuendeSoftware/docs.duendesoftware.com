@@ -424,8 +424,8 @@ does not invalidate it, but applies the new filter from the old cursor position;
 throughout a traversal. Tokens from the earlier format are rejected with `InvalidContinuationTokenException` rather
 than silently restarting at the first page. The exception also identifies malformed tokens and sort mismatches.
 
-String values used by cursor-sorted fields are limited to 500 characters and cannot contain U+0000. Saving an invalid
-value fails with `ArgumentException`; a value longer than 500 characters saved before this limit was enforced can fail
+String values used by cursor-sorted fields are limited to 500 characters and cannot contain `U+0000`. Saving an invalid
+value fails with `ArgumentException`. A value longer than 500 characters saved before this limit was enforced can fail
 when the cursor token is created.
 
 Delete an entity by its storage ID:
