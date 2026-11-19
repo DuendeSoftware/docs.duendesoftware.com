@@ -8,8 +8,6 @@ sidebar:
   order: 10
 ---
 
-import Version from "~/components/Version.astro";
-
 Spaces require [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) for their management data and
 isolated storage pools.
 
@@ -100,50 +98,8 @@ await app.Services
 
 ## Create A Space
 
-Use `ISpaceAdmin` from a trusted provisioning or administration path. Query by name before creating the space:
-
-<Version until="8.1">
-
-```csharp
-// Program.cs
-using Duende.Storage.Querying;
-
-var spaces = app.Services.GetRequiredService<ISpaceAdmin>();
-
-var existing = await spaces.QueryAsync(
-    QueryRequest.Create<SpaceFilter, SpaceSortField>(
-        new SpaceFilter { Name = "Acme" }),
-    CancellationToken.None);
-
-if (!existing.Items.Any(space =>
-    string.Equals(space.Name, "Acme", StringComparison.Ordinal)))
-{
-    var result = await spaces.CreateAsync(
-        new CreateSpaceConfiguration
-        {
-            Name = "Acme",
-            MatchPatterns =
-            [
-                new SpaceMatchPattern
-                {
-                    Origin = "https://login.example.com",
-                    Path = "/acme"
-                }
-            ]
-        },
-        CancellationToken.None);
-
-    if (!result.IsSuccess)
-    {
-        throw new InvalidOperationException(
-            $"Could not create the Acme space: {result.Errors}");
-    }
-}
-```
-
-</Version>
-
-<Version since="8.1">
+Use `ISpaceAdmin` from a trusted provisioning or administration path. This `8.1.0-preview.7` example queries by name
+before creating the space:
 
 ```csharp
 // Program.cs
@@ -182,7 +138,8 @@ if (!existing.Results.Any(space =>
 }
 ```
 
-</Version>
+If you're using `8.1.0-preview.6`, import `Duende.Storage.Querying` instead of
+`Duende.IdentityServer.Models` and read the matching spaces from `existing.Items` rather than `existing.Results`.
 
 `ISpaceAdmin.QueryAsync` uses the same cursor paging as Duende Storage. To page backwards, follow the returned
 `PreviousToken` with the same sort. Do not reverse the sort or the rows; a cursor is bound to the query's sort order.
