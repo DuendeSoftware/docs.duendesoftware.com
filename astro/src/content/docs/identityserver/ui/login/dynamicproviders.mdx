@@ -1,7 +1,7 @@
 ---
 title: "Dynamic Providers"
 description: "Configure external authentication providers from a dynamic store at runtime without performance penalties or application recompilation in IdentityServer."
-date: 2026-09-01
+date: 2026-11-18
 sidebar:
   label: Dynamic Providers
   order: 65
@@ -10,6 +10,8 @@ redirect_from:
   - /identityserver/v6/ui/login/dynamicproviders/
   - /identityserver/v7/ui/login/dynamicproviders/
 ---
+
+import Version from "~/components/Version.astro";
 
 Dynamic Identity Providers are a scalable solution for managing authentication with lots of external providers, without
 incurring performance penalties or requiring application recompilation. This feature enables providers to be configured dynamically from a store at runtime.
@@ -58,6 +60,33 @@ The identity provider store only provides an interface to query dynamic provider
 implementations need a separate mechanism for adding, updating or deleting them. Duende Storage includes an
 [`IIdentityProviderAdmin`](/identityserver/data/providers/duende-storage/admin-apis.md#dynamic-identity-provider)
 implementation for those operations.
+
+<Version since="8.1">
+
+### Dynamic Providers With Spaces (IdentityServer 8.1 and later)
+
+:::caution[IdentityServer 8.1 preview]
+This partitioning is available in the 8.1 preview, not IdentityServer 8.0. It is subject to change before general release.
+:::
+
+When Spaces is enabled, IdentityServer keeps dynamic provider options and change tracking in a separate in-process
+cache partition for each space. Two spaces can use the same provider scheme with different settings, and a challenge
+uses the configuration for the current space. Scheme names remain unchanged.
+
+Provider changes made through the store take effect without restarting the host. A framework options reload evicts the
+named provider from every space.
+
+With Spaces, register custom dynamic provider types through `AddDynamicProvider`, rather than calling
+`DynamicProviders.AddProviderType` alone. Keep the `IOptionsMonitorCache<TOptions>` registered by IdentityServer.
+Replacing it causes Spaces options validation to fail with an `OptionsValidationException` that identifies the
+provider options type. An external replacement cannot pass this validation, even if it partitions options by space.
+
+Space-partitioned options do not change ASP.NET Core's per-request authentication-handler cache. If a handler for a
+scheme has already been created during a request, ASP.NET Core reuses it by scheme name with the options it was created
+with. Changing the current space later in that same request does not switch the existing handler to the other space's
+provider configuration.
+
+</Version>
 
 ## OIDC Providers
 

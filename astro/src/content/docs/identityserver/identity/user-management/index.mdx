@@ -44,7 +44,7 @@ User Management supports the authentication methods that modern applications nee
 * **Opinionated Defaults**: Sensible, security-oriented defaults that reduce the surface area for misconfiguration without sacrificing extensibility.
 
 <Version since="8.1">
-* **SCIM Provisioning**: An experimental SCIM 2.0 service provider for provisioning users and groups from an external identity provider.
+* **SCIM Provisioning (8.1 preview)**: A SCIM 2.0 service provider for provisioning users and groups from an external identity provider.
 </Version>
 
 ## When to use User Management
@@ -63,11 +63,20 @@ User Management is a good fit when you need:
     title="GitHub Repository"
     description="View the source code for this library on GitHub."
   />
-  <LinkCard
-    href="https://www.nuget.org/packages/Duende.UserManagement.IdentityServer8"
-    title="NuGet Package"
-    description="View the package on NuGet.org."
-  />
+  <Version until="8.1" inline>
+    <LinkCard
+      href="https://www.nuget.org/packages/Duende.UserManagement.IdentityServer8"
+      title="NuGet Package"
+      description="View the User Management integration package on NuGet.org."
+    />
+  </Version>
+  <Version since="8.1" inline>
+    <LinkCard
+      href="https://www.nuget.org/packages/Duende.IdentityServer"
+      title="Duende IdentityServer"
+      description="Includes User Management and Spaces from IdentityServer 8.1.0-preview.7 onward."
+    />
+  </Version>
 </CardGrid>
 
 ## Licensing
@@ -86,7 +95,7 @@ See the [glossary](/general/glossary.mdx) for definitions of terms used througho
   <LinkCard title="IdentityServer Integration" href="/identityserver/identity/user-management/identityserver-integration" description="Add User Management to an existing or new IdentityServer deployment." />
   <LinkCard title="Authentication Flows" href="/identityserver/identity/user-management/authentication/overview" description="Compare OTP, TOTP, passkeys, passwords, external providers, and recovery codes." />
   <Version since="8.1" inline>
-    <LinkCard title="SCIM Provisioning" href="/identityserver/identity/user-management/scim" description="Enable and secure the experimental SCIM 2.0 service provider for user and group provisioning." />
+    <LinkCard title="SCIM Provisioning" href="/identityserver/identity/user-management/scim" description="Enable and secure the SCIM 2.0 service provider for user and group provisioning." />
   </Version>
   <LinkCard title="Configuration Reference" href="/identityserver/identity/user-management/reference/configuration" description="All configuration options for authentication, profiles, and membership modules." />
   <LinkCard title="Sample Application" href="/identityserver/samples/usermanagement" description="A complete sample showing OTP, passwords, passkeys, external login, profile management, and ASP.NET Identity migration." />

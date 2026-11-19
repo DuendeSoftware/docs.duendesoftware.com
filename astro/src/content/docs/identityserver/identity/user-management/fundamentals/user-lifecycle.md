@@ -1,7 +1,7 @@
 ---
 title: User Management Operations
 description: Programmatic interfaces for managing user accounts in Duende User Management, including IUserSelfService, IUserAdmin, UserAuthenticators, and value objects.
-date: 2026-04-29
+date: 2026-11-18
 sidebar:
   label: User Management Operations
   order: 6
@@ -123,6 +123,15 @@ if (authenticators is not null)
 ## Value Objects
 
 User Management uses strongly-typed value objects for all identifiers. These types prevent mixing up different kinds of identifiers at compile time and enforce format constraints at parse time.
+
+:::caution[Unreleased: scalar value object compliance work]
+Open [products-private#3542](https://github.com/DuendeSoftware/products-private/issues/3542) proposes bringing public
+User Management scalar value objects into compliance with the scalar value object specification and migrating them
+to generated implementations. The issue's implementation notes include rejecting unpaired surrogates through the
+validation result rather than allowing normalization to throw, and making numeric-backed type converters accept
+native numeric inputs with range and truncation checks. This work is not implemented; do not rely on these proposed
+factory or conversion behaviors until they are verified against the merged change and published package.
+:::
 
 ### `UserSubjectId`
 

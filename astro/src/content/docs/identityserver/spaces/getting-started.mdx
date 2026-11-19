@@ -1,16 +1,19 @@
 ---
 title: "Getting Started With Spaces"
-description: "Step-by-step guide to installing Duende.Spaces, configuring space resolution by origin or path and creating your first IdentityServer space"
-date: 2026-11-02
+description: "Step-by-step guide to installing IdentityServer and Storage with Spaces, configuring space resolution by origin or path, and creating your first space"
+date: 2026-11-18
+preview: true
 sidebar:
   label: "Getting Started"
   order: 10
 ---
 
+import Version from "~/components/Version.astro";
+
 Spaces require [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) for their management data and
 isolated storage pools.
 
-## Install Duende.Spaces Packages
+## Install IdentityServer And Storage
 
 This example uses SQLite:
 
@@ -18,10 +21,10 @@ This example uses SQLite:
 # Terminal
 dotnet add package Duende.IdentityServer --prerelease
 dotnet add package Duende.Storage.Sqlite --prerelease
-dotnet add package Duende.Spaces --prerelease
 ```
 
-See the [Duende.Spaces](https://www.nuget.org/packages/Duende.Spaces) NuGet Gallery page for package versions.
+Spaces is included in `Duende.IdentityServer` starting with `8.1.0-preview.7`. For `8.1.0-preview.6` and earlier,
+install the separate [Duende.Spaces package](https://www.nuget.org/packages/Duende.Spaces) as well.
 
 ## Add a Connection String
 
@@ -99,6 +102,8 @@ await app.Services
 
 Use `ISpaceAdmin` from a trusted provisioning or administration path. Query by name before creating the space:
 
+<Version until="8.1">
+
 ```csharp
 // Program.cs
 using Duende.Storage.Querying;
@@ -135,6 +140,52 @@ if (!existing.Items.Any(space =>
     }
 }
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+// Program.cs
+using Duende.IdentityServer.Models;
+
+var spaces = app.Services.GetRequiredService<ISpaceAdmin>();
+
+var existing = await spaces.QueryAsync(
+    QueryRequest.Create<SpaceFilter, SpaceSortField>(
+        new SpaceFilter { Name = "Acme" }),
+    CancellationToken.None);
+
+if (!existing.Results.Any(space =>
+    string.Equals(space.Name, "Acme", StringComparison.Ordinal)))
+{
+    var result = await spaces.CreateAsync(
+        new CreateSpaceConfiguration
+        {
+            Name = "Acme",
+            MatchPatterns =
+            [
+                new SpaceMatchPattern
+                {
+                    Origin = "https://login.example.com",
+                    Path = "/acme"
+                }
+            ]
+        },
+        CancellationToken.None);
+
+    if (!result.IsSuccess)
+    {
+        throw new InvalidOperationException(
+            $"Could not create the Acme space: {result.Errors}");
+    }
+}
+```
+
+</Version>
+
+`ISpaceAdmin.QueryAsync` uses the same cursor paging as Duende Storage. To page backwards, follow the returned
+`PreviousToken` with the same sort. Do not reverse the sort or the rows; a cursor is bound to the query's sort order.
 
 The `Acme` space created in this example requires both the origin and path to match. A request to
 `https://login.example.com/t/acme/.well-known/openid-configuration` resolves to the Acme pool.

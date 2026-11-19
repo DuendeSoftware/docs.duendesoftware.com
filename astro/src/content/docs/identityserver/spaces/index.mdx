@@ -1,7 +1,7 @@
 ---
 title: "IdentityServer Spaces"
 description: "Run multiple isolated IdentityServer security domains in a single deployment using Spaces with per-tenant configuration and operational data"
-date: 2026-11-10
+date: 2026-11-18
 sidebar:
   label: "Overview"
   order: 1
@@ -37,6 +37,14 @@ flowchart LR
     definitionA --> pool1["Data pool 1"]
     definitionB --> pool2["Data pool 2"]
 ```
+
+### In-Memory Operational Stores
+
+When Spaces is registered through `AddSpaces()` and you don't call `AddOperationalStorage()`, the built-in in-memory
+operational stores also keep separate data per space. This includes grants, device-flow codes, pushed authorization
+requests, server-side sessions, and SAML sign-in and logout state. A request without a resolved space uses the Default
+space's partition. The [in-memory store guide](/identityserver/data/providers/in-memory.mdx#in-memory-operational-stores-with-spaces-identityserver-81-and-later)
+covers constructor and cleanup limitations.
 
 Use `ISpaceAdmin` from a protected administration path to create spaces or change their pool assignments. Moving a space
 to another pool changes which data it sees, so authorize and audit these operations as changes to a security boundary.
@@ -246,6 +254,13 @@ For example, sharing signing credentials reduces cryptographic separation betwee
 the issuer, audience and other constraints, but each space should use deliberately scoped credentials when your security
 model requires independent trust boundaries. IdentityServer protects its own signing keys through the unpartitioned
 Data Protection provider, so they remain valid across every space even when `PartitionDataProtection` is enabled.
+:::
+
+:::caution[Draft for a future preview: Spaces replacement points]
+The current Spaces API still exposes several public services that can be replaced through dependency injection. An
+unmerged proposal in [products-private#4768](https://github.com/DuendeSoftware/products-private/issues/4768) would make
+`ISpaceStore` the only supported replacement point. Until that change is merged and released, do not treat this proposal
+as current behavior or remove existing registrations based on it.
 :::
 
 To inject the Spaces cache into an application service, use its service key:

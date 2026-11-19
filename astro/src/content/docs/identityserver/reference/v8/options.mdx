@@ -1,6 +1,7 @@
 ---
 title: "IdentityServer Options"
 description: "Configuration options reference for Duende IdentityServer v8, covering keys, endpoints, authentication, events, logging, CORS, CSP, sessions, and mTLS."
+date: 2026-11-18
 sidebar:
   label: Options
   order: 10
@@ -12,6 +13,8 @@ redirect_from:
   - /identityserver/reference/options/
   - /identityserver/reference/
 ---
+
+import Version from "~/components/Version.astro";
 
 #### Duende.IdentityServer.Configuration.IdentityServerOptions
 
@@ -200,6 +203,16 @@ must decide whether to continue using it or replace it with a new certificate.
   Delay used when re-loading from the store when the initialization period. It allows
   other servers more time to write new keys so other servers can include them.
   Defaults to 5 seconds.
+
+<Version since="8.1">
+
+* **`KeyCreationLockTimeout`**
+
+  **8.1 preview.** Maximum time to wait for the signing-key creation lock. Defaults to 60 seconds and
+  must be greater than zero. If the lock is not acquired in time, IdentityServer checks the store again and uses an
+  existing usable key if available. If there is no usable key, key retrieval fails.
+
+</Version>
 
 - **`InitializationKeyCacheDuration`**
 
@@ -631,9 +644,25 @@ Caching settings for the stores. Available on the `Caching` property of the `Ide
 
   Cache duration of identity provider configuration loaded from the identity provider store. Defaults to 60 minutes.
 
-- **`CacheLockTimeout`** *(obsolete)*
+<Version until="8.1">
 
-  The timeout for concurrency locking in `KeyManager` for key-management operations. This property is no longer used by configuration-store caching (`HybridCache` provides built-in stampede protection). Defaults to 60 seconds.
+* **`CacheLockTimeout`** *(obsolete)*
+
+  In IdentityServer 8.0, this is the timeout for key-management locking and defaults to 60 seconds. It has no effect
+  on configuration-store caching, because `HybridCache` provides stampede protection.
+
+</Version>
+
+<Version since="8.1">
+
+* **`CacheLockTimeout`** *(obsolete)*
+
+  **8.1 preview.** The property remains but is
+  obsolete and has no effect with the default distributed key manager. The compatibility `KeyManager` still reads it
+  when a host explicitly uses that legacy implementation. Use `KeyManagement.KeyCreationLockTimeout` with the default
+  IdentityServer 8.1 key manager.
+
+</Version>
 
 ## CORS
 
@@ -787,6 +816,25 @@ Settings for [server-side sessions](/identityserver/ui/server-side-sessions/inde
   The background session cleanup job runs at a configured interval. If multiple nodes run the cleanup
   job at the same time update conflicts might occur in the store. To reduce the propability of that happening, the startup time can be fuzzed. The first run is scheduled at a random time between the host startup and the configured RemoveExpiredSessionsFrequency. Subsequent runs are run on the configured RemoveExpiredSessionsFrequency.
   Defaults to `true`.
+
+<Version since="8.1">
+
+## Background Job Leases
+
+**8.1 preview.** `BackgroundJobLeaseOptions` is exposed through the `Lease` property on `OutboxProcessorOptions`,
+`StoragePurgeOptions`, and `ServerSideSessionOptions`. These settings coordinate jobs across nodes only when Duende
+Storage's default instance or Spaces is registered. Without either, the options have no effect.
+
+* **`LeaseDuration`**: Defaults to three times the job's run interval, clamped to 30 seconds through 5 minutes. A
+  crashed node can block takeover for up to this duration.
+* **`RenewalInterval`**: Defaults to one third of `LeaseDuration`.
+* **`CancelBeforeExpiry`**: Defaults to the greater of one tenth of `LeaseDuration` and 5 seconds. It must exceed the
+  clock skew between nodes; IdentityServer does not validate the cluster's clock skew.
+
+Invalid combinations are clamped automatically and logged once as a warning. Outbox delivery remains at-least-once;
+retry counts reset when another node takes over the lease.
+
+</Version>
 
 ## Validation
 

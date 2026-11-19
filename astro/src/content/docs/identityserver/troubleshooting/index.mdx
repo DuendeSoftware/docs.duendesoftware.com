@@ -3,6 +3,7 @@ title: Duende IdentityServer Troubleshooting
 sidebar:
   label: Overview
   order: 15
+date: 2026-11-18
 redirect_from:
   - /mim/
   - /identityserver/v5/troubleshooting/
@@ -37,6 +38,30 @@ IdentityModelEventSource.ShowPII = true;
 
 We recommend to always set this flag to true in any development and test environment that does not contain real personal
 data.
+
+<Version since="8.1">
+
+## Duende Storage Reports A Missing Table
+
+:::caution[IdentityServer 8.1 preview]
+This diagnostic describes the Duende Storage integration in the 8.1 preview, not IdentityServer 8.0.
+:::
+
+When a Duende Storage operation reaches a database where the Storage schema is missing, IdentityServer reports an
+`InvalidOperationException` with a message similar to:
+
+```text
+The database reports that a Duende Storage table does not exist. The Storage schema may not have been created yet, or the connection string or SchemaName may point to another database or schema. To create the schema, run 'duende storage migrate' or call IStorageInstanceSchema.MigrateAsync.
+```
+
+The provider error is preserved as the inner exception. Check that the connection string and schema name point to the
+intended database, then create or upgrade the schema with
+[`duende storage migrate`](/identityserver/data/providers/duende-storage/duende-cli.md#storage-migrate). This error is
+reported when an operation needs the missing table; it is not a startup schema check. To check for missing tables or
+other structural drift before traffic reaches the application, run
+[`duende storage verify`](/identityserver/data/providers/duende-storage/duende-cli.md#storage-verify).
+
+</Version>
 
 <Version since="7.3">
 

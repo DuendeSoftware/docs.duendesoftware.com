@@ -1,5 +1,6 @@
 ---
 title: Diagnostics Data
+date: 2026-11-18
 sidebar:
   label: Diagnostics Data
   order: 16
@@ -47,6 +48,22 @@ The diagnostics data contains the following information:
   * Identity resources
   * API resources
   * API scopes
+
+:::caution[Unreleased: User Management, Spaces, and Storage summaries]
+Open [products-private#4118](https://github.com/DuendeSoftware/products-private/issues/4118) proposes adding these
+sections. They are not available in the current diagnostic summary. Verify the contents against the merged
+implementation before treating this draft as product behavior.
+
+* **User Management**: features used, the user count recorded for license usage, authentication and SCIM settings, and
+  which supported services have custom implementations.
+* **Spaces**: whether Spaces is used, the active-space count recorded for license usage, relevant Spaces settings, and
+  whether `ISpaceStore` is replaced.
+* **Storage**: each configured instance's ID, engine, and mapped data categories.
+
+The proposal excludes user names, email addresses, profile values, space names, connection strings, secrets, one-time
+code delivery settings, and SCIM OAuth settings. A section that fails to collect data should log its failure without
+preventing the rest of the summary.
+:::
 
 Diagnostics data [is formatted as JSON](#diagnostics-data-format).
 

@@ -1,7 +1,7 @@
 ---
 title: Getting Started with User Management
 description: Build a complete OTP (one-time password) login flow from scratch using Duende User Management with IdentityServer as the foundation.
-date: 2026-10-21
+date: 2026-11-18
 sidebar:
   label: Getting Started
   order: 2
@@ -28,6 +28,7 @@ This guide uses a file-based SQLite database for simplicity. SQLite is suitable 
 For production, switch to PostgreSQL or SQL Server. See the [Storage documentation](/identityserver/identity/user-management/fundamentals/storage.mdx) for details.
 </Version>
 <Version since="8.1">
+This version of the guide targets the IdentityServer 8.1 preview, not the current stable 8.0 release.
 This guide uses a file-based SQLite database for simplicity. SQLite is suitable for local development and testing, but production deployments need a different database.
 For production setup of each provider, see [Databases](/identityserver/data/providers/duende-storage/databases/index.mdx).
 </Version>
@@ -70,13 +71,23 @@ dotnet add package Duende.Storage.Sqlite
 
 ```bash title="Terminal"
 dotnet add package Duende.IdentityServer --prerelease
-dotnet add package Duende.UserManagement.IdentityServer8 --prerelease
 dotnet add package Duende.Storage.Sqlite --prerelease
 ```
 
 </Version>
 
-`Duende.IdentityServer` is the core IdentityServer package. `Duende.UserManagement.IdentityServer8` adds the User Management integration on top of it. The storage package provides the backing store for user data.
+For IdentityServer `8.1.0-preview.7` and later, User Management is included in `Duende.IdentityServer`. Earlier 8.1
+previews require the separate `Duende.UserManagement.IdentityServer8` package. The storage package provides the
+backing store for user data.
+
+<Version since="8.1">
+
+:::note[Earlier 8.1 previews]
+For `8.1.0-preview.6` and earlier, add `Duende.UserManagement.IdentityServer8 --prerelease` as a separate package.
+The package merge is included in preview.7 and later.
+:::
+
+</Version>
 
 <Version until="8.1">
 Three storage adapters are available:

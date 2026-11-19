@@ -1,7 +1,7 @@
 ---
 title: "Licensing"
 description: "Details about Duende IdentityServer and BFF licensing requirements, editions, configuration options, and trial mode functionality."
-date: 2026-11-10
+date: 2026-11-18
 sidebar:
   order: 1
 tableOfContents:
@@ -168,6 +168,20 @@ environment, a warning is logged instead and startup continues.
 The SAML Service Provider is different: if a configured license lacks the SAML Service Provider entitlement,
 IdentityServer logs a warning when a SAML Service Provider endpoint is requested, and the endpoint returns
 `404 Not Found`. This applies to both statically and dynamically configured providers and does not stop the application.
+
+### Spaces Capacity
+
+:::caution[IdentityServer 8.1 preview]
+Spaces is a preview feature, not part of IdentityServer 8.0. The capacity behavior below describes the 8.1 preview
+and is subject to change before general release.
+:::
+
+For IdentityServer 8.1 and later, the license's Spaces limit counts active, non-deleted spaces. The implicit Default
+space and soft-deleted spaces do not count. Undeleting a space makes it count again.
+
+Going over the licensed count logs a warning; it does not prevent an administrator from creating or undeleting a space.
+This count limit is separate from the Spaces entitlement check. A host without the entitlement can still fail startup or
+reject a Spaces operation as described above.
 
 :::note
 When developing, you may use your production license key in _any_

@@ -54,9 +54,9 @@ Duende Storage separates two kinds of schema change:
 
 `IStorageInstanceSchema` gives you those migration operations for a storage instance:
 
-* `MigrateAsync()` creates the schema if it doesn't exist, upgrades it if it's behind, or does nothing if it's
-  already current. It then calls `VerifySchemaAsync` and throws an `InvalidOperationException` if verification finds
-  errors.
+* `MigrateAsync()` creates the schema if it doesn't exist, upgrades it if it's behind, or skips migration work if it's
+  already current. It verifies the schema structure in all cases and throws an `InvalidOperationException` if
+  verification finds errors, including when an already-current schema has drifted.
 * `CheckVersionAsync()` returns a `CheckSchemaVersionResult` with `CurrentVersion`, `RequiredVersion` and
   `IsCompatible`, so you can fail fast before `MigrateAsync` instead of
   discovering a mismatch at request time:
@@ -85,6 +85,8 @@ Duende Storage separates two kinds of schema change:
     the schema.
 * `VerifySchemaAsync()` checks that every table, index and other object the current schema version expects is
   present, without changing anything.
+  For a deployment-time check, use [`duende storage verify`](/identityserver/data/providers/duende-storage/duende-cli.md#storage-verify),
+  which also detects structural drift when the stored version number is already current.
 * `BuildMigrationScript(DatabaseSchemaVersion fromVersion)` returns the SQL for the given starting version without
   opening a database connection. Pass `DatabaseSchemaVersion.Zero` for the full script from an empty database.
 
