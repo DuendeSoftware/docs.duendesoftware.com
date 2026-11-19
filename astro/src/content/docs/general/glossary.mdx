@@ -421,17 +421,22 @@ See [deployment](#deployment).
 
 ### Logical Host
 
-The license agreement's term for one IdentityServer installation running as a single system. Each logical host is one
-[deployment](#deployment).
+The license agreement's term for one IdentityServer installation running as a single system. Each logical host that
+handles production traffic is one [deployment](#deployment).
+
+### Authority
+
+An identity provider run by IdentityServer, identified by its issuer (`iss`) value or, for SAML, its entity ID. The same
+authority offered over more than one protocol counts once. See [Multi-Issuer](#multi-issuer).
 
 ### Deployment
 
 A deployment is one IdentityServer with its own [configuration data](/identityserver/data/configuration.mdx),
-[operational data](/identityserver/data/operational.mdx), users, and set of authorities. Adding servers, regions, or
+[operational data](/identityserver/data/operational.mdx), and set of [authorities](#authority). Adding servers, regions, or
 URLs doesn't add deployments.
 
 * One IdentityServer on several servers or in several data centers, sharing the same data: **one deployment**.
-* Two IdentityServers that each have their own configuration data and their own users: **two deployments**, even
+* Two IdentityServers that each have their own configuration data: **two deployments**, even
   if they sit behind a single URL.
 * One IdentityServer serving many [spaces](#space): **one deployment**.
 * Development, test, and staging environments that don't handle production traffic: **not a deployment**.
@@ -462,7 +467,7 @@ includes two capabilities:
   with Duende User Management; custom user stores must be made space-aware explicitly.
 * **[Multi-issuer](#multi-issuer)**, which lets one IdentityServer use more than one issuer (`iss`) value.
 
-Neither adds deployments by itself.
+Neither adds deployments by itself. Without the add-on, each deployment can serve one authority.
 
 <LinkCard
   description="Learn more about IdentityServer Spaces"
