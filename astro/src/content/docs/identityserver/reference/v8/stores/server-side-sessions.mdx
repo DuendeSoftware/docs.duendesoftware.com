@@ -10,10 +10,16 @@ redirect_from:
   - /identityserver/reference/stores/server-side-sessions/
 ---
 
+import Version from "~/components/Version.astro";
+
 #### Duende.IdentityServer.Stores.IServerSideSessionStore
 
 Used to persist users' authentication session data when using
 the [server-side sessions feature](/identityserver/ui/server-side-sessions/index.mdx).
+
+The interface is the same in IdentityServer 8.0 and 8.1 except for `UpdateSessionAsync`:
+
+<Version until="8.1">
 
 ```csharp
 /// <summary>
@@ -32,7 +38,7 @@ public interface IServerSideSessionStore
     Task CreateSessionAsync(ServerSideSession session, CancellationToken ct);
 
     /// <summary>
-    /// Updates a session
+    /// Updates a session.
     /// </summary>
     Task UpdateSessionAsync(ServerSideSession session, CancellationToken ct);
 
@@ -62,6 +68,39 @@ public interface IServerSideSessionStore
     Task<QueryResult<ServerSideSession>> QuerySessionsAsync(CancellationToken ct, SessionQuery? filter = null);
 }
 ```
+
+In IdentityServer 8.0, the method returns `Task` and does not report whether a concurrent update was rejected.
+
+</Version>
+
+<Version since="8.1">
+
+:::caution[IdentityServer 8.1 preview contract]
+The 8.1 contract below is available in preview.7 and is subject to change before general release.
+IdentityServer 8.0 uses the `Task` return type instead.
+:::
+
+```csharp
+/// <summary>
+/// User session store
+/// </summary>
+public interface IServerSideSessionStore
+{
+    Task<ServerSideSession?> GetSessionAsync(string key, CancellationToken ct);
+    Task CreateSessionAsync(ServerSideSession session, CancellationToken ct);
+    Task<bool> UpdateSessionAsync(ServerSideSession session, CancellationToken ct);
+    Task DeleteSessionAsync(string key, CancellationToken ct);
+    Task<IReadOnlyCollection<ServerSideSession>> GetSessionsAsync(SessionFilter filter, CancellationToken ct);
+    Task DeleteSessionsAsync(SessionFilter filter, CancellationToken ct);
+    Task<IReadOnlyCollection<ServerSideSession>> GetAndRemoveExpiredSessionsAsync(int count, CancellationToken ct);
+    Task<QueryResult<ServerSideSession>> QuerySessionsAsync(CancellationToken ct, SessionQuery? filter = null);
+}
+```
+
+In IdentityServer 8.1, `UpdateSessionAsync` returns `true` when it saves the session and `false` when the version
+changed or the session was removed after it was read.
+
+</Version>
 
 #### ServerSideSession
 
@@ -122,6 +161,37 @@ public class ServerSideSession
 The `Ticket` property contains a copy of all the values (and more) and is considered authoritative by IdentityServer,
 thus most of the other property values are considered informational and read-only.
 :::
+
+<Version since="8.1">
+
+IdentityServer 8.1 adds the `Version` property. The store increments it when an update is saved:
+
+```csharp
+public int Version { get; set; }
+```
+
+</Version>
+
+<Version since="8.1">
+
+#### Concurrent Updates In IdentityServer 8.1
+
+In IdentityServer 8.1, compare `session.Version` with the stored version atomically. When they match, save the update,
+increment the stored version, and return `true`. If the version changed or the session was removed after it was read,
+do not write or recreate the session; return `false`.
+
+A `Version` of `0` skips the concurrency check. Query results can also carry `Version` 0, so zero does not indicate
+whether the session was read from the store.
+
+The Entity Framework operational store migration adds a non-null `Version` integer column to `ServerSideSessions`,
+with a default value of `1`.
+
+When a browser request's session-changing write is refused, the request fails with HTTP 500. A cookie renewal that
+only moves the session dates is skipped and succeeds. If a token call's session extension is refused, the token call
+still succeeds but that extension is skipped; a later token call tries again. These behaviors prevent a stale write
+from overwriting a newer session.
+
+</Version>
 
 #### SessionFilter
 
@@ -192,8 +262,7 @@ public class SessionQuery
 public class QueryResult<T>
 {
     /// <summary>
-    /// The token that indicates these results. This is used for more results in subsequent queries.
-    /// If null, then there were no more results.
+    /// The token used to request subsequent results. Check HasNextResults to determine whether another page exists.
     /// </summary>
     public string ResultsToken { get; init; }
 
@@ -228,3 +297,13 @@ public class QueryResult<T>
     public IReadOnlyCollection<T> Results { get; init; } = default!;
 }
 ```
+
+<Version since="8.1">
+
+IdentityServer 8.1 adds `PreviousToken`:
+
+```csharp
+public string? PreviousToken { get; init; }
+```
+
+</Version>

@@ -15,6 +15,10 @@ changes. Some updates contain changes to the stores used by IdentityServer that 
 schema updates. If you are using our Entity Framework based stores we recommend using Entity Framework
 Migrations.
 
+## Upgrading to v8.1 (Preview)
+
+* [**IdentityServer v8.0 to v8.1 (preview)**](/identityserver/upgrades/v8_0-to-v8_1.md)
+
 ## Upgrading to v8.0
 
 * [**IdentityServer v7.4 to v8.0**](/identityserver/upgrades/v7_4-to-v8_0.md)
