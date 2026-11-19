@@ -64,7 +64,7 @@ Legacy customers need a [compatible license key](/general/licensing.md#new-licen
 ### Configuration
 
 Automatic Key Management is configured by the options in the `KeyManagement`
-property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.md#key-management).
+property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.mdx#key-management).
 
 ### Managed Key Lifecycle
 
@@ -384,7 +384,7 @@ When you take this approach, keep in mind:
 
 The automatic key management feature can be disabled by setting the `Enabled`
 flag to `false` on the `KeyManagement` property of
-[`IdentityServerOptions`](/identityserver/reference/v8/options.md#key-management):
+[`IdentityServerOptions`](/identityserver/reference/v8/options.mdx#key-management):
 
 ```csharp
 // Program.cs
@@ -638,7 +638,7 @@ If you suspect a signing key has been exposed, rotate immediately rather than wa
    this deliberately skips.
    * With automatic key management, delete the compromised key from the key store. Don't just retire it: retired keys
      stay published in discovery for `RetentionDuration`. Each instance also caches keys from the store for
-     `KeyManagement.KeyCacheDuration` (see [Key Management options](/identityserver/reference/v8/options.md#key-management)),
+     `KeyManagement.KeyCacheDuration` (see [Key Management options](/identityserver/reference/v8/options.mdx#key-management)),
      so restart every instance after deleting the key rather than waiting for the cache to expire.
    * With static keys, remove the compromised key from `AddSigningCredential` and from any `AddValidationKey`
      registration, then redeploy every instance.

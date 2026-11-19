@@ -51,7 +51,7 @@ Two properties on `AttributeDefinition` control how an attribute is placed withi
 * `AttributeGroupCode? GroupCode`: The group this attribute belongs to. `null` means the attribute is ungrouped and appears outside any group section.
 * `int Order`: Sort weight controlling the display position of this attribute within its group (or among ungrouped attributes). Lower values appear first.
 
-These properties are set when constructing an `AttributeDefinition`. To change them, build a new `SchemaConfiguration` (or modify one read via `ISchemaAdmin`) with the updated definitions — there is no dedicated reorder operation. See [Schema management](/identityserver/identity/user-management/fundamentals/profiles.md#schema-management) for the `Extend` and get-modify-save patterns.
+These properties are set when constructing an `AttributeDefinition`. To change them, build a new `SchemaConfiguration` (or modify one read via `ISchemaAdmin`) with the updated definitions — there is no dedicated reorder operation. See [Schema management](/identityserver/identity/user-management/fundamentals/profiles.mdx#schema-management) for the `Extend` and get-modify-save patterns.
 
 ## Managing Groups
 
@@ -64,7 +64,7 @@ Groups are part of the `SchemaConfiguration.Groups` collection, alongside `Attri
 
 The following example extends the built-in user profile with a `work-info` group and two new attributes assigned to it, in a chosen order.
 
-The example adds new attributes rather than grouping existing ones: the built-in profile already defines `email`, `name`, `given_name` and `family_name`, and `Extend(...)` throws an `InvalidOperationException` if an attribute code already exists in the schema. To put built-in attributes in a group, register a full replacement schema instead (see [Profiles](/identityserver/identity/user-management/fundamentals/profiles.md)).
+The example adds new attributes rather than grouping existing ones: the built-in profile already defines `email`, `name`, `given_name` and `family_name`, and `Extend(...)` throws an `InvalidOperationException` if an attribute code already exists in the schema. To put built-in attributes in a group, register a full replacement schema instead (see [Profiles](/identityserver/identity/user-management/fundamentals/profiles.mdx)).
 
 ```csharp
 // attribute-groups-setup.cs

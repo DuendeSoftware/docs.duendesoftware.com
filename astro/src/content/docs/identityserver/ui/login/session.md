@@ -81,7 +81,7 @@ Duende IdentityServer registers a cookie authentication handler by default for t
 The scheme that the handler in the authentication system is identified by is from the constant
 `IdentityServerConstants.DefaultCookieAuthenticationScheme`.
 
-When configuring IdentityServer, the [AuthenticationOptions](/identityserver/reference/v8/options.md#authentication) expose
+When configuring IdentityServer, the [AuthenticationOptions](/identityserver/reference/v8/options.mdx#authentication) expose
 some settings to control the cookie (e.g. expiration and sliding). For example:
 
 ```csharp
@@ -102,7 +102,7 @@ It is kept in sync with the authentication cookie, and is removed when the user 
 
 If you require more control over the cookie authentication handler you can register your own cookie handler.
 You can then configure IdentityServer to use your cookie handler by setting the `CookieAuthenticationScheme` on
-the [AuthenticationOptions](/identityserver/reference/v8/options.md#authentication). For example:
+the [AuthenticationOptions](/identityserver/reference/v8/options.mdx#authentication). For example:
 
 ```csharp
 // Program.cs

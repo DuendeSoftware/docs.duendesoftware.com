@@ -63,7 +63,7 @@ Custom dynamic identity provider types use `SchemaId.BuildIdentityProviderId(typ
 Each of `BuiltInSchemas.OidcProvider`, `BuiltInSchemas.SamlProvider`, and `BuiltInSchemas.UserProfile` returns a new, mutable
 `SchemaConfiguration` instance on every access, so you can derive from it without affecting the registered default. For the
 user profile schema, including which attributes it defines by default, see
-[User Profiles — the built-in profile schema](/identityserver/identity/user-management/fundamentals/profiles.md#the-built-in-profile-schema).
+[User Profiles — the built-in profile schema](/identityserver/identity/user-management/fundamentals/profiles.mdx#the-built-in-profile-schema).
 
 ### Extending a Built-in Schema
 
@@ -135,7 +135,7 @@ if (!result.IsSuccess)
 }
 ```
 
-See [Dynamic Providers — SAML Providers](/identityserver/ui/login/dynamicproviders.md#saml-providers).
+See [Dynamic Providers — SAML Providers](/identityserver/ui/login/dynamicproviders.mdx#saml-providers).
 :::
 
 ## Define a Schema

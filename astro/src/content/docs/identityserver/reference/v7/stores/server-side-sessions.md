@@ -12,7 +12,7 @@ pagefind: false
 #### Duende.IdentityServer.Stores.IServerSideSessionStore
 
 Used to persist users' authentication session data when using
-the [server-side sessions feature](/identityserver/ui/server-side-sessions/index.md).
+the [server-side sessions feature](/identityserver/ui/server-side-sessions/index.mdx).
 
 ```csharp
 /// <summary>

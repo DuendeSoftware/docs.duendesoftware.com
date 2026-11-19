@@ -53,7 +53,7 @@ The Standard edition adds additional features that go beyond the core protocol s
 included in the Lite edition. This is a popular license because it adds the most
 commonly needed tools and features outside a basic protocol implementation. Feature
 highlights include resource isolation, the OpenId Connect CIBA flow support,
-and server side sessions. [Automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management)
+and server side sessions. [Automatic key management](/identityserver/fundamentals/key-management.mdx#automatic-key-management)
 is available for the Standard edition as an add-on.
 
 #### Advanced Edition
@@ -100,7 +100,7 @@ is registered under multiple protocols. For example:
 | A machine-to-machine client registered for client credentials                     | 1 per registration, regardless of machine count  |
 | A BFF serving two frontends that each have their own client                       | 2                                                |
 | Clients created through [Dynamic Client Registration](/identityserver/configuration/dcr.mdx) | 1 per distinct registered client |
-| IdentityServer acting as a SAML or OIDC client of external IdPs via [dynamic providers](/identityserver/ui/login/dynamicproviders.md) | Not counted as Connected Applications (covered by the dynamic identity provider licensing) |
+| IdentityServer acting as a SAML or OIDC client of external IdPs via [dynamic providers](/identityserver/ui/login/dynamicproviders.mdx) | Not counted as Connected Applications (covered by the dynamic identity provider licensing) |
 
 :::note[Going beyond your plan limits]
 Many of the limits in your license, such as the number of Connected Applications, can be lifted to unlimited with an add-on.
@@ -150,7 +150,7 @@ required license entitlement, IdentityServer logs a warning (rate-limited to onc
 * [Demonstrating Proof-of-Possession (DPoP)](/identityserver/tokens/pop.mdx)
 * [Resource Isolation](/identityserver/fundamentals/resources/isolation/index.md)
 * [Client Initiated Backchannel Authentication (CIBA)](/identityserver/ui/ciba.md)
-* [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.md)
+* [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.mdx)
 * [Financial-Grade Security and Conformance Report](/identityserver/diagnostics/conformance-report.md)
 * [User Management](/identityserver/identity/user-management/index.mdx)
 
@@ -160,8 +160,8 @@ application does not start. This only applies when the feature is enabled and a 
 have a license configured because you are developing locally, or IdentityServer is deployed to a non-production
 environment, a warning is logged instead and startup continues.
 
-* [Server Side Sessions](/identityserver/ui/server-side-sessions/index.md)
-* [Automatic Key Management](/identityserver/fundamentals/key-management.md)
+* [Server Side Sessions](/identityserver/ui/server-side-sessions/index.mdx)
+* [Automatic Key Management](/identityserver/fundamentals/key-management.mdx)
 * [SAML Identity Provider](/identityserver/saml/index.mdx)
 * [Spaces](/identityserver/spaces/index.mdx) (IdentityServer 8.1 and later)
 
@@ -188,7 +188,7 @@ the feature, IdentityServer logs a warning and the feature is not available:
 * [DPoP](/identityserver/tokens/pop.mdx): token requests that include a DPoP proof fail.
 * [Pushed Authorization Requests (PAR)](/identityserver/tokens/par.md): the PAR endpoint returns `404 Not Found`.
 * [Resource Isolation](/identityserver/fundamentals/resources/isolation/index.md): resource indicators are ignored.
-* [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.md): loading a dynamic provider fails.
+* [Dynamic Identity Providers](/identityserver/ui/login/dynamicproviders.mdx): loading a dynamic provider fails.
 * SAML Service Provider: SAML Service Provider requests return `404 Not Found`.
 
 As with the startup checks, this only applies when a license is present. Without a license, these features keep working

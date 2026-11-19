@@ -68,7 +68,7 @@ is [already implemented](/bff/fundamentals/session/management/back-channel-logou
 Back-channel logout notifications are logout tokens as specified
 by [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html#logouttoken).
 Beginning in v6.3, IdentityServer sets the `typ` header of the logout token to `logout+jwt` to comply with the final
-version of the specification. The [`LogoutTokenJwtType` option](/identityserver/reference/v8/options.md#main) can override
+version of the specification. The [`LogoutTokenJwtType` option](/identityserver/reference/v8/options.mdx#main) can override
 this behavior.
 
 ##### Sending Back-channel Logout Notifications Through A Proxy

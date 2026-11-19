@@ -80,7 +80,7 @@ Also add a [storage provider](/identityserver/identity/user-management/fundament
 
 ### Profile Schema
 
-SCIM User resources require the `userName` attribute, which the default User Management profile schema does not include. Use `DefaultScimUserSchema`, which defines the SCIM core user attributes, or add its attributes to your own [profile schema](/identityserver/identity/user-management/fundamentals/profiles.md):
+SCIM User resources require the `userName` attribute, which the default User Management profile schema does not include. Use `DefaultScimUserSchema`, which defines the SCIM core user attributes, or add its attributes to your own [profile schema](/identityserver/identity/user-management/fundamentals/profiles.mdx):
 
 ```csharp title="Program.cs"
 var profileSchema = new SchemaConfiguration

@@ -330,7 +330,7 @@ services.AddAuthentication()
 
 ### Use Server-side Sessions
 
-You can use [server-side sessions](/identityserver/ui/server-side-sessions/index.md) to store the
+You can use [server-side sessions](/identityserver/ui/server-side-sessions/index.mdx) to store the
 user's session data in a data store instead of in the cookie. This will greatly reduce the size of the cookie while allowing you to store more data in the session.
 
 :::note
@@ -387,7 +387,7 @@ When using the `AddCookie` method to configure the cookie authentication handler
 to resolve a service and its dependencies for `ITicketStore`.
 
 To work around this limitation, you can create a custom `IPostConfigureOptions<CookieAuthenticationOptions>` implementation
-like we did for [Server-Side Sessions](/identityserver/ui/server-side-sessions/index.md), which uses [a shim](https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Configuration/DependencyInjection/PostConfigureApplicationCookieTicketStore.cs) to inject an `IHttpContextAccessor` into the actual `ITicketStore` service.
+like we did for [Server-Side Sessions](/identityserver/ui/server-side-sessions/index.mdx), which uses [a shim](https://github.com/DuendeSoftware/products/blob/main/identity-server/src/IdentityServer/Configuration/DependencyInjection/PostConfigureApplicationCookieTicketStore.cs) to inject an `IHttpContextAccessor` into the actual `ITicketStore` service.
 :::
 
 ## URL and Query String Size Limits and Management
