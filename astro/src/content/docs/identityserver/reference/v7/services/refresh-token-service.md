@@ -62,4 +62,9 @@ could instead add a grace period to allow recovery after network failures or
 could treat this as a replay attack and take steps to notify the user and/or
 revoke their access.
 
+If you use DPoP or mTLS, `AcceptConsumedTokenAsync` runs before IdentityServer
+checks the client's key, so revoking access there can be triggered without that
+key. See [replay detection](/identityserver/tokens/refresh.md#replay-detection)
+for a safer approach.
+
 See also: [Refreshing a token](/identityserver/tokens/refresh.md)
