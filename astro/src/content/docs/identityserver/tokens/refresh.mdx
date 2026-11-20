@@ -195,8 +195,10 @@ behavior that you choose. Depending on your scenario, overriding the `CreateRefr
 
 :::caution[Revoking access with DPoP or mTLS]
 `AcceptConsumedTokenAsync` runs before IdentityServer checks that the request uses the key the refresh token is
-[bound to](/identityserver/tokens/pop/). If you revoke access from this method, anyone with an old refresh token can
-trigger it (even without the client's key) and force the user to sign in again.
+[bound to](/identityserver/tokens/pop.mdx). If you revoke access from this method, a caller who passes any required
+client authentication can trigger revocation with an old refresh token before the token-bound key is checked,
+forcing the user to sign in again. If the token-bound mTLS certificate is also required for client authentication,
+the caller still needs that certificate's private key.
 
 If that's acceptable, revoking from `AcceptConsumedTokenAsync` is fine. To revoke only when the request uses the
 right key, do it in an
