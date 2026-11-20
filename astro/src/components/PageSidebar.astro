@@ -1,7 +1,8 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
-import MobileTableOfContents from '@astrojs/starlight/components/MobileTableOfContents.astro';
-import TableOfContents from '@astrojs/starlight/components/TableOfContents.astro';
+// Use the virtual modules so plugin overrides (starlight-heading-badges) are applied.
+import MobileTableOfContents from 'virtual:starlight/components/MobileTableOfContents';
+import TableOfContents from 'virtual:starlight/components/TableOfContents';
 import contributorsData from '../data/contributors.json';
 
 const { editUrl, toc } = Astro.locals.starlightRoute;
