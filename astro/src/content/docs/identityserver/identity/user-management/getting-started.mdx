@@ -1,7 +1,7 @@
 ---
 title: Getting Started with User Management
 description: Build a complete OTP (one-time password) login flow from scratch using Duende User Management with IdentityServer as the foundation.
-date: 2026-10-21
+date: 2026-11-18
 sidebar:
   label: Getting Started
   order: 2
@@ -70,13 +70,12 @@ dotnet add package Duende.Storage.Sqlite
 
 ```bash title="Terminal"
 dotnet add package Duende.IdentityServer --prerelease
-dotnet add package Duende.UserManagement.IdentityServer8 --prerelease
 dotnet add package Duende.Storage.Sqlite --prerelease
 ```
 
-</Version>
+`Duende.IdentityServer` includes User Management. The storage package provides the backing store for user data.
 
-`Duende.IdentityServer` is the core IdentityServer package. `Duende.UserManagement.IdentityServer8` adds the User Management integration on top of it. The storage package provides the backing store for user data.
+</Version>
 
 <Version until="8.1">
 Three storage adapters are available:

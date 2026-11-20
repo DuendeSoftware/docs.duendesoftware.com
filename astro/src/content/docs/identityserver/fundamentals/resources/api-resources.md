@@ -163,7 +163,7 @@ var invoiceApi = new ApiResource("invoice", "Invoice API")
 ```
 
 :::note
-Make sure that you have configured your IdentityServer for the required signing algorithm. See [here](/identityserver/fundamentals/key-management.md) for more details.
+Make sure that you have configured your IdentityServer for the required signing algorithm. See [here](/identityserver/fundamentals/key-management.mdx) for more details.
 :::
 
 ### Resource Isolation

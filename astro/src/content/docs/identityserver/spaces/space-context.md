@@ -1,7 +1,7 @@
 ---
 title: "Reading And Setting The Current Space"
 description: "Read the current space with ISpaceContextAccessor, set it for work outside a request, and look up spaces with ISpaceStore."
-date: 2026-11-10
+date: 2026-11-18
 sidebar:
   label: "Current Space"
   order: 30

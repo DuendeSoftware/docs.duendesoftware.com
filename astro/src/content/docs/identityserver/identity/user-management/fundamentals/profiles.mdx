@@ -1,13 +1,15 @@
 ---
 title: User Profiles and Attributes
 description: "Store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfServic, IUserProfileAdmin, and the BuiltInSchemas.UserProfile and profile administration APIs."
-date: 2026-05-19
+date: 2026-11-18
 sidebar:
   label: User Profiles and Attributes
   order: 1
 redirect_from:
   - /identityserver/usermanagement/fundamentals/profiles/
 ---
+
+import Version from "~/components/Version.astro";
 
 User Management provides a flexible, schema-driven profile system that lets you attach typed attributes to every user. The design follows an **Entity-Attribute-Value (EAV)** model: instead of extending a base class or adding columns to a table, you define attributes in a schema at runtime and store values against individual user profiles.
 
@@ -848,19 +850,34 @@ public interface IUserProfileAdmin
 }
 ```
 
-Filtering and sorting are not supported for profile queries; only pagination via `Range` is available. Passing a filter or sort field will throw `NotSupportedException`. Use `QueryRequest.Create(new DataRange(...))` to construct the request.
+<Version until="8.1">
 
-* **`QueryAsync(QueryRequest, CancellationToken)`**: Returns a paged list of `UserProfile` records. Use `QueryRequest.Create(new DataRange(offset, limit))` to control pagination.
+Filtering and sorting are not supported for profile queries; only pagination via `Range` is available. Passing a filter or sort field will throw `NotSupportedException`. Use `QueryRequest.Create(DataRange.FromOffset(offset, limit))` to construct the request.
+
+</Version>
+
+<Version since="8.1">
+
+In `8.1.0-preview.7`, use `FilterBy.FromSearchExpression(...)` to filter profile queries and `SortBy.Attribute(...)`
+to sort by a supported profile attribute. Continuation-token paging requires a valid attribute sort; otherwise
+`QueryAsync` throws `NotSupportedException`. The offset-based examples below do not require a sort.
+
+</Version>
+
+* **`QueryAsync(QueryRequest, CancellationToken)`**: Returns a paged list of `UserProfile` records. Use `QueryRequest.Create(DataRange.FromOffset(offset, limit))` to control pagination.
 
 * **`QueryAsync(QueryRequest, HashSet<AttributeCode>, CancellationToken)`**: Returns a paged list of `UserProfileAttributeProjection` records with only the specified attributes. This overload is useful for performance optimization when you only need a subset of attributes. The projection includes `SubjectId` and the requested attributes.
 
 ### Querying All Profiles
 
+<Version until="8.1">
+
 ```csharp
+using Duende.Storage.Pagination;
 using Duende.Storage.Querying;
 using Duende.UserManagement.Profiles;
 
-var request = QueryRequest.Create(new DataRange(0, 50));
+var request = QueryRequest.Create(DataRange.FromOffset(0, 50));
 var result = await userProfileAdmin.QueryAsync(request, ct);
 
 foreach (var profile in result.Items)
@@ -869,10 +886,37 @@ foreach (var profile in result.Items)
 }
 ```
 
+</Version>
+
+<Version since="8.1">
+
+:::caution[IdentityServer 8.1 preview API]
+The 8.1 examples use the public paging models in `Duende.IdentityServer.Models` and read rows through `Results`.
+These APIs are available in preview.7 and are subject to change before general release.
+:::
+
+```csharp
+using Duende.IdentityServer.Models;
+using Duende.UserManagement.Profiles;
+
+var request = QueryRequest.Create(DataRange.FromOffset(0, 50));
+var result = await userProfileAdmin.QueryAsync(request, ct);
+
+foreach (var profile in result.Results)
+{
+    Console.WriteLine($"Subject: {profile.SubjectId}");
+}
+```
+
+</Version>
+
 ### Querying Profiles with Attribute Projection
+
+<Version until="8.1">
 
 ```csharp
 using Duende.Storage.EntityAttributeValue;
+using Duende.Storage.Pagination;
 using Duende.Storage.Querying;
 using Duende.UserManagement.Profiles;
 
@@ -883,18 +927,49 @@ var attributes = new HashSet<AttributeCode>
     AttributeCode.Create("department")
 };
 
-var request = QueryRequest.Create(new DataRange(0, 50));
+var request = QueryRequest.Create(DataRange.FromOffset(0, 50));
 var projections = await userProfileAdmin.QueryAsync(request, attributes, ct);
 
 foreach (var projection in projections.Items)
 {
     Console.WriteLine($"Subject: {projection.SubjectId}");
-    foreach (var (name, value) in projection.Attributes)
+    foreach (var attribute in projection.Attributes)
     {
-        Console.WriteLine($"  {name} = {value}");
+        Console.WriteLine($"  {attribute.Code} = {attribute.UntypedValue}");
     }
 }
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+using Duende.IdentityServer.DataExtensions;
+using Duende.IdentityServer.Models;
+using Duende.UserManagement.Profiles;
+
+// Only retrieve email and department attributes for performance
+var attributes = new HashSet<AttributeCode>
+{
+    AttributeCode.Create("email"),
+    AttributeCode.Create("department")
+};
+
+var request = QueryRequest.Create(DataRange.FromOffset(0, 50));
+var projections = await userProfileAdmin.QueryAsync(request, attributes, ct);
+
+foreach (var projection in projections.Results)
+{
+    Console.WriteLine($"Subject: {projection.SubjectId}");
+    foreach (var attribute in projection.Attributes)
+    {
+        Console.WriteLine($"  {attribute.Code} = {attribute.UntypedValue}");
+    }
+}
+```
+
+</Version>
 
 
 

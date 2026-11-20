@@ -124,7 +124,7 @@ admin services.
 - `ISamlSigninStateStore`
 - `ISamlLogoutSessionStore`
 
-Call [`AddServerSideSessions`](/identityserver/ui/server-side-sessions/index.md) separately when you want IdentityServer to
+Call [`AddServerSideSessions`](/identityserver/ui/server-side-sessions/index.mdx) separately when you want IdentityServer to
 use server-side sessions.
 
 The provider adds a background purge service that runs against every registered storage instance. Purging is enabled by

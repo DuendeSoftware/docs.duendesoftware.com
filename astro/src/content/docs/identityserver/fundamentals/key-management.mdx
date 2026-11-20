@@ -1,7 +1,7 @@
 ---
 title: "Signing Key Management And Rotation In IdentityServer"
 description: "How to create, store, rotate, and retire signing keys in IdentityServer using automatic or static key management."
-date: 2026-10-13
+date: 2026-11-18
 sidebar:
   label: Key Management
   order: 50
@@ -16,6 +16,8 @@ redirect_from:
   - /identityserver/v7/fundamentals/keys/automatic_key_management/
   - /identityserver/v7/fundamentals/keys/static_key_management/
 ---
+
+import Version from "~/components/Version.astro";
 
 Duende IdentityServer issues several types of tokens that are cryptographically
 signed, including identity tokens, JWT access tokens, and logout tokens. To
@@ -64,7 +66,7 @@ Legacy customers need a [compatible license key](/general/licensing.md#new-licen
 ### Configuration
 
 Automatic Key Management is configured by the options in the `KeyManagement`
-property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.md#key-management).
+property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.mdx#key-management).
 
 ### Managed Key Lifecycle
 
@@ -164,6 +166,29 @@ var idsvrBuilder = builder.Services.AddIdentityServer(options =>
     options.KeyManagement.KeyPath = "/home/shared/keys";
 });
 ```
+
+<Version since="8.1">
+
+### Key Creation Across Nodes
+
+<a id="key-creation-across-nodes-identityserver-81-and-later"></a>
+
+:::caution[IdentityServer 8.1 preview]
+This coordination is available in the 8.1 preview. It is subject to change before general release.
+:::
+
+When Duende Storage's default instance or Spaces is registered, IdentityServer uses a Storage-backed lock so only one
+node can create or rotate signing keys at a time while the distributed lease is held, per space. The default
+`DistributedKeyManager` does not observe the lease's lost token during key creation, so a lease that expires or is lost
+mid-operation can allow overlapping key creation. This is not a strict single-writer guarantee under lease loss. With
+neither Storage nor Spaces registered, key creation uses a process-local lock. A shared file-system or Entity Framework
+key store alone does not coordinate key creation between nodes.
+
+`KeyManagementOptions.KeyCreationLockTimeout` controls how long a node waits for that lock. It defaults to 60 seconds
+and must be greater than zero. If the wait times out, IdentityServer reads the store again and uses an existing usable
+key if one is available; otherwise key retrieval fails. See the [options reference](/identityserver/reference/v8/options.mdx#key-management).
+
+</Version>
 
 ### Encryption Of Keys at Rest
 
@@ -384,7 +409,7 @@ When you take this approach, keep in mind:
 
 The automatic key management feature can be disabled by setting the `Enabled`
 flag to `false` on the `KeyManagement` property of
-[`IdentityServerOptions`](/identityserver/reference/v8/options.md#key-management):
+[`IdentityServerOptions`](/identityserver/reference/v8/options.mdx#key-management):
 
 ```csharp
 // Program.cs
@@ -638,7 +663,7 @@ If you suspect a signing key has been exposed, rotate immediately rather than wa
    this deliberately skips.
    * With automatic key management, delete the compromised key from the key store. Don't just retire it: retired keys
      stay published in discovery for `RetentionDuration`. Each instance also caches keys from the store for
-     `KeyManagement.KeyCacheDuration` (see [Key Management options](/identityserver/reference/v8/options.md#key-management)),
+     `KeyManagement.KeyCacheDuration` (see [Key Management options](/identityserver/reference/v8/options.mdx#key-management)),
      so restart every instance after deleting the key rather than waiting for the cache to expire.
    * With static keys, remove the compromised key from `AddSigningCredential` and from any `AddValidationKey`
      registration, then redeploy every instance.

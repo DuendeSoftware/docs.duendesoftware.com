@@ -95,7 +95,7 @@ Available options:
   :::note
   SAML signing requires an X.509 certificate. When you use Automatic Key Management with RSA keys, IdentityServer automatically generates an X.509 container that wraps the managed key material. You do not need to create or provide a certificate manually. Manually registered raw RSA keys, including keys registered by `AddDeveloperSigningCredential()`, cannot be wrapped automatically; use an X.509 certificate with a private key instead.
 
-  See [Using The Same Signing Keys For OIDC And SAML](/identityserver/fundamentals/key-management.md#using-the-same-signing-keys-for-oidc-and-saml) for rotation, metadata refresh, and custom key requirements.
+  See [Using The Same Signing Keys For OIDC And SAML](/identityserver/fundamentals/key-management.mdx#using-the-same-signing-keys-for-oidc-and-saml) for rotation, metadata refresh, and custom key requirements.
   :::
 
 * **`MaxRelayStateLength`**

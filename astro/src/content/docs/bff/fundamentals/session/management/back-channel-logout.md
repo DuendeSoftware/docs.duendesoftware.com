@@ -27,7 +27,7 @@ you [configure](/identityserver/reference/v8/models/client.md#authentication--se
 `BackChannelLogoutUri`. When a session ends at IdentityServer, any client that was participating in that session that
 has a back-channel logout URI configured will be sent a back-channel logout request. This typically happens when another
 application signs out. [Expiration](/identityserver/ui/server-side-sessions/session-expiration.mdx)
-of [IdentityServer server side sessions](/identityserver/ui/server-side-sessions/index.md) can also be configured to send
+of [IdentityServer server side sessions](/identityserver/ui/server-side-sessions/index.mdx) can also be configured to send
 back-channel logout requests, though this is disabled by default.
 
 ## Dependencies

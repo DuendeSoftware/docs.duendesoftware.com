@@ -1,7 +1,7 @@
 ---
 title: "Enabling User Management in IdentityServer"
 description: "How to add User Management to IdentityServer, including user storage, authentication flows, claims mapping, and role-based authorization."
-date: 2025-05-29
+date: 2026-11-18
 sidebar:
   label: IdentityServer Integration
   order: 3
@@ -12,8 +12,8 @@ redirect_from:
 import { Steps } from "@astrojs/starlight/components";
 import Version from "~/components/Version.astro";
 
-The `Duende.UserManagement.IdentityServer8` package is what you add to your IdentityServer project to enable User Management.
-It wires up user storage, authentication flows, and claims mapping through a single `AddUserManagement(...)` call on the IdentityServer builder.
+The User Management integration wires up user storage, authentication flows, and claims mapping through a single
+`AddUserManagement(...)` call on the IdentityServer builder.
 Under the hood, it registers an `IProfileService` implementation that maps user profile attributes to OIDC claims and emits role claims
 (both direct and transitive, deduplicated).
 
@@ -32,8 +32,9 @@ Once you have IdentityServer set up, adding User Management takes a single call 
     </Version>
     <Version since="8.1">
     ```bash title="Terminal"
-    dotnet add package Duende.UserManagement.IdentityServer8 --prerelease
+    dotnet add package Duende.IdentityServer --prerelease
     ```
+    `Duende.IdentityServer` includes User Management.
     </Version>
 
 2. **Call `AddUserManagement(...)` on the IdentityServer builder**

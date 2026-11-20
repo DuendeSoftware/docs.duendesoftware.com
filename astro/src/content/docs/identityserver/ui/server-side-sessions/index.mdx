@@ -1,7 +1,7 @@
 ---
 title: "Overview"
 description: "Overview of IdentityServer server-side sessions, storing authentication state on the server rather than cookies for improved control and security."
-date: 2026-09-01
+date: 2026-11-18
 sidebar:
   order: 1
 redirect_from:
@@ -9,6 +9,8 @@ redirect_from:
   - /identityserver/v6/ui/server_side_sessions/
   - /identityserver/v7/ui/server_side_sessions/
 ---
+
+import Version from "~/components/Version.astro";
 
 When a user logs in interactively, their authentication session is managed by the ASP.NET Core authentication system,
 and more specifically the cookie authentication handler.
@@ -53,7 +55,7 @@ By default, the store for the server-side sessions will just be kept in-memory.
 For production scenarios, configure a durable store by using the
 [Entity Framework Core implementation](/identityserver/data/providers/entityframework-core.md#operational-store), the
 [Duende Storage provider](/identityserver/data/providers/duende-storage/getting-started.md#operational-stores) or
-[your own implementation](/identityserver/reference/v8/stores/server-side-sessions.md).
+[your own implementation](/identityserver/reference/v8/stores/server-side-sessions.mdx).
 
 :::note
 Order is important in the ASP.NET Core service provider.
@@ -77,7 +79,7 @@ These values are the user's:
 - display name (an optional and configurable claim value)
 
 If you would like to query this data based on a user's display name, then the claim type used is configurable with the
-`ServerSideSessions.UserDisplayNameClaimType` property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.md#authentication).
+`ServerSideSessions.UserDisplayNameClaimType` property on the [`IdentityServerOptions`](/identityserver/reference/v8/options.mdx#authentication).
 This claim must be included in the claims when the user's [authentication session is established](/identityserver/ui/login/session.md).
 
 For example:
@@ -91,12 +93,40 @@ builder.Services.AddIdentityServer(options => {
 
 ### IServerSideSessionStore
 
-The [`IServerSideSessionStore`](/identityserver/reference/v8/stores/server-side-sessions.md) is the abstraction for storing the server-side session.
+The [`IServerSideSessionStore`](/identityserver/reference/v8/stores/server-side-sessions.mdx) is the abstraction for storing the server-side session.
 
 Entity Framework Core and the preview
 [Duende Storage provider](/identityserver/data/providers/duende-storage/getting-started.md#operational-stores) includes
 implementations. You can also implement the
-[`IServerSideSessionStore` interface](/identityserver/reference/v8/stores/server-side-sessions.md) for another backend.
+[`IServerSideSessionStore` interface](/identityserver/reference/v8/stores/server-side-sessions.mdx) for another backend.
+
+<Version since="8.1">
+
+### Concurrent Session Updates
+
+<a id="concurrent-session-updates-in-identityserver-81"></a>
+
+:::caution[IdentityServer 8.1 preview]
+This concurrency contract is available in the 8.1 preview. It is subject to change before general release.
+:::
+
+IdentityServer 8.1 uses optimistic concurrency when updating a server-side session. The store compares the session's
+`Version` with the stored version and saves the update only if they match. A stale update is not written, and
+`UpdateSessionAsync` returns `false` if the version changed or the session was removed after it was read. A `Version`
+of 0 skips the concurrency check; query results can also carry 0, so it does not indicate whether the session was read.
+
+The Entity Framework operational store requires a migration that adds the `Version` column to
+`ServerSideSessions`. Apply the migration before deploying 8.1; without it, session reads and deletes fail, and new
+sign-ins do not persist a server-side session. A browser request whose session-changing write loses a race fails with
+HTTP 500 instead of silently overwriting the newer session. A cookie renewal that only moves the session dates is
+skipped and the request succeeds. If a token call's session extension loses a race, the token call still succeeds but
+that extension is skipped; the next token call tries again. During a rolling upgrade, older nodes do not perform the
+version check, so the concurrency guarantee applies only after all nodes have been upgraded.
+
+Custom `IServerSideSessionStore` implementations must compare and increment the version atomically when saving. See
+the [store contract](/identityserver/reference/v8/stores/server-side-sessions.mdx#concurrent-updates-in-identityserver-81).
+
+</Version>
 
 :::caution[Prefer `GetSessionsAsync` over `QuerySessionsAsync`]
 When listing sessions, prefer `GetSessionsAsync` over `QuerySessionsAsync`.

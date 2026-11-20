@@ -74,7 +74,8 @@ Options:
 Behavior:
 
 * It reports the current schema version and the required version.
-* If the database is already at the required version, it reports that and makes no changes.
+* If the database is already at the required version, it verifies the schema structure before reporting success. It
+  fails if the schema has drifted, even though its version number is current.
 * If the database's schema version is newer than the version this CLI build knows about, it reports an error instead
   of migrating.
 * `--dry-run` still connects to the database to read its current version, then prints the migration SQL for that
@@ -176,6 +177,40 @@ references `Duende.Storage` directly or through any provider package (`Duende.St
 without that project context, such as a deployment agent that only has the CLI installed, pass `--plugin-version`
 explicitly instead.
 
+### storage verify
+
+Checks that a database has the expected Duende Storage schema without changing it. It checks the current version and
+the schema's structure, including nullability, keys, foreign-key delete rules, and ordered index columns.
+
+The options are the same as `storage migrate`: `--provider`, `--connection-string`, and `--schema`. The connection
+string also falls back to `DUENDE_STORAGE_CONNECTION_STRING`. SQLite verification uses
+a read-only connection, including when the connection string uses an encoded SQLite URI mode. `storage verify` is
+already read-only and has no `--dry-run` option. SQLite does not support `--schema`.
+
+Set `DUENDE_STORAGE_CONNECTION_STRING` to your PostgreSQL connection string before running this example:
+
+```powershell
+# Terminal
+duende storage verify --provider postgresql
+```
+
+To verify a SQLite database, use:
+
+```powershell
+# Terminal
+$env:DUENDE_STORAGE_CONNECTION_STRING = "Data Source=identityserver.db"
+duende storage verify --provider sqlite
+```
+
+Exit codes:
+
+* `0`: the schema is current and structurally valid.
+* `2`: a migration is pending. Structural problems can also be reported.
+* `1`: the schema is newer than the CLI understands, is current but structurally invalid, or the check failed.
+
+Do not treat a current schema version as proof that the tables and indexes are intact. Run `storage verify` during
+deployment validation when you need to detect structural drift.
+
 ### plugin list
 
 Lists the plugins the CLI knows about and, when run from a restored project, the version it would resolve for each.
@@ -223,9 +258,13 @@ These options apply to every `duende` command:
 
 ## Exit Codes
 
+For `storage migrate`:
+
 * `0`: success, including when the schema was already up to date and when `--dry-run` completed.
 * `1`: any error, including an unknown provider, a missing connection string, a database newer than the tool
   understands, or `--schema` combined with `--provider sqlite`.
+
+For `storage verify`, see its command-specific exit codes above. It returns `2` when a migration is pending.
 
 Error messages redact connection-string values.
 

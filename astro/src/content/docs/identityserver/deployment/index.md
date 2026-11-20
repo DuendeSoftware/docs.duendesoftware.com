@@ -47,13 +47,13 @@ This checklist is a short summary of the detailed deployment guidance on this pa
 
 * **HTTPS and proxy settings are correct.** Configure forwarded headers before IdentityServer and verify that the discovery document publishes the public HTTPS issuer. See [Proxy Servers and Load Balancers](#proxy-servers-and-load-balancers).
 * **Data Protection keys use durable, shared storage.** Protect the keys at rest and set an explicit application name. See [ASP.NET Core Data Protection](#aspnet-core-data-protection).
-* **Signing keys are protected and shared by every instance.** Define how keys will be rotated, use [Automatic Key Management](/identityserver/fundamentals/key-management.md#automatic-key-management) when it is available for your edition, and choose a [shared key store](/identityserver/fundamentals/key-management.md#key-storage) for load-balanced deployments.
+* **Signing keys are protected and shared by every instance.** Define how keys will be rotated, use [Automatic Key Management](/identityserver/fundamentals/key-management.mdx#automatic-key-management) when it is available for your edition, and choose a [shared key store](/identityserver/fundamentals/key-management.mdx#key-storage) for load-balanced deployments.
 * **Configuration and operational data use production stores.** Do not rely on in-memory stores for state that must survive restarts or be shared between instances. See [IdentityServer Data Stores](#identityserver-data-stores).
 * **Database changes are part of the deployment process.** Apply schema changes before the new application version starts, and enable [operational-store cleanup](/identityserver/data/providers/entityframework-core.md#operational-store) so expired grants and pushed authorization requests do not accumulate.
 * **Every instance can access the same shared state.** Configure shared operational data, signing keys, Data Protection keys, and any feature-specific [distributed caches](#distributed-caching).
-* **The issuer is consistent across instances and regions.** Every node must resolve the same issuer for a given request. Make sure every node is reached through the same public host names and paths, so tokens validate after a failover. See [Consistent Issuer Across Instances and Regions](/identityserver/deployment/high-availability.md#consistent-issuer-across-instances-and-regions).
-* **The runtime is stateless.** Keep runtime state (grants, consent, automatically managed keys, and sessions) in external stores, and give every instance the same configuration, so instances can be added, replaced, or restarted freely. See [Stateless Runtime and External Stores](/identityserver/deployment/high-availability.md#stateless-runtime-and-external-stores).
-* **Multi-region designs account for replication lag.** Operational data must be consistent across active regions, or codes and refresh tokens can fail with `invalid_grant`. See [Active-Active Constraints](/identityserver/deployment/high-availability.md#active-active-constraints).
+* **The issuer is consistent across instances and regions.** Every node must resolve the same issuer for a given request. Make sure every node is reached through the same public host names and paths, so tokens validate after a failover. See [Consistent Issuer Across Instances and Regions](/identityserver/deployment/high-availability.mdx#consistent-issuer-across-instances-and-regions).
+* **The runtime is stateless.** Keep runtime state (grants, consent, automatically managed keys, and sessions) in external stores, and give every instance the same configuration, so instances can be added, replaced, or restarted freely. See [Stateless Runtime and External Stores](/identityserver/deployment/high-availability.mdx#stateless-runtime-and-external-stores).
+* **Multi-region designs account for replication lag.** Operational data must be consistent across active regions, or codes and refresh tokens can fail with `invalid_grant`. See [Active-Active Constraints](/identityserver/deployment/high-availability.mdx#active-active-constraints).
 * **CORS allows only the required client origins.** Configure explicit origins for browser-based clients and check the middleware order when combining IdentityServer and ASP.NET Core policies. See [CORS](/identityserver/tokens/cors.md).
 * **Token and session lifetimes match your threat model.** Review [access-token and refresh-token settings](/identityserver/reference/v8/models/client.md#token) and keep [server-side session lifetimes](/identityserver/ui/server-side-sessions/session-expiration.mdx) consistent with them.
 * **Diagnostics are ready before traffic arrives.** Configure appropriate [logging](/identityserver/diagnostics/logging.mdx), collect [OpenTelemetry](/identityserver/diagnostics/otel.mdx) signals, enable the [events](/identityserver/diagnostics/events.md) you need, and expose [health checks](#health-checks).
@@ -133,7 +133,7 @@ round-tripped through the browser from being tampered with.
 
 #### The IdentityServer Signing Key
 
-Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/fundamentals/key-management.md), to
+Separately, IdentityServer needs cryptographic keys, called [signing keys](/identityserver/fundamentals/key-management.mdx), to
 sign tokens such as JWT access tokens and id tokens. The signing keys use public key cryptography to allow client
 applications and APIs to validate token signatures using the public keys, which are published by IdentityServer
 through [discovery](/identityserver/reference/v8/endpoints/discovery.md). The private key component of the signing keys are
@@ -171,9 +171,9 @@ Duende IdentityServer includes storage implementations for above data using Enti
 
 Duende IdentityServer's features that rely on data protection include:
 
-* protecting signing keys at rest (if [automatic key management](/identityserver/fundamentals/key-management.md#automatic-key-management) is used and enabled)
+* protecting signing keys at rest (if [automatic key management](/identityserver/fundamentals/key-management.mdx#automatic-key-management) is used and enabled)
 * protecting [persisted grants](/identityserver/data/operational.md#persisted-grant-service) at rest (if enabled)
-* protecting [server-side session](/identityserver/ui/server-side-sessions/index.md) data at rest (if enabled)
+* protecting [server-side session](/identityserver/ui/server-side-sessions/index.mdx) data at rest (if enabled)
 * protecting [the state parameter](/identityserver/ui/login/external.md#state-url-length-and-isecuredataformat) for
   external OIDC providers (if enabled)
 * protecting message payloads sent between pages in the UI (e.g. [logout context](/identityserver/ui/logout/logout-context.md) and [error context](/identityserver/ui/error.md)).

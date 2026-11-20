@@ -29,7 +29,7 @@ data protected before the switch can be read again. Data protected while partiti
 Default space, but not in named spaces, so users in named spaces need to sign in again.
 :::
 
-To turn partitioning on or off, see [Getting Started With Spaces](/identityserver/spaces/getting-started.md#before-deployment).
+To turn partitioning on or off, see [Getting Started With Spaces](/identityserver/spaces/getting-started.mdx#before-deployment).
 
 ## Protecting Data Outside A Resolved Space
 

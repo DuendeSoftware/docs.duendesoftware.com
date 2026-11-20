@@ -412,7 +412,7 @@ strict validation and applies it to that token.
 
 #### IdentityServer v8
 
-The [`StrictClientAssertionAudienceValidation`](/identityserver/reference/v8/options.md#main) option on
+The [`StrictClientAssertionAudienceValidation`](/identityserver/reference/v8/options.mdx#main) option on
 `IdentityServerOptions` defaults to `false`.
 
 When strict validation doesn't apply, IdentityServer accepts these legacy audience values:

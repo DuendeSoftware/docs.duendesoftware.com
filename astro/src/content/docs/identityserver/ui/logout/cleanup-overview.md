@@ -16,7 +16,7 @@ remove it.
 | Artifact                             | Where It Lives                           | Default At Logout                                                                        | How To Clean Up                                                                                                                                                                                |
 |--------------------------------------|------------------------------------------|------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | IdentityServer authentication cookie | Browser, IdentityServer's cookie handler | Removed when you call `SignOutAsync`                                                     | [Removing the authentication cookie](/identityserver/ui/logout/session-cleanup.md#removing-the-authentication-cookie)                                                                          |
-| Server-side session record           | IdentityServer's session store           | Removed automatically when `SignOutAsync` is called and server-side sessions are enabled | [Server-side sessions](/identityserver/ui/server-side-sessions/index.md)                                                                                                                       |
+| Server-side session record           | IdentityServer's session store           | Removed automatically when `SignOutAsync` is called and server-side sessions are enabled | [Server-side sessions](/identityserver/ui/server-side-sessions/index.mdx)                                                                                                                       |
 | External identity provider session   | The external IdP                         | Not signed out automatically                                                             | [External logins](/identityserver/ui/logout/external.md)                                                                                                                                       |
 | Client application sessions/cookies  | Each client application                  | Not cleaned up unless the client is notified                                             | [Client notifications](/identityserver/ui/logout/notification.md)                                                                                                                              |
 | Refresh tokens                       | IdentityServer's persisted grant store   | Kept unless coordination is enabled                                                      | [Revoking client tokens at logout](/identityserver/ui/logout/session-cleanup.md#revoking-client-tokens-at-logout)                                                                              |
@@ -31,13 +31,13 @@ Refresh tokens and reference access tokens are not tied to the user's session at
 after logout until they expire. To revoke a client's tokens when the user's session ends, set
 `CoordinateLifetimeWithUserSession` on the [client configuration](/identityserver/reference/v8/models/client.md#authentication--session-management),
 or enable `CoordinateClientLifetimesWithUserSession` in
-the [IdentityServer authentication options](/identityserver/reference/v8/options.md#authentication). See
+the [IdentityServer authentication options](/identityserver/reference/v8/options.mdx#authentication). See
 [Revoking client tokens at logout](/identityserver/ui/logout/session-cleanup.md#revoking-client-tokens-at-logout) for
 details.
 
 ## Sessions That End Without An Explicit Logout
 
-With [server-side sessions](/identityserver/ui/server-side-sessions/index.md) enabled, a session can also end
+With [server-side sessions](/identityserver/ui/server-side-sessions/index.mdx) enabled, a session can also end
 without the user logging out, for example when it expires or an
 [inactivity timeout](/identityserver/ui/server-side-sessions/inactivity-timeout.md) is reached.
 

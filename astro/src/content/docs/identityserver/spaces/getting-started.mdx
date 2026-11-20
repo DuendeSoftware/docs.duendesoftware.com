@@ -1,7 +1,8 @@
 ---
 title: "Getting Started With Spaces"
-description: "Step-by-step guide to installing Duende.Spaces, configuring space resolution by origin or path and creating your first IdentityServer space"
-date: 2026-11-02
+description: "Step-by-step guide to installing IdentityServer and Storage with Spaces, configuring space resolution by origin or path, and creating your first space"
+date: 2026-11-18
+preview: true
 sidebar:
   label: "Getting Started"
   order: 10
@@ -10,7 +11,7 @@ sidebar:
 Spaces require [Duende Storage](/identityserver/data/providers/duende-storage/index.mdx) for their management data and
 isolated storage pools.
 
-## Install Duende.Spaces Packages
+## Install IdentityServer And Storage
 
 This example uses SQLite:
 
@@ -18,10 +19,9 @@ This example uses SQLite:
 # Terminal
 dotnet add package Duende.IdentityServer --prerelease
 dotnet add package Duende.Storage.Sqlite --prerelease
-dotnet add package Duende.Spaces --prerelease
 ```
 
-See the [Duende.Spaces](https://www.nuget.org/packages/Duende.Spaces) NuGet Gallery page for package versions.
+`Duende.IdentityServer` includes Spaces.
 
 ## Add a Connection String
 
@@ -97,11 +97,12 @@ await app.Services
 
 ## Create A Space
 
-Use `ISpaceAdmin` from a trusted provisioning or administration path. Query by name before creating the space:
+Use `ISpaceAdmin` from a trusted provisioning or administration path. This example queries by name
+before creating the space:
 
 ```csharp
 // Program.cs
-using Duende.Storage.Querying;
+using Duende.IdentityServer.Models;
 
 var spaces = app.Services.GetRequiredService<ISpaceAdmin>();
 
@@ -110,7 +111,7 @@ var existing = await spaces.QueryAsync(
         new SpaceFilter { Name = "Acme" }),
     CancellationToken.None);
 
-if (!existing.Items.Any(space =>
+if (!existing.Results.Any(space =>
     string.Equals(space.Name, "Acme", StringComparison.Ordinal)))
 {
     var result = await spaces.CreateAsync(
@@ -135,6 +136,10 @@ if (!existing.Items.Any(space =>
     }
 }
 ```
+
+`ISpaceAdmin.QueryAsync` uses the same [cursor paging as the Storage admin APIs](/identityserver/data/providers/duende-storage/admin-apis.md#query-and-delete-configuration).
+To page backwards, follow the returned `PreviousToken` with the same sort. Do not reverse the sort or the rows: a
+cursor is bound to the query's sort order.
 
 The `Acme` space created in this example requires both the origin and path to match. A request to
 `https://login.example.com/t/acme/.well-known/openid-configuration` resolves to the Acme pool.

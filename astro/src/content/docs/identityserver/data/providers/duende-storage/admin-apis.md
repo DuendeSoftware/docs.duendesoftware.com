@@ -191,6 +191,11 @@ and the plaintext value. It also takes an optional hash algorithm, description, 
 The `X509Thumbprint`, `X509Name`, `X509CertificateBase64`, and `JWK` types are stored verbatim, so you must supply
 appropriate material for them.
 
+For clients, `CreateSecretAsync` and `DeleteSecretAsync` run the registered `IClientConfigurationValidator`, just like
+`UpdateAsync`. If the client is invalid, the operation returns `validation_failed` and does not write the secret change.
+This applies to any client validation failure, not only a missing or invalid secret. The Storage-backed
+`IClientStore` also validates clients when IdentityServer reads them at runtime, so rejected clients are not returned.
+
 ### Dynamic Identity Provider
 
 ```csharp
@@ -368,7 +373,7 @@ var request = QueryRequest.Create<ApiScopeFilter, ApiScopeSortField>(
 
 var page = await apiScopes.QueryAsync(request, ct);
 
-foreach (var scope in page.Items)
+foreach (var scope in page.Results)
 {
     Console.WriteLine($"{scope.Id}: {scope.Name}");
 }
@@ -404,7 +409,24 @@ Each service returns its own list item type. These carry the typed ID and a few 
 Call `GetAsync`, or the matching get-by-identifier method, when you need the full configuration.
 
 Because text properties match substrings, compare a returned business identifier exactly when you need one specific
-entity. Use the continuation tokens on `QueryResult<T>` to retrieve additional pages.
+entity. The public `QueryResult<T>` exposes the current rows as `Results`. For cursor paging, use `ResultsToken` to
+continue and `PreviousToken` to go back, with `HasNextResults` and `HasPrevResults` indicating whether another page is
+available in each direction. A cursor result can include `ResultsToken` even when `HasNextResults` is false, so use the
+flag rather than token nullness to decide whether to request another page.
+
+Cursor queries use a deterministic order: null sort values are last, and the entity ID breaks ties; without an explicit
+sort, the entity ID is used. Keep the same sort when following either token; don't reverse the sort or the returned
+rows to page backwards. The flag for the direction queried is exact; the flag for the other direction is inferred from
+the cursor position. If rows on that side have since been deleted, an inferred `true` can lead to an empty page.
+
+Tokens are bound to the entity type and sort, not the filter or search value. Changing a filter while following a token
+does not invalidate it, but applies the new filter from the old cursor position; keep the same filter and search value
+throughout a traversal. Tokens from the earlier format are rejected with `InvalidContinuationTokenException` rather
+than silently restarting at the first page. The exception also identifies malformed tokens and sort mismatches.
+
+String values used by cursor-sorted fields are limited to 500 characters and cannot contain `U+0000`. Saving an invalid
+value fails with `ArgumentException`. A value longer than 500 characters saved before this limit was enforced can fail
+when the cursor token is created.
 
 Delete an entity by its storage ID:
 

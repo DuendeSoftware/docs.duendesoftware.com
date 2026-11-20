@@ -1,11 +1,13 @@
 ---
 title: High Availability and Disaster Recovery
 description: Run IdentityServer as a stateless, horizontally scalable cluster, make every instance resolve the same issuer and keys, and understand the consistency constraints of active-active deployments.
-date: 2026-10-13
+date: 2026-11-18
 sidebar:
   label: High Availability
   order: 15
 ---
+
+import Version from "~/components/Version.astro";
 
 A highly available Duende IdentityServer deployment rests on these ground rules: keep the runtime stateless, put shared state in the right external stores, and make every instance and region behave identically.
 
@@ -26,6 +28,30 @@ The two categories of external data have different consistency requirements, whi
 
 User accounts and credentials are a separate concern. They live in a user store outside IdentityServer's configuration and operational stores, with their own consistency and backup requirements, so plan their replication separately.
 
+<Version since="8.1">
+
+## Coordinating Keys And Background Jobs
+
+:::caution[IdentityServer 8.1 preview]
+This coordination is available in the 8.1 preview. It is subject to change before general release.
+:::
+
+When Duende Storage's default instance or Spaces is registered, IdentityServer coordinates signing-key creation per
+space and coordinates the outbox processor, Storage purge, and server-side session cleanup across nodes. The
+distributed signing-key lease is separate from the background-job leases. The default `DistributedKeyManager` does not
+observe the signing-key lease's lost token while creating a key, so a lease that expires or is lost mid-operation can
+allow overlapping key creation.
+
+The background-job lease settings on `OutboxProcessorOptions`, `StoragePurgeOptions`, and `ServerSideSessionOptions`
+only apply when distributed coordination is active. Configure each job's `Lease.CancelBeforeExpiry` to exceed the
+maximum clock skew between nodes. This setting applies to the job lease, not the signing-key lease. A new node that
+takes over an outbox lease starts with fresh per-event retry counts, so processing remains at-least-once across handover.
+
+See [Background Job Lease Options](/identityserver/reference/v8/options.mdx#background-job-leases) and
+[Key Creation Across Nodes](/identityserver/fundamentals/key-management.mdx#key-creation-across-nodes-identityserver-81-and-later).
+
+</Version>
+
 ## Consistent Issuer Across Instances and Regions
 
 By default, IdentityServer derives the `iss` claim from the host that served the request. If a primary region and a failover region are reached through different host names, they can issue tokens with different issuer values, which breaks validation for APIs that expect a specific issuer. The requirement is not a single issuer, but that every instance resolves the same issuer for the same request.
@@ -35,7 +61,7 @@ With [Multi-Issuer](/identityserver/tokens/issuer.mdx#multi-issuer) or [Spaces](
 In any deployment with more than one instance, region, or failover target:
 
 * Ensure that every instance resolves the same issuer for a given request: make sure the proxy in front of IdentityServer always forwards the same public host name and path base. With a single issuer, you can also set `IdentityServerOptions.IssuerUri` to a fixed value. Leave it unset when you use Multi-Issuer or Spaces, because they infer the issuer per request. See [Issuer Claim](/identityserver/tokens/issuer.mdx) and [Proxy Servers and Load Balancers](/identityserver/deployment/index.md#proxy-servers-and-load-balancers).
-* Share the signing keys across all nodes and regions, using a [shared key store](/identityserver/fundamentals/key-management.md#key-storage).
+* Share the signing keys across all nodes and regions, using a [shared key store](/identityserver/fundamentals/key-management.mdx#key-storage).
 * Share the ASP.NET Core Data Protection keys across all nodes and regions, and set the same explicit application name on each. See [ASP.NET Core Data Protection](/identityserver/deployment/index.md#aspnet-core-data-protection).
 
 :::note
