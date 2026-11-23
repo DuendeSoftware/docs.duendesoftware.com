@@ -78,8 +78,9 @@ could treat this as a replay attack and take steps to notify the user and/or
 revoke their access.
 
 If you use DPoP or mTLS, `AcceptConsumedTokenAsync` runs before IdentityServer
-checks the client's key, so revoking access there can be triggered without that
-key. See [replay detection](/identityserver/tokens/refresh.md#replay-detection)
-for a safer approach.
+checks the key the refresh token is bound to. Use it to decide whether to accept
+a consumed token, for example within a grace period, but not for side effects
+such as revocation. See [replay detection](/identityserver/tokens/refresh.md#replay-detection)
+for where to revoke instead.
 
 See also: [Refreshing a token](/identityserver/tokens/refresh.md)

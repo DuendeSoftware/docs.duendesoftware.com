@@ -165,7 +165,13 @@ builder.Services.TryAddTransient<IRefreshTokenService, YourCustomRefreshTokenSer
 
 ### Replay Detection
 
-In addition to one-time only usage semantics, you can add replay detection for refresh tokens.
+Replay detection is for public clients whose refresh tokens can't be sender-constrained. If a refresh token is bound to
+an authenticated client, or to a [DPoP key or mTLS certificate](#binding-refresh-tokens), you don't need it: a
+confidential client's refresh token can't be used without the client's credentials, and IdentityServer rejects a bound
+refresh token presented without its key. For those clients, revoking access on replay disrupts users without adding
+protection.
+
+For public clients without sender-constraining, you can add replay detection on top of one-time only usage semantics.
 Multiple uses of a one-time-only refresh token may indicate:
 
 * A client application bug
@@ -193,23 +199,21 @@ Implementing replay detection can be done in a similar way to [accepting consume
 behavior that you choose. Depending on your scenario, overriding the `CreateRefreshTokenAsync`,
 `ValidateRefreshTokenAsync` and `UpdateRefreshTokenAsync` methods may also be desired.
 
-:::caution[Revoking access with DPoP or mTLS]
+:::caution[Don't revoke from AcceptConsumedTokenAsync with DPoP or mTLS]
 `AcceptConsumedTokenAsync` runs before IdentityServer checks that the request uses the key the refresh token is
-[bound to](/identityserver/tokens/pop.mdx). If you revoke access from this method, a caller who passes any required
-client authentication can trigger revocation with an old refresh token before the token-bound key is checked,
-forcing the user to sign in again. If the token-bound mTLS certificate is also required for client authentication,
-the caller still needs that certificate's private key.
+[bound to](/identityserver/tokens/pop.mdx). It's safe to use this method to decide whether to accept a consumed token,
+for example within a grace period, because a request without the bound key still fails afterwards. It isn't safe for
+side effects such as revocation: a caller without the bound key could trigger them with an old refresh token.
+:::
 
-If that's acceptable, revoking from `AcceptConsumedTokenAsync` is fine. To revoke only when the request uses the
-right key, do it in an
-[`ICustomTokenRequestValidator`](/identityserver/reference/v8/validators/custom-token-request-validator/) instead,
-which runs after the key check:
+If you still want to revoke access when a sender-constrained refresh token is replayed, do it in an
+[`ICustomTokenRequestValidator`](/identityserver/reference/v8/validators/custom-token-request-validator/), which runs
+after the binding check:
 
 1. Return `true` from `AcceptConsumedTokenAsync`, so the request reaches your validator.
 2. In the validator, check whether the refresh token's `ConsumedTime` is set.
 3. If it is, revoke access and fail the request with `invalid_grant`. If you don't fail the request, IdentityServer
    issues new tokens for the old refresh token.
-:::
 
 The options that interact with accepting consumed tokens also interact with replay detection.
 The `PersistentGrantOptions.DeleteOneTimeOnlyRefreshTokensOnUse` flag needs to be disabled so that used tokens persist 
