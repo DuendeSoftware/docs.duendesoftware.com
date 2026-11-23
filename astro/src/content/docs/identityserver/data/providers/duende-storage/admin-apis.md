@@ -1,7 +1,7 @@
 ---
 title: "Configuration Admin APIs"
 description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende Storage admin APIs"
-date: 2026-11-10
+date: 2026-11-23
 sidebar:
   label: "Admin APIs"
   order: 30
@@ -58,7 +58,7 @@ clients that use them.
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.ApiScopes;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<ApiScopeId>> CreateApiScope(
     IApiScopeAdmin admin,
@@ -78,7 +78,7 @@ static Task<SaveResult<ApiScopeId>> CreateApiScope(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.ApiResources;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<ApiResourceId>> CreateApiResource(
     IApiResourceAdmin admin,
@@ -99,7 +99,7 @@ static Task<SaveResult<ApiResourceId>> CreateApiResource(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.IdentityResources;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<IdentityResourceId>> CreateIdentityResource(
     IIdentityResourceAdmin admin,
@@ -120,7 +120,7 @@ static Task<SaveResult<IdentityResourceId>> CreateIdentityResource(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.Clients;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<ClientId>> CreateClient(
     IClientAdmin admin,
@@ -159,7 +159,7 @@ the affected secret.
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.Clients;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static async Task<SaveResult<SecretId>> RotateClientSecret(
     IClientAdmin admin,
@@ -203,7 +203,7 @@ This applies to any client validation failure, not only a missing or invalid sec
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.IdentityProviders;
 using Duende.IdentityServer.Stores.Storage.IdentityProviders;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<IdentityProviderId>> CreateIdentityProvider(
     IIdentityProviderAdmin admin,
@@ -254,7 +254,6 @@ grant direct read access to the configuration store as a substitute for an autho
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.SamlServiceProviders;
 using Duende.IdentityServer.Models;
-using Duende.Storage;
 
 static Task<SaveResult<SamlServiceProviderId>> CreateSamlServiceProvider(
     ISamlServiceProviderAdmin admin,
@@ -366,7 +365,7 @@ Use `QueryAsync` to list entities. The result contains the current page and pagi
 ```csharp
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin.ApiScopes;
-using Duende.Storage.Querying;
+using Duende.IdentityServer.Models;
 
 var request = QueryRequest.Create<ApiScopeFilter, ApiScopeSortField>(
     new ApiScopeFilter { Name = "inventory" });

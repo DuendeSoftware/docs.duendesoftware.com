@@ -1,7 +1,7 @@
 ---
 title: User Profiles and Attributes
 description: "Store, retrieve, and manage user profile attributes in Duende User Management using IUserProfileSelfServic, IUserProfileAdmin, and the BuiltInSchemas.UserProfile and profile administration APIs."
-date: 2026-11-18
+date: 2026-11-23
 sidebar:
   label: User Profiles and Attributes
   order: 1
@@ -81,6 +81,8 @@ Each access to `BuiltInSchemas.UserProfile` returns a new instance, so you can s
 
 To add attributes to the default profile, derive a new schema with `Extend` and register it with `AddInMemoryDataExtensionSchemas`:
 
+<Version until="8.1">
+
 ```csharp title="Program.cs"
 using Duende.Storage.EntityAttributeValue;
 using Duende.UserManagement.Profiles;
@@ -98,6 +100,29 @@ builder.Services
     .AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(department)]);
 ```
 
+</Version>
+
+<Version since="8.1">
+
+```csharp title="Program.cs"
+using Duende.IdentityServer.DataExtensions;
+using Duende.UserManagement.Profiles;
+
+var department = new AttributeDefinition
+{
+    Code = AttributeCode.Create("department"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.String),
+    Description = AttributeDescription.Create("The department the user belongs to.")
+};
+
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(_ => { })
+    .AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(department)]);
+```
+
+</Version>
+
 `Extend` also has an overload that adds attribute groups at the same time:
 
 ```csharp
@@ -111,6 +136,8 @@ The call to `AddInMemoryDataExtensionSchemas` can come before or after `AddUserM
 ### Replacing the built-in profile
 
 To replace the default profile entirely — for example, to log in by a custom attribute instead of `email` — register a full `SchemaConfiguration` that uses `SchemaId.UserProfile`:
+
+<Version until="8.1">
 
 ```csharp title="Program.cs"
 using Duende.Storage.EntityAttributeValue;
@@ -134,6 +161,34 @@ builder.Services
     }]);
 ```
 
+</Version>
+
+<Version since="8.1">
+
+```csharp title="Program.cs"
+using Duende.IdentityServer.DataExtensions;
+using Duende.UserManagement.Profiles;
+
+var username = new AttributeDefinition
+{
+    Code = AttributeCode.Create("username"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.String),
+    IsUnique = true,
+    IsRequired = true
+};
+
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(_ => { })
+    .AddInMemoryDataExtensionSchemas([new SchemaConfiguration
+    {
+        SchemaId = SchemaId.UserProfile,
+        AttributeDefinitions = [username, department]
+    }]);
+```
+
+</Version>
+
 None of the built-in attributes (`email`, `name`, `given_name`, `family_name`) are present unless you add them back explicitly. Replacing the schema is also order-independent relative to `AddUserManagement(...)`.
 
 ### Editing the schema at runtime
@@ -154,7 +209,17 @@ builder.Services
 With `AddDynamicSchemas()`, in-memory schemas — including `BuiltInSchemas.UserProfile` and anything passed to `AddInMemoryDataExtensionSchemas` — are not used, and the built-in profile is **not** seeded into the database. `ISchemaAdmin.GetAsync(SchemaId.UserProfile, ct)` returns "not found" until you create the schema yourself.
 :::
 
+<Version until="8.1">
+
 `ISchemaAdmin` (from `Duende.Storage.EntityAttributeValue`) is the interface for managing the schema at runtime:
+
+</Version>
+
+<Version since="8.1">
+
+`ISchemaAdmin` (from `Duende.IdentityServer.DataExtensions`) is the interface for managing the schema at runtime:
+
+</Version>
 
 ```csharp
 public interface ISchemaAdmin
@@ -168,6 +233,8 @@ public interface ISchemaAdmin
 ```
 
 The typical pattern is get-modify-save, using `GetResult<T>.Version` as the `expectedVersion` for optimistic concurrency on update:
+
+<Version until="8.1">
 
 ```csharp
 // SchemaSetup.cs
@@ -201,6 +268,45 @@ public class SchemaSetup(ISchemaAdmin schemaAdmin)
     }
 }
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+// SchemaSetup.cs
+using Duende.IdentityServer.DataExtensions;
+using Duende.UserManagement.Profiles;
+
+public class SchemaSetup(ISchemaAdmin schemaAdmin)
+{
+    public async Task RunAsync(CancellationToken ct)
+    {
+        var getResult = await schemaAdmin.GetAsync(SchemaId.UserProfile, ct);
+        var schema = getResult.Found
+            ? getResult.Item
+            : BuiltInSchemas.UserProfile;
+
+        schema.AttributeDefinitions.Add(new AttributeDefinition
+        {
+            Code = AttributeCode.Create("department"),
+            AttributeType = new ScalarAttributeType(ScalarDataType.String),
+            Description = AttributeDescription.Create("The department the user belongs to.")
+        });
+
+        var result = getResult.Found
+            ? await schemaAdmin.UpdateAsync(SchemaId.UserProfile, schema, getResult.Version!, ct)
+            : await schemaAdmin.CreateAsync(schema, ct);
+
+        if (!result.IsSuccess)
+        {
+            throw new InvalidOperationException(string.Join("; ", result.Errors));
+        }
+    }
+}
+```
+
+</Version>
 
 Starting from `BuiltInSchemas.UserProfile` when no schema exists yet is a choice, not a requirement — build any `SchemaConfiguration` you want for `SchemaId.UserProfile`.
 
@@ -237,7 +343,7 @@ public sealed record AttributeDefinition
 * `GroupCode`: The code of the group this attribute belongs to. `null` means the attribute is ungrouped.
 * `Order`: Sort weight within the group. Lower values appear first.
 
-To organize attributes into groups and control their display order, see [Attribute groups and ordering](/identityserver/identity/user-management/fundamentals/attribute-groups.md).
+To organize attributes into groups and control their display order, see [Attribute groups and ordering](/identityserver/identity/user-management/fundamentals/attribute-groups.mdx).
 
 ### Attribute Types
 
@@ -271,6 +377,8 @@ Value objects like `AttributeCode` and `AttributeGroupCode` support implicit con
 
 The following example defines a custom `department` string attribute and a unique `employee_id` integer attribute. Add them to the schema either at compile time with `Extend` (see [Extending the built-in profile](#extending-the-built-in-profile)), or at runtime through the `ISchemaAdmin` get-modify-save pattern shown above:
 
+<Version until="8.1">
+
 ```csharp
 using Duende.Storage.EntityAttributeValue;
 
@@ -292,6 +400,34 @@ var employeeId = new AttributeDefinition
 // Compile-time: builder.AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(department, employeeId)]);
 // Runtime: add both to schema.AttributeDefinitions in the get-modify-save pattern, then Update/CreateAsync.
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+using Duende.IdentityServer.DataExtensions;
+
+var department = new AttributeDefinition
+{
+    Code = AttributeCode.Create("department"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.String),
+    Description = AttributeDescription.Create("The department the user belongs to.")
+};
+
+var employeeId = new AttributeDefinition
+{
+    Code = AttributeCode.Create("employee_id"),
+    AttributeType = new ScalarAttributeType(ScalarDataType.Integer),
+    Description = AttributeDescription.Create("The unique employee identifier."),
+    IsUnique = true
+};
+
+// Compile-time: builder.AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(department, employeeId)]);
+// Runtime: add both to schema.AttributeDefinitions in the get-modify-save pattern, then Update/CreateAsync.
+```
+
+</Version>
 
 ### Defining Complex Attributes
 
@@ -698,6 +834,8 @@ public interface IUserProfileSelfService
 
 ### Registering a Profile
 
+<Version until="8.1">
+
 ```csharp
 using Duende.Storage.EntityAttributeValue;
 using Duende.UserManagement;
@@ -724,6 +862,39 @@ public class RegistrationService(IUserProfileSelfService profileService)
     }
 }
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+using Duende.IdentityServer.DataExtensions;
+using Duende.UserManagement;
+using Duende.UserManagement.Profiles;
+
+public class RegistrationService(IUserProfileSelfService profileService)
+{
+    public async Task<UserProfile?> RegisterAsync(
+        string subjectId,
+        string givenName,
+        string familyName,
+        string email,
+        CancellationToken ct)
+    {
+        var schema = await profileService.GetSchemaAsync(ct);
+        var attributes = new AttributeValueCollection(schema);
+
+        attributes.Set(AttributeCode.Create("given_name"), givenName);
+        attributes.Set(AttributeCode.Create("family_name"), familyName);
+        attributes.Set(AttributeCode.Create("email"), email);
+
+        return await profileService.TryCreateAsync(
+            UserSubjectId.Create(subjectId), attributes.Validate(), ct);
+    }
+}
+```
+
+</Version>
 
 ### Retrieving a Profile
 
@@ -789,6 +960,8 @@ public interface IUserProfileAdmin
 
 ### Creating a Profile (Admin)
 
+<Version until="8.1">
+
 ```csharp
 using Duende.Storage.EntityAttributeValue;
 using Duende.UserManagement;
@@ -813,6 +986,37 @@ public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
     }
 }
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+using Duende.IdentityServer.DataExtensions;
+using Duende.UserManagement;
+using Duende.UserManagement.Profiles;
+
+public class AdminProvisioningService(IUserProfileAdmin profileAdmin)
+{
+    public async Task<UserProfile?> ProvisionAsync(
+        string subjectId,
+        string email,
+        int employeeId,
+        CancellationToken ct)
+    {
+        var schema = await profileAdmin.GetSchemaAsync(ct);
+        var attributes = new AttributeValueCollection(schema);
+
+        attributes.Set(AttributeCode.Create("email"), email);
+        attributes.Set(AttributeCode.Create("employee_id"), employeeId);
+
+        return await profileAdmin.TryAddAsync(
+            UserSubjectId.Create(subjectId), attributes.Validate(), ct);
+    }
+}
+```
+
+</Version>
 
 ### Looking Up a Profile by Attribute Value
 
@@ -990,6 +1194,8 @@ public interface IReadOnlyAttributeSchema
 
 The following example shows a complete flow: initialising the schema on startup, registering a user profile, and then reading it back.
 
+<Version until="8.1">
+
 ```csharp
 using Duende.Storage.EntityAttributeValue;
 using Duende.UserManagement;
@@ -1061,3 +1267,81 @@ builder.Services
     .AddUserManagement(_ => { })
     .AddInMemoryDataExtensionSchemas([ProfileSchema.Schema]);
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+using Duende.IdentityServer.DataExtensions;
+using Duende.UserManagement;
+using Duende.UserManagement.Profiles;
+
+// 1. Extend the built-in profile with OIDC standard attributes and a custom attribute.
+//    Register this with AddInMemoryDataExtensionSchemas before or after AddUserManagement(...).
+public static class ProfileSchema
+{
+    public static readonly AttributeDefinition Department = new()
+    {
+        Code = AttributeCode.Create("department"),
+        AttributeType = new ScalarAttributeType(ScalarDataType.String),
+        Description = AttributeDescription.Create("The department the user belongs to.")
+    };
+
+    public static readonly SchemaConfiguration Schema = BuiltInSchemas.UserProfile.Extend(
+        OidcStandardAttributes.EmailVerified,
+        Department);
+}
+
+// 2. Register a new user profile (self-service, called after authentication).
+public class OnboardingHandler(IUserProfileSelfService profileService)
+{
+    public async Task<UserProfile?> OnboardAsync(
+        string subjectId,
+        string givenName,
+        string familyName,
+        string email,
+        CancellationToken ct)
+    {
+        var schema = await profileService.GetSchemaAsync(ct);
+        var attributes = new AttributeValueCollection(schema);
+
+        attributes.Set(AttributeCode.Create("given_name"), givenName);
+        attributes.Set(AttributeCode.Create("family_name"), familyName);
+        attributes.Set(AttributeCode.Create("email"), email);
+        attributes.Set(AttributeCode.Create("email_verified"), false);
+
+        return await profileService.TryCreateAsync(
+            UserSubjectId.Create(subjectId), attributes.Validate(), ct);
+    }
+}
+
+// 3. Read the profile back and surface claims.
+public class ProfileReader(IUserProfileSelfService profileService)
+{
+    public async Task PrintAsync(string subjectId, CancellationToken ct)
+    {
+        var profile = await profileService.TryGetAsync(UserSubjectId.Create(subjectId), ct);
+
+        if (profile is null)
+        {
+            Console.WriteLine("No profile found.");
+            return;
+        }
+
+        foreach (var (name, value) in profile.Attributes)
+        {
+            Console.WriteLine($"{name} = {value}");
+        }
+    }
+}
+```
+
+```csharp title="Program.cs"
+builder.Services
+    .AddIdentityServer()
+    .AddUserManagement(_ => { })
+    .AddInMemoryDataExtensionSchemas([ProfileSchema.Schema]);
+```
+
+</Version>
