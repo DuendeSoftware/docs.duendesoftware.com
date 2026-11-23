@@ -81,27 +81,6 @@ Each access to `BuiltInSchemas.UserProfile` returns a new instance, so you can s
 
 To add attributes to the default profile, derive a new schema with `Extend` and register it with `AddInMemoryDataExtensionSchemas`:
 
-<Version until="8.1">
-
-```csharp title="Program.cs"
-using Duende.Storage.EntityAttributeValue;
-using Duende.UserManagement.Profiles;
-
-var department = new AttributeDefinition
-{
-    Code = AttributeCode.Create("department"),
-    AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    Description = AttributeDescription.Create("The department the user belongs to.")
-};
-
-builder.Services
-    .AddIdentityServer()
-    .AddUserManagement(_ => { })
-    .AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(department)]);
-```
-
-</Version>
-
 <Version since="8.1">
 
 ```csharp title="Program.cs"
@@ -136,32 +115,6 @@ The call to `AddInMemoryDataExtensionSchemas` can come before or after `AddUserM
 ### Replacing the built-in profile
 
 To replace the default profile entirely — for example, to log in by a custom attribute instead of `email` — register a full `SchemaConfiguration` that uses `SchemaId.UserProfile`:
-
-<Version until="8.1">
-
-```csharp title="Program.cs"
-using Duende.Storage.EntityAttributeValue;
-using Duende.UserManagement.Profiles;
-
-var username = new AttributeDefinition
-{
-    Code = AttributeCode.Create("username"),
-    AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    IsUnique = true,
-    IsRequired = true
-};
-
-builder.Services
-    .AddIdentityServer()
-    .AddUserManagement(_ => { })
-    .AddInMemoryDataExtensionSchemas([new SchemaConfiguration
-    {
-        SchemaId = SchemaId.UserProfile,
-        AttributeDefinitions = [username, department]
-    }]);
-```
-
-</Version>
 
 <Version since="8.1">
 
@@ -209,12 +162,6 @@ builder.Services
 With `AddDynamicSchemas()`, in-memory schemas — including `BuiltInSchemas.UserProfile` and anything passed to `AddInMemoryDataExtensionSchemas` — are not used, and the built-in profile is **not** seeded into the database. `ISchemaAdmin.GetAsync(SchemaId.UserProfile, ct)` returns "not found" until you create the schema yourself.
 :::
 
-<Version until="8.1">
-
-`ISchemaAdmin` (from `Duende.Storage.EntityAttributeValue`) is the interface for managing the schema at runtime:
-
-</Version>
-
 <Version since="8.1">
 
 `ISchemaAdmin` (from `Duende.IdentityServer.DataExtensions`) is the interface for managing the schema at runtime:
@@ -233,43 +180,6 @@ public interface ISchemaAdmin
 ```
 
 The typical pattern is get-modify-save, using `GetResult<T>.Version` as the `expectedVersion` for optimistic concurrency on update:
-
-<Version until="8.1">
-
-```csharp
-// SchemaSetup.cs
-using Duende.Storage.EntityAttributeValue;
-using Duende.UserManagement.Profiles;
-
-public class SchemaSetup(ISchemaAdmin schemaAdmin)
-{
-    public async Task RunAsync(CancellationToken ct)
-    {
-        var getResult = await schemaAdmin.GetAsync(SchemaId.UserProfile, ct);
-        var schema = getResult.Found
-            ? getResult.Item
-            : BuiltInSchemas.UserProfile;
-
-        schema.AttributeDefinitions.Add(new AttributeDefinition
-        {
-            Code = AttributeCode.Create("department"),
-            AttributeType = new ScalarAttributeType(ScalarDataType.String),
-            Description = AttributeDescription.Create("The department the user belongs to.")
-        });
-
-        var result = getResult.Found
-            ? await schemaAdmin.UpdateAsync(SchemaId.UserProfile, schema, getResult.Version!, ct)
-            : await schemaAdmin.CreateAsync(schema, ct);
-
-        if (!result.IsSuccess)
-        {
-            throw new InvalidOperationException(string.Join("; ", result.Errors));
-        }
-    }
-}
-```
-
-</Version>
 
 <Version since="8.1">
 
@@ -376,32 +286,6 @@ Value objects like `AttributeCode` and `AttributeGroupCode` support implicit con
 :::
 
 The following example defines a custom `department` string attribute and a unique `employee_id` integer attribute. Add them to the schema either at compile time with `Extend` (see [Extending the built-in profile](#extending-the-built-in-profile)), or at runtime through the `ISchemaAdmin` get-modify-save pattern shown above:
-
-<Version until="8.1">
-
-```csharp
-using Duende.Storage.EntityAttributeValue;
-
-var department = new AttributeDefinition
-{
-    Code = AttributeCode.Create("department"),
-    AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    Description = AttributeDescription.Create("The department the user belongs to.")
-};
-
-var employeeId = new AttributeDefinition
-{
-    Code = AttributeCode.Create("employee_id"),
-    AttributeType = new ScalarAttributeType(ScalarDataType.Integer),
-    Description = AttributeDescription.Create("The unique employee identifier."),
-    IsUnique = true
-};
-
-// Compile-time: builder.AddInMemoryDataExtensionSchemas([BuiltInSchemas.UserProfile.Extend(department, employeeId)]);
-// Runtime: add both to schema.AttributeDefinitions in the get-modify-save pattern, then Update/CreateAsync.
-```
-
-</Version>
 
 <Version since="8.1">
 
@@ -1193,82 +1077,6 @@ public interface IReadOnlyAttributeSchema
 ## End-To-End Example
 
 The following example shows a complete flow: initialising the schema on startup, registering a user profile, and then reading it back.
-
-<Version until="8.1">
-
-```csharp
-using Duende.Storage.EntityAttributeValue;
-using Duende.UserManagement;
-using Duende.UserManagement.Profiles;
-
-// 1. Extend the built-in profile with OIDC standard attributes and a custom attribute.
-//    Register this with AddInMemoryDataExtensionSchemas before or after AddUserManagement(...).
-public static class ProfileSchema
-{
-    public static readonly AttributeDefinition Department = new()
-    {
-        Code = AttributeCode.Create("department"),
-        AttributeType = new ScalarAttributeType(ScalarDataType.String),
-        Description = AttributeDescription.Create("The department the user belongs to.")
-    };
-
-    public static readonly SchemaConfiguration Schema = BuiltInSchemas.UserProfile.Extend(
-        OidcStandardAttributes.EmailVerified,
-        Department);
-}
-
-// 2. Register a new user profile (self-service, called after authentication).
-public class OnboardingHandler(IUserProfileSelfService profileService)
-{
-    public async Task<UserProfile?> OnboardAsync(
-        string subjectId,
-        string givenName,
-        string familyName,
-        string email,
-        CancellationToken ct)
-    {
-        var schema = await profileService.GetSchemaAsync(ct);
-        var attributes = new AttributeValueCollection(schema);
-
-        attributes.Set(AttributeCode.Create("given_name"), givenName);
-        attributes.Set(AttributeCode.Create("family_name"), familyName);
-        attributes.Set(AttributeCode.Create("email"), email);
-        attributes.Set(AttributeCode.Create("email_verified"), false);
-
-        return await profileService.TryCreateAsync(
-            UserSubjectId.Create(subjectId), attributes.Validate(), ct);
-    }
-}
-
-// 3. Read the profile back and surface claims.
-public class ProfileReader(IUserProfileSelfService profileService)
-{
-    public async Task PrintAsync(string subjectId, CancellationToken ct)
-    {
-        var profile = await profileService.TryGetAsync(UserSubjectId.Create(subjectId), ct);
-
-        if (profile is null)
-        {
-            Console.WriteLine("No profile found.");
-            return;
-        }
-
-        foreach (var (name, value) in profile.Attributes)
-        {
-            Console.WriteLine($"{name} = {value}");
-        }
-    }
-}
-```
-
-```csharp title="Program.cs"
-builder.Services
-    .AddIdentityServer()
-    .AddUserManagement(_ => { })
-    .AddInMemoryDataExtensionSchemas([ProfileSchema.Schema]);
-```
-
-</Version>
 
 <Version since="8.1">
 

@@ -68,40 +68,6 @@ The following example extends the built-in user profile with a `work-info` group
 
 The example adds new attributes rather than grouping existing ones: the built-in profile already defines `email`, `name`, `given_name` and `family_name`, and `Extend(...)` throws an `InvalidOperationException` if an attribute code already exists in the schema. To put built-in attributes in a group, register a full replacement schema instead (see [Profiles](/identityserver/identity/user-management/fundamentals/profiles.mdx)).
 
-<Version until="8.1">
-
-```csharp
-// attribute-groups-setup.cs
-using Duende.Storage.EntityAttributeValue;
-using Duende.UserManagement.Profiles;
-
-var workInfo = new AttributeGroup(
-    Code: AttributeGroupCode.Create("work-info"),
-    DisplayName: AttributeDisplayName.Create("Work Information"),
-    Description: null,
-    Order: 0);
-
-var jobTitle = new AttributeDefinition
-{
-    Code = AttributeCode.Create("job_title"),
-    AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    GroupCode = workInfo.Code,
-    Order = 1
-};
-
-var department = new AttributeDefinition
-{
-    Code = AttributeCode.Create("department"),
-    AttributeType = new ScalarAttributeType(ScalarDataType.String),
-    GroupCode = workInfo.Code,
-    Order = 0
-};
-
-var extended = BuiltInSchemas.UserProfile.Extend([jobTitle, department], [workInfo]);
-```
-
-</Version>
-
 <Version since="8.1">
 
 ```csharp
@@ -136,7 +102,11 @@ var extended = BuiltInSchemas.UserProfile.Extend([jobTitle, department], [workIn
 
 </Version>
 
+<Version since="8.1">
+
 ```csharp title="Program.cs"
+using Duende.IdentityServer.DataExtensions;
+
 builder.Services
     .AddIdentityServer()
     .AddUserManagement(_ => { })
@@ -166,6 +136,8 @@ if (getResult.Found)
     await schemaAdmin.UpdateAsync(SchemaId.UserProfile, schema, getResult.Version!, ct);
 }
 ```
+
+</Version>
 
 ## Notes on Ordering
 
