@@ -40,11 +40,9 @@ flowchart LR
 
 ### In-Memory Operational Stores
 
-When Spaces is registered through `AddSpaces()` and you don't call `AddOperationalStorage()`, the built-in in-memory
-operational stores also keep separate data per space. This includes grants, device-flow codes, pushed authorization
-requests, server-side sessions, and SAML sign-in and logout state. A request without a resolved space uses the Default
-space's partition. The [in-memory store guide](/identityserver/data/providers/in-memory.mdx#in-memory-operational-stores-with-spaces-identityserver-81-and-later)
-covers constructor and cleanup limitations.
+When you register Spaces with `AddSpaces()` without calling `AddOperationalStorage()`, the built-in in-memory
+operational stores keep separate data per space. See [In-Memory Stores](/identityserver/data/providers/in-memory.mdx#operational-data)
+for details and limitations; select IdentityServer 8.1 to see the Spaces section.
 
 Use `ISpaceAdmin` from a protected administration path to create spaces or change their pool assignments. Moving a space
 to another pool changes which data it sees, so authorize and audit these operations as changes to a security boundary.

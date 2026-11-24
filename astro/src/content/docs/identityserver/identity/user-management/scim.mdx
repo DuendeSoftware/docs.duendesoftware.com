@@ -63,7 +63,6 @@ The Users endpoints are enabled when `IUserProfileAdmin` is registered, and the 
 ## Installation
 
 Install IdentityServer and a Storage provider:
-Install IdentityServer and a Storage provider:
 
 ```bash
 dotnet add package Duende.IdentityServer --version 8.1.0-preview.7
@@ -170,15 +169,14 @@ When using built-in bearer authentication outside the IdentityServer integration
 
 ### IdentityServer Integration And Spaces
 
-In IdentityServer 8.1 and later, when `ScimOAuthOptions.Authority` is unset, the integration validates the issuer and
-signing keys in-process for the current space. It does not fetch discovery metadata. The usual audience check still
-applies, and in this in-process mode the token's `typ` must match `IdentityServerOptions.AccessTokenJwtType`. The type
-check is skipped when you set an explicit `Authority` or when `AccessTokenJwtType` is empty.
+With in-process validation, the token's `typ` must match `IdentityServerOptions.AccessTokenJwtType`. The type check is
+skipped when you set an explicit `Authority` or when `AccessTokenJwtType` is empty. In-process validation does not fetch
+discovery metadata, and the usual audience check still applies.
 
-With path-based Spaces, call `UseSpaceResolution()` before authentication and SCIM endpoint handling so the space is
-available to token validation. An unknown space path is rejected with `404` before authentication. If a request reaches
-SCIM authentication without a resolved space, IdentityServer logs an error naming `UseSpaceResolution()` and returns
-`401`. It does not fall back to the Default space.
+With path-based Spaces, call `UseSpaceResolution()` before `UseRouting()`, authentication, and SCIM endpoint handling so
+the rewritten path is used for routing and the space is available to token validation. An unknown space path is rejected
+with `404` before authentication. If a request reaches SCIM authentication without a resolved space, IdentityServer logs
+an error naming `UseSpaceResolution()` and returns `401`. It does not fall back to the Default space.
 
 A token issued in one space is rejected in every other space, including Default. Setting a shared
 `IdentityServerOptions.IssuerUri` and using process-wide signing keys is allowed, but removes this SCIM isolation: tokens
@@ -188,9 +186,18 @@ which client may provision into each space.
 
 ### Custom Authorization
 
-If your SCIM client authenticates in a different way, for example with a long-lived bearer token issued by another system, register an ASP.NET Core authorization policy and set `AuthorizationPolicyName` to its name. The policy is applied to all SCIM data endpoints, so it must also implement any read-versus-write distinction you need. Metadata endpoints remain anonymous.
+If your SCIM client authenticates in a different way, for example with a long-lived bearer token issued by another system,
+register an ASP.NET Core authorization policy and set `AuthorizationPolicyName` to its name. This shared policy applies
+to SCIM data endpoints unless you configure `ReadAuthorizationPolicyName` or `WriteAuthorizationPolicyName` for that
+operation. Metadata endpoints remain anonymous.
 
-When a custom policy is configured, the built-in `Authority` and `Audience` validation is skipped. The policy must select and validate its own authentication scheme.
+:::caution[Custom policies and token validation]
+A custom policy replaces the built-in policy for the relevant operations, including its authentication-scheme selection
+and scope requirements. The selected authentication scheme, or the default scheme if the policy does not specify one,
+determines how credentials are validated. If the policy uses the SCIM bearer scheme, its configured issuer and audience
+checks still apply. Make sure the scheme validates credentials and the policy enforces appropriate scopes and
+read-versus-write access.
+:::
 
 ## Connecting A SCIM Client
 

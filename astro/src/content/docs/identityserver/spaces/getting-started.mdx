@@ -152,7 +152,8 @@ instances racing between the query and create operations.
 ## Add Space Resolution Middleware
 
 Forwarded headers must run before space resolution so the resolver sees the public scheme and host. Space resolution must
-then run before ASP.NET Core routing because path-based matches rewrite `PathBase` and `Path`:
+then run before ASP.NET Core routing and authentication middleware because path-based matches rewrite `PathBase` and
+`Path`:
 
 ```csharp
 // Program.cs

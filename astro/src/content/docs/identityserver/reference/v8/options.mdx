@@ -648,8 +648,8 @@ Caching settings for the stores. Available on the `Caching` property of the `Ide
 
 * **`CacheLockTimeout`** *(obsolete)*
 
-  This property is already obsolete in IdentityServer 8.0 because `HybridCache` handles stampede protection for
-  configuration-store caching. The 8.0 key manager still uses it as the lock timeout. It defaults to 60 seconds.
+  Lock timeout used by the key manager for key-management operations. It defaults to 60 seconds.
+  Configuration-store caching no longer uses it because `HybridCache` handles stampede protection.
 
 </Version>
 

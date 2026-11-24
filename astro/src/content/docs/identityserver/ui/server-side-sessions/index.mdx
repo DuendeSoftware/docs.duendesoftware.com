@@ -117,11 +117,13 @@ of 0 skips the concurrency check; query results can also carry 0, so it does not
 
 The Entity Framework operational store requires a migration that adds the `Version` column to
 `ServerSideSessions`. Apply the migration before deploying 8.1; without it, session reads and deletes fail, and new
-sign-ins do not persist a server-side session. A browser request whose session-changing write loses a race fails with
-HTTP 500 instead of silently overwriting the newer session. A cookie renewal that only moves the session dates is
-skipped and the request succeeds. If a token call's session extension loses a race, the token call still succeeds but
-that extension is skipped; the next token call tries again. During a rolling upgrade, older nodes do not perform the
-version check, so the concurrency guarantee applies only after all nodes have been upgraded.
+sign-ins do not persist a server-side session. If the default ticket store's rejected renewal only moves the issue and
+expiry times without changing the session lifetime, it skips the renewal and logs at debug level. A rejected renewal
+with other meaningful ticket changes throws an exception instead of overwriting the newer session; the application's
+exception handling determines the response. If a token call's session extension loses a race, the token call still
+succeeds but that extension is skipped. A later token call that qualifies for an extension can try again. During a rolling
+upgrade, older nodes do not perform the version check, so the concurrency guarantee applies only after all nodes have
+been upgraded.
 
 Custom `IServerSideSessionStore` implementations must compare and increment the version atomically when saving. See
 the [store contract](/identityserver/reference/v8/stores/server-side-sessions.mdx#concurrent-updates-in-identityserver-81).

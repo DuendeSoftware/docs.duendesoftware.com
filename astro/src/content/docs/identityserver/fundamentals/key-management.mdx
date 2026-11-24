@@ -180,9 +180,10 @@ This coordination is available in the 8.1 preview. It is subject to change befor
 When Duende Storage's default instance or Spaces is registered, IdentityServer uses a Storage-backed lock so only one
 node can create or rotate signing keys at a time while the distributed lease is held, per space. The default
 `DistributedKeyManager` does not observe the lease's lost token during key creation, so a lease that expires or is lost
-mid-operation can allow overlapping key creation. This is not a strict single-writer guarantee under lease loss. With
-neither Storage nor Spaces registered, key creation uses a process-local lock. A shared file-system or Entity Framework
-key store alone does not coordinate key creation between nodes.
+mid-operation can allow overlapping key creation, potentially leaving an extra key per signing algorithm. This is not a
+strict single-writer guarantee under lease loss. With neither Storage nor Spaces registered, key creation uses a
+process-local lock. A shared file-system or Entity Framework key store alone does not coordinate key creation between
+nodes.
 
 `KeyManagementOptions.KeyCreationLockTimeout` controls how long a node waits for that lock. It defaults to 60 seconds
 and must be greater than zero. If the wait times out, IdentityServer reads the store again and uses an existing usable

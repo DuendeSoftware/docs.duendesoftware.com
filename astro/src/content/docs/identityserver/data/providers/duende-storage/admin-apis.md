@@ -408,24 +408,70 @@ Each service returns its own list item type. These carry the typed ID and a few 
 Call `GetAsync`, or the matching get-by-identifier method, when you need the full configuration.
 
 Because text properties match substrings, compare a returned business identifier exactly when you need one specific
-entity. The public `QueryResult<T>` exposes the current rows as `Results`. For cursor paging, use `ResultsToken` to
-continue and `PreviousToken` to go back, with `HasNextResults` and `HasPrevResults` indicating whether another page is
-available in each direction. A cursor result can include `ResultsToken` even when `HasNextResults` is false, so use the
-flag rather than token nullness to decide whether to request another page.
+entity.
 
-Cursor queries use a deterministic order: null sort values are last, and the entity ID breaks ties; without an explicit
-sort, the entity ID is used. Keep the same sort when following either token; don't reverse the sort or the returned
-rows to page backwards. The flag for the direction queried is exact; the flag for the other direction is inferred from
-the cursor position. If rows on that side have since been deleted, an inferred `true` can lead to an empty page.
+### Cursor Paging
 
-Tokens are bound to the entity type and sort, not the filter or search value. Changing a filter while following a token
-does not invalidate it, but applies the new filter from the old cursor position; keep the same filter and search value
-throughout a traversal. Tokens from the earlier format are rejected with `InvalidContinuationTokenException` rather
-than silently restarting at the first page. The exception also identifies malformed tokens and sort mismatches.
+Use `ResultsToken` to continue a cursor query and `HasNextResults` to decide when to stop:
 
-String values used by cursor-sorted fields are limited to 500 characters and cannot contain `U+0000`. Saving an invalid
-value fails with `ArgumentException`. A value longer than 500 characters saved before this limit was enforced can fail
-when the cursor token is created.
+```csharp
+// ConfigurationAdmin.cs
+using Duende.IdentityServer.Admin.ApiScopes;
+using Duende.IdentityServer.Models;
+
+var filter = new ApiScopeFilter { Name = "inventory" };
+var range = DataRange.FromContinuationToken((ContinuationToken?)null);
+
+while (true)
+{
+    var request = QueryRequest.Create<ApiScopeFilter, ApiScopeSortField>(filter, range);
+    var page = await apiScopes.QueryAsync(request, ct);
+
+    foreach (var scope in page.Results)
+    {
+        Console.WriteLine($"{scope.Id}: {scope.Name}");
+    }
+
+    if (!page.HasNextResults)
+    {
+        break;
+    }
+
+    range = DataRange.FromContinuationToken(page.ResultsToken);
+}
+```
+
+Keep these rules in mind when traversing pages:
+
+* Check `HasNextResults`, not whether `ResultsToken` is null. A token can be present even on the last page.
+* In `8.1.0-preview.7`, use `HasPrevResults` and `PreviousToken` to go back. Keep the same sort; don't reverse the sort
+  or the returned rows.
+* Keep the same filter and search value throughout a traversal. Tokens are bound to the entity type and sort, not the
+  filter or search value. Changing a filter applies the new filter from the old cursor position.
+* Tokens from the earlier format are rejected with `InvalidContinuationTokenException` rather than silently restarting
+  at the first page. The same exception identifies malformed tokens and sort mismatches.
+
+:::caution[Unreleased paging API change]
+After `8.1.0-preview.7`, `HasPrevResults` has been renamed to `HasPreviousResults` in the product source. The new name
+is not available in preview.7. See the [upgrade guide](/identityserver/upgrades/v8_0-to-v8_1.md#paging-result-property-rename)
+before upgrading to a release that includes the change.
+:::
+
+Cursor queries use a deterministic order:
+
+* Null sort values come last.
+* The entity ID breaks ties.
+* Without an explicit sort, the entity ID determines the order.
+
+The flag for the direction queried is exact; the flag for the other direction is inferred from the cursor position.
+If rows on that side have since been deleted, an inferred `true` can lead to an empty page.
+
+String values used by cursor-sorted fields are limited to 500 characters and cannot contain the null character
+`U+0000`. When a save builds indexed fields, it validates their values and throws `ArgumentException` for an invalid
+string. A value longer than 500 characters saved before this limit was enforced can fail when the cursor token is
+created.
+
+### Delete Configuration
 
 Delete an entity by its storage ID:
 

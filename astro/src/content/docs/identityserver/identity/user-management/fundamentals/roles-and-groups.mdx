@@ -15,9 +15,11 @@ Roles and groups provide a flexible authorization model. A role represents a nam
 
 ## End-to-End Example
 
-The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive). It uses three services (`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) which are registered automatically when you call `AddUserManagement(...)` (see [Configuration](/identityserver/identity/user-management/reference/configuration.mdx#membership-module)) and can be injected via constructor injection:
-
-<Version until="8.1">
+The following example creates a role and a group, assigns the role to the group, and adds a user to the group. To query
+the user's roles, see [Querying a User's Effective Roles](#querying-a-users-effective-roles). The three services
+(`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) are registered automatically when you call `AddUserManagement(...)`
+(see [Configuration](/identityserver/identity/user-management/reference/configuration.mdx#membership-module)) and can be
+injected via constructor injection:
 
 ```csharp
 using Duende.UserManagement;
@@ -53,67 +55,9 @@ public class RoleSetupService(
 
         // 4. Add the user to the group. Membership is auto-created when assigning roles/groups.
         await membershipAdmin.AssignGroupAsync(subjectId, groupId, ct);
-
-        // 5. Query effective roles (direct + transitive, merged in application code).
-        var directRoles = await membershipAdmin.GetDirectRolesAsync(subjectId, range: null, ct);
-        var transitiveRoles = await membershipAdmin.GetTransitiveRolesAsync(subjectId, range: null, ct);
-
-        var effectiveRoles = directRoles.Items
-            .Concat(transitiveRoles.Items)
-            .DistinctBy(r => r.Id)
-            .ToList();
-
-        // effectiveRoles now contains "content-editor" via the group.
     }
 }
 ```
-
-</Version>
-
-<Version since="8.1">
-
-```csharp
-using Duende.UserManagement;
-using Duende.UserManagement.Membership;
-
-public class RoleSetupService(
-    IRoleAdmin roleAdmin,
-    IGroupAdmin groupAdmin,
-    IMembershipAdmin membershipAdmin)
-{
-    public async Task SetupEditorRoleAsync(UserSubjectId subjectId, CancellationToken ct)
-    {
-        var roleResult = await roleAdmin.CreateAsync(
-            new Role { Name = RoleName.Create("content-editor") },
-            ct);
-        if (!roleResult.IsSuccess || roleResult.Id is not { } roleId)
-        {
-            throw new InvalidOperationException($"Could not create the content-editor role: {roleResult}");
-        }
-
-        var groupResult = await groupAdmin.CreateAsync(
-            new Group { Name = GroupName.Create("editors") },
-            ct);
-        if (!groupResult.IsSuccess || groupResult.Id is not { } groupId)
-        {
-            throw new InvalidOperationException($"Could not create the editors group: {groupResult}");
-        }
-
-        await membershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
-        await membershipAdmin.AssignGroupAsync(subjectId, groupId, ct);
-
-        var directRoles = await membershipAdmin.GetDirectRolesAsync(subjectId, range: null, ct);
-        var transitiveRoles = await membershipAdmin.GetTransitiveRolesAsync(subjectId, range: null, ct);
-
-        var effectiveRoles = directRoles.Results
-            .Concat(transitiveRoles.Results)
-            .DistinctBy(r => r.Id)
-            .ToList();
-    }
-}
-```
-
-</Version>
 
 ### Where this code typically lives
 
@@ -230,6 +174,8 @@ foreach (var r in roles.Items)
 </Version>
 
 <Version since="8.1">
+
+The paging models, including `DataRange`, are in the `Duende.IdentityServer.Models` namespace.
 
 ```csharp
 using Duende.IdentityServer.Models;

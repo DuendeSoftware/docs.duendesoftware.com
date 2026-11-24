@@ -83,8 +83,9 @@ Duende Storage separates two kinds of schema change:
   * `CurrentVersion` greater than `RequiredVersion` means a newer version of Duende Storage already migrated the
     database. Upgrade the application to a version that expects the current schema instead of trying to downgrade
     the schema.
-* `VerifySchemaAsync()` checks that every table, index and other object the current schema version expects is
-  present, without changing anything.
+* `VerifySchemaAsync()` checks the database structure without changing it and returns a `SchemaVerificationResult`.
+  Check `IsValid` and `Errors` for discrepancies; unlike `MigrateAsync`, it does not throw because of those discrepancies.
+  Operational failures, such as a database connection failure, can still throw.
   For a deployment-time check, use [`duende storage verify`](/identityserver/data/providers/duende-storage/duende-cli.md#storage-verify),
   which also detects structural drift when the stored version number is already current.
 * `BuildMigrationScript(DatabaseSchemaVersion fromVersion)` returns the SQL for the given starting version without

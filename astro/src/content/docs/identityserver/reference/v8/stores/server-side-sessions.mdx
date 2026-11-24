@@ -183,10 +183,8 @@ whether the session was read from the store.
 The Entity Framework operational store migration adds a non-null `Version` integer column to `ServerSideSessions`,
 with a default value of `1`.
 
-When a browser request's session-changing write is refused, the request fails with HTTP 500. A cookie renewal that
-only moves the session dates is skipped and succeeds. If a token call's session extension is refused, the token call
-still succeeds but that extension is skipped. A later token call that qualifies for an extension can try again.
-These behaviors prevent a stale write from overwriting a newer session.
+For how IdentityServer handles rejected ticket renewals and session extensions, see
+[Concurrent Session Updates](/identityserver/ui/server-side-sessions/index.mdx#concurrent-session-updates-in-identityserver-81).
 
 </Version>
 
@@ -302,5 +300,7 @@ IdentityServer 8.1 adds `PreviousToken`:
 ```csharp
 public string? PreviousToken { get; init; }
 ```
+
+The `HasPrevResults` property shown above is named `HasPreviousResults` in product source after `8.1.0-preview.7`.
 
 </Version>

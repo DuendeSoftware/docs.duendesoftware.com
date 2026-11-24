@@ -205,8 +205,12 @@ duende storage verify --provider sqlite
 Exit codes:
 
 * `0`: the schema is current and structurally valid.
-* `2`: a migration is pending. Structural problems can also be reported.
 * `1`: the schema is newer than the CLI understands, is current but structurally invalid, or the check failed.
+* `2`: the schema is behind and needs a migration. Run `duende storage migrate`. Structural problems can also be
+  reported.
+
+When a migration is pending, exit code `2` takes precedence even if the CLI also reports structural problems. Once the
+schema version is current, structural drift returns exit code `1`.
 
 Do not treat a current schema version as proof that the tables and indexes are intact. Run `storage verify` during
 deployment validation when you need to detect structural drift.
