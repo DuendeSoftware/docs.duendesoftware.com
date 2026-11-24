@@ -112,8 +112,13 @@ your isolation model. A strict `404 Not Found` response is safer for multi-tenan
 :::caution[Leave `IssuerUri` unset with Spaces]
 Spaces rely on IdentityServer inferring the issuer from each request's origin and path base, which is what gives every
 space its own `iss` claim. Leave `IssuerUri` unset so each space has its own issuer. Setting a fixed value makes every
-space return the same `issuer`/`iss`, although their data and normal OpenID Connect discovery endpoints remain separate.
-See [Multi-Issuer](/identityserver/tokens/issuer.mdx#multi-issuer) for how issuer inference works.
+space return the same `issuer`/`iss`. If the spaces also share signing keys, a token issued in one space can be accepted
+in another space when the rest of its validation, such as the audience and client ID, also passes there.
+
+To protect against this, the host fails to start when Spaces is registered and `IssuerUri` is set. If sharing one issuer
+is deliberate, set `SpacesOptions.AllowSharedIssuerUri` to `true` (the default is `false`). See
+[Multi-Issuer](/identityserver/tokens/issuer.mdx#multi-issuer) for how issuer inference works, and
+[What Spaces Does Not Isolate](#what-spaces-does-not-isolate) for which signing key setups are shared.
 :::
 
 ## UI and Application Services
@@ -243,9 +248,22 @@ dependency. Review signing credentials, external caches, telemetry, rate limits 
 they also need space-aware configuration.
 
 For example, sharing signing credentials reduces cryptographic separation between spaces. Token validation still checks
-the issuer, audience and other constraints, but each space should use deliberately scoped credentials when your security
-model requires independent trust boundaries. IdentityServer protects its own signing keys through the unpartitioned
-Data Protection provider, so they remain valid across every space even when `PartitionDataProtection` is enabled.
+the issuer, audience and other constraints, but when `IssuerUri` is set and spaces share an issuer, the issuer check no
+longer tells spaces apart. Each space should use deliberately scoped credentials when your security model requires
+independent trust boundaries. IdentityServer protects its own signing keys through the unpartitioned Data Protection
+provider, so they remain valid across every space even when `PartitionDataProtection` is enabled.
+
+Whether signing keys are shared depends on how you configure them:
+
+* A static signing credential (`AddSigningCredential` or `AddDeveloperSigningCredential`) is shared across spaces.
+* Automatic key management with the file-system key store (the default when you don't call `AddOperationalStorage()`)
+  is shared across spaces, because the process uses one `KeyPath` folder.
+* Automatic key management with `AddOperationalStorage()` stores keys per space.
+* A custom signing key store depends on its implementation.
+
+Shared keys with a separate issuer per space is a valid trade-off, because the issuer still keeps spaces apart.
+`UseIdentityServer()` logs a warning at startup when Spaces is used with a static signing credential, or with automatic
+key management and the file-system key store. A custom signing key store doesn't trigger the warning.
 :::
 
 To inject the Spaces cache into an application service, use its service key:

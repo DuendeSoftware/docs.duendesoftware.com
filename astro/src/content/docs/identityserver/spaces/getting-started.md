@@ -199,6 +199,8 @@ Set `SpacesOptions.PartitionDataProtection` to `false` when all protected data f
 partitioning for that data. If only specific values need to be shared, use `GetUnpartitioned()` for those protectors
 instead.
 
+Spaces infers a separate issuer for each space. Setting `IdentityServerOptions.IssuerUri` gives every space the same issuer, so the host fails to start unless you set `SpacesOptions.AllowSharedIssuerUri` to `true` (default: `false`). Opt in only when sharing one issuer is deliberate.
+
 Spaces registers its own keyed `HybridCache` under `SpacesServiceProviderKeys.SpacesCache` instead of registering or
 sharing the app's default `HybridCache`. If your app already relies on an unkeyed `HybridCache` for its own caching,
 call `AddHybridCache()` yourself. Entries created through `IHybridCacheFactory` are automatically partitioned by the
