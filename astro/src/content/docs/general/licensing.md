@@ -333,7 +333,8 @@ keeps running and handling requests after they are exceeded.
 If you want to redistribute Duende IdentityServer to your customers as part of a product,
 you can use our [redistributable license](https://duendesoftware.com/products/identityserverredist). 
 This license allows your product to include Duende IdentityServer in a packaged product you publish, 
-and your customer installs within their own infrastructure. A current redistribution license is required to publish 
+and your customer installs within their own infrastructure. Each end customer who buys your product counts as a single
+redistribution, no matter how many times they install or run it. A current redistribution license is required to publish 
 any new or updated version of your software which includes Duende IdentityServer. If a redistribution license is expired, 
 Duende IdentityServer does not cease to work for your customer, however they will no longer be able to receive updated versions 
 of Duende IdentityServer from you, including security patches.
@@ -345,12 +346,22 @@ You are always responsible for ensuring your license is renewed.
 
 ##### Redistribution options
 
-Redistribution licenses are based on features, the number of Connected Applications, and the number of IdentityServer
-installations you deploy to your end customers. Many limits, including the number of Connected Applications, can be lifted
-to unlimited. Unlimited Connected Applications does not mean unlimited redistributions: the number of installations
-you ship to your own customers is licensed separately. IdentityServers that you host for your customers count as
-deployments on your license, one per separate installation. IdentityServers that your customers host themselves are
-licensed per product, as set out in your order.
+Redistribution licenses are based on features, the number of Connected Applications, and the number of
+redistributions.
+
+Each end customer who buys your product counts as a single redistribution, no matter how many times they install or run it.
+
+Many limits, including the number of Connected Applications, can be lifted to unlimited. Unlimited
+Connected Applications does not mean unlimited redistributions: the number of customers you ship to is licensed
+separately.
+
+Who owns the hosting decides how an installation is counted:
+
+* **Your customer hosts it** on their own infrastructure or cloud account: it's covered by the redistribution for your
+  product, as set out in your order. 
+* **You host it** on infrastructure or a cloud account you or your affiliates own or hold: each separate installation counts as
+  a [deployment](#deployments) on your license, including when you run one per customer.
+
 [Duende User Management](/identityserver/identity/user-management/index.mdx) and the
 [BFF Security Framework](#bff-security-framework) are also available to redistribution customers.
 
