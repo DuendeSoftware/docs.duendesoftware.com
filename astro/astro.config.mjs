@@ -324,11 +324,6 @@ export default defineConfig({
       },
       social: [
         {
-          icon: "external",
-          label: "Duende Software",
-          href: "https://duendesoftware.com/",
-        },
-        {
           icon: "github",
           label: "GitHub",
           href: "https://github.com/DuendeSoftware/community",
@@ -364,6 +359,7 @@ export default defineConfig({
         Sidebar: "./src/components/Sidebar.astro",
         PageTitle: "./src/components/PageTitle.astro",
         Hero: "./src/components/Hero.astro",
+        SocialIcons: "./src/components/SocialIcons.astro",
       },
     }),
     redirectFrom({
