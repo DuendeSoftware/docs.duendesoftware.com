@@ -1,0 +1,22 @@
+---
+import Default from "@astrojs/starlight/components/SocialIcons.astro";
+---
+
+<a class="site-link" href="https://duendesoftware.com/">
+  duendesoftware.com<span aria-hidden="true">&nbsp;↗</span>
+</a>
+<Default />
+
+<style>
+  .site-link {
+    color: var(--sl-color-white);
+    font-size: var(--sl-text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .site-link:hover {
+    color: var(--sl-color-text-accent);
+    text-decoration: underline;
+  }
+</style>
