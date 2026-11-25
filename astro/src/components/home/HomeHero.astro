@@ -36,17 +36,6 @@ const slices = [
   { y: 82, h: 7, dx: -5, alt: true },
   { y: 89, h: 11, dx: 2, alt: false },
 ];
-
-const isVersions = (products as Product[]).find((p) => p.key === "identityserver")?.versions ?? [];
-const unsupportedMajors = [...new Set(isVersions.filter((v) => v.unsupported).map((v) => v.version.split(".")[0]))]
-  .map(Number)
-  .sort((a, b) => a - b);
-const unsupported =
-  unsupportedMajors.length > 1
-    ? `v${unsupportedMajors[0]}.x–v${unsupportedMajors[unsupportedMajors.length - 1]}.x`
-    : unsupportedMajors.length === 1
-      ? `v${unsupportedMajors[0]}.x`
-      : undefined;
 ---
 
 <div class="home-hero not-content">
@@ -112,7 +101,7 @@ const unsupported =
     </div>
 
     <p class="upgrade">
-      {unsupported && <>IdentityServer {unsupported} is unsupported. </>}
+      Upgrading IdentityServer?{" "}
       <a href="/identityserver/upgrades/">Upgrade guides</a>
     </p>
     <p class="upgrade">
