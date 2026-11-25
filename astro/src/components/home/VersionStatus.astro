@@ -18,15 +18,13 @@ const latestIndex = versions.findIndex((v) => !v.preview);
 const latest = latestIndex >= 0 ? versions[latestIndex] : undefined;
 const preview = versions.slice(0, Math.max(latestIndex, 0)).find((v) => v.preview);
 
-const unsupportedMajors = [
-  ...new Set(versions.filter((v) => v.unsupported).map((v) => v.version.split(".")[0])),
-].sort((a, b) => Number(a) - Number(b));
-const unsupportedLabel =
-  unsupportedMajors.length === 0
-    ? undefined
-    : unsupportedMajors.length === 1
-      ? `v${unsupportedMajors[0]}.x`
-      : `v${unsupportedMajors[0]}.x–v${unsupportedMajors[unsupportedMajors.length - 1]}.x`;
+// Versions are declared newest first, so the first unsupported one is the newest unsupported version.
+const newestUnsupported = versions.find((v) => v.unsupported);
+const unsupportedLabel = newestUnsupported
+  ? versions.at(-1) === newestUnsupported
+    ? `v${newestUnsupported.version}`
+    : `v${newestUnsupported.version} and older`
+  : undefined;
 ---
 
 {latest && (
