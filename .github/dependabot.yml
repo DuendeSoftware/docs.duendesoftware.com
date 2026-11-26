@@ -20,7 +20,7 @@ updates:
           - "patch"
 
   - package-ecosystem: "nuget"
-    directory: "/"
+    directory: "/server"
     schedule:
       interval: "weekly"
     groups:
