@@ -6,6 +6,6 @@ _ = builder.AddJavaScriptApp("astro", "../../../astro")
     .WithExternalHttpEndpoints();
 
 // ASP.NET Core static file server
-_ = builder.AddProject<Projects.Docs_Web>("web");
+_ = builder.AddDotnetProject("web", "../Docs.Web/Docs.Web.csproj");
 
 builder.Build().Run();
