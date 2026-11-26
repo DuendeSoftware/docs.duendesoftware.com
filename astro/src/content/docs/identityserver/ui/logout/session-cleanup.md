@@ -66,7 +66,7 @@ During a user's session, long-lived tokens (e.g. refresh tokens) might have been
 If at logout time you would like to have those tokens revoked, then this can be done automatically by setting the
 `CoordinateLifetimeWithUserSession` property on
 the [client configuration](/identityserver/reference/v8/models/client.md#authentication--session-management), or globally
-on the [IdentityServer Authentication Options](/identityserver/reference/v8/options.md#authentication).
+on the [IdentityServer Authentication Options](/identityserver/reference/v8/options.mdx#authentication).
 
 When coordination is enabled for a client, IdentityServer removes that client's refresh tokens and reference access
 tokens for the session that is ending. JWT access tokens cannot be revoked and remain valid until they expire.
@@ -74,7 +74,7 @@ tokens for the session that is ending. JWT access tokens cannot be revoked and r
 `Authentication.CoordinateClientLifetimesWithUserSession` enables coordination for all clients. A client's own
 `CoordinateLifetimeWithUserSession` value takes precedence over the global option.
 
-Coordination does not require [server-side sessions](/identityserver/ui/server-side-sessions/index.md). Tokens are
+Coordination does not require [server-side sessions](/identityserver/ui/server-side-sessions/index.mdx). Tokens are
 revoked whenever `HttpContext.SignOutAsync` is called for the cookie scheme. With server-side sessions enabled,
 tokens are also revoked when a session expires, and the client receives a back-channel logout notification. See
 [Sessions that end without an explicit logout](/identityserver/ui/logout/cleanup-overview.md#sessions-that-end-without-an-explicit-logout).

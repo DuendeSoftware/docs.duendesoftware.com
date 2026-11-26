@@ -1,13 +1,15 @@
 ---
 title: Attribute Groups and Ordering
 description: How to organize user profile attributes into groups and control their display order in Duende User Management.
-date: 2026-05-15
+date: 2026-11-23
 sidebar:
   label: Attribute Groups
   order: 2
 redirect_from:
   - /identityserver/usermanagement/fundamentals/attribute-groups/
 ---
+
+import Version from "~/components/Version.astro";
 
 When a schema contains many attributes, displaying them as a flat list quickly becomes hard to navigate.
 Attribute groups let you organize attributes into named sections and control the order in which both groups and individual attributes appear. 
@@ -51,26 +53,49 @@ Two properties on `AttributeDefinition` control how an attribute is placed withi
 * `AttributeGroupCode? GroupCode`: The group this attribute belongs to. `null` means the attribute is ungrouped and appears outside any group section.
 * `int Order`: Sort weight controlling the display position of this attribute within its group (or among ungrouped attributes). Lower values appear first.
 
-These properties are set when constructing an `AttributeDefinition`. To change them, build a new `SchemaConfiguration` (or modify one read via `ISchemaAdmin`) with the updated definitions — there is no dedicated reorder operation. See [Schema management](/identityserver/identity/user-management/fundamentals/profiles.md#schema-management) for the `Extend` and get-modify-save patterns.
+These properties are set when constructing an `AttributeDefinition`. The available schema management APIs depend on your version. See [Schema management](/identityserver/identity/user-management/fundamentals/profiles.mdx#schema-management).
 
 ## Managing Groups
+
+<Version until="8.1">
+
+Use `IUserProfileSchemaAdmin` to add and remove groups and definitions, or call `ReorderAttributesAsync` and `ReorderGroupsAsync` to change their order. The service is registered by `AddUserManagement`.
+
+</Version>
+
+<Version since="8.1">
 
 Groups are part of the `SchemaConfiguration.Groups` collection, alongside `AttributeDefinitions`. There is no dedicated API for adding, removing or reordering groups and attributes — you build the `ICollection<AttributeGroup>` and set each `AttributeDefinition.GroupCode`/`Order` as part of the schema you register, the same way you manage any other part of the schema:
 
 * For an in-memory schema, include the groups and ordered definitions when you call `BuiltInSchemas.UserProfile.Extend(attributes, groups)` or construct a full `SchemaConfiguration`, and register it with `AddInMemoryDataExtensionSchemas`.
 * For a storage-backed schema, use the `ISchemaAdmin` get-modify-save pattern: read the current `SchemaConfiguration`, add to or reorder its `Groups` and `AttributeDefinitions` collections, then call `UpdateAsync` with the version from the read.
 
+</Version>
+
 ## Setting Up Groups
 
-The following example extends the built-in user profile with a `work-info` group and two new attributes assigned to it, in a chosen order.
+The following example defines a `work-info` group and two attributes assigned to it, in a chosen order.
 
-The example adds new attributes rather than grouping existing ones: the built-in profile already defines `email`, `name`, `given_name` and `family_name`, and `Extend(...)` throws an `InvalidOperationException` if an attribute code already exists in the schema. To put built-in attributes in a group, register a full replacement schema instead (see [Profiles](/identityserver/identity/user-management/fundamentals/profiles.md)).
+<Version since="8.1">
+
+The example adds new attributes rather than grouping existing ones: the built-in profile already defines `email`, `name`, `given_name` and `family_name`, and `Extend(...)` throws an `InvalidOperationException` if an attribute code already exists in the schema. To put built-in attributes in a group, register a full replacement schema instead (see [Profiles](/identityserver/identity/user-management/fundamentals/profiles.mdx)).
+
+</Version>
+
+<Version until="8.1">
+
+Import `Duende.Storage.EntityAttributeValue` and `Duende.UserManagement.Profiles` for the following definitions and schema operations.
+
+</Version>
+
+<Version since="8.1">
+
+Import `Duende.IdentityServer.DataExtensions` and `Duende.UserManagement.Profiles` for the following definitions and schema registration.
+
+</Version>
 
 ```csharp
 // attribute-groups-setup.cs
-using Duende.Storage.EntityAttributeValue;
-using Duende.UserManagement.Profiles;
-
 var workInfo = new AttributeGroup(
     Code: AttributeGroupCode.Create("work-info"),
     DisplayName: AttributeDisplayName.Create("Work Information"),
@@ -92,9 +117,36 @@ var department = new AttributeDefinition
     GroupCode = workInfo.Code,
     Order = 0
 };
+```
 
+<Version until="8.1">
+
+Add the group before its attributes using an injected `IUserProfileSchemaAdmin`:
+
+```csharp
+// register-attribute-group.cs
+if (!await schemaAdmin.TryAddGroupAsync(workInfo, ct) ||
+    !await schemaAdmin.TryAddAttributeDefinitionAsync(jobTitle, ct) ||
+    !await schemaAdmin.TryAddAttributeDefinitionAsync(department, ct))
+{
+    throw new InvalidOperationException("Could not configure the work-info group.");
+}
+```
+
+These calls can fail if a code already exists or a concurrent update conflicts.
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+// extend-profile-schema.cs
 var extended = BuiltInSchemas.UserProfile.Extend([jobTitle, department], [workInfo]);
 ```
+
+</Version>
+
+<Version since="8.1">
 
 ```csharp title="Program.cs"
 builder.Services
@@ -103,7 +155,27 @@ builder.Services
     .AddInMemoryDataExtensionSchemas([extended]);
 ```
 
-Because `department.Order` (`0`) is lower than `jobTitle.Order` (`1`), a UI that reads `schema.AttributeDefinitions` ordered by `Order` within the `work-info` group renders department before job title.
+</Version>
+
+Because `department.Order` (`0`) is lower than `jobTitle.Order` (`1`), a UI that orders attributes by `Order` within the `work-info` group renders department before job title.
+
+<Version until="8.1">
+
+To change the ordering later, call `ReorderAttributesAsync`:
+
+```csharp
+// reorder-attributes.cs
+if (!await schemaAdmin.ReorderAttributesAsync(workInfo.Code, [jobTitle.Code, department.Code], ct))
+{
+    throw new InvalidOperationException("Could not reorder the work-info attributes.");
+}
+```
+
+The listed attributes receive consecutive order values starting at `0`. Unlisted attributes in the group are appended in their existing relative order. Pass `null` to reorder ungrouped attributes. `ReorderGroupsAsync` similarly reorders groups. These operations return `false` if the schema is missing, the group is missing, or the update fails.
+
+</Version>
+
+<Version since="8.1">
 
 To change ordering later for a storage-backed schema, read the schema with `ISchemaAdmin.GetAsync`, update the `Order` values on the definitions or groups you want to move, and call `UpdateAsync` with the returned version:
 
@@ -127,8 +199,20 @@ if (getResult.Found)
 }
 ```
 
+</Version>
+
 ## Notes on Ordering
 
 `Order` values do not need to be unique. When two attributes share the same `Order` value, apply your own stable secondary sort (for example, by code) when rendering a UI.
 
-Removing a group from the schema does not fail if attributes still reference it by `GroupCode` — treat that as an application-level validation concern when you build the replacement schema: either reassign those attributes' `GroupCode` to `null` or to another existing group before removing the group, so you don't end up with attributes pointing at a group that no longer exists.
+<Version until="8.1">
+
+Removing a group with `TryRemoveGroupAsync` ungroups its attributes.
+
+</Version>
+
+<Version since="8.1">
+
+When removing a group from a `SchemaConfiguration`, reassign its attributes' `GroupCode` to `null` or to another existing group.
+
+</Version>

@@ -6,7 +6,7 @@ sidebar:
   order: 90
 ---
 
-IdentityServer abstracts all data access behind store interfaces. You can implement any of these interfaces yourself to use any database, storage backend, or data access technology, rather than being limited to the built-in [Entity Framework Core](/identityserver/data/providers/entityframework-core.md) or [in-memory](/identityserver/data/providers/in-memory.md) providers.
+IdentityServer abstracts all data access behind store interfaces. You can implement any of these interfaces yourself to use any database, storage backend, or data access technology, rather than being limited to the built-in [Entity Framework Core](/identityserver/data/providers/entityframework-core.md) or [in-memory](/identityserver/data/providers/in-memory.mdx) providers.
 
 Register your custom store implementations in `Program.cs` using the standard ASP.NET Core DI methods or the IdentityServer builder extension methods.
 

@@ -1,7 +1,7 @@
 ---
 title: "Migrating from ASP.NET Identity"
 description: Step-by-step guide to migrating users from an ASP.NET Identity database into Duende User Management using a hosted service and the IUserImporter API.
-date: 2025-05-22
+date: 2026-11-23
 sidebar:
   label: "From ASP.NET Identity"
   order: 2
@@ -10,6 +10,7 @@ redirect_from:
 ---
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import Version from "~/components/Version.astro";
 
 You have a working application with real users. Passwords are stored, sessions are active, and everything runs. Now you want to adopt Duende User Management
 without losing a single account or forcing anyone to reset their password.
@@ -17,7 +18,8 @@ without losing a single account or forcing anyone to reset their password.
 This guide walks you through building a hosted service that reads users from your existing ASP.NET Identity database and imports them into User Management.
 The approach: query the source database directly, map each user to a `UserImportRecord`, and call `IUserImporter.ImportAsync`.
 
-When the migration is done, your users log in exactly as before. They will not notice anything changed.
+With the password migration configured, users with compatible hashes can continue to sign in with their existing
+passwords. Other authenticators need their own migration steps.
 
 Before you start, you need two things: an existing ASP.NET Identity database with users to migrate, and a target IdentityServer application that already has User Management configured.
 If you have not set up User Management yet, see the [getting started guide](/identityserver/identity/user-management/getting-started.mdx) first.
@@ -225,10 +227,14 @@ This is the core of the migration: reading each `IdentityUser` and its claims, t
 The key decisions:
 
 * **`SubjectId`**: use `UserSubjectId.Create(user.Id)` to carry the existing GUID across as-is. This preserves any existing tokens or references that use the subject ID.
-* **`ProfileAttributes`**: map email, phone, username, and claims to profile attributes using the schema. The ASP.NET Identity `UserName` column maps to the SCIM `userName` attribute.
+* **`ProfileAttributes`**: map email, username, and claims to profile attributes using the schema. The ASP.NET Identity `UserName` column maps to the SCIM `userName` attribute when the schema defines it.
 * **`Password`**: wrap the raw base64 hash using `AspNetIdentityPasswordHashAlgorithm.CreateImportData`.
 
-Add a helper method that takes an `IdentityUser` and its claims and returns a `UserImportRecord`:
+Add a helper that takes an `IdentityUser`, its claims, passkeys, and the target schema, and returns a `UserImportRecord`.
+The 8.1 default profile requires an email address. Users without one must be corrected in the source or handled using a
+different schema before import. In 8.0, use the requirements of your configured profile schema.
+
+<Version until="8.1">
 
 ```csharp
 // MigrationHelpers.cs
@@ -239,7 +245,9 @@ using Duende.UserManagement.Authentication.Passkeys;
 using Duende.UserManagement.Import;
 using Microsoft.AspNetCore.Identity;
 
-static UserImportRecord MapUser(
+internal static class MigrationHelpers
+{
+public static UserImportRecord MapUser(
     IdentityUser user,
     IReadOnlyList<IdentityUserClaim<string>> claims,
     IReadOnlyList<PasskeyData> passkeys,
@@ -247,9 +255,13 @@ static UserImportRecord MapUser(
 {
     var attrs = new AttributeValueCollection(schema);
 
-    // Email as a multi-valued complex attribute
+    // Map the email to the scalar profile attribute and, when defined, the SCIM list.
     if (!string.IsNullOrEmpty(user.Email))
     {
+        var scalarEmailCode = AttributeCode.Create("email");
+        if (schema.AttributeDefinitions.ContainsKey(scalarEmailCode))
+            attrs.Set(scalarEmailCode, user.Email);
+
         IReadOnlyList<object> emailList =
         [
             (IReadOnlyDictionary<string, object>)new Dictionary<string, object>
@@ -275,11 +287,13 @@ static UserImportRecord MapUser(
     // Simple scalar claims mapped to profile attributes
     foreach (var claim in claims)
     {
+        if (claim.ClaimValue is null) continue;
         var attrName = MapClaimToAttribute(claim.ClaimType);
         if (attrName is null) continue;
 
         var code = AttributeCode.Create(attrName);
-        if (schema.AttributeDefinitions.ContainsKey(code))
+        if (schema.AttributeDefinitions.TryGetValue(code, out var definition) &&
+            definition.AttributeType is ScalarAttributeType { DataType: ScalarDataType.String })
             attrs.Set(code, claim.ClaimValue);
     }
 
@@ -287,6 +301,7 @@ static UserImportRecord MapUser(
     var nameProps = new Dictionary<string, object>();
     foreach (var claim in claims)
     {
+        if (claim.ClaimValue is null) continue;
         switch (claim.ClaimType)
         {
             case "given_name":   nameProps["givenName"]   = claim.ClaimValue; break;
@@ -297,7 +312,8 @@ static UserImportRecord MapUser(
     if (nameProps.Count > 0)
     {
         var nameCode = AttributeCode.Create("name");
-        if (schema.AttributeDefinitions.ContainsKey(nameCode))
+        if (schema.AttributeDefinitions.TryGetValue(nameCode, out var nameDefinition) &&
+            nameDefinition.AttributeType is ComplexAttributeType)
             attrs.Set(nameCode, (IReadOnlyDictionary<string, object>)nameProps);
     }
 
@@ -321,6 +337,7 @@ static UserImportRecord MapUser(
     var addressProps = new Dictionary<string, object>();
     foreach (var claim in claims)
     {
+        if (claim.ClaimValue is null) continue;
         switch (claim.ClaimType)
         {
             case "street_address": addressProps["streetAddress"] = claim.ClaimValue; break;
@@ -362,7 +379,7 @@ static UserImportRecord MapUser(
     return new UserImportRecord
     {
         SubjectId = UserSubjectId.Create(user.Id),
-        ProfileAttributes = attrs.Count > 0 ? attrs.Validate() : null,
+        ProfileAttributes = attrs.Validate(),
         Authenticators = new AuthenticatorImport
         {
             Password = password,
@@ -372,19 +389,23 @@ static UserImportRecord MapUser(
     };
 }
 
-static string? MapClaimToAttribute(string claimType) => claimType switch
+static string? MapClaimToAttribute(string? claimType) => claimType switch
 {
+    "name"               => "name",
+    "given_name"         => "given_name",
+    "family_name"        => "family_name",
+    "middle_name"        => "middle_name",
     "display_name"       => "displayName",
     "title"              => "title",
     "user_type"          => "userType",
     "preferred_language" => "preferredLanguage",
     "locale"             => "locale",
     "timezone"           => "timezone",
-    // given_name, family_name, middle_name are handled as the complex "name" attribute
     // street_address, locality, region, postal_code, country are handled as the complex "addresses" attribute
     // phone_number is handled separately below if needed
     _ => null
 };
+}
 
 // Data class for passkey credentials read from the source database
 record PasskeyData(
@@ -398,18 +419,309 @@ record PasskeyData(
     string? Name);
 ```
 
-Notice that `given_name`, `family_name`, and `middle_name` are not mapped by `MapClaimToAttribute`
-They are assembled into the complex `name` attribute instead, because User Management stores name components
-as a structured object rather than flat strings.
+</Version>
+
+<Version since="8.1">
+
+```csharp
+// MigrationHelpers.cs
+using Duende.IdentityServer.DataExtensions;
+using Duende.UserManagement;
+using Duende.UserManagement.Authentication.Otp;
+using Duende.UserManagement.Authentication.Passkeys;
+using Duende.UserManagement.Import;
+using Microsoft.AspNetCore.Identity;
+
+internal static class MigrationHelpers
+{
+public static UserImportRecord MapUser(
+    IdentityUser user,
+    IReadOnlyList<IdentityUserClaim<string>> claims,
+    IReadOnlyList<PasskeyData> passkeys,
+    IReadOnlyAttributeSchema schema)
+{
+    var attrs = new AttributeValueCollection(schema);
+
+    // Map the email to the scalar profile attribute and, when defined, the SCIM list.
+    if (!string.IsNullOrEmpty(user.Email))
+    {
+        var scalarEmailCode = AttributeCode.Create("email");
+        if (schema.AttributeDefinitions.ContainsKey(scalarEmailCode))
+            attrs.Set(scalarEmailCode, user.Email);
+
+        IReadOnlyList<object> emailList =
+        [
+            (IReadOnlyDictionary<string, object>)new Dictionary<string, object>
+            {
+                ["value"] = user.Email,
+                ["type"] = "work",
+                ["primary"] = true
+            }
+        ];
+        var emailCode = AttributeCode.Create("emails");
+        if (schema.AttributeDefinitions.ContainsKey(emailCode))
+            attrs.Set(emailCode, emailList);
+    }
+
+    // Username as a SCIM attribute
+    if (!string.IsNullOrEmpty(user.UserName))
+    {
+        var userNameCode = AttributeCode.Create("userName");
+        if (schema.AttributeDefinitions.ContainsKey(userNameCode))
+            attrs.Set(userNameCode, user.UserName);
+    }
+
+    // Simple scalar claims mapped to profile attributes
+    foreach (var claim in claims)
+    {
+        if (claim.ClaimValue is null) continue;
+        var attrName = MapClaimToAttribute(claim.ClaimType);
+        if (attrName is null) continue;
+
+        var code = AttributeCode.Create(attrName);
+        if (schema.AttributeDefinitions.TryGetValue(code, out var definition) &&
+            definition.AttributeType is ScalarAttributeType { DataType: ScalarDataType.String })
+            attrs.Set(code, claim.ClaimValue);
+    }
+
+    // Name as a complex attribute built from given_name / family_name / middle_name claims
+    var nameProps = new Dictionary<string, object>();
+    foreach (var claim in claims)
+    {
+        if (claim.ClaimValue is null) continue;
+        switch (claim.ClaimType)
+        {
+            case "given_name":   nameProps["givenName"]   = claim.ClaimValue; break;
+            case "family_name":  nameProps["familyName"]  = claim.ClaimValue; break;
+            case "middle_name":  nameProps["middleName"]  = claim.ClaimValue; break;
+        }
+    }
+    if (nameProps.Count > 0)
+    {
+        var nameCode = AttributeCode.Create("name");
+        if (schema.AttributeDefinitions.TryGetValue(nameCode, out var nameDefinition) &&
+            nameDefinition.AttributeType is ComplexAttributeType)
+            attrs.Set(nameCode, (IReadOnlyDictionary<string, object>)nameProps);
+    }
+
+    // Password
+    PasswordImport? password = null;
+    if (!string.IsNullOrEmpty(user.PasswordHash))
+    {
+        password = new PasswordImport(
+            AspNetIdentityPasswordHashAlgorithm.CreateImportData(user.PasswordHash));
+    }
+
+    // OTP email address (for email-based one-time passwords)
+    var otpAddresses = new List<OtpAddress>();
+    if (!string.IsNullOrEmpty(user.Email) &&
+        EmailAddress.TryCreate(user.Email, out var emailAddress))
+    {
+        otpAddresses.Add(new OtpAddress(OtpChannel.Email, emailAddress));
+    }
+
+    // Address as a complex attribute from claims
+    var addressProps = new Dictionary<string, object>();
+    foreach (var claim in claims)
+    {
+        if (claim.ClaimValue is null) continue;
+        switch (claim.ClaimType)
+        {
+            case "street_address": addressProps["streetAddress"] = claim.ClaimValue; break;
+            case "locality":      addressProps["locality"]       = claim.ClaimValue; break;
+            case "region":        addressProps["region"]         = claim.ClaimValue; break;
+            case "postal_code":   addressProps["postalCode"]     = claim.ClaimValue; break;
+            case "country":       addressProps["country"]        = claim.ClaimValue; break;
+        }
+    }
+    if (addressProps.Count > 0)
+    {
+        addressProps.TryAdd("primary", false);
+        IReadOnlyList<object> addressList = [(IReadOnlyDictionary<string, object>)addressProps];
+        var addressCode = AttributeCode.Create("addresses");
+        if (schema.AttributeDefinitions.ContainsKey(addressCode))
+            attrs.Set(addressCode, addressList);
+    }
+
+    // Passkeys
+    var passkeyImports = passkeys
+        .Select(p => new PasskeyImport
+        {
+            CredentialId = p.CredentialId,
+            PublicKeyCose = p.PublicKey,
+            Algorithm = p.Algorithm,
+            SignCount = p.SignCount,
+            BackupEligible = p.IsBackupEligible,
+            BackedUp = p.IsBackedUp,
+            Aaguid = p.Aaguid,
+            Name = p.Name ?? "Imported passkey"
+        })
+        .ToList();
+
+    // Set active status
+    var activeCode = AttributeCode.Create("active");
+    if (schema.AttributeDefinitions.ContainsKey(activeCode))
+        attrs.Set(activeCode, true);
+
+    return new UserImportRecord
+    {
+        SubjectId = UserSubjectId.Create(user.Id),
+        ProfileAttributes = attrs.Validate(),
+        Authenticators = new AuthenticatorImport
+        {
+            Password = password,
+            OtpAddresses = otpAddresses.Count > 0 ? otpAddresses : null,
+            Passkeys = passkeyImports.Count > 0 ? passkeyImports : null
+        }
+    };
+}
+
+static string? MapClaimToAttribute(string? claimType) => claimType switch
+{
+    "name"               => "name",
+    "given_name"         => "given_name",
+    "family_name"        => "family_name",
+    "middle_name"        => "middle_name",
+    "display_name"       => "displayName",
+    "title"              => "title",
+    "user_type"          => "userType",
+    "preferred_language" => "preferredLanguage",
+    "locale"             => "locale",
+    "timezone"           => "timezone",
+    // street_address, locality, region, postal_code, country are handled as the complex "addresses" attribute
+    // phone_number is handled separately below if needed
+    _ => null
+};
+}
+
+// Data class for passkey credentials read from the source database
+record PasskeyData(
+    byte[] CredentialId,
+    byte[] PublicKey,
+    int Algorithm,
+    uint SignCount,
+    bool IsBackupEligible,
+    bool IsBackedUp,
+    Guid Aaguid,
+    string? Name);
+```
+
+</Version>
+
+The helper maps name claims to scalar attributes when those attributes exist in the target schema. It also builds a
+complex `name` when the schema defines one. The 8.1 default profile defines scalar `name`, `given_name`, and
+`family_name`; it does not define `middle_name`. Adapt the mapping for your schema, including any required attributes.
 
 ## Run the Import
 
-Now wire everything together in a hosted service. The service runs once on application startup, imports the users, and completes:
+Now wire everything together in a hosted service. The service runs once on application startup, imports the users, and
+completes. This example does not load passkeys and passes an empty list to the helper. If your source contains passkeys,
+load them per user and pass them to `MapUser` instead.
+
+<Version until="8.1">
+
+Make sure the target storage schema is migrated before starting the service.
+
+```csharp
+// AspNetIdentityMigrationService.cs
+using Duende.Storage.EntityAttributeValue;
+using Duende.UserManagement;
+using Duende.UserManagement.Import;
+using Duende.UserManagement.Profiles;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
+public class AspNetIdentityMigrationService : IHostedService
+{
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<AspNetIdentityMigrationService> _logger;
+
+    public AspNetIdentityMigrationService(
+        IServiceProvider serviceProvider,
+        ILogger<AspNetIdentityMigrationService> logger)
+    {
+        _serviceProvider = serviceProvider;
+        _logger = logger;
+    }
+
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var sp = scope.ServiceProvider;
+
+        var sourceDb = sp.GetRequiredService<SourceIdentityDbContext>();
+        var importer = sp.GetRequiredService<IUserImporter>();
+        var profileAdmin = sp.GetRequiredService<IUserProfileAdmin>();
+
+        var schema = await profileAdmin.GetSchemaAsync(cancellationToken);
+
+        // Load all users and their claims from the source database
+        var users = await sourceDb.Users
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        var claimsByUser = await sourceDb.UserClaims
+            .AsNoTracking()
+            .GroupBy(c => c.UserId)
+            .ToDictionaryAsync(
+                g => g.Key,
+                g => (IReadOnlyList<IdentityUserClaim<string>>)g.ToList(),
+                cancellationToken);
+
+        _logger.LogInformation("Found {UserCount} users to migrate.", users.Count);
+
+        const int batchSize = 100;
+        var totalCreated = 0;
+        var totalUpdated = 0;
+        var totalFailed = 0;
+
+        for (var i = 0; i < users.Count; i += batchSize)
+        {
+            var batch = users
+                .Skip(i)
+                .Take(batchSize)
+                .Select(u =>
+                {
+                    var claims = claimsByUser.GetValueOrDefault(u.Id, []);
+                    return MigrationHelpers.MapUser(u, claims, [], schema);
+                })
+                .ToList();
+
+            var result = await importer.ImportAsync(batch, cancellationToken);
+            totalCreated += result.CreatedCount;
+            totalUpdated += result.UpdatedCount;
+            totalFailed += result.FailedCount;
+
+            foreach (var r in result.Results.Where(r => r.Status == UserImportStatus.Failed))
+            {
+                _logger.LogWarning("FAILED {SubjectId}: {Error}", r.SubjectId, r.Error);
+            }
+
+            _logger.LogInformation(
+                "Batch {BatchNumber}: created={Created}, updated={Updated}, failed={Failed}",
+                i / batchSize + 1, result.CreatedCount, result.UpdatedCount, result.FailedCount);
+        }
+
+        _logger.LogInformation(
+            "Migration complete. Created: {Created}, Updated: {Updated}, Failed: {Failed}",
+            totalCreated, totalUpdated, totalFailed);
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+}
+```
+
+</Version>
+
+<Version since="8.1">
 
 ```csharp
 // AspNetIdentityMigrationService.cs
 using Duende.Storage.Schema;
-using Duende.Storage.EntityAttributeValue;
+using Duende.IdentityServer.DataExtensions;
 using Duende.UserManagement;
 using Duende.UserManagement.Import;
 using Duende.UserManagement.Profiles;
@@ -476,7 +788,7 @@ public class AspNetIdentityMigrationService : IHostedService
                 .Select(u =>
                 {
                     var claims = claimsByUser.GetValueOrDefault(u.Id, []);
-                    return MapUser(u, claims, schema);
+                    return MigrationHelpers.MapUser(u, claims, [], schema);
                 })
                 .ToList();
 
@@ -503,6 +815,8 @@ public class AspNetIdentityMigrationService : IHostedService
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
 ```
+
+</Version>
 
 ## Register the Conflict Resolver
 
@@ -556,9 +870,10 @@ The table below shows how common claim types map to User Management attribute co
 
 | ASP.NET Identity claim type | User Management attribute code | Notes                                       |
 |-----------------------------|--------------------------------|---------------------------------------------|
-| `given_name`                | `name.givenName` (complex)     | Assembled into the `name` complex attribute |
-| `family_name`               | `name.familyName` (complex)    | Assembled into the `name` complex attribute |
-| `middle_name`               | `name.middleName` (complex)    | Assembled into the `name` complex attribute |
+| `name`                      | `name`                         | Scalar full name when defined as a string |
+| `given_name`                | `given_name` or `name.givenName` | Scalar, complex, or both, depending on the schema |
+| `family_name`               | `family_name` or `name.familyName` | Scalar, complex, or both, depending on the schema |
+| `middle_name`               | `middle_name` or `name.middleName` | Scalar, complex, or both, depending on the schema |
 | `display_name`              | `displayName`                  | Simple string attribute                     |
 | `title`                     | `title`                        | Simple string attribute                     |
 | `user_type`                 | `userType`                     | Simple string attribute                     |
@@ -572,9 +887,9 @@ The table below shows how common claim types map to User Management attribute co
 | `postal_code`               | `addresses.postalCode`         | Assembled into the `addresses` complex attribute |
 | `country`                   | `addresses.country`            | Assembled into the `addresses` complex attribute |
 
-The `name`, `emails`, `phoneNumbers`, and `addresses` attributes are multi-valued complex types.
-You cannot set them with a plain string: you need to build a dictionary or list of dictionaries and pass it to `collection.Set`.
-The `MapUser` helper above shows how to do this for `name`, `emails`, and `addresses`.
+In a SCIM-shaped schema, `name` is a complex object, while `emails`, `phoneNumbers`, and `addresses` are lists of
+complex objects. Set these with a dictionary or list of dictionaries rather than a plain string. The `MapUser` helper
+above shows this for `name`, `emails`, and `addresses`.
 
 For phone numbers, the pattern is the same as for emails:
 
@@ -601,8 +916,9 @@ if (phoneClaim is not null)
 ```
 
 The attribute codes and their types depend on the schema you have configured in User Management. 
-The `schema.AttributeDefinitions.ContainsKey(code)` check in the mapping code guards against trying to set an attribute that
-does not exist in your schema, which would cause an import failure.
+The mapping checks whether an attribute exists before setting it. An attribute must also have the expected type and
+properties; adjust the mapping to match your target schema. Validation errors raised while mapping stop the hosted
+service before the batch reaches the importer.
 
 ## Importing Passkeys
 

@@ -125,7 +125,7 @@ default.
 Any sensitive values you use as input to your extension grant validator that you do not want included in the logs should
 be filtered.
 This can be done by adding those parameter names on the `Logging.TokenRequestSensitiveValuesFilter` collection on
-the [IdentityServerOptions](/identityserver/reference/v8/options.md#logging).
+the [IdentityServerOptions](/identityserver/reference/v8/options.mdx#logging).
 :::
 
 ## Token Exchange For Impersonation And Delegation

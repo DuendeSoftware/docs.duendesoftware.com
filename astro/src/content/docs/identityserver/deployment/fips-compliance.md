@@ -61,7 +61,7 @@ appropriate key sizes:
 
 Check whether your compliance program sets a stricter baseline, such as a minimum RSA key size of 3072 bits.
 
-The [automatic key management](/identityserver/fundamentals/key-management.md) feature generates 2048-bit RSA keys by
+The [automatic key management](/identityserver/fundamentals/key-management.mdx) feature generates 2048-bit RSA keys by
 default. To raise that, set `KeyManagement.RsaKeySize`, which applies to all `RS*` and `PS*` algorithms:
 
 ```csharp

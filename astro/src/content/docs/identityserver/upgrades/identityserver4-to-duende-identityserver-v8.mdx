@@ -422,7 +422,7 @@ If you're using fully-qualified names in your code, those will need to be update
 
 In your application startup code, typically found in the `ConfigureServices` method in `Startup.cs`, consider removing `AddDeveloperSigningCredential`.
 
-You can use Duende IdentityServer's built-in [manual or automatic key management](/identityserver/fundamentals/key-management.md) instead.
+You can use Duende IdentityServer's built-in [manual or automatic key management](/identityserver/fundamentals/key-management.mdx) instead.
 
 ### Step 5: Update Database Schema
 
@@ -505,9 +505,9 @@ Client apps and APIs typically cache the key material published from IdentitySer
 When upgrading, consider how those applications will handle an upgraded token server with a new and different signing key.
 
 - If you can restart all client apps and APIs that depend on your current signing key, you can remove the old signing key and start to use automatic key management. A restart reloads the discovery document and the new signing key.
-- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](/identityserver/fundamentals/key-management.md#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
+- If you can not restart client apps and APIs, check the [manual and automatic key rotation topics](/identityserver/fundamentals/key-management.mdx#manual-key-rotation) to learn how to announce new signing key material while still supporting the old signing key for a period of time.
 
-If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](/identityserver/fundamentals/key-management.md).
+If your IdentityServer4 implementation is using a signing key, consider using [automatic key management](/identityserver/fundamentals/key-management.mdx).
 
 :::note
 This feature is part of the [Duende IdentityServer Standard (add-on), Advanced, Business (legacy) and Enterprise (legacy) Edition](https://duendesoftware.com/products/identityserver).

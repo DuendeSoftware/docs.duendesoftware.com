@@ -160,7 +160,7 @@ clients or APIs need the tenant, emit it from your [profile service](/identityse
 By default, IdentityServer does not compare the requested tenant with the current session: a user who is signed in
 will be sent straight back to the client, even when the new request asks for a different tenant.
 
-Set [`ValidateTenantOnAuthorization`](/identityserver/reference/v8/options.md) to `true` to change this:
+Set [`ValidateTenantOnAuthorization`](/identityserver/reference/v8/options.mdx) to `true` to change this:
 
 ```csharp
 // Program.cs

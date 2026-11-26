@@ -1,7 +1,7 @@
 ---
 title: "Configuration Admin APIs"
 description: "Create, read, update and delete IdentityServer clients, resources and identity providers using the Duende Storage admin APIs"
-date: 2026-11-10
+date: 2026-11-23
 sidebar:
   label: "Admin APIs"
   order: 30
@@ -58,7 +58,7 @@ clients that use them.
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.ApiScopes;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<ApiScopeId>> CreateApiScope(
     IApiScopeAdmin admin,
@@ -78,7 +78,7 @@ static Task<SaveResult<ApiScopeId>> CreateApiScope(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.ApiResources;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<ApiResourceId>> CreateApiResource(
     IApiResourceAdmin admin,
@@ -99,7 +99,7 @@ static Task<SaveResult<ApiResourceId>> CreateApiResource(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.IdentityResources;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<IdentityResourceId>> CreateIdentityResource(
     IIdentityResourceAdmin admin,
@@ -120,7 +120,7 @@ static Task<SaveResult<IdentityResourceId>> CreateIdentityResource(
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.Clients;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<ClientId>> CreateClient(
     IClientAdmin admin,
@@ -159,7 +159,7 @@ the affected secret.
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.Clients;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static async Task<SaveResult<SecretId>> RotateClientSecret(
     IClientAdmin admin,
@@ -191,6 +191,11 @@ and the plaintext value. It also takes an optional hash algorithm, description, 
 The `X509Thumbprint`, `X509Name`, `X509CertificateBase64`, and `JWK` types are stored verbatim, so you must supply
 appropriate material for them.
 
+For clients, `CreateSecretAsync` and `DeleteSecretAsync` run the registered `IClientConfigurationValidator`, just like
+`UpdateAsync`. If the client is invalid, the operation returns `validation_failed` and does not write the secret change.
+This applies to any client validation failure, not only a missing or invalid secret. The Storage-backed
+`IClientStore` also validates clients when IdentityServer reads them at runtime, so rejected clients are not returned.
+
 ### Dynamic Identity Provider
 
 ```csharp
@@ -198,7 +203,7 @@ appropriate material for them.
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.IdentityProviders;
 using Duende.IdentityServer.Stores.Storage.IdentityProviders;
-using Duende.Storage;
+using Duende.IdentityServer.Models;
 
 static Task<SaveResult<IdentityProviderId>> CreateIdentityProvider(
     IIdentityProviderAdmin admin,
@@ -249,7 +254,6 @@ grant direct read access to the configuration store as a substitute for an autho
 using Duende.IdentityServer.Admin;
 using Duende.IdentityServer.Admin.SamlServiceProviders;
 using Duende.IdentityServer.Models;
-using Duende.Storage;
 
 static Task<SaveResult<SamlServiceProviderId>> CreateSamlServiceProvider(
     ISamlServiceProviderAdmin admin,
@@ -361,14 +365,14 @@ Use `QueryAsync` to list entities. The result contains the current page and pagi
 ```csharp
 // ConfigurationAdmin.cs
 using Duende.IdentityServer.Admin.ApiScopes;
-using Duende.Storage.Querying;
+using Duende.IdentityServer.Models;
 
 var request = QueryRequest.Create<ApiScopeFilter, ApiScopeSortField>(
     new ApiScopeFilter { Name = "inventory" });
 
 var page = await apiScopes.QueryAsync(request, ct);
 
-foreach (var scope in page.Items)
+foreach (var scope in page.Results)
 {
     Console.WriteLine($"{scope.Id}: {scope.Name}");
 }
@@ -404,7 +408,70 @@ Each service returns its own list item type. These carry the typed ID and a few 
 Call `GetAsync`, or the matching get-by-identifier method, when you need the full configuration.
 
 Because text properties match substrings, compare a returned business identifier exactly when you need one specific
-entity. Use the continuation tokens on `QueryResult<T>` to retrieve additional pages.
+entity.
+
+### Cursor Paging
+
+Use `ResultsToken` to continue a cursor query and `HasNextResults` to decide when to stop:
+
+```csharp
+// ConfigurationAdmin.cs
+using Duende.IdentityServer.Admin.ApiScopes;
+using Duende.IdentityServer.Models;
+
+var filter = new ApiScopeFilter { Name = "inventory" };
+var range = DataRange.FromContinuationToken((ContinuationToken?)null);
+
+while (true)
+{
+    var request = QueryRequest.Create<ApiScopeFilter, ApiScopeSortField>(filter, range);
+    var page = await apiScopes.QueryAsync(request, ct);
+
+    foreach (var scope in page.Results)
+    {
+        Console.WriteLine($"{scope.Id}: {scope.Name}");
+    }
+
+    if (!page.HasNextResults)
+    {
+        break;
+    }
+
+    range = DataRange.FromContinuationToken(page.ResultsToken);
+}
+```
+
+Keep these rules in mind when traversing pages:
+
+* Check `HasNextResults`, not whether `ResultsToken` is null. A token can be present even on the last page.
+* In `8.1.0-preview.7`, use `HasPrevResults` and `PreviousToken` to go back. Keep the same sort; don't reverse the sort
+  or the returned rows.
+* Keep the same filter and search value throughout a traversal. Tokens are bound to the entity type and sort, not the
+  filter or search value. Changing a filter applies the new filter from the old cursor position.
+* Tokens from the earlier format are rejected with `InvalidContinuationTokenException` rather than silently restarting
+  at the first page. The same exception identifies malformed tokens and sort mismatches.
+
+:::caution[Unreleased paging API change]
+After `8.1.0-preview.7`, `HasPrevResults` has been renamed to `HasPreviousResults` in the product source. The new name
+is not available in preview.7. See the [upgrade guide](/identityserver/upgrades/v8_0-to-v8_1.md#paging-result-property-rename)
+before upgrading to a release that includes the change.
+:::
+
+Cursor queries use a deterministic order:
+
+* Null sort values come last.
+* The entity ID breaks ties.
+* Without an explicit sort, the entity ID determines the order.
+
+The flag for the direction queried is exact; the flag for the other direction is inferred from the cursor position.
+If rows on that side have since been deleted, an inferred `true` can lead to an empty page.
+
+String values used by cursor-sorted fields are limited to 500 characters and cannot contain the null character
+`U+0000`. When a save builds indexed fields, it validates their values and throws `ArgumentException` for an invalid
+string. A value longer than 500 characters saved before this limit was enforced can fail when the cursor token is
+created.
+
+### Delete Configuration
 
 Delete an entity by its storage ID:
 

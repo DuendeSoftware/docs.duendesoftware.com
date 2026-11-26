@@ -1,7 +1,7 @@
 ---
 title: Roles and Groups
 description: How to manage roles and groups in Duende User Management, including direct and transitive role assignment, CRUD operations, and membership queries.
-date: 2026-04-29
+date: 2026-11-23
 sidebar:
   label: Roles and Groups
   order: 2
@@ -9,13 +9,20 @@ redirect_from:
   - /identityserver/usermanagement/fundamentals/roles-and-groups/
 ---
 
+import Version from "~/components/Version.astro";
+
 Roles and groups provide a flexible authorization model. A role represents a named permission or capability. A group is a named collection of users. Roles can be assigned to users directly, or transitively by assigning a role to a group and then adding users to that group.
 
 ## End-to-End Example
 
-The following example creates a role, creates a group, assigns the role to the group, adds a user to the group, and then queries the user's effective roles (direct and transitive). It uses three services (`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) which are registered automatically when you call `AddUserManagement(...)` (see [Configuration](/identityserver/identity/user-management/reference/configuration.mdx#membership-module)) and can be injected via constructor injection:
+The following example creates a role and a group, assigns the role to the group, and adds a user to the group. To query
+the user's roles, see [Querying a User's Effective Roles](#querying-a-users-effective-roles). The three services
+(`IRoleAdmin`, `IGroupAdmin`, and `IMembershipAdmin`) are registered automatically when you call `AddUserManagement(...)`
+(see [Configuration](/identityserver/identity/user-management/reference/configuration.mdx#membership-module)) and can be
+injected via constructor injection:
 
 ```csharp
+using Duende.UserManagement;
 using Duende.UserManagement.Membership;
 
 public class RoleSetupService(
@@ -29,30 +36,25 @@ public class RoleSetupService(
         var roleResult = await roleAdmin.CreateAsync(
             new Role { Name = RoleName.Create("content-editor") },
             ct);
-        var roleId = roleResult.Value;
+        if (!roleResult.IsSuccess || roleResult.Id is not { } roleId)
+        {
+            throw new InvalidOperationException($"Could not create the content-editor role: {roleResult}");
+        }
 
         // 2. Create a group.
         var groupResult = await groupAdmin.CreateAsync(
             new Group { Name = GroupName.Create("editors") },
             ct);
-        var groupId = groupResult.Value;
+        if (!groupResult.IsSuccess || groupResult.Id is not { } groupId)
+        {
+            throw new InvalidOperationException($"Could not create the editors group: {groupResult}");
+        }
 
         // 3. Assign the role to the group (transitive path).
         await membershipAdmin.AssignRoleToGroupAsync(roleId, groupId, ct);
 
         // 4. Add the user to the group. Membership is auto-created when assigning roles/groups.
         await membershipAdmin.AssignGroupAsync(subjectId, groupId, ct);
-
-        // 5. Query effective roles (direct + transitive, merged in application code).
-        var directRoles = await membershipAdmin.GetDirectRolesAsync(subjectId, range: null, ct);
-        var transitiveRoles = await membershipAdmin.GetTransitiveRolesAsync(subjectId, range: null, ct);
-
-        var effectiveRoles = directRoles.Items
-            .Concat(transitiveRoles.Items)
-            .DistinctBy(r => r.Id)
-            .ToList();
-
-        // effectiveRoles now contains "content-editor" via the group.
     }
 }
 ```
@@ -143,20 +145,23 @@ var result = await roleAdmin.CreateAsync(role, ct);
 
 if (result.IsSuccess)
 {
-    var roleId = result.Value;
+    var roleId = result.Id;
     Console.WriteLine($"Created role: {roleId}");
 }
 ```
 
 ### Querying Roles
 
+<Version until="8.1">
+
 ```csharp
+using Duende.Storage.Pagination;
 using Duende.Storage.Querying;
 using Duende.UserManagement.Membership;
 
 var filter = new RoleFilter { Name = "editor" };
-var sort = SortBy.Ascending(RoleSortField.Name);
-var range = new DataRange(Offset: 0, Limit: 20);
+var sort = SortBy.Field(RoleSortField.Name, SortDirection.Ascending);
+var range = DataRange.FromOffset(0, 20);
 
 var roles = await roleAdmin.QueryAsync(QueryRequest.Create(filter, sort, range), ct);
 
@@ -165,6 +170,30 @@ foreach (var r in roles.Items)
     Console.WriteLine($"{r.Id}: {r.Name}");
 }
 ```
+
+</Version>
+
+<Version since="8.1">
+
+The paging models, including `DataRange`, are in the `Duende.IdentityServer.Models` namespace.
+
+```csharp
+using Duende.IdentityServer.Models;
+using Duende.UserManagement.Membership;
+
+var filter = new RoleFilter { Name = "editor" };
+var sort = SortBy.Field(RoleSortField.Name, SortDirection.Ascending);
+var range = DataRange.FromOffset(0, 20);
+
+var roles = await roleAdmin.QueryAsync(QueryRequest.Create(filter, sort, range), ct);
+
+foreach (var r in roles.Results)
+{
+    Console.WriteLine($"{r.Id}: {r.Name}");
+}
+```
+
+</Version>
 
 ### Updating a Role
 
@@ -221,12 +250,14 @@ var result = await groupAdmin.CreateAsync(group, ct);
 
 if (result.IsSuccess)
 {
-    var groupId = result.Value;
+    var groupId = result.Id;
     Console.WriteLine($"Created group: {groupId}");
 }
 ```
 
 ### Querying Groups with a Filter Expression
+
+<Version until="8.1">
 
 ```csharp
 using Duende.UserManagement.Membership;
@@ -239,6 +270,24 @@ var filter = new GroupFilter
 
 var groups = await groupAdmin.QueryAsync(QueryRequest.Create(filter, sort: null, range: null), ct);
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+using Duende.UserManagement.Membership;
+using Duende.IdentityServer.Models;
+
+var filter = new GroupFilter
+{
+    SearchExpression = new SearchExpression("displayName eq \"editors\"")
+};
+
+var groups = await groupAdmin.QueryAsync(QueryRequest.Create(filter, sort: null, range: null), ct);
+```
+
+</Version>
 
 ## `IMembershipAdmin`
 
@@ -339,6 +388,8 @@ var result = await membershipAdmin.RemoveGroupAsync(subjectId, groupId, ct);
 
 Because direct and transitive roles cannot be combined in a single query, retrieve both sets separately and merge them:
 
+<Version until="8.1">
+
 ```csharp
 using Duende.UserManagement.Membership;
 
@@ -356,7 +407,32 @@ foreach (var role in effectiveRoles)
 }
 ```
 
+</Version>
+
+<Version since="8.1">
+
+```csharp
+using Duende.UserManagement.Membership;
+
+var directRoles = await membershipAdmin.GetDirectRolesAsync(subjectId, range: null, ct);
+var transitiveRoles = await membershipAdmin.GetTransitiveRolesAsync(subjectId, range: null, ct);
+
+var effectiveRoles = directRoles.Results
+    .Concat(transitiveRoles.Results)
+    .DistinctBy(r => r.Id)
+    .ToList();
+
+foreach (var role in effectiveRoles)
+{
+    Console.WriteLine(role.Name);
+}
+```
+
+</Version>
+
 ### Querying Groups for a User
+
+<Version until="8.1">
 
 ```csharp
 var groups = await membershipAdmin.GetGroupsAsync(subjectId, range: null, ct);
@@ -367,12 +443,30 @@ foreach (var group in groups.Items)
 }
 ```
 
-### Listing Members of a Group
+</Version>
+
+<Version since="8.1">
 
 ```csharp
+var groups = await membershipAdmin.GetGroupsAsync(subjectId, range: null, ct);
+
+foreach (var group in groups.Results)
+{
+    Console.WriteLine($"{group.Id}: {group.Name}");
+}
+```
+
+</Version>
+
+### Listing Members of a Group
+
+<Version until="8.1">
+
+```csharp
+using Duende.Storage.Pagination;
 using Duende.UserManagement.Membership;
 
-var range = new DataRange(Offset: 0, Limit: 50);
+var range = DataRange.FromOffset(0, 50);
 var members = await membershipAdmin.GetMembersInGroupAsync(groupId, range, ct);
 
 foreach (var member in members.Items)
@@ -381,7 +475,28 @@ foreach (var member in members.Items)
 }
 ```
 
+</Version>
+
+<Version since="8.1">
+
+```csharp
+using Duende.IdentityServer.Models;
+using Duende.UserManagement.Membership;
+
+var range = DataRange.FromOffset(0, 50);
+var members = await membershipAdmin.GetMembersInGroupAsync(groupId, range, ct);
+
+foreach (var member in members.Results)
+{
+    Console.WriteLine(member.SubjectId);
+}
+```
+
+</Version>
+
 ### Listing Members of a Role
+
+<Version until="8.1">
 
 ```csharp
 var members = await membershipAdmin.GetMembersInRoleAsync(roleId, range: null, ct);
@@ -391,6 +506,21 @@ foreach (var member in members.Items)
     Console.WriteLine(member.SubjectId);
 }
 ```
+
+</Version>
+
+<Version since="8.1">
+
+```csharp
+var members = await membershipAdmin.GetMembersInRoleAsync(roleId, range: null, ct);
+
+foreach (var member in members.Results)
+{
+    Console.WriteLine(member.SubjectId);
+}
+```
+
+</Version>
 
 ### Deprovisioning a User
 

@@ -364,7 +364,8 @@ This changes all passkey endpoints to use `/auth/webauthn` as the base, so regis
 
 ## SCIM
 
-SCIM support is experimental. Enable it with `IUserManagementBuilder.EnableScim(...)` and map its endpoints with `app.MapScim()`. See [SCIM Provisioning](/identityserver/identity/user-management/scim.mdx) for setup, authorization, and known issues.
+Enable SCIM with `IUserManagementBuilder.EnableScim(...)` and map its endpoints with `app.MapScim()`. See
+[SCIM Provisioning](/identityserver/identity/user-management/scim.mdx) for setup, authorization, and known issues.
 
 ### `ScimOptions`
 
@@ -397,9 +398,11 @@ Controls authentication and authorization for SCIM data endpoints. Metadata endp
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `Authority` | `string?` | `null` | Authority used for JWT bearer token validation and discovery. In the IdentityServer integration, it resolves from `IdentityServerOptions.IssuerUri` when not set explicitly. Without either value, default SCIM authorization fails startup validation. |
+| `Authority` | `string?` | `null` | Optional authority for JWT bearer token validation through discovery. When unset in the IdentityServer integration, the built-in bearer scheme validates against the current space's issuer and signing keys in-process. |
 | `Audience` | `string` | `"urn:duende:scim"` | Expected audience in SCIM bearer tokens. |
-| `AuthorizationPolicyName` | `string?` | `null` | Uses the named ASP.NET Core authorization policy instead of the built-in scope-based policies. The custom policy applies to all SCIM data endpoints. |
+| `ReadAuthorizationPolicyName` | `string?` | `null` | Custom policy for read operations. Takes precedence over `AuthorizationPolicyName`; otherwise the built-in read policy is used. |
+| `WriteAuthorizationPolicyName` | `string?` | `null` | Custom policy for write operations. Takes precedence over `AuthorizationPolicyName`; otherwise the built-in write policy is used. |
+| `AuthorizationPolicyName` | `string?` | `null` | Shared custom policy fallback for all SCIM data operations. If unset, the built-in scope-based read and write policies are used. |
 | `RequireHttpsMetadata` | `bool` | `true` | Requires HTTPS when retrieving authority metadata. Disable only in development environments. |
 
 </Version>

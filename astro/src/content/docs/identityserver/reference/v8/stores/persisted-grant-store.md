@@ -117,7 +117,7 @@ querying the grants and/or for informational purposes and should be treated as
 read-only.
 
 By default, the `Data` property is encrypted at rest using the ASP.NET Data
-Protection API. The [`DataProtectData` option](/identityserver/reference/v8/options.md#persistentgrants) can be used to
+Protection API. The [`DataProtectData` option](/identityserver/reference/v8/options.mdx#persistentgrants) can be used to
 disable this
 encryption.
 
