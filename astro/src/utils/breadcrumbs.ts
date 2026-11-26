@@ -25,7 +25,7 @@ function firstChildHref(sidebar: SidebarEntry[], folderLabels: string[]): string
 }
 
 const GENERAL_LABEL = "General Information";
-const topicLabels = new Map([["general", GENERAL_LABEL], ...products.map((p) => [p.key, p.label] as const)]);
+const topicLabels = new Map([["general", GENERAL_LABEL], ["protocols", "Protocols"], ...products.map((p) => [p.key, p.label] as const)]);
 
 const dirOfFile = (path: string) =>
   path.replace(/^.*content\/docs\//, "").split("/").slice(0, -1).join("/");

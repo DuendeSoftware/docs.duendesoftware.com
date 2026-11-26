@@ -1,0 +1,11 @@
+id: "saml-metadata-2.0-os"
+title: "SAML Metadata 2.0"
+url: "https://docs.oasis-open.org/security/saml/v2.0/saml-metadata-2.0-os.pdf"
+status: "OASIS"
+quoteCheck: manual
+sections:
+  - key: "saml_metadata_2_0_os_2_2_2"
+    section: "2.2.2"
+    anchor: "page=7"
+    title: "Endpoint and SSO role metadata"
+  # port-modules.mjs

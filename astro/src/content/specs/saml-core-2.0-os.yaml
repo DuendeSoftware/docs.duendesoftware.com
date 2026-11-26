@@ -1,0 +1,40 @@
+id: "saml-core-2.0-os"
+title: "SAML Core 2.0"
+url: "https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf"
+status: "OASIS"
+quoteCheck: manual
+sections:
+  - key: "saml_core_2_0_os_3_2_1"
+    section: "3.2.1"
+    anchor: "page=36"
+    title: "Complex Type RequestAbstractType"
+  # port-modules.mjs
+  - key: "saml_core_2_0_os_3_2_2"
+    section: "3.2.2"
+    anchor: "page=38"
+    title: "Complex Type StatusResponseType"
+  # port-modules.mjs
+  - key: "saml_core_2_0_os_2_5_1"
+    section: "2.5.1"
+    anchor: "page=21"
+    title: "Element <Conditions>"
+  # port-modules.mjs
+  - key: "saml_core_2_0_os_2_5_1_4"
+    section: "2.5.1.4"
+    anchor: "page=23"
+    title: "Elements <AudienceRestriction> and <Audience>"
+  # port-modules.mjs
+  - key: "saml_core_2_0_os_1_3_4"
+    section: "1.3.4"
+    anchor: "page=9"
+    title: "ID and ID Reference Values"
+  # saml-sso
+  - key: "saml_core_2_0_os_3_4_1"
+    section: "3.4.1"
+    anchor: "page=48"
+    title: "Element <AuthnRequest>"
+  # saml-sso
+  - key: "saml_core_2_0_os_3_4_1_4"
+    section: "3.4.1.4"
+    anchor: "page=53"
+    title: "Processing Rules"
